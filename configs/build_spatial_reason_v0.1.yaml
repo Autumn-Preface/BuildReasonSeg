@@ -1,0 +1,99 @@
+# =============================================================================
+# BuildSpatialReason v0.1 generation config
+#
+# This file selects WHICH queries to emit and how many. It never overrides a
+# relation threshold: every eligibility and margin rule comes from
+# configs/spatial_relations_v1.yaml, which is frozen (see ADR-006/007/008).
+#
+# Regenerating with the same seed and the same relation config must produce
+# byte-identical JSONL. No threshold may be relaxed to reach a size target.
+# =============================================================================
+
+dataset:
+  name: BuildSpatialReason
+  version: v0.1
+  project: BuildReasonSeg
+  source_dataset: WHU Building Dataset
+  source_subset: Satellite dataset II (East Asia)
+
+# Frozen relation layer. Read-only: the generator must not modify these.
+relations:
+  config: configs/spatial_relations_v1.yaml
+  config_version: spatial_relations_v1
+  # Anchored here as a reminder; the authoritative values are read from the file.
+  frozen:
+    ratio_margin: 1.10
+    direction_preset: medium
+    nearest_anchor_non_border: true
+    nearest_target_non_border: true
+    ambiguous_policy: discard
+
+generator:
+  version: v0.1
+  seed: 20260804
+  template_version: v0.1
+
+# -----------------------------------------------------------------------------
+# Query types actually implemented in v0.1
+# -----------------------------------------------------------------------------
+level1:
+  enabled: true
+  query_types: [leftmost, rightmost, topmost, bottommost, largest, smallest]
+  max_per_image: 6
+
+level2:
+  enabled: true
+  # Type A: reference -> nearest
+  nearest:
+    enabled: true
+    references: [largest, smallest]
+  # Type B: reference -> direction, emitted ONLY when exactly one candidate exists
+  direction:
+    enabled: true
+    references: [largest, smallest]
+    relations: [left_of, right_of, above, below]
+  max_per_image: 4
+
+level3:
+  enabled: true
+  # reference -> direction filter -> nearest within the filtered set
+  references: [largest]
+  relations: [left_of, right_of, above, below]
+  max_per_image: 2
+  # Emit trivial chains (single candidate after filtering) but mark them, so the
+  # nontrivial subset can be evaluated separately later.
+  emit_trivial: true
+
+# -----------------------------------------------------------------------------
+# Size and balance control. Soft target: 20000-50000 queries total.
+# If the number of valid samples is smaller, a smaller dataset is accepted.
+# Thresholds are NEVER relaxed to reach the target.
+# -----------------------------------------------------------------------------
+quotas:
+  max_per_image: 12
+  max_per_query_type_per_image: 1
+  max_per_level_per_image:
+    level1: 6
+    level2: 4
+    level3: 2
+  max_per_query_type_total: null      # no global cap by default
+  max_per_level_total: null
+  # Deterministic downsampling when a quota binds: sort by SHA256(seed|image_id)
+  # and keep the first N. Stable, reproducible, never a random split.
+  downsample_seed: 20260804
+
+# -----------------------------------------------------------------------------
+# Output paths (repository-relative)
+# -----------------------------------------------------------------------------
+output:
+  root: datasets/build_spatial_reason
+  version_dir: v0.1
+
+# -----------------------------------------------------------------------------
+# Language
+# -----------------------------------------------------------------------------
+language:
+  emit_zh: true
+  emit_en: true
+  # Both languages come from the SAME template_pair id; see spatial_reasoning/templates.py
+  template_families_min: 3

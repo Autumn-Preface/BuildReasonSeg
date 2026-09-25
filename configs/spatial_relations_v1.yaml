@@ -1,0 +1,267 @@
+# =============================================================================
+# Spatial relation configuration -- v1
+#
+# Every threshold used by the relation engine lives here. No numeric threshold
+# may be hard-coded in spatial_reasoning/*.py; those modules read this file.
+#
+# All values were calibrated on the full WHU component dataset (4038 images,
+# 36926 components, 523384 directed pairs). See docs/relation_statistics_v1.md
+# for the measured distributions and the strict/medium/loose comparison that
+# produced the active set below.
+#
+# Scope: this is TILE-RELATIVE spatial reasoning, not physical-building
+# geometry reasoning. See docs/relation_definitions.md section "Scope".
+# =============================================================================
+
+version: v1
+
+scope:
+  kind: tile_relative
+  note: >-
+    Directions and extremes are interpreted within a single 512x512 image tile.
+    A border-truncated component may legitimately be the leftmost component of
+    its tile. Absolute size relations are NOT tile-relative and therefore use a
+    stricter eligibility rule.
+
+# -----------------------------------------------------------------------------
+# Component quality classification
+# -----------------------------------------------------------------------------
+quality:
+  # Flagged when a component covers more than this fraction of the image's
+  # bounding-box area. This is a CONSERVATIVE HEURISTIC, not real merge ground
+  # truth. Measured bbox_extent_ratio: p99 = 0.0969, p99.5 = 0.1280,
+  # p99.8 = 0.1959, p99.9 = 0.2483, max = 0.6178. The 0.20 cut sits in the
+  # p99.8 tail and flags 70 / 36926 = 0.19% of components, i.e. it targets the
+  # extreme tail rather than a broad quantile.
+  suspected_large_merge:
+    bbox_extent_ratio_threshold: 0.20
+    heuristic: true
+    is_ground_truth: false
+    note: >-
+      A component spanning >20% of the tile is implausible for a single
+      building. Because the source raster was binary, mutually touching
+      buildings were already merged upstream and cannot be separated here.
+
+  # Flagged when area is below this many pixels. Purpose is NOT to delete data:
+  # tiny components are excluded from being an anchor/target for selected
+  # relations. Measured area_px: p0.5 = 88, p1 = 105, p2 = 136, p5 = 226.
+  # The 150 cut flags 1063 / 36926 = 2.88% of components.
+  tiny_component:
+    area_px_threshold: 150
+    note: >-
+      Tiny components give unstable centroids, unstable direction margins and
+      unstable area ranks. They remain in the dataset and may still appear in
+      visualisations; they are simply not eligible as relation anchors.
+
+# -----------------------------------------------------------------------------
+# Directional relations: left_of / right_of / above / below
+#
+# FROZEN PREDICATE CONVENTION: relation(subject, object) means the SUBJECT
+# satisfies the relation with respect to the OBJECT.
+#   left_of(A, B)  == "A is left of B"   == cx_A < cx_B
+#   right_of(A, B) == "A is right of B"  == cx_A > cx_B
+#   above(A, B)    == "A is above B"     == cy_A < cy_B
+#   below(A, B)    == "A is below B"     == cy_A > cy_B
+# See docs/relation_definitions.md. This convention may not be changed by the
+# dataset generator, reasoning chain, MLLM training, evaluation, or the
+# Spatial Consistency Loss.
+# -----------------------------------------------------------------------------
+direction:
+  # Active candidate set. See docs/relation_statistics_v1.md for the sweep.
+  active: medium
+
+  # Presets are MONOTONIC: strict -> medium -> loose relax BOTH alpha and tau,
+  # so Valid(strict) is a subset of Valid(medium), which is a subset of
+  # Valid(loose). This subset property is asserted by
+  # tests/test_relations.py::test_preset_monotonicity_on_all_pairs and again on
+  # real image pairs.
+  candidates:
+    # alpha  = axis dominance: dominant axis must lead the other by this factor
+    # tau    = minimum normalized margin on the dominant axis
+    strict:
+      alpha: 2.0
+      tau: 0.06
+    medium:
+      alpha: 1.2
+      tau: 0.04
+    loose:
+      alpha: 1.0
+      tau: 0.02
+
+  # Measured with the corrected predicate semantics over all 4038 images,
+  # counting `left_of` over every ordered pair (261692 opposite-direction pairs
+  # are rejected as wrong_direction in all three presets and excluded below).
+  # `discarded_rate` = (axis_not_dominant + margin_too_small) / (valid + those).
+  measurements:
+    strict:
+      valid: 79410
+      axis_not_dominant: 182046
+      margin_too_small: 236
+      discarded_rate: 0.6965
+      images_with_valid: 3413
+    medium:
+      valid: 117786
+      axis_not_dominant: 143842
+      margin_too_small: 64
+      discarded_rate: 0.5499
+      images_with_valid: 3579
+    loose:
+      valid: 133101
+      axis_not_dominant: 128591
+      margin_too_small: 0
+      discarded_rate: 0.4914
+      images_with_valid: 3628
+
+  rationale: >-
+    'strict' (alpha 2.0) discards 70% of geometrically-plausible pairs as
+    non-dominant and is too aggressive for a first dataset. 'loose' (alpha 1.0)
+    accepts every pair that is not exactly diagonal, so left_of would include
+    near-diagonal pairs that do not match visual intuition. 'medium' keeps a
+    clear axis preference while retaining 117786 valid pairs across 3579 of
+    4038 images (88.6%), with a 55% discard rate that the validator reports
+    explicitly rather than hiding.
+
+# -----------------------------------------------------------------------------
+# Extreme relations: leftmost / rightmost / topmost / bottommost
+# -----------------------------------------------------------------------------
+extreme:
+  # Absolute pixel margin on the dominant axis between rank 1 and rank 2.
+  # Measured ambiguity rate: 2px -> 0.0545, 4px -> 0.1056, 8px -> 0.1840.
+  margin_px: 4.0
+
+# -----------------------------------------------------------------------------
+# nearest
+# -----------------------------------------------------------------------------
+nearest:
+  # Distance is boundary_distance (NOT centroid distance).
+  distance_metric: boundary_distance
+  # Absolute floor on the margin d2 - d1, in pixels. Prevents integer-identical
+  # ties from being accepted.
+  margin_px_floor: 2.0
+  # Normalized margin, expressed as a fraction of the image diagonal.
+  # Measured valid rate: 0.005 -> 0.781, 0.01 -> 0.611, 0.02 -> 0.372.
+  # 0.005 admits roughly three quarters of anchors while rejecting the closest
+  # ties, which is a reasonable first operating point.
+  margin_diag_fraction: 0.005
+  # Absolute-vs-normalized decision: the normalized term is authoritative, with
+  # the absolute floor as a backstop. Report both in the diagnostics.
+  margin_mode: normalized_with_absolute_floor
+
+# -----------------------------------------------------------------------------
+# largest / smallest
+# -----------------------------------------------------------------------------
+size_rank:
+  # Ratio r = larger_area / smaller_area must be at least this much, so the
+  # same threshold means the same thing for `largest` and `smallest`.
+  #
+  # Chosen as 1.10 on the principle supervision reliability > sample count.
+  # Measured over all 4038 images:
+  #
+  #   ratio   largest_valid  smallest_valid  largest_amb  smallest_amb
+  #   1.05         2965           3085           491           369
+  #   1.10         2566           2769           890           685
+  #   1.15         2242           2523          1214           931
+  #
+  # 1.05 admits pairs whose areas differ by only 5%. The discrepancy between
+  # rasterized area and continuous polygon area has a median of about 6% for
+  # small components (see docs/data_representation.md section 3). That is a
+  # deterministic RASTERIZATION / DISCRETIZATION DISCREPANCY, not random
+  # measurement noise. A 5% margin therefore sits inside that discrepancy: the
+  # rank order between rank 1 and rank 2 would not be reliable ground truth.
+  # 1.10 moves the boundary above it. The cost is about 13% fewer valid samples
+  # and roughly 1.8x more samples correctly classified as ambiguous, which is the
+  # intended trade: ambiguous samples are discarded, not guessed.
+  ratio_margin: 1.10
+  ratio_margin_candidates: [1.05, 1.10, 1.15]
+  largest:
+    # A border-truncated component has an unreliable area, and a suspected
+    # merged blob is not one building. Tiny components are still fine as the
+    # LARGEST component, so 'tiny' is not an exclusion here.
+    exclude_touches_image_border: true
+    exclude_suspected_large_merge: true
+    exclude_tiny_component: false
+  smallest:
+    # Symmetric on border/merge, but a tiny component must NOT be allowed to be
+    # the 'smallest building': that would select rasterization noise.
+    exclude_touches_image_border: true
+    exclude_suspected_large_merge: true
+    exclude_tiny_component: true
+
+# -----------------------------------------------------------------------------
+# Per-relation eligibility
+#
+# A single global 'geometry_valid' flag is deliberately NOT applied to every
+# relation. Tile-relative directions tolerate border truncation; magnitude
+# relations do not. See docs/relation_definitions.md.
+# -----------------------------------------------------------------------------
+eligibility:
+  left_of:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  right_of:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  above:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  below:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  nearest:
+    # FROZEN BORDER POLICY.
+    #
+    # `nearest` is measured with boundary_distance, so a component clipped by the
+    # tile edge has an INCOMPLETE boundary. Both the distance from such a
+    # component and the ordering of distances around it are unreliable.
+    #
+    # Therefore BOTH the anchor and the target must be free of border
+    # truncation. An earlier version allowed an ineligible anchor (reasoning that
+    # a human may ask about a clipped building), which contradicted the fact that
+    # the metric itself is unreliable for that component.
+    #
+    # This does NOT change the tile-relative policy for
+    # leftmost / rightmost / topmost / bottommost, which still accept border
+    # components. See docs/relation_definitions.md.
+    reject_touches_image_border: true
+    reject_touches_image_border_anchor: true
+    reject_suspected_large_merge: true
+    reject_tiny_component: true
+    min_valid_components: 2
+  leftmost:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  rightmost:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  topmost:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  bottommost:
+    reject_touches_image_border: false
+    reject_suspected_large_merge: false
+    reject_tiny_component: false
+    min_valid_components: 1
+  largest:
+    reject_touches_image_border: true
+    reject_suspected_large_merge: true
+    reject_tiny_component: false
+    min_valid_components: 2
+  smallest:
+    reject_touches_image_border: true
+    reject_suspected_large_merge: true
+    reject_tiny_component: true
+    min_valid_components: 2

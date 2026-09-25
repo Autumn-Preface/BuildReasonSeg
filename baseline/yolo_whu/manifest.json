@@ -1,0 +1,236 @@
+{
+  "schema_version": "1.0",
+  "baseline_name": "YOLOv8m-seg-WHU",
+  "role": "baseline_only",
+  "frozen_at": "2026-08-04",
+  "frozen_by": "Task 1 - Project Foundation + Baseline Freeze",
+
+  "_path_convention": "All paths below are project-relative and written with forward slashes. They are resolved from this file's directory (baseline/yolo_whu/). Fields whose key ends in '_historical_absolute' are recorded for provenance only and MUST NOT be loaded by any program.",
+
+  "source_project": {
+    "path": "../../../WHU_Building_Segment",
+    "kind": "legacy inline copy inside this workspace",
+    "relation_to_this_repo": "sibling of this repository's root; read-only; never modified by this project",
+    "source_project_historical_absolute": "C:/D/resources/project/WHU_Building_Segment",
+    "note": "The historical absolute path is the root from which the training run was originally executed; it is recorded from args.yaml 'save_dir'. The workspace copy at ../../../WHU_Building_Segment was verified byte-identical to the historical root for all non-dataset core files during the Task 1 audit."
+  },
+
+  "dataset_source": {
+    "yolo_format_path": "../../../WHU_Building_Segment/dataset/WHU_YOLO_dataset",
+    "ground_truth_raster_path": null,
+    "ground_truth_raster_status": "unconfirmed_recorded_outside_workspace",
+    "ground_truth_raster_historical_absolute": "C:/D/resources/Satellite dataset II (East Asia)/1. The cropped image data and raster labels",
+    "ground_truth_raster_note": "Read-only geometry GT source. Value is null because the path is NOT confirmable from within this workspace and contains a non-ASCII character that is not byte-stable in this record. Referenced by ../../../WHU_Building_Segment/scripts/mask_to_yolo.py.",
+    "splits": {
+      "train": { "images": 2508, "labels": 2508, "images_total_bytes": 1950200830, "labels_total_bytes": 30695290 },
+      "val":   { "images": 627,  "labels": 627,  "images_total_bytes": 487831670,  "labels_total_bytes": 8710898  },
+      "test":  { "images": 903,  "labels": 903,  "images_total_bytes": 714535770,  "labels_total_bytes": 11951639 }
+    },
+    "image_format": "tif",
+    "image_mode": "RGB",
+    "image_size": [512, 512],
+    "image_dtype": "uint8",
+    "label_format": "YOLO polygon instance labels, one polygon per line: '<class_id> x1 y1 x2 y2 ...' with normalized coordinates",
+    "num_classes": 1,
+    "class_names": ["building"],
+    "total_instances": 36926,
+    "val_derivation": "val is a random 20% subset of the original WHU train pool (VALIDATION_RATIO = 0.2, RANDOM_SEED = 42); test is the original WHU test set",
+    "instance_definition": "one connected component of the binary raster label (derived via cv2.findContours with RETR_EXTERNAL)"
+  },
+
+  "model": {
+    "architecture": "YOLOv8m-seg",
+    "model_class": "SegmentationModel",
+    "task": "segment",
+    "checkpoint_format_version": "8.4.67",
+    "pretrained_weights": {
+      "path": "../../../WHU_Building_Segment/weights/yolov8m-seg.pt",
+      "sha256": "51FA7E5EF385EFA6D5B1D8E31B73399BE6ED5D7CA71BDA4BD4B2794BB445C4F4",
+      "size_bytes": 54921020,
+      "origin": "official COCO-seg pretrained, nc=80"
+    }
+  },
+
+  "checkpoint": {
+    "path": "../../../WHU_Building_Segment/runs/segment/logs/whu_building_v1/weights/best.pt",
+    "sha256": "D9A6A65B7E0819CE4ECBBD9D44A5C8F9DCD2E60EA78203BA8FDF90BA6AAA1F91",
+    "size_bytes": 54835548,
+    "not_copied": true,
+    "not_copied_reason": "Checkpoints are intentionally not duplicated into this repository; this manifest points at the frozen legacy location instead.",
+    "sibling_last_checkpoint": {
+      "path": "../../../WHU_Building_Segment/runs/segment/logs/whu_building_v1/weights/last.pt",
+      "sha256": "E1F23388376B9231A9D74774A9D2D772E4B66EBAA855B6D60236976388A8BF74",
+      "size_bytes": 54835548,
+      "note": "Same size as best.pt but a DIFFERENT sha256. An earlier audit incorrectly stated these two files were byte-identical; corrected here."
+    },
+    "checkpoint_metadata": {
+      "nc": 1,
+      "names": { "0": "building" },
+      "recorded_epoch": -1
+    }
+  },
+
+  "training": {
+    "epochs": 100,
+    "epochs_recorded_in_results_csv": 100,
+    "patience": 100,
+    "early_stopping_effective": false,
+    "batch": 16,
+    "imgsz": 640,
+    "device": "0",
+    "seed": 0,
+    "deterministic": true,
+    "workers": 8,
+    "optimizer": "auto",
+    "lr0": 0.01,
+    "lrf": 0.01,
+    "momentum": 0.937,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "cos_lr": false,
+    "amp": true,
+    "freeze": null,
+    "pretrained": true,
+    "close_mosaic": 10,
+    "overlap_mask": true,
+    "mask_ratio": 4,
+    "total_training_time_seconds": 4674.74,
+    "args_file": "run_record/args.yaml",
+    "results_file": "run_record/results.csv"
+  },
+
+  "metrics": {
+    "evaluation_split_for_these_numbers": "val",
+    "test_set_metrics_available": false,
+    "test_set_metrics_reason": "No quantitative test evaluation was ever run. The 903 files in runs/segment/predict/ are inference visualizations only, not a metric computation.",
+    "best_epoch_mask_mAP50": 0.84373,
+    "best_epoch_mask_mAP50_epoch": 44,
+    "best_epoch_mask_mAP50_95": 0.46655,
+    "best_epoch_mask_mAP50_95_epoch": 31,
+    "best_epoch_box_mAP50_95": 0.52396,
+    "best_epoch_box_mAP50_95_epoch": 52,
+    "final_epoch": {
+      "epoch": 100,
+      "box_precision": 0.81787,
+      "box_recall": 0.77094,
+      "box_mAP50": 0.81416,
+      "box_mAP50_95": 0.49151,
+      "mask_precision": 0.82810,
+      "mask_recall": 0.77045,
+      "mask_mAP50": 0.80693,
+      "mask_mAP50_95": 0.43388,
+      "train_box_loss": 0.87616,
+      "train_seg_loss": 1.32543,
+      "train_cls_loss": 0.42968,
+      "train_dfl_loss": 1.00771,
+      "train_sem_loss": 0.0
+    }
+  },
+
+  "environment": {
+    "status": "confirmed_by_interrogating_the_existing_environment",
+    "python": "3.10.20",
+    "python_executable": "conda env 'yolo_sam_env'",
+    "torch": "2.13.0+cu132",
+    "cuda_build": "13.2",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "ultralytics": "8.4.67",
+    "ultralytics_install_kind": "editable_install_pointing_outside_workspace",
+    "opencv": "5.0.0",
+    "numpy": "2.2.6",
+    "pillow": "12.3.0",
+    "tqdm": "4.70.0",
+    "transformers_installed": false,
+    "clip_installed": false,
+    "timm_installed": false,
+    "sam2_installed": false,
+    "segment_anything_installed": true
+  },
+
+  "provenance": {
+    "confirmation_status": "user_confirmed",
+    "_disclaimer": "The source of this provenance is an explicit statement by the project owner, NOT automatic verification from the checkpoint or the source code. The two 'independently_verified' items below were read out of the artefacts themselves. Everything under 'user_confirmed' is recorded as asserted and is not independently reproduced here.",
+    "user_confirmed": {
+      "statement": "The baseline is official pretrained YOLO weights fine-tuned on a subset of the WHU Building Dataset, specifically the 'Satellite dataset II (East Asia)' cropped image data and raster labels.",
+      "source": "user_confirmed"
+    },
+    "independently_verified": {
+      "pretrained_weights_origin": {
+        "value": "official COCO-pretrained segmentation weights, nc=80",
+        "source": "checkpoint_inspection",
+        "evidence": "weights/yolov8m-seg.pt loads as SegmentationModel with nc=80 and the 80 COCO class names, date 2023-01-04."
+      },
+      "dataset_identity": {
+        "value": "WHU Building Dataset, 'Satellite dataset II (East Asia)', cropped image data and raster labels; split into 4038 tiles of 512x512",
+        "source": "legacy_conversion_script",
+        "evidence": "scripts/mask_to_yolo.py lines 11-12 name the source and output roots; the derived YOLO dataset contains 4038 image/label pairs."
+      }
+    }
+  },
+
+  "known_issues": [
+    {
+      "id": "KI-01",
+      "severity": "high",
+      "issue": "The baseline depends on an EDITABLE install of ultralytics that resolves OUTSIDE this project.",
+      "detail": "The editable finder maps the 'ultralytics' package to a mutable external source directory. The baseline is therefore not portable and not reproducible from this repository alone.",
+      "constraint": "The proposed method MUST NOT depend on this mutable external fork."
+    },
+    {
+      "id": "KI-02",
+      "severity": "high",
+      "issue": "No quantitative test-set metrics exist.",
+      "detail": "save_json was false, so no COCO/test metrics were produced. Only 903 visualization images exist.",
+      "impact": "Any published number must come from a proper held-out test protocol that has not yet been run."
+    },
+    {
+      "id": "KI-03",
+      "severity": "medium",
+      "issue": "The logged sem_loss column is identically 0 for all 100 epochs.",
+      "detail": "The external fork defines a fifth loss term (semantic BCE+Dice). It only activates when the model's proto output is a tuple carrying a semantic prediction, which is not the case for this configuration.",
+      "impact": "The run used only the 4 standard YOLO losses (box, seg, cls, dfl). Do not claim semantic supervision."
+    },
+    {
+      "id": "KI-04",
+      "severity": "medium",
+      "issue": "Instance definition is connected-component based and touching buildings are irreversibly merged.",
+      "detail": "Original raster labels are pure binary (values {0,255}). cv2.findContours with RETR_EXTERNAL was used, so any mutually touching buildings became a single instance. Measured: 2.601% of instance pairs have contour distance <= 1.5 px; the single largest instance covers 49.99% of its 512x512 tile.",
+      "impact": "overlap / contain / inside relations are structurally empty (0 of 25454 sampled pairs); strict-touch adjacency is unreliable."
+    },
+    {
+      "id": "KI-05",
+      "severity": "medium",
+      "issue": "patience (100) equals epochs (100), disabling early stopping.",
+      "impact": "Mask mAP50 peaked at 0.84373 around epoch 44 and drifted down to 0.80693 by epoch 100, so the final checkpoint is not the best-performing one by that metric."
+    },
+    {
+      "id": "KI-06",
+      "severity": "medium",
+      "issue": "val is a random 20% subset of the original train pool rather than a geographically disjoint split.",
+      "impact": "Risk of scene-level leakage between train and val. Acceptable for a baseline, but a stronger split must be used for reasoning-query evaluation."
+    },
+    {
+      "id": "KI-07",
+      "severity": "low",
+      "issue": "A COCO detection checkpoint (yolo26n.pt, nc=80) sits at the legacy project root.",
+      "detail": "It is a DetectionModel trained for 245 epochs on COCO and is unrelated to building segmentation; it was not used by the recorded run.",
+      "impact": "Footgun only; it is not part of this baseline."
+    },
+    {
+      "id": "KI-08",
+      "severity": "low",
+      "issue": "opencv.imread fails on the legacy absolute dataset path (non-ASCII characters), returning None.",
+      "detail": "The existing conversion script already contains a Pillow fallback that handles this.",
+      "impact": "Any future script touching the raw raster dataset must use the Pillow path or a re-encoded source."
+    },
+    {
+      "id": "KI-09",
+      "severity": "low",
+      "issue": "The frozen run_record/args.yaml contains one absolute path (save_dir on line 110).",
+      "detail": "It was written by Ultralytics during the original run and is retained so that the record stays byte-identical to the legacy source. No program in this repository reads args.yaml.",
+      "impact": "Cosmetic only. Any absolute-path audit of this repository will flag exactly this one line; it is an allowed exception, documented in baseline/yolo_whu/README.md section 7.",
+      "allowed_exception": true
+    }
+  ]
+}

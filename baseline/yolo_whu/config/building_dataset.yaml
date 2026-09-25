@@ -1,0 +1,12 @@
+# 数据集配置文件
+# 路径使用相对路径，这样项目可以整体移动而不失效
+
+path: ./dataset/WHU_YOLO_dataset  # 数据集根目录（相对于项目根目录）
+
+train: images/train               # 训练集图片路径（相对于path）
+val: images/val                   # 验证集图片路径（相对于path）
+test: images/test                 # 测试集图片路径（相对于path）
+
+# 类别配置
+nc: 1                             # 类别数量（只有建筑物）
+names: ['building']               # 类别名称

@@ -1,0 +1,155 @@
+﻿# ---------------------------------------------------------------------------
+# BuildReasonSeg .gitignore
+#
+# Design intent: ignore BINARIES, RUN OUTPUTS, CACHES and GENERATED ARTIFACTS.
+# Never ignore: configs, annotation schemas (.jsonl), docs, source code, tests,
+# or small evaluation result tables.
+#
+# ORDER MATTERS: git applies the LAST matching rule, so the "MUST stay tracked"
+# block is deliberately placed at the very bottom of this file.
+# ---------------------------------------------------------------------------
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+.conda/
+*.conda
+
+# --- Testing / type / lint caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Editors / OS ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Model weights & checkpoints ---
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.engine
+*.tflite
+*.h5
+*.pb
+weights/
+checkpoints/
+checkpoint/
+
+# --- Training runs & logs ---
+runs/
+outputs/
+lightning_logs/
+tb_logs/
+wandb/
+mlruns/
+*.log
+logs/
+
+# --- Generated predictions / visualizations ---
+predictions/
+preds/
+viz/
+visualizations/
+renders/
+*_pred.jpg
+*_pred.png
+*_vis.jpg
+*_vis.png
+
+# --- Dataset image binaries ---
+# Dataset CODE and schemas are tracked; image/mask binaries are not.
+# WHU images are never copied into this repo in the first place.
+*.tif
+*.tiff
+*.jpg
+*.jpeg
+*.bmp
+*.webp
+*.npy
+*.npz
+*.hdf5
+*.lmdb
+*.bin
+*.cache
+dataset_cache/
+caches/
+
+# --- Generated annotation binaries (bulk) ---
+# The component index maps and the polygon provenance archives are derived
+# artifacts: regenerable from the legacy labels via
+# scripts/build_whu_components.py. They are therefore not tracked.
+# The JSONL metadata, the manifest and docs/data_representation.md ARE tracked.
+datasets/**/masks/
+datasets/**/instances/
+datasets/**/components/
+datasets/**/polygons/
+
+# --- Temporary files ---
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+.audit_tmp/
+scratch/
+sandbox/
+
+# ---------------------------------------------------------------------------
+# MUST STAY TRACKED -- intentionally last so these rules win.
+# These are the frozen baseline record and the core project documentation.
+# ---------------------------------------------------------------------------
+!baseline/**/README.md
+!baseline/**/manifest.json
+!baseline/**/config/**
+!baseline/**/run_record/**
+!baseline/**/plots/**
+!baseline/**/plots/*.png
+!docs/**
+!configs/**
+!tests/**
+!spatial_reasoning/**
+!models/**
+!training/**
+!evaluation/**
+!scripts/**
+!*.yaml
+!*.yml
+!*.jsonl
+!evaluation/*.csv
+!evaluation/*.md
+!evaluation/*.json
+
+# Local generated dataset records
+datasets/whu/metadata/*.jsonl
+datasets/build_spatial_reason/**/*.jsonl
