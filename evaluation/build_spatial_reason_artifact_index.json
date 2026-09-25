@@ -1,0 +1,67 @@
+{
+  "_doc": "Canonical artifact index for BuildSpatialReason. Single declared source of truth for version, counts and canonical paths. scripts/check_artifact_consistency.py enforces two-way agreement between this file, datasets/build_spatial_reason/v0.1.1/{manifest,statistics}.json, the evaluation quality JSON and every Markdown file carrying an ARTIFACT-FACTS block, so no copy of these numbers can drift unnoticed.",
+  "index_version": "1.0",
+  "dataset": {
+    "name": "BuildSpatialReason",
+    "version": "v0.1.1",
+    "project_name": "BuildReasonSeg",
+    "semantic_policy_version": "1.0",
+    "generator_version": "v0.1.1",
+    "template_version": "v0.1",
+    "relation_config_version": "spatial_relations_v1",
+    "generation_seed": 20260804
+  },
+  "counts": {
+    "total_samples": 25229,
+    "by_split": {
+      "train": 15592,
+      "val": 3884,
+      "test": 5753
+    },
+    "by_level": {
+      "1": 17275,
+      "2": 5036,
+      "3": 2918
+    },
+    "level2": {
+      "reference_to_nearest": 2275,
+      "reference_to_direction": 2761,
+      "total_level2": 5036
+    },
+    "level3": {
+      "trivial": 1256,
+      "nontrivial": 1662,
+      "total": 2918
+    }
+  },
+  "canonical_paths": {
+    "manifest": "datasets/build_spatial_reason/v0.1.1/manifest.json",
+    "statistics": "datasets/build_spatial_reason/v0.1.1/statistics.json",
+    "quality_json": "evaluation/build_spatial_reason_v0.1.1_quality.json",
+    "sample_pack": "evaluation/build_spatial_reason_v0.1.1_samples",
+    "quality_doc": "docs/build_spatial_reason_v0.1.1_quality_audit.md",
+    "dataset_doc": "docs/build_spatial_reason_v0.1.1.md",
+    "consistency_json": "evaluation/build_spatial_reason_v0.1.1_consistency.json"
+  },
+  "deprecated_paths": [
+    "evaluation/build_spatial_reason_v011_quality.json",
+    "evaluation/build_spatial_reason_v011_samples"
+  ],
+  "facts_documents": [
+    "README.md",
+    "handoff/FROM_DSH.md",
+    "handoff/PROJECT_STATE.md",
+    "docs/build_spatial_reason_v0.1.1.md",
+    "docs/build_spatial_reason_v0.1.1_quality_audit.md"
+  ],
+  "provenance_required_files": [
+    "spatial_reasoning/semantic_policy.py",
+    "spatial_reasoning/annotator.py",
+    "spatial_reasoning/templates.py",
+    "spatial_reasoning/relations.py",
+    "spatial_reasoning/geometry.py",
+    "spatial_reasoning/thresholds.py",
+    "spatial_reasoning/component_quality.py",
+    "scripts/build_spatial_reason.py"
+  ]
+}

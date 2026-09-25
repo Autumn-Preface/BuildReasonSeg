@@ -1,514 +1,476 @@
-# TO_DSH — Task 5B: BuildSpatialReason-v0.1.1 Corrective Regeneration & Acceptance Audit
+# TO_DSH — Task 5C: Acceptance Audit Hardening & Artifact Consistency
 
-> Status: ACTIVE
+> Status: **ACTIVE**
+>
 > Repository: `BuildReasonSeg`
-> Goal: create and validate **BuildSpatialReason-v0.1.1** as the corrected successor to frozen v0.1.
+>
+> Goal: harden the acceptance audit for **BuildSpatialReason-v0.1.1**, fix stale/inconsistent repository artifacts, and establish a genuinely independent semantic oracle before Task 5.5.
+>
+> Important: **Do not regenerate the v0.1.1 JSONL dataset unless the independent oracle finds a real data defect.**
 
 ## 0. User-facing language
 
-Only the DSH web/chat output shown to the user must be Chinese:
+Only the DSH web/chat output shown to the user must be in **Chinese**:
 - progress summaries;
-- permission/escalation explanations;
 - warnings;
+- permission explanations;
+- blocker explanations;
 - final summary.
 
-Commands, code identifiers, paths, logs, field names may remain English.
+Commands, paths, code identifiers, raw logs, and field names may remain English.
 
-`handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md` may remain English because they are primarily for ChatGPT review.
+`handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md` may remain English.
 
 ## 1. Full-access boundary
 
-DSH is running with Full Access only because the normal workspace-write sandbox cannot start on this Windows host. Full Access is a technical workaround, not broader task authorization.
+DSH is still running with Full Access only because the normal workspace-write sandbox cannot start correctly on this Windows host.
+
+This does **not** expand the task scope.
 
 Allowed writes:
 - only inside `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\`
-- ordinary system temp directories if required by the runtime.
+- ordinary runtime temp directories when technically required.
 
-Allowed read-only external access:
-- `..\WHU_Building_Segment\` only when existing code needs legacy source images, labels, or frozen baseline evidence.
+Allowed external reads:
+- `..\WHU_Building_Segment\` may be read only when required for frozen legacy/source verification.
 
-Allowed network/Git:
-- `git status`, `diff`, `log`, `add`, `commit`, `fetch`, `pull`, `push origin main`.
+Allowed Git/network operations:
+- `git status`
+- `git diff`
+- `git log`
+- `git add`
+- `git commit`
+- `git fetch`
+- `git pull`
+- `git push origin main`
 
 Forbidden:
-- modifying anything outside `BuildReasonSeg`;
+- modifying files outside `BuildReasonSeg`;
 - modifying `../WHU_Building_Segment/`;
-- package installation (`pip`, `conda`, `npm`, etc.);
-- downloading models, datasets, checkpoints, scripts, or external code;
+- installing packages;
+- downloading models, datasets, scripts, checkpoints, or external code;
 - changing system settings, registry, PATH, shell profiles;
 - deleting unrelated files;
-- accessing unrelated user directories;
-- model training;
-- Task 5.5 or later tasks.
+- starting model training;
+- starting Task 5.5;
+- starting any later MLLM/model task.
 
-If a required action conflicts with these limits, do not perform it. Explain the blocker in Chinese in the DSH UI and record it in `handoff/FROM_DSH.md`.
+If any required action conflicts with these limits, stop that action and explain the blocker in Chinese in the DSH UI.
 
-## 2. v0.1 freeze
+## 2. Dataset freeze
 
-`datasets/build_spatial_reason/v0.1/` is immutable historical evidence.
+Treat both dataset versions as frozen historical artifacts:
 
-You may read it but must not modify, regenerate, rename, overwrite, or delete it.
+- `datasets/build_spatial_reason/v0.1/`
+- `datasets/build_spatial_reason/v0.1.1/`
 
-All corrected output must go to:
+Do **not** modify or regenerate any JSONL file in either directory during this task.
 
-`datasets/build_spatial_reason/v0.1.1/`
+Only if the new independent semantic oracle finds a real defect in v0.1.1 may you stop and report that a regeneration task is required.
 
-Verify at the end that v0.1 is unchanged.
+Do not silently repair data in Task 5C.
 
-## 3. Task 5 defects to correct
+## 3. Known inconsistencies to fix
 
-Historical audit findings:
-- v0.1 total: 32,284;
-- target recomputation: 32,284/32,284;
-- hidden semantic eligibility defects:
-  - largest 2,180;
-  - smallest 4,246;
-  - nearest 1,058;
-  - Level-3 nearest 291;
-- previous report said 7,086 unique records hit >=1 semantic defect;
-- reasoning text had component-ID leakage in 100% of records;
-- instructions had 0 ID leakage;
-- Level-2 Type-A was reported as 8,700 but true v0.1 Type A was 4,707 because 3,993 Level-3 records were accidentally included;
-- references appeared in distractors for 12,918 records;
-- scene-level leakage remains unverified.
+The previous Task 5B commit produced a valid-looking v0.1.1 dataset, but several repository artifacts are inconsistent.
 
-These numbers are historical evidence only. Do NOT hard-code rejection IDs or expected v0.1.1 counts.
+### 3.1 Stale counts in handoff/state docs
 
-## 4. Core semantic policy
+Machine-readable sources currently indicate the authoritative v0.1.1 values:
 
-Natural-language semantics are defined over **all visible components**, not a hidden eligibility-filtered subset.
+- total = 25,229
+- Level 2 total = 5,036
+- Level-2 Type A = **2,275**
+- Level-2 Type B = **2,761**
+- Level 3 total = 2,918
+- Level-3 trivial = **1,256**
+- Level-3 nontrivial = **1,662**
 
-Eligibility may reject a sample; it may never silently change the answer.
+However, `handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md` still contain stale values such as:
 
-### 4.1 largest / smallest
+- Type A 2,272 / Type B 2,764
+- trivial 1,261 / nontrivial 1,657
 
-For every sample using `largest` or `smallest`, including when used only as a Level-2/3 reference:
+Fix all stale references so repository documents agree with authoritative machine-readable artifacts.
 
-1. compute the global semantic extreme over all visible components:
-   - largest = global argmax of rasterized `area_px`;
-   - smallest = global argmin of rasterized `area_px`;
-2. apply the frozen size ambiguity/margin rule;
-3. if that exact semantic extreme is eligible, it may be used;
-4. if it is excluded by border/tiny/merge quality logic, discard the query;
-5. never substitute the second-ranked eligible component;
-6. if ambiguous under frozen `ratio_margin = 1.10`, discard.
+### 3.2 Output path mismatch
 
-Do not change frozen relation thresholds.
+The validator currently converts:
 
-### 4.2 Level-2 reference -> nearest
+`v0.1.1 -> v011`
 
-For `largest_to_nearest` / `smallest_to_nearest`:
+and writes:
 
-1. get the semantic reference using 4.1;
-2. compute boundary distance from that reference to **all other visible components**;
-3. semantic nearest = closest visible component before nearest eligibility filtering;
-4. keep only if that exact nearest is nearest-eligible and passes the frozen nearest margin/ambiguity rule;
-5. otherwise discard;
-6. never replace it with a farther eligible component.
+- `evaluation/build_spatial_reason_v011_quality.json`
+- `evaluation/build_spatial_reason_v011_samples/`
 
-### 4.3 Level-2 reference -> direction
+while docs refer to:
 
-For `largest_to_left_of`, `smallest_to_above`, etc.:
+- `evaluation/build_spatial_reason_v0.1.1_quality.json`
+- `evaluation/build_spatial_reason_v0.1.1_samples/`
 
-- reference must first satisfy 4.1;
-- evaluate the frozen direction predicate over visible components;
-- keep only when the intended uniqueness/ambiguity conditions hold;
-- never replace an invalid semantic reference.
+Unify this.
 
-### 4.4 Level-3 reference -> direction -> nearest
+Preferred canonical naming:
 
-For `largest_to_{direction}_to_nearest`:
+- `evaluation/build_spatial_reason_v0.1.1_quality.json`
+- `evaluation/build_spatial_reason_v0.1.1_samples/`
 
-1. obtain true global semantic largest;
-2. if invalid under 4.1, discard;
-3. evaluate the frozen direction predicate over all visible components;
-4. form the complete direction-valid set;
-5. compute the true nearest within that full set by frozen boundary distance;
-6. keep only if that exact nearest is nearest-eligible and passes the frozen nearest ambiguity rule;
-7. otherwise discard;
-8. never remove a closer ineligible component and choose the second-nearest.
+Do not leave duplicate stale artifacts unless clearly marked deprecated and intentionally preserved.
 
-## 5. Correct generator, do not just post-filter v0.1
+### 3.3 Missing semantic policy provenance
 
-Preferred implementation:
-- change generator logic so semantic validity is checked before final sample acceptance/quota selection;
-- deterministically generate v0.1.1 from source component geometry and frozen relation rules;
-- do not load v0.1 and delete a hard-coded list of sample IDs.
+`spatial_reasoning/semantic_policy.py` is now a critical generator/validator dependency but is not included in `manifest.json -> generator_file_sha256`.
 
-The corrected generator itself must become the source of truth.
+Add it to the provenance hash set.
 
-## 6. Version/config
+If other newly critical source files also materially affect generation and are missing, document and include them if appropriate.
 
-Create:
+### 3.4 Stale wording in manifest/docs
 
-`configs/build_spatial_reason_v0.1.1.yaml`
+Update v0.1-era wording that is now inaccurate, including examples such as:
+- template selection being “implicitly recorded” when `template_id` is now explicit;
+- references to “Current v0.1” inside v0.1.1 limitations/docs;
+- any other version-specific wording that is clearly stale.
 
-Generate under:
+Do not rewrite documents broadly; keep the patch narrow.
 
-`datasets/build_spatial_reason/v0.1.1/`
+## 4. Main hardening requirement: independent semantic oracle
 
-Include provenance/version fields sufficient to identify:
-- dataset version;
-- generator version;
-- relation config version;
-- component representation version;
-- semantic visibility policy version.
+This is the core of Task 5C.
 
-Recommended:
-`semantic_visibility_policy_version: "1.0"`
+The current generator and validator both depend on:
 
-Do not rename the project, WHU source dataset, or frozen relation config.
+`spatial_reasoning/semantic_policy.py`
 
-## 7. ID-free natural-language reasoning
+That is useful for consistency, but not sufficiently independent for a final acceptance proof.
 
-Structured `reasoning_steps` may keep numeric component IDs for machine verification.
+Create a second implementation used **only for audit/testing** that does **not import or call**:
 
-But these natural-language fields must contain zero internal IDs:
-- `reasoning_zh`
-- `reasoning_en`
+- `semantic_policy.py`;
+- generator semantic helper functions that internally call it.
 
-Forbidden examples:
-- `component 3`
-- `component 12`
-- `组件3`
-- `构件 7`
+Suggested file:
 
-Use role-based prose, e.g.:
-
-Chinese:
-`首先找到图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择最近的区域作为目标。`
-
-English:
-`First identify the largest building region as the reference. Then identify the building regions to the right of the reference. Finally compare their boundary distances to the reference and select the nearest region as the target.`
-
-The prose should explain the operation, not expose annotation IDs.
-
-## 8. Explicit template_id
-
-Add per-sample:
-
-`template_id`
-
-Requirements:
-- deterministic;
-- same semantic ID for zh/en pair;
-- validator confirms rendered zh/en matches recorded `template_id`;
-- keep existing `template_version` if useful.
-
-## 9. Distractor policy
-
-Adopt this rule:
-
-`distractor_component_ids` excludes both:
-- target;
-- every explicit reference component.
-
-Reference is reasoning context, not a target distractor.
-
-Candidate sets used internally for reasoning are separate and may retain algorithmically necessary members.
-
-## 10. Fix Level-2 statistics
-
-Type A:
-- `level == 2`
-- and query is `*_to_nearest`
-
-Type B:
-- `level == 2`
-- and one-hop reference->direction query.
-
-Add invariant:
-
-`level2.reference_to_nearest + level2.reference_to_direction == by_level["2"]`
-
-Generation/audit must fail if false.
-
-## 11. Fix validator counter semantics
-
-Do not reuse the ambiguous old field `leak_reasoning_samples`.
-
-Use:
-- `leak_reasoning_records`
-- `leak_reasoning_fields`
-- `leak_reasoning_mentions`
-
-Acceptance target for all three: 0.
-
-Also add machine-readable:
+`spatial_reasoning/semantic_oracle.py`
+
+or:
+
+`evaluation/semantic_oracle.py`
+
+The name is flexible, but the separation must be clear.
+
+### Oracle requirements
+
+The oracle must independently implement the semantics directly from:
+- source component geometry;
+- component quality flags;
+- frozen relation thresholds/config;
+- direct geometry functions;
+- frozen direction predicate definition.
+
+It must independently resolve:
+1. `largest`
+2. `smallest`
+3. reference -> nearest
+4. reference -> direction
+5. reference -> direction -> nearest
+
+### Critical independence rule
+
+The oracle may reuse low-level neutral primitives such as:
+- component metadata structures;
+- `geometry.py` distance/area helpers;
+- threshold config loading;
+- component quality classification;
+- low-level direction predicate evaluation if it is already frozen and not part of semantic acceptance policy.
+
+But it must **not** call:
+- `SP.resolve_size_extreme`
+- `SP.resolve_nearest`
+- `SP.direction_candidates_over_visible`
+- `SP.admissible_nearest_ids`
+- any wrapper that simply delegates to these.
+
+The point is to have two implementations:
+- production semantic policy;
+- independent audit oracle.
+
+## 5. Full-dataset oracle audit
+
+Run the independent oracle over **all 25,229 v0.1.1 records**.
+
+For every record, recompute:
+- semantic reference;
+- direction candidate set where applicable;
+- semantic nearest where applicable;
+- final target;
+- ambiguity/admissibility decision.
+
+Compare against the stored record.
+
+Report:
+- total checked;
+- exact target matches;
+- semantic-program mismatches;
+- candidate-set mismatches;
+- reference mismatches;
+- ambiguity-policy mismatches.
+
+Acceptance target:
+- **25,229 / 25,229 exact semantic target match**
+- **0 semantic mismatches**
+
+If any mismatch is found:
+- verdict must be `FAIL_REQUIRES_REVISION`;
+- do not modify JSONL;
+- stop before Task 5.5;
+- list exact sample IDs and root cause.
+
+## 6. Independent hidden-eligibility audit
+
+Using the independent oracle, re-check that no stored v0.1.1 sample violates visible-component semantics.
+
+Machine-readable counts must be zero:
+- `hidden_eligibility_largest`
+- `hidden_eligibility_smallest`
+- `hidden_eligibility_nearest`
+- `hidden_eligibility_level3_nearest`
 - `semantic_violation_unique_records`
-- `semantic_clean_records`
 
-Do not derive the unique semantic union only in prose.
+Do not derive these by calling the production semantic policy.
 
-## 12. Backward safety
+## 7. Repository consistency gate
 
-Refactor narrowly so v0.1.1 uses the new semantic policy without touching v0.1.
-
-Preserve:
-- deterministic seed behavior;
-- frozen relation thresholds;
-- current component representation.
-
-If exact historical v0.1 regeneration becomes awkward, do not risk v0.1. It is sufficient that on-disk v0.1 stays frozen and current code correctly generates v0.1.1.
-
-Document compatibility limitations if any.
-
-## 13. ADR/docs
-
-Update `docs/architecture_decisions.md` with a new ADR (e.g. ADR-010) covering:
-
-1. natural-language semantic universe = all visible components;
-2. eligibility may reject a sample but may not silently change its answer;
-3. quality/GT geometry remains annotation/supervision logic, not inference input;
-4. reference components are excluded from distractors;
-5. natural-language reasoning is ID-free while structured fields retain IDs.
-
-Create/update:
-
-`docs/build_spatial_reason_v0.1.1.md`
-
-Include:
-- changes from v0.1;
-- frozen rules;
-- actual sample counts;
-- semantic policy;
-- known limitations.
-
-## 14. Regenerate v0.1.1
-
-Generate full:
-- `train.jsonl`
-- `val.jsonl`
-- `test.jsonl`
+Add a dedicated consistency checker/test that prevents future drift between:
 - `manifest.json`
 - `statistics.json`
+- quality JSON
+- `handoff/PROJECT_STATE.md`
+- `handoff/FROM_DSH.md`
+- version docs
+- expected evaluation artifact paths
 
-under `datasets/build_spatial_reason/v0.1.1/`.
+Preferred approach:
+- create `scripts/check_artifact_consistency.py`
+- add corresponding tests.
 
-Full JSONL files remain local/ignored by Git.
+At minimum verify machine-readable consistency for:
+- total count;
+- split counts;
+- level counts;
+- Level-2 Type A / Type B / total;
+- Level-3 trivial / nontrivial / total;
+- dataset version;
+- semantic policy version;
+- generator version;
+- evaluation quality path;
+- evaluation sample-pack path.
 
-Do NOT force final count to 32,284, 25,198, or any predetermined value. Let the corrected deterministic generator and quota logic determine it.
+For Markdown/handoff docs, avoid fragile full-text parsing if unnecessary. It is acceptable to verify key declared values and canonical paths through a small structured block or clearly delimited fields.
 
-Report actual counts.
+If useful, add a short machine-readable summary file used by docs/handoff generation rather than hard-coding counts repeatedly.
 
-## 15. Acceptance validator
+## 8. Canonical artifact paths
 
-Refactor validator/CLI so it explicitly supports v0.1.1, e.g.:
+After Task 5C, use exactly:
 
-`python scripts/validate_build_spatial_reason.py --version v0.1.1`
+- `evaluation/build_spatial_reason_v0.1.1_quality.json`
+- `evaluation/build_spatial_reason_v0.1.1_samples/`
+- `docs/build_spatial_reason_v0.1.1_quality_audit.md`
 
-Run on all v0.1.1 records.
+Update all references accordingly.
 
-Blocking counts that must be zero:
-- target recomputation failures;
-- hidden_eligibility_largest;
-- hidden_eligibility_smallest;
-- hidden_eligibility_nearest;
-- hidden_eligibility_level3_nearest;
-- instruction semantic mismatch;
-- reasoning component-ID leakage;
-- target in distractors;
-- reference in distractors;
-- missing/empty target mask;
-- template_id mismatch;
-- duplicate sample IDs;
-- structured-program errors.
+Remove or rename the old `v011` artifacts in the repository if safe.
 
-Required positive checks:
-- target recomputation = 100%;
-- template_id verification = 100%;
-- Type A + Type B = Level 2 total;
-- exact cross-split byte duplicate count = 0;
-- zh/en semantic parity = 100%;
-- v0.1 unchanged.
+Do not keep two competing quality JSONs that appear equally authoritative.
 
-Final v0.1.1 verdict may be:
-- `PASS`
-- `PASS_WITH_WARNINGS`
+## 9. Provenance hardening
 
-If `FAIL_REQUIRES_REVISION`, stop and do not proceed.
+Update:
 
-## 16. Scene-level leakage
+`datasets/build_spatial_reason/v0.1.1/manifest.json`
 
-If geographic/scene grouping still cannot be reconstructed:
+so `generator_file_sha256` includes:
 
-`scene_level_split_leakage = unverified`
+- `spatial_reasoning/semantic_policy.py`
 
-Do not claim absence and do not resplit WHU in this task.
+Also review whether the following materially affect generation and should be included if not already:
+- generator entrypoint;
+- annotator;
+- templates;
+- relations;
+- geometry;
+- thresholds;
+- component quality.
 
-## 17. Level-3 policy
+Do not over-expand provenance to unrelated files.
 
-Continue to distinguish:
-- trivial Level 3;
-- nontrivial Level 3.
+Then verify hashes match current repository contents.
 
-Recompute counts for v0.1.1.
+## 10. Test hardening
 
-Primary multi-hop metric should use nontrivial Level 3; trivial Level 3 should be reported separately.
+Add tests for at least:
+1. oracle never imports/calls `semantic_policy`;
+2. oracle largest matches direct area argmax semantics;
+3. oracle smallest matches direct area argmin semantics;
+4. oracle nearest uses all visible candidates before eligibility;
+5. oracle Level-3 nearest uses full direction-valid candidate set;
+6. full-dataset oracle target match;
+7. artifact consistency checker;
+8. canonical evaluation path naming;
+9. manifest provenance includes `semantic_policy.py`;
+10. v0.1 and v0.1.1 JSONL hashes remain unchanged.
 
-Do not delete trivial samples merely because they are trivial.
+Run the full existing suite plus the new tests.
 
-## 18. Visualization pack
-
-Create a compact pack under:
-
-`evaluation/build_spatial_reason_v0.1.1_samples/`
-
-Suggested:
-- 4 Level 1;
-- 6 Level 2;
-- 8 nontrivial Level 3;
-- 4 trivial Level 3;
-- representative warning cases if warnings remain;
-- `contact_sheet.png`.
-
-Candidate/component IDs may appear in audit overlays only, never in natural-language supervision.
-
-Do not claim full manual inspection unless actually done.
-
-## 19. Tests and execution report
-
-Add/update tests for at least:
-
-1. global largest is never silently replaced;
-2. global smallest is never silently replaced;
-3. nearest visible target is never replaced by farther eligible target;
-4. Level-3 nearest uses the full direction-valid set;
-5. semantic-invalid samples are rejected before acceptance;
-6. natural-language reasoning has no internal IDs;
-7. structured reasoning_steps may retain IDs;
-8. template_id stored and matches zh/en;
-9. reference excluded from distractors;
-10. target excluded from distractors;
-11. Level-2 Type-A + Type-B invariant;
-12. validator version parameterization;
-13. exact image-hash duplicate helper;
-14. deterministic regeneration on a representative subset;
-15. v0.1 remains unmodified where practical.
-
-Run the full existing test suite plus all new tests.
-
-`handoff/FROM_DSH.md` must explicitly record:
-- exact test command(s);
-- total collected;
+Final report must include:
+- exact test commands;
+- total tests/checks;
 - passed;
 - failed;
 - skipped;
-- exit code.
+- exit codes.
 
-Do not merely state “tests passed”.
+## 11. v0.1.1 frozen integrity
 
-## 20. Machine-readable audit output
+Record hashes for:
+- `train.jsonl`
+- `val.jsonl`
+- `test.jsonl`
 
-Create:
+before Task 5C changes.
+
+Verify the exact same hashes after Task 5C.
+
+Also verify v0.1 frozen hashes remain unchanged.
+
+If any JSONL hash changes, this task fails unless the user explicitly authorized regeneration, which they have not.
+
+## 12. Quality JSON update
+
+Canonical file:
 
 `evaluation/build_spatial_reason_v0.1.1_quality.json`
 
-Include at least:
+Add or preserve:
 - verdict;
 - total/split/level/query_type counts;
-- Level-2 Type-A/Type-B;
-- Level-3 trivial/nontrivial;
-- target recomputation checked/pass/fail;
-- hidden semantic counts;
-- semantic_violation_unique_records;
-- semantic_clean_records;
-- reasoning leakage records/fields/mentions;
-- distractor integrity;
+- Level-2 Type A / Type B;
+- Level-3 trivial / nontrivial;
+- production-policy recomputation result;
+- independent-oracle recomputation result;
+- hidden semantic counts from independent oracle;
+- reasoning leakage counts;
 - template_id integrity;
-- exact cross-split duplicates;
+- distractor integrity;
+- exact cross-split duplicate count;
+- v0.1 integrity;
+- v0.1.1 JSONL integrity;
 - scene-level leakage status;
-- test summary if practical.
+- consistency-check result.
 
-## 21. Handoff files
+Recommended new fields:
 
-Write full technical report to:
+```text
+independent_oracle:
+  checked
+  target_match
+  target_mismatch
+  candidate_set_mismatch
+  reference_mismatch
+  semantic_violation_unique_records
+```
 
-`handoff/FROM_DSH.md`
+## 13. Verdict
 
-It may remain English.
+Task 5C final verdict must be exactly one of:
+- `PASS`
+- `PASS_WITH_WARNINGS`
+- `FAIL_REQUIRES_REVISION`
 
-Suggested sections:
+Use `FAIL_REQUIRES_REVISION` if:
+- any independent-oracle target mismatch exists;
+- any independent hidden semantic violation exists;
+- any frozen JSONL hash changes;
+- critical artifact counts remain inconsistent;
+- critical provenance hashes are missing/mismatched.
+
+A documentation-only warning may result in `PASS_WITH_WARNINGS`, but all machine facts must agree before approval.
+
+## 14. Handoff files
+
+Update:
+- `handoff/FROM_DSH.md`
+- `handoff/PROJECT_STATE.md`
+
+These may remain English.
+
+They must use the final authoritative values from machine-readable artifacts.
+
+Do not manually preserve stale numbers.
+
+Recommended final sections in `FROM_DSH.md`:
 1. Verdict
-2. Scope / Safety Compliance
-3. Files Created / Modified
-4. Generator Changes
-5. Semantic Policy Changes
-6. v0.1.1 Counts
-7. v0.1 vs v0.1.1 Comparison
-8. Target Recomputation
-9. Hidden Eligibility Audit
-10. Reasoning Leakage Audit
-11. Template ID Audit
-12. Distractor Policy Audit
-13. Statistics Consistency
-14. Split / Duplicate Audit
-15. Level-3 Trivial / Nontrivial
-16. Visualization Pack
-17. Test Execution Summary
-18. Known Limitations
-19. Git Status / Commit / Push
-20. Recommended Next Task
+2. Files Modified
+3. Dataset Freeze Verification
+4. Canonical Artifact Paths
+5. Independent Oracle Design
+6. Full-Dataset Oracle Audit
+7. Hidden Semantic Audit
+8. Artifact Consistency Audit
+9. Provenance Audit
+10. Test Summary
+11. Remaining Limitations
+12. Git Commit / Push
+13. Ready for Task 5.5?
 
-Update `handoff/PROJECT_STATE.md` concisely. It may also remain English.
+## 15. Git commit and push
 
-## 22. Git commit/push for ChatGPT review
-
-ChatGPT will inspect the pushed repository directly.
-
-Commit and push all new:
-- source code;
-- configs;
-- tests;
-- docs/ADR;
-- v0.1.1 manifest/statistics;
-- quality JSON;
-- lightweight audit visualizations;
-- `handoff/FROM_DSH.md`;
-- `handoff/PROJECT_STATE.md`;
-- this `handoff/TO_DSH.md` if currently modified/uncommitted.
-
-Do NOT commit ignored full JSONL datasets, weights, checkpoints, or unrelated files.
+ChatGPT will review the pushed commit directly.
 
 Before staging:
 1. `git status --short`
-2. inspect changed files
-3. confirm no unrelated/large generated binaries are staged
-4. confirm no out-of-repo writes occurred.
+2. inspect all changed files;
+3. ensure no JSONL dataset file is modified/staged;
+4. ensure no weights/checkpoints/large unrelated files are staged;
+5. confirm no out-of-repo writes occurred.
 
 Recommended commit:
 
-`fix: regenerate BuildSpatialReason v0.1.1`
+`audit: harden BuildSpatialReason v0.1.1 acceptance`
 
-Then:
+Push:
 
 `git push origin main`
 
-If push fails, record exact reason in `FROM_DSH.md` and explain it in Chinese in the DSH UI.
+If push fails, report it exactly.
 
-## 23. Final DSH web/chat response — Chinese only
+## 16. Final DSH web/chat response — Chinese only
 
-At completion, the visible DSH response to the user must be concise Chinese and include only:
-- whether v0.1.1 was generated;
-- final validator verdict;
-- final sample count;
+The final visible DSH response should be concise Chinese and include:
+- Task 5C verdict;
+- independent oracle checked/matched count;
+- whether v0.1.1 JSONL hashes stayed unchanged;
 - test summary;
 - commit hash;
 - push success/failure;
 - any blocker requiring user action.
 
-Do not paste the full English technical report into the UI.
+Do not paste the full English handoff report into the UI.
 
-## 24. Stop
+## 17. Stop
 
-After Task 5B, STOP.
+After Task 5C:
 
-Do not start:
+**STOP.**
+
+Do not begin:
 - Task 5.5;
+- external model/dataset research;
 - MLLM integration;
-- model training;
-- Spatial Relation Encoder;
-- Spatial Consistency Loss;
+- training;
+- architecture implementation;
 - any later task.
 
-Wait for ChatGPT review of the pushed GitHub commit.
+Wait for ChatGPT to review the pushed GitHub commit.

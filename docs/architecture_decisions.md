@@ -465,6 +465,69 @@ pair; and references never appear in distractors.
 
 ---
 
+## ADR-011 — Acceptance semantics must have an independent implementation
+
+**Status:** Accepted (Task 5C)
+
+**Decision**
+
+1. **A shared implementation proves consistency, not truth.** The acceptance
+   oracle for BuildSpatialReason is a **second, independent implementation**
+   (`spatial_reasoning/semantic_oracle.py`) that must not import, call, or
+   delegate to `spatial_reasoning/semantic_policy.py`.
+2. **The oracle re-derives the semantics from frozen inputs only**: raw component
+   geometry, the frozen relation config, the frozen direction predicate, its own
+   recomputation of the component quality flags, and the low-level
+   `geometry.component_box_distance` primitive.
+3. **Every accepted record must agree with the oracle on all five semantic
+   quantities** — semantic reference, direction candidate set, semantic nearest,
+   final target and the ambiguity/admissibility decision. A single disagreement
+   is blocking (`FAIL_REQUIRES_REVISION`).
+4. **Machine-readable artifacts are a single declared truth.** Counts, versions
+   and canonical paths are declared once in
+   `evaluation/build_spatial_reason_artifact_index.json` and enforced by
+   `scripts/check_artifact_consistency.py` against `manifest.json`,
+   `statistics.json`, the quality JSON and every Markdown file carrying an
+   `ARTIFACT-FACTS` block.
+5. **An artifact name must carry the real dataset version.** Evaluation
+   artifacts are `build_spatial_reason_<version>_*`; the historical `v011`
+   abbreviation is prohibited.
+
+**Reasoning**
+
+v0.1.1 was produced by a *single* shared policy module
+(`semantic_policy.py`) that the generator, the recomputation and the validator all
+call. That removes drift between them, but it also means the audit is circular: a
+wrong shared definition is wrong three times and the audit still reports PASS.
+Task 5B's own report illustrated the failure mode in miniature — it published
+Level-2 Type A/B as 2,272/2,764 and Level-3 trivial/nontrivial as 1,261/1,657,
+while `statistics.json`, `manifest.json` and the quality JSON all said
+2,275/2,761 and 1,256/1,662. The data was right; a hand-written artifact was
+wrong, and nothing in the repository could tell.
+
+Task 5C therefore adds:
+* an independent oracle over all 25,229 records (non-circular acceptance), and
+* a consistency gate over every machine-readable and declared artifact
+  (self-checking documentation).
+
+**Rejected alternative.** Trusting the shared policy because "the generator and
+the validator cannot disagree" was rejected: it converts a testable claim
+("the dataset is semantically correct") into an untestable one ("two copies of
+the same code agree with each other").
+
+**Enforcement**
+
+`tests/test_semantic_oracle.py` asserts static independence (AST scan of the
+oracle source for any reference to `semantic_policy` or an `SP` alias), runtime
+independence (every oracle entry point is exercised while a `sys.meta_path`
+poison makes importing `semantic_policy` raise), the five semantic identities on
+synthetic geometry, full-dataset target agreement, and unchanged JSONL hashes.
+`tests/test_artifact_consistency.py` asserts that the gate accepts the real
+repository and rejects injected drift, a resurrected `v011` artifact, and a
+declared fact that contradicts the authoritative index.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -479,3 +542,4 @@ pair; and references never appear in distractors.
 | 008 | Presets monotonic | Valid(strict) ⊆ Valid(medium) ⊆ Valid(loose) |
 | 009 | Project naming | `BuildReasonSeg`; not tied to WHU; WHU is the first source dataset |
 | 010 | Semantic visibility policy | Language is over ALL visible components; eligibility may reject but never silently change an answer |
+| 011 | Acceptance needs an independent oracle | The oracle never imports `semantic_policy`; artifacts are checked against one declared truth |

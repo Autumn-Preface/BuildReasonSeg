@@ -25,10 +25,12 @@ import numpy as np
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT / "spatial_reasoning"))
+sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 import dataset_validator as V  # noqa: E402
 import geometry as G  # noqa: E402
 import relations as R  # noqa: E402
+import semantic_oracle as SO  # noqa: E402
 import thresholds as T  # noqa: E402
 
 DATASET_ROOT = _REPO_ROOT / "datasets" / "whu"
@@ -343,6 +345,85 @@ def audit_semantics(
     return violated
 
 
+def audit_with_oracle(
+    record: dict,
+    so_ctx: SO.OracleImage,
+    issues: V.IssueCollector,
+    counters: dict,
+) -> bool:
+    """Independent-oracle acceptance audit (Task 5C section 5).
+
+    Recomputes the whole semantic program — reference, direction candidate set,
+    semantic nearest, final target, ambiguity/admissibility — with an
+    implementation that never imports ``semantic_policy``, and compares every
+    field with the stored record.
+
+    Returns True when at least one oracle mismatch was found.
+    """
+
+    sample_id = record["sample_id"]
+    image_id = record["image_id"]
+    comparison = SO.compare_record(so_ctx, record)
+
+    counters["oracle_checked"] += 1
+    counters["oracle_target_match"] += int(comparison.target_match)
+    counters["oracle_reference_match"] += int(comparison.reference_match)
+    counters["oracle_candidate_set_match"] += int(comparison.candidate_set_match)
+    if comparison.trivial_match is not None:
+        counters["oracle_trivial_checked"] += 1
+        counters["oracle_trivial_match"] += int(comparison.trivial_match)
+
+    mismatched = False
+    detail = {
+        "level": comparison.level,
+        "query_type": comparison.query_type,
+        "oracle_target": comparison.oracle_target,
+        "stored_target": comparison.stored_target,
+        "oracle_reference": comparison.oracle_reference,
+        "stored_references": list(comparison.stored_references),
+        "oracle_candidates": list(comparison.oracle_candidates),
+        "stored_candidates": list(comparison.stored_candidates),
+    }
+
+    if not comparison.admissible:
+        mismatched = True
+        counters["oracle_ambiguity_mismatch"] += 1
+        issues.add("oracle_ambiguity_mismatch", V.SEVERITY_ERROR, sample_id, image_id,
+                   reason=comparison.oracle_reason, **detail)
+    if not comparison.target_match:
+        mismatched = True
+        counters["oracle_target_mismatch"] += 1
+        issues.add("oracle_target_mismatch", V.SEVERITY_ERROR, sample_id, image_id, **detail)
+    if not comparison.reference_match:
+        mismatched = True
+        counters["oracle_reference_mismatch"] += 1
+        issues.add("oracle_reference_mismatch", V.SEVERITY_ERROR, sample_id, image_id, **detail)
+    if not comparison.candidate_set_match:
+        mismatched = True
+        counters["oracle_candidate_set_mismatch"] += 1
+        issues.add("oracle_candidate_set_mismatch", V.SEVERITY_ERROR, sample_id, image_id, **detail)
+    if comparison.trivial_match is False:
+        mismatched = True
+        counters["oracle_trivial_flag_mismatch"] += 1
+        issues.add("oracle_trivial_flag_mismatch", V.SEVERITY_ERROR, sample_id, image_id,
+                   stored_trivial=comparison.stored_trivial,
+                   oracle_admissible_nearest=len(comparison.oracle_admissible_nearest_ids),
+                   **detail)
+
+    # ---- independent hidden-eligibility audit (section 6) ---------------
+    hidden = SO.oracle_hidden_violations(so_ctx, record)
+    if hidden:
+        mismatched = True
+        counters["oracle_semantic_violation_unique_records"] += 1
+        for code in hidden:
+            counters[f"oracle_{code}"] += 1
+            issues.add(f"oracle_{code}", V.SEVERITY_ERROR, sample_id, image_id, **detail)
+    else:
+        counters["oracle_semantic_clean_records"] += 1
+
+    return mismatched
+
+
 # --------------------------------------------------------------------------
 # Main audit
 # --------------------------------------------------------------------------
@@ -395,6 +476,7 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
             rec["image_id"]: rec for rec in V.iteration_metadata(DATASET_ROOT, split)
         }
         cache: dict[str, V.ImageContext] = {}
+        oracle_cache: dict[str, SO.OracleImage] = {}
         counters["component_maps_loaded"] = counters.get("component_maps_loaded", 0)
 
         for index, record in enumerate(records, start=1):
@@ -409,6 +491,13 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
                 counters["component_maps_loaded"] += 1
 
             ctx = cache[image_id]
+
+            # Independent-oracle context: shares the already-loaded component
+            # map (read-only) but performs its own semantic reasoning.
+            so_ctx = oracle_cache.get(image_id)
+            if so_ctx is None:
+                so_ctx = SO.OracleImage(ctx.image, config, ctx.component_map)
+                oracle_cache[image_id] = so_ctx
 
             split_counts[split] += 1
             level_counts[record["level"]] += 1
@@ -436,6 +525,9 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
             audit_record(record, ctx, issues, counters, enforce_v011)
             if audit_semantics(record, ctx, issues, counters):
                 counters["semantic_violation_unique_records"] += 1
+
+            # ---- independent oracle (Task 5C) --------------------------
+            audit_with_oracle(record, so_ctx, issues, counters)
 
             if not quiet and index % 4000 == 0:
                 print(f"    {split} {index}/{len(records)} ({time.time() - started:.0f}s)", flush=True)
@@ -469,6 +561,11 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
     if enforce_v011 and frozen_report.get("unchanged") is False:
         issues.add("v01_modified", V.SEVERITY_ERROR, detail=frozen_report.get("mismatches"))
 
+    # ---- v0.1.1 JSONL must remain byte-identical (Task 5C section 11) ----
+    frozen_v011 = V.verify_v011_unchanged(_REPO_ROOT / "datasets")
+    if enforce_v011 and frozen_v011.get("unchanged") is False:
+        issues.add("v011_modified", V.SEVERITY_ERROR, detail=frozen_v011.get("mismatches"))
+
     # ---- independent counts --------------------------------------------
     total = sum(split_counts.values())
     independent_counts = {
@@ -492,7 +589,6 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
     }
 
     runtime = time.time() - started
-    verdict = V.decide_verdict(issues)
 
     # ---- required machine-readable audit fields (Task 5B sections 11, 20) ----
     leak_records = int(counters.get("leak_reasoning_records", 0))
@@ -512,14 +608,14 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
     counters["template_checked"] = int(counters.get("template_checked", 0))
     counters["template_verified"] = int(counters.get("template_verified", 0))
 
-    return {
+    report = {
         "audit_target": f"BuildSpatialReason-{version}",
         "audited_version": version,
         "auditor": "dataset_validator.py",
         "runtime_seconds": round(runtime, 2),
         "splits_audited": list(splits),
         "limit_applied": limit,
-        "verdict": verdict,
+        "verdict": "PENDING_CONSISTENCY_GATE",
         "independent_counts": independent_counts,
         "target_recomputation": {
             "checked": int(counters.get("recompute_checked", 0)),
@@ -568,6 +664,44 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
         "issues": issues.as_dict(),
         "duplicate_image_audit": duplicate_report,
         "v01_frozen_integrity": frozen_report,
+        "v011_frozen_integrity": frozen_v011,
+        "independent_oracle": {
+            "oracle_version": SO.ORACLE_VERSION,
+            "oracle_module": "spatial_reasoning/semantic_oracle.py",
+            "imports_semantic_policy": False,
+            "checked": int(counters.get("oracle_checked", 0)),
+            "target_match": int(counters.get("oracle_target_match", 0)),
+            "target_mismatch": int(issues.counts.get("oracle_target_mismatch", 0)),
+            "candidate_set_mismatch": int(issues.counts.get("oracle_candidate_set_mismatch", 0)),
+            "reference_mismatch": int(issues.counts.get("oracle_reference_mismatch", 0)),
+            "ambiguity_policy_mismatch": int(issues.counts.get("oracle_ambiguity_mismatch", 0)),
+            "trivial_flag_checked": int(counters.get("oracle_trivial_checked", 0)),
+            "trivial_flag_match": int(counters.get("oracle_trivial_match", 0)),
+            "trivial_flag_mismatch": int(issues.counts.get("oracle_trivial_flag_mismatch", 0)),
+            "semantic_violation_unique_records": int(
+                counters.get("oracle_semantic_violation_unique_records", 0)
+            ),
+            "semantic_clean_records": int(counters.get("oracle_semantic_clean_records", 0)),
+            "hidden_semantic_counts": {
+                "hidden_eligibility_largest": int(
+                    issues.counts.get("oracle_hidden_eligibility_largest", 0)
+                ),
+                "hidden_eligibility_smallest": int(
+                    issues.counts.get("oracle_hidden_eligibility_smallest", 0)
+                ),
+                "hidden_eligibility_nearest": int(
+                    issues.counts.get("oracle_hidden_eligibility_nearest", 0)
+                ),
+                "hidden_eligibility_level3_nearest": int(
+                    issues.counts.get("oracle_hidden_eligibility_level3_nearest", 0)
+                ),
+                "semantic_violation_flag_instances": sum(
+                    int(issues.counts.get(code, 0))
+                    for code in V.ORACLE_HIDDEN_CODES
+                ),
+            },
+        },
+        "artifact_consistency": {"status": "not_run", "violations": []},
         "scene_level_split_leakage": "unverified",
         "scene_level_split_leakage_reason": (
             "The source WHU tiles carry no scene/geographic grouping metadata in the derived "
@@ -580,6 +714,51 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
             "centroid_y_norm": V.quantiles([c[1] for c in target_centroids]),
         },
     }
+
+    # ---- artifact consistency gate (Task 5C section 7) -------------------
+    #
+    # Run BEFORE the verdict is fixed, and fed this in-memory report, so a
+    # repository-level inconsistency (stale counts in docs, a competing quality
+    # JSON, a missing/mismatched provenance hash) is a blocking acceptance
+    # failure rather than a footnote. The gate's own frozen-data check re-reads
+    # the JSONL from disk independently of the checks above.
+    report["artifact_consistency"] = run_consistency_gate(version, report)
+    if report["artifact_consistency"].get("status") != "consistent":
+        issues.add(
+            "artifact_inconsistent",
+            V.SEVERITY_ERROR,
+            detail={
+                "status": report["artifact_consistency"].get("status"),
+                "violations": report["artifact_consistency"].get("violations", [])[:5],
+            },
+        )
+
+    report["verdict"] = V.decide_verdict(issues)
+    report["issues"] = issues.as_dict()
+    report["counters"] = {
+        k: (dict(v) if isinstance(v, Counter) else v) for k, v in counters.items()
+    }
+    return report
+
+
+def run_consistency_gate(version: str, report: dict) -> dict:
+    """Run the repository consistency gate for the version just audited."""
+
+    try:
+        import check_artifact_consistency as C
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "not_run", "error": f"{type(exc).__name__}: {exc}", "violations": []}
+
+    try:
+        result = C.run_consistency_check(quality_report=report)
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "not_run", "error": f"{type(exc).__name__}: {exc}", "violations": []}
+
+    # The gate audits the repository state for the indexed dataset version; if
+    # that is not the version just audited, say so instead of claiming agreement.
+    if result.get("audited_version") not in (None, version):
+        result["status"] = "version_mismatch"
+    return result
 
 
 def decide_verdict(issues: V.IssueCollector) -> str:
@@ -610,25 +789,31 @@ def main(argv: list[str] | None = None) -> int:
     report = run_audit(args.splits, args.limit, args.quiet, version)
 
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
-    safe_version = version.replace(".", "")
-    json_path = EVAL_DIR / f"build_spatial_reason_{safe_version}_quality.json"
-    json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    # Canonical artifact naming (Task 5C section 8): the file name carries the
+    # real dataset version, so v0.1.1 writes build_spatial_reason_v0.1.1_*.json
+    # rather than the historical "v011" abbreviation that docs never used.
+    json_path = EVAL_DIR / f"build_spatial_reason_{version}_quality.json"
+    samples_dir = EVAL_DIR / f"build_spatial_reason_{version}_samples"
 
     samples: list[str] = []
     if not args.no_samples:
         try:
             from build_spatial_reason_samples import build_sample_pack
 
-            samples = build_sample_pack(
-                EVAL_DIR / f"build_spatial_reason_{safe_version}_samples", report, args.limit, version
-            )
+            samples = build_sample_pack(samples_dir, report, args.limit, version)
         except Exception as exc:  # noqa: BLE001
             print(f"warning: sample pack generation failed: {type(exc).__name__}: {exc}", file=sys.stderr)
 
+    json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
     if not args.quiet:
+        oracle = report["independent_oracle"]
         print(f"verdict : {report['verdict']}")
         print(f"issues  : {report['issues']['counts']}")
         print(f"counts  : {report['independent_counts']['by_level']}")
+        print(f"oracle  : {oracle['target_match']}/{oracle['checked']} exact target matches, "
+              f"{oracle['semantic_violation_unique_records']} semantic violations")
+        print(f"consist.: {report['artifact_consistency'].get('status')}")
         print(f"wrote   : {json_path}")
         print(f"samples : {len(samples)}")
     return 0

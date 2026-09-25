@@ -1,0 +1,112 @@
+{
+  "audited_version": "v0.1.1",
+  "index_path": "evaluation/build_spatial_reason_artifact_index.json",
+  "status": "consistent",
+  "checks": {
+    "canonical_paths": "ok",
+    "dataset_version": "ok",
+    "counts": "ok",
+    "deprecated_paths": "ok",
+    "provenance": "ok",
+    "frozen_data": "ok",
+    "documents": "ok",
+    "documents_checked": 5
+  },
+  "violations": [],
+  "violation_count": 0,
+  "documents_checked": [
+    "docs/build_spatial_reason_v0.1.1.md",
+    "docs/build_spatial_reason_v0.1.1_quality_audit.md",
+    "handoff/FROM_DSH.md",
+    "handoff/PROJECT_STATE.md",
+    "README.md"
+  ],
+  "authoritative_facts": {
+    "dataset_version": "v0.1.1",
+    "total_samples": 25229,
+    "split_train": 15592,
+    "split_val": 3884,
+    "split_test": 5753,
+    "level_1": 17275,
+    "level_2": 5036,
+    "level_3": 2918,
+    "level2_type_a": 2275,
+    "level2_type_b": 2761,
+    "level3_trivial": 1256,
+    "level3_nontrivial": 1662,
+    "semantic_policy_version": "1.0",
+    "generator_version": "v0.1.1",
+    "quality_json_path": "evaluation/build_spatial_reason_v0.1.1_quality.json",
+    "sample_pack_path": "evaluation/build_spatial_reason_v0.1.1_samples"
+  },
+  "quality_verdict": "PASS",
+  "frozen_data": {
+    "v0.1": {
+      "exists": true,
+      "files": {
+        "train.jsonl": {
+          "present": true,
+          "sha256": "5848157b9748ea0a280e73b8ed14ab6be5f83a018b4ad2687bffb62b2cc54975",
+          "recorded_sha256": "5848157b9748ea0a280e73b8ed14ab6be5f83a018b4ad2687bffb62b2cc54975",
+          "matches_recorded": true
+        },
+        "val.jsonl": {
+          "present": true,
+          "sha256": "93aea13d63f94b25f3c90fe1c3f0c27f891f555a9d67c6c16050fbd3c3c163c6",
+          "recorded_sha256": "93aea13d63f94b25f3c90fe1c3f0c27f891f555a9d67c6c16050fbd3c3c163c6",
+          "matches_recorded": true
+        },
+        "test.jsonl": {
+          "present": true,
+          "sha256": "a0b6bfe461fe3579356133d12b0c099d8a23af827f965ba1a8c3cb5d218255cc",
+          "recorded_sha256": "a0b6bfe461fe3579356133d12b0c099d8a23af827f965ba1a8c3cb5d218255cc",
+          "matches_recorded": true
+        },
+        "manifest.json": {
+          "present": true,
+          "sha256": "60a308837a06e5624b05803db076ed131389e630aa7af6e870b4cab00d6f506a",
+          "recorded_sha256": "60a308837a06e5624b05803db076ed131389e630aa7af6e870b4cab00d6f506a",
+          "matches_recorded": true
+        },
+        "statistics.json": {
+          "present": true,
+          "sha256": "38e45395fd09a46f95a786e6cafd71005826cde6d5a97e7193a57dd0343f08fe",
+          "recorded_sha256": "38e45395fd09a46f95a786e6cafd71005826cde6d5a97e7193a57dd0343f08fe",
+          "matches_recorded": true
+        }
+      },
+      "unchanged": true,
+      "mismatches": []
+    },
+    "v0.1.1": {
+      "exists": true,
+      "files": {
+        "train.jsonl": {
+          "present": true,
+          "sha256": "85e3ae168e8d2f6a15bf675eb18fea986e1e0e5732cc93cbdd80e806bb594eee",
+          "recorded_sha256": "85e3ae168e8d2f6a15bf675eb18fea986e1e0e5732cc93cbdd80e806bb594eee",
+          "matches_recorded": true
+        },
+        "val.jsonl": {
+          "present": true,
+          "sha256": "c561d74778c962600bdb33473df2e93de498712a8755634099f9ba27cd246d55",
+          "recorded_sha256": "c561d74778c962600bdb33473df2e93de498712a8755634099f9ba27cd246d55",
+          "matches_recorded": true
+        },
+        "test.jsonl": {
+          "present": true,
+          "sha256": "6f7e9525f29044779f0ad8123870f61830449202c13207723b540216d1c5b29d",
+          "recorded_sha256": "6f7e9525f29044779f0ad8123870f61830449202c13207723b540216d1c5b29d",
+          "matches_recorded": true
+        }
+      },
+      "unchanged": true,
+      "mismatches": [],
+      "metadata_before_task5c": {
+        "manifest.json": "31690010a5dcc53e3e5f960efd738fa4cd169da87eb14e5c84f6680510ec8b65",
+        "statistics.json": "240f924fef317629c3f7f4d1846dcc3cfbcd11583dc946e8e22df763385278ea"
+      }
+    }
+  },
+  "provenance_files_verified": 8
+}

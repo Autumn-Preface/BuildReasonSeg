@@ -251,7 +251,6 @@ def build_manifest(
         "semantic_visibility_policy_version": dataset_meta.get(
             "semantic_visibility_policy_version", A.SP.SEMANTIC_VISIBILITY_POLICY_VERSION
         ),
-        "source_component_representation_version": "v1.0",
         "source_component_metadata": "datasets/whu/metadata/<split>.jsonl",
         "source_component_manifest": "datasets/whu/component_manifest.json",
         "relation_config": _relpath(relation_config_path),
@@ -319,7 +318,7 @@ def build_manifest(
                 "limitation": "no overlap / containment relations",
                 "detail": (
                     "Components are disjoint by construction, so overlap, contain and "
-                    "inside are structurally empty and are not part of v0.1."
+                    "inside are structurally empty and are not part of this dataset version."
                 ),
             },
             {
@@ -327,15 +326,15 @@ def build_manifest(
                 "limitation": "language is template-generated rather than human-authored",
                 "detail": (
                     "Instructions are produced deterministically from templates. Wording "
-                    "diversity is limited by construction; template selection is recorded "
-                    "implicitly through the sample semantic key."
+                    "diversity is limited by construction; each sample records an explicit "
+                    "template_id so template usage is measurable rather than implicit."
                 ),
             },
             {
                 "id": "KL-07",
-                "limitation": "v0.1 source imagery is WHU, but the schema is not WHU-specific",
+                "limitation": "source imagery is WHU, but the schema is not WHU-specific",
                 "detail": (
-                    "Current v0.1 uses the WHU Building Dataset 'Satellite dataset II "
+                    "This version uses the WHU Building Dataset 'Satellite dataset II "
                     "(East Asia)' subset. The BuildSpatialReason schema, relation "
                     "representation and reasoning program do not assume WHU."
                 ),
@@ -418,8 +417,14 @@ def main(argv: list[str] | None = None) -> int:
     stats["peak_memory_mb"] = round(peak_mb, 1)
     stats["generation_seed"] = gen_config["generator"]["seed"]
 
+    # Provenance set (Task 5C section 9). Every file that can change what the
+    # generated samples say or which target they select must be listed, so the
+    # manifest can prove which code produced the records. `semantic_policy.py`
+    # was added in Task 5C: it decides the semantic universe for every size,
+    # nearest and direction query, so it is generation-critical.
     generator_paths = [
         _REPO_ROOT / "spatial_reasoning" / "annotator.py",
+        _REPO_ROOT / "spatial_reasoning" / "semantic_policy.py",
         _REPO_ROOT / "spatial_reasoning" / "templates.py",
         _REPO_ROOT / "spatial_reasoning" / "relations.py",
         _REPO_ROOT / "spatial_reasoning" / "geometry.py",

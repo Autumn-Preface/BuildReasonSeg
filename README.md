@@ -25,7 +25,7 @@ Research direction: **spatial-reasoning-guided building structure reasoning segm
 | Kind | Name | Notes |
 |---|---|---|
 | Project codename / repo | **BuildReasonSeg** | this repository |
-| Future reasoning dataset | **BuildSpatialReason** (`build_spatial_reason`) | **not yet generated** |
+| Reasoning dataset | **BuildSpatialReason** (`build_spatial_reason`) | **v0.1.1 generated and validated** |
 | Source dataset (first) | WHU Building Dataset | historical, unchanged |
 | Source dataset directory | `datasets/whu/` | source-specific raw/derived data |
 | Legacy baseline experiment | `../WHU_Building_Segment/` | historical, unchanged |
@@ -40,16 +40,40 @@ it is not renamed away.
 
 ```
 [x] YOLO baseline                (frozen record only; see baseline/yolo_whu/)
-[ ] BuildSpatialReason           (spatial reasoning annotation dataset)
+[x] BuildSpatialReason           (v0.1.1 generated + independently audited, verdict PASS)
 [ ] Reasoning Segmentation MVP   (MLLM -> [SEG] -> mask decoder)
 [ ] Spatial Relation Module      (Spatial Relation Encoder + Feature Fusion)
 [ ] Spatial Consistency Loss
 [ ] Evaluation & Ablation suite
 ```
 
-**Nothing below the first line is implemented yet.** This README describes the intended
+**Only the first two lines are done.** This README describes the intended
 architecture so that the boundary between done and planned stays explicit. Do not read the
 target architecture as a description of existing code.
+
+<!-- ARTIFACT-FACTS:BEGIN -->
+dataset_version: v0.1.1
+total_samples: 25229
+split_train: 15592
+split_val: 3884
+split_test: 5753
+level_1: 17275
+level_2: 5036
+level_3: 2918
+level2_type_a: 2275
+level2_type_b: 2761
+level3_trivial: 1256
+level3_nontrivial: 1662
+semantic_policy_version: "1.0"
+generator_version: v0.1.1
+quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
+sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
+<!-- ARTIFACT-FACTS:END -->
+
+The block above is machine-checked against
+`evaluation/build_spatial_reason_artifact_index.json` by
+`scripts/check_artifact_consistency.py`.
+
 
 ---
 
@@ -149,7 +173,9 @@ To keep expectations accurate, none of the following exists in this repository y
 - any MLLM or LLM code;
 - any `[SEG]` token or projection module;
 - any segmentation decoder;
-- any spatial annotation generation;
 - any Spatial Relation Encoder;
 - any spatial consistency loss;
 - any training or evaluation entry point.
+
+The spatial annotation generator does exist (`scripts/build_spatial_reason.py`);
+it is the *dataset* line, not the model line.

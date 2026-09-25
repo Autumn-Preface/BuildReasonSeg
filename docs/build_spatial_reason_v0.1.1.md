@@ -18,9 +18,34 @@ Config: `configs/build_spatial_reason_v0.1.1.yaml`
 Quality audit: `docs/build_spatial_reason_v0.1.1_quality_audit.md`,
 `evaluation/build_spatial_reason_v0.1.1_quality.json`
 
+<!-- ARTIFACT-FACTS:BEGIN -->
+dataset_version: v0.1.1
+total_samples: 25229
+split_train: 15592
+split_val: 3884
+split_test: 5753
+level_1: 17275
+level_2: 5036
+level_3: 2918
+level2_type_a: 2275
+level2_type_b: 2761
+level3_trivial: 1256
+level3_nontrivial: 1662
+semantic_policy_version: "1.0"
+generator_version: v0.1.1
+quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
+sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
+<!-- ARTIFACT-FACTS:END -->
+
+These numbers are enforced against
+`evaluation/build_spatial_reason_artifact_index.json`, `manifest.json`,
+`statistics.json` and the quality JSON by
+`scripts/check_artifact_consistency.py`; they cannot drift silently.
+
 ```bash
 python scripts/build_spatial_reason.py --gen-config configs/build_spatial_reason_v0.1.1.yaml
 python scripts/validate_build_spatial_reason.py --version v0.1.1
+python scripts/check_artifact_consistency.py
 ```
 
 ---
@@ -52,6 +77,22 @@ v0.1.1 inverts the order:
 
 One shared implementation enforces this for the generator, the target
 recomputation and the validator: `spatial_reasoning/semantic_policy.py`.
+
+---
+
+## Independent acceptance oracle
+
+A shared implementation proves *consistency*, not *truth*: if it is wrong, it is
+wrong twice and the audit still says PASS. Task 5C therefore adds a second,
+deliberately independent implementation used only for auditing —
+`spatial_reasoning/semantic_oracle.py`.
+
+The oracle **never imports or calls** `semantic_policy`. It re-derives
+`largest` / `smallest` / `nearest` / `direction` / `direction->nearest` from raw
+component geometry, the frozen config, the frozen direction predicate and its own
+recomputation of the quality flags. Every one of the 25,229 records is then
+resolved twice and compared field by field. See
+`docs/build_spatial_reason_v0.1.1_quality_audit.md` for the result.
 
 ---
 

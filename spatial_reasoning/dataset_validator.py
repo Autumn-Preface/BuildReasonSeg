@@ -60,6 +60,28 @@ SEMANTIC_CODES = (
     "hidden_eligibility_level3_nearest",
 )
 
+#: Task 5C: independent-oracle disagreement codes. The oracle in
+#: ``spatial_reasoning/semantic_oracle.py`` never calls ``semantic_policy``, so a
+#: mismatch here means the shared production implementation and an independent
+#: re-implementation of the same frozen semantics disagree about a record.
+ORACLE_CODES = (
+    "oracle_target_mismatch",
+    "oracle_reference_mismatch",
+    "oracle_candidate_set_mismatch",
+    "oracle_ambiguity_mismatch",
+    "oracle_trivial_flag_mismatch",
+)
+
+#: Task 5C: the same hidden-eligibility audit, but derived from the independent
+#: oracle rather than from the shared production policy. Reported separately so
+#: the two cannot be confused, and blocking independently.
+ORACLE_HIDDEN_CODES = (
+    "oracle_hidden_eligibility_largest",
+    "oracle_hidden_eligibility_smallest",
+    "oracle_hidden_eligibility_nearest",
+    "oracle_hidden_eligibility_level3_nearest",
+)
+
 #: Codes that make the dataset unusable as supervision.
 BLOCKING_CODES = (
     "target_recompute_mismatch",
@@ -67,6 +89,10 @@ BLOCKING_CODES = (
     "duplicate_sample_id",
     "duplicate_semantic_key",
     *SEMANTIC_CODES,
+    *ORACLE_CODES,
+    *ORACLE_HIDDEN_CODES,
+    "v011_modified",
+    "artifact_inconsistent",
 )
 
 
@@ -558,6 +584,68 @@ def verify_v01_unchanged(dataset_root: Path) -> dict:
         digest = hash_file(path)
         recorded = V01_FROZEN_SHA256.get(name)
         matches = (recorded is None) or (digest == recorded)
+        result["files"][name] = {
+            "present": True,
+            "sha256": digest,
+            "recorded_sha256": recorded,
+            "matches_recorded": matches,
+        }
+        if not matches:
+            ok = False
+            result["mismatches"].append(f"{name}: {digest} != {recorded}")
+    result["unchanged"] = ok
+    return result
+
+
+#: SHA256 of the frozen v0.1.1 JSONL records, measured immediately BEFORE Task 5C
+#: began. Task 5C must not change a single byte of either dataset version; these
+#: values are the evidence, and they are re-verified by the acceptance audit and
+#: by the artifact consistency gate.
+V011_FROZEN_SHA256 = {
+    "train.jsonl": "85e3ae168e8d2f6a15bf675eb18fea986e1e0e5732cc93cbdd80e806bb594eee",
+    "val.jsonl": "c561d74778c962600bdb33473df2e93de498712a8755634099f9ba27cd246d55",
+    "test.jsonl": "6f7e9525f29044779f0ad8123870f61830449202c13207723b540216d1c5b29d",
+}
+
+#: Part of the same freeze: the v0.1.1 metadata artefacts as they stood when Task
+#: 5C began. ``manifest.json`` is intentionally updated by Task 5C (provenance
+#: hardening, section 9) so it is recorded for reporting only, not enforced.
+V011_METADATA_SHA256_BEFORE_TASK5C = {
+    "manifest.json": "31690010a5dcc53e3e5f960efd738fa4cd169da87eb14e5c84f6680510ec8b65",
+    "statistics.json": "240f924fef317629c3f7f4d1846dcc3cfbcd11583dc946e8e22df763385278ea",
+}
+
+
+def verify_v011_unchanged(dataset_root: Path) -> dict:
+    """Confirm the v0.1.1 JSONL records still hash to their Task-5C baseline.
+
+    A mismatch fails Task 5C: the task explicitly does not authorize
+    regeneration. Reported per file so the exact drift is visible.
+    """
+
+    v011_dir = dataset_root / "build_spatial_reason" / "v0.1.1"
+    result: dict = {
+        "exists": v011_dir.is_dir(),
+        "files": {},
+        "unchanged": None,
+        "mismatches": [],
+        "metadata_before_task5c": V011_METADATA_SHA256_BEFORE_TASK5C,
+    }
+    if not v011_dir.is_dir():
+        result["unchanged"] = None
+        return result
+
+    ok = True
+    for name in ("train.jsonl", "val.jsonl", "test.jsonl"):
+        path = v011_dir / name
+        if not path.is_file():
+            result["files"][name] = {"present": False}
+            ok = False
+            result["mismatches"].append(f"{name}: missing")
+            continue
+        digest = hash_file(path)
+        recorded = V011_FROZEN_SHA256[name]
+        matches = digest == recorded
         result["files"][name] = {
             "present": True,
             "sha256": digest,
