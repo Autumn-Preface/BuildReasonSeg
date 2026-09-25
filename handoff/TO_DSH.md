@@ -1,702 +1,995 @@
-# TO_DSH — Task 5.5: External Research, Model-Stack Verification & BuildReasonSeg-MVP Design Freeze
+# TO_DSH — Task 6A: Native-Windows Environment Bootstrap + 2B `[SEG]` MVP Smoke/Overfit
 
-> Status: ACTIVE
+> Status: **ACTIVE**
+>
 > Repository: `BuildReasonSeg`
-> Goal: use current public evidence to select a technically defensible, license-compatible, hardware-feasible model stack for the first **BuildReasonSeg-MVP**, while mapping the project's novelty against 2024–2026 reasoning-segmentation work.
-> This is a research/architecture-selection task, not a model-training task.
+>
+> Goal: build the **smallest working BuildReasonSeg segmentation pipeline** on the user's actual laptop:
+>
+> `Qwen3-VL-2B-Instruct -> [SEG] hidden state -> Projection MLP -> vanilla SAM2.1 Hiera Base+ mask decoder`
+>
+> and prove it with:
+>
+> 1. environment/model-load measurements;
+> 2. a real 2-sample forward/backward pass;
+> 3. a deterministic 20-sample overfit test;
+> 4. free-generation inference that emits `[SEG]` and produces masks.
+>
+> This task deliberately does **NOT** use Qwen3-VL-4B, `[REF]`, Spatial Relation Encoder, Spatial Consistency Loss, or full-dataset training.
+
+---
 
 ## 0. User-facing language
 
-All DSH web/chat narrative visible to the user must be in Chinese:
-- progress updates;
-- research summaries;
-- warnings;
-- permission/escalation explanations;
-- final recommendation;
-- blockers.
+All narrative text shown in the DSH web/chat UI must be **Chinese**, including progress updates, package/model download explanations, warnings, failures, and the final summary.
 
-Commands, paths, code identifiers, model IDs, paper titles, raw logs, and field names may remain English.
+Commands, paths, raw logs, identifiers, model IDs, and package names may remain English.
 
 `handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md` may remain English.
 
-## 1. Full-access and network boundary
+---
 
-DSH currently has Full Access only because the normal workspace-write sandbox cannot start correctly on this Windows host. Full Access is a technical workaround, not permission to perform unrelated actions.
+## 1. Full-access boundary and new authorization
 
-Allowed writes:
-- only inside `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\`
-- ordinary runtime temp directories when technically required.
+DSH is still running with Full Access because the normal workspace-write sandbox cannot start on this Windows host. Full Access remains a **technical workaround**, not unlimited permission.
 
-Task 5.5 explicitly authorizes read-only public web research. Allowed sources:
-- official GitHub repositories;
-- official project pages;
-- arXiv;
-- publisher/CVF/ISPRS/IEEE pages;
-- Hugging Face official model/dataset cards and file metadata;
-- official vendor documentation;
-- official license files.
+### Allowed writes
 
-Allowed network actions are limited to retrieving lightweight public metadata, HTML/text, JSON, README/LICENSE/config information, paper abstracts/pages, and repository metadata.
+Only inside:
 
-Forbidden:
-- model-weight downloads;
-- dataset downloads;
-- cloning large external repositories;
-- package installation;
-- system/registry/PATH/WSL/CUDA/driver changes;
-- local model inference or training;
-- modifying `../WHU_Building_Segment/`;
-- writes outside `BuildReasonSeg`;
-- cloud resource creation/costs;
-- starting Task 6 implementation.
+`C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\`
 
-If a source requires authentication or a large download, mark it unavailable/unverified.
+plus ordinary OS/runtime temporary directories if unavoidable.
 
-## 2. Accepted dataset state
+### Newly authorized for Task 6A
 
-Treat BuildSpatialReason-v0.1.1 as frozen and accepted:
+Task 6A explicitly authorizes:
 
-- total 25,229
-- train 15,592 / val 3,884 / test 5,753
-- L1 17,275 / L2 5,036 / L3 2,918
-- independent semantic oracle 25,229 / 25,229 target match
-- semantic violations 0
-- reasoning ID leakage 0
-- artifact consistency gate consistent
-- scene-level split leakage unverified
+- creation of one new dedicated Python environment;
+- package installation **inside that environment only**;
+- download of exactly:
+  - `Qwen/Qwen3-VL-2B-Instruct`
+  - `facebook/sam2.1-hiera-base-plus`
+- download/install of the official `facebookresearch/sam2` Python source/package;
+- normal Hugging Face / ModelScope metadata and weight access;
+- lightweight official dependencies needed by the dedicated environment.
 
-Canonical evidence:
-- `evaluation/build_spatial_reason_v0.1.1_quality.json`
-- `evaluation/build_spatial_reason_artifact_index.json`
+### Still forbidden
 
-Do not use v0.1 for future training decisions.
+Do not:
 
-## 3. Preflight housekeeping
+- modify any existing Python/conda environment;
+- modify `yolo_sam_env`;
+- modify system Python;
+- change Windows registry, PATH, drivers, CUDA toolkit, or system-wide env vars;
+- install WSL2;
+- install/change NVIDIA drivers;
+- install/change a system CUDA toolkit;
+- download Qwen3-VL-4B or any other large model;
+- download external training datasets;
+- modify `../WHU_Building_Segment/`;
+- modify frozen BuildSpatialReason JSONL;
+- train on the full dataset;
+- start `[REF]`, Spatial Relation Encoder, or Spatial Consistency Loss work;
+- write outside `BuildReasonSeg` except unavoidable temp files.
 
-Before research, fix the two non-blocking artifact-hygiene issues identified after Task 5C.
+If native Windows cannot be made to work within the bounded fallback rules below, stop and report the blocker. Do **not** automatically migrate to WSL2.
 
-### 3.1 Separate generation-time provenance from current-source provenance
+---
 
-Task 5C modified `scripts/build_spatial_reason.py` after v0.1.1 JSONL had already been generated, then refreshed its manifest hash. This mixes:
-- source actually used to generate the frozen JSONL;
-- source currently present in the repository.
+## 2. Accepted project state entering Task 6A
 
-Use Git history and Task 5B generation commit:
+Treat these as frozen facts:
 
-`a9e5bd69cbc331f79763dd401d5c5f68d2b5f780`
+- BuildSpatialReason-v0.1.1 total: 25,229
+- train / val / test: 15,592 / 3,884 / 5,753
+- independent semantic oracle: 25,229 / 25,229
+- dataset quality verdict: PASS
+- artifact consistency: consistent
+- JSONL hashes frozen
+- `datasets/build_spatial_reason/v0.1/` must not be used
 
-to recover generation-time source bytes/hashes.
+Canonical training source:
 
-Preferred schema:
+`datasets/build_spatial_reason/v0.1.1/train.jsonl`
+
+Do not alter any JSONL.
+
+---
+
+## 3. Task 5.5 review corrections that override ADR-012 details
+
+### 3.1 2B is the only model in Task 6A
+
+Use exactly:
+
+`Qwen/Qwen3-VL-2B-Instruct`
+
+Do not download or instantiate 4B.
+
+Interpretation:
+- 2B = `SAFE_LOCAL` candidate
+- 4B = `BORDERLINE_LOCAL` until measured later
+
+### 3.2 Use SAM2.1 Hiera Base+ for the proof
+
+Use exactly:
+
+`facebook/sam2.1-hiera-base-plus`
+
+Do not use Hiera Large in Task 6A.
+
+### 3.3 `[SEG]` only
+
+Task 6A contains exactly one new architecture token:
+
+`[SEG]`
+
+No `[REF]`.
+
+### 3.4 Do not train a full embedding matrix
+
+Qwen3-VL uses tied input/output embeddings. Training the full resized embedding matrix is memory-inefficient and dangerous.
+
+Preferred implementation:
+- current PEFT `trainable_token_indices=[seg_id]` integrated with LoRA;
+- preserve weight tying;
+- train only the `[SEG]` token row.
+
+Do **not** put the entire vocabulary embedding matrix into AdamW merely with a gradient hook.
+
+If installed PEFT cannot safely train only selected token indices with this model:
+1. do not silently unfreeze the full embedding matrix;
+2. implement a small explicit trainable-token adapter/override;
+3. prove with a test that normal token rows remain unchanged after an optimizer step.
+
+### 3.5 Qwen and SAM image preprocessing are separate branches
+
+Do not assume “512×512 everywhere”.
+
+The source WHU image is 512×512.
+
+Expected architecture:
 
 ```text
-generation_source:
-  commit: <actual generation commit>
-  file_sha256: { ... generation-time files ... }
+same source RGB 512x512
+        |
+        +--> Qwen3-VL processor branch
+        |      measure actual processed shape
+        |      measure image_grid_thw
+        |      measure actual visual-token count
+        |
+        +--> SAM2.1 branch
+               official SAM2 transform/predictor
+               verify internal image size at runtime
+               frozen image encoder
+```
 
-current_source:
-  commit: <current commit before Task 5.5 changes>
-  file_sha256: { ... current generation-relevant files ... }
+Do not hard-code a visual-token count without measuring processor output.
+
+---
+
+## 4. Native Windows environment bootstrap
+
+### 4.1 Preflight first — no changes yet
+
+Record:
+- `where python`
+- Python versions available
+- conda/mamba/venv availability
+- active env name
+- current torch path/version without modifying it
+- GPU name
+- driver version
+- `torch.cuda.is_available()`
+- CUDA runtime reported by torch
+- compute capability
+- `torch.cuda.get_arch_list()`
+- total/free VRAM
+- free disk space on project drive
+- Git clean/dirty state
+- relevant cache env vars
+
+Write:
+
+`evaluation/task6a_preflight.json`
+
+### 4.2 Dedicated environment
+
+Create exactly one dedicated environment.
+
+Preferred order:
+1. if conda/mamba exists, create a **new environment**, not a clone of `yolo_sam_env`;
+2. otherwise create a project-local venv such as `.venv-buildreasonseg-mvp`.
+
+Python:
+- prefer 3.11;
+- Python 3.10 acceptable if 3.11 unavailable.
+
+Never modify an existing env.
+
+Add local env/cache paths to `.gitignore`.
+
+### 4.3 PyTorch
+
+Use an **official GPU-capable PyTorch build** that works with the RTX 5080 Laptop GPU.
+
+Preferred:
+- reproduce the already measured GPU-capable PyTorch/CUDA family if an official install source is available;
+- otherwise use the current official stable CUDA wheel supporting this GPU.
+
+Do not continue until the new env independently verifies:
+
+```text
+torch.cuda.is_available() == True
+compute_capability == (12, 0)
+CUDA tensor operations succeed
+```
+
+Record exact versions and install source.
+
+Do not modify drivers or system CUDA to solve a package mismatch.
+
+### 4.4 Core packages
+
+Install only what Task 6A needs, including as appropriate:
+- transformers (Qwen3-VL capable; compatible major version)
+- peft
+- accelerate
+- safetensors
+- huggingface_hub
+- qwen-vl-utils
+- pillow
+- numpy
+- opencv-python if required
+- pytest
+- pyyaml
+- tqdm
+
+After success, freeze exact relevant versions into:
+
+`environment/task6a_requirements_lock.txt`
+
+Do not blindly freeze unrelated system packages.
+
+### 4.5 SAM2 installation on native Windows
+
+Use official `facebookresearch/sam2`.
+
+Official SAM2 documentation recommends WSL on Windows, but the CUDA extension is optional. Task 6A must intentionally skip that extension using:
+
+`SAM2_BUILD_CUDA=0`
+
+or the equivalent process-local Windows setting.
+
+Do not attempt to compile the optional CUDA extension in Task 6A.
+
+Record the exact SAM2 source revision used.
+
+---
+
+## 5. Local cache and asset policy
+
+Keep model caches/downloads inside ignored project paths, for example:
+
+```text
+local_cache/
+  huggingface/
+  models/
+  sam2_source/
+artifacts/
+  checkpoints/
+  stage_outputs/
 ```
 
 Requirements:
-- generation-time hashes must describe code that actually produced the frozen 25,229 JSONL records;
-- current-source hashes may track later maintenance code;
-- generation-time hashes must never be silently refreshed;
-- include `semantic_policy.py` in the generation-time set if it existed and affected generation;
-- derive hashes from Git object contents when necessary;
-- update consistency checks to enforce the distinction.
+- all large assets gitignored;
+- no model weights staged;
+- no environment directory staged;
+- no external repository contents committed.
 
-Do not change JSONL.
+Before commit, explicitly search for `.safetensors`, `.pt`, `.pth`, env folders, caches, and checkpoints.
 
-### 3.2 Remove nested `PENDING_CONSISTENCY_GATE`
+---
 
-The top-level quality verdict is `PASS`, but the embedded consistency result may still contain:
+## 6. Required code architecture
 
-`quality_verdict: PENDING_CONSISTENCY_GATE`
+Create a small modular MVP package. Names may vary, but responsibilities must stay separate.
 
-because of execution order.
-
-Fix final artifact generation/finalization so:
-- top-level verdict is the actual final verdict;
-- embedded consistency references the same final verdict;
-- live consistency check remains `consistent`.
-
-Do not regenerate JSONL.
-
-## 4. Evidence policy
-
-Record the actual research/access date in every research report.
-
-Evidence priority:
-1. official repo/model/dataset card;
-2. official paper/publisher/project page;
-3. official docs;
-4. secondary sources only if primary sources do not answer the question.
-
-For every important factual claim record:
-- source title;
-- exact URL;
-- source type;
-- accessed date;
-- supported claim.
-
-License claims must distinguish:
-- code license;
-- model-weight license;
-- dataset license.
-
-If unclear, mark:
-
-`UNVERIFIED / DO NOT USE UNTIL RESOLVED`
-
-Do not use forum comments or third-party mirrors as authoritative license evidence.
-
-## 5. Required literature/system survey
-
-At minimum verify these lines of work.
-
-Foundational/general:
-- LISA / LISA++
-- GSVA
-- PixelLM
-- GLaMM or another closely related pixel-grounded MLLM if technically relevant
-
-Pixel-level MLLM integration:
-- Sa2VA
-- SAMTok if relevant
-
-Remote-sensing reasoning segmentation:
-- SegEarth-R1
-- EarthReason
-- Think2Seg-RS
-- FIRM (Fine-Grained Intra-Token Representation of Masks)
-- any clearly newer/highly relevant 2026 work discovered during research
-
-These are seed candidates, not assumed facts.
-
-For each work extract:
-- exact title/authors/venue/status;
-- official repo/project/checkpoint links;
-- code license;
-- model-weight license;
-- dataset license where relevant;
-- base MLLM;
-- vision encoder;
-- decoder/foundation segmenter;
-- special tokens or structured prompts;
-- how language features become masks;
-- reasoning type: textual/latent/structured/RL/decoupled;
-- frozen vs trainable segmentation modules;
-- image/video support;
-- remote-sensing relevance;
-- source-code availability/maturity;
-- training complexity;
-- dependency/runtime constraints;
-- relevance to BuildReasonSeg;
-- novelty-collision risk.
-
-## 6. Novelty-collision audit
-
-Current proposed causal innovation chain:
-1. BuildSpatialReason geometry-verifiable spatial reasoning supervision;
-2. reference-guided explicit spatial reasoning, potentially `[REF] + [SEG]`;
-3. semantic–spatial–visual fusion;
-4. Spatial Relation Encoder / explicit spatial prior;
-5. Spatial Consistency Loss;
-6. building-group spatial reasoning segmentation.
-
-Do not assume these are novel.
-
-Create a matrix with rows:
-- geometry-verifiable spatial reasoning dataset;
-- `[REF]`-style reference representation;
-- `[SEG]` target token;
-- reference mask -> geometry/spatial prior;
-- explicit Spatial Relation Encoder;
-- semantic–spatial–visual fusion;
-- spatial consistency loss;
-- multi-hop spatial reasoning supervision;
-- building/remote-sensing specialization.
-
-Columns should include the major works above.
-
-Classify overlap:
-- DIRECT_OVERLAP
-- PARTIAL_OVERLAP
-- ORTHOGONAL
-- NO_EVIDENCE
-- UNVERIFIED
-
-Then state which BuildReasonSeg claims should be:
-- retained;
-- narrowed;
-- reframed;
-- postponed;
-- dropped.
-
-Do not use “first”, “novel”, “state of the art”, etc. without strong primary evidence.
-
-## 7. Base MLLM candidate verification
-
-Required seed candidates:
-- Qwen3-VL-2B-Instruct
-- Qwen3-VL-4B-Instruct
-- Qwen3-VL-4B-Thinking if relevant
-- Qwen2.5-VL-3B-Instruct
-- Qwen2.5-VL-7B-Instruct
-- any newer compact official multimodal model that is clearly more suitable
-
-Also inspect existing pixel-level variants/integrations:
-- Sa2VA Qwen3-VL variants
-- Sa2VA Qwen2.5-VL variants
-- Think2Seg-RS 3B if available
-- FIRM default/released backbone
-
-For each verify:
-- exact official model ID;
-- parameter count;
-- weight format;
-- Transformers/framework compatibility;
-- minimum/known framework version if documented;
-- BF16/FP16 support;
-- FlashAttention requirement/optionality;
-- LoRA/QLoRA evidence;
-- code license;
-- weight license;
-- official checkpoint disk size;
-- train/freeze behavior of visual tower in typical SFT;
-- access to special-token hidden states;
-- ease of adding `[SEG]` / `[REF]`;
-- Windows-native feasibility;
-- WSL2/Linux requirement or preference;
-- existing SAM/SAM2 integration.
-
-## 8. Segmentation pathway candidates
-
-Compare:
-
-### Route A — LISA-style direct `[SEG]`
-`MLLM hidden([SEG]) -> projection MLP -> segmentation decoder -> mask`
-
-Assess original SAM vs SAM2/SAM2.1, train/freeze choices, and future `[REF] + [SEG]` compatibility.
-
-### Route B — Sa2VA-style MLLM + SAM2
-Assess whether adapting an existing Sa2VA Qwen3-VL backbone is lower risk than building integration from scratch.
-
-### Route C — Think2Seg-RS-style decoupled prompting
-`MLLM -> structured point/box/geometric prompts -> frozen SAM2`
-
-Assess implementation simplicity, 16 GB feasibility, value as baseline, divergence from the Challenge Cup narrative, and novelty collision.
-
-### Route D — SegEarth-R1-style learned mask decoder
-Assess practicality for first local MVP.
-
-### Route E — FIRM/tokenized mask representation
-Assess relevance for small/adjacent remote-sensing objects, engineering complexity, and whether it belongs in the final model or related work.
-
-Do not implement any route.
-
-## 9. `[REF] + [SEG]` feasibility
-
-Evaluate:
+Recommended:
 
 ```text
-Image + Instruction
-        ↓
-      MLLM
-        ↓
-reasoning text + [REF] + [SEG]
-        ↓
-[REF] hidden -> predicted reference mask / reference representation
-        ↓
-inference-available geometry / spatial prior
-        ↓
-[SEG] hidden + spatial prior + visual features
-        ↓
-target mask decoder
+buildreasonseg_mvp/
+  __init__.py
+  data.py
+  qwen_seg.py
+  sam2_bridge.py
+  model.py
+  losses.py
+  checkpointing.py
+  metrics.py
+
+configs/mvp/
+  task6a_2b_seg.yaml
+
+scripts/
+  task6a_probe.py
+  task6a_smoke2.py
+  task6a_overfit20.py
+  task6a_infer.py
+
+tests/
+  test_task6a_data.py
+  test_task6a_token.py
+  test_task6a_bridge.py
+  test_task6a_trainables.py
 ```
 
-Critical rule:
-**Ground-truth geometry must never become an inference-time input.**
+Keep Task 6A independent of legacy YOLO code.
 
-Assess three inference-valid reference/spatial-prior sources:
-1. predicted `[REF]` mask;
-2. predicted point/box/proposal representation;
-3. learned latent spatial map without explicit reference mask.
+Do not import YOLO code.
 
-For each assess:
-- supervision;
-- differentiability;
-- inference availability;
-- implementation complexity;
-- failure modes;
-- VRAM impact;
-- literature overlap;
-- MVP vs final-model suitability.
+---
 
-The MVP need not implement the full Spatial Relation Encoder yet, but must not block it later.
+## 7. Training sample format — Chinese-only for Task 6A
 
-## 10. Hardware feasibility
+Task 6A is a pipeline proof, not the final language policy.
 
-User hardware:
-- Windows 11 64-bit
-- Intel Core Ultra 9 275HX
-- 32 GB DDR5-5600
-- RTX 5080 Laptop GPU, 16 GB VRAM
-- 1 TB NVMe
-- 250–300 GB can be freed
-- preferred dataset storage < 200 GB
-- formal run preferably < 7 days
-- local preferred; cloud acceptable only if high value
+### Input
+- source image;
+- `instruction_zh`.
 
-For each serious candidate classify:
-- SAFE_LOCAL
-- BORDERLINE_LOCAL
-- NOT_RECOMMENDED_LOCAL
+### Assistant target text
 
-Estimate separately:
-1. inference VRAM;
-2. LoRA training;
-3. QLoRA training;
-4. decoder training;
-5. image-resolution impact;
-6. activation/checkpointing impact.
+`reasoning_zh + " [SEG]"`
 
-State assumptions:
-- precision/quantization;
-- optimizer;
-- batch size;
-- gradient accumulation;
-- vision tower frozen or trainable;
-- SAM/SAM2 frozen or trainable;
-- image token/max-pixel budget;
-- context length.
+Requirements:
+- `[SEG]` exactly once;
+- `[SEG]` one tokenizer token;
+- no component IDs exposed in natural text;
+- `reasoning_steps` never fed to model;
+- GT component geometry never model input.
 
-Distinguish:
-- parameter memory;
-- optimizer memory;
-- gradients;
-- activations;
-- CUDA/runtime overhead.
-
-Do not present estimates as measured results.
-
-## 11. Windows vs WSL2/Linux decision
-
-Research whether Task 6 should use:
-- native Windows;
-- WSL2 Ubuntu;
-- another local Linux environment;
-- cloud only if truly necessary.
-
-For each candidate stack record:
-- documented OS assumptions;
-- compiled CUDA ops;
-- DeepSpeed dependence;
-- FlashAttention dependence;
-- SAM2 build-extension behavior;
-- native Windows blockers.
-
-Prefer the least disruptive technically reliable environment.
-
-Do not install anything in Task 5.5.
-
-## 12. External dataset survey
-
-BuildSpatialReason-v0.1.1 remains primary.
-
-Survey external datasets only for:
-- pretraining/warm-up;
-- comparison;
-- robustness;
-- domain transfer;
-- paper baselines.
-
-At minimum:
-- EarthReason
-- ReasonSeg / LISA++ data where available
-- remote-sensing datasets used by SegEarth-R1, Think2Seg-RS, FIRM, Sa2VA
-- LaSeRS
-- DRSeg
-- RISBench
-- RRSIS-D if relevant
-
-For each verify:
-- official source;
-- size;
-- annotation type;
-- reasoning vs referring;
-- image domain;
-- mask availability;
-- splits;
-- license;
-- approximate storage;
-- whether legal/technical use is appropriate.
-
-If license unclear, do not recommend merging it into training.
-
-Do not download datasets.
-
-## 13. Evaluation protocol planning
-
-Propose paper-ready evaluation.
-
-Segmentation:
-- mIoU / gIoU / cIoU where appropriate;
-- Dice/F1 if useful;
-- boundary metric only if justified.
-
-Reasoning:
-- target selection accuracy;
-- relation satisfaction rate;
-- reference selection accuracy;
-- multi-hop success;
-- nontrivial Level-3 primary metric;
-- trivial Level-3 separate reporting.
-
-Spatial consistency:
-- direction consistency;
-- size consistency;
-- nearest consistency.
-
-Baselines:
-- historical YOLOv8m-seg-WHU;
-- non-reasoning segmentation baseline;
-- one LISA/Sa2VA-style reasoning baseline if feasible;
-- one remote-sensing reasoning-segmentation comparison if reproducible.
-
-Do not compare metrics across different datasets as if directly equivalent.
-
-## 14. Final decision matrix
-
-Include at least:
-- Qwen3-VL-2B + SAM2/SAM2.1
-- Qwen3-VL-4B + SAM2/SAM2.1
-- Sa2VA-Qwen3-VL-2B adaptation
-- Sa2VA-Qwen3-VL-4B adaptation
-- Think2Seg-RS-style decoupled route
-- another candidate if research strongly supports it
-
-Compare on:
-- 16 GB feasibility;
-- implementation effort;
-- Windows/WSL complexity;
-- license clarity;
-- code maturity;
-- special-token flexibility;
-- `[REF] + [SEG]` compatibility;
-- remote-sensing relevance;
-- inference speed;
-- paper extensibility;
-- novelty collision risk.
-
-Do not choose via naive numeric total alone.
-
-Output:
-1. Primary MVP stack
-2. Fallback stack
-3. Baseline-only stack
-4. Not recommended now
-
-## 15. Exact decisions required
-
-Answer these exact questions:
-1. What exact MLLM/checkpoint should Task 6 start from?
-2. What exact segmentation model/decoder should Task 6 use?
-3. Should MVP use `[SEG]` only, `[REF] + [SEG]`, or structured prompts?
-4. Which modules are frozen vs trainable?
-5. LoRA, QLoRA, or another PEFT method?
-6. First image resolution/max-pixel policy?
-7. Local OS/environment?
-8. Smallest staged experiment proving the pipeline works?
-9. Any external dataset before/after BuildSpatialReason?
-10. What path stays open for final Spatial Relation Encoder and Spatial Consistency Loss?
-11. What literature result most threatens current novelty?
-12. How should the Challenge Cup technical narrative change?
-
-The result must be concrete enough for Task 6 implementation without repeating this survey.
-
-## 16. Task 6 staged plan — design only
-
-Prepare, but do not execute:
+Mask supervision comes only from:
 
 ```text
-Stage 0: environment + model load smoke test
-Stage 1: 2-sample forward/backward
-Stage 2: overfit 20 samples
-Stage 3: 200–500 sample mini-train
-Stage 4: full train
-Stage 5: validation + demo
+component_map_path
++
+target_component_id / target_mask.component_id
 ```
 
-For each specify:
-- runtime scale;
-- success criteria;
-- failure criteria;
-- checkpoint policy;
-- VRAM safety;
-- logging.
+GT mask is supervision/evaluation only, never inference input.
 
-Future training code must support:
-- best/last checkpoints;
-- periodic saves;
-- resume;
-- mixed precision;
-- gradient accumulation;
+---
+
+## 8. Deterministic 2-sample and 20-sample subsets
+
+Do not choose arbitrary first-N records.
+
+### 8.1 Two-sample smoke pair
+
+Select two records from the **same source image** with:
+- different instructions;
+- different target component IDs;
+- preferably different query types.
+
+Save sample IDs in:
+
+`evaluation/task6a_subset_ids.json`
+
+### 8.2 Twenty-sample overfit set
+
+Construct a deterministic set of approximately:
+
+`10 source images × 2 instructions per image = 20 records`
+
+Requirements:
+- all from train;
+- no val/test;
+- cover L1, L2, and nontrivial L3 where available;
+- include direction / nearest / size / extreme families;
+- each paired image has two different target masks;
+- selection is deterministic and recorded;
+- do not optimize subset choice using model results.
+
+Purpose: make image-only memorization insufficient; the model must attend to the instruction.
+
+---
+
+## 9. Qwen3-VL `[SEG]` pathway
+
+### 9.1 Token setup
+
+- add `[SEG]` as an additional special token;
+- verify tokenizer round-trip;
+- assert literal `[SEG]` maps to exactly one token;
+- record `seg_token_id`;
+- resize embeddings exactly once;
+- verify tied-weight state after resize.
+
+### 9.2 Selective token training
+
+Prefer PEFT LoRA with:
+
+`trainable_token_indices=[seg_token_id]`
+
+Verify:
+- only new token is trainable in token adapter;
+- full vocab embedding is not made trainable;
+- tied output behavior remains valid.
+
+Automated regression:
+- snapshot several normal token embeddings;
+- run one optimizer step;
+- ordinary rows unchanged within strict tolerance;
+- `[SEG]` row changes.
+
+### 9.3 LoRA scope
+
+Target language-model layers only.
+
+Desired projections:
+- q
+- k
+- v
+- o
+- gate
+- up
+- down
+
+Do **not** attach LoRA to the visual tower merely because names overlap.
+
+Programmatically inspect full module names and use a text-only target set.
+
+After injection assert:
+
+`number of LoRA modules under vision tower == 0`
+
+Record total/trainable/LoRA/token params and LoRA module names.
+
+### 9.4 Hidden-state extraction under teacher forcing
+
+1. build chat input from image + `instruction_zh`;
+2. assistant target = `reasoning_zh + " [SEG]"`;
+3. mask all user/image/prompt tokens in LM labels;
+4. LM CE only on assistant target tokens;
+5. request hidden states;
+6. locate actual `[SEG]` position from token IDs;
+7. extract final-layer hidden state.
+
+Do not hard-code hidden size; read config.
+
+### 9.5 Inference hidden state
+
+For free generation:
+1. generate from image + instruction only;
+2. verify `[SEG]` emitted;
+3. re-run complete generated sequence with `output_hidden_states=True`;
+4. locate generated `[SEG]`;
+5. decode mask from that hidden state.
+
+Do not use GT reasoning or target to obtain inference hidden state.
+
+---
+
+## 10. Qwen visual preprocessing measurements
+
+For a real WHU 512×512 image record:
+- original shape;
+- processor pixel tensor shape;
+- `image_grid_thw`;
+- actual visual-token count;
+- total sequence length for at least one L1, one L2, one L3 sample.
+
+Do not state “256 visual tokens” unless measured output confirms it.
+
+Set intended image budget explicitly where the processor API supports it without distorting aspect ratio.
+
+---
+
+## 11. Vanilla SAM2.1 language bridge
+
+Do **not** depend on Sa2VA custom code.
+
+Use official vanilla SAM2.1.
+
+### 11.1 Frozen/trainable SAM modules
+
+Freeze:
+- image encoder/backbone;
+- memory modules / memory attention;
+- prompt encoder parameters.
+
+Train:
+- SAM2 mask decoder;
+- BuildReasonSeg projection MLP.
+
+### 11.2 Image feature path
+
+Use official SAM2 image preprocessing/predictor behavior.
+
+Image encoder runs under `torch.no_grad()`.
+
+Measure:
+- source shape;
+- transformed SAM tensor shape;
+- `sam_model.image_size`;
+- image embedding shape;
+- high-res feature shapes.
+
+Verify internal resolution rather than assuming it.
+
+### 11.3 Language-as-sparse-prompt bridge
+
+Implement a minimal project-owned bridge:
+
+```text
+Qwen [SEG] hidden
+    -> Projection MLP
+    -> SAM prompt embedding dimension
+    -> one sparse prompt token
+    -> vanilla SAM2 mask decoder
+```
+
+Use official prompt encoder only to obtain:
+- positional encoding;
+- no-mask dense embedding.
+
+Inject projected `[SEG]` as the sparse prompt embedding passed to `sam_mask_decoder`.
+
+Requirements:
+- projection output dim read from SAM prompt-encoder embed dim;
+- no GT point/box/mask prompt supplied at inference;
+- no GT centroid/bbox/component id supplied at inference;
+- no reference mask;
+- `multimask_output=False`;
+- use official high-res image features if selected config expects them.
+
+Keep projection separate so a later Spatial Relation Encoder can be inserted.
+
+### 11.4 Mask resolution
+
+For training:
+- use SAM mask logits;
+- either resize GT mask to logit resolution with nearest-neighbor or postprocess logits to original size;
+- document the choice and keep deterministic.
+
+For evaluation/visualization:
+- output aligned to original 512×512;
+- fixed threshold;
+- IoU computed at original resolution.
+
+---
+
+## 12. Losses — provisional smoke config
+
+Initial objective:
+
+```text
+L_total =
+    1.0 * L_lm_ce
+  + 2.0 * L_mask_bce
+  + 0.5 * L_mask_dice
+```
+
+This is provisional smoke/overfit config, not a paper hyperparameter.
+
+Requirements:
+- BCE-with-logits;
+- soft Dice + epsilon;
+- report components separately;
+- no Spatial Consistency Loss;
+- no reference-mask loss.
+
+If this prevents the 20-sample sanity overfit, you may adjust mask-loss weights only after recording the initial result. No broad hyperparameter search.
+
+---
+
+## 13. Optimizer/training policy
+
+Suggested:
+- batch size 1;
+- gradient accumulation as needed;
+- BF16 autocast if stable;
+- AdamW;
+- zero weight decay on trainable special-token representation;
+- modest weight decay elsewhere if appropriate;
 - gradient clipping;
-- NaN detection;
-- OOM recovery guidance;
-- validation;
-- early stopping where appropriate.
+- `use_cache=False` during training;
+- deterministic seed.
 
-No implementation now.
+No QLoRA in Task 6A unless BF16 2B unexpectedly OOMs. If BF16 2B OOMs, stop and report before adding quantization.
 
-## 17. Deliverables
+Trainable only:
+- text-only LoRA adapters;
+- `[SEG]` trainable token representation;
+- projection MLP;
+- SAM2 mask decoder.
 
-Create at least:
+Everything else frozen.
+
+---
+
+## 14. Stage 0 — environment/model-load proof
+
+Load:
+- Qwen3-VL-2B-Instruct;
+- SAM2.1 Hiera Base+.
+
+No training yet.
+
+Record Qwen:
+- RAM before/after;
+- GPU allocated/reserved peak;
+- dtype;
+- embedding tie;
+- hidden size;
+- vocab before/after `[SEG]`;
+- processor outputs on a real WHU image.
+
+Record SAM:
+- image size;
+- total params;
+- mask-decoder params;
+- transformed input shape;
+- embedding/high-res feature shapes;
+- GPU peak after feature extraction.
+
+Then load both together and record combined idle allocated/reserved/free VRAM.
+
+If combined load is unsafe, stop before training.
+
+---
+
+## 15. Stage 1 — real 2-sample forward/backward
+
+Use the fixed same-image/different-target pair.
+
+Perform real forward/backward through:
 
 ```text
-docs/research/task5_5_sources.md
-docs/research/task5_5_literature_matrix.md
-docs/research/task5_5_model_stack.md
-docs/research/task5_5_hardware_feasibility.md
-docs/research/task5_5_novelty_collision.md
-docs/research/task5_5_mvp_decision.md
-evaluation/task5_5_stack_decision.json
+image + instruction
+    -> Qwen teacher-forced reasoning + [SEG]
+    -> [SEG] hidden
+    -> projection
+    -> SAM2 mask decoder
+    -> LM + BCE + Dice
 ```
 
-Optional:
+Success criteria:
+- all losses finite;
+- projected embedding shape correct;
+- predicted mask logits finite and non-constant;
+- non-zero finite grads on LoRA, `[SEG]`, projection, SAM2 mask decoder;
+- zero trainable params in Qwen visual tower;
+- frozen SAM2 encoder has no grads;
+- no GT geometry passed as input;
+- no OOM;
+- true peak VRAM recorded.
+
+Run at least one optimizer step and verify:
+- `[SEG]` trainable state changes;
+- normal vocab samples unchanged;
+- frozen modules unchanged.
+
+Do not proceed to Stage 2 until Stage 1 passes.
+
+---
+
+## 16. Stage 2 — deterministic 20-sample overfit
+
+### 16.1 Goal
+
+Prove the architecture can intentionally memorize paired instruction-mask examples where the same image has different targets under different instructions.
+
+### 16.2 Training bound
+
+Use early stopping.
+
+Suggested bounds:
+- max 1000 optimizer steps;
+- or ~2–3 hours wall time;
+- stop earlier when success is repeatedly met.
+
+Do not run indefinitely.
+
+### 16.3 Primary success criteria
+
+- teacher-forced training mIoU on all 20 >= **0.90**;
+- no NaN/Inf;
+- no empty/full-image collapse;
+- instruction-specific behavior on paired images.
+
+### 16.4 Same-image pair sanity
+
+For each pair A/B:
+- prediction under instruction A must overlap GT-A more than GT-B;
+- prediction under instruction B must overlap GT-B more than GT-A.
+
+Target at least:
+
+`9 / 10 pairs`
+
+Record every pair result.
+
+### 16.5 Free generation
+
+For all 20:
+- image + instruction only;
+- generate assistant output;
+- count whether `[SEG]` appears exactly once;
+- re-forward generated text to obtain `[SEG]` hidden;
+- decode mask.
+
+Target:
+
+`20 / 20 [SEG] emission`
+
+If mask overfit succeeds but free-generation emission is imperfect, verdict may be `PASS_WITH_WARNINGS`; report exact count.
+
+If teacher-forced mIoU cannot exceed 0.90 within bounded training, verdict cannot be PASS.
+
+### 16.6 Optional frozen SAM feature cache
+
+Because SAM image encoder is frozen and only ~10 unique images are used, after Stage 1 you may cache detached SAM image/high-res features locally for Stage 2.
+
+If used:
+- ignored local path;
+- record dtype/shapes;
+- verify cached vs uncached decoder outputs on one sample.
+
+Do not cache Qwen hidden states.
+
+---
+
+## 17. Required measurements
+
+Record at minimum:
+- exact package versions;
+- model revisions/commit hashes where available;
+- actual download sizes on disk;
+- env disk size;
+- Qwen load VRAM;
+- SAM load VRAM;
+- combined idle VRAM;
+- Stage 1 forward peak;
+- Stage 1 backward peak;
+- Stage 2 peak;
+- stage runtimes;
+- Qwen processor shape;
+- `image_grid_thw`;
+- measured visual-token count;
+- sequence lengths;
+- SAM transformed resolution;
+- SAM embedding/high-res shapes;
+- `[SEG]` id;
+- `[SEG]` hidden shape;
+- projection shape;
+- mask-logit shape;
+- trainable param counts by module.
+
+Clearly separate MEASURED from CONFIGURED values.
+
+---
+
+## 18. Checkpointing
+
+For Stage 2 save ignored local checkpoints:
+- `last`
+- `best` by training mIoU
+
+Checkpoint only adapter state needed to reproduce the MVP:
+- LoRA adapter;
+- trainable `[SEG]` token state;
+- projection MLP;
+- SAM2 mask decoder;
+- optimizer/scheduler if resume supported;
+- config;
+- RNG state if practical.
+
+Do not duplicate base Qwen/SAM weights.
+
+Create committed:
+
+`evaluation/task6a_checkpoint_manifest.json`
+
+with paths, sizes, SHA256, base model IDs/revisions; do not commit checkpoint bytes.
+
+---
+
+## 19. Visual outputs
+
+Create lightweight committed outputs under:
+
+`evaluation/task6a_samples/`
+
+At least:
+- both smoke-pair samples;
+- 4–6 Stage-2 examples;
+- at least two same-image/different-instruction pairs.
+
+Show:
+- source image;
+- GT mask;
+- predicted mask;
+- instruction;
+- query type;
+- IoU.
+
+Keep pack small.
+
+---
+
+## 20. Tests
+
+Add fast tests for at least:
+
+1. v0.1.1 target-mask reconstruction;
+2. `[SEG]` is one token;
+3. only assistant target is labeled for LM CE;
+4. `reasoning_steps` / component IDs are not model inputs;
+5. selective `[SEG]` training leaves normal vocab rows unchanged;
+6. LoRA targets no visual-tower module;
+7. SAM bridge dimensions;
+8. SAM image encoder frozen;
+9. projection + mask decoder trainable;
+10. no `[REF]` path in Task 6A;
+11. inference consumes no GT geometry;
+12. paired subset has different targets per same image.
+
+Also preserve a Stage-1 real-model integration result, but do not force model downloads from ordinary pytest.
+
+Run the full lightweight test suite and report:
+- exact command;
+- collected;
+- passed;
+- failed;
+- skipped;
+- exit code.
+
+---
+
+## 21. Required reports
+
+Create:
 
 ```text
-docs/research/task5_5_external_datasets.md
-docs/research/task5_5_evaluation_plan.md
+evaluation/task6a_preflight.json
+evaluation/task6a_environment.json
+evaluation/task6a_subset_ids.json
+evaluation/task6a_smoke_report.json
+evaluation/task6a_checkpoint_manifest.json
+docs/task6a_mvp_smoke.md
 ```
 
-Update:
-- `docs/architecture_decisions.md`
-- `handoff/FROM_DSH.md`
-- `handoff/PROJECT_STATE.md`
-- `README.md`
+`task6a_smoke_report.json` must include machine-readable sections for:
+- environment;
+- model revisions;
+- preprocessing;
+- trainable params;
+- Stage 0;
+- Stage 1;
+- Stage 2;
+- pairwise instruction dependence;
+- free-generation `[SEG]` emission;
+- VRAM;
+- timings;
+- checkpoint hashes;
+- final verdict;
+- blockers/warnings.
 
-Only freeze a new ADR if evidence is strong enough. If critical evidence remains unresolved, mark the ADR `PROVISIONAL`.
+Allowed verdicts:
+- `PASS`
+- `PASS_WITH_WARNINGS`
+- `FAIL_REQUIRES_DEBUG`
 
-## 18. Machine-readable stack decision
+Model load alone is never PASS.
 
-`evaluation/task5_5_stack_decision.json` should include:
-- research date;
-- primary stack;
-- fallback stack;
-- baseline-only stack(s);
-- MLLM model IDs;
-- decoder/model IDs;
-- licenses + verification status;
-- environment recommendation;
-- precision/quantization recommendation;
-- trainable/frozen modules;
-- first image/max-pixel policy;
-- external datasets approved/rejected/unverified;
-- key novelty-overlap flags;
-- unresolved risks;
-- Task 6 entry criteria;
-- source URLs.
+---
 
-Label estimates as estimates.
+## 22. ADR update
 
-## 19. Source-quality checks
+Do not rewrite Task 5.5 broadly.
 
-Before finalizing:
-- verify every URL reachable at research time;
-- remove duplicate sources;
-- prefer canonical GitHub/HF/arXiv links;
-- ensure every license claim has a source;
-- distinguish paper date from repo update date;
-- distinguish code release from weight release;
-- distinguish remote-sensing reasoning segmentation from ordinary referring segmentation;
-- explicitly verify the official Think2Seg-RS source;
-- explicitly inspect current 2026 work, not only 2023–2024 baselines.
+Append a measurement note to ADR-012 or create narrow ADR-013 recording:
+- 2B + Base+ measured proof stack;
+- 4B still unmeasured/borderline;
+- `[SEG]` selectively trainable;
+- separate Qwen/SAM preprocessing branches;
+- SAM2 optional CUDA extension intentionally disabled on native Windows;
+- Task 6A measurements supersede overlapping Task 5.5 estimates.
 
-## 20. No implementation/downloads
+Only mark ADR-013 accepted if Stage 1 succeeds.
 
-Do not:
-- add model integration code;
-- create training scripts;
-- install environments;
-- download weights;
-- download datasets;
-- test inference;
-- allocate cloud GPUs.
+---
 
-Small repository scripts for provenance/consistency housekeeping are allowed.
+## 23. Git hygiene
 
-## 21. Git commit/push
-
-ChatGPT will review the research package directly from GitHub.
-
-Before staging:
+Before commit:
 1. `git status --short`
-2. inspect all changes
-3. ensure no weights, dataset archives, external repos, caches, or large files are staged
-4. verify frozen JSONL hashes unchanged
-5. verify no unauthorized out-of-repo writes
+2. confirm no environment dir staged
+3. confirm no HF cache staged
+4. confirm no `.safetensors`, `.pt`, `.pth`, model weights, checkpoint bytes, or downloaded SAM repo staged
+5. confirm no BuildSpatialReason JSONL changed
+6. run `python scripts/check_artifact_consistency.py`
+7. inspect all staged files
+
+Commit only source/config/tests/small reports/docs/lightweight visualizations/handoff state/`.gitignore`.
 
 Recommended commit:
 
-`research: select BuildReasonSeg MVP stack`
+`feat: prove 2B SEG MVP pipeline`
 
 Then:
 
 `git push origin main`
 
-If push fails, record the blocker.
+If push fails, record exact blocker.
 
-## 22. Handoff
+---
 
-Write `handoff/FROM_DSH.md` (English allowed).
+## 24. Handoff
 
-Suggested sections:
-1. Verdict / Research Confidence
-2. Preflight Provenance Fix
-3. Sources Reviewed
-4. Literature Landscape
-5. Novelty Collision
-6. Base MLLM Comparison
-7. Segmentation Pathways
-8. `[REF] + [SEG]` Feasibility
-9. Hardware Feasibility
-10. Windows vs WSL2/Linux
-11. External Dataset Decisions
-12. Evaluation Plan
-13. Primary MVP Stack
-14. Fallback / Baselines
-15. Task 6 Staged Plan
-16. Remaining Risks
-17. Files Created / Modified
-18. Git Commit / Push
-19. Ready for Task 6?
+Update:
+- `handoff/FROM_DSH.md`
+- `handoff/PROJECT_STATE.md`
 
-Update `handoff/PROJECT_STATE.md` concisely.
+English is allowed.
 
-## 23. Final DSH web/chat response — Chinese only
+`FROM_DSH.md` should include:
+1. Verdict
+2. Environment Created
+3. Packages / Model Revisions
+4. Stage 0 Measurements
+5. Qwen Preprocessing
+6. SAM2 Preprocessing
+7. `[SEG]` Token / PEFT Verification
+8. LoRA Scope Verification
+9. Stage 1 Forward/Backward
+10. Stage 2 Overfit
+11. Same-Image Pair Test
+12. Free-Generation Test
+13. VRAM / Runtime
+14. Checkpoint Manifest
+15. Tests
+16. Git Status / Push
+17. Known Problems
+18. Recommendation for Task 6B
 
-The visible final response must concisely report:
-- Task 5.5 complete/incomplete;
-- selected primary MVP stack;
-- selected fallback stack;
-- recommended execution environment;
-- whether 16 GB local training appears feasible;
-- largest unresolved risk;
+---
+
+## 25. Final DSH web/chat response — Chinese only
+
+The final visible response must concisely report:
+- Task 6A verdict;
+- dedicated env created or not;
+- 2B + SAM2 Base+ load success;
+- measured Stage-1 peak VRAM;
+- 2-sample backward pass/fail;
+- final 20-sample training mIoU;
+- same-image pair pass count;
+- `[SEG]` free-generation emission count;
+- Stage-2 peak VRAM;
 - commit hash;
-- push success/failure.
+- push success/failure;
+- any blocker requiring user action.
 
-Do not paste the full research report into the UI.
+Do not paste the full technical report into the UI.
 
-## 24. Stop
+---
 
-After Task 5.5:
+## 26. Stop condition
 
-STOP.
+After Task 6A:
 
-Do not begin Task 6 implementation, environment installation, model download, dataset download, or training.
+**STOP.**
 
-Wait for ChatGPT to review the pushed research package.
+Do not:
+- download Qwen3-VL-4B;
+- add `[REF]`;
+- implement Spatial Relation Encoder;
+- implement Spatial Consistency Loss;
+- start full-dataset training;
+- modify external datasets.
+
+Wait for ChatGPT to review the pushed Task 6A implementation and measured results.

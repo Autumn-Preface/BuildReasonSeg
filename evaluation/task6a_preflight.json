@@ -1,0 +1,92 @@
+{
+  "_doc": "Task 6A section 4.1 preflight. Read-only survey of the machine BEFORE any environment change. Every value here is MEASURED on the host at 2026-09-26 unless a field says otherwise.",
+  "task": "6A",
+  "recorded_at": "2026-09-26",
+  "repo_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+  "repo_head_before_task": "c68fb408f7d7fa4bb2fa31b9443ee8b4bb0dc951",
+  "repo_worktree": {"dirty": true, "only_expected": ["handoff/TO_DSH.md (Task 6A spec supplied by reviewer)", "scripts/__pycache__/", "spatial_reasoning/__pycache__/", "tests/__pycache__/ (untracked, gitignored by intent)"]},
+
+  "python": {
+    "where_python": [
+      "C:\\D\\Python\\Python312\\python.exe",
+      "C:\\D\\anaconda3\\python.exe",
+      "C:\\Users\\ROG\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe"
+    ],
+    "system_python_312": "C:\\D\\Python\\Python312\\python.exe",
+    "conda_base_python": "C:\\D\\anaconda3\\python.exe",
+    "note": "System Python is left untouched. All Task 6A work happens in a new dedicated conda environment."
+  },
+
+  "conda": {
+    "available": true,
+    "executable": "C:\\D\\anaconda3\\Scripts\\conda.exe",
+    "version": "25.11.0",
+    "mamba_available": false,
+    "existing_environments": {
+      "base": "C:\\D\\anaconda3",
+      "jupyter": "C:\\Users\\ROG\\.conda\\envs\\jupyter",
+      "yolo_sam_env": "C:\\Users\\ROG\\.conda\\envs\\yolo_sam_env"
+    },
+    "frozen_environments_not_to_be_modified": ["base", "jupyter", "yolo_sam_env"],
+    "active_environment_at_preflight": null,
+    "conda_prefix_env_var": "",
+    "conda_default_env_var": "",
+    "planned_new_environment_prefix": ".conda/buildreasonseg-mvp (project-local, inside the repository, gitignored)"
+  },
+
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "driver_version": "617.14",
+    "memory_total_mib": 16303,
+    "memory_free_mib": 13557,
+    "total_vram_gib": 15.89,
+    "free_vram_gib_at_preflight": 14.71,
+    "compute_capability": [12, 0],
+    "arch_sm": "sm_120 (Blackwell)",
+    "measured_via": "nvidia-smi + torch.cuda"
+  },
+
+  "existing_torch_reference_measurement": {
+    "_doc": "Measured by importing torch from the pre-existing yolo_sam_env. That environment was READ ONLY and is not modified by Task 6A. Basis for choosing the new environment's wheel family.",
+    "environment": "yolo_sam_env",
+    "python": "3.10.20",
+    "torch": "2.13.0+cu132",
+    "torch_cuda_runtime": "13.2",
+    "cuda_available": true,
+    "compute_capability": [12, 0],
+    "arch_list": ["sm_75", "sm_80", "sm_86", "sm_90", "sm_100", "sm_120"],
+    "sdp_available": true
+  },
+
+  "system_cuda": {
+    "system_cuda_toolkit": "NOT INSTALLED (nvcc not on PATH)",
+    "consequence": "The optional SAM2 CUDA extension (sam2._C) cannot be compiled on this host. Task 6A therefore intentionally installs SAM2 with SAM2_BUILD_CUDA=0, which the official project documents as supported and which only disables mask hole/sprinkle post-processing.",
+    "driver_change_required": false
+  },
+
+  "disk": {
+    "drives": [{"device": "C:", "total_gb": 923.9, "free_gb": 77.5}],
+    "project_drive": "C:",
+    "free_gb_at_preflight": 77.5,
+    "sufficiency_assessment": "Sufficient for Task 6A. Estimated new consumption: PyTorch CUDA wheels ~3.5 GB, dependency stack ~1.5 GB, conda environment ~2 GB, Qwen3-VL-2B-Instruct ~4.0 GB, sam2.1-hiera-base-plus ~0.6 GB, SAM2 source <0.1 GB, caches/artifacts ~2 GB => roughly 14 GB of the 77.5 GB free.",
+    "reason_not_more": "The reviewer's earlier note that 250-300 GB could be freed refers to potential cleanup that has not been performed; Task 6A does not delete unrelated files."
+  },
+
+  "cache_environment_variables": {
+    "HF_HOME": null,
+    "HUGGINGFACE_HUB_CACHE": null,
+    "TRANSFORMERS_CACHE": null,
+    "TORCH_HOME": null,
+    "MODELSCOPE_CACHE": null,
+    "note": "None were set at preflight. Task 6A sets project-local cache paths process-locally (not system-wide) so that downloads stay inside the repository's ignored local_cache/ directory."
+  },
+
+  "network_reachability_note": {
+    "observed": "The Windows hosts file contains a Steam++ / Watt Toolkit blocklist mapping github.com and huggingface.co to 127.0.0.1, but a local listener transparently proxies those connections, so ordinary HTTP clients (Python, pip, git) reach them.",
+    "consequence": "Weight and package downloads are expected to work; if they do not, the ModelScope route is the documented fallback for Qwen models.",
+    "verified_earlier_in_task_5_5": true
+  },
+
+  "preflight_blockers": [],
+  "changes_made_during_preflight": "none (read-only survey)"
+}

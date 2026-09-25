@@ -1,4 +1,4 @@
-﻿# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 # BuildReasonSeg .gitignore
 #
 # Design intent: ignore BINARIES, RUN OUTPUTS, CACHES and GENERATED ARTIFACTS.
@@ -153,3 +153,30 @@ sandbox/
 # Local generated dataset records
 datasets/whu/metadata/*.jsonl
 datasets/build_spatial_reason/**/*.jsonl
+
+# ---------------------------------------------------------------------------
+# Task 6A -- HARD local-only ignores.
+#
+# These are placed AFTER the "MUST STAY TRACKED" negations above because git
+# applies the LAST matching rule. That matters: the unanchored `!*.yaml` and
+# `!*.yml` negations match at ANY depth, so without these lines a .yaml or .yml
+# file inside the conda environment or a downloaded model cache could be
+# re-included and accidentally staged. Nothing under these paths is ever
+# committed: they hold environments, weights, caches and run outputs only.
+# ---------------------------------------------------------------------------
+
+# Dedicated conda environment (created with: conda create --prefix .conda/buildreasonseg-mvp)
+.conda/
+
+# Local model / dataset / source caches (weights, HF hub blobs, SAM2 source)
+local_cache/
+
+# Run artifacts: checkpoints, stage outputs, logs
+artifacts/
+
+# Downloaded external repository contents, if any
+external/
+
+# Task 6A/6B run logs
+*.out
+*.err

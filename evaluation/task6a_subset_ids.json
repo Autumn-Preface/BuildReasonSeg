@@ -1,0 +1,122 @@
+{
+  "_doc": "Task 6A section 8: deterministic subsets, chosen before any training and never revised by model results.",
+  "smoke_pair": {
+    "n_records": 2,
+    "n_images": 1,
+    "by_level": {
+      "1": 2
+    },
+    "by_query_type": {
+      "bottommost": 1,
+      "leftmost": 1
+    },
+    "sample_ids": [
+      "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+      "buildsr_train_1_0_1_leftmost_274a8750ef95"
+    ],
+    "image_ids": [
+      "1_0"
+    ]
+  },
+  "overfit_set": {
+    "n_records": 20,
+    "n_images": 10,
+    "by_level": {
+      "1": 14,
+      "2": 1,
+      "3": 5
+    },
+    "by_query_type": {
+      "bottommost": 8,
+      "largest_to_above_to_nearest": 1,
+      "largest_to_below_to_nearest": 2,
+      "largest_to_left_of_to_nearest": 2,
+      "leftmost": 5,
+      "rightmost": 1,
+      "smallest_to_nearest": 1
+    },
+    "sample_ids": [
+      "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+      "buildsr_train_1_10026_3_largest_to_below_to_nearest_732dee5f98fe",
+      "buildsr_train_1_10032_1_bottommost_62e28ffe3faf",
+      "buildsr_train_1_10032_3_largest_to_left_of_to_nearest_d365fa3f702f",
+      "buildsr_train_1_10034_1_bottommost_6965886144d4",
+      "buildsr_train_1_10034_3_largest_to_left_of_to_nearest_5df2a5b757ec",
+      "buildsr_train_2_1930_1_leftmost_06eb450eb151",
+      "buildsr_train_2_1930_2_smallest_to_nearest_8ffc71c0de4f",
+      "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+      "buildsr_train_1_0_1_leftmost_274a8750ef95",
+      "buildsr_train_1_1_1_bottommost_21d59d9779df",
+      "buildsr_train_1_1_1_leftmost_838ac475c396",
+      "buildsr_train_1_10027_1_bottommost_f20bc2b65ca8",
+      "buildsr_train_1_10027_1_leftmost_edf1d2a3e98a",
+      "buildsr_train_1_10028_1_bottommost_0ea0b6393ffe",
+      "buildsr_train_1_10028_1_leftmost_20903f0707f0",
+      "buildsr_train_1_106_1_bottommost_d70ee0890916",
+      "buildsr_train_1_106_3_largest_to_below_to_nearest_019a93d4634f",
+      "buildsr_train_1_1062_1_bottommost_55d8e959a1fc",
+      "buildsr_train_1_1062_3_largest_to_above_to_nearest_3a7e5ce190ce"
+    ],
+    "image_ids": [
+      "1_0",
+      "1_1",
+      "1_10026",
+      "1_10027",
+      "1_10028",
+      "1_10032",
+      "1_10034",
+      "1_106",
+      "1_1062",
+      "2_1930"
+    ]
+  },
+  "smoke_pair_shares_image": true,
+  "smoke_pair_targets": [
+    1,
+    2
+  ],
+  "overfit_targets_per_image": {
+    "1_0": [
+      1,
+      2
+    ],
+    "1_1": [
+      1,
+      11
+    ],
+    "1_10026": [
+      1,
+      2
+    ],
+    "1_10027": [
+      1,
+      4
+    ],
+    "1_10028": [
+      1,
+      3
+    ],
+    "1_10032": [
+      1,
+      11
+    ],
+    "1_10034": [
+      1,
+      6
+    ],
+    "1_106": [
+      1,
+      4
+    ],
+    "1_1062": [
+      1,
+      4
+    ],
+    "2_1930": [
+      6,
+      7
+    ]
+  },
+  "dataset_version": "v0.1.1",
+  "split_used": "train"
+}

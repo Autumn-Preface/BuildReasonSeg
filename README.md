@@ -42,15 +42,28 @@ it is not renamed away.
 [x] YOLO baseline                (frozen record only; see baseline/yolo_whu/)
 [x] BuildSpatialReason           (v0.1.1 generated + independently audited, verdict PASS)
 [x] MVP stack selection          (Task 5.5 research freeze; see docs/research/)
-[ ] Reasoning Segmentation MVP   (MLLM -> [SEG] -> mask decoder)  -- designed, NOT implemented
+[x] Reasoning Segmentation MVP   (Task 6A: 2B [SEG] pipeline proven end to end, verdict PASS)
 [ ] Spatial Relation Module      (Spatial Relation Encoder + Feature Fusion)  -- the lead contribution
 [ ] Spatial Consistency Loss
 [ ] Evaluation & Ablation suite
 ```
 
-**Only the first three lines are done.** The MVP line is *designed and frozen* but not implemented. This
-README describes the intended architecture so that the boundary between done and planned stays explicit.
-Do not read the target architecture as a description of existing code.
+**The first four lines are done.** The MVP chain `image + instruction -> Qwen3-VL-2B -> reasoning text +
+[SEG] -> projection -> SAM2.1 -> mask` is implemented, measured on the target laptop and proven on a
+deterministic 20-sample overfit set (`docs/task6a_mvp_smoke.md`, ADR-013). It is **not** a generalisation
+or language-quality result: the reasoning trace is not yet learned, and the model emits `[SEG]` on 0/4
+unseen test records. Do not read the target architecture as a description of existing code beyond what
+is listed here.
+
+### MVP environment (Task 6A)
+
+| Item | Value |
+|---|---|
+| Environment | `.conda/buildreasonseg-mvp` (conda, Python 3.11.16, gitignored) |
+| PyTorch | 2.13.0+cu132, RTX 5080 Laptop (sm_120), 15.89 GiB VRAM |
+| Models | `Qwen/Qwen3-VL-2B-Instruct` + `facebook/sam2.1-hiera-base-plus` (both in `local_cache/`, gitignored) |
+| Trainable | text LoRA (196 modules) + one `[SEG]` row + projection MLP + SAM2 mask decoder = 1.08 % of parameters |
+| Reproduce | `environment/task6a_requirements_lock.txt`, then `scripts/task6a_download.py` and the four `scripts/task6a_*.py` stage scripts |
 
 ### Frozen MVP stack (Task 5.5, ADR-012)
 

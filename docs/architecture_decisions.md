@@ -596,6 +596,92 @@ different base model without superseding this ADR.
 
 ---
 
+## ADR-013 — Task 6A measured MVP proof stack
+
+**Status:** **Accepted** (Task 6A). Acceptance was conditional on Stage 1 succeeding,
+and Stage 1 passed all nine of its checks; the Stage 2 outcome is recorded in
+`evaluation/task6a_smoke_report.json` and summarised in §Outcome.
+
+**Decision**
+
+1. **The measured MVP proof stack is Qwen3-VL-2B-Instruct + SAM2.1 Hiera Base+
+   with a single `[SEG]` token.** Measured on the target laptop: 2.223 B total
+   parameters, 24.0 M trainable (1.08 %), 256 visual tokens per 512×512 tile,
+   sequence lengths 295–331, idle combined VRAM 5.10 GiB, Stage 1 peak 7.25 GiB
+   allocated / 8.45 GiB reserved.
+2. **Qwen3-VL-4B remains UNMEASURED and therefore still `BORDERLINE_LOCAL`.**
+   Task 5.5 estimated 11.6–12.6 GiB for 4B BF16 LoRA; Task 6A did not test it, so
+   that estimate is unchanged but unconfirmed. Nothing in Task 6A authorises
+   treating 4B as proven.
+3. **`[SEG]` is selectively trainable, and the tying is preserved.** PEFT 0.21
+   `trainable_token_indices` wraps the input embedding **and** the tied `lm_head`, and the two adapters
+   share the **same delta parameter object**, so there is exactly **one** trainable vocabulary row used
+   on both sides — which is what "tied embeddings" should mean. The full 151,670 × 2048 embedding table
+   stays frozen, and after an optimizer step the `[SEG]` row changes while six sampled ordinary
+   vocabulary rows move by exactly 0.0. Two measured details are worth keeping: the optimizer covers all
+   528 trainable tensors with none missing, and `resize_token_embeddings` **shrinks** Qwen's padded table
+   (151,936 rows → 151,670) rather than only appending a row.
+4. **The Qwen and SAM2 image branches are separate and measured separately.**
+   One 512×512 RGB tile becomes 256 Qwen visual tokens (`image_grid_thw =
+   [1,32,32]`, patch 16, merge 2) **and** a 1×3×1024×1024 normalized SAM2 tensor
+   producing a 1×256×64×64 image embedding plus high-resolution features of
+   1×32×256×256 and 1×64×128×128. The earlier Task 5.5 phrase "512×512
+   everywhere" is explicitly retracted.
+5. **The SAM2 optional compiled CUDA extension is intentionally disabled on
+   native Windows** (`SAM2_BUILD_CUDA=0`, SAM2 revision `2b90b9f5…`), because no
+   system CUDA toolkit is installed and the extension only affects mask
+   hole/sprinkle post-processing.
+6. **Task 6A measurements supersede every overlapping Task 5.5 estimate.** Where
+   the two disagree, the measured value wins.
+
+**Reasoning**
+
+Task 5.5 produced a design; Task 6A produced the first numbers measured on the
+real machine. Three of them changed the picture:
+
+* **The image-budget estimate was right, but for a reason worth recording.**
+  Task 5.5 predicted 256 visual tokens from the config; the processor confirms it,
+  and the released preprocessor config carries no top-level
+  `min_pixels`/`max_pixels` — the budget lives on `image_processor.size`, which is
+  where the explicit 512×512 setting is applied.
+* **`[SEG]` trainability had a subtlety.** The naive reading of "tied embeddings"
+  suggests the output row must be trained separately. In practice PEFT's token
+  adapter covers both sides, and the output-side delta is created lazily on the
+  first forward — which is why the trainable parameter count is 2048 before any
+  step and 4096 afterwards. Recorded so this is not "rediscovered" later.
+* **Instruction dependence is real and measurable.** On the fixed 20-sample set
+  (10 images × 2 different targets), every prediction overlaps its own ground
+  truth far more than the other target on the same image (typically ≈0.9 vs
+  0.000). This is the evidence that the mask pathway consumes the instruction
+  rather than an image-only shortcut.
+
+**Consequences**
+
+* Task 6B may start from this stack; it must not silently switch to 4B without
+  measuring it first.
+* The `[SEG]` token is plumbing, not a contribution (ADR-011 and the Task 5.5
+  novelty audit); the reference pathway is still future work.
+* Estimates that Task 6A replaced are labelled as superseded rather than deleted,
+  so the difference between design and measurement stays visible.
+
+**Outcome**
+
+Stage 0, Stage 1 and Stage 2 all passed. Stage 2 (deterministic 20-sample overfit) finished at 2,000
+optimizer steps with **all 20 samples ≥ 0.9366 training mIoU (mean 0.9807)**, **10/10** same-image paired
+instruction dependence and **20/20** free-generation `[SEG]` emission. Two corrections made during the
+task are recorded rather than hidden: the paired-instruction criterion was initially implemented wrongly
+(it reported 0/10 because it compared the two predictions against each other instead of each prediction
+against both ground truths), and the primary IoU interpolation was aligned with SAM2's own
+`postprocess_masks` (bilinear) after reading the installed source, with the stricter nearest view also
+reported. Full numbers, every recipe revision and the runs that did **not** meet the gate are in
+`evaluation/task6a_smoke_report.json`, `docs/task6a_mvp_smoke.md` and `handoff/FROM_DSH.md`.
+
+**What Task 6A did not establish.** The assistant reasoning text is not reproduced (assistant token
+accuracy ≈ 0), and the model emits `[SEG]` on 0/4 unseen test records. This is an overfit pipeline proof,
+not a generalisation or language-quality result.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -612,3 +698,4 @@ different base model without superseding this ADR.
 | 010 | Semantic visibility policy | Language is over ALL visible components; eligibility may reject but never silently change an answer |
 | 011 | Acceptance needs an independent oracle | The oracle never imports `semantic_policy`; artifacts are checked against one declared truth |
 | 012 | **MVP stack frozen** | Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large + BF16 LoRA `[SEG]`, native Windows, no external training data; `[REF]` is prior art, the relation encoder is the contribution |
+| 013 | **Task 6A measured proof stack** | 2B + Base+ measured working; 4B still unmeasured; `[SEG]` selectively trainable on both tied rows; separate Qwen/SAM preprocessing; SAM2 CUDA extension disabled |

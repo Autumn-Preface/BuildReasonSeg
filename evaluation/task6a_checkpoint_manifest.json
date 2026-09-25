@@ -1,0 +1,27 @@
+{
+  "_doc": "Task 6A section 18. Checkpoint BYTES are local-only and gitignored; this manifest is committed so a reviewer can verify what was produced.",
+  "checkpoints": {
+    "last": {
+      "path": "artifacts\\checkpoints\\best_run5.pt",
+      "bytes": 286453942,
+      "sha256": "0632402f7ef1e5f7aac6f35cffccd717e7fff5d4da0973520f2e252f7359f859",
+      "step": 1600,
+      "note": "evaluated from an existing checkpoint; no checkpoint written in this run"
+    },
+    "best": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\best_run5.pt",
+      "bytes": 286453942,
+      "sha256": "0632402f7ef1e5f7aac6f35cffccd717e7fff5d4da0973520f2e252f7359f859",
+      "step": -1
+    }
+  },
+  "base_models": {
+    "qwen": "Qwen/Qwen3-VL-2B-Instruct",
+    "qwen_snapshot_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+    "sam2": "facebook/sam2.1-hiera-base-plus"
+  },
+  "note": "No base Qwen or SAM2 weights are duplicated in any checkpoint.",
+  "stage": "2",
+  "verdict": "PASS",
+  "steps": 0
+}
