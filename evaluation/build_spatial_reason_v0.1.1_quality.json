@@ -2,7 +2,7 @@
   "audit_target": "BuildSpatialReason-v0.1.1",
   "audited_version": "v0.1.1",
   "auditor": "dataset_validator.py",
-  "runtime_seconds": 356.17,
+  "runtime_seconds": 381.19,
   "splits_audited": [
     "train",
     "val",
@@ -393,7 +393,7 @@
       "quality_json_path": "evaluation/build_spatial_reason_v0.1.1_quality.json",
       "sample_pack_path": "evaluation/build_spatial_reason_v0.1.1_samples"
     },
-    "quality_verdict": "PENDING_CONSISTENCY_GATE",
+    "quality_verdict": "PASS",
     "frozen_data": {
       "v0.1": {
         "exists": true,
@@ -461,6 +461,23 @@
           "statistics.json": "240f924fef317629c3f7f4d1846dcc3cfbcd11583dc946e8e22df763385278ea"
         }
       }
+    },
+    "provenance": {
+      "legacy_field_present": false,
+      "generation_commit": "a9e5bd69cbc331f79763dd401d5c5f68d2b5f780",
+      "current_commit": "ac7f8b1778a25fdf5cba4f7402e6306fd6784016",
+      "verified_against_git": true,
+      "generation_files": 8,
+      "current_files": 8,
+      "working_tree": {
+        "divergent_on_disk": [
+          "scripts/build_spatial_reason.py"
+        ],
+        "absent_on_disk": []
+      },
+      "generation_vs_current_diverged": [
+        "scripts/build_spatial_reason.py"
+      ]
     },
     "provenance_files_verified": 8
   },

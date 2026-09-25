@@ -717,11 +717,19 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
 
     # ---- artifact consistency gate (Task 5C section 7) -------------------
     #
-    # Run BEFORE the verdict is fixed, and fed this in-memory report, so a
+    # Run BEFORE the verdict is finalised, and fed this in-memory report, so a
     # repository-level inconsistency (stale counts in docs, a competing quality
     # JSON, a missing/mismatched provenance hash) is a blocking acceptance
     # failure rather than a footnote. The gate's own frozen-data check re-reads
     # the JSONL from disk independently of the checks above.
+    #
+    # Task 5.5 section 3.2: the verdict embedded in the gate result must be the
+    # FINAL verdict, not the pre-gate placeholder. So the per-record verdict is
+    # computed first, the gate is run with it, and if the gate itself fails the
+    # verdict is recomputed and written back into the embedded block.
+    report["verdict"] = V.decide_verdict(issues)
+    report["issues"] = issues.as_dict()
+
     report["artifact_consistency"] = run_consistency_gate(version, report)
     if report["artifact_consistency"].get("status") != "consistent":
         issues.add(
@@ -732,8 +740,10 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
                 "violations": report["artifact_consistency"].get("violations", [])[:5],
             },
         )
+        report["verdict"] = V.decide_verdict(issues)
 
-    report["verdict"] = V.decide_verdict(issues)
+    # The embedded consistency record always quotes the final verdict.
+    report["artifact_consistency"]["quality_verdict"] = report["verdict"]
     report["issues"] = issues.as_dict()
     report["counters"] = {
         k: (dict(v) if isinstance(v, Counter) else v) for k, v in counters.items()

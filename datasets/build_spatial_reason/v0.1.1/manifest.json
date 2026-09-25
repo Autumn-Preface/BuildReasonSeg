@@ -23,16 +23,6 @@
   "generator_version": "v0.1.1",
   "generator_config": "configs/build_spatial_reason_v0.1.1.yaml",
   "generator_config_sha256": "ac6fd627975d9fd24fdc673927b67c5b99d3ae25146c3707f693d06eaab16204",
-  "generator_file_sha256": {
-    "spatial_reasoning/annotator.py": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca",
-    "spatial_reasoning/semantic_policy.py": "69a7dc6a64804d7e1211d32029c198a68577af386e09a6d349dce4c79f071aa8",
-    "spatial_reasoning/templates.py": "29b63ae1ca11d9d18e0d75edaa6ca67646f0206caf003e29a58783a4d3b66dc1",
-    "spatial_reasoning/relations.py": "ec0fd6139cf312bcb77bd8dded89c44da4fc6a84c331f0a81a49a058f036c7dc",
-    "spatial_reasoning/geometry.py": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807",
-    "spatial_reasoning/thresholds.py": "22ba70feb85fd1d8550384b9c527795a29d7d63715c637e5aaa0cb04b5ef6570",
-    "spatial_reasoning/component_quality.py": "ec8e86462670d33fe47391b82c20cd6fb3e527fcfc633df007114ae36a75ca33",
-    "scripts/build_spatial_reason.py": "29c27bb2847be902897b8a56163908bd9d95c6c482b1452b8ac977a177e1b0d5"
-  },
   "generation_seed": 20260804,
   "template_version": "v0.1",
   "sample_counts": {
@@ -129,5 +119,54 @@
       "detail": "This version uses the WHU Building Dataset 'Satellite dataset II (East Asia)' subset. The BuildSpatialReason schema, relation representation and reasoning program do not assume WHU."
     }
   ],
-  "statistics_file": "datasets/build_spatial_reason/v0.1.1/statistics.json"
+  "statistics_file": "datasets/build_spatial_reason/v0.1.1/statistics.json",
+  "generation_source": {
+    "commit": "a9e5bd69cbc331f79763dd401d5c5f68d2b5f780",
+    "commit_subject": "fix: regenerate BuildSpatialReason v0.1.1",
+    "file_sha256": {
+      "spatial_reasoning/annotator.py": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca",
+      "spatial_reasoning/semantic_policy.py": "69a7dc6a64804d7e1211d32029c198a68577af386e09a6d349dce4c79f071aa8",
+      "spatial_reasoning/templates.py": "29b63ae1ca11d9d18e0d75edaa6ca67646f0206caf003e29a58783a4d3b66dc1",
+      "spatial_reasoning/relations.py": "d45688a696e8ea102ccd763a14dd20a466a80cab2ed617bb2fcf0d52767ec727",
+      "spatial_reasoning/geometry.py": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807",
+      "spatial_reasoning/thresholds.py": "22ba70feb85fd1d8550384b9c527795a29d7d63715c637e5aaa0cb04b5ef6570",
+      "spatial_reasoning/component_quality.py": "ec8e86462670d33fe47391b82c20cd6fb3e527fcfc633df007114ae36a75ca33",
+      "scripts/build_spatial_reason.py": "9345feda7134f0e642c904dd1a456d65c29d4815333414d85bcb21c513e25b40"
+    },
+    "hash_definition": "SHA256 of the file content after line-ending normalisation (CRLF -> LF), read from the Git object store at the commit named above. Normalisation makes the hash independent of core.autocrlf and comparable with a working-tree file; it is a no-op for blobs, which are already LF.",
+    "missing_at_commit": [],
+    "definition": "Byte content of the generation-relevant source files AS COMMITTED at the commit whose working tree produced the frozen v0.1.1 JSONL. Reconstructed from the Git object store. This block is historical and must never be refreshed."
+  },
+  "current_source": {
+    "commit": "ac7f8b1778a25fdf5cba4f7402e6306fd6784016",
+    "commit_subject": "audit: harden BuildSpatialReason v0.1.1 acceptance",
+    "file_sha256": {
+      "spatial_reasoning/annotator.py": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca",
+      "spatial_reasoning/semantic_policy.py": "69a7dc6a64804d7e1211d32029c198a68577af386e09a6d349dce4c79f071aa8",
+      "spatial_reasoning/templates.py": "29b63ae1ca11d9d18e0d75edaa6ca67646f0206caf003e29a58783a4d3b66dc1",
+      "spatial_reasoning/relations.py": "d45688a696e8ea102ccd763a14dd20a466a80cab2ed617bb2fcf0d52767ec727",
+      "spatial_reasoning/geometry.py": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807",
+      "spatial_reasoning/thresholds.py": "22ba70feb85fd1d8550384b9c527795a29d7d63715c637e5aaa0cb04b5ef6570",
+      "spatial_reasoning/component_quality.py": "ec8e86462670d33fe47391b82c20cd6fb3e527fcfc633df007114ae36a75ca33",
+      "scripts/build_spatial_reason.py": "29c27bb2847be902897b8a56163908bd9d95c6c482b1452b8ac977a177e1b0d5"
+    },
+    "hash_definition": "SHA256 of the file content after line-ending normalisation (CRLF -> LF), read from the Git object store at the commit named above. Normalisation makes the hash independent of core.autocrlf and comparable with a working-tree file; it is a no-op for blobs, which are already LF.",
+    "missing_at_commit": [],
+    "definition": "Byte content of the same files AS COMMITTED at the snapshot commit named in 'current_source.commit' (the repository state when this research task began). It may move as maintenance edits land; it describes the code a future regeneration would use, NOT the code that produced the frozen JSONL."
+  },
+  "provenance_note": "generation_source describes the code that produced the frozen JSONL and must never be refreshed; current_source tracks the repository snapshot named in current_source.commit and may move as maintenance edits land. Both blocks are derived from Git objects and enforced by scripts/check_artifact_consistency.py. The single-map field generator_file_sha256 was split in Task 5.5 section 3.1.",
+  "provenance_split_note": {
+    "superseded_field": "generator_file_sha256",
+    "superseded_value": {
+      "spatial_reasoning/annotator.py": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca",
+      "spatial_reasoning/semantic_policy.py": "69a7dc6a64804d7e1211d32029c198a68577af386e09a6d349dce4c79f071aa8",
+      "spatial_reasoning/templates.py": "29b63ae1ca11d9d18e0d75edaa6ca67646f0206caf003e29a58783a4d3b66dc1",
+      "spatial_reasoning/relations.py": "ec0fd6139cf312bcb77bd8dded89c44da4fc6a84c331f0a81a49a058f036c7dc",
+      "spatial_reasoning/geometry.py": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807",
+      "spatial_reasoning/thresholds.py": "22ba70feb85fd1d8550384b9c527795a29d7d63715c637e5aaa0cb04b5ef6570",
+      "spatial_reasoning/component_quality.py": "ec8e86462670d33fe47391b82c20cd6fb3e527fcfc633df007114ae36a75ca33",
+      "scripts/build_spatial_reason.py": "29c27bb2847be902897b8a56163908bd9d95c6c482b1452b8ac977a177e1b0d5"
+    },
+    "reason": "It mixed generation-time and post-generation maintenance hashes: Task 5C edited scripts/build_spatial_reason.py after generation and refreshed only that entry, so the map no longer described any single real code state."
+  }
 }

@@ -528,6 +528,74 @@ declared fact that contradicts the authoritative index.
 
 ---
 
+## ADR-012 — BuildReasonSeg-MVP model stack
+
+**Status:** Accepted (Task 5.5), with the **`PROVISIONAL`** sub-decisions listed in §Provisional clauses.
+
+**Decision**
+
+1. **Base MLLM: `Qwen/Qwen3-VL-4B-Instruct`** (Apache-2.0, verified from the Hugging Face API licence
+   tag and the ModelScope first-party `License` field; BF16; 8.27 GiB of weights).
+   **Stages 0–2 run on `Qwen/Qwen3-VL-2B-Instruct`** so the pipeline is proved before the 4B budget is
+   spent. Switching is a configuration change: same family, same token ids.
+2. **Mask decoder: `facebook/sam2.1-hiera-large`** (Apache-2.0, LICENSE file read first-hand; 1.67 GiB).
+   The image encoder and memory module stay **frozen**; only the **mask decoder** trains.
+3. **Pathway: LISA-style `[SEG]` for the MVP; `[REF] + [SEG]` from Stage 3.** The `[REF]` **token** is
+   acknowledged prior art (SegLLM, PSALM) and is never claimed as a contribution.
+4. **Trainable:** LoRA rank 16 on `q,k,v,o,gate,up,down`, the `[SEG]`/`[REF]` embedding rows, the
+   projection MLP, and the SAM2 mask decoder. **Frozen:** vision tower, LLM base weights, SAM2 image
+   encoder and memory module.
+5. **Precision:** BF16 LoRA. 4-bit QLoRA is the OOM fallback only.
+6. **Image policy: native 512×512, no upscaling** (256 visual tokens per tile), with the pixel budget set
+   **explicitly** because Qwen3-VL's released preprocessor config carries no `min_pixels`/`max_pixels`.
+7. **Environment: native Windows 11 in a new dedicated conda environment** (`yolo_sam_env` is never
+   modified), PyTorch SDPA rather than FlashAttention. **WSL2 Ubuntu is the documented fallback.**
+8. **No external dataset is merged into training.** Warm-up is unnecessary; the licence-clean candidates
+   (EarthReason, RefSegRS) are reserved for evaluation.
+9. **The Spatial Relation Encoder is the lead contribution**, and the MVP must not block it: the
+   projection MLP and the relation encoder remain separate modules, and every inference-time geometric
+   quantity is derived from the model's own predicted masks.
+
+**Reasoning**
+
+The MVP must be buildable on a single 16 GB laptop GPU by one person under competition time pressure.
+That constraint, plus a strict licence policy, selects the stack almost uniquely:
+
+* Every component on the critical path has a **verified** licence and a **public** reference recipe
+  (LISA for the `[SEG]` mechanism; Sa2VA for the `[SEG]`-hidden-state → projection → SAM2 pattern on the
+  *same* Qwen3-VL base family).
+* The local Blackwell question is already **closed by measurement**: the installed
+  `torch 2.13.0+cu132` advertises `sm_120` and initialises the RTX 5080 Laptop GPU, and the total VRAM is
+  15.89 GiB. So the usual reason to move to Linux — PyTorch not supporting the new GPU — does not apply.
+* FlashAttention, the usual *other* reason to move to Linux, is **optional** here and has no official
+  Windows support, no prebuilt wheels and no `sm_120` in its documented GPU list. At ~768-token
+  sequences with a 256-token image prefix it offers the least benefit of any regime, so it is not
+  allowed to dictate the operating system.
+* `Qwen2.5-VL-3B-Instruct` was the most attractive size on paper and is **excluded on licence grounds
+  alone**: no reachable first-party source states a licence for its weights.
+
+The novelty audit (Task 5.5 §6) forces the architectural emphasis: `[SEG]` is ubiquitous and `[REF]` is
+already published, so the defensible contribution is the **explicit relation pathway over predicted
+region geometry**, backed by a dataset whose relations can be re-verified geometrically.
+
+**Provisional clauses (`PROVISIONAL` — do not treat as settled)**
+
+| Sub-decision | Why provisional | What resolves it |
+|---|---|---|
+| 4-bit QLoRA as the OOM fallback | `bitsandbytes` documents Windows 11 + QLoRA 4-bit, but the combination with `sm_120` is not documented | Stage 0/3 measurement on the target machine |
+| WSL2 as the fallback environment | SAM 2's Windows build status rests on non-first-party text; its compiled extension is optional but its necessity here is unmeasured | Stage 0 installation attempt |
+| Any future adoption of Sa2VA code | the repository's **code licence** was not verifiable at research time | reading the repository LICENSE from a machine with unimpeded GitHub access |
+| The narrow dataset-novelty claim | "no public dataset verified to combine instance-level building masks with multi-hop spatial instructions" is an evidenced absence; the ISPRS Annals XI-2-2026 building-VLM paper was read only at abstract level | reading that paper's full text |
+
+**Enforcement**
+
+`evaluation/task5_5_stack_decision.json` is the machine-readable form of this ADR.
+`docs/research/task5_5_mvp_decision.md` §2.2 lists the Task 6 entry criteria, including the licence and
+weight-acquisition checks that must pass before any implementation begins. Task 6 must not begin from a
+different base model without superseding this ADR.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -543,3 +611,4 @@ declared fact that contradicts the authoritative index.
 | 009 | Project naming | `BuildReasonSeg`; not tied to WHU; WHU is the first source dataset |
 | 010 | Semantic visibility policy | Language is over ALL visible components; eligibility may reject but never silently change an answer |
 | 011 | Acceptance needs an independent oracle | The oracle never imports `semantic_policy`; artifacts are checked against one declared truth |
+| 012 | **MVP stack frozen** | Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large + BF16 LoRA `[SEG]`, native Windows, no external training data; `[REF]` is prior art, the relation encoder is the contribution |

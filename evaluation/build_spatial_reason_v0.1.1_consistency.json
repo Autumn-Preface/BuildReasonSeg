@@ -108,5 +108,22 @@
       }
     }
   },
+  "provenance": {
+    "legacy_field_present": false,
+    "generation_commit": "a9e5bd69cbc331f79763dd401d5c5f68d2b5f780",
+    "current_commit": "ac7f8b1778a25fdf5cba4f7402e6306fd6784016",
+    "verified_against_git": true,
+    "generation_files": 8,
+    "current_files": 8,
+    "working_tree": {
+      "divergent_on_disk": [
+        "scripts/build_spatial_reason.py"
+      ],
+      "absent_on_disk": []
+    },
+    "generation_vs_current_diverged": [
+      "scripts/build_spatial_reason.py"
+    ]
+  },
   "provenance_files_verified": 8
 }

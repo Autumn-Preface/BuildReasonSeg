@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 5C._
+_Last updated by DSH at the end of Task 5.5._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -32,12 +32,11 @@ The block above is machine-checked against
 | Project codename | **BuildReasonSeg** |
 | Repository | `Autumn-Preface/BuildReasonSeg` (branch `main`) |
 | Legacy evidence (read-only) | `../WHU_Building_Segment/` |
-| Reasoning dataset | **BuildSpatialReason** |
-| Current dataset version | **v0.1.1** (validated, usable) |
-| Legacy dataset version | **v0.1** (frozen, superseded, retained on disk) |
-| Source dataset | WHU Building Dataset — `Satellite dataset II (East Asia)` |
+| Reasoning dataset | **BuildSpatialReason v0.1.1** (frozen, audited, verdict PASS) |
+| Legacy dataset version | **v0.1** (frozen, superseded — never use for training decisions) |
 | Semantic visibility policy | **1.0** (`spatial_reasoning/semantic_policy.py`) |
 | Independent audit oracle | **1.0** (`spatial_reasoning/semantic_oracle.py`) |
+| MVP stack | **ADR-012** — Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large + BF16 LoRA `[SEG]` |
 
 ## Completed tasks
 
@@ -51,93 +50,64 @@ The block above is machine-checked against
 | 4 | BuildSpatialReason-v0.1 dataset generator | done (32,284 records) |
 | 5 | v0.1 validator + semantic quality audit | done → `FAIL_REQUIRES_REVISION` |
 | 5B | v0.1.1 corrective regeneration + acceptance audit | done → `PASS` |
-| 5C | **Acceptance hardening + artifact consistency** | **done → `PASS`** |
+| 5C | Acceptance hardening + artifact consistency | done → `PASS` |
+| 5.5 | **External research, model-stack verification, MVP design freeze** | **done → COMPLETE (ADR-012)** |
 
-## Frozen relation rules (unchanged since Task 3B)
+## MVP stack (ADR-012)
 
-- Predicate convention: **`relation(subject, object)` = subject satisfies the
-  relation w.r.t. the object** (ADR-006).
-- Relation set: `left_of` `right_of` `above` `below` `leftmost` `rightmost`
-  `topmost` `bottommost` `nearest` `largest` `smallest`.
-- Thresholds (frozen in `configs/spatial_relations_v1.yaml`, never overridden):
-  direction preset `medium` (`alpha = 1.2`, `tau = 0.04`), presets monotonic;
-  `size_rank.ratio_margin = 1.10`; `nearest` anchor + target non-border;
-  `extreme.margin_px = 4.0`; `tiny_component` < 150 px²;
-  `suspected_large_merge` when bbox extent > 0.20.
-- Ambiguity policy: **discard, never tie-break** (ADR-004).
-- Scope: **tile-relative** spatial reasoning.
-
-## Semantic visibility policy (ADR-010)
-
-Natural language is defined over **all visible components**. Eligibility may
-**reject** a sample; it may never silently **change** its answer, and no runner-up
-is ever substituted. Implemented in `spatial_reasoning/semantic_policy.py` and
-shared by the generator, the validator recomputation and the acceptance audit.
-
-## Independent acceptance oracle (ADR-011, new in Task 5C)
-
-`spatial_reasoning/semantic_oracle.py` is a second implementation of the same five
-semantics that **never imports `semantic_policy`**. It resolves all 25,229
-records independently and must agree on reference, direction candidate set,
-nearest, final target and the ambiguity decision.
-
-| Task 5C gate | Result |
+| Item | Choice |
 |---|---|
-| Independent-oracle target match | **25,229 / 25,229** |
-| Independent semantic violations | **0** |
-| Production hidden violations | **0** |
-| Artifact consistency violations | **0** |
-| Provenance digests vs disk | **8 / 8 match** |
-| v0.1 / v0.1.1 JSONL hashes | **unchanged** |
+| Base MLLM | `Qwen/Qwen3-VL-4B-Instruct` (apache-2.0 verified), Stages 0–2 on the 2B sibling |
+| Mask decoder | `facebook/sam2.1-hiera-large` (Apache-2.0, LICENSE read), encoder + memory frozen |
+| Pathway | LISA-style `[SEG]` for the MVP; `[REF] + [SEG]` from Stage 3 |
+| Trainable | LoRA r=16 on `q,k,v,o,gate,up,down`, `[SEG]`/`[REF]` embeddings, projection MLP, SAM2 mask decoder |
+| Frozen | vision tower, LLM base weights, SAM2 image encoder + memory |
+| Precision | BF16 LoRA; 4-bit QLoRA is the OOM fallback (`sm_120` + bnb on Windows is `PROVISIONAL`) |
+| Environment | native Windows 11, **new dedicated conda env**; SDPA (no FlashAttention); WSL2 is the fallback |
+| Images | native 512×512, 256 visual tokens/tile, pixel budget set explicitly |
+| External training data | **none** |
 
-## Task 5B count correction (Task 5C section 3.1)
+Excluded on evidence: `Qwen2.5-VL-3B-Instruct` (weight licence unverifiable),
+`Qwen2.5-VL-7B` BF16 (exceeds VRAM), Sa2VA-Qwen3-VL-4B as a fine-tuning target (18.84 GiB),
+`Qwen3-VL-4B-Thinking` for the MVP.
 
-The Task 5B report published Level-2 Type A/B as 2,272/2,764 and Level-3
-trivial/nontrivial as 1,261/1,657. `statistics.json`, `manifest.json` and the
-quality JSON all said **2,275/2,761** and **1,256/1,662**, and a direct recount
-from the JSONL confirms them. The **dataset was always correct; the Task 5B
-report text was wrong.** Corrected, and now gated.
+## Measured environment facts
 
-## Canonical artifact paths (post-Task 5C)
+RTX 5080 Laptop GPU, compute capability **(12, 0)** = `sm_120`, **15.89 GiB** VRAM;
+`torch 2.13.0+cu132` with `sm_120` in `get_arch_list()` and `cuda.is_available() == True` — all measured
+locally. This closes the Blackwell risk **natively on Windows**.
 
-```
-datasets/build_spatial_reason/v0.1.1/manifest.json
-datasets/build_spatial_reason/v0.1.1/statistics.json
-evaluation/build_spatial_reason_artifact_index.json
-evaluation/build_spatial_reason_v0.1.1_quality.json
-evaluation/build_spatial_reason_v0.1.1_consistency.json
-evaluation/build_spatial_reason_v0.1.1_samples/
-docs/build_spatial_reason_v0.1.1_quality_audit.md
-```
+## Novelty position (Task 5.5 audit)
 
-The historical `v011` evaluation artifacts no longer exist.
+`[SEG]` is ubiquitous; a `[REF]` reference token is **already published** (SegLLM arXiv 2410.18923;
+PSALM ECCV 2024); instruction-tuned building analysis is published prior art (ISPRS Annals XI-2-2026).
+**Retained contributions:** geometry-verifiable relation supervision; an explicit **Spatial Relation
+Encoder over the model's own predicted geometry**; a **relation-level Spatial Consistency Loss**.
+**Most threatening work:** SegLLM.
 
-## Tests
-
-**138/138 checks passed across 8 suites, 0 failed, 0 skipped, all exit 0.**
-
-`test_component_conversion` 11 · `test_geometry` 17 · `test_relations` 35 ·
-`test_annotator` 22 · `test_dataset_validator` 18 · `test_v011_acceptance` 19 ·
-`test_semantic_oracle` 8 · `test_artifact_consistency` 8.
+Dataset position: **no public remote-sensing dataset was verified to combine instance-level building
+masks with multi-hop spatial instructions** (28 datasets surveyed) — an evidenced absence, phrased as
+such.
 
 ## Current blockers
 
-**None.**
+**None.** Non-blocking risks carried forward:
 
-Known limitations (non-blocking): border truncation caps `largest`/`smallest`
-coverage; `scene_level_split_leakage = unverified`; `peak_memory_mb` unconfirmed;
-the oracle shares `geometry.component_box_distance` with production; oracle
-independence is structural, not adversarial (see `FROM_DSH.md` §11).
+1. A local accelerator (Steam++ / Watt Toolkit) blackholes `github.com` / `huggingface.co` in the hosts
+   file while proxying them; **weight acquisition must be confirmed at Task 6 Stage 0** (ModelScope is
+   the documented alternative for Qwen).
+2. `bitsandbytes` + `sm_120` + Windows is undocumented → the QLoRA fallback is `PROVISIONAL`.
+3. All VRAM figures are estimates until Stage 0–2 measure them.
+4. Sa2VA repository code licence unresolved (used as a recipe, not a dependency).
+5. 22 of 28 external datasets remain licence-`UNVERIFIED` → not used for training.
+6. `scene_level_split_leakage = unverified` in v0.1.1.
 
 ## Recommended next task
 
-**ChatGPT review of the Task 5C commit.** If approved, proceed to the next planned
-stage (Task 5.5 / MLLM integration) as a **separate** task, consuming
-`datasets/build_spatial_reason/v0.1.1/` and reading counts from
-`evaluation/build_spatial_reason_artifact_index.json` rather than hand-copying
-them.
+**ChatGPT review of the Task 5.5 research package**, then **Task 6 (MVP implementation)** as a separate
+task, starting from `evaluation/task5_5_stack_decision.json` and
+`docs/research/task5_5_mvp_decision.md`. Task 6 must pass the entry criteria in §2.2 of that document
+before writing implementation code.
 
-Full detail: `handoff/FROM_DSH.md`,
-`docs/build_spatial_reason_v0.1.1_quality_audit.md`,
-`evaluation/build_spatial_reason_v0.1.1_quality.json`,
-`evaluation/build_spatial_reason_v0.1.1_consistency.json`.
+Full detail: `handoff/FROM_DSH.md`, `docs/research/task5_5_*.md`,
+`evaluation/task5_5_stack_decision.json`.

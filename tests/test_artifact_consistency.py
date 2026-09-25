@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -26,6 +27,7 @@ sys.path.insert(0, str(_REPO_ROOT / "spatial_reasoning"))
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 import check_artifact_consistency as C  # noqa: E402
+import split_manifest_provenance as S  # noqa: E402
 
 INDEX_PATH = _REPO_ROOT / "evaluation" / "build_spatial_reason_artifact_index.json"
 
@@ -145,27 +147,58 @@ def test_canonical_evaluation_paths():
 # --------------------------------------------------------------------------
 
 
-def test_manifest_provenance_includes_semantic_policy():
-    """Provenance must cover semantic_policy.py and match the files on disk."""
+def test_manifest_provenance_split_and_git_verified():
+    """Provenance must separate generation-time from current-source (Task 5.5 §3.1)."""
 
     manifest = _load("datasets/build_spatial_reason/v0.1.1/manifest.json")
-    provenance = manifest["generator_file_sha256"]
 
-    assert "spatial_reasoning/semantic_policy.py" in provenance, sorted(provenance)
+    assert "generator_file_sha256" not in manifest, (
+        "the legacy combined provenance field must be gone; run "
+        "scripts/split_manifest_provenance.py"
+    )
+    generation = manifest["generation_source"]
+    current_source = manifest["current_source"]
+
+    # semantic_policy.py materially decides every size/nearest/direction answer,
+    # so it must be in BOTH provenance blocks.
+    for label, block in (("generation_source", generation), ("current_source", current_source)):
+        assert "spatial_reasoning/semantic_policy.py" in block["file_sha256"], label
+        assert block["commit"] and block["commit"] != "UNCOMMITTED", label
 
     required = _index()["provenance_required_files"]
-    missing = [name for name in required if name not in provenance]
-    assert not missing, f"provenance missing generation-critical files: {missing}"
+    missing = [name for name in required if name not in generation["file_sha256"]]
+    assert not missing, f"generation_source missing generation-critical files: {missing}"
 
-    for name, recorded in sorted(provenance.items()):
-        path = _REPO_ROOT / name
-        assert path.is_file(), f"provenance lists a missing file: {name}"
-        assert C.sha256_file(path) == recorded, f"provenance digest mismatch for {name}"
+    # Generation-time hashes must match Git history at the generation commit,
+    # which is what stops them from being silently refreshed.
+    assert S.resolve_commit(_REPO_ROOT, generation["commit"]) == generation["commit"]
+    for name, recorded in sorted(generation["file_sha256"].items()):
+        actual = S.blob_hash(_REPO_ROOT, generation["commit"], name)
+        assert actual == recorded, f"generation_source drift for {name}: {actual} != {recorded}"
 
-    # The generator must build the same list at generation time.
-    source = (_REPO_ROOT / "scripts" / "build_spatial_reason.py").read_text(encoding="utf-8")
-    assert '"semantic_policy.py"' in source
-    print(f"  [9] manifest provenance covers {len(provenance)} files and matches disk OK")
+    for name, recorded in sorted(current_source["file_sha256"].items()):
+        actual = S.blob_hash(_REPO_ROOT, current_source["commit"], name)
+        assert actual == recorded, f"current_source drift for {name}: {actual} != {recorded}"
+
+    # The two blocks are allowed to differ — that is the whole point of the split —
+    # and the only file that may have diverged is the generator entrypoint.
+    diverged = sorted(
+        name for name in generation["file_sha256"]
+        if generation["file_sha256"][name] != current_source["file_sha256"].get(name)
+    )
+    assert diverged == ["scripts/build_spatial_reason.py"], diverged
+
+    # The split tool must be idempotent and must accept the stored manifest.
+    result = subprocess.run(
+        [sys.executable, "scripts/split_manifest_provenance.py", "--check", "--quiet"],
+        cwd=_REPO_ROOT, capture_output=True, text=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    print(
+        f"  [9] provenance split verified against Git "
+        f"({len(generation['file_sha256'])} files; diverged={diverged}) OK"
+    )
 
 
 # --------------------------------------------------------------------------
@@ -219,7 +252,7 @@ def main() -> int:
         ("7c detects deprecated artifact", test_consistency_checker_detects_deprecated_artifact),
         ("7d facts parser", test_facts_parser_rejects_declared_mismatch),
         ("8 canonical paths", test_canonical_evaluation_paths),
-        ("9 provenance", test_manifest_provenance_includes_semantic_policy),
+        ("9 provenance split", test_manifest_provenance_split_and_git_verified),
         ("documents", test_required_documents_declare_authoritative_facts),
         ("extra published report", test_consistency_report_is_written_and_matches_live_check),
     ]

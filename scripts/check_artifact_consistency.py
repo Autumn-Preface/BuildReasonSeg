@@ -21,9 +21,11 @@ Checks
 3.  canonical paths               the quality JSON, the sample pack and the
                                   quality doc exist at their canonical names
 4.  deprecated paths              the superseded ``v011`` artifacts are gone
-5.  provenance                   ``manifest.generator_file_sha256`` covers every
-                                  required source file and every recorded digest
-                                  matches the file currently on disk
+5.  provenance                   ``manifest.generation_source`` and
+                                  ``manifest.current_source`` both exist, cover
+                                  every generation-critical file, and match Git
+                                  history / the recorded snapshot commit; the
+                                  legacy combined field is gone
 6.  frozen data                  v0.1 and v0.1.1 JSONL records hash to their
                                   recorded values
 7.  documents                    every ``ARTIFACT-FACTS`` block declares the
@@ -43,6 +45,7 @@ from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT / "spatial_reasoning"))
+sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 import dataset_validator as V  # noqa: E402
 
@@ -379,25 +382,103 @@ def run_consistency_check(
         fail("deprecated_paths_present", surviving)
     checks["deprecated_paths"] = "ok" if not surviving else "fail"
 
-    # ---- 4. provenance --------------------------------------------------
-    provenance = manifest.get("generator_file_sha256") or {}
+    # ---- 4. provenance (generation-time vs current-source) --------------
+    #
+    # Task 5.5 section 3.1. A single `generator_file_sha256` map mixed the code
+    # that produced the frozen JSONL with later maintenance edits. The two are
+    # now separate blocks and BOTH are verified against Git history, so the
+    # generation-time record cannot be silently refreshed.
     required = index.get("provenance_required_files", [])
-    absent = [name for name in required if name not in provenance]
-    if absent:
-        fail("provenance_missing_files", absent)
+    generation = manifest.get("generation_source") or {}
+    current_source = manifest.get("current_source") or {}
+    provenance_report: dict = {
+        "legacy_field_present": "generator_file_sha256" in manifest,
+        "generation_commit": generation.get("commit"),
+        "current_commit": current_source.get("commit"),
+        "verified_against_git": None,
+        "generation_files": len(generation.get("file_sha256") or {}),
+        "current_files": len(current_source.get("file_sha256") or {}),
+    }
 
-    mismatched: dict[str, dict] = {}
-    for name, recorded in sorted(provenance.items()):
-        path = repo_root / name
-        if not path.is_file():
-            mismatched[name] = {"recorded_sha256": recorded, "error": "file missing"}
-            continue
-        current = sha256_file(path)
-        if current != recorded:
-            mismatched[name] = {"recorded_sha256": recorded, "current_sha256": current}
-    if mismatched:
-        fail("provenance_hash_mismatch", mismatched)
-    checks["provenance"] = "ok" if not (absent or mismatched) else "fail"
+    if provenance_report["legacy_field_present"]:
+        fail(
+            "provenance_legacy_field",
+            "manifest still carries generator_file_sha256; run "
+            "scripts/split_manifest_provenance.py",
+        )
+
+    for label, block in (("generation_source", generation), ("current_source", current_source)):
+        if not block.get("commit") or not block.get("file_sha256"):
+            fail("provenance_missing_block", f"{label} is absent or empty")
+
+    absent = [name for name in required if name not in (generation.get("file_sha256") or {})]
+    absent += [
+        name for name in required if name not in (current_source.get("file_sha256") or {})
+    ]
+    if absent:
+        fail("provenance_missing_files", sorted(set(absent)))
+
+    # Git-derived verification. Any of the three failure modes below is a hard
+    # failure; missing Git metadata is reported as unverified, not as a pass.
+    git_problems: list[dict] = []
+    git_available = True
+    try:
+        import split_manifest_provenance as S
+    except Exception as exc:  # noqa: BLE001
+        git_available = False
+        provenance_report["git_error"] = f"import failed: {type(exc).__name__}: {exc}"
+
+    if git_available:
+        for label, block in (("generation_source", generation), ("current_source", current_source)):
+            commit = block.get("commit")
+            if not commit or commit == "UNCOMMITTED":
+                git_problems.append({"block": label, "error": "no usable commit recorded"})
+                continue
+            try:
+                resolved = S.resolve_commit(repo_root, commit)
+            except Exception as exc:  # noqa: BLE001
+                git_problems.append({"block": label, "commit": commit, "error": str(exc)})
+                continue
+            if resolved != commit:
+                git_problems.append(
+                    {"block": label, "error": "commit does not resolve to itself", "resolved": resolved}
+                )
+            for name, recorded in sorted(block["file_sha256"].items()):
+                actual = S.blob_hash(repo_root, commit, name)
+                if actual is None:
+                    git_problems.append({"block": label, "file": name, "error": "absent at commit"})
+                elif actual != recorded:
+                    git_problems.append(
+                        {
+                            "block": label,
+                            "file": name,
+                            "recorded_sha256": recorded,
+                            "git_sha256": actual,
+                        }
+                    )
+        provenance_report["verified_against_git"] = not git_problems
+        if git_problems:
+            fail("provenance_git_mismatch", git_problems)
+
+        # Informational: does the working tree still match the snapshot block?
+        try:
+            provenance_report["working_tree"] = S.working_tree_divergence(repo_root, current_source)
+        except Exception:  # noqa: BLE001
+            pass
+    else:
+        provenance_report["verified_against_git"] = None
+        checks["provenance"] = "unverified"
+        fail("provenance_git_unavailable", provenance_report.get("git_error"))
+
+    provenance_report["generation_vs_current_diverged"] = sorted(
+        name
+        for name in set(generation.get("file_sha256") or {}) | set(current_source.get("file_sha256") or {})
+        if (generation.get("file_sha256") or {}).get(name)
+        != (current_source.get("file_sha256") or {}).get(name)
+    )
+
+    if "provenance" not in checks:
+        checks["provenance"] = "ok" if not (absent or git_problems or provenance_report["legacy_field_present"]) else "fail"
 
     # ---- 5. frozen data -------------------------------------------------
     frozen: dict = {}
@@ -469,7 +550,8 @@ def run_consistency_check(
         "authoritative_facts": facts,
         "quality_verdict": quality.get("verdict"),
         "frozen_data": frozen,
-        "provenance_files_verified": len(provenance),
+        "provenance": provenance_report,
+        "provenance_files_verified": provenance_report["generation_files"],
     }
 
 

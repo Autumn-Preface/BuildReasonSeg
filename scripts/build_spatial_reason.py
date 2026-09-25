@@ -51,6 +51,19 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def sha256_source_file(path: Path) -> str:
+    """SHA256 of a *source* file after CRLF -> LF normalisation.
+
+    Provenance hashes must be independent of ``core.autocrlf``: on Windows git
+    may materialise a committed LF blob as CRLF in the working tree, which changes
+    the raw byte hash without changing the code. Normalising makes a working-tree
+    hash comparable with the Git blob hash used by
+    ``scripts/split_manifest_provenance.py``.
+    """
+
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def _peak_memory_mb() -> float:
     """Best-effort peak resident memory in MB; 0.0 when unavailable.
 
@@ -227,6 +240,48 @@ def summarise(samples: list[dict]) -> dict:
     }
 
 
+def _git_head() -> str | None:
+    """Best-effort current commit hash; ``None`` when unavailable.
+
+    Provenance only: a failure here never blocks generation.
+    """
+
+    try:
+        import subprocess
+
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        if result.returncode == 0:
+            return result.stdout.strip() or None
+    except Exception:  # noqa: BLE001
+        pass
+    return None
+
+
+def source_provenance(paths: list[Path], commit: str | None = None) -> dict:
+    """Generation-time vs current-source provenance (Task 5.5 section 3.1).
+
+    The two are the SAME at generation time, and that is what is recorded here.
+    They diverge later, when maintenance edits touch generation-relevant files;
+    ``scripts/split_manifest_provenance.py`` is the housekeeping tool that
+    reconstructs the true generation-time bytes from Git history and must never
+    silently refresh them.
+    """
+
+    block = {"commit": commit or _git_head() or "UNCOMMITTED"}
+    block["file_sha256"] = {_relpath(path): sha256_source_file(path) for path in paths}
+    block["hash_definition"] = (
+        "SHA256 after line-ending normalisation (CRLF -> LF), so the value is independent "
+        "of core.autocrlf and equals the committed Git blob hash for a clean checkout."
+    )
+    return block
+
+
 def build_manifest(
     stats: dict,
     relation_config: T.RelationConfig,
@@ -238,6 +293,11 @@ def build_manifest(
     dataset_meta: dict,
 ) -> dict:
     """Dataset-level manifest with provenance and known limitations."""
+
+    generation_commit = _git_head()
+    #: Recorded once and reused verbatim, so the two blocks can never disagree
+    #: about the code that produced this run.
+    generation_block = source_provenance(generator_paths, generation_commit)
 
     return {
         "dataset_name": "BuildSpatialReason",
@@ -268,9 +328,21 @@ def build_manifest(
         "generator_version": A.GENERATOR_VERSION,
         "generator_config": _relpath(gen_config_path),
         "generator_config_sha256": sha256_file(gen_config_path),
-        "generator_file_sha256": {
-            _relpath(p): sha256_file(p) for p in generator_paths
+        # Task 5.5 section 3.1: generation-time and current-source provenance are
+        # separate records. They are identical at generation time; later
+        # maintenance edits move only `current_source`.
+        "generation_source": generation_block,
+        "current_source": {
+            "commit": generation_block["commit"],
+            "file_sha256": dict(generation_block["file_sha256"]),
         },
+        "provenance_note": (
+            "generation_source describes the code that produced THIS run and must never be "
+            "refreshed afterwards. current_source tracks the repository state and may move as "
+            "maintenance edits land. scripts/split_manifest_provenance.py reconstructs the "
+            "generation-time bytes from Git history and is enforced by "
+            "scripts/check_artifact_consistency.py."
+        ),
         "generation_seed": gen_config["generator"]["seed"],
         "template_version": gen_config["generator"]["template_version"],
         "sample_counts": {

@@ -1,0 +1,257 @@
+{
+  "_doc": "Task 5.5 machine-readable MVP stack decision for BuildReasonSeg. Design only: nothing was downloaded, installed or trained. Every field is annotated with an evidence label: VERIFIED (read first-hand from an official source: model config, API, LICENSE file, publisher page, vendor documentation), PLATFORM_FIELD (official platform field such as an HF API license tag or GitHub API license.spdx_id), MEASURED (read from the local target machine), ESTIMATE (author arithmetic or judgement, NOT a measurement), UNVERIFIED (no reachable source).",
+  "task": "5.5",
+  "research_date": "2026-09-26",
+  "repository": "Autumn-Preface/BuildReasonSeg",
+  "reviewed_commit_before_task": "ac7f8b1778a25fdf5cba4f7402e6306fd6784016",
+
+  "primary_stack": {
+    "name": "Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large, LISA-style [SEG], BF16 LoRA r=16",
+    "mllm": {
+      "model_id": "Qwen/Qwen3-VL-4B-Instruct",
+      "params": "~4.44B",
+      "weights_bf16_gib": 8.27,
+      "context_length": 262144,
+      "text_hidden": 2560,
+      "layers": 36,
+      "ffn": 9728,
+      "vision_patch_size": 16,
+      "vision_merge_size": 2,
+      "vocab_size": 151936,
+      "special_token_ids": {"vision_start": 151652, "vision_end": 151653, "image": 151655, "video": 151656},
+      "evidence": {"params_and_size": "PLATFORM_FIELD + VERIFIED (HF API file listing; ModelScope License)", "architecture": "VERIFIED (config.json read first-hand)"}
+    },
+    "decoder": {
+      "model_id": "facebook/sam2.1-hiera-large",
+      "on_disk_gib": 1.67,
+      "fallback_model_id": "facebook/sam2.1-hiera-base-plus",
+      "fallback_on_disk_gib": 0.60,
+      "evidence": "VERIFIED (LICENSE file read first-hand; HF API file listing for size)"
+    },
+    "tokens": {
+      "mvp": "[SEG] only",
+      "stage3_plus": "[REF] + [SEG]",
+      "note": "The [REF] TOKEN is prior art (SegLLM arXiv 2410.18923; PSALM ECCV 2024). Only the geometric use of the predicted reference is claimed."
+    },
+    "estimated_total_vram_gib": {"low": 11.6, "high": 12.6, "label": "ESTIMATE"},
+    "feasibility_class": "SAFE_LOCAL"
+  },
+
+  "fallback_stack": {
+    "name": "Qwen3-VL-2B-Instruct + SAM 2.1 hiera-base-plus, identical recipe",
+    "mllm_model_id": "Qwen/Qwen3-VL-2B-Instruct",
+    "mllm_weights_bf16_gib": 3.96,
+    "decoder_model_id": "facebook/sam2.1-hiera-base-plus",
+    "estimated_total_vram_gib": {"low": 6.6, "high": 7.1, "label": "ESTIMATE"},
+    "feasibility_class": "SAFE_LOCAL",
+    "trigger": "OOM at 4B after gradient checkpointing and image-budget reduction, or unacceptable step time",
+    "also_used_for": "Task 6 Stages 0-2 (pipeline proof) by design"
+  },
+
+  "baseline_only_stacks": [
+    {
+      "name": "Think2Seg-RS-style decoupled prompting",
+      "mechanism": "MLLM -> structured point/box/geometric prompts -> frozen SAM2",
+      "training": "none (inference only)",
+      "feasibility_class": "SAFE_LOCAL",
+      "role": "engineering baseline; answers how far structured prompting gets; never presented as the method",
+      "source": "arXiv 2512.19302 (verified first-hand that the official source exists)"
+    },
+    {
+      "name": "Non-reasoning referring segmentation",
+      "mechanism": "instruction text -> text-conditioned segmenter, no spatial reasoning supervision",
+      "role": "isolates how much of the performance comes from spatial reasoning",
+      "status": "to be built in Task 6"
+    },
+    {
+      "name": "Frozen YOLOv8m-seg on WHU",
+      "metrics": {"val_mask_mAP50_epoch100": 0.80693, "peak_epoch44": 0.84373},
+      "role": "performance floor and sanity check; measured on the WHU INSTANCE task, not on BuildSpatialReason, so it must be footnoted as a different task",
+      "status": "available as a frozen record in baseline/yolo_whu/"
+    }
+  ],
+
+  "not_recommended_now": [
+    {"item": "Qwen/Qwen2.5-VL-3B-Instruct", "reason": "weight licence UNVERIFIED — HF API exposes no licence tag and the ModelScope first-party License field is empty", "status": "UNVERIFIED / DO NOT USE UNTIL RESOLVED"},
+    {"item": "Qwen/Qwen2.5-VL-7B-Instruct (BF16)", "reason": "15.45 GiB of weights exceeds the 15.89 GiB VRAM; licence is clean (apache-2.0) so only 4-bit QLoRA is viable, which depends on an unverified bnb+sm_120 combination"},
+    {"item": "ByteDance/Sa2VA-Qwen3-VL-4B as a fine-tuning target", "reason": "18.84 GiB of weights; use as a reference RECIPE instead"},
+    {"item": "ByteDance/Sa2VA-* repository code", "reason": "code licence UNVERIFIED at research time; training recipe is research-grade and assumes a data scale unavailable here"},
+    {"item": "Qwen/Qwen3-VL-4B-Thinking for the MVP", "reason": "shipped chat template forces a long chain-of-thought before any answer, so the segmentation token can only appear after it, complicating mask-token supervision"},
+    {"item": "Route E tokenized mask representation (FIRM / SAMTok)", "reason": "replaces the decoder; wrong stage before a working pipeline exists"}
+  ],
+
+  "environment_recommendation": {
+    "primary": "native Windows 11, dedicated new conda environment (never yolo_sam_env)",
+    "fallback": "WSL2 Ubuntu",
+    "fallback_trigger": "SAM 2 optional compiled CUDA extension proves necessary, or a decision to enable FlashAttention",
+    "attention_backend": "PyTorch SDPA (FlashAttention not used)",
+    "python": "3.10 or 3.11",
+    "torch": {"installed": "2.13.0+cu132", "cuda_runtime": "13.2", "sm_120_in_arch_list": true, "evidence": "MEASURED locally"},
+    "transformers_min": "4.57.0 (evidence: VERIFIED from the Qwen3-VL model card text via ModelScope)",
+    "measured_gpu": {"name": "NVIDIA GeForce RTX 5080 Laptop GPU", "compute_capability": [12, 0], "total_vram_gib": 15.89, "evidence": "MEASURED"},
+    "flash_attention_windows": "no official support, no prebuilt Windows wheels, and no sm_120 in the documented GPU list (FA2 stops at Hopper) — evidence: VERIFIED via pypi.org",
+    "bitsandbytes_windows": "officially supported since 0.43.0; README (0.50.2, 2026-08-27) lists a Windows 11 row with QLoRA 4-bit — evidence: VERIFIED via pypi.org; the sm_120-on-Windows combination is UNVERIFIED"
+  },
+
+  "precision_and_quantization": {
+    "primary": "BF16 LoRA, rank 16, alpha 32, dropout 0.05, on q,k,v,o,gate,up,down",
+    "adapter_parameter_count": {"Qwen3-VL-4B": "~31.3M (ESTIMATE from verified dims)", "Qwen3-VL-2B": "~17.4M"},
+    "oom_fallback": "4-bit QLoRA rank 16 (documented on Windows; sm_120 combination UNVERIFIED)",
+    "not_attempted": "full fine-tuning"
+  },
+
+  "modules": {
+    "frozen": [
+      "Qwen3-VL vision tower",
+      "Qwen3-VL language weights (LoRA only)",
+      "SAM 2.1 image encoder",
+      "SAM 2.1 memory / attention module"
+    ],
+    "trainable": [
+      "LoRA adapters on q,k,v,o,gate,up,down",
+      "[SEG] embedding row (and [REF] from Stage 3)",
+      "projection MLP from LLM hidden space to the decoder prompt space",
+      "SAM 2.1 mask decoder"
+    ],
+    "reserved_not_built": ["Spatial Relation Encoder", "Spatial Consistency Loss"]
+  },
+
+  "image_policy": {
+    "first_resolution": "512x512 native (the BuildSpatialReason tile size), no upscaling",
+    "visual_tokens_per_image": 256,
+    "derivation": "patch_size 16 x merge_size 2 = 32x32 px per token; 512/32 = 16 => 16x16 = 256 tokens (VERIFIED from config)",
+    "budget_setting": "min_pixels = max_pixels = 512*512, set EXPLICITLY",
+    "warning": "Qwen3-VL's released preprocessor_config.json contains no min_pixels/max_pixels keys, so Qwen2.5-VL's defaults (min_pixels 3136, max_pixels 12845056) must not be inherited",
+    "target_sequence_length": "<=768 tokens"
+  },
+
+  "external_datasets": {
+    "approved": [
+      {"dataset": "EarthReason", "hf_id": "earth-insights/EarthReason", "license": "apache-2.0", "size_gib": 1.32, "verification": "PLATFORM_FIELD (HF dataset API licence tag + file listing)", "approved_for": ["evaluation", "robustness"], "not_for_training_merge": true}
+    ],
+    "approved_with_caveat": [
+      {"dataset": "LaSeRS", "hf_id": "earth-insights/LaSeRS", "license": "apache-2.0", "size_gib": 11.65, "caveat": "its SAMRS-derived masks inherit academic / non-commercial upstream terms", "approved_for": ["evaluation"], "not_for_training_merge": true},
+      {"dataset": "RefSegRS", "license": "cc-by-4.0", "size_gib": 2.77, "approved_for": ["evaluation"]}
+    ],
+    "rejected_for_training": [
+      {"dataset": "DRSeg (PixDLM)", "hf_id": "WhynotHug/DRSeg", "license": "cc-by-nc-4.0", "size_gib": 2.47, "reason": "non-commercial licence"},
+      {"dataset": "RISBench", "reason": "own terms UNVERIFIED; upstream DOTA-v2 is academic-only and DIOR is CC BY-NC 4.0; no building class"},
+      {"dataset": "RRSIS-D", "reason": "community-uploaded copies carry conflicting tags (mit / cc-by-4.0 / none); upstream DOTA-v2/DIOR terms are non-commercial; no building class"},
+      {"dataset": "DOTA-v2", "reason": "academic purposes only, commercial use prohibited; no building class"},
+      {"dataset": "DIOR", "license": "cc-by-nc-4.0", "reason": "non-commercial"},
+      {"dataset": "SAMRS", "reason": "own terms UNVERIFIED; upstream constraints apply"}
+    ],
+    "unverified_count": 22,
+    "warmup_recommendation": "no external dataset before BuildSpatialReason; warm-up is unnecessary and most candidate licences are unresolved",
+    "decisive_finding": {
+      "question": "Is there any public remote-sensing reasoning-segmentation dataset combining instance-level BUILDING masks with multi-hop spatial instructions?",
+      "answer": "NO",
+      "evidence": "no public dataset was verified to combine all three; BRIGHT has ~291k building instance polygons but no language; LaSeRS/DRSeg have instance masks but unverified building coverage; EarthReason has reasoning but region masks; RISBench/RRSIS-D have no building class and only explicit referring",
+      "closest_adjacent_source_checked": {"title": "From Pixels to Semantics: Can a Single Instruction-Tuned VLM Unify Geospatial Building Analysis?", "doi": "10.5194/isprs-annals-XI-2-2026-857-2026", "read": "abstract + citation metadata read first-hand", "effect_on_answer": "none — it is a model/adaptation study whose dataset spans segmentation, detection, VQA and captioning, not spatial relations"}
+    }
+  },
+
+  "novelty_overlap_flags": {
+    "_legend": "DIRECT_OVERLAP | PARTIAL_OVERLAP | ORTHOGONAL | NO_EVIDENCE | UNVERIFIED",
+    "geometry_verifiable_spatial_reasoning_dataset": {"flag": "NO_EVIDENCE", "note": "no surveyed work supervises a stated spatial relation in a form re-checkable geometrically from the annotation"},
+    "ref_style_reference_token": {"flag": "DIRECT_OVERLAP", "note": "SegLLM (arXiv 2410.18923) uses [REF]+[SEG] with supervised reference mask; PSALM (ECCV 2024) also uses a [REF] token"},
+    "seg_target_token": {"flag": "DIRECT_OVERLAP", "note": "LISA, LISA++, GSVA, PixelLM, GLaMM, PSALM, Sa2VA, SegLLM, SAMTok"},
+    "reference_mask_to_geometry_or_spatial_prior": {"flag": "PARTIAL_OVERLAP", "note": "SegLLM re-injects a mask-derived bounding-box positional embedding plus a masked-object CLIP embedding into the LLM"},
+    "explicit_spatial_relation_encoder": {"flag": "NO_EVIDENCE", "note": "no dedicated relation encoder over predicted region geometry found"},
+    "semantic_spatial_visual_fusion": {"flag": "PARTIAL_OVERLAP", "note": "crowded; every pixel-level MLLM fuses language and visual features"},
+    "spatial_consistency_loss": {"flag": "PARTIAL_OVERLAP", "note": "spatial losses exist (SegEarth-R2 attention-space supervision; Think2Seg-RS mask-IoU GRPO reward) but no relation-contradiction loss found"},
+    "multi_hop_spatial_reasoning_supervision": {"flag": "PARTIAL_OVERLAP", "note": "SegLLM multi-round chains; TerraScope L2-Spatial; neither is a single chained instruction with a geometric check"},
+    "building_or_remote_sensing_specialization": {"flag": "PARTIAL_OVERLAP", "note": "ISPRS Annals XI-2-2026 (July 2026) instruction-tunes PaliGemma 2 for geospatial building analysis; BRIGHT has building polygons; several RS reasoning methods exist"}
+  },
+
+  "claims_decision": {
+    "retain": [
+      "geometry-verifiable relation supervision (evidenced absence, stated as such)",
+      "explicit Spatial Relation Encoder over self-predicted region geometry (lead contribution)",
+      "Spatial Consistency Loss on spatial relations",
+      "instance-level building + reference-anchored + multi-hop instruction setting"
+    ],
+    "narrow": ["[REF] + [SEG] -> the claim becomes the GEOMETRIC use of the predicted reference, not the token"],
+    "reframe": ["semantic-spatial-visual fusion -> architectural detail / ablation, not a headline claim", "building specialisation -> problem setting, not a contribution"],
+    "postpone": ["tokenized mask representation (FIRM / SAMTok)"],
+    "drop": [
+      "any first/novel claim about [SEG], [REF], pixel-level MLLM segmentation, or instruction-tuning for buildings",
+      "any claim that the Task 5B hidden-eligibility correction is a scientific contribution",
+      "any claim that a Chinese-instruction setting is itself novel"
+    ],
+    "most_threatening_prior_work": {"work": "SegLLM: Multi-round Reasoning Segmentation", "arxiv": "2410.18923", "date": "2024-10-24"}
+  },
+
+  "unresolved_risks": [
+    {"risk": "Sa2VA repository code licence could not be verified first-hand", "impact": "the Sa2VA route is treated as a recipe only; not a dependency", "status": "UNVERIFIED"},
+    {"risk": "Qwen2.5-VL-3B-Instruct weight licence cannot be established from any reachable first-party source", "impact": "the model is excluded from consideration", "status": "UNVERIFIED / DO NOT USE UNTIL RESOLVED"},
+    {"risk": "bitsandbytes + sm_120 + Windows combination not documented", "impact": "the QLoRA OOM fallback is not guaranteed", "status": "UNVERIFIED"},
+    {"risk": "Qwen3-VL image-budget defaults absent from the released preprocessor config", "impact": "the budget must be set explicitly and verified in Stage 0", "status": "VERIFIED as absent"},
+    {"risk": "All VRAM figures are analytic", "impact": "Stage 0-2 exist to replace them with measurements", "status": "ESTIMATE"},
+    {"risk": "A local accelerator (Steam++ / Watt Toolkit) blackholes github.com and huggingface.co in the hosts file while proxying them via a local listener; ordinary HTTP clients currently succeed", "impact": "weight acquisition must be confirmed in Stage 0; the ModelScope route is the documented alternative for Qwen models", "status": "MEASURED"},
+    {"risk": "Full text of the ISPRS Annals building-VLM paper not read (abstract only)", "impact": "if its full text released a dataset with instance-level building masks plus multi-hop spatial instructions, the dataset-novelty claim would need narrowing", "status": "partially verified"},
+    {"risk": "scene_level_split_leakage = unverified in BuildSpatialReason-v0.1.1", "impact": "no claim of geographic generalisation may be made from test numbers", "status": "carried from Task 5C"}
+  ],
+
+  "task6_entry_criteria": [
+    "licences cleared for every component actually used (Qwen3-VL-4B/2B apache-2.0; SAM 2.1 Apache-2.0); any QLoRA fallback additionally requires resolving bitsandbytes + sm_120 on Windows",
+    "weight acquisition confirmed on the target machine at Stage 0 (Hugging Face route vs ModelScope route)",
+    "a new dedicated conda environment created; yolo_sam_env is never modified",
+    "[SEG] token id and vocabulary-extension procedure fixed and recorded",
+    "dataset frozen and verified: v0.1.1 JSONL hashes unchanged, quality JSON PASS, consistency gate consistent",
+    "datasets/build_spatial_reason/v0.1/ is not used for any training decision"
+  ],
+
+  "task6_staged_plan_summary": [
+    {"stage": 0, "goal": "environment + model load smoke test", "model": "Qwen3-VL-2B-Instruct"},
+    {"stage": 1, "goal": "2-sample forward/backward proving hidden([SEG]) -> projection -> mask", "model": "Qwen3-VL-2B-Instruct"},
+    {"stage": 2, "goal": "overfit 20 samples to > 0.9 training mIoU", "model": "Qwen3-VL-2B-Instruct"},
+    {"stage": 3, "goal": "200-500 sample mini-train; switch to 4B; add [REF]", "model": "Qwen/Qwen3-VL-4B-Instruct"},
+    {"stage": 4, "goal": "full train, target < 7 days", "model": "Qwen/Qwen3-VL-4B-Instruct"},
+    {"stage": 5, "goal": "validation + demo per the evaluation plan", "model": "Qwen/Qwen3-VL-4B-Instruct"}
+  ],
+
+  "source_urls": {
+    "model_and_decoder": [
+      "https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct",
+      "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct",
+      "https://huggingface.co/Qwen/Qwen3-VL-4B-Thinking",
+      "https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct",
+      "https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct",
+      "https://www.modelscope.cn/models/Qwen/Qwen3-VL-4B-Instruct",
+      "https://huggingface.co/api/models/Qwen/Qwen3-VL-4B-Instruct",
+      "https://huggingface.co/facebook/sam2.1-hiera-large",
+      "https://raw.githubusercontent.com/facebookresearch/sam2/main/LICENSE",
+      "https://raw.githubusercontent.com/facebookresearch/segment-anything/main/LICENSE",
+      "https://huggingface.co/ByteDance/Sa2VA-Qwen3-VL-4B"
+    ],
+    "prior_work": [
+      "https://arxiv.org/abs/2410.18923",
+      "https://arxiv.org/abs/2501.04001",
+      "https://arxiv.org/abs/2512.19302",
+      "https://arxiv.org/abs/2504.09644",
+      "https://openaccess.thecvf.com/",
+      "https://github.com/berkeley-hipie/segllm"
+    ],
+    "datasets": [
+      "https://huggingface.co/datasets/earth-insights/EarthReason",
+      "https://huggingface.co/datasets/earth-insights/LaSeRS",
+      "https://huggingface.co/datasets/WhynotHug/DRSeg",
+      "https://huggingface.co/datasets/xiang709/VRSBench",
+      "https://huggingface.co/datasets/JessicaYuan/RefSegRS",
+      "https://huggingface.co/datasets/xlangai/BRIGHT"
+    ],
+    "environment": [
+      "https://learn.microsoft.com/en-us/windows/ai/directml/gpu-cuda-in-wsl",
+      "https://docs.nvidia.com/cuda/wsl-user-guide/index.html",
+      "https://pypi.org/project/flash-attn/",
+      "https://pypi.org/project/bitsandbytes/"
+    ],
+    "isprs": ["https://isprs-annals.copernicus.org/articles/XI-2-2026/857/2026/"]
+  },
+
+  "evidence_summary": {
+    "labels_used": ["VERIFIED", "PLATFORM_FIELD", "MEASURED", "ESTIMATE", "UNVERIFIED"],
+    "note": "Research tools (web_fetch/web_search) could not retrieve github.com or huggingface.co because a local accelerator blackholes them in the hosts file; ordinary HTTP clients on the same machine could, and were used for the licence and metadata verification recorded above. Facts that remain UNVERIFIED are marked as such and are not relied upon for the chosen stack."
+  }
+}

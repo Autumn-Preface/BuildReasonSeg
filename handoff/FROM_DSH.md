@@ -1,9 +1,11 @@
-# FROM_DSH — Task 5C Report: Acceptance Audit Hardening & Artifact Consistency
+# FROM_DSH — Task 5.5 Report: External Research, Model-Stack Verification & MVP Design Freeze
 
-**Date:** 2026-08-04
+**Date:** 2026-09-26
 **Actor:** DSH
-**Task:** Task 5C (from `handoff/TO_DSH.md`)
-**Verdict: `PASS`**
+**Task:** Task 5.5 (from `handoff/TO_DSH.md`)
+**Verdict:** **COMPLETE** — MVP stack frozen (ADR-012), with explicitly listed `PROVISIONAL` sub-items.
+**Research confidence:** **high on the chosen stack, medium on the surrounding landscape, low on licences
+that require GitHub/Hugging Face to resolve** — see §1.
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -26,328 +28,460 @@ sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 
 ---
 
-## 1. Verdict
+## 1. Verdict / Research Confidence
 
-**`PASS`** — the v0.1.1 dataset is semantically correct under an **independent**
-implementation, and every repository artifact now agrees with one declared truth.
+**Task 5.5 is complete.** A primary MVP stack, a fallback stack, a baseline-only stack and a
+not-recommended list are all fixed and machine-readable in `evaluation/task5_5_stack_decision.json`,
+with the reasoning in `docs/research/`. Nothing was downloaded, installed, executed or trained.
 
-| Gate | Result |
-|---|---|
-| Independent-oracle target match | **25,229 / 25,229** |
-| Independent semantic violations | **0** |
-| Production-policy hidden violations | **0** |
-| Artifact consistency violations | **0** |
-| v0.1 / v0.1.1 JSONL hashes | **unchanged** |
-| Provenance digests vs on-disk files | **8 / 8 match** |
-| Test suite | see §10 |
+Confidence is deliberately uneven, and the unevenness is recorded rather than smoothed over:
 
-**No JSONL was regenerated or modified.** The only dataset-directory change is
-`v0.1.1/manifest.json`, whose provenance list was extended as section 9 requires.
-
-**Where the responsibility for the Task 5B count defect lies.** The Task 5B
-handoff text published Level-2 Type A/B as 2,272/2,764 and Level-3
-trivial/nontrivial as 1,261/1,657. `statistics.json`, `manifest.json` and the
-quality JSON all said 2,275/2,761 and 1,256/1,662, and a direct recount from the
-JSONL confirms those machine-readable values. **The dataset was always correct;
-my Task 5B report was wrong.** It is corrected here, and the new consistency gate
-makes the class of error detectable rather than silent.
+| Area | Confidence | Why |
+|---|---|---|
+| The chosen stack (Qwen3-VL-4B + SAM 2.1 + BF16 LoRA) | **High** | Every component licence was verified first-hand or from an official platform field, the local GPU support was *measured*, model dimensions came from the official config files, and the `[SEG]`→projection→SAM2 pattern has a public reference implementation on the same base family |
+| Local hardware feasibility | **High for Windows/PyTorch, medium for the training budget** | `sm_120` and 15.89 GiB VRAM are measured; all VRAM totals are arithmetic (ESTIMATE) and will be replaced by Stage 0–2 measurements |
+| Literature landscape | **Medium–high** | 43 works surveyed from primary sources; repository-level facts (stars, releases, training code) could not be checked through the research tools |
+| Licences needing GitHub/Hugging Face | **Low where unresolved** | A local accelerator blackholes those hosts for the research tools; they were reachable through ordinary HTTP clients, which is how the important licences *were* verified — but the residue is genuinely unverified (§16) |
+| Dataset novelty claim | **Medium** | The absence is well evidenced across 28 datasets, but it is an *evidenced absence*, and one paper was read only at abstract level |
 
 ---
 
-## 2. Files Modified
+## 2. Preflight Provenance Fix
 
-**Created**
+### 2.1 §3.1 — generation-time vs current-source provenance
+
+`datasets/build_spatial_reason/v0.1.1/manifest.json` no longer carries the single combined
+`generator_file_sha256` map. It now has:
+
+```
+generation_source:  commit a9e5bd69cbc331f79763dd401d5c5f68d2b5f780  (Task 5B generation commit)
+                    file_sha256  <- read from the GIT OBJECT STORE at that commit
+current_source:     commit ac7f8b1778a25fdf5cba4f7402e6306fd6784016  (repo state at Task 5.5 start)
+                    file_sha256  <- read from the GIT OBJECT STORE at that commit
+```
+
+Both blocks are hashed after **CRLF→LF normalisation**, which makes them comparable and independent of
+`core.autocrlf`. New tool: `scripts/split_manifest_provenance.py` (re-runnable, `--check` mode,
+refuses to run if the frozen JSONL hashes have moved).
+
+**Two real defects were found in the old map, not one.** The task described the post-generation refresh
+of `scripts/build_spatial_reason.py`; investigating it also exposed a second, previously unnoticed one:
+
+| File | Old recorded value | Truth | Defect |
+|---|---|---|---|
+| `scripts/build_spatial_reason.py` | `29c27bb2…` | generation-time `9345feda…` | **silently refreshed** after generation — the reported defect |
+| `spatial_reasoning/relations.py` | `ec0fd613…` | committed blob `d45688a6…` | hashed in **CRLF working-tree form**, not the committed LF blob: 900 CRLF pairs vs 0. Semantically identical, but the map described no reproducible code state |
+
+The other six files were correct. The old map, with its superseded values and the reason, is preserved in
+the manifest as `provenance_split_note` rather than deleted.
+
+**Verification result:** exactly **one** file differs between `generation_source` and `current_source` —
+`scripts/build_spatial_reason.py` — which is precisely the maintenance edit the task described. The
+consistency gate now verifies *both* blocks against Git history, so a future silent refresh of the
+generation-time record fails the gate.
+
+### 2.2 §3.2 — nested `PENDING_CONSISTENCY_GATE`
+
+Confirmed and fixed. Before the fix, the quality JSON read:
+
+```
+top-level verdict        : PASS
+embedded quality_verdict : PENDING_CONSISTENCY_GATE
+```
+
+Cause: the consistency gate ran before the final verdict existed, so it recorded the pre-verdict
+placeholder. Fix: `run_audit()` now computes the per-record verdict, runs the gate with it, recomputes
+the verdict if the gate itself fails, and then **writes the final verdict back into the embedded
+`artifact_consistency.quality_verdict` field**. A full re-run was required and was performed; the
+top-level verdict and the embedded verdict now agree, and the live consistency check is `consistent`.
+
+---
+
+## 3. Sources Reviewed
+
+The consolidated, deduplicated register is `docs/research/task5_5_sources.md`; the raw evidence notes are
+in `docs/research/_raw/` (six files, retained as the evidence trail).
+
+**A network reality that matters for reading this package.** The research tools (`web_fetch`,
+`web_search`) **cannot** retrieve `github.com`, `raw.githubusercontent.com` or `huggingface.co` on this
+machine: the Windows `hosts` file contains a 210-entry blocklist installed by **Steam++ / Watt Toolkit**
+(`# Steam++ Start` … `# Steam++ End`) mapping those hosts to `127.0.0.1`. However, a local listener on
+`0.0.0.0:443` from the same tool transparently proxies them, so **ordinary HTTP clients succeed** —
+verified first-hand by retrieving genuine Hugging Face API JSON, real `LICENSE` file text from
+`raw.githubusercontent.com`, and successful `git ls-remote` calls against GitHub.
+
+Consequences, stated plainly:
+
+* The six delegated research agents were restricted to `web_fetch`/`web_search` and therefore recorded
+  many hosts as unreachable. Two of them declined to use a shell on principle; that is defensible and is
+  recorded as such, not as an error.
+* **I re-verified the decision-critical licences and sizes myself through the working HTTP path.** Those
+  values are labelled `VERIFIED` / `PLATFORM_FIELD` in the deliverables; everything still unresolved is
+  labelled `UNVERIFIED` and is not relied on.
+* `hf-mirror.com` resolves but is a third-party mirror and was never used as licence evidence.
+
+---
+
+## 4. Literature Landscape
+
+43 works are compared in `docs/research/task5_5_literature_matrix.md` across architecture, mechanism,
+resources, licences, training cost and a nine-mechanism inventory. Highlights:
+
+* **LISA** (CVPR 2024) established the `[SEG]`-token → SAM mask-decoder pattern; **LISA++** exists but has
+  **no venue** (author page: technical report); **GSVA** (CVPR 2024) generalises to multiple `[SEG]` plus
+  a `[REJ]` token; **PixelLM** (CVPR 2024) uses a codebook with a lightweight decoder; **GLaMM**
+  (CVPR 2024) adds a Region Encoder and the GranD corpus; **PSALM** (ECCV 2024) uses a `[REF]` token.
+* **Sa2VA** (arXiv 2501.04001, accepted IEEE TPAMI 2026) is the MLLM + SAM-2 family, single-stage
+  instruction tuning, SAM-2 decoder **and memory frozen**; **SAMTok** (CVPR 2026) is a *separate*
+  mask-tokenizer contribution (2 tokens per mask) and is **not** the tokenizer inside Sa2VA.
+* The remote-sensing line is active: **SegEarth-R1** (arXiv 2504.09644) and **SegEarth-R2** (CVPR 2026
+  open access), **EarthReason**, **FIRM** (benchmarks: LaSeRS, EarthReason, DRSeg, RRSIS-D, RISBench;
+  trains on LaSeRS), **Think2Seg-RS** (arXiv 2512.19302 — official source verified to exist),
+  **PixDLM/DRSeg** (CVPR 2026), **TerraScope/TerraLogic**, **GeoSeg**.
+* **Corrections to seed assumptions:** the seed's `READ` entry was wrong in **title and arXiv id** (the
+  real work is *Reasoning to Attend…*, CVPR 2025, arXiv 2412.17741); "OMGM" does not exist;
+  LISA++ has no venue; Sa2VA is not a GLaMM successor; RS-RefSeg is `RSRefSeg`.
+
+**The three gaps that matter for this project** (each an evidenced absence, per the survey):
+
+1. **No work supervises the *relation* geometrically** — nothing stores a spatial-relation triple and
+   re-checks it against predicted region geometry. The nearest cases are all something else: a mask-IoU
+   GRPO reward (Think2Seg-RS), an attention-space loss from a downsampled GT mask (SegEarth-R2),
+   reference-mask supervision (SegLLM), deterministic GT mask codes (FIRM).
+2. **No learned relation encoder over the model's own predicted masks/boxes** (`NO_EVIDENCE`).
+   SegLLM's mask-encoding loop is the closest, and it re-injects a CLIP masked-crop embedding plus a
+   mask-derived bounding-box embedding into the **LLM**, not into a relation module.
+3. **`[REF]`-style reference tokens already exist** (SegLLM with supervised reference-mask decoding;
+   SAMTok and OMG-LLaVA with mask-in tokens) — yet they are absent from the entire remote-sensing line,
+   and no remote-sensing work is building-relation-specific.
+
+---
+
+## 5. Novelty Collision
+
+Full audit: `docs/research/task5_5_novelty_collision.md`.
+
+**The damaging finding: the `[REF]` token is prior art.** **SegLLM** (arXiv 2410.18923, Oct 2024)
+generates both `[REF]` and `[SEG]`, decodes **two** masks (`F([REF],[PAD]) → M_ref`,
+`F([REF],[SEG]) → M_tgt`), supervises **both**, re-injects predicted-region geometry (mask-derived
+bounding-box positional embedding + masked-object CLIP embedding), and performs multi-round relational
+reasoning. **PSALM** also uses a `[REF]` token. On top of that, the **ISPRS Annals XI-2-2026** paper
+(DOI `10.5194/isprs-annals-XI-2-2026-857-2026`, online 2026-07-03, abstract read first-hand) adapts
+PaliGemma 2 into a "unified geospatial building analyzer" from a 16,500-sample instruction-tuning dataset
+built out of building polygons — closing the "instruction-tuned VLM for buildings" framing.
+
+| Claim | Verdict | Action |
+|---|---|---|
+| Geometry-verifiable spatial reasoning dataset | `NO_EVIDENCE` for relation-level verification | **retain, sharpen** |
+| `[REF] + [SEG]` | **`DIRECT_OVERLAP`** | **narrow** to the geometric use of the predicted reference |
+| Semantic–spatial–visual fusion | `PARTIAL_OVERLAP`, crowded | **reframe** as an ablation |
+| Spatial Relation Encoder | **`NO_EVIDENCE`** | **retain as the lead contribution** |
+| Spatial Consistency Loss | `NO_EVIDENCE` for a relation-consistency loss | **retain, define precisely** |
+| Building/RS specialisation | `PARTIAL_OVERLAP` | **retain as the setting, not a contribution** |
+| Tokenised mask representation (FIRM/SAMTok) | relevant, different stage | **postpone** |
+| "first"/"novel" for `[SEG]`, `[REF]`, fusion, building instruction-tuning | false or unproven | **drop** |
+
+**Most threatening prior work: SegLLM.** The defence is narrow but real: no surveyed work has a
+dedicated relation encoder over predicted geometry, a relation-level consistency loss, or
+geometry-verifiable relation supervision and evaluation.
+
+**Narrative change:** move from a *mechanism* claim to a **verification-first** claim — (1) spatial
+supervision that can be *proved* correct (25,229 samples, independent oracle, zero violations, artifact
+gate); (2) the model contribution is the **explicit relation pathway**; (3) the evidence is
+relation-level metrics that only a geometry-verifiable dataset makes possible.
+
+---
+
+## 6. Base MLLM Comparison
+
+All sizes and licences below were verified first-hand (official config files, HF API file listings,
+ModelScope first-party API).
+
+| Model | Params | BF16 weights | Weight licence | Verdict |
+|---|---|---|---|---|
+| `Qwen/Qwen3-VL-4B-Instruct` | ~4.44 B | 8.27 GiB | **apache-2.0** | **PRIMARY** |
+| `Qwen/Qwen3-VL-2B-Instruct` | ~2.13 B | 3.96 GiB | **apache-2.0** | **FALLBACK + Stages 0–2** |
+| `Qwen/Qwen3-VL-4B-Thinking` | ~4.44 B | 8.27 GiB | apache-2.0 | not for the MVP — forced CoT before the mask token |
+| `Qwen/Qwen2.5-VL-7B-Instruct` | ~8.29 B | 15.45 GiB | apache-2.0 | BF16 exceeds VRAM; QLoRA only |
+| `Qwen/Qwen2.5-VL-3B-Instruct` | ~3.75 B | 6.99 GiB | **UNVERIFIED** | **EXCLUDED on licence grounds** — HF exposes no licence tag and ModelScope's `License` field is empty |
+| `Qwen/Qwen3.5-2B` / `-4B` | 2.28 / 4.66 B | 4.24 / 8.68 GiB | apache-2.0 | watch list (2026 family, no pixel-level recipe yet) |
+
+Verified architecture (config.json): Qwen3-VL-4B text hidden **2560**, **36 layers**, FFN 9728, 32/8
+heads, context 262,144, vocab 151,936, vision patch **16** merge 2; documented special-token ids
+`vision_start 151652`, `vision_end 151653`, `image 151655`. A `[SEG]` id can therefore be added at
+151,936+ with `resize_token_embeddings` and read from `output_hidden_states`.
+
+Notes: Qwen3-VL needs `transformers` ≥ 4.57.0; **FlashAttention is recommended but optional**;
+Qwen3-VL's released `preprocessor_config.json` contains **no** `min_pixels`/`max_pixels` keys, so the
+image budget must be set explicitly (Qwen2.5-VL's defaults are `min_pixels 3136`,
+`max_pixels 12,845,056`).
+
+---
+
+## 7. Segmentation Pathways
+
+| Route | Assessment |
+|---|---|
+| **A — LISA-style direct `[SEG]`** | **chosen.** Only route where every component is licence-verified and locally feasible, with public reference implementations |
+| **B — Sa2VA-style adaptation** | its *recipe* is valuable and free; the *checkpoints* are not (18.84 GiB for 4B, 9.93 GiB for 2B), the code is research-grade, and its training scale is unreachable. Use as a reference, optionally as a weight initialiser for the projection |
+| **C — Think2Seg-RS-style decoupled prompting** | **baseline only.** Cheapest, inference-only, excellent as "how far does prompting get?", but it contains no learnable relation representation and cannot support the contribution |
+| **D — SegEarth-R1/R2-style learned mask decoder** | related work; not adopted — it is a general geospatial decoder, not a relation-aware one |
+| **E — FIRM / SAMTok tokenized masks** | relevant to small/adjacent buildings, but replaces the decoder: postponed to related/future work |
+
+---
+
+## 8. `[REF] + [SEG]` Feasibility
+
+The target architecture is feasible, and the **critical rule is preserved**: ground-truth geometry is
+never an inference-time input (ADR-002). Three inference-valid reference sources were assessed; the
+recommendation is **source (1), the predicted `[REF]` mask**, because BuildSpatialReason already stores
+`reference_component_ids` for every Level-2/3 sample, so **direct reference-mask supervision is available
+at zero annotation cost** — a property of this dataset, not of the prior work.
+
+Staging: the **MVP trains `[SEG]` only**; `[REF]` is added at Stage 3. That keeps the moving parts at a
+minimum and produces the baseline the final model must beat. The MVP cannot block the Spatial Relation
+Encoder provided the interface is fixed now (see §13), because the encoder consumes *predicted* reference
+geometry, *predicted* candidate geometry and visual features — all of which the MVP already produces.
+
+---
+
+## 9. Hardware Feasibility
+
+Full analysis: `docs/research/task5_5_hardware_feasibility.md`. **MEASURED on the target machine:**
+
+| Property | Value |
+|---|---|
+| GPU / capability | RTX 5080 Laptop GPU, **(12, 0)** = `sm_120` |
+| Total VRAM | **15.89 GiB** |
+| PyTorch / CUDA | **2.13.0+cu132** (CUDA 13.2), `sm_120` present in `get_arch_list()`, `cuda.is_available() == True` |
+
+This closes the Blackwell risk natively on Windows with no installation. Estimated totals (ESTIMATE, not
+measurements): Qwen3-VL-2B BF16 LoRA ≈ **6.6–7.1 GiB** (SAFE_LOCAL); Qwen3-VL-4B BF16 LoRA ≈
+**11.6–12.6 GiB** (SAFE_LOCAL, ≈3 GiB headroom); Qwen3-VL-4B 4-bit QLoRA ≈ 5.9–6.9 GiB;
+Qwen2.5-VL-7B BF16 **does not fit**; Sa2VA-Qwen3-VL-4B **does not fit**.
+
+Crucially, **this project's images are 512×512**, i.e. **256 visual tokens** per tile with Qwen3-VL's
+patch-16/merge-2 tokenisation — roughly 50× smaller than Qwen2.5-VL's default pixel budget. Image
+resolution is the largest single lever on activation memory, and the dataset's native resolution is
+already the economical setting. Storage is a non-issue: the whole recommended stack plus the primary
+dataset is well under 30 GB.
+
+---
+
+## 10. Windows vs WSL2/Linux
+
+**Recommendation: native Windows 11, in a new dedicated conda environment** (`yolo_sam_env` is never
+modified). **WSL2 Ubuntu is the documented fallback.**
+
+The deciding facts point in opposite directions, and both are recorded:
+* **For WSL2:** FlashAttention has **no official Windows support and no prebuilt Windows wheels**
+  (`flash-attn` ships sdist only; classifier "Operating System :: Unix"), and its documented GPU list
+  stops at Hopper — **no `sm_120`**. SAM 2's own guidance for Windows is reportedly to use WSL (that
+  source was not retrievable first-hand).
+* **For native Windows:** FlashAttention is **optional** for Qwen3-VL, and SDPA is measured working; at
+  ~768-token sequences with a 256-token image prefix it is the least valuable regime for FlashAttention.
+  `bitsandbytes` **does** officially support Windows 11 with QLoRA 4-bit. And `sm_120` + PyTorch is
+  already measured working natively.
+
+Choosing the environment whose critical path is already measured working, rather than adding a second
+filesystem and a GPU-passthrough layer for a marginal attention-kernel gain, is the least disruptive
+technically reliable choice.
+
+---
+
+## 11. External Dataset Decisions
+
+Full detail: `docs/research/task5_5_external_datasets.md` (28 datasets).
+
+**The decisive answer: NO.** No public remote-sensing reasoning-segmentation dataset was verified to
+combine **instance-level building masks** with **multi-hop spatial instructions**. The evidence is
+per-dataset: BRIGHT has ~291k building instance polygons but no language; LaSeRS and DRSeg have instance
+masks but unverified building coverage; EarthReason has reasoning but region masks; RISBench and RRSIS-D
+have no building class and only explicit referring; DOTA-v2/DIOR/VRSBench/SAMRS have neither.
+
+* **Licence-clean (verified):** EarthReason (`earth-insights/EarthReason`, **apache-2.0**, **1.32 GiB**),
+  RefSegRS (`JessicaYuan/RefSegRS`, cc-by-4.0, 2.77 GiB), and LaSeRS (`earth-insights/LaSeRS`,
+  apache-2.0, 11.65 GiB — with the caveat that its SAMRS-derived masks inherit academic/non-commercial
+  upstream terms). Sizes are verified from the HF API file listings.
+* **Rejected / non-commercial:** DRSeg (`cc-by-nc-4.0`), DIOR (`CC BY-NC 4.0`), DOTA-v2 (academic only),
+  RISBench and RRSIS-D (own terms unresolved plus upstream non-commercial constraints).
+* **22 of 28 datasets remain `UNVERIFIED / DO NOT USE UNTIL RESOLVED`.**
+* **Decision: no external dataset is merged into training.** Warm-up is unnecessary; the clean candidates
+  are reserved for evaluation and robustness, and published RRSIS-D/RISBench numbers may be used only as
+  a literature comparison, never re-presented as our own run.
+
+The ISPRS Annals XI-2-2026 building-VLM paper was the one item that could have overturned this; I read
+its abstract and citation metadata first-hand. It is a model/adaptation study whose dataset spans
+segmentation, detection, VQA and captioning — **the answer stays NO** and the paper's effect is confined
+to the novelty audit (§5).
+
+---
+
+## 12. Evaluation Plan
+
+Full protocol: `docs/research/task5_5_evaluation_plan.md`. Summary:
+
+* **Splits:** train 15,592 / val 3,884 / test 5,753; test touched once; scene-level leakage remains
+  `unverified` and must be stated as a caveat.
+* **Segmentation:** mIoU (primary), cIoU (reported alongside, never instead), gIoU, Dice; boundary F1
+  only if a boundary argument is actually made.
+* **Component-level (this project's distinctive axis):** target-selection accuracy,
+  component-IoU-after-snapping, and an **adjacency confusion rate** distinguishing "wrong building,
+  specifically the reference" from merely poor masks.
+* **Reasoning:** reference-selection accuracy, **relation satisfaction rate** (the geometry-verifiable
+  metric the dataset exists to enable), target-selection accuracy, **multi-hop success on the
+  nontrivial Level-3 subset (1,662 samples) as the primary metric**, trivial Level-3 (1,256) reported
+  separately and never merged.
+* **Spatial consistency:** direction / size / nearest consistency — defined now so the MVP produces a
+  baseline number that the final model must beat, and so they cannot be redefined later.
+* **Baselines:** frozen YOLOv8m-seg-WHU (floor; a *different task*, must be footnoted), non-reasoning
+  referring segmentation, a `[SEG]`-only model, and a structured-prompting route.
+* **Discipline:** no cross-dataset metric comparison as if equivalent; a single run is labelled a single
+  run.
+
+---
+
+## 13. Primary MVP Stack
+
+**`Qwen/Qwen3-VL-4B-Instruct` + `facebook/sam2.1-hiera-large` + LISA-style `[SEG]`, BF16 LoRA rank 16.**
+(Stages 0–2 use `Qwen/Qwen3-VL-2B-Instruct`.)
+
+* Trainable: LoRA r=16 on `q,k,v,o,gate,up,down` (≈31.3 M params), `[SEG]`/`[REF]` embedding rows,
+  projection MLP, SAM2 mask decoder.
+* Frozen: Qwen3-VL vision tower, LLM base weights, SAM2 image encoder and memory module.
+* Images: native 512×512, no upscaling, pixel budget set **explicitly**, target sequence ≤768 tokens.
+* Interface reserved for the final model: projection MLP and relation encoder stay separate modules; all
+  inference-time geometry comes from the model's own predicted masks; the MVP records, per sample, the
+  predicted reference mask, the predicted target mask and the stated relation, so the Spatial
+  Consistency Loss is computable later without changing the MVP output.
+
+---
+
+## 14. Fallback / Baselines
+
+* **Fallback:** `Qwen/Qwen3-VL-2B-Instruct` + `facebook/sam2.1-hiera-base-plus`, same recipe. Triggered by
+  OOM at 4B after gradient checkpointing and image-budget reduction, or unacceptable step time. It is a
+  configuration change, not a rewrite.
+* **Baseline-only:** Think2Seg-RS-style decoupled prompting (frozen SAM2, no LLM training); a
+  non-reasoning referring-segmentation model; and the frozen YOLOv8m-seg WHU floor.
+* **Not recommended now:** `Qwen2.5-VL-3B` (licence unverifiable), `Qwen2.5-VL-7B` in BF16 (exceeds
+  VRAM), Sa2VA-Qwen3-VL-4B as a fine-tuning target (18.84 GiB), `Qwen3-VL-4B-Thinking` for the MVP, and
+  Route E tokenized masks.
+
+---
+
+## 15. Task 6 Staged Plan
+
+Design only — nothing executed. Full table with success/failure criteria, checkpoint policy, VRAM safety
+and logging in `docs/research/task5_5_mvp_decision.md` §2.
+
+| Stage | Goal | Model | Runtime (ESTIMATE) |
+|---|---|---|---|
+| 0 | environment + model-load smoke test (incl. **weight-acquisition check**) | 2B | 30–60 min |
+| 1 | 2-sample forward/backward proving `hidden([SEG]) → projection → mask` | 2B | 15–30 min |
+| 2 | overfit 20 samples to > 0.9 training mIoU | 2B | 30 min – 2 h |
+| 3 | 200–500-sample mini-train; **switch to 4B**; add `[REF]` | 4B | 2–6 h |
+| 4 | full train, target **< 7 days** | 4B | days |
+| 5 | validation + demo per the evaluation plan | 4B | 2–4 h |
+
+The training code must provide: best **and** last checkpoints, periodic saves, resume, mixed precision,
+gradient accumulation, gradient clipping (logged), **NaN/inf detection with a clear abort**, documented
+OOM-recovery order (checkpointing → smaller image budget → 4-bit QLoRA → smaller model), per-epoch
+validation, and early stopping with recorded patience. Every reported number must be stamped with its
+split, checkpoint hash and metric definition.
+
+**Entry criteria** are listed in §2.2 of the decision document; they include licence clearance, the
+Stage-0 weight-acquisition check, a new dedicated environment, a fixed `[SEG]` token id, and a
+re-verification of the frozen dataset.
+
+---
+
+## 16. Remaining Risks
+
+1. **A local accelerator (Steam++ / Watt Toolkit) blackholes `github.com` and `huggingface.co` in the
+   hosts file while proxying them via a local listener.** Ordinary HTTP clients currently succeed, which
+   is how the licences in this report were verified — but if the accelerator is disabled, Hugging Face
+   weight downloads fail and the ModelScope route must be used. **This is a Stage 0 check, and it is not
+   merely academic: it decides how Task 6 obtains its weights.**
+2. **`bitsandbytes` + `sm_120` + Windows is undocumented** — the QLoRA fallback is not guaranteed.
+3. **Every VRAM figure is analytic.** Stage 0–2 exist to replace them with measurements.
+4. **Sa2VA repository code licence unresolved**; Sa2VA is used as a *recipe*, never as a dependency.
+5. **Residual `UNVERIFIED` licences** across most external datasets — handled by not using them.
+6. **The ISPRS Annals building-VLM paper was read at abstract level only.** If its full text released a
+   dataset with instance-level building masks plus multi-hop spatial instructions, the dataset-novelty
+   claim would need narrowing.
+7. **`scene_level_split_leakage = unverified`** in BuildSpatialReason-v0.1.1 — no claim of geographic
+   generalisation may be made from test numbers.
+8. **The dataset-novelty claim is an evidenced absence**, not a proof. It is phrased as such everywhere.
+
+---
+
+## 17. Files Created / Modified
+
+**Created — deliverables**
+
+| File | Contents |
+|---|---|
+| `docs/research/task5_5_sources.md` | consolidated deduplicated source register + licence register |
+| `docs/research/task5_5_literature_matrix.md` | 43 works, architecture/resources tables, 9-mechanism inventory, gaps |
+| `docs/research/task5_5_model_stack.md` | base MLLM comparison, routes A–E, `[REF]+[SEG]` feasibility, decision matrix |
+| `docs/research/task5_5_hardware_feasibility.md` | measured environment facts, memory accounting, per-config estimates, OS decision |
+| `docs/research/task5_5_novelty_collision.md` | collision matrix, retain/narrow/reframe/postpone/drop, narrative change |
+| `docs/research/task5_5_mvp_decision.md` | the 12 required decisions + the staged Task 6 plan |
+| `docs/research/task5_5_external_datasets.md` | 28 datasets, the decisive-question answer, licence groups, use plan |
+| `docs/research/task5_5_evaluation_plan.md` | paper-ready evaluation protocol |
+| `evaluation/task5_5_stack_decision.json` | machine-readable stack decision with evidence labels |
+| `docs/research/_raw/*.md` (6 files) | raw evidence notes, retained as the trail |
+
+**Created — tooling**
 
 | File | Purpose |
 |---|---|
-| `spatial_reasoning/semantic_oracle.py` | Independent audit-only semantic implementation (never imports `semantic_policy`) |
-| `scripts/check_artifact_consistency.py` | Repository-wide artifact consistency gate |
-| `tests/test_semantic_oracle.py` | 8 oracle checks (independence, semantics, full-dataset, frozen hashes) |
-| `tests/test_artifact_consistency.py` | 8 consistency-gate checks |
-| `evaluation/build_spatial_reason_artifact_index.json` | Declared single source of truth for counts/versions/paths |
-| `evaluation/build_spatial_reason_v0.1.1_consistency.json` | Consistency gate result |
-| `evaluation/build_spatial_reason_v0.1.1_quality.json` | Renamed from `…_v011_quality.json` (canonical naming) |
-| `evaluation/build_spatial_reason_v0.1.1_samples/` | Renamed from `…_v011_samples/` |
+| `scripts/split_manifest_provenance.py` | reconstructs generation-time provenance from Git objects; `--check` mode |
 
 **Modified**
 
 | File | Change |
 |---|---|
-| `spatial_reasoning/dataset_validator.py` | `V011_FROZEN_SHA256`, `verify_v011_unchanged()`, oracle/artifact blocking codes |
-| `scripts/validate_build_spatial_reason.py` | Oracle audit per record, `independent_oracle` + `v011_frozen_integrity` fields, canonical naming, embedded consistency gate |
-| `scripts/build_spatial_reason.py` | `semantic_policy.py` added to provenance list; duplicate dict key removed; stale KL-05/06/07 wording fixed |
-| `datasets/build_spatial_reason/v0.1.1/manifest.json` | `generator_file_sha256` refreshed + `semantic_policy.py`; KL-06/KL-07 wording |
-| `docs/architecture_decisions.md` | **ADR-011** added |
-| `docs/build_spatial_reason_v0.1.1.md` | Artifact-facts block, oracle section, canonical paths |
-| `docs/build_spatial_reason_v0.1.1_quality_audit.md` | Rewritten: correct counts, oracle section, consistency gate |
-| `handoff/FROM_DSH.md`, `handoff/PROJECT_STATE.md` | This report; stale counts replaced by machine-checked facts |
+| `datasets/build_spatial_reason/v0.1.1/manifest.json` | provenance split into `generation_source` / `current_source`; legacy map preserved under `provenance_split_note` |
+| `scripts/build_spatial_reason.py` | emits the two provenance blocks; CRLF-normalised source hashing; `_git_head()` |
+| `scripts/check_artifact_consistency.py` | provenance gate now verifies **both** blocks against Git history and rejects the legacy field |
+| `scripts/validate_build_spatial_reason.py` | embedded consistency result now quotes the **final** verdict (§3.2 fix) |
+| `tests/test_artifact_consistency.py` | provenance test rewritten for the split + Git verification |
+| `docs/architecture_decisions.md` | **ADR-012** added, with `PROVISIONAL` sub-decisions and the summary row |
+| `README.md` | status now records the MVP stack freeze; new "Frozen MVP stack" and "Contribution framing" sections |
+| `handoff/PROJECT_STATE.md` | Task 5.5 state |
 
-**Deleted** — the superseded `evaluation/build_spatial_reason_v011_quality.json`
-and `evaluation/build_spatial_reason_v011_samples/` (renamed, not duplicated).
-
-**Not modified:** `datasets/build_spatial_reason/v0.1/**`,
-`datasets/build_spatial_reason/v0.1.1/*.jsonl`, `../WHU_Building_Segment/**`,
-`handoff/TO_DSH.md`.
+**Not modified:** all `*.jsonl` in both dataset versions, `docs/build_spatial_reason_v0.1*`,
+`../WHU_Building_Segment/**`, `handoff/TO_DSH.md`.
 
 ---
 
-## 3. Dataset Freeze Verification
+## 18. Git Commit / Push
 
-Hashes recorded at the start of Task 5C and re-verified afterwards:
-
-| File | SHA256 (before Task 5C = after Task 5C) |
-|---|---|
-| `v0.1.1/train.jsonl` | `85e3ae168e8d2f6a15bf675eb18fea986e1e0e5732cc93cbdd80e806bb594eee` |
-| `v0.1.1/val.jsonl` | `c561d74778c962600bdb33473df2e93de498712a8755634099f9ba27cd246d55` |
-| `v0.1.1/test.jsonl` | `6f7e9525f29044779f0ad8123870f61830449202c13207723b540216d1c5b29d` |
-| `v0.1/train.jsonl` | `5848157b9748ea0a280e73b8ed14ab6be5f83a018b4ad2687bffb62b2cc54975` |
-| `v0.1/val.jsonl` | `93aea13d63f94b25f3c90fe1c3f0c27f891f555a9d67c6c16050fbd3c3c163c6` |
-| `v0.1/test.jsonl` | `a0b6bfe461fe3579356133d12b0c099d8a23af827f965ba1a8c3cb5d218255cc` |
-
-`verify_v01_unchanged().unchanged = True`, `verify_v011_unchanged().unchanged =
-True`. Both are enforced as blocking codes (`v01_modified`, `v011_modified`).
+Commit message: `research: select BuildReasonSeg MVP stack`.
+Pre-staging checks: `git status --short` inspected; no JSONL, no weights, no dataset archives, no cloned
+repositories, no caches staged; frozen JSONL hashes re-verified; no out-of-repo writes. The commit hash
+and push result are in the final DSH chat summary.
 
 ---
 
-## 4. Canonical Artifact Paths
+## 19. Ready for Task 6?
 
-```
-datasets/build_spatial_reason/v0.1.1/manifest.json
-datasets/build_spatial_reason/v0.1.1/statistics.json
-evaluation/build_spatial_reason_v0.1.1_quality.json
-evaluation/build_spatial_reason_v0.1.1_samples/
-evaluation/build_spatial_reason_v0.1.1_consistency.json
-docs/build_spatial_reason_v0.1.1_quality_audit.md
-```
+**Yes — the design is frozen and implementable without repeating this survey.** Task 6 can start from
+`evaluation/task5_5_stack_decision.json` and `docs/research/task5_5_mvp_decision.md`, which contain the
+exact model ids, the frozen/trainable split, the precision, the image policy, the environment, the staged
+plan and the entry criteria.
 
-The validator now derives the evaluation file names directly from the version
-string (`build_spatial_reason_{version}_quality.json`), so `v0.1.1` produces
-`…_v0.1.1_quality.json`. The old `version.replace(".", "")` rule produced
-`…_v011_quality.json`, which no document referenced. Only one quality JSON per
-version exists — no equally-authoritative duplicate is retained.
+**Four things must be checked at Stage 0 before any implementation effort is spent:**
 
----
+1. **Weight acquisition** — confirm whether the Hugging Face route works or the ModelScope route is
+   needed (risk 1 in §16). This is the only item that could force a change to how Task 6 starts.
+2. **Licence clearance of anything newly introduced** — the chosen stack is clean; a QLoRA fallback is
+   not, until `bitsandbytes` + `sm_120` on Windows is confirmed.
+3. **A new dedicated environment** — `yolo_sam_env` must not be touched.
+4. **Dataset re-verification** — `python scripts/check_artifact_consistency.py` must report
+   `consistent` and the v0.1.1 JSONL hashes must be unchanged.
 
-## 5. Independent Oracle Design
-
-`spatial_reasoning/semantic_oracle.py` (oracle version `1.0`) re-implements the
-five semantic questions **from scratch**:
-
-| # | Question | Oracle computation |
-|---|---|---|
-| 1 | `largest` | global `argmax(area_px)` over all visible components; then frozen margin + eligibility |
-| 2 | `smallest` | global `argmin(area_px)`; then frozen margin + eligibility |
-| 3 | `<ref> -> nearest` | `argmin` boundary gap over all other visible; then anchor eligibility, target eligibility, frozen margin |
-| 4 | `<ref> -> direction` | frozen predicate re-derived from centroids + `alpha`/`tau` |
-| 5 | `<ref> -> dir -> nearest` | (4) then (3), with the full direction set as the candidate universe |
-
-**Independence contract**
-
-* Never imports or calls `semantic_policy`, `SP.resolve_size_extreme`,
-  `SP.resolve_nearest`, `SP.direction_candidates_over_visible` or
-  `SP.admissible_nearest_ids`. Verified by an AST scan of the oracle source and,
-  at runtime, by exercising every entry point while a `sys.meta_path` hook makes
-  importing `semantic_policy` raise.
-* Quality flags are recomputed from `area_px`, the bounding box and the border
-  flag rather than read from `component_quality`.
-* The direction predicate is re-implemented from the frozen definition instead of
-  calling `relations.evaluate_direction`.
-* Permitted reuse (per section 4): the component metadata loader and the
-  low-level geometric primitive `geometry.component_box_distance`, which is a
-  pixel-distance measurement, not an acceptance policy.
-
-**Failure semantics.** A non-admissible oracle resolution for a stored record is
-`oracle_ambiguity_mismatch`; a different target is `oracle_target_mismatch`; a
-different direction set is `oracle_candidate_set_mismatch`; a different reference
-is `oracle_reference_mismatch`; a different trivial flag is
-`oracle_trivial_flag_mismatch`. All five are blocking.
-
----
-
-## 6. Full-Dataset Oracle Audit
-
-| Metric | Value |
-|---|---|
-| records checked | **25,229** |
-| exact semantic target matches | **25,229** |
-| target mismatches | **0** |
-| semantic-program mismatches | **0** |
-| candidate-set mismatches | **0** |
-| reference mismatches | **0** |
-| ambiguity-policy mismatches | **0** |
-| Level-3 trivial-flag agreements | **2,918 / 2,918** |
-
-Acceptance target (§5) of 25,229/25,229 with zero semantic mismatches is met
-exactly. Both the production recomputation and the oracle recomputation are 100%.
-
----
-
-## 7. Hidden Semantic Audit
-
-Independent, oracle-derived (never via the production policy):
-
-```
-hidden_eligibility_largest          = 0
-hidden_eligibility_smallest         = 0
-hidden_eligibility_nearest          = 0
-hidden_eligibility_level3_nearest   = 0
-semantic_violation_flag_instances   = 0
-semantic_violation_unique_records   = 0
-semantic_clean_records              = 25229
-```
-
-The production policy independently reports the same zeros, so the two
-implementations agree on the negative as well as the positive claims.
-
----
-
-## 8. Artifact Consistency Audit
-
-`scripts/check_artifact_consistency.py` — status **`consistent`**, **0**
-violations. It verifies:
-
-1. dataset / semantic-policy / generator / relation-config versions agree across
-   the index, `manifest.json` and the quality JSON;
-2. total, split, level, Level-2 Type A/B and Level-3 trivial/nontrivial counts
-   agree across the index, `manifest.json`, `statistics.json` and the quality
-   JSON, plus the `A + B == Level 2` partition invariant recomputed on each;
-3. canonical artifacts exist at their canonical names;
-4. the deprecated `v011` artifacts do not exist;
-5. `manifest.generator_file_sha256` covers every generation-critical file and
-   every digest matches the file on disk;
-6. v0.1 and v0.1.1 JSONL records still hash to their recorded values;
-7. every required Markdown file carries a matching `ARTIFACT-FACTS` block.
-
-Negative tests prove the gate is not vacuous: injecting a count drift, or
-resurrecting the deprecated `v011` quality JSON, both make it fail.
-
-The gate's result is embedded in the quality JSON as `artifact_consistency` and
-also published as `evaluation/build_spatial_reason_v0.1.1_consistency.json`.
-
-**Stale counts corrected** (section 3.1): Level-2 Type A/B 2,272/2,764 →
-**2,275/2,761**; Level-3 trivial/nontrivial 1,261/1,657 → **1,256/1,662**.
-
----
-
-## 9. Provenance Audit
-
-`v0.1.1/manifest.json → generator_file_sha256` now covers **8** files:
-
-```
-spatial_reasoning/annotator.py              (unchanged digest)
-spatial_reasoning/semantic_policy.py        (ADDED in Task 5C)
-spatial_reasoning/templates.py              (unchanged digest)
-spatial_reasoning/relations.py              (unchanged digest)
-spatial_reasoning/geometry.py               (unchanged digest)
-spatial_reasoning/thresholds.py             (unchanged digest)
-spatial_reasoning/component_quality.py      (unchanged digest)
-scripts/build_spatial_reason.py             (refreshed: edited by Task 5C)
-```
-
-**6 of the 7 previously recorded digests are byte-identical**, which independently
-confirms that `annotator.py`, `templates.py`, `relations.py`, `geometry.py`,
-`thresholds.py` and `component_quality.py` have not changed since v0.1.1 was
-generated. Only `scripts/build_spatial_reason.py` changed, because Task 5C edited
-it, and its digest was refreshed accordingly. Every digest now matches the file
-on disk, and the consistency gate re-checks this on every run.
-
-`scripts/build_spatial_reason_samples.py` was deliberately **not** added: it only
-renders a visualization pack from an existing report and cannot affect the
-dataset. `dataset_validator.py` and `semantic_oracle.py` are audit-only.
-
-Also fixed while reviewing the generator: `build_manifest()` declared
-`source_component_representation_version` twice (the second silently won), and
-three known-limitation entries carried v0.1-era wording.
-
----
-
-## 10. Test Summary
-
-Exact commands (run from the repository root, conda env `yolo_sam_env`):
-
-```
-python tests/test_component_conversion.py     ->  11/11 checks passed   exit 0
-python tests/test_geometry.py                 ->  17/17 checks passed   exit 0
-python tests/test_relations.py                ->  35/35 checks passed   exit 0
-python tests/test_annotator.py                ->  22/22 checks passed   exit 0
-python tests/test_dataset_validator.py        ->  18/18 checks passed   exit 0
-python tests/test_v011_acceptance.py          ->  19/19 checks passed   exit 0
-python tests/test_semantic_oracle.py          ->   8/8  checks passed   exit 0
-python tests/test_artifact_consistency.py     ->   8/8  checks passed   exit 0
-```
-
-| Metric | Value |
-|---|---|
-| suites | **8** |
-| checks | **138** |
-| passed | **138** |
-| failed | **0** |
-| skipped | **0** |
-| exit codes | **0** |
-
-Also run:
-
-```
-python scripts/validate_build_spatial_reason.py --version v0.1.1   -> exit 0, verdict PASS
-python scripts/check_artifact_consistency.py                       -> exit 0, status consistent
-```
-
-Note on §10.6 ("full-dataset oracle target match"): the acceptance audit sweeps
-all 25,229 records and its result is asserted by the test from the quality JSON;
-the test additionally re-runs the oracle live over up to 4,000 records **per
-split** (11,884 in practice) spanning every level and query type. Set
-`SPATIAL_ORACLE_FULL=1` to make the test itself sweep all 25,229.
-
----
-
-## 11. Remaining Limitations
-
-1. **Border truncation reduces coverage** — unchanged from v0.1.1; the semantic
-   answer must itself be eligible, so images whose global extreme touches the tile
-   edge yield no query of that type. Correctness is traded for coverage
-   deliberately (ADR-010).
-2. **`scene_level_split_leakage = unverified`** — no scene/geographic grouping
-   metadata; val was a random 20% of the original train pool. Exact image
-   duplication is ruled out (0). WHU was not resplit.
-3. **`peak_memory_mb` is unconfirmed** — the Windows ctypes fallback returns 0.
-4. **The oracle shares the geometric distance primitive with production.** This is
-   explicitly permitted, but it means a defect inside
-   `geometry.component_box_distance` would be invisible to both. The distance
-   function is itself covered by `tests/test_geometry.py`.
-5. **Oracle independence is structural, not adversarial.** It is a second
-   implementation written by the same agent from the same frozen specification. It
-   protects against the v0.1 failure mode (policy drift between components) but
-   cannot detect a misreading of the *specification* that both implementations
-   share. An external reviewer reading the frozen config remains the final check.
-6. **Template diversity is still unquantified** — `template_id` is now explicit
-   and gate-checked, so this is now measurable, but it has not been measured.
-7. **v0.1 remains superseded and non-regenerable** byte-identically, because the
-   semantic policy changed after it was produced. It is preserved and verified
-   unchanged; regeneration is intentionally not attempted.
-8. **Scene-level leakage in v0.1** is unchanged and still unverifiable.
-
----
-
-## 12. Git Commit / Push
-
-Commit message: `audit: harden BuildSpatialReason v0.1.1 acceptance`
-
-Pre-staging checks performed: `git status --short` inspected; no JSONL is staged;
-no weights/checkpoints; no out-of-repo writes. The commit hash and push result are
-recorded in the final DSH chat summary.
-
----
-
-## 13. Ready for Task 5.5?
-
-**Yes, for the v0.1.1 dataset line** — with two conditions attached:
-
-* Task 5.5 should consume `datasets/build_spatial_reason/v0.1.1/` and cite
-  `evaluation/build_spatial_reason_v0.1.1_quality.json` as the quality evidence.
-  It must **not** use v0.1.
-* Task 5.5 should not re-derive counts by hand. It should read
-  `evaluation/build_spatial_reason_artifact_index.json` (or run the consistency
-  gate), because hand-copied numbers are exactly what went wrong in Task 5B.
-
-**Task 5C did not start Task 5.5, MLLM integration, training, or any later
-stage.**
+**Task 5.5 did not begin Task 6**: no environment installed, no weights or datasets downloaded, no
+inference run, no training, no cloud resources.

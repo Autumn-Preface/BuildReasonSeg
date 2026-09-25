@@ -41,15 +41,39 @@ it is not renamed away.
 ```
 [x] YOLO baseline                (frozen record only; see baseline/yolo_whu/)
 [x] BuildSpatialReason           (v0.1.1 generated + independently audited, verdict PASS)
-[ ] Reasoning Segmentation MVP   (MLLM -> [SEG] -> mask decoder)
-[ ] Spatial Relation Module      (Spatial Relation Encoder + Feature Fusion)
+[x] MVP stack selection          (Task 5.5 research freeze; see docs/research/)
+[ ] Reasoning Segmentation MVP   (MLLM -> [SEG] -> mask decoder)  -- designed, NOT implemented
+[ ] Spatial Relation Module      (Spatial Relation Encoder + Feature Fusion)  -- the lead contribution
 [ ] Spatial Consistency Loss
 [ ] Evaluation & Ablation suite
 ```
 
-**Only the first two lines are done.** This README describes the intended
-architecture so that the boundary between done and planned stays explicit. Do not read the
-target architecture as a description of existing code.
+**Only the first three lines are done.** The MVP line is *designed and frozen* but not implemented. This
+README describes the intended architecture so that the boundary between done and planned stays explicit.
+Do not read the target architecture as a description of existing code.
+
+### Frozen MVP stack (Task 5.5, ADR-012)
+
+| Item | Choice |
+|---|---|
+| Base MLLM | `Qwen/Qwen3-VL-4B-Instruct` (Apache-2.0), stages 0–2 on the 2B sibling |
+| Mask decoder | `facebook/sam2.1-hiera-large` (Apache-2.0), image encoder + memory frozen |
+| Pathway | LISA-style `[SEG]` for the MVP; `[REF] + [SEG]` from Stage 3 |
+| Trainable | LoRA r=16 on `q,k,v,o,gate,up,down`, `[SEG]`/`[REF]` embeddings, projection MLP, SAM2 mask decoder |
+| Environment | native Windows 11, new dedicated conda env, PyTorch SDPA (no FlashAttention); WSL2 is the fallback |
+| Images | native 512×512, no upscaling, 256 visual tokens per tile, pixel budget set explicitly |
+| External training data | **none** — EarthReason / RefSegRS are reserved for evaluation |
+
+Evidence, alternates and the exact Task 6 entry criteria:
+`docs/research/task5_5_mvp_decision.md`, `evaluation/task5_5_stack_decision.json`.
+
+### Contribution framing after the novelty audit
+
+The `[SEG]` token is ubiquitous and a `[REF]` reference token is **already published** (SegLLM, 2024;
+PSALM, 2024), and instruction-tuned building analysis is published prior art (ISPRS Annals, 2026). The
+retained contributions are therefore: **geometry-verifiable relation supervision**, an **explicit
+Spatial Relation Encoder over the model's own predicted region geometry**, and a **relation-level Spatial
+Consistency Loss**. See `docs/research/task5_5_novelty_collision.md`.
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
