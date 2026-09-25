@@ -1,0 +1,132 @@
+{
+  "dataset_name": "BuildSpatialReason",
+  "dataset_version": "v0.1.1",
+  "project_name": "BuildReasonSeg",
+  "source_dataset": "WHU Building Dataset",
+  "source_subset": "Satellite dataset II (East Asia)",
+  "source_component_representation_version": "v1.0",
+  "semantic_visibility_policy_version": "1.0",
+  "source_component_metadata": "datasets/whu/metadata/<split>.jsonl",
+  "source_component_manifest": "datasets/whu/component_manifest.json",
+  "relation_config": "configs/spatial_relations_v1.yaml",
+  "relation_config_version": "spatial_relations_v1",
+  "relation_config_sha256": "f6cba54ee0d6883ef286d1a903431e08b79bf9df2ae37a2e26101728f7185628",
+  "frozen_relation_settings": {
+    "ratio_margin": 1.1,
+    "direction_preset": "medium",
+    "direction_alpha": 1.2,
+    "direction_tau": 0.04,
+    "nearest_anchor_non_border": true,
+    "nearest_target_non_border": true,
+    "ambiguous_policy": "discard"
+  },
+  "generator_version": "v0.1.1",
+  "generator_config": "configs/build_spatial_reason_v0.1.1.yaml",
+  "generator_config_sha256": "ac6fd627975d9fd24fdc673927b67c5b99d3ae25146c3707f693d06eaab16204",
+  "generator_file_sha256": {
+    "spatial_reasoning/annotator.py": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca",
+    "spatial_reasoning/templates.py": "29b63ae1ca11d9d18e0d75edaa6ca67646f0206caf003e29a58783a4d3b66dc1",
+    "spatial_reasoning/relations.py": "ec0fd6139cf312bcb77bd8dded89c44da4fc6a84c331f0a81a49a058f036c7dc",
+    "spatial_reasoning/geometry.py": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807",
+    "spatial_reasoning/thresholds.py": "22ba70feb85fd1d8550384b9c527795a29d7d63715c637e5aaa0cb04b5ef6570",
+    "spatial_reasoning/component_quality.py": "ec8e86462670d33fe47391b82c20cd6fb3e527fcfc633df007114ae36a75ca33",
+    "scripts/build_spatial_reason.py": "9345feda7134f0e642c904dd1a456d65c29d4815333414d85bcb21c513e25b40"
+  },
+  "generation_seed": 20260804,
+  "template_version": "v0.1",
+  "sample_counts": {
+    "total": 25229,
+    "by_split": {
+      "test": 5753,
+      "train": 15592,
+      "val": 3884
+    },
+    "by_level": {
+      "1": 17275,
+      "2": 5036,
+      "3": 2918
+    },
+    "by_query_type": {
+      "bottommost": 3494,
+      "largest": 2077,
+      "largest_to_above": 438,
+      "largest_to_above_to_nearest": 720,
+      "largest_to_below": 406,
+      "largest_to_below_to_nearest": 724,
+      "largest_to_left_of": 465,
+      "largest_to_left_of_to_nearest": 724,
+      "largest_to_nearest": 1419,
+      "largest_to_right_of": 434,
+      "largest_to_right_of_to_nearest": 750,
+      "leftmost": 3519,
+      "rightmost": 3527,
+      "smallest": 1167,
+      "smallest_to_above": 258,
+      "smallest_to_below": 232,
+      "smallest_to_left_of": 269,
+      "smallest_to_nearest": 856,
+      "smallest_to_right_of": 259,
+      "topmost": 3491
+    },
+    "level2": {
+      "reference_to_nearest": 2275,
+      "reference_to_direction": 2761,
+      "total_level2": 5036,
+      "invariant_holds": true
+    },
+    "level3": {
+      "trivial": 1256,
+      "nontrivial": 1662
+    }
+  },
+  "discard_reasons": {
+    "ambiguous": 1657,
+    "level3_nearest_semantic_ineligible": 1217,
+    "multiple_direction_candidates": 4265,
+    "nearest_margin_fail": 360,
+    "nearest_semantic_ineligible": 692,
+    "no_direction_candidate": 9501,
+    "quota_downsample": 539,
+    "semantic_ambiguous": 5362,
+    "semantic_target_ineligible": 10283,
+    "single_component_image": 116
+  },
+  "known_limitations": [
+    {
+      "id": "KL-01",
+      "limitation": "source annotation represents building connected components",
+      "detail": "A 'building region' in an instruction maps to a building CONNECTED COMPONENT in the source annotation, not to a verified real-world physical building."
+    },
+    {
+      "id": "KL-02",
+      "limitation": "touching physical buildings may already be merged",
+      "detail": "The source raster was a binary semantic mask, so mutually touching buildings became a single component before this dataset existed."
+    },
+    {
+      "id": "KL-03",
+      "limitation": "border-truncated components are unreliable for some relations",
+      "detail": "31.72% of components touch the tile edge. They remain eligible for tile-relative extremes but are excluded from largest/smallest/nearest."
+    },
+    {
+      "id": "KL-04",
+      "limitation": "no building-function semantics",
+      "detail": "No annotation of use, type, or function exists in the source data."
+    },
+    {
+      "id": "KL-05",
+      "limitation": "no overlap / containment relations",
+      "detail": "Components are disjoint by construction, so overlap, contain and inside are structurally empty and are not part of v0.1."
+    },
+    {
+      "id": "KL-06",
+      "limitation": "language is template-generated rather than human-authored",
+      "detail": "Instructions are produced deterministically from templates. Wording diversity is limited by construction; template selection is recorded implicitly through the sample semantic key."
+    },
+    {
+      "id": "KL-07",
+      "limitation": "v0.1 source imagery is WHU, but the schema is not WHU-specific",
+      "detail": "Current v0.1 uses the WHU Building Dataset 'Satellite dataset II (East Asia)' subset. The BuildSpatialReason schema, relation representation and reasoning program do not assume WHU."
+    }
+  ],
+  "statistics_file": "datasets/build_spatial_reason/v0.1.1/statistics.json"
+}

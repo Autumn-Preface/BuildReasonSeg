@@ -1,0 +1,324 @@
+{
+  "audit_target": "BuildSpatialReason-v0.1.1",
+  "audited_version": "v0.1.1",
+  "auditor": "dataset_validator.py",
+  "runtime_seconds": 335.33,
+  "splits_audited": [
+    "train",
+    "val",
+    "test"
+  ],
+  "limit_applied": null,
+  "verdict": "PASS",
+  "independent_counts": {
+    "total_records": 25229,
+    "by_split": {
+      "test": 5753,
+      "train": 15592,
+      "val": 3884
+    },
+    "by_level": {
+      "1": 17275,
+      "2": 5036,
+      "3": 2918
+    },
+    "by_query_type": {
+      "bottommost": 3494,
+      "largest": 2077,
+      "largest_to_above": 438,
+      "largest_to_above_to_nearest": 720,
+      "largest_to_below": 406,
+      "largest_to_below_to_nearest": 724,
+      "largest_to_left_of": 465,
+      "largest_to_left_of_to_nearest": 724,
+      "largest_to_nearest": 1419,
+      "largest_to_right_of": 434,
+      "largest_to_right_of_to_nearest": 750,
+      "leftmost": 3519,
+      "rightmost": 3527,
+      "smallest": 1167,
+      "smallest_to_above": 258,
+      "smallest_to_below": 232,
+      "smallest_to_left_of": 269,
+      "smallest_to_nearest": 856,
+      "smallest_to_right_of": 259,
+      "topmost": 3491
+    },
+    "by_split_level": {
+      "test": {
+        "1": 3875,
+        "2": 1158,
+        "3": 720
+      },
+      "train": {
+        "1": 10713,
+        "2": 3106,
+        "3": 1773
+      },
+      "val": {
+        "1": 2687,
+        "2": 772,
+        "3": 425
+      }
+    },
+    "by_split_query_type": {
+      "test": {
+        "bottommost": 787,
+        "largest": 491,
+        "largest_to_above": 100,
+        "largest_to_above_to_nearest": 167,
+        "largest_to_below": 89,
+        "largest_to_below_to_nearest": 195,
+        "largest_to_left_of": 93,
+        "largest_to_left_of_to_nearest": 181,
+        "largest_to_nearest": 361,
+        "largest_to_right_of": 94,
+        "largest_to_right_of_to_nearest": 177,
+        "leftmost": 784,
+        "rightmost": 782,
+        "smallest": 260,
+        "smallest_to_above": 62,
+        "smallest_to_below": 43,
+        "smallest_to_left_of": 63,
+        "smallest_to_nearest": 191,
+        "smallest_to_right_of": 62,
+        "topmost": 771
+      },
+      "train": {
+        "bottommost": 2166,
+        "largest": 1269,
+        "largest_to_above": 275,
+        "largest_to_above_to_nearest": 457,
+        "largest_to_below": 255,
+        "largest_to_below_to_nearest": 426,
+        "largest_to_left_of": 298,
+        "largest_to_left_of_to_nearest": 441,
+        "largest_to_nearest": 857,
+        "largest_to_right_of": 271,
+        "largest_to_right_of_to_nearest": 449,
+        "leftmost": 2187,
+        "rightmost": 2197,
+        "smallest": 733,
+        "smallest_to_above": 148,
+        "smallest_to_below": 142,
+        "smallest_to_left_of": 169,
+        "smallest_to_nearest": 530,
+        "smallest_to_right_of": 161,
+        "topmost": 2161
+      },
+      "val": {
+        "bottommost": 541,
+        "largest": 317,
+        "largest_to_above": 63,
+        "largest_to_above_to_nearest": 96,
+        "largest_to_below": 62,
+        "largest_to_below_to_nearest": 103,
+        "largest_to_left_of": 74,
+        "largest_to_left_of_to_nearest": 102,
+        "largest_to_nearest": 201,
+        "largest_to_right_of": 69,
+        "largest_to_right_of_to_nearest": 124,
+        "leftmost": 548,
+        "rightmost": 548,
+        "smallest": 174,
+        "smallest_to_above": 48,
+        "smallest_to_below": 47,
+        "smallest_to_left_of": 37,
+        "smallest_to_nearest": 135,
+        "smallest_to_right_of": 36,
+        "topmost": 559
+      }
+    },
+    "level2": {
+      "reference_to_nearest": 2275,
+      "reference_to_direction": 2761,
+      "total_level2": 5036
+    },
+    "level3": {
+      "trivial": 1256,
+      "nontrivial": 1662,
+      "total": 2918
+    },
+    "images_with_samples": 3920,
+    "samples_per_image": {
+      "n": 3920,
+      "min": 1.0,
+      "p5": 3.0,
+      "median": 6.0,
+      "p95": 11.0,
+      "max": 12.0
+    }
+  },
+  "target_recomputation": {
+    "checked": 25229,
+    "pass": 25229,
+    "fail": 0
+  },
+  "hidden_semantic_counts": {
+    "hidden_eligibility_largest": 0,
+    "hidden_eligibility_smallest": 0,
+    "hidden_eligibility_nearest": 0,
+    "hidden_eligibility_level3_nearest": 0,
+    "semantic_violation_flag_instances": 0
+  },
+  "semantic_violation_unique_records": 0,
+  "semantic_clean_records": 25229,
+  "reasoning_leakage": {
+    "leak_reasoning_records": 0,
+    "leak_reasoning_fields": 0,
+    "leak_reasoning_mentions": 0,
+    "leak_instruction_records": 0
+  },
+  "distractor_integrity": {
+    "target_in_distractors": 0,
+    "reference_in_distractors": 0,
+    "duplicate_distractors": 0,
+    "distractor_missing_component": 0
+  },
+  "template_id_integrity": {
+    "checked": 25229,
+    "verified": 25229,
+    "mismatch": 0,
+    "missing": 0,
+    "not_reconstructed": 0
+  },
+  "mask_selector_integrity": {
+    "checked": 25229,
+    "mismatch": 0,
+    "empty": 0
+  },
+  "exact_cross_split_duplicates": 0,
+  "counters": {
+    "template_usage": {
+      "l1.leftmost.c": 1211,
+      "l1.rightmost.a": 1128,
+      "l1.topmost.c": 1207,
+      "l1.bottommost.a": 1140,
+      "l1.largest.a": 721,
+      "l1.smallest.b": 384,
+      "l2.nearest.smallest.b": 287,
+      "l2.dir.left_of.a": 253,
+      "l2.dir.above.c": 239,
+      "l3.chain.c": 971,
+      "l1.leftmost.b": 1133,
+      "l1.rightmost.c": 1171,
+      "l1.topmost.a": 1137,
+      "l1.bottommost.c": 1191,
+      "l1.rightmost.b": 1228,
+      "l1.largest.c": 672,
+      "l2.nearest.largest.a": 472,
+      "l2.dir.above.b": 216,
+      "l3.chain.a": 935,
+      "l1.leftmost.a": 1175,
+      "l1.topmost.b": 1147,
+      "l1.bottommost.b": 1163,
+      "l2.dir.below.c": 218,
+      "l1.largest.b": 684,
+      "l2.nearest.largest.b": 504,
+      "l3.chain.b": 1012,
+      "l2.nearest.largest.c": 443,
+      "l2.dir.below.b": 216,
+      "l1.smallest.a": 385,
+      "l2.nearest.smallest.c": 267,
+      "l2.dir.left_of.b": 256,
+      "l2.dir.right_of.a": 227,
+      "l1.smallest.c": 398,
+      "l2.dir.right_of.b": 234,
+      "l2.dir.right_of.c": 232,
+      "l2.dir.above.a": 241,
+      "l2.dir.left_of.c": 225,
+      "l2.nearest.smallest.a": 302,
+      "l2.dir.below.a": 204
+    },
+    "audited_version": "v0.1.1",
+    "component_maps_loaded": 3920,
+    "mask_checked": 25229,
+    "recompute_checked": 25229,
+    "recompute_pass": 25229,
+    "template_verified": 25229,
+    "template_checked": 25229,
+    "hidden_largest_ok": 8157,
+    "hidden_smallest_ok": 3041,
+    "hidden_nearest_ok": 2275,
+    "hidden_level3_nearest_ok": 2918
+  },
+  "issues": {
+    "counts": {},
+    "severity": {},
+    "examples": {}
+  },
+  "duplicate_image_audit": {
+    "images_hashed_by_split": {
+      "train": 2423,
+      "val": 614,
+      "test": 883
+    },
+    "exact_image_duplicate_cross_split": 0,
+    "duplicates": []
+  },
+  "v01_frozen_integrity": {
+    "exists": true,
+    "files": {
+      "train.jsonl": {
+        "present": true,
+        "sha256": "5848157b9748ea0a280e73b8ed14ab6be5f83a018b4ad2687bffb62b2cc54975",
+        "recorded_sha256": "5848157b9748ea0a280e73b8ed14ab6be5f83a018b4ad2687bffb62b2cc54975",
+        "matches_recorded": true
+      },
+      "val.jsonl": {
+        "present": true,
+        "sha256": "93aea13d63f94b25f3c90fe1c3f0c27f891f555a9d67c6c16050fbd3c3c163c6",
+        "recorded_sha256": "93aea13d63f94b25f3c90fe1c3f0c27f891f555a9d67c6c16050fbd3c3c163c6",
+        "matches_recorded": true
+      },
+      "test.jsonl": {
+        "present": true,
+        "sha256": "a0b6bfe461fe3579356133d12b0c099d8a23af827f965ba1a8c3cb5d218255cc",
+        "recorded_sha256": "a0b6bfe461fe3579356133d12b0c099d8a23af827f965ba1a8c3cb5d218255cc",
+        "matches_recorded": true
+      },
+      "manifest.json": {
+        "present": true,
+        "sha256": "60a308837a06e5624b05803db076ed131389e630aa7af6e870b4cab00d6f506a",
+        "recorded_sha256": "60a308837a06e5624b05803db076ed131389e630aa7af6e870b4cab00d6f506a",
+        "matches_recorded": true
+      },
+      "statistics.json": {
+        "present": true,
+        "sha256": "38e45395fd09a46f95a786e6cafd71005826cde6d5a97e7193a57dd0343f08fe",
+        "recorded_sha256": "38e45395fd09a46f95a786e6cafd71005826cde6d5a97e7193a57dd0343f08fe",
+        "matches_recorded": true
+      }
+    },
+    "unchanged": true,
+    "mismatches": []
+  },
+  "scene_level_split_leakage": "unverified",
+  "scene_level_split_leakage_reason": "The source WHU tiles carry no scene/geographic grouping metadata in the derived YOLO dataset, and the val split was a random 20% subset of the original train pool. Scene-level disjointness therefore cannot be established from available metadata.",
+  "target_distribution": {
+    "area_px": {
+      "n": 25229,
+      "min": 66.0,
+      "p5": 191.4000000000001,
+      "median": 1201.0,
+      "p95": 4942.799999999996,
+      "max": 131787.0
+    },
+    "centroid_x_norm": {
+      "n": 25229,
+      "min": 0.0014490927419354839,
+      "p5": 0.023370452425373136,
+      "median": 0.4866057265228426,
+      "p95": 0.9746853606968817,
+      "max": 0.9965771967821783
+    },
+    "centroid_y_norm": {
+      "n": 25229,
+      "min": 0.0014204545454545455,
+      "p5": 0.02371547284644195,
+      "median": 0.4972931548199111,
+      "p95": 0.9759345620052793,
+      "max": 0.9970865885416667
+    }
+  }
+}

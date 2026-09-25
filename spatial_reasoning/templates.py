@@ -221,6 +221,30 @@ DIRECTION_PREPOSITION: dict[str, dict[str, str]] = {
     "below": {"zh": "下方", "en": "below it"},
 }
 
+#: Role-based phrasing for ID-FREE reasoning prose.
+#:
+#: ``OPERATION_PHRASE`` above is used where the sentence reads
+#: "X is component N" (id-bearing, v0.1 only). These phrases say
+#: "identify the X" instead, so the prose never exposes an annotation id.
+ROLE_PHRASE: dict[str, dict[str, str]] = {
+    "argmax_area": {"zh": "面积最大的建筑区域", "en": "the largest building region"},
+    "argmin_area": {"zh": "面积最小的建筑区域", "en": "the smallest building region"},
+    "argmin_centroid_x": {"zh": "最左侧的建筑区域", "en": "the leftmost building region"},
+    "argmax_centroid_x": {"zh": "最右侧的建筑区域", "en": "the rightmost building region"},
+    "argmin_centroid_y": {"zh": "最上方的建筑区域", "en": "the topmost building region"},
+    "argmax_centroid_y": {"zh": "最下方的建筑区域", "en": "the bottommost building region"},
+}
+
+#: Direction phrase that reads correctly AFTER the reference region is already
+#: established, used in ID-FREE reasoning prose. The value is a complete
+#: adverbial, so the sentence stays grammatical in every direction.
+DIRECTION_RELATIVE_TO_REFERENCE: dict[str, dict[str, str]] = {
+    "right_of": {"zh": "位于参考区域右侧", "en": "on the right side of the reference region"},
+    "left_of": {"zh": "位于参考区域左侧", "en": "on the left side of the reference region"},
+    "above": {"zh": "位于参考区域上方", "en": "above the reference region"},
+    "below": {"zh": "位于参考区域下方", "en": "below the reference region"},
+}
+
 #: Full prepositional phrase, used where the direction is inserted BEFORE the
 #: reference ("the candidates {dir} of component N"). The value already contains
 #: "of", so the template must not add another one.

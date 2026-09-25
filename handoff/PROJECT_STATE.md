@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 5._
+_Last updated by DSH at the end of Task 5B._
 
 ## Identity
 
@@ -10,9 +10,10 @@ _Last updated by DSH at the end of Task 5._
 | Repository | `Autumn-Preface/BuildReasonSeg` (branch `main`) |
 | Legacy evidence (read-only) | `../WHU_Building_Segment/` |
 | Reasoning dataset | **BuildSpatialReason** |
-| Current dataset version | **v0.1** (frozen) |
-| Next dataset version | v0.1.1 (recommended, not started) |
+| Current dataset version | **v0.1.1** (usable) |
+| Legacy dataset version | **v0.1** (frozen, superseded, retained on disk) |
 | Source dataset | WHU Building Dataset — `Satellite dataset II (East Asia)` |
+| Semantic visibility policy | **1.0** (`spatial_reasoning/semantic_policy.py`) |
 
 ## Completed tasks
 
@@ -21,78 +22,90 @@ _Last updated by DSH at the end of Task 5._
 | 1 | Project foundation + baseline freeze | done |
 | 2 | Polygon → building component representation | done (4,038 maps, 36,926 components, 0 conflicts) |
 | 3A | Geometry statistics + relation engine + thresholds | done |
-| 3B | Relation semantics correction + freeze | done (predicate convention fixed, presets monotonic, `ratio_margin` 1.10) |
+| 3B | Relation semantics correction + freeze | done |
 | Naming | `SpatialReasoningSeg` → `BuildReasonSeg` | done |
-| 4 | BuildSpatialReason-v0.1 dataset generator | done (**32,284 records**) |
-| 5 | v0.1 dataset validator + semantic quality audit | **done → verdict `FAIL_REQUIRES_REVISION`** |
+| 4 | BuildSpatialReason-v0.1 dataset generator | done (32,284 records) |
+| 5 | v0.1 validator + semantic quality audit | done → `FAIL_REQUIRES_REVISION` |
+| 5B | **v0.1.1 corrective regeneration + acceptance audit** | **done → `PASS`** |
 
-## Frozen relation rules
+## Frozen relation rules (unchanged by Task 5B)
 
 - Predicate convention: **`relation(subject, object)` = subject satisfies the
-  relation w.r.t. the object** (`left_of(A,B)` ⇔ "A is left of B"). ADR-006.
+  relation w.r.t. the object** (ADR-006).
 - Relation set: `left_of` `right_of` `above` `below` `leftmost` `rightmost`
   `topmost` `bottommost` `nearest` `largest` `smallest`.
-  Not used: `overlap` `contain` `inside` `adjacent_to` `near` `far`.
-- Thresholds (frozen in `configs/spatial_relations_v1.yaml`, never overridden by the generator):
-  - direction preset `medium` — `alpha = 1.2`, `tau = 0.04`; presets are
-    monotonic strict → medium → loose;
-  - `size_rank.ratio_margin = 1.10`;
-  - `nearest`: **anchor non-border AND target non-border**;
-  - `extreme.margin_px = 4.0`; `tiny_component` < 150 px²;
-    `suspected_large_merge` when bbox extent > 0.20.
+- Thresholds (frozen in `configs/spatial_relations_v1.yaml`, never overridden):
+  direction preset `medium` (`alpha = 1.2`, `tau = 0.04`), presets monotonic;
+  `size_rank.ratio_margin = 1.10`; `nearest` anchor + target non-border;
+  `extreme.margin_px = 4.0`; `tiny_component` < 150 px²;
+  `suspected_large_merge` when bbox extent > 0.20.
 - Ambiguity policy: **discard, never tie-break** (ADR-004).
 - Scope: **tile-relative** spatial reasoning.
 
-## Task 5 verdict
+## Semantic visibility policy (new, ADR-010)
 
-**`FAIL_REQUIRES_REVISION`** — v0.1 must not be used as MLLM supervision as-is.
+Natural language is defined over **all visible components**. Eligibility may
+**reject** a sample; it may never silently **change** its answer, and no runner-up
+is ever substituted. Implemented once in `spatial_reasoning/semantic_policy.py`
+and shared by the generator, the validator recomputation and the acceptance audit,
+so generator and verifier cannot disagree about what a question means.
 
-What passed (all 32,284 records): target re-computation **100%**, mask selectors,
-structured programs, candidate/distractor integrity, template reconstruction
-(39/39 templates used), language parity, no duplicate ids, **0** exact cross-split
-image duplicates, instructions **ID-free**.
+## Task 5B verdict
 
-Blocking defects:
+**`PASS`** — v0.1.1 passed the acceptance audit with **zero** blocking counts and
+**zero** issues of any severity.
 
-1. **Hidden eligibility makes the natural-language answer false/misleading for
-   7,086 records (21.9%)** — `largest` 2,180 (20.2%), `smallest` 4,246 (56.9%),
-   `nearest` 1,058 (22.5%), Level-3 nearest 291 (7.3%). The engine answers over an
-   eligibility-filtered subset while the instruction reads as being over all
-   visible components.
-2. **Internal component IDs leak into reasoning text in 100% of records**
-   (159,014 mentions). Instructions are clean; only reasoning text is affected.
+| Check | v0.1 | v0.1.1 |
+|---|---|---|
+| hidden semantic violations | 7,086 | **0** |
+| reasoning ID leakage | 32,284 (159,014 mentions) | **0** |
+| reference in distractors | 12,918 | **0** |
+| target recomputation | 32,284/32,284 | **25,229/25,229 (100%)** |
+| `template_id` verified | absent | **25,229/25,229** |
+| back-reference in reasoning | n/a | **0** |
 
-Also found: `statistics.json` / `manifest.json` report Level-2 Type A as 8,700,
-but the true value is **4,707**; the generator's
-`endswith("_to_nearest")` counter also swept in all 3,993 Level-3 records
-(4,707 + 3,993 = 8,700). Level/​split totals are correct.
+## Dataset v0.1.1 counts
 
-Full detail: `handoff/FROM_DSH.md`,
-`docs/build_spatial_reason_v0.1_quality_audit.md`,
-`evaluation/build_spatial_reason_v0.1_quality.json`.
+```
+total    : 25229
+by_split : train 15592 | val 3884 | test 5753
+by_level : L1 17275 | L2 5036 | L3 2918
+level2   : reference_to_nearest 2272 + reference_to_direction 2764 = 5036 (invariant holds)
+level3   : trivial 1261 | nontrivial 1657
+per image: min 1 | median 6 | max 12
+images with samples: 3920
+```
+
+Top discard reasons: `semantic_target_ineligible` 10,283 ·
+`no_direction_candidate` 9,501 · `semantic_ambiguous` 5,362 ·
+`multiple_direction_candidates` 4,265 · `ambiguous` 1,657 ·
+`level3_nearest_semantic_ineligible` 1,217 · `nearest_semantic_ineligible` 692.
+
+## Tests
+
+**122/122 passed, 0 failed, 0 skipped, all exit 0.**
+
+`test_component_conversion` 11 · `test_geometry` 17 · `test_relations` 35 ·
+`test_annotator` 22 · `test_dataset_validator` 18 · `test_v011_acceptance` 19.
 
 ## Current blockers
 
-1. Semantic eligibility defect must be fixed before v0.1 can supervise a model
-   (recommended fix: drop the 7,086 affected records — Option A).
-2. Reasoning text must be regenerated ID-free.
-3. Level-2 Type-A statistic must be corrected.
+**None.** v0.1.1 is validated and usable as MLLM supervision.
 
-Not a blocker but unverified: **scene-level split leakage = `unverified`** — the
-derived dataset carries no scene/geographic grouping metadata and val was a random
-20% subset of the original train pool.
+Known limitations (non-blocking): border truncation caps `largest`/`smallest`
+coverage; `scene_level_split_leakage = unverified`; `peak_memory_mb` unconfirmed
+(Windows ctypes fallback returns 0); v0.1 is no longer byte-regenerable by the
+current code path (preserved on disk and verified unchanged).
 
 ## Recommended next task
 
-**`BuildSpatialReason-v0.1.1`** (not Task 5.5). The audit is complete and
-decisive, the root causes are identified, and the corrections are mechanical:
+**ChatGPT review of the v0.1.1 commit**, then — if approved — the next planned
+stage (MLLM integration / reasoning segmentation MVP) as a **separate** task.
 
-1. drop the 7,086 semantically untruthful records (retain 25,198 = 78.1%);
-2. regenerate reasoning text with no `component N` identifiers;
-3. fix the Type-A counter to key on `level == 2`;
-4. decide and document the reference/distractor policy;
-5. add a per-sample `template_id` for language-diversity auditing.
+Non-blocking dataset follow-ups: quantify template diversity per query type using
+the new `template_id` field; decide whether recovering `largest`/`smallest`
+coverage needs richer (non-truncated) source annotations.
 
-Acceptance gate for v0.1.1 (all validator-checkable):
-`hidden_eligibility_* = 0`, `component_id_leak_reasoning = 0`,
-Type A + Type B = Level 2 total, target recomputation stays 100%.
+Full detail: `handoff/FROM_DSH.md`,
+`docs/build_spatial_reason_v0.1.1_quality_audit.md`,
+`evaluation/build_spatial_reason_v0.1.1_quality.json`.

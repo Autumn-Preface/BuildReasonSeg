@@ -49,6 +49,7 @@ def audit_record(
     ctx: V.ImageContext,
     issues: V.IssueCollector,
     counters: dict,
+    enforce_v011: bool = True,
 ) -> None:
     """Run every per-sample integrity and semantic check."""
 
@@ -58,6 +59,7 @@ def audit_record(
     query_type = record["query_type"]
     steps = record["reasoning_steps"]
     target = record["target_component_id"]
+    references = record["reference_component_ids"]
 
     # ---- mask selector -------------------------------------------------
     mask = record.get("target_mask") or {}
@@ -112,7 +114,6 @@ def audit_record(
                    level=level, expected=expected_ops, found=len(steps))
 
     # ---- reference integrity -------------------------------------------
-    references = record["reference_component_ids"]
     if level == 1:
         if references:
             issues.add("level1_has_reference", V.SEVERITY_ERROR, sample_id, image_id, references=references)
@@ -140,9 +141,11 @@ def audit_record(
     for value in distractors:
         if ctx.component(value) is None:
             issues.add("distractor_missing_component", V.SEVERITY_ERROR, sample_id, image_id, value=value)
-    if references and references[0] in distractors:
-        issues.add("reference_in_distractors", V.SEVERITY_WARNING, sample_id, image_id,
-                   reference=references[0])
+    # Task 5B section 9: distractors must exclude every explicit reference too.
+    for reference_id in references:
+        if reference_id in distractors:
+            issues.add("reference_in_distractors", V.SEVERITY_ERROR, sample_id, image_id,
+                       reference=reference_id)
 
     # ---- Level-2 Type B: uniqueness ------------------------------------
     if level == 2 and query_type.count("_to_") == 1 and not query_type.endswith("_to_nearest"):
@@ -175,7 +178,9 @@ def audit_record(
         else:
             relation = filter_step["relation"]
             reference_id = filter_step["reference_component_id"]
-            derived_direction = ctx.direction_candidates(reference_id, relation)
+            derived_direction = V.SP.direction_candidates_over_visible(
+                ctx.image, reference_id, relation, ctx.config, ctx.quality
+            )
             stored_direction = sorted(filter_step.get("candidate_component_ids", []))
             if derived_direction != stored_direction:
                 issues.add("level3_direction_candidates_mismatch", V.SEVERITY_ERROR, sample_id, image_id,
@@ -189,17 +194,34 @@ def audit_record(
             if not set(stored_eligible) <= set(stored_direction):
                 issues.add("level3_eligible_not_subset", V.SEVERITY_ERROR, sample_id, image_id,
                            eligible=stored_eligible, direction=stored_direction)
-            if sorted(nearest_step.get("candidate_component_ids", [])) != stored_eligible:
-                issues.add("level3_nearest_step_candidates_mismatch", V.SEVERITY_ERROR, sample_id, image_id)
+            # The nearest step must reason over the FULL direction-valid set (so a
+            # closer but ineligible component is never skipped), not over the
+            # eligible subset.
+            if sorted(nearest_step.get("candidate_component_ids", [])) != stored_direction:
+                issues.add("level3_nearest_step_candidates_mismatch", V.SEVERITY_ERROR,
+                           sample_id, image_id,
+                           expected=stored_direction,
+                           found=sorted(nearest_step.get("candidate_component_ids", [])))
 
-            # trivial flag must follow the eligible candidate count
-            expected_trivial = len(derived_eligible) == 1
+            # trivial_selection must equal "exactly one admissible candidate
+            # after the direction filter and the frozen margin rule".
+            admissible = V.SP.admissible_nearest_ids(
+                ctx.image, reference_id, derived_direction, ctx.component_map,
+                ctx.config, ctx.quality,
+            )
+            expected_trivial = len(admissible) == 1
             if bool(record.get("trivial_selection")) != expected_trivial:
                 issues.add("trivial_flag_mismatch", V.SEVERITY_ERROR, sample_id, image_id,
                            recorded=record.get("trivial_selection"), expected=expected_trivial,
-                           n_eligible=len(derived_eligible))
+                           n_admissible=len(admissible), n_direction=len(derived_direction))
 
     # ---- component id leakage in natural language -----------------------
+    # Task 5B section 11: three distinct counters, not one ambiguous field.
+    #
+    #   leak_reasoning_records -> records with >=1 leak in any reasoning field
+    #   leak_reasoning_fields  -> (record, field) pairs that leak
+    #   leak_reasoning_mentions-> total id mentions
+    record_leaks = 0
     for field_name, kind in (
         ("instruction_zh", "instruction"),
         ("instruction_en", "instruction"),
@@ -207,32 +229,44 @@ def audit_record(
         ("reasoning_en", "reasoning"),
     ):
         leaks = V.find_component_id_leaks(record.get(field_name, ""))
-        if leaks:
-            counters[f"leak_{kind}_samples"] += 1
-            counters[f"leak_{kind}_mentions"] += len(leaks)
-            issues.add(f"component_id_leak_{kind}", V.SEVERITY_WARNING, sample_id, image_id,
-                       field=field_name, leaks=leaks[:3])
+        if not leaks:
+            continue
+        counters[f"leak_{kind}_fields"] += 1
+        counters[f"leak_{kind}_mentions"] += len(leaks)
+        if kind == "reasoning":
+            record_leaks += 1
+        issues.add(f"component_id_leak_{kind}", V.SEVERITY_WARNING, sample_id, image_id,
+                   field=field_name, leaks=leaks[:3])
+    if record_leaks:
+        counters["leak_reasoning_records"] += 1
+    if any(
+        V.find_component_id_leaks(record.get(f, ""))
+        for f in ("instruction_zh", "instruction_en")
+    ):
+        counters["leak_instruction_records"] += 1
 
-    # ---- language hygiene -----------------------------------------------
-    for field_name in ("instruction_zh", "instruction_en", "reasoning_zh", "reasoning_en"):
-        text = record.get(field_name, "")
-        if not text or not text.strip():
-            issues.add("empty_language_field", V.SEVERITY_ERROR, sample_id, image_id, field=field_name)
-        if "{" in text or "}" in text:
-            issues.add("raw_placeholder", V.SEVERITY_ERROR, sample_id, image_id, field=field_name)
-        if "None" in text or "null" in text:
-            issues.add("literal_none", V.SEVERITY_ERROR, sample_id, image_id, field=field_name)
-        if "。。" in text or ".." in text or "，，" in text:
-            issues.add("doubled_punctuation", V.SEVERITY_WARNING, sample_id, image_id, field=field_name)
-
-    # ---- template reconstruction ----------------------------------------
-    template_id = V.reconstruct_template_id(query_type, record["instruction_zh"], record["instruction_en"])
-    if template_id is None:
-        issues.add("template_not_reconstructed", V.SEVERITY_ERROR, sample_id, image_id,
-                   query_type=query_type)
+    # ---- template_id integrity (v0.1.1 profile) --------------------------
+    stored_template_id = record.get("template_id")
+    if not stored_template_id and not enforce_v011:
+        # Historical v0.1 had no template_id field; skip rather than flag it.
+        counters["template_checked"] += 1
+        counters["template_id_absent_legacy"] += 1
+        return
+    if not stored_template_id:
+        issues.add("template_id_missing", V.SEVERITY_ERROR, sample_id, image_id)
     else:
-        counters["template_matched"] += 1
-        counters.setdefault("template_usage", Counter())[template_id] += 1
+        reconstructed = V.reconstruct_template_id(
+            query_type, record["instruction_zh"], record["instruction_en"]
+        )
+        if reconstructed is None:
+            issues.add("template_not_reconstructed", V.SEVERITY_ERROR, sample_id, image_id,
+                       query_type=query_type, stored_template_id=stored_template_id)
+        elif reconstructed != stored_template_id:
+            issues.add("template_id_mismatch", V.SEVERITY_ERROR, sample_id, image_id,
+                       stored=stored_template_id, reconstructed=reconstructed)
+        else:
+            counters["template_verified"] += 1
+            counters.setdefault("template_usage", Counter())[stored_template_id] += 1
     counters["template_checked"] += 1
 
 
@@ -241,8 +275,13 @@ def audit_semantics(
     ctx: V.ImageContext,
     issues: V.IssueCollector,
     counters: dict,
-) -> None:
-    """Hidden-eligibility semantic audit (stricter than engine eligibility)."""
+) -> bool:
+    """Hidden-eligibility semantic audit (stricter than engine eligibility).
+
+    Returns True when this record carries at least one semantic violation, so the
+    caller can maintain the unique-record union as a machine-readable counter
+    rather than deriving it only in prose.
+    """
 
     sample_id = record["sample_id"]
     image_id = record["image_id"]
@@ -250,6 +289,7 @@ def audit_semantics(
     query_type = record["query_type"]
     target = record["target_component_id"]
     references = record["reference_component_ids"]
+    violated = False
 
     # ---- largest / smallest ---------------------------------------------
     if "largest" in query_type:
@@ -259,6 +299,7 @@ def audit_semantics(
         violation = V.audit_hidden_largest(ctx, reference_id)
         if violation:
             counters["hidden_largest"] += 1
+            violated = True
             issues.add("hidden_eligibility_largest", V.SEVERITY_ERROR, sample_id, image_id, **violation)
         else:
             counters["hidden_largest_ok"] += 1
@@ -268,6 +309,7 @@ def audit_semantics(
         violation = V.audit_hidden_smallest(ctx, reference_id)
         if violation:
             counters["hidden_smallest"] += 1
+            violated = True
             issues.add("hidden_eligibility_smallest", V.SEVERITY_ERROR, sample_id, image_id, **violation)
         else:
             counters["hidden_smallest_ok"] += 1
@@ -278,6 +320,7 @@ def audit_semantics(
         violation = V.audit_hidden_nearest(ctx, anchor, target)
         if violation:
             counters["hidden_nearest"] += 1
+            violated = True
             issues.add("hidden_eligibility_nearest", V.SEVERITY_ERROR, sample_id, image_id, **violation)
         else:
             counters["hidden_nearest_ok"] += 1
@@ -291,10 +334,13 @@ def audit_semantics(
             )
             if violation:
                 counters["hidden_level3_nearest"] += 1
+                violated = True
                 issues.add("hidden_eligibility_level3_nearest", V.SEVERITY_ERROR,
                            sample_id, image_id, **violation)
             else:
                 counters["hidden_level3_nearest_ok"] += 1
+
+    return violated
 
 
 # --------------------------------------------------------------------------
@@ -302,11 +348,25 @@ def audit_semantics(
 # --------------------------------------------------------------------------
 
 
-def run_audit(splits: Sequence[str], limit: int | None, quiet: bool) -> dict:
+def run_audit(splits: Sequence[str], limit: int | None, quiet: bool,
+              version: str = "v0.1", enforce_v011: bool | None = None) -> dict:
+    """Audit one dataset version.
+
+    ``enforce_v011`` selects the rule set:
+      * ``True``  -> v0.1.1 acceptance profile (template_id required, semantic
+        candidate derivation, distractor policy strict).
+      * ``False`` -> historical v0.1 profile (no template_id field existed).
+      * ``None``  -> inferred: enabled for versions other than ``v0.1``.
+    """
+
+    if enforce_v011 is None:
+        enforce_v011 = version != "v0.1"
+
     config = T.load_config()
     issues = V.IssueCollector()
     counters: dict = defaultdict(int)
     counters["template_usage"] = Counter()
+    counters["audited_version"] = version
 
     level_counts = Counter()
     query_type_counts = Counter()
@@ -324,7 +384,7 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool) -> dict:
     started = time.time()
 
     for split in splits:
-        records = V.read_dataset_records(_REPO_ROOT / "datasets", split)
+        records = V.read_dataset_records(_REPO_ROOT / "datasets", split, version)
         if limit is not None:
             records = records[:limit]
         record_by_split[split] = records
@@ -373,8 +433,9 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool) -> dict:
                     (component.centroid_x / ctx.image.width, component.centroid_y / ctx.image.height)
                 )
 
-            audit_record(record, ctx, issues, counters)
-            audit_semantics(record, ctx, issues, counters)
+            audit_record(record, ctx, issues, counters, enforce_v011)
+            if audit_semantics(record, ctx, issues, counters):
+                counters["semantic_violation_unique_records"] += 1
 
             if not quiet and index % 4000 == 0:
                 print(f"    {split} {index}/{len(records)} ({time.time() - started:.0f}s)", flush=True)
@@ -387,6 +448,13 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool) -> dict:
         if count > 1:
             issues.add("duplicate_semantic_key", V.SEVERITY_ERROR, detail={"key": list(key[:1]), "count": count})
 
+    # ---- language parity (zh/en from the same template) ------------------
+    if counters.get("template_checked"):
+        parity_ok = counters.get("template_verified", 0)
+        if enforce_v011 and parity_ok != counters["template_checked"]:
+            issues.add("language_parity_incomplete", V.SEVERITY_ERROR,
+                       detail={"verified": parity_ok, "checked": counters["template_checked"]})
+
     # ---- image hash leakage --------------------------------------------
     duplicate_report = V.exact_cross_split_image_duplicates(
         DATASET_ROOT, [s for s in splits], record_by_split
@@ -394,6 +462,12 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool) -> dict:
     if duplicate_report["exact_image_duplicate_cross_split"] > 0:
         issues.add("exact_image_duplicate_cross_split", V.SEVERITY_ERROR,
                    detail=duplicate_report["duplicates"][:3])
+
+    # ---- v0.1 must remain byte-identical --------------------------------
+    frozen_report = V.verify_v01_unchanged(_REPO_ROOT / "datasets")
+
+    if enforce_v011 and frozen_report.get("unchanged") is False:
+        issues.add("v01_modified", V.SEVERITY_ERROR, detail=frozen_report.get("mismatches"))
 
     # ---- independent counts --------------------------------------------
     total = sum(split_counts.values())
@@ -420,17 +494,80 @@ def run_audit(splits: Sequence[str], limit: int | None, quiet: bool) -> dict:
     runtime = time.time() - started
     verdict = V.decide_verdict(issues)
 
+    # ---- required machine-readable audit fields (Task 5B sections 11, 20) ----
+    leak_records = int(counters.get("leak_reasoning_records", 0))
+    leak_fields = int(counters.get("leak_reasoning_fields", 0))
+    leak_mentions = int(counters.get("leak_reasoning_mentions", 0))
+
+    semantic_flag_codes = (
+        "hidden_eligibility_largest",
+        "hidden_eligibility_smallest",
+        "hidden_eligibility_nearest",
+        "hidden_eligibility_level3_nearest",
+    )
+    semantic_violations = sum(int(issues.counts.get(code, 0)) for code in semantic_flag_codes)
+    semantic_unique = int(counters.get("semantic_violation_unique_records", 0))
+
+    total_records = int(independent_counts["total_records"])
+    counters["template_checked"] = int(counters.get("template_checked", 0))
+    counters["template_verified"] = int(counters.get("template_verified", 0))
+
     return {
-        "audit_target": "BuildSpatialReason-v0.1",
+        "audit_target": f"BuildSpatialReason-{version}",
+        "audited_version": version,
         "auditor": "dataset_validator.py",
         "runtime_seconds": round(runtime, 2),
         "splits_audited": list(splits),
         "limit_applied": limit,
         "verdict": verdict,
         "independent_counts": independent_counts,
+        "target_recomputation": {
+            "checked": int(counters.get("recompute_checked", 0)),
+            "pass": int(counters.get("recompute_pass", 0)),
+            "fail": int(counters.get("recompute_checked", 0)) - int(counters.get("recompute_pass", 0)),
+        },
+        "hidden_semantic_counts": {
+            "hidden_eligibility_largest": int(issues.counts.get("hidden_eligibility_largest", 0)),
+            "hidden_eligibility_smallest": int(issues.counts.get("hidden_eligibility_smallest", 0)),
+            "hidden_eligibility_nearest": int(issues.counts.get("hidden_eligibility_nearest", 0)),
+            "hidden_eligibility_level3_nearest": int(
+                issues.counts.get("hidden_eligibility_level3_nearest", 0)
+            ),
+            "semantic_violation_flag_instances": semantic_violations,
+        },
+        "semantic_violation_unique_records": semantic_unique,
+        "semantic_clean_records": total_records - semantic_unique,
+        "reasoning_leakage": {
+            "leak_reasoning_records": leak_records,
+            "leak_reasoning_fields": leak_fields,
+            "leak_reasoning_mentions": leak_mentions,
+            "leak_instruction_records": int(counters.get("leak_instruction_records", 0)),
+        },
+        "distractor_integrity": {
+            "target_in_distractors": int(issues.counts.get("target_in_distractors", 0)),
+            "reference_in_distractors": int(issues.counts.get("reference_in_distractors", 0)),
+            "duplicate_distractors": int(issues.counts.get("duplicate_distractors", 0)),
+            "distractor_missing_component": int(issues.counts.get("distractor_missing_component", 0)),
+        },
+        "template_id_integrity": {
+            "checked": int(counters.get("template_checked", 0)),
+            "verified": int(counters.get("template_verified", 0)),
+            "mismatch": int(issues.counts.get("template_id_mismatch", 0)),
+            "missing": int(issues.counts.get("template_id_missing", 0)),
+            "not_reconstructed": int(issues.counts.get("template_not_reconstructed", 0)),
+        },
+        "mask_selector_integrity": {
+            "checked": int(counters.get("mask_checked", 0)),
+            "mismatch": int(issues.counts.get("target_mask_mismatch", 0)),
+            "empty": int(issues.counts.get("target_mask_empty", 0)),
+        },
+        "exact_cross_split_duplicates": int(
+            duplicate_report["exact_image_duplicate_cross_split"]
+        ),
         "counters": {k: (dict(v) if isinstance(v, Counter) else v) for k, v in counters.items()},
         "issues": issues.as_dict(),
         "duplicate_image_audit": duplicate_report,
+        "v01_frozen_integrity": frozen_report,
         "scene_level_split_leakage": "unverified",
         "scene_level_split_leakage_reason": (
             "The source WHU tiles carry no scene/geographic grouping metadata in the derived "
@@ -454,22 +591,27 @@ def decide_verdict(issues: V.IssueCollector) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--splits", nargs="+", default=list(SPLITS), choices=list(SPLITS))
+    parser.add_argument("--version", default="v0.1.1",
+                        help="dataset version under datasets/build_spatial_reason/")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--no-samples", action="store_true")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args(argv)
 
-    if not (GEN_DIR / "train.jsonl").is_file():
-        print(f"error: dataset not found at {GEN_DIR}", file=sys.stderr)
+    version = args.version
+    version_dir = _REPO_ROOT / "datasets" / "build_spatial_reason" / version
+    if not (version_dir / "train.jsonl").is_file():
+        print(f"error: dataset not found at {version_dir}", file=sys.stderr)
         return 2
 
     if not args.quiet:
-        print(f"auditing {GEN_DIR}")
+        print(f"auditing {version_dir}")
 
-    report = run_audit(args.splits, args.limit, args.quiet)
+    report = run_audit(args.splits, args.limit, args.quiet, version)
 
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
-    json_path = EVAL_DIR / "build_spatial_reason_v0.1_quality.json"
+    safe_version = version.replace(".", "")
+    json_path = EVAL_DIR / f"build_spatial_reason_{safe_version}_quality.json"
     json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     samples: list[str] = []
@@ -477,7 +619,9 @@ def main(argv: list[str] | None = None) -> int:
         try:
             from build_spatial_reason_samples import build_sample_pack
 
-            samples = build_sample_pack(SAMPLES_DIR, report, args.limit)
+            samples = build_sample_pack(
+                EVAL_DIR / f"build_spatial_reason_{safe_version}_samples", report, args.limit, version
+            )
         except Exception as exc:  # noqa: BLE001
             print(f"warning: sample pack generation failed: {type(exc).__name__}: {exc}", file=sys.stderr)
 

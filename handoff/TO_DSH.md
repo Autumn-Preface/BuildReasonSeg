@@ -1,470 +1,514 @@
-# TO_DSH — Task 5: BuildSpatialReason-v0.1 Dataset Validator & Semantic Quality Audit
+# TO_DSH — Task 5B: BuildSpatialReason-v0.1.1 Corrective Regeneration & Acceptance Audit
 
-> Status: **ACTIVE**
->
-> Canonical repository: `BuildReasonSeg`
->
-> This file is the authoritative task handoff from ChatGPT to DSH.
+> Status: ACTIVE
+> Repository: `BuildReasonSeg`
+> Goal: create and validate **BuildSpatialReason-v0.1.1** as the corrected successor to frozen v0.1.
 
-## 0. Before starting
+## 0. User-facing language
 
-1. Work only inside the current `BuildReasonSeg` workspace.
-2. Treat `../WHU_Building_Segment/` as read-only legacy evidence.
-3. Do **not** train any model, download data, install packages, or modify the external legacy project.
-4. Do **not** modify or regenerate any existing file under:
-   `datasets/build_spatial_reason/v0.1/`
-5. Treat BuildSpatialReason-v0.1 as a frozen audit target. If problems are found, report them; do not silently repair v0.1.
-6. The next corrected dataset version, if required, will be `BuildSpatialReason-v0.1.1`.
+Only the DSH web/chat output shown to the user must be Chinese:
+- progress summaries;
+- permission/escalation explanations;
+- warnings;
+- final summary.
 
-## 1. Goal
+Commands, code identifiers, paths, logs, field names may remain English.
 
-Independently validate the final 32,284-record BuildSpatialReason-v0.1 dataset from source component metadata and the frozen relation engine.
+`handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md` may remain English because they are primarily for ChatGPT review.
 
-The validator must distinguish:
+## 1. Full-access boundary
 
-- program-internal consistency;
-- geometry truth;
-- natural-language semantic truth;
-- split / duplication integrity;
-- future MLLM-supervision suitability.
+DSH is running with Full Access only because the normal workspace-write sandbox cannot start on this Windows host. Full Access is a technical workaround, not broader task authorization.
 
-Do not simply trust `reasoning_steps`, `target_component_id`, `statistics.json`, `manifest.json`, or generator-produced intermediates.
+Allowed writes:
+- only inside `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\`
+- ordinary system temp directories if required by the runtime.
+
+Allowed read-only external access:
+- `..\WHU_Building_Segment\` only when existing code needs legacy source images, labels, or frozen baseline evidence.
+
+Allowed network/Git:
+- `git status`, `diff`, `log`, `add`, `commit`, `fetch`, `pull`, `push origin main`.
+
+Forbidden:
+- modifying anything outside `BuildReasonSeg`;
+- modifying `../WHU_Building_Segment/`;
+- package installation (`pip`, `conda`, `npm`, etc.);
+- downloading models, datasets, checkpoints, scripts, or external code;
+- changing system settings, registry, PATH, shell profiles;
+- deleting unrelated files;
+- accessing unrelated user directories;
+- model training;
+- Task 5.5 or later tasks.
+
+If a required action conflicts with these limits, do not perform it. Explain the blocker in Chinese in the DSH UI and record it in `handoff/FROM_DSH.md`.
+
+## 2. v0.1 freeze
+
+`datasets/build_spatial_reason/v0.1/` is immutable historical evidence.
+
+You may read it but must not modify, regenerate, rename, overwrite, or delete it.
+
+All corrected output must go to:
+
+`datasets/build_spatial_reason/v0.1.1/`
+
+Verify at the end that v0.1 is unchanged.
+
+## 3. Task 5 defects to correct
+
+Historical audit findings:
+- v0.1 total: 32,284;
+- target recomputation: 32,284/32,284;
+- hidden semantic eligibility defects:
+  - largest 2,180;
+  - smallest 4,246;
+  - nearest 1,058;
+  - Level-3 nearest 291;
+- previous report said 7,086 unique records hit >=1 semantic defect;
+- reasoning text had component-ID leakage in 100% of records;
+- instructions had 0 ID leakage;
+- Level-2 Type-A was reported as 8,700 but true v0.1 Type A was 4,707 because 3,993 Level-3 records were accidentally included;
+- references appeared in distractors for 12,918 records;
+- scene-level leakage remains unverified.
+
+These numbers are historical evidence only. Do NOT hard-code rejection IDs or expected v0.1.1 counts.
+
+## 4. Core semantic policy
+
+Natural-language semantics are defined over **all visible components**, not a hidden eligibility-filtered subset.
+
+Eligibility may reject a sample; it may never silently change the answer.
+
+### 4.1 largest / smallest
+
+For every sample using `largest` or `smallest`, including when used only as a Level-2/3 reference:
+
+1. compute the global semantic extreme over all visible components:
+   - largest = global argmax of rasterized `area_px`;
+   - smallest = global argmin of rasterized `area_px`;
+2. apply the frozen size ambiguity/margin rule;
+3. if that exact semantic extreme is eligible, it may be used;
+4. if it is excluded by border/tiny/merge quality logic, discard the query;
+5. never substitute the second-ranked eligible component;
+6. if ambiguous under frozen `ratio_margin = 1.10`, discard.
+
+Do not change frozen relation thresholds.
+
+### 4.2 Level-2 reference -> nearest
+
+For `largest_to_nearest` / `smallest_to_nearest`:
+
+1. get the semantic reference using 4.1;
+2. compute boundary distance from that reference to **all other visible components**;
+3. semantic nearest = closest visible component before nearest eligibility filtering;
+4. keep only if that exact nearest is nearest-eligible and passes the frozen nearest margin/ambiguity rule;
+5. otherwise discard;
+6. never replace it with a farther eligible component.
+
+### 4.3 Level-2 reference -> direction
+
+For `largest_to_left_of`, `smallest_to_above`, etc.:
+
+- reference must first satisfy 4.1;
+- evaluate the frozen direction predicate over visible components;
+- keep only when the intended uniqueness/ambiguity conditions hold;
+- never replace an invalid semantic reference.
+
+### 4.4 Level-3 reference -> direction -> nearest
+
+For `largest_to_{direction}_to_nearest`:
+
+1. obtain true global semantic largest;
+2. if invalid under 4.1, discard;
+3. evaluate the frozen direction predicate over all visible components;
+4. form the complete direction-valid set;
+5. compute the true nearest within that full set by frozen boundary distance;
+6. keep only if that exact nearest is nearest-eligible and passes the frozen nearest ambiguity rule;
+7. otherwise discard;
+8. never remove a closer ineligible component and choose the second-nearest.
+
+## 5. Correct generator, do not just post-filter v0.1
+
+Preferred implementation:
+- change generator logic so semantic validity is checked before final sample acceptance/quota selection;
+- deterministically generate v0.1.1 from source component geometry and frozen relation rules;
+- do not load v0.1 and delete a hard-coded list of sample IDs.
+
+The corrected generator itself must become the source of truth.
+
+## 6. Version/config
 
 Create:
 
-- `spatial_reasoning/dataset_validator.py`
-- `scripts/validate_build_spatial_reason.py`
-- `tests/test_dataset_validator.py`
-- `evaluation/build_spatial_reason_v0.1_quality.json`
-- `docs/build_spatial_reason_v0.1_quality_audit.md`
+`configs/build_spatial_reason_v0.1.1.yaml`
 
-Keep audit visualizations under:
-`evaluation/build_spatial_reason_v0.1_samples/`
+Generate under:
 
-## 2. Independent dataset statistics
+`datasets/build_spatial_reason/v0.1.1/`
 
-Read the final JSONL files directly and independently recompute:
+Include provenance/version fields sufficient to identify:
+- dataset version;
+- generator version;
+- relation config version;
+- component representation version;
+- semantic visibility policy version.
 
-- total records;
-- split counts;
-- Level 1 / Level 2 / Level 3 counts;
-- query_type counts;
-- trivial / nontrivial Level 3;
-- samples per image.
+Recommended:
+`semantic_visibility_policy_version: "1.0"`
 
-Compare these numbers with `manifest.json`, `statistics.json`, and existing generated docs.
+Do not rename the project, WHU source dataset, or frozen relation config.
 
-### Known inconsistency to verify independently
+## 7. ID-free natural-language reasoning
 
-Task 4 reported:
+Structured `reasoning_steps` may keep numeric component IDs for machine verification.
 
-- Level 2 total = 8,925;
-- Type A reference→nearest = 8,700;
-- Type B reference→direction = 4,218.
-
-These cannot all be true.
-
-Do **not** copy a number from this task file. Recount from JSONL and identify the true source-of-truth values and which existing report/statistic is stale or wrong.
-
-## 3. Full target recomputation — all samples
-
-For **every record**, independently execute its intended structured program from:
-
-- source component metadata;
-- frozen relation definitions;
-- frozen thresholds;
-- query_type semantics.
-
-Compute:
-
-`recomputed_target_component_id`
-
-and compare against:
-
-`target_component_id`.
-
-Do not use the stored target as an input to the recomputation.
-
-Report:
-
-- checked count;
-- pass count;
-- failures;
-- exact sample IDs and reasons.
-
-Target should be 100% match.
-
-## 4. Global natural-language semantic audit
-
-This section is intentionally stricter than engine eligibility.
-
-Natural language such as “largest building” and “nearest building” is normally interpreted over the visible components in the image, not over a hidden eligibility-filtered subset.
-
-Audit whether hidden eligibility rules change the answer seen by a human/model.
-
-### 4.1 largest
-
-For every sample involving `largest`:
-
-1. compute global argmax of `area_px` over all visible components in the image;
-2. compare it with the dataset reference/target used as “largest”.
-
-If the true global largest was excluded because of border/merge eligibility and the dataset uses another component, flag:
-
-`hidden_eligibility_largest`.
-
-### 4.2 smallest
-
-Analogously compute global argmin over all visible components.
-
-If the natural-language “smallest” differs from the engine-selected eligible smallest, flag:
-
-`hidden_eligibility_smallest`.
-
-### 4.3 nearest
-
-For all reference→nearest samples:
-
-1. compute boundary distance from the reference to **all other visible components**;
-2. identify the semantic nearest before target-eligibility filtering;
-3. compare with dataset target.
-
-If a closer border/ineligible component exists and the dataset selects a farther eligible component, flag:
-
-`hidden_eligibility_nearest`.
-
-### 4.4 Level-3 nearest-within
-
-For:
-
-`reference → direction filter → nearest within filtered set`
-
-first obtain all direction candidates using the frozen direction predicate. Then find the true nearest among that direction set **before nearest eligibility filtering**.
-
-If dataset target differs because the closest directional candidate is ineligible, flag:
-
-`hidden_eligibility_level3_nearest`.
-
-For every violation record:
-
-- image_id;
-- sample_id;
-- reference;
-- all directional/semantic candidates;
-- selected target;
-- semantic target;
-- exclusion reason.
-
-## 5. Recommended semantic correction strategy
-
-Do not modify v0.1.
-
-Evaluate two correction strategies for v0.1.1:
-
-### Option A — preferred unless evidence argues otherwise
-
-Keep only samples where hidden eligibility filtering does **not** change the answer expressed by the natural-language instruction.
-
-Examples:
-
-- global largest is eligible → keep;
-- global largest is ineligible → discard the query;
-- semantic nearest is eligible → keep;
-- semantic nearest is ineligible → discard the query.
-
-### Option B
-
-Make hidden eligibility explicit in language, e.g.:
-“among building regions that do not touch the image boundary ...”
-
-Discuss why this may teach annotation artifacts rather than useful spatial reasoning.
-
-Recommend one option based on audit evidence.
-
-## 6. Internal component-ID leakage audit
-
-Scan:
-
-- `instruction_zh`
-- `instruction_en`
+But these natural-language fields must contain zero internal IDs:
 - `reasoning_zh`
 - `reasoning_en`
 
-for internal annotation IDs such as:
-
+Forbidden examples:
 - `component 3`
 - `component 12`
-- Chinese equivalents such as `组件3`.
+- `组件3`
+- `构件 7`
 
-Differentiate:
-
-- instruction leakage;
-- reasoning-text leakage.
-
-IDs inside structured machine fields such as `reasoning_steps` are **not** leakage.
-
-Assess whether current natural-language reasoning can be used directly as future MLLM supervision when the input image does not display these IDs.
-
-If unsuitable, propose a v0.1.1 ID-free reasoning style, e.g.:
+Use role-based prose, e.g.:
 
 Chinese:
-“首先找到图像中面积最大的建筑区域，将其作为参考区域。随后比较其右侧候选建筑与参考区域的距离，选择距离最近的区域作为目标。”
+`首先找到图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择最近的区域作为目标。`
 
 English:
-“First identify the largest building region as the reference. Then compare the distances of the candidate regions to its right and select the closest one as the target.”
+`First identify the largest building region as the reference. Then identify the building regions to the right of the reference. Finally compare their boundary distances to the reference and select the nearest region as the target.`
 
-Do not change v0.1 in this task.
+The prose should explain the operation, not expose annotation IDs.
 
-## 7. Candidate / distractor integrity
+## 8. Explicit template_id
 
-Full-dataset checks:
+Add per-sample:
 
-- target must not occur in `distractor_component_ids`;
-- reference must not be incorrectly included as target/distractor;
-- all candidate IDs exist;
-- candidate lists contain no duplicates;
-- Level-2 Type-B requires exactly one direction candidate;
-- Level-3:
-  `nearest_eligible_component_ids ⊆ candidate_component_ids`;
-- recompute both candidate sets independently and compare.
+`template_id`
 
-## 8. Mask selector integrity
+Requirements:
+- deterministic;
+- same semantic ID for zh/en pair;
+- validator confirms rendered zh/en matches recorded `template_id`;
+- keep existing `template_version` if useful.
 
-For all records, check:
+## 9. Distractor policy
 
-`target_mask.component_id == target_component_id`.
+Adopt this rule:
 
-Resolve the referenced component map and verify the target ID exists and yields a non-empty binary mask.
+`distractor_component_ids` excludes both:
+- target;
+- every explicit reference component.
 
-Prefer full-dataset validation at current scale.
+Reference is reasoning context, not a target distractor.
 
-## 9. Reference integrity
+Candidate sets used internally for reasoning are separate and may retain algorithmically necessary members.
 
-- Level 1: `reference_component_ids == []`;
-- Level 2/3: reference exists in source image;
-- reference != target;
-- structured-program reference agrees with `reference_component_ids`;
-- Level 3 step 1 output equals the reference.
+## 10. Fix Level-2 statistics
 
-## 10. Structured program integrity
+Type A:
+- `level == 2`
+- and query is `*_to_nearest`
 
-Validate for every sample:
+Type B:
+- `level == 2`
+- and one-hop reference->direction query.
 
-- continuous step numbering;
-- operation sequence matches level/query_type;
-- every referenced component exists;
-- no circular/self-invalid dependency;
-- candidate lists have no duplicate IDs;
-- output target appears only at the appropriate step;
-- Level 1 uses the expected one-step direct operation;
-- Level 2 uses the expected two logical operations;
-- Level 3 uses the expected three logical operations.
+Add invariant:
 
-## 11. Template distribution and language parity
+`level2.reference_to_nearest + level2.reference_to_direction == by_level["2"]`
 
-Using `templates.py` and the deterministic selector, reconstruct the expected template choice from the semantic key.
+Generation/audit must fail if false.
 
-Quantify for every `query_type × language`:
+## 11. Fix validator counter semantics
 
-- template usage counts;
-- template shares;
-- unused templates;
-- severe imbalance, if any.
+Do not reuse the ambiguous old field `leak_reasoning_samples`.
 
-Verify Chinese and English instructions correspond to the same semantic template/program.
+Use:
+- `leak_reasoning_records`
+- `leak_reasoning_fields`
+- `leak_reasoning_mentions`
 
-Programmatically scan for:
+Acceptance target for all three: 0.
 
-- raw placeholders;
-- `{...}`;
-- `None`;
-- `null`;
-- doubled punctuation;
-- obvious repeated articles;
-- empty sentences;
-- unexpected Chinese in English template;
-- unexpected English in Chinese template.
+Also add machine-readable:
+- `semantic_violation_unique_records`
+- `semantic_clean_records`
 
-Do not use an LLM for validation.
+Do not derive the unique semantic union only in prose.
 
-## 12. Cross-split image duplicate audit
+## 12. Backward safety
 
-Beyond image_id separation, hash the underlying source image files.
+Refactor narrowly so v0.1.1 uses the new semantic policy without touching v0.1.
 
-Check byte-identical cross-split duplicates across train/val/test.
+Preserve:
+- deterministic seed behavior;
+- frozen relation thresholds;
+- current component representation.
 
-Report:
+If exact historical v0.1 regeneration becomes awkward, do not risk v0.1. It is sufficient that on-disk v0.1 stays frozen and current code correctly generates v0.1.1.
 
-`exact_image_duplicate_cross_split = N`.
+Document compatibility limitations if any.
 
-If no exact duplicates, record 0.
+## 13. ADR/docs
 
-### Scene-level leakage
+Update `docs/architecture_decisions.md` with a new ADR (e.g. ADR-010) covering:
 
-Do not claim scene-level leakage is absent unless it can actually be established from available metadata.
+1. natural-language semantic universe = all visible components;
+2. eligibility may reject a sample but may not silently change its answer;
+3. quality/GT geometry remains annotation/supervision logic, not inference input;
+4. reference components are excluded from distractors;
+5. natural-language reasoning is ID-free while structured fields retain IDs.
 
-If original scene/tile grouping cannot be reliably reconstructed, report:
+Create/update:
 
-`scene_level_split_leakage = unverified`.
+`docs/build_spatial_reason_v0.1.1.md`
 
-Explain why.
+Include:
+- changes from v0.1;
+- frozen rules;
+- actual sample counts;
+- semantic policy;
+- known limitations.
 
-## 13. Distribution audit
+## 14. Regenerate v0.1.1
 
-Compare train/val/test for:
+Generate full:
+- `train.jsonl`
+- `val.jsonl`
+- `test.jsonl`
+- `manifest.json`
+- `statistics.json`
 
-- level proportions;
-- query_type proportions;
-- target area distribution;
-- target centroid distribution;
-- source components/image.
+under `datasets/build_spatial_reason/v0.1.1/`.
 
-Simple descriptive differences are enough.
+Full JSONL files remain local/ignored by Git.
 
-Do not resplit the dataset in this task.
+Do NOT force final count to 32,284, 25,198, or any predetermined value. Let the corrected deterministic generator and quota logic determine it.
 
-## 14. Trivial / nontrivial Level-3 audit
+Report actual counts.
 
-Independently verify the reported:
+## 15. Acceptance validator
 
-- trivial selection count;
-- nontrivial selection count.
+Refactor validator/CLI so it explicitly supports v0.1.1, e.g.:
 
-Check:
+`python scripts/validate_build_spatial_reason.py --version v0.1.1`
 
-`trivial_selection == true`
+Run on all v0.1.1 records.
 
-iff the direction-filtered nearest candidate set has exactly one eligible candidate.
+Blocking counts that must be zero:
+- target recomputation failures;
+- hidden_eligibility_largest;
+- hidden_eligibility_smallest;
+- hidden_eligibility_nearest;
+- hidden_eligibility_level3_nearest;
+- instruction semantic mismatch;
+- reasoning component-ID leakage;
+- target in distractors;
+- reference in distractors;
+- missing/empty target mask;
+- template_id mismatch;
+- duplicate sample IDs;
+- structured-program errors.
 
-Recommend that trivial Level-3 not be included in the primary multi-hop reasoning metric.
+Required positive checks:
+- target recomputation = 100%;
+- template_id verification = 100%;
+- Type A + Type B = Level 2 total;
+- exact cross-split byte duplicate count = 0;
+- zh/en semantic parity = 100%;
+- v0.1 unchanged.
 
-## 15. Visualization audit pack
-
-Generate a lightweight pack:
-
-- 6 Level-1;
-- 8 Level-2;
-- 10 nontrivial Level-3;
-- 4 trivial Level-3;
-- if semantic violations exist, up to 8 representative failure cases.
-
-Each audit visualization should show:
-
-- source image;
-- reference outline;
-- target outline;
-- candidate IDs as **audit overlay only**;
-- instruction;
-- query_type.
-
-Generate:
-
-`evaluation/build_spatial_reason_v0.1_samples/contact_sheet.png`
-
-Keep the whole pack reasonably small (preferably <10 MB).
-
-Do not claim manual visual inspection unless images were actually inspected.
-
-## 16. Audit verdict
-
-The final status must be exactly one of:
-
+Final v0.1.1 verdict may be:
 - `PASS`
 - `PASS_WITH_WARNINGS`
-- `FAIL_REQUIRES_REVISION`
 
-Default to `FAIL_REQUIRES_REVISION` if any of the following is non-zero:
+If `FAIL_REQUIRES_REVISION`, stop and do not proceed.
 
-- target recomputation failures;
-- instruction semantic mismatches;
-- hidden eligibility violations that make the natural-language answer false or misleading.
+## 16. Scene-level leakage
 
-If revision is required, recommend `BuildSpatialReason-v0.1.1`.
+If geographic/scene grouping still cannot be reconstructed:
 
-Do not overwrite v0.1.
+`scene_level_split_leakage = unverified`
 
-## 17. Tests
+Do not claim absence and do not resplit WHU in this task.
 
-Add validator tests that cover at least:
+## 17. Level-3 policy
 
-- independent count reconstruction;
-- target recomputation;
-- hidden-largest mismatch fixture;
-- hidden-smallest mismatch fixture;
-- hidden-nearest mismatch fixture;
-- Level-3 hidden nearest fixture;
-- component-ID leakage detection;
-- candidate/distractor checks;
-- mask selector integrity;
-- template reconstruction;
-- exact image-hash leakage helper.
+Continue to distinguish:
+- trivial Level 3;
+- nontrivial Level 3.
 
-Run all existing tests plus the new validator tests.
+Recompute counts for v0.1.1.
 
-## 18. Final DSH report
+Primary multi-hop metric should use nontrivial Level 3; trivial Level 3 should be reported separately.
 
-Write the complete report to:
+Do not delete trivial samples merely because they are trivial.
+
+## 18. Visualization pack
+
+Create a compact pack under:
+
+`evaluation/build_spatial_reason_v0.1.1_samples/`
+
+Suggested:
+- 4 Level 1;
+- 6 Level 2;
+- 8 nontrivial Level 3;
+- 4 trivial Level 3;
+- representative warning cases if warnings remain;
+- `contact_sheet.png`.
+
+Candidate/component IDs may appear in audit overlays only, never in natural-language supervision.
+
+Do not claim full manual inspection unless actually done.
+
+## 19. Tests and execution report
+
+Add/update tests for at least:
+
+1. global largest is never silently replaced;
+2. global smallest is never silently replaced;
+3. nearest visible target is never replaced by farther eligible target;
+4. Level-3 nearest uses the full direction-valid set;
+5. semantic-invalid samples are rejected before acceptance;
+6. natural-language reasoning has no internal IDs;
+7. structured reasoning_steps may retain IDs;
+8. template_id stored and matches zh/en;
+9. reference excluded from distractors;
+10. target excluded from distractors;
+11. Level-2 Type-A + Type-B invariant;
+12. validator version parameterization;
+13. exact image-hash duplicate helper;
+14. deterministic regeneration on a representative subset;
+15. v0.1 remains unmodified where practical.
+
+Run the full existing test suite plus all new tests.
+
+`handoff/FROM_DSH.md` must explicitly record:
+- exact test command(s);
+- total collected;
+- passed;
+- failed;
+- skipped;
+- exit code.
+
+Do not merely state “tests passed”.
+
+## 20. Machine-readable audit output
+
+Create:
+
+`evaluation/build_spatial_reason_v0.1.1_quality.json`
+
+Include at least:
+- verdict;
+- total/split/level/query_type counts;
+- Level-2 Type-A/Type-B;
+- Level-3 trivial/nontrivial;
+- target recomputation checked/pass/fail;
+- hidden semantic counts;
+- semantic_violation_unique_records;
+- semantic_clean_records;
+- reasoning leakage records/fields/mentions;
+- distractor integrity;
+- template_id integrity;
+- exact cross-split duplicates;
+- scene-level leakage status;
+- test summary if practical.
+
+## 21. Handoff files
+
+Write full technical report to:
 
 `handoff/FROM_DSH.md`
 
-Use these sections:
+It may remain English.
 
-1. Audit Verdict
-2. Files Created / Modified
-3. Independent Dataset Counts
-4. Existing Statistics Consistency
-5. Full Target Re-computation
-6. Largest Semantic Audit
-7. Smallest Semantic Audit
-8. Nearest Semantic Audit
-9. Level-3 Hidden Eligibility Audit
-10. Component-ID Leakage
-11. Structured Program Integrity
-12. Candidate / Distractor Integrity
-13. Mask Selector Integrity
-14. Template Distribution
-15. Language Parity
-16. Split / Exact Duplicate Audit
-17. Distribution Audit
-18. Trivial / Nontrivial Level-3 Audit
-19. Visualization Pack
-20. Issues Found
-21. Recommended Fixes
-22. Ready for v0.1.1 or Task 5.5?
+Suggested sections:
+1. Verdict
+2. Scope / Safety Compliance
+3. Files Created / Modified
+4. Generator Changes
+5. Semantic Policy Changes
+6. v0.1.1 Counts
+7. v0.1 vs v0.1.1 Comparison
+8. Target Recomputation
+9. Hidden Eligibility Audit
+10. Reasoning Leakage Audit
+11. Template ID Audit
+12. Distractor Policy Audit
+13. Statistics Consistency
+14. Split / Duplicate Audit
+15. Level-3 Trivial / Nontrivial
+16. Visualization Pack
+17. Test Execution Summary
+18. Known Limitations
+19. Git Status / Commit / Push
+20. Recommended Next Task
 
-Be explicit about every mismatch and do not hide failed checks.
+Update `handoff/PROJECT_STATE.md` concisely. It may also remain English.
 
-## 19. Update project handoff state
+## 22. Git commit/push for ChatGPT review
 
-At the end, update:
+ChatGPT will inspect the pushed repository directly.
 
-`handoff/PROJECT_STATE.md`
+Commit and push all new:
+- source code;
+- configs;
+- tests;
+- docs/ADR;
+- v0.1.1 manifest/statistics;
+- quality JSON;
+- lightweight audit visualizations;
+- `handoff/FROM_DSH.md`;
+- `handoff/PROJECT_STATE.md`;
+- this `handoff/TO_DSH.md` if currently modified/uncommitted.
 
-with a concise current state:
+Do NOT commit ignored full JSONL datasets, weights, checkpoints, or unrelated files.
 
-- project codename;
-- current dataset version;
-- completed tasks;
-- frozen relation rules;
-- Task 5 verdict;
-- current blockers;
-- recommended next task.
+Before staging:
+1. `git status --short`
+2. inspect changed files
+3. confirm no unrelated/large generated binaries are staged
+4. confirm no out-of-repo writes occurred.
 
-Do not put the full report there.
+Recommended commit:
 
-## 20. Git handoff
+`fix: regenerate BuildSpatialReason v0.1.1`
 
-After all work and tests are complete:
+Then:
 
-1. run `git status`;
-2. ensure no large ignored/generated dataset binaries were accidentally staged;
-3. commit all intended Task 5 code/docs/audit outputs plus:
-   - `handoff/FROM_DSH.md`
-   - `handoff/PROJECT_STATE.md`
-4. commit message:
-   `audit: validate BuildSpatialReason v0.1`
-5. push to `origin/main`.
+`git push origin main`
 
-Do **not** modify `handoff/TO_DSH.md` except, optionally, to add a final line saying the task has been completed. Prefer leaving the task text intact for audit history.
+If push fails, record exact reason in `FROM_DSH.md` and explain it in Chinese in the DSH UI.
 
-If push is blocked by permission/network policy, complete all local work and report the exact blocker in `handoff/FROM_DSH.md`.
+## 23. Final DSH web/chat response — Chinese only
+
+At completion, the visible DSH response to the user must be concise Chinese and include only:
+- whether v0.1.1 was generated;
+- final validator verdict;
+- final sample count;
+- test summary;
+- commit hash;
+- push success/failure;
+- any blocker requiring user action.
+
+Do not paste the full English technical report into the UI.
+
+## 24. Stop
+
+After Task 5B, STOP.
+
+Do not start:
+- Task 5.5;
+- MLLM integration;
+- model training;
+- Spatial Relation Encoder;
+- Spatial Consistency Loss;
+- any later task.
+
+Wait for ChatGPT review of the pushed GitHub commit.

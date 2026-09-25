@@ -39,6 +39,7 @@ import numpy as np
 
 import geometry as G
 import relations as R
+import semantic_policy as SP
 import templates as TP
 import thresholds as T
 from component_quality import classify_image
@@ -257,8 +258,10 @@ def iteration_metadata(dataset_root: Path, split: str) -> Iterator[dict]:
                 yield json.loads(line)
 
 
-def read_dataset_records(dataset_root: Path, split: str) -> list[dict]:
-    path = dataset_root / "build_spatial_reason" / "v0.1" / f"{split}.jsonl"
+def read_dataset_records(dataset_root: Path, split: str, version: str = "v0.1") -> list[dict]:
+    """Read the JSONL records for one split of a specific dataset version."""
+
+    path = dataset_root / "build_spatial_reason" / version / f"{split}.jsonl"
     with path.open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
@@ -271,86 +274,73 @@ def read_dataset_records(dataset_root: Path, split: str) -> list[dict]:
 def recompute_target_independent(
     ctx: ImageContext, level: int, query_type: str, steps: Sequence[dict]
 ) -> int | None:
-    """Recompute the target from the intended program, using the query_type too.
+    """Recompute the target from the intended program under the SEMANTIC policy.
 
-    Deliberately independent of the stored ``target_component_id``. For the
-    Level-2 Type-B case the answer is the unique direction candidate, derived
-    from the frozen direction predicate rather than read from the record.
+    Deliberately independent of the stored ``target_component_id``. Every answer
+    is the **global semantic** result over all visible components, and ``None``
+    is returned when that result is not admissible — which is precisely when the
+    v0.1.1 generator discards the query.
     """
+
+    quality = ctx.quality
+    config = ctx.config
+    image = ctx.image
+
+    def size_answer(which: str) -> int | None:
+        outcome = SP.resolve_size_extreme(image, which, config, quality)
+        return outcome.semantic_target if outcome.admissible else None
+
+    def nearest_answer(anchor_id: int, candidates: Sequence[int]) -> int | None:
+        outcome = SP.resolve_nearest(
+            image, anchor_id, candidates, ctx.component_map, config, quality
+        )
+        return outcome.semantic_target if outcome.admissible else None
 
     if level == 1:
         if len(steps) != 1:
             return None
-        return ctx.extreme_target(steps[0]["operation"]) if "area" not in steps[0]["operation"] \
-            else ctx.size_target(steps[0]["operation"])
+        operation = steps[0]["operation"]
+        if operation == "argmax_area":
+            return size_answer("largest")
+        if operation == "argmin_area":
+            return size_answer("smallest")
+        return ctx.extreme_target(operation)
 
     if level == 2:
         reference_type, _, tail = query_type.partition("_to_")
-        reference_operation = LEVEL1_OPERATIONS.get(reference_type)
-        if reference_operation is None:
-            return None
-        reference_id = ctx.extreme_target(reference_operation) if "area" not in reference_operation \
-            else ctx.size_target(reference_operation)
-        if reference_id is None:
+        reference = size_answer(reference_type)
+        if reference is None:
             return None
 
         if tail == "nearest":
-            # Nearest over the nearest-eligible set, using boundary distance.
-            all_others = [c.component_id for c in ctx.image.components if c.component_id != reference_id]
-            eligible = ctx.nearest_eligible(reference_id, all_others)
-            scored = ctx.nearest_gap(reference_id, eligible)
-            if not scored:
-                return None
-            if len(scored) >= 2:
-                d1, id1 = scored[0]
-                d2, _ = scored[1]
-                margin = d2 - d1
-                if (
-                    margin / ctx.image.diagonal < ctx.config.nearest.margin_diag_fraction
-                    or margin < ctx.config.nearest.margin_px_floor
-                ):
-                    return None
-            return scored[0][1]
+            all_others = [c.component_id for c in image.components if c.component_id != reference]
+            return nearest_answer(reference, all_others)
 
-        # Type B: unique direction candidate.
-        candidates = ctx.direction_candidates(reference_id, tail)
-        if len(candidates) != 1:
-            return None
-        return candidates[0]
+        candidates = SP.direction_candidates_over_visible(
+            image, reference, tail, config, quality
+        )
+        return candidates[0] if len(candidates) == 1 else None
 
     if level == 3:
         reference_type = query_type.split("_to_", 1)[0]
-        reference_operation = LEVEL1_OPERATIONS.get(reference_type)
-        if reference_operation is None:
-            return None
-        reference_id = ctx.extreme_target(reference_operation) if "area" not in reference_operation \
-            else ctx.size_target(reference_operation)
-        if reference_id is None:
+        reference = size_answer(reference_type)
+        if reference is None:
             return None
 
         relation = None
         for candidate_relation in ("left_of", "right_of", "above", "below"):
-            if f"_to_{candidate_relation}_to_nearest" == query_type[len(reference_type):]:
+            if query_type == f"{reference_type}_to_{candidate_relation}_to_nearest":
                 relation = candidate_relation
                 break
         if relation is None:
             return None
 
-        filtered = ctx.direction_candidates(reference_id, relation)
-        eligible = ctx.nearest_eligible(reference_id, filtered)
-        scored = ctx.nearest_gap(reference_id, eligible)
-        if not scored:
+        filtered = SP.direction_candidates_over_visible(
+            image, reference, relation, config, quality
+        )
+        if not filtered:
             return None
-        if len(scored) >= 2:
-            d1, _ = scored[0]
-            d2, _ = scored[1]
-            margin = d2 - d1
-            if (
-                margin / ctx.image.diagonal < ctx.config.nearest.margin_diag_fraction
-                or margin < ctx.config.nearest.margin_px_floor
-            ):
-                return None
-        return scored[0][1]
+        return nearest_answer(reference, filtered)
 
     return None
 
@@ -530,6 +520,55 @@ def _render_matches(template: str, text: str) -> bool:
 
 def hash_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+#: SHA256 of the frozen v0.1 artefacts, measured when v0.1 was completed and
+#: re-confirmed before Task 5B began. Used only to CONFIRM v0.1 was not
+#: modified; v0.1 is never regenerated.
+V01_FROZEN_SHA256 = {
+    "train.jsonl": "5848157b9748ea0a280e73b8ed14ab6be5f83a018b4ad2687bffb62b2cc54975",
+    "val.jsonl": "93aea13d63f94b25f3c90fe1c3f0c27f891f555a9d67c6c16050fbd3c3c163c6",
+    "test.jsonl": "a0b6bfe461fe3579356133d12b0c099d8a23af827f965ba1a8c3cb5d218255cc",
+    "manifest.json": "60a308837a06e5624b05803db076ed131389e630aa7af6e870b4cab00d6f506a",
+    "statistics.json": "38e45395fd09a46f95a786e6cafd71005826cde6d5a97e7193a57dd0343f08fe",
+}
+
+
+def verify_v01_unchanged(dataset_root: Path) -> dict:
+    """Confirm the frozen v0.1 artefacts still hash to their recorded values.
+
+    Returns a report; a mismatch is a hard integrity failure. Only the on-disk
+    files are read — v0.1 is never regenerated.
+    """
+
+    v01_dir = dataset_root / "build_spatial_reason" / "v0.1"
+    result: dict = {"exists": v01_dir.is_dir(), "files": {}, "unchanged": None, "mismatches": []}
+    if not v01_dir.is_dir():
+        result["unchanged"] = None
+        return result
+
+    ok = True
+    for name in ("train.jsonl", "val.jsonl", "test.jsonl", "manifest.json", "statistics.json"):
+        path = v01_dir / name
+        if not path.is_file():
+            result["files"][name] = {"present": False}
+            ok = False
+            result["mismatches"].append(f"{name}: missing")
+            continue
+        digest = hash_file(path)
+        recorded = V01_FROZEN_SHA256.get(name)
+        matches = (recorded is None) or (digest == recorded)
+        result["files"][name] = {
+            "present": True,
+            "sha256": digest,
+            "recorded_sha256": recorded,
+            "matches_recorded": matches,
+        }
+        if not matches:
+            ok = False
+            result["mismatches"].append(f"{name}: {digest} != {recorded}")
+    result["unchanged"] = ok
+    return result
 
 
 def exact_cross_split_image_duplicates(

@@ -100,13 +100,10 @@ def test_determinism_byte_identical():
     second = _serialise(_generate(limit=15))
     assert first == second, "generation is not byte-identical across runs"
 
-    # And re-loading the on-disk artefact must match too.
-    path = GENERATED_DIR / "train.jsonl"
-    if path.is_file():
-        # Compare the first N lines rather than the whole file (subset vs full run).
-        on_disk = "\n".join(path.read_text(encoding="utf-8").splitlines()[: len(first.splitlines()) - 1])
-        offline = "\n".join(first.splitlines()[: len(first.splitlines()) - 1])
-        assert on_disk == offline, "on-disk artefact differs from a fresh subset run"
+    # The on-disk v0.1 artefact was produced with the SUPERSEDED v0.1 semantic
+    # policy, so a fresh run no longer reproduces it. The equivalent check for
+    # the current policy lives in tests/test_v011_acceptance.py, which compares a
+    # fresh v0.1.1 subset run against the on-disk v0.1.1 artefact.
     print("  [A] determinism byte-identical OK")
 
 
@@ -147,8 +144,7 @@ def test_target_recomputable_from_steps():
                 f"recorded {sample['target_component_id']}"
             )
             # Independently re-derive the relation filter set and compare with the
-            # stored list. For Level-2 Type-B, the nearest step's candidate list
-            # must additionally equal the nearest-eligible subset.
+            # stored list.
             for step in sample["reasoning_steps"]:
                 if step["operation"] != "filter_relation":
                     continue
@@ -157,9 +153,11 @@ def test_target_recomputable_from_steps():
                     f"{sample['sample_id']}: stored relation candidates "
                     f"{sorted(step['candidate_component_ids'])} != derived {derived}"
                 )
+                # The nearest step must reason over the FULL direction-valid set
+                # (v0.1.1 semantic policy), so a closer but ineligible candidate
+                # is never skipped.
                 nearest_eligible = step.get("nearest_eligible_component_ids")
                 if nearest_eligible is not None:
-                    # Must be a subset of the relation candidates.
                     assert set(nearest_eligible) <= set(derived), (
                         f"{sample['sample_id']}: nearest-eligible {nearest_eligible} is not a "
                         f"subset of the relation candidates {derived}"
@@ -168,9 +166,9 @@ def test_target_recomputable_from_steps():
                         s for s in sample["reasoning_steps"]
                         if s["operation"] == "argmin_boundary_distance"
                     )
-                    assert sorted(nearest_step["candidate_component_ids"]) == sorted(nearest_eligible), (
-                        f"{sample['sample_id']}: nearest step candidates disagree with the "
-                        f"recorded nearest-eligible subset"
+                    assert sorted(nearest_step["candidate_component_ids"]) == sorted(derived), (
+                        f"{sample['sample_id']}: nearest step must cover the full direction set "
+                        f"{derived}, got {sorted(nearest_step['candidate_component_ids'])}"
                     )
             checked += 1
         if checked >= 120:
@@ -617,21 +615,45 @@ def test_schema_fields_present():
 
 
 def test_level3_trivial_flag_matches_candidate_count():
+    """trivial_selection == "exactly one ADMISSIBLE candidate after filtering".
+
+    v0.1.1 changed the criterion from the raw direction-set size to the
+    admissible-candidate count, so a chain whose direction set has several
+    members but only one admissible candidate is correctly marked trivial.
+    """
+
     if not _have_dataset():
         return
+    import semantic_policy as SP
+
     checked = trivial = 0
-    for sample in _generate(limit=25):
-        if sample["level"] != 3:
-            continue
-        steps = sample["reasoning_steps"]
-        nearest_step = next(s for s in steps if s["operation"] == "argmin_boundary_distance")
-        n_candidates = len(nearest_step["candidate_component_ids"])
-        if n_candidates == 1:
-            assert sample["trivial_selection"], sample["sample_id"]
-            trivial += 1
-        else:
-            assert not sample["trivial_selection"], sample["sample_id"]
-        checked += 1
+    for split in ("train",):
+        for image_record in list(G.iter_metadata(DATASET_ROOT, split))[:25]:
+            image = G.image_geometry_from_record(image_record)
+            samples = A.generate_for_image(
+                image, image_record, CONFIG, _gen_config(), _dataset_meta(),
+                A.DiscardCounter(), set()
+            )
+            for sample in samples:
+                if sample["level"] != 3:
+                    continue
+                steps = sample["reasoning_steps"]
+                nearest_step = next(s for s in steps if s["operation"] == "argmin_boundary_distance")
+                admissible = SP.admissible_nearest_ids(
+                    image,
+                    nearest_step["reference_component_id"],
+                    nearest_step["candidate_component_ids"],
+                    image.load_map(DATASET_ROOT),
+                    CONFIG,
+                )
+                if len(admissible) == 1:
+                    assert sample["trivial_selection"], sample["sample_id"]
+                    trivial += 1
+                else:
+                    assert not sample["trivial_selection"], (
+                        f"{sample['sample_id']}: admissible={len(admissible)} but flagged trivial"
+                    )
+                checked += 1
     assert checked > 0, "no Level-3 samples generated"
     print(f"  [extra] Level-3 trivial flag consistent OK ({checked} samples, {trivial} trivial)")
 

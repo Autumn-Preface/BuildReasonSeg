@@ -1,566 +1,467 @@
-# FROM_DSH — Task 5 Report: BuildSpatialReason-v0.1 Dataset Validator & Semantic Quality Audit
+# FROM_DSH — Task 5B Report: BuildSpatialReason-v0.1.1 Corrective Regeneration & Acceptance Audit
 
 **Date:** 2026-08-04
-**Auditor:** DSH
-**Audit target:** `datasets/build_spatial_reason/v0.1/` (32,284 records), treated as **frozen**
-**Verdict: `FAIL_REQUIRES_REVISION`**
+**Actor:** DSH
+**Task:** Task 5B (from `handoff/TO_DSH.md`)
+**Verdict: `PASS`**
 
 ---
 
-## 1. Audit Verdict
+## 1. Verdict
 
-**`FAIL_REQUIRES_REVISION`**
+**`PASS`** — BuildSpatialReason-v0.1.1 was generated and passed the full
+acceptance audit with **zero** blocking counts and **zero** issues of any
+severity (no errors, no warnings).
 
-The dataset is **internally consistent and fully machine-verifiable**, but it is
-**not semantically sound** for a substantial minority of records, and its
-reasoning text is **not directly usable as MLLM supervision**.
-
-Two independent defect classes were established:
-
-| Class | Severity | Scale |
+| | v0.1 | v0.1.1 |
 |---|---|---|
-| Hidden eligibility makes the natural-language answer false/misleading | **BLOCKING** | **7,086 records (21.9%)** |
-| Internal component IDs leak into reasoning text | WARNING (universal) | **32,284 records (100%)** |
+| Verdict | `FAIL_REQUIRES_REVISION` | **`PASS`** |
+| Hidden semantic violations | 7,086 records (21.9%) | **0** |
+| Reasoning ID leakage | 32,284 records (100%) | **0** |
+| Reference in distractors | 12,918 records | **0** |
+| Target recomputation | 32,284/32,284 | **25,229/25,229** |
+| `template_id` verification | field absent | **25,229/25,229** |
 
-Verdict logic (`dataset_validator.decide_verdict`) returns
-`FAIL_REQUIRES_REVISION` because blocking codes fired, specifically
-`hidden_eligibility_largest` / `_smallest` / `_nearest` /
-`_level3_nearest` — all of which are in `BLOCKING_CODES`.
-
-**v0.1 was NOT modified.** No file under `datasets/build_spatial_reason/v0.1/`
-was written, regenerated or repaired. Recommended revision version:
-**`BuildSpatialReason-v0.1.1`**.
+v0.1 remains byte-identical and frozen. No Task 5.5 or later work was started.
 
 ---
 
-## 2. Files Created / Modified
+## 2. Scope / Safety Compliance
 
-**Created (5 new files, all committable — verified not ignored):**
+| Constraint | Status |
+|---|---|
+| Writes confined to `BuildReasonSeg/` | **complied** |
+| `../WHU_Building_Segment/` read-only | **complied** — 11/11 core SHA256 unchanged, 9,014 files |
+| No package installation | **complied** |
+| No model/dataset download | **complied** |
+| No system/registry/PATH changes | **complied** |
+| No unrelated file deletion | **complied** |
+| No model training | **complied** |
+| `datasets/build_spatial_reason/v0.1/` not modified | **complied** — verified by SHA256, see §14 |
+| Task 5.5 / later tasks not started | **complied** |
+
+**Full Access note.** The session ran under `danger-full-access` because the
+`workspace-write` sandbox runner could not start on this Windows host (its
+per-run temp directory under `C:\Users\ROG\AppData\Local\Temp` did not exist and
+lies outside the workspace, so file tools could not create it). Full Access was
+used purely as a technical workaround; all writes stayed inside `BuildReasonSeg/`
+plus ordinary temp files.
+
+---
+
+## 3. Files Created / Modified
+
+**Created:**
 
 | File | Purpose |
 |---|---|
-| `spatial_reasoning/dataset_validator.py` | Validator core: per-image cached context, independent recomputation, semantic audit, template reconstruction, image-hash leakage |
-| `scripts/validate_build_spatial_reason.py` | Audit CLI |
-| `scripts/build_spatial_reason_samples.py` | Audit visualization pack + contact sheet |
-| `tests/test_dataset_validator.py` | 18 validator tests |
-| `evaluation/build_spatial_reason_v0.1_quality.json` | Machine-readable audit results (full run) |
-| `docs/build_spatial_reason_v0.1_quality_audit.md` | Readable audit report |
-| `evaluation/build_spatial_reason_v0.1_samples/` | 37 PNGs + `contact_sheet.png` (8.98 MB) |
-| `handoff/FROM_DSH.md` (this file), `handoff/PROJECT_STATE.md` | Handoff outputs |
+| `spatial_reasoning/semantic_policy.py` | Single shared semantic visibility policy (generator + validator + recomputation) |
+| `configs/build_spatial_reason_v0.1.1.yaml` | v0.1.1 generation config, incl. `semantic_visibility_policy_version: "1.0"` |
+| `tests/test_v011_acceptance.py` | 19 v0.1.1 acceptance tests |
+| `docs/build_spatial_reason_v0.1.1.md` | v0.1.1 dataset documentation |
+| `docs/build_spatial_reason_v0.1.1_quality_audit.md` | Acceptance audit report |
+| `evaluation/build_spatial_reason_v0.1.1_quality.json` | Machine-readable acceptance audit |
+| `evaluation/build_spatial_reason_v0.1.1_samples/` | 28 PNGs + `contact_sheet.png` (6.67 MB) |
+| `datasets/build_spatial_reason/v0.1.1/{train,val,test}.jsonl`, `manifest.json`, `statistics.json` | The dataset (JSONL git-ignored) |
 
-**Modified:** none. **No existing file was edited**, including
-`handoff/TO_DSH.md` (left intact for audit history).
+**Modified:**
 
-**Not modified:** `../WHU_Building_Segment/` (legacy, read-only) and every file
-under `datasets/build_spatial_reason/v0.1/`.
-
----
-
-## 3. Independent Dataset Counts
-
-Recounted directly from the three JSONL files, independent of all generator
-bookkeeping:
-
-| Quantity | Value |
+| File | Change |
 |---|---|
-| **Total records** | **32,284** |
-| `train` | 19,977 |
-| `val` | 4,981 |
-| `test` | 7,326 |
-| **Level 1** | **19,366** |
-| **Level 2** | **8,925** |
-| **Level 3** | **3,993** |
-| Level 2 Type A (`reference → nearest`) | **4,707** |
-| Level 2 Type B (`reference → direction`) | **4,218** |
-| Level 3 trivial | **1,804** |
-| Level 3 nontrivial | **2,189** |
-| Images with samples | 3,921 |
-| Samples/image | min 2, p5 3, median 9, p95 12, max 12 |
+| `spatial_reasoning/annotator.py` | Semantic policy integration; ID-free reasoning renderer; `template_id`; distractor rule; `SAMPLE_ID_VERSION` separation; new discard reasons |
+| `spatial_reasoning/templates.py` | `ROLE_PHRASE`, `DIRECTION_RELATIVE_TO_REFERENCE`; grammar fixes |
+| `spatial_reasoning/dataset_validator.py` | Version parameterization; semantic-policy recomputation; `verify_v01_unchanged`; `decide_verdict` moved here |
+| `scripts/build_spatial_reason.py` | Version-aware manifest + fixed Level-2 counter + invariant assertion |
+| `scripts/validate_build_spatial_reason.py` | `--version`; new counters; `template_id` check; Level-3 checks; machine-readable fields |
+| `scripts/build_spatial_reason_samples.py` | Version parameterization and pack composition |
+| `tests/test_annotator.py` | Updated 3 assertions to v0.1.1 semantics |
+| `tests/test_dataset_validator.py` | Recomputation now targets v0.1.1 |
+| `docs/architecture_decisions.md` | **ADR-010** added |
 
-By split × level:
-
-| split | L1 | L2 | L3 |
-|---|---|---|---|
-| train | 11,994 | 5,541 | 2,442 |
-| val | 3,018 | 1,345 | 618 |
-| test | 4,354 | 2,039 | 933 |
-
-`total_records`, `by_split`, `by_level`, `trivial` and `nontrivial` all **agree**
-with `statistics.json` and `manifest.json`.
+**Not modified:** `datasets/build_spatial_reason/v0.1/**`, `../WHU_Building_Segment/**`,
+`handoff/TO_DSH.md` (left intact for audit history, per §22).
 
 ---
 
-## 4. Existing Statistics Consistency
+## 4. Generator Changes
 
-**One inconsistency found, and it is a genuine generator bug — the known
-discrepancy in §2 of the task file is confirmed.**
+1. **Semantic-first resolution.** `generate_level1/2/3` no longer ask the relation
+   engine for an eligibility-filtered answer. They call
+   `semantic_policy.resolve_size_extreme` / `resolve_nearest` /
+   `direction_candidates_over_visible`, which compute the answer over **all
+   visible components** and report whether it is admissible. A new
+   `_resolve_reference` helper replaces the three duplicated
+   `image_relations.size_rank.get(...)` blocks.
+2. **Discard instead of substitute.** When the semantic answer is ineligible or
+   ambiguous the query is dropped, with a specific discard reason
+   (`semantic_target_ineligible`, `semantic_ambiguous`,
+   `nearest_semantic_ineligible`, `level3_nearest_semantic_ineligible`).
+3. **Level-3 uses the full direction set** for the nearest comparison, so a
+   closer-but-ineligible direction candidate is never skipped.
+4. **ID-free reasoning renderer.** `render_reasoning` emits role-based prose
+   (`面积最大的建筑区域` / `the largest building region`) and never an id.
+5. **`template_id` recorded** on every `CandidateQuery` and sample. It was
+   missing from Level-2 Type-B queries in v0.1.
+6. **Distractors exclude target and all references.**
+7. **Level-2 counter fixed**: both halves now require `level == 2`, plus a hard
+   assertion that `TypeA + TypeB == by_level["2"]`.
+8. **Reproducibility split from version.** `SAMPLE_ID_VERSION` stays `"v0.1"`
+   (historical sample ids stay reproducible) while `GENERATOR_VERSION` is now
+   `"v0.1.1"` and is recorded per sample and in the manifest.
 
-Task 4 reported Level 2 = 8,925, Type A = 8,700, Type B = 4,218. Since
-8,700 + 4,218 = 12,918 ≠ 8,925, these could not all be true.
-
-**Authoritative recount:**
-
-```
-Level 2 total (level == 2)        = 8925
-Level 2 Type A (largest_to_nearest + smallest_to_nearest) = 2235 + 2472 = 4707
-Level 2 Type B (count("_to_") == 1 and not endswith("_to_nearest")) = 4218
-4707 + 4218 = 8925  ==  Level 2 total   ✓ internally consistent
-```
-
-**Root cause (identified exactly):** the generator computed Type A with
-`query_type.endswith("_to_nearest")`. **Every Level-3 query type also ends in
-`_to_nearest`** (`largest_to_right_of_to_nearest`), so the filter swept all of
-Level 3 into the Type-A count:
-
-```
-8700 = 4707  (true Level 2 Type A)
-     + 3993  (ALL of Level 3)
-```
-
-| Statistic | Claimed | True | Status |
-|---|---|---|---|
-| `statistics.json` → `level2.reference_to_nearest` | 8,700 | **4,707** | **WRONG** |
-| `manifest.json` → `sample_counts.level2.reference_to_nearest` | 8,700 | **4,707** | **WRONG** |
-| `statistics.json` → `level2.reference_to_direction` | 4,218 | 4,218 | correct (by luck of the filter) |
-| `by_level`, `by_split`, `total_samples` | — | — | correct |
-
-The defect is confined to the reported **decomposition**; the dataset records
-themselves are unaffected. Pinned by
-`test_independent_counts_match_generator_bookkeeping`.
+**No threshold was changed.** The generator asserts at startup that its config
+agrees with the frozen `ratio_margin` and direction preset.
 
 ---
 
-## 5. Full Target Re-computation
+## 5. Semantic Policy Changes
 
-Every one of the 32,284 records was independently recomputed from its intended
-structured program, using source component metadata, the frozen relation
-definitions and the frozen thresholds. The stored `target_component_id` was
-**never used as an input**.
+**Rule:** natural language is defined over **all visible components**. Eligibility
+may reject a sample; it may never silently change its answer.
 
-| Metric | Result |
-|---|---|
-| Checked | **32,284** |
-| Pass | **32,284** |
-| Fail | **0** |
-| Match rate | **100.000%** |
-
-Recomputation was independent in two respects:
-
-1. The Level-2 Type-B target was re-derived from the frozen direction predicate,
-   not read from the stored `candidate_component_ids`.
-2. Filter sets were re-derived via `filter_relation_candidates` and compared
-   against the stored lists.
-
-Additionally, `reasoning_steps` were re-executed end-to-end by the validator's
-own operation interpreter (`recompute_target_independent`), including
-re-applying the nearest margin policy, with **zero** mismatches.
-
-**Conclusion: the structured-program → target chain is sound in v0.1.**
-
----
-
-## 6. Largest Semantic Audit
-
-`hidden_eligibility_largest`: **2,180 violations** of 10,785 applicable
-(**20.2%**).
-
-Method: for every record involving `largest`, compute the global argmax of
-`area_px` over **all visible components**, then compare with the component the
-dataset uses as "largest".
-
-Example `buildsr_train_1_10028_1_largest_6ec47d449c40`:
-
-```
-instruction_en       : Locate and segment the building region with the largest area.
-global_largest_id    : 10
-global_largest_flags : ["touches_image_border"]
-engine_reference_id  : 5      <- actual dataset target
-```
-
-Component 10 is genuinely the largest visible building region, but it is
-border-truncated, so the engine silently answered component 5. A reader cannot
-see the hidden filter and would reasonably choose 10.
-
-Visualized at
-`evaluation/build_spatial_reason_v0.1_samples/031_semantic_failure_buildsr_train_1_10028_1_largest_6ec47d449c40.png`.
-
-By split: train 1,390 / val 366 / test 424.
-
----
-
-## 7. Smallest Semantic Audit
-
-`hidden_eligibility_smallest`: **4,246 violations** of 7,468 applicable
-(**56.9%**) — the worst semantic defect in the dataset.
-
-Method: global argmin of `area_px` over all visible components vs the engine's
-eligible smallest.
-
-The rate is far higher than `largest` because `smallest` has **two** filters
-stacked: border-truncation **and** `tiny_component` exclusion. Small components
-are frequently both border-touching and tiny, so the visible global smallest is
-very often not the engine's answer.
-
-Example `buildsr_train_1_10028_1_smallest_1a8466520a90`:
-
-```
-global_smallest_id    : 11
-global_smallest_flags : ["touches_image_border"]
-engine_reference_id   : 4
-```
-
-By split: train 2,607 / val 640 / test 999.
-
----
-
-## 8. Nearest Semantic Audit
-
-`hidden_eligibility_nearest`: **1,058 violations** of 4,707 applicable
-(**22.5%**).
-
-Method: compute boundary distance from the reference to **all other visible
-components**, take the semantic nearest before target-eligibility filtering, and
-compare with the dataset target.
-
-Example `buildsr_train_1_0_2_largest_to_nearest_062c35a80063`:
-
-```
-semantic_nearest_id    : 3   gap = 48.65 px
-engine_target_id       : 2   gap = 229.46 px
-semantic_nearest_flags : ["touches_image_border"]
-```
-
-The dataset's answer (component 2) is **4.7× farther** from the reference than the
-component a reader would pick (component 3). This is the most visibly misleading
-violation class: the instruction says "nearest", and the selected component is
-demonstrably not the nearest visible one.
-
-By split: train 686 / val 141 / test 231.
-
----
-
-## 9. Level-3 Hidden Eligibility Audit
-
-`hidden_eligibility_level3_nearest`: **291 violations** of 3,993 applicable
-(**7.3%**).
-
-Method: obtain all direction candidates via the frozen direction predicate, then
-find the true nearest within that direction set **before** nearest-eligibility
-filtering, and compare with the dataset target.
-
-Example `buildsr_train_1_10028_3_largest_to_above_to_nearest_a988dcbdac2a`:
-
-```
-relation               : above
-direction_candidates   : [7, 8, 9, 10, 11]
-semantic_nearest_id    : 10   gap = 13.04 px
-engine_target_id       : 7    gap = 78.61 px
-semantic_nearest_flags : ["touches_image_border"]
-```
-
-Note this is a **nontrivial** Level-3 sample, so the violation survives even in
-the subset that a future reasoning metric would prefer. By split: train 164 /
-val 47 / test 80.
-
----
-
-## 10. Component-ID Leakage
-
-| Field group | Samples affected | Total mentions |
+| Question | Semantic universe | Kept only if |
 |---|---|---|
-| **`reasoning_zh` / `reasoning_en`** | **32,284 / 32,284 = 100%** | **159,014** |
-| `instruction_zh` / `instruction_en` | **0** | 0 |
+| `largest` / `smallest` | global argmax/argmin of `area_px` over all visible | that exact component is eligible **and** `larger/smaller >= 1.10` |
+| `<ref>_to_nearest` | boundary distance to all other visible | true nearest is nearest-eligible **and** passes the margin |
+| `<ref>_to_<dir>` | frozen direction predicate over all visible | exactly one candidate |
+| `<ref>_to_<dir>_to_nearest` | nearest within the **full** direction-valid set | that nearest is eligible **and** passes the margin |
 
-Uniform across levels: L1 19,366 / L2 8,925 / L3 3,993.
+Implemented once in `spatial_reasoning/semantic_policy.py` and shared by the
+generator, the validator's recomputation and the acceptance audit, so the
+generator and the verifier cannot disagree about what a question means — the
+root cause of the v0.1 defect.
 
-Example (`buildsr_train_1_0_1_leftmost_a9c23eba2157`):
+---
+
+## 6. v0.1.1 Counts (actual, not target-driven)
 
 ```
-instruction_zh : 分割图像中最左侧的建筑区域。              <- clean
-instruction_en : Segment the leftmost building region...    <- clean
-reasoning_zh   : 最左侧的建筑区域是 component 2。            <- LEAK
-reasoning_en   : The leftmost building region is component 2. <- LEAK
+total    : 25229
+by_split : train 15592 | val 3884 | test 5753
+by_level : L1 17275 | L2 5036 | L3 2918
+level2   : reference_to_nearest 2272 + reference_to_direction 2764 = 5036 (invariant holds)
+level3   : trivial 1261 | nontrivial 1657
+per image: min 1 | p5 3 | median 6 | p95 11 | max 12
+images with samples: 3920
 ```
 
-**Classification:** this is **reasoning-text leakage only**. IDs inside
-`reasoning_steps` are structured machine fields and are **not** leakage.
+No count target was imposed. The reduction from 32,284 to 25,229 is the
+**intended consequence** of discarding semantically untruthful samples.
 
-**Suitability assessment — NOT suitable as-is for MLLM supervision.** The input
-image does not display any `component N` label. Training a model to emit such
-identifiers teaches it to produce annotation-internal artifacts it cannot
-ground, rather than spatial reasoning. Any model trained on this reasoning text
-would be pushed toward hallucinating identifiers.
+Discard reasons:
 
-**Proposed v0.1.1 ID-free reasoning style** (this is a proposal, **not applied**
-to v0.1):
-
-- 中文：首先找到图像中面积最大的建筑区域，将其作为参考区域。随后比较其右侧候选建筑与参考区域的距离，选择距离最近的区域作为目标。
-- English: First identify the largest building region as the reference. Then
-  compare the distances of the candidate regions to its right and select the
-  closest one as the target.
-
----
-
-## 11. Structured Program Integrity
-
-Validated on all 32,284 records. **Zero failures** in every category:
-
-| Check | Result |
+| Reason | Count |
 |---|---|
-| Continuous step numbering (`step == index`) | 0 failures |
-| Program length matches level (L1=1, L2=2, L3=3 operations) | 0 failures |
-| Operation sequence matches level/query_type | 0 failures |
-| Every referenced component exists in the source image | 0 failures |
-| No duplicate IDs inside any step candidate list | 0 failures |
-| Output target appears only at the appropriate step | 0 failures |
-| Level-3 `filter_relation` present with `argmin_boundary_distance` | 0 failures |
+| `semantic_target_ineligible` | 10,283 |
+| `no_direction_candidate` | 9,501 |
+| `semantic_ambiguous` | 5,362 |
+| `multiple_direction_candidates` | 4,265 |
+| `ambiguous` | 1,657 |
+| `level3_nearest_semantic_ineligible` | 1,217 |
+| `nearest_semantic_ineligible` | 692 |
+| `quota_downsample` | 539 |
+| `nearest_margin_fail` | 360 |
+| `single_component_image` | 116 |
 
 ---
 
-## 12. Candidate / Distractor Integrity
+## 7. v0.1 vs v0.1.1 Comparison
 
-| Check | Result |
-|---|---|
-| Target present in `distractor_component_ids` | **0** |
-| Duplicate IDs in `distractor_component_ids` | **0** |
-| Distractor IDs that do not exist | **0** |
-| Level-2 Type-B with exactly one direction candidate | **4,218 / 4,218** ✓ |
-| Level-3 `nearest_eligible_component_ids ⊆ candidate_component_ids` | **0 violations** |
-| Level-3 stored direction set == independently derived set | **0 mismatches** |
-| Level-3 stored eligible set == independently derived set | **0 mismatches** |
-| Reference present in `distractor_component_ids` | **12,918 (40.0%)** — WARNING |
-
-The distractor finding is a **definitional ambiguity, not a data error**: the
-reference is legitimately not the target, so listing it is not incorrect. But a
-distractor set meant to represent "plausible wrong answers" probably should
-exclude the named reference. Flagged for v0.1.1 to decide and document.
-
----
-
-## 13. Mask Selector Integrity
-
-Full-dataset validation (all 32,284 records):
-
-| Check | Result |
-|---|---|
-| `target_mask.component_id == target_component_id` | **32,284 / 32,284** |
-| `target_mask.representation == "component_map_selector"` | **32,284 / 32,284** |
-| Target component exists in the referenced component map | **32,284 / 32,284** |
-| Target mask yields **non-empty** binary mask | **32,284 / 32,284** |
-
----
-
-## 14. Template Distribution
-
-All **39 declared templates were used; zero unused**. Reconstruction succeeded
-for **32,284 / 32,284** records.
-
-| Family | Templates | Uses | Balance |
+| metric | v0.1 | v0.1.1 | change |
 |---|---|---|---|
-| `l1.leftmost` | 3 | 3,519 | 1,154 / 1,140 / 1,225 |
-| `l1.rightmost` | 3 | 3,527 | 1,183 / 1,226 / 1,118 |
-| `l1.topmost` | 3 | 3,491 | 1,152 / 1,130 / 1,209 |
-| `l1.bottommost` | 3 | 3,494 | 1,156 / 1,128 / 1,210 |
-| `l1.largest` | 3 | 2,566 | 861 / 878 / 827 |
-| `l1.smallest` | 3 | 2,769 | 928 / 927 / 914 |
-| `l2.nearest` | 6 | 4,707 | 716 – 852 |
-| `l2.dir` | 12 | 4,218 | 327 – 375 |
-| `l3.chain` | 3 | 3,993 | 1,315 / 1,299 / 1,379 |
+| total | 32,284 | 25,229 | −7,055 (−21.9%) |
+| train | 19,977 | 15,592 | −4,385 |
+| val | 4,981 | 3,884 | −1,097 |
+| test | 7,326 | 5,753 | −1,573 |
+| Level 1 | 19,366 | 17,275 | −2,091 |
+| Level 2 | 8,925 | 5,036 | −3,889 |
+| Level 3 | 3,993 | 2,918 | −1,075 |
+| L2 Type A | 4,707 (reported as 8,700) | 2,272 | |
+| L2 Type B | 4,218 | 2,764 | |
+| L3 trivial | 1,804 | 1,261 | criterion refined |
+| L3 nontrivial | 2,189 | 1,657 | |
+| hidden semantic violations | 7,086 | **0** | |
+| reasoning id leaks | 32,284 | **0** | |
+| reference in distractors | 12,918 | **0** | |
+| `template_id` present | no | **yes (100% verified)** | |
+| verdict | FAIL_REQUIRES_REVISION | **PASS** | |
 
-**No severe imbalance.** Every family's per-template spread is within roughly
-±10% of its mean, which is consistent with the SHA256-bucketed selector being
-unbiased.
+Note the v0.1 Type-A figure: the historical report said 8,700, which was the
+buggy counter. The true v0.1 Type A was **4,707** (verified in Task 5).
 
 ---
 
-## 15. Language Parity
+## 8. Target Recomputation
 
-| Check | Result |
+| Metric | Value |
 |---|---|
-| zh and en reconstruct to the **same** template id | **32,284 / 32,284** |
-| zh/en from *different* templates (mismatch) | **0** |
-| Raw `{placeholder}` left in text | **0** |
-| Literal `None` / `null` in text | **0** |
-| Empty language field | **0** |
-| Doubled punctuation (`。。`, `，，`, `..`) | **0** |
+| checked | **25,229** |
+| pass | **25,229** |
+| fail | **0** |
+| match rate | **100.000%** |
 
-Language parity holds operationally: a zh/en pair always resolves to the same
-`template_id`, and a mismatched cross-family pair is correctly rejected
-(`test_template_reconstruction_rejects_mismatched_pair`).
+Every record was recomputed under the semantic policy from source component
+metadata, the frozen relations and the frozen thresholds. The stored
+`target_component_id` was never used as an input; Level-2 Type-B targets were
+re-derived from the direction predicate, and all filter sets were re-derived and
+compared.
 
 ---
 
-## 16. Split / Exact Duplicate Audit
+## 9. Hidden Eligibility Audit
+
+| Flag | v0.1 | v0.1.1 |
+|---|---|---|
+| `hidden_eligibility_largest` | 2,180 | **0** |
+| `hidden_eligibility_smallest` | 4,246 | **0** |
+| `hidden_eligibility_nearest` | 1,058 | **0** |
+| `hidden_eligibility_level3_nearest` | 291 | **0** |
+| semantic violation flag instances | 7,775 | **0** |
+| `semantic_violation_unique_records` | 7,086 | **0** |
+| `semantic_clean_records` | 25,198 | **25,229** |
+
+The audit is deliberately stricter than engine eligibility: it recomputes the
+global semantic answer over all visible components and compares it with the
+dataset's choice. Zero means no stored instruction can be read as false.
+
+---
+
+## 10. Reasoning Leakage Audit
+
+| Counter | v0.1 | v0.1.1 |
+|---|---|---|
+| `leak_reasoning_records` | 32,284 (was reported as `leak_reasoning_samples`) | **0** |
+| `leak_reasoning_fields` | — | **0** |
+| `leak_reasoning_mentions` | 159,014 | **0** |
+| `leak_instruction_records` | 0 | **0** |
+
+The ambiguous legacy field `leak_reasoning_samples` is no longer produced. The
+three counters requested by §11 are emitted, all zero.
+
+Sample of the new reasoning style:
+
+```
+reasoning_zh : 首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。
+reasoning_en : First identify the largest building region as the reference region. Then identify the building regions on the right side of the reference region. Finally compare their boundary distances to the reference region and select the nearest one as the target.
+```
+
+`reasoning_steps` still carries numeric ids (`output_component_id`,
+`reference_component_id`, `candidate_component_ids`) for machine verification.
+
+---
+
+## 11. Template ID Audit
+
+| Metric | Value |
+|---|---|
+| checked | **25,229** |
+| verified | **25,229** |
+| mismatch | **0** |
+| missing | **0** |
+| not reconstructed | **0** |
+| zh/en semantic parity | **100%** (zero mismatches) |
+
+`template_id` is deterministic, identical for the zh/en pair, and independently
+re-verified by re-rendering both languages and matching them back to a template
+pair. All 39 declared templates are used.
+
+Language hygiene: zero raw `{placeholder}`, zero literal `None`/`null`, zero
+empty language fields, zero doubled punctuation.
+
+---
+
+## 12. Distractor Policy Audit
+
+| Check | v0.1 | v0.1.1 |
+|---|---|---|
+| target in distractors | 0 | **0** |
+| **reference in distractors** | 12,918 | **0** |
+| duplicate distractors | 0 | **0** |
+| missing distractor components | 0 | **0** |
+
+`distractor_component_ids` now excludes both the target and every explicit
+reference. Internal candidate sets are separate and retain the members the
+reasoning logic needs.
+
+---
+
+## 13. Statistics Consistency
+
+The v0.1 defect is fixed and now guarded by an assertion.
+
+| Statistic | v0.1 | v0.1.1 |
+|---|---|---|
+| `level2.reference_to_nearest` | 8,700 (**wrong**; true 4,707) | **2,272** |
+| `level2.reference_to_direction` | 4,218 | **2,764** |
+| sum vs `by_level["2"]` | 12,918 ≠ 8,925 (**violated**) | 5,036 = 5,036 ✓ |
+| `invariant_holds` field | absent | **true** |
+
+Root cause (v0.1): the counter omitted the `level == 2` guard, so
+`endswith("_to_nearest")` also matched all 3,993 Level-3 types
+(4,707 + 3,993 = 8,700). `scripts/build_spatial_reason.py` now restricts both
+halves to `level == 2` and **raises** if the invariant fails.
+
+---
+
+## 14. Split / Duplicate Audit
 
 | Check | Result |
 |---|---|
 | `train ∩ val` image ids | **∅** |
 | `train ∩ test` image ids | **∅** |
 | `val ∩ test` image ids | **∅** |
-| Duplicate `sample_id` | **0** |
-| Duplicate canonical semantic key (image + program + target) | **0** |
-| **`exact_image_duplicate_cross_split`** | **0** |
+| duplicate `sample_id` | **0** |
+| duplicate canonical semantic key | **0** |
+| **`exact_cross_split_duplicates`** | **0** |
+| images hashed | train 2,423 / val 614 / test 883 |
 
-Source images hashed: train 2,424 / val 614 / test 883 (3,921 distinct images
-referenced by the dataset). **No byte-identical image appears in two splits.**
+**v0.1 frozen integrity:** all five artefacts still hash to their recorded
+values — `verify_v01_unchanged` returns `unchanged: True`. A mismatch would raise
+`v01_modified` as a blocking error; it did not fire.
 
-### Scene-level leakage
-
-**`scene_level_split_leakage = unverified`**
-
-Reason: the derived YOLO dataset carries **no scene / geographic grouping
-metadata**, and val was a **random 20% subset of the original WHU train pool**.
-Scene-level disjointness therefore cannot be established from available
-metadata. Exact image duplication is ruled out (0); geographic adjacency between
-train and val tiles is **not** ruled out and must not be claimed absent.
+**Scene-level leakage:** `unverified` (see §18).
 
 ---
 
-## 17. Distribution Audit
+## 15. Level-3 Trivial / Nontrivial
 
-Level proportions are tightly matched across splits:
-
-| split | n | L1 | L2 | L3 |
-|---|---|---|---|---|
-| train | 19,977 | 60.04% | 27.74% | 12.22% |
-| val | 4,981 | 60.59% | 27.00% | 12.41% |
-| test | 7,326 | 59.43% | 27.83% | 12.74% |
-
-Max deviation between splits is ~0.6 percentage points — no level skew.
-
-Target component distributions (descriptive):
-
-| metric | min | p5 | median | p95 | max |
-|---|---|---|---|---|---|
-| `area_px` | 66 | 207 | 1,198.5 | 4,940.1 | 131,787 |
-| `centroid_x_norm` | 0.001 | 0.028 | 0.488 | 0.969 | 0.997 |
-| `centroid_y_norm` | 0.001 | 0.029 | 0.496 | 0.971 | 0.997 |
-
-Targets are centred on the image and cover the full area range; no positional or
-scale collapse. The dataset was **not** resplit in this task.
-
----
-
-## 18. Trivial / Nontrivial Level-3 Audit
-
-| Metric | Reported | Independently verified |
-|---|---|---|
-| trivial | 1,804 | **1,804** ✓ |
-| nontrivial | 2,189 | **2,189** ✓ |
-| total | 3,993 | **3,993** ✓ |
-
-Verification: `trivial_selection == true` was checked **iff** the
-direction-filtered **nearest-eligible** candidate set contains exactly one
-component, recomputed independently from the frozen predicate with **0**
-mismatches.
-
-**Recommendation (as requested):** trivial Level-3 samples **should NOT** be
-included in the primary multi-hop reasoning metric. With a single eligible
-candidate after filtering, the direction filter alone determines the answer and
-no distance comparison is required, so such samples do not test multi-hop
-reasoning. Report them separately.
-
-Caveat worth noting for v0.1.1: because the semantic audit found 291 Level-3
-violations, the nontrivial subset is the one that must be cleaned first — it is
-exactly where a "nearest" claim can be visibly wrong.
-
----
-
-## 19. Visualization Pack
-
-| Item | Count |
+| Subset | Count |
 |---|---|
-| **visualizations_generated** | **37** (36 per spec + contact sheet) |
-| Composition | 6 Level-1, 8 Level-2 (4 nearest + 4 direction), 10 nontrivial Level-3, 4 trivial Level-3, 8 semantic-failure cases |
-| `contact_sheet.png` | 1 |
-| Total pack size | **8.98 MB** (<10 MB target) |
-| Location | `evaluation/build_spatial_reason_v0.1_samples/` |
+| nontrivial | **1,657** |
+| trivial | **1,261** |
+| total | 2,918 |
 
-Each panel shows: source image (grayscale), reference outline (amber), target
-outline + fill (green), candidate IDs as an **audit overlay only**, plus
-query_type, level, reference, target, candidate list and the English instruction.
+`trivial_selection` was independently re-verified against
+`semantic_policy.admissible_nearest_ids`: **0** mismatches. The criterion was
+refined during this task — it now means "exactly one **admissible** candidate
+after the direction filter and the frozen margin rule", rather than the raw
+direction-set size. This makes the flag consistent between generator and
+validator and correctly classifies chains whose direction set is larger but whose
+admissible set is a singleton.
 
-**`manual_visual_inspection`: PARTIAL.** I opened and inspected **2** panels
-directly (one semantic-failure case and the pack listing); I did **not** visually
-inspect all 37. Per the task's instruction, generated count is **not** claimed as
-inspected count. The pack exists specifically so a human can complete the review
-quickly.
-
----
-
-## 20. Issues Found
-
-| # | Issue | Severity | Scale | Evidence |
-|---|---|---|---|---|
-| 1 | **Hidden eligibility changes the natural-language answer** | **BLOCKING** | 7,086 records / 21.9% | §6–9; 4 flags |
-| 2 | **Internal component IDs in reasoning text** | WARNING (universal) | 32,284 records / 100% | §10 |
-| 3 | **`statistics.json` / `manifest.json` Level-2 Type-A count wrong** | WARNING | 2 files | §4: 8,700 vs true 4,707 = 4,707 + 3,993 (all L3) |
-| 4 | Reference listed in `distractor_component_ids` | WARNING (definitional) | 12,918 records / 40.0% | §12 |
-| 5 | Scene-level split leakage unverifiable | INFO | — | §16 |
-| 6 | Trivial Level-3 pollutes multi-hop metric if pooled | INFO | 1,804 records | §18 |
-
-**No other defects found.** In particular: target recomputation, mask selectors,
-structured programs, candidate/distractor integrity, template reconstruction,
-language parity and exact-duplicate detection are all **clean**, and no
-instruction-level ID leakage, placeholder residue or empty fields exist.
+Trivial samples are **not** deleted; the primary multi-hop metric should use the
+nontrivial subset.
 
 ---
 
-## 21. Recommended Fixes
+## 16. Visualization Pack
 
-For **`BuildSpatialReason-v0.1.1`** (do not patch v0.1 in place):
+| Item | Value |
+|---|---|
+| `visualizations_generated` | **28** + contact sheet = 29 files |
+| Composition | 4 Level-1, 6 Level-2, 8 nontrivial Level-3, 4 trivial Level-3, 6 warning/failure cases (none required — pack size driven by spec) |
+| `contact_sheet.png` | present |
+| Size | **6.67 MB** |
+| Location | `evaluation/build_spatial_reason_v0.1.1_samples/` |
 
-1. **Apply Option A — drop semantically untruthful samples.** Keep only records
-   where hidden eligibility does not change the expressed answer. Measured
-   effect: discard **7,086 (21.9%)**, retain **25,198 (78.1%)**. No language
-   change needed. `leftmost` / `rightmost` / `topmost` / `bottommost` are
-   unaffected and fully retained.
-   - Rejected alternative (Option B) — making eligibility explicit in the
-     instruction ("among building regions that do not touch the image boundary
-     ...") — is **not recommended**: tile-edge truncation is an artifact of how
-     the WHU tiles were cropped, not a property of buildings or of spatial
-     reasoning, so it would teach a non-transferable dataset quirk and make the
-     instructions stylistically inconsistent with the tile-relative extremes.
-2. **Regenerate reasoning text ID-free.** Replace `component N` with referring
-   descriptions (see §10 for the proposed style). This is a prerequisite for
-   using the reasoning text as MLLM supervision at all.
-3. **Fix the Type-A counter** to key on `level == 2` rather than
-   `query_type.endswith("_to_nearest")`, then regenerate `statistics.json` and
-   `manifest.json`.
-4. **Decide and document the distractor policy** for the reference component.
-5. **Add a `template_id` field per sample** so language-diversity auditing does
-   not require text reverse-engineering (currently only `template_version` is
-   recorded).
-6. **Consider one uniform eligibility policy for `smallest`.** Its 56.9%
-   violation rate suggests the two stacked filters (border + tiny) are too
-   aggressive for a natural-language "smallest".
+`manual_visual_inspection`: **NOT claimed.** I did not visually inspect the v0.1.1
+panels individually. Component ids appear only in the audit overlay, never in the
+natural-language supervision.
 
 ---
 
-## 22. Ready for v0.1.1 or Task 5.5?
+## 17. Test Execution Summary
 
-**Recommend `BuildSpatialReason-v0.1.1` directly — Task 5.5 is not required.**
+Exact commands and results (run from the repository root):
 
-Rationale: the audit is complete and decisive. Both defect classes are
-**fully characterised with exact counts, root causes and representative
-evidence**, and the corrective actions are mechanical rather than investigative:
+```
+python tests/test_component_conversion.py   ->  11/11 checks passed   exit 0
+python tests/test_geometry.py               ->  17/17 checks passed   exit 0
+python tests/test_relations.py              ->  35/35 checks passed   exit 0
+python tests/test_annotator.py              ->  22/22 checks passed   exit 0
+python tests/test_dataset_validator.py      ->  18/18 checks passed   exit 0
+python tests/test_v011_acceptance.py        ->  19/19 checks passed   exit 0
+```
 
-- semantic filtering needs no new analysis, only the measured filter (§21.1);
-- the ID-free reasoning rewrite is a templating change in
-  `spatial_reasoning/templates.py` / `annotator.py`;
-- the counter bug has an identified one-line root cause.
+| Metric | Value |
+|---|---|
+| total collected | **122** |
+| passed | **122** |
+| failed | **0** |
+| skipped | **0** |
+| exit code | **0** |
 
-There is **no open question that further auditing would resolve**, so an
-intermediate Task 5.5 would add cost without information. The one item that
-genuinely needs a human decision — the distractor/reference policy (§21.4) — is
-small enough to settle inside v0.1.1.
+Also run:
 
-Before v0.1.1 is accepted, the following must be true (all are validator-checkable):
+```
+python scripts/build_spatial_reason.py --gen-config configs/build_spatial_reason_v0.1.1.yaml    -> exit 0
+python scripts/validate_build_spatial_reason.py --version v0.1.1                               -> exit 0, verdict PASS
+```
 
-- `hidden_eligibility_*` counts = **0**;
-- `component_id_leak_reasoning` = **0**;
-- `statistics.json` Type A = true Type A, and Type A + Type B = Level 2 total;
-- target recomputation remains **100%**.
+Three v0.1-era test assertions were updated because the v0.1.1 semantics changed
+deliberately:
 
-**Do not begin Task 5.5 or v0.1.1 in this session** — as instructed, this task
-stops here.
+1. `test_annotator.py` determinism no longer compares against the **on-disk
+   v0.1** artefact (produced under the superseded policy); the two-run
+   byte-identity assertion remains, and the on-disk equivalent is covered for
+   v0.1.1 in `test_v011_acceptance.py`.
+2. `test_annotator.py` now requires the Level-3 nearest step to cover the **full
+   direction set** rather than the eligible subset.
+3. `test_annotator.py` trivial-flag test and
+   `test_dataset_validator.py` recomputation test now use the v0.1.1 semantics.
+
+These are test expectation updates, not suppressions: every underlying property is
+still asserted, in the form the corrected policy defines.
+
+---
+
+## 18. Known Limitations
+
+1. **Border truncation reduces coverage.** Because the semantic answer must itself
+   be eligible, an image whose largest/smallest building touches the tile edge
+   produces **no** query of that type. This is why Level 2 dropped most
+   (`semantic_target_ineligible` 10,283). Coverage is traded for correctness
+   deliberately.
+2. **`scene_level_split_leakage = unverified`.** The derived dataset carries no
+   scene/geographic grouping metadata and val was a random 20% subset of the
+   original train pool, so geographic adjacency between splits cannot be excluded.
+   Exact image duplication is ruled out (0). WHU was **not** resplit.
+3. **Source annotation is connected components**, not verified physical buildings;
+   touching buildings were merged upstream.
+4. **No building-function semantics** exists in the source data.
+5. **No overlap / containment relations** — components are disjoint by
+   construction.
+6. **Language is template-generated**; `template_id` is now recorded so diversity
+   is measurable, but wording variety is still bounded by 39 templates.
+7. **Tile-edge truncation is a cropping artifact**, not a property of buildings —
+   which is why Option B (naming eligibility in the instruction) was rejected.
+8. **`peak_memory_mb` is unreliable.** The Windows ctypes fallback for peak RSS
+   returned 0; peak memory was not confirmed and must not be read as "zero".
+9. **v0.1 is no longer regenerable byte-identically** by the current code path,
+   because the semantic policy changed. v0.1 is preserved on disk and verified
+   unchanged; regeneration is intentionally not attempted (§12 backward safety).
+
+---
+
+## 19. Git Status / Commit / Push
+
+Pre-staging inspection confirmed: no dataset JSONL, no weights/checkpoints, and no
+out-of-repo changes staged; `../WHU_Building_Segment/` untouched.
+
+```
+commit : fix: regenerate BuildSpatialReason v0.1.1
+branch : main
+push   : origin/main
+```
+
+Commit hash and push result are recorded in the final DSH chat summary.
+
+---
+
+## 20. Recommended Next Task
+
+**ChatGPT review of the pushed commit**, then — if approved — move on to the
+next planned stage (MLLM integration / reasoning segmentation MVP) as a
+**separate** task.
+
+Within the dataset line, two small follow-ups remain worth doing at some point,
+neither blocking:
+
+1. **Quantify template diversity** per query type using the new `template_id`
+   field, to judge whether 39 templates are enough for language generalisation.
+2. **Consider whether the `largest`/`smallest` coverage loss** (Level 2 fell from
+   8,925 to 5,036) is acceptable, or whether a richer source annotation with
+   non-truncated buildings would recover it. This is a data-sourcing question, not
+   a policy one — relaxing the policy would reintroduce false instructions.
+
+**Task 5.5 was not started. No later task was started.**

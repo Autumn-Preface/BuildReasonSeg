@@ -36,10 +36,11 @@ THUMB = 384
 CONTACT_COLUMNS = 6
 
 
-def _load_records(limit: int | None) -> list[dict]:
+def _load_records(limit: int | None, version: str = "v0.1") -> list[dict]:
     records: list[dict] = []
+    gen_dir = _REPO_ROOT / "datasets" / "build_spatial_reason" / version
     for split in SPLITS:
-        path = GEN_DIR / f"{split}.jsonl"
+        path = gen_dir / f"{split}.jsonl"
         if not path.is_file():
             continue
         with path.open(encoding="utf-8") as handle:
@@ -51,7 +52,7 @@ def _load_records(limit: int | None) -> list[dict]:
     return records
 
 
-def _select(records: list[dict], report: dict) -> list[dict]:
+def _select(records: list[dict], report: dict, composition: dict | None = None) -> list[dict]:
     """Pick the required pack composition, deterministically."""
 
     buckets: dict[str, list[dict]] = {
@@ -76,11 +77,11 @@ def _select(records: list[dict], report: dict) -> list[dict]:
             buckets[key].append(record)
 
     wanted = [
-        ("level1", 6),
-        ("level2_nearest", 4),
-        ("level2_direction", 4),
-        ("level3_nontrivial", 10),
-        ("level3_trivial", 4),
+        ("level1", (composition or {}).get("level1", 6)),
+        ("level2_nearest", (composition or {}).get("level2_nearest", 4)),
+        ("level2_direction", (composition or {}).get("level2_direction", 4)),
+        ("level3_nontrivial", (composition or {}).get("level3_nontrivial", 10)),
+        ("level3_trivial", (composition or {}).get("level3_trivial", 4)),
     ]
     chosen: list[tuple[str, dict]] = []
     for name, count in wanted:
@@ -216,15 +217,21 @@ def build_contact_sheet(sample_dir: Path, out_path: Path, columns: int = CONTACT
     return len(thumbs)
 
 
-def build_sample_pack(sample_dir: Path, report: dict, limit: int | None = None) -> list[str]:
-    """Write the pack and the contact sheet. Returns written file names."""
+def build_sample_pack(sample_dir: Path, report: dict, limit: int | None = None,
+                      version: str = "v0.1", composition: dict | None = None) -> list[str]:
+    """Write the pack and the contact sheet. Returns written file names.
+
+    ``composition`` overrides the default (v0.1-shaped) pack composition, e.g.
+    ``{"level1": 4, "level2_nearest": 3, "level2_direction": 3,
+       "level3_nontrivial": 8, "level3_trivial": 4}``.
+    """
 
     sample_dir.mkdir(parents=True, exist_ok=True)
     for stale in sample_dir.glob("*.png"):
         stale.unlink()
 
-    records = _load_records(limit)
-    chosen = _select(records, report)
+    records = _load_records(limit, version)
+    chosen = _select(records, report, composition=composition)
 
     written: list[str] = []
     for index, (name, record) in enumerate(chosen):

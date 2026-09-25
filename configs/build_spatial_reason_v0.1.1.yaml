@@ -1,0 +1,105 @@
+# =============================================================================
+# BuildSpatialReason v0.1.1 generation config
+#
+# Corrected successor to v0.1. The relation thresholds are UNCHANGED and remain
+# frozen in configs/spatial_relations_v1.yaml. What changed is the SEMANTIC
+# VISIBILITY POLICY: natural language is defined over all visible components, and
+# eligibility may reject a sample but may never silently change its answer.
+#
+# See docs/build_spatial_reason_v0.1.1.md and ADR-010.
+# =============================================================================
+
+dataset:
+  name: BuildSpatialReason
+  version: v0.1.1
+  project: BuildReasonSeg
+  source_dataset: WHU Building Dataset
+  source_subset: Satellite dataset II (East Asia)
+  component_representation_version: v1.0
+  semantic_visibility_policy_version: "1.0"
+
+# Frozen relation layer. Read-only: the generator must not modify these.
+relations:
+  config: configs/spatial_relations_v1.yaml
+  config_version: spatial_relations_v1
+  frozen:
+    ratio_margin: 1.10
+    direction_preset: medium
+    nearest_anchor_non_border: true
+    nearest_target_non_border: true
+    ambiguous_policy: discard
+
+generator:
+  version: v0.1.1
+  seed: 20260804
+  template_version: v0.1
+
+# -----------------------------------------------------------------------------
+# Semantic visibility policy (v0.1.1 core change)
+#
+# semantic_universe: visible_components
+#   -> "largest"/"smallest"/"nearest" are resolved over EVERY visible component.
+# on_semantic_target_ineligible: discard
+#   -> if the true semantic answer is excluded by quality logic, drop the query.
+#      Never substitute the runner-up.
+# on_semantic_ambiguous: discard
+#   -> frozen margin rules still apply and still discard.
+# -----------------------------------------------------------------------------
+semantic_policy:
+  version: "1.0"
+  semantic_universe: visible_components
+  on_semantic_target_ineligible: discard
+  on_semantic_ambiguous: discard
+  allow_runner_up_substitution: false
+  id_free_reasoning: true
+
+# -----------------------------------------------------------------------------
+# Query types
+# -----------------------------------------------------------------------------
+level1:
+  enabled: true
+  query_types: [leftmost, rightmost, topmost, bottommost, largest, smallest]
+  max_per_image: 6
+
+level2:
+  enabled: true
+  nearest:
+    enabled: true
+    references: [largest, smallest]
+  direction:
+    enabled: true
+    references: [largest, smallest]
+    relations: [left_of, right_of, above, below]
+  max_per_image: 4
+
+level3:
+  enabled: true
+  references: [largest]
+  relations: [left_of, right_of, above, below]
+  max_per_image: 2
+  emit_trivial: true
+
+# -----------------------------------------------------------------------------
+# Size and balance control.
+# No target count is imposed: the corrected deterministic generator decides.
+# Thresholds are NEVER relaxed to reach a size.
+# -----------------------------------------------------------------------------
+quotas:
+  max_per_image: 12
+  max_per_query_type_per_image: 1
+  max_per_level_per_image:
+    level1: 6
+    level2: 4
+    level3: 2
+  max_per_query_type_total: null
+  max_per_level_total: null
+  downsample_seed: 20260804
+
+output:
+  root: datasets/build_spatial_reason
+  version_dir: v0.1.1
+
+language:
+  emit_zh: true
+  emit_en: true
+  template_families_min: 3

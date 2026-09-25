@@ -401,6 +401,70 @@ falsify the record:
 
 ---
 
+## ADR-010 — Semantic visibility policy for natural language
+
+**Status:** Accepted (Task 5B)
+
+**Decision**
+
+1. **The natural-language semantic universe is ALL VISIBLE COMPONENTS.**
+   "the largest building region" means the largest component the reader can see
+   in the image, not the largest component that happens to survive a hidden
+   quality filter.
+2. **Eligibility may REJECT a sample; it may never silently CHANGE its answer.**
+   If the true semantic answer is excluded by border/tiny/merge quality logic,
+   the query is **discarded**. The runner-up is never substituted.
+3. **Quality / GT geometry remains annotation and supervision logic, never
+   inference input** (restates ADR-002 for the generator).
+4. **Reference components are excluded from `distractor_component_ids`.**
+   A reference is reasoning context, not a wrong answer.
+5. **Natural-language reasoning is ID-free, while structured fields keep IDs.**
+   `reasoning_steps` retains numeric component ids for machine verification;
+   `reasoning_zh` / `reasoning_en` contain **zero** ids.
+
+**Reasoning**
+
+v0.1 generated all targets with the relation engine, which answers over an
+*eligibility-filtered* subset — then rendered those answers in language that
+reads as being over *all visible* components. A Task 5 audit measured the
+consequence: **7,086 of 32,284 records (21.9%)** carried an instruction whose
+plain reading was false. The clearest case selected a component **4.7× farther**
+from the reference than the visibly nearest one, while the instruction said
+"nearest".
+
+Separately, every one of the 32,284 records leaked internal ids
+(`component 2`) into its reasoning text. The input image displays no such ids, so
+this trains a model to emit identifiers it cannot ground — an annotation artifact
+rather than spatial reasoning.
+
+Because v0.1's generator and its relation engine disagreed about what a question
+*means*, v0.1.1 introduces
+`spatial_reasoning/semantic_policy.py` as the **single shared implementation**
+used by the generator, the target recomputation and the acceptance validator.
+One definition, so they cannot drift apart again.
+
+**Scope note.** This decision concerns the *meaning* of an instruction. It does
+not alter any relation threshold: `ratio_margin = 1.10`, direction preset
+`medium`, and the `nearest` non-border anchor/target rule are unchanged and
+remain frozen in `configs/spatial_relations_v1.yaml` (ADR-008).
+
+**Rejected alternative.** Making the eligibility explicit in the instruction
+("among building regions that do not touch the image boundary, segment the
+largest one") was rejected: tile-edge truncation is an artifact of how the source
+tiles were cropped, not a property of buildings or of spatial reasoning. Teaching
+a model to condition on it would encode a non-transferable dataset quirk.
+
+**Enforcement**
+
+`tests/test_dataset_validator.py` and `tests/test_annotator.py` assert:
+global largest/smallest are never silently replaced; the nearest visible target is
+never replaced by a farther eligible one; Level-3 nearest uses the full
+direction-valid set; semantic-invalid samples are rejected before acceptance;
+reasoning text has no internal ids; `template_id` matches the rendered zh/en
+pair; and references never appear in distractors.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -414,3 +478,4 @@ falsify the record:
 | 007 | `nearest` excludes border at both ends | Boundary metric needs a complete boundary |
 | 008 | Presets monotonic | Valid(strict) ⊆ Valid(medium) ⊆ Valid(loose) |
 | 009 | Project naming | `BuildReasonSeg`; not tied to WHU; WHU is the first source dataset |
+| 010 | Semantic visibility policy | Language is over ALL visible components; eligibility may reject but never silently change an answer |

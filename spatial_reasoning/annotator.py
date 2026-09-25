@@ -42,11 +42,22 @@ import numpy as np
 
 import geometry as G
 import relations as R
+import semantic_policy as SP
 import templates as TP
 import thresholds as T
 from component_quality import ImageQuality, classify_image
 
-GENERATOR_VERSION = "v0.1"
+#: Generator implementation version, recorded per sample and in the manifest.
+GENERATOR_VERSION = "v0.1.1"
+
+#: Version mixed into ``sample_id`` / semantic identity.
+#:
+#: Deliberately pinned at v0.1 so the HISTORICAL v0.1 sample ids remain
+#: reproducible from this same code path (Task 5B section 12 backward safety).
+#: The dataset version is carried separately in ``dataset_meta["version"]``, and
+#: v0.1.1 instances are distinguishable by that field plus the new
+#: ``template_id`` / ``semantic_visibility_policy_version`` fields.
+SAMPLE_ID_VERSION = "v0.1"
 
 #: Version string written into every sample for the relation layer.
 RELATION_CONFIG_VERSION = "spatial_relations_v1"
@@ -86,6 +97,10 @@ COMPONENT_NOUN_EN = "building region"
 
 DISCARD_REASONS = (
     "ambiguous",
+    "semantic_ambiguous",
+    "semantic_target_ineligible",
+    "nearest_semantic_ineligible",
+    "level3_nearest_semantic_ineligible",
     "no_reference",
     "no_direction_candidate",
     "multiple_direction_candidates",
@@ -131,7 +146,7 @@ def semantic_key(image_id: str, steps: Sequence[dict], target_id: int) -> str:
             "image_id": image_id,
             "steps": _canonical_steps(steps),
             "target": int(target_id),
-            "generator_version": GENERATOR_VERSION,
+            "sample_id_version": SAMPLE_ID_VERSION,
         },
         sort_keys=True,
         separators=(",", ":"),
@@ -317,10 +332,20 @@ def filter_relation_candidates(
 
 
 def render_reasoning(steps: Sequence[dict]) -> tuple[str, str]:
-    """Render short, verifiable reasoning text from the structured steps.
+    """Render ID-FREE, role-based reasoning prose from the structured steps.
 
-    Every statement is directly checkable against ``reasoning_steps``. This is
-    deliberately not a long chain of thought.
+    Task 5B section 7: ``reasoning_zh`` / ``reasoning_en`` must contain **zero**
+    internal component ids. The structured ``reasoning_steps`` keep numeric ids
+    for machine verification; the prose explains the *operation* instead, e.g.
+    "面积最大的建筑区域" / "the largest building region" rather than
+    "component 3".
+
+    Rationale: the input image does not display component ids, so prose that
+    references them teaches a model to emit identifiers it cannot ground. See
+    ADR-010.
+
+    Every sentence remains directly checkable against ``reasoning_steps`` — the
+    prose is a rendering of the operations, just without exposing annotation ids.
     """
 
     zh: list[str] = []
@@ -330,67 +355,55 @@ def render_reasoning(steps: Sequence[dict]) -> tuple[str, str]:
         operation = step["operation"]
 
         if operation in TP.OPERATION_PHRASE:
-            phrase = TP.OPERATION_PHRASE[operation]
-            out = step.get("output_component_id")
-            zh.append(f"{phrase['zh']}是 component {out}。")
-            en.append(f"The {phrase['en']} is component {out}.")
+            # Role-based reference: name the role, not the id.
+            zh.append(f"首先确定图像中{TP.OPERATION_PHRASE[operation]['zh']}，将其作为参考区域。")
+            en.append(
+                f"First identify {TP.ROLE_PHRASE[operation]['en']} as the reference region."
+            )
 
         elif operation == "filter_relation":
             relation = step["relation"]
-            reference = step["reference_component_id"]
             candidates = step.get("candidate_component_ids", [])
-            if len(candidates) == 1:
-                zh.append(
-                    f"在 component {reference} {TP.DIRECTION_PHRASE[relation]['zh']}"
-                    f"的建筑区域中仅有 component {candidates[0]}，因此它是目标。"
-                )
-                en.append(
-                    f"Component {candidates[0]} is the only building region to the "
-                    f"{TP.DIRECTION_PHRASE[relation]['en']} of component {reference}, "
-                    f"so it is the target."
-                )
+            if step_index == 0:
+                # No reference in scope yet: filter the whole image.
+                zh.append(f"在图像中筛选位于{TP.DIRECTION_PHRASE[relation]['zh']}的建筑区域。")
+                en.append(f"Filter the image for building regions {TP.DIRECTION_RELATIVE_OF[relation]['en']}.")
             else:
+                # Phrased RELATIVE TO the reference so the sentence stays
+                # grammatical for every direction (v0.1 produced
+                # "regions on its left side the reference region").
                 zh.append(
-                    f"位于 component {reference} {TP.DIRECTION_PHRASE[relation]['zh']}的候选为 "
-                    f"{TP.join_components_zh(list(candidates))}。"
+                    f"随后筛选{TP.DIRECTION_RELATIVE_TO_REFERENCE[relation]['zh']}的建筑区域。"
                 )
                 en.append(
-                    f"The candidates {TP.DIRECTION_RELATIVE_OF[relation]['en']} "
-                    f"component {reference} are {TP.join_components_en(list(candidates))}."
+                    f"Then identify the building regions "
+                    f"{TP.DIRECTION_RELATIVE_TO_REFERENCE[relation]['en']}."
                 )
 
-            # When a stricter nearest-eligibility subset exists, state it too, so
-            # the text accounts for every component the computation actually used.
-            nearest_eligible = step.get("nearest_eligible_component_ids")
-            if nearest_eligible is not None and sorted(nearest_eligible) != sorted(candidates):
-                zh.append(
-                    f"其中可用于最近距离比较的为 {TP.join_components_zh(list(nearest_eligible))}。"
-                )
+            if len(candidates) == 0:
+                zh.append("该方向没有满足条件的候选区域。")
+                en.append("No candidate region satisfies this direction.")
+            elif len(candidates) == 1:
+                zh.append("该方向上恰好只有一个满足条件的候选区域，因此它即为目标。")
                 en.append(
-                    f"Of those, the ones admissible for the nearest-distance "
-                    f"comparison are {TP.join_components_en(list(nearest_eligible))}."
+                    "Exactly one candidate region satisfies this direction, so it is the target."
                 )
 
         elif operation == "argmin_boundary_distance":
-            anchor = step["reference_component_id"]
             candidates = step.get("candidate_component_ids", [])
-            out = step.get("output_component_id")
             previous_was_filter = (
                 step_index > 0 and steps[step_index - 1]["operation"] == "filter_relation"
             )
-            if len(candidates) == 1:
+            if len(candidates) <= 1:
                 if not previous_was_filter:
-                    # The filter step already stated the uniqueness; avoid repeating it.
-                    zh.append(f"筛选后仅剩 component {out}，因此它是目标。")
-                    en.append(f"Only component {out} remains after filtering, so it is the target.")
+                    zh.append("筛选后仅剩一个区域，因此它即为目标。")
+                    en.append("Only one region remains after filtering, so it is the target.")
                 # else: the filter step already concluded, nothing to add.
             else:
-                zh.append(
-                    f"其中 component {out} 与 component {anchor} 的边界距离最近，因此它是目标。"
-                )
+                zh.append("最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。")
                 en.append(
-                    f"Component {out} has the smallest boundary distance to component "
-                    f"{anchor}, so it is the target."
+                    "Finally compare their boundary distances to the reference region and "
+                    "select the nearest one as the target."
                 )
         else:
             raise ValueError(f"cannot render reasoning for operation: {operation}")
@@ -416,6 +429,7 @@ def build_sample(
     candidate_ids: list[int],
     *,
     dataset_meta: dict,
+    template_id: str,
     trivial_selection: bool = False,
 ) -> dict:
     """Assemble one canonical sample record.
@@ -423,13 +437,16 @@ def build_sample(
     Geometry (polygon, bbox, centroid, area) is deliberately NOT duplicated:
     ``image_metadata_ref`` points at the Task 2 metadata, which remains the
     single geometry source.
+
+    Distractor policy (Task 5B section 9): distractors exclude BOTH the target
+    and every explicit reference component. A reference is reasoning context, not
+    a wrong answer, so listing it as a distractor would be misleading.
     """
 
     reasoning_zh, reasoning_en = render_reasoning(steps)
+    excluded = {target_id} | set(reference_ids)
     distractor_ids = sorted(
-        c.component_id
-        for c in image.components
-        if c.component_id != target_id and c.component_id not in set(candidate_ids)
+        c.component_id for c in image.components if c.component_id not in excluded
     )
 
     return {
@@ -448,6 +465,7 @@ def build_sample(
         "query_type": query_type,
         "instruction_zh": instruction_zh,
         "instruction_en": instruction_en,
+        "template_id": template_id,
         "reference_component_ids": sorted(reference_ids),
         "target_component_id": int(target_id),
         "candidate_component_ids": sorted(candidate_ids),
@@ -461,6 +479,7 @@ def build_sample(
         },
         "trivial_selection": bool(trivial_selection),
         "relation_config_version": RELATION_CONFIG_VERSION,
+        "semantic_visibility_policy_version": SP.SEMANTIC_VISIBILITY_POLICY_VERSION,
         "generator_version": GENERATOR_VERSION,
     }
 
@@ -482,11 +501,38 @@ class CandidateQuery:
     instruction_en: str
     reference_ids: list[int]
     candidate_ids: list[int]
+    template_id: str = ""
     trivial_selection: bool = False
 
     @property
     def semantic_key(self) -> str:
         return semantic_key("", self.steps, self.target_id)
+
+
+def _resolve_reference(
+    image: G.ImageGeometry,
+    reference_type: str,
+    config: T.RelationConfig,
+    counter: DiscardCounter,
+) -> int | None:
+    """Resolve a size reference under the v0.1.1 semantic visibility policy.
+
+    Returns the reference component id only when the **global semantic** extreme
+    over all visible components is eligible and unambiguous. Otherwise records a
+    discard reason and returns ``None`` — the runner-up eligible component is
+    never substituted.
+    """
+
+    outcome = SP.resolve_size_extreme(image, reference_type, config)
+    if outcome.admissible:
+        return outcome.semantic_target
+    if outcome.reason == SP.REASON_SEMANTIC_AMBIGUOUS:
+        counter.add("semantic_ambiguous")
+    elif outcome.reason == SP.REASON_SEMANTIC_TARGET_INELIGIBLE:
+        counter.add("semantic_target_ineligible")
+    else:
+        counter.add("no_reference")
+    return None
 
 
 def generate_level1(
@@ -496,25 +542,37 @@ def generate_level1(
     enabled_types: Sequence[str],
     counter: DiscardCounter,
 ) -> list[CandidateQuery]:
-    """Direct spatial grounding queries."""
+    """Direct spatial grounding queries.
+
+    Tile-relative extremes (``leftmost`` / ``rightmost`` / ``topmost`` /
+    ``bottommost``) have no eligibility filter, so they are unaffected by the
+    semantic visibility policy. ``largest`` / ``smallest`` are resolved strictly
+    under it: the global extreme must itself be eligible, otherwise the query is
+    discarded.
+    """
 
     queries: list[CandidateQuery] = []
     quality = image_relations.quality
 
     for query_type in enabled_types:
-        relation = LEVEL1_GATING_RELATION[query_type]
-        result = image_relations.extremes.get(relation) or image_relations.size_rank.get(relation)
-        if result is None:
-            counter.add("no_reference")
-            continue
-        if result.ambiguous:
-            counter.add("ambiguous")
-            continue
-        if not result.valid:
-            counter.add("border_ineligible" if result.reason == R.REASON_TOO_FEW_CANDIDATES else "no_reference")
-            continue
+        if query_type in ("largest", "smallest"):
+            target_id = _resolve_reference(image, query_type, config, counter)
+            if target_id is None:
+                continue
+        else:
+            relation = LEVEL1_GATING_RELATION[query_type]
+            result = image_relations.extremes.get(relation)
+            if result is None:
+                counter.add("no_reference")
+                continue
+            if result.ambiguous:
+                counter.add("ambiguous")
+                continue
+            if not result.valid:
+                counter.add("border_ineligible")
+                continue
+            target_id = result.subject
 
-        target_id = result.subject
         operation = LEVEL1_OPERATIONS[query_type]
         steps = [{"step": 1, "operation": operation, "output_component_id": int(target_id)}]
 
@@ -531,6 +589,7 @@ def generate_level1(
                 instruction_en=template.en,
                 reference_ids=[],
                 candidate_ids=[],
+                template_id=template.template_id,
             )
         )
     return queries
@@ -553,27 +612,34 @@ def generate_level2(
 
     # ---- Type A: reference -> nearest -------------------------------------
     for reference_type in nearest_refs:
-        ref_result = image_relations.size_rank.get(reference_type)
-        if ref_result is None or not ref_result.valid:
-            counter.add("ambiguous" if (ref_result is not None and ref_result.ambiguous) else "no_reference")
+        reference_id = _resolve_reference(image, reference_type, config, counter)
+        if reference_id is None:
             continue
-        reference_id = ref_result.subject
 
         # The reference must itself be eligible as a nearest anchor.
         rule = config.eligibility_for("nearest")
-        accepted, _ = rule.accepts_as_anchor(image_relations.quality.flags(reference_id).as_dict())
+        accepted, _ = rule.accepts_as_anchor(
+            image_relations.quality.flags(reference_id).as_dict()
+        )
         if not accepted:
             counter.add("border_ineligible")
             continue
 
-        nearest_result = image_relations.nearest.get(reference_id)
-        if nearest_result is None or not nearest_result.valid:
-            if nearest_result is not None and nearest_result.ambiguous:
+        # Semantic nearest over ALL other visible components, then the frozen
+        # eligibility + margin check. The runner-up is never substituted.
+        all_others = [c.component_id for c in image.components if c.component_id != reference_id]
+        outcome = SP.resolve_nearest(
+            image, reference_id, all_others, component_map, config, image_relations.quality
+        )
+        if not outcome.admissible:
+            if outcome.reason == SP.REASON_SEMANTIC_TARGET_INELIGIBLE:
+                counter.add("nearest_semantic_ineligible")
+            elif outcome.reason == SP.REASON_SEMANTIC_MARGIN_FAIL:
                 counter.add("nearest_margin_fail")
             else:
-                counter.add("no_reference")
+                counter.add("nearest_margin_fail")
             continue
-        target_id = nearest_result.object
+        target_id = outcome.semantic_target
 
         ref_operation = LEVEL1_OPERATIONS[reference_type]
         steps = [
@@ -582,9 +648,7 @@ def generate_level2(
                 "step": 2,
                 "operation": "argmin_boundary_distance",
                 "reference_component_id": int(reference_id),
-                "candidate_component_ids": [
-                    c.component_id for c in image.components if c.component_id != reference_id
-                ],
+                "candidate_component_ids": all_others,
                 "output_component_id": int(target_id),
             },
         ]
@@ -600,19 +664,16 @@ def generate_level2(
                 instruction_zh=template.zh,
                 instruction_en=template.en,
                 reference_ids=[reference_id],
-                candidate_ids=[
-                    c.component_id for c in image.components if c.component_id != reference_id
-                ],
+                candidate_ids=all_others,
+                template_id=template.template_id,
             )
         )
 
     # ---- Type B: reference -> direction, ONLY when unique ------------------
     for reference_type in direction_refs:
-        ref_result = image_relations.size_rank.get(reference_type)
-        if ref_result is None or not ref_result.valid:
-            counter.add("ambiguous" if (ref_result is not None and ref_result.ambiguous) else "no_reference")
+        reference_id = _resolve_reference(image, reference_type, config, counter)
+        if reference_id is None:
             continue
-        reference_id = ref_result.subject
 
         for relation in direction_relations:
             # PREDICATE CONVENTION (ADR-006): relation(subject, object) means the
@@ -624,12 +685,8 @@ def generate_level2(
             #     right_of(candidate, reference)   == candidate is right of reference
             #
             # So the candidate is the subject and the reference is the object.
-            # Querying with subject == reference would ask "is the reference to
-            # the right of the candidate", which is a different question.
-            candidates = sorted(
-                r.subject
-                for r in image_relations.directional
-                if r.valid and r.relation == relation and r.object == reference_id
+            candidates = SP.direction_candidates_over_visible(
+                image, reference_id, relation, config, image_relations.quality
             )
             if not candidates:
                 counter.add("no_direction_candidate")
@@ -675,6 +732,7 @@ def generate_level2(
                     instruction_en=template.en.format(ref=reference_phrase["en"]),
                     reference_ids=[reference_id],
                     candidate_ids=[int(target_id)],
+                    template_id=template.template_id,
                 )
             )
 
@@ -696,44 +754,58 @@ def generate_level3(
     queries: list[CandidateQuery] = []
 
     for reference_type in references:
-        ref_result = image_relations.size_rank.get(reference_type)
-        if ref_result is None or not ref_result.valid:
-            counter.add("ambiguous" if (ref_result is not None and ref_result.ambiguous) else "no_reference")
+        reference_id = _resolve_reference(image, reference_type, config, counter)
+        if reference_id is None:
             continue
-        reference_id = ref_result.subject
 
         rule = config.eligibility_for("nearest")
-        accepted, _ = rule.accepts_as_anchor(image_relations.quality.flags(reference_id).as_dict())
+        accepted, _ = rule.accepts_as_anchor(
+            image_relations.quality.flags(reference_id).as_dict()
+        )
         if not accepted:
             counter.add("border_ineligible")
             continue
 
         for relation in relations_wanted:
-            # The candidate is the SUBJECT (see the convention note in
-            # generate_level2): "the regions to the right of the reference".
-            filtered = sorted(
-                r.subject
-                for r in image_relations.directional
-                if r.valid and r.relation == relation and r.object == reference_id
+            # Complete direction-valid set over all visible components.
+            filtered = SP.direction_candidates_over_visible(
+                image, reference_id, relation, config, image_relations.quality
             )
             if not filtered:
                 counter.add("no_direction_candidate")
                 continue
 
-            within = R.nearest_within(
-                image, reference_id, filtered, config, image_relations.quality, component_map
+            # NOTE: the semantic nearest is taken over the FULL direction set,
+            # including components that are not nearest-eligible. If the true
+            # nearest within that set is ineligible, the query is discarded --
+            # a closer ineligible component is never skipped in favour of a
+            # farther eligible one (Task 5B section 4.4).
+            outcome = SP.resolve_nearest(
+                image, reference_id, filtered, component_map, config, image_relations.quality
             )
-            if not within.valid:
-                if within.ambiguous:
-                    counter.add("nearest_margin_fail")
+            if not outcome.admissible:
+                if outcome.reason == SP.REASON_SEMANTIC_TARGET_INELIGIBLE:
+                    counter.add("level3_nearest_semantic_ineligible")
                 else:
-                    counter.add("border_ineligible")
+                    counter.add("nearest_margin_fail")
                 continue
-            if within.trivial_selection and not emit_trivial:
+
+            target_id = outcome.semantic_target
+
+            # A Level-3 query is TRIVIAL when the direction filter plus the
+            # frozen nearest-margin rule leave exactly ONE admissible candidate,
+            # so no distance comparison is required. Preferring this criterion
+            # over the raw direction-set size keeps the flag consistent with the
+            # validator and keeps the sample in the correct evaluation subset.
+            admissible_after_margin = SP.admissible_nearest_ids(
+                image, reference_id, filtered, component_map, config, image_relations.quality
+            )
+            trivial_selection = len(admissible_after_margin) == 1
+
+            if trivial_selection and not emit_trivial:
                 counter.add("level_disabled")
                 continue
 
-            target_id = within.target
             ref_operation = LEVEL1_OPERATIONS[reference_type]
             steps = [
                 {"step": 1, "operation": ref_operation, "output_component_id": int(reference_id)},
@@ -747,18 +819,18 @@ def generate_level3(
                     ],
                     # Everything that satisfies the stated direction relation.
                     "candidate_component_ids": list(filtered),
-                    # The subset that is also admissible for nearest. These two
-                    # sets differ because `nearest` is stricter (a border
-                    # component can satisfy `right_of` yet be ineligible as a
-                    # nearest candidate). Both are stored so the reasoning text
-                    # and the nearest computation stay auditable.
-                    "nearest_eligible_component_ids": list(within.candidate_ids),
+                    # The subset of those admissible for the nearest comparison.
+                    # Stored separately because `nearest` is stricter than the
+                    # direction predicate.
+                    "nearest_eligible_component_ids": SP.nearest_eligible_ids(
+                        image, reference_id, filtered, config, image_relations.quality
+                    ),
                 },
                 {
                     "step": 3,
                     "operation": "argmin_boundary_distance",
                     "reference_component_id": int(reference_id),
-                    "candidate_component_ids": list(within.candidate_ids),
+                    "candidate_component_ids": list(filtered),
                     "output_component_id": int(target_id),
                 },
             ]
@@ -782,8 +854,9 @@ def generate_level3(
                         ref=reference_phrase["en"], dir=direction_phrase["en"]
                     ),
                     reference_ids=[reference_id],
-                    candidate_ids=list(within.candidate_ids),
-                    trivial_selection=bool(within.trivial_selection),
+                    candidate_ids=list(filtered),
+                    template_id=template.template_id,
+                    trivial_selection=bool(trivial_selection),
                 )
             )
 
@@ -958,6 +1031,7 @@ def generate_for_image(
                 reference_ids=query.reference_ids,
                 candidate_ids=query.candidate_ids,
                 dataset_meta=dataset_meta,
+                template_id=query.template_id,
                 trivial_selection=query.trivial_selection,
             )
         )

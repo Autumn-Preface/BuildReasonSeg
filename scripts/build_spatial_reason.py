@@ -162,10 +162,29 @@ def summarise(samples: list[dict]) -> dict:
     trivial = sum(1 for s in level3 if s["trivial_selection"])
     nontrivial = len(level3) - trivial
 
-    level2_nearest = sum(1 for s in samples if s["query_type"].endswith("_to_nearest"))
-    level2_direction = sum(
-        1 for s in samples if s["level"] == 2 and not s["query_type"].endswith("_to_nearest")
+    # Level-2 decomposition (Task 5B section 10).
+    #
+    # The v0.1 counter omitted the `level == 2` guard, so
+    # `endswith("_to_nearest")` also matched every Level-3 query type
+    # (`largest_to_right_of_to_nearest`) and reported 8,700 instead of 4,707.
+    # Both halves are now explicitly restricted to level 2.
+    level2_nearest = sum(
+        1 for s in samples
+        if s["level"] == 2 and s["query_type"].endswith("_to_nearest")
     )
+    level2_direction = sum(
+        1 for s in samples
+        if s["level"] == 2 and not s["query_type"].endswith("_to_nearest")
+    )
+
+    # Invariant: the two Level-2 subtypes must partition Level 2 exactly.
+    level2_total = int(by_level.get(2, 0))
+    if level2_nearest + level2_direction != level2_total:
+        raise AssertionError(
+            "Level-2 invariant violated: "
+            f"reference_to_nearest({level2_nearest}) + "
+            f"reference_to_direction({level2_direction}) != by_level['2']({level2_total})"
+        )
 
     per_image = Counter((s["split"], s["image_id"]) for s in samples)
     counts = np.array(list(per_image.values()), dtype=np.float64) if per_image else np.array([0.0])
@@ -186,6 +205,8 @@ def summarise(samples: list[dict]) -> dict:
         "level2": {
             "reference_to_nearest": level2_nearest,
             "reference_to_direction": level2_direction,
+            "total_level2": level2_total,
+            "invariant_holds": level2_nearest + level2_direction == level2_total,
         },
         "level3": {
             "trivial": trivial,
@@ -214,15 +235,22 @@ def build_manifest(
     gen_config_path: Path,
     gen_config: dict,
     counter: A.DiscardCounter,
+    dataset_meta: dict,
 ) -> dict:
     """Dataset-level manifest with provenance and known limitations."""
 
     return {
         "dataset_name": "BuildSpatialReason",
-        "dataset_version": "v0.1",
+        "dataset_version": dataset_meta["version"],
         "project_name": "BuildReasonSeg",
         "source_dataset": "WHU Building Dataset",
         "source_subset": "Satellite dataset II (East Asia)",
+        "source_component_representation_version": dataset_meta.get(
+            "component_representation_version", "v1.0"
+        ),
+        "semantic_visibility_policy_version": dataset_meta.get(
+            "semantic_visibility_policy_version", A.SP.SEMANTIC_VISIBILITY_POLICY_VERSION
+        ),
         "source_component_representation_version": "v1.0",
         "source_component_metadata": "datasets/whu/metadata/<split>.jsonl",
         "source_component_manifest": "datasets/whu/component_manifest.json",
@@ -407,6 +435,7 @@ def main(argv: list[str] | None = None) -> int:
         args.gen_config,
         gen_config,
         counter,
+        dataset_meta,
     )
     manifest["statistics_file"] = _relpath(out_dir / "statistics.json")
 

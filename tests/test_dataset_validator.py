@@ -165,10 +165,16 @@ def test_independent_counts_match_generator_bookkeeping():
 
 
 def test_target_recomputation_on_dataset():
-    """Recompute targets independently for a sample and require 100% match."""
+    """Recompute targets independently and require 100% match.
 
-    if not _have_dataset():
-        print("  [recompute] SKIPPED")
+    Runs against **v0.1.1**, whose targets follow the semantic visibility policy
+    that ``recompute_target_independent`` implements. v0.1 used the superseded
+    policy, so it is audited by the historical Task 5 report rather than here.
+    """
+
+    target_dir = GEN_DIR.parent / "v0.1.1"
+    if not (target_dir / "train.jsonl").is_file():
+        print("  [recompute] SKIPPED (no v0.1.1 dataset)")
         return
 
     import json
@@ -179,7 +185,7 @@ def test_target_recomputation_on_dataset():
 
     for split in ("train",):
         meta = {r["image_id"]: r for r in V.iteration_metadata(DATASET_ROOT, split)}
-        lines = (GEN_DIR / f"{split}.jsonl").read_text(encoding="utf-8").splitlines()
+        lines = (target_dir / f"{split}.jsonl").read_text(encoding="utf-8").splitlines()
         for line in lines[:1500]:
             record = json.loads(line)
             key = (split, record["image_id"])
