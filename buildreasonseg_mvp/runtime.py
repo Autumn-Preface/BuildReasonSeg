@@ -6,6 +6,7 @@ four stage scripts stay thin and cannot drift apart.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import math
 import os
@@ -226,8 +227,15 @@ class MvpRuntime:
 
     # -- batches ---------------------------------------------------------
 
-    def prepare(self, sample: data_mod.Sample) -> tuple[TeacherForcedBatch, np.ndarray]:
-        image = sample.image_rgb()
+    def prepare(self, sample: data_mod.Sample, image: np.ndarray | None = None) -> tuple[TeacherForcedBatch, np.ndarray]:
+        """Build the teacher-forcing batch for one sample.
+
+        `image` lets a caller supply an already-decoded frame (Task 6C.5 source cache)
+        so the PNG is not decoded twice; the default decodes from disk exactly as before.
+        """
+
+        if image is None:
+            image = sample.image_rgb()
         batch = build_teacher_forcing_batch(
             self.processor,
             self.tokenizer,
@@ -304,10 +312,18 @@ class MvpRuntime:
 
         return torch.optim.lr_scheduler.LambdaLR(optimizer, factor)
 
-    def train_step(self, batch, gt_mask, features, optimizer=None) -> dict:
+    def train_step(
+        self, batch, gt_mask, features, optimizer=None, timer=None, collect_grad_norms: bool = True
+    ) -> dict:
         """One forward/backward pass; optionally one optimizer step.
 
         `gt_mask` is supervision only and is never an input to either model.
+        `timer` is an optional Task 6C.5 stage profiler; `None` (the default) adds no
+        synchronization and does not change any value.
+        `collect_grad_norms` defaults to `True`, preserving behaviour for every caller
+        that consumes `grad_norms`. Task 6C's training loop discards that field, so the
+        Task 6C.5 pipeline can switch the per-step instrumentation off; the equivalence
+        gate proves losses, gradients and parameters are unaffected either way.
         """
 
         training_cfg = self.cfg["training"]
@@ -315,29 +331,42 @@ class MvpRuntime:
         use_autocast = bool(training_cfg.get("bf16_autocast", True))
         autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
 
-        with autocast:
-            output = self.model(batch, features)
-            target, supervision_logits, supervision_mode = self.build_mask_supervision(
-                gt_mask, output.mask_logits
-            )
-            breakdown = combined_loss(
-                output.lm_logits, batch.labels, supervision_logits, target, self.loss_weights
-            )
+        # Task 6C.5: `timer` is an optional stage profiler. When it is None (the
+        # default, and the only path the training script uses) the code below is the
+        # same computation with a few extra `is not None` checks and no synchronization.
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                output = self.model(batch, features)
+        with _stage("loss"):
+            with autocast:
+                target, supervision_logits, supervision_mode = self.build_mask_supervision(
+                    gt_mask, output.mask_logits
+                )
+                breakdown = combined_loss(
+                    output.lm_logits, batch.labels, supervision_logits, target, self.loss_weights
+                )
 
         if optimizer is not None:
             optimizer.zero_grad(set_to_none=True)
-        breakdown.total.backward()
+        with _stage("backward"):
+            breakdown.total.backward()
 
-        grad_norms = gradient_norms(self.model)
+        grad_norms = gradient_norms(self.model) if collect_grad_norms else {}
         clipped = None
         if optimizer is not None:
-            clipped = float(
-                torch.nn.utils.clip_grad_norm_(
-                    [p for p in self.model.parameters() if p.requires_grad],
-                    float(self.cfg["optimizer"]["grad_clip_norm"]),
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
                 )
-            )
-            optimizer.step()
+                optimizer.step()
 
         return {
             "losses": breakdown.as_dict(),

@@ -1,0 +1,50 @@
+# =============================================================================
+# Task 6C.5 -- adopted batch-1 training pipeline (throughput)
+#
+# This file does NOT change the experiment. It records the ONE pipeline switch that
+# Task 6C.5 measured as value-preserving, so a later task can turn it on without
+# re-deriving it. The model, loss, optimizer, scheduler, step count, sample order
+# and effective batch size are unchanged from configs/mvp/task6c_2b_ablation.yaml.
+#
+#   pipeline.skip_grad_norm_instrumentation
+#                                drop the per-step per-parameter gradient-norm sweep
+#                                (528 tensors) that runtime.train_step computes and
+#                                that Task 6C's training loop then discards.
+#
+# Measured effect (interleaved, 2 rounds, 8 warmup + 64 measured steps, batch 1):
+#   2.152 -> 2.373 samples/s, +10.24 %, repeat spread 0.47 %.
+# Verdict: OPTIMIZATION_PARTIAL (below the 20 % success gate).
+#
+# Equivalence evidence: evaluation/task6c5_equivalence.json. Prepared tensors, per-step
+# losses, gradient fingerprints and post-step parameter fingerprints are bit-identical
+# to the unmodified path; bit_equivalent: true.
+#
+# REJECTED here on measurement, not on principle -- see
+# docs/task6c5_training_optimization.md section 4. All of them were slower:
+#   source_cache            -5.8 %   (CPU work removed is only ~2 % of the step)
+#   preprocessed_cache      -2.9 %
+#   pinned + non_blocking  -13.0 %   (per-step host payload is only ~2.5 MB)
+#   prefetch_threads 2/4/8  -5.5/-5.7/-9.3 %  (monotonically worse with more threads)
+#   gradient checkpointing OFF  -8.6 %  (stays ON)
+#
+# Boundary reminder: batch semantics stay one sample per optimizer step. Nothing here
+# authorises batch size > 1 or gradient accumulation.
+# =============================================================================
+
+task: "6C.5"
+throughput:
+  pipeline:
+    skip_grad_norm_instrumentation: true
+    # Explicitly OFF, recorded so the adopted configuration is unambiguous.
+    source_cache: false
+    preprocessed_cache: false
+    prefetch_threads: 0
+    pin_memory: false
+    non_blocking: false
+  # Formal experiment defaults stay untouched by this file.
+  preserves:
+    - "batch semantics: one sample per optimizer step"
+    - "strict deterministic mode"
+    - "gradient checkpointing ON"
+    - "model, loss, optimizer, scheduler and step count"
+    - "training subset and sample order"

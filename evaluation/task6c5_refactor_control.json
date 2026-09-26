@@ -1,0 +1,117 @@
+{
+  "_doc": "Task 6C.5 refactor control. Reconstructs the pre-Task-6C.5 train_step body (one autocast region, unconditional gradient norms, no stage timers) and compares it against the current default path. Losses, gradient fingerprints and post-step parameter fingerprints must be identical, otherwise the audit itself changed training semantics. Correctness control only; it measures no throughput.",
+  "task": "6C.5",
+  "steps": 4,
+  "samples": [
+    "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+    "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+    "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+    "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6"
+  ],
+  "initial_trainable_sha256": "e631acc704a06c2dae39d72f86177ebadfa44135d77007b3f46699d398414e3e",
+  "previous_code_mode": "one autocast region + unconditional gradient norms (HEAD body)",
+  "current_code_mode": "split autocast regions + optional timers + collect_grad_norms=True",
+  "losses_identical": true,
+  "gradients_identical": true,
+  "post_step_parameters_identical": true,
+  "refactor_value_neutral": true,
+  "previous": {
+    "losses": [
+      {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      {
+        "total": "8.599398612976074",
+        "lm_ce": "3.290419816970825",
+        "mask_bce": "0.5144948959350586",
+        "mask_dice": "0.9895690083503723"
+      },
+      {
+        "total": "8.60462474822998",
+        "lm_ce": "3.793832778930664",
+        "mask_bce": "0.009105002507567406",
+        "mask_dice": "0.9987496137619019"
+      },
+      {
+        "total": "5.86283540725708",
+        "lm_ce": "2.398149013519287",
+        "mask_bce": "0.03391338884830475",
+        "mask_dice": "0.9987108111381531"
+      }
+    ],
+    "gradient_digests": [
+      "dc6c9b62654e7ef5465c6c1270637f7e2db5033456fe590d9f2e82e69d98077d",
+      "4f5343981d91f40bf3e453a782c0e01c2d831a2acf6a91dbf134e7b885655d9a",
+      "d0d42a19b111444b24f2fd6ad07f44245ca7a5817172c010bb03d29341a1b249",
+      "a216dbffbbee7459ae125ef551cd3ac3e782660f65a440fd66329683f95837e6"
+    ],
+    "parameter_digests": [
+      "cc4f062e0134bb7a3dbcf50f3dc0ff4730fbb75161fc380a8dd108c36119505a",
+      "e0a8f39c0b3dd6c02ce13a2f6090aa1fa4f98fcfda9dc54de4dff19276f39433",
+      "6bfec6be3e267636c1583392c69a0b2915c9742e44724daa0a6014202932b013",
+      "e631acc704a06c2dae39d72f86177ebadfa44135d77007b3f46699d398414e3e"
+    ]
+  },
+  "current": {
+    "losses": [
+      {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      {
+        "total": "8.599398612976074",
+        "lm_ce": "3.290419816970825",
+        "mask_bce": "0.5144948959350586",
+        "mask_dice": "0.9895690083503723"
+      },
+      {
+        "total": "8.60462474822998",
+        "lm_ce": "3.793832778930664",
+        "mask_bce": "0.009105002507567406",
+        "mask_dice": "0.9987496137619019"
+      },
+      {
+        "total": "5.86283540725708",
+        "lm_ce": "2.398149013519287",
+        "mask_bce": "0.03391338884830475",
+        "mask_dice": "0.9987108111381531"
+      }
+    ],
+    "gradient_digests": [
+      "dc6c9b62654e7ef5465c6c1270637f7e2db5033456fe590d9f2e82e69d98077d",
+      "4f5343981d91f40bf3e453a782c0e01c2d831a2acf6a91dbf134e7b885655d9a",
+      "d0d42a19b111444b24f2fd6ad07f44245ca7a5817172c010bb03d29341a1b249",
+      "a216dbffbbee7459ae125ef551cd3ac3e782660f65a440fd66329683f95837e6"
+    ],
+    "parameter_digests": [
+      "cc4f062e0134bb7a3dbcf50f3dc0ff4730fbb75161fc380a8dd108c36119505a",
+      "e0a8f39c0b3dd6c02ce13a2f6090aa1fa4f98fcfda9dc54de4dff19276f39433",
+      "6bfec6be3e267636c1583392c69a0b2915c9742e44724daa0a6014202932b013",
+      "e631acc704a06c2dae39d72f86177ebadfa44135d77007b3f46699d398414e3e"
+    ]
+  },
+  "determinism": {
+    "requested": true,
+    "seed": 20260926,
+    "python_random_seeded": true,
+    "numpy_seeded": true,
+    "torch_manual_seed": true,
+    "torch_cuda_manual_seed_all": true,
+    "pythonhashseed": "20260926",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "strict_requested": true,
+    "use_deterministic_algorithms": true,
+    "use_deterministic_algorithms_warn_only": false,
+    "cublas_workspace_config": ":4096:8",
+    "cublas_error": null,
+    "bit_reproducible_claimed": true,
+    "strict_effective": true
+  },
+  "initial_trainable_state_sha256_note": "fingerprint of the restored initial state, identical for both runs"
+}

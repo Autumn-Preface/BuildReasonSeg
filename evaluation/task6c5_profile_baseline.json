@@ -1,0 +1,225 @@
+{
+  "_doc": "Task 6C.5 section 8 synchronized stage profile of the B0 (current) path. Because every stage is bracketed by torch.cuda.synchronize(), the wall times here are NOT throughput numbers; use evaluation/task6c5_variants.json for throughput.",
+  "task": "6C.5",
+  "profile_kind": "synchronized_stage_profile",
+  "samples": 16,
+  "synchronized": true,
+  "stage_profile": {
+    "cuda_events": true,
+    "stage_seconds_total": 7.0893,
+    "stage_seconds": {
+      "backward": 2.727,
+      "cpu_to_gpu": 0.015,
+      "image_io": 0.0438,
+      "loss": 0.0967,
+      "optimizer_step": 0.5453,
+      "qwen_forward": 3.5541,
+      "qwen_prepare_total": 0.0538,
+      "sam_feature_lookup": 0.0369,
+      "target_mask_io": 0.0168
+    },
+    "stage_calls": {
+      "backward": 16,
+      "cpu_to_gpu": 16,
+      "image_io": 16,
+      "loss": 16,
+      "optimizer_step": 16,
+      "qwen_forward": 16,
+      "qwen_prepare_total": 16,
+      "sam_feature_lookup": 16,
+      "target_mask_io": 16
+    },
+    "stage_share_percent": {
+      "backward": 38.47,
+      "cpu_to_gpu": 0.21,
+      "image_io": 0.62,
+      "loss": 1.36,
+      "optimizer_step": 7.69,
+      "qwen_forward": 50.13,
+      "qwen_prepare_total": 0.76,
+      "sam_feature_lookup": 0.52,
+      "target_mask_io": 0.24
+    },
+    "stage_cuda_seconds": {
+      "backward": 2.7215,
+      "cpu_to_gpu": 0.0142,
+      "image_io": 0.0355,
+      "loss": 0.0961,
+      "optimizer_step": 0.5431,
+      "qwen_forward": 3.5532,
+      "qwen_prepare_total": 0.0529,
+      "sam_feature_lookup": 0.0365,
+      "target_mask_io": 0.016
+    },
+    "step_wall_seconds": {
+      "n": 16,
+      "mean": 0.494448787500005,
+      "median": 0.40263490000143065,
+      "p90": 0.4548352999991039,
+      "min": 0.37263050000183284,
+      "max": 1.8420695000022533
+    }
+  },
+  "sam_feature_cache": {
+    "max_images": 480,
+    "cached_images": 32,
+    "hits": 48,
+    "misses": 32,
+    "evictions": 0,
+    "storage": "cpu_tensors",
+    "share_constant_features": true,
+    "ram_footprint_bytes": 545259520,
+    "ram_footprint_gib": 0.5078,
+    "ram_footprint_gb": 0.5453,
+    "image_dependent_bytes_per_image": 16777216,
+    "shared_constant_bytes": 8388608,
+    "per_image_bytes": 17039360
+  },
+  "utilization_during_profile": {
+    "interval_seconds": 0.5,
+    "n_samples": 15,
+    "nvidia_smi_call_seconds": {
+      "n": 15,
+      "mean": 0.054145686666985667,
+      "median": 0.05547160000060103,
+      "p90": 0.07549060000019381,
+      "min": 0.039155599999503465,
+      "max": 0.07603469999958179
+    },
+    "gpu_utilization_percent": {
+      "n": 15,
+      "mean": 36.8,
+      "median": 40.0,
+      "p90": 48.0,
+      "min": 2.0,
+      "max": 78.0
+    },
+    "gpu_memory_used_mib": {
+      "n": 15,
+      "mean": 9834.533333333333,
+      "median": 10423.0,
+      "p90": 10426.0,
+      "min": 7404.0,
+      "max": 10426.0
+    },
+    "gpu_temperature_c": {
+      "n": 15,
+      "mean": 72.6,
+      "median": 73.0,
+      "p90": 75.0,
+      "min": 68.0,
+      "max": 76.0
+    },
+    "gpu_power_watts": {
+      "n": 15,
+      "mean": 104.30933333333334,
+      "median": 107.68,
+      "p90": 118.85,
+      "min": 50.37,
+      "max": 131.89
+    },
+    "cpu_total_percent": {
+      "n": 15,
+      "mean": 73.56,
+      "median": 90.2,
+      "p90": 97.8,
+      "min": 0.0,
+      "max": 98.0
+    },
+    "process_cpu_percent": {
+      "n": 15,
+      "mean": 1557.32,
+      "median": 1868.0,
+      "p90": 1986.2,
+      "min": 99.9,
+      "max": 2043.5
+    },
+    "process_rss_gib": {
+      "n": 15,
+      "mean": 3.1206,
+      "median": 3.282,
+      "p90": 3.284,
+      "min": 2.026,
+      "max": 3.284
+    },
+    "system_ram_used_gib": {
+      "n": 15,
+      "mean": 14.395933333333334,
+      "median": 14.545,
+      "p90": 14.554,
+      "min": 13.33,
+      "max": 14.56
+    },
+    "system_ram_percent": {
+      "n": 15,
+      "mean": 45.879999999999995,
+      "median": 46.4,
+      "p90": 46.4,
+      "min": 42.5,
+      "max": 46.4
+    }
+  },
+  "processor_decomposition": {
+    "repeats": 8,
+    "image_processor_seconds": {
+      "n": 8,
+      "mean": 0.0008981875002973538,
+      "median": 0.0008328500007337425,
+      "p90": 0.0009391999992658384,
+      "min": 0.0006806999990658369,
+      "max": 0.0015217000000120606
+    },
+    "prepare_total_seconds": {
+      "n": 8,
+      "mean": 0.002211675000580726,
+      "median": 0.002234699999462464,
+      "p90": 0.002371900001890026,
+      "min": 0.0019140999975206796,
+      "max": 0.0026079000017489307
+    },
+    "chat_template_and_tokenizer_seconds_estimate": 0.0013134875002833724,
+    "estimate_note": "the chat/template + tokenizer share is derived as prepare_total minus the image processor alone, because one processor call does both; treat it as an estimate"
+  },
+  "forward_split": {
+    "repeats": 8,
+    "qwen_forward_seconds": {
+      "n": 8,
+      "mean": 0.14260477828979493,
+      "median": 0.1388209762573242,
+      "p90": 0.15557472229003907,
+      "min": 0.1320814666748047,
+      "max": 0.16207948303222655
+    },
+    "projection_plus_sam_decode_seconds": {
+      "n": 8,
+      "mean": 0.012547068119049072,
+      "median": 0.0061910879611968995,
+      "p90": 0.008044863700866699,
+      "min": 0.005865856170654297,
+      "max": 0.05505209732055664
+    }
+  },
+  "gradient_checkpointing": true,
+  "deterministic": {
+    "requested": true,
+    "seed": 20260926,
+    "python_random_seeded": true,
+    "numpy_seeded": true,
+    "torch_manual_seed": true,
+    "torch_cuda_manual_seed_all": true,
+    "pythonhashseed": "20260926",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "strict_requested": true,
+    "use_deterministic_algorithms": true,
+    "use_deterministic_algorithms_warn_only": false,
+    "cublas_workspace_config": ":4096:8",
+    "cublas_error": null,
+    "bit_reproducible_claimed": true,
+    "strict_effective": true
+  },
+  "vram": {
+    "peak_allocated_gib": 7.575,
+    "peak_reserved_gib": 8.564
+  }
+}

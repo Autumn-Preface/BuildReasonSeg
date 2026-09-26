@@ -1,0 +1,2345 @@
+{
+  "_doc": "Task 6C.5 section 25: every pipeline variant that was tried, including slower and rejected ones. Warm steady-state, one sample per optimizer step, fixed sample order.",
+  "task": "6C.5",
+  "benchmark": "evaluation/task6c5_benchmark_ids.json",
+  "variants": {
+    "B0_current": {
+      "variant": "B0_current",
+      "flags": {
+        "source_cache": false,
+        "preprocessed_cache": false,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 25.5424,
+      "ms_per_sample": 399.0995,
+      "samples_per_sec": 2.5056,
+      "step_wall_p50_seconds": 0.40096149999953923,
+      "step_wall_p90_seconds": 0.4266510000015842,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 21.7252,
+        "stage_seconds": {
+          "backward": 10.1897,
+          "cpu_to_gpu": 0.0555,
+          "loss": 0.1185,
+          "optimizer_step": 1.4083,
+          "qwen_forward": 9.814,
+          "sam_feature_lookup": 0.1392
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 46.9,
+          "cpu_to_gpu": 0.26,
+          "loss": 0.55,
+          "optimizer_step": 6.48,
+          "qwen_forward": 45.17,
+          "sam_feature_lookup": 0.64
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.3990825484377183,
+          "median": 0.40096149999953923,
+          "p90": 0.4266510000015842,
+          "min": 0.34785050000209594,
+          "max": 0.4431283000012627
+        }
+      },
+      "cache_cold_build_seconds": 0.5767,
+      "cache_stats": {
+        "flags": {
+          "source_cache": false,
+          "preprocessed_cache": false,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 0,
+          "cached_masks": 0,
+          "image_hits": 0,
+          "image_misses": 0,
+          "mask_hits": 0,
+          "mask_misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0
+        },
+        "preprocessed_cache": {
+          "enabled": false,
+          "entries": 0,
+          "max_entries": 1024,
+          "hits": 0,
+          "misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.771,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.742,
+        "peak_reserved_gib": 8.641
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 45,
+        "nvidia_smi_call_seconds": {
+          "n": 45,
+          "mean": 0.060857111111221864,
+          "median": 0.057110699999611825,
+          "p90": 0.07468199999857461,
+          "min": 0.0396307999981218,
+          "max": 0.09235389999957988
+        },
+        "gpu_utilization_percent": {
+          "n": 45,
+          "mean": 41.24444444444445,
+          "median": 42.0,
+          "p90": 51.0,
+          "min": 22.0,
+          "max": 57.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 45,
+          "mean": 9949.977777777778,
+          "median": 9951.0,
+          "p90": 9951.0,
+          "min": 9947.0,
+          "max": 9960.0
+        },
+        "gpu_temperature_c": {
+          "n": 45,
+          "mean": 76.26666666666667,
+          "median": 76.0,
+          "p90": 79.0,
+          "min": 71.0,
+          "max": 80.0
+        },
+        "gpu_power_watts": {
+          "n": 45,
+          "mean": 110.41244444444445,
+          "median": 110.29,
+          "p90": 113.63,
+          "min": 105.74,
+          "max": 115.1
+        },
+        "cpu_total_percent": {
+          "n": 45,
+          "mean": 90.15333333333334,
+          "median": 93.0,
+          "p90": 97.4,
+          "min": 0.0,
+          "max": 97.7
+        },
+        "process_cpu_percent": {
+          "n": 45,
+          "mean": 1851.5488888888888,
+          "median": 1862.9,
+          "p90": 2035.1,
+          "min": 1545.4,
+          "max": 2196.4
+        },
+        "process_rss_gib": {
+          "n": 45,
+          "mean": 3.297311111111111,
+          "median": 3.297,
+          "p90": 3.3,
+          "min": 3.29,
+          "max": 3.3
+        },
+        "system_ram_used_gib": {
+          "n": 45,
+          "mean": 14.02688888888889,
+          "median": 14.02,
+          "p90": 14.053,
+          "min": 13.993,
+          "max": 14.105
+        },
+        "system_ram_percent": {
+          "n": 45,
+          "mean": 44.70444444444445,
+          "median": 44.7,
+          "p90": 44.8,
+          "min": 44.6,
+          "max": 45.0
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "baseline reference (the gate's own run-to-run control)",
+      "adopted": false,
+      "rejection_reason": "baseline reference",
+      "speedup_percent_vs_B0": 0.0,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B1_source_cache": {
+      "variant": "B1_source_cache",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": false,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 27.1156,
+      "ms_per_sample": 423.6805,
+      "samples_per_sec": 2.3603,
+      "step_wall_p50_seconds": 0.4210266499994759,
+      "step_wall_p90_seconds": 0.44818360000135726,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 23.0582,
+        "stage_seconds": {
+          "backward": 10.8418,
+          "cpu_to_gpu": 0.0543,
+          "loss": 0.1293,
+          "optimizer_step": 1.4883,
+          "qwen_forward": 10.4049,
+          "sam_feature_lookup": 0.1396
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 47.02,
+          "cpu_to_gpu": 0.24,
+          "loss": 0.56,
+          "optimizer_step": 6.45,
+          "qwen_forward": 45.12,
+          "sam_feature_lookup": 0.61
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.4236630421875134,
+          "median": 0.4210266499994759,
+          "p90": 0.44818360000135726,
+          "min": 0.3463103000030969,
+          "max": 0.47258200000214856
+        }
+      },
+      "cache_cold_build_seconds": 0.4286,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": false,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 168,
+          "image_misses": 32,
+          "mask_hits": 72,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.135
+        },
+        "preprocessed_cache": {
+          "enabled": false,
+          "entries": 0,
+          "max_entries": 1024,
+          "hits": 0,
+          "misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.506,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.743,
+        "peak_reserved_gib": 8.643
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 48,
+        "nvidia_smi_call_seconds": {
+          "n": 48,
+          "mean": 0.06297344583337387,
+          "median": 0.05932599999869126,
+          "p90": 0.07915399999910733,
+          "min": 0.04121370000211755,
+          "max": 0.10096680000060587
+        },
+        "gpu_utilization_percent": {
+          "n": 48,
+          "mean": 39.229166666666664,
+          "median": 40.0,
+          "p90": 49.0,
+          "min": 19.0,
+          "max": 54.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 48,
+          "mean": 9952.145833333334,
+          "median": 9951.0,
+          "p90": 9953.0,
+          "min": 9951.0,
+          "max": 9962.0
+        },
+        "gpu_temperature_c": {
+          "n": 48,
+          "mean": 80.85416666666667,
+          "median": 81.0,
+          "p90": 82.0,
+          "min": 79.0,
+          "max": 82.0
+        },
+        "gpu_power_watts": {
+          "n": 48,
+          "mean": 111.933125,
+          "median": 111.975,
+          "p90": 114.01,
+          "min": 108.37,
+          "max": 116.15
+        },
+        "cpu_total_percent": {
+          "n": 48,
+          "mean": 87.56875000000001,
+          "median": 90.35,
+          "p90": 93.1,
+          "min": 0.0,
+          "max": 99.9
+        },
+        "process_cpu_percent": {
+          "n": 48,
+          "mean": 1746.9395833333335,
+          "median": 1774.8000000000002,
+          "p90": 1928.1,
+          "min": 1321.0,
+          "max": 2024.0
+        },
+        "process_rss_gib": {
+          "n": 48,
+          "mean": 3.3369375,
+          "median": 3.337,
+          "p90": 3.338,
+          "min": 3.336,
+          "max": 3.338
+        },
+        "system_ram_used_gib": {
+          "n": 48,
+          "mean": 14.002604166666666,
+          "median": 13.9915,
+          "p90": 14.03,
+          "min": 13.974,
+          "max": 14.104
+        },
+        "system_ram_percent": {
+          "n": 48,
+          "mean": 44.635416666666664,
+          "median": 44.6,
+          "p90": 44.7,
+          "min": 44.5,
+          "max": 45.0
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -5.799,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B2_preprocessed_cache": {
+      "variant": "B2_preprocessed_cache",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 26.3124,
+      "ms_per_sample": 411.1318,
+      "samples_per_sec": 2.4323,
+      "step_wall_p50_seconds": 0.4119863500000065,
+      "step_wall_p90_seconds": 0.43749190000016824,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 22.5917,
+        "stage_seconds": {
+          "backward": 10.2702,
+          "cpu_to_gpu": 0.0564,
+          "loss": 0.1578,
+          "optimizer_step": 1.4829,
+          "qwen_forward": 10.4929,
+          "sam_feature_lookup": 0.1316
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 45.46,
+          "cpu_to_gpu": 0.25,
+          "loss": 0.7,
+          "optimizer_step": 6.56,
+          "qwen_forward": 46.45,
+          "sam_feature_lookup": 0.58
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.41111602187487506,
+          "median": 0.4119863500000065,
+          "p90": 0.43749190000016824,
+          "min": 0.38379599999825587,
+          "max": 0.453714499999478
+        }
+      },
+      "cache_cold_build_seconds": 0.4432,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 168,
+          "image_misses": 32,
+          "mask_hits": 72,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.13
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 72,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.17,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.302,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.742,
+        "peak_reserved_gib": 8.643
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 47,
+        "nvidia_smi_call_seconds": {
+          "n": 47,
+          "mean": 0.05736769787209267,
+          "median": 0.05556390000128886,
+          "p90": 0.07534260000102222,
+          "min": 0.0383588000004238,
+          "max": 0.10257809999893652
+        },
+        "gpu_utilization_percent": {
+          "n": 47,
+          "mean": 39.97872340425532,
+          "median": 40.0,
+          "p90": 50.0,
+          "min": 23.0,
+          "max": 55.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 47,
+          "mean": 9953.574468085106,
+          "median": 9953.0,
+          "p90": 9953.0,
+          "min": 9953.0,
+          "max": 9962.0
+        },
+        "gpu_temperature_c": {
+          "n": 47,
+          "mean": 82.51063829787235,
+          "median": 83.0,
+          "p90": 83.0,
+          "min": 80.0,
+          "max": 85.0
+        },
+        "gpu_power_watts": {
+          "n": 47,
+          "mean": 113.77127659574468,
+          "median": 114.75,
+          "p90": 129.29,
+          "min": 78.7,
+          "max": 141.66
+        },
+        "cpu_total_percent": {
+          "n": 47,
+          "mean": 56.285106382978725,
+          "median": 58.4,
+          "p90": 66.5,
+          "min": 0.0,
+          "max": 75.7
+        },
+        "process_cpu_percent": {
+          "n": 47,
+          "mean": 1018.6595744680851,
+          "median": 1051.8,
+          "p90": 1246.1,
+          "min": 133.0,
+          "max": 1437.4
+        },
+        "process_rss_gib": {
+          "n": 47,
+          "mean": 3.713659574468085,
+          "median": 3.714,
+          "p90": 3.714,
+          "min": 3.713,
+          "max": 3.714
+        },
+        "system_ram_used_gib": {
+          "n": 47,
+          "mean": 14.341106382978724,
+          "median": 14.332,
+          "p90": 14.354,
+          "min": 14.318,
+          "max": 14.454
+        },
+        "system_ram_percent": {
+          "n": 47,
+          "mean": 45.714893617021275,
+          "median": 45.7,
+          "p90": 45.7,
+          "min": 45.6,
+          "max": 46.1
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -2.925,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B3_pinned_nonblocking": {
+      "variant": "B3_pinned_nonblocking",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": true,
+        "non_blocking": true,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 29.3542,
+      "ms_per_sample": 458.6599,
+      "samples_per_sec": 2.1803,
+      "step_wall_p50_seconds": 0.45540244999938295,
+      "step_wall_p90_seconds": 0.4828529999977036,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 24.559,
+        "stage_seconds": {
+          "backward": 12.0089,
+          "cpu_to_gpu": 0.0161,
+          "loss": 0.1358,
+          "optimizer_step": 1.5554,
+          "qwen_forward": 10.6919,
+          "sam_feature_lookup": 0.1509
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 48.9,
+          "cpu_to_gpu": 0.07,
+          "loss": 0.55,
+          "optimizer_step": 6.33,
+          "qwen_forward": 43.54,
+          "sam_feature_lookup": 0.61
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.4586415624999063,
+          "median": 0.45540244999938295,
+          "p90": 0.4828529999977036,
+          "min": 0.42601959999956307,
+          "max": 0.5005085000011604
+        }
+      },
+      "cache_cold_build_seconds": 0.479,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": true,
+          "non_blocking": true,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 168,
+          "image_misses": 32,
+          "mask_hits": 72,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.141
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 72,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.164,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.374,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.743,
+        "peak_reserved_gib": 8.643
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 51,
+        "nvidia_smi_call_seconds": {
+          "n": 51,
+          "mean": 0.07110057254919643,
+          "median": 0.06598630000007688,
+          "p90": 0.0947636999990209,
+          "min": 0.0535797000011371,
+          "max": 0.11587240000153542
+        },
+        "gpu_utilization_percent": {
+          "n": 51,
+          "mean": 37.627450980392155,
+          "median": 39.0,
+          "p90": 49.0,
+          "min": 16.0,
+          "max": 53.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 51,
+          "mean": 9953.588235294117,
+          "median": 9953.0,
+          "p90": 9953.0,
+          "min": 9950.0,
+          "max": 9962.0
+        },
+        "gpu_temperature_c": {
+          "n": 51,
+          "mean": 81.66666666666667,
+          "median": 82.0,
+          "p90": 82.0,
+          "min": 79.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 51,
+          "mean": 112.12980392156862,
+          "median": 114.28,
+          "p90": 126.46,
+          "min": 72.24,
+          "max": 155.37
+        },
+        "cpu_total_percent": {
+          "n": 51,
+          "mean": 82.7235294117647,
+          "median": 85.9,
+          "p90": 88.8,
+          "min": 0.0,
+          "max": 89.7
+        },
+        "process_cpu_percent": {
+          "n": 51,
+          "mean": 1656.670588235294,
+          "median": 1701.5,
+          "p90": 1813.9,
+          "min": 1398.5,
+          "max": 2063.3
+        },
+        "process_rss_gib": {
+          "n": 51,
+          "mean": 3.73,
+          "median": 3.73,
+          "p90": 3.73,
+          "min": 3.73,
+          "max": 3.73
+        },
+        "system_ram_used_gib": {
+          "n": 51,
+          "mean": 14.349980392156864,
+          "median": 14.341,
+          "p90": 14.371,
+          "min": 14.332,
+          "max": 14.447
+        },
+        "system_ram_percent": {
+          "n": 51,
+          "mean": 45.72941176470589,
+          "median": 45.7,
+          "p90": 45.8,
+          "min": 45.7,
+          "max": 46.0
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -12.983,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B4_prefetch_threads_2": {
+      "variant": "B4_prefetch_threads_2",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 2,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 27.0169,
+      "ms_per_sample": 422.1387,
+      "samples_per_sec": 2.3689,
+      "step_wall_p50_seconds": 0.4210381499979121,
+      "step_wall_p90_seconds": 0.4380194000004849,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 23.218,
+        "stage_seconds": {
+          "backward": 10.5237,
+          "cpu_to_gpu": 0.0568,
+          "loss": 0.1514,
+          "optimizer_step": 1.5493,
+          "qwen_forward": 10.8055,
+          "sam_feature_lookup": 0.1313
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 45.33,
+          "cpu_to_gpu": 0.24,
+          "loss": 0.65,
+          "optimizer_step": 6.67,
+          "qwen_forward": 46.54,
+          "sam_feature_lookup": 0.57
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.4221140781248778,
+          "median": 0.4210381499979121,
+          "p90": 0.4380194000004849,
+          "min": 0.38219910000043456,
+          "max": 0.4457339000000502
+        }
+      },
+      "cache_cold_build_seconds": 0.4796,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 2,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 174,
+          "image_misses": 32,
+          "mask_hits": 78,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.138
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 78,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.192,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.332,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.739,
+        "peak_reserved_gib": 8.645
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 49,
+        "nvidia_smi_call_seconds": {
+          "n": 49,
+          "mean": 0.05405805918387475,
+          "median": 0.05559209999773884,
+          "p90": 0.0669869999983348,
+          "min": 0.039402100002916995,
+          "max": 0.10657899999932852
+        },
+        "gpu_utilization_percent": {
+          "n": 49,
+          "mean": 38.48979591836735,
+          "median": 39.0,
+          "p90": 48.0,
+          "min": 23.0,
+          "max": 55.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 49,
+          "mean": 9955.040816326531,
+          "median": 9955.0,
+          "p90": 9956.0,
+          "min": 9953.0,
+          "max": 9962.0
+        },
+        "gpu_temperature_c": {
+          "n": 49,
+          "mean": 81.91836734693878,
+          "median": 82.0,
+          "p90": 83.0,
+          "min": 80.0,
+          "max": 85.0
+        },
+        "gpu_power_watts": {
+          "n": 49,
+          "mean": 112.15428571428572,
+          "median": 114.72,
+          "p90": 124.75,
+          "min": 58.89,
+          "max": 169.49
+        },
+        "cpu_total_percent": {
+          "n": 49,
+          "mean": 55.36734693877551,
+          "median": 52.8,
+          "p90": 68.6,
+          "min": 0.0,
+          "max": 73.8
+        },
+        "process_cpu_percent": {
+          "n": 49,
+          "mean": 1002.1775510204081,
+          "median": 945.5,
+          "p90": 1351.6,
+          "min": 133.0,
+          "max": 1414.9
+        },
+        "process_rss_gib": {
+          "n": 49,
+          "mean": 3.7300000000000004,
+          "median": 3.73,
+          "p90": 3.73,
+          "min": 3.73,
+          "max": 3.73
+        },
+        "system_ram_used_gib": {
+          "n": 49,
+          "mean": 14.384061224489795,
+          "median": 14.35,
+          "p90": 14.433,
+          "min": 14.333,
+          "max": 14.517
+        },
+        "system_ram_percent": {
+          "n": 49,
+          "mean": 45.844897959183676,
+          "median": 45.7,
+          "p90": 46.0,
+          "min": 45.7,
+          "max": 46.3
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -5.456,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B4_prefetch_threads_4": {
+      "variant": "B4_prefetch_threads_4",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 4,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 27.0831,
+      "ms_per_sample": 423.1738,
+      "samples_per_sec": 2.3631,
+      "step_wall_p50_seconds": 0.42130474999976286,
+      "step_wall_p90_seconds": 0.43509239999912097,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 23.2925,
+        "stage_seconds": {
+          "backward": 10.5382,
+          "cpu_to_gpu": 0.0573,
+          "loss": 0.1429,
+          "optimizer_step": 1.5565,
+          "qwen_forward": 10.8652,
+          "sam_feature_lookup": 0.1323
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 45.24,
+          "cpu_to_gpu": 0.25,
+          "loss": 0.61,
+          "optimizer_step": 6.68,
+          "qwen_forward": 46.65,
+          "sam_feature_lookup": 0.57
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.42315594218746355,
+          "median": 0.42130474999976286,
+          "p90": 0.43509239999912097,
+          "min": 0.4006368000009388,
+          "max": 0.44741029999931925
+        }
+      },
+      "cache_cold_build_seconds": 0.4358,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 4,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 180,
+          "image_misses": 32,
+          "mask_hits": 84,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.133
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 84,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.156,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.291,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.744,
+        "peak_reserved_gib": 8.65
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 49,
+        "nvidia_smi_call_seconds": {
+          "n": 49,
+          "mean": 0.056622355101984684,
+          "median": 0.056372799997916445,
+          "p90": 0.07091150000269408,
+          "min": 0.038599499999691034,
+          "max": 0.10676390000298852
+        },
+        "gpu_utilization_percent": {
+          "n": 49,
+          "mean": 38.97959183673469,
+          "median": 41.0,
+          "p90": 49.0,
+          "min": 22.0,
+          "max": 50.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 49,
+          "mean": 9958.265306122448,
+          "median": 9955.0,
+          "p90": 9961.0,
+          "min": 9955.0,
+          "max": 9970.0
+        },
+        "gpu_temperature_c": {
+          "n": 49,
+          "mean": 82.14285714285714,
+          "median": 82.0,
+          "p90": 83.0,
+          "min": 80.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 49,
+          "mean": 111.72183673469388,
+          "median": 115.76,
+          "p90": 127.98,
+          "min": 60.73,
+          "max": 172.24
+        },
+        "cpu_total_percent": {
+          "n": 49,
+          "mean": 55.72040816326531,
+          "median": 56.6,
+          "p90": 67.4,
+          "min": 0.0,
+          "max": 69.1
+        },
+        "process_cpu_percent": {
+          "n": 49,
+          "mean": 985.3183673469388,
+          "median": 1027.2,
+          "p90": 1232.2,
+          "min": 66.5,
+          "max": 1327.3
+        },
+        "process_rss_gib": {
+          "n": 49,
+          "mean": 3.7300000000000004,
+          "median": 3.73,
+          "p90": 3.73,
+          "min": 3.73,
+          "max": 3.73
+        },
+        "system_ram_used_gib": {
+          "n": 49,
+          "mean": 14.427061224489798,
+          "median": 14.421,
+          "p90": 14.434,
+          "min": 14.41,
+          "max": 14.533
+        },
+        "system_ram_percent": {
+          "n": 49,
+          "mean": 45.98979591836735,
+          "median": 46.0,
+          "p90": 46.0,
+          "min": 45.9,
+          "max": 46.3
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -5.687,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B4_prefetch_threads_8": {
+      "variant": "B4_prefetch_threads_8",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 8,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 28.1637,
+      "ms_per_sample": 440.0576,
+      "samples_per_sec": 2.2724,
+      "step_wall_p50_seconds": 0.43795925000085845,
+      "step_wall_p90_seconds": 0.4644834999999148,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 24.1628,
+        "stage_seconds": {
+          "backward": 10.9781,
+          "cpu_to_gpu": 0.0594,
+          "loss": 0.1429,
+          "optimizer_step": 1.6012,
+          "qwen_forward": 11.2387,
+          "sam_feature_lookup": 0.1425
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 45.43,
+          "cpu_to_gpu": 0.25,
+          "loss": 0.59,
+          "optimizer_step": 6.63,
+          "qwen_forward": 46.51,
+          "sam_feature_lookup": 0.59
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.4400400140625038,
+          "median": 0.43795925000085845,
+          "p90": 0.4644834999999148,
+          "min": 0.3609861999975692,
+          "max": 0.5019783999996434
+        }
+      },
+      "cache_cold_build_seconds": 0.4285,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 8,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 192,
+          "image_misses": 32,
+          "mask_hits": 96,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.132
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 96,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.154,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.289,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.74,
+        "peak_reserved_gib": 8.65
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 50,
+        "nvidia_smi_call_seconds": {
+          "n": 50,
+          "mean": 0.06004622399981599,
+          "median": 0.05733999999938533,
+          "p90": 0.07363030000124127,
+          "min": 0.039411800000380026,
+          "max": 0.0921520000010787
+        },
+        "gpu_utilization_percent": {
+          "n": 50,
+          "mean": 39.5,
+          "median": 40.0,
+          "p90": 51.0,
+          "min": 19.0,
+          "max": 66.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 50,
+          "mean": 12678.56,
+          "median": 14870.0,
+          "p90": 14906.0,
+          "min": 9961.0,
+          "max": 14950.0
+        },
+        "gpu_temperature_c": {
+          "n": 50,
+          "mean": 82.32,
+          "median": 82.0,
+          "p90": 83.0,
+          "min": 80.0,
+          "max": 85.0
+        },
+        "gpu_power_watts": {
+          "n": 50,
+          "mean": 109.521,
+          "median": 114.18,
+          "p90": 126.35,
+          "min": 76.06,
+          "max": 143.51
+        },
+        "cpu_total_percent": {
+          "n": 50,
+          "mean": 59.044,
+          "median": 58.55,
+          "p90": 68.2,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 50,
+          "mean": 856.018,
+          "median": 814.0999999999999,
+          "p90": 1165.1,
+          "min": 133.0,
+          "max": 1268.4
+        },
+        "process_rss_gib": {
+          "n": 50,
+          "mean": 3.73,
+          "median": 3.73,
+          "p90": 3.73,
+          "min": 3.73,
+          "max": 3.73
+        },
+        "system_ram_used_gib": {
+          "n": 50,
+          "mean": 14.81788,
+          "median": 14.632,
+          "p90": 15.519,
+          "min": 13.829,
+          "max": 18.496
+        },
+        "system_ram_percent": {
+          "n": 50,
+          "mean": 47.222,
+          "median": 46.6,
+          "p90": 49.5,
+          "min": 44.1,
+          "max": 58.9
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -9.307,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B6_skip_grad_norm_instrumentation": {
+      "variant": "B6_skip_grad_norm_instrumentation",
+      "flags": {
+        "source_cache": false,
+        "preprocessed_cache": false,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": true
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 22.478,
+      "ms_per_sample": 351.2187,
+      "samples_per_sec": 2.8472,
+      "step_wall_p50_seconds": 0.35262485000021115,
+      "step_wall_p90_seconds": 0.3682050999996136,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 21.9095,
+        "stage_seconds": {
+          "backward": 10.2218,
+          "cpu_to_gpu": 0.0556,
+          "loss": 0.1262,
+          "optimizer_step": 1.3119,
+          "qwen_forward": 10.0602,
+          "sam_feature_lookup": 0.1337
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 46.65,
+          "cpu_to_gpu": 0.25,
+          "loss": 0.58,
+          "optimizer_step": 5.99,
+          "qwen_forward": 45.92,
+          "sam_feature_lookup": 0.61
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.35120192343725876,
+          "median": 0.35262485000021115,
+          "p90": 0.3682050999996136,
+          "min": 0.3204210999974748,
+          "max": 0.38789039999755914
+        }
+      },
+      "cache_cold_build_seconds": 0.5616,
+      "cache_stats": {
+        "flags": {
+          "source_cache": false,
+          "preprocessed_cache": false,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": true
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 0,
+          "cached_masks": 0,
+          "image_hits": 0,
+          "image_misses": 0,
+          "mask_hits": 0,
+          "mask_misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0
+        },
+        "preprocessed_cache": {
+          "enabled": false,
+          "entries": 0,
+          "max_entries": 1024,
+          "hits": 0,
+          "misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.728,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.742,
+        "peak_reserved_gib": 8.641
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 40,
+        "nvidia_smi_call_seconds": {
+          "n": 40,
+          "mean": 0.0589414625002064,
+          "median": 0.0569446000008611,
+          "p90": 0.07132620000265888,
+          "min": 0.03967740000007325,
+          "max": 0.08841519999987213
+        },
+        "gpu_utilization_percent": {
+          "n": 40,
+          "mean": 42.15,
+          "median": 42.5,
+          "p90": 48.0,
+          "min": 35.0,
+          "max": 51.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 40,
+          "mean": 10502.375,
+          "median": 10504.0,
+          "p90": 10504.0,
+          "min": 10500.0,
+          "max": 10504.0
+        },
+        "gpu_temperature_c": {
+          "n": 40,
+          "mean": 76.675,
+          "median": 77.0,
+          "p90": 79.0,
+          "min": 71.0,
+          "max": 80.0
+        },
+        "gpu_power_watts": {
+          "n": 40,
+          "mean": 118.24075,
+          "median": 118.57499999999999,
+          "p90": 120.9,
+          "min": 113.21,
+          "max": 122.22
+        },
+        "cpu_total_percent": {
+          "n": 40,
+          "mean": 97.44250000000001,
+          "median": 100.0,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 40,
+          "mean": 2037.4675,
+          "median": 2054.6,
+          "p90": 2141.0,
+          "min": 1657.0,
+          "max": 3027.3
+        },
+        "process_rss_gib": {
+          "n": 40,
+          "mean": 3.2872500000000002,
+          "median": 3.288,
+          "p90": 3.289,
+          "min": 3.28,
+          "max": 3.289
+        },
+        "system_ram_used_gib": {
+          "n": 40,
+          "mean": 14.528049999999999,
+          "median": 14.5175,
+          "p90": 14.559,
+          "min": 14.492,
+          "max": 14.639
+        },
+        "system_ram_percent": {
+          "n": 40,
+          "mean": 46.305,
+          "median": 46.3,
+          "p90": 46.4,
+          "min": 46.2,
+          "max": 46.7
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "bit_equivalent to B0 (task6c5_equivalence.json)",
+      "adopted": true,
+      "rejection_reason": null,
+      "speedup_percent_vs_B0": 13.633,
+      "bit_equivalent_to_B0": true,
+      "equivalence_gate": "task6c5_equivalence.json"
+    },
+    "B7_cache_plus_skip_grad_norms_plus_prefetch2": {
+      "variant": "B7_cache_plus_skip_grad_norms_plus_prefetch2",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 2,
+        "skip_grad_norm_instrumentation": true
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 24.0168,
+      "ms_per_sample": 375.2626,
+      "samples_per_sec": 2.6648,
+      "step_wall_p50_seconds": 0.3743183999995381,
+      "step_wall_p90_seconds": 0.3881976999982726,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 23.8051,
+        "stage_seconds": {
+          "backward": 10.778,
+          "cpu_to_gpu": 0.0668,
+          "loss": 0.1441,
+          "optimizer_step": 1.467,
+          "qwen_forward": 11.2116,
+          "sam_feature_lookup": 0.1378
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 45.28,
+          "cpu_to_gpu": 0.28,
+          "loss": 0.61,
+          "optimizer_step": 6.16,
+          "qwen_forward": 47.1,
+          "sam_feature_lookup": 0.58
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.3752460890626139,
+          "median": 0.3743183999995381,
+          "p90": 0.3881976999982726,
+          "min": 0.33326690000103554,
+          "max": 0.3973587000000407
+        }
+      },
+      "cache_cold_build_seconds": 0.4409,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 2,
+          "skip_grad_norm_instrumentation": true
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 174,
+          "image_misses": 32,
+          "mask_hits": 78,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.138
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 78,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.154,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.294,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.742,
+        "peak_reserved_gib": 8.65
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 43,
+        "nvidia_smi_call_seconds": {
+          "n": 43,
+          "mean": 0.059435232557937756,
+          "median": 0.05725410000013653,
+          "p90": 0.07617640000171377,
+          "min": 0.039179899998998735,
+          "max": 0.0998777999993763
+        },
+        "gpu_utilization_percent": {
+          "n": 43,
+          "mean": 40.44186046511628,
+          "median": 41.0,
+          "p90": 46.0,
+          "min": 32.0,
+          "max": 48.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 43,
+          "mean": 9964.418604651162,
+          "median": 9961.0,
+          "p90": 9970.0,
+          "min": 9961.0,
+          "max": 9970.0
+        },
+        "gpu_temperature_c": {
+          "n": 43,
+          "mean": 84.32558139534883,
+          "median": 84.0,
+          "p90": 86.0,
+          "min": 83.0,
+          "max": 86.0
+        },
+        "gpu_power_watts": {
+          "n": 43,
+          "mean": 121.7767441860465,
+          "median": 123.33,
+          "p90": 130.7,
+          "min": 102.18,
+          "max": 136.07
+        },
+        "cpu_total_percent": {
+          "n": 43,
+          "mean": 60.406976744186046,
+          "median": 62.4,
+          "p90": 71.3,
+          "min": 0.0,
+          "max": 82.7
+        },
+        "process_cpu_percent": {
+          "n": 43,
+          "mean": 1081.4953488372093,
+          "median": 1067.4,
+          "p90": 1408.4,
+          "min": 99.7,
+          "max": 1478.7
+        },
+        "process_rss_gib": {
+          "n": 43,
+          "mean": 3.731,
+          "median": 3.731,
+          "p90": 3.731,
+          "min": 3.731,
+          "max": 3.731
+        },
+        "system_ram_used_gib": {
+          "n": 43,
+          "mean": 14.372674418604651,
+          "median": 14.364,
+          "p90": 14.397,
+          "min": 14.346,
+          "max": 14.493
+        },
+        "system_ram_percent": {
+          "n": 43,
+          "mean": 45.81860465116279,
+          "median": 45.8,
+          "p90": 45.9,
+          "min": 45.7,
+          "max": 46.2
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": 6.354,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B5_no_gradient_checkpointing": {
+      "variant": "B5_no_gradient_checkpointing",
+      "flags": {
+        "source_cache": false,
+        "preprocessed_cache": false,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {
+        "gradient_checkpointing": false
+      },
+      "runtime_mode": "no_checkpointing",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 27.9396,
+      "ms_per_sample": 436.5561,
+      "samples_per_sec": 2.2907,
+      "step_wall_p50_seconds": 0.4522352999993018,
+      "step_wall_p90_seconds": 0.47062930000174674,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 23.525,
+        "stage_seconds": {
+          "backward": 11.1905,
+          "cpu_to_gpu": 0.0551,
+          "loss": 0.1314,
+          "optimizer_step": 1.4573,
+          "qwen_forward": 10.551,
+          "sam_feature_lookup": 0.1397
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 47.57,
+          "cpu_to_gpu": 0.23,
+          "loss": 0.56,
+          "optimizer_step": 6.19,
+          "qwen_forward": 44.85,
+          "sam_feature_lookup": 0.59
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.4365387328126076,
+          "median": 0.4522352999993018,
+          "p90": 0.47062930000174674,
+          "min": 0.37128990000201156,
+          "max": 0.48462609999842243
+        }
+      },
+      "cache_cold_build_seconds": 0.64,
+      "cache_stats": {
+        "flags": {
+          "source_cache": false,
+          "preprocessed_cache": false,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 0,
+          "cached_masks": 0,
+          "image_hits": 0,
+          "image_misses": 0,
+          "mask_hits": 0,
+          "mask_misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0
+        },
+        "preprocessed_cache": {
+          "enabled": false,
+          "entries": 0,
+          "max_entries": 1024,
+          "hits": 0,
+          "misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.837,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.742,
+        "peak_reserved_gib": 8.641
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 49,
+        "nvidia_smi_call_seconds": {
+          "n": 49,
+          "mean": 0.06630793469349203,
+          "median": 0.0606231999990996,
+          "p90": 0.09090610000203014,
+          "min": 0.040212799998698756,
+          "max": 0.1313095000004978
+        },
+        "gpu_utilization_percent": {
+          "n": 49,
+          "mean": 39.61224489795919,
+          "median": 42.0,
+          "p90": 49.0,
+          "min": 19.0,
+          "max": 55.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 49,
+          "mean": 10503.836734693878,
+          "median": 10505.0,
+          "p90": 10506.0,
+          "min": 10500.0,
+          "max": 10506.0
+        },
+        "gpu_temperature_c": {
+          "n": 49,
+          "mean": 74.95918367346938,
+          "median": 75.0,
+          "p90": 77.0,
+          "min": 71.0,
+          "max": 78.0
+        },
+        "gpu_power_watts": {
+          "n": 49,
+          "mean": 108.89734693877551,
+          "median": 108.89,
+          "p90": 120.79,
+          "min": 77.61,
+          "max": 139.47
+        },
+        "cpu_total_percent": {
+          "n": 49,
+          "mean": 86.5061224489796,
+          "median": 88.9,
+          "p90": 94.9,
+          "min": 0.0,
+          "max": 97.5
+        },
+        "process_cpu_percent": {
+          "n": 49,
+          "mean": 1686.591836734694,
+          "median": 1701.9,
+          "p90": 1933.8,
+          "min": 1234.9,
+          "max": 2067.6
+        },
+        "process_rss_gib": {
+          "n": 49,
+          "mean": 3.283367346938775,
+          "median": 3.284,
+          "p90": 3.285,
+          "min": 3.279,
+          "max": 3.285
+        },
+        "system_ram_used_gib": {
+          "n": 49,
+          "mean": 14.546285714285714,
+          "median": 14.536,
+          "p90": 14.584,
+          "min": 14.507,
+          "max": 14.658
+        },
+        "system_ram_percent": {
+          "n": 49,
+          "mean": 46.35918367346939,
+          "median": 46.3,
+          "p90": 46.5,
+          "min": 46.2,
+          "max": 46.7
+        }
+      },
+      "gradient_checkpointing": false,
+      "deterministic_strict": true,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": -8.577,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "DET_algorithms_off": {
+      "variant": "DET_algorithms_off",
+      "flags": {
+        "source_cache": false,
+        "preprocessed_cache": false,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": false
+      },
+      "runtime_overrides": {
+        "deterministic_strict": false,
+        "deterministic": false
+      },
+      "runtime_mode": "det_off",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 25.0973,
+      "ms_per_sample": 392.1446,
+      "samples_per_sec": 2.5501,
+      "step_wall_p50_seconds": 0.3987085000007937,
+      "step_wall_p90_seconds": 0.41656570000122883,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 20.9573,
+        "stage_seconds": {
+          "backward": 10.2812,
+          "cpu_to_gpu": 0.0568,
+          "loss": 0.0599,
+          "optimizer_step": 0.9092,
+          "qwen_forward": 9.517,
+          "sam_feature_lookup": 0.1333
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 49.06,
+          "cpu_to_gpu": 0.27,
+          "loss": 0.29,
+          "optimizer_step": 4.34,
+          "qwen_forward": 45.41,
+          "sam_feature_lookup": 0.64
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.39212983750002195,
+          "median": 0.3987085000007937,
+          "p90": 0.41656570000122883,
+          "min": 0.32073269999818876,
+          "max": 0.4383543000003556
+        }
+      },
+      "cache_cold_build_seconds": 0.6253,
+      "cache_stats": {
+        "flags": {
+          "source_cache": false,
+          "preprocessed_cache": false,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": false
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 0,
+          "cached_masks": 0,
+          "image_hits": 0,
+          "image_misses": 0,
+          "mask_hits": 0,
+          "mask_misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0
+        },
+        "preprocessed_cache": {
+          "enabled": false,
+          "entries": 0,
+          "max_entries": 1024,
+          "hits": 0,
+          "misses": 0,
+          "bytes": 0,
+          "gib": 0.0,
+          "build_seconds": 0.0,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.818,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.742,
+        "peak_reserved_gib": 8.637
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 44,
+        "nvidia_smi_call_seconds": {
+          "n": 44,
+          "mean": 0.07285511363641656,
+          "median": 0.07133260000045993,
+          "p90": 0.0951887999981409,
+          "min": 0.0545981999966898,
+          "max": 0.10227969999687048
+        },
+        "gpu_utilization_percent": {
+          "n": 44,
+          "mean": 38.36363636363637,
+          "median": 40.0,
+          "p90": 48.0,
+          "min": 23.0,
+          "max": 51.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 44,
+          "mean": 10498.818181818182,
+          "median": 10500.0,
+          "p90": 10501.0,
+          "min": 10493.0,
+          "max": 10501.0
+        },
+        "gpu_temperature_c": {
+          "n": 44,
+          "mean": 74.6590909090909,
+          "median": 75.0,
+          "p90": 77.0,
+          "min": 71.0,
+          "max": 78.0
+        },
+        "gpu_power_watts": {
+          "n": 44,
+          "mean": 108.61500000000001,
+          "median": 108.265,
+          "p90": 115.61,
+          "min": 70.06,
+          "max": 137.54
+        },
+        "cpu_total_percent": {
+          "n": 44,
+          "mean": 90.23409090909091,
+          "median": 92.4,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 44,
+          "mean": 1800.6045454545456,
+          "median": 1796.4,
+          "p90": 2021.2,
+          "min": 1235.0,
+          "max": 2182.4
+        },
+        "process_rss_gib": {
+          "n": 44,
+          "mean": 3.274545454545454,
+          "median": 3.275,
+          "p90": 3.277,
+          "min": 3.269,
+          "max": 3.277
+        },
+        "system_ram_used_gib": {
+          "n": 44,
+          "mean": 14.50959090909091,
+          "median": 14.497499999999999,
+          "p90": 14.562,
+          "min": 14.465,
+          "max": 14.621
+        },
+        "system_ram_percent": {
+          "n": 44,
+          "mean": 46.24090909090909,
+          "median": 46.2,
+          "p90": 46.4,
+          "min": 46.1,
+          "max": 46.6
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": false,
+      "equivalence_status": "this flag set was not gated for equivalence; rejected on throughput",
+      "adopted": false,
+      "rejection_reason": "rejected on throughput: it is slower than the adopted pipeline, and this flag set was not separately gated for equivalence",
+      "speedup_percent_vs_B0": 1.776,
+      "bit_equivalent_to_B0": false,
+      "equivalence_gate": null
+    },
+    "B9_caches_plus_skip_grad_norms": {
+      "variant": "B9_caches_plus_skip_grad_norms",
+      "flags": {
+        "source_cache": true,
+        "preprocessed_cache": true,
+        "pin_memory": false,
+        "non_blocking": false,
+        "prefetch_threads": 0,
+        "skip_grad_norm_instrumentation": true
+      },
+      "runtime_overrides": {},
+      "runtime_mode": "default",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 21.9739,
+      "ms_per_sample": 343.342,
+      "samples_per_sec": 2.9125,
+      "step_wall_p50_seconds": 0.34205780000047525,
+      "step_wall_p90_seconds": 0.3530212000005122,
+      "stage_profile": {
+        "cuda_events": false,
+        "stage_seconds_total": 21.7842,
+        "stage_seconds": {
+          "backward": 9.9592,
+          "cpu_to_gpu": 0.0533,
+          "loss": 0.1631,
+          "optimizer_step": 1.3876,
+          "qwen_forward": 10.0818,
+          "sam_feature_lookup": 0.1391
+        },
+        "stage_calls": {
+          "backward": 64,
+          "cpu_to_gpu": 64,
+          "loss": 64,
+          "optimizer_step": 64,
+          "qwen_forward": 64,
+          "sam_feature_lookup": 64
+        },
+        "stage_share_percent": {
+          "backward": 45.72,
+          "cpu_to_gpu": 0.24,
+          "loss": 0.75,
+          "optimizer_step": 6.37,
+          "qwen_forward": 46.28,
+          "sam_feature_lookup": 0.64
+        },
+        "stage_cuda_seconds": {},
+        "step_wall_seconds": {
+          "n": 64,
+          "mean": 0.34332019062514973,
+          "median": 0.34205780000047525,
+          "p90": 0.3530212000005122,
+          "min": 0.32877709999957005,
+          "max": 0.36650700000245706
+        }
+      },
+      "cache_cold_build_seconds": 0.4515,
+      "cache_stats": {
+        "flags": {
+          "source_cache": true,
+          "preprocessed_cache": true,
+          "pin_memory": false,
+          "non_blocking": false,
+          "prefetch_threads": 0,
+          "skip_grad_norm_instrumentation": true
+        },
+        "source_cache": {
+          "enabled": {
+            "images": true,
+            "masks": true
+          },
+          "cached_images": 32,
+          "cached_masks": 64,
+          "image_hits": 168,
+          "image_misses": 32,
+          "mask_hits": 72,
+          "mask_misses": 64,
+          "bytes": 41943040,
+          "gib": 0.0391,
+          "build_seconds": 0.133
+        },
+        "preprocessed_cache": {
+          "enabled": true,
+          "entries": 64,
+          "max_entries": 1024,
+          "hits": 72,
+          "misses": 64,
+          "bytes": 403303072,
+          "gib": 0.3756,
+          "build_seconds": 0.173,
+          "caches_model_outputs": false
+        },
+        "prepare_seconds": 0.308,
+        "prefetch_threads": 0
+      },
+      "prefetch_queue_final": null,
+      "vram": {
+        "peak_allocated_gib": 7.743,
+        "peak_reserved_gib": 8.643
+      },
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 40,
+        "nvidia_smi_call_seconds": {
+          "n": 40,
+          "mean": 0.05137454500027161,
+          "median": 0.05528509999930975,
+          "p90": 0.05821710000236635,
+          "min": 0.038674100000207545,
+          "max": 0.07597380000152043
+        },
+        "gpu_utilization_percent": {
+          "n": 40,
+          "mean": 43.675,
+          "median": 43.5,
+          "p90": 50.0,
+          "min": 34.0,
+          "max": 51.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 40,
+          "mean": 10504.15,
+          "median": 10504.0,
+          "p90": 10504.0,
+          "min": 10503.0,
+          "max": 10506.0
+        },
+        "gpu_temperature_c": {
+          "n": 40,
+          "mean": 81.25,
+          "median": 81.0,
+          "p90": 83.0,
+          "min": 79.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 40,
+          "mean": 123.82000000000001,
+          "median": 123.775,
+          "p90": 125.85,
+          "min": 120.45,
+          "max": 127.68
+        },
+        "cpu_total_percent": {
+          "n": 40,
+          "mean": 64.42,
+          "median": 64.7,
+          "p90": 75.5,
+          "min": 0.0,
+          "max": 76.2
+        },
+        "process_cpu_percent": {
+          "n": 40,
+          "mean": 1212.0375,
+          "median": 1200.4499999999998,
+          "p90": 1465.4,
+          "min": 942.6,
+          "max": 1553.9
+        },
+        "process_rss_gib": {
+          "n": 40,
+          "mean": 3.6929749999999997,
+          "median": 3.693,
+          "p90": 3.693,
+          "min": 3.692,
+          "max": 3.693
+        },
+        "system_ram_used_gib": {
+          "n": 40,
+          "mean": 14.896225000000001,
+          "median": 14.886,
+          "p90": 14.925,
+          "min": 14.865,
+          "max": 15.018
+        },
+        "system_ram_percent": {
+          "n": 40,
+          "mean": 47.475,
+          "median": 47.4,
+          "p90": 47.6,
+          "min": 47.4,
+          "max": 47.9
+        }
+      },
+      "gradient_checkpointing": true,
+      "deterministic_strict": true,
+      "equivalence_status": "bit_equivalent to B0 (task6c5_equivalence_caches.json)",
+      "adopted": false,
+      "rejection_reason": "bit-equivalent and faster (2.913 vs 2.847 samples/s = +2.29%) but inside the ~5% complexity threshold, so the smaller change set B6_skip_grad_norm_instrumentation is preferred",
+      "speedup_percent_vs_B0": 16.24,
+      "bit_equivalent_to_B0": true,
+      "equivalence_gate": "task6c5_equivalence_caches.json"
+    }
+  },
+  "adopted_variant": "B6_skip_grad_norm_instrumentation",
+  "adopted_flags": {
+    "source_cache": false,
+    "preprocessed_cache": false,
+    "pin_memory": false,
+    "non_blocking": false,
+    "prefetch_threads": 0,
+    "skip_grad_norm_instrumentation": true
+  },
+  "speedup_percent_vs_B0": 13.633,
+  "success_category": "OPTIMIZATION_PARTIAL",
+  "decision_note": "value-preserving improvements exist but the gain is below the 20% success gate (+13.63%)",
+  "equivalence_gates": [
+    "task6c5_equivalence.json",
+    "task6c5_equivalence_caches.json"
+  ],
+  "adoption_rule": "adopt only a bit-equivalent flag set whose gain clears ~5%; among those keep the fewest-switch variant unless a more complex one is >5% faster"
+}

@@ -1,688 +1,826 @@
-# TO_DSH — Task 6C: Paired Counterfactual Training × Neutral SAM Prompt Ablation
+# TO_DSH — Task 6C.5: Training Pipeline Throughput Audit & Value-Preserving Optimization
 
 > Status: **ACTIVE**
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: diagnose and fix the Task 6B instruction-conditioning failure **before** any 4B scale-up or `[REF]` work.
+> Purpose: diagnose the observed **CPU≈100% / GPU≈40%** training imbalance and implement **value-preserving training-pipeline optimizations** before continuing algorithm work.
 >
-> Core question:
+> This is a performance-engineering task, not a model-quality task.
 >
-> Did Task 6B fail because the training subset never forced two different instructions on the same image to select two different targets, because the SAM bridge injected a fixed positive centre point, or because both effects interact?
->
-> Task 6C is a controlled **2 × 2 ablation** on the existing 2B stack.
->
-> No 4B. No `[REF]`. No Spatial Relation Encoder. No Spatial Consistency Loss. No full-dataset training.
+> **Do not start Task 6D. Do not change the model architecture, loss, dataset semantics, training subset, optimizer semantics, or effective batch size.**
 
 ## 0. User-facing language
 
-All narrative text shown in the DSH web/chat UI must be **Chinese**.
+All narrative text visible to the user in DSH web/chat must be **Chinese**.
 
-Commands, paths, model IDs, raw logs, code identifiers and metric names may remain English.
+Commands, code, paths, metric names, profiler labels and raw logs may remain English.
 
-`handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md` may remain English.
+`handoff/FROM_DSH.md` / `handoff/PROJECT_STATE.md` may remain English.
 
-# PART A — Fixed project / environment rules
+## 1. Current hardware / motivation
 
-## 1. Reuse the existing Conda environment
+Target machine:
+
+- Windows 11
+- Intel Core Ultra 9 275HX
+- 32 GB RAM
+- RTX 5080 Laptop GPU, ~15.9 GiB VRAM
+- NVMe SSD
+
+Observed by the user during current training:
+
+- GPU utilization often around **40%**
+- CPU utilization often near **100%**
+
+Current Task 6C training loop is visibly serial:
+
+```text
+Sample
+→ PIL image read
+→ Qwen processor / chat construction / tokenizer
+→ CPU tensors
+→ H2D
+→ SAM feature lookup / encode
+→ GPU forward/backward
+→ optimizer
+→ next sample
+```
+
+Task 6C also trains with **real micro-batch = 1** and strict deterministic mode.
+
+Task 6C already improved the SAM2 CPU feature cache to 480 images, with a measured footprint of ~7.5 GiB.
+
+The goal now is to determine exactly where wall time is spent and make the GPU wait less.
+
+## 2. Scope and hard boundaries
+
+### Allowed
+
+You may:
+
+- add profiling/timing utilities;
+- add CPU input caches for deterministic, model-independent data;
+- cache/precompute Qwen preprocessing outputs that are independent of trainable weights;
+- cache source images / GT masks if useful;
+- add pinned-memory support;
+- add non-blocking CPU→GPU copies;
+- add a bounded prefetch/DataLoader implementation if measured useful;
+- benchmark DataLoader worker counts;
+- fix avoidable repeated PIL / tokenizer / processor work;
+- benchmark gradient checkpointing ON vs OFF;
+- benchmark strict deterministic ON vs OFF;
+- improve feature-cache transfer mechanics;
+- implement a faster default pipeline **only if it is output-equivalent under the acceptance tests below**.
+
+### Forbidden
+
+Do not:
+
+- change Qwen3-VL-2B to another model;
+- change SAM2 model;
+- use 4B;
+- add `[REF]`;
+- change the SAM bridge;
+- change LoRA rank/targets;
+- change loss weights;
+- change learning rates;
+- change optimizer;
+- change scheduler;
+- change number/order of optimizer steps;
+- change effective batch size;
+- adopt batch size 2+ in this task;
+- use gradient accumulation to pretend GPU occupancy improved;
+- change BuildSpatialReason data;
+- use test split;
+- modify GT/inference semantics;
+- add Spatial Relation Encoder;
+- add Spatial Consistency Loss;
+- resume model-quality experiments.
+
+**Task 6C.5 must preserve the current batch-1 optimization semantics.**
+
+True batching can be considered later, after this audit.
+
+## 3. UU Accelerator policy — ignore completely
+
+The user explicitly states that **UU is their own currently used accelerator and does not need to be inspected or managed**.
+
+Therefore:
+
+- do not search for UU processes;
+- do not inspect UU state;
+- do not mention UU in routine task output;
+- do not close, stop, modify or diagnose UU;
+- do not treat unrelated hosts entries as a project problem.
+
+Only Watt Toolkit lifecycle matters for DSH-managed networking.
+
+## 4. Watt Toolkit ownership policy
+
+At task start inspect **only Watt Toolkit / Steam++ state**.
+
+### If Watt is already running before DSH starts this task
+
+Record:
+
+`watt_preexisting = true`
+
+Then:
+
+- leave it alone;
+- do not stop it at task end;
+- training still runs offline from local cache;
+- if Git push works, use it without claiming DSH started Watt.
+
+### If Watt is not running
+
+Record:
+
+`watt_preexisting = false`
+
+Keep it off during profiling/training.
+
+If final `git push` needs networking, DSH may use the already verified `FULL_AUTO_OK` lifecycle:
+
+1. launch Watt;
+2. verify its accelerator;
+3. push;
+4. close with `WM_SYSCOMMAND / SC_CLOSE`;
+5. verify Watt processes/listeners/Steam++ hosts block are gone.
+
+Only close Watt if **DSH itself started it during this task**.
+
+Never:
+- force-kill;
+- edit hosts;
+- change certificates;
+- use `verify=False`.
+
+## 5. Reuse current environment / current codebase
 
 Use exactly:
 
 `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp`
 
-Do not create a new environment.
+Use current main after Task 6C.
 
-Do not modify Conda `base`, `yolo_sam_env`, system Python, drivers, CUDA toolkit, WSL, registry, system PATH.
+Current formal training defaults remain:
 
-Task 6C should run from already cached model assets.
+- Qwen3-VL-2B
+- SAM2.1 Base+
+- BF16
+- batch-1 semantics
+- strict deterministic mode
+- Phase-B joint path
 
-## 2. Watt Toolkit network policy — `FULL_AUTO_OK`
+The representative performance workload should use the **Task 6C P_C path** unless profiling shows bridge choice has measurable runtime impact. The bridge difference is not the subject of this task.
 
-The standalone lifecycle test is accepted.
+# PART A — Baseline profiling
 
-Current user settings:
-- `TrayIcon = false`
-- `MinimizeOnStartup = false`
-- `ProgramStartupRunProxy = true`
+## 6. Create a fixed benchmark workload
 
-### Start
+Create a deterministic benchmark set from the existing **Task 6C P training subset**:
 
-Use the proven Microsoft Store launch path:
-
-```powershell
-Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\4651ED44255E.47979655102CE_k6txddmbb6c52!App'
-```
-
-Then verify the Watt main window appears, `Steam++.Accelerator.exe` becomes active, ports 443/80 are owned by the accelerator, Watt's hosts block appears, and the required network operation succeeds.
-
-### Stop
-
-Do **not** use `.NET CloseMainWindow()` / bare `WM_CLOSE`.
-
-Use the tested real window-close action:
-
-```text
-PostMessage(
-    hWnd of window "Watt Toolkit",
-    WM_SYSCOMMAND = 0x0112,
-    SC_CLOSE      = 0xF060,
-    0
-)
-```
-
-After stop verify:
-- no Watt / Steam++ process remains;
-- ports 443/80 and previously swept proxy ports are free;
-- Steam++ hosts block is gone;
-- hosts returns to baseline.
-
-Never use `taskkill /F`, `Stop-Process -Force`, direct hosts edits, certificate-store edits, or TLS `verify=False`.
-
-### Important TLS rule
-
-While Watt is active, Git/WinHTTP works, but Python `certifi` still fails against Watt's TLS interception.
-
-Do not reintroduce the old certificate-injection workaround.
-
-Task 6C itself should run **offline** from `local_cache/`.
-
-Use Watt only for a networking step that actually needs it, especially final `git push`.
-
-# PART B — Correctness fixes before the experiment
-
-## 3. Task 6B causal conclusion is provisional
-
-Task 6B measured:
-- strict e2e val mIoU ≈ 0.11018;
-- paired validation = 0 / 20;
-- projected prompt cosine ≈ 0.999952 on same-image/different-instruction pairs.
-
-But the statement "`[SEG]→prompt` is the only bottleneck and the mask decoder is fine" is not yet fully established because Task 6B had two confounds:
-
-1. its 480 training records came from 480 distinct images — no same-image / different-instruction counterfactual training;
-2. the SAM bridge used a fixed **positive centre point** `(0.5, 0.5)` and then added the projected language vector to that point embedding.
-
-Amend ADR-014:
-- preserve every Task 6B measurement;
-- mark the causal diagnosis as **PROVISIONAL pending Task 6C ablation**;
-- explicitly record these two confounds.
-
-Do not erase Task 6B results.
-
-## 4. Fix reproducibility / bookkeeping defects first
-
-### 4.1 Determinism flag must become real
-
-Implement actual deterministic setup for `training.deterministic`.
-
-At minimum:
-- Python `random` seed;
-- NumPy seed;
-- `torch.manual_seed`;
-- `torch.cuda.manual_seed_all`;
-- `torch.backends.cudnn.benchmark = False`;
-- `torch.backends.cudnn.deterministic = True`;
-- `torch.use_deterministic_algorithms(True)` if the complete path supports it.
-
-Run a tiny 2-sample forward/backward deterministic smoke twice.
-
-If strict deterministic algorithms fail because an operation has no deterministic implementation:
-- record the exact operation/error;
-- use `torch.use_deterministic_algorithms(True, warn_only=True)` as fallback;
-- state clearly that bit reproducibility is not guaranteed.
-
-Do not silently claim determinism.
-
-### 4.2 Checkpoint directory must follow config
-
-Remove Task 6B's hard-coded checkpoint-directory behavior.
-
-Every arm must have a distinct config-driven directory:
-
-```text
-artifacts/checkpoints/task6c/U_C/
-artifacts/checkpoints/task6c/U_L/
-artifacts/checkpoints/task6c/P_C/
-artifacts/checkpoints/task6c/P_L/
-```
-
-No arm may overwrite another. Add regression tests.
-
-### 4.3 Evaluation lookup must not depend on val text
-
-Do not build operation-chain scoring rules from `train + val`.
-
-Build the lookup from:
-- frozen template definitions if practical; otherwise
-- **train split only**.
-
-Validation annotations may provide the expected query type for scoring, but may not extend the accepted wording/operation lookup.
-
-### 4.4 Feature cache
-
-Increase SAM2 CPU feature cache to cover the whole 480-record train subset when memory budget permits.
-
-Target:
-- cache up to 480 images;
-- total cache <= 8 GB;
-- record actual RAM footprint.
-
-This is a speed change only.
-
-# PART C — Two experimental factors
-
-## 5. Factor 1: training-sample structure
-
-### `U` — Unpaired / unique-image training
-
-Use the exact Task 6B training subset:
-- 480 records;
-- 480 unique images;
-- 160 L1;
-- 160 L2;
-- 160 nontrivial L3.
-
-Do not change its sample IDs.
-
-### `P` — Paired counterfactual training
-
-Create a new deterministic 480-record subset:
-- **240 unique images × 2 instructions per image**;
-- every pair must have different target component IDs;
-- every pair must have different query types;
-- no trivial L3.
-
-Construct pairs so record-level level counts are exactly:
-- 160 L1
-- 160 L2
-- 160 nontrivial L3
-
-Preferred exact pair composition:
-- 80 images: one L1 + one L2;
-- 80 images: one L1 + one nontrivial L3;
-- 80 images: one L2 + one nontrivial L3.
-
-This yields exactly 160 records per level.
-
-Within those constraints balance L1 query types, L2 families/references/directions and L3 directions as evenly as practical.
-
-Selection must be deterministic and independent of model results.
-
-If exact 80/80/80 is impossible, prove why from the dataset and choose the nearest feasible deterministic composition; do not silently relax it.
+- 64 records;
+- preferably 32 paired images × 2 instructions;
+- fixed IDs before benchmarking;
+- representative mix of L1/L2/L3;
+- no validation/test data.
 
 Create:
 
-`evaluation/task6c_subset_ids.json`
+`evaluation/task6c5_benchmark_ids.json`
 
-containing both U and P subsets and their audits.
+Use the same record order for every benchmark.
 
-## 6. Factor 2: SAM sparse-prompt bridge
+## 7. Separate cold-start and steady-state performance
 
-### `C` — Current centre-positive bridge
+Do not mix cache construction with steady-state training.
 
-Preserve Task 6B:
+Measure separately:
 
-```text
-fixed point at normalized (0.5, 0.5), label = positive
-    -> SAM prompt encoder point embedding
-    -> add projected [SEG] vector
-    -> SAM mask decoder
-```
+### Cold-start
 
-This is a valid baseline but must no longer be described as "content-free" or "neutral". It is a real positive spatial prior.
+Includes:
 
-### `L` — Language-only sparse token
+- model/runtime load;
+- SAM feature cache population if needed;
+- Qwen preprocessing-cache population if added;
+- input cache memory growth.
 
-Implement a second bridge with **no point prompt at all**:
+### Warm steady-state
 
-```python
-sparse_prompt_embeddings = projected[:, None, :]
-```
+After all intended caches are warm:
 
-subject only to dtype/device/shape expected by vanilla SAM2.
+- run warmup steps first;
+- then measure at least **64 optimization steps**;
+- use the same samples in the same order.
 
-Continue to use the official SAM prompt encoder for:
-- image positional encoding;
-- no-mask dense embedding.
+Primary performance decisions must use **warm steady-state throughput**.
 
-Do not create point coordinates, point labels, boxes, or mask prompts.
+Also report total first-epoch cost separately because it matters in real use.
 
-No GT geometry enters inference.
+## 8. Instrument the existing pipeline before optimizing
 
-Keep `multimask_output=False`, same SAM2 image/high-res features, same decoder.
-
-### Do not add other bridge changes in Task 6C
-
-Do not simultaneously add:
-- prompt normalization;
-- whitening;
-- learned prompt-type tokens;
-- multiple sparse tokens;
-- `[REF]`;
-- geometry supervision;
-- point-inside auxiliary loss.
-
-# PART D — The 2×2 experiment
-
-## 7. Four arms
-
-Run exactly:
-
-| Arm | Train subset | SAM bridge |
-|---|---|---|
-| `U_C` | unpaired 480 unique images | centre-positive |
-| `U_L` | unpaired 480 unique images | language-only |
-| `P_C` | 240 paired images × 2 | centre-positive |
-| `P_L` | 240 paired images × 2 | language-only |
-
-All four share:
-- same Qwen3-VL-2B base snapshot;
-- same SAM2.1 Base+ checkpoint;
-- same tokenizer/vocab and `[SEG]`;
-- same initialization seed;
-- same optimizer recipe;
-- same loss weights;
-- same epoch counts;
-- same validation set;
-- same paired validation probe;
-- same metric code.
-
-The two factors above must be the only intended experimental differences.
-
-## 8. Initialization equality
-
-Every arm starts from clean base, not Task 6A/6B checkpoint.
-
-Before training:
-- fresh LoRA;
-- fresh `[SEG]` trainable token adapter;
-- fresh Projection MLP;
-- original pretrained SAM2 mask decoder.
-
-Use the same random seed.
-
-Compute SHA256/fingerprint over all **initial trainable parameter tensors** before first optimizer step.
-
-All four arms should have the same initial-trainable-state fingerprint.
-
-If not, stop and fix before training.
-
-## 9. Training recipe — fixed, no tuning
-
-Use Task 6B headline recipe, no adjusted-run tuning.
-
-### Phase A
-- 1 epoch;
-- LoRA + `[SEG]` only;
-- LM CE only.
-
-### Phase B
-- maximum **3 epochs**;
-- train LoRA + `[SEG]` + Projection MLP + SAM2 mask decoder;
-- base/vision encoders frozen.
-
-Loss:
+Create a profiling path that measures at minimum:
 
 ```text
-L_total =
-    2.0 * L_lm_ce
-  + 2.0 * L_mask_bce
-  + 1.0 * L_mask_dice
+image_io
+target_mask_io
+qwen_prepare_total
+  ├─ image preprocessing
+  ├─ chat/template + tokenizer where separable
+cpu_to_gpu
+sam_feature_lookup
+sam_feature_encode_on_miss
+qwen_forward
+sam_projection_decode_forward
+loss
+backward
+optimizer_step
+whole_step_wall
 ```
 
-Use same LR groups as corrected Task 6B headline implementation.
+If exact Qwen forward vs SAM forward separation is awkward in backward, use:
 
-No recipe adjustment in Task 6C. This is causal diagnosis, not hyperparameter search.
+1. a small **synchronized stage-profile** run with CUDA events;
+2. a separate **unsynchronized end-to-end throughput** benchmark.
 
-# PART E — Validation
+Do not put `torch.cuda.synchronize()` inside the normal optimized training loop merely for measurement.
 
-## 10. Reuse exact Task 6B validation material
+For GPU-side timings use CUDA events where possible.
 
-Use exactly:
-- 120-record validation subset: 40 L1 + 40 L2 + 40 nontrivial L3;
-- 20 same-image/different-instruction validation pairs.
+For CPU-side timings use a high-resolution monotonic timer.
 
-Do not select a new validation subset. Do not use test.
+## 9. System-utilization sampling
 
-## 11. End-to-end validation
+During each steady-state benchmark record:
 
-For each arm:
+- GPU utilization from `nvidia-smi` or an already-installed NVML binding;
+- GPU VRAM used;
+- GPU power draw if available;
+- CPU total utilization;
+- process CPU utilization;
+- process RSS;
+- system RAM usage;
+- samples/sec;
+- ms/sample.
 
-### Free generation — primary
+Sample utilization periodically (e.g. ~0.2–1.0 s) without installing new monitoring software.
 
-Input only image + instruction.
-
-Then:
-- generate reasoning + `[SEG]`;
-- require exactly one `[SEG]`;
-- re-forward generated sequence;
-- read generated `[SEG]` hidden;
-- project;
-- decode mask.
-
-Invalid `[SEG]` generation scores IoU/Dice = 0.
+Do not trust Windows Task Manager alone.
 
 Report:
-- valid `[SEG]` emission;
-- strict e2e mIoU;
-- strict Dice;
-- conditional mIoU;
-- L1/L2/L3 breakdown;
-- query-family breakdown.
+- mean;
+- median;
+- p90;
+- min/max where useful.
 
-### Teacher-forced
+If `nvidia-smi` sampling itself measurably perturbs the run, quantify it and use a lower sample frequency.
 
-Report same mask metrics with expected reasoning prefix. Diagnostic only.
+# PART B — Optimization candidates
 
-## 12. Paired instruction-dependence remains primary gate
+## 10. Baseline B0
 
-For the same 20 unseen validation pairs:
+Benchmark the current Task 6C path unchanged:
 
-```text
-IoU(pred_A, GT_A) > IoU(pred_A, GT_B)
-IoU(pred_B, GT_B) > IoU(pred_B, GT_A)
+`B0_current`
+
+Conditions:
+
+- batch semantics = 1 sample / optimizer step;
+- strict deterministic ON;
+- gradient checkpointing current value;
+- current 480-image SAM CPU cache;
+- no new Qwen/input cache;
+- normal synchronous `.to(cuda)`.
+
+Record full stage breakdown.
+
+This is the reference.
+
+## 11. Candidate B1 — cache immutable source data
+
+Implement only if measured useful:
+
+- source RGB image caching;
+- target-mask caching.
+
+Rules:
+
+- CPU-only;
+- keyed by immutable sample/image identifiers;
+- no model outputs;
+- no hidden states;
+- no gradients;
+- no inference-time GT leakage — this cache is only training supervision/input I/O acceleration.
+
+Verify cached image/mask arrays are byte-identical to disk-loaded versions on multiple records.
+
+Benchmark:
+
+`B1_source_cache`
+
+## 12. Candidate B2 — cache deterministic Qwen preprocessing
+
+This is likely the highest-value CPU optimization.
+
+The following are fixed for a given training sample and do **not** depend on trainable weights:
+
+- processor-generated image tensors;
+- `input_ids`;
+- `attention_mask`;
+- `labels`;
+- `image_grid_thw`;
+- other deterministic processor tensors;
+- prompt/sequence metadata.
+
+Implement a CPU-side preprocessing cache for the fixed training sample.
+
+Preferred design:
+
+- do **not** cache Qwen hidden states;
+- do **not** cache logits;
+- do **not** cache any trainable-model output;
+- preserve exact `TeacherForcedBatch` semantics;
+- avoid duplicating large image tensors for same-image paired samples if practical;
+- cache may live in RAM, local ignored files, or a hybrid, selected by measured cost.
+
+Before adoption, compare uncached vs cached prepared tensors across at least 16 samples:
+
+- shape identical;
+- dtype identical;
+- exact tensor equality where expected;
+- same `[SEG]` position;
+- same labels;
+- same visual-token count.
+
+Benchmark:
+
+`B2_preprocessed_cache`
+
+Record:
+- cache-build seconds;
+- RAM/disk bytes;
+- cache hit time;
+- first-epoch break-even estimate.
+
+## 13. Candidate B3 — pinned memory + non-blocking H2D
+
+If CPU tensors are cached/prepared, add a safe pinned-memory path.
+
+Potentially add:
+
+```python
+TeacherForcedBatch.pin_memory()
+TeacherForcedBatch.to(device, non_blocking=True)
 ```
 
-Both directions must pass.
+including tensor-valued `extra_inputs`.
 
-If either member fails valid `[SEG]`, pair fails.
+Also support pinned cached target masks / SAM CPU features only if practical.
 
-For every arm report:
-- passed /20;
-- mean own-target IoU;
-- mean cross-target IoU;
-- mean own-minus-cross margin;
-- median own-minus-cross margin;
-- mean IoU(pred_A, pred_B).
+Rules:
 
-# PART F — Prompt-pathway diagnosis
+- no semantic changes;
+- no unsafe lifetime/reuse bugs;
+- no pinning the entire 7.5 GiB SAM cache blindly if Windows/page-lock pressure becomes excessive.
 
-## 13. Diagnose all four arms identically
+Benchmark variants:
 
-Measure on at least:
-- 10 same-image/different-instruction pairs;
-- 10 different-image references.
+- ordinary H2D;
+- pinned + non_blocking.
 
-At each stage:
+Reject if slower or destabilizes RAM.
 
-### `[SEG]` hidden, 2048-d
-Report cosine similarity, L2 distance, vector norm.
+Benchmark:
 
-### Projection output, 256-d
-Report cosine similarity, L2 distance, vector norm, per-dimension std over diagnosis set, mean absolute activation.
+`B3_pinned_nonblocking`
 
-### Final sparse prompt actually passed to SAM
-Report cosine similarity, L2 distance, norm.
+## 14. Candidate B4 — bounded CPU prefetch / DataLoader
 
-For `C`, also report:
-- norm of point-derived prompt embedding before language addition;
-- norm of projected language vector;
-- ratio `||projected|| / ||point_embedding||`.
+Only after B2/B3 are implemented/measured.
 
-For `L`, final sparse prompt should equal projected language token apart from dtype conversion.
+The current training loop consumes one sample synchronously. Test whether a small background input pipeline helps.
 
-### Dataset-level collapse diagnostics
+Because this is Windows and process spawning/pickling large tensors can be expensive, benchmark conservatively:
 
-Over a fixed diagnosis set compute:
-- centered covariance or SVD of projected vectors;
-- top 10 singular values;
-- variance explained by top 1/top 5/top 10;
-- effective-rank metric.
+- worker/prefetch baseline: 0;
+- 2 workers;
+- 4 workers;
+- optionally 8 workers **only if 4 workers is still beneficial and RAM is safe**.
 
-Do not call a representation "constant" solely from cosine if L2/norm variation is substantial.
+Use:
+- `persistent_workers=True` where applicable;
+- bounded `prefetch_factor`;
+- pinned memory only if B3 proved useful.
 
-Use measured terminology such as directional collapse, low-rank collapse, or near-constant direction.
+Do not duplicate the full multi-GiB cache into every worker.
 
-### Mask output
+A thread-based prefetch queue is allowed instead of multiprocessing if it performs better on this Windows workload.
 
-For paired samples report IoU(pred_A, pred_B).
+Choose by measurement, not convention.
 
-# PART G — Interpretation rules
+Benchmark winner as:
 
-## 14. Pre-declare causal interpretation
+`B4_prefetch_best`
 
-- If `P_*` >> `U_*` regardless of bridge: evidence favors **missing counterfactual paired training**.
-- If `*_L` >> `*_C` regardless of sampling: evidence favors the **fixed centre-positive prompt**.
-- If only `P_L` works: evidence favors a strong **interaction**.
-- If none work: problem is deeper in `[SEG]` representation/projection/SAM conditioning; only then consider later normalization, multi-token prompt, auxiliary supervision, or `[REF]`.
-- If all work similarly: Task 6B failure was likely dominated by stochastic/implementation defects; verify reproducibility before architecture claims.
+Record why workers or threads were chosen.
 
-## 15. Task 6C verdict
+## 15. Candidate B5 — gradient checkpointing cost measurement
 
-Use one of:
-- `EXPERIMENT_COMPLETE_FIX_FOUND`
-- `EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`
-- `EXPERIMENT_COMPLETE_NO_FIX`
-- `FAIL_EXPERIMENT_INVALID`
+Current config uses:
 
-`EXPERIMENT_COMPLETE_FIX_FOUND` requires at least one arm:
-- paired validation >= **14/20**;
-- mean own-minus-cross margin > **0.05**;
-- valid `[SEG]` emission >= 90%;
-- strict e2e mIoU >= **0.11**;
-- no GT leakage.
+`gradient_checkpointing: true`
 
-`EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`: no arm clears full gate, but at least one intervention materially improves paired probe or prompt diversity over `U_C`.
+Measure the same steady-state workload with:
 
-`EXPERIMENT_COMPLETE_NO_FIX`: all four remain essentially collapsed / paired probe remains very poor.
+- checkpointing ON;
+- checkpointing OFF.
 
-`FAIL_EXPERIMENT_INVALID`: unequal initialization, overwritten checkpoints, invalid subset, severe nondeterminism, leakage, or mismatched code paths make comparison invalid.
+Do **not** automatically adopt OFF.
 
-# PART H — Language-metric caution
+For OFF record:
+- throughput;
+- GPU utilization;
+- peak allocated/reserved VRAM;
+- output/loss/gradient equivalence;
+- deterministic status.
 
-## 16. Do not claim reasoning from template exact-match
+Adoption rule:
 
-Preserve Task 6B caveat.
+Checkpointing OFF may become the optimized default **only if all hold**:
 
-Reasoning exact match = template/format performance.
+1. peak reserved VRAM < **14.0 GiB**;
+2. no OOM across the full benchmark;
+3. fixed-sample loss/gradient comparison is bit-identical or meets a separately documented strict numerical-equivalence tolerance;
+4. steady-state throughput improves by >= **10%**;
+5. strict deterministic mode still works.
 
-Operation-chain accuracy is useful but still not sufficient evidence of visual reasoning.
+If not, keep checkpointing ON.
 
-**Mask target selection on paired unseen images is the main reasoning evidence.**
+## 16. Determinism cost measurement — measure, do not weaken formal default
 
-Use wording like:
-> language-format / template mapping transfers
+Benchmark:
 
-not:
-> the MLLM has learned spatial reasoning
+- strict deterministic ON;
+- deterministic algorithms OFF while retaining the same seed setup.
 
-unless mask/relation behavior supports it.
+Purpose: quantify the speed tax.
 
-# PART I — Tests and artifacts
+Do **not** change formal experiment default from strict deterministic ON in this task.
 
-## 17. Tests
+If OFF is materially faster, document a possible future **development-only fast mode**, but do not silently use it for paper/ablation results.
 
-Add/regress tests for:
-1. `training.deterministic` is consumed;
-2. deterministic 2-sample smoke repeated twice;
-3. checkpoint path comes from config;
-4. four arms have unique checkpoint dirs;
-5. trainable-state fingerprint equality;
-6. U subset matches Task 6B exactly;
-7. P subset = 480 records / 240 images / 2 records per image;
-8. every P pair has different targets;
-9. every P pair has different query types;
-10. P level counts = 160/160/160 unless feasibility exception is proven;
-11. no trivial L3 in P;
-12. val subset identical to Task 6B;
-13. paired val identical to Task 6B;
-14. operation lookup built without val text;
-15. centre bridge remains Task 6B behavior;
-16. language-only bridge contains no point/box/mask prompt;
-17. language-only sparse tensor shape correct;
-18. no GT geometry in inference;
-19. no `[REF]`;
-20. no 4B.
+No Task 6C.5 headline speed claim may mix deterministic modes.
+
+## 17. Batch-size policy
+
+Do **not** implement or adopt true batch size > 1 in Task 6C.5.
+
+Reason:
+
+- current `TeacherForcedBatch` / `[SEG]` extraction / SAM bridge are written around single-sample semantics;
+- changing optimizer batch semantics would confound performance engineering with algorithmic changes.
+
+At the end, estimate whether remaining GPU headroom justifies a later dedicated batching task.
+
+Gradient accumulation is not a substitute and must not be presented as a GPU-utilization optimization.
+
+# PART C — Equivalence gates
+
+## 18. Value-preserving optimization gate
+
+Before an optimization becomes the new default pipeline, compare baseline vs optimized on a fixed mini-run.
+
+Use:
+
+- same clean initialization;
+- same 8–16 samples;
+- same sample order;
+- same seed;
+- strict deterministic mode;
+- same optimizer states;
+- same training recipe.
+
+For input/pipeline-only changes, require:
+
+- prepared tensors identical;
+- per-step losses bit-identical;
+- gradient fingerprint identical;
+- post-step trainable-parameter fingerprint identical.
+
+If an optimization cannot meet bit identity because of an inherently different valid execution path (e.g. checkpointing OFF), require a **separate explicit numerical-equivalence report** and do not merge it with the bit-equivalent pipeline group.
+
+The safest bit-equivalent winner should become the default.
+
+## 19. Resource safety
+
+System RAM is 32 GB.
+
+During optimization:
+
+- avoid paging/swap;
+- prefer process RSS + cache footprint comfortably below ~24 GiB;
+- stop expanding RAM cache if system commit pressure becomes unsafe.
+
+GPU:
+
+- total ~15.9 GiB;
+- keep normal optimized strict pipeline with adequate safety margin;
+- do not chase 99% GPU utilization at the cost of OOM instability.
+
+No optimization is accepted solely because GPU utilization percentage is higher.
+
+Primary metric is:
+
+> **end-to-end samples/sec at identical training semantics**
+
+Secondary:
+- GPU utilization;
+- CPU utilization;
+- VRAM/RAM;
+- first-epoch cost.
+
+# PART D — Decision logic
+
+## 20. Optimization decision
+
+Select one final optimized batch-1 strict-deterministic pipeline.
+
+Prefer the smallest set of changes that delivers most of the gain.
+
+Example structure:
+
+```text
+B0 current
+→ B2 preprocessed input cache
+→ B3 pinned/nonblocking
+→ B4 bounded prefetch (only if useful)
+→ B5 checkpointing decision
+```
+
+Do not keep complexity that adds <~5% benefit unless it solves a clear bottleneck.
+
+## 21. Success categories
+
+Use exactly one:
+
+- `OPTIMIZATION_SUCCESS`
+- `OPTIMIZATION_PARTIAL`
+- `NO_MEANINGFUL_BOTTLENECK_FIX`
+- `INVALID_BENCHMARK`
+
+### `OPTIMIZATION_SUCCESS`
+
+Require:
+
+- accepted optimized path is value-preserving;
+- no OOM/paging;
+- warm steady-state throughput improves by >= **20%** over B0;
+- or GPU utilization rises >= **15 percentage points** with >=10% throughput gain.
+
+### `OPTIMIZATION_PARTIAL`
+
+Correct/value-preserving improvements exist but gains are below the full gate.
+
+### `NO_MEANINGFUL_BOTTLENECK_FIX`
+
+Measured candidates do not improve throughput materially.
+
+### `INVALID_BENCHMARK`
+
+Use only for invalid comparisons, thermal/power instability so severe results are unusable, mismatched model states, or benchmark instrumentation dominating runtime.
+
+# PART E — Thermal / laptop controls
+
+## 22. Avoid thermal benchmarking mistakes
+
+Because this is a laptop GPU/CPU:
+
+- record GPU temperature if available;
+- record GPU power;
+- keep AC power connected assumption only if observed, otherwise report unknown;
+- allow warmup before measurement;
+- avoid comparing one cold run against one thermally saturated run.
+
+Interleave/repeat baseline and final winner once if practical:
+
+```text
+B0
+optimized
+B0 repeat
+optimized repeat
+```
+
+Use repeat variation to judge benchmark stability.
+
+Do not modify BIOS, fan curves, Windows power plan, undervolt/overclock settings, or OEM utilities.
+
+# PART F — Implementation requirements
+
+## 23. Keep optimization modular
+
+Suggested modules/scripts:
+
+```text
+buildreasonseg_mvp/input_cache.py
+buildreasonseg_mvp/perf.py
+scripts/task6c5_profile.py
+scripts/task6c5_benchmark.py
+configs/mvp/task6c5_throughput.yaml
+```
+
+Names may vary, but avoid embedding profiling hacks permanently inside core model logic.
+
+Profiling must be switchable/off by default.
+
+## 24. Tests
+
+Add tests for at least:
+
+1. source-image cache equality;
+2. target-mask cache equality;
+3. Qwen prepared-batch cache exact equality;
+4. cache does not contain hidden states/logits;
+5. pinned batch preserves tensors;
+6. non-blocking transfer preserves values;
+7. optimized and baseline 8-step loss sequence identical;
+8. optimized and baseline gradient fingerprint identical;
+9. optimized and baseline post-step parameter fingerprint identical;
+10. strict deterministic mode remains enabled for the accepted pipeline;
+11. feature cache remains CPU-resident between accesses;
+12. no cache mutation / VRAM leak regression;
+13. no test split used;
+14. batch semantics remain one sample per optimizer step;
+15. no architecture/loss/optimizer changes;
+16. profiler disabled path has negligible/no semantic impact.
 
 Run:
+
 `python -m pytest tests/ -q`
 
-Report collected/passed/failed/skipped/exit code.
+Do not make ordinary pytest load/download full weights unless the existing test policy already isolates such tests.
 
-Ordinary pytest must not download model weights.
+# PART G — Required artifacts
 
-## 18. Required artifacts
+## 25. Machine-readable outputs
 
 Create:
 
 ```text
-evaluation/task6c_subset_ids.json
-evaluation/task6c_determinism.json
-evaluation/task6c_initialization.json
-
-evaluation/task6c_U_C.json
-evaluation/task6c_U_L.json
-evaluation/task6c_P_C.json
-evaluation/task6c_P_L.json
-
-evaluation/task6c_prompt_U_C.json
-evaluation/task6c_prompt_U_L.json
-evaluation/task6c_prompt_P_C.json
-evaluation/task6c_prompt_P_L.json
-
-evaluation/task6c_comparison.json
-evaluation/task6c_checkpoint_manifest.json
-
-docs/task6c_prompt_ablation.md
+evaluation/task6c5_benchmark_ids.json
+evaluation/task6c5_profile_baseline.json
+evaluation/task6c5_variants.json
+evaluation/task6c5_equivalence.json
+evaluation/task6c5_final_benchmark.json
+evaluation/task6c5_resource_usage.json
 ```
 
-`task6c_comparison.json` must contain:
-- exact factor definitions;
-- initialization fingerprints;
-- subset hashes;
-- all primary metrics;
-- paired metrics;
-- prompt diagnostics;
-- deterministic status;
-- winner/no-winner;
-- causal interpretation under §14;
-- final Task 6C verdict.
+`task6c5_variants.json` must include every tried variant, including slower/rejected ones.
 
-## 19. Visualizations
+For each variant include:
 
-Create compact `evaluation/task6c_samples/`.
+- exact code/config flags;
+- steps measured;
+- warmup steps;
+- seconds;
+- ms/sample;
+- samples/sec;
+- GPU util mean/median/p90;
+- CPU util;
+- process RSS;
+- system RAM;
+- VRAM allocated/reserved peak;
+- GPU temperature/power if available;
+- cache bytes;
+- cold-build time;
+- equivalence status;
+- adopted/rejected;
+- rejection reason.
 
-For at least 4 fixed paired val images show four-arm comparisons:
-- source image;
-- instruction A/B;
-- GT A/B;
-- U_C predictions;
-- U_L predictions;
-- P_C predictions;
-- P_L predictions.
+## 26. Human-readable report
 
-Optionally add one small PCA/singular-value diagnostic figure.
+Create:
 
-Do not overproduce large images.
+`docs/task6c5_training_optimization.md`
 
-# PART J — Documentation / ADR
+It must answer:
 
-## 20. ADR update
+1. What actually caused CPU≈100% / GPU≈40%?
+2. What percentage of step wall time was CPU preparation / H2D / GPU compute?
+3. Which cache/preprocessing changes helped?
+4. Did pinned memory help?
+5. Did workers/prefetch help on Windows?
+6. What did gradient checkpointing cost?
+7. What did strict determinism cost?
+8. What is the final recommended pipeline?
+9. What is the achieved speedup?
+10. What bottleneck remains?
+11. Is true batching likely worth a later task?
 
-Update ADR-014:
-- preserve Task 6B measurements;
-- mark causal diagnosis provisional until Task 6C;
-- record unique-image training confound and fixed positive-centre prompt confound.
+# PART H — Do not touch model-quality conclusions
 
-After Task 6C add ADR-015 containing only what the 2×2 experiment establishes.
+## 27. No Task 6C result reinterpretation
 
-Do not claim `[REF]` novelty, Spatial Relation Encoder success, 4B superiority, or reasoning success beyond evidence.
+Task 6C model findings remain unchanged:
 
-# PART K — Git / Watt finish workflow
+- no arm solved instruction-conditioned segmentation;
+- paired probe remains 0/20;
+- deeper conditioning-interface problem remains unresolved.
 
-## 21. Training/evaluation: Watt OFF
+Task 6C.5 may not claim model-quality improvement because it is not a model-quality experiment.
 
-Keep Watt closed during local training/evaluation.
+Do not rerun Task 6C four-arm results unless needed for a tiny equivalence check.
 
-Use cached Qwen/SAM2 and offline HF/Transformers mode if needed.
+# PART I — Git and Watt
 
-## 22. Final push: Watt may be automated
+## 28. Git hygiene
 
-After tests, artifacts, and local commit are complete:
+Before commit:
 
-If normal `git push` is unavailable/unreliable, DSH is authorized to:
+- no model weights;
+- no checkpoints;
+- no large profiler trace files;
+- no local cache tensors;
+- no `.conda`;
+- no dataset JSONL edits;
+- no test outputs unrelated to this task.
 
-1. start Watt automatically using the proven launch command;
-2. verify acceleration active;
-3. `git push origin main`;
-4. close Watt with `WM_SYSCOMMAND / SC_CLOSE`;
-5. verify processes/listeners/hosts returned to baseline.
-
-Do not leave Watt running after push unless shutdown verification fails.
-
-If shutdown verification fails:
-- do not force-kill;
-- tell the user immediately.
+Large profiler traces remain gitignored.
 
 Recommended commit:
 
-`experiment: isolate prompt conditioning failure`
+`perf: optimize batch-1 training pipeline`
 
-## 23. Git hygiene
+## 29. Final push
 
-Before commit:
-- no model weights staged;
-- no checkpoints staged;
-- no `.conda/`;
-- no `local_cache/`;
-- no feature-cache tensors;
-- no BuildSpatialReason JSONL changed;
-- no test data used;
-- no Watt settings/system files committed.
+Attempt normal push.
 
-Run:
-- full pytest;
-- `python scripts/check_artifact_consistency.py`.
+Apply Watt ownership rule from §4:
 
-# PART L — Handoff
+- pre-existing Watt: use but never close;
+- DSH-started Watt: push then close and verify cleanup;
+- no Watt needed: do nothing.
 
-## 24. `handoff/FROM_DSH.md`
+Ignore UU completely.
 
-Include:
+# 30. Handoff
+
+Update `handoff/FROM_DSH.md` with:
+
 1. Verdict
-2. Correctness Fixes
-3. Determinism Status
-4. Subset Construction
-5. Four Experimental Arms
-6. Initialization Equality
-7. U_C Result
-8. U_L Result
-9. P_C Result
-10. P_L Result
-11. Paired Validation Comparison
-12. Prompt Representation Diagnostics
-13. 2×2 Causal Interpretation
-14. Language Metric Caveat
-15. Runtime / VRAM
+2. Baseline Bottleneck
+3. Benchmark Method
+4. B0 Baseline
+5. Source Cache
+6. Qwen Preprocessing Cache
+7. Pinned / Nonblocking Transfer
+8. Prefetch / Worker Benchmark
+9. Gradient Checkpointing Benchmark
+10. Determinism Cost
+11. Equivalence Proof
+12. Final Optimized Pipeline
+13. Throughput / GPU / CPU Improvement
+14. RAM / VRAM / Thermals
+15. Remaining Bottleneck
 16. Tests
-17. Git / Watt Push Lifecycle
-18. Negative Results
-19. Recommendation for Task 6D
+17. Git / Watt State
+18. Recommendation for next project task
 
-## 25. Final DSH web/chat response — Chinese only
+# 31. Final DSH web response — Chinese only
 
 Report concisely:
-- Task 6C verdict;
-- whether deterministic mode is genuinely active;
-- P subset exact composition;
-- four-arm strict e2e mIoU;
-- four-arm paired pass /20;
-- four-arm own-minus-cross margins;
-- four-arm projected-prompt cosine/effective-rank summary;
-- which factor helped most;
-- whether P_L or another arm clears fix gate;
-- peak VRAM;
-- total runtime;
+
+- Task 6C.5 verdict;
+- baseline samples/sec;
+- optimized samples/sec;
+- speedup percentage;
+- baseline vs optimized GPU utilization;
+- baseline vs optimized CPU utilization;
+- main bottleneck found;
+- optimizations adopted;
+- optimizations rejected;
+- strict determinism cost;
+- checkpointing ON/OFF result;
+- final RAM/VRAM peak;
+- whether semantics are bit-equivalent;
+- tests;
 - commit hash;
-- push success;
-- whether Watt auto-start/auto-close succeeded for push.
+- push result;
+- Watt handling result.
 
-Do not paste full report.
+# 32. STOP
 
-# 26. STOP
+After Task 6C.5:
 
-After Task 6C: **STOP.**
+**STOP.**
 
-Do not download/run 4B, add `[REF]`, implement Spatial Relation Encoder, implement Spatial Consistency Loss, train full 15,592 records, or add external datasets.
+Do not start Task 6D.
+Do not resume model architecture work.
+Do not run 4B.
+Do not add `[REF]`.
+Do not start full training.
 
 Wait for ChatGPT review.

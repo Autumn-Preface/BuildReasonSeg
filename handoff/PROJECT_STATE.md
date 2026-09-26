@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6C._
+_Last updated by DSH at the end of Task 6C.5._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -58,6 +58,7 @@ The block above is machine-checked against
 | 6B | Network cleanup + 2B real mini-train + first generalization audit | done → `FAIL_REQUIRES_DEBUG` |
 | Watt | Standalone Watt Toolkit lifecycle test (3 rounds) | done → `FULL_AUTO_OK` |
 | 6C | **Paired counterfactual training × neutral SAM prompt 2×2 ablation** | **done → `EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`** |
+| 6C.5 | **Batch-1 training-pipeline throughput audit + value-preserving optimization** | **done → `OPTIMIZATION_PARTIAL`** |
 
 ## Task 6C measured results
 
@@ -71,6 +72,53 @@ only the training subset (U/P) and the SAM bridge (C/L) differ. Full detail:
 | `U_L` (language bridge) | 0.10872 | 0.17846 | 120/120 | **0/20** | −0.003530 | 1.491 | 0.9087 |
 | `P_C` (paired data) | 0.10604 | 0.17851 | 120/120 | **0/20** | +0.000007 | **4.100** | **0.5892** |
 | `P_L` (both) | 0.09284 | 0.15626 | 120/120 | **0/20** | −0.000003 | **3.371** | **0.6430** |
+
+## Task 6C.5 measured results
+
+Performance-only task; it changed no model, loss, optimizer, scheduler, data or sample order, and it does not
+reinterpret Task 6C. Full detail: `docs/task6c5_training_optimization.md`,
+`evaluation/task6c5_variants.json`, `evaluation/task6c5_final_benchmark.json`.
+
+| | B0 (current) | Adopted (`skip_grad_norm_instrumentation`) |
+|---|---|---|
+| Throughput (interleaved, 2 rounds, 8 warmup + 64 steps, batch 1) | 2.152 samples/s | **2.373 samples/s → +10.24 %** |
+| Repeat spread | 4.96 % | 0.47 % |
+| GPU utilization | 37.3 % | 37.5 % (unchanged) |
+| CPU utilization | 84.4 % | 92.5 % |
+| Single clean sweep | 2.506 samples/s | 2.847 samples/s (+13.63 %) |
+| Peak RSS / reserved VRAM | 3.30 GiB / 8.64 GiB | 3.29 GiB / 8.64 GiB |
+
+1. **The CPU≈100 % / GPU≈40 % cause is per-operator launch overhead inside Qwen forward and backward, not
+   data preparation.** Synchronized profiling puts `qwen_forward` 50.1 %, `backward` 38.5 %, `optimizer_step`
+   7.7 % against **all host-side preparation ≈2.4 %** (processor 0.76 %, image I/O 0.62 %, SAM feature
+   lookup 0.52 %, target-mask I/O 0.24 %, H2D 0.21 %). The processor costs 2.21 ms/sample against a ≈400 ms
+   step.
+2. **Every data-side candidate was measured and rejected**: source cache −5.80 %, Qwen preprocessing cache
+   −2.92 % (it halves CPU utilization 90 → 56 % and still loses), pinned + non-blocking −12.98 %, prefetch
+   with 2/4/8 threads −5.46/−5.69/−9.31 %. The preprocessing cache is the clean proof that the hypothesis was
+   wrong: CPU utilization is not the binding constraint.
+3. **The adopted change is one switch**: drop the per-step 528-tensor gradient-norm sweep that the Task 6C
+   loop computes and discards. Default stays `collect_grad_norms=True`, so Task 6A/6B and their tests are
+   unaffected. Bit-equivalent gate: prepared tensors (0 mismatches / 16 samples), 12-step losses, gradient
+   fingerprints and post-step parameter fingerprints all identical, baseline control reproducible. A
+   separate refactor control proves the audit's own restructuring of `train_step` (optional stage timers,
+   split `torch.autocast` regions) is value-neutral against the pre-6C.5 step body.
+4. **Rejected caches were still value-preserving.** `source_cache + preprocessed_cache + skip` is also
+   bit-equivalent (second gate artifact) and 2.29 % faster than the adopted variant — inside the benchmark's
+   own 4.96 % spread — so three extra switches were not taken for an unresolvable difference (section 20's
+   ~5 % complexity rule, recorded as `adoption_rule`).
+5. **Gradient checkpointing stays ON** (−8.58 % when off) and **strict determinism stays ON** (the
+   determinism tax is only +1.78 %, well below the gate).
+6. **Remaining bottleneck is batch-1 launch serialization**; data-side work is closed out. Raising arithmetic
+   intensity per launch (batch > 1) is the only evidence-backed lever and is explicitly a different
+   experiment, not a Task 6C.5 optimization.
+7. **Measurement defect found and fixed**: the LoRA adapters' `dropout = 0.05` consumes the global RNG, so an
+   equivalence gate must **re-seed per run** — with a single start-up seed the baseline did not reproduce
+   itself. Any future equivalence claim needs the same per-run re-seeding rule.
+8. **Network / Watt for 6C.5**: the accelerators were **pre-existing** (`watt_preexisting = true`) and were
+   used only to push; nothing was closed, force-killed, or reconfigured, no hosts file was edited and no TLS
+   verification was disabled. The UU accelerator was ignored entirely. The MVP stack stayed offline
+   (`HF_HUB_OFFLINE=1`) throughout.
 
 ## What Task 6C changed in the project's understanding
 
@@ -112,22 +160,29 @@ only the training subset (U/P) and the SAM bridge (C/L) differ. Full detail:
    IoU(pred_A, pred_B) 0.999.
 5. **The best mIoU arm is not the most diverse arm** (`U_L` 0.1087 vs `P_L` 0.0928), so mIoU alone remains
    a misleading selection signal.
+6. **Training throughput is launch-bound at batch 1** (2.373 samples/s after Task 6C.5, +10.24 %,
+   GPU utilization ~37 %). No data-side optimization helps; a batch>1 feasibility task would be needed and
+   is a new experiment, not a perf tweak (see the Task 6C.5 section).
 
 ## Current blockers
 
 **None for the next task to start.** The failure is characterised, the two candidate causes are excluded by
-a valid controlled experiment, and the remaining search space is now narrow and explicit.
+a valid controlled experiment, the throughput question is audited and closed, and the remaining search space
+is narrow and explicit.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6C results**, then **Task 6D aimed after the prompt**:
+**ChatGPT review of the pushed Task 6C.5 results**, then **Task 6D aimed after the prompt**:
 
 1. make the `[SEG]` hidden state instruction-conditional (auxiliary point-inside-the-mask supervision from
    ground-truth geometry used *as supervision only*, or a second explicitly negative prompt slot);
 2. only then test prompt normalisation / whitening and a multi-token prompt, which Task 6C has now earned
    the right to try;
 3. keep the paired instruction-dependence probe as the primary gate and keep the four correctness fixes;
-4. do not scale to 4B and do not add `[REF]` on the strength of anything measured so far.
+4. do not scale to 4B and do not add `[REF]` on the strength of anything measured so far;
+5. do not re-open pipeline caching — it is measured, gated and closed (value-preserving but slower). If
+   throughput becomes blocking again, the only justified lever is a dedicated batch>1 feasibility task.
 
 Full detail: `handoff/FROM_DSH.md`, `docs/task6c_prompt_ablation.md`,
-`evaluation/task6c_comparison.json`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).
+`docs/task6c5_training_optimization.md`, `evaluation/task6c_comparison.json`,
+`evaluation/task6c5_variants.json`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).

@@ -475,18 +475,29 @@ class TeacherForcedBatch:
     visual_tokens: int
     extra_inputs: dict = field(default_factory=dict)
 
-    def to(self, device: str) -> "TeacherForcedBatch":
+    def to(self, device: str, non_blocking: bool = False) -> "TeacherForcedBatch":
+        """Move the batch to `device`.
+
+        `non_blocking=True` is the Task 6C.5 pinned-memory path: it only changes how
+        the copy is issued, never the values. With pinned host memory the copy can
+        overlap with compute; the resulting tensors are identical, which the
+        equivalence gate verifies.
+        """
+
+        def move(tensor):
+            return tensor.to(device, non_blocking=non_blocking)
+
         moved = {
-            "input_ids": self.input_ids.to(device),
-            "attention_mask": self.attention_mask.to(device),
-            "labels": self.labels.to(device),
+            "input_ids": move(self.input_ids),
+            "attention_mask": move(self.attention_mask),
+            "labels": move(self.labels),
         }
         if self.pixel_values is not None:
-            moved["pixel_values"] = self.pixel_values.to(device)
+            moved["pixel_values"] = move(self.pixel_values)
         if self.image_grid_thw is not None:
-            moved["image_grid_thw"] = self.image_grid_thw.to(device)
+            moved["image_grid_thw"] = move(self.image_grid_thw)
         moved["extra_inputs"] = {
-            key: (value.to(device) if torch.is_tensor(value) else value)
+            key: (move(value) if torch.is_tensor(value) else value)
             for key, value in self.extra_inputs.items()
         }
         return TeacherForcedBatch(

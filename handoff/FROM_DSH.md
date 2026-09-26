@@ -1,18 +1,7 @@
-# FROM_DSH — Task 6C Report: Paired Counterfactual Training × Neutral SAM Prompt Ablation
+# FROM_DSH — Task 6C.5 Report: Training Pipeline Throughput Audit & Value-Preserving Optimization
 
-**Date:** 2026-09-26
-**Actor:** DSH
-**Task:** Task 6C (from `handoff/TO_DSH.md`)
-**Verdict: `EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`**
-
-> A valid, bit-reproducible 2×2 on the frozen ADR-013 stack. **No arm clears the fix gate**: all four
-> score **0/20** on the paired unseen validation probe with mean own-minus-cross margins between −0.0035
-> and +0.000007. But paired counterfactual training materially changes the prompt representation
-> (projected effective rank 1.50 → 3.74, top-1 variance 0.905 → 0.616), so the verdict is a partial
-> improvement rather than "no fix".
-
-> The Task 6B report is preserved verbatim in `handoff/ARCHIVE_task6b_report.md`; the Task 6A report is in
-> `handoff/ARCHIVE_task6a_report.md`. This file is the Task 6C report.
+_This file now holds the Task 6C.5 report. The previous Task 6C report is preserved in git history and in
+full detail in `docs/task6c_prompt_ablation.md`, `evaluation/task6c_comparison.json` and ADR-015._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -37,320 +26,318 @@ sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 
 ## 1. Verdict
 
-**`EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`.**
+**`OPTIMIZATION_PARTIAL`.**
 
-The experiment is valid (§6: identical initialization fingerprints, four distinct checkpoint directories,
-valid U/P subsets, no test-split contact, cross-process bit reproducibility). No arm clears the fix gate:
-all four are 0/20 on the paired probe with margins within ±0.0036, and strict end-to-end mIoU runs
-0.0928–0.1087 against a 0.11 bar. Two arms improve materially over `U_C` on the prompt representation:
-`P_C` (effective rank +2.58, top-1 variance −0.313) and `P_L` (+1.85, −0.259).
+One change is adopted and proven value-preserving: **`skip_grad_norm_instrumentation`** — stop computing the
+per-step, per-parameter gradient-norm sweep over 528 tensors that the Task 6C training loop never reads.
 
-The causal reading is `deeper_representation_problem`: neither the sampling scheme nor the fixed centre
-point is the cause, and both were excluded by measurement, not by argument.
-
-## 2. Correctness Fixes
-
-Four Task 6B defects were fixed before any arm ran; each has a regression test.
-
-| Fix | Was | Is |
+| | B0 (current) | Adopted (`B6`) |
 |---|---|---|
-| Determinism | `training.deterministic: true` never consumed; Phase B not reproducible across processes | `build_runtime` → `enable_determinism`: seeds `random`/NumPy/torch/CUDA, `cudnn.benchmark=False`, `cudnn.deterministic=True`, `torch.use_deterministic_algorithms(True)` with `CUBLAS_WORKSPACE_CONFIG=:4096:8`, each setting reported individually |
-| Checkpoint directory | module-level constant `CHECKPOINT_DIR` in `scripts/task6b_train.py`; the adjusted run overwrote the headline run | `cfg["paths"]["checkpoints"] / <ARM>` → four distinct directories; the constant is gone |
-| Evaluation lookup | operation-chain lookup built from `train + val` text | built from the **train split only**; the arm report carries `lookup_audit.val_text_used = false` |
-| Feature cache | 160 images for 480 training images | 480 images, with `image_pe` and the no-mask dense embedding shared once instead of once per image |
+| Throughput (interleaved, 2 rounds) | 2.152 samples/s | **2.373 samples/s** |
+| Speedup | — | **+10.24 %** |
+| Repeat spread | 4.96 % | **0.47 %** |
+| GPU utilization | 37.3 % | 37.5 % |
+| CPU utilization | 84.4 % | 92.5 % |
+| Single clean sweep | 2.506 samples/s | 2.847 samples/s (+13.63 %) |
 
-A fifth defect was found while fixing the fourth: `Sam2FeatureCache` mutated the stored entry when moving
-it to the device, which both leaked 8 MiB of VRAM per cached image and double-counted the constants. The
-cache now builds copies (`dataclasses.replace`) and never mutates what it stores.
+`OPTIMIZATION_PARTIAL` and not `OPTIMIZATION_SUCCESS` because the gain is below section 21's 20 % gate and
+the GPU-utilization route (+15 points) was not met either: GPU utilization does not move, because the added
+speed comes from doing **less CPU work per step**, not from feeding the GPU better.
 
-## 3. Determinism Status
+Every other candidate — source-image cache, Qwen preprocessing cache, pinned/non-blocking transfer, 2/4/8
+prefetch threads, gradient checkpointing off — was **measured and rejected**. Strict deterministic mode
+stays ON and gradient checkpointing stays ON. Nothing in Task 6C's model-quality conclusions is
+reinterpreted.
 
-**Genuinely active, in strict mode, with cross-process bit reproducibility.**
+## 2. Baseline Bottleneck
 
-`evaluation/task6c_determinism.json`: two independent processes ran the same 2-sample forward/backward plus
-one optimizer step with the same seed.
+The observed CPU≈100 % / GPU≈40 % is real, and it is **not** data loading. Synchronized stage profile of the
+unmodified path (`evaluation/task6c5_profile_baseline.json`, 16 samples, 443 ms/sample):
+
+| Stage | Share of step wall |
+|---|---|
+| `qwen_forward` | **50.13 %** |
+| `backward` | **38.47 %** |
+| `optimizer_step` | 7.69 % |
+| `loss` | 1.36 % |
+| `qwen_prepare_total` (processor: image + chat template + tokenizer) | **0.76 %** |
+| `image_io` | 0.62 % |
+| `sam_feature_lookup` | 0.52 % |
+| `target_mask_io` | 0.24 % |
+| `cpu_to_gpu` | **0.21 %** |
+
+**All host-side data work together is ≈2.4 % of the step**; GPU-side stages are ≈97 %. The Qwen processor
+measures **2.21 ms/sample** (image processor 0.90 ms, chat template + tokenizer ≈1.3 ms) against a ≈400 ms
+step. A forward-only split gives `qwen_forward` 142.6 ms against `projection + SAM decode` 12.5 ms.
+
+So the CPU is saturated **inside** the forward and backward passes — Python/ATen dispatch and kernel
+launches for a 2B model at batch 1 — while the GPU drains each kernel quickly and waits for the next
+launch. GPU utilization near 40 % is launch-latency starvation *inside the model call*, and that is
+precisely why every data-side optimization came back neutral or negative.
+
+## 3. Benchmark Method
+
+* **Set** — `evaluation/task6c5_benchmark_ids.json`: 64 records over **32 paired images × 2 instructions**
+  from the Task 6C `P` training subset (11 × L1+L2, 11 × L1+L3, 10 × L2+L3 ⇒ 22 L1 / 21 L2 / 21 L3). Fixed
+  ids, fixed order, **train split only**.
+* **Protocol** — 8 unmeasured warmup steps then **64 measured optimizer steps**, one sample per step, SAM2
+  feature cache warm. All variants restored to the identical initial trainable state with a fresh optimizer,
+  strict deterministic mode, and the seed re-applied per run (see §11).
+* **Instrumentation** — `nvidia-smi` and `psutil` sampled at 0.5 s for GPU util/VRAM/temperature/power, CPU,
+  process RSS and system RAM. Timing harness in `buildreasonseg_mvp/perf.py`; caches in `input_cache.py`;
+  pipeline in `pipeline.py`.
+* **Interleaving** — the quotable comparison is `B0 → optimized → B0 → optimized`, so thermal drift shows
+  up as a spread rather than as an apparent gain.
+* **One invalid sweep, corrected.** The first sweep was contaminated: `EscapeFromTarkov.exe` started at
+  20:40:53 mid-sweep with 10.9 GiB RAM plus GPU. Under that load `B0` measured 1.608 samples/s and two
+  variants showed −22 % / −29 %; the same `B0` measures ≈2.5 samples/s on a quiet machine. The contaminated
+  file is kept gitignored at `artifacts/task6c5_contaminated_variants.json` and no conclusion uses it. The
+  user closed the game; every number here is from the clean re-run.
+* **Honest limitation** — the laptop GPU drifts thermally across a sweep (71 → 84 °C). Single-sweep
+  differences under ~3 % are not resolvable, which is why the final decision rests on the interleaved run
+  and why a 2.29 % difference was not treated as a win (§12).
+
+## 4. B0 Baseline
+
+| Metric | Value |
+|---|---|
+| Throughput, single clean sweep | **2.506 samples/s** (399.1 ms/sample) |
+| Throughput, interleaved mean | **2.152 samples/s** (465 ms/sample; rounds 2.206 / 2.099) |
+| GPU utilization | 41.2 % (sweep) / 37.3 % (interleaved) |
+| CPU utilization | 90.2 % mean, p90 97.4 % |
+| Step wall p50 / p90 | 0.401 s / 0.427 s |
+| Process RSS | 3.30 GiB |
+| Peak VRAM | 7.74 GiB allocated / 8.64 GiB reserved |
+| GPU temperature / power | 76.3 °C / 110.4 W |
+| SAM2 CPU feature cache | 32 images resident (0.508 GiB) during the benchmark |
+
+## 5. Source Cache
+
+`PipelineFlags(source_cache=True)` caches decoded RGB frames and boolean GT masks
+(`buildreasonseg_mvp/input_cache.py`), storing read-only contiguous copies; cache equality is tested.
+
+* **Rejected on throughput: 2.360 samples/s = −5.80 %** versus B0, GPU 39.2 %, CPU 87.6 %, cache 40.0 MiB.
+* The cache is correct — the flag set is bit-equivalent to B0 (`evaluation/task6c5_equivalence_caches.json`)
+  — it simply removes ≈0.6 % of the step (`image_io` + `target_mask_io`) and pays more than that in
+  dictionary bookkeeping and copy-on-read.
+* Cold build 0.58 s.
+
+## 6. Qwen Preprocessing Cache
+
+`PreprocessedCache` memoizes the deterministic Qwen processor output keyed by sample id, bounded at 1024
+entries, and explicitly does not store model outputs (`caches_model_outputs: false`).
+
+* **Rejected on throughput: 2.432 samples/s = −2.92 %** versus B0.
+* It *did* relieve the CPU: utilization fell **90.2 % → 56.3 %**, and RSS rose 3.30 → 3.71 GiB with
+  384.6 MiB of cached tensors. But wall time did not improve, because the work removed was ≈0.76 % of the
+  step. This single result is the clearest demonstration of the section-2 diagnosis: a cache can halve CPU
+  utilization without buying a single sample per second.
+* Equality of cached prepared batches is tested elementwise (ids, `pixel_values`, `extra_inputs`,
+  `[SEG]` position, visual-token count).
+
+## 7. Pinned / Nonblocking Transfer
+
+`pin_batch()` + `TeacherForcedBatch.to(device, non_blocking=True)`.
+
+* **Rejected on throughput: 2.180 samples/s = −12.98 %** versus B0, the worst data-side result.
+* Why: the per-step host payload is small — ≈2.5 MB of `pixel_values` plus a few kB of ids — so page-locking
+  and the extra staging copy cost far more than the copy they overlap. `cpu_to_gpu` was already 0.21 % of the
+  step; pinned memory was optimizing 0.2 %.
+* Value preservation is tested (`tests/test_task6c5_pipeline.py`), so the rejection is purely a throughput
+  result.
+
+## 8. Prefetch / Worker Benchmark
+
+A bounded background preparation pool with 2, 4 and 8 threads, GPU-side work left on the main thread.
+
+| Workers | samples/s | vs B0 |
+|---|---|---|
+| 2 | 2.369 | −5.46 % |
+| 4 | 2.363 | −5.69 % |
+| 8 | 2.272 | −9.31 % |
+
+* **All rejected.** More threads are monotonically worse, so there is no worker count to prefer.
+* `DataLoader` subprocesses were not used: each worker would need its own copy of the multi-GiB SAM2
+  feature cache, which the 24 GiB RSS budget does not allow.
+* The pool must be keyed by **request position**, not by sample id and not FIFO. A FIFO queue silently
+  handed step *i* a different sample's batch (the caller restarts the sequence after warmup), and an earlier
+  sample-id-keyed pool **deadlocked** the benchmark: the bounded buffer stayed full while the consumer asked
+  for a different sample, leaving the GPU idle. Both are correctness failures that would silently corrupt
+  training, and neither bought anything, so prefetching is off.
+* With 8 workers, GPU memory used transiently reached **14 950 MiB of 15 894 MiB** — no OOM, but the
+  headroom that protects the 14 GiB reserved-VRAM rule mostly disappears.
+
+## 9. Gradient Checkpointing Benchmark
+
+`B5_no_gradient_checkpointing`: **2.291 samples/s = −8.58 %** versus B0 (GPU 39.6 %, CPU 86.5 %, RSS
+3.28 GiB, VRAM unchanged at 8.64 GiB reserved).
+
+Turning checkpointing off does not win back recomputation time here, because the step is
+launch-latency-bound rather than compute-bound: removing recomputation removes kernels but not launches.
+It fails section 15 on throughput as well as being a different execution path, so **gradient checkpointing
+stays ON**.
+
+## 10. Determinism Cost
+
+`DET_algorithms_off` (deterministic algorithms disabled, `cudnn.benchmark=True`): 2.550 samples/s = **+1.78 %**
+versus B0 — the strict-determinism tax is ≈1.8 % on this workload, far below the 20 % gate and not worth
+trading away cross-process bit reproducibility.
+
+**The formal experiment default stays strict determinism ON**, and no headline number in this report mixes
+modes: the throughput table's `B0` and `B6` are both strict, and the +10.24 %/+13.63 % figures are strict
+versus strict.
+
+## 11. Equivalence Proof
+
+Two gates were run, both with the same clean initialization, the same 16 prepared samples in the same order,
+the same 12 optimization steps, the same optimizer construction, strict deterministic mode and a per-run
+re-seeded RNG.
+
+| Check | `skip_grad_norm_instrumentation` (adopted) | `source_cache`+`preprocessed_cache`+`skip` (rejected) |
+|---|---|---|
+| Prepared tensors identical | **true** (0 mismatches / 16) | **true** (0 mismatches / 16) |
+| Per-step losses bit-identical | **true** | **true** |
+| Gradient fingerprints identical | **true** | **true** |
+| Post-step parameter fingerprints identical | **true** | **true** |
+| Baseline-vs-baseline control reproducible | **true** | **true** |
+| `bit_equivalent` | **true** | **true** |
+
+Artifacts: `evaluation/task6c5_equivalence.json`, `evaluation/task6c5_equivalence_caches.json`.
+
+**A third control closes the hole the gate cannot see.** The gate's baseline is *this* code with default
+flags, so it proves the adopted switch is neutral but **not** that the audit's own restructuring of
+`train_step` was. That restructuring wrapped the stages in optional timers, split one `torch.autocast`
+region into two, and made the gradient-norm sweep optional. `scripts/task6c5_refactor_control.py`
+reconstructs the pre-Task-6C.5 step body verbatim (one autocast region around forward + supervision + loss,
+unconditional gradient norms, no timers) and compares it against the current default path over 4 real
+samples with the same initialization, order, per-run seed and strict determinism:
 
 | Check | Result |
 |---|---|
-| `torch.use_deterministic_algorithms(True)` accepted | **yes** (no non-deterministic operation on the path) |
-| `warn_only` fallback needed | **no** |
-| `CUBLAS_WORKSPACE_CONFIG` | `:4096:8` |
-| losses identical | **yes** |
-| gradient digests identical | **yes** |
-| post-step trainable-state digests identical | **yes** |
-| `cross_process_bit_reproducible` | **true** |
-| `bit_reproducibility_claimed` | **true** |
+| Losses identical | **true** |
+| Gradient fingerprints identical | **true** |
+| Post-step parameter fingerprints identical | **true** |
+| `refactor_value_neutral` | **true** |
 
-An independent confirmation: the `U_C` arm was run once before the cache change and once after, and both
-executions produced **bit-identical** metrics (strict e2e mIoU 0.10515983039163602, Dice 0.1735980396815246,
-LM CE 0.003345464280168168, paired margin −8.79e-07). The cache change is therefore provably
-value-preserving, not merely assumed to be.
+Artifact: `evaluation/task6c5_refactor_control.json`. Without this control, "value-preserving" would rest on
+an argument about autocast policy being stateless; with it, the claim is measured.
 
-## 4. Subset Construction
+**A methodological defect found and fixed by the gate.** The gate first reported the optimized path as
+non-equivalent while the prepared tensors matched and the first loss was identical. A control run — the
+baseline against itself — failed the same way, which located the cause: the LoRA adapters carry
+`dropout = 0.05`, so every forward consumes the global RNG; with the seed applied only once at process
+start, two runs *in the same process* see different dropout masks. "Same seed" has to mean per run. This is
+recorded in the artifact because it is exactly the kind of thing that makes an equivalence claim look
+stronger than it is.
 
-`evaluation/task6c_subset_ids.json`. Both subsets come from the **train** split; `test_split_used: false`.
+## 12. Final Optimized Pipeline
 
-**U** — Task 6B's exact 480 sample ids, unchanged: 480 records over 480 unique images, 160/160/160.
+One switch, nothing else:
 
-**P** — 480 records over **240 unique images × 2 instructions**, 2 records per image, built deterministically:
+```yaml
+throughput:
+  pipeline:
+    skip_grad_norm_instrumentation: true
+```
 
-* composition **80 × (L1+L2) + 80 × (L1+L3nt) + 80 × (L2+L3nt)** → exactly **160 L1 + 160 L2 + 160 L3**;
-* every pair has **different target components** and **different query types** (240/240 both);
-* **no trivial L3** (160 nontrivial);
-* the preferred 80/80/80 split was **feasible exactly** — the train split offers 1454 eligible images for
-  L1+L2, 754 for L1+L3 and 618 for L2+L3 — so no relaxation was needed and none was made;
-* query types are balanced: L1-side 26–28 per type, L2-side 16 across the two L2 buckets, L3-side 20 per
-  direction.
+`runtime.train_step(..., collect_grad_norms=False)` skips the 528-tensor gradient-norm sweep. The default
+remains `collect_grad_norms=True`, so Task 6A/6B scripts and `tests/test_task6a_bridge.py` are unchanged;
+only the Task 6C loop, which discards `result["grad_norms"]`, is affected. Recorded in
+`configs/mvp/task6c5_throughput.yaml` together with the rejected flags and why.
 
-Selection orders candidates by query type, image id and sample id and, at each of the 240 slots, takes the
-candidate whose query-type usage is smallest; no model output participates. Rebuilding twice gives
-identical ids.
+**Adoption rule applied** (in `evaluation/task6c5_variants.json` under `adoption_rule`): adopt only a
+bit-equivalent flag set whose gain clears ~5 %, and among those keep the fewest-switch variant unless a more
+complex one is more than 5 % faster. This is what decided `B6` over `B9`: `B9` (both caches + skip) is also
+bit-equivalent and measured 2.913 samples/s, **+2.29 % over `B6`** — inside the benchmark's own run-to-run
+spread and inside section 20's complexity threshold — so three extra switches, two memory bounds and a
+staleness surface were not taken for an unresolvable difference.
 
-Validation material is Task 6B's verbatim: the same 120 records (40/40/40) and the same 20 paired images.
+## 13. Throughput / GPU / CPU Improvement
 
-## 5. Four Experimental Arms
+Interleaved, same rounds, same machine, quiet system:
 
-| Arm | Subset | Bridge | Definition |
+| | B0 | Adopted | Change |
 |---|---|---|---|
-| `U_C` | U | centre | Task 6B behaviour: fixed point (0.5, 0.5), positive label, projected vector added |
-| `U_L` | U | language | `sparse_prompt_embeddings = projected[:, None, :]`; no point, box or mask prompt |
-| `P_C` | P | centre | as `U_C` but paired counterfactual data |
-| `P_L` | P | language | as `U_L` but paired counterfactual data |
+| samples/s (mean of 2 rounds) | 2.152 | **2.373** | **+10.24 %** |
+| ms/sample | 465 | 421 | −9.3 % |
+| relative spread | 4.96 % | **0.47 %** | — |
+| GPU utilization | 37.3 % | 37.5 % | +0.2 points |
+| CPU utilization | 84.4 % | 92.5 % | higher, because more steps complete per second |
+| Single clean sweep | 2.506 | 2.847 | +13.63 % |
 
-Shared: Qwen3-VL-2B snapshot `89644892e4d85e24eaac8bacfd4f463576704203`, SAM2.1 Base+ checkpoint, tokenizer
-and `[SEG]` id 151669, seed 20260926, Phase A 1 epoch (480 steps, LoRA + `[SEG]`, LM CE only), Phase B
-3 epochs (1440 steps, LoRA + `[SEG]` + Projection MLP + SAM2 mask decoder), loss
-`2.0·L_lm_ce + 2.0·L_mask_bce + 1.0·L_mask_dice`, LoRA 1e-4 / token 3e-4 / decoder 3e-4, warmup 20, cosine,
-grad clip 1.0, supervision at 512×512, `multimask_output=False`. No per-epoch selection and no tuning.
+The honest summary: **throughput ≈ +10 %, GPU utilization unchanged**. The gain is real, reproducible
+(spread 0.47 % across rounds) and bit-equivalent, but it is a CPU-side saving, not a GPU-feeding fix.
 
-The `L` bridge leaves the official prompt encoder in charge of the image positional encoding and the
-no-mask dense embedding (both produced inside `Sam2Encoder.encode`); it simply creates no point
-coordinates, no point labels, no boxes and no mask prompt. The measured sparse-prompt shape is `(1, 1, 256)`
-for `L` and `(1, 2, 256)` for `C`, because SAM's prompt encoder appends its own padding slot in the `C`
-path. That difference is recorded rather than hidden.
+## 14. RAM / VRAM / Thermals
 
-## 6. Initialization Equality
-
-Every arm starts from a clean base (fresh LoRA, fresh `[SEG]` adapter, fresh Projection MLP, original SAM2
-mask decoder). Before the first optimizer step each arm hashes every trainable tensor:
-
-| Arm | initial trainable SHA-256 | tensors | parameters |
+| | B0 | Adopted | Limit |
 |---|---|---|---|
-| `U_C` | `97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf` | 528 | 24,010,309 |
-| `U_L` | identical | 528 | 24,010,309 |
-| `P_C` | identical | 528 | 24,010,309 |
-| `P_L` | identical | 528 | 24,010,309 |
+| Process RSS (peak, over all variants) | 3.30 GiB | 3.73 GiB | 24 GiB |
+| Peak reserved VRAM | 8.64 GiB | 8.64 GiB (7.74 GiB allocated) | 14 GiB |
+| GPU temperature during sweeps | 71–84 °C | | |
+| GPU power | 108–124 W | | |
+| Paging / OOM | none | none | |
 
-Checkpoint directories are distinct: `artifacts/checkpoints/task6c/{U_C,U_L,P_C,P_L}/`. No arm can
-overwrite another.
+Peak RSS across the whole sweep was **3.73 GiB** (the cache variants), peak reserved VRAM **8.65 GiB**
+(`B4_4`). The system was on AC power and no BIOS, fan curve, power plan, undervolt or OEM setting was
+touched. Note that the *benchmark* is short: the full-training SAM2 cache is 480 images / 7.508 GiB and is
+unmodified from Task 6C, so the training-time RSS figure remains the Task 6C one.
 
-## 7. U_C Result — the Task 6B baseline arm
+## 15. Remaining Bottleneck
 
-| Metric | Value |
-|---|---|
-| valid `[SEG]` emission | 1.000 (120/120) |
-| strict e2e mIoU / Dice | 0.10516 / 0.17360 |
-| conditional mIoU | 0.10516 |
-| teacher-forced mIoU | 0.10516 |
-| operation-chain accuracy | 0.983 |
-| val LM CE | 0.00335 |
-| L1 / L2 / nontrivial L3 | 0.1231 / 0.1117 / 0.0807 |
-| **paired** | **0/20**, own 0.13149, cross 0.13149, margin −0.000001, IoU(pred_A,pred_B) 0.99971 |
-| projected cosine (same image) / effective rank | 0.999997 / 1.516 |
+The step is a **serial CPU-launch-bound chain at batch 1**: `qwen_forward` 50 % + `backward` 38 % + optimizer
+8 %, with the CPU at ~90–100 % and the GPU idle between small kernels at ~40 % utilization. Data
+preparation is not the problem (≈2.4 %), which is why the entire cache/prefetch/pinning family regressed.
 
-This reproduces Task 6B's failure with three fixed epochs instead of Task 6B's best epoch, i.e. the collapse
-is not an artefact of Task 6B's epoch selection or of its missing determinism.
-
-## 8. U_L Result — language-only bridge on the same data
-
-| Metric | Value |
-|---|---|
-| valid `[SEG]` emission | 1.000 |
-| strict e2e mIoU / Dice | **0.10872** / 0.17846 |
-| operation-chain accuracy | 0.808 |
-| val LM CE | 0.04900 |
-| L1 / L2 / nontrivial L3 | 0.1213 / 0.1171 / 0.0878 |
-| **paired** | **0/20**, own 0.12833, cross 0.13186, margin **−0.003530**, IoU(pred_A,pred_B) 0.97903 |
-| projected cosine / effective rank | 0.999909 / 1.491 |
-
-Removing the fixed centre point slightly raises mIoU and makes the decoded masks a little more variable
-(prediction-to-prediction IoU 0.9997 → 0.9790), but the paired probe stays at zero and the mean margin is
-slightly *negative* — the prediction matches the other target marginally better than its own. Instruction
-conditioning does not appear.
-
-## 9. P_C Result — paired data, centre bridge
-
-| Metric | Value |
-|---|---|
-| valid `[SEG]` emission | 1.000 |
-| strict e2e mIoU / Dice | 0.10604 / 0.17851 |
-| operation-chain accuracy | 1.000 |
-| val LM CE | 0.00000 |
-| L1 / L2 / nontrivial L3 | 0.1144 / 0.1227 / 0.0810 |
-| **paired** | **0/20**, own 0.13475, cross 0.13474, margin +0.000007, IoU(pred_A,pred_B) 0.99945 |
-| projected cosine / **effective rank** | 0.999996 / **4.100** (top-1 variance 0.589, was 0.902) |
-
-The representation is materially more diverse than `U_C` while the mask-level behaviour is unchanged: the
-projection spreads across more dimensions but two instructions on one image still produce the same mask.
-
-## 10. P_L Result — paired data, language-only bridge
-
-| Metric | Value |
-|---|---|
-| valid `[SEG]` emission | 1.000 |
-| strict e2e mIoU / Dice | **0.09284** / 0.15626 |
-| operation-chain accuracy | 1.000 |
-| val LM CE | 0.00000 |
-| L1 / L2 / nontrivial L3 | 0.1005 / 0.1018 / 0.0763 |
-| **paired** | **0/20**, own 0.12374, cross 0.12375, margin −0.000003, IoU(pred_A,pred_B) 0.99972 |
-| projected cosine / **effective rank** | 0.999999 / **3.371** (top-1 variance 0.643) |
-
-The combination of both interventions is the worst arm on mIoU (0.0928) while also improving the
-representation. More prompt diversity did not translate into mask quality or conditioning.
-
-## 11. Paired Validation Comparison
-
-| Arm | passed | own IoU | cross IoU | mean margin | median margin | mean IoU(pred_A, pred_B) |
-|---|---|---|---|---|---|---|
-| `U_C` | 0/20 | 0.13149 | 0.13149 | −0.000001 | 0.000000 | 0.99971 |
-| `U_L` | 0/20 | 0.12833 | 0.13186 | −0.003530 | 0.000000 | 0.97903 |
-| `P_C` | 0/20 | 0.13475 | 0.13474 | +0.000007 | 0.000000 | 0.99945 |
-| `P_L` | 0/20 | 0.12374 | 0.12375 | −0.000003 | 0.000000 | 0.99972 |
-
-The gate needs ≥ 14/20 and a mean margin > 0.05. Every arm is 0/20 and every margin is within ±0.0036 of
-zero; the median margin is exactly 0.0 in all four arms. The best individual pair margin anywhere in the
-480 pair-evaluations is +0.0002.
-
-## 12. Prompt Representation Diagnostics
-
-Ten same-image pairs and ten cross-image references per arm, teacher-forced, identical code path.
-
-| Arm | `[SEG]` hidden cos (same img) | projected cos (same img) | sparse-prompt cos | prediction IoU (A vs B) | top-1 var. | top-5 var. | effective rank |
-|---|---|---|---|---|---|---|---|
-| `U_C` | 0.99238 | 0.999997 | 0.999997 | 0.9999 | 0.9023 | 0.9959 | 1.516 |
-| `U_L` | 0.98976 | 0.999909 | 0.999909 | 0.9595 | 0.9087 | 0.9952 | 1.491 |
-| `P_C` | 0.99719 | 0.999996 | 0.999996 | 0.9993 | **0.5892** | 0.9109 | **4.100** |
-| `P_L` | 0.99898 | 0.999999 | 0.999999 | 0.9999 | **0.6430** | 0.9512 | **3.371** |
-
-* Wording used: **directional collapse / low-rank collapse / near-constant direction** — not "constant".
-  The directions are nearly identical while the norms and L2 distances still vary, and the effective rank
-  is non-zero (1.5–4.1).
-* Factor effects: sampling **material** (effective rank +2.23, top-1 variance −0.289, both beyond the
-  pre-declared thresholds), bridge **not material** (rank −0.377, top-1 +0.030).
-* Bridge-specific: for `C`, the point embedding norm is 11.39 and the projected language norm 266.8, a
-  ratio of **23.4×** (`P_C` 18.3×) — the language vector dominates the sparse prompt by an order of
-  magnitude. For `L`, the sparse prompt equals the projected token exactly
-  (`sparse_prompt_equals_projected_all = true`).
-
-## 13. 2×2 Causal Interpretation
-
-Pre-declared rule: a factor is materially better when the mean paired passed count improves by ≥ 3 or the
-mean margin by ≥ 0.05.
-
-| Comparison | Paired passed | Mean margin | Representation diversity |
-|---|---|---|---|
-| **P vs U** | 0.0 vs 0.0 | +0.000002 vs −0.001765 | **material** (rank 3.74 vs 1.50, top-1 0.616 vs 0.905) |
-| **L vs C** | 0.0 vs 0.0 | −0.001766 vs +0.000003 | not material (rank 2.43 vs 2.81, top-1 0.776 vs 0.746) |
-
-**Code: `deeper_representation_problem`.** Because neither factor moves the paired probe while the factors
-do move the representation, the failure is not fixed by paired counterfactual sampling nor by removing the
-fixed positive centre point. The sampling scheme and the point prior are both excluded; what remains is how
-the `[SEG]` hidden state is formed and how SAM's decoder turns a prompt direction into a region. Prompt
-normalisation, a multi-token prompt, auxiliary point supervision or `[REF]` are justified now — and were
-not before.
-
-An important supporting measurement: the Task 6B bridge's fixed point is *not* drowning the language
-signal (ratio 23.4× in language's favour), so "the centre point overrides the language vector" is not
-supported. The mask stays put even when the language vector is essentially the whole prompt.
-
-## 14. Language Metric Caveat
-
-Unchanged and repeated deliberately: `reasoning_zh` is template-generated (21 distinct strings in the whole
-training mini-set), so reasoning exact match and operation-chain accuracy measure **language-format /
-template mapping**, not reasoning. All four arms emit exactly one `[SEG]` on 120/120 unseen records and
-`P_C`/`P_L` reach 1.000 operation-chain accuracy while their masks remain instruction-independent — which is
-precisely why the paired mask probe, not the text metrics, is the reasoning evidence here.
-
-## 15. Runtime / VRAM
-
-| | Value |
-|---|---|
-| Optimisation per arm | 1141–1256 s (Phase A ≈ 168 s; Phase B ≈ 1000 s over three epochs) |
-| Wall clock per arm | ≈ 35–37 min including model load, three teacher-forced epochs, the final free-generation pass, the paired probe and the diagnosis |
-| Peak VRAM | 5.37 GiB allocated / **8.42 GiB reserved** of 15.894 GiB — identical across all four arms |
-| SAM2 CPU feature cache | U arms 480 images = **7.508 GiB** (16 MiB per image + 8 MiB shared constants); P arms 240 images = 5.805 GiB. Within the 8 GiB budget in GiB terms; 8.06 GB in decimal units, stated rather than rounded down |
-| Cache sharing | enables the whole 480-image subset to fit; without it the same run measured 11.25 GiB |
+That leaves exactly one evidence-backed lever: **true batching**, which raises arithmetic intensity per
+launch instead of shaving a host-side fraction. It is explicitly out of Task 6C.5's scope — section 17
+forbids batch > 1 and gradient accumulation here, and an effective batch change is a different experiment
+that needs its own authorization, its own equivalence story and a VRAM budget check. It should not be
+smuggled in as a "performance" change.
 
 ## 16. Tests
 
-Task 6C adds three test files covering all twenty items of the section 17 list:
+`python -m pytest tests/ -q` → **213 passed**, 31 warnings, 473.52 s (7:53).
 
-| File | Items | Result |
-|---|---|---|
-| `tests/test_task6c_fixes.py` | 1, 2, 3, 4, 5 + cache budget and cache-sharing correctness | 8/8 |
-| `tests/test_task6c_subsets.py` | 6, 7, 8, 9, 10, 11, 12, 13 | 8/8 |
-| `tests/test_task6c_bridge.py` | 14, 15, 16, 17, 18, 19, 20 | 8/8 |
+The 16 section-24 items are covered by the 12 model-backed test functions in
+`tests/test_task6c5_pipeline.py` (220 s on its own; several functions cover two items each): source-image
+cache equality, target-mask cache equality, prepared-batch cache exact equality, no hidden states/logits in
+caches, pinned batch preserves tensors, non-blocking transfer preserves values, identical 8-step loss
+sequence, identical gradient fingerprints, identical post-step parameter fingerprints, strict determinism
+still enabled for the accepted pipeline, feature cache remains CPU-resident, cache footprints bounded, no
+cache mutation / VRAM leak, no test split used, batch semantics one sample per optimizer step, no
+architecture/loss/optimizer change, and a profiler-off path with no semantic impact.
 
-Full-suite collected / passed / failed / skipped / exit code are reported in the final DSH response.
+`scripts/task6c5_refactor_control.py` adds the cross-version control described in §11; it is a control
+artifact rather than a pytest case because it needs the real weights.
 
-## 17. Git / Watt Push Lifecycle
+## 17. Git / Watt State
 
-**What actually happened, including a process miss.** Task 6C intended to keep Watt Toolkit closed for the
-whole training and evaluation phase. It was **not** closed: Watt Toolkit (`Steam++.exe`) was already running
-when this task began, with its start time recorded as **14:16:23** — before the first command of the task —
-and `Steam++.Accelerator.exe` held `:443`/`:80` throughout the 15:16–17:40 training window. DSH did not
-verify the accelerator state at the start of Task 6C (it had been verified at the end of the preceding
-lifecycle test) and did not notice until the final state check. The miss is recorded rather than papered
-over.
+* Working tree committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`; commit message
+  `perf: optimize batch-1 training pipeline`. The exact hash and the push result are recorded in the
+  follow-up `docs:` commit and in the DSH turn response.
+* Artifacts: `evaluation/task6c5_benchmark_ids.json`, `task6c5_profile_baseline.json`,
+  `task6c5_variants.json`, `task6c5_equivalence.json`, `task6c5_equivalence_caches.json`,
+  `task6c5_refactor_control.json`, `task6c5_final_benchmark.json`, `task6c5_resource_usage.json`; report
+  `docs/task6c5_training_optimization.md`. No weights, no checkpoints, no `.conda`, no dataset edits, no
+  profiler traces; the contaminated sweep stays gitignored under `artifacts/`.
+* **Watt Toolkit: `watt_preexisting = true`.** `Steam++.exe` was already running before this task started
+  (since 14:16:23, with `Steam++.Accelerator.exe` on :443/:80 and its hosts block present). Per section 4
+  it was **used for the push and left running** — DSH did not start it, so DSH did not close it, and it was
+  never force-killed, no hosts file was edited and no certificate or TLS setting was changed.
+* **UU was ignored completely** — not searched for, not inspected, not mentioned as a project problem.
 
-**Why the measurements are still sound.** Every Task 6C entry point sets `HF_HUB_OFFLINE=1` and
-`TRANSFORMERS_OFFLINE=1` and loads Qwen and SAM2 from `local_cache/`; the determinism, subset, training,
-comparison and visualization scripts make **no network calls at all**. The hosts redirection therefore
-changed DNS resolution for four host names and touched nothing the runs read. What cannot be claimed is a
-pristine network environment during training.
+## 18. Recommendation for next project task
 
-**The push.** `git push origin main` succeeded on the **first attempt** (`3bd7341..c80169b`), with no need to
-use the `FULL_AUTO_OK` start procedure. Because the hosts file redirects `github.com` to `127.0.0.1` while
-Watt is active, that push was most likely carried by Watt's acceleration rather than by a direct
-connection, so this round does **not** demonstrate that a push succeeds with the accelerator off. The
-confirmed check afterwards: `github.com`, `api.github.com` and `huggingface.co` all resolve to `127.0.0.1`,
-and `git ls-remote origin` returns the pushed commit.
-
-**Nothing was stopped.** At the time of the final check `uu_launcher.exe` had just been started (18:03:00)
-and had rewritten the hosts file (18:03:27), so the accelerators appeared to be in active use by the user.
-DSH therefore did **not** close Watt Toolkit and did not touch the hosts file: the task's Watt authorization
-covers starting and closing an accelerator that DSH itself started for the push, and that did not happen.
-The machine is left with Watt Toolkit running and the hosts file carrying both the `#uu_acc` and
-`# Steam++` blocks; the user has been told. `taskkill /F`, `Stop-Process -Force`, hosts edits,
-certificate-store edits and `verify=False` were never used.
-
-## 18. Negative Results
-
-1. **Paired counterfactual training does not create instruction conditioning.** `P_C` 0/20, `P_L` 0/20,
-   margins ≈ 0. The most natural explanation of Task 6B's failure is therefore not the sampling scheme.
-2. **Removing the fixed positive centre point does not fix it.** `U_L` 0/20 with a slightly *negative*
-   margin; the L-vs-C diversity difference is below the pre-declared threshold.
-3. **Neither does the combination.** `P_L` is the worst arm on strict mIoU (0.0928).
-4. **More prompt diversity did not become mask diversity.** `P_C`/`P_L` raise the projected effective rank
-   to 3.4–4.1 while IoU(pred_A, pred_B) stays at 0.999.
-5. **The centre point is not the culprit by magnitude.** Ratio 23.4× in favour of the language vector.
-6. **Task 6B's defect list was longer than reported**: `training.deterministic` was dead, the checkpoint
-   directory was hard-coded, the operation lookup saw val text, and the feature cache both thrashed and —
-   after the first fix — leaked VRAM by mutating stored entries. All are fixed and tested.
-
-## 19. Recommendation for Task 6D
-
-The remaining problem is after the prompt, so Task 6D should target it rather than model scale:
-
-1. **Make the `[SEG]` hidden state instruction-conditional before it reaches the projection.** Candidates:
-   supervise the prompt against the target region (a point-inside-the-mask auxiliary loss built from
-   ground-truth geometry as *supervision only*), or add a second, explicitly *negative* prompt slot so the
-   decoder has something to contrast.
-2. **Then test prompt conditioning directly.** Normalisation/whitening of the 256-d prompt and a
-   multi-token prompt are now justified, because §13 excluded the two cheaper explanations.
-3. **Keep the paired probe as the primary gate** and keep the four Task 6C correctness fixes; without
-   determinism and per-arm checkpoints, a four-arm comparison is not interpretable.
-4. **Do not scale to 4B yet.** Nothing measured here suggests more parameters would make an
-   instruction-independent prompt instruction-conditional.
-5. **`[REF]` remains future work** and is still prior art; the novelty claim stays with the relation-level
-   encoder and loss, which Task 6D still does not touch.
+1. **Do not repeat the caching work.** It is now measured, gated and closed: the caches are
+   value-preserving and *slower*; the CPU-preparation hypothesis is dead (≈2.4 % of the step).
+2. **If throughput matters again, the only justified next step is a dedicated batch>1 feasibility task** —
+   measure VRAM headroom at batch 2/4 with gradient checkpointing ON, decide the equivalence story for a
+   changed effective batch, and treat it as a new experiment rather than a perf tweak. It is not authorized
+   by Task 6C.5.
+3. **Return to the real blocker.** Task 6C's model-quality position is unchanged: no arm solved
+   instruction-conditioned segmentation, the paired probe is 0/20, and the problem is after the prompt.
+   The throughput work does not change that, and no performance number may be used to argue model quality.
+4. **Keep the fixed measurement assets.** The fixed 64-record benchmark set, the interleaved protocol, the
+   per-run re-seeding rule and the `B0 → candidate` comparison are reusable and should be the default for
+   any future pipeline claim.
