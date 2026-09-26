@@ -260,6 +260,48 @@ class MvpRuntime:
             return self.feature_cache.get(sample.image_id, image)
         return self.sam_encoder.encode(image), False
 
+    # -- Task 6C.7: frozen Qwen visual-feature cache ---------------------
+
+    def set_visual_cache_key(self, key: str | None) -> None:
+        """Identify the source image for the visual-feature cache.
+
+        Task 6C.7 section 8 keys the cache by immutable source-image identity, so two
+        instructions on one image share one entry. When no key is set the cache falls
+        back to a content hash of the processed pixels, which is always correct and
+        simply costs one hash instead of nothing.
+        """
+
+        self.visual_cache_key = key
+
+    def install_visual_cache(self, enabled: bool = True, max_images: int = 512) -> dict:
+        """Install the bounded CPU cache over the frozen Qwen visual tower.
+
+        The wrapper is installed on this runtime's own Qwen module and stores only
+        `pooler_output` and `deepstack_features` — the two things `Qwen3VLModel.forward`
+        reads from the visual tower, both produced exclusively by frozen parameters. No
+        language-model hidden state, `[SEG]` state or logit is cached.
+        """
+
+        from .visual_cache import VisualFeatureCache, install_visual_feature_cache
+
+        self.visual_cache = VisualFeatureCache(max_images=max_images, enabled=enabled)
+        self.visual_cache_key = None
+        report = install_visual_feature_cache(
+            self.model.qwen,
+            self.visual_cache,
+            key_provider=lambda: getattr(self, "visual_cache_key", None),
+        )
+        report["max_images"] = max_images
+        report["enabled"] = enabled
+        self.reports["visual_cache"] = report
+        return report
+
+    def visual_cache_stats(self) -> dict:
+        cache = getattr(self, "visual_cache", None)
+        if cache is None:
+            return {"enabled": False, "installed": False}
+        return {"installed": True, **cache.stats()}
+
     # -- optimisation ----------------------------------------------------
 
     def build_optimizer(self) -> torch.optim.AdamW:

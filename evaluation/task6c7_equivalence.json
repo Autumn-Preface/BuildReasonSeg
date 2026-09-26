@@ -1,0 +1,1244 @@
+{
+  "_doc": "Task 6C.7 section 7. Exact-equivalence proof for the frozen visual-feature cache: 16-sample feature comparison plus a 12-step end-to-end gate with per-run re-seeding, strict determinism, one uncached reference, an uncached control and two cache key strategies. Adoption requires BIT_EQUIVALENT.",
+  "task": "6C.7",
+  "steps": 12,
+  "install": {
+    "installed": true,
+    "target": "Qwen3VLModel",
+    "enabled": true,
+    "max_images": 64,
+    "wrapped": "get_image_features",
+    "stores": [
+      "pooler_output",
+      "deepstack_features"
+    ],
+    "miss_path": "original bound method, unchanged"
+  },
+  "tolerances": {
+    "loss_max_abs": 0.001,
+    "loss_max_rel": 0.0001,
+    "gradient_max_abs": 1e-05,
+    "parameter_max_abs": 1e-06,
+    "parameter_max_rel": 1e-06
+  },
+  "initial_trainable_sha256": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+  "strict_determinism": true,
+  "feature_equality": {
+    "samples_checked": 16,
+    "all_first_calls_identical": true,
+    "all_cache_hits_identical": true,
+    "max_abs_difference_over_samples": 0.0,
+    "cache_stats_after_equality_check": {
+      "enabled": true,
+      "max_images": 64,
+      "entries": 8,
+      "bytes": 33554432,
+      "gib": 0.0312,
+      "bytes_per_image": 4194304.0,
+      "hits": 24,
+      "misses": 8,
+      "hit_rate": 0.75,
+      "evictions": 0,
+      "build_seconds": 0.0101,
+      "hit_seconds_total": 0.0173,
+      "miss_seconds_total": 0.2153,
+      "mean_hit_seconds": 0.000723,
+      "mean_miss_seconds": 0.026917,
+      "keys_by_kind": {
+        "image_identity": 8
+      },
+      "stores_model_outputs": false,
+      "stores": [
+        "pooler_output",
+        "deepstack_features"
+      ]
+    },
+    "records": [
+      {
+        "sample_id": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+        "image_id": "1_0",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+        "image_id": "1_0",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+        "image_id": "1_10026",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+        "image_id": "1_10026",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+        "image_id": "1_10027",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+        "image_id": "1_10027",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+        "image_id": "1_10032",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+        "image_id": "1_10032",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+        "image_id": "1_10034",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+        "image_id": "1_10034",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+        "image_id": "1_1023",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+        "image_id": "1_1023",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+        "image_id": "1_1029",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+        "image_id": "1_1029",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+        "image_id": "1_1030",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      },
+      {
+        "sample_id": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+        "image_id": "1_1030",
+        "reference_vs_first_call": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        },
+        "reference_vs_cache_hit": {
+          "shapes_match": true,
+          "dtype_match": true,
+          "identical": true,
+          "max_abs_difference": 0.0,
+          "pooler_shape": [
+            [
+              256,
+              2048
+            ]
+          ],
+          "deepstack_shapes": [
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ],
+            [
+              256,
+              2048
+            ]
+          ],
+          "dtype": "torch.bfloat16"
+        }
+      }
+    ]
+  },
+  "reference_run_to_run_control": {
+    "losses_identical": true,
+    "gradients_identical": true,
+    "post_step_parameters_identical": true,
+    "loss_max_abs_difference": 0.0,
+    "loss_max_rel_difference": 0.0,
+    "bit_equivalent": true,
+    "within_declared_loss_tolerance": true,
+    "category": "BIT_EQUIVALENT"
+  },
+  "cached_image_key": {
+    "losses_identical": true,
+    "gradients_identical": true,
+    "post_step_parameters_identical": true,
+    "loss_max_abs_difference": 0.0,
+    "loss_max_rel_difference": 0.0,
+    "bit_equivalent": true,
+    "within_declared_loss_tolerance": true,
+    "category": "BIT_EQUIVALENT",
+    "cache_stats": {
+      "enabled": true,
+      "max_images": 64,
+      "entries": 6,
+      "bytes": 25165824,
+      "gib": 0.0234,
+      "bytes_per_image": 4194304.0,
+      "hits": 30,
+      "misses": 14,
+      "hit_rate": 0.6818,
+      "evictions": 0,
+      "build_seconds": 0.0151,
+      "hit_seconds_total": 0.032,
+      "miss_seconds_total": 0.4319,
+      "mean_hit_seconds": 0.001068,
+      "mean_miss_seconds": 0.030852,
+      "keys_by_kind": {
+        "image_identity": 14
+      },
+      "stores_model_outputs": false,
+      "stores": [
+        "pooler_output",
+        "deepstack_features"
+      ]
+    }
+  },
+  "cached_content_key": {
+    "losses_identical": true,
+    "gradients_identical": true,
+    "post_step_parameters_identical": true,
+    "loss_max_abs_difference": 0.0,
+    "loss_max_rel_difference": 0.0,
+    "bit_equivalent": true,
+    "within_declared_loss_tolerance": true,
+    "category": "BIT_EQUIVALENT",
+    "cache_stats": {
+      "enabled": true,
+      "max_images": 64,
+      "entries": 6,
+      "bytes": 25165824,
+      "gib": 0.0234,
+      "bytes_per_image": 4194304.0,
+      "hits": 36,
+      "misses": 20,
+      "hit_rate": 0.6429,
+      "evictions": 0,
+      "build_seconds": 0.0202,
+      "hit_seconds_total": 0.036,
+      "miss_seconds_total": 0.6375,
+      "mean_hit_seconds": 0.001,
+      "mean_miss_seconds": 0.031873,
+      "keys_by_kind": {
+        "image_identity": 14,
+        "content_hash": 6
+      },
+      "stores_model_outputs": false,
+      "stores": [
+        "pooler_output",
+        "deepstack_features"
+      ]
+    }
+  },
+  "uncached_reference": {
+    "losses": [
+      {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      {
+        "total": "8.599398612976074",
+        "lm_ce": "3.290419816970825",
+        "mask_bce": "0.5144948959350586",
+        "mask_dice": "0.9895690083503723"
+      },
+      {
+        "total": "8.60462474822998",
+        "lm_ce": "3.793832778930664",
+        "mask_bce": "0.009105002507567406",
+        "mask_dice": "0.9987496137619019"
+      },
+      {
+        "total": "5.86283540725708",
+        "lm_ce": "2.398149013519287",
+        "mask_bce": "0.03391338884830475",
+        "mask_dice": "0.9987108111381531"
+      },
+      {
+        "total": "6.441194534301758",
+        "lm_ce": "2.6111695766448975",
+        "mask_bce": "0.11605214327573776",
+        "mask_dice": "0.9867511987686157"
+      },
+      {
+        "total": "5.757072925567627",
+        "lm_ce": "2.311300754547119",
+        "mask_bce": "0.07243551313877106",
+        "mask_dice": "0.9896000027656555"
+      },
+      {
+        "total": "5.289403915405273",
+        "lm_ce": "2.0926432609558105",
+        "mask_bce": "0.0559091791510582",
+        "mask_dice": "0.9922988414764404"
+      },
+      {
+        "total": "4.239265441894531",
+        "lm_ce": "1.582262396812439",
+        "mask_bce": "0.041279587894678116",
+        "mask_dice": "0.992181658744812"
+      },
+      {
+        "total": "3.994422435760498",
+        "lm_ce": "1.439845085144043",
+        "mask_bce": "0.05908190459012985",
+        "mask_dice": "0.996568500995636"
+      },
+      {
+        "total": "4.61956262588501",
+        "lm_ce": "1.756262183189392",
+        "mask_bce": "0.05408883094787598",
+        "mask_dice": "0.9988604784011841"
+      },
+      {
+        "total": "3.9071836471557617",
+        "lm_ce": "1.269627571105957",
+        "mask_bce": "0.18553367257118225",
+        "mask_dice": "0.9968611001968384"
+      },
+      {
+        "total": "3.730811834335327",
+        "lm_ce": "1.362574815750122",
+        "mask_bce": "0.010326454415917397",
+        "mask_dice": "0.9850091338157654"
+      }
+    ],
+    "cache_stats": {
+      "enabled": false,
+      "max_images": 64,
+      "entries": 0,
+      "bytes": 0,
+      "gib": 0.0,
+      "bytes_per_image": 0.0,
+      "hits": 24,
+      "misses": 8,
+      "hit_rate": 0.75,
+      "evictions": 0,
+      "build_seconds": 0.0101,
+      "hit_seconds_total": 0.0173,
+      "miss_seconds_total": 0.2153,
+      "mean_hit_seconds": 0.000723,
+      "mean_miss_seconds": 0.026917,
+      "keys_by_kind": {
+        "image_identity": 8
+      },
+      "stores_model_outputs": false,
+      "stores": [
+        "pooler_output",
+        "deepstack_features"
+      ]
+    }
+  },
+  "cached_image_losses": [
+    {
+      "total": "9.425538063049316",
+      "lm_ce": "3.9997737407684326",
+      "mask_bce": "0.21305836737155914",
+      "mask_dice": "0.9998741149902344"
+    },
+    {
+      "total": "8.599398612976074",
+      "lm_ce": "3.290419816970825",
+      "mask_bce": "0.5144948959350586",
+      "mask_dice": "0.9895690083503723"
+    },
+    {
+      "total": "8.60462474822998",
+      "lm_ce": "3.793832778930664",
+      "mask_bce": "0.009105002507567406",
+      "mask_dice": "0.9987496137619019"
+    },
+    {
+      "total": "5.86283540725708",
+      "lm_ce": "2.398149013519287",
+      "mask_bce": "0.03391338884830475",
+      "mask_dice": "0.9987108111381531"
+    },
+    {
+      "total": "6.441194534301758",
+      "lm_ce": "2.6111695766448975",
+      "mask_bce": "0.11605214327573776",
+      "mask_dice": "0.9867511987686157"
+    },
+    {
+      "total": "5.757072925567627",
+      "lm_ce": "2.311300754547119",
+      "mask_bce": "0.07243551313877106",
+      "mask_dice": "0.9896000027656555"
+    },
+    {
+      "total": "5.289403915405273",
+      "lm_ce": "2.0926432609558105",
+      "mask_bce": "0.0559091791510582",
+      "mask_dice": "0.9922988414764404"
+    },
+    {
+      "total": "4.239265441894531",
+      "lm_ce": "1.582262396812439",
+      "mask_bce": "0.041279587894678116",
+      "mask_dice": "0.992181658744812"
+    },
+    {
+      "total": "3.994422435760498",
+      "lm_ce": "1.439845085144043",
+      "mask_bce": "0.05908190459012985",
+      "mask_dice": "0.996568500995636"
+    },
+    {
+      "total": "4.61956262588501",
+      "lm_ce": "1.756262183189392",
+      "mask_bce": "0.05408883094787598",
+      "mask_dice": "0.9988604784011841"
+    },
+    {
+      "total": "3.9071836471557617",
+      "lm_ce": "1.269627571105957",
+      "mask_bce": "0.18553367257118225",
+      "mask_dice": "0.9968611001968384"
+    },
+    {
+      "total": "3.730811834335327",
+      "lm_ce": "1.362574815750122",
+      "mask_bce": "0.010326454415917397",
+      "mask_dice": "0.9850091338157654"
+    }
+  ],
+  "adoptable": true
+}

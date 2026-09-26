@@ -1,0 +1,215 @@
+{
+  "_doc": "Task 6C.7 sections 5-8. Cache eligibility for the frozen Qwen3-VL visual tower, the narrowest safe boundary, the footprint of the cached tensors, and a measured recompute-determinism check. No training semantics are changed by this script.",
+  "task": "6C.7",
+  "runtime": "formal Phase-B path with collect_grad_norms=false (integrated baseline B0.6)",
+  "batch_size": 1,
+  "strict_determinism": true,
+  "visual_tower_static_check": {
+    "visual_module_class": "Qwen3VLVisionModel",
+    "parameter_count": 315,
+    "trainable_parameter_names": [],
+    "all_parameters_frozen": true,
+    "parameter_dtypes": {
+      "torch.bfloat16": 315
+    },
+    "lora_module_count": 0,
+    "lora_modules": [],
+    "zero_visual_lora": true,
+    "dropout_modules_with_p_gt_0": [],
+    "modules_with_buffers": [
+      "rotary_pos_emb:['inv_freq', 'original_inv_freq']"
+    ],
+    "registered_buffer_count": 1,
+    "training_mode": false
+  },
+  "boundary": {
+    "qwen_class": "PeftModel",
+    "language_model_class": "Qwen3VLForConditionalGeneration",
+    "visual_class": "Qwen3VLVisionModel",
+    "interface": "Qwen3VLModel.get_image_features(pixel_values, image_grid_thw)",
+    "consumed_by_forward": [
+      "get_image_features(...).pooler_output  -> torch.cat -> masked_scatter into inputs_embeds",
+      "get_image_features(...).deepstack_features -> deepstack injection at early LM layers"
+    ],
+    "not_cached": [
+      "vision last_hidden_state (pre-merger, not read by the language model)",
+      "language-model hidden states",
+      "[SEG] hidden state",
+      "logits",
+      "anything downstream of a trainable parameter"
+    ]
+  },
+  "recompute_determinism": {
+    "identical": true,
+    "max_abs_difference": 0.0,
+    "interpretation": "bit-identical recomputation means the tower is a pure function here"
+  },
+  "feature_signature": {
+    "pooler_shapes": [
+      [
+        256,
+        2048
+      ]
+    ],
+    "deepstack_shapes": [
+      [
+        256,
+        2048
+      ],
+      [
+        256,
+        2048
+      ],
+      [
+        256,
+        2048
+      ]
+    ],
+    "dtype": "torch.bfloat16",
+    "device": "cuda:0",
+    "pooler_bytes": 1048576,
+    "deepstack_bytes": 3145728,
+    "last_hidden_state_bytes": 2097152,
+    "bytes_per_image_pooler_plus_deepstack": 4194304,
+    "bytes_per_image_including_last_hidden_state": 6291456
+  },
+  "training_time_state": {
+    "visual_parameters_changed_by_step": [],
+    "visual_buffers_changed_by_step": [],
+    "visual_state_stable": true,
+    "registered_buffers": [
+      "rotary_pos_emb.inv_freq",
+      "rotary_pos_emb.original_inv_freq"
+    ],
+    "buffer_count": 2,
+    "trainable_fingerprint_before_step": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "trainable_fingerprint_after_step": "cc4f062e0134bb7a3dbcf50f3dc0ff4730fbb75161fc380a8dd108c36119505a",
+    "note": "the visual tower must not move; the trainable fingerprint is expected to change. Registered buffers are compared too, so a running statistic that moved would fail this check even though it is not a parameter."
+  },
+  "instruction_independence": {
+    "pairs_checked": 8,
+    "all_pixels_identical": true,
+    "all_features_identical": true,
+    "instructions_differ_in_all_pairs": true,
+    "pairs": [
+      {
+        "image_id": "1_0",
+        "sample_ids": [
+          "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+          "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_10026",
+        "sample_ids": [
+          "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+          "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_10027",
+        "sample_ids": [
+          "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+          "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_10032",
+        "sample_ids": [
+          "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+          "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_10034",
+        "sample_ids": [
+          "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+          "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_1023",
+        "sample_ids": [
+          "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+          "buildsr_train_1_1023_2_largest_to_below_45c4116875f1"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_1029",
+        "sample_ids": [
+          "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+          "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      },
+      {
+        "image_id": "1_1030",
+        "sample_ids": [
+          "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+          "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb"
+        ],
+        "instructions_differ": true,
+        "pixel_values_identical": true,
+        "visual_features_identical": true,
+        "visual_features_max_abs_difference": 0.0
+      }
+    ]
+  },
+  "cache_footprint": {
+    "stored_fields": [
+      "pooler_output",
+      "deepstack_features"
+    ],
+    "dtype_kept": "torch.bfloat16",
+    "bytes_per_image": 4194304.0,
+    "mib_per_image": 4.0,
+    "task6c_480_images_gib": 1.875,
+    "full_whu_train_2508_images_gib": 9.797,
+    "measured_build_seconds_for_8_images": 0.265,
+    "measured_build_ms_per_image": 33.12,
+    "default_max_images": 512,
+    "default_max_gib": 2.0,
+    "budget_gib": 8.0,
+    "within_budget_at_default_bound": true,
+    "within_budget_for_full_whu_train": false
+  },
+  "eligibility": {
+    "conditions": {
+      "all_visual_parameters_frozen": true,
+      "zero_visual_lora": true,
+      "visual_output_deterministic": true,
+      "no_visual_state_moves_during_a_step": true,
+      "independent_of_instruction": true,
+      "no_visual_dropout": true
+    },
+    "eligible": true,
+    "failed_conditions": []
+  }
+}

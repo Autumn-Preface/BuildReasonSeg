@@ -1,0 +1,872 @@
+{
+  "_doc": "Task 6C.7 section 9. V0 (pre-fix duplicate H2D), V1 (section 3 fix), V2 (V1 + frozen visual cache, image key) and V2b (same cache with a content-hash key), on the fixed 64-record benchmark set with the Task 6C.6 protocol. V3 (deferred project-owned scalar logging) is deliberately not implemented: the scoped attribution in task6c7_sync_hotspots.json measures those reads as a few out of ~1,051 per step, so section 10 says to leave them alone.",
+  "task": "6C.7",
+  "steps_measured": 64,
+  "warmup_steps": 8,
+  "batch_size": 1,
+  "reference_bracket": {
+    "available": true,
+    "reference_variants": [
+      "V1_reference_first",
+      "V1_reference_last"
+    ],
+    "reference_samples_per_sec": [
+      2.978,
+      2.2457
+    ],
+    "reference_first": 2.978,
+    "reference_last": 2.2457,
+    "reference_mean": 2.6119,
+    "reference_drift_percent": -24.59,
+    "resolvable_gain_percent_floor": 24.59
+  },
+  "summary": {
+    "v1_samples_per_sec": 2.6119,
+    "v0_vs_v1_percent": -7.037,
+    "v2_vs_v1_percent": -10.104,
+    "reference_drift_percent": -24.59,
+    "resolvable_floor_percent": 24.59
+  },
+  "v3_decision": {
+    "implemented": false,
+    "reason": "section 10: optimize the project-owned scalar read-backs only if profiling proves they are a meaningful fraction of the remaining synchronization cost. They are not.",
+    "source": "evaluation/task6c7_sync_hotspots.json"
+  },
+  "entries": [
+    {
+      "variant": "V1_reference_first",
+      "name": "V1_reference_first",
+      "description": "Section 3 applied: one logical device transfer per Phase-B step (bracket start).",
+      "duplicate_h2d": false,
+      "visual_cache": false,
+      "visual_cache_max_images": 512,
+      "visual_cache_key": "image",
+      "deferred_scalars": false,
+      "notes": [],
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "collect_grad_norms_effective": false,
+      "visual_cache_install": {
+        "installed": false
+      },
+      "cold_cache": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 21.4908,
+      "ms_per_sample": 335.794,
+      "samples_per_sec": 2.978,
+      "first_step_seconds": 14.415,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 69,
+        "nvidia_smi_call_seconds": {
+          "n": 69,
+          "mean": 0.05055416666574024,
+          "median": 0.041403299997909926,
+          "p90": 0.07075430000259075,
+          "min": 0.03784489999816287,
+          "max": 0.10014029999729246
+        },
+        "gpu_utilization_percent": {
+          "n": 69,
+          "mean": 28.07246376811594,
+          "median": 37.0,
+          "p90": 49.0,
+          "min": 1.0,
+          "max": 85.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 69,
+          "mean": 8994.08695652174,
+          "median": 9875.0,
+          "p90": 9881.0,
+          "min": 6282.0,
+          "max": 9881.0
+        },
+        "gpu_temperature_c": {
+          "n": 69,
+          "mean": 68.23188405797102,
+          "median": 70.0,
+          "p90": 75.0,
+          "min": 60.0,
+          "max": 76.0
+        },
+        "gpu_power_watts": {
+          "n": 69,
+          "mean": 86.89695652173914,
+          "median": 116.0,
+          "p90": 119.06,
+          "min": 30.17,
+          "max": 134.56
+        },
+        "cpu_total_percent": {
+          "n": 69,
+          "mean": 65.2927536231884,
+          "median": 99.9,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 69,
+          "mean": 1309.955072463768,
+          "median": 1949.0,
+          "p90": 2120.3,
+          "min": 91.4,
+          "max": 2236.3
+        },
+        "process_rss_gib": {
+          "n": 69,
+          "mean": 3.1061159420289854,
+          "median": 3.284,
+          "p90": 3.289,
+          "min": 1.98,
+          "max": 3.289
+        },
+        "system_ram_used_gib": {
+          "n": 69,
+          "mean": 13.852376811594203,
+          "median": 13.966,
+          "p90": 14.081,
+          "min": 12.699,
+          "max": 14.139
+        },
+        "system_ram_percent": {
+          "n": 69,
+          "mean": 44.149275362318846,
+          "median": 44.5,
+          "p90": 44.9,
+          "min": 40.5,
+          "max": 45.1
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.652,
+        "peak_reserved_gib": 8.566
+      },
+      "cache_bytes": 0,
+      "visual_cache_stats": {
+        "installed": false
+      },
+      "counters_per_step": {
+        "cuda_kernels": 57341.0,
+        "item_op_events": 2102.0,
+        "scalar_reads": 1051.0,
+        "sync_ops": 444.0,
+        "profiled_steps": 2,
+        "profiler_inflated": true
+      },
+      "reference_position": 0,
+      "speedup_percent_vs_interpolated_reference": null,
+      "gain_resolvable": false,
+      "local_reference_uncertainty_percent": null,
+      "equivalence_category": "REFERENCE (no cache)",
+      "adopted": false,
+      "rejection_reason": "reference / control run"
+    },
+    {
+      "variant": "V0_duplicate_h2d",
+      "name": "V0_duplicate_h2d",
+      "description": "Pre-section-3 formal loop: builds an unused `moved = batch.to(device)` and hands the original CPU batch to `train_step`, which copies again.",
+      "duplicate_h2d": true,
+      "visual_cache": false,
+      "visual_cache_max_images": 512,
+      "visual_cache_key": "image",
+      "deferred_scalars": false,
+      "notes": [],
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "collect_grad_norms_effective": false,
+      "visual_cache_install": {
+        "installed": false
+      },
+      "cold_cache": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 26.3582,
+      "ms_per_sample": 411.846,
+      "samples_per_sec": 2.4281,
+      "first_step_seconds": 0.4658,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 53,
+        "nvidia_smi_call_seconds": {
+          "n": 53,
+          "mean": 0.05704853962255721,
+          "median": 0.056448199997248594,
+          "p90": 0.07054410000273492,
+          "min": 0.039102299997466616,
+          "max": 0.09706119999464136
+        },
+        "gpu_utilization_percent": {
+          "n": 53,
+          "mean": 38.84905660377358,
+          "median": 40.0,
+          "p90": 45.0,
+          "min": 23.0,
+          "max": 86.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 53,
+          "mean": 9906.33962264151,
+          "median": 9951.0,
+          "p90": 10098.0,
+          "min": 6837.0,
+          "max": 10104.0
+        },
+        "gpu_temperature_c": {
+          "n": 53,
+          "mean": 76.11320754716981,
+          "median": 77.0,
+          "p90": 78.0,
+          "min": 72.0,
+          "max": 79.0
+        },
+        "gpu_power_watts": {
+          "n": 53,
+          "mean": 111.00094339622642,
+          "median": 110.16,
+          "p90": 115.74,
+          "min": 104.19,
+          "max": 135.75
+        },
+        "cpu_total_percent": {
+          "n": 53,
+          "mean": 93.65094339622641,
+          "median": 95.4,
+          "p90": 98.3,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 53,
+          "mean": 1814.4528301886792,
+          "median": 1959.2,
+          "p90": 2033.8,
+          "min": 989.8,
+          "max": 2142.4
+        },
+        "process_rss_gib": {
+          "n": 53,
+          "mean": 4.550037735849056,
+          "median": 4.55,
+          "p90": 4.55,
+          "min": 4.55,
+          "max": 4.552
+        },
+        "system_ram_used_gib": {
+          "n": 53,
+          "mean": 15.24622641509434,
+          "median": 15.197,
+          "p90": 15.452,
+          "min": 15.184,
+          "max": 15.526
+        },
+        "system_ram_percent": {
+          "n": 53,
+          "mean": 48.58490566037736,
+          "median": 48.4,
+          "p90": 49.2,
+          "min": 48.4,
+          "max": 49.5
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.661,
+        "peak_reserved_gib": 8.602
+      },
+      "cache_bytes": 0,
+      "visual_cache_stats": {
+        "installed": false
+      },
+      "counters_per_step": {
+        "cuda_kernels": 57381.5,
+        "item_op_events": 2102.0,
+        "scalar_reads": 1051.0,
+        "sync_ops": 456.0,
+        "profiled_steps": 2,
+        "profiler_inflated": true
+      },
+      "reference_position": 1,
+      "reference_position_of_bracketing_runs": [
+        0,
+        4
+      ],
+      "speedup_percent_vs_interpolated_reference": -13.125,
+      "local_reference_uncertainty_percent": 14.019,
+      "gain_resolvable": false,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "REFERENCE (no cache)",
+      "adopted": false,
+      "rejection_reason": "reference / control run"
+    },
+    {
+      "variant": "V2_v1_plus_visual_cache",
+      "name": "V2_v1_plus_visual_cache",
+      "description": "V1 plus the frozen Qwen visual-feature cache, keyed by source-image identity.",
+      "duplicate_h2d": false,
+      "visual_cache": true,
+      "visual_cache_max_images": 512,
+      "visual_cache_key": "image",
+      "deferred_scalars": false,
+      "notes": [],
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "collect_grad_norms_effective": false,
+      "visual_cache_install": {
+        "installed": true,
+        "target": "Qwen3VLModel",
+        "enabled": true,
+        "max_images": 512,
+        "wrapped": "get_image_features",
+        "stores": [
+          "pooler_output",
+          "deepstack_features"
+        ],
+        "miss_path": "original bound method, unchanged"
+      },
+      "cold_cache": {
+        "unique_images": 32,
+        "seconds": 1.322,
+        "ms_per_image": 41.303,
+        "entries": 32,
+        "bytes": 134217728,
+        "gib": 0.125,
+        "bytes_per_image": 4194304.0
+      },
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 27.2568,
+      "ms_per_sample": 425.888,
+      "samples_per_sec": 2.348,
+      "first_step_seconds": 0.5273,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 54,
+        "nvidia_smi_call_seconds": {
+          "n": 54,
+          "mean": 0.06558914259275533,
+          "median": 0.06183900000178255,
+          "p90": 0.08518310000363272,
+          "min": 0.051734300002863165,
+          "max": 0.1024111999940942
+        },
+        "gpu_utilization_percent": {
+          "n": 54,
+          "mean": 32.18518518518518,
+          "median": 29.5,
+          "p90": 44.0,
+          "min": 21.0,
+          "max": 52.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 54,
+          "mean": 10215.87037037037,
+          "median": 10281.0,
+          "p90": 10281.0,
+          "min": 7381.0,
+          "max": 10281.0
+        },
+        "gpu_temperature_c": {
+          "n": 54,
+          "mean": 74.68518518518519,
+          "median": 75.0,
+          "p90": 76.0,
+          "min": 73.0,
+          "max": 76.0
+        },
+        "gpu_power_watts": {
+          "n": 54,
+          "mean": 101.31759259259259,
+          "median": 103.305,
+          "p90": 111.85,
+          "min": 61.16,
+          "max": 123.63
+        },
+        "cpu_total_percent": {
+          "n": 54,
+          "mean": 87.5037037037037,
+          "median": 90.75,
+          "p90": 93.2,
+          "min": 0.0,
+          "max": 94.6
+        },
+        "process_cpu_percent": {
+          "n": 54,
+          "mean": 1680.8870370370369,
+          "median": 1686.25,
+          "p90": 1871.1,
+          "min": 1265.5,
+          "max": 1901.7
+        },
+        "process_rss_gib": {
+          "n": 54,
+          "mean": 4.751,
+          "median": 4.751,
+          "p90": 4.751,
+          "min": 4.751,
+          "max": 4.751
+        },
+        "system_ram_used_gib": {
+          "n": 54,
+          "mean": 16.18411111111111,
+          "median": 16.195500000000003,
+          "p90": 16.232,
+          "min": 16.074,
+          "max": 16.309
+        },
+        "system_ram_percent": {
+          "n": 54,
+          "mean": 51.57777777777778,
+          "median": 51.6,
+          "p90": 51.7,
+          "min": 51.2,
+          "max": 52.0
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.656,
+        "peak_reserved_gib": 8.582
+      },
+      "cache_bytes": 134217728,
+      "visual_cache_stats": {
+        "installed": true,
+        "enabled": true,
+        "max_images": 512,
+        "entries": 32,
+        "bytes": 134217728,
+        "gib": 0.125,
+        "bytes_per_image": 4194304.0,
+        "hits": 72,
+        "misses": 32,
+        "hit_rate": 0.6923,
+        "evictions": 0,
+        "build_seconds": 0.0363,
+        "hit_seconds_total": 0.1755,
+        "miss_seconds_total": 1.0413,
+        "mean_hit_seconds": 0.002438,
+        "mean_miss_seconds": 0.032541,
+        "keys_by_kind": {
+          "image_identity": 32
+        },
+        "stores_model_outputs": false,
+        "stores": [
+          "pooler_output",
+          "deepstack_features"
+        ]
+      },
+      "counters_per_step": {
+        "cuda_kernels": 52501.0,
+        "item_op_events": 2084.0,
+        "scalar_reads": 1042.0,
+        "sync_ops": 251.0,
+        "profiled_steps": 2,
+        "profiler_inflated": true
+      },
+      "reference_position": 2,
+      "reference_position_of_bracketing_runs": [
+        0,
+        4
+      ],
+      "speedup_percent_vs_interpolated_reference": -10.102,
+      "local_reference_uncertainty_percent": 14.019,
+      "gain_resolvable": false,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "BIT_EQUIVALENT",
+      "adopted": false,
+      "rejection_reason": "gain -10.10% is inside the local reference uncertainty (14.019%)"
+    },
+    {
+      "variant": "V2b_v1_plus_visual_cache_content_key",
+      "name": "V2b_v1_plus_visual_cache_content_key",
+      "description": "As V2 but keyed by the pixel content hash instead of the image id.",
+      "duplicate_h2d": false,
+      "visual_cache": true,
+      "visual_cache_max_images": 512,
+      "visual_cache_key": "content",
+      "deferred_scalars": false,
+      "notes": [],
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "collect_grad_norms_effective": false,
+      "visual_cache_install": {
+        "installed": true,
+        "target": "Qwen3VLModel",
+        "enabled": true,
+        "max_images": 512,
+        "wrapped": "get_image_features",
+        "stores": [
+          "pooler_output",
+          "deepstack_features"
+        ],
+        "miss_path": "original bound method, unchanged"
+      },
+      "cold_cache": {
+        "unique_images": 32,
+        "seconds": 1.17,
+        "ms_per_image": 36.552,
+        "entries": 32,
+        "bytes": 134217728,
+        "gib": 0.125,
+        "bytes_per_image": 4194304.0
+      },
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 27.5497,
+      "ms_per_sample": 430.464,
+      "samples_per_sec": 2.3231,
+      "first_step_seconds": 0.4025,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 54,
+        "nvidia_smi_call_seconds": {
+          "n": 54,
+          "mean": 0.06557061111056504,
+          "median": 0.06181110000034096,
+          "p90": 0.08261959999799728,
+          "min": 0.04308689999743365,
+          "max": 0.1036584000030416
+        },
+        "gpu_utilization_percent": {
+          "n": 54,
+          "mean": 33.129629629629626,
+          "median": 32.0,
+          "p90": 40.0,
+          "min": 23.0,
+          "max": 59.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 54,
+          "mean": 10115.407407407407,
+          "median": 10286.0,
+          "p90": 10293.0,
+          "min": 7508.0,
+          "max": 10303.0
+        },
+        "gpu_temperature_c": {
+          "n": 54,
+          "mean": 74.48148148148148,
+          "median": 74.0,
+          "p90": 76.0,
+          "min": 72.0,
+          "max": 77.0
+        },
+        "gpu_power_watts": {
+          "n": 54,
+          "mean": 102.54814814814816,
+          "median": 102.065,
+          "p90": 115.23,
+          "min": 45.83,
+          "max": 123.89
+        },
+        "cpu_total_percent": {
+          "n": 54,
+          "mean": 88.0851851851852,
+          "median": 90.8,
+          "p90": 93.5,
+          "min": 0.0,
+          "max": 96.3
+        },
+        "process_cpu_percent": {
+          "n": 54,
+          "mean": 1702.3203703703705,
+          "median": 1709.1,
+          "p90": 1920.5,
+          "min": 920.3,
+          "max": 3024.2
+        },
+        "process_rss_gib": {
+          "n": 54,
+          "mean": 4.000888888888889,
+          "median": 4.001,
+          "p90": 4.001,
+          "min": 3.995,
+          "max": 4.001
+        },
+        "system_ram_used_gib": {
+          "n": 54,
+          "mean": 15.349,
+          "median": 15.44,
+          "p90": 15.475,
+          "min": 15.087,
+          "max": 15.559
+        },
+        "system_ram_percent": {
+          "n": 54,
+          "mean": 48.90925925925926,
+          "median": 49.2,
+          "p90": 49.3,
+          "min": 48.1,
+          "max": 49.6
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.654,
+        "peak_reserved_gib": 8.59
+      },
+      "cache_bytes": 134217728,
+      "visual_cache_stats": {
+        "installed": true,
+        "enabled": true,
+        "max_images": 512,
+        "entries": 32,
+        "bytes": 134217728,
+        "gib": 0.125,
+        "bytes_per_image": 4194304.0,
+        "hits": 72,
+        "misses": 32,
+        "hit_rate": 0.6923,
+        "evictions": 0,
+        "build_seconds": 0.0315,
+        "hit_seconds_total": 0.1645,
+        "miss_seconds_total": 0.9369,
+        "mean_hit_seconds": 0.002285,
+        "mean_miss_seconds": 0.029279,
+        "keys_by_kind": {
+          "image_identity": 32
+        },
+        "stores_model_outputs": false,
+        "stores": [
+          "pooler_output",
+          "deepstack_features"
+        ]
+      },
+      "counters_per_step": {
+        "cuda_kernels": 52501.0,
+        "item_op_events": 2084.0,
+        "scalar_reads": 1042.0,
+        "sync_ops": 251.0,
+        "profiled_steps": 2,
+        "profiler_inflated": true
+      },
+      "reference_position": 3,
+      "reference_position_of_bracketing_runs": [
+        0,
+        4
+      ],
+      "speedup_percent_vs_interpolated_reference": -4.351,
+      "local_reference_uncertainty_percent": 14.019,
+      "gain_resolvable": false,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "BIT_EQUIVALENT",
+      "adopted": false,
+      "rejection_reason": "gain -4.35% is inside the local reference uncertainty (14.019%)"
+    },
+    {
+      "variant": "V1_reference_last",
+      "name": "V1_reference_last",
+      "description": "Section 3 applied (bracket end).",
+      "duplicate_h2d": false,
+      "visual_cache": false,
+      "visual_cache_max_images": 512,
+      "visual_cache_key": "image",
+      "deferred_scalars": false,
+      "notes": [],
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "collect_grad_norms_effective": false,
+      "visual_cache_install": {
+        "installed": false
+      },
+      "cold_cache": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "measured_seconds": 28.4989,
+      "ms_per_sample": 445.295,
+      "samples_per_sec": 2.2457,
+      "first_step_seconds": 0.4099,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 55,
+        "nvidia_smi_call_seconds": {
+          "n": 55,
+          "mean": 0.07342027999958108,
+          "median": 0.0662704999995185,
+          "p90": 0.09972389999893494,
+          "min": 0.040251200000057,
+          "max": 0.12109369999961928
+        },
+        "gpu_utilization_percent": {
+          "n": 55,
+          "mean": 33.0,
+          "median": 32.0,
+          "p90": 42.0,
+          "min": 20.0,
+          "max": 89.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 55,
+          "mean": 11870.90909090909,
+          "median": 11886.0,
+          "p90": 11886.0,
+          "min": 11124.0,
+          "max": 11886.0
+        },
+        "gpu_temperature_c": {
+          "n": 55,
+          "mean": 74.21818181818182,
+          "median": 74.0,
+          "p90": 75.0,
+          "min": 71.0,
+          "max": 77.0
+        },
+        "gpu_power_watts": {
+          "n": 55,
+          "mean": 101.75036363636363,
+          "median": 102.05,
+          "p90": 109.75,
+          "min": 61.51,
+          "max": 156.65
+        },
+        "cpu_total_percent": {
+          "n": 55,
+          "mean": 89.12727272727273,
+          "median": 90.8,
+          "p90": 97.3,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 55,
+          "mean": 1879.4163636363635,
+          "median": 1867.5,
+          "p90": 2098.7,
+          "min": 1461.7,
+          "max": 2236.9
+        },
+        "process_rss_gib": {
+          "n": 55,
+          "mean": 4.384854545454545,
+          "median": 4.384,
+          "p90": 4.385,
+          "min": 4.379,
+          "max": 4.411
+        },
+        "system_ram_used_gib": {
+          "n": 55,
+          "mean": 15.504999999999999,
+          "median": 15.532,
+          "p90": 15.57,
+          "min": 15.367,
+          "max": 15.649
+        },
+        "system_ram_percent": {
+          "n": 55,
+          "mean": 49.407272727272726,
+          "median": 49.5,
+          "p90": 49.6,
+          "min": 49.0,
+          "max": 49.9
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.662,
+        "peak_reserved_gib": 10.34
+      },
+      "cache_bytes": 0,
+      "visual_cache_stats": {
+        "installed": false
+      },
+      "counters_per_step": {
+        "cuda_kernels": 57339.5,
+        "item_op_events": 2102.0,
+        "scalar_reads": 1051.0,
+        "sync_ops": 444.0,
+        "profiled_steps": 2,
+        "profiler_inflated": true
+      },
+      "reference_position": 4,
+      "speedup_percent_vs_interpolated_reference": null,
+      "gain_resolvable": false,
+      "local_reference_uncertainty_percent": null,
+      "equivalence_category": "REFERENCE (no cache)",
+      "adopted": false,
+      "rejection_reason": "reference / control run"
+    }
+  ]
+}

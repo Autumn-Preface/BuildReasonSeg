@@ -1,0 +1,729 @@
+{
+  "_doc": "Task 6C.7 section 4. Attribution of the remaining per-step `aten::item` and host/device synchronization events on the formal Phase-B step. Python stack capture is unavailable on this build (`KinetoEvent.stack` is empty, `torch._C._get_python_stack` absent), so attribution uses the scoped-window fallback section 4 permits, plus a gradient-checkpointing hypothesis test. Compact summary only.",
+  "task": "6C.7",
+  "path_measured": "formal Phase-B step, collect_grad_norms=false (integrated baseline B0.6)",
+  "batch_size": 1,
+  "profiler": {
+    "steps_profiled": 3,
+    "profiled_wall_seconds": 4.237,
+    "wall_inflation_note": "with_stack=True inflates the profiled wall time heavily; counts, not times, are the evidence here.",
+    "per_step": {
+      "cuda_kernel_count": 65561.3,
+      "item_events": 2102.0,
+      "sync_events": 443.7
+    },
+    "item_total": 6306,
+    "sync_total": 1331,
+    "top_item_call_sites": [
+      {
+        "call_site": "unknown|<no stack>|",
+        "events": 6306,
+        "share_percent": 100.0,
+        "stack_chain": []
+      }
+    ],
+    "top_sync_call_sites": [
+      {
+        "call_site": "cudaMemcpyAsync|unknown|<no stack>|",
+        "events": 939,
+        "share_percent": 70.55,
+        "stack_chain": []
+      },
+      {
+        "call_site": "cudaStreamSynchronize|unknown|<no stack>|",
+        "events": 390,
+        "share_percent": 29.3,
+        "stack_chain": []
+      },
+      {
+        "call_site": "cudaDeviceSynchronize|unknown|<no stack>|",
+        "events": 2,
+        "share_percent": 0.15,
+        "stack_chain": []
+      }
+    ],
+    "item_events_by_bucket": {
+      "unknown": 6306
+    },
+    "sync_events_by_bucket": {
+      "cudaMemcpyAsync|unknown": 939,
+      "cudaStreamSynchronize|unknown": 390,
+      "cudaDeviceSynchronize|unknown": 2
+    },
+    "item_neighbourhood": {
+      "total_item_events": 6306,
+      "immediately_preceding_op": [
+        {
+          "op": "aten::item",
+          "events": 3148,
+          "share_percent": 49.92
+        },
+        {
+          "op": "<built-in method item of Tensor object at 0x000002079595F0C0>",
+          "events": 3087,
+          "share_percent": 48.95
+        },
+        {
+          "op": "aten::as_strided",
+          "events": 15,
+          "share_percent": 0.24
+        },
+        {
+          "op": "Memcpy DtoD (Device -> Device)",
+          "events": 12,
+          "share_percent": 0.19
+        },
+        {
+          "op": "detach",
+          "events": 12,
+          "share_percent": 0.19
+        },
+        {
+          "op": "aten::fill_",
+          "events": 6,
+          "share_percent": 0.1
+        },
+        {
+          "op": "aten::is_nonzero",
+          "events": 6,
+          "share_percent": 0.1
+        },
+        {
+          "op": "_ZN2at6native13reduce_kernelILi512ELi1ENS0_8ReduceOpIfNS0_7MeanOpsIffffEEjfLi4ELi4EEEEEvT1_",
+          "events": 6,
+          "share_percent": 0.1
+        },
+        {
+          "op": "_ZN2at6native54_GLOBAL__N__bdbaa4e2_21_ForeachPointwiseOp_cu_ef478fac25multi_tensor_apply_kernelINS1_18TensorListMetadataILi3EEENS1_24PointwiseOpScalarFunctorIfLi3ELi3ELi0EEEJSt10multipliesIfEfEEEvT_T0_DpT1_",
+          "events": 5,
+          "share_percent": 0.08
+        },
+        {
+          "op": "<built-in method arange of type object at 0x00007FFF3FEBC2C0>",
+          "events": 3,
+          "share_percent": 0.05
+        }
+      ],
+      "three_op_windows": [
+        {
+          "window": "<built-in method item of Tensor object at 0x000002079595F0C0> -> aten::item -> aten::_local_scalar_dense",
+          "events": 3082,
+          "share_percent": 48.87
+        },
+        {
+          "window": "<built-in function isinstance> -> <built-in method item of Tensor object at 0x000002079595F0C0> -> aten::item",
+          "events": 3068,
+          "share_percent": 48.65
+        },
+        {
+          "window": "aten::select -> aten::as_strided -> aten::item",
+          "events": 15,
+          "share_percent": 0.24
+        },
+        {
+          "window": "aten::as_strided -> aten::item -> aten::_local_scalar_dense",
+          "events": 15,
+          "share_percent": 0.24
+        },
+        {
+          "window": "cudaMemcpyAsync -> Memcpy DtoD (Device -> Device) -> aten::item",
+          "events": 12,
+          "share_percent": 0.19
+        },
+        {
+          "window": "Memcpy DtoD (Device -> Device) -> aten::item -> aten::_local_scalar_dense",
+          "events": 12,
+          "share_percent": 0.19
+        },
+        {
+          "window": "aten::detach -> detach -> aten::item",
+          "events": 12,
+          "share_percent": 0.19
+        },
+        {
+          "window": "detach -> aten::item -> aten::_local_scalar_dense",
+          "events": 12,
+          "share_percent": 0.19
+        },
+        {
+          "window": "aten::as_strided -> <built-in method item of Tensor object at 0x000002079595F0C0> -> aten::item",
+          "events": 9,
+          "share_percent": 0.14
+        },
+        {
+          "window": "aten::empty -> aten::fill_ -> aten::item",
+          "events": 6,
+          "share_percent": 0.1
+        }
+      ]
+    }
+  },
+  "classification": {
+    "stack_attribution_available": false,
+    "stack_attribution_error": "KinetoEvent.stack is always empty on this build and torch._C._get_python_stack does not exist, so call-site attribution falls back to scoped windows as section 4 permits",
+    "dominant_call_site": {
+      "call_site": "unknown|<no stack>|",
+      "events": 6306,
+      "share_percent": 100.0,
+      "stack_chain": []
+    },
+    "step_scalar_reads": 1048.0,
+    "step_sync_ops": 427.0,
+    "step_cuda_kernels": 57262.0,
+    "largest_scalar_read_source": "full_train_step",
+    "vision_tower_share_of_scalar_reads_percent": 0.86,
+    "project_owned_scalar_reads": 26.0,
+    "ranked_table": [
+      {
+        "component": "full_train_step",
+        "scalar_reads_per_step": 1048.0,
+        "share_of_step_scalar_reads_percent": 100.0,
+        "sync_ops_per_step": 427.0,
+        "cuda_kernels_per_step": 57262.0,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "optimizer_and_clip_only",
+        "scalar_reads_per_step": 1024.0,
+        "share_of_step_scalar_reads_percent": 97.71,
+        "sync_ops_per_step": 1.0,
+        "cuda_kernels_per_step": 2638.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "loss_and_project_scalars",
+        "scalar_reads_per_step": 23.0,
+        "share_of_step_scalar_reads_percent": 2.19,
+        "sync_ops_per_step": 275.0,
+        "cuda_kernels_per_step": 20512.5,
+        "avoidable": "yes",
+        "note": ""
+      },
+      {
+        "component": "forward_with_grad_and_loss",
+        "scalar_reads_per_step": 19.0,
+        "share_of_step_scalar_reads_percent": 1.81,
+        "sync_ops_per_step": 267.0,
+        "cuda_kernels_per_step": 20500.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "qwen_language_model_only",
+        "scalar_reads_per_step": 10.0,
+        "share_of_step_scalar_reads_percent": 0.95,
+        "sync_ops_per_step": 67.0,
+        "cuda_kernels_per_step": 17204.0,
+        "avoidable": "no",
+        "note": "forward_with_grad_and_loss minus vision_tower_only"
+      },
+      {
+        "component": "vision_tower_only",
+        "scalar_reads_per_step": 9.0,
+        "share_of_step_scalar_reads_percent": 0.86,
+        "sync_ops_per_step": 200.0,
+        "cuda_kernels_per_step": 3296.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "backward_only",
+        "scalar_reads_per_step": 5.0,
+        "share_of_step_scalar_reads_percent": 0.48,
+        "sync_ops_per_step": 159.0,
+        "cuda_kernels_per_step": 34123.0,
+        "avoidable": "no",
+        "note": "full_train_step minus forward_with_grad_and_loss minus optimizer_and_clip_only"
+      },
+      {
+        "component": "data_prepare",
+        "scalar_reads_per_step": 3.0,
+        "share_of_step_scalar_reads_percent": 0.29,
+        "sync_ops_per_step": 1.0,
+        "cuda_kernels_per_step": 0.0,
+        "avoidable": "yes",
+        "note": ""
+      },
+      {
+        "component": "sam_projection_decode_only",
+        "scalar_reads_per_step": 2.0,
+        "share_of_step_scalar_reads_percent": 0.19,
+        "sync_ops_per_step": 14.0,
+        "cuda_kernels_per_step": 741.5,
+        "avoidable": "no",
+        "note": ""
+      }
+    ],
+    "avoidable": "the two project-owned windows are avoidable in principle (defer the four loss floats and the clip norm to logging intervals); the vision-tower and language-model traffic is third-party and section 4 forbids patching those internals"
+  },
+  "scoped_windows": {
+    "convention": "scalar_reads = item-op events / 2, because one read-back records both `aten::item` and `aten::_local_scalar_dense`. This is also why Task 6C.6 reported 1,051 `aten::item` per step while this run counts 2,102 item-op events per step.",
+    "windows": {
+      "data_prepare": {
+        "calls": 2,
+        "scalar_reads_per_call": 3.0,
+        "item_op_events_per_call": 6.0,
+        "sync_ops_per_call": 1.0,
+        "cuda_kernels_per_call": 0.0
+      },
+      "vision_tower_only": {
+        "calls": 2,
+        "scalar_reads_per_call": 9.0,
+        "item_op_events_per_call": 18.0,
+        "sync_ops_per_call": 200.0,
+        "cuda_kernels_per_call": 3296.5
+      },
+      "forward_with_grad_and_loss": {
+        "calls": 2,
+        "scalar_reads_per_call": 19.0,
+        "item_op_events_per_call": 38.0,
+        "sync_ops_per_call": 267.0,
+        "cuda_kernels_per_call": 20500.5
+      },
+      "sam_projection_decode_only": {
+        "calls": 2,
+        "scalar_reads_per_call": 2.0,
+        "item_op_events_per_call": 4.0,
+        "sync_ops_per_call": 14.0,
+        "cuda_kernels_per_call": 741.5
+      },
+      "loss_and_project_scalars": {
+        "calls": 2,
+        "scalar_reads_per_call": 23.0,
+        "item_op_events_per_call": 46.0,
+        "sync_ops_per_call": 275.0,
+        "cuda_kernels_per_call": 20512.5
+      },
+      "full_train_step": {
+        "calls": 2,
+        "scalar_reads_per_call": 1048.0,
+        "item_op_events_per_call": 2096.0,
+        "sync_ops_per_call": 427.0,
+        "cuda_kernels_per_call": 57262.0
+      },
+      "optimizer_and_clip_only": {
+        "calls": 2,
+        "scalar_reads_per_call": 1024.0,
+        "item_op_events_per_call": 2048.0,
+        "sync_ops_per_call": 1.0,
+        "cuda_kernels_per_call": 2638.5
+      }
+    },
+    "derived": {
+      "qwen_language_model_only": {
+        "scalar_reads_per_call": 10.0,
+        "sync_ops_per_call": 67.0,
+        "cuda_kernels_per_call": 17204.0,
+        "derivation": "forward_with_grad_and_loss minus vision_tower_only"
+      },
+      "backward_only": {
+        "scalar_reads_per_call": 5.0,
+        "sync_ops_per_call": 159.0,
+        "cuda_kernels_per_call": 34123.0,
+        "derivation": "full_train_step minus forward_with_grad_and_loss minus optimizer_and_clip_only"
+      }
+    },
+    "ranked_table": [
+      {
+        "component": "full_train_step",
+        "scalar_reads_per_step": 1048.0,
+        "share_of_step_scalar_reads_percent": 100.0,
+        "sync_ops_per_step": 427.0,
+        "cuda_kernels_per_step": 57262.0,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "optimizer_and_clip_only",
+        "scalar_reads_per_step": 1024.0,
+        "share_of_step_scalar_reads_percent": 97.71,
+        "sync_ops_per_step": 1.0,
+        "cuda_kernels_per_step": 2638.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "loss_and_project_scalars",
+        "scalar_reads_per_step": 23.0,
+        "share_of_step_scalar_reads_percent": 2.19,
+        "sync_ops_per_step": 275.0,
+        "cuda_kernels_per_step": 20512.5,
+        "avoidable": "yes",
+        "note": ""
+      },
+      {
+        "component": "forward_with_grad_and_loss",
+        "scalar_reads_per_step": 19.0,
+        "share_of_step_scalar_reads_percent": 1.81,
+        "sync_ops_per_step": 267.0,
+        "cuda_kernels_per_step": 20500.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "qwen_language_model_only",
+        "scalar_reads_per_step": 10.0,
+        "share_of_step_scalar_reads_percent": 0.95,
+        "sync_ops_per_step": 67.0,
+        "cuda_kernels_per_step": 17204.0,
+        "avoidable": "no",
+        "note": "forward_with_grad_and_loss minus vision_tower_only"
+      },
+      {
+        "component": "vision_tower_only",
+        "scalar_reads_per_step": 9.0,
+        "share_of_step_scalar_reads_percent": 0.86,
+        "sync_ops_per_step": 200.0,
+        "cuda_kernels_per_step": 3296.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "backward_only",
+        "scalar_reads_per_step": 5.0,
+        "share_of_step_scalar_reads_percent": 0.48,
+        "sync_ops_per_step": 159.0,
+        "cuda_kernels_per_step": 34123.0,
+        "avoidable": "no",
+        "note": "full_train_step minus forward_with_grad_and_loss minus optimizer_and_clip_only"
+      },
+      {
+        "component": "data_prepare",
+        "scalar_reads_per_step": 3.0,
+        "share_of_step_scalar_reads_percent": 0.29,
+        "sync_ops_per_step": 1.0,
+        "cuda_kernels_per_step": 0.0,
+        "avoidable": "yes",
+        "note": ""
+      },
+      {
+        "component": "sam_projection_decode_only",
+        "scalar_reads_per_step": 2.0,
+        "share_of_step_scalar_reads_percent": 0.19,
+        "sync_ops_per_step": 14.0,
+        "cuda_kernels_per_step": 741.5,
+        "avoidable": "no",
+        "note": ""
+      }
+    ],
+    "step_scalar_reads": 1048.0,
+    "step_sync_ops": 427.0,
+    "step_cuda_kernels": 57262.0
+  },
+  "item_call_sites": {
+    "steps_traced": 1,
+    "total_item_calls": 1029,
+    "item_calls_per_step": 1029.0,
+    "top_call_sites": [
+      {
+        "call_site": "task6c7_profile.py:768:<module> | task6c7_profile.py:674:main | task6c7_profile.py:564:trace_item_call_sites | runtime.py:423:train_step",
+        "calls": 1024,
+        "share_percent": 99.51,
+        "frames": [
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6c7_profile.py",
+            "line": 768,
+            "function": "<module>",
+            "source": "raise SystemExit(main())"
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6c7_profile.py",
+            "line": 674,
+            "function": "main",
+            "source": "tracer = None if args.skip_tracer else trace_item_call_sites(runtime, samples, args.trace_steps)"
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6c7_profile.py",
+            "line": 564,
+            "function": "trace_item_call_sites",
+            "source": "result = runtime.train_step("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\runtime.py",
+            "line": 423,
+            "function": "train_step",
+            "source": "optimizer.step()"
+          }
+        ]
+      },
+      {
+        "call_site": "generic.py:939:wrapper | modeling_qwen3_vl.py:1228:forward | modeling_qwen3_vl.py:1126:compute_3d_position_ids | modeling_qwen3_vl.py:1018:get_rope_index",
+        "calls": 3,
+        "share_percent": 0.29,
+        "frames": [
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\utils\\generic.py",
+            "line": 939,
+            "function": "wrapper",
+            "source": "output = func(self, *args, **kwargs)"
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1228,
+            "function": "forward",
+            "source": "position_ids = self.compute_3d_position_ids("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1126,
+            "function": "compute_3d_position_ids",
+            "source": "position_ids, rope_deltas = self.get_rope_index("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1018,
+            "function": "get_rope_index",
+            "source": "vision_position_ids = self.get_vision_position_ids("
+          }
+        ]
+      },
+      {
+        "call_site": "modeling_qwen3_vl.py:1361:forward | generic.py:939:wrapper | modeling_qwen3_vl.py:1186:forward | modeling_qwen3_vl.py:1093:get_placeholder_mask",
+        "calls": 1,
+        "share_percent": 0.1,
+        "frames": [
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1361,
+            "function": "forward",
+            "source": "outputs = self.model("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\utils\\generic.py",
+            "line": 939,
+            "function": "wrapper",
+            "source": "output = func(self, *args, **kwargs)"
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1186,
+            "function": "forward",
+            "source": "image_mask, _ = self.get_placeholder_mask("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1093,
+            "function": "get_placeholder_mask",
+            "source": "f\"Image features and image tokens do not match, tokens: {n_image_tokens}, features: {image_features.shape[0]}\","
+          }
+        ]
+      },
+      {
+        "call_site": "generic.py:939:wrapper | modeling_qwen3_vl.py:1186:forward | modeling_qwen3_vl.py:1091:get_placeholder_mask | import_utils.py:1867:torch_compilable_check",
+        "calls": 1,
+        "share_percent": 0.1,
+        "frames": [
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\utils\\generic.py",
+            "line": 939,
+            "function": "wrapper",
+            "source": "output = func(self, *args, **kwargs)"
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1186,
+            "function": "forward",
+            "source": "image_mask, _ = self.get_placeholder_mask("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py",
+            "line": 1091,
+            "function": "get_placeholder_mask",
+            "source": "torch_compilable_check("
+          },
+          {
+            "file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\utils\\import_utils.py",
+            "line": 1867,
+            "function": "torch_compilable_check",
+            "source": "torch._check_tensor_all_with(error_type, cond, msg_callable)"
+          }
+        ]
+      }
+    ],
+    "note": "sys.setprofile slows execution; this is a diagnostic attribution, not a timing measurement. `Tensor.item`, `float(tensor)` and `int(tensor)` are all recorded."
+  },
+  "mechanism_verdict": {
+    "step_scalar_reads_per_step": 1048.0,
+    "backward_scalar_reads_per_step": 5.0,
+    "backward_share_percent": 0.48,
+    "forward_scalar_reads_per_step": 19.0,
+    "optimizer_and_clip_scalar_reads_per_step": 1024.0,
+    "optimizer_share_percent": 97.71,
+    "project_owned_scalar_reads_per_step": 26.0,
+    "project_owned_share_percent": 2.48,
+    "dominant_python_call_site": "task6c7_profile.py:768:<module> | task6c7_profile.py:674:main | task6c7_profile.py:564:trace_item_call_sites | runtime.py:423:train_step",
+    "dominant_call_site_share_percent": 99.51,
+    "mechanism": {
+      "identified": "torch.optim's per-parameter optimizer bookkeeping",
+      "source": "torch/optim/adam.py:770-776 (foreach path) via _get_value() -> torch/optim/optimizer.py:95",
+      "explanation": "with capturable=False and fused=False, AdamW deliberately hosts each parameter's `step` counter on the CPU (torch/optim/adam.py:165-176, upstream comment: 'kernel launches are costly on CUDA and XLA'), and the foreach bias-correction converts that counter to a Python number twice per parameter per step. 2 x 528 trainable tensors = ~1,056 reads, which is what is measured.",
+      "third_party": true,
+      "requires_device_sync": false,
+      "cost_estimate": "CPU tensor .item() does not synchronize the device (measured: ~130 cudaStreamSynchronize per step against ~1,051 reads), and the alternative that removes them - fused=True, which keeps `step` on the GPU - was measured at -0.71% (unresolvable) in Task 6C.6 and is not bit-equivalent, so the conversions are cheap and not worth trading equivalence for."
+    },
+    "avoidable": "no — the traffic is inside third-party optimizer internals (section 4 forbids patching them), it does not synchronize the device, and the only supported alternative (fused=True) measured no gain and is not bit-equivalent. The project's own reads are under 1% of the total, so section 10 says to leave them alone."
+  },
+  "checkpointing_probe": {
+    "convention": "scalar_reads = item-op events / 2, because one read-back records both `aten::item` and `aten::_local_scalar_dense`. This is also why Task 6C.6 reported 1,051 `aten::item` per step while this run counts 2,102 item-op events per step.",
+    "windows": {
+      "data_prepare": {
+        "calls": 2,
+        "scalar_reads_per_call": 3.0,
+        "item_op_events_per_call": 6.0,
+        "sync_ops_per_call": 1.0,
+        "cuda_kernels_per_call": 0.0
+      },
+      "vision_tower_only": {
+        "calls": 2,
+        "scalar_reads_per_call": 9.0,
+        "item_op_events_per_call": 18.0,
+        "sync_ops_per_call": 200.0,
+        "cuda_kernels_per_call": 3296.5
+      },
+      "forward_with_grad_and_loss": {
+        "calls": 2,
+        "scalar_reads_per_call": 19.0,
+        "item_op_events_per_call": 38.0,
+        "sync_ops_per_call": 267.0,
+        "cuda_kernels_per_call": 20501.0
+      },
+      "sam_projection_decode_only": {
+        "calls": 2,
+        "scalar_reads_per_call": 2.0,
+        "item_op_events_per_call": 4.0,
+        "sync_ops_per_call": 14.0,
+        "cuda_kernels_per_call": 741.5
+      },
+      "loss_and_project_scalars": {
+        "calls": 2,
+        "scalar_reads_per_call": 23.0,
+        "item_op_events_per_call": 46.0,
+        "sync_ops_per_call": 275.0,
+        "cuda_kernels_per_call": 20512.5
+      },
+      "full_train_step": {
+        "calls": 2,
+        "scalar_reads_per_call": 1048.0,
+        "item_op_events_per_call": 2096.0,
+        "sync_ops_per_call": 427.0,
+        "cuda_kernels_per_call": 57262.0
+      },
+      "optimizer_and_clip_only": {
+        "calls": 2,
+        "scalar_reads_per_call": 1024.0,
+        "item_op_events_per_call": 2048.0,
+        "sync_ops_per_call": 1.0,
+        "cuda_kernels_per_call": 2638.5
+      }
+    },
+    "derived": {
+      "qwen_language_model_only": {
+        "scalar_reads_per_call": 10.0,
+        "sync_ops_per_call": 67.0,
+        "cuda_kernels_per_call": 17204.5,
+        "derivation": "forward_with_grad_and_loss minus vision_tower_only"
+      },
+      "backward_only": {
+        "scalar_reads_per_call": 5.0,
+        "sync_ops_per_call": 159.0,
+        "cuda_kernels_per_call": 34122.5,
+        "derivation": "full_train_step minus forward_with_grad_and_loss minus optimizer_and_clip_only"
+      }
+    },
+    "ranked_table": [
+      {
+        "component": "full_train_step",
+        "scalar_reads_per_step": 1048.0,
+        "share_of_step_scalar_reads_percent": 100.0,
+        "sync_ops_per_step": 427.0,
+        "cuda_kernels_per_step": 57262.0,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "optimizer_and_clip_only",
+        "scalar_reads_per_step": 1024.0,
+        "share_of_step_scalar_reads_percent": 97.71,
+        "sync_ops_per_step": 1.0,
+        "cuda_kernels_per_step": 2638.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "loss_and_project_scalars",
+        "scalar_reads_per_step": 23.0,
+        "share_of_step_scalar_reads_percent": 2.19,
+        "sync_ops_per_step": 275.0,
+        "cuda_kernels_per_step": 20512.5,
+        "avoidable": "yes",
+        "note": ""
+      },
+      {
+        "component": "forward_with_grad_and_loss",
+        "scalar_reads_per_step": 19.0,
+        "share_of_step_scalar_reads_percent": 1.81,
+        "sync_ops_per_step": 267.0,
+        "cuda_kernels_per_step": 20501.0,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "qwen_language_model_only",
+        "scalar_reads_per_step": 10.0,
+        "share_of_step_scalar_reads_percent": 0.95,
+        "sync_ops_per_step": 67.0,
+        "cuda_kernels_per_step": 17204.5,
+        "avoidable": "no",
+        "note": "forward_with_grad_and_loss minus vision_tower_only"
+      },
+      {
+        "component": "vision_tower_only",
+        "scalar_reads_per_step": 9.0,
+        "share_of_step_scalar_reads_percent": 0.86,
+        "sync_ops_per_step": 200.0,
+        "cuda_kernels_per_step": 3296.5,
+        "avoidable": "no",
+        "note": ""
+      },
+      {
+        "component": "backward_only",
+        "scalar_reads_per_step": 5.0,
+        "share_of_step_scalar_reads_percent": 0.48,
+        "sync_ops_per_step": 159.0,
+        "cuda_kernels_per_step": 34122.5,
+        "avoidable": "no",
+        "note": "full_train_step minus forward_with_grad_and_loss minus optimizer_and_clip_only"
+      },
+      {
+        "component": "data_prepare",
+        "scalar_reads_per_step": 3.0,
+        "share_of_step_scalar_reads_percent": 0.29,
+        "sync_ops_per_step": 1.0,
+        "cuda_kernels_per_step": 0.0,
+        "avoidable": "yes",
+        "note": ""
+      },
+      {
+        "component": "sam_projection_decode_only",
+        "scalar_reads_per_step": 2.0,
+        "share_of_step_scalar_reads_percent": 0.19,
+        "sync_ops_per_step": 14.0,
+        "cuda_kernels_per_step": 741.5,
+        "avoidable": "no",
+        "note": ""
+      }
+    ],
+    "step_scalar_reads": 1048.0,
+    "step_sync_ops": 427.0,
+    "step_cuda_kernels": 57262.0,
+    "gradient_checkpointing": false,
+    "comparison": {
+      "full_step_scalar_reads_on": 1048.0,
+      "full_step_scalar_reads_off": 1048.0,
+      "backward_scalar_reads_on": 5.0,
+      "backward_scalar_reads_off": 5.0
+    }
+  }
+}

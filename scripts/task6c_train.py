@@ -165,8 +165,13 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
     while step < steps:
         sample = samples[step % len(samples)]
         batch, image = runtime.prepare(sample)
-        moved = batch.to(runtime.device)
         if is_language_only:
+            # Task 6C.7 section 3: Phase A calls Qwen directly, so it moves the batch
+            # itself. Phase B must NOT build its own copy here: `runtime.train_step`
+            # already performs `batch.to(self.device)`, so the previous unconditional
+            # `moved = batch.to(...)` allocated and copied a full batch that Phase B
+            # then discarded.
+            moved = batch.to(runtime.device)
             with torch.autocast("cuda", dtype=torch.bfloat16, enabled=True):
                 output = runtime.model.qwen(
                     input_ids=moved.input_ids,
@@ -192,10 +197,13 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
             optimizer.step()
             value = float(loss.detach())
             losses = {"total": value, "lm_ce": value, "mask_bce": 0.0, "mask_dice": 0.0}
-            del output
+            del output, moved
         else:
             gt_mask = sample.target_mask()
             features, _cached = runtime.features_for(sample, image)
+            # Task 6C.7: identify the source image for the frozen visual-feature cache. Two
+            # instructions on one image share one entry; a no-op when no cache is installed.
+            runtime.set_visual_cache_key(sample.image_id)
             result = runtime.train_step(
                 batch,
                 gt_mask,
@@ -213,7 +221,8 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
         if scheduler is not None:
             scheduler.step()
         step += 1
-        del batch, moved
+        # `moved` only exists in Phase A (Task 6C.7 section 3), so it is released there.
+        del batch
 
         if step % log_every == 0 or step == steps:
             history.append(
@@ -240,6 +249,7 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
         # Task 6C.6 section 1: recorded so a run's report states which diagnostic mode
         # it actually used.
         "collect_grad_norms": collect_grad_norms,
+        "visual_cache": runtime.visual_cache_stats(),
         "optimizer_groups": [
             {"lr": g["lr"], "weight_decay": g["weight_decay"], "name": g.get("name"), "tensors": len(g["params"])}
             for g in groups
@@ -328,6 +338,18 @@ def main(argv: list[str] | None = None) -> int:
 
     runtime = build_runtime(cfg, device="cuda", verbose=True)
     determinism = runtime.reports["determinism"]
+    # Task 6C.7 section 11: the frozen visual-feature cache is adopted for the formal path.
+    visual_cache_report = None
+    if bool(cfg.get("training", {}).get("visual_feature_cache", False)):
+        visual_cache_report = runtime.install_visual_cache(
+            enabled=True,
+            max_images=int(cfg.get("training", {}).get("visual_feature_cache_max_images", 512)),
+        )
+        print(
+            f"[task6c] arm {arm}: visual-feature cache ON "
+            f"(max {visual_cache_report['max_images']} images, ~2.0 GiB at 4 MiB/image)",
+            flush=True,
+        )
     arm_dir = checkpoint_dir(cfg, arm)
     arm_dir.mkdir(parents=True, exist_ok=True)
     print(f"[task6c] arm {arm}: checkpoint dir {arm_dir}", flush=True)
@@ -373,6 +395,7 @@ def main(argv: list[str] | None = None) -> int:
         "bridge": spec["bridge"],
         "config": cfg,
         "determinism": determinism,
+        "visual_feature_cache": visual_cache_report,
         "lookup_audit": lookup_audit,
         "subset_sizes": {"train_records": len(train_samples), "val_records": len(val_samples), "pairs": len(pairs)},
         "trainable_params_initial": runtime.reports["params"],

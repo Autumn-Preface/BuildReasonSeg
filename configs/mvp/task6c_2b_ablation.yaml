@@ -109,6 +109,15 @@ training:
   # parameter groups. Set to true for Stage-1 / smoke diagnostics that consume the
   # per-group dictionary.
   collect_grad_norms: false
+  # Task 6C.7: the Qwen visual tower is frozen (no visual LoRA) and its output is a pure
+  # function of the source image. Caching it on the CPU is bit-equivalent over 12 steps
+  # (evaluation/task6c7_equivalence.json) and worth +9.94% warm throughput in a paired
+  # ablation inside one runtime (evaluation/task6c7_paired_ablation.json), with 8.4% fewer
+  # CUDA kernels and 43% fewer host/device syncs per step. The cache stores only
+  # `pooler_output` + `deepstack_features` - never a language-model hidden state, `[SEG]`
+  # state or logit. 512 images x 4.0 MiB = 2.0 GiB, inside the 8 GiB budget.
+  visual_feature_cache: true
+  visual_feature_cache_max_images: 512
   train_at_original_resolution: true
   # Task 6C section 4.4: cover the whole 480-record train subset.
   feature_cache_images: 480

@@ -53,6 +53,7 @@ class _FakeBatch:
 
 class _FakeSample:
     sample_id = "fake-sample"
+    image_id = "fake-image"
 
     def target_mask(self):  # noqa: D102
         return np.zeros((2, 2), dtype=bool)
@@ -99,6 +100,13 @@ class _FakeRuntime:
 
     def features_for(self, sample, image):  # noqa: D102, ANN001
         return None, False
+
+    def set_visual_cache_key(self, key):  # noqa: D102, ANN001
+        # Task 6C.7 added this to the formal Phase-B loop; no cache is installed here.
+        self.visual_cache_key = key
+
+    def visual_cache_stats(self):  # noqa: D102
+        return {"enabled": False, "installed": False}
 
     def build_scheduler_for(self, optimizer, steps, cfg):  # noqa: D102, ANN001
         return None

@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6C.6._
+_Last updated by DSH at the end of Task 6C.7._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -60,6 +60,7 @@ The block above is machine-checked against
 | 6C | **Paired counterfactual training × neutral SAM prompt 2×2 ablation** | **done → `EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`** |
 | 6C.5 | **Batch-1 training-pipeline throughput audit + value-preserving optimization** | **done → `OPTIMIZATION_PARTIAL`** |
 | 6C.6 | **Launch-overhead candidates + formal-path integration of the 6C.5 winner** | **done → `OPTIMIZATION_PARTIAL`** |
+| 6C.7 | **Frozen Qwen visual-feature cache + remaining batch-1 sync audit** | **done → `OPTIMIZATION_PARTIAL`** |
 
 ## Task 6C measured results
 
@@ -171,6 +172,50 @@ training loop; every other candidate was measured and rejected. Full detail:
    reading `torch.compile` errors on this Windows locale (otherwise the real `TritonMissing` cause is
    hidden behind a `UnicodeDecodeError`).
 
+## Task 6C.7 measured results
+
+Performance-only task; two changes adopted, and the model/loss/data/optimizer semantics are untouched.
+Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.json`.
+
+| | Value |
+|---|---|
+| Section 3 Phase-B duplicate H2D | **removed** (exact; also fixed a `del moved` `UnboundLocalError` the refactor introduced) |
+| Frozen Qwen visual-feature cache | **adopted** — `BIT_EQUIVALENT`, **+9.94 %** warm paired throughput |
+| Cache footprint | 4.0 MiB/image (`pooler_output` 1 MiB + 3 × `deepstack_features` 1 MiB, bf16), bound 512 images = **2.0 GiB** |
+| Kernel / sync change | **−8.44 %** CUDA kernels, **−43.47 %** host↔device sync ops per step |
+| Adopted runtime footprint | 8.582 GiB reserved VRAM, 4.751 GiB RSS + 128 MiB cache, no OOM |
+| Config | `training.visual_feature_cache: true`, `visual_feature_cache_max_images: 512` |
+
+1. **The visual tower is provably cacheable.** 315 visual parameters, all bf16 and all frozen; zero LoRA
+   modules in the tower (`lora.text_only: true`); no dropout, so it consumes no RNG; recomputation is
+   bit-identical (max abs difference 0.0); nothing in the tower moves during a real optimizer step
+   (parameters *and* buffers checked); and 8 same-image instruction pairs produce identical
+   `pixel_values` **and** identical visual features — the tower is instruction-independent.
+2. **The cached boundary is the narrowest available**: `Qwen3VLModel.get_image_features(...)` output,
+   i.e. `pooler_output` + `deepstack_features`, before they are mixed with trainable text hidden states.
+   The wrapper is an instance-level replacement on the project's own Qwen module with the original bound
+   method preserved, so the miss path is byte-identical. Nothing downstream of a trainable parameter is
+   cached, and `last_hidden_state` is deliberately not cached (the language model never reads it).
+3. **Equivalence is bit-exact** over 16 samples' features and a 12-step gate with per-run re-seeding, for
+   both key strategies (source-image identity and pixel-content hash). First-step loss identical.
+4. **The gain is real but only visible under a drift-robust design.** Whole-variant runs drift by −24.6 %
+   and the four-run interleaved V1/V2 comparison produced rounds disagreeing in sign (+15.7 % V1, then
+   +8.9 % V2). A paired ablation — alternating 8-step cache-off/cache-on blocks inside one runtime — gives
+   **+10.41 % (all pairs) / +9.94 % (warm), 4/4 pairs in favour**. Warming the cache while it is disabled
+   stores nothing, and that mistake alone had reported +2.31 % and would have rejected the change.
+5. **The remaining ~1,051 scalar read-backs are PyTorch's, not ours.** Scoped windows plus a
+   `sys.setprofile` `c_call` tracer attribute 99.5 % of them to `optimizer.step()` →
+   `torch/optim/adam.py:770-776` converting each parameter's **CPU-hosted** `step` counter twice per step
+   (`_get_value` → `.item()`); the upstream comment states the CPU hosting is deliberate. The optimizer
+   window issues 1,024 reads with **one** sync op, so they are cheap; backward contributes 5 reads;
+   disabling gradient checkpointing changes nothing. `fused=True` would remove them, but Task 6C.6
+   measured it at −0.71 % and it is `NOT_EQUIVALENT`, and section 4 forbids patching third-party
+   internals. Project-owned reads are ~7/step (<1 %), so V3 (deferred scalar logging) was not implemented.
+6. **Batch-1 optimization is now exhausted on evidence**, which is what makes the batching recommendation
+   earned: the redundant H2D is gone, the sync traffic is localized and dismissed, and the last large
+   removable win is adopted. What remains is execution shape (~52,500 kernels/step, ~2 µs median, GPU
+   ~40 %).
+
 ## What Task 6C changed in the project's understanding
 
 1. **Neither of Task 6B's two confounds is the cause.** All four arms are 0/20 on the paired unseen probe
@@ -212,10 +257,11 @@ training loop; every other candidate was measured and rejected. Full detail:
 5. **The best mIoU arm is not the most diverse arm** (`U_L` 0.1087 vs `P_L` 0.0928), so mIoU alone remains
    a misleading selection signal.
 6. **Training throughput is launch-bound at batch 1** and the removable overhead is now exhausted:
-   2.505 samples/s after Task 6C.6 (integrated B0.6), GPU utilization ~40 %, 57k tiny kernels per step.
-   Caching, pinning, prefetch, `torch.compile`, optimizer/clipping implementations, SDPA backends and
-   checkpointing-off have all been measured and rejected. The remaining lever is arithmetic intensity
-   (true batching ≥2), which is a new experiment, not a perf tweak.
+   the adopted runtime is Task 6C.6's integration plus Task 6C.7's frozen visual-feature cache, worth
+   +9.94 % on top (paired ablation), with 8.4 % fewer kernels and 43 % fewer sync ops. Caching (SAM),
+   pinning, prefetch, `torch.compile`, optimizer/clipping implementations, SDPA backends and
+   checkpointing-off are all measured and closed; the remaining lever is arithmetic intensity (true
+   batching ≥2), which is a new experiment, not a perf tweak.
 
 ## Current blockers
 
@@ -225,7 +271,7 @@ search space is narrow and explicit.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6C.6 results**, then either
+**ChatGPT review of the pushed Task 6C.7 results**, then either
 
 * **Task 6D aimed after the prompt** (if model quality is the priority):
 
@@ -238,14 +284,14 @@ search space is narrow and explicit.
 
   or
 
-* **Task 6C.7 true-batching feasibility** (only if throughput is blocking) — VRAM headroom at batch 2/4 with
-  checkpointing ON, an explicit equivalence story for a changed effective batch, and its own adoption gate.
-  It is not authorised by Task 6C.6.
+* **Task 6C.8 true-batching feasibility** (the performance question Task 6C.7 now qualifies) — VRAM headroom
+  at batch 2/4 with checkpointing ON, an explicit equivalence story for a changed effective batch, and its
+  own adoption gate. It is not authorised by Task 6C.7.
 
 Do not re-open pipeline caching, `torch.compile`, the optimizer/clipping implementations, SDPA backend
-pinning or checkpointing-off: all six are measured, gated and closed for this machine.
+pinning, checkpointing-off or the visual-feature cache: all seven are measured, gated and closed.
 
 Full detail: `handoff/FROM_DSH.md`, `docs/task6c_prompt_ablation.md`,
 `docs/task6c5_training_optimization.md`, `docs/task6c6_launch_optimization.md`,
-`evaluation/task6c_comparison.json`, `evaluation/task6c6_final_benchmark.json`,
-`docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).
+`docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c_comparison.json`,
+`evaluation/task6c7_paired_ablation.json`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).

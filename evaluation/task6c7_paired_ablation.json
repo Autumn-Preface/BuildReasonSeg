@@ -1,0 +1,204 @@
+{
+  "_doc": "Task 6C.7 section 9/11. Fine-grained paired ablation of the frozen visual cache: inside one runtime, alternating 8-step cache-off / cache-on blocks, with each adjacent off/on pair treated as one drift-robust observation. The vision tower has no dropout, so toggling the cache does not perturb the RNG and both arms train identically. Kernel/sync counts are measured per arm with a short profiled window.",
+  "task": "6C.7",
+  "block_steps": 8,
+  "warmup_steps": 8,
+  "batch_size": 1,
+  "cold_cache": {
+    "unique_images": 32,
+    "seconds": 15.739,
+    "ms_per_image": 491.856,
+    "entries": 32,
+    "bytes": 134217728,
+    "gib": 0.125,
+    "bytes_per_image": 4194304.0
+  },
+  "blocks": [
+    {
+      "arm": "off",
+      "steps": 8,
+      "seconds": 2.5807,
+      "ms_per_step": 322.583,
+      "samples_per_sec": 3.1
+    },
+    {
+      "arm": "on",
+      "steps": 8,
+      "seconds": 2.3077,
+      "ms_per_step": 288.459,
+      "samples_per_sec": 3.4667
+    },
+    {
+      "arm": "off",
+      "steps": 8,
+      "seconds": 2.5595,
+      "ms_per_step": 319.941,
+      "samples_per_sec": 3.1256
+    },
+    {
+      "arm": "on",
+      "steps": 8,
+      "seconds": 2.2704,
+      "ms_per_step": 283.801,
+      "samples_per_sec": 3.5236
+    },
+    {
+      "arm": "off",
+      "steps": 8,
+      "seconds": 2.5403,
+      "ms_per_step": 317.543,
+      "samples_per_sec": 3.1492
+    },
+    {
+      "arm": "on",
+      "steps": 8,
+      "seconds": 2.351,
+      "ms_per_step": 293.875,
+      "samples_per_sec": 3.4028
+    },
+    {
+      "arm": "off",
+      "steps": 8,
+      "seconds": 2.6283,
+      "ms_per_step": 328.538,
+      "samples_per_sec": 3.0438
+    },
+    {
+      "arm": "on",
+      "steps": 8,
+      "seconds": 2.4109,
+      "ms_per_step": 301.359,
+      "samples_per_sec": 3.3183
+    }
+  ],
+  "pairs": [
+    {
+      "off_ms_per_step": 322.583,
+      "on_ms_per_step": 288.459,
+      "on_vs_off_percent": 11.829
+    },
+    {
+      "off_ms_per_step": 319.941,
+      "on_ms_per_step": 283.801,
+      "on_vs_off_percent": 12.734
+    },
+    {
+      "off_ms_per_step": 317.543,
+      "on_ms_per_step": 293.875,
+      "on_vs_off_percent": 8.053
+    },
+    {
+      "off_ms_per_step": 328.538,
+      "on_ms_per_step": 301.359,
+      "on_vs_off_percent": 9.018
+    }
+  ],
+  "paired_mean_on_vs_off_percent": 10.409,
+  "paired_mean_warm_only_percent": 9.935,
+  "pairs_in_favour_of_cache": 4,
+  "pairs_total": 4,
+  "counters_per_step": {
+    "off": {
+      "cuda_kernels": 57341.5,
+      "item_op_events": 2102.0,
+      "scalar_reads": 1051.0,
+      "sync_ops": 444.0
+    },
+    "on": {
+      "cuda_kernels": 52501.0,
+      "item_op_events": 2084.0,
+      "scalar_reads": 1042.0,
+      "sync_ops": 251.0
+    }
+  },
+  "kernel_count_reduction_percent": 8.44,
+  "sync_count_reduction_percent": 43.47,
+  "secondary_route_kernel_or_sync": true,
+  "adopted": true,
+  "adoption_reason": "warm paired mean +9.94% clears the section 11 8.0% gate",
+  "utilization": {
+    "interval_seconds": 0.5,
+    "n_samples": 41,
+    "nvidia_smi_call_seconds": {
+      "n": 41,
+      "mean": 0.06728657317066014,
+      "median": 0.06925680000131251,
+      "p90": 0.08724200000142446,
+      "min": 0.03903549999813549,
+      "max": 0.10387949999858392
+    },
+    "gpu_utilization_percent": {
+      "n": 41,
+      "mean": 40.80487804878049,
+      "median": 44.0,
+      "p90": 52.0,
+      "min": 0.0,
+      "max": 61.0
+    },
+    "gpu_memory_used_mib": {
+      "n": 41,
+      "mean": 9916.09756097561,
+      "median": 10062.0,
+      "p90": 10062.0,
+      "min": 7038.0,
+      "max": 10062.0
+    },
+    "gpu_temperature_c": {
+      "n": 41,
+      "mean": 71.1219512195122,
+      "median": 72.0,
+      "p90": 76.0,
+      "min": 60.0,
+      "max": 77.0
+    },
+    "gpu_power_watts": {
+      "n": 41,
+      "mean": 106.42073170731707,
+      "median": 111.87,
+      "p90": 116.73,
+      "min": 24.36,
+      "max": 120.58
+    },
+    "cpu_total_percent": {
+      "n": 41,
+      "mean": 93.17560975609756,
+      "median": 100.0,
+      "p90": 100.0,
+      "min": 0.0,
+      "max": 100.0
+    },
+    "process_cpu_percent": {
+      "n": 41,
+      "mean": 2037.631707317073,
+      "median": 2170.7,
+      "p90": 2216.7,
+      "min": 705.6,
+      "max": 2261.9
+    },
+    "process_rss_gib": {
+      "n": 41,
+      "mean": 3.415780487804878,
+      "median": 3.45,
+      "p90": 3.45,
+      "min": 2.704,
+      "max": 3.45
+    },
+    "system_ram_used_gib": {
+      "n": 41,
+      "mean": 14.307073170731709,
+      "median": 14.33,
+      "p90": 14.356,
+      "min": 13.594,
+      "max": 14.431
+    },
+    "system_ram_percent": {
+      "n": 41,
+      "mean": 45.609756097560975,
+      "median": 45.7,
+      "p90": 45.8,
+      "min": 43.3,
+      "max": 46.0
+    }
+  },
+  "strict_determinism_effective": true
+}
