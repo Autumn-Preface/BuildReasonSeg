@@ -1,0 +1,2708 @@
+{
+  "baseline_state": {
+    "phase": "baseline",
+    "captured_at": "2026-09-26T13:13:34+0800",
+    "processes": {
+      "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "total_processes": 367,
+      "watt_related": [],
+      "watt_related_count": 0,
+      "excluded_self_matches": [
+        {
+          "pid": 31036,
+          "name": "node.exe"
+        },
+        {
+          "pid": 4080,
+          "name": "powershell.exe"
+        },
+        {
+          "pid": 30060,
+          "name": "python.exe"
+        }
+      ]
+    },
+    "services": {
+      "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "watt_related": [],
+      "watt_related_count": 0
+    },
+    "listeners": {
+      "command": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "total_listeners": 68,
+      "on_port_443": [],
+      "on_port_80": [],
+      "on_watt_typical_ports": [],
+      "all": [
+        {
+          "address": "::",
+          "port": 49768,
+          "pid": 1920,
+          "process": "services"
+        },
+        {
+          "address": "::",
+          "port": 49668,
+          "pid": 5264,
+          "process": "spoolsv"
+        },
+        {
+          "address": "::",
+          "port": 49667,
+          "pid": 3888,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 49666,
+          "pid": 3220,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 49665,
+          "pid": 1848,
+          "process": "wininit"
+        },
+        {
+          "address": "::",
+          "port": 49664,
+          "pid": 1940,
+          "process": "lsass"
+        },
+        {
+          "address": "::1",
+          "port": 42050,
+          "pid": 9616,
+          "process": "OneDrive.Sync.Service"
+        },
+        {
+          "address": "::",
+          "port": 7680,
+          "pid": 34792,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 445,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "::",
+          "port": 135,
+          "pid": 1996,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 59111,
+          "pid": 8784,
+          "process": "lktsrv"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 59110,
+          "pid": 8800,
+          "process": "nidmsrv"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 55774,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 55767,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 51100,
+          "pid": 23820,
+          "process": "ArmouryCrate.UserSessionHelper"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 50923,
+          "pid": 6016,
+          "process": "ArmouryCrateControlInterface"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 50100,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49794,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49793,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49792,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49791,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49788,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49783,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49769,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49768,
+          "pid": 1920,
+          "process": "services"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49766,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49765,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 49681,
+          "pid": 8812,
+          "process": "nimdnsResponder"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 49670,
+          "pid": 9332,
+          "process": "niDiscSvc"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49668,
+          "pid": 5264,
+          "process": "spoolsv"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49667,
+          "pid": 3888,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49666,
+          "pid": 3220,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49665,
+          "pid": 1848,
+          "process": "wininit"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49664,
+          "pid": 1940,
+          "process": "lsass"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 40431,
+          "pid": 9740,
+          "process": "GameViewerServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 27339,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 27036,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 24830,
+          "pid": 5496,
+          "process": "AsusSoftwareManager"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 22112,
+          "pid": 6484,
+          "process": "ROGLiveService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 21635,
+          "pid": 9740,
+          "process": "GameViewerServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 16301,
+          "pid": 548,
+          "process": "uu_ball"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13032,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13031,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13030,
+          "pid": 6484,
+          "process": "ROGLiveService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 12177,
+          "pid": 23820,
+          "process": "ArmouryCrate.UserSessionHelper"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 11001,
+          "pid": 6148,
+          "process": "AuraWallpaperService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 10000,
+          "pid": 30420,
+          "process": "YunDetectService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9410,
+          "pid": 40968,
+          "process": "QQEX"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9210,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9014,
+          "pid": 23524,
+          "process": "ArmouryHtmlDebugServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9013,
+          "pid": 17248,
+          "process": "ArmourySocketServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9012,
+          "pid": 17248,
+          "process": "ArmourySocketServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 8885,
+          "pid": 23580,
+          "process": "ROGKBPlugin"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 8082,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 7778,
+          "pid": 6016,
+          "process": "ArmouryCrateControlInterface"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 6850,
+          "pid": 20384,
+          "process": "AacAmbientLighting"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 5283,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 5040,
+          "pid": 15548,
+          "process": "svchost"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4310,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4301,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4001,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 3580,
+          "pid": 6460,
+          "process": "nisvcloc"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 3080,
+          "pid": 17384,
+          "process": "node"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 2343,
+          "pid": 7244,
+          "process": "lkads"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 2013,
+          "pid": 616,
+          "process": "uu"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 1042,
+          "pid": 22872,
+          "process": "asus_framework"
+        },
+        {
+          "address": "10.19.246.26",
+          "port": 139,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 135,
+          "pid": 1996,
+          "process": "svchost"
+        }
+      ]
+    },
+    "hosts": {
+      "command": "read-only read of C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "path": "C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "readable": true,
+      "sha256": "b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46",
+      "total_active_lines": 1,
+      "relevant_entries": [],
+      "watt_marker_lines": [],
+      "blackhole_entries": []
+    },
+    "dns": {
+      "command": "python socket.getaddrinfo(host, 443)",
+      "github.com": {
+        "resolved": true,
+        "addresses": [
+          "20.205.243.166"
+        ]
+      },
+      "api.github.com": {
+        "resolved": true,
+        "addresses": [
+          "20.205.243.168"
+        ]
+      },
+      "raw.githubusercontent.com": {
+        "resolved": true,
+        "addresses": [
+          "185.199.108.133",
+          "185.199.109.133",
+          "185.199.110.133",
+          "185.199.111.133"
+        ]
+      },
+      "huggingface.co": {
+        "resolved": false,
+        "error": "gaierror: [Errno 11001] getaddrinfo failed"
+      },
+      "hf.co": {
+        "resolved": true,
+        "addresses": [
+          "18.213.84.241",
+          "3.210.66.237",
+          "34.198.14.237",
+          "34.202.8.246",
+          "34.204.155.59",
+          "44.212.132.255"
+        ]
+      }
+    },
+    "https": {
+      "command": "python urllib.request with ssl.create_default_context(cafile=certifi.where())",
+      "tls": {
+        "cafile": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+        "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+        "certificate_count": 121
+      },
+      "verify_enabled": true,
+      "results": {
+        "github": {
+          "url": "https://github.com/",
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.32
+        },
+        "github_api": {
+          "url": "https://api.github.com/repos/facebookresearch/sam2",
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.242
+        },
+        "raw_githubusercontent": {
+          "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.236
+        },
+        "huggingface": {
+          "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
+          "ok": false,
+          "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+          "seconds": 0.001
+        }
+      }
+    },
+    "git": {
+      "command": "git ls-remote https://github.com/facebookresearch/sam2 HEAD",
+      "ok": true,
+      "returncode": 0,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "seconds": 0.927
+    },
+    "tcp": [
+      {
+        "host": "18.213.84.241",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.253
+      },
+      {
+        "host": "185.199.108.133",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.077
+      },
+      {
+        "host": "185.199.109.133",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.089
+      },
+      {
+        "host": "185.199.110.133",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.093
+      }
+    ],
+    "commands_used": {
+      "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
+      "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
+    }
+  },
+  "locate_state": {
+    "_doc": "TO_DSH section 4: locate the installed executable without changing anything.",
+    "running_process": [],
+    "shortcuts": {
+      "command": "powershell -NoProfile -Command \"$sh = New-Object -ComObject WScript.Shell; $dirs = @(\\\"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\\", \\\"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\\", \\\"$env:USERPROFILE\\Desktop\\\", \\\"$env:PUBLIC\\Desktop\\\"); Get-ChildItem -Path $dirs -Recurse -Filter *.lnk -ErrorAction SilentlyContinue | ForEach-Object { $s = $sh.CreateShortcut($_.FullName); [pscustomobject]@{ shortcut = $_.FullName; target = $s.TargetPath; args = $s.Arguments; workdir = $s.WorkingDirectory } } | ConvertTo-Json -Depth 3 -Compress\"",
+      "total": 187,
+      "matches": []
+    },
+    "directories": {
+      "command": "powershell -NoProfile -Command \"$roots = @(\\\"$env:ProgramFiles\\\", \\\"${env:ProgramFiles(x86)}\\\", \\\"$env:LOCALAPPDATA\\Programs\\\", \\\"$env:LOCALAPPDATA\\\", \\\"$env:APPDATA\\\"); foreach ($root in $roots) { if (Test-Path $root) { Get-ChildItem -Path $root -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'watt|steam|beyond|toolkit' } | Select-Object -ExpandProperty FullName } } | ConvertTo-Json -Compress\"",
+      "matches": []
+    },
+    "executables_in_matched_directories": {
+      "command": null,
+      "matches": []
+    },
+    "uninstall_entries": {
+      "command": "powershell -NoProfile -Command \"$paths = @('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'); Get-ItemProperty -Path $paths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -match 'watt|steam|beyond' } | Select-Object DisplayName,DisplayVersion,InstallLocation,DisplayIcon,UninstallString | ConvertTo-Json -Depth 3 -Compress\"",
+      "matches": [
+        {
+          "DisplayName": "Steam",
+          "DisplayVersion": "2.10.91.91",
+          "InstallLocation": null,
+          "DisplayIcon": "C:\\D\\steam\\uninstall.exe",
+          "UninstallString": "C:\\D\\steam\\uninstall.exe"
+        }
+      ]
+    },
+    "candidates": [
+      "C:\\D\\steam\\uninstall.exe"
+    ],
+    "selected": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
+    "selected_exists": true,
+    "selected_metadata": {
+      "path": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
+      "version": "3.1.2025.0 (MSIX 4651ED44255E.47979655102CE)"
+    },
+    "msix_finding": {
+      "_doc": "Located via Get-StartApps + Get-AppxPackage: Watt Toolkit is a Microsoft Store MSIX package, so there is no Win32 shortcut or uninstall entry to find.",
+      "display_name": "Watt Toolkit",
+      "package_name": "4651ED44255E.47979655102CE",
+      "package_family_name": "4651ED44255E.47979655102CE_k6txddmbb6c52",
+      "package_full_name_x64": "4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52",
+      "version": "3.1.2025.0",
+      "signature_kind": "Store",
+      "install_location": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52",
+      "executable": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
+      "executable_bytes": 209864,
+      "entry_point": "Windows.FullTrustApplication",
+      "application_id": "App",
+      "capabilities": [
+        "internetClient",
+        "runFullTrust",
+        "allowElevation"
+      ],
+      "accelerator_module": "modules\\\\Accelerator\\\\Steam++.Accelerator.dll",
+      "launch_method": "explorer.exe shell:AppsFolder\\\\4651ED44255E.47979655102CE_k6txddmbb6c52!App",
+      "launch_method_rationale": "normal Start-Menu activation of the packaged app; no elevated mode, no undocumented switches, no compatibility flags",
+      "elevation_note": "the package declares the allowElevation capability, so enabling acceleration may raise a UAC prompt that DSH cannot accept"
+    }
+  },
+  "active_state": {
+    "phase": "active",
+    "captured_at": "2026-09-26T13:16:46+0800",
+    "processes": {
+      "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "total_processes": 375,
+      "watt_related": [
+        {
+          "pid": 21808,
+          "parent_pid": 13784,
+          "name": "Steam++.exe",
+          "executable_path": null,
+          "command_line": ""
+        },
+        {
+          "pid": 2388,
+          "parent_pid": 21808,
+          "name": "Steam++.exe",
+          "executable_path": null,
+          "command_line": ""
+        },
+        {
+          "pid": 12380,
+          "parent_pid": 21808,
+          "name": "Steam++.Accelerator.exe",
+          "executable_path": null,
+          "command_line": ""
+        }
+      ],
+      "watt_related_count": 3,
+      "excluded_self_matches": [
+        {
+          "pid": 8632,
+          "name": "node.exe"
+        },
+        {
+          "pid": 44352,
+          "name": "powershell.exe"
+        },
+        {
+          "pid": 18236,
+          "name": "python.exe"
+        }
+      ]
+    },
+    "services": {
+      "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "watt_related": [],
+      "watt_related_count": 0
+    },
+    "listeners": {
+      "command": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "total_listeners": 70,
+      "on_port_443": [
+        {
+          "address": "0.0.0.0",
+          "port": 443,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ],
+      "on_port_80": [
+        {
+          "address": "0.0.0.0",
+          "port": 80,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ],
+      "on_watt_typical_ports": [
+        {
+          "address": "0.0.0.0",
+          "port": 443,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 80,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ],
+      "all": [
+        {
+          "address": "::",
+          "port": 49768,
+          "pid": 1920,
+          "process": "services"
+        },
+        {
+          "address": "::",
+          "port": 49668,
+          "pid": 5264,
+          "process": "spoolsv"
+        },
+        {
+          "address": "::",
+          "port": 49667,
+          "pid": 3888,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 49666,
+          "pid": 3220,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 49665,
+          "pid": 1848,
+          "process": "wininit"
+        },
+        {
+          "address": "::",
+          "port": 49664,
+          "pid": 1940,
+          "process": "lsass"
+        },
+        {
+          "address": "::1",
+          "port": 42050,
+          "pid": 9616,
+          "process": "OneDrive.Sync.Service"
+        },
+        {
+          "address": "::",
+          "port": 7680,
+          "pid": 34792,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 445,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "::",
+          "port": 135,
+          "pid": 1996,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 59111,
+          "pid": 8784,
+          "process": "lktsrv"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 59110,
+          "pid": 8800,
+          "process": "nidmsrv"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 55774,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 55767,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 51100,
+          "pid": 23820,
+          "process": "ArmouryCrate.UserSessionHelper"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 50923,
+          "pid": 6016,
+          "process": "ArmouryCrateControlInterface"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 50100,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49794,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49793,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49792,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49791,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49788,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49783,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49769,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49768,
+          "pid": 1920,
+          "process": "services"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49766,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49765,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 49681,
+          "pid": 8812,
+          "process": "nimdnsResponder"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 49670,
+          "pid": 9332,
+          "process": "niDiscSvc"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49668,
+          "pid": 5264,
+          "process": "spoolsv"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49667,
+          "pid": 3888,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49666,
+          "pid": 3220,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49665,
+          "pid": 1848,
+          "process": "wininit"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49664,
+          "pid": 1940,
+          "process": "lsass"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 40431,
+          "pid": 9740,
+          "process": "GameViewerServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 27339,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 27036,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 24830,
+          "pid": 5496,
+          "process": "AsusSoftwareManager"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 22112,
+          "pid": 6484,
+          "process": "ROGLiveService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 21635,
+          "pid": 9740,
+          "process": "GameViewerServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 16301,
+          "pid": 548,
+          "process": "uu_ball"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13032,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13031,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13030,
+          "pid": 6484,
+          "process": "ROGLiveService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 12177,
+          "pid": 23820,
+          "process": "ArmouryCrate.UserSessionHelper"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 11001,
+          "pid": 6148,
+          "process": "AuraWallpaperService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 10000,
+          "pid": 30420,
+          "process": "YunDetectService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9410,
+          "pid": 40968,
+          "process": "QQEX"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9210,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9014,
+          "pid": 23524,
+          "process": "ArmouryHtmlDebugServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9013,
+          "pid": 17248,
+          "process": "ArmourySocketServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9012,
+          "pid": 17248,
+          "process": "ArmourySocketServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 8885,
+          "pid": 23580,
+          "process": "ROGKBPlugin"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 8082,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 7778,
+          "pid": 6016,
+          "process": "ArmouryCrateControlInterface"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 6850,
+          "pid": 20384,
+          "process": "AacAmbientLighting"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 5283,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 5040,
+          "pid": 15548,
+          "process": "svchost"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4310,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4301,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4001,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 3580,
+          "pid": 6460,
+          "process": "nisvcloc"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 3080,
+          "pid": 17384,
+          "process": "node"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 2343,
+          "pid": 7244,
+          "process": "lkads"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 2013,
+          "pid": 616,
+          "process": "uu"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 1042,
+          "pid": 22872,
+          "process": "asus_framework"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 443,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        },
+        {
+          "address": "10.19.246.26",
+          "port": 139,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 135,
+          "pid": 1996,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 80,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ]
+    },
+    "hosts": {
+      "command": "read-only read of C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "path": "C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "readable": true,
+      "sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
+      "total_active_lines": 211,
+      "relevant_entries": [
+        "127.0.0.1 huggingface.co",
+        "127.0.0.1 api.github.com",
+        "127.0.0.1 education.github.com",
+        "127.0.0.1 resources.github.com",
+        "127.0.0.1 uploads.github.com",
+        "127.0.0.1 archiveprogram.github.com",
+        "127.0.0.1 raw.github.com",
+        "127.0.0.1 raw.githubusercontent.com",
+        "127.0.0.1 github.com",
+        "127.0.0.1 pages.github.com",
+        "127.0.0.1 gist.github.com"
+      ],
+      "watt_marker_lines": [
+        "# Steam++ Start",
+        "# Steam++ End"
+      ],
+      "blackhole_entries": [
+        "127.0.0.1 steamcdn-a.akamaihd.net",
+        "127.0.0.1 steamuserimages-a.akamaihd.net",
+        "127.0.0.1 cdn.akamai.steamstatic.com",
+        "127.0.0.1 community.akamai.steamstatic.com",
+        "127.0.0.1 avatars.akamai.steamstatic.com",
+        "127.0.0.1 store.akamai.steamstatic.com",
+        "127.0.0.1 community.steamstatic.com",
+        "127.0.0.1 media.steampowered.com",
+        "127.0.0.1 steamcommunity.com",
+        "127.0.0.1 www.steamcommunity.com",
+        "127.0.0.1 store.steampowered.com",
+        "127.0.0.1 api.steampowered.com",
+        "127.0.0.1 help.steampowered.com",
+        "127.0.0.1 login.steampowered.com",
+        "127.0.0.1 checkout.steampowered.com",
+        "127.0.0.1 img.youtube.com",
+        "127.0.0.1 irc-ws.chat.twitch.tv",
+        "127.0.0.1 irc-ws-r.chat.twitch.tv",
+        "127.0.0.1 passport.twitch.tv",
+        "127.0.0.1 assets.twitch.tv",
+        "127.0.0.1 clips-media-assets2.twitch.tv",
+        "127.0.0.1 abs.hls.ttvnw.net",
+        "127.0.0.1 video-edge-00252e.pdx01.abs.hls.ttvnw.net",
+        "127.0.0.1 id-cdn.twitch.tv",
+        "127.0.0.1 id.twitch.tv",
+        "127.0.0.1 pubsub-edge.twitch.tv",
+        "127.0.0.1 supervisor.ext-twitch.tv",
+        "127.0.0.1 vod-secure.twitch.tv",
+        "127.0.0.1 music.twitch.tv",
+        "127.0.0.1 panels.twitch.tv",
+        "127.0.0.1 twitch.tv",
+        "127.0.0.1 www.twitch.tv",
+        "127.0.0.1 m.twitch.tv",
+        "127.0.0.1 app.twitch.tv",
+        "127.0.0.1 badges.twitch.tv",
+        "127.0.0.1 blog.twitch.tv",
+        "127.0.0.1 inspector.twitch.tv",
+        "127.0.0.1 stream.twitch.tv",
+        "127.0.0.1 dev.twitch.tv",
+        "127.0.0.1 clips.twitch.tv",
+        "127.0.0.1 gql.twitch.tv",
+        "127.0.0.1 vod-storyboards.twitch.tv",
+        "127.0.0.1 trowel.twitch.tv",
+        "127.0.0.1 countess.twitch.tv",
+        "127.0.0.1 extension-files.twitch.tv",
+        "127.0.0.1 vod-metro.twitch.tv",
+        "127.0.0.1 pubster.twitch.tv",
+        "127.0.0.1 help.twitch.tv",
+        "127.0.0.1 link.twitch.tv",
+        "127.0.0.1 player.twitch.tv",
+        "127.0.0.1 api.twitch.tv",
+        "127.0.0.1 cvp.twitch.tv",
+        "127.0.0.1 client-event-reporter.twitch.tv",
+        "127.0.0.1 gds-vhs-drops-campaign-images.twitch.tv",
+        "127.0.0.1 us-west-2.uploads-regional.twitch.tv",
+        "127.0.0.1 assets.help.twitch.tv",
+        "127.0.0.1 discuss.dev.twitch.tv",
+        "127.0.0.1 dashboard.twitch.tv",
+        "127.0.0.1 origin-a.akamaihd.net",
+        "127.0.0.1 store.ubisoft.com",
+        "127.0.0.1 fonts.gstatic.com",
+        "127.0.0.1 gravatar.com",
+        "127.0.0.1 secure.gravatar.com",
+        "127.0.0.1 www.gravatar.com",
+        "127.0.0.1 themes.googleusercontent.com",
+        "127.0.0.1 ajax.googleapis.com",
+        "127.0.0.1 fonts.googleapis.com",
+        "127.0.0.1 maxcdn.bootstrapcdn.com",
+        "127.0.0.1 open.spotify.com",
+        "127.0.0.1 spotify.com",
+        "127.0.0.1 www.spotify.com",
+        "127.0.0.1 apresolve.spotify.com",
+        "127.0.0.1 api-partner.spotify.com",
+        "127.0.0.1 translate.google.cn",
+        "127.0.0.1 translate.googleapis.com",
+        "127.0.0.1 translate-pa.googleapis.com",
+        "127.0.0.1 translate.google.com",
+        "127.0.0.1 google.com",
+        "127.0.0.1 www.google.com",
+        "127.0.0.1 hcaptcha.com",
+        "127.0.0.1 assets.hcaptcha.com",
+        "127.0.0.1 imgs.hcaptcha.com",
+        "127.0.0.1 www.hcaptcha.com",
+        "127.0.0.1 docs.hcaptcha.com",
+        "127.0.0.1 js.hcaptcha.com",
+        "127.0.0.1 newassets.hcaptcha.com",
+        "127.0.0.1 imgs3.hcaptcha.com",
+        "127.0.0.1 client-api.arkoselabs.com",
+        "127.0.0.1 epic-games-api.arkoselabs.com",
+        "127.0.0.1 cdn.arkoselabs.com",
+        "127.0.0.1 prod-ireland.arkoselabs.com",
+        "127.0.0.1 huggingface.co",
+        "127.0.0.1 github.dev",
+        "127.0.0.1 api.github.com",
+        "127.0.0.1 github.githubassets.com",
+        "127.0.0.1 support-assets.githubassets.com",
+        "127.0.0.1 education.github.com",
+        "127.0.0.1 resources.github.com",
+        "127.0.0.1 uploads.github.com",
+        "127.0.0.1 archiveprogram.github.com",
+        "127.0.0.1 raw.github.com",
+        "127.0.0.1 githubusercontent.com",
+        "127.0.0.1 raw.githubusercontent.com",
+        "127.0.0.1 camo.githubusercontent.com",
+        "127.0.0.1 cloud.githubusercontent.com",
+        "127.0.0.1 avatars.githubusercontent.com",
+        "127.0.0.1 avatars0.githubusercontent.com",
+        "127.0.0.1 avatars1.githubusercontent.com",
+        "127.0.0.1 avatars2.githubusercontent.com",
+        "127.0.0.1 avatars3.githubusercontent.com",
+        "127.0.0.1 user-images.githubusercontent.com",
+        "127.0.0.1 objects.githubusercontent.com",
+        "127.0.0.1 private-user-images.githubusercontent.com",
+        "127.0.0.1 github.com",
+        "127.0.0.1 pages.github.com",
+        "127.0.0.1 gist.github.com",
+        "127.0.0.1 githubapp.com",
+        "127.0.0.1 hub.docker.com",
+        "127.0.0.1 greasyfork.org",
+        "127.0.0.1 update.greasyfork.org",
+        "127.0.0.1 github.io",
+        "127.0.0.1 www.github.io",
+        "127.0.0.1 www.roblox.com",
+        "127.0.0.1 roblox.com",
+        "127.0.0.1 web.roblox.com",
+        "127.0.0.1 apis.roblox.com",
+        "127.0.0.1 games.roblox.com",
+        "127.0.0.1 auth.roblox.com",
+        "127.0.0.1 accountsettings.roblox.com",
+        "127.0.0.1 presence.roblox.com",
+        "127.0.0.1 friends.roblox.com",
+        "127.0.0.1 users.roblox.com",
+        "127.0.0.1 gameinternationalization.roblox.com",
+        "127.0.0.1 gamejoin.roblox.com",
+        "127.0.0.1 locale.roblox.com",
+        "127.0.0.1 metrics.roblox.com",
+        "127.0.0.1 economy.roblox.com",
+        "127.0.0.1 groups.roblox.com",
+        "127.0.0.1 develop.roblox.com",
+        "127.0.0.1 versioncompatibility.api.roblox.com",
+        "127.0.0.1 clientsettings.api.roblox.com",
+        "127.0.0.1 ephemeralcounters.api.roblox.com",
+        "127.0.0.1 nl.roblox.com",
+        "127.0.0.1 badges.roblox.com",
+        "127.0.0.1 chat.roblox.com",
+        "127.0.0.1 ecsv2.roblox.com",
+        "127.0.0.1 thumbnails.roblox.com",
+        "127.0.0.1 twostepverification.roblox.com",
+        "127.0.0.1 trades.roblox.com",
+        "127.0.0.1 notifications.roblox.com",
+        "127.0.0.1 realtime-signalr.roblox.com",
+        "127.0.0.1 assetgame.roblox.com",
+        "127.0.0.1 contacts.roblox.com",
+        "127.0.0.1 t.email.roblox.com",
+        "127.0.0.1 fandom.com",
+        "127.0.0.1 www.fandom.com",
+        "127.0.0.1 nexusmods.com",
+        "127.0.0.1 www.nexusmods.com",
+        "127.0.0.1 staticdelivery.nexusmods.com",
+        "127.0.0.1 cf-files.nexusmods.com",
+        "127.0.0.1 staticstats.nexusmods.com",
+        "127.0.0.1 users.nexusmods.com",
+        "127.0.0.1 files.nexus-cdn.com",
+        "127.0.0.1 premium-files.nexus-cdn.com",
+        "127.0.0.1 supporter-files.nexus-cdn.com",
+        "127.0.0.1 binary.lge.modcdn.io",
+        "127.0.0.1 mod.io",
+        "127.0.0.1 static.mod.io",
+        "127.0.0.1 api.mod.io",
+        "127.0.0.1 docs.mod.io",
+        "127.0.0.1 beta.mod.io",
+        "127.0.0.1 blog.mod.io",
+        "127.0.0.1 auth.mod.io",
+        "127.0.0.1 storage.live.com",
+        "127.0.0.1 skyapi.onedrive.live.com",
+        "127.0.0.1 onedrive.live.com",
+        "127.0.0.1 onedrive.live",
+        "127.0.0.1 mega.co.nz",
+        "127.0.0.1 g.cdn1.mega.co.nz",
+        "127.0.0.1 www.mega.co.nz",
+        "127.0.0.1 userstroage.mega.co.nz",
+        "127.0.0.1 g.api.mega.co.nz",
+        "127.0.0.1 mega.io",
+        "127.0.0.1 g.static.mega.co.nz",
+        "127.0.0.1 mega.nz",
+        "127.0.0.1 www.mega.nz",
+        "127.0.0.1 aem.dropbox.com",
+        "127.0.0.1 dropbox.com",
+        "127.0.0.1 www.dropbox.com",
+        "127.0.0.1 dl.dropboxusercontent.com",
+        "127.0.0.1 uc07aaf207f16a978a3dbc24a1c9.dl.dropboxusercontent.com",
+        "127.0.0.1 uc87442e427766fe8cf2a7a07827.dl.dropboxusercontent.com",
+        "127.0.0.1 uc957f785cc03b9b273234fd24f9.dl.dropboxusercontent.com",
+        "127.0.0.1 ucc541451e9df780e40777d477eb.dl.dropboxusercontent.com",
+        "127.0.0.1 ucb277f9a438d6b3f4ea2147ac26.dl.dropboxusercontent.com",
+        "127.0.0.1 uc4b4b602d4b01e27782f92ce984.dl.dropboxusercontent.com",
+        "127.0.0.1 uc9c83355d6aa8bc75f7f597c7d6.dl.dropboxusercontent.com",
+        "127.0.0.1 ucaf37cba09486e69c215bdfe2e2.dl.dropboxusercontent.com",
+        "127.0.0.1 uca3a40eb53259715309022eb9fd.dl.dropboxusercontent.com",
+        "127.0.0.1 pinterest.com",
+        "127.0.0.1 www.pinterest.com",
+        "127.0.0.1 pinimg.com",
+        "127.0.0.1 sm.pinimg.com",
+        "127.0.0.1 s.pinimg.com",
+        "127.0.0.1 i.pinimg.com",
+        "127.0.0.1 de.pinterest.com",
+        "127.0.0.1 s2.pinimg.com",
+        "127.0.0.1 pinterest.jp",
+        "127.0.0.1 pinterest.kr",
+        "127.0.0.1 pinterest.info"
+      ]
+    },
+    "dns": {
+      "command": "python socket.getaddrinfo(host, 443)",
+      "github.com": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "api.github.com": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "raw.githubusercontent.com": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "huggingface.co": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "hf.co": {
+        "resolved": true,
+        "addresses": [
+          "18.213.84.241",
+          "3.210.66.237",
+          "34.198.14.237",
+          "34.202.8.246",
+          "34.204.155.59",
+          "44.212.132.255"
+        ]
+      }
+    },
+    "https": {
+      "command": "python urllib.request with ssl.create_default_context(cafile=certifi.where())",
+      "tls": {
+        "cafile": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+        "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+        "certificate_count": 121
+      },
+      "verify_enabled": true,
+      "results": {
+        "github": {
+          "url": "https://github.com/",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.16
+        },
+        "github_api": {
+          "url": "https://api.github.com/repos/facebookresearch/sam2",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.104
+        },
+        "raw_githubusercontent": {
+          "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.092
+        },
+        "huggingface": {
+          "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.07
+        }
+      }
+    },
+    "git": {
+      "command": "git ls-remote https://github.com/facebookresearch/sam2 HEAD",
+      "ok": true,
+      "returncode": 0,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "seconds": 1.577
+    },
+    "tcp": [
+      {
+        "host": "127.0.0.1",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.012
+      },
+      {
+        "host": "18.213.84.241",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.253
+      },
+      {
+        "host": "3.210.66.237",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.26
+      },
+      {
+        "host": "34.198.14.237",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.268
+      }
+    ],
+    "commands_used": {
+      "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
+      "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
+    }
+  },
+  "post_state": {
+    "phase": "post",
+    "captured_at": "2026-09-26T13:19:31+0800",
+    "processes": {
+      "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "total_processes": 371,
+      "watt_related": [
+        {
+          "pid": 21808,
+          "parent_pid": 13784,
+          "name": "Steam++.exe",
+          "executable_path": null,
+          "command_line": ""
+        },
+        {
+          "pid": 2388,
+          "parent_pid": 21808,
+          "name": "Steam++.exe",
+          "executable_path": null,
+          "command_line": ""
+        },
+        {
+          "pid": 12380,
+          "parent_pid": 21808,
+          "name": "Steam++.Accelerator.exe",
+          "executable_path": null,
+          "command_line": ""
+        }
+      ],
+      "watt_related_count": 3,
+      "excluded_self_matches": [
+        {
+          "pid": 40688,
+          "name": "node.exe"
+        },
+        {
+          "pid": 36648,
+          "name": "powershell.exe"
+        },
+        {
+          "pid": 39184,
+          "name": "python.exe"
+        }
+      ]
+    },
+    "services": {
+      "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "watt_related": [],
+      "watt_related_count": 0
+    },
+    "listeners": {
+      "command": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "total_listeners": 70,
+      "on_port_443": [
+        {
+          "address": "0.0.0.0",
+          "port": 443,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ],
+      "on_port_80": [
+        {
+          "address": "0.0.0.0",
+          "port": 80,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ],
+      "on_watt_typical_ports": [
+        {
+          "address": "0.0.0.0",
+          "port": 443,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 80,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ],
+      "all": [
+        {
+          "address": "::",
+          "port": 49768,
+          "pid": 1920,
+          "process": "services"
+        },
+        {
+          "address": "::",
+          "port": 49668,
+          "pid": 5264,
+          "process": "spoolsv"
+        },
+        {
+          "address": "::",
+          "port": 49667,
+          "pid": 3888,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 49666,
+          "pid": 3220,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 49665,
+          "pid": 1848,
+          "process": "wininit"
+        },
+        {
+          "address": "::",
+          "port": 49664,
+          "pid": 1940,
+          "process": "lsass"
+        },
+        {
+          "address": "::1",
+          "port": 42050,
+          "pid": 9616,
+          "process": "OneDrive.Sync.Service"
+        },
+        {
+          "address": "::",
+          "port": 7680,
+          "pid": 34792,
+          "process": "svchost"
+        },
+        {
+          "address": "::",
+          "port": 445,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "::",
+          "port": 135,
+          "pid": 1996,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 59111,
+          "pid": 8784,
+          "process": "lktsrv"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 59110,
+          "pid": 8800,
+          "process": "nidmsrv"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 55774,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 55767,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 51100,
+          "pid": 23820,
+          "process": "ArmouryCrate.UserSessionHelper"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 50923,
+          "pid": 6016,
+          "process": "ArmouryCrateControlInterface"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 50100,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49794,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49793,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49792,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49791,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49788,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49783,
+          "pid": 6268,
+          "process": "GlideXService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49769,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49768,
+          "pid": 1920,
+          "process": "services"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49766,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49765,
+          "pid": 6276,
+          "process": "GlideXNearService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 49681,
+          "pid": 8812,
+          "process": "nimdnsResponder"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 49670,
+          "pid": 9332,
+          "process": "niDiscSvc"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49668,
+          "pid": 5264,
+          "process": "spoolsv"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49667,
+          "pid": 3888,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49666,
+          "pid": 3220,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49665,
+          "pid": 1848,
+          "process": "wininit"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 49664,
+          "pid": 1940,
+          "process": "lsass"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 40431,
+          "pid": 9740,
+          "process": "GameViewerServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 27339,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 27036,
+          "pid": 29960,
+          "process": "steam"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 24830,
+          "pid": 5496,
+          "process": "AsusSoftwareManager"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 22112,
+          "pid": 6484,
+          "process": "ROGLiveService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 21635,
+          "pid": 9740,
+          "process": "GameViewerServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 16301,
+          "pid": 548,
+          "process": "uu_ball"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13032,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13031,
+          "pid": 6056,
+          "process": "ArmouryCrate.Service"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 13030,
+          "pid": 6484,
+          "process": "ROGLiveService"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 12177,
+          "pid": 23820,
+          "process": "ArmouryCrate.UserSessionHelper"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 11001,
+          "pid": 6148,
+          "process": "AuraWallpaperService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 10000,
+          "pid": 30420,
+          "process": "YunDetectService"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9410,
+          "pid": 40968,
+          "process": "QQEX"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9210,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9014,
+          "pid": 23524,
+          "process": "ArmouryHtmlDebugServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9013,
+          "pid": 17248,
+          "process": "ArmourySocketServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 9012,
+          "pid": 17248,
+          "process": "ArmourySocketServer"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 8885,
+          "pid": 23580,
+          "process": "ROGKBPlugin"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 8082,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 7778,
+          "pid": 6016,
+          "process": "ArmouryCrateControlInterface"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 6850,
+          "pid": 20384,
+          "process": "AacAmbientLighting"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 5283,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 5040,
+          "pid": 15548,
+          "process": "svchost"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4310,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4301,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 4001,
+          "pid": 20768,
+          "process": "QQ"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 3580,
+          "pid": 6460,
+          "process": "nisvcloc"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 3080,
+          "pid": 17384,
+          "process": "node"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 2343,
+          "pid": 7244,
+          "process": "lkads"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 2013,
+          "pid": 616,
+          "process": "uu"
+        },
+        {
+          "address": "127.0.0.1",
+          "port": 1042,
+          "pid": 22872,
+          "process": "asus_framework"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 443,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        },
+        {
+          "address": "10.19.246.26",
+          "port": 139,
+          "pid": 4,
+          "process": "System"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 135,
+          "pid": 1996,
+          "process": "svchost"
+        },
+        {
+          "address": "0.0.0.0",
+          "port": 80,
+          "pid": 12380,
+          "process": "Steam++.Accelerator"
+        }
+      ]
+    },
+    "hosts": {
+      "command": "read-only read of C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "path": "C:\\Windows\\System32\\drivers\\etc\\hosts",
+      "readable": true,
+      "sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
+      "total_active_lines": 211,
+      "relevant_entries": [
+        "127.0.0.1 huggingface.co",
+        "127.0.0.1 api.github.com",
+        "127.0.0.1 education.github.com",
+        "127.0.0.1 resources.github.com",
+        "127.0.0.1 uploads.github.com",
+        "127.0.0.1 archiveprogram.github.com",
+        "127.0.0.1 raw.github.com",
+        "127.0.0.1 raw.githubusercontent.com",
+        "127.0.0.1 github.com",
+        "127.0.0.1 pages.github.com",
+        "127.0.0.1 gist.github.com"
+      ],
+      "watt_marker_lines": [
+        "# Steam++ Start",
+        "# Steam++ End"
+      ],
+      "blackhole_entries": [
+        "127.0.0.1 steamcdn-a.akamaihd.net",
+        "127.0.0.1 steamuserimages-a.akamaihd.net",
+        "127.0.0.1 cdn.akamai.steamstatic.com",
+        "127.0.0.1 community.akamai.steamstatic.com",
+        "127.0.0.1 avatars.akamai.steamstatic.com",
+        "127.0.0.1 store.akamai.steamstatic.com",
+        "127.0.0.1 community.steamstatic.com",
+        "127.0.0.1 media.steampowered.com",
+        "127.0.0.1 steamcommunity.com",
+        "127.0.0.1 www.steamcommunity.com",
+        "127.0.0.1 store.steampowered.com",
+        "127.0.0.1 api.steampowered.com",
+        "127.0.0.1 help.steampowered.com",
+        "127.0.0.1 login.steampowered.com",
+        "127.0.0.1 checkout.steampowered.com",
+        "127.0.0.1 img.youtube.com",
+        "127.0.0.1 irc-ws.chat.twitch.tv",
+        "127.0.0.1 irc-ws-r.chat.twitch.tv",
+        "127.0.0.1 passport.twitch.tv",
+        "127.0.0.1 assets.twitch.tv",
+        "127.0.0.1 clips-media-assets2.twitch.tv",
+        "127.0.0.1 abs.hls.ttvnw.net",
+        "127.0.0.1 video-edge-00252e.pdx01.abs.hls.ttvnw.net",
+        "127.0.0.1 id-cdn.twitch.tv",
+        "127.0.0.1 id.twitch.tv",
+        "127.0.0.1 pubsub-edge.twitch.tv",
+        "127.0.0.1 supervisor.ext-twitch.tv",
+        "127.0.0.1 vod-secure.twitch.tv",
+        "127.0.0.1 music.twitch.tv",
+        "127.0.0.1 panels.twitch.tv",
+        "127.0.0.1 twitch.tv",
+        "127.0.0.1 www.twitch.tv",
+        "127.0.0.1 m.twitch.tv",
+        "127.0.0.1 app.twitch.tv",
+        "127.0.0.1 badges.twitch.tv",
+        "127.0.0.1 blog.twitch.tv",
+        "127.0.0.1 inspector.twitch.tv",
+        "127.0.0.1 stream.twitch.tv",
+        "127.0.0.1 dev.twitch.tv",
+        "127.0.0.1 clips.twitch.tv",
+        "127.0.0.1 gql.twitch.tv",
+        "127.0.0.1 vod-storyboards.twitch.tv",
+        "127.0.0.1 trowel.twitch.tv",
+        "127.0.0.1 countess.twitch.tv",
+        "127.0.0.1 extension-files.twitch.tv",
+        "127.0.0.1 vod-metro.twitch.tv",
+        "127.0.0.1 pubster.twitch.tv",
+        "127.0.0.1 help.twitch.tv",
+        "127.0.0.1 link.twitch.tv",
+        "127.0.0.1 player.twitch.tv",
+        "127.0.0.1 api.twitch.tv",
+        "127.0.0.1 cvp.twitch.tv",
+        "127.0.0.1 client-event-reporter.twitch.tv",
+        "127.0.0.1 gds-vhs-drops-campaign-images.twitch.tv",
+        "127.0.0.1 us-west-2.uploads-regional.twitch.tv",
+        "127.0.0.1 assets.help.twitch.tv",
+        "127.0.0.1 discuss.dev.twitch.tv",
+        "127.0.0.1 dashboard.twitch.tv",
+        "127.0.0.1 origin-a.akamaihd.net",
+        "127.0.0.1 store.ubisoft.com",
+        "127.0.0.1 fonts.gstatic.com",
+        "127.0.0.1 gravatar.com",
+        "127.0.0.1 secure.gravatar.com",
+        "127.0.0.1 www.gravatar.com",
+        "127.0.0.1 themes.googleusercontent.com",
+        "127.0.0.1 ajax.googleapis.com",
+        "127.0.0.1 fonts.googleapis.com",
+        "127.0.0.1 maxcdn.bootstrapcdn.com",
+        "127.0.0.1 open.spotify.com",
+        "127.0.0.1 spotify.com",
+        "127.0.0.1 www.spotify.com",
+        "127.0.0.1 apresolve.spotify.com",
+        "127.0.0.1 api-partner.spotify.com",
+        "127.0.0.1 translate.google.cn",
+        "127.0.0.1 translate.googleapis.com",
+        "127.0.0.1 translate-pa.googleapis.com",
+        "127.0.0.1 translate.google.com",
+        "127.0.0.1 google.com",
+        "127.0.0.1 www.google.com",
+        "127.0.0.1 hcaptcha.com",
+        "127.0.0.1 assets.hcaptcha.com",
+        "127.0.0.1 imgs.hcaptcha.com",
+        "127.0.0.1 www.hcaptcha.com",
+        "127.0.0.1 docs.hcaptcha.com",
+        "127.0.0.1 js.hcaptcha.com",
+        "127.0.0.1 newassets.hcaptcha.com",
+        "127.0.0.1 imgs3.hcaptcha.com",
+        "127.0.0.1 client-api.arkoselabs.com",
+        "127.0.0.1 epic-games-api.arkoselabs.com",
+        "127.0.0.1 cdn.arkoselabs.com",
+        "127.0.0.1 prod-ireland.arkoselabs.com",
+        "127.0.0.1 huggingface.co",
+        "127.0.0.1 github.dev",
+        "127.0.0.1 api.github.com",
+        "127.0.0.1 github.githubassets.com",
+        "127.0.0.1 support-assets.githubassets.com",
+        "127.0.0.1 education.github.com",
+        "127.0.0.1 resources.github.com",
+        "127.0.0.1 uploads.github.com",
+        "127.0.0.1 archiveprogram.github.com",
+        "127.0.0.1 raw.github.com",
+        "127.0.0.1 githubusercontent.com",
+        "127.0.0.1 raw.githubusercontent.com",
+        "127.0.0.1 camo.githubusercontent.com",
+        "127.0.0.1 cloud.githubusercontent.com",
+        "127.0.0.1 avatars.githubusercontent.com",
+        "127.0.0.1 avatars0.githubusercontent.com",
+        "127.0.0.1 avatars1.githubusercontent.com",
+        "127.0.0.1 avatars2.githubusercontent.com",
+        "127.0.0.1 avatars3.githubusercontent.com",
+        "127.0.0.1 user-images.githubusercontent.com",
+        "127.0.0.1 objects.githubusercontent.com",
+        "127.0.0.1 private-user-images.githubusercontent.com",
+        "127.0.0.1 github.com",
+        "127.0.0.1 pages.github.com",
+        "127.0.0.1 gist.github.com",
+        "127.0.0.1 githubapp.com",
+        "127.0.0.1 hub.docker.com",
+        "127.0.0.1 greasyfork.org",
+        "127.0.0.1 update.greasyfork.org",
+        "127.0.0.1 github.io",
+        "127.0.0.1 www.github.io",
+        "127.0.0.1 www.roblox.com",
+        "127.0.0.1 roblox.com",
+        "127.0.0.1 web.roblox.com",
+        "127.0.0.1 apis.roblox.com",
+        "127.0.0.1 games.roblox.com",
+        "127.0.0.1 auth.roblox.com",
+        "127.0.0.1 accountsettings.roblox.com",
+        "127.0.0.1 presence.roblox.com",
+        "127.0.0.1 friends.roblox.com",
+        "127.0.0.1 users.roblox.com",
+        "127.0.0.1 gameinternationalization.roblox.com",
+        "127.0.0.1 gamejoin.roblox.com",
+        "127.0.0.1 locale.roblox.com",
+        "127.0.0.1 metrics.roblox.com",
+        "127.0.0.1 economy.roblox.com",
+        "127.0.0.1 groups.roblox.com",
+        "127.0.0.1 develop.roblox.com",
+        "127.0.0.1 versioncompatibility.api.roblox.com",
+        "127.0.0.1 clientsettings.api.roblox.com",
+        "127.0.0.1 ephemeralcounters.api.roblox.com",
+        "127.0.0.1 nl.roblox.com",
+        "127.0.0.1 badges.roblox.com",
+        "127.0.0.1 chat.roblox.com",
+        "127.0.0.1 ecsv2.roblox.com",
+        "127.0.0.1 thumbnails.roblox.com",
+        "127.0.0.1 twostepverification.roblox.com",
+        "127.0.0.1 trades.roblox.com",
+        "127.0.0.1 notifications.roblox.com",
+        "127.0.0.1 realtime-signalr.roblox.com",
+        "127.0.0.1 assetgame.roblox.com",
+        "127.0.0.1 contacts.roblox.com",
+        "127.0.0.1 t.email.roblox.com",
+        "127.0.0.1 fandom.com",
+        "127.0.0.1 www.fandom.com",
+        "127.0.0.1 nexusmods.com",
+        "127.0.0.1 www.nexusmods.com",
+        "127.0.0.1 staticdelivery.nexusmods.com",
+        "127.0.0.1 cf-files.nexusmods.com",
+        "127.0.0.1 staticstats.nexusmods.com",
+        "127.0.0.1 users.nexusmods.com",
+        "127.0.0.1 files.nexus-cdn.com",
+        "127.0.0.1 premium-files.nexus-cdn.com",
+        "127.0.0.1 supporter-files.nexus-cdn.com",
+        "127.0.0.1 binary.lge.modcdn.io",
+        "127.0.0.1 mod.io",
+        "127.0.0.1 static.mod.io",
+        "127.0.0.1 api.mod.io",
+        "127.0.0.1 docs.mod.io",
+        "127.0.0.1 beta.mod.io",
+        "127.0.0.1 blog.mod.io",
+        "127.0.0.1 auth.mod.io",
+        "127.0.0.1 storage.live.com",
+        "127.0.0.1 skyapi.onedrive.live.com",
+        "127.0.0.1 onedrive.live.com",
+        "127.0.0.1 onedrive.live",
+        "127.0.0.1 mega.co.nz",
+        "127.0.0.1 g.cdn1.mega.co.nz",
+        "127.0.0.1 www.mega.co.nz",
+        "127.0.0.1 userstroage.mega.co.nz",
+        "127.0.0.1 g.api.mega.co.nz",
+        "127.0.0.1 mega.io",
+        "127.0.0.1 g.static.mega.co.nz",
+        "127.0.0.1 mega.nz",
+        "127.0.0.1 www.mega.nz",
+        "127.0.0.1 aem.dropbox.com",
+        "127.0.0.1 dropbox.com",
+        "127.0.0.1 www.dropbox.com",
+        "127.0.0.1 dl.dropboxusercontent.com",
+        "127.0.0.1 uc07aaf207f16a978a3dbc24a1c9.dl.dropboxusercontent.com",
+        "127.0.0.1 uc87442e427766fe8cf2a7a07827.dl.dropboxusercontent.com",
+        "127.0.0.1 uc957f785cc03b9b273234fd24f9.dl.dropboxusercontent.com",
+        "127.0.0.1 ucc541451e9df780e40777d477eb.dl.dropboxusercontent.com",
+        "127.0.0.1 ucb277f9a438d6b3f4ea2147ac26.dl.dropboxusercontent.com",
+        "127.0.0.1 uc4b4b602d4b01e27782f92ce984.dl.dropboxusercontent.com",
+        "127.0.0.1 uc9c83355d6aa8bc75f7f597c7d6.dl.dropboxusercontent.com",
+        "127.0.0.1 ucaf37cba09486e69c215bdfe2e2.dl.dropboxusercontent.com",
+        "127.0.0.1 uca3a40eb53259715309022eb9fd.dl.dropboxusercontent.com",
+        "127.0.0.1 pinterest.com",
+        "127.0.0.1 www.pinterest.com",
+        "127.0.0.1 pinimg.com",
+        "127.0.0.1 sm.pinimg.com",
+        "127.0.0.1 s.pinimg.com",
+        "127.0.0.1 i.pinimg.com",
+        "127.0.0.1 de.pinterest.com",
+        "127.0.0.1 s2.pinimg.com",
+        "127.0.0.1 pinterest.jp",
+        "127.0.0.1 pinterest.kr",
+        "127.0.0.1 pinterest.info"
+      ]
+    },
+    "dns": {
+      "command": "python socket.getaddrinfo(host, 443)",
+      "github.com": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "api.github.com": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "raw.githubusercontent.com": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "huggingface.co": {
+        "resolved": true,
+        "addresses": [
+          "127.0.0.1"
+        ]
+      },
+      "hf.co": {
+        "resolved": true,
+        "addresses": [
+          "18.213.84.241",
+          "3.210.66.237",
+          "34.198.14.237",
+          "34.202.8.246",
+          "34.204.155.59",
+          "44.212.132.255"
+        ]
+      }
+    },
+    "https": {
+      "command": "python urllib.request with ssl.create_default_context(cafile=certifi.where())",
+      "tls": {
+        "cafile": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+        "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+        "certificate_count": 121
+      },
+      "verify_enabled": true,
+      "results": {
+        "github": {
+          "url": "https://github.com/",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.003
+        },
+        "github_api": {
+          "url": "https://api.github.com/repos/facebookresearch/sam2",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.003
+        },
+        "raw_githubusercontent": {
+          "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.014
+        },
+        "huggingface": {
+          "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
+          "ok": false,
+          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+          "seconds": 0.016
+        }
+      }
+    },
+    "git": {
+      "command": "git ls-remote https://github.com/facebookresearch/sam2 HEAD",
+      "ok": true,
+      "returncode": 0,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "seconds": 1.033
+    },
+    "tcp": [
+      {
+        "host": "127.0.0.1",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.02
+      },
+      {
+        "host": "18.213.84.241",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.253
+      },
+      {
+        "host": "3.210.66.237",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.25
+      },
+      {
+        "host": "34.198.14.237",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.248
+      }
+    ],
+    "commands_used": {
+      "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
+      "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
+    }
+  },
+  "_doc": "Standalone Watt Toolkit lifecycle test (handoff/TO_DSH.md). Scope limited to starting and stopping the local accelerator; no BuildReasonSeg model work. Read-only with respect to system configuration: DSH never edited the hosts file, the registry, the certificate store, PATH or the system proxy, and never force-killed a process. The hosts changes below were written by Watt Toolkit itself as its normal acceleration behaviour.",
+  "task": "Standalone Watt Toolkit Lifecycle Test",
+  "test_timestamp": {
+    "started": "2026-09-26T13:13:34+0800",
+    "baseline_captured": "2026-09-26T13:13:34+0800",
+    "app_launched": "2026-09-26T13:16:20+0800",
+    "active_captured": "2026-09-26T13:16:46+0800",
+    "graceful_stop_attempt_finished": "2026-09-26T13:19:00+0800",
+    "post_attempt_captured": "2026-09-26T13:19:31+0800"
+  },
+  "environment": {
+    "session_id": 1,
+    "user_interactive": true,
+    "user": "ROG",
+    "desktop": "interactive (explorer.exe present, Shell_TrayWnd reachable via UI Automation)"
+  },
+  "executable": {
+    "distribution": "Microsoft Store MSIX package (SignatureKind=Store); no Win32 shortcut exists",
+    "display_name": "Watt Toolkit",
+    "package_name": "4651ED44255E.47979655102CE",
+    "package_family_name": "4651ED44255E.47979655102CE_k6txddmbb6c52",
+    "package_full_name_x64": "4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52",
+    "version": "3.1.2025.0",
+    "install_location": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52",
+    "executable_path": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
+    "executable_stage": "Steam++.exe",
+    "launch_activation_id": "4651ED44255E.47979655102CE_k6txddmbb6c52!App",
+    "capabilities": [
+      "internetClient",
+      "runFullTrust",
+      "allowElevation"
+    ],
+    "accelerator_child_process": "Steam++.Accelerator.exe (modules/Accelerator)",
+    "found_via": "Get-StartApps (display name 'Watt Toolkit') then Get-AppxPackage by PackageFamilyName",
+    "not_found_in": [
+      "187 Start Menu / Desktop shortcuts (no watt/steam++/beyond match)",
+      "C:/Program Files, C:/Program Files (x86), %LOCALAPPDATA%/Programs (no matching directory)",
+      "uninstall registry entries (only real 'Steam' matched)",
+      "C:/Windows/Prefetch (no WATT/STEAM/BEYOND/TOOLKIT evidence)"
+    ]
+  },
+  "baseline_summary": {
+    "watt_processes": 0,
+    "watt_services": 0,
+    "listeners_on_443": 0,
+    "listeners_on_80": 0,
+    "hosts_sha256": "b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46",
+    "hosts_active_lines": 1,
+    "hosts_relevant_entries": [],
+    "dns": {
+      "github.com": true,
+      "api.github.com": true,
+      "raw.githubusercontent.com": true,
+      "huggingface.co": false,
+      "hf.co": true
+    },
+    "https": {
+      "github": true,
+      "github_api": true,
+      "raw_githubusercontent": true,
+      "huggingface": false
+    },
+    "git_ls_remote_ok": true,
+    "mirrors_user_statement": "Confirmed: at test start Watt Toolkit was exited and acceleration was off (0 Watt processes, 0 listeners on 443, 1 active hosts line with no relevant entries). huggingface.co did not resolve; GitHub/PyPI HTTPS worked."
+  },
+  "startup": {
+    "method": "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'",
+    "rationale": "normal Start-Menu activation of the packaged app; no compatibility flags, no elevated mode, no undocumented switches",
+    "attempted": true,
+    "success": true,
+    "seconds_to_process_tree": 20,
+    "processes_started": [
+      {
+        "pid": 21808,
+        "name": "Steam++.exe",
+        "role": "main/UI+lifetime owner (parent of the others)"
+      },
+      {
+        "pid": 2388,
+        "name": "Steam++.exe",
+        "role": "child process"
+      },
+      {
+        "pid": 12380,
+        "name": "Steam++.Accelerator.exe",
+        "role": "accelerator module, owns :443 and :80"
+      }
+    ],
+    "application_window": "appeared only after a second activation; class 'Avalonia-7b702aff-...'",
+    "acceleration_started_automatically": true,
+    "acceleration_evidence": "within 20 s of launch the accelerator child process owned 0.0.0.0:443 and 0.0.0.0:80 and the hosts file gained a '# Steam++ Start' ... '# Steam++ End' block redirecting github.com, api.github.com, raw.githubusercontent.com and huggingface.co to 127.0.0.1",
+    "gui_interaction_needed_to_enable_acceleration": false
+  },
+  "active_summary": {
+    "watt_processes": [
+      {
+        "pid": 21808,
+        "name": "Steam++.exe",
+        "executable_path": null
+      },
+      {
+        "pid": 2388,
+        "name": "Steam++.exe",
+        "executable_path": null
+      },
+      {
+        "pid": 12380,
+        "name": "Steam++.Accelerator.exe",
+        "executable_path": null
+      }
+    ],
+    "listeners": [
+      {
+        "address": "0.0.0.0",
+        "port": 443,
+        "pid": 12380,
+        "process": "Steam++.Accelerator"
+      },
+      {
+        "address": "0.0.0.0",
+        "port": 80,
+        "pid": 12380,
+        "process": "Steam++.Accelerator"
+      }
+    ],
+    "hosts_sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
+    "hosts_active_lines": 211,
+    "hosts_relevant_entries": [
+      "127.0.0.1 huggingface.co",
+      "127.0.0.1 api.github.com",
+      "127.0.0.1 education.github.com",
+      "127.0.0.1 resources.github.com",
+      "127.0.0.1 uploads.github.com",
+      "127.0.0.1 archiveprogram.github.com",
+      "127.0.0.1 raw.github.com",
+      "127.0.0.1 raw.githubusercontent.com",
+      "127.0.0.1 github.com",
+      "127.0.0.1 pages.github.com",
+      "127.0.0.1 gist.github.com"
+    ],
+    "hosts_watt_markers": [
+      "# Steam++ Start",
+      "# Steam++ End"
+    ],
+    "dns": {
+      "github.com": true,
+      "api.github.com": true,
+      "raw.githubusercontent.com": true,
+      "huggingface.co": true,
+      "hf.co": true
+    },
+    "dns_targets": {
+      "github.com": [
+        "127.0.0.1"
+      ],
+      "huggingface.co": [
+        "127.0.0.1"
+      ]
+    }
+  },
+  "active_github_test": {
+    "git_ls_remote": {
+      "command": "git ls-remote https://github.com/facebookresearch/sam2 HEAD",
+      "ok": true,
+      "returncode": 0,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "seconds": 1.577
+    },
+    "git_result": "OK via git's schannel backend; HEAD 2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "python_certifi_https": {
+      "url": "https://api.github.com/repos/facebookresearch/sam2",
+      "ok": false,
+      "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+      "seconds": 0.104
+    },
+    "windows_schannel_https": "Invoke-WebRequest https://api.github.com/repos/facebookresearch/sam2 -> 200, 6741 bytes"
+  },
+  "active_huggingface_test": {
+    "python_certifi_https": {
+      "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
+      "ok": false,
+      "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
+      "seconds": 0.07
+    },
+    "windows_schannel_https_api": "https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct -> 200, 15509 bytes, modelId Qwen/Qwen3-VL-2B-Instruct",
+    "windows_schannel_https_config": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json -> 200, 1505 bytes, model_type=qwen3_vl, architectures=Qwen3VLForConditionalGeneration",
+    "weights_downloaded": false,
+    "improvement_over_baseline": "yes: at baseline huggingface.co did not resolve at all; with acceleration on it resolves and returns real metadata through the OS trust store"
+  },
+  "tls_integrity": {
+    "verify_enabled": true,
+    "insecure_flags_used": false,
+    "certifi_not_modified": true,
+    "certifi_bundle": {
+      "cafile": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+      "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+      "certificate_count": 121
+    },
+    "python_certifi_result_under_acceleration": "CERTIFICATE_VERIFY_FAILED 'unable to get local issuer certificate' for all four probes",
+    "interpretation": "Watt Toolkit intercepts TLS with its own root CA, which it installs into the Windows certificate store that git (schannel) and .NET/WinHTTP trust. The project's standard certifi bundle does not trust it. Per TO_DSH section 6 this is recorded as a limitation; the old cert-injection workaround was NOT reintroduced."
+  },
+  "graceful_stop_attempt": {
+    "acceleration_stopped_automatically": false,
+    "application_exited_automatically": false,
+    "method_attempted": [
+      {
+        "step": 1,
+        "action": "re-activated the packaged app so its main window existed (shell:AppsFolder activation)",
+        "purpose": "make a normal window close possible",
+        "result": "window 'Watt Toolkit' became visible (Avalonia)"
+      },
+      {
+        "step": 2,
+        "action": "read-only UI Automation survey of that window and of the desktop tree",
+        "result": "UIAutomationClient loaded, but the app window exposes 0 descendants and 0 named controls, so no control could be invoked by name and no in-app navigation was possible without blind coordinate clicking (forbidden)"
+      },
+      {
+        "step": 3,
+        "action": "Get-Process -Id 21808 | CloseMainWindow()   # == WM_CLOSE, the same request as the title-bar X",
+        "result": "returned True but only minimized to tray: all three processes still running, :443/:80 still listening, hosts block unchanged after 15 s"
+      },
+      {
+        "step": 4,
+        "action": "opened the tray overflow flyout by UIA InvokePattern on AutomationId 'SystemTrayIcon', located the icon named ' Watt Toolkit' by UIA, and right-clicked at the centre of its UIA bounding rectangle (2012,1322,60,60) to open its context menu",
+        "result": "a context-menu popup window appeared (Avalonia class 'Avalonia-d824d289-...') but exposes 0 menu items to UIA and was not visible in a screen capture; selecting 'exit' would require clicking unlabelled coordinates"
+      },
+      {
+        "step": 5,
+        "action": "stopped the automation attempt",
+        "result": "no force-kill was used; Stop-Process -Force and taskkill /F were never invoked, and no helper process was terminated"
+      }
+    ],
+    "not_attempted_because_forbidden_or_unsafe": [
+      "taskkill /F (explicitly forbidden)",
+      "Stop-Process -Force (explicitly forbidden)",
+      "terminating the accelerator helper process (explicitly forbidden)",
+      "blind coordinate clicking inside the app window or the tray menu",
+      "editing the hosts file to undo Watt's block",
+      "editing app settings or the registry"
+    ]
+  },
+  "post_shutdown_verification": {
+    "reached": false,
+    "reason": "no graceful stop or exit mechanism was available, so no post-shutdown state exists",
+    "state_after_failed_attempt": {
+      "watt_processes": 3,
+      "listeners_on_443": 1,
+      "listeners_on_80": 1,
+      "hosts_sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
+      "hosts_active_lines": 211,
+      "hosts_relevant_entries": [
+        "127.0.0.1 huggingface.co",
+        "127.0.0.1 api.github.com",
+        "127.0.0.1 education.github.com",
+        "127.0.0.1 resources.github.com",
+        "127.0.0.1 uploads.github.com",
+        "127.0.0.1 archiveprogram.github.com",
+        "127.0.0.1 raw.github.com",
+        "127.0.0.1 raw.githubusercontent.com",
+        "127.0.0.1 github.com",
+        "127.0.0.1 pages.github.com",
+        "127.0.0.1 gist.github.com"
+      ],
+      "identical_to_active_state": true,
+      "dns": {
+        "github.com": true,
+        "api.github.com": true,
+        "raw.githubusercontent.com": true,
+        "huggingface.co": true,
+        "hf.co": true
+      },
+      "https_python_certifi": {
+        "github": false,
+        "github_api": false,
+        "raw_githubusercontent": false,
+        "huggingface": false
+      },
+      "git_ls_remote_ok": true
+    },
+    "baseline_comparison": {
+      "hosts_returned_to_baseline": false,
+      "listeners_returned_to_baseline": false,
+      "processes_returned_to_baseline": false,
+      "still_active": true
+    }
+  },
+  "classification": {
+    "primary": "AUTO_START_MANUAL_STOP",
+    "definition": "DSH can reliably start Watt Toolkit and acceleration starts automatically with it, but DSH cannot safely stop acceleration or exit the application.",
+    "secondary_condition": "FAILED_UNSAFE_STATE (condition)",
+    "secondary_explanation": "TO_DSH section 10 defines FAILED_UNSAFE_STATE as the test leaving a network/proxy state different from baseline that DSH cannot restore safely. That condition currently holds: the hosts file carries Watt's 211-line block, Steam++.Accelerator.exe owns :443/:80, and DSH cannot restore baseline. It is reported as a secondary condition rather than the primary classification because nothing is broken or misconfigured -- it is the expected consequence of a start-only automation and the user can restore baseline in two clicks.",
+    "future_workflow": "DSH starts Watt Toolkit; acceleration comes up automatically; after the networked work the user manually stops acceleration and exits Watt Toolkit from its tray icon.",
+    "user_interaction_required": true
+  },
+  "user_interaction_required": {
+    "now": true,
+    "action": "Open the Watt Toolkit tray icon (hidden-icons area of the taskbar -> the icon named 'Watt Toolkit'), use '停止加速' / turn acceleration off, then choose '退出' (Exit). Do NOT rely on the window X: it only minimizes to tray.",
+    "how_to_verify": "Afterwards there should be 0 processes named Steam++.exe / Steam++.Accelerator.exe, nothing listening on :443 or :80, and the hosts file back to 1 active line (sha256 b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46).",
+    "for_future_runs": "Watt must be stopped manually; DSH cannot automate the stop side on this version."
+  },
+  "safety_warnings": [
+    "The machine is currently NOT at its pre-test baseline: Watt Toolkit's hosts block and its local :443/:80 listeners are active.",
+    "Watt Toolkit intercepts TLS with its own root CA. Python's standard certifi bundle does not trust it, so python/urllib/httpx/requests will fail certificate verification while acceleration is on. Do not fix this by injecting certificates into certifi.",
+    "git and .NET/WinHTTP work while acceleration is on because they use the Windows trust store.",
+    "No force-kill, hosts edit, registry edit, certificate change or proxy change was performed by DSH."
+  ],
+  "limitations": [
+    "GUI control automation is not possible: the app is an Avalonia build whose windows expose no UI Automation tree, and its tray context menu is not UIA-readable.",
+    "No documented CLI shutdown switch exists for this version and none was guessed.",
+    "DSH cannot verify the post-shutdown state until the user stops Watt manually."
+  ],
+  "exact_commands_actions_used": {
+    "baseline_probe": {
+      "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
+      "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
+    },
+    "locate_watt": {
+      "Get-StartApps | Where-Object { $_.Name -match 'watt|steam|beyond|toolkit|加速|瓦特' }": "found 'Watt Toolkit' with AppID 4651ED44255E.47979655102CE_k6txddmbb6c52!App",
+      "Get-AppxPackage -PackageTypeFilter All | Where-Object { $_.PackageFamilyName -eq '4651ED44255E.47979655102CE_k6txddmbb6c52' }": "MSIX 3.1.2025.0, SignatureKind Store",
+      "read AppxManifest.xml": "Application Id=App Executable=Steam++.exe EntryPoint=Windows.FullTrustApplication; capabilities internetClient, runFullTrust, allowElevation"
+    },
+    "startup": {
+      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'": "accelerator came up automatically within 20 s"
+    },
+    "active_probe": {
+      "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
+      "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
+    },
+    "graceful_stop": {
+      "Get-Process -Id 21808 | CloseMainWindow()": "True, but only minimized to tray",
+      "UIA: window.FindAll(TreeScope.Descendants, TrueCondition)": "0 descendants",
+      "UIA: InvokePattern on AutomationId 'SystemTrayIcon'": "opened the overflow flyout",
+      "UIA: tray icon named ' Watt Toolkit'": "rect 2012,1322,60,60",
+      "user32 SetCursorPos + mouse_event RIGHTDOWN/RIGHTUP at (2042,1352)": "opened a context-menu popup whose items are not UIA-readable"
+    },
+    "post_probe": {
+      "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
+      "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
+      "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
+      "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
+      "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
+    }
+  },
+  "artifacts": {
+    "screenshots_gitignored": [
+      "artifacts/watt_lifecycle/screen_after_reactivate.png",
+      "artifacts/watt_lifecycle/screen_tray_menu.png"
+    ],
+    "probe_helper_gitignored": "artifacts/watt_lifecycle/probe.py"
+  }
+}
