@@ -295,14 +295,34 @@ Full-suite collected / passed / failed / skipped / exit code are reported in the
 
 ## 17. Git / Watt Push Lifecycle
 
-Watt Toolkit was kept **closed** for the whole training and evaluation phase (the runs are offline from
-`local_cache/`). For the final push the proven `FULL_AUTO_OK` lifecycle is used if and only if a plain
-`git push` fails: start via
-`Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\4651ED44255E.47979655102CE_k6txddmbb6c52!App'`,
-verify the accelerator owns `:443`/`:80` and the hosts block appears, push, then close with
-`PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0)` and verify processes, ports, hosts and the
-system proxy are back to baseline. `taskkill /F`, `Stop-Process -Force`, hosts edits, certificate-store
-edits and `verify=False` are never used. The final response states what actually happened.
+**What actually happened, including a process miss.** Task 6C intended to keep Watt Toolkit closed for the
+whole training and evaluation phase. It was **not** closed: Watt Toolkit (`Steam++.exe`) was already running
+when this task began, with its start time recorded as **14:16:23** — before the first command of the task —
+and `Steam++.Accelerator.exe` held `:443`/`:80` throughout the 15:16–17:40 training window. DSH did not
+verify the accelerator state at the start of Task 6C (it had been verified at the end of the preceding
+lifecycle test) and did not notice until the final state check. The miss is recorded rather than papered
+over.
+
+**Why the measurements are still sound.** Every Task 6C entry point sets `HF_HUB_OFFLINE=1` and
+`TRANSFORMERS_OFFLINE=1` and loads Qwen and SAM2 from `local_cache/`; the determinism, subset, training,
+comparison and visualization scripts make **no network calls at all**. The hosts redirection therefore
+changed DNS resolution for four host names and touched nothing the runs read. What cannot be claimed is a
+pristine network environment during training.
+
+**The push.** `git push origin main` succeeded on the **first attempt** (`3bd7341..c80169b`), with no need to
+use the `FULL_AUTO_OK` start procedure. Because the hosts file redirects `github.com` to `127.0.0.1` while
+Watt is active, that push was most likely carried by Watt's acceleration rather than by a direct
+connection, so this round does **not** demonstrate that a push succeeds with the accelerator off. The
+confirmed check afterwards: `github.com`, `api.github.com` and `huggingface.co` all resolve to `127.0.0.1`,
+and `git ls-remote origin` returns the pushed commit.
+
+**Nothing was stopped.** At the time of the final check `uu_launcher.exe` had just been started (18:03:00)
+and had rewritten the hosts file (18:03:27), so the accelerators appeared to be in active use by the user.
+DSH therefore did **not** close Watt Toolkit and did not touch the hosts file: the task's Watt authorization
+covers starting and closing an accelerator that DSH itself started for the push, and that did not happen.
+The machine is left with Watt Toolkit running and the hosts file carrying both the `#uu_acc` and
+`# Steam++` blocks; the user has been told. `taskkill /F`, `Stop-Process -Force`, hosts edits,
+certificate-store edits and `verify=False` were never used.
 
 ## 18. Negative Results
 
