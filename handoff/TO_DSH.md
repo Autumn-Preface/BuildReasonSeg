@@ -1,826 +1,477 @@
-# TO_DSH — Task 6C.5: Training Pipeline Throughput Audit & Value-Preserving Optimization
+# TO_DSH — Task 6C.6: Batch-1 GPU Launch-Overhead Optimization & Formal-Path Integration
 
 > Status: **ACTIVE**
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: diagnose the observed **CPU≈100% / GPU≈40%** training imbalance and implement **value-preserving training-pipeline optimizations** before continuing algorithm work.
+> Purpose: continue training-performance work after Task 6C.5 showed that data loading/preprocessing is not the bottleneck.
 >
-> This is a performance-engineering task, not a model-quality task.
+> Task 6C.5 found that host-side data work is only ≈2.4% of step time, while Qwen forward/backward dominate. GPU utilization remains ~37–41% at batch 1. Skipping unused gradient-norm instrumentation improves throughput by ~10.24%, while caches/pinning/prefetch do not help.
 >
-> **Do not start Task 6D. Do not change the model architecture, loss, dataset semantics, training subset, optimizer semantics, or effective batch size.**
+> This task targets **model-call / kernel-launch overhead while preserving batch-1 training semantics**.
+>
+> **Do not begin Task 6D model-quality work. Do not use true batch size > 1 yet.**
 
 ## 0. User-facing language
 
-All narrative text visible to the user in DSH web/chat must be **Chinese**.
+All narrative text shown to the user in DSH web/chat must be **Chinese**.
 
-Commands, code, paths, metric names, profiler labels and raw logs may remain English.
+Commands, paths, code identifiers, raw profiler names and metric names may remain English.
 
-`handoff/FROM_DSH.md` / `handoff/PROJECT_STATE.md` may remain English.
+# PART A — First fix: integrate the already-adopted Task 6C.5 optimization
 
-## 1. Current hardware / motivation
+## 1. Task 6C.5 adoption is not yet wired into the formal training loop
 
-Target machine:
+Current `scripts/task6c_train.py` still calls:
 
-- Windows 11
-- Intel Core Ultra 9 275HX
-- 32 GB RAM
-- RTX 5080 Laptop GPU, ~15.9 GiB VRAM
-- NVMe SSD
-
-Observed by the user during current training:
-
-- GPU utilization often around **40%**
-- CPU utilization often near **100%**
-
-Current Task 6C training loop is visibly serial:
-
-```text
-Sample
-→ PIL image read
-→ Qwen processor / chat construction / tokenizer
-→ CPU tensors
-→ H2D
-→ SAM feature lookup / encode
-→ GPU forward/backward
-→ optimizer
-→ next sample
+```python
+runtime.train_step(batch, gt_mask, features, optimizer=optimizer)
 ```
 
-Task 6C also trains with **real micro-batch = 1** and strict deterministic mode.
+which defaults to:
 
-Task 6C already improved the SAM2 CPU feature cache to 480 images, with a measured footprint of ~7.5 GiB.
+```python
+collect_grad_norms=True
+```
 
-The goal now is to determine exactly where wall time is spent and make the GPU wait less.
+Therefore the measured Task 6C.5 winner is not yet actually active in the main Task 6C-style training path.
 
-## 2. Scope and hard boundaries
+Fix this first.
 
-### Allowed
+### Required behavior
 
-You may:
+Add a config-controlled setting, preferably under:
 
-- add profiling/timing utilities;
-- add CPU input caches for deterministic, model-independent data;
-- cache/precompute Qwen preprocessing outputs that are independent of trainable weights;
-- cache source images / GT masks if useful;
-- add pinned-memory support;
-- add non-blocking CPU→GPU copies;
-- add a bounded prefetch/DataLoader implementation if measured useful;
-- benchmark DataLoader worker counts;
-- fix avoidable repeated PIL / tokenizer / processor work;
-- benchmark gradient checkpointing ON vs OFF;
-- benchmark strict deterministic ON vs OFF;
-- improve feature-cache transfer mechanics;
-- implement a faster default pipeline **only if it is output-equivalent under the acceptance tests below**.
+```yaml
+training:
+  collect_grad_norms: false
+```
 
-### Forbidden
+or an equally explicit name.
 
-Do not:
+The formal joint-training loop must pass:
 
-- change Qwen3-VL-2B to another model;
-- change SAM2 model;
-- use 4B;
-- add `[REF]`;
-- change the SAM bridge;
-- change LoRA rank/targets;
-- change loss weights;
-- change learning rates;
-- change optimizer;
-- change scheduler;
-- change number/order of optimizer steps;
-- change effective batch size;
-- adopt batch size 2+ in this task;
-- use gradient accumulation to pretend GPU occupancy improved;
-- change BuildSpatialReason data;
-- use test split;
-- modify GT/inference semantics;
-- add Spatial Relation Encoder;
-- add Spatial Consistency Loss;
-- resume model-quality experiments.
+```python
+collect_grad_norms=cfg_value
+```
 
-**Task 6C.5 must preserve the current batch-1 optimization semantics.**
+to `runtime.train_step`.
 
-True batching can be considered later, after this audit.
+Rules:
 
-## 3. UU Accelerator policy — ignore completely
+- Stage-1 / smoke diagnostics that explicitly need per-group gradient norms may keep it `true`.
+- Formal multi-step training should default to `false` unless the caller genuinely consumes the detailed gradient-norm dictionary.
+- `clip_grad_norm_` is **not** removed. Only the unused diagnostic sweep is removed.
+- Existing behavior remains available through config.
 
-The user explicitly states that **UU is their own currently used accelerator and does not need to be inspected or managed**.
+Add a regression test proving the formal training path actually consumes the setting.
 
-Therefore:
+# PART B — Watt policy
 
-- do not search for UU processes;
-- do not inspect UU state;
-- do not mention UU in routine task output;
-- do not close, stop, modify or diagnose UU;
-- do not treat unrelated hosts entries as a project problem.
+## 2. Ignore UU completely
 
-Only Watt Toolkit lifecycle matters for DSH-managed networking.
+Do not inspect, search, stop, diagnose or mention UU.
 
-## 4. Watt Toolkit ownership policy
+Only Watt Toolkit matters.
 
-At task start inspect **only Watt Toolkit / Steam++ state**.
+## 3. Watt ownership rule
 
-### If Watt is already running before DSH starts this task
+At task start inspect Watt/Steam++ only.
 
-Record:
+- If Watt is already running: record `watt_preexisting=true`, use it if necessary, and **do not close it**.
+- If Watt is not running: keep it off during benchmarks. If push needs it, DSH may start it using the already validated lifecycle, then close it with the validated `WM_SYSCOMMAND / SC_CLOSE` path and verify cleanup.
 
-`watt_preexisting = true`
+Never force-kill or edit hosts/certificates/TLS verification.
 
-Then:
+All model benchmarks remain offline from local cache.
 
-- leave it alone;
-- do not stop it at task end;
-- training still runs offline from local cache;
-- if Git push works, use it without claiming DSH started Watt.
+# PART C — Benchmark baseline
 
-### If Watt is not running
+## 4. New baseline B0.6
 
-Record:
-
-`watt_preexisting = false`
-
-Keep it off during profiling/training.
-
-If final `git push` needs networking, DSH may use the already verified `FULL_AUTO_OK` lifecycle:
-
-1. launch Watt;
-2. verify its accelerator;
-3. push;
-4. close with `WM_SYSCOMMAND / SC_CLOSE`;
-5. verify Watt processes/listeners/Steam++ hosts block are gone.
-
-Only close Watt if **DSH itself started it during this task**.
-
-Never:
-- force-kill;
-- edit hosts;
-- change certificates;
-- use `verify=False`.
-
-## 5. Reuse current environment / current codebase
-
-Use exactly:
-
-`C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp`
-
-Use current main after Task 6C.
-
-Current formal training defaults remain:
+The baseline for this task is **Task 6C.5's adopted batch-1 path**, after §1 is integrated:
 
 - Qwen3-VL-2B
 - SAM2.1 Base+
 - BF16
-- batch-1 semantics
-- strict deterministic mode
-- Phase-B joint path
+- batch 1
+- strict determinism ON
+- gradient checkpointing ON
+- no source/preprocess cache
+- no pinning/prefetch
+- `collect_grad_norms=false`
+- same P_C representative path
+- same 64-record Task 6C.5 benchmark IDs
+- 8 warmup + 64 measured optimization steps
+- SAM feature cache warm
 
-The representative performance workload should use the **Task 6C P_C path** unless profiling shows bridge choice has measurable runtime impact. The bridge difference is not the subject of this task.
+Run an interleaved confirmation of the integrated baseline.
 
-# PART A — Baseline profiling
+Target reference is approximately 2.37 samples/s, but do not force agreement; report current measured value.
 
-## 6. Create a fixed benchmark workload
+# PART D — Diagnose the launch-bound model execution more directly
 
-Create a deterministic benchmark set from the existing **Task 6C P training subset**:
+## 5. Short PyTorch profiler diagnosis
 
-- 64 records;
-- preferably 32 paired images × 2 instructions;
-- fixed IDs before benchmarking;
-- representative mix of L1/L2/L3;
-- no validation/test data.
+Task 6C.5 established that forward/backward dominate, but "kernel-launch latency" was inferred rather than fully isolated.
+
+Run a short profiling window (e.g. 6–12 representative steps) using `torch.profiler` or an equivalent already-installed PyTorch profiler.
+
+Do not commit huge raw traces.
+
+Report:
+
+- CPU self time by top operators;
+- CUDA time by top operators;
+- number of CUDA kernel launches if obtainable;
+- average CUDA-kernel duration;
+- number of CPU↔CUDA synchronization events;
+- major graph breaks / Python hotspots if visible;
+- SDPA/attention kernels actually selected;
+- whether the workload is dominated by many small kernels, synchronization, memory-bound ops, or another mechanism.
+
+Create a compact machine-readable summary, not a multi-hundred-MB trace.
+
+The report must distinguish:
+
+> "data preparation is not the bottleneck"
+
+from the stronger claim:
+
+> "kernel launch overhead is definitely the bottleneck"
+
+Only make the stronger claim if this profiler supports it.
+
+# PART E — Candidate C1: `torch.compile`
+
+## 6. Test `torch.compile` without changing training semantics
+
+This is the main candidate because Task 6C.5 indicates model-call granularity / dispatch overhead.
+
+Test carefully, in increasing scope.
+
+### C1a — compile Qwen language model only
+
+Test supported modes such as:
+
+- default
+- `mode="reduce-overhead"`
+
+Do not use `max-autotune` unless compile time is reasonable and it does not introduce unsafe/unstable behavior.
+
+### C1b — compile only Projection + SAM mask-decoder path
+
+This path is smaller and may or may not matter.
+
+### C1c — compile the combined trainable model path
+
+Only if C1a/b show the stack is compatible.
+
+### Requirements
+
+For each compile variant record:
+
+- compile success/failure;
+- compile time;
+- first-step latency;
+- recompilation count;
+- graph-break count/reasons where observable;
+- warm steady-state samples/s;
+- GPU utilization;
+- CPU utilization;
+- VRAM;
+- numerical-equivalence status;
+- whether strict deterministic mode remains effective.
+
+Do not hide compile failures.
+
+### Dynamic-shape caution
+
+Sequence lengths vary across samples.
+
+If this causes recompilation:
+
+- report it;
+- try dynamic-shape support if available;
+- do not introduce fixed-length padding in this task unless a separate exact-equivalence gate proves it safe.
+
+No architecture modification.
+
+# PART F — Candidate C2: optimizer / gradient clipping implementation
+
+## 7. Audit optimizer and clipping launch overhead
+
+Current optimizer/clipping is a smaller share than Qwen forward/backward, but it is measurable.
+
+Test without changing optimizer mathematics:
+
+### AdamW implementation
+
+Inspect whether current PyTorch automatically uses foreach, fused, or single-tensor path.
+
+Benchmark explicit:
+
+- current/default;
+- `foreach=True` if supported;
+- `fused=True` if supported on current parameter groups/dtypes.
+
+### Gradient clipping
+
+Inspect whether `torch.nn.utils.clip_grad_norm_` is using foreach.
+
+Benchmark explicit `foreach=True` where supported.
+
+### Equivalence
+
+Because fused/foreach paths can change floating-point reduction order:
+
+- run strict numerical-equivalence checks;
+- do not call them bit-equivalent unless they truly are;
+- preserve strict determinism;
+- if optimizer-state/parameter differences exceed a tight predeclared tolerance, reject.
+
+Do not change LR, beta values, weight decay, clipping threshold or parameter groups.
+
+# PART G — Candidate C3: CUDA graph / reduce-overhead execution
+
+## 8. CUDA graph feasibility
+
+Only test if installed PyTorch / `torch.compile(mode="reduce-overhead")` exposes a safe path.
+
+Do not build custom brittle CUDA-graph infrastructure unless clearly justified.
+
+Record blockers such as:
+
+- dynamic sequence shape;
+- dropout RNG behavior;
+- PEFT wrappers;
+- gradient checkpointing;
+- allocation pattern;
+- dynamic SAM tensors.
+
+If unsupported, document and reject cleanly.
+
+# PART H — Candidate C4: attention backend audit
+
+## 9. Verify actual SDPA backend
+
+Do not install FlashAttention or new CUDA extensions in this task.
+
+Inspect which PyTorch SDPA backend is actually used for the Qwen workload on this RTX 5080.
+
+If PyTorch offers multiple already-built backends, benchmark only already-available safe choices.
+
+Examples may include flash SDPA, memory-efficient SDPA, or math fallback.
+
+Do not force unsupported kernels.
+
+Report actual backend selection and whether any accidental fallback is occurring.
+
+# PART I — Candidate C5: checkpointing interaction
+
+## 10. Gradient checkpointing interaction
+
+Task 6C.5 found checkpointing OFF slower in one clean sweep.
+
+Because that result was not interleaved and is counterintuitive, do not use it as a universal claim.
+
+For the **best compile candidate only**, compare checkpointing ON vs OFF using an interleaved repeat if VRAM is safe.
+
+Do not adopt OFF unless:
+
+- throughput improves reproducibly;
+- peak reserved VRAM < 14.0 GiB;
+- strict determinism/equivalence remains acceptable.
+
+Otherwise retain ON.
+
+# PART J — No true batch > 1 yet
+
+## 11. Batch policy
+
+This task deliberately remains true batch 1.
+
+Reason: batch > 1 changes optimization semantics unless the training loop is redesigned carefully; the current goal is to exhaust launch-overhead reductions that can preserve current semantics.
+
+At the end, if none of C1–C5 yields a material gain, formally recommend a separate **Task 6C.7 true-batching feasibility experiment**.
+
+Do not implement it here.
+
+# PART K — Equivalence gates
+
+## 12. Baseline equivalence
+
+After integrating `collect_grad_norms=false`, prove again:
+
+- identical prepared tensors;
+- same 12-step losses;
+- same gradient fingerprints;
+- same post-step parameter fingerprints
+
+against the pre-integration `collect_grad_norms=true` path under per-run reseeding.
+
+This should be bit-identical.
+
+## 13. Candidate equivalence categories
+
+Classify candidates as:
+
+### `BIT_EQUIVALENT`
+Exact loss/gradient/post-step fingerprints.
+
+### `NUMERICALLY_EQUIVALENT`
+Not bit-identical, but within predeclared tight tolerances and no semantic difference.
+
+Record maximum loss absolute/relative difference, gradient difference, and parameter max absolute/relative difference after fixed steps.
+
+### `NOT_EQUIVALENT`
+Differences exceed tolerance or formal determinism breaks.
+
+Do not adopt `NOT_EQUIVALENT`.
+
+For formal paper/ablation runs, prefer `BIT_EQUIVALENT`.
+
+# PART L — Performance decision rules
+
+## 14. Primary metric
+
+Primary:
+
+> warm steady-state end-to-end samples/sec at identical batch-1 training semantics
+
+Secondary:
+
+- GPU utilization;
+- CPU utilization;
+- kernel-launch/graph-break metrics;
+- compile overhead;
+- VRAM/RAM;
+- first-epoch wall time.
+
+## 15. Adoption threshold
+
+Adopt a new runtime optimization only if:
+
+- equivalence is acceptable;
+- strict deterministic mode remains available;
+- no OOM/paging;
+- warm throughput improves >= 8% over integrated B0.6 **or**
+- it improves >=5% while materially reducing run-to-run variance / CPU overhead / compile graph breaks.
+
+Prefer the simplest winner.
+
+Do not stack optimizations that each add complexity for <3% additional gain unless they address a demonstrated blocker.
+
+# PART M — Outputs
+
+## 16. Required artifacts
 
 Create:
 
-`evaluation/task6c5_benchmark_ids.json`
-
-Use the same record order for every benchmark.
-
-## 7. Separate cold-start and steady-state performance
-
-Do not mix cache construction with steady-state training.
-
-Measure separately:
-
-### Cold-start
-
-Includes:
-
-- model/runtime load;
-- SAM feature cache population if needed;
-- Qwen preprocessing-cache population if added;
-- input cache memory growth.
-
-### Warm steady-state
-
-After all intended caches are warm:
-
-- run warmup steps first;
-- then measure at least **64 optimization steps**;
-- use the same samples in the same order.
-
-Primary performance decisions must use **warm steady-state throughput**.
-
-Also report total first-epoch cost separately because it matters in real use.
-
-## 8. Instrument the existing pipeline before optimizing
-
-Create a profiling path that measures at minimum:
-
 ```text
-image_io
-target_mask_io
-qwen_prepare_total
-  ├─ image preprocessing
-  ├─ chat/template + tokenizer where separable
-cpu_to_gpu
-sam_feature_lookup
-sam_feature_encode_on_miss
-qwen_forward
-sam_projection_decode_forward
-loss
-backward
-optimizer_step
-whole_step_wall
+evaluation/task6c6_integrated_baseline.json
+evaluation/task6c6_profiler_summary.json
+evaluation/task6c6_compile_variants.json
+evaluation/task6c6_optimizer_variants.json
+evaluation/task6c6_equivalence.json
+evaluation/task6c6_final_benchmark.json
+evaluation/task6c6_resource_usage.json
+docs/task6c6_launch_optimization.md
 ```
 
-If exact Qwen forward vs SAM forward separation is awkward in backward, use:
+If a candidate cannot run, keep its failure record.
 
-1. a small **synchronized stage-profile** run with CUDA events;
-2. a separate **unsynchronized end-to-end throughput** benchmark.
+Do not commit huge profiler trace files.
 
-Do not put `torch.cuda.synchronize()` inside the normal optimized training loop merely for measurement.
+# PART N — Tests
 
-For GPU-side timings use CUDA events where possible.
+## 17. Required tests
 
-For CPU-side timings use a high-resolution monotonic timer.
+Add/regress tests for at least:
 
-## 9. System-utilization sampling
+1. formal training config consumes `collect_grad_norms`;
+2. setting false removes diagnostic sweep but leaves `clip_grad_norm_`;
+3. true path remains available for Stage-1 diagnostics;
+4. integration is bit-equivalent over fixed mini-run;
+5. compile wrapper can be disabled cleanly;
+6. compile failure falls back only when explicitly configured — no silent fallback in formal benchmark;
+7. no architecture/loss/data/optimizer semantics changed;
+8. strict deterministic mode preserved for accepted candidate;
+9. no test split;
+10. no batch > 1;
+11. no `[REF]`, 4B, SRE, SCL;
+12. profiler is disabled in normal training.
 
-During each steady-state benchmark record:
-
-- GPU utilization from `nvidia-smi` or an already-installed NVML binding;
-- GPU VRAM used;
-- GPU power draw if available;
-- CPU total utilization;
-- process CPU utilization;
-- process RSS;
-- system RAM usage;
-- samples/sec;
-- ms/sample.
-
-Sample utilization periodically (e.g. ~0.2–1.0 s) without installing new monitoring software.
-
-Do not trust Windows Task Manager alone.
-
-Report:
-- mean;
-- median;
-- p90;
-- min/max where useful.
-
-If `nvidia-smi` sampling itself measurably perturbs the run, quantify it and use a lower sample frequency.
-
-# PART B — Optimization candidates
-
-## 10. Baseline B0
-
-Benchmark the current Task 6C path unchanged:
-
-`B0_current`
-
-Conditions:
-
-- batch semantics = 1 sample / optimizer step;
-- strict deterministic ON;
-- gradient checkpointing current value;
-- current 480-image SAM CPU cache;
-- no new Qwen/input cache;
-- normal synchronous `.to(cuda)`.
-
-Record full stage breakdown.
-
-This is the reference.
-
-## 11. Candidate B1 — cache immutable source data
-
-Implement only if measured useful:
-
-- source RGB image caching;
-- target-mask caching.
-
-Rules:
-
-- CPU-only;
-- keyed by immutable sample/image identifiers;
-- no model outputs;
-- no hidden states;
-- no gradients;
-- no inference-time GT leakage — this cache is only training supervision/input I/O acceleration.
-
-Verify cached image/mask arrays are byte-identical to disk-loaded versions on multiple records.
-
-Benchmark:
-
-`B1_source_cache`
-
-## 12. Candidate B2 — cache deterministic Qwen preprocessing
-
-This is likely the highest-value CPU optimization.
-
-The following are fixed for a given training sample and do **not** depend on trainable weights:
-
-- processor-generated image tensors;
-- `input_ids`;
-- `attention_mask`;
-- `labels`;
-- `image_grid_thw`;
-- other deterministic processor tensors;
-- prompt/sequence metadata.
-
-Implement a CPU-side preprocessing cache for the fixed training sample.
-
-Preferred design:
-
-- do **not** cache Qwen hidden states;
-- do **not** cache logits;
-- do **not** cache any trainable-model output;
-- preserve exact `TeacherForcedBatch` semantics;
-- avoid duplicating large image tensors for same-image paired samples if practical;
-- cache may live in RAM, local ignored files, or a hybrid, selected by measured cost.
-
-Before adoption, compare uncached vs cached prepared tensors across at least 16 samples:
-
-- shape identical;
-- dtype identical;
-- exact tensor equality where expected;
-- same `[SEG]` position;
-- same labels;
-- same visual-token count.
-
-Benchmark:
-
-`B2_preprocessed_cache`
-
-Record:
-- cache-build seconds;
-- RAM/disk bytes;
-- cache hit time;
-- first-epoch break-even estimate.
-
-## 13. Candidate B3 — pinned memory + non-blocking H2D
-
-If CPU tensors are cached/prepared, add a safe pinned-memory path.
-
-Potentially add:
-
-```python
-TeacherForcedBatch.pin_memory()
-TeacherForcedBatch.to(device, non_blocking=True)
-```
-
-including tensor-valued `extra_inputs`.
-
-Also support pinned cached target masks / SAM CPU features only if practical.
-
-Rules:
-
-- no semantic changes;
-- no unsafe lifetime/reuse bugs;
-- no pinning the entire 7.5 GiB SAM cache blindly if Windows/page-lock pressure becomes excessive.
-
-Benchmark variants:
-
-- ordinary H2D;
-- pinned + non_blocking.
-
-Reject if slower or destabilizes RAM.
-
-Benchmark:
-
-`B3_pinned_nonblocking`
-
-## 14. Candidate B4 — bounded CPU prefetch / DataLoader
-
-Only after B2/B3 are implemented/measured.
-
-The current training loop consumes one sample synchronously. Test whether a small background input pipeline helps.
-
-Because this is Windows and process spawning/pickling large tensors can be expensive, benchmark conservatively:
-
-- worker/prefetch baseline: 0;
-- 2 workers;
-- 4 workers;
-- optionally 8 workers **only if 4 workers is still beneficial and RAM is safe**.
-
-Use:
-- `persistent_workers=True` where applicable;
-- bounded `prefetch_factor`;
-- pinned memory only if B3 proved useful.
-
-Do not duplicate the full multi-GiB cache into every worker.
-
-A thread-based prefetch queue is allowed instead of multiprocessing if it performs better on this Windows workload.
-
-Choose by measurement, not convention.
-
-Benchmark winner as:
-
-`B4_prefetch_best`
-
-Record why workers or threads were chosen.
-
-## 15. Candidate B5 — gradient checkpointing cost measurement
-
-Current config uses:
-
-`gradient_checkpointing: true`
-
-Measure the same steady-state workload with:
-
-- checkpointing ON;
-- checkpointing OFF.
-
-Do **not** automatically adopt OFF.
-
-For OFF record:
-- throughput;
-- GPU utilization;
-- peak allocated/reserved VRAM;
-- output/loss/gradient equivalence;
-- deterministic status.
-
-Adoption rule:
-
-Checkpointing OFF may become the optimized default **only if all hold**:
-
-1. peak reserved VRAM < **14.0 GiB**;
-2. no OOM across the full benchmark;
-3. fixed-sample loss/gradient comparison is bit-identical or meets a separately documented strict numerical-equivalence tolerance;
-4. steady-state throughput improves by >= **10%**;
-5. strict deterministic mode still works.
-
-If not, keep checkpointing ON.
-
-## 16. Determinism cost measurement — measure, do not weaken formal default
-
-Benchmark:
-
-- strict deterministic ON;
-- deterministic algorithms OFF while retaining the same seed setup.
-
-Purpose: quantify the speed tax.
-
-Do **not** change formal experiment default from strict deterministic ON in this task.
-
-If OFF is materially faster, document a possible future **development-only fast mode**, but do not silently use it for paper/ablation results.
-
-No Task 6C.5 headline speed claim may mix deterministic modes.
-
-## 17. Batch-size policy
-
-Do **not** implement or adopt true batch size > 1 in Task 6C.5.
-
-Reason:
-
-- current `TeacherForcedBatch` / `[SEG]` extraction / SAM bridge are written around single-sample semantics;
-- changing optimizer batch semantics would confound performance engineering with algorithmic changes.
-
-At the end, estimate whether remaining GPU headroom justifies a later dedicated batching task.
-
-Gradient accumulation is not a substitute and must not be presented as a GPU-utilization optimization.
-
-# PART C — Equivalence gates
-
-## 18. Value-preserving optimization gate
-
-Before an optimization becomes the new default pipeline, compare baseline vs optimized on a fixed mini-run.
-
-Use:
-
-- same clean initialization;
-- same 8–16 samples;
-- same sample order;
-- same seed;
-- strict deterministic mode;
-- same optimizer states;
-- same training recipe.
-
-For input/pipeline-only changes, require:
-
-- prepared tensors identical;
-- per-step losses bit-identical;
-- gradient fingerprint identical;
-- post-step trainable-parameter fingerprint identical.
-
-If an optimization cannot meet bit identity because of an inherently different valid execution path (e.g. checkpointing OFF), require a **separate explicit numerical-equivalence report** and do not merge it with the bit-equivalent pipeline group.
-
-The safest bit-equivalent winner should become the default.
-
-## 19. Resource safety
-
-System RAM is 32 GB.
-
-During optimization:
-
-- avoid paging/swap;
-- prefer process RSS + cache footprint comfortably below ~24 GiB;
-- stop expanding RAM cache if system commit pressure becomes unsafe.
-
-GPU:
-
-- total ~15.9 GiB;
-- keep normal optimized strict pipeline with adequate safety margin;
-- do not chase 99% GPU utilization at the cost of OOM instability.
-
-No optimization is accepted solely because GPU utilization percentage is higher.
-
-Primary metric is:
-
-> **end-to-end samples/sec at identical training semantics**
-
-Secondary:
-- GPU utilization;
-- CPU utilization;
-- VRAM/RAM;
-- first-epoch cost.
-
-# PART D — Decision logic
-
-## 20. Optimization decision
-
-Select one final optimized batch-1 strict-deterministic pipeline.
-
-Prefer the smallest set of changes that delivers most of the gain.
-
-Example structure:
-
-```text
-B0 current
-→ B2 preprocessed input cache
-→ B3 pinned/nonblocking
-→ B4 bounded prefetch (only if useful)
-→ B5 checkpointing decision
-```
-
-Do not keep complexity that adds <~5% benefit unless it solves a clear bottleneck.
-
-## 21. Success categories
-
-Use exactly one:
-
-- `OPTIMIZATION_SUCCESS`
-- `OPTIMIZATION_PARTIAL`
-- `NO_MEANINGFUL_BOTTLENECK_FIX`
-- `INVALID_BENCHMARK`
-
-### `OPTIMIZATION_SUCCESS`
-
-Require:
-
-- accepted optimized path is value-preserving;
-- no OOM/paging;
-- warm steady-state throughput improves by >= **20%** over B0;
-- or GPU utilization rises >= **15 percentage points** with >=10% throughput gain.
-
-### `OPTIMIZATION_PARTIAL`
-
-Correct/value-preserving improvements exist but gains are below the full gate.
-
-### `NO_MEANINGFUL_BOTTLENECK_FIX`
-
-Measured candidates do not improve throughput materially.
-
-### `INVALID_BENCHMARK`
-
-Use only for invalid comparisons, thermal/power instability so severe results are unusable, mismatched model states, or benchmark instrumentation dominating runtime.
-
-# PART E — Thermal / laptop controls
-
-## 22. Avoid thermal benchmarking mistakes
-
-Because this is a laptop GPU/CPU:
-
-- record GPU temperature if available;
-- record GPU power;
-- keep AC power connected assumption only if observed, otherwise report unknown;
-- allow warmup before measurement;
-- avoid comparing one cold run against one thermally saturated run.
-
-Interleave/repeat baseline and final winner once if practical:
-
-```text
-B0
-optimized
-B0 repeat
-optimized repeat
-```
-
-Use repeat variation to judge benchmark stability.
-
-Do not modify BIOS, fan curves, Windows power plan, undervolt/overclock settings, or OEM utilities.
-
-# PART F — Implementation requirements
-
-## 23. Keep optimization modular
-
-Suggested modules/scripts:
-
-```text
-buildreasonseg_mvp/input_cache.py
-buildreasonseg_mvp/perf.py
-scripts/task6c5_profile.py
-scripts/task6c5_benchmark.py
-configs/mvp/task6c5_throughput.yaml
-```
-
-Names may vary, but avoid embedding profiling hacks permanently inside core model logic.
-
-Profiling must be switchable/off by default.
-
-## 24. Tests
-
-Add tests for at least:
-
-1. source-image cache equality;
-2. target-mask cache equality;
-3. Qwen prepared-batch cache exact equality;
-4. cache does not contain hidden states/logits;
-5. pinned batch preserves tensors;
-6. non-blocking transfer preserves values;
-7. optimized and baseline 8-step loss sequence identical;
-8. optimized and baseline gradient fingerprint identical;
-9. optimized and baseline post-step parameter fingerprint identical;
-10. strict deterministic mode remains enabled for the accepted pipeline;
-11. feature cache remains CPU-resident between accesses;
-12. no cache mutation / VRAM leak regression;
-13. no test split used;
-14. batch semantics remain one sample per optimizer step;
-15. no architecture/loss/optimizer changes;
-16. profiler disabled path has negligible/no semantic impact.
-
-Run:
+Run full:
 
 `python -m pytest tests/ -q`
 
-Do not make ordinary pytest load/download full weights unless the existing test policy already isolates such tests.
+# PART O — Watt / Git
 
-# PART G — Required artifacts
+## 18. Final push
 
-## 25. Machine-readable outputs
+Training/profiling is offline.
 
-Create:
+At final push:
 
-```text
-evaluation/task6c5_benchmark_ids.json
-evaluation/task6c5_profile_baseline.json
-evaluation/task6c5_variants.json
-evaluation/task6c5_equivalence.json
-evaluation/task6c5_final_benchmark.json
-evaluation/task6c5_resource_usage.json
-```
-
-`task6c5_variants.json` must include every tried variant, including slower/rejected ones.
-
-For each variant include:
-
-- exact code/config flags;
-- steps measured;
-- warmup steps;
-- seconds;
-- ms/sample;
-- samples/sec;
-- GPU util mean/median/p90;
-- CPU util;
-- process RSS;
-- system RAM;
-- VRAM allocated/reserved peak;
-- GPU temperature/power if available;
-- cache bytes;
-- cold-build time;
-- equivalence status;
-- adopted/rejected;
-- rejection reason.
-
-## 26. Human-readable report
-
-Create:
-
-`docs/task6c5_training_optimization.md`
-
-It must answer:
-
-1. What actually caused CPU≈100% / GPU≈40%?
-2. What percentage of step wall time was CPU preparation / H2D / GPU compute?
-3. Which cache/preprocessing changes helped?
-4. Did pinned memory help?
-5. Did workers/prefetch help on Windows?
-6. What did gradient checkpointing cost?
-7. What did strict determinism cost?
-8. What is the final recommended pipeline?
-9. What is the achieved speedup?
-10. What bottleneck remains?
-11. Is true batching likely worth a later task?
-
-# PART H — Do not touch model-quality conclusions
-
-## 27. No Task 6C result reinterpretation
-
-Task 6C model findings remain unchanged:
-
-- no arm solved instruction-conditioned segmentation;
-- paired probe remains 0/20;
-- deeper conditioning-interface problem remains unresolved.
-
-Task 6C.5 may not claim model-quality improvement because it is not a model-quality experiment.
-
-Do not rerun Task 6C four-arm results unless needed for a tiny equivalence check.
-
-# PART I — Git and Watt
-
-## 28. Git hygiene
-
-Before commit:
-
-- no model weights;
-- no checkpoints;
-- no large profiler trace files;
-- no local cache tensors;
-- no `.conda`;
-- no dataset JSONL edits;
-- no test outputs unrelated to this task.
-
-Large profiler traces remain gitignored.
+- if Watt was pre-existing, use it if necessary and leave it running;
+- if DSH started Watt, close it after push using validated `WM_SYSCOMMAND / SC_CLOSE` and verify cleanup;
+- ignore UU entirely.
 
 Recommended commit:
 
-`perf: optimize batch-1 training pipeline`
+`perf: reduce batch-1 launch overhead`
 
-## 29. Final push
+# PART P — Handoff
 
-Attempt normal push.
+## 19. `handoff/FROM_DSH.md`
 
-Apply Watt ownership rule from §4:
-
-- pre-existing Watt: use but never close;
-- DSH-started Watt: push then close and verify cleanup;
-- no Watt needed: do nothing.
-
-Ignore UU completely.
-
-# 30. Handoff
-
-Update `handoff/FROM_DSH.md` with:
+Include:
 
 1. Verdict
-2. Baseline Bottleneck
-3. Benchmark Method
-4. B0 Baseline
-5. Source Cache
-6. Qwen Preprocessing Cache
-7. Pinned / Nonblocking Transfer
-8. Prefetch / Worker Benchmark
-9. Gradient Checkpointing Benchmark
-10. Determinism Cost
-11. Equivalence Proof
-12. Final Optimized Pipeline
-13. Throughput / GPU / CPU Improvement
-14. RAM / VRAM / Thermals
-15. Remaining Bottleneck
-16. Tests
-17. Git / Watt State
-18. Recommendation for next project task
+2. Task 6C.5 Integration Fix
+3. Integrated B0.6
+4. Profiler Evidence
+5. `torch.compile` Results
+6. Optimizer / Clipping Results
+7. CUDA-Graph / Reduce-Overhead Results
+8. SDPA Backend Audit
+9. Checkpointing Interaction
+10. Equivalence
+11. Final Adopted Runtime
+12. Throughput / GPU / CPU / VRAM
+13. Compile Cold Cost / Break-even
+14. Remaining Bottleneck
+15. Tests
+16. Git / Watt
+17. Recommendation: Task 6D vs Task 6C.7 batching
 
-# 31. Final DSH web response — Chinese only
+## 20. Final DSH UI response — Chinese only
 
-Report concisely:
+Report:
 
-- Task 6C.5 verdict;
-- baseline samples/sec;
-- optimized samples/sec;
-- speedup percentage;
-- baseline vs optimized GPU utilization;
-- baseline vs optimized CPU utilization;
-- main bottleneck found;
-- optimizations adopted;
-- optimizations rejected;
-- strict determinism cost;
-- checkpointing ON/OFF result;
-- final RAM/VRAM peak;
-- whether semantics are bit-equivalent;
+- verdict;
+- integrated baseline samples/s;
+- best accepted samples/s and speedup;
+- GPU utilization before/after;
+- profiler-supported bottleneck;
+- compile success/failure and graph breaks;
+- optimizer/clipping result;
+- SDPA backend;
+- checkpointing result;
+- equivalence category;
+- VRAM;
 - tests;
-- commit hash;
-- push result;
-- Watt handling result.
+- commit/push;
+- Watt handling;
+- whether batch>1 is now the next performance lever.
 
-# 32. STOP
+# 21. STOP
 
-After Task 6C.5:
+After Task 6C.6:
 
 **STOP.**
 
-Do not start Task 6D.
-Do not resume model architecture work.
-Do not run 4B.
-Do not add `[REF]`.
-Do not start full training.
+Do not start true batch > 1, Task 6D, 4B, `[REF]`, Spatial Relation Encoder, Spatial Consistency Loss, or full training.
 
 Wait for ChatGPT review.

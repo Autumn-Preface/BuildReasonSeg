@@ -101,6 +101,14 @@ training:
   # Set from the measured outcome of scripts/task6c_determinism.py: True only if
   # every operation on the training path has a deterministic implementation.
   deterministic_strict: true
+  # Task 6C.6 section 1: the formal joint-training loop consumed `grad_norms` from
+  # `MvpRuntime.train_step` but never read it. Task 6C.5 measured the per-step
+  # 528-tensor sweep at +10.24% throughput when removed and proved the removal
+  # bit-identical (prepared tensors, 12-step losses, gradient fingerprints, post-step
+  # parameter fingerprints). `clip_grad_norm_` is NOT affected: same threshold, same
+  # parameter groups. Set to true for Stage-1 / smoke diagnostics that consume the
+  # per-group dictionary.
+  collect_grad_norms: false
   train_at_original_resolution: true
   # Task 6C section 4.4: cover the whole 480-record train subset.
   feature_cache_images: 480

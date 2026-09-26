@@ -1,0 +1,913 @@
+{
+  "_doc": "Task 6C.6 section 15. Interleaved head-to-head between the integrated baseline B0.6 and a challenger runtime, alternating A/B/A/B so both see the same thermal conditions. Adoption follows section 15: equivalence acceptable, strict determinism still effective, no OOM/paging, and either >=8% warm throughput or >=5% with a material variance / CPU / graph-break reduction. With the winner switches at their defaults the challenger is the pre-integration path (--winner-collect-grad-norms true), which is the head-to-head confirmation of the section 1 integration rather than of a new candidate.",
+  "task": "6C.6",
+  "steps_measured": 64,
+  "warmup_steps": 8,
+  "batch_size": 1,
+  "ordering": [
+    "B0.6_round1",
+    "CHALLENGER_candidate_runtime",
+    "B0.6_round2",
+    "CHALLENGER_candidate_runtime_round2"
+  ],
+  "adopted_runtime": {
+    "name": "B0.6",
+    "description": "Task 6C.5 adopted batch-1 path with training.collect_grad_norms=false wired into the formal loop by section 1",
+    "collect_grad_norms": false,
+    "compilation": "none",
+    "optimizer": "torch.optim.AdamW default resolution (foreach=True, measured)",
+    "clipping": "clip_grad_norm_ default (foreach), threshold 1.0",
+    "gradient_checkpointing": true,
+    "strict_determinism": true,
+    "integration_gain_percent_from_baseline_group": 21.498
+  },
+  "baseline": {
+    "samples_per_sec_per_round": [
+      2.5453,
+      2.4652
+    ],
+    "mean": 2.5053,
+    "spread": 0.03197,
+    "primary_metrics": {
+      "samples_per_sec": 2.5453,
+      "ms_per_sample": 392.888,
+      "gpu_utilization_mean": 40.34615384615385,
+      "cpu_utilization_mean": 90.42307692307692,
+      "process_rss_gib_mean": 3.2339615384615383,
+      "peak_reserved_vram_gib": 8.566,
+      "peak_allocated_vram_gib": 7.652,
+      "gpu_temperature_c_mean": 77.59615384615384,
+      "gpu_power_watts_mean": 113.19923076923077
+    }
+  },
+  "challenger": {
+    "samples_per_sec_per_round": [
+      2.1882,
+      2.1792
+    ],
+    "mean": 2.1837,
+    "spread": 0.00412,
+    "collect_grad_norms": true,
+    "optimizer_kind": "default",
+    "clip_grad_foreach": null,
+    "compile_scope": null,
+    "primary_metrics": {
+      "samples_per_sec": 2.1882,
+      "ms_per_sample": 456.994,
+      "gpu_utilization_mean": 36.89473684210526,
+      "cpu_utilization_mean": 83.88421052631578,
+      "process_rss_gib_mean": 3.293315789473684,
+      "peak_reserved_vram_gib": 8.582,
+      "peak_allocated_vram_gib": 7.658,
+      "gpu_temperature_c_mean": 78.84210526315789,
+      "gpu_power_watts_mean": 110.86614035087719
+    }
+  },
+  "speedup_percent": -12.837,
+  "secondary_criteria": {
+    "variance_reduction": true,
+    "compile_graph_breaks_removed": true
+  },
+  "adoption_thresholds": {
+    "gain_percent": 8.0,
+    "gain_with_secondary_percent": 5.0,
+    "reserved_vram_limit_gib": 14.0,
+    "rss_limit_gib": 24.0
+  },
+  "adopted": false,
+  "adoption_reason": "+-12.84% does not clear the 8.0% gate, and the 5.0% route needs a variance or graph-break reduction",
+  "strict_determinism_effective": true,
+  "entries": [
+    {
+      "variant": "B0.6_round1",
+      "name": "B0.6_round1",
+      "description": "Integrated baseline B0.6 (interleaved).",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "inductor",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 29.482,
+      "measured_seconds": 25.1448,
+      "ms_per_sample": 392.888,
+      "samples_per_sec": 2.5453,
+      "first_step_seconds": 1.997,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.392888,
+        "min": 0.302224,
+        "max": 0.439133
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 52,
+        "nvidia_smi_call_seconds": {
+          "n": 52,
+          "mean": 0.0645827711540243,
+          "median": 0.059600099997624056,
+          "p90": 0.08774419999826932,
+          "min": 0.03913520000060089,
+          "max": 0.10748239999520592
+        },
+        "gpu_utilization_percent": {
+          "n": 52,
+          "mean": 40.34615384615385,
+          "median": 41.0,
+          "p90": 47.0,
+          "min": 23.0,
+          "max": 86.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 52,
+          "mean": 9581.538461538461,
+          "median": 9762.0,
+          "p90": 9768.0,
+          "min": 6148.0,
+          "max": 9768.0
+        },
+        "gpu_temperature_c": {
+          "n": 52,
+          "mean": 77.59615384615384,
+          "median": 78.0,
+          "p90": 79.0,
+          "min": 71.0,
+          "max": 80.0
+        },
+        "gpu_power_watts": {
+          "n": 52,
+          "mean": 113.19923076923077,
+          "median": 112.805,
+          "p90": 121.88,
+          "min": 54.26,
+          "max": 135.24
+        },
+        "cpu_total_percent": {
+          "n": 52,
+          "mean": 90.42307692307692,
+          "median": 95.85,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 52,
+          "mean": 1819.271153846154,
+          "median": 1922.95,
+          "p90": 2082.4,
+          "min": 100.1,
+          "max": 2173.1
+        },
+        "process_rss_gib": {
+          "n": 52,
+          "mean": 3.2339615384615383,
+          "median": 3.284,
+          "p90": 3.285,
+          "min": 2.0,
+          "max": 3.286
+        },
+        "system_ram_used_gib": {
+          "n": 52,
+          "mean": 13.971019230769231,
+          "median": 14.025,
+          "p90": 14.067,
+          "min": 12.783,
+          "max": 14.126
+        },
+        "system_ram_percent": {
+          "n": 52,
+          "mean": 44.52884615384615,
+          "median": 44.7,
+          "p90": 44.8,
+          "min": 40.7,
+          "max": 45.0
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.652,
+        "peak_reserved_gib": 8.566
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    },
+    {
+      "variant": "CHALLENGER_candidate_runtime",
+      "name": "CHALLENGER_candidate_runtime",
+      "description": "The candidate runtime, measured head-to-head against the integrated baseline B0.6.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": true,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": true,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 33.1041,
+      "measured_seconds": 29.2476,
+      "ms_per_sample": 456.994,
+      "samples_per_sec": 2.1882,
+      "first_step_seconds": 0.552,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.456994,
+        "min": 0.411925,
+        "max": 0.493083
+      },
+      "grad_norms_collected": true,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 57,
+        "nvidia_smi_call_seconds": {
+          "n": 57,
+          "mean": 0.07610512631595555,
+          "median": 0.07163869999931194,
+          "p90": 0.11126920000242535,
+          "min": 0.0469916000001831,
+          "max": 0.12818699999479577
+        },
+        "gpu_utilization_percent": {
+          "n": 57,
+          "mean": 36.89473684210526,
+          "median": 38.0,
+          "p90": 47.0,
+          "min": 17.0,
+          "max": 83.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 57,
+          "mean": 9714.877192982456,
+          "median": 9784.0,
+          "p90": 9784.0,
+          "min": 6685.0,
+          "max": 9784.0
+        },
+        "gpu_temperature_c": {
+          "n": 57,
+          "mean": 78.84210526315789,
+          "median": 79.0,
+          "p90": 80.0,
+          "min": 76.0,
+          "max": 82.0
+        },
+        "gpu_power_watts": {
+          "n": 57,
+          "mean": 110.86614035087719,
+          "median": 114.67,
+          "p90": 125.84,
+          "min": 55.51,
+          "max": 158.92
+        },
+        "cpu_total_percent": {
+          "n": 57,
+          "mean": 83.88421052631578,
+          "median": 86.7,
+          "p90": 89.6,
+          "min": 0.0,
+          "max": 93.3
+        },
+        "process_cpu_percent": {
+          "n": 57,
+          "mean": 1644.9684210526316,
+          "median": 1657.5,
+          "p90": 1806.2,
+          "min": 1207.3,
+          "max": 1962.6
+        },
+        "process_rss_gib": {
+          "n": 57,
+          "mean": 3.293315789473684,
+          "median": 3.294,
+          "p90": 3.295,
+          "min": 3.291,
+          "max": 3.298
+        },
+        "system_ram_used_gib": {
+          "n": 57,
+          "mean": 13.949736842105263,
+          "median": 13.941,
+          "p90": 13.972,
+          "min": 13.929,
+          "max": 14.047
+        },
+        "system_ram_percent": {
+          "n": 57,
+          "mean": 44.449122807017545,
+          "median": 44.4,
+          "p90": 44.5,
+          "min": 44.4,
+          "max": 44.8
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.658,
+        "peak_reserved_gib": 8.582
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    },
+    {
+      "variant": "B0.6_round2",
+      "name": "B0.6_round2",
+      "description": "Integrated baseline B0.6 (interleaved, second round).",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "inductor",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 29.3288,
+      "measured_seconds": 25.9609,
+      "ms_per_sample": 405.639,
+      "samples_per_sec": 2.4652,
+      "first_step_seconds": 0.49,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.405639,
+        "min": 0.365525,
+        "max": 0.432704
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 51,
+        "nvidia_smi_call_seconds": {
+          "n": 51,
+          "mean": 0.07199177450934703,
+          "median": 0.06742030000168597,
+          "p90": 0.0913247999997111,
+          "min": 0.0554788000008557,
+          "max": 0.11502059999475023
+        },
+        "gpu_utilization_percent": {
+          "n": 51,
+          "mean": 39.568627450980394,
+          "median": 38.0,
+          "p90": 47.0,
+          "min": 28.0,
+          "max": 84.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 51,
+          "mean": 9708.529411764706,
+          "median": 9784.0,
+          "p90": 9784.0,
+          "min": 6692.0,
+          "max": 9784.0
+        },
+        "gpu_temperature_c": {
+          "n": 51,
+          "mean": 80.31372549019608,
+          "median": 80.0,
+          "p90": 81.0,
+          "min": 78.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 51,
+          "mean": 113.55196078431372,
+          "median": 112.94,
+          "p90": 120.68,
+          "min": 98.22,
+          "max": 133.93
+        },
+        "cpu_total_percent": {
+          "n": 51,
+          "mean": 93.52549019607844,
+          "median": 95.7,
+          "p90": 97.9,
+          "min": 0.0,
+          "max": 98.3
+        },
+        "process_cpu_percent": {
+          "n": 51,
+          "mean": 1889.0313725490198,
+          "median": 1905.8,
+          "p90": 2027.5,
+          "min": 1511.1,
+          "max": 2210.8
+        },
+        "process_rss_gib": {
+          "n": 51,
+          "mean": 3.2952745098039213,
+          "median": 3.295,
+          "p90": 3.297,
+          "min": 3.288,
+          "max": 3.302
+        },
+        "system_ram_used_gib": {
+          "n": 51,
+          "mean": 13.944607843137254,
+          "median": 13.937,
+          "p90": 13.963,
+          "min": 13.924,
+          "max": 14.052
+        },
+        "system_ram_percent": {
+          "n": 51,
+          "mean": 44.431372549019606,
+          "median": 44.4,
+          "p90": 44.5,
+          "min": 44.4,
+          "max": 44.8
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.658,
+        "peak_reserved_gib": 8.582
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    },
+    {
+      "variant": "CHALLENGER_candidate_runtime_round2",
+      "name": "CHALLENGER_candidate_runtime_round2",
+      "description": "The candidate runtime, measured head-to-head against the integrated baseline B0.6.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": true,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": true,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 33.2351,
+      "measured_seconds": 29.369,
+      "ms_per_sample": 458.89,
+      "samples_per_sec": 2.1792,
+      "first_step_seconds": 0.56,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.45889,
+        "min": 0.388,
+        "max": 0.496231
+      },
+      "grad_norms_collected": true,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 58,
+        "nvidia_smi_call_seconds": {
+          "n": 58,
+          "mean": 0.0727289637932323,
+          "median": 0.06586745000095107,
+          "p90": 0.10462890000053449,
+          "min": 0.052532500005327165,
+          "max": 0.12362159999611322
+        },
+        "gpu_utilization_percent": {
+          "n": 58,
+          "mean": 37.36206896551724,
+          "median": 38.0,
+          "p90": 48.0,
+          "min": 16.0,
+          "max": 87.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 58,
+          "mean": 9714.810344827587,
+          "median": 9783.0,
+          "p90": 9784.0,
+          "min": 6696.0,
+          "max": 9784.0
+        },
+        "gpu_temperature_c": {
+          "n": 58,
+          "mean": 79.89655172413794,
+          "median": 80.0,
+          "p90": 81.0,
+          "min": 78.0,
+          "max": 82.0
+        },
+        "gpu_power_watts": {
+          "n": 58,
+          "mean": 110.84551724137931,
+          "median": 112.21000000000001,
+          "p90": 124.31,
+          "min": 70.89,
+          "max": 156.85
+        },
+        "cpu_total_percent": {
+          "n": 58,
+          "mean": 83.53448275862068,
+          "median": 85.9,
+          "p90": 89.6,
+          "min": 0.0,
+          "max": 92.1
+        },
+        "process_cpu_percent": {
+          "n": 58,
+          "mean": 1681.2706896551724,
+          "median": 1706.35,
+          "p90": 1837.8,
+          "min": 1273.4,
+          "max": 2043.3
+        },
+        "process_rss_gib": {
+          "n": 58,
+          "mean": 3.296155172413793,
+          "median": 3.296,
+          "p90": 3.297,
+          "min": 3.296,
+          "max": 3.298
+        },
+        "system_ram_used_gib": {
+          "n": 58,
+          "mean": 13.938551724137932,
+          "median": 13.933,
+          "p90": 13.95,
+          "min": 13.925,
+          "max": 14.029
+        },
+        "system_ram_percent": {
+          "n": 58,
+          "mean": 44.422413793103445,
+          "median": 44.4,
+          "p90": 44.5,
+          "min": 44.4,
+          "max": 44.7
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.658,
+        "peak_reserved_gib": 8.582
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    }
+  ],
+  "verdict": "OPTIMIZATION_PARTIAL",
+  "what_was_adopted": {
+    "runtime_change_in_this_task": "training.collect_grad_norms=false wired into the formal loop",
+    "measured_integration_gain_percent": 21.498,
+    "new_candidates_adopted": [],
+    "reason": "the only runtime change this task adopts is the section 1 integration of the Task 6C.5 winner; no torch.compile, optimizer, clipping, SDPA or checkpointing candidate cleared the section 15 gate, and the compile family is additionally blocked by the missing Triton backend"
+  }
+}

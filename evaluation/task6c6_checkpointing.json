@@ -1,0 +1,854 @@
+{
+  "_doc": "Task 6C.6 section 10. Gradient checkpointing ON vs OFF, interleaved, measured on the best compile candidate path when one exists and on the integrated baseline otherwise. Task 6C.5 measured OFF as 8.58% slower in a single non-interleaved sweep; this run decides whether that survives interleaving.",
+  "task": "6C.6",
+  "path_measured": "integrated baseline B0.6",
+  "steps_measured": 64,
+  "warmup_steps": 8,
+  "checkpointing_on": {
+    "samples_per_sec_per_round": [
+      2.7376,
+      2.5844
+    ],
+    "samples_per_sec_mean": 2.661,
+    "relative_spread": 0.05757
+  },
+  "checkpointing_off": {
+    "samples_per_sec_per_round": [
+      2.6241,
+      2.5898
+    ],
+    "samples_per_sec_mean": 2.6069,
+    "relative_spread": 0.01316
+  },
+  "off_versus_on_percent": -2.031,
+  "recommendation": "keep checkpointing ON",
+  "entries": [
+    {
+      "variant": "CK_on_round1",
+      "name": "CK_on_round1",
+      "description": "Gradient checkpointing ON.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": true,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 37.9585,
+      "measured_seconds": 23.3778,
+      "ms_per_sample": 365.278,
+      "samples_per_sec": 2.7376,
+      "first_step_seconds": 12.421,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.365278,
+        "min": 0.294086,
+        "max": 0.411731
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 68,
+        "nvidia_smi_call_seconds": {
+          "n": 68,
+          "mean": 0.05887238676490704,
+          "median": 0.0576328499992087,
+          "p90": 0.08673310000449419,
+          "min": 0.03814549999515293,
+          "max": 0.11969630000385223
+        },
+        "gpu_utilization_percent": {
+          "n": 68,
+          "mean": 30.176470588235293,
+          "median": 40.0,
+          "p90": 48.0,
+          "min": 1.0,
+          "max": 88.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 68,
+          "mean": 9240.54411764706,
+          "median": 9755.0,
+          "p90": 9761.0,
+          "min": 6149.0,
+          "max": 9761.0
+        },
+        "gpu_temperature_c": {
+          "n": 68,
+          "mean": 72.38235294117646,
+          "median": 75.0,
+          "p90": 77.0,
+          "min": 64.0,
+          "max": 79.0
+        },
+        "gpu_power_watts": {
+          "n": 68,
+          "mean": 90.97029411764706,
+          "median": 113.47,
+          "p90": 121.42,
+          "min": 31.24,
+          "max": 136.6
+        },
+        "cpu_total_percent": {
+          "n": 68,
+          "mean": 69.86470588235295,
+          "median": 99.9,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 68,
+          "mean": 1412.6808823529411,
+          "median": 1958.7,
+          "p90": 2168.6,
+          "min": 88.6,
+          "max": 2224.8
+        },
+        "process_rss_gib": {
+          "n": 68,
+          "mean": 3.1844264705882352,
+          "median": 3.275,
+          "p90": 3.276,
+          "min": 1.97,
+          "max": 3.283
+        },
+        "system_ram_used_gib": {
+          "n": 68,
+          "mean": 13.938426470588235,
+          "median": 13.9835,
+          "p90": 14.086,
+          "min": 12.667,
+          "max": 14.105
+        },
+        "system_ram_percent": {
+          "n": 68,
+          "mean": 44.419117647058826,
+          "median": 44.6,
+          "p90": 44.9,
+          "min": 40.4,
+          "max": 45.0
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.652,
+        "peak_reserved_gib": 8.566
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    },
+    {
+      "variant": "CK_off_round1",
+      "name": "CK_off_round1",
+      "description": "Gradient checkpointing OFF.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": false,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": false,
+      "gradient_checkpointing_enabled": false,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 27.4474,
+      "measured_seconds": 24.3892,
+      "ms_per_sample": 381.082,
+      "samples_per_sec": 2.6241,
+      "first_step_seconds": 0.458,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.381082,
+        "min": 0.356461,
+        "max": 0.408941
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 48,
+        "nvidia_smi_call_seconds": {
+          "n": 48,
+          "mean": 0.06928554375038705,
+          "median": 0.06518979999964358,
+          "p90": 0.0877394000053755,
+          "min": 0.05615100000431994,
+          "max": 0.10346579999895766
+        },
+        "gpu_utilization_percent": {
+          "n": 48,
+          "mean": 42.395833333333336,
+          "median": 43.0,
+          "p90": 47.0,
+          "min": 29.0,
+          "max": 85.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 48,
+          "mean": 9697.1875,
+          "median": 9777.0,
+          "p90": 9777.0,
+          "min": 6681.0,
+          "max": 9777.0
+        },
+        "gpu_temperature_c": {
+          "n": 48,
+          "mean": 78.45833333333333,
+          "median": 78.0,
+          "p90": 79.0,
+          "min": 76.0,
+          "max": 81.0
+        },
+        "gpu_power_watts": {
+          "n": 48,
+          "mean": 114.205,
+          "median": 114.545,
+          "p90": 117.67,
+          "min": 102.73,
+          "max": 124.62
+        },
+        "cpu_total_percent": {
+          "n": 48,
+          "mean": 97.4875,
+          "median": 100.0,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 48,
+          "mean": 1962.9125000000001,
+          "median": 2026.65,
+          "p90": 2112.3,
+          "min": 1598.6,
+          "max": 2173.1
+        },
+        "process_rss_gib": {
+          "n": 48,
+          "mean": 3.2898125,
+          "median": 3.29,
+          "p90": 3.291,
+          "min": 3.287,
+          "max": 3.293
+        },
+        "system_ram_used_gib": {
+          "n": 48,
+          "mean": 13.954875,
+          "median": 13.9495,
+          "p90": 13.995,
+          "min": 13.918,
+          "max": 14.064
+        },
+        "system_ram_percent": {
+          "n": 48,
+          "mean": 44.481249999999996,
+          "median": 44.5,
+          "p90": 44.6,
+          "min": 44.4,
+          "max": 44.8
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.658,
+        "peak_reserved_gib": 8.582
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    },
+    {
+      "variant": "CK_on_round2",
+      "name": "CK_on_round2",
+      "description": "Gradient checkpointing ON.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": true,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 27.8861,
+      "measured_seconds": 24.7638,
+      "ms_per_sample": 386.934,
+      "samples_per_sec": 2.5844,
+      "first_step_seconds": 0.457,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.386934,
+        "min": 0.358786,
+        "max": 0.428333
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 49,
+        "nvidia_smi_call_seconds": {
+          "n": 49,
+          "mean": 0.0726676530610682,
+          "median": 0.06951709999702871,
+          "p90": 0.09462340000027325,
+          "min": 0.05571429999690736,
+          "max": 0.12211609999940265
+        },
+        "gpu_utilization_percent": {
+          "n": 49,
+          "mean": 40.63265306122449,
+          "median": 39.0,
+          "p90": 46.0,
+          "min": 32.0,
+          "max": 86.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 49,
+          "mean": 9699.265306122448,
+          "median": 9777.0,
+          "p90": 9777.0,
+          "min": 6683.0,
+          "max": 9777.0
+        },
+        "gpu_temperature_c": {
+          "n": 49,
+          "mean": 79.46938775510205,
+          "median": 79.0,
+          "p90": 80.0,
+          "min": 77.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 49,
+          "mean": 114.38183673469388,
+          "median": 114.13,
+          "p90": 118.01,
+          "min": 96.85,
+          "max": 152.32
+        },
+        "cpu_total_percent": {
+          "n": 49,
+          "mean": 96.91632653061224,
+          "median": 100.0,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 49,
+          "mean": 1970.4755102040817,
+          "median": 2002.5,
+          "p90": 2102.2,
+          "min": 1690.2,
+          "max": 2146.5
+        },
+        "process_rss_gib": {
+          "n": 49,
+          "mean": 3.2881428571428573,
+          "median": 3.288,
+          "p90": 3.288,
+          "min": 3.288,
+          "max": 3.293
+        },
+        "system_ram_used_gib": {
+          "n": 49,
+          "mean": 13.99387755102041,
+          "median": 13.986,
+          "p90": 14.044,
+          "min": 13.964,
+          "max": 14.067
+        },
+        "system_ram_percent": {
+          "n": 49,
+          "mean": 44.58775510204082,
+          "median": 44.6,
+          "p90": 44.8,
+          "min": 44.5,
+          "max": 44.8
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.658,
+        "peak_reserved_gib": 8.582
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    },
+    {
+      "variant": "CK_off_round2",
+      "name": "CK_off_round2",
+      "description": "Gradient checkpointing OFF.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": false,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": false,
+      "gradient_checkpointing_enabled": false,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 27.8647,
+      "measured_seconds": 24.7122,
+      "ms_per_sample": 386.128,
+      "samples_per_sec": 2.5898,
+      "first_step_seconds": 0.466,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.386128,
+        "min": 0.359807,
+        "max": 0.42922
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 48,
+        "nvidia_smi_call_seconds": {
+          "n": 48,
+          "mean": 0.07266387708386901,
+          "median": 0.06825924999793642,
+          "p90": 0.09503039999981411,
+          "min": 0.05566099999850849,
+          "max": 0.13459810000495054
+        },
+        "gpu_utilization_percent": {
+          "n": 48,
+          "mean": 41.541666666666664,
+          "median": 41.0,
+          "p90": 47.0,
+          "min": 29.0,
+          "max": 88.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 48,
+          "mean": 9696.708333333334,
+          "median": 9774.0,
+          "p90": 9777.0,
+          "min": 6683.0,
+          "max": 9777.0
+        },
+        "gpu_temperature_c": {
+          "n": 48,
+          "mean": 80.10416666666667,
+          "median": 80.0,
+          "p90": 81.0,
+          "min": 77.0,
+          "max": 82.0
+        },
+        "gpu_power_watts": {
+          "n": 48,
+          "mean": 114.31041666666665,
+          "median": 114.545,
+          "p90": 118.84,
+          "min": 92.43,
+          "max": 154.64
+        },
+        "cpu_total_percent": {
+          "n": 48,
+          "mean": 96.86458333333333,
+          "median": 99.9,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 48,
+          "mean": 1956.9229166666667,
+          "median": 1997.1,
+          "p90": 2099.5,
+          "min": 1593.1,
+          "max": 2178.8
+        },
+        "process_rss_gib": {
+          "n": 48,
+          "mean": 3.285458333333333,
+          "median": 3.285,
+          "p90": 3.286,
+          "min": 3.285,
+          "max": 3.287
+        },
+        "system_ram_used_gib": {
+          "n": 48,
+          "mean": 13.963020833333333,
+          "median": 13.9545,
+          "p90": 13.986,
+          "min": 13.945,
+          "max": 14.058
+        },
+        "system_ram_percent": {
+          "n": 48,
+          "mean": 44.518750000000004,
+          "median": 44.5,
+          "p90": 44.6,
+          "min": 44.4,
+          "max": 44.8
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.658,
+        "peak_reserved_gib": 8.582
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      }
+    }
+  ],
+  "change_resolvable": false,
+  "adopted": false,
+  "decision": "gradient checkpointing stays ON: OFF measured -2.03%, which is inside the round-to-round spread (ON 5.76%, OFF 1.32%)"
+}

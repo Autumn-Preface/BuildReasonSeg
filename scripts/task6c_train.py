@@ -133,6 +133,25 @@ def make_optimizer(runtime, phase: str, steps: int):
     return optimizer, scheduler, groups
 
 
+def collect_grad_norms_setting(runtime) -> bool:
+    """Task 6C.6 section 1: does the formal joint-training path collect gradient norms?
+
+    Task 6C.5 measured the per-step, per-parameter gradient-norm sweep over 528 tensors
+    at +10.24 % throughput when removed, and proved the removal bit-equivalent. This
+    loop never reads `result["grad_norms"]`, so the sweep was pure diagnostic cost.
+
+    The switch is configuration-controlled (`training.collect_grad_norms`) and defaults
+    to `True`, so every other caller keeps the behaviour it had. Stage-1 / smoke
+    diagnostics that genuinely consume the per-group dictionary can set it back to
+    `true` in their own config, or call `runtime.train_step` without the argument.
+
+    `clip_grad_norm_` is unaffected: it still runs inside `train_step` with the same
+    threshold and the same parameter groups.
+    """
+
+    return bool(runtime.cfg.get("training", {}).get("collect_grad_norms", True))
+
+
 def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: str) -> dict:
     optimizer, scheduler, groups = make_optimizer(runtime, phase, steps)
     history: list[dict] = []
@@ -140,6 +159,8 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
     nan_seen = False
     started = time.time()
     is_language_only = phase.upper() == "A"
+    # Task 6C.6 section 1: the formal path passes the configured value explicitly.
+    collect_grad_norms = collect_grad_norms_setting(runtime)
 
     while step < steps:
         sample = samples[step % len(samples)]
@@ -175,7 +196,13 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
         else:
             gt_mask = sample.target_mask()
             features, _cached = runtime.features_for(sample, image)
-            result = runtime.train_step(batch, gt_mask, features, optimizer=optimizer)
+            result = runtime.train_step(
+                batch,
+                gt_mask,
+                features,
+                optimizer=optimizer,
+                collect_grad_norms=collect_grad_norms,
+            )
             losses = result["losses"]
             clipped = result["grad_clip_total_norm"]
             del result, features
@@ -210,6 +237,9 @@ def train_phase(runtime, samples, phase: str, steps: int, log_every: int, tag: s
         "steps": step,
         "nan_seen": nan_seen,
         "seconds": round(time.time() - started, 2),
+        # Task 6C.6 section 1: recorded so a run's report states which diagnostic mode
+        # it actually used.
+        "collect_grad_norms": collect_grad_norms,
         "optimizer_groups": [
             {"lr": g["lr"], "weight_decay": g["weight_decay"], "name": g.get("name"), "tensors": len(g["params"])}
             for g in groups

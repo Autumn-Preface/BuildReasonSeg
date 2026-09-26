@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6C.5._
+_Last updated by DSH at the end of Task 6C.6._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -59,6 +59,7 @@ The block above is machine-checked against
 | Watt | Standalone Watt Toolkit lifecycle test (3 rounds) | done → `FULL_AUTO_OK` |
 | 6C | **Paired counterfactual training × neutral SAM prompt 2×2 ablation** | **done → `EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`** |
 | 6C.5 | **Batch-1 training-pipeline throughput audit + value-preserving optimization** | **done → `OPTIMIZATION_PARTIAL`** |
+| 6C.6 | **Launch-overhead candidates + formal-path integration of the 6C.5 winner** | **done → `OPTIMIZATION_PARTIAL`** |
 
 ## Task 6C measured results
 
@@ -119,6 +120,57 @@ reinterpret Task 6C. Full detail: `docs/task6c5_training_optimization.md`,
    used to push; nothing was closed, force-killed, or reconfigured, no hosts file was edited and no TLS
    verification was disabled. The MVP stack stayed offline (`HF_HUB_OFFLINE=1`) throughout.
 
+## Task 6C.6 measured results
+
+Performance-only task. The one runtime change it adopts is wiring Task 6C.5's winner into the formal
+training loop; every other candidate was measured and rejected. Full detail:
+`docs/task6c6_launch_optimization.md`, `evaluation/task6c6_*.json`.
+
+| | Value |
+|---|---|
+| Formal-path integration | `training.collect_grad_norms: false` in `configs/mvp/task6c_2b_ablation.yaml`, passed explicitly by `scripts/task6c_train.py` |
+| Integration equivalence | **`BIT_EQUIVALENT`** (prepared tensors, 12-step losses, gradients, post-step parameters) |
+| Integrated baseline B0.6 | **2.505 samples/s** (final head-to-head mean; 2.545 / 2.465) |
+| Pre-integration control | 2.184 samples/s (2.188 / 2.179; spread 0.41 %) |
+| Integration gain (interleaved) | **+14.7 %** (+21.5 % in the 4-run baseline group) |
+| New candidates adopted | **none** |
+| Adopted runtime footprint | 8.582 GiB reserved VRAM, 3.295 GiB RSS, no OOM |
+
+1. **The step is dispatch/launch dominated, now measured rather than inferred**: **57,341 CUDA kernels
+   per step** at a **2.1 µs median**, **2,545 host↔device synchronizations per step**, the CUDA launch
+   path consuming **31.9 % of CPU self time**, and the GPU only ~33 % utilized in unprofiled runs. Host
+   data preparation is ≈2.4 % of the step (Task 6C.5) and is not a factor. The gradient-norm sweep that
+   Task 6C.5 removed accounted for 3,589 kernels and 2,048 synchronizations per step.
+2. **`torch.compile` cannot run on this install.** The inductor backend fails with `TritonMissing`
+   (no Triton package, no MSVC). Everything that does run is slower: `cudagraphs` −24.7 %, combined
+   `aot_eager` −21.2 %, decoder tail −11.3 %, Qwen `aot_eager` −10.4 %, Qwen `eager` −9.2 %. All compile
+   candidates are also `NOT_EQUIVALENT` (max loss difference 0.042–0.234 against a 1e-3 tolerance), all
+   inflate reserved VRAM by ~4 GiB, and `combined_aot_eager` exceeds the 14 GiB budget at 14.41 GiB.
+   `backend="eager"` and `cudagraphs` additionally fail on a **sequence-length change** (291/321/295/318
+   tokens) with a tensor-size mismatch — CUDA graphs are unsafe here without fixed-length padding, which
+   is out of scope.
+3. **Optimizer/clipping is already optimal.** `_default_to_fused_or_foreach` resolves to
+   `foreach=True` for the 528 fp32 parameters, so `foreach=True` is a no-op; `fused=True` is inside the
+   noise band and `NOT_EQUIVALENT`; `foreach=False` is slower. Two *code-identical* controls
+   (`adamw_foreach`, `clip_foreach_true`) measured −2.85 % and −3.37 %, which fixes the **noise floor of
+   a sequential group at 3.37 %** on this machine.
+4. **SDPA is already mixed and correct.** Per step, 472 attention calls split into **248
+   memory-efficient CUTLASS FMHA** and **224 math**, with 0 flash and 0 cuDNN. FlashAttention is not
+   compiled into this PyTorch build; forcing flash or mem-efficient fails with `No available kernel`, and
+   forcing math changes the numerics (9.4481 vs 9.4255) and is ~9.7 % slower. No accidental fallback to
+   fix, no win available.
+5. **Gradient checkpointing stays ON.** Interleaved ON/OFF gave OFF −2.03 % with the two rounds
+   disagreeing in sign (spread ON 5.76 %, OFF 1.32 %) → Task 6C.5's −8.58 % single-sweep figure does not
+   survive interleaving.
+6. **This laptop's absolute throughput is not a stable quantity** (up to 19 % between identical runs;
+   the first run in a process is systematically fastest). The reproducible quantity is the interleaved
+   *ratio*, which is why every comparison brackets its candidates with reference runs and compares
+   against the interpolated reference, and why a non-resolvable gain is never adopted.
+7. **Methodology carried forward**: A/B/A/B interleaving for headline numbers, bracketed+interpolated
+   references for screening, per-run re-seeding in every equivalence gate, and `PYTHONUTF8=1` when
+   reading `torch.compile` errors on this Windows locale (otherwise the real `TritonMissing` cause is
+   hidden behind a `UnicodeDecodeError`).
+
 ## What Task 6C changed in the project's understanding
 
 1. **Neither of Task 6B's two confounds is the cause.** All four arms are 0/20 on the paired unseen probe
@@ -159,29 +211,41 @@ reinterpret Task 6C. Full detail: `docs/task6c5_training_optimization.md`,
    IoU(pred_A, pred_B) 0.999.
 5. **The best mIoU arm is not the most diverse arm** (`U_L` 0.1087 vs `P_L` 0.0928), so mIoU alone remains
    a misleading selection signal.
-6. **Training throughput is launch-bound at batch 1** (2.373 samples/s after Task 6C.5, +10.24 %,
-   GPU utilization ~37 %). No data-side optimization helps; a batch>1 feasibility task would be needed and
-   is a new experiment, not a perf tweak (see the Task 6C.5 section).
+6. **Training throughput is launch-bound at batch 1** and the removable overhead is now exhausted:
+   2.505 samples/s after Task 6C.6 (integrated B0.6), GPU utilization ~40 %, 57k tiny kernels per step.
+   Caching, pinning, prefetch, `torch.compile`, optimizer/clipping implementations, SDPA backends and
+   checkpointing-off have all been measured and rejected. The remaining lever is arithmetic intensity
+   (true batching ≥2), which is a new experiment, not a perf tweak.
 
 ## Current blockers
 
 **None for the next task to start.** The failure is characterised, the two candidate causes are excluded by
-a valid controlled experiment, the throughput question is audited and closed, and the remaining search space
-is narrow and explicit.
+a valid controlled experiment, the throughput question is audited and closed at batch 1, and the remaining
+search space is narrow and explicit.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6C.5 results**, then **Task 6D aimed after the prompt**:
+**ChatGPT review of the pushed Task 6C.6 results**, then either
 
-1. make the `[SEG]` hidden state instruction-conditional (auxiliary point-inside-the-mask supervision from
-   ground-truth geometry used *as supervision only*, or a second explicitly negative prompt slot);
-2. only then test prompt normalisation / whitening and a multi-token prompt, which Task 6C has now earned
-   the right to try;
-3. keep the paired instruction-dependence probe as the primary gate and keep the four correctness fixes;
-4. do not scale to 4B and do not add `[REF]` on the strength of anything measured so far;
-5. do not re-open pipeline caching — it is measured, gated and closed (value-preserving but slower). If
-   throughput becomes blocking again, the only justified lever is a dedicated batch>1 feasibility task.
+* **Task 6D aimed after the prompt** (if model quality is the priority):
+
+  1. make the `[SEG]` hidden state instruction-conditional (auxiliary point-inside-the-mask supervision from
+     ground-truth geometry used *as supervision only*, or a second explicitly negative prompt slot);
+  2. only then test prompt normalisation / whitening and a multi-token prompt, which Task 6C has now earned
+     the right to try;
+  3. keep the paired instruction-dependence probe as the primary gate and keep the four correctness fixes;
+  4. do not scale to 4B and do not add `[REF]` on the strength of anything measured so far;
+
+  or
+
+* **Task 6C.7 true-batching feasibility** (only if throughput is blocking) — VRAM headroom at batch 2/4 with
+  checkpointing ON, an explicit equivalence story for a changed effective batch, and its own adoption gate.
+  It is not authorised by Task 6C.6.
+
+Do not re-open pipeline caching, `torch.compile`, the optimizer/clipping implementations, SDPA backend
+pinning or checkpointing-off: all six are measured, gated and closed for this machine.
 
 Full detail: `handoff/FROM_DSH.md`, `docs/task6c_prompt_ablation.md`,
-`docs/task6c5_training_optimization.md`, `evaluation/task6c_comparison.json`,
-`evaluation/task6c5_variants.json`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).
+`docs/task6c5_training_optimization.md`, `docs/task6c6_launch_optimization.md`,
+`evaluation/task6c_comparison.json`, `evaluation/task6c6_final_benchmark.json`,
+`docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).

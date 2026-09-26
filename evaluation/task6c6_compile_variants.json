@@ -1,0 +1,1965 @@
+{
+  "_doc": "Task 6C.6 section 6/8. torch.compile scopes C1a (Qwen LM), C1b (projection + SAM mask decoder), C1c (combined) plus the CUDA-graph (cudagraphs) feasibility probe. Failures are recorded, not hidden: a wrapper that could not be installed has status=compile_failed and a graph that raises on its first call has status=runtime_failed, both with the exception text. Candidates are compared against an uncompiled reference run immediately before and after them, because this laptop drifts by ~17% in absolute throughput between identical runs.",
+  "task": "6C.6",
+  "steps_measured": 64,
+  "warmup_steps": 8,
+  "batch_size": 1,
+  "reference_bracket": {
+    "available": true,
+    "reference_variants": [
+      "uncompiled_reference_first",
+      "uncompiled_reference_last"
+    ],
+    "reference_samples_per_sec": [
+      2.9089,
+      2.35
+    ],
+    "reference_first": 2.9089,
+    "reference_last": 2.35,
+    "reference_mean": 2.6295,
+    "reference_drift_percent": -19.213,
+    "resolvable_gain_percent_floor": 19.213
+  },
+  "reference_samples_per_sec": 2.9089,
+  "entries": [
+    {
+      "variant": "uncompiled_reference_first",
+      "name": "uncompiled_reference_first",
+      "description": "Integrated baseline reference (bracket start).",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "inductor",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "reference run",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 36.9615,
+      "measured_seconds": 22.0017,
+      "ms_per_sample": 343.777,
+      "samples_per_sec": 2.9089,
+      "first_step_seconds": 12.579,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.343777,
+        "min": 0.317792,
+        "max": 0.371974
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 66,
+        "nvidia_smi_call_seconds": {
+          "n": 66,
+          "mean": 0.054871251515357995,
+          "median": 0.05505310000080499,
+          "p90": 0.07232130000193138,
+          "min": 0.037611799998558126,
+          "max": 0.16202229999908013
+        },
+        "gpu_utilization_percent": {
+          "n": 66,
+          "mean": 29.348484848484848,
+          "median": 39.0,
+          "p90": 47.0,
+          "min": 0.0,
+          "max": 88.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 66,
+          "mean": 10008.348484848484,
+          "median": 10580.0,
+          "p90": 10587.0,
+          "min": 6950.0,
+          "max": 10588.0
+        },
+        "gpu_temperature_c": {
+          "n": 66,
+          "mean": 69.39393939393939,
+          "median": 71.0,
+          "p90": 77.0,
+          "min": 61.0,
+          "max": 78.0
+        },
+        "gpu_power_watts": {
+          "n": 66,
+          "mean": 90.42636363636365,
+          "median": 115.14500000000001,
+          "p90": 119.35,
+          "min": 31.05,
+          "max": 136.72
+        },
+        "cpu_total_percent": {
+          "n": 66,
+          "mean": 68.44848484848485,
+          "median": 99.9,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 66,
+          "mean": 1363.1348484848484,
+          "median": 1883.85,
+          "p90": 2132.5,
+          "min": 94.0,
+          "max": 2223.0
+        },
+        "process_rss_gib": {
+          "n": 66,
+          "mean": 3.1782878787878786,
+          "median": 3.2794999999999996,
+          "p90": 3.284,
+          "min": 1.978,
+          "max": 3.284
+        },
+        "system_ram_used_gib": {
+          "n": 66,
+          "mean": 15.619863636363638,
+          "median": 15.683,
+          "p90": 15.821,
+          "min": 14.319,
+          "max": 16.138
+        },
+        "system_ram_percent": {
+          "n": 66,
+          "mean": 49.78030303030303,
+          "median": 50.0,
+          "p90": 50.4,
+          "min": 45.6,
+          "max": 51.4
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.652,
+        "peak_reserved_gib": 8.566
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      },
+      "speedup_percent_vs_reference_mean": 10.626,
+      "speedup_percent_vs_reference_first": 0.0,
+      "speedup_percent_vs_reference_last": 23.783,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "REFERENCE"
+    },
+    {
+      "variant": "C1a_qwen_inductor_default",
+      "name": "C1a_qwen_inductor_default",
+      "description": "Qwen language model only, inductor default mode.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "qwen",
+      "compile_backend": "inductor",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "did not run (runtime_failed): TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/tr",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "qwen",
+        "backend": "inductor",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.848,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "runtime_failed",
+      "error": "TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/triton\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"\n",
+      "traceback_tail": "    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\model.py\", line 157, in forward\n    lm_logits, seg_hidden = forward_qwen(self.qwen, batch)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\qwen_seg.py\", line 615, in forward_qwen\n    outputs = model(\n              ^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py\", line 511, in __call__\n    return super().__call__(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py\", line 1183, in compile_wrapper\n    raise e.remove_dynamo_frames() from None  # see TORCHDYNAMO_VERBOSE=1\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_inductor\\scheduler.py\", line 8499, in create_backend\n    raise TritonMissing(inspect.currentframe())\ntorch._inductor.exc.TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/triton\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"",
+      "failed_at_step": 0,
+      "steps_measured": 0,
+      "samples_per_sec": null,
+      "ms_per_sample": null,
+      "speedup_percent_vs_reference_mean": null,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": null
+    },
+    {
+      "variant": "C1a_qwen_inductor_reduce_overhead",
+      "name": "C1a_qwen_inductor_reduce_overhead",
+      "description": "Qwen language model only, mode=reduce-overhead (CUDA-graph trees).",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "qwen",
+      "compile_backend": "inductor",
+      "compile_mode": "reduce-overhead",
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "did not run (runtime_failed): TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/tr",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "qwen",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "compiled": true,
+        "compile_seconds": 0.002,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "runtime_failed",
+      "error": "TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/triton\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"\n",
+      "traceback_tail": "    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\model.py\", line 157, in forward\n    lm_logits, seg_hidden = forward_qwen(self.qwen, batch)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\qwen_seg.py\", line 615, in forward_qwen\n    outputs = model(\n              ^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py\", line 511, in __call__\n    return super().__call__(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py\", line 1183, in compile_wrapper\n    raise e.remove_dynamo_frames() from None  # see TORCHDYNAMO_VERBOSE=1\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_inductor\\scheduler.py\", line 8499, in create_backend\n    raise TritonMissing(inspect.currentframe())\ntorch._inductor.exc.TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/triton\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"",
+      "failed_at_step": 0,
+      "steps_measured": 0,
+      "samples_per_sec": null,
+      "ms_per_sample": null,
+      "speedup_percent_vs_reference_mean": null,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": null
+    },
+    {
+      "variant": "C1c_combined_inductor_default",
+      "name": "C1c_combined_inductor_default",
+      "description": "Combined trainable model path, inductor default mode.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "combined",
+      "compile_backend": "inductor",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "did not run (runtime_failed): TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/tr",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "combined",
+        "backend": "inductor",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.002,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "runtime_failed",
+      "error": "TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/triton\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"\n",
+      "traceback_tail": "Traceback (most recent call last):\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6c6_common.py\", line 547, in run_variant\n    result = runtime.train_step(\n             ^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\runtime.py\", line 355, in train_step\n    output = self.model(batch, features)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py\", line 511, in __call__\n    return super().__call__(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_dynamo\\eval_frame.py\", line 1183, in compile_wrapper\n    raise e.remove_dynamo_frames() from None  # see TORCHDYNAMO_VERBOSE=1\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\torch\\_inductor\\scheduler.py\", line 8499, in create_backend\n    raise TritonMissing(inspect.currentframe())\ntorch._inductor.exc.TritonMissing: Cannot find a working triton installation. Either the package is not installed or it is too old. More information on installing Triton can be found at: https://github.com/triton-lang/triton\n\nSet TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS=\"+dynamo\"",
+      "failed_at_step": 0,
+      "steps_measured": 0,
+      "samples_per_sec": null,
+      "ms_per_sample": null,
+      "speedup_percent_vs_reference_mean": null,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": null
+    },
+    {
+      "variant": "C3_cudagraphs_reduce_overhead",
+      "name": "C3_cudagraphs_reduce_overhead",
+      "description": "Section 8: backend=cudagraphs, the CUDA-graph path reduce-overhead would use. Feasibility probe for graph capture on this stack.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "combined",
+      "compile_backend": "cudagraphs",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": true,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "combined",
+        "backend": "cudagraphs",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.001,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 57.891,
+      "measured_seconds": 32.3331,
+      "ms_per_sample": 505.205,
+      "samples_per_sec": 1.9794,
+      "first_step_seconds": 15.892,
+      "first_step_losses": {
+        "total": "9.4877290725708",
+        "lm_ce": "4.030169486999512",
+        "mask_bce": "0.21375852823257446",
+        "mask_dice": "0.9998732209205627"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.505205,
+        "min": 0.180078,
+        "max": 10.837664
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 1.165592,
+      "clip_total_norm_mean": 8.330193,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 100,
+        "nvidia_smi_call_seconds": {
+          "n": 100,
+          "mean": 0.0630804250005167,
+          "median": 0.05699984999955632,
+          "p90": 0.08410610000282759,
+          "min": 0.03790789999766275,
+          "max": 0.17264029999932973
+        },
+        "gpu_utilization_percent": {
+          "n": 100,
+          "mean": 20.08,
+          "median": 6.0,
+          "p90": 47.0,
+          "min": 1.0,
+          "max": 81.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 100,
+          "mean": 11785.42,
+          "median": 11611.0,
+          "p90": 14827.0,
+          "min": 7787.0,
+          "max": 14827.0
+        },
+        "gpu_temperature_c": {
+          "n": 100,
+          "mean": 70.94,
+          "median": 69.0,
+          "p90": 78.0,
+          "min": 65.0,
+          "max": 80.0
+        },
+        "gpu_power_watts": {
+          "n": 100,
+          "mean": 71.4366,
+          "median": 40.31,
+          "p90": 122.27,
+          "min": 26.85,
+          "max": 136.03
+        },
+        "cpu_total_percent": {
+          "n": 100,
+          "mean": 49.246,
+          "median": 17.7,
+          "p90": 100.0,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 100,
+          "mean": 947.2760000000001,
+          "median": 105.2,
+          "p90": 2095.4,
+          "min": 91.7,
+          "max": 2203.2
+        },
+        "process_rss_gib": {
+          "n": 100,
+          "mean": 3.6178500000000002,
+          "median": 3.6375,
+          "p90": 3.776,
+          "min": 3.38,
+          "max": 3.776
+        },
+        "system_ram_used_gib": {
+          "n": 100,
+          "mean": 16.169069999999998,
+          "median": 16.237000000000002,
+          "p90": 16.358,
+          "min": 15.906,
+          "max": 16.425
+        },
+        "system_ram_percent": {
+          "n": 100,
+          "mean": 51.528999999999996,
+          "median": 51.75,
+          "p90": 52.1,
+          "min": 50.7,
+          "max": 52.3
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 9.8,
+        "peak_reserved_gib": 12.635
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {
+          "aot_autograd.not_ok": 2,
+          "aot_autograd.ok": 44,
+          "aot_autograd.total": 47,
+          "frames.ok": 98,
+          "frames.total": 108,
+          "graph_break.Data dependent operator\n  Explanation: Operator `aten._local_scalar_dense.default` has a non-Tensor output whose value is dependent on the data of Tensor inputs.\n  Hint: Enable tracing of data-dependent output operators with `torch._dynamo.config.capture_scalar_outputs = True`\n\n  Developer debug context: aten._local_scalar_dense.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0033.html": 8,
+          "graph_break.Dynamic shape operator\n  Explanation: Operator `aten.nonzero.default`'s output shape depends on input Tensor data.\n  Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True`\n\n  Developer debug context: aten.nonzero.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html": 3,
+          "graph_break.Dynamic shape operator\n  Explanation: Operator `aten.repeat_interleave.Tensor`'s output shape depends on input Tensor data.\n  Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True`\n\n  Developer debug context: aten.repeat_interleave.Tensor\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html": 9,
+          "graph_break.Dynamic shape operator\n  Explanation: Operator `aten.repeat_interleave.Tensor`'s output shape depends on input Tensor data.\n  Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True`\n\n  Developer debug context: aten.repeat_interleave.Tensor\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html\n\n*** While handling this graph break, another graph break occurred: ***\n\nGraph break under GenericContextWrappingVariable\n  Explanation: Attempted to graph break in an active context manager(s) that doesn't support graph breaking.\n  Hint: Move the offending context manager(s) to outside the compiled region.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: Active generic context managers: [GenericContextWrappingVariable(_GeneratorContextManager)]\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0066.html": 1,
+          "graph_break.Unsupported Tensor.item() call with capture_scalar_outputs=False\n  Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False.\n  Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph.\n\n  Developer debug context: call_method TensorVariable() item () {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0124.html": 11,
+          "graph_break.Unsupported context manager\n  Explanation: Dynamo does not know how to enter a `lock` context manager.\n  Hint: Avoid using the unsupported context manager.\n  Hint: If the context manager seems like it should be supported (e.g. torch.set_grad_enabled), then it may be the case that it was created outside the compiled region, which Dynamo does not support. Supported context managers can cross graph break boundaries only if they are local non-closure variables, or are intermediate values.\n  Hint: File an issue to PyTorch. Simple context managers can potentially be supported, but note that context managers can't be supported in general\n\n  Developer debug context: Attempted SETUP_WITH/BEFORE_WITH/LOAD_SPECIAL on LazyVariableTracker(realized: UserDefinedObjectVariable(lock))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0142.html": 10,
+          "graph_break.Unsupported context manager\n  Explanation: Dynamo does not know how to enter a `lock` context manager.\n  Hint: Avoid using the unsupported context manager.\n  Hint: If the context manager seems like it should be supported (e.g. torch.set_grad_enabled), then it may be the case that it was created outside the compiled region, which Dynamo does not support. Supported context managers can cross graph break boundaries only if they are local non-closure variables, or are intermediate values.\n  Hint: File an issue to PyTorch. Simple context managers can potentially be supported, but note that context managers can't be supported in general\n\n  Developer debug context: Attempted SETUP_WITH/BEFORE_WITH/LOAD_SPECIAL on LazyVariableTracker(realized: UserDefinedObjectVariable(lock))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0142.html\n\n*** While handling this graph break, another graph break occurred: ***\n\nGraph break under GenericContextWrappingVariable\n  Explanation: Attempted to graph break in an active context manager(s) that doesn't support graph breaking.\n  Hint: Move the offending context manager(s) to outside the compiled region.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: Active generic context managers: [GenericContextWrappingVariable(_GeneratorContextManager)]\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0066.html": 2,
+          "graph_break.Unsupported method call\n  Explanation: Dynamo does not know how to trace method `get` of class `ContextVar`\n  Hint: Avoid calling `ContextVar.get` in your code.\n  Hint: Please report an issue to PyTorch.\n\n  Developer debug context: call_method UserDefinedObjectVariable(ContextVar) get [] {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0156.html": 3,
+          "graph_break.setattr() on unsupported type\n  Explanation: setattr() is not supported on type type\n  Hint: It may be possible to write Dynamo tracing rules for this code. Please report an issue to PyTorch if you encounter this graph break often and it is causing performance issues.\n\n  Developer debug context: setattr(UserDefinedClassVariable(<class 'torch.utils.hooks.RemovableHandle'>), ConstantVariable(str: 'next_id'), ConstantVariable(int: 147))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0467.html": 2,
+          "graph_break.setattr() on unsupported type\n  Explanation: setattr() is not supported on type type\n  Hint: It may be possible to write Dynamo tracing rules for this code. Please report an issue to PyTorch if you encounter this graph break often and it is causing performance issues.\n\n  Developer debug context: setattr(UserDefinedClassVariable(<class 'torch.utils.hooks.RemovableHandle'>), ConstantVariable(str: 'next_id'), ConstantVariable(int: 148))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0467.html": 1,
+          "graph_break.setattr() on unsupported type\n  Explanation: setattr() is not supported on type type\n  Hint: It may be possible to write Dynamo tracing rules for this code. Please report an issue to PyTorch if you encounter this graph break often and it is causing performance issues.\n\n  Developer debug context: setattr(UserDefinedClassVariable(<class 'torch.utils.hooks.RemovableHandle'>), ConstantVariable(str: 'next_id'), ConstantVariable(int: 199))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0467.html": 2,
+          "graph_break.setattr() on unsupported type\n  Explanation: setattr() is not supported on type type\n  Hint: It may be possible to write Dynamo tracing rules for this code. Please report an issue to PyTorch if you encounter this graph break often and it is causing performance issues.\n\n  Developer debug context: setattr(UserDefinedClassVariable(<class 'torch.utils.hooks.RemovableHandle'>), ConstantVariable(str: 'next_id'), ConstantVariable(int: 200))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0467.html": 1,
+          "inductor.cudagraph_recorded_non_static_inputs": 1367,
+          "inductor.cudagraph_skips": 3,
+          "resumes.torch_dynamo_resume_in__deepstack_process_at_867": 1,
+          "resumes.torch_dynamo_resume_in_build_sparse_prompt_at_608": 1,
+          "resumes.torch_dynamo_resume_in_build_sparse_prompt_at_609": 1,
+          "resumes.torch_dynamo_resume_in_compute_3d_position_ids_at_1126": 1,
+          "resumes.torch_dynamo_resume_in_decode_mask_at_636": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_1180": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_1186": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_1228": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_1238": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_1361": 2,
+          "resumes.torch_dynamo_resume_in_forward_at_157": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_159": 2,
+          "resumes.torch_dynamo_resume_in_forward_at_306": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_351": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_592": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_704": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_712": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_713": 1,
+          "resumes.torch_dynamo_resume_in_forward_qwen_at_615": 2,
+          "resumes.torch_dynamo_resume_in_get_image_features_at_1054": 1,
+          "resumes.torch_dynamo_resume_in_get_image_features_at_1058": 1,
+          "resumes.torch_dynamo_resume_in_get_placeholder_mask_at_1091": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_attention_seqlens_at_76": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_cu_seqlens_at_64": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_interpolation_indices_and_weights_at_276": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_interpolation_indices_and_weights_at_277": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_interpolation_indices_and_weights_at_278": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_interpolation_indices_and_weights_at_280": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_position_ids_at_112": 2,
+          "resumes.torch_dynamo_resume_in_get_vision_position_ids_at_925": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_position_ids_at_926": 1,
+          "resumes.torch_dynamo_resume_in_get_vision_position_ids_at_927": 1,
+          "resumes.torch_dynamo_resume_in_install_all_output_capturing_hooks_at_205": 2,
+          "resumes.torch_dynamo_resume_in_install_output_capuring_hook_at_138": 4,
+          "resumes.torch_dynamo_resume_in_output_capturing_hook_at_107": 1,
+          "resumes.torch_dynamo_resume_in_torch_compilable_check_at_1849": 1,
+          "resumes.torch_dynamo_resume_in_wrapper_at_280": 2,
+          "resumes.torch_dynamo_resume_in_wrapper_at_939": 4,
+          "stats.calls_captured": 1162,
+          "stats.unique_graphs": 44,
+          "unimplemented.Backend compiler exception\n  Explanation: Backend compiler `cudagraphs` failed with aten.nonzero.default. Adding a graph break.\n  Hint: Report an issue to the backend compiler repo.\n\n  Developer debug context: Backend: cudagraphs\n    Exception:aten.nonzero.default\n    Traceback:\n      File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py\", line 869, in torch_dynamo_resume_in__deepstack_process_at_867\n        return hidden_states\n\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0219.html": 1,
+          "unimplemented.Backend compiler exception\n  Explanation: Backend compiler `cudagraphs` failed with aten.nonzero.default. Adding a graph break.\n  Hint: Report an issue to the backend compiler repo.\n\n  Developer debug context: Backend: cudagraphs\n    Exception:aten.nonzero.default\n    Traceback:\n      File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py\", line 869, in torch_dynamo_resume_in__deepstack_process_at_867\n        return hidden_states\n               ^^^^^^^^^^^^^\n\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0219.html": 1,
+          "unimplemented.Data dependent operator\n  Explanation: Operator `aten._local_scalar_dense.default` has a non-Tensor output whose value is dependent on the data of Tensor inputs.\n  Hint: Enable tracing of data-dependent output operators with `torch._dynamo.config.capture_scalar_outputs = True`\n\n  Developer debug context: aten._local_scalar_dense.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0033.html": 2,
+          "unimplemented.Data dependent operator\n  Explanation: Operator `aten._local_scalar_dense.default` has a non-Tensor output whose value is dependent on the data of Tensor inputs.\n  Hint: Enable tracing of data-dependent output operators with `torch._dynamo.config.capture_scalar_outputs = True`\n\n  Developer debug context: aten._local_scalar_dense.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0033.html\n\n*** While handling this graph break, another graph break occurred: ***\n\ngraph break in loop\n  Explanation: torch.compile detected a graph break in a for/while loop. Skipping the frame and falling back to eager, as graph breaks in loops are not supported.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: frame skipped: <listcomp> (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py line 306)\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb7000.html": 1,
+          "unimplemented.Data dependent operator\n  Explanation: Operator `aten._local_scalar_dense.default` has a non-Tensor output whose value is dependent on the data of Tensor inputs.\n  Hint: Enable tracing of data-dependent output operators with `torch._dynamo.config.capture_scalar_outputs = True`\n\n  Developer debug context: aten._local_scalar_dense.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0033.html\n\n*** While handling this graph break, another graph break occurred: ***\n\ngraph break in loop\n  Explanation: torch.compile detected a graph break in a for/while loop. Skipping the frame and falling back to eager, as graph breaks in loops are not supported.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: frame skipped: torch_dynamo_resume_in_forward_at_713 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py line 713)\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb7000.html": 1,
+          "unimplemented.Dynamic shape operator\n  Explanation: Operator `aten.nonzero.default`'s output shape depends on input Tensor data.\n  Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True`\n\n  Developer debug context: aten.nonzero.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html": 1,
+          "unimplemented.Dynamic shape operator\n  Explanation: Operator `aten.nonzero.default`'s output shape depends on input Tensor data.\n  Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True`\n\n  Developer debug context: aten.nonzero.default\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html\n\n*** While handling this graph break, another graph break occurred: ***\n\ngraph break in loop\n  Explanation: torch.compile detected a graph break in a for/while loop. Skipping the frame and falling back to eager, as graph breaks in loops are not supported.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: frame skipped: get_rope_index (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py line 939)\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb7000.html": 1,
+          "unimplemented.Dynamic shape operator\n  Explanation: Operator `aten.repeat_interleave.Tensor`'s output shape depends on input Tensor data.\n  Hint: Enable tracing of dynamic shape operators with `torch._dynamo.config.capture_dynamic_output_shape_ops = True`\n\n  Developer debug context: aten.repeat_interleave.Tensor\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0036.html": 1,
+          "unimplemented.Dynamo recompile limit exceeded\n  Explanation: Dynamo attempted to recompile the code object too many times, exceeding the recompile_limit cache size limit (currently set to 8). Excessive recompilations can degrade performance due to the compilation overhead of each recompilation.\n  Hint: To monitor recompilations, enable TORCH_LOGS=recompiles. If recompilations are expected, consider increasing torch._dynamo.config.recompile_limit to an appropriate value.\n  Hint: See https://docs.pytorch.org/docs/main/user_guide/torch_compiler/compile/programming_model.recompilation.html for tips on dealing with recompilations.\n\n  Developer debug context: Limit type: recompile_limit\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0039.html": 1,
+          "unimplemented.Unsupported context manager\n  Explanation: Dynamo does not know how to enter a `lock` context manager.\n  Hint: Avoid using the unsupported context manager.\n  Hint: If the context manager seems like it should be supported (e.g. torch.set_grad_enabled), then it may be the case that it was created outside the compiled region, which Dynamo does not support. Supported context managers can cross graph break boundaries only if they are local non-closure variables, or are intermediate values.\n  Hint: File an issue to PyTorch. Simple context managers can potentially be supported, but note that context managers can't be supported in general\n\n  Developer debug context: Attempted SETUP_WITH/BEFORE_WITH/LOAD_SPECIAL on LazyVariableTracker(realized: UserDefinedObjectVariable(lock))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0142.html": 2,
+          "unimplemented.Unsupported method call\n  Explanation: Dynamo does not know how to trace method `get` of class `ContextVar`\n  Hint: Avoid calling `ContextVar.get` in your code.\n  Hint: Please report an issue to PyTorch.\n\n  Developer debug context: call_method UserDefinedObjectVariable(ContextVar) get [] {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0156.html": 1,
+          "unimplemented.Unsupported method call\n  Explanation: Dynamo does not know how to trace method `get` of class `ContextVar`\n  Hint: Avoid calling `ContextVar.get` in your code.\n  Hint: Please report an issue to PyTorch.\n\n  Developer debug context: call_method UserDefinedObjectVariable(ContextVar) get [] {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0156.html\n\n*** While handling this graph break, another graph break occurred: ***\n\ngraph break in loop\n  Explanation: torch.compile detected a graph break in a for/while loop. Skipping the frame and falling back to eager, as graph breaks in loops are not supported.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: frame skipped: forward (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\models\\qwen3_vl\\modeling_qwen3_vl.py line 773)\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb7000.html": 1,
+          "unimplemented.setattr() on unsupported type\n  Explanation: setattr() is not supported on type type\n  Hint: It may be possible to write Dynamo tracing rules for this code. Please report an issue to PyTorch if you encounter this graph break often and it is causing performance issues.\n\n  Developer debug context: setattr(UserDefinedClassVariable(<class 'torch.utils.hooks.RemovableHandle'>), ConstantVariable(str: 'next_id'), ConstantVariable(int: 147))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0467.html": 1,
+          "unimplemented.setattr() on unsupported type\n  Explanation: setattr() is not supported on type type\n  Hint: It may be possible to write Dynamo tracing rules for this code. Please report an issue to PyTorch if you encounter this graph break often and it is causing performance issues.\n\n  Developer debug context: setattr(UserDefinedClassVariable(<class 'torch.utils.hooks.RemovableHandle'>), ConstantVariable(str: 'next_id'), ConstantVariable(int: 147))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0467.html\n\n*** While handling this graph break, another graph break occurred: ***\n\ngraph break in loop\n  Explanation: torch.compile detected a graph break in a for/while loop. Skipping the frame and falling back to eager, as graph breaks in loops are not supported.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: frame skipped: recursively_install_hooks (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\transformers\\utils\\output_capturing.py line 141)\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb7000.html": 1
+        },
+        "graph_breaks": 53,
+        "recompiles": 1,
+        "frames": 1373
+      },
+      "speedup_percent_vs_reference_mean": -24.723,
+      "speedup_percent_vs_reference_first": -31.954,
+      "speedup_percent_vs_reference_last": -15.77,
+      "gain_resolvable_above_reference_drift": true,
+      "equivalence_category": null
+    },
+    {
+      "variant": "C1a_qwen_eager",
+      "name": "C1a_qwen_eager",
+      "description": "Qwen language model only, backend=eager: pure dynamo trace, no codegen.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "qwen",
+      "compile_backend": "eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": true,
+      "rejection_reason": null,
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "qwen",
+        "backend": "eager",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.001,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 34.8204,
+      "measured_seconds": 26.7906,
+      "ms_per_sample": 418.603,
+      "samples_per_sec": 2.3889,
+      "first_step_seconds": 5.272,
+      "first_step_losses": {
+        "total": "9.4877290725708",
+        "lm_ce": "4.030169486999512",
+        "mask_bce": "0.21375852823257446",
+        "mask_dice": "0.9998732209205627"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.418603,
+        "min": 0.215398,
+        "max": 0.45597
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.864835,
+      "clip_total_norm_mean": 7.802177,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 61,
+        "nvidia_smi_call_seconds": {
+          "n": 61,
+          "mean": 0.0667863426226445,
+          "median": 0.06240799999795854,
+          "p90": 0.08440469999914058,
+          "min": 0.0425969999996596,
+          "max": 0.10619630000292091
+        },
+        "gpu_utilization_percent": {
+          "n": 61,
+          "mean": 34.60655737704918,
+          "median": 37.0,
+          "p90": 45.0,
+          "min": 3.0,
+          "max": 86.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 61,
+          "mean": 14442.11475409836,
+          "median": 15097.0,
+          "p90": 15097.0,
+          "min": 11167.0,
+          "max": 15097.0
+        },
+        "gpu_temperature_c": {
+          "n": 61,
+          "mean": 76.42622950819673,
+          "median": 77.0,
+          "p90": 79.0,
+          "min": 69.0,
+          "max": 81.0
+        },
+        "gpu_power_watts": {
+          "n": 61,
+          "mean": 100.34213114754098,
+          "median": 109.02,
+          "p90": 118.63,
+          "min": 35.28,
+          "max": 158.85
+        },
+        "cpu_total_percent": {
+          "n": 61,
+          "mean": 80.49016393442622,
+          "median": 93.3,
+          "p90": 96.1,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 61,
+          "mean": 1585.2639344262295,
+          "median": 1808.1,
+          "p90": 2000.4,
+          "min": 97.3,
+          "max": 2120.3
+        },
+        "process_rss_gib": {
+          "n": 61,
+          "mean": 3.863622950819672,
+          "median": 3.872,
+          "p90": 3.875,
+          "min": 3.792,
+          "max": 3.875
+        },
+        "system_ram_used_gib": {
+          "n": 61,
+          "mean": 16.508540983606558,
+          "median": 16.525,
+          "p90": 16.584,
+          "min": 16.345,
+          "max": 16.659
+        },
+        "system_ram_percent": {
+          "n": 61,
+          "mean": 52.61147540983607,
+          "median": 52.7,
+          "p90": 52.9,
+          "min": 52.1,
+          "max": 53.1
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 8.685,
+        "peak_reserved_gib": 12.875
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {
+          "inductor.cudagraph_recorded_non_static_inputs": 29
+        },
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      },
+      "speedup_percent_vs_reference_mean": -9.15,
+      "speedup_percent_vs_reference_first": -17.876,
+      "speedup_percent_vs_reference_last": 1.655,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": null
+    },
+    {
+      "variant": "C1a_qwen_aot_eager",
+      "name": "C1a_qwen_aot_eager",
+      "description": "Qwen language model only, backend=aot_eager: dynamo graph capture without Triton codegen, so it runs on an install that has no Triton.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "qwen",
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "not equivalent: the candidate changes losses/gradients out of the predeclared tolerance, so it cannot be adopted at any speed",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "qwen",
+        "backend": "aot_eager",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.001,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 30.4655,
+      "measured_seconds": 27.1494,
+      "ms_per_sample": 424.209,
+      "samples_per_sec": 2.3573,
+      "first_step_seconds": 0.265,
+      "first_step_losses": {
+        "total": "9.4877290725708",
+        "lm_ce": "4.030169486999512",
+        "mask_bce": "0.21375852823257446",
+        "mask_dice": "0.9998732209205627"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.424209,
+        "min": 0.212498,
+        "max": 0.878857
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.864835,
+      "clip_total_norm_mean": 7.802177,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 53,
+        "nvidia_smi_call_seconds": {
+          "n": 53,
+          "mean": 0.06213896037702655,
+          "median": 0.05870310000318568,
+          "p90": 0.07169050000084098,
+          "min": 0.05219149999902584,
+          "max": 0.09374169999500737
+        },
+        "gpu_utilization_percent": {
+          "n": 53,
+          "mean": 36.60377358490566,
+          "median": 37.0,
+          "p90": 46.0,
+          "min": 1.0,
+          "max": 86.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 53,
+          "mean": 14604.547169811322,
+          "median": 14659.0,
+          "p90": 14659.0,
+          "min": 11913.0,
+          "max": 14659.0
+        },
+        "gpu_temperature_c": {
+          "n": 53,
+          "mean": 78.67924528301887,
+          "median": 79.0,
+          "p90": 80.0,
+          "min": 74.0,
+          "max": 82.0
+        },
+        "gpu_power_watts": {
+          "n": 53,
+          "mean": 110.17320754716982,
+          "median": 111.7,
+          "p90": 120.32,
+          "min": 38.8,
+          "max": 143.3
+        },
+        "cpu_total_percent": {
+          "n": 53,
+          "mean": 91.43584905660379,
+          "median": 93.9,
+          "p90": 96.5,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 53,
+          "mean": 1759.6018867924527,
+          "median": 1803.1,
+          "p90": 1957.2,
+          "min": 1008.9,
+          "max": 2032.4
+        },
+        "process_rss_gib": {
+          "n": 53,
+          "mean": 3.8742830188679247,
+          "median": 3.874,
+          "p90": 3.875,
+          "min": 3.872,
+          "max": 3.877
+        },
+        "system_ram_used_gib": {
+          "n": 53,
+          "mean": 16.46566037735849,
+          "median": 16.467,
+          "p90": 16.533,
+          "min": 16.372,
+          "max": 16.582
+        },
+        "system_ram_percent": {
+          "n": 53,
+          "mean": 52.48301886792453,
+          "median": 52.5,
+          "p90": 52.7,
+          "min": 52.2,
+          "max": 52.8
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.808,
+        "peak_reserved_gib": 12.447
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      },
+      "speedup_percent_vs_reference_mean": -10.352,
+      "speedup_percent_vs_reference_first": -18.962,
+      "speedup_percent_vs_reference_last": 0.311,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "NOT_EQUIVALENT",
+      "equivalence_gate": "compile_qwen_aot_eager",
+      "equivalence_detail": {
+        "loss_max_abs_difference": 0.23393750190734863,
+        "gradient_max_abs_difference": 0.018228047993034124,
+        "post_step_parameter_max_abs_difference": 0.0041525475680828094,
+        "within_predeclared_tolerance": false
+      }
+    },
+    {
+      "variant": "C1b_decoder_tail_aot_eager",
+      "name": "C1b_decoder_tail_aot_eager",
+      "description": "Projection + SAM mask-decoder tail only, backend=aot_eager, function form so dynamo does not trace the parent module twice.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "decoder_tail",
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "not equivalent: the candidate changes losses/gradients out of the predeclared tolerance, so it cannot be adopted at any speed",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "decoder_tail",
+        "backend": "aot_eager",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.001,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 36.1689,
+      "measured_seconds": 27.4251,
+      "ms_per_sample": 428.517,
+      "samples_per_sec": 2.3336,
+      "first_step_seconds": 5.603,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.428517,
+        "min": 0.411681,
+        "max": 0.458646
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 2.427455,
+      "clip_total_norm_mean": 8.321488,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 63,
+        "nvidia_smi_call_seconds": {
+          "n": 63,
+          "mean": 0.06665461587314013,
+          "median": 0.06525980000151321,
+          "p90": 0.08271469999453984,
+          "min": 0.03979010000330163,
+          "max": 0.11340539999946486
+        },
+        "gpu_utilization_percent": {
+          "n": 63,
+          "mean": 31.03174603174603,
+          "median": 35.0,
+          "p90": 43.0,
+          "min": 1.0,
+          "max": 83.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 63,
+          "mean": 14640.285714285714,
+          "median": 14978.0,
+          "p90": 14978.0,
+          "min": 12026.0,
+          "max": 14978.0
+        },
+        "gpu_temperature_c": {
+          "n": 63,
+          "mean": 78.12698412698413,
+          "median": 79.0,
+          "p90": 80.0,
+          "min": 71.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 63,
+          "mean": 99.91539682539683,
+          "median": 111.08,
+          "p90": 115.91,
+          "min": 37.91,
+          "max": 141.56
+        },
+        "cpu_total_percent": {
+          "n": 63,
+          "mean": 79.58730158730158,
+          "median": 92.3,
+          "p90": 95.6,
+          "min": 0.0,
+          "max": 100.0
+        },
+        "process_cpu_percent": {
+          "n": 63,
+          "mean": 1549.6730158730159,
+          "median": 1787.7,
+          "p90": 1921.4,
+          "min": 94.6,
+          "max": 2049.0
+        },
+        "process_rss_gib": {
+          "n": 63,
+          "mean": 3.916349206349206,
+          "median": 3.921,
+          "p90": 3.921,
+          "min": 3.884,
+          "max": 3.921
+        },
+        "system_ram_used_gib": {
+          "n": 63,
+          "mean": 16.385174603174605,
+          "median": 16.364,
+          "p90": 16.413,
+          "min": 16.353,
+          "max": 16.517
+        },
+        "system_ram_percent": {
+          "n": 63,
+          "mean": 52.211111111111116,
+          "median": 52.2,
+          "p90": 52.3,
+          "min": 52.1,
+          "max": 52.6
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.945,
+        "peak_reserved_gib": 12.781
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {
+          "aot_autograd.ok": 5,
+          "aot_autograd.total": 6,
+          "frames.ok": 7,
+          "frames.total": 7,
+          "graph_break.Unsupported Tensor.item() call with capture_scalar_outputs=False\n  Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False.\n  Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph.\n\n  Developer debug context: call_method TensorVariable() item () {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0124.html": 5,
+          "resumes.torch_dynamo_resume_in__decoder_tail_at_227": 2,
+          "resumes.torch_dynamo_resume_in_build_sparse_prompt_at_608": 1,
+          "resumes.torch_dynamo_resume_in_build_sparse_prompt_at_609": 1,
+          "resumes.torch_dynamo_resume_in_decode_mask_at_636": 1,
+          "stats.calls_captured": 519,
+          "stats.unique_graphs": 5
+        },
+        "graph_breaks": 5,
+        "recompiles": 0,
+        "frames": 533
+      },
+      "speedup_percent_vs_reference_mean": -11.253,
+      "speedup_percent_vs_reference_first": -19.777,
+      "speedup_percent_vs_reference_last": -0.698,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "NOT_EQUIVALENT",
+      "equivalence_gate": "compile_decoder_tail_aot_eager",
+      "equivalence_detail": {
+        "loss_max_abs_difference": 0.04215526580810547,
+        "gradient_max_abs_difference": 0.004461735486984253,
+        "post_step_parameter_max_abs_difference": 0.003056734800338745,
+        "within_predeclared_tolerance": false
+      }
+    },
+    {
+      "variant": "C1c_combined_aot_eager",
+      "name": "C1c_combined_aot_eager",
+      "description": "Combined trainable model path, backend=aot_eager.",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": "combined",
+      "compile_backend": "aot_eager",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "not equivalent: the candidate changes losses/gradients out of the predeclared tolerance, so it cannot be adopted at any speed",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "scope": "combined",
+        "backend": "aot_eager",
+        "mode": null,
+        "compiled": true,
+        "compile_seconds": 0.001,
+        "first_step_seconds": null,
+        "error": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 36.7207,
+      "measured_seconds": 30.9004,
+      "ms_per_sample": 482.819,
+      "samples_per_sec": 2.0712,
+      "first_step_seconds": 2.49,
+      "first_step_losses": {
+        "total": "9.4877290725708",
+        "lm_ce": "4.030169486999512",
+        "mask_bce": "0.21375852823257446",
+        "mask_dice": "0.9998732209205627"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.482819,
+        "min": 0.330506,
+        "max": 0.511447
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 1.165592,
+      "clip_total_norm_mean": 8.330193,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 63,
+        "nvidia_smi_call_seconds": {
+          "n": 63,
+          "mean": 0.07378621904723649,
+          "median": 0.05960780000168597,
+          "p90": 0.08703780000359984,
+          "min": 0.03981770000245888,
+          "max": 0.5898077000019839
+        },
+        "gpu_utilization_percent": {
+          "n": 63,
+          "mean": 52.77777777777778,
+          "median": 48.0,
+          "p90": 83.0,
+          "min": 1.0,
+          "max": 89.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 63,
+          "mean": 15311.587301587302,
+          "median": 15297.0,
+          "p90": 15398.0,
+          "min": 15257.0,
+          "max": 15541.0
+        },
+        "gpu_temperature_c": {
+          "n": 63,
+          "mean": 79.61904761904762,
+          "median": 80.0,
+          "p90": 81.0,
+          "min": 73.0,
+          "max": 83.0
+        },
+        "gpu_power_watts": {
+          "n": 63,
+          "mean": 108.43412698412699,
+          "median": 109.78,
+          "p90": 117.05,
+          "min": 39.85,
+          "max": 137.4
+        },
+        "cpu_total_percent": {
+          "n": 63,
+          "mean": 82.23015873015873,
+          "median": 86.2,
+          "p90": 89.7,
+          "min": 0.0,
+          "max": 95.5
+        },
+        "process_cpu_percent": {
+          "n": 63,
+          "mean": 1660.974603174603,
+          "median": 1734.9,
+          "p90": 1870.7,
+          "min": 97.0,
+          "max": 2143.9
+        },
+        "process_rss_gib": {
+          "n": 63,
+          "mean": 4.252952380952381,
+          "median": 4.256,
+          "p90": 4.256,
+          "min": 4.066,
+          "max": 4.259
+        },
+        "system_ram_used_gib": {
+          "n": 63,
+          "mean": 17.42177777777778,
+          "median": 17.43,
+          "p90": 17.478,
+          "min": 16.642,
+          "max": 17.664
+        },
+        "system_ram_percent": {
+          "n": 63,
+          "mean": 55.53333333333333,
+          "median": 55.6,
+          "p90": 55.7,
+          "min": 53.0,
+          "max": 56.3
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 9.995,
+        "peak_reserved_gib": 14.406
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {
+          "aot_autograd.ok": 1,
+          "aot_autograd.total": 1,
+          "frames.ok": 3,
+          "frames.total": 3,
+          "graph_break.Unsupported Tensor.item() call with capture_scalar_outputs=False\n  Explanation: Dynamo does not support tracing `Tensor.item()` with config.capture_scalar_outputs=False.\n  Hint: Set `torch._dynamo.config.capture_scalar_outputs = True` or `export TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS=1` to include these operations in the captured graph.\n\n  Developer debug context: call_method TensorVariable() item () {}\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0124.html": 1,
+          "graph_break.Unsupported context manager\n  Explanation: Dynamo does not know how to enter a `lock` context manager.\n  Hint: Avoid using the unsupported context manager.\n  Hint: If the context manager seems like it should be supported (e.g. torch.set_grad_enabled), then it may be the case that it was created outside the compiled region, which Dynamo does not support. Supported context managers can cross graph break boundaries only if they are local non-closure variables, or are intermediate values.\n  Hint: File an issue to PyTorch. Simple context managers can potentially be supported, but note that context managers can't be supported in general\n\n  Developer debug context: Attempted SETUP_WITH/BEFORE_WITH/LOAD_SPECIAL on LazyVariableTracker(realized: UserDefinedObjectVariable(lock))\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0142.html\n\n*** While handling this graph break, another graph break occurred: ***\n\nGraph break under GenericContextWrappingVariable\n  Explanation: Attempted to graph break in an active context manager(s) that doesn't support graph breaking.\n  Hint: Move the offending context manager(s) to outside the compiled region.\n  Hint: This graph break may have been caused by an earlier graph break. Resolving the earlier graph break may resolve this one.\n\n  Developer debug context: Active generic context managers: [GenericContextWrappingVariable(_GeneratorContextManager)]\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0066.html": 2,
+          "resumes.torch_dynamo_resume_in_forward_at_157": 1,
+          "resumes.torch_dynamo_resume_in_forward_at_159": 1,
+          "resumes.torch_dynamo_resume_in_forward_qwen_at_615": 1,
+          "stats.calls_captured": 4,
+          "stats.unique_graphs": 1
+        },
+        "graph_breaks": 3,
+        "recompiles": 0,
+        "frames": 10
+      },
+      "speedup_percent_vs_reference_mean": -21.232,
+      "speedup_percent_vs_reference_first": -28.798,
+      "speedup_percent_vs_reference_last": -11.864,
+      "gain_resolvable_above_reference_drift": true,
+      "equivalence_category": "NOT_EQUIVALENT",
+      "equivalence_gate": "compile_combined_aot_eager",
+      "equivalence_detail": {
+        "loss_max_abs_difference": 0.22746062278747559,
+        "gradient_max_abs_difference": 0.0,
+        "post_step_parameter_max_abs_difference": 0.0,
+        "within_predeclared_tolerance": false
+      }
+    },
+    {
+      "variant": "uncompiled_reference_last",
+      "name": "uncompiled_reference_last",
+      "description": "Integrated baseline reference (bracket end).",
+      "optimizer_kind": "default",
+      "clip_grad_foreach": null,
+      "compile_scope": null,
+      "compile_backend": "inductor",
+      "compile_mode": null,
+      "deterministic_strict": null,
+      "gradient_checkpointing": null,
+      "collect_grad_norms": null,
+      "runtime_mode": "default",
+      "sdpa_backend": null,
+      "notes": [],
+      "adopted": false,
+      "rejection_reason": "reference run",
+      "equivalence_status": null,
+      "collect_grad_norms_effective": false,
+      "gradient_checkpointing_config": true,
+      "gradient_checkpointing_enabled": true,
+      "determinism": {
+        "requested": true,
+        "seed": 20260926,
+        "python_random_seeded": true,
+        "numpy_seeded": true,
+        "torch_manual_seed": true,
+        "torch_cuda_manual_seed_all": true,
+        "pythonhashseed": "20260926",
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "strict_requested": true,
+        "use_deterministic_algorithms": true,
+        "use_deterministic_algorithms_warn_only": false,
+        "cublas_workspace_config": ":4096:8",
+        "cublas_error": null,
+        "bit_reproducible_claimed": true,
+        "strict_effective": true
+      },
+      "trainable_params": {
+        "total_params": 2227632642,
+        "trainable_params": 24010309,
+        "lora_params": 17432576,
+        "token_params": 2048,
+        "output_row_params": 0,
+        "trainable_fraction": 0.010778397006448606,
+        "seg_token_id": 151669,
+        "embedding_base_frozen": true,
+        "embedding_base_numel": 310620160
+      },
+      "compile": {
+        "compiled": false,
+        "scope": null
+      },
+      "optimizer": {
+        "requested": "default",
+        "constructed": true,
+        "class": "AdamW",
+        "defaults": {
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        },
+        "param_groups": 3,
+        "params": 528,
+        "param_dtypes": [
+          "torch.float32"
+        ],
+        "torch_default_resolution": {
+          "fused": false,
+          "foreach": true,
+          "interpretation": "foreach multi-tensor path"
+        }
+      },
+      "sdpa_backend_forced": null,
+      "sdpa_backend_error": null,
+      "status": "ok",
+      "steps_measured": 64,
+      "warmup_steps": 8,
+      "total_sequence_seconds": 30.6977,
+      "measured_seconds": 27.234,
+      "ms_per_sample": 425.531,
+      "samples_per_sec": 2.35,
+      "first_step_seconds": 0.491,
+      "first_step_losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "step_wall_seconds": {
+        "n": 64,
+        "mean": 0.425531,
+        "min": 0.393879,
+        "max": 0.465284
+      },
+      "grad_norms_collected": false,
+      "clip_total_norm_last": 0.544658,
+      "clip_total_norm_mean": 8.444049,
+      "utilization": {
+        "interval_seconds": 0.5,
+        "n_samples": 54,
+        "nvidia_smi_call_seconds": {
+          "n": 54,
+          "mean": 0.06728612222246334,
+          "median": 0.06264765000378247,
+          "p90": 0.08095640000101412,
+          "min": 0.053635800002666656,
+          "max": 0.10434769999847049
+        },
+        "gpu_utilization_percent": {
+          "n": 54,
+          "mean": 37.25925925925926,
+          "median": 38.0,
+          "p90": 44.0,
+          "min": 25.0,
+          "max": 87.0
+        },
+        "gpu_memory_used_mib": {
+          "n": 54,
+          "mean": 13812.166666666666,
+          "median": 13880.0,
+          "p90": 13884.0,
+          "min": 10867.0,
+          "max": 13884.0
+        },
+        "gpu_temperature_c": {
+          "n": 54,
+          "mean": 80.66666666666667,
+          "median": 81.0,
+          "p90": 82.0,
+          "min": 78.0,
+          "max": 82.0
+        },
+        "gpu_power_watts": {
+          "n": 54,
+          "mean": 110.9437037037037,
+          "median": 110.97999999999999,
+          "p90": 117.53,
+          "min": 58.14,
+          "max": 143.14
+        },
+        "cpu_total_percent": {
+          "n": 54,
+          "mean": 91.86111111111111,
+          "median": 94.3,
+          "p90": 95.8,
+          "min": 0.0,
+          "max": 98.0
+        },
+        "process_cpu_percent": {
+          "n": 54,
+          "mean": 1852.0796296296296,
+          "median": 1847.6,
+          "p90": 2003.8,
+          "min": 1470.8,
+          "max": 2405.8
+        },
+        "process_rss_gib": {
+          "n": 54,
+          "mean": 4.083481481481481,
+          "median": 4.016,
+          "p90": 4.22,
+          "min": 4.013,
+          "max": 4.224
+        },
+        "system_ram_used_gib": {
+          "n": 54,
+          "mean": 17.19088888888889,
+          "median": 17.116500000000002,
+          "p90": 17.346,
+          "min": 17.1,
+          "max": 17.419
+        },
+        "system_ram_percent": {
+          "n": 54,
+          "mean": 54.77407407407408,
+          "median": 54.55,
+          "p90": 55.3,
+          "min": 54.5,
+          "max": 55.5
+        }
+      },
+      "vram": {
+        "peak_allocated_gib": 7.94,
+        "peak_reserved_gib": 12.803
+      },
+      "dynamo": {
+        "available": true,
+        "delta": {},
+        "graph_breaks": 0,
+        "recompiles": 0,
+        "frames": 0
+      },
+      "speedup_percent_vs_reference_mean": -10.629,
+      "speedup_percent_vs_reference_first": -19.213,
+      "speedup_percent_vs_reference_last": 0.0,
+      "gain_resolvable_above_reference_drift": false,
+      "equivalence_category": "REFERENCE"
+    }
+  ],
+  "failure_summary": {
+    "count": 3,
+    "triton_missing": 3,
+    "other": []
+  },
+  "torch_compile_available": true,
+  "decision": "no torch.compile candidate is adopted: the inductor backend cannot run at all on this install (no Triton), and every backend that does run is either slower or numerically different"
+}

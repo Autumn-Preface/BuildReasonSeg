@@ -1,0 +1,936 @@
+{
+  "_doc": "Task 6C.6 section 5/9. Compact profiler summary plus the SDPA backend audit, measured on the integrated baseline path (B0.6). No raw trace is written or committed. CI-style ratios inside the profiled window are reported with the CUPTI inflation caveat attached.",
+  "task": "6C.6",
+  "path_measured": "integrated baseline B0.6 (formal step, collect_grad_norms=false)",
+  "batch_size": 1,
+  "deterministic_strict": true,
+  "profiler": {
+    "steps_profiled": 8,
+    "warmup_steps": 2,
+    "warmup_seconds": 17.8,
+    "profiled_wall_seconds": 45.999,
+    "ms_per_step_profiled": 5749.891,
+    "cpu_self_time_total_ms": 3497.42,
+    "cpu_self_time_per_step_ms": 437.177,
+    "cuda_kernel_count": 458732,
+    "cuda_kernel_launches_per_step": 57341.5,
+    "cuda_kernel_total_ms": 4123.213,
+    "cuda_kernel_total_per_step_ms": 515.402,
+    "cuda_kernel_mean_us": 8.988,
+    "cuda_kernel_median_us": 2.1120000001974404,
+    "cuda_kernel_p90_us": 8.191999999806285,
+    "cuda_kernel_max_us": 16146.630999999994,
+    "gpu_busy_fraction_of_wall": 0.0896,
+    "cpu_self_fraction_of_wall": 0.076,
+    "sync_event_count": 20362,
+    "sync_events_per_step": 2545.25,
+    "sync_ops": {
+      "aten::item": 8408,
+      "aten::_local_scalar_dense": 8408,
+      "cudaMemcpyAsync": 2504,
+      "cudaStreamSynchronize": 1040,
+      "cudaDeviceSynchronize": 2
+    },
+    "top_cpu_self_time": [
+      {
+        "name": "cudaLaunchKernel",
+        "us": 948541.3,
+        "ms": 948.541,
+        "calls": 118008,
+        "us_per_call": 8.04
+      },
+      {
+        "name": "aten::mm",
+        "us": 234279.5,
+        "ms": 234.279,
+        "calls": 13288,
+        "us_per_call": 17.63
+      },
+      {
+        "name": "aten::empty_strided",
+        "us": 156931.1,
+        "ms": 156.931,
+        "calls": 31304,
+        "us_per_call": 5.01
+      },
+      {
+        "name": "aten::fill_",
+        "us": 156920.7,
+        "ms": 156.921,
+        "calls": 48384,
+        "us_per_call": 3.24
+      },
+      {
+        "name": "aten::mul",
+        "us": 145777.8,
+        "ms": 145.778,
+        "calls": 16256,
+        "us_per_call": 8.97
+      },
+      {
+        "name": "cuLaunchKernel",
+        "us": 142915.3,
+        "ms": 142.915,
+        "calls": 15464,
+        "us_per_call": 9.24
+      },
+      {
+        "name": "aten::copy_",
+        "us": 122529.7,
+        "ms": 122.53,
+        "calls": 27616,
+        "us_per_call": 4.44
+      },
+      {
+        "name": "aten::_to_copy",
+        "us": 93156.9,
+        "ms": 93.157,
+        "calls": 23912,
+        "us_per_call": 3.9
+      },
+      {
+        "name": "cudaMemcpyAsync",
+        "us": 70966.1,
+        "ms": 70.966,
+        "calls": 2504,
+        "us_per_call": 28.34
+      },
+      {
+        "name": "cudaStreamSynchronize",
+        "us": 61594.6,
+        "ms": 61.595,
+        "calls": 1040,
+        "us_per_call": 59.23
+      },
+      {
+        "name": "autograd::engine::evaluate_function: ToCopyBackward0",
+        "us": 53889.5,
+        "ms": 53.889,
+        "calls": 10024,
+        "us_per_call": 5.38
+      },
+      {
+        "name": "aten::empty",
+        "us": 46419.6,
+        "ms": 46.42,
+        "calls": 10096,
+        "us_per_call": 4.6
+      },
+      {
+        "name": "autograd::engine::evaluate_function: MmBackward0",
+        "us": 41852.3,
+        "ms": 41.852,
+        "calls": 4712,
+        "us_per_call": 8.88
+      },
+      {
+        "name": "aten::transpose",
+        "us": 40958.4,
+        "ms": 40.958,
+        "calls": 27544,
+        "us_per_call": 1.49
+      },
+      {
+        "name": "aten::t",
+        "us": 39994.5,
+        "ms": 39.994,
+        "calls": 21696,
+        "us_per_call": 1.84
+      }
+    ],
+    "top_cuda_time": [
+      {
+        "name": "aten::mm",
+        "us": 371987.8,
+        "ms": 371.988,
+        "calls": 13288,
+        "us_per_call": 27.99
+      },
+      {
+        "name": "_ZN7cutlass7Kernel2I66cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_32x6_tn_align8EEvNT_6ParamsE",
+        "us": 190154.6,
+        "ms": 190.155,
+        "calls": 2260,
+        "us_per_call": 84.14
+      },
+      {
+        "name": "_ZN7cutlass7Kernel2I66cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_32x6_nn_align8EEvNT_6ParamsE",
+        "us": 126763.1,
+        "ms": 126.763,
+        "calls": 2016,
+        "us_per_call": 62.88
+      },
+      {
+        "name": "aten::copy_",
+        "us": 122060.4,
+        "ms": 122.06,
+        "calls": 27616,
+        "us_per_call": 4.42
+      },
+      {
+        "name": "Optimizer.step#AdamW.step",
+        "us": 116064.4,
+        "ms": 116.064,
+        "calls": 8,
+        "us_per_call": 14508.05
+      },
+      {
+        "name": "aten::addmm",
+        "us": 86446.3,
+        "ms": 86.446,
+        "calls": 1248,
+        "us_per_call": 69.27
+      },
+      {
+        "name": "aten::fill_",
+        "us": 77484.8,
+        "ms": 77.485,
+        "calls": 48384,
+        "us_per_call": 1.6
+      },
+      {
+        "name": "aten::bmm",
+        "us": 62819.3,
+        "ms": 62.819,
+        "calls": 1376,
+        "us_per_call": 45.65
+      },
+      {
+        "name": "aten::mul",
+        "us": 48264.2,
+        "ms": 48.264,
+        "calls": 16256,
+        "us_per_call": 2.97
+      },
+      {
+        "name": "_ZN2at6native29vectorized_elementwise_kernelILi4ENS0_11FillFunctorIfEESt5arrayIPcLy1EEEEviT0_T1_",
+        "us": 40965.3,
+        "ms": 40.965,
+        "calls": 27624,
+        "us_per_call": 1.48
+      },
+      {
+        "name": "_ZN2at6native27unrolled_elementwise_kernelIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE5_clEvEUlfE_St5arrayIPcLy2EELi4E23TrivialOffsetCalculatorILi1EjESB_NS0_6memory12LoadWithCastILi1EEENSC_13StoreWithCastILi1EEEEEviT_T0_T2_T3_T4_T5_",
+        "us": 39289.2,
+        "ms": 39.289,
+        "calls": 11352,
+        "us_per_call": 3.46
+      },
+      {
+        "name": "aten::_efficient_attention_forward",
+        "us": 37392.9,
+        "ms": 37.393,
+        "calls": 248,
+        "us_per_call": 150.78
+      },
+      {
+        "name": "_Z40fmha_cutlassF_bf16_aligned_64x64_rf_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi64ELi64ELi64ELb1ELb1EE6ParamsE",
+        "us": 37392.9,
+        "ms": 37.393,
+        "calls": 248,
+        "us_per_call": 150.78
+      },
+      {
+        "name": "Memcpy DtoD (Device -> Device)",
+        "us": 34348.5,
+        "ms": 34.349,
+        "calls": 1424,
+        "us_per_call": 24.12
+      },
+      {
+        "name": "_ZN2at6native29vectorized_elementwise_kernelILi4ENS0_11FillFunctorIN3c108BFloat16EEESt5arrayIPcLy1EEEEviT0_T1_",
+        "us": 33029.9,
+        "ms": 33.03,
+        "calls": 14864,
+        "us_per_call": 2.22
+      }
+    ],
+    "attention_kernel_hits": {
+      "flash": 0,
+      "mem_efficient": 912,
+      "math": 1848,
+      "cudnn": 0
+    },
+    "softmax_kernel_names": {
+      "aten::_safe_softmax": 224,
+      "aten::softmax": 224,
+      "aten::_softmax": 224,
+      "_ZN43_GLOBAL__N__bcfaaeff_10_SoftMax_cu_0af7be2120softmax_warp_forwardIfffLi9ELb0ELb0ELi32EEEvPT0_PKT_iiiPKbib": 224,
+      "autograd::engine::evaluate_function: SafeSoftmaxBackward0": 224,
+      "SafeSoftmaxBackward0": 224,
+      "aten::_softmax_backward_data": 224,
+      "_ZN43_GLOBAL__N__bcfaaeff_10_SoftMax_cu_0af7be2121softmax_warp_backwardIfffLi9ELb0ELb0ELi32EEEvPT0_PKT_S5_iiiPKb": 224
+    },
+    "attention_named_kernel_names": {
+      "aten::scaled_dot_product_attention": 472,
+      "aten::_scaled_dot_product_efficient_attention": 248,
+      "aten::_efficient_attention_forward": 248,
+      "_Z40fmha_cutlassF_bf16_aligned_64x64_rf_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4S": 248,
+      "aten::_scaled_dot_product_attention_math": 224,
+      "autograd::engine::evaluate_function: ScaledDotProductEfficientAttentionBackward0": 56,
+      "ScaledDotProductEfficientAttentionBackward0": 56,
+      "aten::_scaled_dot_product_efficient_attention_backward": 56
+    },
+    "launch_overhead_cpu_share": {
+      "cpu_self_time_total_ms": 3497.42,
+      "launch_path_cpu_self_ms": 1116.92,
+      "launch_share_of_cpu_self_percent": 31.94
+    },
+    "wall_time_inflation_caveat": "CUPTI instrumentation inflates the profiled wall time by roughly an order of magnitude, so the *_fraction_of_wall fields above are NOT usable as statements about the unprofiled step. Counts (kernels/step, syncs/step), per-kernel durations and the CPU-self-time composition are the evidence; the unprofiled baseline for throughput is evaluation/task6c6_integrated_baseline.json.",
+    "sam_cache_warm": true,
+    "utilization_during_profile": {
+      "interval_seconds": 0.5,
+      "n_samples": 55,
+      "nvidia_smi_call_seconds": {
+        "n": 55,
+        "mean": 0.1305435818180823,
+        "median": 0.10926699999981793,
+        "p90": 0.16031829999701586,
+        "min": 0.04578150000452297,
+        "max": 0.856754300002649
+      },
+      "gpu_utilization_percent": {
+        "n": 55,
+        "mean": 6.4,
+        "median": 2.0,
+        "p90": 30.0,
+        "min": 2.0,
+        "max": 52.0
+      },
+      "gpu_memory_used_mib": {
+        "n": 55,
+        "mean": 9788.6,
+        "median": 9789.0,
+        "p90": 9789.0,
+        "min": 9767.0,
+        "max": 9789.0
+      },
+      "gpu_temperature_c": {
+        "n": 55,
+        "mean": 61.345454545454544,
+        "median": 60.0,
+        "p90": 67.0,
+        "min": 59.0,
+        "max": 69.0
+      },
+      "gpu_power_watts": {
+        "n": 55,
+        "mean": 39.19218181818182,
+        "median": 30.24,
+        "p90": 93.07,
+        "min": 29.95,
+        "max": 100.17
+      },
+      "cpu_total_percent": {
+        "n": 55,
+        "mean": 17.87090909090909,
+        "median": 8.2,
+        "p90": 79.6,
+        "min": 0.0,
+        "max": 84.0
+      },
+      "process_cpu_percent": {
+        "n": 55,
+        "mean": 321.0436363636364,
+        "median": 100.0,
+        "p90": 1529.1,
+        "min": 97.3,
+        "max": 1738.2
+      },
+      "process_rss_gib": {
+        "n": 55,
+        "mean": 6.6678,
+        "median": 7.018,
+        "p90": 8.24,
+        "min": 3.181,
+        "max": 8.369
+      },
+      "system_ram_used_gib": {
+        "n": 55,
+        "mean": 17.51430909090909,
+        "median": 17.942,
+        "p90": 18.967,
+        "min": 14.216,
+        "max": 19.1
+      },
+      "system_ram_percent": {
+        "n": 55,
+        "mean": 55.82181818181818,
+        "median": 57.2,
+        "p90": 60.5,
+        "min": 45.3,
+        "max": 60.9
+      }
+    },
+    "gpu_utilization_percent": 6.4,
+    "cpu_utilization_percent": 17.87090909090909,
+    "peak_vram_gib": {
+      "peak_allocated_gib": 7.573,
+      "peak_reserved_gib": 8.561
+    },
+    "dynamo": {
+      "available": true,
+      "delta": {},
+      "graph_breaks": 0,
+      "recompiles": 0,
+      "frames": 0
+    },
+    "caveat": "Kineto profiles with its own overhead; the per-step wall time here is NOT a throughput measurement. Use evaluation/task6c6_integrated_baseline.json for that."
+  },
+  "profiler_pre_integration_control": {
+    "steps_profiled": 8,
+    "warmup_steps": 2,
+    "warmup_seconds": 1.439,
+    "profiled_wall_seconds": 53.596,
+    "ms_per_step_profiled": 6699.502,
+    "cpu_self_time_total_ms": 3783.19,
+    "cpu_self_time_per_step_ms": 472.899,
+    "cuda_kernel_count": 487442,
+    "cuda_kernel_launches_per_step": 60930.2,
+    "cuda_kernel_total_ms": 4248.2,
+    "cuda_kernel_total_per_step_ms": 531.025,
+    "cuda_kernel_mean_us": 8.715,
+    "cuda_kernel_median_us": 2.0479999999515712,
+    "cuda_kernel_p90_us": 8.160000000149012,
+    "cuda_kernel_max_us": 15402.641999999993,
+    "gpu_busy_fraction_of_wall": 0.0793,
+    "cpu_self_fraction_of_wall": 0.0706,
+    "sync_event_count": 36746,
+    "sync_events_per_step": 4593.25,
+    "sync_ops": {
+      "aten::item": 12504,
+      "aten::_local_scalar_dense": 12504,
+      "cudaMemcpyAsync": 6600,
+      "cudaStreamSynchronize": 5136,
+      "cudaDeviceSynchronize": 2
+    },
+    "top_cpu_self_time": [
+      {
+        "name": "cudaLaunchKernel",
+        "us": 996967.2,
+        "ms": 996.967,
+        "calls": 126200,
+        "us_per_call": 7.9
+      },
+      {
+        "name": "aten::mm",
+        "us": 228172.0,
+        "ms": 228.172,
+        "calls": 13288,
+        "us_per_call": 17.17
+      },
+      {
+        "name": "cudaStreamSynchronize",
+        "us": 193865.3,
+        "ms": 193.865,
+        "calls": 5136,
+        "us_per_call": 37.75
+      },
+      {
+        "name": "aten::fill_",
+        "us": 156077.4,
+        "ms": 156.077,
+        "calls": 48384,
+        "us_per_call": 3.23
+      },
+      {
+        "name": "aten::empty_strided",
+        "us": 151371.3,
+        "ms": 151.371,
+        "calls": 31304,
+        "us_per_call": 4.84
+      },
+      {
+        "name": "aten::mul",
+        "us": 140885.1,
+        "ms": 140.885,
+        "calls": 16256,
+        "us_per_call": 8.67
+      },
+      {
+        "name": "cuLaunchKernel",
+        "us": 138204.0,
+        "ms": 138.204,
+        "calls": 15464,
+        "us_per_call": 8.94
+      },
+      {
+        "name": "aten::copy_",
+        "us": 121474.9,
+        "ms": 121.475,
+        "calls": 27616,
+        "us_per_call": 4.4
+      },
+      {
+        "name": "cudaMemcpyAsync",
+        "us": 107759.9,
+        "ms": 107.76,
+        "calls": 6600,
+        "us_per_call": 16.33
+      },
+      {
+        "name": "aten::_to_copy",
+        "us": 89392.5,
+        "ms": 89.392,
+        "calls": 23912,
+        "us_per_call": 3.74
+      },
+      {
+        "name": "aten::pow",
+        "us": 69185.2,
+        "ms": 69.185,
+        "calls": 6824,
+        "us_per_call": 10.14
+      },
+      {
+        "name": "autograd::engine::evaluate_function: ToCopyBackward0",
+        "us": 54078.8,
+        "ms": 54.079,
+        "calls": 10024,
+        "us_per_call": 5.39
+      },
+      {
+        "name": "aten::empty",
+        "us": 45811.0,
+        "ms": 45.811,
+        "calls": 10096,
+        "us_per_call": 4.54
+      },
+      {
+        "name": "aten::linalg_vector_norm",
+        "us": 43854.1,
+        "ms": 43.854,
+        "calls": 4120,
+        "us_per_call": 10.64
+      },
+      {
+        "name": "autograd::engine::evaluate_function: MmBackward0",
+        "us": 42021.8,
+        "ms": 42.022,
+        "calls": 4712,
+        "us_per_call": 8.92
+      }
+    ],
+    "top_cuda_time": [
+      {
+        "name": "aten::mm",
+        "us": 369678.5,
+        "ms": 369.678,
+        "calls": 13288,
+        "us_per_call": 27.82
+      },
+      {
+        "name": "_ZN7cutlass7Kernel2I66cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_32x6_tn_align8EEvNT_6ParamsE",
+        "us": 188265.5,
+        "ms": 188.265,
+        "calls": 2260,
+        "us_per_call": 83.3
+      },
+      {
+        "name": "aten::copy_",
+        "us": 128405.5,
+        "ms": 128.405,
+        "calls": 27616,
+        "us_per_call": 4.65
+      },
+      {
+        "name": "_ZN7cutlass7Kernel2I66cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_32x6_nn_align8EEvNT_6ParamsE",
+        "us": 125543.9,
+        "ms": 125.544,
+        "calls": 2016,
+        "us_per_call": 62.27
+      },
+      {
+        "name": "Optimizer.step#AdamW.step",
+        "us": 116420.3,
+        "ms": 116.42,
+        "calls": 8,
+        "us_per_call": 14552.53
+      },
+      {
+        "name": "aten::addmm",
+        "us": 86069.2,
+        "ms": 86.069,
+        "calls": 1248,
+        "us_per_call": 68.97
+      },
+      {
+        "name": "aten::fill_",
+        "us": 77611.8,
+        "ms": 77.612,
+        "calls": 48384,
+        "us_per_call": 1.6
+      },
+      {
+        "name": "aten::bmm",
+        "us": 63570.8,
+        "ms": 63.571,
+        "calls": 1376,
+        "us_per_call": 46.2
+      },
+      {
+        "name": "aten::mul",
+        "us": 49985.5,
+        "ms": 49.986,
+        "calls": 16256,
+        "us_per_call": 3.07
+      },
+      {
+        "name": "_ZN2at6native29vectorized_elementwise_kernelILi4ENS0_11FillFunctorIfEESt5arrayIPcLy1EEEEviT0_T1_",
+        "us": 41816.7,
+        "ms": 41.817,
+        "calls": 27624,
+        "us_per_call": 1.51
+      },
+      {
+        "name": "_ZN2at6native27unrolled_elementwise_kernelIZZZNS0_23direct_copy_kernel_cudaERNS_18TensorIteratorBaseEENKUlvE1_clEvENKUlvE5_clEvEUlfE_St5arrayIPcLy2EELi4E23TrivialOffsetCalculatorILi1EjESB_NS0_6memory12LoadWithCastILi1EEENSC_13StoreWithCastILi1EEEEEviT_T0_T2_T3_T4_T5_",
+        "us": 40849.4,
+        "ms": 40.849,
+        "calls": 11352,
+        "us_per_call": 3.6
+      },
+      {
+        "name": "aten::_efficient_attention_forward",
+        "us": 38130.1,
+        "ms": 38.13,
+        "calls": 248,
+        "us_per_call": 153.75
+      },
+      {
+        "name": "_Z40fmha_cutlassF_bf16_aligned_64x64_rf_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4Sm80ELb1ELi64ELi64ELi64ELb1ELb1EE6ParamsE",
+        "us": 38130.1,
+        "ms": 38.13,
+        "calls": 248,
+        "us_per_call": 153.75
+      },
+      {
+        "name": "Memcpy DtoD (Device -> Device)",
+        "us": 37314.1,
+        "ms": 37.314,
+        "calls": 1424,
+        "us_per_call": 26.2
+      },
+      {
+        "name": "aten::linalg_vector_norm",
+        "us": 37014.8,
+        "ms": 37.015,
+        "calls": 4120,
+        "us_per_call": 8.98
+      }
+    ],
+    "attention_kernel_hits": {
+      "flash": 0,
+      "mem_efficient": 912,
+      "math": 1848,
+      "cudnn": 0
+    },
+    "softmax_kernel_names": {
+      "aten::_safe_softmax": 224,
+      "aten::softmax": 224,
+      "aten::_softmax": 224,
+      "_ZN43_GLOBAL__N__bcfaaeff_10_SoftMax_cu_0af7be2120softmax_warp_forwardIfffLi9ELb0ELb0ELi32EEEvPT0_PKT_iiiPKbib": 224,
+      "autograd::engine::evaluate_function: SafeSoftmaxBackward0": 224,
+      "SafeSoftmaxBackward0": 224,
+      "aten::_softmax_backward_data": 224,
+      "_ZN43_GLOBAL__N__bcfaaeff_10_SoftMax_cu_0af7be2121softmax_warp_backwardIfffLi9ELb0ELb0ELi32EEEvPT0_PKT_S5_iiiPKb": 224
+    },
+    "attention_named_kernel_names": {
+      "aten::scaled_dot_product_attention": 472,
+      "aten::_scaled_dot_product_efficient_attention": 248,
+      "aten::_efficient_attention_forward": 248,
+      "_Z40fmha_cutlassF_bf16_aligned_64x64_rf_sm80N22PyTorchMemEffAttention15AttentionKernelIN7cutlass10bfloat16_tENS1_4arch4S": 248,
+      "aten::_scaled_dot_product_attention_math": 224,
+      "autograd::engine::evaluate_function: ScaledDotProductEfficientAttentionBackward0": 56,
+      "ScaledDotProductEfficientAttentionBackward0": 56,
+      "aten::_scaled_dot_product_efficient_attention_backward": 56
+    },
+    "launch_overhead_cpu_share": {
+      "cpu_self_time_total_ms": 3783.19,
+      "launch_path_cpu_self_ms": 1159.36,
+      "launch_share_of_cpu_self_percent": 30.64
+    },
+    "wall_time_inflation_caveat": "CUPTI instrumentation inflates the profiled wall time by roughly an order of magnitude, so the *_fraction_of_wall fields above are NOT usable as statements about the unprofiled step. Counts (kernels/step, syncs/step), per-kernel durations and the CPU-self-time composition are the evidence; the unprofiled baseline for throughput is evaluation/task6c6_integrated_baseline.json.",
+    "sam_cache_warm": true,
+    "utilization_during_profile": {
+      "interval_seconds": 0.5,
+      "n_samples": 54,
+      "nvidia_smi_call_seconds": {
+        "n": 54,
+        "mean": 0.16735640740713548,
+        "median": 0.12239399999816669,
+        "p90": 0.20127740000316408,
+        "min": 0.04240600000048289,
+        "max": 1.5872226999999839
+      },
+      "gpu_utilization_percent": {
+        "n": 54,
+        "mean": 6.2592592592592595,
+        "median": 2.0,
+        "p90": 23.0,
+        "min": 2.0,
+        "max": 41.0
+      },
+      "gpu_memory_used_mib": {
+        "n": 54,
+        "mean": 9805.0,
+        "median": 9805.0,
+        "p90": 9805.0,
+        "min": 9805.0,
+        "max": 9805.0
+      },
+      "gpu_temperature_c": {
+        "n": 54,
+        "mean": 60.333333333333336,
+        "median": 59.0,
+        "p90": 66.0,
+        "min": 58.0,
+        "max": 68.0
+      },
+      "gpu_power_watts": {
+        "n": 54,
+        "mean": 40.56944444444444,
+        "median": 30.060000000000002,
+        "p90": 90.84,
+        "min": 29.62,
+        "max": 110.87
+      },
+      "cpu_total_percent": {
+        "n": 54,
+        "mean": 21.414814814814818,
+        "median": 12.2,
+        "p90": 73.2,
+        "min": 0.0,
+        "max": 78.4
+      },
+      "process_cpu_percent": {
+        "n": 54,
+        "mean": 331.14444444444445,
+        "median": 100.0,
+        "p90": 1465.2,
+        "min": 91.9,
+        "max": 1551.4
+      },
+      "process_rss_gib": {
+        "n": 54,
+        "mean": 8.78225925925926,
+        "median": 8.526499999999999,
+        "p90": 10.371,
+        "min": 8.147,
+        "max": 10.78
+      },
+      "system_ram_used_gib": {
+        "n": 54,
+        "mean": 19.449648148148146,
+        "median": 19.2085,
+        "p90": 21.048,
+        "min": 18.832,
+        "max": 21.447
+      },
+      "system_ram_percent": {
+        "n": 54,
+        "mean": 61.99814814814815,
+        "median": 61.2,
+        "p90": 67.1,
+        "min": 60.0,
+        "max": 68.4
+      }
+    },
+    "gpu_utilization_percent": 6.2592592592592595,
+    "cpu_utilization_percent": 21.414814814814818,
+    "peak_vram_gib": {
+      "peak_allocated_gib": 7.572,
+      "peak_reserved_gib": 8.576
+    },
+    "dynamo": {
+      "available": true,
+      "delta": {},
+      "graph_breaks": 0,
+      "recompiles": 0,
+      "frames": 0
+    },
+    "caveat": "Kineto profiles with its own overhead; the per-step wall time here is NOT a throughput measurement. Use evaluation/task6c6_integrated_baseline.json for that."
+  },
+  "gradient_norm_sweep_cost": {
+    "extra_cuda_kernels_per_step": 3588.7,
+    "extra_sync_events_per_step": 2048.0,
+    "extra_kernel_ms_per_step": 15.623,
+    "extra_cpu_self_ms_per_step": 35.722,
+    "note": "The 528-tensor sweep is a host-side loop over parameters; its cost shows up as CPU self time and host/device synchronization, not as GPU work. The per-step figures are profiler-inflated; the unprofiled cost is the B0.6-versus-control throughput difference in evaluation/task6c6_integrated_baseline.json."
+  },
+  "mechanism_verdict": {
+    "weak_claim_data_preparation_is_not_the_bottleneck": true,
+    "weak_claim_evidence": "Task 6C.5 stage profile: qwen_prepare_total 0.76%, image_io 0.62%, target_mask_io 0.24%, cpu_to_gpu 0.21% of step time.",
+    "strong_claim_kernel_launch_dispatch_is_the_bottleneck": true,
+    "criteria": {
+      "more_than_10000_launches_per_step": true,
+      "median_kernel_under_5us": true,
+      "more_than_100_syncs_per_step": true,
+      "launch_path_over_20_percent_of_cpu_self": true,
+      "unprofiled_gpu_utilization_under_55_percent": true
+    },
+    "gpu_utilization_percent_during_run": 32.62992239149181,
+    "gpu_utilization_source": "unprofiled B0.6 (B0.6_integrated_round1=26.2%, B0.6_integrated_round2=39.0%)",
+    "profiled_window_gpu_utilization_percent": 6.4,
+    "criteria_are_inflation_independent": true,
+    "statement": "Supported: the step is dispatch/launch dominated. It issues 57,342 CUDA kernels per step with a median duration of 2.1 us (mean 9.0 us), it synchronizes host and device 2,545 times per step, the CUDA launch path accounts for 31.9% of CPU self time, and the GPU is only about 33% utilized in unprofiled runs. Removing the unused gradient-norm sweep removes 3,589 of those kernels and 2,048 of those synchronizations per step, which is exactly why it was worth 10-21%."
+  },
+  "sdpa_backends": {
+    "_doc": "Task 6C.6 section 9. Which SDPA backend the Qwen3-VL-2B workload actually uses on this RTX 5080, whether any accidental fallback is happening, and what forcing an already-built alternative costs. No extension is installed and no unsupported kernel is forced.",
+    "torch_sdpa_flags": {
+      "torch_version": "2.13.0+cu132",
+      "cuda_version": "13.2",
+      "flash_sdp_enabled_flag": true,
+      "mem_efficient_sdp_enabled_flag": true,
+      "math_sdp_enabled_flag": true,
+      "cudnn_sdp_enabled_flag": true,
+      "flash_attention_built_into_torch": false,
+      "triton_installed": false,
+      "backend_members": [
+        "ERROR",
+        "MATH",
+        "FLASH_ATTENTION",
+        "EFFICIENT_ATTENTION",
+        "CUDNN_ATTENTION",
+        "OVERRIDEABLE"
+      ],
+      "forced_backend_probe": {
+        "flash": {
+          "ok": false,
+          "error": "RuntimeError: No available kernel. Aborting execution."
+        },
+        "mem_efficient": {
+          "ok": true,
+          "max_abs_diff_vs_math": null
+        },
+        "math": {
+          "ok": true,
+          "max_abs_diff_vs_math": null
+        },
+        "cudnn": {
+          "ok": false,
+          "error": "RuntimeError: No available kernel. Aborting execution."
+        }
+      }
+    },
+    "variants": [
+      {
+        "variant": "SDPA_torch_default",
+        "status": "ok",
+        "forced_backend": null,
+        "force_error": null,
+        "samples_per_sec": 2.5913,
+        "ms_per_sample": 385.907,
+        "first_step_seconds": 0.444,
+        "losses_first_step": null,
+        "primary_metrics": {
+          "samples_per_sec": 2.5913,
+          "ms_per_sample": 385.907,
+          "gpu_utilization_mean": 40.44444444444444,
+          "cpu_utilization_mean": 92.17777777777778,
+          "process_rss_gib_mean": 8.76972222222222,
+          "peak_reserved_vram_gib": 8.598,
+          "peak_allocated_vram_gib": 7.655,
+          "gpu_temperature_c_mean": 71.05555555555556,
+          "gpu_power_watts_mean": 107.84722222222223
+        },
+        "error": null,
+        "speedup_percent_vs_torch_default": 0.0
+      },
+      {
+        "variant": "SDPA_mem_efficient",
+        "status": "runtime_failed",
+        "forced_backend": "mem_efficient",
+        "force_error": null,
+        "samples_per_sec": null,
+        "ms_per_sample": null,
+        "first_step_seconds": null,
+        "losses_first_step": null,
+        "primary_metrics": {
+          "samples_per_sec": null,
+          "ms_per_sample": null,
+          "gpu_utilization_mean": null,
+          "cpu_utilization_mean": null,
+          "process_rss_gib_mean": null,
+          "peak_reserved_vram_gib": null,
+          "peak_allocated_vram_gib": null,
+          "gpu_temperature_c_mean": null,
+          "gpu_power_watts_mean": null
+        },
+        "error": "RuntimeError: No available kernel. Aborting execution.",
+        "speedup_percent_vs_torch_default": null
+      },
+      {
+        "variant": "SDPA_math",
+        "status": "ok",
+        "forced_backend": "math",
+        "force_error": null,
+        "samples_per_sec": 2.3411,
+        "ms_per_sample": 427.156,
+        "first_step_seconds": 0.521,
+        "losses_first_step": null,
+        "primary_metrics": {
+          "samples_per_sec": 2.3411,
+          "ms_per_sample": 427.156,
+          "gpu_utilization_mean": 44.7,
+          "cpu_utilization_mean": 89.27000000000001,
+          "process_rss_gib_mean": 8.8071,
+          "peak_reserved_vram_gib": 8.613,
+          "peak_allocated_vram_gib": 7.657,
+          "gpu_temperature_c_mean": 76.25,
+          "gpu_power_watts_mean": 114.348
+        },
+        "error": null,
+        "speedup_percent_vs_torch_default": -9.655
+      },
+      {
+        "variant": "SDPA_flash",
+        "status": "runtime_failed",
+        "forced_backend": "flash",
+        "force_error": null,
+        "samples_per_sec": null,
+        "ms_per_sample": null,
+        "first_step_seconds": null,
+        "losses_first_step": null,
+        "primary_metrics": {
+          "samples_per_sec": null,
+          "ms_per_sample": null,
+          "gpu_utilization_mean": null,
+          "cpu_utilization_mean": null,
+          "process_rss_gib_mean": null,
+          "peak_reserved_vram_gib": null,
+          "peak_allocated_vram_gib": null,
+          "gpu_temperature_c_mean": null,
+          "gpu_power_watts_mean": null
+        },
+        "error": "RuntimeError: No available kernel. Aborting execution.",
+        "speedup_percent_vs_torch_default": null
+      }
+    ],
+    "selected_backend_evidence": "attention_kernel_hits in the profiler section names the kernels that actually ran for the torch-default variant; forcing a backend that the build cannot provide raises inside the step, and that error is recorded rather than hidden."
+  },
+  "sdpa_backend_identity": {
+    "_doc": "One-step identity check: is torch's automatic SDPA choice the same execution path as forcing MATH? Byte-identical losses and post-step parameters mean yes.",
+    "torch_default_run": {
+      "ok": true,
+      "losses": {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      "parameter_fingerprint": "cc4f062e0134bb7a3dbcf50f3dc0ff4730fbb75161fc380a8dd108c36119505a"
+    },
+    "forced_math_run": {
+      "ok": true,
+      "losses": {
+        "total": "9.44814395904541",
+        "lm_ce": "4.010562896728516",
+        "mask_bce": "0.21357248723506927",
+        "mask_dice": "0.9998728036880493"
+      },
+      "parameter_fingerprint": "d8b464dc00aa4a78e31f0d33f734ad563f5d1bfce5ca726d17268dc2be75cfaf"
+    },
+    "default_is_math_backend": false,
+    "conclusion": "The default backend is NOT identical to the math path; see the runs above."
+  }
+}

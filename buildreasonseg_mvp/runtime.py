@@ -313,7 +313,14 @@ class MvpRuntime:
         return torch.optim.lr_scheduler.LambdaLR(optimizer, factor)
 
     def train_step(
-        self, batch, gt_mask, features, optimizer=None, timer=None, collect_grad_norms: bool = True
+        self,
+        batch,
+        gt_mask,
+        features,
+        optimizer=None,
+        timer=None,
+        collect_grad_norms: bool = True,
+        clip_grad_foreach: bool | None = None,
     ) -> dict:
         """One forward/backward pass; optionally one optimizer step.
 
@@ -324,6 +331,10 @@ class MvpRuntime:
         that consumes `grad_norms`. Task 6C's training loop discards that field, so the
         Task 6C.5 pipeline can switch the per-step instrumentation off; the equivalence
         gate proves losses, gradients and parameters are unaffected either way.
+        `clip_grad_foreach` defaults to `None`, which is exactly what
+        `clip_grad_norm_` does today. Task 6C.6 section 7 benchmarks the foreach
+        reduction; the norm, the threshold and the parameter groups are unchanged, but
+        the reduction order differs, so a caller must gate the change on equivalence.
         """
 
         training_cfg = self.cfg["training"]
@@ -364,6 +375,7 @@ class MvpRuntime:
                     torch.nn.utils.clip_grad_norm_(
                         [p for p in self.model.parameters() if p.requires_grad],
                         float(self.cfg["optimizer"]["grad_clip_norm"]),
+                        foreach=clip_grad_foreach,
                     )
                 )
                 optimizer.step()
