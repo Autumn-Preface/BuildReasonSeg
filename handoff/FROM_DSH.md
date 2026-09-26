@@ -313,9 +313,9 @@ artifact rather than a pytest case because it needs the real weights.
 
 ## 17. Git / Watt State
 
-* Working tree committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`; commit message
-  `perf: optimize batch-1 training pipeline`. The exact hash and the push result are recorded in the
-  follow-up `docs:` commit and in the DSH turn response.
+* Working tree committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`; commit
+  `412cdf5` — `perf: optimize batch-1 training pipeline` — plus a follow-up `docs:` commit recording this
+  hash and the push result. Remote `main` was at `3f7ccc5` (Task 6C) before this task.
 * Artifacts: `evaluation/task6c5_benchmark_ids.json`, `task6c5_profile_baseline.json`,
   `task6c5_variants.json`, `task6c5_equivalence.json`, `task6c5_equivalence_caches.json`,
   `task6c5_refactor_control.json`, `task6c5_final_benchmark.json`, `task6c5_resource_usage.json`; report
