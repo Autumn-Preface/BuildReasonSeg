@@ -311,9 +311,10 @@ profiler only runs from its own opt-in script.
 
 ## 16. Git / Watt
 
-* Committed and pushed to `Autumn-Preface/BuildReasonSeg`… see the exact hash and push result in the
-  follow-up `docs:` commit and in the DSH turn response; the recommended message
-  `perf: reduce batch-1 launch overhead` was used. Remote `main` was at `1e2383c` before this task.
+* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`: commit **`ab6a49a`**
+  (`perf: reduce batch-1 launch overhead`) plus a follow-up `docs:` commit recording this hash and the
+  push result. Remote `main` was at `1e2383c` (Task 6C.5) before this task; the push result was
+  `1e2383c..ab6a49a  main -> main`.
 * Artifacts: `evaluation/task6c6_integrated_baseline.json`, `task6c6_profiler_summary.json`,
   `task6c6_compile_variants.json`, `task6c6_optimizer_variants.json`, `task6c6_checkpointing.json`,
   `task6c6_equivalence.json`, `task6c6_final_benchmark.json`, `task6c6_resource_usage.json`; report
