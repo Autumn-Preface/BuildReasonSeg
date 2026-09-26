@@ -271,9 +271,9 @@ appears. It also asserts the sync attribution artifact keeps naming the optimize
 
 ## 12. Git / Watt
 
-* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main` with the recommended message
-  `perf: cache frozen Qwen visual features`; the exact hash and push result are recorded in the follow-up
-  `docs:` commit and in the DSH turn response. Remote `main` was at `5f515a0` before this task.
+* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`: commit **`4d62c8f`**
+  (`perf: cache frozen Qwen visual features`) plus a follow-up `docs:` commit recording this hash and the
+  push result (`5f515a0..4d62c8f  main -> main`). Remote `main` was at `5f515a0` before this task.
 * Artifacts: `evaluation/task6c7_visual_cache_eligibility.json`, `task6c7_sync_hotspots.json`,
   `task6c7_equivalence.json`, `task6c7_variants.json`, `task6c7_paired_ablation.json`,
   `task6c7_final_benchmark.json`, `task6c7_resource_usage.json`; report
