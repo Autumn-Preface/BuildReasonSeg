@@ -115,10 +115,9 @@ reinterpret Task 6C. Full detail: `docs/task6c5_training_optimization.md`,
 7. **Measurement defect found and fixed**: the LoRA adapters' `dropout = 0.05` consumes the global RNG, so an
    equivalence gate must **re-seed per run** — with a single start-up seed the baseline did not reproduce
    itself. Any future equivalence claim needs the same per-run re-seeding rule.
-8. **Network / Watt for 6C.5**: the accelerators were **pre-existing** (`watt_preexisting = true`) and were
-   used only to push; nothing was closed, force-killed, or reconfigured, no hosts file was edited and no TLS
-   verification was disabled. The UU accelerator was ignored entirely. The MVP stack stayed offline
-   (`HF_HUB_OFFLINE=1`) throughout.
+8. **Network / Watt for 6C.5**: the accelerator was **pre-existing** (`watt_preexisting = true`) and was only
+   used to push; nothing was closed, force-killed, or reconfigured, no hosts file was edited and no TLS
+   verification was disabled. The MVP stack stayed offline (`HF_HUB_OFFLINE=1`) throughout.
 
 ## What Task 6C changed in the project's understanding
 

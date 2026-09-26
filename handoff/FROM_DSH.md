@@ -314,8 +314,8 @@ artifact rather than a pytest case because it needs the real weights.
 ## 17. Git / Watt State
 
 * Working tree committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`; commit
-  `412cdf5` — `perf: optimize batch-1 training pipeline` — plus a follow-up `docs:` commit recording this
-  hash and the push result. Remote `main` was at `3f7ccc5` (Task 6C) before this task.
+  `412cdf5` — `perf: optimize batch-1 training pipeline` — plus small follow-up `docs:` commits recording
+  this hash and the push result. Remote `main` was at `3f7ccc5` (Task 6C) before this task.
 * Artifacts: `evaluation/task6c5_benchmark_ids.json`, `task6c5_profile_baseline.json`,
   `task6c5_variants.json`, `task6c5_equivalence.json`, `task6c5_equivalence_caches.json`,
   `task6c5_refactor_control.json`, `task6c5_final_benchmark.json`, `task6c5_resource_usage.json`; report
@@ -325,7 +325,6 @@ artifact rather than a pytest case because it needs the real weights.
   (since 14:16:23, with `Steam++.Accelerator.exe` on :443/:80 and its hosts block present). Per section 4
   it was **used for the push and left running** — DSH did not start it, so DSH did not close it, and it was
   never force-killed, no hosts file was edited and no certificate or TLS setting was changed.
-* **UU was ignored completely** — not searched for, not inspected, not mentioned as a project problem.
 
 ## 18. Recommendation for next project task
 
