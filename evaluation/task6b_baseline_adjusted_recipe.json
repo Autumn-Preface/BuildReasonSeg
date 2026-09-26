@@ -1,0 +1,257 @@
+{
+  "teacher_forced": {
+    "count": 120,
+    "miou": 0.0062619634033831235,
+    "dice": 0.010038119380740248,
+    "lm_ce": 3.4575974961121876,
+    "assistant_token_accuracy": 0.4405029230560935,
+    "reasoning_token_accuracy": 0.4522248435281972,
+    "seg_token_accuracy": 0.0
+  },
+  "teacher_forced_breakdown_level": {
+    "L1": {
+      "count": 40,
+      "miou": 0.016471778197071036,
+      "dice": 0.025644291754203363,
+      "lm_ce": 4.245198762416839,
+      "assistant_token_accuracy": 0.35302287581699365,
+      "reasoning_token_accuracy": 0.38968750000000013,
+      "seg_token_accuracy": 0.0
+    },
+    "L2": {
+      "count": 40,
+      "miou": 0.0003930633863333621,
+      "dice": 0.000780031555701991,
+      "lm_ce": 3.4271072447299957,
+      "assistant_token_accuracy": 0.45465610611724444,
+      "reasoning_token_accuracy": 0.45254258614014714,
+      "seg_token_accuracy": 0.0
+    },
+    "L3_nontrivial": {
+      "count": 40,
+      "miou": 0.0019210486267449835,
+      "dice": 0.003690034832315383,
+      "lm_ce": 2.700486481189728,
+      "assistant_token_accuracy": 0.5138297872340425,
+      "reasoning_token_accuracy": 0.5144444444444443,
+      "seg_token_accuracy": 0.0
+    }
+  },
+  "teacher_forced_breakdown_family": {
+    "direction": {
+      "count": 32,
+      "miou": 0.0002588745779834533,
+      "dice": 0.0005135629643322425,
+      "lm_ce": 3.531466282904148,
+      "assistant_token_accuracy": 0.4324293076109936,
+      "reasoning_token_accuracy": 0.4291702961672475,
+      "seg_token_accuracy": 0.0
+    },
+    "extreme": {
+      "count": 27,
+      "miou": 0.02421789621787432,
+      "dice": 0.03762390095731668,
+      "lm_ce": 4.306528197394477,
+      "assistant_token_accuracy": 0.3681917211328976,
+      "reasoning_token_accuracy": 0.40246913580246924,
+      "seg_token_accuracy": 0.0
+    },
+    "multi_hop_direction_to_nearest": {
+      "count": 40,
+      "miou": 0.0019210486267449835,
+      "dice": 0.003690034832315383,
+      "lm_ce": 2.700486481189728,
+      "assistant_token_accuracy": 0.5138297872340425,
+      "reasoning_token_accuracy": 0.5144444444444443,
+      "seg_token_accuracy": 0.0
+    },
+    "nearest": {
+      "count": 8,
+      "miou": 0.0009298186197329973,
+      "dice": 0.001845905921180985,
+      "lm_ce": 3.0096710920333862,
+      "assistant_token_accuracy": 0.5435633001422475,
+      "reasoning_token_accuracy": 0.5460317460317461,
+      "seg_token_accuracy": 0.0
+    },
+    "size": {
+      "count": 13,
+      "miou": 0.0003836869230949782,
+      "dice": 0.0007635649477372623,
+      "lm_ce": 4.117822243617131,
+      "assistant_token_accuracy": 0.3215183509301156,
+      "reasoning_token_accuracy": 0.3631410256410256,
+      "seg_token_accuracy": 0.0
+    }
+  },
+  "teacher_forced_seconds": 26.23,
+  "teacher_forced_peak_vram": {
+    "allocated_gib": 4.819,
+    "reserved_gib": 6.266,
+    "peak_allocated_gib": 5.534,
+    "peak_reserved_gib": 6.266,
+    "free_gib": 8.335,
+    "total_gib": 15.894
+  },
+  "free_generation": {
+    "count": 120,
+    "valid_seg_emission": 0,
+    "valid_seg_emission_rate": 0.0,
+    "strict_end_to_end_miou": 0.0,
+    "strict_end_to_end_dice": 0.0,
+    "conditional_miou": null,
+    "conditional_dice": null,
+    "collapsed_samples": 0,
+    "reasoning_exact_match": 0.0,
+    "reasoning_char_similarity": 0.24638562732924985,
+    "operation_chain_accuracy": 0.0,
+    "mean_generated_tokens": 53.3
+  },
+  "free_generation_breakdown_level": {
+    "L1": {
+      "count": 40,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.25168969221325904,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 48.575
+    },
+    "L2": {
+      "count": 40,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.24690819998513747,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 47.325
+    },
+    "L3_nontrivial": {
+      "count": 40,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.24055898978935267,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 64.0
+    }
+  },
+  "free_generation_breakdown_family": {
+    "direction": {
+      "count": 32,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.2638425616980509,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 43.15625
+    },
+    "extreme": {
+      "count": 27,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.25454175189046496,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 43.592592592592595
+    },
+    "multi_hop_direction_to_nearest": {
+      "count": 40,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.24055898978935267,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 64.0
+    },
+    "nearest": {
+      "count": 8,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.17917075313348385,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 64.0
+    },
+    "size": {
+      "count": 13,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.24576618365290803,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 58.92307692307692
+    }
+  },
+  "free_generation_seconds": 439.35,
+  "free_generation_peak_vram": {
+    "allocated_gib": 4.505,
+    "reserved_gib": 6.318,
+    "peak_allocated_gib": 5.128,
+    "peak_reserved_gib": 6.318,
+    "free_gib": 8.282,
+    "total_gib": 15.894
+  },
+  "language": {
+    "count": 120,
+    "mean_lm_ce": 3.4575974961121876,
+    "perplexity": 31.740627855591754,
+    "mean_assistant_token_accuracy": 0.4405029230560935,
+    "mean_reasoning_token_accuracy": 0.4522248435281972,
+    "seg_token_accuracy": 0.0,
+    "reasoning_exact_match": 0.0,
+    "operation_chain_accuracy": 0.0,
+    "mean_reasoning_char_similarity": 0.5094721220410133,
+    "generation_reasoning_exact_match": 0.0,
+    "generation_operation_chain_accuracy": 0.0,
+    "generation_char_similarity": 0.24638562732924985
+  },
+  "selection": {
+    "valid_seg_emission_rate": 0.0,
+    "strict_end_to_end_miou": 0.0,
+    "operation_chain_accuracy": 0.0,
+    "lm_ce": 3.4575974961121876,
+    "teacher_forced_miou": 0.0062619634033831235,
+    "conditional_miou": null
+  }
+}

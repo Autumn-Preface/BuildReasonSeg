@@ -10,13 +10,14 @@
     "provenance": "ok",
     "frozen_data": "ok",
     "documents": "ok",
-    "documents_checked": 5
+    "documents_checked": 6
   },
   "violations": [],
   "violation_count": 0,
   "documents_checked": [
     "docs/build_spatial_reason_v0.1.1.md",
     "docs/build_spatial_reason_v0.1.1_quality_audit.md",
+    "handoff/ARCHIVE_task6a_report.md",
     "handoff/FROM_DSH.md",
     "handoff/PROJECT_STATE.md",
     "README.md"

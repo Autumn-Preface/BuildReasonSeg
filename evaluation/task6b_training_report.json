@@ -1,0 +1,3770 @@
+{
+  "_doc": "Task 6B training report: two-phase deterministic 2B mini-train.",
+  "task": "6B",
+  "config": {
+    "task": "6B",
+    "seed": 20260926,
+    "offline": true,
+    "models": {
+      "qwen_model_id": "Qwen/Qwen3-VL-2B-Instruct",
+      "qwen_dtype": "bfloat16",
+      "qwen_attn_implementation": "sdpa",
+      "sam2_repo_id": "facebook/sam2.1-hiera-base-plus",
+      "sam2_checkpoint_file": "sam2.1_hiera_base_plus.pt",
+      "sam2_config_name": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+      "sam2_source_revision_expected": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+    },
+    "paths": {
+      "local_cache": "local_cache",
+      "hf_cache": "local_cache/huggingface",
+      "models_dir": "local_cache/models",
+      "sam2_source": "local_cache/sam2_source",
+      "artifacts": "artifacts",
+      "stage_outputs": "artifacts/stage_outputs",
+      "checkpoints": "artifacts/checkpoints/task6b",
+      "feature_cache": "artifacts/sam2_feature_cache"
+    },
+    "token": {
+      "seg_token": "[SEG]",
+      "prefer_peft_trainable_token_indices": true
+    },
+    "lora": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "bias": "none",
+      "target_suffixes": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "text_only": true
+    },
+    "projection": {
+      "hidden_dim": null,
+      "dropout": 0.0
+    },
+    "preprocessing": {
+      "image_budget": {
+        "set_explicitly": true,
+        "min_pixels": 262144,
+        "max_pixels": 262144
+      }
+    },
+    "loss": {
+      "lm_ce": 2.0,
+      "mask_bce": 2.0,
+      "mask_dice": 1.0,
+      "note": "Task 6B section 12 initial weights; one bounded adjustment allowed after the first full documented Phase-B epoch"
+    },
+    "optimizer": {
+      "name": "adamw",
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "weight_decay": 0.01,
+      "grad_clip_norm": 1.0,
+      "phase_a": {
+        "lora_lr": 0.0001,
+        "token_lr": 0.0003,
+        "warmup_steps": 20,
+        "lr_schedule": "cosine"
+      },
+      "phase_b": {
+        "lora_lr": 0.0001,
+        "token_lr": 0.0003,
+        "decoder_lr": 0.0003,
+        "warmup_steps": 20,
+        "lr_schedule": "cosine"
+      }
+    },
+    "training": {
+      "bf16_autocast": true,
+      "gradient_checkpointing": true,
+      "use_cache": false,
+      "deterministic": true,
+      "train_at_original_resolution": true,
+      "feature_cache_images": 160
+    },
+    "phase_a": {
+      "epochs": 1,
+      "grad_accum_steps": 1,
+      "eval_every_steps": 120,
+      "log_every_steps": 40
+    },
+    "phase_b": {
+      "epochs": 5,
+      "grad_accum_steps": 1,
+      "max_steps": 2400,
+      "early_stop_patience": 2,
+      "log_every_steps": 40
+    },
+    "validation": {
+      "per_epoch_teacher_forced": true,
+      "per_epoch_free_generation": true,
+      "best_joint_rule": [
+        "valid_seg_emission_rate",
+        "strict_end_to_end_miou",
+        "operation_chain_accuracy",
+        "lm_ce"
+      ]
+    },
+    "inference": {
+      "max_new_tokens": 64,
+      "validation_max_new_tokens": 64,
+      "do_sample": false,
+      "mask_threshold": 0.0,
+      "multimask_output": false
+    }
+  },
+  "package_versions": {
+    "torch": "2.13.0+cu132",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "accelerate": "1.15.0",
+    "safetensors": "0.8.0",
+    "huggingface_hub": "1.33.0",
+    "SAM-2": "1.0",
+    "numpy": "2.4.6"
+  },
+  "model_revisions": {
+    "qwen_model_id": "Qwen/Qwen3-VL-2B-Instruct",
+    "qwen_snapshot_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+    "sam2_repo_id": "facebook/sam2.1-hiera-base-plus",
+    "sam2_source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  },
+  "subset_sizes": {
+    "train": 480,
+    "val": 120,
+    "paired_pairs": 20
+  },
+  "started_from_clean_base": true,
+  "trainable_params_initial": {
+    "total_params": 2227632642,
+    "trainable_params": 24010309,
+    "lora_params": 17432576,
+    "token_params": 2048,
+    "output_row_params": 0,
+    "trainable_fraction": 0.010778397006448606,
+    "seg_token_id": 151669,
+    "embedding_base_frozen": true,
+    "embedding_base_numel": 310620160
+  },
+  "best_joint_rule": [
+    "valid_seg_emission_rate",
+    "strict_end_to_end_miou",
+    "operation_chain_accuracy",
+    "lm_ce"
+  ],
+  "phases": {
+    "A_trainables": {
+      "phase": "A",
+      "trainable_tensors": 393,
+      "frozen_tensors": 1243,
+      "trainable_params": 17434624,
+      "projection_trainable": false,
+      "sam_mask_decoder_trainable": false,
+      "qwen_visual_trainable": []
+    },
+    "A": {
+      "phase": "A",
+      "steps": 480,
+      "nan_seen": false,
+      "seconds": 218.88,
+      "optimizer_groups": [
+        {
+          "lr": 0.0,
+          "weight_decay": 0.01,
+          "name": "lora",
+          "tensors": 392
+        },
+        {
+          "lr": 0.0,
+          "weight_decay": 0.0,
+          "name": "token",
+          "tensors": 1
+        }
+      ],
+      "history": [
+        {
+          "step": 40,
+          "phase": "A",
+          "elapsed_seconds": 17.5,
+          "lr": [
+            9.953429730181653e-05,
+            0.0002986028919054496
+          ],
+          "losses": {
+            "total": 0.000286792463157326,
+            "lm_ce": 0.000286792463157326,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.02055356092751026
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.1,
+            "peak_allocated_gib": 6.033,
+            "peak_reserved_gib": 7.1,
+            "free_gib": 7.437,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 80,
+          "phase": "A",
+          "elapsed_seconds": 35.1,
+          "lr": [
+            9.586056507527266e-05,
+            0.0002875816952258179
+          ],
+          "losses": {
+            "total": 0.000145700789289549,
+            "lm_ce": 0.000145700789289549,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.02349761128425598
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.1,
+            "peak_allocated_gib": 6.033,
+            "peak_reserved_gib": 7.1,
+            "free_gib": 7.437,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 120,
+          "phase": "A",
+          "elapsed_seconds": 53.3,
+          "lr": [
+            8.8785564535221e-05,
+            0.00026635669360566296
+          ],
+          "losses": {
+            "total": 2.460512587276753e-05,
+            "lm_ce": 2.460512587276753e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.0011074659414589405
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.1,
+            "peak_allocated_gib": 6.033,
+            "peak_reserved_gib": 7.1,
+            "free_gib": 7.437,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 160,
+          "phase": "A",
+          "elapsed_seconds": 71.7,
+          "lr": [
+            7.883401610574336e-05,
+            0.00023650204831723005
+          ],
+          "losses": {
+            "total": 1.8055983673548326e-05,
+            "lm_ce": 1.8055983673548326e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.0007068407721817493
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.1,
+            "peak_allocated_gib": 6.033,
+            "peak_reserved_gib": 7.1,
+            "free_gib": 7.437,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 200,
+          "phase": "A",
+          "elapsed_seconds": 90.0,
+          "lr": [
+            6.674398060854931e-05,
+            0.0002002319418256479
+          ],
+          "losses": {
+            "total": 0.016335617750883102,
+            "lm_ce": 0.016335617750883102,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 2.8118157386779785
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 240,
+          "phase": "A",
+          "elapsed_seconds": 108.5,
+          "lr": [
+            5.341212066823355e-05,
+            0.00016023636200470065
+          ],
+          "losses": {
+            "total": 2.474143184372224e-05,
+            "lm_ce": 2.474143184372224e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.000924713269341737
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 280,
+          "phase": "A",
+          "elapsed_seconds": 126.9,
+          "lr": [
+            3.982719934736832e-05,
+            0.00011948159804210495
+          ],
+          "losses": {
+            "total": 2.3671100279898383e-05,
+            "lm_ce": 2.3671100279898383e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.0011682265903800726
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 320,
+          "phase": "A",
+          "elapsed_seconds": 145.1,
+          "lr": [
+            2.6996748113442394e-05,
+            8.099024434032717e-05
+          ],
+          "losses": {
+            "total": 3.825015664915554e-05,
+            "lm_ce": 3.825015664915554e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.002151727443560958
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 360,
+          "phase": "A",
+          "elapsed_seconds": 163.5,
+          "lr": [
+            1.5872342839067306e-05,
+            4.761702851720191e-05
+          ],
+          "losses": {
+            "total": 6.915404082974419e-05,
+            "lm_ce": 6.915404082974419e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.005848994478583336
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 400,
+          "phase": "A",
+          "elapsed_seconds": 181.7,
+          "lr": [
+            7.2790297726755716e-06,
+            2.1837089318026714e-05
+          ],
+          "losses": {
+            "total": 3.809687405009754e-05,
+            "lm_ce": 3.809687405009754e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.0018591547850519419
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 440,
+          "phase": "A",
+          "elapsed_seconds": 200.3,
+          "lr": [
+            1.8541356326100433e-06,
+            5.56240689783013e-06
+          ],
+          "losses": {
+            "total": 2.852032230293844e-05,
+            "lm_ce": 2.852032230293844e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.0012444928288459778
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        },
+        {
+          "step": 480,
+          "phase": "A",
+          "elapsed_seconds": 218.9,
+          "lr": [
+            0.0,
+            0.0
+          ],
+          "losses": {
+            "total": 2.708411375351716e-05,
+            "lm_ce": 2.708411375351716e-05,
+            "mask_bce": 0.0,
+            "mask_dice": 0.0
+          },
+          "grad": {
+            "grad_clip_total_norm": 0.0016545744147151709
+          },
+          "vram": {
+            "available": true,
+            "allocated_gib": 4.731,
+            "reserved_gib": 7.102,
+            "peak_allocated_gib": 6.061,
+            "peak_reserved_gib": 7.102,
+            "free_gib": 7.435,
+            "total_gib": 15.894
+          }
+        }
+      ],
+      "peak_vram": {
+        "available": true,
+        "allocated_gib": 4.731,
+        "reserved_gib": 7.102,
+        "peak_allocated_gib": 6.061,
+        "peak_reserved_gib": 7.102,
+        "free_gib": 7.435,
+        "total_gib": 15.894
+      },
+      "feature_cache": {
+        "max_images": 160,
+        "cached_images": 120,
+        "hits": 0,
+        "misses": 120,
+        "evictions": 0,
+        "storage": "cpu_tensors"
+      }
+    },
+    "A_validation": {
+      "teacher_forced": {
+        "count": 120,
+        "miou": 0.006851879489897452,
+        "dice": 0.011127011705529008,
+        "lm_ce": 0.22990993372364604,
+        "assistant_token_accuracy": 0.9805555555555555,
+        "reasoning_token_accuracy": 0.977986111111111,
+        "seg_token_accuracy": 1.0
+      },
+      "teacher_forced_breakdown_level": {
+        "L1": {
+          "count": 40,
+          "miou": 0.01784576389063531,
+          "dice": 0.028087452926682632,
+          "lm_ce": 0.6896316915750503,
+          "assistant_token_accuracy": 0.9416666666666662,
+          "reasoning_token_accuracy": 0.933958333333333,
+          "seg_token_accuracy": 1.0
+        },
+        "L2": {
+          "count": 40,
+          "miou": 0.0006605757035103328,
+          "dice": 0.001311515435314434,
+          "lm_ce": 6.825645293702109e-05,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "L3_nontrivial": {
+          "count": 40,
+          "miou": 0.002049298875546717,
+          "dice": 0.003982066754589957,
+          "lm_ce": 2.985314295074204e-05,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        }
+      },
+      "teacher_forced_breakdown_family": {
+        "direction": {
+          "count": 32,
+          "miou": 0.0005917532238474309,
+          "dice": 0.0011749388809395753,
+          "lm_ce": 6.785342063153621e-05,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "extreme": {
+          "count": 27,
+          "miou": 0.026172288719989004,
+          "dice": 0.0410814747895408,
+          "lm_ce": 0.5635347653318334,
+          "assistant_token_accuracy": 0.9411764705882354,
+          "reasoning_token_accuracy": 0.9333333333333335,
+          "seg_token_accuracy": 1.0
+        },
+        "multi_hop_direction_to_nearest": {
+          "count": 40,
+          "miou": 0.002049298875546717,
+          "dice": 0.003982066754589957,
+          "lm_ce": 2.985314295074204e-05,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "nearest": {
+          "count": 8,
+          "miou": 0.0009358656221619415,
+          "dice": 0.0018578216528138685,
+          "lm_ce": 6.986858215896063e-05,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "size": {
+          "count": 13,
+          "miou": 0.0005522123219776204,
+          "dice": 0.001099869057669507,
+          "lm_ce": 0.9515253076186547,
+          "assistant_token_accuracy": 0.9426847662141781,
+          "reasoning_token_accuracy": 0.9352564102564103,
+          "seg_token_accuracy": 1.0
+        }
+      },
+      "teacher_forced_seconds": 18.5,
+      "teacher_forced_peak_vram": {
+        "allocated_gib": 4.915,
+        "reserved_gib": 7.102,
+        "peak_allocated_gib": 5.63,
+        "peak_reserved_gib": 7.102,
+        "free_gib": 7.435,
+        "total_gib": 15.894
+      },
+      "free_generation": {
+        "count": 120,
+        "valid_seg_emission": 120,
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.007083570592059386,
+        "strict_end_to_end_dice": 0.011478584444182394,
+        "conditional_miou": 0.007083570592059386,
+        "conditional_dice": 0.011478584444182394,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.6666666666666666,
+        "reasoning_char_similarity": 0.8618768557587122,
+        "operation_chain_accuracy": 0.6666666666666666,
+        "mean_generated_tokens": 42.125
+      },
+      "free_generation_breakdown_level": {
+        "L1": {
+          "count": 40,
+          "valid_seg_emission": 40,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.01854083719712111,
+          "strict_end_to_end_dice": 0.02914217114264279,
+          "conditional_miou": 0.01854083719712111,
+          "conditional_dice": 0.02914217114264279,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 0.0,
+          "reasoning_char_similarity": 0.5856305672761365,
+          "operation_chain_accuracy": 0.0,
+          "mean_generated_tokens": 37.075
+        },
+        "L2": {
+          "count": 40,
+          "valid_seg_emission": 40,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.0006605757035103328,
+          "strict_end_to_end_dice": 0.001311515435314434,
+          "conditional_miou": 0.0006605757035103328,
+          "conditional_dice": 0.001311515435314434,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 42.3
+        },
+        "L3_nontrivial": {
+          "count": 40,
+          "valid_seg_emission": 40,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.002049298875546717,
+          "strict_end_to_end_dice": 0.003982066754589957,
+          "conditional_miou": 0.002049298875546717,
+          "conditional_dice": 0.003982066754589957,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 47.0
+        }
+      },
+      "free_generation_breakdown_family": {
+        "direction": {
+          "count": 32,
+          "valid_seg_emission": 32,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.0005917532238474309,
+          "strict_end_to_end_dice": 0.0011749388809395753,
+          "conditional_miou": 0.0005917532238474309,
+          "conditional_dice": 0.0011749388809395753,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 43.5
+        },
+        "extreme": {
+          "count": 27,
+          "valid_seg_emission": 27,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.02720835881839875,
+          "strict_end_to_end_dice": 0.04265662678324857,
+          "conditional_miou": 0.02720835881839875,
+          "conditional_dice": 0.04265662678324857,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 0.0,
+          "reasoning_char_similarity": 0.5822784810126579,
+          "operation_chain_accuracy": 0.0,
+          "mean_generated_tokens": 37.0
+        },
+        "multi_hop_direction_to_nearest": {
+          "count": 40,
+          "valid_seg_emission": 40,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.002049298875546717,
+          "strict_end_to_end_dice": 0.003982066754589957,
+          "conditional_miou": 0.002049298875546717,
+          "conditional_dice": 0.003982066754589957,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 47.0
+        },
+        "nearest": {
+          "count": 8,
+          "valid_seg_emission": 8,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.0009358656221619415,
+          "strict_end_to_end_dice": 0.0018578216528138685,
+          "conditional_miou": 0.0009358656221619415,
+          "conditional_dice": 0.0018578216528138685,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 37.5
+        },
+        "size": {
+          "count": 13,
+          "valid_seg_emission": 13,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.0005390615221598419,
+          "strict_end_to_end_dice": 0.0010736863506153817,
+          "conditional_miou": 0.0005390615221598419,
+          "conditional_dice": 0.0010736863506153817,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 0.0,
+          "reasoning_char_similarity": 0.5925925925925926,
+          "operation_chain_accuracy": 0.0,
+          "mean_generated_tokens": 37.23076923076923
+        }
+      },
+      "free_generation_seconds": 375.02,
+      "free_generation_peak_vram": {
+        "allocated_gib": 4.626,
+        "reserved_gib": 7.102,
+        "peak_allocated_gib": 5.346,
+        "peak_reserved_gib": 7.102,
+        "free_gib": 7.435,
+        "total_gib": 15.894
+      },
+      "language": {
+        "count": 120,
+        "mean_lm_ce": 0.22990993372364604,
+        "perplexity": 1.2584866576178515,
+        "mean_assistant_token_accuracy": 0.9805555555555555,
+        "mean_reasoning_token_accuracy": 0.977986111111111,
+        "seg_token_accuracy": 1.0,
+        "reasoning_exact_match": 0.6666666666666666,
+        "operation_chain_accuracy": 0.6666666666666666,
+        "mean_reasoning_char_similarity": 0.9862916666666667,
+        "generation_reasoning_exact_match": 0.6666666666666666,
+        "generation_operation_chain_accuracy": 0.6666666666666666,
+        "generation_char_similarity": 0.8618768557587122
+      },
+      "selection": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.007083570592059386,
+        "operation_chain_accuracy": 0.6666666666666666,
+        "lm_ce": 0.22990993372364604,
+        "teacher_forced_miou": 0.006851879489897452,
+        "conditional_miou": 0.007083570592059386
+      }
+    },
+    "B_trainables": {
+      "phase": "B",
+      "trainable_tensors": 528,
+      "frozen_tensors": 1108,
+      "trainable_params": 24010309,
+      "projection_trainable": true,
+      "sam_mask_decoder_trainable": true,
+      "qwen_visual_trainable": []
+    },
+    "B_epochs": [
+      {
+        "epoch": 1,
+        "steps_this_epoch": 480,
+        "total_phase_b_steps": 480,
+        "seconds": 423.55,
+        "peak_vram": {
+          "available": true,
+          "allocated_gib": 4.803,
+          "reserved_gib": 7.127,
+          "peak_allocated_gib": 6.168,
+          "peak_reserved_gib": 7.127,
+          "free_gib": 7.407,
+          "total_gib": 15.894
+        },
+        "history": [
+          {
+            "step": 40,
+            "phase": "B",
+            "elapsed_seconds": 26.0,
+            "lr": [
+              9.953429730181653e-05,
+              0.0002986028919054496,
+              0.0002986028919054496
+            ],
+            "losses": {
+              "total": 0.925930917263031,
+              "lm_ce": 5.974656232865527e-05,
+              "mask_bce": 0.030436497181653976,
+              "mask_dice": 0.8649384379386902
+            },
+            "grad": {
+              "lora": 0.252961,
+              "seg_token": 0.337051,
+              "projection": 1.500647,
+              "sam_mask_decoder": 3.300558,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 3.6500985622406006
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.142,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 80,
+            "phase": "B",
+            "elapsed_seconds": 53.2,
+            "lr": [
+              9.586056507527266e-05,
+              0.0002875816952258179,
+              0.0002875816952258179
+            ],
+            "losses": {
+              "total": 0.9214766025543213,
+              "lm_ce": 6.710651632602094e-06,
+              "mask_bce": 0.02118612453341484,
+              "mask_dice": 0.8790909051895142
+            },
+            "grad": {
+              "lora": 0.034144,
+              "seg_token": 0.047605,
+              "projection": 0.33131,
+              "sam_mask_decoder": 1.504143,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.541312336921692
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.142,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 120,
+            "phase": "B",
+            "elapsed_seconds": 81.0,
+            "lr": [
+              8.8785564535221e-05,
+              0.00026635669360566296,
+              0.00026635669360566296
+            ],
+            "losses": {
+              "total": 1.0373903512954712,
+              "lm_ce": 7.369705144810723e-06,
+              "mask_bce": 0.04649589583277702,
+              "mask_dice": 0.9443838596343994
+            },
+            "grad": {
+              "lora": 0.023924,
+              "seg_token": 0.035662,
+              "projection": 0.232226,
+              "sam_mask_decoder": 2.603462,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.6141512393951416
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.142,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 160,
+            "phase": "B",
+            "elapsed_seconds": 111.1,
+            "lr": [
+              7.883401610574336e-05,
+              0.00023650204831723005,
+              0.00023650204831723005
+            ],
+            "losses": {
+              "total": 0.8761908411979675,
+              "lm_ce": 2.6366094516561134e-06,
+              "mask_bce": 0.016123058274388313,
+              "mask_dice": 0.8439394235610962
+            },
+            "grad": {
+              "lora": 0.008911,
+              "seg_token": 0.015238,
+              "projection": 0.160372,
+              "sam_mask_decoder": 2.928025,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.932467222213745
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.142,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 200,
+            "phase": "B",
+            "elapsed_seconds": 142.9,
+            "lr": [
+              6.674398060854931e-05,
+              0.0002002319418256479,
+              0.0002002319418256479
+            ],
+            "losses": {
+              "total": 1.094667911529541,
+              "lm_ce": 4.821805487154052e-05,
+              "mask_bce": 0.06014252454042435,
+              "mask_dice": 0.9742864370346069
+            },
+            "grad": {
+              "lora": 0.005716,
+              "seg_token": 0.001856,
+              "projection": 0.029343,
+              "sam_mask_decoder": 0.538271,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.539104163646698
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 240,
+            "phase": "B",
+            "elapsed_seconds": 177.1,
+            "lr": [
+              5.341212066823355e-05,
+              0.00016023636200470065,
+              0.00016023636200470065
+            ],
+            "losses": {
+              "total": 0.9663450717926025,
+              "lm_ce": 6.304092039499665e-06,
+              "mask_bce": 0.03437615931034088,
+              "mask_dice": 0.8975801467895508
+            },
+            "grad": {
+              "lora": 0.009222,
+              "seg_token": 0.01737,
+              "projection": 0.137191,
+              "sam_mask_decoder": 1.715217,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.7208068370819092
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 280,
+            "phase": "B",
+            "elapsed_seconds": 217.2,
+            "lr": [
+              3.982719934736832e-05,
+              0.00011948159804210495,
+              0.00011948159804210495
+            ],
+            "losses": {
+              "total": 0.6927801966667175,
+              "lm_ce": 5.735828381148167e-06,
+              "mask_bce": 0.017205197364091873,
+              "mask_dice": 0.6583583354949951
+            },
+            "grad": {
+              "lora": 0.01312,
+              "seg_token": 0.022963,
+              "projection": 0.145964,
+              "sam_mask_decoder": 1.917348,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.9230775833129883
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 320,
+            "phase": "B",
+            "elapsed_seconds": 258.5,
+            "lr": [
+              2.6996748113442394e-05,
+              8.099024434032717e-05,
+              8.099024434032717e-05
+            ],
+            "losses": {
+              "total": 1.0873911380767822,
+              "lm_ce": 7.62921990826726e-06,
+              "mask_bce": 0.05208970978856087,
+              "mask_dice": 0.9831964373588562
+            },
+            "grad": {
+              "lora": 0.007098,
+              "seg_token": 0.012629,
+              "projection": 0.096199,
+              "sam_mask_decoder": 1.046399,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.0509113073349
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 360,
+            "phase": "B",
+            "elapsed_seconds": 299.4,
+            "lr": [
+              1.5872342839067306e-05,
+              4.761702851720191e-05,
+              4.761702851720191e-05
+            ],
+            "losses": {
+              "total": 0.6787998080253601,
+              "lm_ce": 1.620423427084461e-05,
+              "mask_bce": 0.015910053625702858,
+              "mask_dice": 0.6469472646713257
+            },
+            "grad": {
+              "lora": 0.011988,
+              "seg_token": 0.016415,
+              "projection": 0.191899,
+              "sam_mask_decoder": 0.94012,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.9597209095954895
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 400,
+            "phase": "B",
+            "elapsed_seconds": 341.5,
+            "lr": [
+              7.2790297726755716e-06,
+              2.1837089318026714e-05,
+              2.1837089318026714e-05
+            ],
+            "losses": {
+              "total": 0.9473279118537903,
+              "lm_ce": 7.345203812292311e-06,
+              "mask_bce": 0.029321543872356415,
+              "mask_dice": 0.8886701464653015
+            },
+            "grad": {
+              "lora": 0.003836,
+              "seg_token": 0.006906,
+              "projection": 0.04787,
+              "sam_mask_decoder": 0.948947,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.9501864314079285
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 440,
+            "phase": "B",
+            "elapsed_seconds": 381.8,
+            "lr": [
+              1.8541356326100433e-06,
+              5.56240689783013e-06,
+              5.56240689783013e-06
+            ],
+            "losses": {
+              "total": 0.7152020931243896,
+              "lm_ce": 9.115498869505245e-06,
+              "mask_bce": 0.015849387273192406,
+              "mask_dice": 0.6834850907325745
+            },
+            "grad": {
+              "lora": 0.003242,
+              "seg_token": 0.005617,
+              "projection": 0.03244,
+              "sam_mask_decoder": 0.916186,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.9167829155921936
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 480,
+            "phase": "B",
+            "elapsed_seconds": 423.6,
+            "lr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "losses": {
+              "total": 1.0457943677902222,
+              "lm_ce": 4.950942184223095e-06,
+              "mask_bce": 0.026600055396556854,
+              "mask_dice": 0.9925843477249146
+            },
+            "grad": {
+              "lora": 0.000766,
+              "seg_token": 0.000912,
+              "projection": 0.009449,
+              "sam_mask_decoder": 0.494108,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.4941997528076172
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          }
+        ],
+        "nan_seen": false,
+        "selection": {
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.09320633715955777,
+          "operation_chain_accuracy": 0.6666666666666666,
+          "lm_ce": 0.21007339083403545,
+          "teacher_forced_miou": 0.09321079642523007,
+          "conditional_miou": 0.09320633715955777
+        },
+        "teacher_forced": {
+          "count": 120,
+          "miou": 0.09321079642523007,
+          "dice": 0.15182142069843582,
+          "lm_ce": 0.21007339083403545,
+          "assistant_token_accuracy": 0.9805555555555555,
+          "reasoning_token_accuracy": 0.977986111111111,
+          "seg_token_accuracy": 1.0
+        },
+        "free_generation": {
+          "count": 120,
+          "valid_seg_emission": 120,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.09320633715955777,
+          "strict_end_to_end_dice": 0.15181563320379068,
+          "conditional_miou": 0.09320633715955777,
+          "conditional_dice": 0.15181563320379068,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 0.6666666666666666,
+          "reasoning_char_similarity": 0.8473628546741103,
+          "operation_chain_accuracy": 0.6666666666666666,
+          "mean_generated_tokens": 43.483333333333334
+        },
+        "language": {
+          "count": 120,
+          "mean_lm_ce": 0.21007339083403545,
+          "perplexity": 1.2337686039410034,
+          "mean_assistant_token_accuracy": 0.9805555555555555,
+          "mean_reasoning_token_accuracy": 0.977986111111111,
+          "seg_token_accuracy": 1.0,
+          "reasoning_exact_match": 0.6666666666666666,
+          "operation_chain_accuracy": 0.6666666666666666,
+          "mean_reasoning_char_similarity": 0.9862916666666667,
+          "generation_reasoning_exact_match": 0.6666666666666666,
+          "generation_operation_chain_accuracy": 0.6666666666666666,
+          "generation_char_similarity": 0.8473628546741103
+        }
+      },
+      {
+        "epoch": 2,
+        "steps_this_epoch": 480,
+        "total_phase_b_steps": 960,
+        "seconds": 317.28,
+        "peak_vram": {
+          "available": true,
+          "allocated_gib": 4.803,
+          "reserved_gib": 7.127,
+          "peak_allocated_gib": 6.167,
+          "peak_reserved_gib": 7.127,
+          "free_gib": 7.407,
+          "total_gib": 15.894
+        },
+        "history": [
+          {
+            "step": 40,
+            "phase": "B",
+            "elapsed_seconds": 25.8,
+            "lr": [
+              9.953429730181653e-05,
+              0.0002986028919054496,
+              0.0002986028919054496
+            ],
+            "losses": {
+              "total": 0.9262370467185974,
+              "lm_ce": 1.7768097677617334e-05,
+              "mask_bce": 0.02657429873943329,
+              "mask_dice": 0.8730528950691223
+            },
+            "grad": {
+              "lora": 0.006672,
+              "seg_token": 0.005287,
+              "projection": 0.070106,
+              "sam_mask_decoder": 2.148287,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.1494476795196533
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.141,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 80,
+            "phase": "B",
+            "elapsed_seconds": 52.6,
+            "lr": [
+              9.586056507527266e-05,
+              0.0002875816952258179,
+              0.0002875816952258179
+            ],
+            "losses": {
+              "total": 0.9782485365867615,
+              "lm_ce": 3.982961970905308e-06,
+              "mask_bce": 0.03895295038819313,
+              "mask_dice": 0.9003346562385559
+            },
+            "grad": {
+              "lora": 0.003887,
+              "seg_token": 0.003551,
+              "projection": 0.061301,
+              "sam_mask_decoder": 1.006219,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.0080987215042114
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.141,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 120,
+            "phase": "B",
+            "elapsed_seconds": 79.1,
+            "lr": [
+              8.8785564535221e-05,
+              0.00026635669360566296,
+              0.00026635669360566296
+            ],
+            "losses": {
+              "total": 1.0192434787750244,
+              "lm_ce": 3.162534540024353e-06,
+              "mask_bce": 0.0403912179172039,
+              "mask_dice": 0.9384546875953674
+            },
+            "grad": {
+              "lora": 0.001408,
+              "seg_token": 0.000973,
+              "projection": 0.038286,
+              "sam_mask_decoder": 1.069259,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.0699459314346313
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.141,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 160,
+            "phase": "B",
+            "elapsed_seconds": 105.5,
+            "lr": [
+              7.883401610574336e-05,
+              0.00023650204831723005,
+              0.00023650204831723005
+            ],
+            "losses": {
+              "total": 0.8042160868644714,
+              "lm_ce": 1.5847786016820464e-06,
+              "mask_bce": 0.013614284805953503,
+              "mask_dice": 0.7769843339920044
+            },
+            "grad": {
+              "lora": 0.004316,
+              "seg_token": 0.004597,
+              "projection": 0.111387,
+              "sam_mask_decoder": 2.75609,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.7583467960357666
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.141,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 200,
+            "phase": "B",
+            "elapsed_seconds": 131.7,
+            "lr": [
+              6.674398060854931e-05,
+              0.0002002319418256479,
+              0.0002002319418256479
+            ],
+            "losses": {
+              "total": 1.0872306823730469,
+              "lm_ce": 0.00017002259846776724,
+              "mask_bce": 0.050177887082099915,
+              "mask_dice": 0.9865348935127258
+            },
+            "grad": {
+              "lora": 0.018923,
+              "seg_token": 0.003025,
+              "projection": 0.01501,
+              "sam_mask_decoder": 0.592637,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.5931369066238403
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 240,
+            "phase": "B",
+            "elapsed_seconds": 158.1,
+            "lr": [
+              5.341212066823355e-05,
+              0.00016023636200470065,
+              0.00016023636200470065
+            ],
+            "losses": {
+              "total": 0.930817723274231,
+              "lm_ce": 6.875232884340221e-06,
+              "mask_bce": 0.03352735936641693,
+              "mask_dice": 0.8637492656707764
+            },
+            "grad": {
+              "lora": 0.012693,
+              "seg_token": 0.007379,
+              "projection": 0.119437,
+              "sam_mask_decoder": 1.532947,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.537663221359253
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 280,
+            "phase": "B",
+            "elapsed_seconds": 184.6,
+            "lr": [
+              3.982719934736832e-05,
+              0.00011948159804210495,
+              0.00011948159804210495
+            ],
+            "losses": {
+              "total": 0.6572521924972534,
+              "lm_ce": 5.408729066402884e-06,
+              "mask_bce": 0.01877988502383232,
+              "mask_dice": 0.6196815967559814
+            },
+            "grad": {
+              "lora": 0.001835,
+              "seg_token": 0.001092,
+              "projection": 0.047431,
+              "sam_mask_decoder": 0.740068,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.7415897250175476
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 320,
+            "phase": "B",
+            "elapsed_seconds": 211.2,
+            "lr": [
+              2.6996748113442394e-05,
+              8.099024434032717e-05,
+              8.099024434032717e-05
+            ],
+            "losses": {
+              "total": 1.0477932691574097,
+              "lm_ce": 1.5166734556260053e-05,
+              "mask_bce": 0.046471402049064636,
+              "mask_dice": 0.9548201560974121
+            },
+            "grad": {
+              "lora": 0.03836,
+              "seg_token": 0.025371,
+              "projection": 0.42895,
+              "sam_mask_decoder": 1.903465,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.9517407417297363
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 360,
+            "phase": "B",
+            "elapsed_seconds": 237.6,
+            "lr": [
+              1.5872342839067306e-05,
+              4.761702851720191e-05,
+              4.761702851720191e-05
+            ],
+            "losses": {
+              "total": 0.6886622309684753,
+              "lm_ce": 1.0842672963917721e-05,
+              "mask_bce": 0.016231264919042587,
+              "mask_dice": 0.6561779975891113
+            },
+            "grad": {
+              "lora": 0.003277,
+              "seg_token": 0.002796,
+              "projection": 0.046768,
+              "sam_mask_decoder": 0.910485,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.9116958975791931
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 400,
+            "phase": "B",
+            "elapsed_seconds": 264.0,
+            "lr": [
+              7.2790297726755716e-06,
+              2.1837089318026714e-05,
+              2.1837089318026714e-05
+            ],
+            "losses": {
+              "total": 0.9234695434570312,
+              "lm_ce": 1.1775368875532877e-05,
+              "mask_bce": 0.03188701719045639,
+              "mask_dice": 0.859671950340271
+            },
+            "grad": {
+              "lora": 0.002261,
+              "seg_token": 0.001747,
+              "projection": 0.043482,
+              "sam_mask_decoder": 0.595042,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.596635103225708
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 440,
+            "phase": "B",
+            "elapsed_seconds": 290.7,
+            "lr": [
+              1.8541356326100433e-06,
+              5.56240689783013e-06,
+              5.56240689783013e-06
+            ],
+            "losses": {
+              "total": 0.6921506524085999,
+              "lm_ce": 9.70342352957232e-06,
+              "mask_bce": 0.015595304779708385,
+              "mask_dice": 0.6609406471252441
+            },
+            "grad": {
+              "lora": 0.002664,
+              "seg_token": 0.002056,
+              "projection": 0.066313,
+              "sam_mask_decoder": 1.181022,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.1828869581222534
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 480,
+            "phase": "B",
+            "elapsed_seconds": 317.3,
+            "lr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "losses": {
+              "total": 1.0538452863693237,
+              "lm_ce": 9.34620857151458e-06,
+              "mask_bce": 0.030007708817720413,
+              "mask_dice": 0.9938111901283264
+            },
+            "grad": {
+              "lora": 0.004308,
+              "seg_token": 0.002528,
+              "projection": 0.049808,
+              "sam_mask_decoder": 0.598821,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.6009095311164856
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          }
+        ],
+        "nan_seen": false,
+        "selection": {
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.11009196502446211,
+          "operation_chain_accuracy": 0.8666666666666667,
+          "lm_ce": 0.01480380521795534,
+          "teacher_forced_miou": 0.11008726016951885,
+          "conditional_miou": 0.11009196502446211
+        },
+        "teacher_forced": {
+          "count": 120,
+          "miou": 0.11008726016951885,
+          "dice": 0.18099092380433618,
+          "lm_ce": 0.01480380521795534,
+          "assistant_token_accuracy": 0.9921568627450981,
+          "reasoning_token_accuracy": 0.9911111111111112,
+          "seg_token_accuracy": 1.0
+        },
+        "free_generation": {
+          "count": 120,
+          "valid_seg_emission": 120,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.11009196502446211,
+          "strict_end_to_end_dice": 0.18099848738254104,
+          "conditional_miou": 0.11009196502446211,
+          "conditional_dice": 0.18099848738254104,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 0.8666666666666667,
+          "reasoning_char_similarity": 0.951851851851852,
+          "operation_chain_accuracy": 0.8666666666666667,
+          "mean_generated_tokens": 37.61666666666667
+        },
+        "language": {
+          "count": 120,
+          "mean_lm_ce": 0.01480380521795534,
+          "perplexity": 1.0149139242650436,
+          "mean_assistant_token_accuracy": 0.9921568627450981,
+          "mean_reasoning_token_accuracy": 0.9911111111111112,
+          "seg_token_accuracy": 1.0,
+          "reasoning_exact_match": 0.8666666666666667,
+          "operation_chain_accuracy": 0.8666666666666667,
+          "mean_reasoning_char_similarity": 0.9971631205673759,
+          "generation_reasoning_exact_match": 0.8666666666666667,
+          "generation_operation_chain_accuracy": 0.8666666666666667,
+          "generation_char_similarity": 0.951851851851852
+        }
+      },
+      {
+        "epoch": 3,
+        "steps_this_epoch": 480,
+        "total_phase_b_steps": 1440,
+        "seconds": 314.55,
+        "peak_vram": {
+          "available": true,
+          "allocated_gib": 4.802,
+          "reserved_gib": 7.127,
+          "peak_allocated_gib": 6.167,
+          "peak_reserved_gib": 7.127,
+          "free_gib": 7.407,
+          "total_gib": 15.894
+        },
+        "history": [
+          {
+            "step": 40,
+            "phase": "B",
+            "elapsed_seconds": 25.5,
+            "lr": [
+              9.953429730181653e-05,
+              0.0002986028919054496,
+              0.0002986028919054496
+            ],
+            "losses": {
+              "total": 0.9266217350959778,
+              "lm_ce": 8.331285243912134e-06,
+              "mask_bce": 0.027348924428224564,
+              "mask_dice": 0.8719072341918945
+            },
+            "grad": {
+              "lora": 0.00752,
+              "seg_token": 0.007509,
+              "projection": 0.195593,
+              "sam_mask_decoder": 1.78373,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.7944530248641968
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 80,
+            "phase": "B",
+            "elapsed_seconds": 51.6,
+            "lr": [
+              9.586056507527266e-05,
+              0.0002875816952258179,
+              0.0002875816952258179
+            ],
+            "losses": {
+              "total": 0.9882237911224365,
+              "lm_ce": 2.8469858079915866e-06,
+              "mask_bce": 0.03400099277496338,
+              "mask_dice": 0.9202160835266113
+            },
+            "grad": {
+              "lora": 0.005193,
+              "seg_token": 0.002984,
+              "projection": 0.087347,
+              "sam_mask_decoder": 1.565176,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.567622423171997
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 120,
+            "phase": "B",
+            "elapsed_seconds": 77.7,
+            "lr": [
+              8.8785564535221e-05,
+              0.00026635669360566296,
+              0.00026635669360566296
+            ],
+            "losses": {
+              "total": 1.0837422609329224,
+              "lm_ce": 7.741306035313755e-06,
+              "mask_bce": 0.054149702191352844,
+              "mask_dice": 0.9754273891448975
+            },
+            "grad": {
+              "lora": 0.020151,
+              "seg_token": 0.010933,
+              "projection": 0.198702,
+              "sam_mask_decoder": 1.486348,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.499746561050415
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 160,
+            "phase": "B",
+            "elapsed_seconds": 104.0,
+            "lr": [
+              7.883401610574336e-05,
+              0.00023650204831723005,
+              0.00023650204831723005
+            ],
+            "losses": {
+              "total": 0.7413350343704224,
+              "lm_ce": 6.149565706436988e-06,
+              "mask_bce": 0.014719193801283836,
+              "mask_dice": 0.7118843197822571
+            },
+            "grad": {
+              "lora": 0.012637,
+              "seg_token": 0.006108,
+              "projection": 0.119034,
+              "sam_mask_decoder": 3.594808,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 3.5968058109283447
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 200,
+            "phase": "B",
+            "elapsed_seconds": 130.3,
+            "lr": [
+              6.674398060854931e-05,
+              0.0002002319418256479,
+              0.0002002319418256479
+            ],
+            "losses": {
+              "total": 1.0769048929214478,
+              "lm_ce": 0.00013704698358196765,
+              "mask_bce": 0.0479394868016243,
+              "mask_dice": 0.9807518720626831
+            },
+            "grad": {
+              "lora": 0.009156,
+              "seg_token": 0.002453,
+              "projection": 0.027815,
+              "sam_mask_decoder": 0.689743,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.6903690099716187
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 240,
+            "phase": "B",
+            "elapsed_seconds": 156.6,
+            "lr": [
+              5.341212066823355e-05,
+              0.00016023636200470065,
+              0.00016023636200470065
+            ],
+            "losses": {
+              "total": 0.9387214183807373,
+              "lm_ce": 6.043528173904633e-06,
+              "mask_bce": 0.028277559205889702,
+              "mask_dice": 0.8821542263031006
+            },
+            "grad": {
+              "lora": 0.015526,
+              "seg_token": 0.00845,
+              "projection": 0.044357,
+              "sam_mask_decoder": 1.089936,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.0909814834594727
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 280,
+            "phase": "B",
+            "elapsed_seconds": 182.9,
+            "lr": [
+              3.982719934736832e-05,
+              0.00011948159804210495,
+              0.00011948159804210495
+            ],
+            "losses": {
+              "total": 0.6774231791496277,
+              "lm_ce": 3.285171942479792e-06,
+              "mask_bce": 0.019002703949809074,
+              "mask_dice": 0.639411211013794
+            },
+            "grad": {
+              "lora": 0.00697,
+              "seg_token": 0.00359,
+              "projection": 0.131235,
+              "sam_mask_decoder": 0.984998,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.993733286857605
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 320,
+            "phase": "B",
+            "elapsed_seconds": 209.3,
+            "lr": [
+              2.6996748113442394e-05,
+              8.099024434032717e-05,
+              8.099024434032717e-05
+            ],
+            "losses": {
+              "total": 1.0219988822937012,
+              "lm_ce": 2.0674187908298336e-05,
+              "mask_bce": 0.04397311806678772,
+              "mask_dice": 0.9340113401412964
+            },
+            "grad": {
+              "lora": 0.003259,
+              "seg_token": 0.001829,
+              "projection": 0.041445,
+              "sam_mask_decoder": 1.265281,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.265965461730957
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 360,
+            "phase": "B",
+            "elapsed_seconds": 235.8,
+            "lr": [
+              1.5872342839067306e-05,
+              4.761702851720191e-05,
+              4.761702851720191e-05
+            ],
+            "losses": {
+              "total": 0.6914545893669128,
+              "lm_ce": 2.2330890715238638e-05,
+              "mask_bce": 0.01622762158513069,
+              "mask_dice": 0.6589546799659729
+            },
+            "grad": {
+              "lora": 0.032736,
+              "seg_token": 0.018814,
+              "projection": 0.595018,
+              "sam_mask_decoder": 3.324472,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 3.377511739730835
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 400,
+            "phase": "B",
+            "elapsed_seconds": 262.1,
+            "lr": [
+              7.2790297726755716e-06,
+              2.1837089318026714e-05,
+              2.1837089318026714e-05
+            ],
+            "losses": {
+              "total": 0.8786062002182007,
+              "lm_ce": 9.997745110013057e-06,
+              "mask_bce": 0.029107103124260902,
+              "mask_dice": 0.8203719854354858
+            },
+            "grad": {
+              "lora": 0.013298,
+              "seg_token": 0.006763,
+              "projection": 0.352375,
+              "sam_mask_decoder": 1.205714,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.256238579750061
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 440,
+            "phase": "B",
+            "elapsed_seconds": 288.4,
+            "lr": [
+              1.8541356326100433e-06,
+              5.56240689783013e-06,
+              5.56240689783013e-06
+            ],
+            "losses": {
+              "total": 0.6856423020362854,
+              "lm_ce": 1.4290988474385813e-05,
+              "mask_bce": 0.016478760167956352,
+              "mask_dice": 0.6526561975479126
+            },
+            "grad": {
+              "lora": 0.017118,
+              "seg_token": 0.008823,
+              "projection": 0.159995,
+              "sam_mask_decoder": 1.577658,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.5858672857284546
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 480,
+            "phase": "B",
+            "elapsed_seconds": 314.5,
+            "lr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "losses": {
+              "total": 1.0550326108932495,
+              "lm_ce": 7.2283278313989285e-06,
+              "mask_bce": 0.02938172034919262,
+              "mask_dice": 0.9962547421455383
+            },
+            "grad": {
+              "lora": 0.001409,
+              "seg_token": 0.000559,
+              "projection": 0.007926,
+              "sam_mask_decoder": 0.433485,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.43356001377105713
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          }
+        ],
+        "nan_seen": false,
+        "selection": {
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.11017863780842695,
+          "operation_chain_accuracy": 1.0,
+          "lm_ce": 0.002000436694943157,
+          "teacher_forced_miou": 0.11017863780842695,
+          "conditional_miou": 0.11017863780842695
+        },
+        "teacher_forced": {
+          "count": 120,
+          "miou": 0.11017863780842695,
+          "dice": 0.1787357068867573,
+          "lm_ce": 0.002000436694943157,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "free_generation": {
+          "count": 120,
+          "valid_seg_emission": 120,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.11017863780842695,
+          "strict_end_to_end_dice": 0.1787357068867573,
+          "conditional_miou": 0.11017863780842695,
+          "conditional_dice": 0.1787357068867573,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 35.483333333333334
+        },
+        "language": {
+          "count": 120,
+          "mean_lm_ce": 0.002000436694943157,
+          "perplexity": 1.0020024389033029,
+          "mean_assistant_token_accuracy": 1.0,
+          "mean_reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0,
+          "reasoning_exact_match": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_reasoning_char_similarity": 1.0,
+          "generation_reasoning_exact_match": 1.0,
+          "generation_operation_chain_accuracy": 1.0,
+          "generation_char_similarity": 1.0
+        }
+      },
+      {
+        "epoch": 4,
+        "steps_this_epoch": 480,
+        "total_phase_b_steps": 1920,
+        "seconds": 311.79,
+        "peak_vram": {
+          "available": true,
+          "allocated_gib": 4.803,
+          "reserved_gib": 7.127,
+          "peak_allocated_gib": 6.168,
+          "peak_reserved_gib": 7.127,
+          "free_gib": 7.407,
+          "total_gib": 15.894
+        },
+        "history": [
+          {
+            "step": 40,
+            "phase": "B",
+            "elapsed_seconds": 25.1,
+            "lr": [
+              9.953429730181653e-05,
+              0.0002986028919054496,
+              0.0002986028919054496
+            ],
+            "losses": {
+              "total": 0.8764476776123047,
+              "lm_ce": 1.6755451497374452e-06,
+              "mask_bce": 0.024146966636180878,
+              "mask_dice": 0.8281503915786743
+            },
+            "grad": {
+              "lora": 0.029345,
+              "seg_token": 0.015889,
+              "projection": 0.162256,
+              "sam_mask_decoder": 2.882493,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.88724946975708
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 80,
+            "phase": "B",
+            "elapsed_seconds": 51.1,
+            "lr": [
+              9.586056507527266e-05,
+              0.0002875816952258179,
+              0.0002875816952258179
+            ],
+            "losses": {
+              "total": 1.0293941497802734,
+              "lm_ce": 1.5427072241891437e-07,
+              "mask_bce": 0.04207461327314377,
+              "mask_dice": 0.9452446699142456
+            },
+            "grad": {
+              "lora": 0.002131,
+              "seg_token": 0.001621,
+              "projection": 0.087621,
+              "sam_mask_decoder": 1.714607,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.716846227645874
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 120,
+            "phase": "B",
+            "elapsed_seconds": 76.9,
+            "lr": [
+              8.8785564535221e-05,
+              0.00026635669360566296,
+              0.00026635669360566296
+            ],
+            "losses": {
+              "total": 1.0446528196334839,
+              "lm_ce": 1.402461009547551e-07,
+              "mask_bce": 0.05535867065191269,
+              "mask_dice": 0.9339352250099182
+            },
+            "grad": {
+              "lora": 0.003522,
+              "seg_token": 0.002579,
+              "projection": 0.082205,
+              "sam_mask_decoder": 0.934584,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.938202440738678
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 160,
+            "phase": "B",
+            "elapsed_seconds": 102.9,
+            "lr": [
+              7.883401610574336e-05,
+              0.00023650204831723005,
+              0.00023650204831723005
+            ],
+            "losses": {
+              "total": 0.7046045064926147,
+              "lm_ce": 1.1219693618613746e-07,
+              "mask_bce": 0.011787299066781998,
+              "mask_dice": 0.6810296773910522
+            },
+            "grad": {
+              "lora": 0.00342,
+              "seg_token": 0.002825,
+              "projection": 0.218475,
+              "sam_mask_decoder": 3.727323,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 3.733722686767578
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.802,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.14,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 200,
+            "phase": "B",
+            "elapsed_seconds": 128.9,
+            "lr": [
+              6.674398060854931e-05,
+              0.0002002319418256479,
+              0.0002002319418256479
+            ],
+            "losses": {
+              "total": 1.0810455083847046,
+              "lm_ce": 0.00010685904271667823,
+              "mask_bce": 0.0482257604598999,
+              "mask_dice": 0.984380304813385
+            },
+            "grad": {
+              "lora": 0.007217,
+              "seg_token": 0.001962,
+              "projection": 0.034793,
+              "sam_mask_decoder": 0.955477,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.9561392664909363
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 240,
+            "phase": "B",
+            "elapsed_seconds": 155.3,
+            "lr": [
+              5.341212066823355e-05,
+              0.00016023636200470065,
+              0.00016023636200470065
+            ],
+            "losses": {
+              "total": 0.931068480014801,
+              "lm_ce": 1.0368413541073096e-06,
+              "mask_bce": 0.024265283718705177,
+              "mask_dice": 0.8825358152389526
+            },
+            "grad": {
+              "lora": 0.002096,
+              "seg_token": 0.001211,
+              "projection": 0.149363,
+              "sam_mask_decoder": 1.691366,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.697949767112732
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 280,
+            "phase": "B",
+            "elapsed_seconds": 181.4,
+            "lr": [
+              3.982719934736832e-05,
+              0.00011948159804210495,
+              0.00011948159804210495
+            ],
+            "losses": {
+              "total": 0.6473446488380432,
+              "lm_ce": 1.2309020576140028e-06,
+              "mask_bce": 0.016542764380574226,
+              "mask_dice": 0.6142566800117493
+            },
+            "grad": {
+              "lora": 0.004167,
+              "seg_token": 0.003641,
+              "projection": 0.278165,
+              "sam_mask_decoder": 1.871027,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.891599178314209
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 320,
+            "phase": "B",
+            "elapsed_seconds": 207.3,
+            "lr": [
+              2.6996748113442394e-05,
+              8.099024434032717e-05,
+              8.099024434032717e-05
+            ],
+            "losses": {
+              "total": 1.0615534782409668,
+              "lm_ce": 3.6394754715729505e-05,
+              "mask_bce": 0.04924694821238518,
+              "mask_dice": 0.9629868268966675
+            },
+            "grad": {
+              "lora": 0.008192,
+              "seg_token": 0.0024,
+              "projection": 0.055055,
+              "sam_mask_decoder": 1.433716,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.4347976446151733
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 360,
+            "phase": "B",
+            "elapsed_seconds": 233.6,
+            "lr": [
+              1.5872342839067306e-05,
+              4.761702851720191e-05,
+              4.761702851720191e-05
+            ],
+            "losses": {
+              "total": 0.7209573984146118,
+              "lm_ce": 1.2396984857332427e-05,
+              "mask_bce": 0.016815826296806335,
+              "mask_dice": 0.6873009204864502
+            },
+            "grad": {
+              "lora": 0.006902,
+              "seg_token": 0.003982,
+              "projection": 0.25452,
+              "sam_mask_decoder": 1.689013,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.7081013917922974
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 400,
+            "phase": "B",
+            "elapsed_seconds": 259.7,
+            "lr": [
+              7.2790297726755716e-06,
+              2.1837089318026714e-05,
+              2.1837089318026714e-05
+            ],
+            "losses": {
+              "total": 0.881542444229126,
+              "lm_ce": 2.5490185180387925e-06,
+              "mask_bce": 0.02838759310543537,
+              "mask_dice": 0.8247621655464172
+            },
+            "grad": {
+              "lora": 0.002993,
+              "seg_token": 0.003156,
+              "projection": 0.175501,
+              "sam_mask_decoder": 1.239519,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.2518889904022217
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 440,
+            "phase": "B",
+            "elapsed_seconds": 285.6,
+            "lr": [
+              1.8541356326100433e-06,
+              5.56240689783013e-06,
+              5.56240689783013e-06
+            ],
+            "losses": {
+              "total": 0.6890325546264648,
+              "lm_ce": 4.27363875132869e-06,
+              "mask_bce": 0.015222632326185703,
+              "mask_dice": 0.6585787534713745
+            },
+            "grad": {
+              "lora": 0.00266,
+              "seg_token": 0.001248,
+              "projection": 0.067302,
+              "sam_mask_decoder": 1.856138,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.8573598861694336
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 480,
+            "phase": "B",
+            "elapsed_seconds": 311.8,
+            "lr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "losses": {
+              "total": 1.0688728094100952,
+              "lm_ce": 4.5272731767909136e-06,
+              "mask_bce": 0.03628160059452057,
+              "mask_dice": 0.9963005185127258
+            },
+            "grad": {
+              "lora": 0.002013,
+              "seg_token": 0.001027,
+              "projection": 0.05319,
+              "sam_mask_decoder": 0.908131,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.9096904397010803
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.803,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.168,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          }
+        ],
+        "nan_seen": false,
+        "selection": {
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.09910814046433267,
+          "operation_chain_accuracy": 1.0,
+          "lm_ce": 2.856970082850315e-06,
+          "teacher_forced_miou": 0.09910814046433267,
+          "conditional_miou": 0.09910814046433267
+        },
+        "teacher_forced": {
+          "count": 120,
+          "miou": 0.09910814046433267,
+          "dice": 0.16267282698480887,
+          "lm_ce": 2.856970082850315e-06,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "free_generation": {
+          "count": 120,
+          "valid_seg_emission": 120,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.09910814046433267,
+          "strict_end_to_end_dice": 0.16267282698480887,
+          "conditional_miou": 0.09910814046433267,
+          "conditional_dice": 0.16267282698480887,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 35.483333333333334
+        },
+        "language": {
+          "count": 120,
+          "mean_lm_ce": 2.856970082850315e-06,
+          "perplexity": 1.000002856974164,
+          "mean_assistant_token_accuracy": 1.0,
+          "mean_reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0,
+          "reasoning_exact_match": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_reasoning_char_similarity": 1.0,
+          "generation_reasoning_exact_match": 1.0,
+          "generation_operation_chain_accuracy": 1.0,
+          "generation_char_similarity": 1.0
+        }
+      },
+      {
+        "epoch": 5,
+        "steps_this_epoch": 480,
+        "total_phase_b_steps": 2400,
+        "seconds": 312.47,
+        "peak_vram": {
+          "available": true,
+          "allocated_gib": 4.801,
+          "reserved_gib": 7.127,
+          "peak_allocated_gib": 6.167,
+          "peak_reserved_gib": 7.127,
+          "free_gib": 7.407,
+          "total_gib": 15.894
+        },
+        "history": [
+          {
+            "step": 40,
+            "phase": "B",
+            "elapsed_seconds": 25.4,
+            "lr": [
+              9.953429730181653e-05,
+              0.0002986028919054496,
+              0.0002986028919054496
+            ],
+            "losses": {
+              "total": 0.7288135290145874,
+              "lm_ce": 1.7285284457102534e-06,
+              "mask_bce": 0.02223011665046215,
+              "mask_dice": 0.6843498349189758
+            },
+            "grad": {
+              "lora": 0.020448,
+              "seg_token": 0.006442,
+              "projection": 0.183475,
+              "sam_mask_decoder": 2.259349,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.266887903213501
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.139,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 80,
+            "phase": "B",
+            "elapsed_seconds": 51.3,
+            "lr": [
+              9.586056507527266e-05,
+              0.0002875816952258179,
+              0.0002875816952258179
+            ],
+            "losses": {
+              "total": 0.9880696535110474,
+              "lm_ce": 1.051846467703399e-07,
+              "mask_bce": 0.030337002128362656,
+              "mask_dice": 0.9273954629898071
+            },
+            "grad": {
+              "lora": 0.00273,
+              "seg_token": 0.001442,
+              "projection": 0.097784,
+              "sam_mask_decoder": 1.953708,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.9561563730239868
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.139,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 120,
+            "phase": "B",
+            "elapsed_seconds": 77.3,
+            "lr": [
+              8.8785564535221e-05,
+              0.00026635669360566296,
+              0.00026635669360566296
+            ],
+            "losses": {
+              "total": 1.003206729888916,
+              "lm_ce": 2.3841842278216063e-07,
+              "mask_bce": 0.06102360785007477,
+              "mask_dice": 0.8811590075492859
+            },
+            "grad": {
+              "lora": 0.015475,
+              "seg_token": 0.008698,
+              "projection": 0.455912,
+              "sam_mask_decoder": 2.555833,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.596237897872925
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.139,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 160,
+            "phase": "B",
+            "elapsed_seconds": 103.5,
+            "lr": [
+              7.883401610574336e-05,
+              0.00023650204831723005,
+              0.00023650204831723005
+            ],
+            "losses": {
+              "total": 0.5915036201477051,
+              "lm_ce": 3.786645947911893e-07,
+              "mask_bce": 0.006546067073941231,
+              "mask_dice": 0.5784107446670532
+            },
+            "grad": {
+              "lora": 0.015628,
+              "seg_token": 0.006869,
+              "projection": 0.459105,
+              "sam_mask_decoder": 4.14806,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 4.173424243927002
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.139,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 200,
+            "phase": "B",
+            "elapsed_seconds": 129.4,
+            "lr": [
+              6.674398060854931e-05,
+              0.0002002319418256479,
+              0.0002002319418256479
+            ],
+            "losses": {
+              "total": 1.0578991174697876,
+              "lm_ce": 0.0008017705986276269,
+              "mask_bce": 0.042015500366687775,
+              "mask_dice": 0.9722645878791809
+            },
+            "grad": {
+              "lora": 0.051453,
+              "seg_token": 0.001726,
+              "projection": 0.048155,
+              "sam_mask_decoder": 1.00189,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.0043668746948242
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 240,
+            "phase": "B",
+            "elapsed_seconds": 155.6,
+            "lr": [
+              5.341212066823355e-05,
+              0.00016023636200470065,
+              0.00016023636200470065
+            ],
+            "losses": {
+              "total": 0.9075832366943359,
+              "lm_ce": 4.712920826932532e-07,
+              "mask_bce": 0.02291967160999775,
+              "mask_dice": 0.8617429733276367
+            },
+            "grad": {
+              "lora": 0.021324,
+              "seg_token": 0.009829,
+              "projection": 0.250031,
+              "sam_mask_decoder": 2.79066,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.8019373416900635
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 280,
+            "phase": "B",
+            "elapsed_seconds": 181.9,
+            "lr": [
+              3.982719934736832e-05,
+              0.00011948159804210495,
+              0.00011948159804210495
+            ],
+            "losses": {
+              "total": 0.5826888084411621,
+              "lm_ce": 4.2693517343650456e-07,
+              "mask_bce": 0.017646171152591705,
+              "mask_dice": 0.5473955869674683
+            },
+            "grad": {
+              "lora": 0.002116,
+              "seg_token": 0.00114,
+              "projection": 0.071707,
+              "sam_mask_decoder": 1.419231,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.421043038368225
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 320,
+            "phase": "B",
+            "elapsed_seconds": 208.2,
+            "lr": [
+              2.6996748113442394e-05,
+              8.099024434032717e-05,
+              8.099024434032717e-05
+            ],
+            "losses": {
+              "total": 0.9938857555389404,
+              "lm_ce": 3.299651098132017e-06,
+              "mask_bce": 0.0389321967959404,
+              "mask_dice": 0.9160147309303284
+            },
+            "grad": {
+              "lora": 0.007817,
+              "seg_token": 0.002631,
+              "projection": 0.045472,
+              "sam_mask_decoder": 2.018227,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 2.018756151199341
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 360,
+            "phase": "B",
+            "elapsed_seconds": 234.3,
+            "lr": [
+              1.5872342839067306e-05,
+              4.761702851720191e-05,
+              4.761702851720191e-05
+            ],
+            "losses": {
+              "total": 0.7591505646705627,
+              "lm_ce": 2.663076884346083e-06,
+              "mask_bce": 0.017017116770148277,
+              "mask_dice": 0.7251110076904297
+            },
+            "grad": {
+              "lora": 0.047638,
+              "seg_token": 0.016804,
+              "projection": 0.780423,
+              "sam_mask_decoder": 4.851351,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 4.9139814376831055
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 400,
+            "phase": "B",
+            "elapsed_seconds": 260.3,
+            "lr": [
+              7.2790297726755716e-06,
+              2.1837089318026714e-05,
+              2.1837089318026714e-05
+            ],
+            "losses": {
+              "total": 0.937241792678833,
+              "lm_ce": 1.4558595466951374e-06,
+              "mask_bce": 0.030706778168678284,
+              "mask_dice": 0.8758253455162048
+            },
+            "grad": {
+              "lora": 0.011893,
+              "seg_token": 0.005098,
+              "projection": 0.0545,
+              "sam_mask_decoder": 1.007365,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 1.0089211463928223
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 440,
+            "phase": "B",
+            "elapsed_seconds": 286.4,
+            "lr": [
+              1.8541356326100433e-06,
+              5.56240689783013e-06,
+              5.56240689783013e-06
+            ],
+            "losses": {
+              "total": 0.6852934956550598,
+              "lm_ce": 2.234497287645354e-06,
+              "mask_bce": 0.015953632071614265,
+              "mask_dice": 0.6533817648887634
+            },
+            "grad": {
+              "lora": 0.034106,
+              "seg_token": 0.014424,
+              "projection": 0.253588,
+              "sam_mask_decoder": 3.800035,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 3.808666944503784
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          },
+          {
+            "step": 480,
+            "phase": "B",
+            "elapsed_seconds": 312.5,
+            "lr": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "losses": {
+              "total": 1.0645198822021484,
+              "lm_ce": 2.394230705249356e-06,
+              "mask_bce": 0.033330388367176056,
+              "mask_dice": 0.9978543519973755
+            },
+            "grad": {
+              "lora": 0.001981,
+              "seg_token": 0.000885,
+              "projection": 0.104775,
+              "sam_mask_decoder": 0.690769,
+              "sam_image_encoder": 0.0,
+              "grad_clip_total_norm": 0.698673665523529
+            },
+            "vram": {
+              "available": true,
+              "allocated_gib": 4.801,
+              "reserved_gib": 7.127,
+              "peak_allocated_gib": 6.167,
+              "peak_reserved_gib": 7.127,
+              "free_gib": 7.407,
+              "total_gib": 15.894
+            }
+          }
+        ],
+        "nan_seen": false,
+        "selection": {
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.09920698490587657,
+          "operation_chain_accuracy": 1.0,
+          "lm_ce": 2.3041186917538426e-06,
+          "teacher_forced_miou": 0.09920698490587657,
+          "conditional_miou": 0.09920698490587657
+        },
+        "teacher_forced": {
+          "count": 120,
+          "miou": 0.09920698490587657,
+          "dice": 0.16019456952860864,
+          "lm_ce": 2.3041186917538426e-06,
+          "assistant_token_accuracy": 1.0,
+          "reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0
+        },
+        "free_generation": {
+          "count": 120,
+          "valid_seg_emission": 120,
+          "valid_seg_emission_rate": 1.0,
+          "strict_end_to_end_miou": 0.09920698490587657,
+          "strict_end_to_end_dice": 0.16019456952860864,
+          "conditional_miou": 0.09920698490587657,
+          "conditional_dice": 0.16019456952860864,
+          "collapsed_samples": 0,
+          "reasoning_exact_match": 1.0,
+          "reasoning_char_similarity": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_generated_tokens": 35.483333333333334
+        },
+        "language": {
+          "count": 120,
+          "mean_lm_ce": 2.3041186917538426e-06,
+          "perplexity": 1.0000023041213462,
+          "mean_assistant_token_accuracy": 1.0,
+          "mean_reasoning_token_accuracy": 1.0,
+          "seg_token_accuracy": 1.0,
+          "reasoning_exact_match": 1.0,
+          "operation_chain_accuracy": 1.0,
+          "mean_reasoning_char_similarity": 1.0,
+          "generation_reasoning_exact_match": 1.0,
+          "generation_operation_chain_accuracy": 1.0,
+          "generation_char_similarity": 1.0
+        }
+      }
+    ]
+  },
+  "baseline": {
+    "teacher_forced": {
+      "count": 120,
+      "miou": 0.0062619634033831235,
+      "dice": 0.010038119380740248,
+      "lm_ce": 3.4575974961121876,
+      "assistant_token_accuracy": 0.4405029230560935,
+      "reasoning_token_accuracy": 0.4522248435281972,
+      "seg_token_accuracy": 0.0
+    },
+    "teacher_forced_breakdown_level": {
+      "L1": {
+        "count": 40,
+        "miou": 0.016471778197071036,
+        "dice": 0.025644291754203363,
+        "lm_ce": 4.245198762416839,
+        "assistant_token_accuracy": 0.35302287581699365,
+        "reasoning_token_accuracy": 0.38968750000000013,
+        "seg_token_accuracy": 0.0
+      },
+      "L2": {
+        "count": 40,
+        "miou": 0.0003930633863333621,
+        "dice": 0.000780031555701991,
+        "lm_ce": 3.4271072447299957,
+        "assistant_token_accuracy": 0.45465610611724444,
+        "reasoning_token_accuracy": 0.45254258614014714,
+        "seg_token_accuracy": 0.0
+      },
+      "L3_nontrivial": {
+        "count": 40,
+        "miou": 0.0019210486267449835,
+        "dice": 0.003690034832315383,
+        "lm_ce": 2.700486481189728,
+        "assistant_token_accuracy": 0.5138297872340425,
+        "reasoning_token_accuracy": 0.5144444444444443,
+        "seg_token_accuracy": 0.0
+      }
+    },
+    "teacher_forced_breakdown_family": {
+      "direction": {
+        "count": 32,
+        "miou": 0.0002588745779834533,
+        "dice": 0.0005135629643322425,
+        "lm_ce": 3.531466282904148,
+        "assistant_token_accuracy": 0.4324293076109936,
+        "reasoning_token_accuracy": 0.4291702961672475,
+        "seg_token_accuracy": 0.0
+      },
+      "extreme": {
+        "count": 27,
+        "miou": 0.02421789621787432,
+        "dice": 0.03762390095731668,
+        "lm_ce": 4.306528197394477,
+        "assistant_token_accuracy": 0.3681917211328976,
+        "reasoning_token_accuracy": 0.40246913580246924,
+        "seg_token_accuracy": 0.0
+      },
+      "multi_hop_direction_to_nearest": {
+        "count": 40,
+        "miou": 0.0019210486267449835,
+        "dice": 0.003690034832315383,
+        "lm_ce": 2.700486481189728,
+        "assistant_token_accuracy": 0.5138297872340425,
+        "reasoning_token_accuracy": 0.5144444444444443,
+        "seg_token_accuracy": 0.0
+      },
+      "nearest": {
+        "count": 8,
+        "miou": 0.0009298186197329973,
+        "dice": 0.001845905921180985,
+        "lm_ce": 3.0096710920333862,
+        "assistant_token_accuracy": 0.5435633001422475,
+        "reasoning_token_accuracy": 0.5460317460317461,
+        "seg_token_accuracy": 0.0
+      },
+      "size": {
+        "count": 13,
+        "miou": 0.0003836869230949782,
+        "dice": 0.0007635649477372623,
+        "lm_ce": 4.117822243617131,
+        "assistant_token_accuracy": 0.3215183509301156,
+        "reasoning_token_accuracy": 0.3631410256410256,
+        "seg_token_accuracy": 0.0
+      }
+    },
+    "teacher_forced_seconds": 37.64,
+    "teacher_forced_peak_vram": {
+      "allocated_gib": 4.819,
+      "reserved_gib": 6.266,
+      "peak_allocated_gib": 5.534,
+      "peak_reserved_gib": 6.266,
+      "free_gib": 8.335,
+      "total_gib": 15.894
+    },
+    "free_generation": {
+      "count": 120,
+      "valid_seg_emission": 0,
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "strict_end_to_end_dice": 0.0,
+      "conditional_miou": null,
+      "conditional_dice": null,
+      "collapsed_samples": 0,
+      "reasoning_exact_match": 0.0,
+      "reasoning_char_similarity": 0.24638562732924985,
+      "operation_chain_accuracy": 0.0,
+      "mean_generated_tokens": 53.3
+    },
+    "free_generation_breakdown_level": {
+      "L1": {
+        "count": 40,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.25168969221325904,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 48.575
+      },
+      "L2": {
+        "count": 40,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.24690819998513747,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 47.325
+      },
+      "L3_nontrivial": {
+        "count": 40,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.24055898978935267,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 64.0
+      }
+    },
+    "free_generation_breakdown_family": {
+      "direction": {
+        "count": 32,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.2638425616980509,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 43.15625
+      },
+      "extreme": {
+        "count": 27,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.25454175189046496,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 43.592592592592595
+      },
+      "multi_hop_direction_to_nearest": {
+        "count": 40,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.24055898978935267,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 64.0
+      },
+      "nearest": {
+        "count": 8,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.17917075313348385,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 64.0
+      },
+      "size": {
+        "count": 13,
+        "valid_seg_emission": 0,
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 0.0,
+        "strict_end_to_end_dice": 0.0,
+        "conditional_miou": null,
+        "conditional_dice": null,
+        "collapsed_samples": 0,
+        "reasoning_exact_match": 0.0,
+        "reasoning_char_similarity": 0.24576618365290803,
+        "operation_chain_accuracy": 0.0,
+        "mean_generated_tokens": 58.92307692307692
+      }
+    },
+    "free_generation_seconds": 442.72,
+    "free_generation_peak_vram": {
+      "allocated_gib": 4.505,
+      "reserved_gib": 6.318,
+      "peak_allocated_gib": 5.128,
+      "peak_reserved_gib": 6.318,
+      "free_gib": 8.282,
+      "total_gib": 15.894
+    },
+    "language": {
+      "count": 120,
+      "mean_lm_ce": 3.4575974961121876,
+      "perplexity": 31.740627855591754,
+      "mean_assistant_token_accuracy": 0.4405029230560935,
+      "mean_reasoning_token_accuracy": 0.4522248435281972,
+      "seg_token_accuracy": 0.0,
+      "reasoning_exact_match": 0.0,
+      "operation_chain_accuracy": 0.0,
+      "mean_reasoning_char_similarity": 0.5094721220410133,
+      "generation_reasoning_exact_match": 0.0,
+      "generation_operation_chain_accuracy": 0.0,
+      "generation_char_similarity": 0.24638562732924985
+    },
+    "selection": {
+      "valid_seg_emission_rate": 0.0,
+      "strict_end_to_end_miou": 0.0,
+      "operation_chain_accuracy": 0.0,
+      "lm_ce": 3.4575974961121876,
+      "teacher_forced_miou": 0.0062619634033831235,
+      "conditional_miou": null
+    }
+  },
+  "phase_b_total_steps": 2400,
+  "best_joint_selection": {
+    "valid_seg_emission_rate": 1.0,
+    "strict_end_to_end_miou": 0.11017863780842695,
+    "operation_chain_accuracy": 1.0,
+    "lm_ce": 0.002000436694943157,
+    "teacher_forced_miou": 0.11017863780842695,
+    "conditional_miou": 0.11017863780842695
+  },
+  "final_validation": {
+    "valid_seg_emission_rate": 1.0,
+    "strict_end_to_end_miou": 0.11017863780842695,
+    "operation_chain_accuracy": 1.0,
+    "lm_ce": 0.002000436694943157,
+    "teacher_forced_miou": 0.11017863780842695,
+    "conditional_miou": 0.11017863780842695
+  },
+  "paired_probe": {
+    "passed": 0,
+    "n_pairs": 20,
+    "mean_own_target_iou": 0.13884744303870564,
+    "mean_cross_target_iou": 0.13873415212955684
+  },
+  "peak_vram_overall": {
+    "available": true,
+    "allocated_gib": 4.625,
+    "reserved_gib": 7.127,
+    "peak_allocated_gib": 5.369,
+    "peak_reserved_gib": 7.127,
+    "free_gib": 7.407,
+    "total_gib": 15.894
+  },
+  "total_seconds": 1898.52,
+  "recipe_adjustment": {
+    "_doc": "Recorded original versus adjusted Phase-B recipe (Task 6B section 12). Both runs start from the same clean base, the same subsets and the same seed. The canonical artifacts describe the ORIGINAL (pre-declared section 12) recipe.",
+    "allowed_by": "handoff/TO_DSH.md section 12: one bounded recipe adjustment allowed after the first complete documented Phase-B epoch if one objective clearly fails",
+    "headline_recipe_config": "configs/mvp/task6b_2b_minitrain.yaml",
+    "adjusted_recipe_config": "configs/mvp/task6b_2b_minitrain_adjusted.yaml",
+    "what_changed": [
+      {
+        "loss_weights": {
+          "from": {
+            "lm_ce": 2.0,
+            "mask_bce": 2.0,
+            "mask_dice": 1.0
+          },
+          "to": {
+            "lm_ce": 1.5,
+            "mask_bce": 4.0,
+            "mask_dice": 3.0
+          }
+        }
+      },
+      {
+        "phase_b_decoder_lr": {
+          "from": 0.0003,
+          "to": 0.001
+        }
+      }
+    ],
+    "why": "After five documented Phase-B epochs with the section 12 initial objective (the decision to adjust was taken after the first full epoch was on record), the language objective was solved (val lm_ce 3.4576 -> 0.0020, valid [SEG] emission 120/120, operation-chain accuracy 1.00, generated reasoning exact match 1.00) while the segmentation objective clearly failed: training mask Dice loss stayed flat at ~0.65-1.00 in every epoch (an all-background prediction costs ~0.02 BCE and ~1.00 Dice loss on this data), strict end-to-end val mIoU stalled at 0.1102, and the paired instruction probe scored 0/20 because two different instructions on one image produced near-identical masks (mean own-target IoU 0.13885 vs mean cross-target IoU 0.13873). The adjustment adopted the mask-dominant weighting Task 6A demonstrated on this exact stack and raised the mask-pathway learning rate, on the reading that the failed objective was under-trained rather than mis-specified.",
+    "outcome": "The adjustment did NOT help. Strict end-to-end val mIoU fell from 0.11018 to 0.09498 and the paired probe stayed at 0/20, so the failure is not explained by loss weighting or by the mask-pathway learning rate. It is explained by the projection collapsing to a near-constant prompt (evaluation/task6b_prompt_diagnosis_*.json). Recorded honestly rather than reverted silently.",
+    "unchanged": [
+      "seed 20260926",
+      "section 9 subsets (train 480 / val 120 / paired 20 pairs)",
+      "architecture and frozen/trainable split (ADR-013)",
+      "Phase A recipe",
+      "5 Phase-B epochs and the 2400-step cap",
+      "early-stop patience 2",
+      "the best_joint selection rule declared before Phase B"
+    ],
+    "not_a_search": "Exactly one adjustment was made. No other configuration was tried.",
+    "files": {
+      "headline_training_report": "evaluation/task6b_training_report.json",
+      "headline_validation": "evaluation/task6b_validation.json",
+      "headline_first_execution_remeasured": "evaluation/task6b_revalidation_original_recipe.json",
+      "adjusted_training_report": "evaluation/task6b_training_report_adjusted_recipe.json",
+      "adjusted_validation": "evaluation/task6b_validation_adjusted_recipe.json",
+      "prompt_diagnosis_headline": "evaluation/task6b_prompt_diagnosis_original_recipe.json",
+      "prompt_diagnosis_adjusted": "evaluation/task6b_prompt_diagnosis_adjusted_recipe.json"
+    },
+    "original_recipe_run": {
+      "config_path": "configs/mvp/task6b_2b_minitrain.yaml",
+      "phase_b_total_steps": 2400,
+      "best_joint_selection": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.11017863780842695,
+        "operation_chain_accuracy": 1.0,
+        "lm_ce": 0.002000436694943157,
+        "teacher_forced_miou": 0.11017863780842695,
+        "conditional_miou": 0.11017863780842695
+      },
+      "epochs": [
+        {
+          "epoch": 1,
+          "total_phase_b_steps": 480,
+          "seconds": 423.55,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.803,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.168,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.09320633715955777,
+            "operation_chain_accuracy": 0.6666666666666666,
+            "lm_ce": 0.21007339083403545,
+            "teacher_forced_miou": 0.09321079642523007,
+            "conditional_miou": 0.09320633715955777
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 2,
+          "total_phase_b_steps": 960,
+          "seconds": 317.28,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.803,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.167,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.11009196502446211,
+            "operation_chain_accuracy": 0.8666666666666667,
+            "lm_ce": 0.01480380521795534,
+            "teacher_forced_miou": 0.11008726016951885,
+            "conditional_miou": 0.11009196502446211
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 3,
+          "total_phase_b_steps": 1440,
+          "seconds": 314.55,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.802,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.167,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.11017863780842695,
+            "operation_chain_accuracy": 1.0,
+            "lm_ce": 0.002000436694943157,
+            "teacher_forced_miou": 0.11017863780842695,
+            "conditional_miou": 0.11017863780842695
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 4,
+          "total_phase_b_steps": 1920,
+          "seconds": 311.79,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.803,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.168,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.09910814046433267,
+            "operation_chain_accuracy": 1.0,
+            "lm_ce": 2.856970082850315e-06,
+            "teacher_forced_miou": 0.09910814046433267,
+            "conditional_miou": 0.09910814046433267
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 5,
+          "total_phase_b_steps": 2400,
+          "seconds": 312.47,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.801,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.167,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.09920698490587657,
+            "operation_chain_accuracy": 1.0,
+            "lm_ce": 2.3041186917538426e-06,
+            "teacher_forced_miou": 0.09920698490587657,
+            "conditional_miou": 0.09920698490587657
+          },
+          "nan_seen": false
+        }
+      ],
+      "paired_probe_passed": 0
+    },
+    "adjusted_recipe_run": {
+      "config_path": "configs/mvp/task6b_2b_minitrain_adjusted.yaml",
+      "phase_b_total_steps": 2400,
+      "best_joint_selection": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.09498032111345409,
+        "operation_chain_accuracy": 1.0,
+        "lm_ce": 5.144737811709395e-06,
+        "teacher_forced_miou": 0.09498032111345409,
+        "conditional_miou": 0.09498032111345409
+      },
+      "epochs": [
+        {
+          "epoch": 1,
+          "total_phase_b_steps": 480,
+          "seconds": 314.52,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.803,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.168,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.0903100950533153,
+            "operation_chain_accuracy": 0.6666666666666666,
+            "lm_ce": 0.19185162675693543,
+            "teacher_forced_miou": 0.09031415006285172,
+            "conditional_miou": 0.0903100950533153
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 2,
+          "total_phase_b_steps": 960,
+          "seconds": 313.2,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.803,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.167,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.09482439680303398,
+            "operation_chain_accuracy": 1.0,
+            "lm_ce": 0.0005663049397545213,
+            "teacher_forced_miou": 0.09482439680303398,
+            "conditional_miou": 0.09482439680303398
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 3,
+          "total_phase_b_steps": 1440,
+          "seconds": 315.2,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.802,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.167,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.09498032111345409,
+            "operation_chain_accuracy": 1.0,
+            "lm_ce": 5.144737811709395e-06,
+            "teacher_forced_miou": 0.09498032111345409,
+            "conditional_miou": 0.09498032111345409
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 4,
+          "total_phase_b_steps": 1920,
+          "seconds": 317.61,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.803,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.168,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.08739911397989664,
+            "operation_chain_accuracy": 0.975,
+            "lm_ce": 0.0029038386731452684,
+            "teacher_forced_miou": 0.08739911397989664,
+            "conditional_miou": 0.08739911397989664
+          },
+          "nan_seen": false
+        },
+        {
+          "epoch": 5,
+          "total_phase_b_steps": 2400,
+          "seconds": 317.33,
+          "peak_vram": {
+            "available": true,
+            "allocated_gib": 4.801,
+            "reserved_gib": 7.127,
+            "peak_allocated_gib": 6.167,
+            "peak_reserved_gib": 7.127,
+            "free_gib": 7.407,
+            "total_gib": 15.894
+          },
+          "selection": {
+            "valid_seg_emission_rate": 1.0,
+            "strict_end_to_end_miou": 0.07760340163202337,
+            "operation_chain_accuracy": 1.0,
+            "lm_ce": 2.958499685329722e-05,
+            "teacher_forced_miou": 0.07760340163202337,
+            "conditional_miou": 0.07760340163202337
+          },
+          "nan_seen": false
+        }
+      ],
+      "paired_probe_passed": 0
+    },
+    "comparison": [
+      {
+        "metric": "valid_seg_emission_rate",
+        "original_recipe": 1.0,
+        "adjusted_recipe": 1.0
+      },
+      {
+        "metric": "strict_end_to_end_miou",
+        "original_recipe": 0.11017863780842695,
+        "adjusted_recipe": 0.09498032111345409
+      },
+      {
+        "metric": "conditional_miou",
+        "original_recipe": 0.11017863780842695,
+        "adjusted_recipe": 0.09498032111345409
+      },
+      {
+        "metric": "teacher_forced_miou",
+        "original_recipe": 0.11017863780842695,
+        "adjusted_recipe": 0.09498032111345409
+      },
+      {
+        "metric": "operation_chain_accuracy",
+        "original_recipe": 1.0,
+        "adjusted_recipe": 1.0
+      },
+      {
+        "metric": "lm_ce",
+        "original_recipe": 0.002000436694943157,
+        "adjusted_recipe": 5.144737811709395e-06
+      },
+      {
+        "metric": "paired_instruction_dependence",
+        "original_recipe": "0/20",
+        "adjusted_recipe": "0/20"
+      }
+    ],
+    "reproducibility_of_the_headline_recipe": {
+      "checked": true,
+      "first_execution_remeasured_report": "evaluation/task6b_revalidation_original_recipe.json",
+      "first_execution_selection": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.11018644084214652,
+        "operation_chain_accuracy": 1.0,
+        "lm_ce": 0.00041113056028052597,
+        "teacher_forced_miou": 0.11018644084214652,
+        "conditional_miou": 0.11018644084214652
+      },
+      "headline_selection": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.11017863780842695,
+        "operation_chain_accuracy": 1.0,
+        "lm_ce": 0.002000436694943157,
+        "teacher_forced_miou": 0.11017863780842695,
+        "conditional_miou": 0.11017863780842695
+      },
+      "absolute_deltas": {
+        "valid_seg_emission_rate": 0.0,
+        "strict_end_to_end_miou": 7.803033719569474e-06,
+        "conditional_miou": 7.803033719569474e-06,
+        "teacher_forced_miou": 7.803033719569474e-06,
+        "operation_chain_accuracy": 0.0,
+        "lm_ce": 0.0015893061346626308
+      },
+      "max_absolute_delta": 0.0015893061346626308,
+      "headline_metric_reproduced_within_1e-4": true,
+      "all_selection_metrics_reproduced_within_1e-3": false,
+      "bit_identical": false,
+      "note": "The fresh baseline and Phase A reproduced bit-identically across processes (same LM CE, same mIoU, same per-step losses), but Phase B did not: `training.deterministic: true` in the config is never consumed, because `buildreasonseg_mvp/runtime.py` calls `set_seed` and never `torch.use_deterministic_algorithms` / `torch.backends.cudnn.deterministic`. Sampled CUDA kernels in the SAM2 path are therefore not reproducible step-for-step. The divergence stays small: strict end-to-end mIoU differs by 7.8e-06 (0.11018644 vs 0.11017864) and the operation-chain accuracy and emission rate are identical. Per-epoch mIoU did differ more than that early on (epoch 1: 0.1008 vs 0.0932), which is why the section 17 +0.10 criterion should be read as marginal rather than comfortable. The first execution could not keep its checkpoint bytes -- scripts/task6b_train.py uses a module-level CHECKPOINT_DIR rather than `paths.checkpoints`, so the adjusted run overwrote artifacts/checkpoints/task6b/. The recorded sha256 values are archived in evaluation/task6b_checkpoint_manifest_adjusted_recipe.json and the canonical evaluation/task6b_checkpoint_manifest.json now describes the re-run."
+    }
+  }
+}

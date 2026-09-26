@@ -26,6 +26,7 @@ Reference: SAM2 revision 2b90b9f5ceec907a1c18123530e92e794ad901a4,
 from __future__ import annotations
 
 import os
+from collections import OrderedDict
 from dataclasses import dataclass, field
 
 import torch
@@ -287,22 +288,94 @@ class Sam2Encoder(nn.Module):
 
 
 class Sam2FeatureCache:
-    """Cache of detached frozen SAM2 features, keyed by image id.
+    """Bounded cache of detached frozen SAM2 features, keyed by image id.
 
-    Task 6A section 16.6 permits this because the encoder is frozen and only ~10
-    unique images are used in Stage 2. Qwen hidden states are never cached.
+    Task 6A section 16.6 and Task 6B section 18 both allow this because the
+    encoder is frozen. Two properties matter at Task 6B scale (480 training images
+    rather than 10):
+
+    * a **hard cap** on the number of cached images, with least-recently-used
+      eviction, so the cache cannot grow without bound; and
+    * tensors are held on **CPU** and moved to the device on use, so the cache
+      does not consume VRAM alongside the model.
+
+    Qwen hidden states are never cached.
     """
 
-    def __init__(self, encoder: Sam2Encoder) -> None:
+    def __init__(self, encoder: Sam2Encoder, max_images: int = 160) -> None:
         self.encoder = encoder
-        self._store: dict[str, Sam2Features] = {}
+        self.max_images = int(max_images)
+        self._store: "OrderedDict[str, Sam2Features]" = OrderedDict()
+        self.hits = 0
+        self.misses = 0
+        self.evictions = 0
+        self.device = next(encoder.sam.parameters()).device
+
+    def _to_cpu(self, features: Sam2Features) -> Sam2Features:
+        def move(tensor):
+            return tensor.detach().to("cpu")
+
+        return Sam2Features(
+            image_embeddings=move(features.image_embeddings),
+            high_res_features=(
+                [move(level) for level in features.high_res_features]
+                if features.high_res_features
+                else None
+            ),
+            image_pe=move(features.image_pe),
+            dense_no_mask_embedding=move(features.dense_no_mask_embedding),
+            source_shape=features.source_shape,
+            transformed_shape=features.transformed_shape,
+            embedding_shape=features.embedding_shape,
+            high_res_shapes=features.high_res_shapes,
+        )
+
+    def _to_device(self, features: Sam2Features) -> Sam2Features:
+        def move(tensor):
+            return tensor.to(self.device, non_blocking=True)
+
+        return Sam2Features(
+            image_embeddings=move(features.image_embeddings),
+            high_res_features=(
+                [move(level) for level in features.high_res_features]
+                if features.high_res_features
+                else None
+            ),
+            image_pe=move(features.image_pe),
+            dense_no_mask_embedding=move(features.dense_no_mask_embedding),
+            source_shape=features.source_shape,
+            transformed_shape=features.transformed_shape,
+            embedding_shape=features.embedding_shape,
+            high_res_shapes=features.high_res_shapes,
+        )
 
     def get(self, image_id: str, image_hwc_uint8) -> tuple[Sam2Features, bool]:
-        if image_id in self._store:
-            return self._store[image_id], True
-        features = self.encoder.encode(image_hwc_uint8).detach()
+        cached = self._store.get(image_id)
+        if cached is not None:
+            self._store.move_to_end(image_id)
+            self.hits += 1
+            return self._to_device(cached), True
+
+        self.misses += 1
+        features = self._to_cpu(self.encoder.encode(image_hwc_uint8))
         self._store[image_id] = features
-        return features, False
+        while len(self._store) > self.max_images:
+            self._store.popitem(last=False)
+            self.evictions += 1
+        return self._to_device(features), False
+
+    def stats(self) -> dict:
+        return {
+            "max_images": self.max_images,
+            "cached_images": len(self._store),
+            "hits": self.hits,
+            "misses": self.misses,
+            "evictions": self.evictions,
+            "storage": "cpu_tensors",
+        }
+
+    def clear(self) -> None:
+        self._store.clear()
 
     def __len__(self) -> int:
         return len(self._store)

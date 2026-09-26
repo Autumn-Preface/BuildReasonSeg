@@ -87,6 +87,28 @@ def mask_iou_from_logits(
     return float(binary_iou(prediction, target).mean())
 
 
+def dice_from_logits(
+    logits: torch.Tensor,
+    target: torch.Tensor,
+    size: tuple[int, int],
+    threshold: float = 0.0,
+    mode: str = "bilinear",
+) -> float:
+    """Original-resolution Dice between thresholded upsampled logits and the GT mask."""
+
+    upsampled = upsample_logits(logits, size, mode=mode)
+    prediction = upsampled > threshold
+    target = target.to(prediction.device)
+    if target.dim() == 2:
+        target = target.unsqueeze(0).unsqueeze(0)
+    prediction = prediction.bool()
+    target = target.bool()
+    dims = tuple(range(1, prediction.dim()))
+    intersection = (prediction & target).sum(dim=dims).float()
+    total = prediction.sum(dim=dims).float() + target.sum(dim=dims).float()
+    return float(((2.0 * intersection + 1e-6) / (total + 1e-6)).mean())
+
+
 def collapse_flags(logits: torch.Tensor, threshold: float = 0.0) -> dict:
     """Detect empty / full-image collapse, which must never count as success."""
 

@@ -180,3 +180,10 @@ external/
 # Task 6A/6B run logs
 *.out
 *.err
+
+# Python bytecode. Placed after the "MUST STAY TRACKED" negations above because
+# the unanchored `!scripts/**`, `!tests/**` and `!spatial_reasoning/**` rules
+# would otherwise re-include these directories.
+__pycache__/
+*.pyc
+.pytest_cache/

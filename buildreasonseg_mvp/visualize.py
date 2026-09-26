@@ -77,6 +77,68 @@ def render_panel(
     return bool(cv2.imwrite(str(out_path), resized))
 
 
+def render_task6b_panel(
+    out_path: Path,
+    image_rgb: np.ndarray,
+    gt_mask: np.ndarray | None,
+    pred_mask: np.ndarray | None,
+    header: str,
+    lines: list[str],
+    seg_valid: bool,
+    iou: float | None,
+) -> bool:
+    """Task 6B panel: source, GT outline, prediction outline, generated reasoning.
+
+    A missing prediction (invalid or absent `[SEG]`) is drawn as "no mask" rather
+    than silently omitted, so a format failure is visible in the pack.
+    """
+
+    import cv2
+
+    canvas = cv2.cvtColor(np.ascontiguousarray(image_rgb), cv2.COLOR_RGB2BGR).copy()
+    canvas = (canvas * 0.70).astype(np.uint8)
+
+    if gt_mask is not None:
+        gt = gt_mask.astype(bool)
+        tint = np.zeros_like(canvas)
+        tint[gt] = (0, 200, 255)
+        canvas = np.where(gt[..., None], (canvas * 0.60 + tint * 0.40).astype(np.uint8), canvas)
+        canvas[_outline(gt)] = (0, 200, 255)
+
+    if pred_mask is not None:
+        pred = pred_mask.astype(bool)
+        tint = np.zeros_like(canvas)
+        tint[pred] = (0, 255, 0)
+        canvas = np.where(pred[..., None], (canvas * 0.60 + tint * 0.40).astype(np.uint8), canvas)
+        canvas[_outline(pred)] = (0, 255, 0)
+
+    banner_height = 118
+    banner = np.zeros((banner_height, canvas.shape[1], 3), np.uint8)
+    colour = (0, 255, 0) if seg_valid else (0, 0, 255)
+    badge = f"[SEG] OK  IoU {iou:.3f}" if (seg_valid and iou is not None) else "[SEG] FAILED (IoU 0)"
+    cv2.putText(banner, badge, (4, 16), cv2.FONT_HERSHEY_SIMPLEX, 0.44, colour, 1, cv2.LINE_AA)
+    cv2.putText(banner, header[:118], (4, 36), cv2.FONT_HERSHEY_SIMPLEX, 0.38, (255, 255, 255), 1, cv2.LINE_AA)
+    for index, text in enumerate(lines[:4]):
+        cv2.putText(
+            banner,
+            text[:118],
+            (4, 58 + index * 16),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.34,
+            (200, 200, 200),
+            1,
+            cv2.LINE_AA,
+        )
+
+    combined = np.vstack([banner, canvas])
+    scale = THUMB_HEIGHT / combined.shape[0]
+    resized = cv2.resize(
+        combined, (max(1, int(combined.shape[1] * scale)), THUMB_HEIGHT), interpolation=cv2.INTER_AREA
+    )
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    return bool(cv2.imwrite(str(out_path), resized))
+
+
 def build_contact_sheet(sample_dir: Path, out_path: Path, columns: int = 4, thumb: int = 256) -> int:
     import cv2
 

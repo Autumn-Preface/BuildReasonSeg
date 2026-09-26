@@ -172,12 +172,20 @@ class MvpRuntime:
             sample.instruction_zh,
             sample.assistant_text,
             self.model.seg_token_id,
-            append_eos=bool(self.cfg["stage2_overfit"].get("append_eos_to_target", True)),
+            append_eos=bool(
+                self.cfg.get("stage2_overfit", {}).get(
+                    "append_eos_to_target", self.cfg.get("training", {}).get("append_eos_to_target", True)
+                )
+            ),
         )
         return batch, image
 
     def features_for(self, sample: data_mod.Sample, image: np.ndarray):
-        if self.cfg["stage2_overfit"].get("use_sam_feature_cache", True):
+        use_cache = bool(
+            self.cfg.get("stage2_overfit", {}).get("use_sam_feature_cache", True)
+            and self.cfg.get("training", {}).get("use_sam_feature_cache", True)
+        )
+        if use_cache:
             return self.feature_cache.get(sample.image_id, image)
         return self.sam_encoder.encode(image), False
 
@@ -192,6 +200,23 @@ class MvpRuntime:
             decoder_lr=float(opt_cfg.get("decoder_lr", opt_cfg["head_lr"])),
         )
         return torch.optim.AdamW(groups, betas=tuple(opt_cfg["betas"]))
+
+    def build_scheduler_for(self, optimizer, max_steps: int, schedule_cfg: dict):
+        """Scheduler described by an explicit config block (Task 6B phases)."""
+
+        schedule = str(schedule_cfg.get("lr_schedule", "none")).lower()
+        warmup = int(schedule_cfg.get("warmup_steps", 0))
+
+        def factor(step: int) -> float:
+            if schedule == "none":
+                return 1.0
+            if warmup and step < warmup:
+                return max(1e-3, (step + 1) / warmup)
+            progress = (step - warmup) / max(1, max_steps - warmup)
+            progress = min(max(progress, 0.0), 1.0)
+            return 0.5 * (1.0 + math.cos(math.pi * progress))
+
+        return torch.optim.lr_scheduler.LambdaLR(optimizer, factor)
 
     def build_scheduler(self, optimizer, max_steps: int):
         """Optional cosine decay with linear warmup.
@@ -329,7 +354,49 @@ def gradient_norms(model: BuildReasonSegMvp) -> dict:
 # --------------------------------------------------------------------------
 
 
-def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool = True) -> MvpRuntime:
+def set_phase_trainables(model: BuildReasonSegMvp, phase: str) -> dict:
+    """Two-phase training schedule from Task 6B section 12.
+
+    * ``A`` -- language-format warm-up: only the text LoRA adapters and the
+      trainable `[SEG]` row are optimised. The projection MLP and the SAM2 mask
+      decoder are **frozen**, so the mask pathway is untouched during warm-up.
+    * ``B`` -- joint segmentation training: the projection MLP and the SAM2 mask
+      decoder join the optimiser.
+
+    The Qwen vision tower, the Qwen base weights, the SAM2 image encoder, the
+    prompt encoder and the memory modules stay frozen in both phases.
+    """
+
+    phase = phase.upper()
+    if phase not in ("A", "B"):
+        raise ValueError(f"phase must be 'A' or 'B', got {phase!r}")
+
+    for parameter in model.projection.parameters():
+        parameter.requires_grad_(phase == "B")
+    for parameter in model.sam.sam_mask_decoder.parameters():
+        parameter.requires_grad_(phase == "B")
+
+    trainable = [name for name, p in model.named_parameters() if p.requires_grad]
+    frozen = [name for name, p in model.named_parameters() if not p.requires_grad]
+    return {
+        "phase": phase,
+        "trainable_tensors": len(trainable),
+        "frozen_tensors": len(frozen),
+        "trainable_params": sum(p.numel() for p in model.parameters() if p.requires_grad),
+        "projection_trainable": any(p.requires_grad for p in model.projection.parameters()),
+        "sam_mask_decoder_trainable": any(
+            p.requires_grad for p in model.sam.sam_mask_decoder.parameters()
+        ),
+        "qwen_visual_trainable": [
+            name
+            for name in trainable
+            if any(marker in name for marker in ("visual", "vision_tower", "vision_model"))
+        ],
+    }
+
+
+def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool = True,
+                  feature_cache_images: int | None = None) -> MvpRuntime:
     cfg = cfg or load_config()
     set_seed(int(cfg["seed"]))
 
@@ -428,6 +495,13 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
     reports["vram_after_load"] = vram()
 
     sam_encoder = Sam2Encoder(sam)
+    cache_images = int(
+        feature_cache_images
+        if feature_cache_images is not None
+        else cfg.get("training", {}).get(
+            "feature_cache_images", cfg.get("stage2_overfit", {}).get("feature_cache_images", 160)
+        )
+    )
     return MvpRuntime(
         cfg=cfg,
         processor=processor,
@@ -437,7 +511,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         projection=projection,
         model=model,
         sam_encoder=sam_encoder,
-        feature_cache=Sam2FeatureCache(sam_encoder),
+        feature_cache=Sam2FeatureCache(sam_encoder, max_images=cache_images),
         device=device,
         reports=reports,
         loss_weights=LossWeights(**{k: float(v) for k, v in cfg["loss"].items() if isinstance(v, (int, float))}),

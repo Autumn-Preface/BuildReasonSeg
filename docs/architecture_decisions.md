@@ -682,6 +682,78 @@ not a generalisation or language-quality result.
 
 ---
 
+## ADR-014 — Task 6B: the `[SEG]`→prompt interface is the MVP bottleneck, not the mask decoder
+
+**Status:** **Accepted** (Task 6B). This is a measurement ADR: it records what a real 2B mini-train
+established, because it changes where the next iteration should spend effort.
+
+**Context.** Task 6A proved the pipeline end to end on a 20-sample overfit (mean training mIoU 0.9807,
+10/10 paired instruction dependence). Task 6A could not say whether that was generalisation or
+memorisation. Task 6B ran the first real mini-train — 480 train / 120 val / 20 paired val images, drawn
+deterministically from BuildSpatialReason v0.1.1, with no test-split contact — on the frozen ADR-013
+stack.
+
+**Decision**
+
+1. **The language pathway generalises; the mask pathway does not.** On 120 unseen val records the
+   headline recipe reaches valid `[SEG]` emission **120/120**, generated reasoning exact match **1.000**
+   and operation-chain accuracy **1.000**, but strict end-to-end mIoU only **0.1102** (Dice 0.1807)
+   against 0.98 on the 20-sample overfit. Teacher-forced mIoU is identical to free-generation mIoU to
+   1e-16, so the mask error is not a generation problem.
+2. **The measured mechanism is a collapsed prompt interface.** Along
+   `[SEG] hidden → Projection MLP → 256-d sparse prompt → SAM2 mask decoder`, the cosine similarity of the
+   `[SEG]` hidden state for two *different instructions on the same image* is 0.9656 (headline run) /
+   0.9952 (adjusted run), versus 0.9975 / 0.9996 for two *different images*; after the projection the
+   256-d prompt is a near-constant vector (cosine 0.999952 within an image and 0.999997 across images in
+   the headline run), and the two decoded masks have IoU 0.9970. The paired instruction probe therefore
+   scores **0/20** with mean own-target IoU 0.13885 versus mean cross-target IoU 0.13873. The mask decoder
+   is not the failing component; the prompt it is handed carries no referent identity.
+3. **The failure is not a loss-weighting or learning-rate artefact.** The single bounded section 12
+   adjustment — Task 6A's mask-dominant weighting (`lm_ce 1.5 / mask_bce 4.0 / mask_dice 3.0`) plus a
+   3.3× mask-pathway learning rate — made the result slightly **worse** (strict e2e mIoU 0.11018 →
+   0.09498, paired probe still 0/20). The training mask Dice loss stayed in 0.65–1.00 in every epoch of
+   both runs, the signature of a near-all-background prediction on small targets.
+4. **The gradient budget is dominated by the mask decoder.** At the first Phase-B step the gradient norms
+   were `sam_mask_decoder 114.3`, `projection 13.2`, `seg_token 1.57`, `lora 1.04` against a clip norm of
+   1.0, so the decoder consumes ≈99 % of the clipped budget while the two places a referent-specific
+   prompt could come from receive ≈11 % and <1 %.
+5. **Language metrics on this dataset cannot support a reasoning claim.** `reasoning_zh` is
+   template-generated: the whole 480-record mini-train contains **21 distinct reasoning strings** (L1 6,
+   L2 11, L3 4) and every one of the 20 distinct val strings also occurs in train. Training LM CE
+   therefore collapses to ~0 within 40 optimizer steps. `operation_chain_accuracy` is the only language
+   metric here that carries information.
+6. **Task 6B's verdict is `FAIL_REQUIRES_DEBUG`.** Nine of the ten section 17 minimums are met; paired
+   instruction dependence (0/20 against a ≥14/20 bar) fails as badly as it can, and section 17 names
+   "pair generalization fails badly" as a debug-required condition.
+7. **Next effort belongs at the prompt interface, not at model scale.** The collapse sits at the
+   `[SEG]`→prompt interface, which a 4B base MLLM would plausibly reproduce, so a 4B run is not the fix;
+   it is only a scale measurement once the interface is fixed.
+8. **Phase B is not bit-reproducible, and the +0.10 improvement bar is therefore marginal.**
+   `training.deterministic: true` is never consumed — `set_seed` is called but
+   `torch.use_deterministic_algorithms` / `torch.backends.cudnn.deterministic` are not — so re-running the
+   identical headline recipe reproduced the baseline and Phase A bit-identically and Phase B only
+   approximately (epoch-1 mIoU 0.1008 vs 0.0932; best-epoch 0.11018644 vs 0.11017864). The +0.10 bar was
+   met by both executions, but the epoch-to-epoch spread is larger than the margin, so the criterion should
+   not be read as comfortable. The flag was left alone because enforcing it would change the numerics of an
+   already-recorded recipe; it is the first recommended change for Task 6C.
+
+**Consequences**
+
+* The paired instruction-dependence probe stays the primary gate for the MVP. Strict end-to-end mIoU
+  alone presented this failure as a modest success (+0.110 absolute over baseline); the paired probe
+  exposed it as a total failure of instruction conditioning.
+* Any future prompt design must be justified by a measurement at this interface
+  (`scripts/task6b_diagnose_prompt.py`), not by the final mIoU.
+* The three Task 6A numbers that Task 6B supersedes are: 20/20 emission no longer implies generalisation,
+  0.98 mIoU is an overfit ceiling rather than a capability, and "assistant token accuracy ≈ 0" was partly
+  a measurement bug (see below) rather than only a frozen-LM artefact.
+* Task 6B found and fixed two measurement defects, recorded rather than silently restated: the
+  teacher-forced token accuracy indexed `lm_logits` one position early (baseline reasoning-token accuracy
+  was 0.4522, reported as 0.0160), and the teacher-forced path hard-coded its text-quality fields to
+  zero by construction.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -699,3 +771,4 @@ not a generalisation or language-quality result.
 | 011 | Acceptance needs an independent oracle | The oracle never imports `semantic_policy`; artifacts are checked against one declared truth |
 | 012 | **MVP stack frozen** | Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large + BF16 LoRA `[SEG]`, native Windows, no external training data; `[REF]` is prior art, the relation encoder is the contribution |
 | 013 | **Task 6A measured proof stack** | 2B + Base+ measured working; 4B still unmeasured; `[SEG]` selectively trainable on both tied rows; separate Qwen/SAM preprocessing; SAM2 CUDA extension disabled |
+| 014 | **Task 6B: the `[SEG]`→prompt interface is the MVP bottleneck** | Language generalises (120/120 emission, 1.000 chain accuracy) but the mask does not (0.1102 mIoU, paired probe 0/20); the projection collapses to a near-constant 256-d prompt; loss weighting and mask LR do not fix it, so effort goes to the interface, not to 4B |

@@ -1,0 +1,223 @@
+{
+  "_doc": "Task 6B prompt-pathway diagnosis. Teacher-forced only; ground truth is used for scoring only.",
+  "task": "6B",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\best_joint.pt",
+    "sha256": "634a159a0102c6501f3b60c3dab774cb6d8695a844dcfa7fe42a1aa4b2c2334e",
+    "restore": {
+      "step": 1440,
+      "metrics": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.09498032111345409,
+        "operation_chain_accuracy": 1.0,
+        "lm_ce": 5.144737811709395e-06,
+        "teacher_forced_miou": 0.09498032111345409,
+        "conditional_miou": 0.09498032111345409
+      },
+      "missing_keys": 626,
+      "unexpected_keys": 0
+    }
+  },
+  "n_pairs": 10,
+  "same_image_different_instruction": {
+    "seg_hidden_cosine": {
+      "mean": 0.9952332973480225,
+      "min": 0.9946788549423218,
+      "max": 0.9957332611083984
+    },
+    "seg_hidden_l2": {
+      "mean": 14.773028469085693,
+      "min": 13.872245788574219,
+      "max": 15.643193244934082
+    },
+    "projected_cosine": {
+      "mean": 0.9999947011470794,
+      "min": 0.9999926090240479,
+      "max": 0.9999967813491821
+    },
+    "projected_l2": {
+      "mean": 3.1903370022773743,
+      "min": 1.6853647232055664,
+      "max": 6.041450500488281
+    },
+    "prediction_iou_a_vs_b": {
+      "mean": 0.9999179844900408,
+      "min": 0.9995462794918331,
+      "max": 1.0
+    }
+  },
+  "different_image_reference": {
+    "seg_hidden_cosine": {
+      "mean": 0.999578951464759,
+      "min": 0.9992466568946838,
+      "max": 0.999883770942688
+    },
+    "projected_cosine": {
+      "mean": 0.9999998145633273,
+      "min": 0.9999994039535522,
+      "max": 1.0
+    }
+  },
+  "pairs": [
+    {
+      "image_id": "1_1247",
+      "a": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+      "b": "buildsr_val_1_1247_3_largest_to_right_of_to_nearest_0be0bf7c8b0a",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_right_of_to_nearest",
+      "seg_hidden_cosine_same_image": 0.9957332611083984,
+      "seg_hidden_l2_same_image": 13.872245788574219,
+      "projected_cosine_same_image": 0.9999957084655762,
+      "projected_l2_same_image": 2.227710723876953,
+      "prediction_iou_a_vs_b": 0.9996335654085746,
+      "a_iou_on_a": 2.1101498326459023e-10,
+      "a_iou_on_b": 2.437835211477335e-10,
+      "b_iou_on_a": 2.110595170856655e-10,
+      "b_iou_on_b": 2.4384297359070217e-10
+    },
+    {
+      "image_id": "1_2103",
+      "a": "buildsr_val_1_2103_1_largest_9ccf675337a3",
+      "b": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_right_of",
+      "seg_hidden_cosine_same_image": 0.9952993988990784,
+      "seg_hidden_l2_same_image": 14.731281280517578,
+      "projected_cosine_same_image": 0.9999931454658508,
+      "projected_l2_same_image": 3.3459672927856445,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.4590841829776764,
+      "a_iou_on_b": 0.09944172948598862,
+      "b_iou_on_a": 0.4590841829776764,
+      "b_iou_on_b": 0.09944172948598862
+    },
+    {
+      "image_id": "1_2757",
+      "a": "buildsr_val_1_2757_1_largest_f9ed1e8c8949",
+      "b": "buildsr_val_1_2757_3_largest_to_left_of_to_nearest_21f7f5f71d7d",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of_to_nearest",
+      "seg_hidden_cosine_same_image": 0.9954366087913513,
+      "seg_hidden_l2_same_image": 14.402667045593262,
+      "projected_cosine_same_image": 0.9999956488609314,
+      "projected_l2_same_image": 1.923310399055481,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.010826416313648224,
+      "a_iou_on_b": 0.10774410516023636,
+      "b_iou_on_a": 0.010826416313648224,
+      "b_iou_on_b": 0.10774410516023636
+    },
+    {
+      "image_id": "1_286",
+      "a": "buildsr_val_1_286_1_largest_76ca4af3c712",
+      "b": "buildsr_val_1_286_2_largest_to_left_of_056216b5b322",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of",
+      "seg_hidden_cosine_same_image": 0.9953673481941223,
+      "seg_hidden_l2_same_image": 14.552369117736816,
+      "projected_cosine_same_image": 0.999995768070221,
+      "projected_l2_same_image": 2.597019672393799,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.5020259022712708,
+      "a_iou_on_b": 6.82593870315884e-10,
+      "b_iou_on_a": 0.5020259022712708,
+      "b_iou_on_b": 6.82593870315884e-10
+    },
+    {
+      "image_id": "1_2864",
+      "a": "buildsr_val_1_2864_1_largest_90b650948e0d",
+      "b": "buildsr_val_1_2864_2_largest_to_left_of_987279555505",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of",
+      "seg_hidden_cosine_same_image": 0.9946788549423218,
+      "seg_hidden_l2_same_image": 15.643193244934082,
+      "projected_cosine_same_image": 0.9999938011169434,
+      "projected_l2_same_image": 3.0095815658569336,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.2688274681568146,
+      "a_iou_on_b": 0.07818929851055145,
+      "b_iou_on_a": 0.2688274681568146,
+      "b_iou_on_b": 0.07818929851055145
+    },
+    {
+      "image_id": "1_2866",
+      "a": "buildsr_val_1_2866_1_largest_d012eb1a741d",
+      "b": "buildsr_val_1_2866_2_largest_to_below_81ccfad4014b",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.9948346018791199,
+      "seg_hidden_l2_same_image": 15.425362586975098,
+      "projected_cosine_same_image": 0.9999943375587463,
+      "projected_l2_same_image": 3.348906993865967,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.0025657478254288435,
+      "a_iou_on_b": 8.183306254849754e-10,
+      "b_iou_on_a": 0.0025657478254288435,
+      "b_iou_on_b": 8.183306254849754e-10
+    },
+    {
+      "image_id": "1_3400",
+      "a": "buildsr_val_1_3400_1_largest_bf204efb4cc1",
+      "b": "buildsr_val_1_3400_2_largest_to_below_281be38b0776",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.9951595067977905,
+      "seg_hidden_l2_same_image": 15.069953918457031,
+      "projected_cosine_same_image": 0.999994158744812,
+      "projected_l2_same_image": 4.031354904174805,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.25172337889671326,
+      "a_iou_on_b": 0.26383355259895325,
+      "b_iou_on_a": 0.25172337889671326,
+      "b_iou_on_b": 0.26383355259895325
+    },
+    {
+      "image_id": "1_3604",
+      "a": "buildsr_val_1_3604_1_largest_abc1fd1ca1cf",
+      "b": "buildsr_val_1_3604_3_largest_to_left_of_to_nearest_926a4e3b6386",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of_to_nearest",
+      "seg_hidden_cosine_same_image": 0.9955633878707886,
+      "seg_hidden_l2_same_image": 14.214882850646973,
+      "projected_cosine_same_image": 0.9999967813491821,
+      "projected_l2_same_image": 1.6853647232055664,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.0006345180445350707,
+      "a_iou_on_b": 0.09788253903388977,
+      "b_iou_on_a": 0.0006345180445350707,
+      "b_iou_on_b": 0.09788253903388977
+    },
+    {
+      "image_id": "1_3999",
+      "a": "buildsr_val_1_3999_1_largest_7d347989fb00",
+      "b": "buildsr_val_1_3999_2_largest_to_below_cff46ded87f4",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.9951807260513306,
+      "seg_hidden_l2_same_image": 14.883932113647461,
+      "projected_cosine_same_image": 0.9999926090240479,
+      "projected_l2_same_image": 6.041450500488281,
+      "prediction_iou_a_vs_b": 1.0,
+      "a_iou_on_a": 0.3466748893260956,
+      "a_iou_on_b": 0.1795039176940918,
+      "b_iou_on_a": 0.3466748893260956,
+      "b_iou_on_b": 0.1795039176940918
+    },
+    {
+      "image_id": "1_4894",
+      "a": "buildsr_val_1_4894_1_largest_db5e08abd804",
+      "b": "buildsr_val_1_4894_2_largest_to_below_5e40a082053a",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.9950792789459229,
+      "seg_hidden_l2_same_image": 14.934396743774414,
+      "projected_cosine_same_image": 0.9999950528144836,
+      "projected_l2_same_image": 3.6927032470703125,
+      "prediction_iou_a_vs_b": 0.9995462794918331,
+      "a_iou_on_a": 0.35100221633911133,
+      "a_iou_on_b": 0.04220346361398697,
+      "b_iou_on_a": 0.35122495889663696,
+      "b_iou_on_b": 0.042184725403785706
+    }
+  ]
+}

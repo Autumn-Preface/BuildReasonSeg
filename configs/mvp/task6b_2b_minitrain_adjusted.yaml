@@ -1,0 +1,141 @@
+# =============================================================================
+# Task 6B -- ADJUSTED Phase-B recipe (single bounded adjustment, TO_DSH section 12)
+#
+# Identical to configs/mvp/task6b_2b_minitrain.yaml except for the two coordinated
+# changes recorded below. They were made AFTER the first run finished four
+# documented Phase-B epochs, and are the only adjustment made.
+#
+# Trigger (recorded evidence, run 1 -- "original"):
+#   * language objective solved: val lm_ce 3.4576 -> 0.00041, emission 120/120,
+#     operation-chain accuracy 1.00, generated reasoning exact match 1.00;
+#   * segmentation objective clearly failed: training mask Dice loss stayed flat
+#     at ~0.65-1.00 across all four epochs (an all-background prediction costs
+#     ~0.02 BCE and ~1.00 Dice loss on this data), strict end-to-end val mIoU
+#     stalled at 0.1102, and the paired instruction-dependence probe scored 0/20
+#     because the two instructions on one image produced near-identical masks
+#     (e.g. 0.5297312140464783 vs 0.5297312140464783).
+#
+# Adjustment:
+#   1. objective weights -> the mask-dominant weighting that Task 6A demonstrated
+#      on this exact stack (lm_ce 1.5 / mask_bce 4.0 / mask_dice 3.0, versus the
+#      section 12 initial 2.0 / 2.0 / 1.0). Mask signal rises from 3.0 to 7.0
+#      units against an already-solved language term.
+#   2. mask-pathway learning rate: phase-B decoder_lr 3e-4 -> 1e-3. The projection
+#      MLP, the SAM2 mask decoder and the [SEG] row all use this group, and the
+#      step budget is fixed, so the failed objective needs to move further per step.
+#
+# Nothing else changed: same seed, same subsets, same architecture, same number of
+# Phase-B epochs (5) and the same 2400-step cap, same early-stop patience, same
+# best_joint selection rule declared before Phase B.
+# =============================================================================
+
+task: "6B"
+seed: 20260926
+offline: true
+
+models:
+  qwen_model_id: "Qwen/Qwen3-VL-2B-Instruct"
+  qwen_dtype: "bfloat16"
+  qwen_attn_implementation: "sdpa"
+  sam2_repo_id: "facebook/sam2.1-hiera-base-plus"
+  sam2_checkpoint_file: "sam2.1_hiera_base_plus.pt"
+  sam2_config_name: "configs/sam2.1/sam2.1_hiera_b+.yaml"
+  sam2_source_revision_expected: "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+
+paths:
+  local_cache: "local_cache"
+  hf_cache: "local_cache/huggingface"
+  models_dir: "local_cache/models"
+  sam2_source: "local_cache/sam2_source"
+  artifacts: "artifacts"
+  stage_outputs: "artifacts/stage_outputs"
+  checkpoints: "artifacts/checkpoints/task6b_adjusted"
+  feature_cache: "artifacts/sam2_feature_cache"
+
+token:
+  seg_token: "[SEG]"
+  prefer_peft_trainable_token_indices: true
+
+lora:
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  bias: "none"
+  target_suffixes: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  text_only: true
+
+projection:
+  hidden_dim: null
+  dropout: 0.0
+
+preprocessing:
+  image_budget:
+    set_explicitly: true
+    min_pixels: 262144
+    max_pixels: 262144
+
+loss:
+  # ADJUSTMENT 1: Task 6A mask-dominant weighting.
+  lm_ce: 1.5
+  mask_bce: 4.0
+  mask_dice: 3.0
+  note: "ADJUSTED recipe: section 12 initial weights were 2.0/2.0/1.0; see the header for the recorded justification."
+
+optimizer:
+  name: "adamw"
+  betas: [0.9, 0.999]
+  weight_decay: 0.01
+  grad_clip_norm: 1.0
+  phase_a:
+    lora_lr: 1.0e-4
+    token_lr: 3.0e-4
+    warmup_steps: 20
+    lr_schedule: "cosine"
+  phase_b:
+    lora_lr: 1.0e-4
+    token_lr: 3.0e-4
+    # ADJUSTMENT 2: mask-pathway learning rate 3e-4 -> 1e-3.
+    decoder_lr: 1.0e-3
+    warmup_steps: 20
+    lr_schedule: "cosine"
+
+training:
+  bf16_autocast: true
+  gradient_checkpointing: true
+  use_cache: false
+  deterministic: true
+  train_at_original_resolution: true
+  feature_cache_images: 160
+
+phase_a:
+  epochs: 1
+  grad_accum_steps: 1
+  eval_every_steps: 120
+  log_every_steps: 40
+
+phase_b:
+  epochs: 5
+  grad_accum_steps: 1
+  max_steps: 2400
+  early_stop_patience: 2
+  log_every_steps: 40
+
+validation:
+  per_epoch_teacher_forced: true
+  # Per-epoch free generation is kept ENABLED: the best_joint selection rule below
+  # is driven by free-generation metrics, so disabling it would silently fall back
+  # to LM CE alone.
+  per_epoch_free_generation: true
+  # best_joint selection rule, DEFINED BEFORE PHASE B AND NOT CHANGED AFTERWARDS:
+  #   1. higher valid [SEG] emission rate
+  #   2. higher strict end-to-end val mIoU
+  #   3. higher operation-chain accuracy
+  #   4. lower LM CE
+  best_joint_rule: ["valid_seg_emission_rate", "strict_end_to_end_miou", "operation_chain_accuracy", "lm_ce"]
+
+inference:
+  max_new_tokens: 64
+  validation_max_new_tokens: 64
+  do_sample: false
+  mask_threshold: 0.0
+  multimask_output: false

@@ -1,0 +1,223 @@
+{
+  "_doc": "Task 6B prompt-pathway diagnosis. Teacher-forced only; ground truth is used for scoring only.",
+  "task": "6B",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\best_joint.pt",
+    "sha256": "d4656cce1c950d6d0048e5409818c98506f87aaab74ecc2ce749fd8322ce82c2",
+    "restore": {
+      "step": 1440,
+      "metrics": {
+        "valid_seg_emission_rate": 1.0,
+        "strict_end_to_end_miou": 0.11017863780842695,
+        "operation_chain_accuracy": 1.0,
+        "lm_ce": 0.002000436694943157,
+        "teacher_forced_miou": 0.11017863780842695,
+        "conditional_miou": 0.11017863780842695
+      },
+      "missing_keys": 626,
+      "unexpected_keys": 0
+    }
+  },
+  "n_pairs": 10,
+  "same_image_different_instruction": {
+    "seg_hidden_cosine": {
+      "mean": 0.9655950188636779,
+      "min": 0.946718156337738,
+      "max": 0.9800194501876831
+    },
+    "seg_hidden_l2": {
+      "mean": 21.22361640930176,
+      "min": 16.080617904663086,
+      "max": 27.491540908813477
+    },
+    "projected_cosine": {
+      "mean": 0.9999522387981414,
+      "min": 0.9999280571937561,
+      "max": 0.9999750256538391
+    },
+    "projected_l2": {
+      "mean": 22.938660049438475,
+      "min": 14.546455383300781,
+      "max": 31.91608238220215
+    },
+    "prediction_iou_a_vs_b": {
+      "mean": 0.997015167054234,
+      "min": 0.9883720930232558,
+      "max": 0.9995066600888012
+    }
+  },
+  "different_image_reference": {
+    "seg_hidden_cosine": {
+      "mean": 0.9974781486723158,
+      "min": 0.9936044216156006,
+      "max": 0.999703586101532
+    },
+    "projected_cosine": {
+      "mean": 0.9999966581662496,
+      "min": 0.9999894499778748,
+      "max": 0.9999999403953552
+    }
+  },
+  "pairs": [
+    {
+      "image_id": "1_1247",
+      "a": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+      "b": "buildsr_val_1_1247_3_largest_to_right_of_to_nearest_0be0bf7c8b0a",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_right_of_to_nearest",
+      "seg_hidden_cosine_same_image": 0.9800194501876831,
+      "seg_hidden_l2_same_image": 16.080617904663086,
+      "projected_cosine_same_image": 0.9999750256538391,
+      "projected_l2_same_image": 14.546455383300781,
+      "prediction_iou_a_vs_b": 0.9973880597014926,
+      "a_iou_on_a": 2.1326508614638584e-10,
+      "a_iou_on_b": 2.4679169818853097e-10,
+      "b_iou_on_a": 2.1349273737758523e-10,
+      "b_iou_on_b": 2.4709662094224427e-10
+    },
+    {
+      "image_id": "1_2103",
+      "a": "buildsr_val_1_2103_1_largest_9ccf675337a3",
+      "b": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_right_of",
+      "seg_hidden_cosine_same_image": 0.9709784388542175,
+      "seg_hidden_l2_same_image": 20.020822525024414,
+      "projected_cosine_same_image": 0.9999638795852661,
+      "projected_l2_same_image": 23.946699142456055,
+      "prediction_iou_a_vs_b": 0.9980139026812314,
+      "a_iou_on_a": 0.5072544813156128,
+      "a_iou_on_b": 0.0934947058558464,
+      "b_iou_on_a": 0.5062691569328308,
+      "b_iou_on_b": 0.09338168799877167
+    },
+    {
+      "image_id": "1_2757",
+      "a": "buildsr_val_1_2757_1_largest_f9ed1e8c8949",
+      "b": "buildsr_val_1_2757_3_largest_to_left_of_to_nearest_21f7f5f71d7d",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of_to_nearest",
+      "seg_hidden_cosine_same_image": 0.9783995747566223,
+      "seg_hidden_l2_same_image": 16.739192962646484,
+      "projected_cosine_same_image": 0.9999711513519287,
+      "projected_l2_same_image": 16.059494018554688,
+      "prediction_iou_a_vs_b": 0.9965576592082617,
+      "a_iou_on_a": 0.024714531376957893,
+      "a_iou_on_b": 0.12893323600292206,
+      "b_iou_on_a": 0.024890419095754623,
+      "b_iou_on_b": 0.12881551682949066
+    },
+    {
+      "image_id": "1_286",
+      "a": "buildsr_val_1_286_1_largest_76ca4af3c712",
+      "b": "buildsr_val_1_286_2_largest_to_left_of_056216b5b322",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of",
+      "seg_hidden_cosine_same_image": 0.946718156337738,
+      "seg_hidden_l2_same_image": 27.491540908813477,
+      "projected_cosine_same_image": 0.9999350309371948,
+      "projected_l2_same_image": 31.91608238220215,
+      "prediction_iou_a_vs_b": 0.9969356486210419,
+      "a_iou_on_a": 0.5847974419593811,
+      "a_iou_on_b": 4.59136811903349e-10,
+      "b_iou_on_a": 0.5852435827255249,
+      "b_iou_on_b": 4.5787545976949673e-10
+    },
+    {
+      "image_id": "1_2864",
+      "a": "buildsr_val_1_2864_1_largest_90b650948e0d",
+      "b": "buildsr_val_1_2864_2_largest_to_left_of_987279555505",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of",
+      "seg_hidden_cosine_same_image": 0.9575539827346802,
+      "seg_hidden_l2_same_image": 24.1395206451416,
+      "projected_cosine_same_image": 0.9999328255653381,
+      "projected_l2_same_image": 29.881412506103516,
+      "prediction_iou_a_vs_b": 0.9995066600888012,
+      "a_iou_on_a": 0.5770186185836792,
+      "a_iou_on_b": 0.04970472306013107,
+      "b_iou_on_a": 0.5767080783843994,
+      "b_iou_on_b": 0.04972919821739197
+    },
+    {
+      "image_id": "1_2866",
+      "a": "buildsr_val_1_2866_1_largest_d012eb1a741d",
+      "b": "buildsr_val_1_2866_2_largest_to_below_81ccfad4014b",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.966893196105957,
+      "seg_hidden_l2_same_image": 21.013296127319336,
+      "projected_cosine_same_image": 0.999949038028717,
+      "projected_l2_same_image": 24.353971481323242,
+      "prediction_iou_a_vs_b": 0.9883720930232558,
+      "a_iou_on_a": 5.627461829860181e-10,
+      "a_iou_on_b": 0.002793296705931425,
+      "b_iou_on_a": 5.636978661627268e-10,
+      "b_iou_on_b": 0.002799161011353135
+    },
+    {
+      "image_id": "1_3400",
+      "a": "buildsr_val_1_3400_1_largest_bf204efb4cc1",
+      "b": "buildsr_val_1_3400_2_largest_to_below_281be38b0776",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.976287305355072,
+      "seg_hidden_l2_same_image": 17.652009963989258,
+      "projected_cosine_same_image": 0.999973475933075,
+      "projected_l2_same_image": 16.623289108276367,
+      "prediction_iou_a_vs_b": 0.997889404812157,
+      "a_iou_on_a": 0.2437412440776825,
+      "a_iou_on_b": 0.3343689441680908,
+      "b_iou_on_a": 0.24323782324790955,
+      "b_iou_on_b": 0.33501946926116943
+    },
+    {
+      "image_id": "1_3604",
+      "a": "buildsr_val_1_3604_1_largest_abc1fd1ca1cf",
+      "b": "buildsr_val_1_3604_3_largest_to_left_of_to_nearest_926a4e3b6386",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of_to_nearest",
+      "seg_hidden_cosine_same_image": 0.9683618545532227,
+      "seg_hidden_l2_same_image": 20.37470054626465,
+      "projected_cosine_same_image": 0.9999645352363586,
+      "projected_l2_same_image": 19.263893127441406,
+      "prediction_iou_a_vs_b": 0.9979773462783171,
+      "a_iou_on_a": 0.01243523322045803,
+      "a_iou_on_b": 0.1512162983417511,
+      "b_iou_on_a": 0.012451361864805222,
+      "b_iou_on_b": 0.1510862410068512
+    },
+    {
+      "image_id": "1_3999",
+      "a": "buildsr_val_1_3999_1_largest_7d347989fb00",
+      "b": "buildsr_val_1_3999_2_largest_to_below_cff46ded87f4",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.9543399810791016,
+      "seg_hidden_l2_same_image": 24.686689376831055,
+      "projected_cosine_same_image": 0.9999280571937561,
+      "projected_l2_same_image": 25.50061798095703,
+      "prediction_iou_a_vs_b": 0.9994910941475827,
+      "a_iou_on_a": 0.3567851185798645,
+      "a_iou_on_b": 0.171897292137146,
+      "b_iou_on_a": 0.3569553792476654,
+      "b_iou_on_b": 0.17197906970977783
+    },
+    {
+      "image_id": "1_4894",
+      "a": "buildsr_val_1_4894_1_largest_db5e08abd804",
+      "b": "buildsr_val_1_4894_2_largest_to_below_5e40a082053a",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden_cosine_same_image": 0.9563982486724854,
+      "seg_hidden_l2_same_image": 24.03777313232422,
+      "projected_cosine_same_image": 0.9999293684959412,
+      "projected_l2_same_image": 27.29468536376953,
+      "prediction_iou_a_vs_b": 0.998019801980198,
+      "a_iou_on_a": 0.43718698620796204,
+      "a_iou_on_b": 0.039041996002197266,
+      "b_iou_on_a": 0.4372393786907196,
+      "b_iou_on_b": 0.038965292274951935
+    }
+  ]
+}

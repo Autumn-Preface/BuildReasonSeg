@@ -1,0 +1,54 @@
+{
+  "_doc": "Task 6A section 18. Checkpoint BYTES are local-only and gitignored; this manifest is committed so a reviewer can verify what was produced.",
+  "checkpoints": {
+    "phaseA_last": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\phaseA_last.pt",
+      "bytes": 96250941,
+      "sha256": "7c70ce38593c8d28eeca80b2c877c074cce4217e7bec1a1181b327c462ba43b0"
+    },
+    "best_mask": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\best_mask.pt",
+      "bytes": 96249867,
+      "sha256": "cefc5f53b5d126eb3c813900adf65b4e1851dcaabe938102aa9123829b9005f0"
+    },
+    "best_language": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\best_language.pt",
+      "bytes": 96252015,
+      "sha256": "f3042f1e486befa4b4beaf121400bb8cefc1271bb03ca1ced4d4b3318cba79be"
+    },
+    "best_joint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\best_joint.pt",
+      "bytes": 96250404,
+      "sha256": "d4656cce1c950d6d0048e5409818c98506f87aaab74ecc2ce749fd8322ce82c2"
+    },
+    "last": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6b\\last.pt",
+      "bytes": 96213390,
+      "sha256": "8b0bc74c2a0f61adcf0925a8bae2170c750186f75e8f508cfb89b337465146aa"
+    }
+  },
+  "base_models": {
+    "qwen": "Qwen/Qwen3-VL-2B-Instruct",
+    "qwen_snapshot_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+    "sam2": "facebook/sam2.1-hiera-base-plus",
+    "sam2_source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  },
+  "note": "No base Qwen or SAM2 weights are duplicated in any checkpoint.",
+  "task": "6B",
+  "phase_a_steps": 480,
+  "phase_b_steps": 2400,
+  "best_joint_rule": [
+    "valid_seg_emission_rate",
+    "strict_end_to_end_miou",
+    "operation_chain_accuracy",
+    "lm_ce"
+  ],
+  "best_joint_selection": {
+    "valid_seg_emission_rate": 1.0,
+    "strict_end_to_end_miou": 0.11017863780842695,
+    "operation_chain_accuracy": 1.0,
+    "lm_ce": 0.002000436694943157,
+    "teacher_forced_miou": 0.11017863780842695,
+    "conditional_miou": 0.11017863780842695
+  }
+}

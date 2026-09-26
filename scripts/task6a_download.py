@@ -50,16 +50,18 @@ def _configure_cache() -> None:
 
 
 def _fix_local_tls() -> dict:
-    """Make the local accelerator's TLS interception trusted by certifi.
+    """Report TLS trust state. Task 6B removed the automatic certifi mutation.
 
-    See `buildreasonseg_mvp/local_env.py` for why this is needed and why it is a
-    process-local configuration rather than a system change.
+    The Task 6A workaround (appending the Windows ROOT/CA stores to certifi) is no
+    longer applied at runtime. The standard bundle is used as-is; if a local
+    accelerator is ever reinstalled, `buildreasonseg_mvp.local_env` retains the old
+    merge as an explicit `confirm=True` opt-in.
     """
 
     sys.path.insert(0, str(REPO_ROOT))
-    from buildreasonseg_mvp.local_env import ensure_windows_roots_in_certifi
+    from buildreasonseg_mvp.local_env import certifi_status
 
-    return ensure_windows_roots_in_certifi()
+    return certifi_status()
 
 
 def download_qwen() -> dict:

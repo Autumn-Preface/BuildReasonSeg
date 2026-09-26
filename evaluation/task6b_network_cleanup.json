@@ -1,0 +1,307 @@
+{
+  "_doc": "Task 6B Part A. Read-only with respect to system configuration: no hosts edit, no certificate-store edit, no registry/driver/PATH/proxy change, and no insecure TLS flag.",
+  "task": "6B",
+  "part": "A",
+  "repo_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+  "hosts": {
+    "readable": true,
+    "total_active_lines": 1,
+    "blackhole_line_count": 0,
+    "entries_for_hosts_of_interest": [],
+    "accelerator_marker_lines": [],
+    "workaround_present": false
+  },
+  "listeners": {
+    "listening_ports": {},
+    "any_previous_proxy_port_open": false
+  },
+  "dns": {
+    "github.com": {
+      "resolved": true,
+      "addresses": [
+        "20.205.243.166"
+      ],
+      "resolves_to_loopback": false
+    },
+    "raw.githubusercontent.com": {
+      "resolved": true,
+      "addresses": [
+        "185.199.108.133",
+        "185.199.109.133",
+        "185.199.110.133",
+        "185.199.111.133"
+      ],
+      "resolves_to_loopback": false
+    },
+    "huggingface.co": {
+      "resolved": false,
+      "error": "gaierror: [Errno 11001] getaddrinfo failed"
+    },
+    "github.io": {
+      "resolved": true,
+      "addresses": [
+        "185.199.108.153",
+        "185.199.109.153",
+        "185.199.110.153",
+        "185.199.111.153"
+      ],
+      "resolves_to_loopback": false
+    },
+    "_configured_dns_servers": "202.195.70.70"
+  },
+  "certifi_before_restore": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+    "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "certificate_count": 121,
+    "contains_accelerator_root": false,
+    "backup_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem.orig",
+    "backup_exists": true,
+    "backup_sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "matches_backup": true,
+    "standard_certificate_count": 121,
+    "is_standard": true
+  },
+  "certifi_restore": {
+    "restored": true,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+    "backup": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem.orig",
+    "sha256_before": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "backup_sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "sha256_after": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "certificate_count": 121,
+    "contains_accelerator_root": false,
+    "backup_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem.orig",
+    "backup_exists": true,
+    "matches_backup": true,
+    "standard_certificate_count": 121,
+    "is_standard": true
+  },
+  "certifi_after_restore": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+    "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "certificate_count": 121,
+    "contains_accelerator_root": false,
+    "backup_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem.orig",
+    "backup_exists": true,
+    "backup_sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "matches_backup": true,
+    "standard_certificate_count": 121,
+    "is_standard": true
+  },
+  "certifi_assertion": {
+    "ok": true,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem",
+    "sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "certificate_count": 121,
+    "contains_accelerator_root": false,
+    "backup_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\certifi\\cacert.pem.orig",
+    "backup_exists": true,
+    "backup_sha256": "9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f",
+    "matches_backup": true,
+    "standard_certificate_count": 121,
+    "is_standard": true
+  },
+  "direct_https": {
+    "urllib": {
+      "github_api": {
+        "url": "https://api.github.com/repos/facebookresearch/sam2",
+        "ok": true,
+        "status": 200,
+        "bytes_read": 128
+      },
+      "raw_githubusercontent": {
+        "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
+        "ok": true,
+        "status": 200,
+        "bytes_read": 128
+      },
+      "pypi": {
+        "url": "https://pypi.org/simple/",
+        "ok": true,
+        "status": 200,
+        "bytes_read": 128
+      },
+      "huggingface_api": {
+        "url": "https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct",
+        "ok": false,
+        "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>"
+      },
+      "huggingface_config": {
+        "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
+        "ok": false,
+        "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>"
+      },
+      "huggingface_sam2_api": {
+        "url": "https://huggingface.co/api/models/facebook/sam2.1-hiera-base-plus",
+        "ok": false,
+        "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>"
+      }
+    },
+    "httpx": {
+      "github_api": {
+        "url": "https://api.github.com/repos/facebookresearch/sam2",
+        "ok": true,
+        "status": 200
+      },
+      "raw_githubusercontent": {
+        "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
+        "ok": true,
+        "status": 200
+      },
+      "pypi": {
+        "url": "https://pypi.org/simple/",
+        "ok": true,
+        "status": 200
+      },
+      "huggingface_api": {
+        "url": "https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct",
+        "ok": false,
+        "error": "ConnectError: [Errno 11001] getaddrinfo failed"
+      },
+      "huggingface_config": {
+        "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
+        "ok": false,
+        "error": "ConnectError: [Errno 11001] getaddrinfo failed"
+      },
+      "huggingface_sam2_api": {
+        "url": "https://huggingface.co/api/models/facebook/sam2.1-hiera-base-plus",
+        "ok": false,
+        "error": "ConnectError: [Errno 11001] getaddrinfo failed"
+      }
+    },
+    "tls_verification_enabled": true,
+    "insecure_flags_used": false
+  },
+  "git": {
+    "project_origin": {
+      "url": "https://github.com/Autumn-Preface/BuildReasonSeg",
+      "ok": true,
+      "head": "026de640f69b0c520a96cb1363487902d07e411b",
+      "error": null,
+      "attempts": [
+        {
+          "returncode": 128,
+          "head": null,
+          "error": "fatal: unable to access 'https://github.com/Autumn-Preface/BuildReasonSeg/': Failed to connect to github.com:443 after 21065 ms: Could not connect to server"
+        },
+        {
+          "returncode": 0,
+          "head": "026de640f69b0c520a96cb1363487902d07e411b",
+          "error": null
+        }
+      ]
+    },
+    "github_sam2": {
+      "url": "https://github.com/facebookresearch/sam2",
+      "ok": true,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "attempts": [
+        {
+          "returncode": 0,
+          "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+          "error": null
+        }
+      ]
+    },
+    "huggingface": {
+      "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct",
+      "ok": false,
+      "head": null,
+      "error": "fatal: unable to access 'https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/': Could not resolve host: huggingface.co",
+      "attempts": [
+        {
+          "returncode": 128,
+          "head": null,
+          "error": "fatal: unable to access 'https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/': Could not resolve host: huggingface.co"
+        },
+        {
+          "returncode": 128,
+          "head": null,
+          "error": "fatal: unable to access 'https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/': Could not resolve host: huggingface.co"
+        }
+      ]
+    },
+    "github_sam2_resolve_override": {
+      "url": "https://github.com/facebookresearch/sam2",
+      "resolve_override": "github.com:443:140.82.113.4",
+      "persisted": false,
+      "ok": true,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "tls_certificate_error": null
+    }
+  },
+  "github_reachability": {
+    "_doc": "TCP 443 reachability of the address the system resolver returns for github.com versus other GitHub edge addresses. This is a network-level property, not a leftover of the local accelerator.",
+    "dns_answer": [
+      "20.205.243.166"
+    ],
+    "probes": [
+      {
+        "host": "20.205.243.166",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.073
+      },
+      {
+        "host": "140.82.113.4",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.259
+      },
+      {
+        "host": "20.205.243.168",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.077
+      },
+      {
+        "host": "185.199.108.133",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.078
+      }
+    ]
+  },
+  "cached_assets": {
+    "qwen_snapshot_dir_present": true,
+    "qwen_snapshot_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+    "qwen_weight_files": [
+      "model.safetensors"
+    ],
+    "qwen_bytes": 4266640306,
+    "sam2_checkpoint_present": true,
+    "sam2_checkpoint_bytes": 323606802,
+    "sam2_source_present": true
+  },
+  "offline_load": {
+    "offline_env_set": true,
+    "processor_loaded": true,
+    "tokenizer_length": 151669,
+    "sam2_loaded": true,
+    "sam2_image_size": 1024,
+    "seconds": 5.73
+  },
+  "acceptance": {
+    "no_certificate_verify_failure": true,
+    "certificate_verify_failures": [],
+    "no_accelerator_root_in_certifi": true,
+    "no_insecure_flags_used": true,
+    "hosts_workaround_removed": true,
+    "no_previous_proxy_listener": true,
+    "direct_https_to_github_and_pypi_ok": true,
+    "github_https_ok": true,
+    "git_github_transport_ok": true,
+    "git_project_origin_ok": true,
+    "git_github_transport_with_resolve_ok": true,
+    "git_resolve_override_persisted": false,
+    "huggingface_direct_https_ok": false,
+    "huggingface_dns_resolvable": false,
+    "offline_assets_usable": true,
+    "workaround_required_now": false,
+    "x_repo_commit_problem": "not reproducible: the previous X-Repo-Commit / LocalEntryNotFoundError came from the accelerator's TLS proxy, which is gone. huggingface.co is unreachable by DNS on this network, so no Hub metadata request is attempted and the cached checkpoint is used."
+  },
+  "runtime_seconds": 45.17
+}

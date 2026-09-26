@@ -75,20 +75,30 @@ class BuildReasonSegMvp(nn.Module):
         head_lr: float,
         weight_decay: float,
         decoder_lr: float | None = None,
+        token_lr: float | None = None,
     ):
         """Three AdamW groups.
 
         * token rows  -- zero weight decay; the `[SEG]` representation is a single
-          embedding row and decaying it toward zero fights the objective;
+          embedding row and decaying it toward zero fights the objective. It has its
+          own learning rate (`token_lr`), which defaults to `decoder_lr` so existing
+          callers keep their behaviour.
         * decoder/projection -- the randomly-initialised projection and the
           repurposed SAM2 mask decoder need a higher learning rate than the
           pretrained LoRA adapters;
         * LoRA adapters -- pretrained-adjacent, so the lowest rate.
+
+        Recorded defect (Task 6B): before `token_lr` existed this method always gave
+        the token group `decoder_lr`, so a configured `optimizer.*.token_lr` was
+        silently unused. In the Task 6B headline recipe `token_lr` and `decoder_lr`
+        are both 3e-4, so the headline result is unaffected; in the adjusted recipe
+        the `[SEG]` row therefore trained at 1e-3 rather than the configured 3e-4.
         """
 
         from .qwen_seg import is_token_parameter, output_row_param_ids
 
         decoder_lr = decoder_lr if decoder_lr is not None else head_lr
+        token_lr = token_lr if token_lr is not None else decoder_lr
 
         token_param_ids: set[int] = set(output_row_param_ids(self))
         if self.token_holder is not None:
@@ -118,7 +128,7 @@ class BuildReasonSegMvp(nn.Module):
                 {"params": decoder, "lr": decoder_lr, "weight_decay": weight_decay, "name": "decoder"}
             )
         if token:
-            groups.append({"params": token, "lr": decoder_lr, "weight_decay": 0.0, "name": "token"})
+            groups.append({"params": token, "lr": token_lr, "weight_decay": 0.0, "name": "token"})
         return groups
 
     # -- forward ---------------------------------------------------------

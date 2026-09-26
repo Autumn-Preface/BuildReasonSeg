@@ -1,13 +1,17 @@
-# FROM_DSH — Task 6A Report: Native-Windows Environment Bootstrap + 2B `[SEG]` MVP Smoke/Overfit
+# FROM_DSH — Task 6B Report: Network Cleanup + 2B `[SEG]` Real Mini-Train & First Generalization Audit
 
 **Date:** 2026-09-26
 **Actor:** DSH
-**Task:** Task 6A (from `handoff/TO_DSH.md`)
-**Verdict: `PASS`**
+**Task:** Task 6B (from `handoff/TO_DSH.md`)
+**Verdict: `FAIL_REQUIRES_DEBUG`**
 
-> Reported against the Task 6A success criteria: all 20 overfit samples ≥ 0.90 teacher-forced training
-> mIoU, ≥ 9/10 same-image paired instruction dependence, 20/20 free-generation `[SEG]` emission, no
-> NaN/Inf, no collapse. Measured: **min 0.9366 / mean 0.9807 mIoU**, **10/10 pairs**, **20/20 emission**.
+> Reported against the Task 6B section 17 minimums. Nine of ten are met; **paired validation
+> instruction-dependence is 0/20 against a ≥14/20 bar**, and section 17 names "pair generalization fails
+> badly" as a debug-required condition. Measured: 120/120 valid `[SEG]` emission, strict end-to-end val
+> mIoU **0.1102**, operation-chain accuracy **1.000**, paired **0/20**.
+
+> The Task 6A report is preserved verbatim in `handoff/ARCHIVE_task6a_report.md`. This file is the Task 6B
+> report.
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -32,350 +36,408 @@ sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 
 ## 1. Verdict
 
-**`PASS`** — the smallest end-to-end BuildReasonSeg segmentation pipeline was built and measured on the
-user's actual laptop:
+**`FAIL_REQUIRES_DEBUG`.**
 
-```
-image + instruction -> Qwen3-VL-2B-Instruct -> reasoning text + [SEG]
-                    -> [SEG] hidden state -> Projection MLP
-                    -> one sparse prompt embedding -> vanilla SAM2.1 Hiera Base+ mask decoder -> mask
-```
+The Task 6B mini-train solved the language half of the problem and failed the segmentation half. On 120
+unseen validation records the model emits exactly one `[SEG]` **120/120** times, reproduces the expected
+`reasoning_zh` exactly **120/120** times and gets the operation chain right **120/120** times — while
+strict end-to-end mIoU is **0.1102** and the paired instruction-dependence probe scores **0/20**.
 
-| Gate | Result |
+The failure is not vague. Two different instructions on the same image produce masks whose IoU is
+**0.9999**, because the 256-d sparse prompt the projection emits is a near-constant vector (cosine
+**0.999995** between two instructions on one image, **1.000000** between two different images). The mask
+decoder is being asked to segment the same thing every time. The single permitted bounded recipe
+adjustment was tried and made the result slightly worse (0.1102 → 0.0950), so the cause is not loss
+weighting or the mask-pathway learning rate.
+
+## 2. Network / Watt Cleanup
+
+Full record: `evaluation/task6b_network_cleanup.json`.
+
+* hosts entries for `github.com` / `raw.githubusercontent.com` / `huggingface.co` / `github.io`: **none**;
+  `workaround_present: false`; 0 blackhole lines; 0 accelerator marker lines.
+* listeners on 443 and on the accelerator's usual proxy ports: **none**.
+* certifi restored to the standard 121-certificate bundle, **no accelerator root present**
+  (sha256 `9cc2a774b5198dcff14d9be1e66091f538975d867ce029a96bce15a55dfd730f`).
+* the automatic trust mutation is **removed** from `buildreasonseg_mvp/local_env.py`; the legacy merge
+  helper is opt-in and a no-op without `confirm=True`. Importing the project no longer touches certifi.
+* no insecure TLS flag is passed anywhere (`insecure_flags_used: false`).
+* read-only with respect to system configuration: no hosts edit, no certificate-store edit, no
+  registry/driver/`PATH`/proxy change.
+
+**The Watt-specific part of the problem is gone. The underlying connectivity is not normal.** Details in
+§4.
+
+## 3. Conda Environment Integrity
+
+`.conda/buildreasonseg-mvp`, created with `conda create --prefix` inside the project directory as
+required; Python 3.11.16, torch 2.13.0+cu132, transformers 5.17.0, peft 0.21.0, scipy 1.17.1, SAM2 1.0 at
+revision `2b90b9f5ceec907a1c18123530e92e794ad901a4`. `.conda/` is in `.gitignore`. No `venv` was created;
+`base` and `yolo_sam_env` were not modified.
+
+## 4. Direct Hugging Face / GitHub Validation
+
+| Probe | Result |
 |---|---|
-| Environment created, existing environments untouched | ✅ |
-| Models loaded on 16 GB VRAM, native Windows | ✅ |
-| Stage 1 real 2-sample forward/backward, all 9 checks | ✅ |
-| Stage 2 teacher-forced mIoU, all 20 samples | **min 0.9366, mean 0.9807** (≥ 0.90 required) |
-| Same-image paired instruction dependence | **10 / 10** (≥ 9 required) |
-| Free-generation `[SEG]` emission | **20 / 20** |
-| No NaN/Inf, no empty/full collapse | ✅ |
-| Tests | **156 / 156 passed**, exit 0 |
+| `https://api.github.com/...` (urllib + httpx) | **200**, standard TLS |
+| `https://raw.githubusercontent.com/...` (urllib) | **200** |
+| `https://pypi.org/simple/` (urllib + httpx) | **200** |
+| `https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct` | **DNS failure**, `[Errno 11001] getaddrinfo failed` |
+| offline load of processor + SAM2 from `local_cache/` | **succeeds in ≈30 s** |
 
-Machine-readable results: `evaluation/task6a_smoke_report.json` (sections: `environment`,
-`model_revisions`, `stage0`, `trainable_params`, `stage1`, `stage2`, `pairwise_instruction_dependence`,
-`free_generation_seg_emission`, `vram`, `timings`, `checkpoint_hashes`), plus
-`evaluation/task6a_preflight.json`, `evaluation/task6a_environment.json`,
-`evaluation/task6a_subset_ids.json`, `evaluation/task6a_checkpoint_manifest.json`.
+**`huggingface.co` does not resolve on this network at all** (system resolver `202.195.70.70`; public
+resolvers return unrelated addresses). Task 6B therefore runs with `HF_HUB_OFFLINE=1` and
+`TRANSFORMERS_OFFLINE=1` against the cached Qwen3-VL-2B snapshot
+`89644892e4d85e24eaac8bacfd4f463576704203` and the cached SAM2.1 Base+ weights. Every Task 6B question can
+be answered offline; downloading new weights cannot.
 
----
+**git smart-HTTP to GitHub is intermittent.** `github.com` resolves to `20.205.243.166`, which black-holes
+TCP 443 (~21 s timeout) while other GitHub edge addresses answer in under 300 ms
+(`140.82.113.4`, `20.205.243.168`, `185.199.108.133`). Five consecutive `git ls-remote` attempts failed,
+then the same command succeeded minutes later with no change to the machine. This is a property of the
+current connection, not a leftover of the accelerator — the hosts file is clean, nothing is listening and
+no certificate is being injected. The recorded, non-persistent fallback is
 
-## 2. Environment Created
+```
+git -c http.curloptResolve=github.com:443:140.82.113.4 <command>
+```
 
-One dedicated environment, created with **`conda create --prefix`** as instructed — **not venv**, and not
-a clone of anything.
+which only chooses the address the connection is opened to; TLS still verifies the real hostname against
+the standard bundle. Nothing was written to the hosts file, the git config, the certificate store, the
+registry, `PATH`, drivers or the system proxy.
 
-| Item | Value |
+The `X-Repo-Commit` / `LocalEntryNotFoundError` failure Task 6A saw from the accelerator's TLS proxy is
+**not reproducible**: with `huggingface.co` unresolvable, no Hub metadata request is attempted at all.
+
+## 5. Frozen Architecture
+
+Unchanged from ADR-013 and verified per phase:
+
+| Component | State |
 |---|---|
-| Prefix | `.conda/buildreasonseg-mvp` (project-local) |
-| Python | 3.11.16 (conda 25.11.0) |
-| PyTorch | `2.13.0+cu132` from `https://download.pytorch.org/whl/cu132` |
-| `torch.cuda.is_available()` | True |
-| Compute capability | (12, 0) = `sm_120` |
-| BF16 matmul, SDPA | verified inside the new environment |
-| Disk (`local_cache/`) | 4.81 GB |
+| Qwen3-VL-2B-Instruct, BF16 | base LLM frozen; **vision tower frozen in both phases** (`qwen_visual_trainable: []`) |
+| text LoRA r=16 α=32 | trainable, 196 modules, 17,432,576 parameters |
+| `[SEG]` row (id 151669) | trainable, one tied row shared by input embedding and `lm_head`, 2,048 parameters |
+| Projection MLP | frozen in Phase A (`projection_trainable: false`), trainable in Phase B |
+| SAM2 image encoder / prompt encoder / memory | frozen |
+| SAM2 mask decoder | frozen in Phase A (`sam_mask_decoder_trainable: false`), trainable in Phase B |
+| Phase A trainable tensors | 393 of 1,636 |
+| Phase B trainable tensors | 528 of 1,636 |
+| total trainable | **24,010,309 / 2,227,632,642 = 1.078 %** |
 
-`base`, `jupyter` and `yolo_sam_env` were **never modified**. `.conda/`, `local_cache/` and `artifacts/`
-were added to `.gitignore` **after** the existing "MUST STAY TRACKED" negation block, because the
-unanchored `!*.yaml` / `!*.yml` rules match at any depth and would otherwise have re-included
-environment files.
+No `[REF]`. No 4B. No Spatial Relation Encoder. No Spatial Consistency Loss. No external dataset.
 
-**Local TLS trust configuration (necessary, and disclosed).** The machine runs Steam++ / Watt Toolkit,
-which terminates TLS for some hosts and re-signs them with its own root ("SteamTools Certificate",
-BeyondDimension). That root is in the Windows certificate store, so `ssl.create_default_context()`
-trusts it, but the `certifi` bundle used by `httpx`/`huggingface_hub` does not, which made Hub downloads
-fail with `CERTIFICATE_VERIFY_FAILED`. `buildreasonseg_mvp/local_env.py` appends the Windows ROOT/CA
-stores to this environment's certifi bundle. This is a **process-local** setting: it touches only the
-project's own environment and `local_cache/`, changes no registry key, driver, PATH or system variable,
-and backs the original bundle up as `cacert.pem.orig`. Both SteamTools roots were located this way.
+## 6. Train / Validation Subsets
 
----
+`evaluation/task6b_subset_ids.json`, decided before training and never revised using model results.
+Round-robin over per-level buckets ordered by `sample_id`, so selection is independent of file order and
+of model behaviour.
 
-## 3. Packages / Model Revisions
+| Subset | Size | Composition | Unique images | Image reuse |
+|---|---|---|---|---|
+| train | 480 | 160 L1 + 160 L2 + 160 nontrivial L3 | 480 | 0 |
+| val | 120 | 40 L1 + 40 L2 + 40 nontrivial L3 | 120 | 0 |
+| paired | 40 records / 20 pairs | 20 val images × 2 instructions, different targets, 20/20 different query types | 20 | — |
 
-| Component | Version / revision |
-|---|---|
-| `transformers` | 5.17.0 |
-| `peft` | 0.21.0 |
-| `accelerate` / `safetensors` / `huggingface_hub` / `tokenizers` | 1.15.0 / 0.8.0 / 1.33.0 / 0.23.2 |
-| `qwen-vl-utils` | 0.0.14 |
-| `SAM-2` | 1.0 @ **`2b90b9f5ceec907a1c18123530e92e794ad901a4`** |
-| Qwen3-VL-2B-Instruct snapshot | **`89644892e4d85e24eaac8bacfd4f463576704203`**, 4.27 GB on disk |
-| sam2.1_hiera_base_plus.pt | 323,606,802 bytes |
+No trivial L3. Train and val come from disjoint splits. Test split never read
+(`test_split_used: false`).
 
-Lock file: `environment/task6a_requirements_lock.txt` (SAM-2 pinned to the upstream commit, not to a
-local path, so the lock is reproducible elsewhere).
+## 7. Fresh Baseline
 
-SAM2 was installed with **`SAM2_BUILD_CUDA=0`**: the optional compiled CUDA extension is intentionally
-skipped on native Windows (no system CUDA toolkit present) and only affects mask hole/sprinkle
-post-processing. The SAM2 checkpoint could not be fetched via `hf_hub_download` because the local
-accelerator strips the `X-Repo-Commit` header from the resolve redirect; `scripts/task6a_download.py`
-falls back to a plain `urllib` download of the same official URL and records which path was used.
-
----
-
-## 4. Stage 0 Measurements
-
-**Qwen3-VL-2B-Instruct:** BF16; text hidden 2048; vocab 151,669 → 151,670; **`[SEG]` id 151,669**;
-single-token round-trip verified; weight tying present before and after resize; total parameters
-**2,227,632,642**, trainable **24,010,309 (1.08 %)**; RAM 0.53 → 0.84 GiB.
-
-**Qwen preprocessing (measured, not assumed):** source (512, 512, 3) → `pixel_values` (1024, 1536),
-`image_grid_thw = [[1, 32, 32]]` → **256 visual tokens**. Sequence lengths per level: L1 296, L2 324,
-L3 332. The image budget is set explicitly on `image_processor.size` (`min_pixels = max_pixels =
-262144`) because the released Qwen3-VL preprocessor config carries no top-level pixel keys.
-
-**SAM2.1 Hiera Base+:** `image_size` 1024, `backbone_stride` 16, prompt embed dim **256**, image
-embedding (64, 64), `use_high_res_features_in_sam` True; parameters — total 80,850,178, image encoder
-69,106,816 (frozen), prompt encoder 6,220 (frozen), **mask decoder 4,215,109 (trainable)**. Transformed
-input (1, 3, 1024, 1024) → image embedding (1, 256, 64, 64) plus high-res features (1, 32, 256, 256) and
-(1, 64, 128, 128).
-
-**VRAM at rest (both models loaded):** 4.53 GiB allocated / 5.10 GiB reserved of 15.89 GiB.
-
-The Qwen and SAM2 branches are confirmed to be **separate preprocessing paths** from the same 512×512 RGB
-tile.
-
----
-
-## 5. Qwen Preprocessing
-
-Covered in §4. One correction to Task 5.5 is recorded: the design note "512×512 everywhere" is wrong as
-a description of the model inputs — the Qwen branch sees 256 visual tokens and the SAM2 branch sees a
-1024×1024 normalised tensor. Both derive from the same source tile.
-
-## 6. SAM2 Preprocessing
-
-The official `SAM2ImagePredictor` transform and encoder are used, so the visual path is byte-for-byte the
-official behaviour. `Sam2Encoder.encode` reproduces `set_image` exactly: transform → `forward_image` →
-`_prepare_backbone_features` → `no_mem_embed` addition → the documented feature reshaping. The official
-prompt encoder is consulted only for (a) the positional encoding of one sparse prompt slot and (b) the
-no-mask dense embedding; no point, box, mask, centroid, bbox or component id from the annotation is ever
-supplied.
-
----
-
-## 7. `[SEG]` Token / PEFT Verification
-
-* `[SEG]` is **exactly one token** (id 151,669); encode → `[151669]`, decode round-trips.
-* Vocab 151,669 → 151,670; embeddings resized **once**; weight tying still True afterwards.
-* **Measured detail:** `resize_token_embeddings` *shrinks* Qwen's padded table from 151,936 rows to
-  151,670 (tokenizer length + the new token). Those padding rows were unreachable from the tokenizer, so
-  this removes dead weight — but it is a real change and is asserted, not assumed.
-* `trainable_token_indices=[151669]` is used (PEFT 0.21 supports it). The base embedding table stays
-  **frozen** (`requires_grad == False`, 310,620,160 elements).
-* **PEFT preserves the tying for the trainable token:** the input adapter and the output head's adapter
-  share the **same** delta parameter object, giving exactly **one** trainable `[SEG]` row used on both
-  sides. No separate output-row wrapper is needed.
-* The optimizer covers **all 528 trainable tensors with 0 missing** (asserted).
-* Regression: after one optimizer step the `[SEG]` row moved (max abs delta 1.0e-4) while ordinary rows
-  for ids 0, 1, 100, 1000, 50000 and 151000 moved by exactly **0.0**.
-
----
-
-## 8. LoRA Scope Verification
-
-* 196 target modules, all language-model projections (`...language_model.layers.N.{q,k,v,o,gate,up,down}_proj`).
-* **Zero** trainable parameters anywhere under the visual tower, and **zero** LoRA modules under it —
-  raised as an error by `attach_lora` if violated, and asserted by the tests.
-* LoRA parameters: 17,432,576.
-
----
-
-## 9. Stage 1 Forward/Backward
-
-Fixed smoke pair: same image `1_0`, different instructions, different query types, different targets
-(`bottommost` → 1, `leftmost` → 2). All nine checks passed:
-
-all losses finite · projected shape == SAM prompt dim (256) · mask logits finite and non-constant ·
-non-zero finite gradients on LoRA / `[SEG]` / projection / SAM2 mask decoder · zero trainable parameters
-in the Qwen visual tower · frozen SAM2 image encoder has no gradient · `[SEG]` row changed after the
-optimizer step · ordinary vocabulary rows unchanged · no OOM.
-
-```
-lm_logits (1, 290, 151670)  seg_hidden (1, 2048)  projected (1, 256)
-sparse prompt (1, 2, 256)   mask logits (1, 1, 256, 256)
-grad norms: lora 11.45 | [SEG] 8.60 | projection 5.61 | SAM2 decoder 5.70 | SAM2 encoder 0.0
-losses: total 5.038 = lm_ce 4.110 + mask_bce 0.214 + mask_dice 0.9999
-```
-
-**Stage 1 peak VRAM: 7.25 GiB allocated / 8.45 GiB reserved.** Stage 1 wall time 35 s including load.
-
----
-
-## 10. Stage 2 Overfit
-
-Deterministic subset: **10 images × 2 instructions = 20 records**, all train, decided before any training
-and never revised using results. Levels: L1 14, L2 1, nontrivial L3 5. Every image has exactly two
-different targets.
-
-Five runs were performed; **all are kept**, including the three that did not meet the gate:
-
-| Run | Supervision | Loss (lm/bce/dice) | LR | Steps | Result |
-|---|---|---|---|---|---|
-| 1 | 256 logit | 1.0/2.0/0.5 | 1e-4 | 1000 | mean 0.836, min 0.649 — unstable |
-| 2 | 256 logit | 1.0/2.0/0.5 | 2e-4 | 1000 | mean 0.706, min 0.304 — worse without a schedule |
-| 3 | 256 logit | 0.5/4.0/2.0 | 3-group + cosine | 1000 | mean 0.8995, min 0.696, **pairs 10/10**, emission 0/20 |
-| 4 | 256 logit | 1.5/4.0/2.0 | 3-group + cosine | 2000 | mean 0.9237, min 0.8667, **pairs 10/10**, **emission 20/20** |
-| **5** | **512 original** | 1.5/4.0/3.0 | 3-group + cosine | 2000 | **min 0.9366, mean 0.9807, pairs 10/10, emission 20/20** |
-
-Final run: **2,000 optimizer steps**, stopped by the step bound (the wall-clock bound was not reached),
-no NaN/Inf, no collapse, **Stage 2 peak VRAM 5.99 GiB allocated / 8.76 GiB reserved**.
-
-Three engineering findings drove the revisions:
-
-1. **The model was never taught to stop.** Without EOS appended to the training target, free generation
-   ran to the token cap and emitted `[SEG]` 4–13 times. Appending EOS took emission from 0/20 to
-   **20/20** with generated sequences of 17–47 tokens and exactly one `[SEG]`.
-2. **Separate learning rates + a cosine schedule** removed the late-training oscillation that ruined
-   runs 1 and 2 (the projection MLP is randomly initialised and the SAM2 decoder is being repurposed, so
-   both need a higher rate than the pretrained LoRA adapters).
-3. **Supervision resolution.** SAM2's logits are 256×256, so a 148 px target occupies ~37 px there,
-   capping the achievable 512×512 IoU. Task 6A §11.4 permits post-processing the logits to the original
-   size instead of resizing the ground truth; run 5 supervises at 512×512.
-
-**Recipe adjustments were made only after the initial results were recorded**, as §12 permits, and every
-prior run remains in the record.
-
----
-
-## 11. Same-Image Pair Test
-
-**10 / 10 pairs** (requirement ≥ 9). Each prediction is compared against **both** ground truths on its
-image:
-
-| Image | A own / other | B own / other | Pass |
-|---|---|---|---|
-| `1_0` | 0.929 / 0.000 | 0.901 / 0.000 | ✅ |
-| `1_1` | 0.911 / 0.000 | 0.949 / 0.000 | ✅ |
-| `1_10026` | 0.875 / 0.000 | 0.953 / 0.000 | ✅ |
-| … 7 more | own ≈ 0.94–0.98 | **other = 0.000** | ✅ |
-
-**A correction recorded rather than hidden.** The first implementation of this criterion compared the two
-predictions' own-target IoUs against each other, which can never satisfy a "both directions" requirement
-because the two conditions are mutually exclusive — it reported **0/10** for runs 1, 2 and 3. The
-corrected implementation (each prediction against both ground truths, exactly as §16.4 states) reports
-10/10 with a very wide margin. The wrong 0/10 figure appears in two run logs and is explained in
-`docs/task6a_mvp_smoke.md` §5.4.
-
----
-
-## 12. Free-Generation Test
-
-**20 / 20** emit `[SEG]` exactly once. The path uses **no** ground-truth reasoning, target id, geometry
-or reference: generate from image + instruction → locate the generated `[SEG]` → re-forward the complete
-generated sequence → read that token's hidden state → projection → SAM2 decoder → mask.
-
-Standalone demo (`scripts/task6a_infer.py`) on the recorded smoke pair from the best checkpoint:
-
-| Sample | query | `[SEG]` count | IoU |
-|---|---|---|---|
-| `buildsr_train_1_0_1_bottommost_979bd303d0ec` | `bottommost` | 1 | 0.9639 |
-| `buildsr_train_1_0_1_leftmost_274a8750ef95` | `leftmost` | 1 | 0.9755 |
-
-**Honest negative result:** the same script on four **unseen test** records emits `[SEG]` **0/4** times.
-That is expected for a model overfitted on 20 training records, and it is reported because it is the
-correct evidence that Stage 2 is an overfit sanity test and **not** a generalisation result.
-
----
-
-## 13. VRAM / Runtime
-
-| Point | allocated | reserved |
-|---|---|---|
-| Both models loaded, idle | 4.53 GiB | 5.10 GiB |
-| Stage 1 peak (forward + backward) | **7.25 GiB** | 8.45 GiB |
-| Stage 2 peak (training + eval + generation) | **5.99 GiB** | 8.76 GiB |
-| Evaluation-only re-run peak | 5.69 GiB | 6.38 GiB |
-| Total VRAM | 15.89 GiB | |
-
-Runtimes: environment + downloads ≈ 20 min; Stage 0 ≈ 20 s; Stage 1 ≈ 35 s; Stage 2 run 5 ≈ 80 min for
-2,000 steps plus final evaluation.
-
-The Task 5.5 estimate for the 2B stack (6.6–7.1 GiB) is close to the measured Stage 1 peak of 7.25 GiB
-and is superseded by it. The 4B estimate remains **unmeasured**.
-
----
-
-## 14. Checkpoint Manifest
-
-`evaluation/task6a_checkpoint_manifest.json` — paths, sizes, SHA-256 and base model ids/revisions. Only
-the reproducible state is saved: LoRA + trainable `[SEG]` row, projection MLP, SAM2 mask decoder,
-optimizer state, config, step, metrics and RNG state. **No base Qwen or SAM2 weights are duplicated**, and
-no checkpoint bytes are committed (all under `artifacts/`, gitignored).
-
----
-
-## 15. Tests
-
-```
-python -m pytest tests/ -q
-```
+Same 120 val records, clean ADR-013 architecture, no Task 6A checkpoint used as an initialisation.
 
 | Metric | Value |
 |---|---|
-| collected | 156 |
-| passed | **156** |
-| failed | 0 |
-| skipped | 0 |
-| exit code | **0** |
-| wall time | 266 s |
+| valid `[SEG]` emission | **0 / 120** |
+| strict end-to-end mIoU / Dice | 0.0000 / 0.0000 |
+| conditional mIoU | n/a |
+| operation-chain accuracy | 0.000 |
+| teacher-forced mIoU / Dice | 0.00626 / 0.01004 |
+| teacher-forced LM CE / perplexity | 3.4576 / 31.74 |
+| teacher-forced reasoning-token accuracy | 0.4522 |
+| teacher-forced `[SEG]` token accuracy | **0.000** |
 
-Twelve new Task 6A checks (four files) cover the required list; the pre-existing 144 checks still pass.
-The model-level Task 6A tests skip cleanly when the assets are absent or `TASK6A_SKIP_MODEL_TESTS=1`, so
-`pytest` never forces a download.
+The untrained model never emits `[SEG]`, and even teacher-forced it never puts probability on `[SEG]`.
 
-Three failures encountered while building the suite were **my own test bugs**, not product bugs, and are
-worth recording: the embedding-table assertion ignored Qwen's padding and the shrink on resize; two
-static-scan assertions flagged their own explanatory docstrings; and one asserted a separate output-row
-delta that PEFT in fact shares with the input adapter.
+## 8. Phase A Language Warm-up
 
----
+Text LoRA + `[SEG]` only; projection and mask decoder frozen; LM CE only; 1 epoch = 480 steps; no SAM2
+computation at all.
 
-## 16. Git Status / Push
+| | Baseline | After Phase A |
+|---|---|---|
+| training LM CE | — | 0.0003 at step 40, ~0.0000 by step 120 |
+| val LM CE | 3.4576 | **0.2299** |
+| valid `[SEG]` emission | 0.000 | **1.000** |
+| operation-chain accuracy | 0.000 | 0.667 |
+| strict end-to-end mIoU | 0.000 | 0.00708 |
 
-Commit message: `feat: prove 2B SEG MVP pipeline`.
-Pre-staging checks: environment directory, HF cache, model weights, SAM2 source and checkpoints all
-confirmed gitignored; no `.safetensors`/`.pt`/`.pth`/`.bin` staged; no BuildSpatialReason JSONL changed;
-`scripts/check_artifact_consistency.py` re-run before committing. The commit hash and push result are in
-the final DSH chat summary.
+Phase A alone moves the model from never emitting `[SEG]` to emitting exactly one on every unseen record.
+The mask stays at chance, as designed, because the projection and decoder are frozen.
 
----
+## 9. Phase B Joint Mini-Train
 
-## 17. Known Problems
+Continue from Phase A; text LoRA + `[SEG]` + projection MLP + SAM2 mask decoder; base and vision frozen.
+Section 12 initial objective `L = 2.0·L_lm_ce + 2.0·L_mask_bce + 1.0·L_mask_dice`; 5 epochs / 2400-step
+cap; early-stop patience 2; supervision at the original 512×512 resolution. The `best_joint` rule
+(emission → strict e2e mIoU → operation chain → LM CE) was declared before Phase B and never changed.
 
-1. **The assistant reasoning text is not learned.** Assistant token accuracy ≈ 0 because the smoke recipe
-   is mask-dominant. The model emits `[SEG]` reliably and the mask is correct, but the reasoning trace
-   itself is not usable. **This is the single most important limitation of Task 6A** and it is a
-   deliberate consequence of an overfit/segmentation-first recipe, not a claim about the final model.
-2. **No generalisation.** 0/4 `[SEG]` emission on unseen test records. Expected from a 20-sample overfit.
-3. **Small targets cap out.** Under the strict nearest-interpolation view, sub-300 px targets reach only
-   ~0.87 IoU, because SAM2's decoder output is 256×256 and a ~6×6-pixel object loses ~30 % IoU to a
-   1-pixel boundary error. The primary metric uses SAM2's own bilinear post-processing; both are reported.
-4. **A local accelerator mediates the network.** Weight acquisition could break if Steam++ is disabled;
-   the ModelScope route is the documented alternative for Qwen models. Stage 0 confirms acquisition
-   rather than assuming it.
-5. **`SAM2_BUILD_CUDA=0`** means mask hole/sprinkle post-processing is unavailable. Not exercised in
-   Task 6A and documented in `evaluation/task6a_environment.json`.
-6. **Qwen3-VL-4B was never loaded**, so ADR-012's 4B estimate remains an estimate.
+| Epoch | Phase-B steps | valid `[SEG]` | strict e2e mIoU | chain acc. | val LM CE |
+|---|---|---|---|---|---|
+| 1 | 480 | 1.000 | 0.0932 | 0.667 | 0.2101 |
+| 2 | 960 | 1.000 | 0.1101 | 0.867 | 0.0148 |
+| **3** | **1440** | **1.000** | **0.1102** | **1.000** | 0.0020 |
+| 4 | 1920 | 1.000 | 0.0991 | 1.000 | 0.000003 |
+| 5 | 2400 | 1.000 | 0.0992 | 1.000 | 0.000002 |
 
----
+Early stopping fired after two epochs without `best_joint` improvement; the best checkpoint is at **step
+1440 (epoch 3)**. No NaN, no Inf, no OOM. Training mask loss never descended: `mask_dice` stayed in
+0.65–1.00 and `mask_bce` in 0.01–0.05 for all 2400 steps — the cost signature of a near-all-background
+prediction on small targets.
 
-## 18. Recommendation for Task 6B
+**The one permitted bounded adjustment (section 12)** was made once, after the first complete documented
+epoch, because the segmentation objective clearly failed while the language objective was solved:
 
-Task 6B can proceed from this stack. Recommended order of work, in priority order:
+| | original (headline) | adjusted |
+|---|---|---|
+| loss weights | `lm_ce 2.0 / mask_bce 2.0 / mask_dice 1.0` | `lm_ce 1.5 / mask_bce 4.0 / mask_dice 3.0` (Task 6A's mask-dominant weighting) |
+| Phase-B `decoder_lr` | 3e-4 | 1e-3 |
+| strict end-to-end val mIoU | **0.11018** | **0.09498** |
+| paired probe | 0 / 20 | 0 / 20 |
+| best epoch / step | 3 / 1440 | 3 / 1440 |
+| Phase-B epochs run | 5 | 5 |
+| per-epoch mIoU | 0.0932, 0.1101, 0.1102, 0.0991, 0.0992 | 0.0903, 0.0948, 0.0950, 0.0874, 0.0776 |
 
-1. **Make the language trace real.** Raise the language weight and/or train on more than 20 samples so
-   the model actually produces `reasoning_zh`; the current recipe proves the mask pathway only. Without
-   this, an MLLM narrative is not supportable.
-2. **Scale the data.** Move from the 20-sample overfit to a real mini-train (200–500 samples, then the
-   full 15,592) using the same code path; the pipeline, checkpointing, resume, metrics and inference
-   script are already in place.
-3. **Then add `[REF]`** — the second special token — and only afterwards the Spatial Relation Encoder and
-   the Spatial Consistency Loss. The interface is reserved: the projection MLP and any future relation
-   module are separate, and all inference-time geometry comes from the model's own predicted masks.
-4. **Keep the deterministic-subset habit.** Every subset used for a claim should be recorded before the
-   run and never revised using results — the Task 6A subset file is the template.
+**The adjustment did not help.** It is recorded rather than reverted. The headline run's artifacts are the
+canonical `evaluation/task6b_*.json`, the adjustment is kept in full as
+`evaluation/task6b_*_adjusted_recipe.json`, and the comparison is embedded in
+`task6b_training_report.json → recipe_adjustment`.
 
-**Task 6A did not start Task 6B**: no `[REF]`, no Spatial Relation Encoder, no Spatial Consistency Loss,
-no full-dataset training, no 4B download.
+No other configuration was tried.
+
+## 10. Teacher-Forced Validation
+
+Expected `reasoning_zh + [SEG]` given, 120 unseen val records, headline checkpoint:
+
+| Metric | Baseline | Headline |
+|---|---|---|
+| mIoU / Dice | 0.00626 / 0.01004 | **0.11018 / 0.17874** |
+| LM CE / perplexity | 3.4576 / 31.74 | **0.00200 / 1.0020** |
+| assistant-token accuracy | 0.4405 | **1.000** |
+| reasoning-token accuracy | 0.4522 | **1.000** |
+| `[SEG]` token accuracy | 0.000 | **1.000** |
+| greedy-decoded reasoning exact match | 0.000 | **1.000** |
+| greedy-decoded operation-chain accuracy | 0.000 | **1.000** |
+
+Teacher-forced mIoU equals free-generation mIoU exactly (`0.11017863780842695`). With a perfect prefix the
+mask is identical, so the mask error is not a generation problem.
+
+## 11. Free-Generation End-to-End Validation
+
+Input is only the image and the instruction; the generated sequence is re-forwarded, the generated `[SEG]`
+located, and its hidden state drives the mask. Zero or multiple `[SEG]` score IoU = 0, Dice = 0.
+
+| Metric | Baseline | Headline |
+|---|---|---|
+| valid `[SEG]` emission | 0 / 120 (0.000) | **120 / 120 (1.000)** |
+| **strict end-to-end mIoU** | 0.0000 | **0.11018** |
+| strict end-to-end Dice | 0.0000 | 0.17874 |
+| conditional mIoU / Dice | n/a | 0.11018 / 0.17874 |
+| collapsed samples | 0 | 0 |
+| generated reasoning exact match | 0.000 | **1.000** |
+| generated reasoning char similarity | 0.2464 | **1.000** |
+| generated operation-chain accuracy | 0.000 | **1.000** |
+| mean generated tokens | 53.3 | 35.5 |
+
+Improvement over baseline: **+0.11018 absolute**, clearing section 17's +0.10 bar by 0.010 — but see §9 and
+§17: the margin is smaller than the run-to-run spread of Phase B, so the criterion is met **marginally**.
+Conditional and strict mIoU coincide because emission is 120/120 — there is no format failure to hide
+behind, and none to blame either.
+
+## 12. Language / Reasoning Metrics
+
+Reported as first-class, with the caveat that matters more than the numbers: **`reasoning_zh` is
+template-generated.**
+
+| | records | distinct `reasoning_zh` | distinct `template_id` |
+|---|---|---|---|
+| train mini-set | 480 | **21** | 39 |
+| val mini-set | 120 | **20** | 37 |
+
+All 20 distinct val reasoning strings also occur in the training mini-set. L1 has 6 distinct strings for
+160 records; L3 has 4 for 160. This is why training LM CE collapses to ~0 within 40 optimizer steps.
+
+Consequences: reasoning-token accuracy and reasoning exact match are **not** evidence of reasoning;
+`operation_chain_accuracy` is the only language metric here that carries information because it checks the
+chain rather than the wording; the interesting comparison is the mask, not the text.
+
+Headline language metrics (120 unseen records): generation exact match 1.000, generation operation-chain
+accuracy 1.000, generation char similarity 1.000, teacher-forced reasoning-token accuracy 1.000, teacher-
+forced LM CE 0.00041.
+
+## 13. L1 / L2 / L3 Breakdown
+
+Strict end-to-end mIoU, headline checkpoint; emission is 1.000 in every stratum.
+
+| Stratum | strict e2e mIoU | conditional mIoU |
+|---|---|---|
+| L1 | **0.1446** | 0.1446 |
+| L2 | 0.1082 | 0.1082 |
+| L3 nontrivial | **0.0778** | 0.0778 |
+
+| Query family | strict e2e mIoU |
+|---|---|
+| `extreme` | **0.1496** |
+| `size` | 0.1341 |
+| `direction` | 0.0878 |
+| `nearest` | **0.1898** |
+| `multi_hop_direction_to_nearest` | **0.0778** |
+
+Difficulty grows with the number of hops, as expected, but every stratum sits between 0.08 and 0.19: the
+model is nowhere near a usable mask.
+
+## 14. Paired Instruction Probe
+
+20 unseen val images, two instructions per image with **different targets** and different query types. A
+pair passes only if each prediction overlaps its own ground truth more than the other target's.
+
+| | Headline | Adjusted |
+|---|---|---|
+| pairs passed | **0 / 20** | **0 / 20** |
+| mean own-target IoU | 0.13885 | 0.10489 |
+| mean cross-target IoU | 0.13873 | 0.10490 |
+| pairs with both emissions valid | 20 / 20 | 20 / 20 |
+
+Own-target and cross-target IoU agree to four decimals: the model is not choosing the wrong object, it is
+producing nearly the same mask for both instructions.
+
+**Diagnosis.** `scripts/task6b_diagnose_prompt.py`, recorded in
+`evaluation/task6b_prompt_diagnosis_original_recipe.json` and
+`evaluation/task6b_prompt_diagnosis_adjusted_recipe.json`, measures each stage of
+`[SEG] hidden → Projection MLP → 256-d prompt → SAM2 mask decoder`, teacher-forced, with the same
+measurement repeated across different images for scale:
+
+| Stage | headline: same image, different instruction | headline: different images | adjusted: same / different images |
+|---|---|---|---|
+| `[SEG]` hidden cosine (2,048-d) | 0.9656 | 0.9975 | 0.9952 / 0.9996 |
+| projected prompt cosine (256-d) | **0.999952** | **0.999997** | **0.999995** / **1.000000** |
+| decoded mask IoU (a vs b) | **0.9970** | — | **0.9999** |
+
+1. The `[SEG]` hidden state carries little referent (or even image) information: two instructions on one
+   image are almost as similar to each other as two different images are.
+2. The projection emits a **near-constant** 256-d prompt.
+3. The masks are therefore nearly identical, and the decoder — which has the most trainable capacity — is
+   not the failing component.
+
+Gradient evidence agrees: at the first Phase-B step the gradient norms were `sam_mask_decoder 114.3`,
+`projection 13.2`, `seg_token 1.57`, `lora 1.04` against a clip norm of 1.0, so the decoder consumes ≈99 %
+of the clipped budget while the projection and LoRA adapters (the only places a referent-specific prompt
+can come from) receive ≈11 % and <1 %.
+
+## 15. VRAM / Runtime
+
+RTX 5080 Laptop, 15.894 GiB:
+
+| | Value |
+|---|---|
+| Phase A | 480 steps, 218.9 s |
+| Phase B | 5 epochs × 480 steps = 2400 steps; 423.6 s for epoch 1 (feature-cache warm-up), then 311.8–317.3 s per epoch |
+| optimisation time (Phase A + Phase B) | 1898.5 s ≈ 31.6 min |
+| teacher-forced validation (120 records) | 18.5 s per pass |
+| free-generation validation (120 records) | 375.0 s per pass |
+| peak VRAM Phase A | 6.06 GiB allocated / 7.10 GiB reserved |
+| peak VRAM Phase B | 6.17 GiB allocated / 7.13 GiB reserved |
+| overall peak allocation | 5.37 GiB allocated / 7.13 GiB reserved of 15.894 GiB |
+| SAM2 feature cache | LRU on CPU, 160 images ≈ 1.7 GB (section 18 cap 8 GB) |
+
+The 160-image cache is smaller than the 480-image training set, so the LRU thrashes and features are
+recomputed most epochs. Wall-clock cost only, worth raising in Task 6C.
+
+## 16. Checkpoints
+
+`evaluation/task6b_checkpoint_manifest.json` (+ `..._original_recipe.json`,
+`..._adjusted_recipe.json`), with sha256 per role: `phaseA_last`, `best_mask`, `best_language`,
+`best_joint`, `last`. The canonical manifest describes the headline checkpoint
+`artifacts/checkpoints/task6b/best_joint.pt` at step 960, and the exact hash is also recorded in
+`evaluation/task6b_validation.json → checkpoint`.
+
+Two recorded facts about the checkpoints:
+
+* checkpoints contain **only trainable tensors** (626 frozen base keys are absent by design;
+  `unexpected_keys: 0`), so they are only meaningful on top of the same base models;
+* `scripts/task6b_train.py` uses a module-level `CHECKPOINT_DIR` rather than `paths.checkpoints` from the
+  config, so the adjusted run overwrote the first execution's checkpoint bytes. The headline recipe was
+  re-run to regenerate a checkpoint whose bytes match the recorded manifest; the reproducibility
+  comparison — including the finding that Phase B is not bit-reproducible — is in
+  `task6b_training_report.json → recipe_adjustment.reproducibility_of_the_headline_recipe`.
+
+## 17. Tests
+
+See `docs/task6b_minitrain.md` §13 for the five defects found and fixed during Task 6B. The notable ones:
+
+* teacher-forced token accuracy indexed `lm_logits` one position early (labels are pre-shifted), which
+  reported ≈3 % accuracy alongside LM CE 0.00041 — contradictory, and the contradiction exposed the bug.
+  Fixed and re-measured with `scripts/task6b_revalidate.py`; the baseline reasoning-token accuracy is
+  0.4522 (not the 0.0160 first reported) and the trained value is 1.000;
+* the teacher-forced path hard-coded its text-quality fields to zero by construction, so the first report
+  showed `reasoning_exact_match 0.0` next to `generation_reasoning_exact_match 1.0`;
+* `optimizer.*.token_lr` was silently unused because `trainable_parameter_groups` gave the `[SEG]` row
+  `decoder_lr`. The headline recipe is unaffected (both are 3e-4); the adjusted recipe's `[SEG]` row
+  trained at 1e-3 rather than the configured 3e-4. Fixed by adding an explicit `token_lr` argument;
+* a test asserted the wrong label convention for the assistant tail; corrected.
+
+Suite result: `python -m pytest tests/ -q` → **177 passed, 30 warnings, exit 0** (472.4 s). Full list of
+defects in `docs/task6b_minitrain.md` §13.
+
+* **`training.deterministic: true` is a dead flag — recorded, deliberately not changed.**
+  `buildreasonseg_mvp/runtime.py` calls `set_seed` and never `torch.use_deterministic_algorithms` /
+  `torch.backends.cudnn.deterministic`, so sampled CUDA kernels in the SAM2 path are not reproducible
+  step-for-step. Re-running the identical headline recipe reproduced the fresh baseline and Phase A
+  **bit-identically**, but not Phase B: epoch-1 mIoU was 0.1008 in the first execution and 0.0932 in the
+  second, and the best-epoch mIoU was 0.11018644 versus 0.11017864. Enforcing determinism would change the
+  numerics of an already-recorded recipe, so it was left alone and is the first recommended change for
+  Task 6C. Consequence: the section 17 +0.10 bar is met **marginally**, not comfortably.
+
+## 18. Negative Results
+
+Recorded because they are the useful part of Task 6B:
+
+1. **Mask-dominant loss weighting plus a 3.3× mask learning rate did not help.** 0.11019 → 0.09498, paired
+   probe unchanged at 0/20. The failure is not a weighting or LR artefact.
+2. **A 20-sample overfit result does not transfer.** Task 6A's 0.9807 mIoU / 10-per-10 pairs became 0.1102
+   mIoU / 0-of-20 pairs at 480 training records.
+3. **Perfect `[SEG]` emission is not evidence of segmentation capability.** 120/120 emission coexists with
+   near-constant masks.
+4. **Teacher-forced and free-generation mIoU being identical is a warning sign, not a good sign.** It means
+   the mask carries no dependence on the language prefix.
+5. **The language metrics cannot support a reasoning claim** on this dataset: 21 distinct reasoning strings
+   in the whole training mini-set.
+6. **A 4B scale-up is not justified as the fix.** The collapse is at the `[SEG]`→prompt interface and would
+   plausibly reproduce.
+
+## 19. Git Commit / Push
+
+See the final DSH response for the exact commit hash and push result. Intended commit message:
+
+```
+train: validate 2B SEG mini-generalization
+```
+
+Staged: the Task 6B code, tests, configs, docs, ADR-014 and the `evaluation/task6b_*.json` artifacts.
+Not staged: `.conda/`, `local_cache/`, `artifacts/`, `__pycache__/`, model weights, checkpoint bytes and the
+frozen BuildSpatialReason JSONL.
+
+## 20. Recommendation for Task 6C
+
+The measured failure is a prompt-interface failure, so Task 6C should target the interface, not model scale:
+
+1. **Stop the projection collapsing.** Nothing in the objective rewards a prompt that varies with the
+   instruction. Candidates: normalise or whiten the 256-d prompt; add a point-inside-the-mask auxiliary
+   supervision built from ground-truth geometry (supervision only, never an input); or give SAM2 more than
+   one prompt channel.
+2. **Fix the gradient budget.** Per-group clipping, or a lower decoder LR with a higher LoRA LR. This is a
+   *different* intervention from the section 12 adjustment already tried and failed.
+3. **Raise `feature_cache_images` to 480.**
+4. **Keep the paired instruction-dependence probe as the primary gate.** It is the only metric that
+   detected the real failure; mIoU alone read as a modest success.
+5. **Only then consider 4B, and only as a scale measurement.**

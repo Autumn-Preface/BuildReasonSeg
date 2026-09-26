@@ -56,12 +56,14 @@ def require_model_assets() -> None:
 
 @lru_cache(maxsize=1)
 def runtime():
-    """One lazily-built runtime shared by every model-level test."""
+    """One lazily-built runtime shared by every model-level test.
 
-    from buildreasonseg_mvp.local_env import ensure_windows_roots_in_certifi
+    No TLS mutation happens here: Task 6B removed the automatic certifi merge, so
+    building the runtime only reads the standard trust store.
+    """
+
     from buildreasonseg_mvp.runtime import build_runtime, load_config
 
-    ensure_windows_roots_in_certifi()
     return build_runtime(load_config(CONFIG_PATH), device="cuda", verbose=False)
 
 

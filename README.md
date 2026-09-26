@@ -43,27 +43,37 @@ it is not renamed away.
 [x] BuildSpatialReason           (v0.1.1 generated + independently audited, verdict PASS)
 [x] MVP stack selection          (Task 5.5 research freeze; see docs/research/)
 [x] Reasoning Segmentation MVP   (Task 6A: 2B [SEG] pipeline proven end to end, verdict PASS)
+[x] MVP generalization audit     (Task 6B: language generalises, masks do not; verdict FAIL_REQUIRES_DEBUG)
 [ ] Spatial Relation Module      (Spatial Relation Encoder + Feature Fusion)  -- the lead contribution
 [ ] Spatial Consistency Loss
 [ ] Evaluation & Ablation suite
 ```
 
-**The first four lines are done.** The MVP chain `image + instruction -> Qwen3-VL-2B -> reasoning text +
-[SEG] -> projection -> SAM2.1 -> mask` is implemented, measured on the target laptop and proven on a
-deterministic 20-sample overfit set (`docs/task6a_mvp_smoke.md`, ADR-013). It is **not** a generalisation
-or language-quality result: the reasoning trace is not yet learned, and the model emits `[SEG]` on 0/4
-unseen test records. Do not read the target architecture as a description of existing code beyond what
-is listed here.
+**The first five lines are done.** The MVP chain `image + instruction -> Qwen3-VL-2B -> reasoning text +
+[SEG] -> projection -> SAM2.1 -> mask` is implemented, measured on the target laptop, proven on a
+deterministic 20-sample overfit set (`docs/task6a_mvp_smoke.md`, ADR-013) and then audited on a real
+480-record mini-train (`docs/task6b_minitrain.md`, ADR-014). The audit splits the result in two:
 
-### MVP environment (Task 6A)
+* the **language pathway generalises** — on 120 unseen validation records the model emits exactly one
+  `[SEG]` 120/120 times with 1.000 reasoning exact match and 1.000 operation-chain accuracy;
+* the **mask pathway does not** — strict end-to-end validation mIoU is **0.1102**, and the paired
+  instruction-dependence probe scores **0/20** because the projection collapses to a near-constant
+  256-d prompt, so two different instructions on one image produce masks with IoU 0.9999.
+
+Do not read the target architecture as a description of existing code beyond what is listed here, and do
+not read the language metrics as evidence of reasoning: the dataset's `reasoning_zh` is template-generated
+(21 distinct strings in the whole 480-record training mini-set).
+
+### MVP environment (Task 6A, reused by Task 6B)
 
 | Item | Value |
 |---|---|
-| Environment | `.conda/buildreasonseg-mvp` (conda, Python 3.11.16, gitignored) |
+| Environment | `.conda/buildreasonseg-mvp` (conda `--prefix`, Python 3.11.16, gitignored) |
 | PyTorch | 2.13.0+cu132, RTX 5080 Laptop (sm_120), 15.89 GiB VRAM |
 | Models | `Qwen/Qwen3-VL-2B-Instruct` + `facebook/sam2.1-hiera-base-plus` (both in `local_cache/`, gitignored) |
-| Trainable | text LoRA (196 modules) + one `[SEG]` row + projection MLP + SAM2 mask decoder = 1.08 % of parameters |
-| Reproduce | `environment/task6a_requirements_lock.txt`, then `scripts/task6a_download.py` and the four `scripts/task6a_*.py` stage scripts |
+| Trainable | text LoRA (196 modules) + one `[SEG]` row + projection MLP + SAM2 mask decoder = 1.078 % of parameters |
+| Offline | Task 6B runs with `HF_HUB_OFFLINE=1` / `TRANSFORMERS_OFFLINE=1`: `huggingface.co` does not resolve on this network after the local accelerator was removed |
+| Reproduce | `environment/task6a_requirements_lock.txt`, then `scripts/task6a_download.py`, the four `scripts/task6a_*.py` stage scripts, and `scripts/task6b_*.py` |
 
 ### Frozen MVP stack (Task 5.5, ADR-012)
 
