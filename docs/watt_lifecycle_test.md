@@ -1,117 +1,134 @@
-# Standalone Watt Toolkit lifecycle test
+# Watt Toolkit lifecycle test
 
-**Date:** 2026-09-26
 **Scope:** can DSH safely and reliably start *and stop* the local Watt Toolkit / Steam++ accelerator on
 this Windows machine? No BuildReasonSeg model work was done, and Task 6C was not started.
-**Machine-readable record:** `evaluation/watt_lifecycle_test.json`
+**Machine-readable record:** `evaluation/watt_lifecycle_test.json` (round 2; round 1 lives in commit
+`1b41060` and in the gitignored `artifacts/watt_lifecycle/round1_report.json`)
 
-## Result
+## Result (round 2, tray icon disabled)
 
 | Question | Answer |
 |---|---|
-| Watt Toolkit executable found? | **Yes** — but not where a Win32 search looks. It is a Microsoft Store MSIX package. |
-| Application start automated? | **Yes** — normal Start-Menu activation, 3 processes within 20 s. |
-| Acceleration start automated? | **Yes, automatically** — it enabled itself on launch, with no GUI interaction. |
-| Acceleration stop automated? | **No.** |
-| Application exit automated? | **No.** |
-| Baseline restored? | **No** — the machine is currently still accelerated. |
-| **Classification** | **`AUTO_START_MANUAL_STOP`** (see the note on `FAILED_UNSAFE_STATE` below) |
+| Watt Toolkit executable found? | **Yes** — Microsoft Store MSIX `4651ED44255E.47979655102CE`, version **3.1.2025.0**, entry point `Steam++.exe` |
+| Application start automated? | **Yes** — normal packaged-app activation; process tree in ~22 s |
+| Acceleration start automated? | **Yes, automatically** — no GUI interaction at all |
+| **Acceleration works?** | **Yes** — `github.com`, `api.github.com`, `raw.githubusercontent.com` and `huggingface.co` become reachable; `huggingface.co` goes from *unresolvable* to serving real metadata |
+| **Does closing the main window exit Watt fully?** | **Yes** — via the real window-close command (`WM_SYSCOMMAND`/`SC_CLOSE`, what the **✕** button and **Alt+F4** send). A bare `WM_CLOSE` (the .NET `CloseMainWindow()` default) is **ignored** |
+| **Processes / ports / hosts restored?** | **Yes, byte-identical** |
+| User interaction required? | **No** |
+| **Classification** | **`FULL_AUTO_OK`** |
 
-**The user must stop it manually:** open the Watt Toolkit tray icon (taskbar hidden-icons area), turn
-acceleration off, then choose *Exit*. The window **X button only minimizes to tray** — do not rely on it.
+## The setting change, verified read-only
 
-## What was found
+`%LOCALAPPDATA%\Packages\4651ED44255E.47979655102CE_k6txddmbb6c52\LocalState\Settings\GeneralSettings.json`
 
-Watt Toolkit is not installed the way a classic desktop app is:
+```json
+{ "TrayIcon": false, "MinimizeOnStartup": true, "AutoRunOnStartup": true, "WebProxyMode": "FollowSystem" }
+```
 
-* no Start Menu or Desktop shortcut (187 shortcuts scanned, none matched);
-* no entry under `Program Files`, `%LOCALAPPDATA%\Programs` or the uninstall registry keys;
-* no `C:\Windows\Prefetch` evidence;
-* but `Get-StartApps` lists **`Watt Toolkit`** with AppID `4651ED44255E.47979655102CE_k6txddmbb6c52!App`.
+`...\LocalState\Plugins\Accelerator\Settings\ProxySettings.json`
 
-It is a Store MSIX package:
+```json
+{ "ProxyMode": "Hosts", "ProgramStartupRunProxy": true, "UseDoh": true, "ProxyMasterDns": "223.5.5.5",
+  "SystemProxyPortId": 26561, "Socks5ProxyEnable": false }
+```
 
-| | |
-|---|---|
-| Package | `4651ED44255E.47979655102CE` (family `…_k6txddmbb6c52`), version **3.1.2025.0**, `SignatureKind: Store` |
-| Entry point | `Steam++.exe` (`Windows.FullTrustApplication`) under `C:\Program Files\WindowsApps\…_x64__…` |
-| Capabilities | `internetClient`, `runFullTrust`, **`allowElevation`** |
-| Children at runtime | a second `Steam++.exe` and **`Steam++.Accelerator.exe`** (the accelerator module) |
+So `TrayIcon: false` is confirmed, `ProgramStartupRunProxy: true` explains the automatic acceleration, and
+`ProxyMode: Hosts` explains the hosts-file rewrite.
 
-## Baseline (verified, not assumed)
+## 1. Start → acceleration comes up by itself
 
-The user's statement was checked rather than believed: **0** Watt processes, **0** Watt services,
-**nothing listening on :443 or :80**, hosts file with **1** active line and no GitHub/Hugging Face
-entries. `huggingface.co` did **not** resolve; `github.com`, `api.github.com`,
-`raw.githubusercontent.com` and PyPI worked over standard TLS, and `git ls-remote` succeeded.
+Launching the packaged app (`Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\…!App'`) produced,
+within 22 s:
 
-## With acceleration on
-
-Launching the packaged app was enough — **acceleration came up by itself**:
-
-* processes `Steam++.exe` (21808, 2388) + `Steam++.Accelerator.exe` (12380);
+* `Steam++.exe` (window owner) + a child `Steam++.exe` + `Steam++.Accelerator.exe`;
 * `Steam++.Accelerator.exe` owning **0.0.0.0:443** and **0.0.0.0:80**;
-* hosts file rewritten from 1 to **211** active lines, wrapped in `# Steam++ Start` / `# Steam++ End`,
-  pointing `github.com`, `api.github.com`, `raw.githubusercontent.com`, `huggingface.co` and others at
-  `127.0.0.1`.
+* hosts file 5 bytes → **6873 bytes / 214 lines** with a `# Steam++ Start … # Steam++ End` block
+  redirecting `github.com`, `api.github.com`, `raw.githubusercontent.com`, `huggingface.co` (and others)
+  to `127.0.0.1`.
 
-Connectivity (lightweight probes only; no weights downloaded):
+Because `MinimizeOnStartup: true` **and** the tray icon is off, the first activation comes up with **no
+visible window and no tray icon**. A second activation surfaces the window. That is a normal user action
+and DSH performs it automatically.
+
+## 2. Connectivity while accelerated
 
 | Probe | Baseline | Accelerated |
 |---|---|---|
-| `huggingface.co` DNS | **unresolvable** | resolves (to 127.0.0.1) |
-| HF `config.json` (WinHTTP / OS trust store) | — | **200**, 1505 bytes, `model_type=qwen3_vl` |
+| `huggingface.co` DNS | **unresolvable** | resolves (via hosts → 127.0.0.1) |
+| HF `config.json` (WinHTTP) | — | **200**, 1505 bytes, `model_type=qwen3_vl` |
 | HF model API (WinHTTP) | — | **200**, 15509 bytes |
-| `git ls-remote github.com/facebookresearch/sam2` | OK | **OK**, HEAD `2b90b9f5…` |
-| Python + standard `certifi` (all four URLs) | GitHub OK, HF fail | **all four `CERTIFICATE_VERIFY_FAILED`** |
+| `git ls-remote …/sam2` | OK | **OK**, HEAD `2b90b9f5…` |
+| Python + standard `certifi` | GitHub OK, HF fail | **all four `CERTIFICATE_VERIFY_FAILED`** |
 
-**TLS limitation (recorded, not worked around).** Watt intercepts TLS with its own root CA, which it
-installs into the **Windows** certificate store that git (schannel) and .NET/WinHTTP trust. The project's
-standard **certifi** bundle does not, so Python HTTP clients fail verification while acceleration is on.
-Per the task instruction the old certificate-injection workaround was **not** reintroduced, and no
-insecure flag was used.
+No model weights were downloaded. The `certifi` limitation is unchanged from round 1: Watt's interception
+root is trusted by the **Windows** store (git/schannel, WinHTTP) but not by the project's `certifi`
+bundle. The certificate-injection workaround was **not** reintroduced and no insecure flag was used.
 
-## Why the stop side failed
+## 3. Closing the main window — the round-2 headline
 
 | Attempt | Result |
 |---|---|
-| 1. Re-activate the packaged app so a window exists | window appeared (`Avalonia-…`, title `Watt Toolkit`) |
-| 2. Read-only UI Automation survey | UIAutomationClient loaded, but the window exposes **0 descendants / 0 named controls** — nothing invokable by name, and navigating the app would need blind coordinate clicks |
-| 3. `CloseMainWindow()` on the window owner (identical to clicking the title-bar **X**) | returned `True` but **only minimized to tray**: 15 s later all three processes alive, `:443`/`:80` still listening, hosts unchanged |
-| 4. Tray route: opened the hidden-icons flyout by UIA `InvokePattern`, found the icon named `' Watt Toolkit'`, right-clicked at the centre of its **UIA-supplied** rectangle | a context-menu popup appeared (Avalonia), but it exposes **0 menu items** to UIA and was not even visible in a screen capture; choosing *Exit* would require clicking unlabelled coordinates |
-| 5. | **Stopped.** No `taskkill /F`, no `Stop-Process -Force`, no helper killed, no hosts/registry/certificate/proxy edit. |
+| `CloseMainWindow()` — .NET posts a bare `WM_CLOSE` | returned `True` but **ignored**: 25 s later the window was still present and on-screen, all 3 processes alive, `:443`/`:80` still held, hosts unchanged |
+| `CloseMainWindow()` again | ignored again |
+| **`PostMessage(hWnd, WM_SYSCOMMAND, SC_CLOSE)`** — exactly what Windows sends when the user clicks **✕** or presses **Alt+F4** | **FULL EXIT**: within 8 s all `Steam++.exe` / `Steam++.Accelerator.exe` processes were gone, the window no longer existed, ports released, hosts restored |
+| whole cycle repeated once with fresh PIDs | auto-acceleration **True**, full exit **True**, hosts restored **True** |
 
-So the lifecycle capability is asymmetric: **start is fully automatic, stop is not automatable** on this
-version — the app is a tray-only Avalonia build with no UI Automation tree and no documented CLI shutdown
-switch.
+So the answer to the question is **yes — but only through the real window-close path**. This also explains
+round 1: with `TrayIcon: true` the app treated the close as "hide to tray" (the window vanished while the
+accelerator kept running) and the only full-exit route was a tray menu that UI Automation cannot read.
+With the tray icon off there is nothing to hide into, and the real close command terminates the whole
+process tree.
 
-## Classification, and the `FAILED_UNSAFE_STATE` question
+## 4. Post-exit verification — back to baseline
 
-Primary: **`AUTO_START_MANUAL_STOP`** — "DSH can reliably start Watt/acceleration, but cannot safely stop
-and exit it."
+| Check | Baseline | After exit |
+|---|---|---|
+| Watt processes | 0 | **0** |
+| Watt services | 0 | **0** |
+| Listeners on 443 / 80 | none | **none** |
+| Also swept 26561, 8868, 7890, 10808, 10809 | none | **all free** |
+| hosts bytes | `ef bb bf 0d 0a` (sha256 `f01a374e…6295`) | **identical** |
+| hosts Steam++ block | absent | **absent** |
+| System proxy (`ProxyEnable`) | 0 | **0** (nothing left configured) |
+| `huggingface.co` DNS | unresolvable | **unresolvable again** |
 
-The spec also defines `FAILED_UNSAFE_STATE` as "the test leaves a network/proxy state different from
-baseline and DSH cannot restore it safely", and **that condition currently holds**: the hosts block is
-still in place, the accelerator still owns `:443`/`:80`, and baseline is not restored. It is recorded as a
-*secondary condition* rather than the primary classification because nothing is broken — the app is
-working exactly as designed and the user can restore baseline in two clicks. Whichever label a reviewer
-prefers, the actionable content is the same and is listed under "manual action" below.
+`github.com` again resolves to `20.205.243.166`, which black-holes TCP 443 (~21 s) while `140.82.113.4`
+and `20.205.243.168` answer immediately — five consecutive `git ls-remote` attempts failed on that
+address. This is the **pre-existing intermittency recorded in Task 6B**, not a Watt leftover: the DNS and
+hosts state is identical to baseline.
 
-## Manual action required now
+### A counting bug this round found and fixed
 
-1. Open the taskbar hidden-icons area and click the **Watt Toolkit** icon (or use its window).
-2. Turn acceleration **off**.
-3. Choose **Exit** (退出). Do not rely on the window **X** — it only minimizes to tray.
-4. Expected baseline afterwards: **no** `Steam++.exe` / `Steam++.Accelerator.exe` processes, **nothing**
-   listening on `:443` or `:80`, and the hosts file back to **1** active line
-   (sha256 `b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46`).
+The probe's `total_active_lines` read the hosts file with `Path.read_text`, which normalises newlines and
+keeps the UTF-8 BOM. The BOM was therefore counted as one "active line", which is why earlier rounds
+reported "1 active line" on an effectively empty file. The probe now strips the BOM and treats the
+**raw-bytes SHA-256** as authoritative. The pre-test hosts file has always been the empty 5-byte
+BOM+CRLF file; no pre-existing entry was ever lost by Watt.
 
-## Consequence for BuildReasonSeg
+## 5. Classification
 
-Watt was what mediated `huggingface.co` in Task 6A and produced the `X-Repo-Commit` /
-`LocalEntryNotFoundError` symptoms. Since its stop side cannot be automated, the workable pattern is:
-**DSH starts Watt when networking to GitHub/Hugging Face is needed, and the user stops it afterwards.**
-Task 6B's offline posture (`HF_HUB_OFFLINE=1` from `local_cache/`) remains the safer default: it needs no
-accelerator at all, and it avoids the certifi-vs-Watt TLS conflict entirely.
+**`FULL_AUTO_OK`** — DSH can start Watt Toolkit, acceleration enables itself, connectivity can be
+verified, acceleration can be stopped, Watt can be exited and cleanup can be verified, all with no user
+interaction.
 
-Nothing in this test justifies re-introducing certificate injection, and no model work was performed.
+Working sequence (recorded verbatim in the JSON):
+
+```
+Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\4651ED44255E.47979655102CE_k6txddmbb6c52!App'   # start
+# same command again -> surfaces the main window (MinimizeOnStartup + no tray icon)
+# then: PostMessage(hWnd of the window named 'Watt Toolkit', WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0) -> full exit
+```
+
+Never used: `taskkill /F`, `Stop-Process -Force`, killing helper processes, editing hosts, registry,
+certificate store, PATH or system proxy, or blind coordinate clicking.
+
+## 6. Consequence for BuildReasonSeg
+
+Watt is what mediated `huggingface.co` in Task 6A and produced the `X-Repo-Commit` /
+`LocalEntryNotFoundError` symptoms. With the tray icon disabled the whole lifecycle is automatable, so
+DSH can start Watt for GitHub/Hugging Face work and shut it down afterwards **without user help** — but
+Task 6B's offline posture (`HF_HUB_OFFLINE=1` from `local_cache/`) remains the cheaper default, since it
+needs no accelerator and avoids the certifi-vs-Watt TLS conflict entirely.
+
+Nothing here justifies re-introducing certificate injection, and no model work was performed.

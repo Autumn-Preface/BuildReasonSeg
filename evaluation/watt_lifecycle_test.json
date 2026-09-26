@@ -1,23 +1,23 @@
 {
   "baseline_state": {
     "phase": "baseline",
-    "captured_at": "2026-09-26T13:13:34+0800",
+    "captured_at": "2026-09-26T13:29:28+0800",
     "processes": {
       "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_processes": 367,
+      "total_processes": 363,
       "watt_related": [],
       "watt_related_count": 0,
       "excluded_self_matches": [
         {
-          "pid": 31036,
+          "pid": 12056,
           "name": "node.exe"
         },
         {
-          "pid": 4080,
+          "pid": 21808,
           "name": "powershell.exe"
         },
         {
-          "pid": 30060,
+          "pid": 2512,
           "name": "python.exe"
         }
       ]
@@ -448,8 +448,12 @@
       "command": "read-only read of C:\\Windows\\System32\\drivers\\etc\\hosts",
       "path": "C:\\Windows\\System32\\drivers\\etc\\hosts",
       "readable": true,
-      "sha256": "b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46",
-      "total_active_lines": 1,
+      "sha256_of_raw_bytes": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295",
+      "size_bytes": 5,
+      "raw_bytes_hex": "efbbbf0d0a",
+      "starts_with_utf8_bom": true,
+      "uses_crlf": true,
+      "total_active_lines": 0,
       "relevant_entries": [],
       "watt_marker_lines": [],
       "blackhole_entries": []
@@ -507,27 +511,26 @@
           "ok": true,
           "status": 200,
           "bytes_read": 64,
-          "seconds": 0.32
+          "seconds": 0.326
         },
         "github_api": {
           "url": "https://api.github.com/repos/facebookresearch/sam2",
           "ok": true,
           "status": 200,
           "bytes_read": 64,
-          "seconds": 0.242
+          "seconds": 0.535
         },
         "raw_githubusercontent": {
           "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
-          "ok": true,
-          "status": 200,
-          "bytes_read": 64,
-          "seconds": 0.236
+          "ok": false,
+          "error": "RemoteDisconnected: Remote end closed connection without response",
+          "seconds": 19.45
         },
         "huggingface": {
           "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
           "ok": false,
           "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
-          "seconds": 0.001
+          "seconds": 0.039
         }
       }
     },
@@ -537,32 +540,33 @@
       "returncode": 0,
       "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
       "error": null,
-      "seconds": 0.927
+      "seconds": 1.015
     },
     "tcp": [
       {
         "host": "18.213.84.241",
         "port": 443,
         "reachable": true,
-        "seconds": 0.253
+        "seconds": 0.274
       },
       {
         "host": "185.199.108.133",
         "port": 443,
         "reachable": true,
-        "seconds": 0.077
+        "seconds": 0.079
       },
       {
         "host": "185.199.109.133",
         "port": 443,
         "reachable": true,
-        "seconds": 0.089
+        "seconds": 0.079
       },
       {
         "host": "185.199.110.133",
         "port": 443,
-        "reachable": true,
-        "seconds": 0.093
+        "reachable": false,
+        "error": "TimeoutError: timed out",
+        "seconds": 6.014
       }
     ],
     "commands_used": {
@@ -573,91 +577,30 @@
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
     }
   },
-  "locate_state": {
-    "_doc": "TO_DSH section 4: locate the installed executable without changing anything.",
-    "running_process": [],
-    "shortcuts": {
-      "command": "powershell -NoProfile -Command \"$sh = New-Object -ComObject WScript.Shell; $dirs = @(\\\"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\\", \\\"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\\", \\\"$env:USERPROFILE\\Desktop\\\", \\\"$env:PUBLIC\\Desktop\\\"); Get-ChildItem -Path $dirs -Recurse -Filter *.lnk -ErrorAction SilentlyContinue | ForEach-Object { $s = $sh.CreateShortcut($_.FullName); [pscustomobject]@{ shortcut = $_.FullName; target = $s.TargetPath; args = $s.Arguments; workdir = $s.WorkingDirectory } } | ConvertTo-Json -Depth 3 -Compress\"",
-      "total": 187,
-      "matches": []
-    },
-    "directories": {
-      "command": "powershell -NoProfile -Command \"$roots = @(\\\"$env:ProgramFiles\\\", \\\"${env:ProgramFiles(x86)}\\\", \\\"$env:LOCALAPPDATA\\Programs\\\", \\\"$env:LOCALAPPDATA\\\", \\\"$env:APPDATA\\\"); foreach ($root in $roots) { if (Test-Path $root) { Get-ChildItem -Path $root -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'watt|steam|beyond|toolkit' } | Select-Object -ExpandProperty FullName } } | ConvertTo-Json -Compress\"",
-      "matches": []
-    },
-    "executables_in_matched_directories": {
-      "command": null,
-      "matches": []
-    },
-    "uninstall_entries": {
-      "command": "powershell -NoProfile -Command \"$paths = @('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'); Get-ItemProperty -Path $paths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -match 'watt|steam|beyond' } | Select-Object DisplayName,DisplayVersion,InstallLocation,DisplayIcon,UninstallString | ConvertTo-Json -Depth 3 -Compress\"",
-      "matches": [
-        {
-          "DisplayName": "Steam",
-          "DisplayVersion": "2.10.91.91",
-          "InstallLocation": null,
-          "DisplayIcon": "C:\\D\\steam\\uninstall.exe",
-          "UninstallString": "C:\\D\\steam\\uninstall.exe"
-        }
-      ]
-    },
-    "candidates": [
-      "C:\\D\\steam\\uninstall.exe"
-    ],
-    "selected": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
-    "selected_exists": true,
-    "selected_metadata": {
-      "path": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
-      "version": "3.1.2025.0 (MSIX 4651ED44255E.47979655102CE)"
-    },
-    "msix_finding": {
-      "_doc": "Located via Get-StartApps + Get-AppxPackage: Watt Toolkit is a Microsoft Store MSIX package, so there is no Win32 shortcut or uninstall entry to find.",
-      "display_name": "Watt Toolkit",
-      "package_name": "4651ED44255E.47979655102CE",
-      "package_family_name": "4651ED44255E.47979655102CE_k6txddmbb6c52",
-      "package_full_name_x64": "4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52",
-      "version": "3.1.2025.0",
-      "signature_kind": "Store",
-      "install_location": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52",
-      "executable": "C:\\Program Files\\WindowsApps\\4651ED44255E.47979655102CE_3.1.2025.0_x64__k6txddmbb6c52\\Steam++.exe",
-      "executable_bytes": 209864,
-      "entry_point": "Windows.FullTrustApplication",
-      "application_id": "App",
-      "capabilities": [
-        "internetClient",
-        "runFullTrust",
-        "allowElevation"
-      ],
-      "accelerator_module": "modules\\\\Accelerator\\\\Steam++.Accelerator.dll",
-      "launch_method": "explorer.exe shell:AppsFolder\\\\4651ED44255E.47979655102CE_k6txddmbb6c52!App",
-      "launch_method_rationale": "normal Start-Menu activation of the packaged app; no elevated mode, no undocumented switches, no compatibility flags",
-      "elevation_note": "the package declares the allowElevation capability, so enabling acceleration may raise a UAC prompt that DSH cannot accept"
-    }
-  },
   "active_state": {
     "phase": "active",
-    "captured_at": "2026-09-26T13:16:46+0800",
+    "captured_at": "2026-09-26T13:30:32+0800",
     "processes": {
       "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_processes": 375,
+      "total_processes": 369,
       "watt_related": [
         {
-          "pid": 21808,
+          "pid": 37956,
           "parent_pid": 13784,
           "name": "Steam++.exe",
           "executable_path": null,
           "command_line": ""
         },
         {
-          "pid": 2388,
-          "parent_pid": 21808,
+          "pid": 41100,
+          "parent_pid": 37956,
           "name": "Steam++.exe",
           "executable_path": null,
           "command_line": ""
         },
         {
-          "pid": 12380,
-          "parent_pid": 21808,
+          "pid": 13200,
+          "parent_pid": 37956,
           "name": "Steam++.Accelerator.exe",
           "executable_path": null,
           "command_line": ""
@@ -666,15 +609,15 @@
       "watt_related_count": 3,
       "excluded_self_matches": [
         {
-          "pid": 8632,
+          "pid": 9668,
           "name": "node.exe"
         },
         {
-          "pid": 44352,
+          "pid": 39252,
           "name": "powershell.exe"
         },
         {
-          "pid": 18236,
+          "pid": 28960,
           "name": "python.exe"
         }
       ]
@@ -691,7 +634,7 @@
         {
           "address": "0.0.0.0",
           "port": 443,
-          "pid": 12380,
+          "pid": 13200,
           "process": "Steam++.Accelerator"
         }
       ],
@@ -699,7 +642,7 @@
         {
           "address": "0.0.0.0",
           "port": 80,
-          "pid": 12380,
+          "pid": 13200,
           "process": "Steam++.Accelerator"
         }
       ],
@@ -707,13 +650,13 @@
         {
           "address": "0.0.0.0",
           "port": 443,
-          "pid": 12380,
+          "pid": 13200,
           "process": "Steam++.Accelerator"
         },
         {
           "address": "0.0.0.0",
           "port": 80,
-          "pid": 12380,
+          "pid": 13200,
           "process": "Steam++.Accelerator"
         }
       ],
@@ -1117,7 +1060,7 @@
         {
           "address": "0.0.0.0",
           "port": 443,
-          "pid": 12380,
+          "pid": 13200,
           "process": "Steam++.Accelerator"
         },
         {
@@ -1135,7 +1078,7 @@
         {
           "address": "0.0.0.0",
           "port": 80,
-          "pid": 12380,
+          "pid": 13200,
           "process": "Steam++.Accelerator"
         }
       ]
@@ -1144,8 +1087,12 @@
       "command": "read-only read of C:\\Windows\\System32\\drivers\\etc\\hosts",
       "path": "C:\\Windows\\System32\\drivers\\etc\\hosts",
       "readable": true,
-      "sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
-      "total_active_lines": 211,
+      "sha256_of_raw_bytes": "d7bcb7fed6b0a8ea569769d6833b5b77f9c3ad6ca3c89946026aa9d075c6e3e6",
+      "size_bytes": 6873,
+      "raw_bytes_hex": "efbbbf0d0a0d0a2320537465616d2b2b2053746172740d0a3132372e302e302e3120737465616d63646e2d612e616b616d616968642e6e65740d0a3132372e302e302e3120737465616d75736572696d616765732d612e616b616d616968642e6e65740d0a3132372e302e302e312063646e2e616b616d61692e737465616d7374617469632e636f6d0d0a3132372e302e302e3120636f6d6d756e6974792e616b616d61692e737465616d7374617469632e636f6d0d0a3132372e302e302e3120617661746172732e616b616d61692e737465616d7374617469632e636f6d0d0a3132372e302e302e312073746f72652e616b616d61692e737465616d7374617469632e636f6d0d0a3132372e302e302e3120636f6d6d756e6974792e737465616d7374617469632e636f6d0d0a3132372e302e302e31206d656469612e737465616d706f77657265642e636f6d0d0a3132372e302e302e3120737465616d636f6d6d756e6974792e636f6d0d0a3132372e302e302e31207777772e737465616d636f6d6d756e6974792e636f6d0d0a3132372e302e302e312073746f72652e737465616d706f77657265642e636f6d0d0a3132372e302e302e31206170692e737465616d706f77657265642e636f6d0d0a3132372e302e302e312068656c702e737465616d706f77657265642e636f6d0d0a3132372e302e302e31206c6f67696e2e737465616d706f77657265642e636f6d0d0a3132372e302e302e3120636865636b6f75742e737465616d706f77657265642e636f6d0d0a3132372e302e302e3120696d672e796f75747562652e636f6d0d0a3132372e302e302e31206972632d77732e636861742e7477697463682e74760d0a3132372e302e302e31206972632d77732d722e636861742e7477697463682e74760d0a3132372e302e302e312070617373706f72742e7477697463682e74760d0a3132372e302e302e31206173736574732e7477697463682e74760d0a3132372e302e302e3120636c6970732d6d656469612d617373657473322e7477697463682e74760d0a3132372e302e302e31206162732e686c732e7474766e772e6e65740d0a3132372e302e302e3120766964656f2d656467652d3030323532652e70647830312e6162732e686c732e7474766e772e6e65740d0a3132372e302e302e312069642d63646e2e7477697463682e74760d0a3132372e302e302e312069642e7477697463682e74760d0a3132372e302e302e31207075627375622d656467652e7477697463682e74760d0a3132372e302e302e312073757065727669736f722e6578742d7477697463682e74760d0a3132372e302e302e3120766f642d7365637572652e7477697463682e74760d0a3132372e302e302e31206d757369632e7477697463682e74760d0a3132372e302e302e312070616e656c732e7477697463682e74760d0a3132372e302e302e31207477697463682e74760d0a3132372e302e302e31207777772e7477697463682e74760d0a3132372e302e302e31206d2e7477697463682e74760d0a3132372e302e302e31206170702e7477697463682e74760d0a3132372e302e302e31206261646765732e7477697463682e74760d0a3132372e302e302e3120626c6f672e7477697463682e74760d0a3132372e302e302e3120696e73706563746f722e7477697463682e74760d0a3132372e302e302e312073747265616d2e7477697463682e74760d0a3132372e302e302e31206465762e7477697463682e74760d0a3132372e302e302e3120636c6970732e7477697463682e74760d0a3132372e302e302e312067716c2e7477697463682e74760d0a3132372e302e302e3120766f642d73746f7279626f617264732e7477697463682e74760d0a3132372e302e302e312074726f77656c2e7477697463682e74760d0a3132372e302e302e3120636f756e746573732e7477697463682e74760d0a3132372e302e302e3120657874656e73696f6e2d66696c65732e7477697463682e74760d0a3132372e302e302e3120766f642d6d6574726f2e7477697463682e74760d0a3132372e302e302e3120707562737465722e7477697463682e74760d0a3132372e302e302e312068656c702e7477697463682e74760d0a3132372e302e302e31206c696e6b2e7477697463682e74760d0a3132372e302e302e3120706c617965722e7477697463682e74760d0a3132372e302e302e31206170692e7477697463682e74760d0a3132372e302e302e31206376702e7477697463682e74760d0a3132372e302e302e3120636c69656e742d6576656e742d7265706f727465722e7477697463682e74760d0a3132372e302e302e31206764732d7668732d64726f70732d63616d706169676e2d696d616765732e7477697463682e74760d0a3132372e302e302e312075732d776573742d322e75706c6f6164732d726567696f6e616c2e7477697463682e74760d0a3132372e302e302e31206173736574732e68656c702e7477697463682e74760d0a3132372e302e302e3120646973637573732e6465762e7477697463682e74760d0a3132372e302e302e312064617368626f6172642e7477697463682e74760d0a3132372e302e302e31206f726967696e2d612e616b616d616968642e6e65740d0a3132372e302e302e312073746f72652e756269736f66742e636f6d0d0a3132372e302e302e3120666f6e74732e677374617469632e636f6d0d0a3132372e302e302e312067726176617461722e636f6d0d0a3132372e302e302e31207365637572652e67726176617461722e636f6d0d0a3132372e302e302e31207777772e67726176617461722e636f6d0d0a3132372e302e302e31207468656d65732e676f6f676c6575736572636f6e74656e742e636f6d0d0a3132372e302e302e3120616a61782e676f6f676c65617069732e636f6d0d0a3132372e302e302e3120666f6e74732e676f6f676c65617069732e636f6d0d0a3132372e302e302e31206d617863646e2e626f6f74737472617063646e2e636f6d0d0a3132372e302e302e31206f70656e2e73706f746966792e636f6d0d0a3132372e302e302e312073706f746966792e636f6d0d0a3132372e302e302e31207777772e73706f746966792e636f6d0d0a3132372e302e302e312061707265736f6c76652e73706f746966792e636f6d0d0a3132372e302e302e31206170692d706172746e65722e73706f746966792e636f6d0d0a3132372e302e302e31207472616e736c6174652e676f6f676c652e636e0d0a3132372e302e302e31207472616e736c6174652e676f6f676c65617069732e636f6d0d0a3132372e302e302e31207472616e736c6174652d70612e676f6f676c65617069732e636f6d0d0a3132372e302e302e31207472616e736c6174652e676f6f676c652e636f6d0d0a3132372e302e302e3120676f6f676c652e636f6d0d0a3132372e302e302e31207777772e676f6f676c652e636f6d0d0a3132372e302e302e312068636170746368612e636f6d0d0a3132372e302e302e31206173736574732e68636170746368612e636f6d0d0a3132372e302e302e3120696d67732e68636170746368612e636f6d0d0a3132372e302e302e31207777772e68636170746368612e636f6d0d0a3132372e302e302e3120646f63732e68636170746368612e636f6d0d0a3132372e302e302e31206a732e68636170746368612e636f6d0d0a3132372e302e302e31206e65776173736574732e68636170746368612e636f6d0d0a3132372e302e302e3120696d6773332e68636170746368612e636f6d0d0a3132372e302e302e3120636c69656e742d6170692e61726b6f73656c6162732e636f6d0d0a3132372e302e302e3120657069632d67616d65732d6170692e61726b6f73656c6162732e636f6d0d0a3132372e302e302e312063646e2e61726b6f73656c6162732e636f6d0d0a3132372e302e302e312070726f642d6972656c616e642e61726b6f73656c6162732e636f6d0d0a3132372e302e302e312068756767696e67666163652e636f0d0a3132372e302e302e31206769746875622e6465760d0a3132372e302e302e31206170692e6769746875622e636f6d0d0a3132372e302e302e31206769746875622e6769746875626173736574732e636f6d0d0a3132372e302e302e3120737570706f72742d6173736574732e6769746875626173736574732e636f6d0d0a3132372e302e302e3120656475636174696f6e2e6769746875622e636f6d0d0a3132372e302e302e31207265736f75726365732e6769746875622e636f6d0d0a3132372e302e302e312075706c6f6164732e6769746875622e636f6d0d0a3132372e302e302e31206172636869766570726f6772616d2e6769746875622e636f6d0d0a3132372e302e302e31207261772e6769746875622e636f6d0d0a3132372e302e302e312067697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e31207261772e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e312063616d6f2e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e3120636c6f75642e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e3120617661746172732e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e312061766174617273302e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e312061766174617273312e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e312061766174617273322e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e312061766174617273332e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e3120757365722d696d616765732e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e31206f626a656374732e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e3120707269766174652d757365722d696d616765732e67697468756275736572636f6e74656e742e636f6d0d0a3132372e302e302e31206769746875622e636f6d0d0a3132372e302e302e312070616765732e6769746875622e636f6d0d0a3132372e302e302e3120676973742e6769746875622e636f6d0d0a3132372e302e302e31206769746875626170702e636f6d0d0a3132372e302e302e31206875622e646f636b65722e636f6d0d0a3132372e302e302e3120677265617379666f726b2e6f72670d0a3132372e302e302e31207570646174652e677265617379666f726b2e6f72670d0a3132372e302e302e31206769746875622e696f0d0a3132372e302e302e31207777772e6769746875622e696f0d0a3132372e302e302e31207777772e726f626c6f782e636f6d0d0a3132372e302e302e3120726f626c6f782e636f6d0d0a3132372e302e302e31207765622e726f626c6f782e636f6d0d0a3132372e302e302e3120617069732e726f626c6f782e636f6d0d0a3132372e302e302e312067616d65732e726f626c6f782e636f6d0d0a3132372e302e302e3120617574682e726f626c6f782e636f6d0d0a3132372e302e302e31206163636f756e7473657474696e67732e726f626c6f782e636f6d0d0a3132372e302e302e312070726573656e63652e726f626c6f782e636f6d0d0a3132372e302e302e3120667269656e64732e726f626c6f782e636f6d0d0a3132372e302e302e312075736572732e726f626c6f782e636f6d0d0a3132372e302e302e312067616d65696e7465726e6174696f6e616c697a6174696f6e2e726f626c6f782e636f6d0d0a3132372e302e302e312067616d656a6f696e2e726f626c6f782e636f6d0d0a3132372e302e302e31206c6f63616c652e726f626c6f782e636f6d0d0a3132372e302e302e31206d6574726963732e726f626c6f782e636f6d0d0a3132372e302e302e312065636f6e6f6d792e726f626c6f782e636f6d0d0a3132372e302e302e312067726f7570732e726f626c6f782e636f6d0d0a3132372e302e302e3120646576656c6f702e726f626c6f782e636f6d0d0a3132372e302e302e312076657273696f6e636f6d7061746962696c6974792e6170692e726f626c6f782e636f6d0d0a3132372e302e302e3120636c69656e7473657474696e67732e6170692e726f626c6f782e636f6d0d0a3132372e302e302e3120657068656d6572616c636f756e746572732e6170692e726f626c6f782e636f6d0d0a3132372e302e302e31206e6c2e726f626c6f782e636f6d0d0a3132372e302e302e31206261646765732e726f626c6f782e636f6d0d0a3132372e302e302e3120636861742e726f626c6f782e636f6d0d0a3132372e302e302e312065637376322e726f626c6f782e636f6d0d0a3132372e302e302e31207468756d626e61696c732e726f626c6f782e636f6d0d0a3132372e302e302e312074776f73746570766572696669636174696f6e2e726f626c6f782e636f6d0d0a3132372e302e302e31207472616465732e726f626c6f782e636f6d0d0a3132372e302e302e31206e6f74696669636174696f6e732e726f626c6f782e636f6d0d0a3132372e302e302e31207265616c74696d652d7369676e616c722e726f626c6f782e636f6d0d0a3132372e302e302e3120617373657467616d652e726f626c6f782e636f6d0d0a3132372e302e302e3120636f6e74616374732e726f626c6f782e636f6d0d0a3132372e302e302e3120742e656d61696c2e726f626c6f782e636f6d0d0a3132372e302e302e312066616e646f6d2e636f6d0d0a3132372e302e302e31207777772e66616e646f6d2e636f6d0d0a3132372e302e302e31206e657875736d6f64732e636f6d0d0a3132372e302e302e31207777772e6e657875736d6f64732e636f6d0d0a3132372e302e302e312073746174696364656c69766572792e6e657875736d6f64732e636f6d0d0a3132372e302e302e312063662d66696c65732e6e657875736d6f64732e636f6d0d0a3132372e302e302e312073746174696373746174732e6e657875736d6f64732e636f6d0d0a3132372e302e302e312075736572732e6e657875736d6f64732e636f6d0d0a3132372e302e302e312066696c65732e6e657875732d63646e2e636f6d0d0a3132372e302e302e31207072656d69756d2d66696c65732e6e657875732d63646e2e636f6d0d0a3132372e302e302e3120737570706f727465722d66696c65732e6e657875732d63646e2e636f6d0d0a3132372e302e302e312062696e6172792e6c67652e6d6f6463646e2e696f0d0a3132372e302e302e31206d6f642e696f0d0a3132372e302e302e31207374617469632e6d6f642e696f0d0a3132372e302e302e31206170692e6d6f642e696f0d0a3132372e302e302e3120646f63732e6d6f642e696f0d0a3132372e302e302e3120626574612e6d6f642e696f0d0a3132372e302e302e3120626c6f672e6d6f642e696f0d0a3132372e302e302e3120617574682e6d6f642e696f0d0a3132372e302e302e312073746f726167652e6c6976652e636f6d0d0a3132372e302e302e3120736b796170692e6f6e6564726976652e6c6976652e636f6d0d0a3132372e302e302e31206f6e6564726976652e6c6976652e636f6d0d0a3132372e302e302e31206f6e6564726976652e6c6976650d0a3132372e302e302e31206d6567612e636f2e6e7a0d0a3132372e302e302e3120672e63646e312e6d6567612e636f2e6e7a0d0a3132372e302e302e31207777772e6d6567612e636f2e6e7a0d0a3132372e302e302e3120757365727374726f6167652e6d6567612e636f2e6e7a0d0a3132372e302e302e3120672e6170692e6d6567612e636f2e6e7a0d0a3132372e302e302e31206d6567612e696f0d0a3132372e302e302e3120672e7374617469632e6d6567612e636f2e6e7a0d0a3132372e302e302e31206d6567612e6e7a0d0a3132372e302e302e31207777772e6d6567612e6e7a0d0a3132372e302e302e312061656d2e64726f70626f782e636f6d0d0a3132372e302e302e312064726f70626f782e636f6d0d0a3132372e302e302e31207777772e64726f70626f782e636f6d0d0a3132372e302e302e3120646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756330376161663230376631366139373861336462633234613163392e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756338373434326534323737363666653863663261376130373832372e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756339353766373835636330336239623237333233346664323466392e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756363353431343531653964663738306534303737376434373765622e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756362323737663961343338643662336634656132313437616332362e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756334623462363032643462303165323737383266393263653938342e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756339633833333535643661613862633735663766353937633764362e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756361663337636261303934383665363963323135626466653265322e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e3120756361336134306562353332353937313533303930323265623966642e646c2e64726f70626f7875736572636f6e74656e742e636f6d0d0a3132372e302e302e312070696e7465726573742e636f6d0d0a3132372e302e302e31207777772e70696e7465726573742e636f6d0d0a3132372e302e302e312070696e696d672e636f6d0d0a3132372e302e302e3120736d2e70696e696d672e636f6d0d0a3132372e302e302e3120732e70696e696d672e636f6d0d0a3132372e302e302e3120692e70696e696d672e636f6d0d0a3132372e302e302e312064652e70696e7465726573742e636f6d0d0a3132372e302e302e312073322e70696e696d672e636f6d0d0a3132372e302e302e312070696e7465726573742e6a700d0a3132372e302e302e312070696e7465726573742e6b720d0a3132372e302e302e312070696e7465726573742e696e666f0d0a2320537465616d2b2b20456e640d0a",
+      "starts_with_utf8_bom": true,
+      "uses_crlf": true,
+      "total_active_lines": 210,
       "relevant_entries": [
         "127.0.0.1 huggingface.co",
         "127.0.0.1 api.github.com",
@@ -1427,25 +1374,25 @@
           "url": "https://github.com/",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.16
+          "seconds": 0.155
         },
         "github_api": {
           "url": "https://api.github.com/repos/facebookresearch/sam2",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.104
+          "seconds": 0.124
         },
         "raw_githubusercontent": {
           "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.092
+          "seconds": 0.068
         },
         "huggingface": {
           "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.07
+          "seconds": 0.073
         }
       }
     },
@@ -1455,32 +1402,32 @@
       "returncode": 0,
       "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
       "error": null,
-      "seconds": 1.577
+      "seconds": 1.532
     },
     "tcp": [
       {
         "host": "127.0.0.1",
         "port": 443,
         "reachable": true,
-        "seconds": 0.012
+        "seconds": 0.0
       },
       {
         "host": "18.213.84.241",
         "port": 443,
         "reachable": true,
-        "seconds": 0.253
+        "seconds": 0.225
       },
       {
         "host": "3.210.66.237",
         "port": 443,
         "reachable": true,
-        "seconds": 0.26
+        "seconds": 0.251
       },
       {
         "host": "34.198.14.237",
         "port": 443,
         "reachable": true,
-        "seconds": 0.268
+        "seconds": 0.259
       }
     ],
     "commands_used": {
@@ -1493,45 +1440,23 @@
   },
   "post_state": {
     "phase": "post",
-    "captured_at": "2026-09-26T13:19:31+0800",
+    "captured_at": "2026-09-26T13:32:18+0800",
     "processes": {
       "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_processes": 371,
-      "watt_related": [
-        {
-          "pid": 21808,
-          "parent_pid": 13784,
-          "name": "Steam++.exe",
-          "executable_path": null,
-          "command_line": ""
-        },
-        {
-          "pid": 2388,
-          "parent_pid": 21808,
-          "name": "Steam++.exe",
-          "executable_path": null,
-          "command_line": ""
-        },
-        {
-          "pid": 12380,
-          "parent_pid": 21808,
-          "name": "Steam++.Accelerator.exe",
-          "executable_path": null,
-          "command_line": ""
-        }
-      ],
-      "watt_related_count": 3,
+      "total_processes": 363,
+      "watt_related": [],
+      "watt_related_count": 0,
       "excluded_self_matches": [
         {
-          "pid": 40688,
+          "pid": 3120,
           "name": "node.exe"
         },
         {
-          "pid": 36648,
+          "pid": 37168,
           "name": "powershell.exe"
         },
         {
-          "pid": 39184,
+          "pid": 41564,
           "name": "python.exe"
         }
       ]
@@ -1543,37 +1468,10 @@
     },
     "listeners": {
       "command": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_listeners": 70,
-      "on_port_443": [
-        {
-          "address": "0.0.0.0",
-          "port": 443,
-          "pid": 12380,
-          "process": "Steam++.Accelerator"
-        }
-      ],
-      "on_port_80": [
-        {
-          "address": "0.0.0.0",
-          "port": 80,
-          "pid": 12380,
-          "process": "Steam++.Accelerator"
-        }
-      ],
-      "on_watt_typical_ports": [
-        {
-          "address": "0.0.0.0",
-          "port": 443,
-          "pid": 12380,
-          "process": "Steam++.Accelerator"
-        },
-        {
-          "address": "0.0.0.0",
-          "port": 80,
-          "pid": 12380,
-          "process": "Steam++.Accelerator"
-        }
-      ],
+      "total_listeners": 68,
+      "on_port_443": [],
+      "on_port_80": [],
+      "on_watt_typical_ports": [],
       "all": [
         {
           "address": "::",
@@ -1972,12 +1870,6 @@
           "process": "asus_framework"
         },
         {
-          "address": "0.0.0.0",
-          "port": 443,
-          "pid": 12380,
-          "process": "Steam++.Accelerator"
-        },
-        {
           "address": "10.19.246.26",
           "port": 139,
           "pid": 4,
@@ -1988,12 +1880,6 @@
           "port": 135,
           "pid": 1996,
           "process": "svchost"
-        },
-        {
-          "address": "0.0.0.0",
-          "port": 80,
-          "pid": 12380,
-          "process": "Steam++.Accelerator"
         }
       ]
     },
@@ -2001,263 +1887,42 @@
       "command": "read-only read of C:\\Windows\\System32\\drivers\\etc\\hosts",
       "path": "C:\\Windows\\System32\\drivers\\etc\\hosts",
       "readable": true,
-      "sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
-      "total_active_lines": 211,
-      "relevant_entries": [
-        "127.0.0.1 huggingface.co",
-        "127.0.0.1 api.github.com",
-        "127.0.0.1 education.github.com",
-        "127.0.0.1 resources.github.com",
-        "127.0.0.1 uploads.github.com",
-        "127.0.0.1 archiveprogram.github.com",
-        "127.0.0.1 raw.github.com",
-        "127.0.0.1 raw.githubusercontent.com",
-        "127.0.0.1 github.com",
-        "127.0.0.1 pages.github.com",
-        "127.0.0.1 gist.github.com"
-      ],
-      "watt_marker_lines": [
-        "# Steam++ Start",
-        "# Steam++ End"
-      ],
-      "blackhole_entries": [
-        "127.0.0.1 steamcdn-a.akamaihd.net",
-        "127.0.0.1 steamuserimages-a.akamaihd.net",
-        "127.0.0.1 cdn.akamai.steamstatic.com",
-        "127.0.0.1 community.akamai.steamstatic.com",
-        "127.0.0.1 avatars.akamai.steamstatic.com",
-        "127.0.0.1 store.akamai.steamstatic.com",
-        "127.0.0.1 community.steamstatic.com",
-        "127.0.0.1 media.steampowered.com",
-        "127.0.0.1 steamcommunity.com",
-        "127.0.0.1 www.steamcommunity.com",
-        "127.0.0.1 store.steampowered.com",
-        "127.0.0.1 api.steampowered.com",
-        "127.0.0.1 help.steampowered.com",
-        "127.0.0.1 login.steampowered.com",
-        "127.0.0.1 checkout.steampowered.com",
-        "127.0.0.1 img.youtube.com",
-        "127.0.0.1 irc-ws.chat.twitch.tv",
-        "127.0.0.1 irc-ws-r.chat.twitch.tv",
-        "127.0.0.1 passport.twitch.tv",
-        "127.0.0.1 assets.twitch.tv",
-        "127.0.0.1 clips-media-assets2.twitch.tv",
-        "127.0.0.1 abs.hls.ttvnw.net",
-        "127.0.0.1 video-edge-00252e.pdx01.abs.hls.ttvnw.net",
-        "127.0.0.1 id-cdn.twitch.tv",
-        "127.0.0.1 id.twitch.tv",
-        "127.0.0.1 pubsub-edge.twitch.tv",
-        "127.0.0.1 supervisor.ext-twitch.tv",
-        "127.0.0.1 vod-secure.twitch.tv",
-        "127.0.0.1 music.twitch.tv",
-        "127.0.0.1 panels.twitch.tv",
-        "127.0.0.1 twitch.tv",
-        "127.0.0.1 www.twitch.tv",
-        "127.0.0.1 m.twitch.tv",
-        "127.0.0.1 app.twitch.tv",
-        "127.0.0.1 badges.twitch.tv",
-        "127.0.0.1 blog.twitch.tv",
-        "127.0.0.1 inspector.twitch.tv",
-        "127.0.0.1 stream.twitch.tv",
-        "127.0.0.1 dev.twitch.tv",
-        "127.0.0.1 clips.twitch.tv",
-        "127.0.0.1 gql.twitch.tv",
-        "127.0.0.1 vod-storyboards.twitch.tv",
-        "127.0.0.1 trowel.twitch.tv",
-        "127.0.0.1 countess.twitch.tv",
-        "127.0.0.1 extension-files.twitch.tv",
-        "127.0.0.1 vod-metro.twitch.tv",
-        "127.0.0.1 pubster.twitch.tv",
-        "127.0.0.1 help.twitch.tv",
-        "127.0.0.1 link.twitch.tv",
-        "127.0.0.1 player.twitch.tv",
-        "127.0.0.1 api.twitch.tv",
-        "127.0.0.1 cvp.twitch.tv",
-        "127.0.0.1 client-event-reporter.twitch.tv",
-        "127.0.0.1 gds-vhs-drops-campaign-images.twitch.tv",
-        "127.0.0.1 us-west-2.uploads-regional.twitch.tv",
-        "127.0.0.1 assets.help.twitch.tv",
-        "127.0.0.1 discuss.dev.twitch.tv",
-        "127.0.0.1 dashboard.twitch.tv",
-        "127.0.0.1 origin-a.akamaihd.net",
-        "127.0.0.1 store.ubisoft.com",
-        "127.0.0.1 fonts.gstatic.com",
-        "127.0.0.1 gravatar.com",
-        "127.0.0.1 secure.gravatar.com",
-        "127.0.0.1 www.gravatar.com",
-        "127.0.0.1 themes.googleusercontent.com",
-        "127.0.0.1 ajax.googleapis.com",
-        "127.0.0.1 fonts.googleapis.com",
-        "127.0.0.1 maxcdn.bootstrapcdn.com",
-        "127.0.0.1 open.spotify.com",
-        "127.0.0.1 spotify.com",
-        "127.0.0.1 www.spotify.com",
-        "127.0.0.1 apresolve.spotify.com",
-        "127.0.0.1 api-partner.spotify.com",
-        "127.0.0.1 translate.google.cn",
-        "127.0.0.1 translate.googleapis.com",
-        "127.0.0.1 translate-pa.googleapis.com",
-        "127.0.0.1 translate.google.com",
-        "127.0.0.1 google.com",
-        "127.0.0.1 www.google.com",
-        "127.0.0.1 hcaptcha.com",
-        "127.0.0.1 assets.hcaptcha.com",
-        "127.0.0.1 imgs.hcaptcha.com",
-        "127.0.0.1 www.hcaptcha.com",
-        "127.0.0.1 docs.hcaptcha.com",
-        "127.0.0.1 js.hcaptcha.com",
-        "127.0.0.1 newassets.hcaptcha.com",
-        "127.0.0.1 imgs3.hcaptcha.com",
-        "127.0.0.1 client-api.arkoselabs.com",
-        "127.0.0.1 epic-games-api.arkoselabs.com",
-        "127.0.0.1 cdn.arkoselabs.com",
-        "127.0.0.1 prod-ireland.arkoselabs.com",
-        "127.0.0.1 huggingface.co",
-        "127.0.0.1 github.dev",
-        "127.0.0.1 api.github.com",
-        "127.0.0.1 github.githubassets.com",
-        "127.0.0.1 support-assets.githubassets.com",
-        "127.0.0.1 education.github.com",
-        "127.0.0.1 resources.github.com",
-        "127.0.0.1 uploads.github.com",
-        "127.0.0.1 archiveprogram.github.com",
-        "127.0.0.1 raw.github.com",
-        "127.0.0.1 githubusercontent.com",
-        "127.0.0.1 raw.githubusercontent.com",
-        "127.0.0.1 camo.githubusercontent.com",
-        "127.0.0.1 cloud.githubusercontent.com",
-        "127.0.0.1 avatars.githubusercontent.com",
-        "127.0.0.1 avatars0.githubusercontent.com",
-        "127.0.0.1 avatars1.githubusercontent.com",
-        "127.0.0.1 avatars2.githubusercontent.com",
-        "127.0.0.1 avatars3.githubusercontent.com",
-        "127.0.0.1 user-images.githubusercontent.com",
-        "127.0.0.1 objects.githubusercontent.com",
-        "127.0.0.1 private-user-images.githubusercontent.com",
-        "127.0.0.1 github.com",
-        "127.0.0.1 pages.github.com",
-        "127.0.0.1 gist.github.com",
-        "127.0.0.1 githubapp.com",
-        "127.0.0.1 hub.docker.com",
-        "127.0.0.1 greasyfork.org",
-        "127.0.0.1 update.greasyfork.org",
-        "127.0.0.1 github.io",
-        "127.0.0.1 www.github.io",
-        "127.0.0.1 www.roblox.com",
-        "127.0.0.1 roblox.com",
-        "127.0.0.1 web.roblox.com",
-        "127.0.0.1 apis.roblox.com",
-        "127.0.0.1 games.roblox.com",
-        "127.0.0.1 auth.roblox.com",
-        "127.0.0.1 accountsettings.roblox.com",
-        "127.0.0.1 presence.roblox.com",
-        "127.0.0.1 friends.roblox.com",
-        "127.0.0.1 users.roblox.com",
-        "127.0.0.1 gameinternationalization.roblox.com",
-        "127.0.0.1 gamejoin.roblox.com",
-        "127.0.0.1 locale.roblox.com",
-        "127.0.0.1 metrics.roblox.com",
-        "127.0.0.1 economy.roblox.com",
-        "127.0.0.1 groups.roblox.com",
-        "127.0.0.1 develop.roblox.com",
-        "127.0.0.1 versioncompatibility.api.roblox.com",
-        "127.0.0.1 clientsettings.api.roblox.com",
-        "127.0.0.1 ephemeralcounters.api.roblox.com",
-        "127.0.0.1 nl.roblox.com",
-        "127.0.0.1 badges.roblox.com",
-        "127.0.0.1 chat.roblox.com",
-        "127.0.0.1 ecsv2.roblox.com",
-        "127.0.0.1 thumbnails.roblox.com",
-        "127.0.0.1 twostepverification.roblox.com",
-        "127.0.0.1 trades.roblox.com",
-        "127.0.0.1 notifications.roblox.com",
-        "127.0.0.1 realtime-signalr.roblox.com",
-        "127.0.0.1 assetgame.roblox.com",
-        "127.0.0.1 contacts.roblox.com",
-        "127.0.0.1 t.email.roblox.com",
-        "127.0.0.1 fandom.com",
-        "127.0.0.1 www.fandom.com",
-        "127.0.0.1 nexusmods.com",
-        "127.0.0.1 www.nexusmods.com",
-        "127.0.0.1 staticdelivery.nexusmods.com",
-        "127.0.0.1 cf-files.nexusmods.com",
-        "127.0.0.1 staticstats.nexusmods.com",
-        "127.0.0.1 users.nexusmods.com",
-        "127.0.0.1 files.nexus-cdn.com",
-        "127.0.0.1 premium-files.nexus-cdn.com",
-        "127.0.0.1 supporter-files.nexus-cdn.com",
-        "127.0.0.1 binary.lge.modcdn.io",
-        "127.0.0.1 mod.io",
-        "127.0.0.1 static.mod.io",
-        "127.0.0.1 api.mod.io",
-        "127.0.0.1 docs.mod.io",
-        "127.0.0.1 beta.mod.io",
-        "127.0.0.1 blog.mod.io",
-        "127.0.0.1 auth.mod.io",
-        "127.0.0.1 storage.live.com",
-        "127.0.0.1 skyapi.onedrive.live.com",
-        "127.0.0.1 onedrive.live.com",
-        "127.0.0.1 onedrive.live",
-        "127.0.0.1 mega.co.nz",
-        "127.0.0.1 g.cdn1.mega.co.nz",
-        "127.0.0.1 www.mega.co.nz",
-        "127.0.0.1 userstroage.mega.co.nz",
-        "127.0.0.1 g.api.mega.co.nz",
-        "127.0.0.1 mega.io",
-        "127.0.0.1 g.static.mega.co.nz",
-        "127.0.0.1 mega.nz",
-        "127.0.0.1 www.mega.nz",
-        "127.0.0.1 aem.dropbox.com",
-        "127.0.0.1 dropbox.com",
-        "127.0.0.1 www.dropbox.com",
-        "127.0.0.1 dl.dropboxusercontent.com",
-        "127.0.0.1 uc07aaf207f16a978a3dbc24a1c9.dl.dropboxusercontent.com",
-        "127.0.0.1 uc87442e427766fe8cf2a7a07827.dl.dropboxusercontent.com",
-        "127.0.0.1 uc957f785cc03b9b273234fd24f9.dl.dropboxusercontent.com",
-        "127.0.0.1 ucc541451e9df780e40777d477eb.dl.dropboxusercontent.com",
-        "127.0.0.1 ucb277f9a438d6b3f4ea2147ac26.dl.dropboxusercontent.com",
-        "127.0.0.1 uc4b4b602d4b01e27782f92ce984.dl.dropboxusercontent.com",
-        "127.0.0.1 uc9c83355d6aa8bc75f7f597c7d6.dl.dropboxusercontent.com",
-        "127.0.0.1 ucaf37cba09486e69c215bdfe2e2.dl.dropboxusercontent.com",
-        "127.0.0.1 uca3a40eb53259715309022eb9fd.dl.dropboxusercontent.com",
-        "127.0.0.1 pinterest.com",
-        "127.0.0.1 www.pinterest.com",
-        "127.0.0.1 pinimg.com",
-        "127.0.0.1 sm.pinimg.com",
-        "127.0.0.1 s.pinimg.com",
-        "127.0.0.1 i.pinimg.com",
-        "127.0.0.1 de.pinterest.com",
-        "127.0.0.1 s2.pinimg.com",
-        "127.0.0.1 pinterest.jp",
-        "127.0.0.1 pinterest.kr",
-        "127.0.0.1 pinterest.info"
-      ]
+      "sha256_of_raw_bytes": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295",
+      "size_bytes": 5,
+      "raw_bytes_hex": "efbbbf0d0a",
+      "starts_with_utf8_bom": true,
+      "uses_crlf": true,
+      "total_active_lines": 0,
+      "relevant_entries": [],
+      "watt_marker_lines": [],
+      "blackhole_entries": []
     },
     "dns": {
       "command": "python socket.getaddrinfo(host, 443)",
       "github.com": {
         "resolved": true,
         "addresses": [
-          "127.0.0.1"
+          "20.205.243.166"
         ]
       },
       "api.github.com": {
         "resolved": true,
         "addresses": [
-          "127.0.0.1"
+          "20.205.243.168"
         ]
       },
       "raw.githubusercontent.com": {
         "resolved": true,
         "addresses": [
-          "127.0.0.1"
+          "185.199.108.133",
+          "185.199.109.133",
+          "185.199.110.133",
+          "185.199.111.133"
         ]
       },
       "huggingface.co": {
-        "resolved": true,
-        "addresses": [
-          "127.0.0.1"
-        ]
+        "resolved": false,
+        "error": "gaierror: [Errno 11001] getaddrinfo failed"
       },
       "hf.co": {
         "resolved": true,
@@ -2283,61 +1948,64 @@
         "github": {
           "url": "https://github.com/",
           "ok": false,
-          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.003
+          "error": "TimeoutError: The read operation timed out",
+          "seconds": 25.269
         },
         "github_api": {
           "url": "https://api.github.com/repos/facebookresearch/sam2",
-          "ok": false,
-          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.003
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.575
         },
         "raw_githubusercontent": {
           "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
-          "ok": false,
-          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.014
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.466
         },
         "huggingface": {
           "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
           "ok": false,
-          "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.016
+          "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+          "seconds": 0.033
         }
       }
     },
     "git": {
       "command": "git ls-remote https://github.com/facebookresearch/sam2 HEAD",
-      "ok": true,
-      "returncode": 0,
-      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
-      "error": null,
-      "seconds": 1.033
+      "ok": false,
+      "returncode": 128,
+      "head": null,
+      "error": "fatal: unable to access 'https://github.com/facebookresearch/sam2/': Failed to connect to github.com:443 after 21085 ms: Could not connect to server",
+      "seconds": 21.138
     },
     "tcp": [
-      {
-        "host": "127.0.0.1",
-        "port": 443,
-        "reachable": true,
-        "seconds": 0.02
-      },
       {
         "host": "18.213.84.241",
         "port": 443,
         "reachable": true,
-        "seconds": 0.253
-      },
-      {
-        "host": "3.210.66.237",
-        "port": 443,
-        "reachable": true,
-        "seconds": 0.25
-      },
-      {
-        "host": "34.198.14.237",
-        "port": 443,
-        "reachable": true,
         "seconds": 0.248
+      },
+      {
+        "host": "185.199.108.133",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.088
+      },
+      {
+        "host": "185.199.109.133",
+        "port": 443,
+        "reachable": true,
+        "seconds": 0.094
+      },
+      {
+        "host": "185.199.110.133",
+        "port": 443,
+        "reachable": false,
+        "error": "TimeoutError: timed out",
+        "seconds": 6.008
       }
     ],
     "commands_used": {
@@ -2348,21 +2016,48 @@
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
     }
   },
-  "_doc": "Standalone Watt Toolkit lifecycle test (handoff/TO_DSH.md). Scope limited to starting and stopping the local accelerator; no BuildReasonSeg model work. Read-only with respect to system configuration: DSH never edited the hosts file, the registry, the certificate store, PATH or the system proxy, and never force-killed a process. The hosts changes below were written by Watt Toolkit itself as its normal acceleration behaviour.",
+  "_doc": "Standalone Watt Toolkit lifecycle test, ROUND 2 (handoff/TO_DSH.md re-run). Scope limited to starting and stopping the local accelerator; no BuildReasonSeg model work and no Task 6C. Read-only with respect to system configuration: DSH never edited the hosts file, the registry, the certificate store, PATH or the system proxy, and never force-killed a process. Every hosts change below was written by Watt Toolkit itself.",
   "task": "Standalone Watt Toolkit Lifecycle Test",
+  "round": 2,
   "test_timestamp": {
-    "started": "2026-09-26T13:13:34+0800",
-    "baseline_captured": "2026-09-26T13:13:34+0800",
-    "app_launched": "2026-09-26T13:16:20+0800",
-    "active_captured": "2026-09-26T13:16:46+0800",
-    "graceful_stop_attempt_finished": "2026-09-26T13:19:00+0800",
-    "post_attempt_captured": "2026-09-26T13:19:31+0800"
+    "baseline_captured": "2026-09-26T13:29:28+0800",
+    "app_launched": "2026-09-26T13:26:00+0800",
+    "active_captured": "2026-09-26T13:30:32+0800",
+    "window_close_attempts": "2026-09-26T13:33:00+0800",
+    "post_captured": "2026-09-26T13:32:18+0800",
+    "confirmation_cycle": "2026-09-26T13:38:00+0800"
+  },
+  "configuration_change_since_round_1": {
+    "_doc": "The user changed two Watt Toolkit settings and asked for a re-run focused on them.",
+    "settings_file": "%LOCALAPPDATA%\\Packages\\4651ED44255E.47979655102CE_k6txddmbb6c52\\LocalState\\Settings\\GeneralSettings.json (read-only)",
+    "GeneralSettings.json": {
+      "TrayIcon": false,
+      "MinimizeOnStartup": true,
+      "AutoRunOnStartup": true,
+      "WebProxyMode": "FollowSystem"
+    },
+    "accelerator_settings_file": "...\\LocalState\\Plugins\\Accelerator\\Settings\\ProxySettings.json (read-only)",
+    "ProxySettings.json": {
+      "ProxyMode": "Hosts",
+      "ProgramStartupRunProxy": true,
+      "UseDoh": true,
+      "ProxyMasterDns": "223.5.5.5",
+      "SystemProxyPortId": 26561,
+      "Socks5ProxyEnable": false
+    },
+    "reading": "TrayIcon=false confirmed; ProgramStartupRunProxy=true means acceleration is enabled whenever the program starts, so launching the app is expected to enable acceleration by itself. ProxyMode=Hosts means acceleration works by rewriting the hosts file."
+  },
+  "previous_round": {
+    "report": "round 1 = commit 1b41060 (full record in that commit's evaluation/watt_lifecycle_test.json)",
+    "configuration": "TrayIcon was TRUE (tray icon enabled)",
+    "classification": "AUTO_START_MANUAL_STOP",
+    "why_stop_failed_then": "a bare WM_CLOSE (the .NET CloseMainWindow path) only minimized the window to tray; the tray context menu was not readable through UI Automation, so selecting Exit would have required clicking unlabelled coordinates"
   },
   "environment": {
     "session_id": 1,
     "user_interactive": true,
     "user": "ROG",
-    "desktop": "interactive (explorer.exe present, Shell_TrayWnd reachable via UI Automation)"
+    "desktop": "interactive; Shell_TrayWnd reachable via UI Automation"
   },
   "executable": {
     "distribution": "Microsoft Store MSIX package (SignatureKind=Store); no Win32 shortcut exists",
@@ -2387,15 +2082,19 @@
       "C:/Program Files, C:/Program Files (x86), %LOCALAPPDATA%/Programs (no matching directory)",
       "uninstall registry entries (only real 'Steam' matched)",
       "C:/Windows/Prefetch (no WATT/STEAM/BEYOND/TOOLKIT evidence)"
-    ]
+    ],
+    "note": "unchanged from round 1: Microsoft Store MSIX 3.1.2025.0, entry point Steam++.exe, capabilities internetClient/runFullTrust/allowElevation"
   },
   "baseline_summary": {
+    "verified_not_assumed": true,
     "watt_processes": 0,
     "watt_services": 0,
     "listeners_on_443": 0,
     "listeners_on_80": 0,
-    "hosts_sha256": "b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46",
-    "hosts_active_lines": 1,
+    "hosts_sha256_raw": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295",
+    "hosts_size_bytes": 5,
+    "hosts_raw_bytes_hex": "efbbbf0d0a",
+    "hosts_total_active_lines": 0,
     "hosts_relevant_entries": [],
     "dns": {
       "github.com": true,
@@ -2407,74 +2106,64 @@
     "https": {
       "github": true,
       "github_api": true,
-      "raw_githubusercontent": true,
+      "raw_githubusercontent": false,
       "huggingface": false
     },
     "git_ls_remote_ok": true,
-    "mirrors_user_statement": "Confirmed: at test start Watt Toolkit was exited and acceleration was off (0 Watt processes, 0 listeners on 443, 1 active hosts line with no relevant entries). huggingface.co did not resolve; GitHub/PyPI HTTPS worked."
+    "note": "the pre-test hosts file is 5 bytes 'ef bb bf 0d 0a' (a UTF-8 BOM and one CRLF) with zero real entries; the earlier '1 active line' count was the BOM being counted as a line, which was a counting bug in this probe and is fixed"
   },
   "startup": {
     "method": "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'",
-    "rationale": "normal Start-Menu activation of the packaged app; no compatibility flags, no elevated mode, no undocumented switches",
+    "rationale": "normal packaged-app activation; no elevated mode, no compatibility flags, no undocumented switches",
     "attempted": true,
     "success": true,
-    "seconds_to_process_tree": 20,
+    "seconds_to_process_tree": 22,
     "processes_started": [
       {
-        "pid": 21808,
+        "pid": 37956,
         "name": "Steam++.exe",
-        "role": "main/UI+lifetime owner (parent of the others)"
+        "role": "main process and window owner"
       },
       {
-        "pid": 2388,
+        "pid": 41100,
         "name": "Steam++.exe",
         "role": "child process"
       },
       {
-        "pid": 12380,
+        "pid": 13200,
         "name": "Steam++.Accelerator.exe",
         "role": "accelerator module, owns :443 and :80"
       }
     ],
-    "application_window": "appeared only after a second activation; class 'Avalonia-7b702aff-...'",
+    "window_on_first_launch": "none visible: MinimizeOnStartup=true combined with TrayIcon=false means the app comes up in the background, so a second activation is needed to surface the main window",
     "acceleration_started_automatically": true,
-    "acceleration_evidence": "within 20 s of launch the accelerator child process owned 0.0.0.0:443 and 0.0.0.0:80 and the hosts file gained a '# Steam++ Start' ... '# Steam++ End' block redirecting github.com, api.github.com, raw.githubusercontent.com and huggingface.co to 127.0.0.1",
-    "gui_interaction_needed_to_enable_acceleration": false
+    "acceleration_evidence": "within 22 s of launch Steam++.Accelerator.exe owned 0.0.0.0:443 and 0.0.0.0:80 and the hosts file grew from 5 bytes to 6873 bytes / 214 lines with the '# Steam++ Start' ... '# Steam++ End' block redirecting github.com, api.github.com, raw.githubusercontent.com and huggingface.co to 127.0.0.1",
+    "gui_interaction_needed": false,
+    "tray_icon_present": false
   },
   "active_summary": {
     "watt_processes": [
-      {
-        "pid": 21808,
-        "name": "Steam++.exe",
-        "executable_path": null
-      },
-      {
-        "pid": 2388,
-        "name": "Steam++.exe",
-        "executable_path": null
-      },
-      {
-        "pid": 12380,
-        "name": "Steam++.Accelerator.exe",
-        "executable_path": null
-      }
+      37956,
+      41100,
+      13200
     ],
     "listeners": [
       {
         "address": "0.0.0.0",
         "port": 443,
-        "pid": 12380,
+        "pid": 13200,
         "process": "Steam++.Accelerator"
       },
       {
         "address": "0.0.0.0",
         "port": 80,
-        "pid": 12380,
+        "pid": 13200,
         "process": "Steam++.Accelerator"
       }
     ],
-    "hosts_sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
-    "hosts_active_lines": 211,
+    "hosts_sha256_raw": "d7bcb7fed6b0a8ea569769d6833b5b77f9c3ad6ca3c89946026aa9d075c6e3e6",
+    "hosts_size_bytes": 6873,
+    "hosts_total_active_lines": 210,
     "hosts_relevant_entries": [
       "127.0.0.1 huggingface.co",
       "127.0.0.1 api.github.com",
@@ -2499,14 +2188,12 @@
       "huggingface.co": true,
       "hf.co": true
     },
-    "dns_targets": {
-      "github.com": [
-        "127.0.0.1"
-      ],
-      "huggingface.co": [
-        "127.0.0.1"
-      ]
-    }
+    "dns_answer_github": [
+      "127.0.0.1"
+    ],
+    "dns_answer_huggingface": [
+      "127.0.0.1"
+    ]
   },
   "active_github_test": {
     "git_ls_remote": {
@@ -2515,28 +2202,30 @@
       "returncode": 0,
       "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
       "error": null,
-      "seconds": 1.577
+      "seconds": 1.532
     },
-    "git_result": "OK via git's schannel backend; HEAD 2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "result": "OK via git's schannel backend; HEAD 2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "windows_schannel_https": "Invoke-WebRequest https://api.github.com/repos/facebookresearch/sam2 -> 200",
     "python_certifi_https": {
       "url": "https://api.github.com/repos/facebookresearch/sam2",
       "ok": false,
       "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-      "seconds": 0.104
-    },
-    "windows_schannel_https": "Invoke-WebRequest https://api.github.com/repos/facebookresearch/sam2 -> 200, 6741 bytes"
+      "seconds": 0.124
+    }
   },
   "active_huggingface_test": {
+    "improved_over_baseline": true,
+    "baseline": "huggingface.co did not resolve at all",
+    "active": "resolves and returns real metadata through the OS trust store",
+    "api_models": "https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct -> 200, 15509 bytes, modelId Qwen/Qwen3-VL-2B-Instruct",
+    "config_json": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json -> 200, 1505 bytes, model_type=qwen3_vl",
+    "weights_downloaded": false,
     "python_certifi_https": {
       "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
       "ok": false,
       "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-      "seconds": 0.07
-    },
-    "windows_schannel_https_api": "https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct -> 200, 15509 bytes, modelId Qwen/Qwen3-VL-2B-Instruct",
-    "windows_schannel_https_config": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json -> 200, 1505 bytes, model_type=qwen3_vl, architectures=Qwen3VLForConditionalGeneration",
-    "weights_downloaded": false,
-    "improvement_over_baseline": "yes: at baseline huggingface.co did not resolve at all; with acceleration on it resolves and returns real metadata through the OS trust store"
+      "seconds": 0.073
+    }
   },
   "tls_integrity": {
     "verify_enabled": true,
@@ -2548,117 +2237,146 @@
       "certificate_count": 121
     },
     "python_certifi_result_under_acceleration": "CERTIFICATE_VERIFY_FAILED 'unable to get local issuer certificate' for all four probes",
-    "interpretation": "Watt Toolkit intercepts TLS with its own root CA, which it installs into the Windows certificate store that git (schannel) and .NET/WinHTTP trust. The project's standard certifi bundle does not trust it. Per TO_DSH section 6 this is recorded as a limitation; the old cert-injection workaround was NOT reintroduced."
+    "interpretation": "unchanged from round 1: Watt's interception root is trusted by the Windows store (git schannel, WinHTTP) but not by the project's standard certifi bundle. Recorded as a limitation; the certificate-injection workaround was NOT reintroduced."
   },
   "graceful_stop_attempt": {
-    "acceleration_stopped_automatically": false,
-    "application_exited_automatically": false,
-    "method_attempted": [
+    "acceleration_stopped_automatically": true,
+    "application_exited_automatically": true,
+    "outcome": "FULL EXIT achieved with a normal window-close request",
+    "attempts": [
       {
         "step": 1,
-        "action": "re-activated the packaged app so its main window existed (shell:AppsFolder activation)",
-        "purpose": "make a normal window close possible",
-        "result": "window 'Watt Toolkit' became visible (Avalonia)"
+        "action": "re-activated the packaged app (shell:AppsFolder activation) so the main window existed",
+        "result": "window 'Watt Toolkit' appeared, owner pid 37956, class Avalonia-95a8d511-..."
       },
       {
         "step": 2,
-        "action": "read-only UI Automation survey of that window and of the desktop tree",
-        "result": "UIAutomationClient loaded, but the app window exposes 0 descendants and 0 named controls, so no control could be invoked by name and no in-app navigation was possible without blind coordinate clicking (forbidden)"
+        "action": "Get-Process -Id 37956 | CloseMainWindow()  # .NET posts a bare WM_CLOSE",
+        "result": "returned True but was IGNORED: 25 s later the window was still present and not offscreen, all three processes alive, :443/:80 still listening, hosts unchanged"
       },
       {
         "step": 3,
-        "action": "Get-Process -Id 21808 | CloseMainWindow()   # == WM_CLOSE, the same request as the title-bar X",
-        "result": "returned True but only minimized to tray: all three processes still running, :443/:80 still listening, hosts block unchanged after 15 s"
+        "action": "CloseMainWindow() a second time",
+        "result": "returned True, ignored again (same window handle, 3 processes)"
       },
       {
         "step": 4,
-        "action": "opened the tray overflow flyout by UIA InvokePattern on AutomationId 'SystemTrayIcon', located the icon named ' Watt Toolkit' by UIA, and right-clicked at the centre of its UIA bounding rectangle (2012,1322,60,60) to open its context menu",
-        "result": "a context-menu popup window appeared (Avalonia class 'Avalonia-d824d289-...') but exposes 0 menu items to UIA and was not visible in a screen capture; selecting 'exit' would require clicking unlabelled coordinates"
+        "action": "PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0) - the message Windows sends when the user clicks the title-bar X or presses Alt+F4",
+        "result": "FULL EXIT: within 8 s all three Steam++.exe / Steam++.Accelerator.exe processes were gone, the window handle no longer existed, :443 and :80 were released and the hosts file was back to its 5-byte baseline"
       },
       {
         "step": 5,
-        "action": "stopped the automation attempt",
-        "result": "no force-kill was used; Stop-Process -Force and taskkill /F were never invoked, and no helper process was terminated"
+        "action": "PostMessage(hWnd, WM_CLOSE) as a control after the exit",
+        "result": "returned 0 because the window had already gone"
+      },
+      {
+        "step": 6,
+        "action": "repeated the whole cycle once (confirmation cycle) with fresh PIDs",
+        "result": "auto-acceleration True, full exit on window close True, hosts back to baseline True"
       }
     ],
-    "not_attempted_because_forbidden_or_unsafe": [
-      "taskkill /F (explicitly forbidden)",
-      "Stop-Process -Force (explicitly forbidden)",
-      "terminating the accelerator helper process (explicitly forbidden)",
-      "blind coordinate clicking inside the app window or the tray menu",
-      "editing the hosts file to undo Watt's block",
-      "editing app settings or the registry"
+    "working_shutdown_sequence": [
+      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'   # start",
+      "same again                                                                  # surface the window",
+      "find the top-level window named 'Watt Toolkit' owned by Steam++.exe via UI Automation, then user32 PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0)"
+    ],
+    "not_attempted_because_forbidden": [
+      "taskkill /F",
+      "Stop-Process -Force",
+      "terminating the accelerator helper process",
+      "editing the hosts file",
+      "editing the registry, certificate store, PATH or system proxy",
+      "blind coordinate clicking"
     ]
   },
   "post_shutdown_verification": {
-    "reached": false,
-    "reason": "no graceful stop or exit mechanism was available, so no post-shutdown state exists",
-    "state_after_failed_attempt": {
-      "watt_processes": 3,
-      "listeners_on_443": 1,
-      "listeners_on_80": 1,
-      "hosts_sha256": "d17fb5ca384a81c98c1a1d4fe40b4a3f1c9e5bec10a7a90946dd709b03b3820b",
-      "hosts_active_lines": 211,
-      "hosts_relevant_entries": [
-        "127.0.0.1 huggingface.co",
-        "127.0.0.1 api.github.com",
-        "127.0.0.1 education.github.com",
-        "127.0.0.1 resources.github.com",
-        "127.0.0.1 uploads.github.com",
-        "127.0.0.1 archiveprogram.github.com",
-        "127.0.0.1 raw.github.com",
-        "127.0.0.1 raw.githubusercontent.com",
-        "127.0.0.1 github.com",
-        "127.0.0.1 pages.github.com",
-        "127.0.0.1 gist.github.com"
-      ],
-      "identical_to_active_state": true,
-      "dns": {
-        "github.com": true,
-        "api.github.com": true,
-        "raw.githubusercontent.com": true,
-        "huggingface.co": true,
-        "hf.co": true
+    "reached": true,
+    "processes": {
+      "watt_processes": 0,
+      "watt_services": 0,
+      "returned_to_baseline": true
+    },
+    "listeners": {
+      "on_443": 0,
+      "on_80": 0,
+      "swept_ports_all_free": {
+        "443": true,
+        "80": true,
+        "26561": true,
+        "8868": true,
+        "7890": true,
+        "10808": true,
+        "10809": true
       },
-      "https_python_certifi": {
+      "returned_to_baseline": true
+    },
+    "hosts": {
+      "sha256_raw": "f01a374e9c81e3db89b3a42940c4d6a5447684986a1296e42bf13f196eed6295",
+      "size_bytes": 5,
+      "raw_bytes_hex": "efbbbf0d0a",
+      "total_active_lines": 0,
+      "watt_markers": [],
+      "returned_to_baseline": true,
+      "byte_identical_to_pre_test": true
+    },
+    "system_proxy": {
+      "ProxyEnable": 0,
+      "ProxyServer": null,
+      "AutoConfigURL": null,
+      "left_configured": false
+    },
+    "connectivity": {
+      "dns_github": [
+        "20.205.243.166"
+      ],
+      "dns_huggingface_resolved": false,
+      "https": {
         "github": false,
-        "github_api": false,
-        "raw_githubusercontent": false,
+        "github_api": true,
+        "raw_githubusercontent": true,
         "huggingface": false
       },
-      "git_ls_remote_ok": true
+      "git_ls_remote_ok": false,
+      "note": "github.com resolves again to 20.205.243.166, which black-holes TCP 443 (~21 s timeout) while 140.82.113.4 and 20.205.243.168 answer immediately; five consecutive git attempts failed on that address. This is the pre-existing intermittency recorded in Task 6B, not a Watt leftover: the hosts/DNS state is identical to baseline and huggingface.co is unresolvable again exactly as before the test."
     },
-    "baseline_comparison": {
-      "hosts_returned_to_baseline": false,
-      "listeners_returned_to_baseline": false,
-      "processes_returned_to_baseline": false,
-      "still_active": true
-    }
+    "overall_returned_to_baseline": true
+  },
+  "configuration_effect": {
+    "question_1_acceleration_auto_starts": {
+      "answer": "YES",
+      "evidence": "accelerator child process took :443/:80 and the hosts block appeared within 22 s of launch, twice"
+    },
+    "question_2_window_close_exits_fully": {
+      "answer": "YES, but only through the real window-close command",
+      "evidence": "WM_SYSCOMMAND/SC_CLOSE (what the title-bar X and Alt+F4 send) produced a full exit with hosts and ports restored, twice. A bare WM_CLOSE - which is what .NET CloseMainWindow() posts - was ignored twice with the window left open."
+    },
+    "question_3_state_restored": {
+      "answer": "YES",
+      "evidence": "0 processes, 0 listeners on 443/80/26561/8868/7890/10808/10809, hosts byte-identical (efbbbf0d0a), system proxy disabled"
+    },
+    "why_round_1_differed": "with TrayIcon=true the app treated a close request as 'hide to tray', so the window vanished while the accelerator kept running and the only full-exit route was the tray menu. With TrayIcon=false there is no tray to hide into, and the real close command terminates the process tree and restores the hosts file."
   },
   "classification": {
-    "primary": "AUTO_START_MANUAL_STOP",
-    "definition": "DSH can reliably start Watt Toolkit and acceleration starts automatically with it, but DSH cannot safely stop acceleration or exit the application.",
-    "secondary_condition": "FAILED_UNSAFE_STATE (condition)",
-    "secondary_explanation": "TO_DSH section 10 defines FAILED_UNSAFE_STATE as the test leaving a network/proxy state different from baseline that DSH cannot restore safely. That condition currently holds: the hosts file carries Watt's 211-line block, Steam++.Accelerator.exe owns :443/:80, and DSH cannot restore baseline. It is reported as a secondary condition rather than the primary classification because nothing is broken or misconfigured -- it is the expected consequence of a start-only automation and the user can restore baseline in two clicks.",
-    "future_workflow": "DSH starts Watt Toolkit; acceleration comes up automatically; after the networked work the user manually stops acceleration and exits Watt Toolkit from its tray icon.",
-    "user_interaction_required": true
+    "primary": "FULL_AUTO_OK",
+    "definition": "DSH can start Watt Toolkit, acceleration enables itself, connectivity can be verified, acceleration can be stopped, Watt can be exited and cleanup can be verified - all without user interaction.",
+    "caveat": "the reliable exit path is the real window-close command (WM_SYSCOMMAND/SC_CLOSE), not the .NET CloseMainWindow() default. A second activation is needed because MinimizeOnStartup=true and TrayIcon=false start the app without a visible window.",
+    "future_workflow": "DSH starts Watt Toolkit, waits for the accelerator to take :443/:80, does the networked work, then sends SC_CLOSE to the 'Watt Toolkit' window to exit and verifies the hosts file and ports are back to baseline. No user action required.",
+    "user_interaction_required": false
   },
   "user_interaction_required": {
-    "now": true,
-    "action": "Open the Watt Toolkit tray icon (hidden-icons area of the taskbar -> the icon named 'Watt Toolkit'), use '停止加速' / turn acceleration off, then choose '退出' (Exit). Do NOT rely on the window X: it only minimizes to tray.",
-    "how_to_verify": "Afterwards there should be 0 processes named Steam++.exe / Steam++.Accelerator.exe, nothing listening on :443 or :80, and the hosts file back to 1 active line (sha256 b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46).",
-    "for_future_runs": "Watt must be stopped manually; DSH cannot automate the stop side on this version."
+    "now": false,
+    "action": null,
+    "for_future_runs": "none; the cycle is fully automatable with TrayIcon disabled"
   },
   "safety_warnings": [
-    "The machine is currently NOT at its pre-test baseline: Watt Toolkit's hosts block and its local :443/:80 listeners are active.",
-    "Watt Toolkit intercepts TLS with its own root CA. Python's standard certifi bundle does not trust it, so python/urllib/httpx/requests will fail certificate verification while acceleration is on. Do not fix this by injecting certificates into certifi.",
-    "git and .NET/WinHTTP work while acceleration is on because they use the Windows trust store.",
-    "No force-kill, hosts edit, registry edit, certificate change or proxy change was performed by DSH."
+    "None outstanding: the machine is back at its pre-test baseline (byte-identical hosts file, no Watt processes, no Watt listeners, system proxy still disabled).",
+    "While acceleration is on, Watt intercepts TLS. Python clients using the standard certifi bundle fail certificate verification; git and WinHTTP succeed because they use the Windows trust store. Do not fix this by injecting certificates into certifi.",
+    "Disabling the tray icon makes Watt an invisible background process that a bare WM_CLOSE does not terminate; use the real window close (X / Alt+F4) or re-activate the app first."
   ],
   "limitations": [
-    "GUI control automation is not possible: the app is an Avalonia build whose windows expose no UI Automation tree, and its tray context menu is not UIA-readable.",
-    "No documented CLI shutdown switch exists for this version and none was guessed.",
-    "DSH cannot verify the post-shutdown state until the user stops Watt manually."
+    "The app exposes no UI Automation tree, so in-app controls still cannot be invoked by name; the exit used is the operating system's window-close command, which is what a user's X click sends.",
+    "The bare-WM_CLOSE-is-ignored behaviour is specific to this Watt Toolkit 3.1.2025.0 build and should be re-checked after an app update.",
+    "GitHub reachability remains intermittent at the network level (github.com resolves to a black-holed address) independently of Watt."
   ],
   "exact_commands_actions_used": {
     "baseline_probe": {
@@ -2668,13 +2386,12 @@
       "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
     },
-    "locate_watt": {
-      "Get-StartApps | Where-Object { $_.Name -match 'watt|steam|beyond|toolkit|加速|瓦特' }": "found 'Watt Toolkit' with AppID 4651ED44255E.47979655102CE_k6txddmbb6c52!App",
-      "Get-AppxPackage -PackageTypeFilter All | Where-Object { $_.PackageFamilyName -eq '4651ED44255E.47979655102CE_k6txddmbb6c52' }": "MSIX 3.1.2025.0, SignatureKind Store",
-      "read AppxManifest.xml": "Application Id=App Executable=Steam++.exe EntryPoint=Windows.FullTrustApplication; capabilities internetClient, runFullTrust, allowElevation"
+    "settings_read_read_only": {
+      "Get-Content .../LocalState/Settings/GeneralSettings.json": "TrayIcon=false, MinimizeOnStartup=true",
+      "Get-Content .../LocalState/Plugins/Accelerator/Settings/ProxySettings.json": "ProxyMode=Hosts, ProgramStartupRunProxy=true"
     },
     "startup": {
-      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'": "accelerator came up automatically within 20 s"
+      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'": "accelerator auto-enabled within 22 s"
     },
     "active_probe": {
       "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
@@ -2683,12 +2400,15 @@
       "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
     },
-    "graceful_stop": {
-      "Get-Process -Id 21808 | CloseMainWindow()": "True, but only minimized to tray",
-      "UIA: window.FindAll(TreeScope.Descendants, TrueCondition)": "0 descendants",
-      "UIA: InvokePattern on AutomationId 'SystemTrayIcon'": "opened the overflow flyout",
-      "UIA: tray icon named ' Watt Toolkit'": "rect 2012,1322,60,60",
-      "user32 SetCursorPos + mouse_event RIGHTDOWN/RIGHTUP at (2042,1352)": "opened a context-menu popup whose items are not UIA-readable"
+    "network_simulation": {
+      "git ls-remote https://github.com/facebookresearch/sam2 HEAD": "exit 0, HEAD 2b90b9f5...",
+      "Invoke-WebRequest https://huggingface.co/api/models/Qwen/Qwen3-VL-2B-Instruct": "200, 15509 bytes",
+      "Invoke-WebRequest https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json": "200, 1505 bytes"
+    },
+    "shutdown": {
+      "CloseMainWindow()": "ignored (window stayed open, 3 processes)",
+      "PostMessage WM_SYSCOMMAND/SC_CLOSE": "full exit",
+      "find the top-level window named 'Watt Toolkit' owned by Steam++.exe via UI Automation, then user32 PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0)": "the mechanism that worked"
     },
     "post_probe": {
       "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
@@ -2696,9 +2416,11 @@
       "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
       "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
-    }
+    },
+    "confirmation_cycle": "the same launch -> activate -> SC_CLOSE sequence repeated once with fresh PIDs; auto-acceleration True, full exit True, hosts restored True"
   },
   "artifacts": {
+    "round_1_backup_gitignored": "artifacts/watt_lifecycle/round1_report.json",
     "screenshots_gitignored": [
       "artifacts/watt_lifecycle/screen_after_reactivate.png",
       "artifacts/watt_lifecycle/screen_tray_menu.png"
