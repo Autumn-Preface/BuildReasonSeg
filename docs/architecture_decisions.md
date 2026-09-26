@@ -687,6 +687,25 @@ not a generalisation or language-quality result.
 **Status:** **Accepted** (Task 6B). This is a measurement ADR: it records what a real 2B mini-train
 established, because it changes where the next iteration should spend effort.
 
+> **Status amendment (Task 6C, section 3): the *causal* diagnosis in this ADR is PROVISIONAL.**
+> Every measurement below is preserved unchanged. What is provisional is the attribution — the claim
+> that the `[SEG]`→prompt interface is *the* bottleneck. Task 6B had two confounds that a single
+> training run could not separate:
+>
+> 1. **Unique-image training confound.** All 480 training records came from 480 *distinct* images, so
+>    the subset never forced two different instructions on the *same* image to select two different
+>    targets. A model can minimise the objective without ever learning instruction-conditional
+>    selection, and Task 6B's own 0/20 paired result is consistent with that.
+> 2. **Fixed positive-centre prompt confound.** The SAM bridge always injected a real point prompt at
+>    the tile centre with `label = positive` and then *added* the projected language vector to that
+>    point embedding. That is a genuine spatial prior, not a neutral or "content-free" placeholder,
+>    and it can dominate the language contribution.
+>
+> `docs/task6c_prompt_ablation.md` and ADR-015 report the controlled 2×2 that separates them:
+> training-sample structure (U = unique images, P = 240 images × 2 counterfactual instructions) ×
+> SAM bridge (C = the Task 6B centre-positive prompt, L = language-only sparse token). The Task 6B
+> verdict and every number in this ADR remain as measured; only the causal reading is downgraded.
+
 **Context.** Task 6A proved the pipeline end to end on a 20-sample overfit (mean training mIoU 0.9807,
 10/10 paired instruction dependence). Task 6A could not say whether that was generalisation or
 memorisation. Task 6B ran the first real mini-train — 480 train / 120 val / 20 paired val images, drawn
@@ -754,6 +773,69 @@ stack.
 
 ---
 
+## ADR-015 — Task 6C: the instruction-conditioning failure is not sampling and not the centre point
+
+**Status:** **Accepted** (Task 6C) for what the 2×2 experiment measures; nothing here is claimed beyond it.
+
+**Context.** ADR-014's causal reading was provisional because Task 6B could not separate two confounds: a
+training subset drawn from 480 *distinct* images (so two instructions never had to pick two targets on one
+image), and a bridge that injected a fixed positive point at the tile centre. Task 6C ran the controlled
+2×2 — sampling {U = Task 6B's 480 unique images, P = 240 images × 2 counterfactual instructions} × bridge
+{C = the Task 6B centre-positive prompt, L = language-only sparse token} — with one recipe, one seed, one
+validation set and one metric path.
+
+**Decision**
+
+1. **The experiment is valid and reproducible.** All four arms start from the same initial trainable
+   fingerprint (`97daa58a4cff0ae9…`, 528 tensors, 24,010,309 parameters), write to four distinct
+   config-driven checkpoint directories, and run in strict deterministic mode
+   (`torch.use_deterministic_algorithms(True)`, `CUBLAS_WORKSPACE_CONFIG=:4096:8`) whose cross-process bit
+   reproducibility is demonstrated on a two-sample forward/backward plus optimizer step. `training.
+   deterministic` is now consumed; in Task 6B it was a dead flag.
+2. **Neither factor fixes instruction conditioning.** All four arms score **0/20** on the paired unseen
+   validation probe with mean own-minus-cross margins between −0.0035 and +0.000007, against a required
+   > 0.05, and strict end-to-end mIoU between 0.0928 and 0.1087 against a 0.11 bar. Paired counterfactual
+   training, the removal of the fixed centre point, and their combination all fail.
+3. **Paired training does change the representation, without creating conditioning.** The projected
+   prompt's effective rank rises from 1.50 (U arms) to 3.74 (P arms) and its top-1 variance share falls
+   from 0.905 to 0.616, while the same-image projected cosine stays above 0.99999 and the
+   prediction-to-prediction IoU stays at 0.999. The projection uses more dimensions; two instructions on
+   one image still produce the same mask.
+4. **The fixed positive centre point is not the dominant cause.** For the C arms the point embedding's norm
+   is 11.39 against a projected language norm of 266.8 — a ratio of 23.4× in the language vector's favour —
+   and removing the point prompt entirely (the L arms) leaves the paired probe at 0/20 and does not move
+   the prompt geometry materially (effective rank 2.43 vs 2.81). Task 6B's bridge was a real spatial prior,
+   but it was not what suppressed the language signal.
+5. **The collapse is directional and low-rank, not a constant.** Same-image projected cosine > 0.9999 with
+   a top-1 variance share of 0.59–0.91 and a non-zero effective rank (1.5–4.1). Wording that Task 6B used
+   loosely is fixed here: *directional collapse / near-constant direction*, not "the prompt is constant".
+6. **The remaining problem is after the prompt.** Since the sampling scheme and the point prior are both
+   excluded, what is left is how the `[SEG]` hidden state is formed and how SAM's decoder turns a prompt
+   direction into a region. Prompt normalisation, a multi-token prompt, auxiliary point supervision or
+   `[REF]` become justified *now*, and not before.
+7. **Verdict: `EXPERIMENT_COMPLETE_PARTIAL_IMPROVEMENT`.** No arm clears the fix gate; `P_C` and `P_L`
+   materially improve the prompt representation over `U_C` (effective rank +2.58 and +1.85, top-1 variance
+   −0.313 and −0.259).
+8. **The Task 6B measurements stand unchanged**, including the 0.11018 strict e2e mIoU, the 0/20 paired
+   result and the 0.99995 projected cosine; only Task 6B's *attribution* is superseded, and it is
+   superseded in the direction of "later in the pipeline", not "somewhere else entirely".
+
+**Consequences**
+
+* The paired instruction-dependence probe remains the primary gate, and strict end-to-end mIoU remains a
+  weak signal: the arms that changed the representation most had *lower* mIoU (`P_L` 0.0928) than the
+  baseline (`U_C` 0.1052).
+* A 4B scale-up is still not justified by anything measured here. Nothing in Task 6C suggests that more
+  parameters would fix a prompt that is not instruction-conditional.
+* Task 6C's four correctness fixes (real determinism, config-driven per-arm checkpoints, train-only
+  operation lookup, and a 480-image feature cache inside an 8 GiB budget) are prerequisites for any future
+  ablation and should be kept.
+* Language metrics remain template metrics: `reasoning_zh` has 21 distinct values in the whole training
+  mini-set, so reasoning exact match and operation-chain accuracy are format measurements, and the mask
+  target selection on paired unseen images stays the reasoning evidence.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -771,4 +853,5 @@ stack.
 | 011 | Acceptance needs an independent oracle | The oracle never imports `semantic_policy`; artifacts are checked against one declared truth |
 | 012 | **MVP stack frozen** | Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large + BF16 LoRA `[SEG]`, native Windows, no external training data; `[REF]` is prior art, the relation encoder is the contribution |
 | 013 | **Task 6A measured proof stack** | 2B + Base+ measured working; 4B still unmeasured; `[SEG]` selectively trainable on both tied rows; separate Qwen/SAM preprocessing; SAM2 CUDA extension disabled |
-| 014 | **Task 6B: the `[SEG]`→prompt interface is the MVP bottleneck** | Language generalises (120/120 emission, 1.000 chain accuracy) but the mask does not (0.1102 mIoU, paired probe 0/20); the projection collapses to a near-constant 256-d prompt; loss weighting and mask LR do not fix it, so effort goes to the interface, not to 4B |
+| 014 | **Task 6B: the `[SEG]`→prompt interface is the MVP bottleneck** | Language generalises (120/120 emission, 1.000 chain accuracy) but the mask does not (0.1102 mIoU, paired probe 0/20); the projection collapses to a near-constant 256-d prompt; loss weighting and mask LR do not fix it, so effort goes to the interface, not to 4B. **Causal reading PROVISIONAL — see 015** |
+| 015 | **Task 6C: neither paired sampling nor the centre point fixes conditioning** | Valid, bit-reproducible 2×2; all four arms 0/20 paired with margins within ±0.0036; paired training raises projected effective rank 1.50→3.74 without producing conditioning; the centre point is 1/23 of the language norm, so removing it changes little — the remaining problem is after the prompt |

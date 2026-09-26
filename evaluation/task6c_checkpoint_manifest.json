@@ -1,0 +1,51 @@
+{
+  "U_C": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6c\\U_C\\last.pt",
+    "bytes": 96213070,
+    "sha256": "d89a69ec44da03704fcf5e28373fdbb569c1fbb90b51628b5efce0dd5891bee4",
+    "phase_b_steps": 1440
+  },
+  "_base_models": {
+    "qwen": "Qwen/Qwen3-VL-2B-Instruct",
+    "qwen_snapshot_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+    "sam2": "facebook/sam2.1-hiera-base-plus",
+    "sam2_source_revision": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "task": "6C",
+    "arms": {
+      "U_C": {
+        "subset": "U",
+        "bridge": "centre"
+      },
+      "U_L": {
+        "subset": "U",
+        "bridge": "language"
+      },
+      "P_C": {
+        "subset": "P",
+        "bridge": "centre"
+      },
+      "P_L": {
+        "subset": "P",
+        "bridge": "language"
+      }
+    }
+  },
+  "U_L": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6c\\U_L\\last.pt",
+    "bytes": 96213070,
+    "sha256": "547bced357643ea72d45121da23c24d116fcb89b4809ec4841cad9c89aebe666",
+    "phase_b_steps": 1440
+  },
+  "P_C": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6c\\P_C\\last.pt",
+    "bytes": 96213070,
+    "sha256": "e2f55087142ddfd80ea6a1926ec302bc5e0b7f1b798b0acae0adb6c42a1462a8",
+    "phase_b_steps": 1440
+  },
+  "P_L": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6c\\P_L\\last.pt",
+    "bytes": 96213070,
+    "sha256": "c54b116fa2e108445c05888aa10c4a24f18d7b174fdbace1e24545e078fa5e7a",
+    "phase_b_steps": 1440
+  }
+}

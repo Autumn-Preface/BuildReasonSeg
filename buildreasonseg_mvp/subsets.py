@@ -22,9 +22,13 @@ Selection rules
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from pathlib import Path
 from typing import Iterable, Sequence
 
 from . import data as data_mod
+
+#: Repository root, used to locate committed subset id files.
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 #: Requested sizes (Task 6B section 9).
 TRAIN_SIZE_BY_LEVEL = {1: 160, 2: 160, 3: 160}
@@ -278,3 +282,227 @@ def build_all(train_version: str = data_mod.DATASET_VERSION) -> dict:
 
 def load_subset(payload: dict, key: str) -> list[str]:
     return list(payload[key]["sample_ids"])
+
+
+# ---------------------------------------------------------------------------
+# Task 6C -- paired counterfactual training subset
+# ---------------------------------------------------------------------------
+
+#: (level of instruction A, level of instruction B, how many images)
+PAIR_COMPOSITION = ((1, 2, 80), (1, 3, 80), (2, 3, 80))
+PAIRED_IMAGES = sum(quota for _a, _b, quota in PAIR_COMPOSITION)
+PAIRED_RECORDS = PAIRED_IMAGES * 2
+TASK6B_SUBSET_JSON = REPO_ROOT / "evaluation" / "task6b_subset_ids.json"
+
+
+def eligible_for_pairing(records: Sequence[dict]) -> list[dict]:
+    """Level 1, level 2, or nontrivial level 3."""
+
+    return [
+        record
+        for record in records
+        if int(record["level"]) in (1, 2) or is_nontrivial_level3(record)
+    ]
+
+
+def _pair_candidates(by_image: dict[str, list[dict]], level_a: int, level_b: int) -> list[tuple]:
+    """All (image_id, rec_a, rec_b) satisfying the Task 6C pair constraints."""
+
+    candidates: list[tuple] = []
+    for image_id in sorted(by_image):
+        left = sorted(
+            (r for r in by_image[image_id] if int(r["level"]) == level_a), key=lambda r: r["sample_id"]
+        )
+        right = sorted(
+            (r for r in by_image[image_id] if int(r["level"]) == level_b), key=lambda r: r["sample_id"]
+        )
+        for rec_a in left:
+            for rec_b in right:
+                if int(rec_a["target_component_id"]) == int(rec_b["target_component_id"]):
+                    continue
+                if rec_a["query_type"] == rec_b["query_type"]:
+                    continue
+                candidates.append((image_id, rec_a, rec_b))
+    candidates.sort(
+        key=lambda item: (
+            item[1]["query_type"],
+            item[2]["query_type"],
+            item[0],
+            item[1]["sample_id"],
+            item[2]["sample_id"],
+        )
+    )
+    return candidates
+
+
+def build_paired_480(
+    records: Sequence[dict], composition=PAIR_COMPOSITION
+) -> tuple[list[dict], dict]:
+    """Task 6C factor 1 `P`: 240 unique images x 2 instructions.
+
+    Constraints, all checked in the returned audit:
+
+    * every pair has two different target components;
+    * every pair has two different query types;
+    * no trivial level 3;
+    * level counts are exactly 160 / 160 / 160 via the 80 + 80 + 80 composition.
+
+    Selection is deterministic: candidates are ordered by query type, image id and
+    sample id, and each step picks the candidate whose query-type usage is currently
+    the least used, with that ordering as the tie-break. No model output participates.
+    """
+
+    by_image: dict[str, list[dict]] = defaultdict(list)
+    for record in eligible_for_pairing(records):
+        by_image[record["image_id"]].append(record)
+
+    per_bucket = {
+        f"L{level_a}_L{level_b}": _pair_candidates(by_image, level_a, level_b)
+        for level_a, level_b, _quota in composition
+    }
+    eligible_images = {
+        name: len({candidate[0] for candidate in candidates})
+        for name, candidates in per_bucket.items()
+    }
+    quotas = {f"L{a}_L{b}": quota for a, b, quota in composition}
+    exact_composition_feasible = all(
+        eligible_images[name] >= quota for name, quota in quotas.items()
+    )
+
+    used_images: set[str] = set()
+    chosen: list[dict] = []
+    selection_audit: dict[str, dict] = {}
+    for level_a, level_b, quota in composition:
+        name = f"L{level_a}_L{level_b}"
+        candidates = per_bucket[name]
+        type_usage_a: Counter = Counter()
+        type_usage_b: Counter = Counter()
+        picked: list[tuple] = []
+        # One slot at a time; each slot re-scores the remaining candidates so the
+        # query-type counters stay balanced as selection proceeds.
+        while len(picked) < quota:
+            best = None
+            best_key = None
+            for image_id, rec_a, rec_b in candidates:
+                if image_id in used_images:
+                    continue
+                key = (
+                    type_usage_a[rec_a["query_type"]],
+                    type_usage_b[rec_b["query_type"]],
+                    rec_a["query_type"],
+                    rec_b["query_type"],
+                    image_id,
+                    rec_a["sample_id"],
+                    rec_b["sample_id"],
+                )
+                if best_key is None or key < best_key:
+                    best_key = key
+                    best = (image_id, rec_a, rec_b)
+            if best is None:
+                break
+            image_id, rec_a, rec_b = best
+            used_images.add(image_id)
+            type_usage_a[rec_a["query_type"]] += 1
+            type_usage_b[rec_b["query_type"]] += 1
+            picked.append(best)
+            chosen.extend([rec_a, rec_b])
+        selection_audit[name] = {
+            "level_a": level_a,
+            "level_b": level_b,
+            "quota": quota,
+            "selected_images": len(picked),
+            "eligible_images": eligible_images[name],
+            "feasible": eligible_images[name] >= quota,
+            "query_types_a": dict(sorted(type_usage_a.items())),
+            "query_types_b": dict(sorted(type_usage_b.items())),
+        }
+
+    chosen.sort(key=lambda r: r["sample_id"])
+    pairs: list[dict] = []
+    for index in range(0, len(chosen) - 1, 2):
+        left, right = chosen[index], chosen[index + 1]
+        pairs.append(
+            {
+                "image_id": left["image_id"],
+                "a": left["sample_id"],
+                "b": right["sample_id"],
+                "a_level": int(left["level"]),
+                "b_level": int(right["level"]),
+                "a_query_type": left["query_type"],
+                "b_query_type": right["query_type"],
+                "a_target": int(left["target_component_id"]),
+                "b_target": int(right["target_component_id"]),
+            }
+        )
+
+    levels = Counter(str(r["level"]) for r in chosen)
+    per_image = Counter(r["image_id"] for r in chosen)
+    audit = {
+        "composition_requested": [list(item) for item in composition],
+        "composition_feasible_exactly": bool(exact_composition_feasible),
+        "eligible_images_per_bucket": eligible_images,
+        "selection": selection_audit,
+        "n_records": len(chosen),
+        "n_images": len(per_image),
+        "records_per_image_values": sorted(set(per_image.values())),
+        "max_records_per_image": max(per_image.values()) if per_image else 0,
+        "by_level": dict(sorted(levels.items())),
+        "nontrivial_l3": sum(1 for r in chosen if is_nontrivial_level3(r)),
+        "trivial_l3": sum(
+            1 for r in chosen if int(r["level"]) == 3 and bool(r.get("trivial_selection", False))
+        ),
+        "all_pairs_different_targets": all(p["a_target"] != p["b_target"] for p in pairs),
+        "all_pairs_different_query_types": all(p["a_query_type"] != p["b_query_type"] for p in pairs),
+        "n_pairs": len(pairs),
+        "query_type_histogram": dict(sorted(Counter(r["query_type"] for r in chosen).items())),
+        "sample_ids": [r["sample_id"] for r in chosen],
+        "pairs": pairs,
+    }
+    return chosen, audit
+
+
+def _ids_sha256(sample_ids: Sequence[str]) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    for sample_id in sample_ids:
+        digest.update(sample_id.encode("utf-8"))
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+
+def build_task6c(train_version: str = data_mod.DATASET_VERSION) -> dict:
+    """Task 6C subsets: `U` (Task 6B's exact 480) and `P` (240 paired images)."""
+
+    import json
+
+    train_records = data_mod.read_records("train", train_version)
+    by_id = {record["sample_id"]: record for record in train_records}
+
+    payload = json.loads(TASK6B_SUBSET_JSON.read_text(encoding="utf-8"))
+    u_ids = list(payload["train"]["sample_ids"])
+    missing = [sample_id for sample_id in u_ids if sample_id not in by_id]
+    if missing:
+        raise RuntimeError(f"Task 6B train subset ids missing from the train split: {missing[:5]}")
+    u_records = sorted((by_id[sample_id] for sample_id in u_ids), key=lambda r: r["sample_id"])
+
+    p_records, p_audit = build_paired_480(train_records)
+
+    return {
+        "_doc": (
+            "Task 6C section 5 deterministic subsets. U is Task 6B's exact 480-record train subset "
+            "(same sample ids, unchanged); P is a new 240-image x 2-instruction counterfactual subset. "
+            "Both come from the train split only; the test split is never touched."
+        ),
+        "dataset_version": train_version,
+        "source_split": "train",
+        "test_split_used": False,
+        "U": {
+            **summarise(u_records, "task6c_U_480_unique_images"),
+            "definition": "unpaired / unique-image, identical to the Task 6B training subset",
+            "source": "evaluation/task6b_subset_ids.json -> train.sample_ids",
+            "source_sample_ids_sha256": _ids_sha256(u_ids),
+            "sample_ids": [r["sample_id"] for r in u_records],
+        },
+        "P": dict(p_audit),
+    }

@@ -1,0 +1,42 @@
+{
+  "U_C": {
+    "arm": "U_C",
+    "subset": "U",
+    "bridge": "centre",
+    "seed": 20260926,
+    "initial_trainable_sha256": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "tensor_count": 528,
+    "numel": 24010309,
+    "from_clean_base": true
+  },
+  "U_L": {
+    "arm": "U_L",
+    "subset": "U",
+    "bridge": "language",
+    "seed": 20260926,
+    "initial_trainable_sha256": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "tensor_count": 528,
+    "numel": 24010309,
+    "from_clean_base": true
+  },
+  "P_C": {
+    "arm": "P_C",
+    "subset": "P",
+    "bridge": "centre",
+    "seed": 20260926,
+    "initial_trainable_sha256": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "tensor_count": 528,
+    "numel": 24010309,
+    "from_clean_base": true
+  },
+  "P_L": {
+    "arm": "P_L",
+    "subset": "P",
+    "bridge": "language",
+    "seed": 20260926,
+    "initial_trainable_sha256": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "tensor_count": 528,
+    "numel": 24010309,
+    "from_clean_base": true
+  }
+}

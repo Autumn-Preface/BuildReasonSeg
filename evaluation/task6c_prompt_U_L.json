@@ -1,0 +1,868 @@
+{
+  "_doc": "Task 6C section 13 prompt-pathway diagnosis. Teacher-forced, so generation quality cannot confound it. Ground truth is used only for the prediction-vs-prediction overlap.",
+  "bridge": "language",
+  "n_same_image_pairs": 10,
+  "n_different_image_references": 45,
+  "same_image_different_instruction": {
+    "seg_hidden_cosine": {
+      "mean": 0.9897574663162232,
+      "min": 0.988923192024231,
+      "max": 0.9906367659568787,
+      "n": 10
+    },
+    "seg_hidden_l2": {
+      "mean": 21.235236358642577,
+      "min": 20.300804138183594,
+      "max": 22.099435806274414,
+      "n": 10
+    },
+    "projected_cosine": {
+      "mean": 0.999908709526062,
+      "min": 0.999850869178772,
+      "max": 0.999966025352478,
+      "n": 10
+    },
+    "projected_l2": {
+      "mean": 2.3947263956069946,
+      "min": 1.2905724048614502,
+      "max": 3.6878528594970703,
+      "n": 10
+    },
+    "sparse_prompt_cosine": {
+      "mean": 0.999908709526062,
+      "min": 0.999850869178772,
+      "max": 0.999966025352478,
+      "n": 10
+    },
+    "sparse_prompt_l2": {
+      "mean": 2.3947263956069946,
+      "min": 1.2905724048614502,
+      "max": 3.6878528594970703,
+      "n": 10
+    },
+    "prediction_iou_a_vs_b": {
+      "mean": 0.9594592353651805,
+      "min": 0.5990396158463386,
+      "max": 1.0,
+      "n": 10
+    }
+  },
+  "different_image_reference": {
+    "seg_hidden_cosine": {
+      "mean": 0.9972987413406372,
+      "min": 0.9943519830703735,
+      "max": 0.9995450377464294,
+      "n": 45
+    },
+    "projected_cosine": {
+      "mean": 0.9999905149141948,
+      "min": 0.9999714493751526,
+      "max": 0.9999988675117493,
+      "n": 45
+    },
+    "sparse_prompt_cosine": {
+      "mean": 0.9999905149141948,
+      "min": 0.9999714493751526,
+      "max": 0.9999988675117493,
+      "n": 45
+    }
+  },
+  "representation": {
+    "seg_hidden": {
+      "available": true,
+      "n": 20,
+      "top10_singular_values": [
+        41.843067,
+        21.767366,
+        18.198133,
+        10.283978,
+        8.786918,
+        7.451152,
+        6.167699,
+        4.836502,
+        4.67483,
+        4.550643
+      ],
+      "variance_explained_top1": 0.586737,
+      "variance_explained_top5": 0.917819,
+      "variance_explained_top10": 0.971275,
+      "effective_rank": 4.3181,
+      "effective_rank_by_90pct": 5,
+      "total_energy": 2984.03271484375
+    },
+    "projected": {
+      "available": true,
+      "n": 20,
+      "top10_singular_values": [
+        8.240293,
+        2.199265,
+        1.109605,
+        0.509298,
+        0.372979,
+        0.335159,
+        0.241708,
+        0.221025,
+        0.172987,
+        0.149416
+      ],
+      "variance_explained_top1": 0.908664,
+      "variance_explained_top5": 0.995198,
+      "variance_explained_top10": 0.998836,
+      "effective_rank": 1.4906,
+      "effective_rank_by_90pct": 1,
+      "total_energy": 74.72774505615234
+    },
+    "sparse_prompt": {
+      "available": true,
+      "n": 20,
+      "top10_singular_values": [
+        8.240293,
+        2.199265,
+        1.109605,
+        0.509298,
+        0.372979,
+        0.335159,
+        0.241708,
+        0.221025,
+        0.172987,
+        0.149416
+      ],
+      "variance_explained_top1": 0.908664,
+      "variance_explained_top5": 0.995198,
+      "variance_explained_top10": 0.998836,
+      "effective_rank": 1.4906,
+      "effective_rank_by_90pct": 1,
+      "total_energy": 74.72774505615234
+    },
+    "projected_norm_mean": 117.73877296447753
+  },
+  "bridge_specific": {
+    "mode": "language",
+    "sparse_prompt_shape": [
+      1,
+      1,
+      256
+    ],
+    "sparse_prompt_shape_note": "centre bridge: SAM's prompt encoder appends its own padding slot, so the sparse prompt is (1, 2, prompt_dim); language bridge: (1, 1, prompt_dim). The cosine/L2/norm numbers below are computed on the full tensor SAM actually receives.",
+    "point_embedding_norm_mean": null,
+    "projected_language_norm_mean": null,
+    "ratio_projected_over_point_mean": null,
+    "sparse_prompt_equals_projected_all": true,
+    "sparse_prompt_equals_projected_expected": true
+  },
+  "pairs": [
+    {
+      "image_id": "1_1247",
+      "a": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+      "b": "buildsr_val_1_1247_3_largest_to_right_of_to_nearest_0be0bf7c8b0a",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_right_of_to_nearest",
+      "seg_hidden": {
+        "cosine": 0.9898943901062012,
+        "l2": 21.1530704498291,
+        "norm_a": 149.1067352294922,
+        "norm_b": 148.195556640625,
+        "mean_norm": 148.65115356445312,
+        "norm_std": 0.6443005800247192,
+        "per_dim_std_mean": 0.24427379667758942,
+        "mean_abs_activation": 1.840356707572937,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.999966025352478,
+        "l2": 2.1654388904571533,
+        "norm_a": 118.74688720703125,
+        "norm_b": 120.67436218261719,
+        "mean_norm": 119.71062469482422,
+        "norm_std": 1.3629306554794312,
+        "per_dim_std_mean": 0.07481136173009872,
+        "mean_abs_activation": 5.7269487380981445,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.999966025352478,
+        "l2": 2.1654388904571533,
+        "norm_a": 118.74688720703125,
+        "norm_b": 120.67436218261719,
+        "mean_norm": 119.71062469482422,
+        "norm_std": 1.3629306554794312,
+        "per_dim_std_mean": 0.07481136173009872,
+        "mean_abs_activation": 5.7269487380981445,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 0.9993444772205834,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_2103",
+      "a": "buildsr_val_1_2103_1_largest_9ccf675337a3",
+      "b": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_right_of",
+      "seg_hidden": {
+        "cosine": 0.9900611042976379,
+        "l2": 20.94563865661621,
+        "norm_a": 148.4548797607422,
+        "norm_b": 148.65138244628906,
+        "mean_norm": 148.60214233398438,
+        "norm_std": 0.38472360372543335,
+        "per_dim_std_mean": 0.24488866329193115,
+        "mean_abs_activation": 1.8393995761871338,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9998637437820435,
+        "l2": 2.8988213539123535,
+        "norm_a": 118.10417938232422,
+        "norm_b": 115.94232940673828,
+        "mean_norm": 118.36693572998047,
+        "norm_std": 1.9507551193237305,
+        "per_dim_std_mean": 0.11806362867355347,
+        "mean_abs_activation": 5.662014484405518,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9998637437820435,
+        "l2": 2.8988213539123535,
+        "norm_a": 118.10417938232422,
+        "norm_b": 115.94232940673828,
+        "mean_norm": 118.36693572998047,
+        "norm_std": 1.9507551193237305,
+        "per_dim_std_mean": 0.11806362867355347,
+        "mean_abs_activation": 5.662014484405518,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 0.9988696307460437,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_2757",
+      "a": "buildsr_val_1_2757_1_largest_f9ed1e8c8949",
+      "b": "buildsr_val_1_2757_3_largest_to_left_of_to_nearest_21f7f5f71d7d",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of_to_nearest",
+      "seg_hidden": {
+        "cosine": 0.9893720149993896,
+        "l2": 21.641571044921875,
+        "norm_a": 148.8200225830078,
+        "norm_b": 147.50164794921875,
+        "mean_norm": 148.4550323486328,
+        "norm_std": 0.5608488917350769,
+        "per_dim_std_mean": 0.2358849048614502,
+        "mean_abs_activation": 1.841833472251892,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9999638795852661,
+        "l2": 1.4342973232269287,
+        "norm_a": 119.75007629394531,
+        "norm_b": 120.75635528564453,
+        "mean_norm": 118.99569702148438,
+        "norm_std": 1.8257429599761963,
+        "per_dim_std_mean": 0.10900472849607468,
+        "mean_abs_activation": 5.692245006561279,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9999638795852661,
+        "l2": 1.4342973232269287,
+        "norm_a": 119.75007629394531,
+        "norm_b": 120.75635528564453,
+        "mean_norm": 118.99569702148438,
+        "norm_std": 1.8257429599761963,
+        "per_dim_std_mean": 0.10900472849607468,
+        "mean_abs_activation": 5.692245006561279,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 0.9993637665023063,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_286",
+      "a": "buildsr_val_1_286_1_largest_76ca4af3c712",
+      "b": "buildsr_val_1_286_2_largest_to_left_of_056216b5b322",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of",
+      "seg_hidden": {
+        "cosine": 0.9906367659568787,
+        "l2": 20.300804138183594,
+        "norm_a": 148.6578826904297,
+        "norm_b": 146.80995178222656,
+        "mean_norm": 148.27474975585938,
+        "norm_std": 0.7615963816642761,
+        "per_dim_std_mean": 0.23486937582492828,
+        "mean_abs_activation": 1.841203212738037,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9999235272407532,
+        "l2": 2.253084421157837,
+        "norm_a": 118.60578155517578,
+        "norm_b": 116.88723754882812,
+        "mean_norm": 118.68339538574219,
+        "norm_std": 1.7106428146362305,
+        "per_dim_std_mean": 0.10304342955350876,
+        "mean_abs_activation": 5.677223205566406,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9999235272407532,
+        "l2": 2.253084421157837,
+        "norm_a": 118.60578155517578,
+        "norm_b": 116.88723754882812,
+        "mean_norm": 118.68339538574219,
+        "norm_std": 1.7106428146362305,
+        "per_dim_std_mean": 0.10304342955350876,
+        "mean_abs_activation": 5.677223205566406,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 0.5990396158463386,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_2864",
+      "a": "buildsr_val_1_2864_1_largest_90b650948e0d",
+      "b": "buildsr_val_1_2864_2_largest_to_left_of_987279555505",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of",
+      "seg_hidden": {
+        "cosine": 0.9895126819610596,
+        "l2": 21.52869415283203,
+        "norm_a": 147.50048828125,
+        "norm_b": 149.03915405273438,
+        "mean_norm": 148.2737579345703,
+        "norm_std": 0.7633252143859863,
+        "per_dim_std_mean": 0.24211686849594116,
+        "mean_abs_activation": 1.8404138088226318,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9998757839202881,
+        "l2": 2.4012391567230225,
+        "norm_a": 117.33938598632812,
+        "norm_b": 115.79385375976562,
+        "mean_norm": 118.26004791259766,
+        "norm_std": 1.7903335094451904,
+        "per_dim_std_mean": 0.10795936733484268,
+        "mean_abs_activation": 5.656859397888184,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9998757839202881,
+        "l2": 2.4012391567230225,
+        "norm_a": 117.33938598632812,
+        "norm_b": 115.79385375976562,
+        "mean_norm": 118.26004791259766,
+        "norm_std": 1.7903335094451904,
+        "per_dim_std_mean": 0.10795936733484268,
+        "mean_abs_activation": 5.656859397888184,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 1.0,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_2866",
+      "a": "buildsr_val_1_2866_1_largest_d012eb1a741d",
+      "b": "buildsr_val_1_2866_2_largest_to_below_81ccfad4014b",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden": {
+        "cosine": 0.988923192024231,
+        "l2": 22.099435806274414,
+        "norm_a": 147.4209442138672,
+        "norm_b": 148.88230895996094,
+        "mean_norm": 148.25341796875,
+        "norm_std": 0.7589854001998901,
+        "per_dim_std_mean": 0.2485864758491516,
+        "mean_abs_activation": 1.8406089544296265,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.999850869178772,
+        "l2": 2.6719560623168945,
+        "norm_a": 117.34769439697266,
+        "norm_b": 115.58902740478516,
+        "mean_norm": 117.96143341064453,
+        "norm_std": 1.802632451057434,
+        "per_dim_std_mean": 0.10960076004266739,
+        "mean_abs_activation": 5.642469882965088,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.999850869178772,
+        "l2": 2.6719560623168945,
+        "norm_a": 117.34769439697266,
+        "norm_b": 115.58902740478516,
+        "mean_norm": 117.96143341064453,
+        "norm_std": 1.802632451057434,
+        "per_dim_std_mean": 0.10960076004266739,
+        "mean_abs_activation": 5.642469882965088,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 1.0,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_3400",
+      "a": "buildsr_val_1_3400_1_largest_bf204efb4cc1",
+      "b": "buildsr_val_1_3400_2_largest_to_below_281be38b0776",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden": {
+        "cosine": 0.9901083111763,
+        "l2": 20.93927001953125,
+        "norm_a": 149.05795288085938,
+        "norm_b": 148.60780334472656,
+        "mean_norm": 148.336181640625,
+        "norm_std": 0.7345111966133118,
+        "per_dim_std_mean": 0.24449138343334198,
+        "mean_abs_activation": 1.8399471044540405,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9998767375946045,
+        "l2": 3.6878528594970703,
+        "norm_a": 118.72758483886719,
+        "norm_b": 115.53063201904297,
+        "mean_norm": 117.84253692626953,
+        "norm_std": 1.7983360290527344,
+        "per_dim_std_mean": 0.10896044969558716,
+        "mean_abs_activation": 5.636843681335449,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9998767375946045,
+        "l2": 3.6878528594970703,
+        "norm_a": 118.72758483886719,
+        "norm_b": 115.53063201904297,
+        "mean_norm": 117.84253692626953,
+        "norm_std": 1.7983360290527344,
+        "per_dim_std_mean": 0.10896044969558716,
+        "mean_abs_activation": 5.636843681335449,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 0.9989429175475687,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_3604",
+      "a": "buildsr_val_1_3604_1_largest_abc1fd1ca1cf",
+      "b": "buildsr_val_1_3604_3_largest_to_left_of_to_nearest_926a4e3b6386",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_left_of_to_nearest",
+      "seg_hidden": {
+        "cosine": 0.9893772006034851,
+        "l2": 21.612810134887695,
+        "norm_a": 148.54129028320312,
+        "norm_b": 147.86807250976562,
+        "mean_norm": 148.3197479248047,
+        "norm_std": 0.6962023377418518,
+        "per_dim_std_mean": 0.2427535355091095,
+        "mean_abs_activation": 1.839918851852417,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9999597072601318,
+        "l2": 1.2905724048614502,
+        "norm_a": 118.93441009521484,
+        "norm_b": 119.6541748046875,
+        "mean_norm": 118.02399444580078,
+        "norm_std": 1.7509907484054565,
+        "per_dim_std_mean": 0.10657837986946106,
+        "mean_abs_activation": 5.6455841064453125,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9999597072601318,
+        "l2": 1.2905724048614502,
+        "norm_a": 118.93441009521484,
+        "norm_b": 119.6541748046875,
+        "mean_norm": 118.02399444580078,
+        "norm_std": 1.7509907484054565,
+        "per_dim_std_mean": 0.10657837986946106,
+        "mean_abs_activation": 5.6455841064453125,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 0.9990319457889641,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_3999",
+      "a": "buildsr_val_1_3999_1_largest_7d347989fb00",
+      "b": "buildsr_val_1_3999_2_largest_to_below_cff46ded87f4",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden": {
+        "cosine": 0.9893903136253357,
+        "l2": 21.522905349731445,
+        "norm_a": 147.39419555664062,
+        "norm_b": 147.992431640625,
+        "mean_norm": 148.25015258789062,
+        "norm_std": 0.6922706961631775,
+        "per_dim_std_mean": 0.24323512613773346,
+        "mean_abs_activation": 1.8396852016448975,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9998868107795715,
+        "l2": 2.6698834896087646,
+        "norm_a": 117.77853393554688,
+        "norm_b": 115.76775360107422,
+        "mean_norm": 117.885009765625,
+        "norm_std": 1.728527545928955,
+        "per_dim_std_mean": 0.10556073486804962,
+        "mean_abs_activation": 5.638909816741943,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9998868107795715,
+        "l2": 2.6698834896087646,
+        "norm_a": 117.77853393554688,
+        "norm_b": 115.76775360107422,
+        "mean_norm": 117.885009765625,
+        "norm_std": 1.728527545928955,
+        "per_dim_std_mean": 0.10556073486804962,
+        "mean_abs_activation": 5.638909816741943,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 1.0,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    },
+    {
+      "image_id": "1_4894",
+      "a": "buildsr_val_1_4894_1_largest_db5e08abd804",
+      "b": "buildsr_val_1_4894_2_largest_to_below_5e40a082053a",
+      "a_query_type": "largest",
+      "b_query_type": "largest_to_below",
+      "seg_hidden": {
+        "cosine": 0.9902986884117126,
+        "l2": 20.608163833618164,
+        "norm_a": 147.6645050048828,
+        "norm_b": 148.14639282226562,
+        "mean_norm": 148.21566772460938,
+        "norm_std": 0.6679521203041077,
+        "per_dim_std_mean": 0.24307499825954437,
+        "mean_abs_activation": 1.838696837425232,
+        "dim": 2048
+      },
+      "projected": {
+        "cosine": 0.9999200105667114,
+        "l2": 2.4741179943084717,
+        "norm_a": 117.41691589355469,
+        "norm_b": 115.42828369140625,
+        "mean_norm": 117.73878479003906,
+        "norm_std": 1.726262092590332,
+        "per_dim_std_mean": 0.10508841276168823,
+        "mean_abs_activation": 5.631826877593994,
+        "dim": 256
+      },
+      "sparse_prompt": {
+        "cosine": 0.9999200105667114,
+        "l2": 2.4741179943084717,
+        "norm_a": 117.41691589355469,
+        "norm_b": 115.42828369140625,
+        "mean_norm": 117.73878479003906,
+        "norm_std": 1.726262092590332,
+        "per_dim_std_mean": 0.10508841276168823,
+        "mean_abs_activation": 5.631826877593994,
+        "dim": 256
+      },
+      "pred_iou_a_vs_b": 1.0,
+      "sparse_prompt_shape": [
+        1,
+        1,
+        256
+      ],
+      "bridge_diagnostics_a": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "bridge_diagnostics_b": {
+        "bridge": "language",
+        "point_prompt_used": false,
+        "uses_point_coordinates": false,
+        "uses_point_labels": false,
+        "uses_box_prompt": false,
+        "uses_mask_prompt": false,
+        "projected_norm": null,
+        "point_embedding_norm": null,
+        "ratio_projected_over_point": null,
+        "point_embedding_before_language_added": false
+      },
+      "sparse_prompt_equals_projected": true
+    }
+  ],
+  "arm": "U_L",
+  "subset": "U",
+  "same_image_metric_note": "cosine is on a different-image reference at the same stage; a representation is only called collapsed together with the SVD/effective-rank numbers"
+}

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
+from statistics import median
 from typing import Sequence
 
 import torch
@@ -257,6 +258,7 @@ def free_generation_validation(runtime, samples: Sequence[data_mod.Sample], look
                         features,
                         projected,
                         multimask_output=bool(config["multimask_output"]),
+                        bridge=runtime.bridge,
                     )
                     iou = mask_iou_from_logits(decoded.low_res_logits, torch.as_tensor(gt).float(), gt.shape)
                     dice = dice_from_logits(decoded.low_res_logits, torch.as_tensor(gt).float(), gt.shape)
@@ -400,6 +402,18 @@ def pair_pass_decision(
     return bool(a_iou_on_a > a_iou_on_b and b_iou_on_b > b_iou_on_a)
 
 
+def _prediction_iou(logits_a, logits_b, size) -> float:
+    """IoU between two predicted masks, at the original resolution."""
+
+    from .metrics import upsample_logits
+
+    mask_a = upsample_logits(logits_a, size) > 0.0
+    mask_b = upsample_logits(logits_b, size) > 0.0
+    intersection = int((mask_a & mask_b).sum().item())
+    union = int((mask_a | mask_b).sum().item())
+    return intersection / union if union else 0.0
+
+
 def paired_probe(runtime, pairs: Sequence[dict], lookup: dict) -> dict:
     """For 20 unseen val image pairs, does the instruction select the right target?
 
@@ -459,11 +473,18 @@ def paired_probe(runtime, pairs: Sequence[dict], lookup: dict) -> dict:
                     )
                     projected = runtime.projection(hidden)
                     features, _ = runtime.features_for(sample, image)
-                    decoded = decode_mask(runtime.model.sam, features, projected, multimask_output=False)
+                    decoded = decode_mask(
+                        runtime.model.sam,
+                        features,
+                        projected,
+                        multimask_output=False,
+                        bridge=runtime.bridge,
+                    )
                     size = sample.target_mask().shape
                     predictions[label] = {
                         "iou_on_a": mask_iou_from_logits(decoded.low_res_logits, gt_a, size),
                         "iou_on_b": mask_iou_from_logits(decoded.low_res_logits, gt_b, size),
+                        "logits": decoded.low_res_logits.detach().float().cpu(),
                         "generated_reasoning": reasoning_part(generation["text"]),
                     }
                     predictions[label]["operation_chain_correct"] = operation_chain_correct(
@@ -483,6 +504,12 @@ def paired_probe(runtime, pairs: Sequence[dict], lookup: dict) -> dict:
                 entry["b_iou_on_b"] = b["iou_on_b"]
                 entry["a_operation_chain_correct"] = a["operation_chain_correct"]
                 entry["b_operation_chain_correct"] = b["operation_chain_correct"]
+                # Task 6C section 12: the margin and the prediction-to-prediction
+                # overlap are part of the report, not just the pass/fail bit.
+                entry["margin_a"] = a["iou_on_a"] - a["iou_on_b"]
+                entry["margin_b"] = b["iou_on_b"] - b["iou_on_a"]
+                entry["pair_margin"] = (entry["margin_a"] + entry["margin_b"]) / 2.0
+                entry["pred_iou_a_vs_b"] = _prediction_iou(a["logits"], b["logits"], size)
             entry["passed"] = passed
             results.append(entry)
     finally:
@@ -505,6 +532,8 @@ def paired_probe(runtime, pairs: Sequence[dict], lookup: dict) -> dict:
     emission_valid = sum(
         1 for entry in results if entry.get("a_seg_count") == 1 and entry.get("b_seg_count") == 1
     )
+    margins = [entry["pair_margin"] for entry in results if "pair_margin" in entry]
+    pred_overlaps = [entry["pred_iou_a_vs_b"] for entry in results if "pred_iou_a_vs_b" in entry]
     return {
         "n_pairs": len(results),
         "passed": sum(1 for entry in results if entry["passed"]),
@@ -512,6 +541,10 @@ def paired_probe(runtime, pairs: Sequence[dict], lookup: dict) -> dict:
         "pairs_with_both_emissions_valid": emission_valid,
         "mean_own_target_iou": _mean(own),
         "mean_cross_target_iou": _mean(cross),
+        "margin_pairs": len(margins),
+        "mean_own_minus_cross_margin": _mean(margins),
+        "median_own_minus_cross_margin": (median(margins) if margins else None),
+        "mean_pred_iou_a_vs_b": _mean(pred_overlaps),
         "seconds": round(time.time() - started, 2),
         "pairs": results,
     }

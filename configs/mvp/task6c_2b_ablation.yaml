@@ -1,0 +1,135 @@
+# =============================================================================
+# Task 6C -- Paired Counterfactual Training x Neutral SAM Prompt Ablation
+#
+# A controlled 2 x 2 ablation on the frozen ADR-013 stack:
+#   factor 1 (training-sample structure): U = Task 6B's 480 unique-image records
+#                                         P = 240 images x 2 counterfactual instructions
+#   factor 2 (SAM sparse-prompt bridge):  C = Task 6B centre-positive point prompt
+#                                         L = language-only sparse token, no point prompt
+#
+# The recipe is Task 6B's HEADLINE recipe, unchanged and untuned (section 9):
+# loss 2.0/2.0/1.0, LoRA 1e-4, token 3e-4, decoder 3e-4, warmup 20, cosine,
+# Phase A 1 epoch, Phase B <= 3 epochs. `bridge.mode` and the training subset are
+# overridden per arm on the command line; nothing else differs between arms.
+#
+# Deliberately NOT here: 4B, [REF], Spatial Relation Encoder, Spatial Consistency
+# Loss, full-dataset training, prompt normalisation/whitening, multiple sparse
+# tokens, geometry supervision, point-inside auxiliary loss.
+# =============================================================================
+
+task: "6C"
+seed: 20260926
+offline: true
+
+models:
+  qwen_model_id: "Qwen/Qwen3-VL-2B-Instruct"
+  qwen_dtype: "bfloat16"
+  qwen_attn_implementation: "sdpa"
+  sam2_repo_id: "facebook/sam2.1-hiera-base-plus"
+  sam2_checkpoint_file: "sam2.1_hiera_base_plus.pt"
+  sam2_config_name: "configs/sam2.1/sam2.1_hiera_b+.yaml"
+  sam2_source_revision_expected: "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+
+paths:
+  local_cache: "local_cache"
+  hf_cache: "local_cache/huggingface"
+  models_dir: "local_cache/models"
+  sam2_source: "local_cache/sam2_source"
+  artifacts: "artifacts"
+  stage_outputs: "artifacts/stage_outputs"
+  # Task 6C section 4.2: the arm directory is appended to this by the training
+  # script, so no arm can overwrite another.
+  checkpoints: "artifacts/checkpoints/task6c"
+  feature_cache: "artifacts/sam2_feature_cache"
+
+# Task 6C factor 2. Overridden per arm with --bridge.
+bridge:
+  mode: "centre"
+
+token:
+  seg_token: "[SEG]"
+  prefer_peft_trainable_token_indices: true
+
+lora:
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  bias: "none"
+  target_suffixes: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  text_only: true
+
+projection:
+  hidden_dim: null
+  dropout: 0.0
+
+preprocessing:
+  image_budget:
+    set_explicitly: true
+    min_pixels: 262144
+    max_pixels: 262144
+
+loss:
+  # Task 6B headline weights, unchanged (section 9: no tuning in Task 6C).
+  lm_ce: 2.0
+  mask_bce: 2.0
+  mask_dice: 1.0
+  note: "Task 6B headline objective, fixed for all four Task 6C arms"
+
+optimizer:
+  name: "adamw"
+  betas: [0.9, 0.999]
+  weight_decay: 0.01
+  grad_clip_norm: 1.0
+  phase_a:
+    lora_lr: 1.0e-4
+    token_lr: 3.0e-4
+    warmup_steps: 20
+    lr_schedule: "cosine"
+  phase_b:
+    lora_lr: 1.0e-4
+    token_lr: 3.0e-4
+    decoder_lr: 3.0e-4
+    warmup_steps: 20
+    lr_schedule: "cosine"
+
+training:
+  bf16_autocast: true
+  gradient_checkpointing: true
+  use_cache: false
+  # Task 6C section 4.1: this used to be a dead flag; it is now consumed.
+  deterministic: true
+  # Set from the measured outcome of scripts/task6c_determinism.py: True only if
+  # every operation on the training path has a deterministic implementation.
+  deterministic_strict: true
+  train_at_original_resolution: true
+  # Task 6C section 4.4: cover the whole 480-record train subset.
+  feature_cache_images: 480
+  # `image_pe` and the no-mask dense embedding do not depend on the image, so they
+  # are cached once instead of once per image. Value-preserving; without it 480
+  # images would need 11.25 GiB instead of the 7.5 GiB measured with sharing.
+  feature_cache_share_constants: true
+
+phase_a:
+  epochs: 1
+  grad_accum_steps: 1
+  log_every_steps: 120
+
+phase_b:
+  epochs: 3
+  grad_accum_steps: 1
+  max_steps: 1440
+  early_stop_patience: 0
+  log_every_steps: 120
+
+validation:
+  # No per-epoch selection: section 9 forbids tuning, so every arm trains a fixed
+  # number of epochs and is evaluated once at the end.
+  per_epoch_teacher_forced: true
+  per_epoch_free_generation: false
+
+inference:
+  max_new_tokens: 64
+  validation_max_new_tokens: 64
+  do_sample: false
+  mask_threshold: 0.0
+  multimask_output: false

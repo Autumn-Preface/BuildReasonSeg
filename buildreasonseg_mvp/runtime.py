@@ -56,6 +56,63 @@ def set_seed(seed: int) -> None:
     os.environ.setdefault("PYTHONHASHSEED", str(seed))
 
 
+def enable_determinism(seed: int, strict: bool = True) -> dict:
+    """Make `training.deterministic` real, and report exactly what was enforced.
+
+    Task 6B declared `training.deterministic: true` but never consumed it, so its
+    Phase B was not bit-reproducible. This records each setting individually rather
+    than asserting determinism: `bit_reproducible_claimed` is only true when every
+    requested measure was applied *and* strict deterministic algorithms were
+    accepted. CuBLAS workspace configuration is also pinned because
+    `torch.use_deterministic_algorithms` requires it for matmul backward.
+    """
+
+    set_seed(seed)
+    report = {
+        "requested": True,
+        "seed": int(seed),
+        "python_random_seeded": True,
+        "numpy_seeded": True,
+        "torch_manual_seed": True,
+        "torch_cuda_manual_seed_all": True,
+        "pythonhashseed": os.environ.get("PYTHONHASHSEED"),
+        "cudnn_benchmark": False,
+        "cudnn_deterministic": True,
+        "strict_requested": bool(strict),
+        "use_deterministic_algorithms": None,
+        "use_deterministic_algorithms_warn_only": False,
+        "cublas_workspace_config": None,
+        "cublas_error": None,
+        "bit_reproducible_claimed": False,
+    }
+
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+
+    if strict:
+        try:
+            os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+            report["cublas_workspace_config"] = os.environ.get("CUBLAS_WORKSPACE_CONFIG")
+        except Exception as exc:  # noqa: BLE001 - pragma: no cover
+            report["cublas_error"] = f"{type(exc).__name__}: {exc}"
+        torch.use_deterministic_algorithms(True)
+        report["use_deterministic_algorithms"] = True
+        report["bit_reproducible_claimed"] = True
+    else:
+        torch.use_deterministic_algorithms(True, warn_only=True)
+        report["use_deterministic_algorithms"] = True
+        report["use_deterministic_algorithms_warn_only"] = True
+        report["bit_reproducible_claimed"] = False
+
+    return report
+
+
+def disable_determinism() -> None:
+    torch.use_deterministic_algorithms(False)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+
+
 def vram() -> dict:
     if not torch.cuda.is_available():
         return {"available": False}
@@ -160,6 +217,12 @@ class MvpRuntime:
     device: str
     reports: dict = field(default_factory=dict)
     loss_weights: LossWeights = field(default_factory=LossWeights)
+
+    @property
+    def bridge(self) -> str:
+        """The SAM sparse-prompt bridge this runtime's model was built with."""
+
+        return getattr(self.model, "bridge", "centre")
 
     # -- batches ---------------------------------------------------------
 
@@ -396,9 +459,21 @@ def set_phase_trainables(model: BuildReasonSegMvp, phase: str) -> dict:
 
 
 def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool = True,
-                  feature_cache_images: int | None = None) -> MvpRuntime:
+                  feature_cache_images: int | None = None,
+                  deterministic_strict: bool | None = None) -> MvpRuntime:
     cfg = cfg or load_config()
-    set_seed(int(cfg["seed"]))
+    deterministic = bool(cfg.get("training", {}).get("deterministic", False))
+    strict = (
+        bool(cfg.get("training", {}).get("deterministic_strict", True))
+        if deterministic_strict is None
+        else bool(deterministic_strict)
+    )
+    if deterministic:
+        determinism = enable_determinism(int(cfg["seed"]), strict=strict)
+    else:
+        set_seed(int(cfg["seed"]))
+        determinism = {"requested": False, "seed": int(cfg["seed"])}
+    determinism["strict_effective"] = bool(deterministic and strict)
 
     cache_root = REPO_ROOT / cfg["paths"]["hf_cache"]
     reports: dict = {}
@@ -469,14 +544,18 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         dropout=float(cfg["projection"].get("dropout", 0.0)),
     ).to(device)
 
+    bridge = str(cfg.get("bridge", {}).get("mode", "centre"))
     model = BuildReasonSegMvp(
         qwen=qwen,
         sam=sam,
         projection=projection,
         seg_token_id=token_setup.seg_token_id,
         token_holder=token_holder,
+        bridge=bridge,
     ).to(device)
 
+    reports["bridge"] = bridge
+    reports["determinism"] = determinism
     reports["params"] = parameter_report(model, token_setup.seg_token_id, token_holder)
     reports["qwen_hidden_size"] = hidden_size
     reports["sam_prompt_embed_dim"] = int(sam_report.prompt_embed_dim)
@@ -511,7 +590,13 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         projection=projection,
         model=model,
         sam_encoder=sam_encoder,
-        feature_cache=Sam2FeatureCache(sam_encoder, max_images=cache_images),
+        feature_cache=Sam2FeatureCache(
+            sam_encoder,
+            max_images=cache_images,
+            share_constant_features=bool(
+                cfg.get("training", {}).get("feature_cache_share_constants", True)
+            ),
+        ),
         device=device,
         reports=reports,
         loss_weights=LossWeights(**{k: float(v) for k, v in cfg["loss"].items() if isinstance(v, (int, float))}),

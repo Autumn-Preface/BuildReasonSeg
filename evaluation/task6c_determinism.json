@@ -1,0 +1,123 @@
+{
+  "_doc": "Task 6C section 4.1 determinism evidence. Two independent processes, same seed, 2-sample forward/backward plus one optimizer step. `training.deterministic` is now consumed by build_runtime (it was a dead flag in Task 6B).",
+  "task": "6C",
+  "config": "configs\\mvp\\task6c_2b_ablation.yaml",
+  "strict_requested": true,
+  "strict_supported": true,
+  "strict_error": null,
+  "effective_mode": "strict",
+  "use_deterministic_algorithms_warn_only": false,
+  "measure": {
+    "python_random_seeded": true,
+    "numpy_seeded": true,
+    "torch_manual_seed": true,
+    "torch_cuda_manual_seed_all": true,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "cublas_workspace_config": ":4096:8"
+  },
+  "losses_identical": true,
+  "gradients_identical": true,
+  "post_step_parameters_identical": true,
+  "cross_process_bit_reproducible": true,
+  "bit_reproducibility_claimed": true,
+  "run1": {
+    "mode": "strict",
+    "determinism_report": {
+      "requested": true,
+      "seed": 20260926,
+      "python_random_seeded": true,
+      "numpy_seeded": true,
+      "torch_manual_seed": true,
+      "torch_cuda_manual_seed_all": true,
+      "pythonhashseed": "20260926",
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "strict_requested": true,
+      "use_deterministic_algorithms": true,
+      "use_deterministic_algorithms_warn_only": false,
+      "cublas_workspace_config": ":4096:8",
+      "cublas_error": null,
+      "bit_reproducible_claimed": true,
+      "strict_effective": true
+    },
+    "sample_ids": [
+      "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+      "buildsr_train_1_10026_1_largest_c6bcf9c76a2b"
+    ],
+    "losses": [
+      {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      {
+        "total": "9.547110557556152",
+        "lm_ce": "4.190395832061768",
+        "mask_bce": "0.08325356245040894",
+        "mask_dice": "0.9998125433921814"
+      }
+    ],
+    "gradients": {
+      "sha256": "919b49ade7770b8a437d11e1fe127f601a32d86bc294c9a487022e32a0529dbe",
+      "tensors_with_grad": 512,
+      "total_grad_norm": 91.40223916821115
+    },
+    "initial_fingerprint": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "post_step_fingerprint": "a3f04787b1d4e42fac55b7a5ebc21fad34d55d220333362e689b13cb32d2bec8",
+    "error": null,
+    "returncode": 0,
+    "seconds": 28.2
+  },
+  "run2": {
+    "mode": "strict",
+    "determinism_report": {
+      "requested": true,
+      "seed": 20260926,
+      "python_random_seeded": true,
+      "numpy_seeded": true,
+      "torch_manual_seed": true,
+      "torch_cuda_manual_seed_all": true,
+      "pythonhashseed": "20260926",
+      "cudnn_benchmark": false,
+      "cudnn_deterministic": true,
+      "strict_requested": true,
+      "use_deterministic_algorithms": true,
+      "use_deterministic_algorithms_warn_only": false,
+      "cublas_workspace_config": ":4096:8",
+      "cublas_error": null,
+      "bit_reproducible_claimed": true,
+      "strict_effective": true
+    },
+    "sample_ids": [
+      "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+      "buildsr_train_1_10026_1_largest_c6bcf9c76a2b"
+    ],
+    "losses": [
+      {
+        "total": "9.425538063049316",
+        "lm_ce": "3.9997737407684326",
+        "mask_bce": "0.21305836737155914",
+        "mask_dice": "0.9998741149902344"
+      },
+      {
+        "total": "9.547110557556152",
+        "lm_ce": "4.190395832061768",
+        "mask_bce": "0.08325356245040894",
+        "mask_dice": "0.9998125433921814"
+      }
+    ],
+    "gradients": {
+      "sha256": "919b49ade7770b8a437d11e1fe127f601a32d86bc294c9a487022e32a0529dbe",
+      "tensors_with_grad": 512,
+      "total_grad_norm": 91.40223916821115
+    },
+    "initial_fingerprint": "97daa58a4cff0ae904512d79a7ae50ec4b96abbd36e25c2b37f95d8956416acf",
+    "post_step_fingerprint": "a3f04787b1d4e42fac55b7a5ebc21fad34d55d220333362e689b13cb32d2bec8",
+    "error": null,
+    "returncode": 0,
+    "seconds": 28.0
+  },
+  "seconds": 56.2
+}

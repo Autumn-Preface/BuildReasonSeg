@@ -27,13 +27,14 @@ from __future__ import annotations
 
 import os
 from collections import OrderedDict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 import torch
 import torch.nn as nn
 
-#: Centroid of the tile, used as a content-free positional anchor for the sparse
-#: prompt slot. A constant, never derived from the annotation.
+#: Centroid of the tile, used as the fixed positive point prompt of the Task 6B
+#: bridge. A constant, never derived from the annotation -- but a real spatial
+#: prior, not a "content-free" placeholder (Task 6C section 6 renamed it).
 PROMPT_ANCHOR_XY = (0.5, 0.5)
 
 
@@ -302,7 +303,9 @@ class Sam2FeatureCache:
     Qwen hidden states are never cached.
     """
 
-    def __init__(self, encoder: Sam2Encoder, max_images: int = 160) -> None:
+    def __init__(
+        self, encoder: Sam2Encoder, max_images: int = 160, share_constant_features: bool = True
+    ) -> None:
         self.encoder = encoder
         self.max_images = int(max_images)
         self._store: "OrderedDict[str, Sam2Features]" = OrderedDict()
@@ -310,6 +313,75 @@ class Sam2FeatureCache:
         self.misses = 0
         self.evictions = 0
         self.device = next(encoder.sam.parameters()).device
+        # Task 6C section 4.4: `image_pe` and the no-mask dense embedding do not
+        # depend on the image at all (they are functions of the fixed tile size and
+        # the prompt-encoder weights). Caching one copy per image wasted 8 MiB of the
+        # 24 MiB per image and pushed 480 images to 11.25 GiB, over the 8 GiB budget.
+        # Sharing them is value-preserving: the decoder receives bit-identical
+        # tensors (see tests/test_task6c_fixes.py).
+        self.share_constant_features = bool(share_constant_features)
+        self._shared_cpu: dict[tuple, tuple[torch.Tensor, torch.Tensor]] = {}
+        self._shared_device: dict[tuple, tuple[torch.Tensor, torch.Tensor]] = {}
+
+    @staticmethod
+    def _constant_key(features: Sam2Features) -> tuple:
+        return (
+            tuple(features.image_pe.shape),
+            tuple(features.dense_no_mask_embedding.shape),
+            str(features.image_pe.dtype),
+            str(features.dense_no_mask_embedding.dtype),
+        )
+
+    def _share(self, features: Sam2Features) -> Sam2Features:
+        """Return a copy whose two image-independent tensors point at one shared CPU copy."""
+
+        if not self.share_constant_features:
+            return features
+        key = self._constant_key(features)
+        shared = self._shared_cpu.get(key)
+        if shared is None:
+            shared = (
+                features.image_pe.detach().to("cpu").contiguous(),
+                features.dense_no_mask_embedding.detach().to("cpu").contiguous(),
+            )
+            self._shared_cpu[key] = shared
+        return replace(features, image_pe=shared[0], dense_no_mask_embedding=shared[1])
+
+    def _device_constants(self, features: Sam2Features) -> tuple[torch.Tensor, torch.Tensor]:
+        key = self._constant_key(features)
+        pair = self._shared_device.get(key)
+        if pair is None:
+            cpu = self._shared_cpu[key]
+            pair = (
+                cpu[0].to(self.device, non_blocking=True),
+                cpu[1].to(self.device, non_blocking=True),
+            )
+            self._shared_device[key] = pair
+        return pair
+
+    def _to_device(self, features: Sam2Features) -> Sam2Features:
+        """Return a device copy. Never mutates its argument.
+
+        Mutating the stored entry here would put CUDA tensors inside the CPU cache
+        (one leaked copy per cached image) and would double-count the shared
+        constants in the footprint.
+        """
+
+        def move(tensor):
+            return tensor.to(self.device, non_blocking=True)
+
+        high_res = [move(level) for level in features.high_res_features] if features.high_res_features else None
+        if self.share_constant_features:
+            image_pe, dense = self._device_constants(features)
+        else:
+            image_pe, dense = move(features.image_pe), move(features.dense_no_mask_embedding)
+        return replace(
+            features,
+            image_embeddings=move(features.image_embeddings),
+            high_res_features=high_res,
+            image_pe=image_pe,
+            dense_no_mask_embedding=dense,
+        )
 
     def _to_cpu(self, features: Sam2Features) -> Sam2Features:
         def move(tensor):
@@ -357,14 +429,53 @@ class Sam2FeatureCache:
             return self._to_device(cached), True
 
         self.misses += 1
-        features = self._to_cpu(self.encoder.encode(image_hwc_uint8))
+        features = self._share(self._to_cpu(self.encoder.encode(image_hwc_uint8)))
         self._store[image_id] = features
         while len(self._store) > self.max_images:
             self._store.popitem(last=False)
             self.evictions += 1
         return self._to_device(features), False
 
+    def ram_footprint_bytes(self) -> int:
+        """Actual CPU-resident byte count of the cached tensors.
+
+        Shared tensors are counted once: the per-image entries reference the same
+        `image_pe` / `dense_no_mask_embedding` objects.
+        """
+
+        seen: set[int] = set()
+        total = 0
+
+        def add(tensor: torch.Tensor) -> None:
+            nonlocal total
+            if id(tensor) in seen:
+                return
+            seen.add(id(tensor))
+            total += tensor.numel() * tensor.element_size()
+
+        for features in self._store.values():
+            add(features.image_embeddings)
+            add(features.image_pe)
+            add(features.dense_no_mask_embedding)
+            for level in features.high_res_features or []:
+                add(level)
+        for pair in self._shared_cpu.values():
+            add(pair[0])
+            add(pair[1])
+        return total
+
+    def shared_constant_bytes(self) -> int:
+        return sum(t.numel() * t.element_size() for pair in self._shared_cpu.values() for t in pair)
+
+    def image_dependent_bytes_per_image(self) -> int:
+        if not self._store:
+            return 0
+        features = next(iter(self._store.values()))
+        tensors = [features.image_embeddings, *(features.high_res_features or [])]
+        return sum(t.numel() * t.element_size() for t in tensors)
+
     def stats(self) -> dict:
+        footprint = self.ram_footprint_bytes()
         return {
             "max_images": self.max_images,
             "cached_images": len(self._store),
@@ -372,6 +483,13 @@ class Sam2FeatureCache:
             "misses": self.misses,
             "evictions": self.evictions,
             "storage": "cpu_tensors",
+            "share_constant_features": self.share_constant_features,
+            "ram_footprint_bytes": footprint,
+            "ram_footprint_gib": round(footprint / 1024**3, 4),
+            "ram_footprint_gb": round(footprint / 1000**3, 4),
+            "image_dependent_bytes_per_image": self.image_dependent_bytes_per_image(),
+            "shared_constant_bytes": self.shared_constant_bytes(),
+            "per_image_bytes": round(footprint / len(self._store)) if self._store else 0,
         }
 
     def clear(self) -> None:
@@ -414,24 +532,66 @@ class MaskDecodeResult:
     low_res_logits: torch.Tensor
     iou_prediction: torch.Tensor
     sparse_prompt_shape: tuple[int, ...] = ()
+    sparse_prompt: torch.Tensor | None = None
+    prompt_diagnostics: dict = field(default_factory=dict)
 
     def as_dict(self) -> dict:
         return {
             "low_res_logits_shape": list(self.low_res_logits.shape),
             "iou_prediction_shape": list(self.iou_prediction.shape),
             "sparse_prompt_shape": list(self.sparse_prompt_shape),
+            "prompt_diagnostics": self.prompt_diagnostics,
         }
 
 
-def build_sparse_prompt(sam: nn.Module, projected: torch.Tensor) -> torch.Tensor:
+#: Task 6C factor 2. `centre` is the Task 6B bridge (a real fixed positive spatial
+#: prior, not a "content-free" placeholder); `language` passes only the projected
+#: language token and no point/box/mask prompt at all.
+BRIDGE_CENTRE = "centre"
+BRIDGE_LANGUAGE = "language"
+BRIDGES = (BRIDGE_CENTRE, BRIDGE_LANGUAGE)
+
+
+def sparse_prompt_dtype(sam: nn.Module) -> torch.dtype:
+    return sam.sam_prompt_encoder.point_embeddings[0].weight.dtype
+
+
+def build_sparse_prompt(
+    sam: nn.Module, projected: torch.Tensor, bridge: str = BRIDGE_CENTRE
+) -> tuple[torch.Tensor, dict]:
     """One sparse prompt embedding per sample, in SAM's prompt space.
 
-    The official prompt encoder is consulted for a single real point prompt at the
-    tile centre, which supplies (a) a positional encoding for the sparse slot and
-    (b) the no-mask dense embedding. The projected language vector is added to the
-    real point slot. The anchor coordinate is a constant; nothing is derived from
-    the annotation.
+    ``bridge='centre'`` (Task 6B, unchanged): the official prompt encoder is asked
+    for a single real point prompt at the tile centre, which supplies a positional
+    encoding for the sparse slot, and the projected language vector is **added** to
+    that point embedding. The anchor is a constant, but it is still a genuine
+    positive spatial prior.
+
+    ``bridge='language'`` (Task 6C): no point coordinates, no point labels, no
+    boxes and no mask prompt are created. The sparse prompt is exactly the
+    projected `[SEG]` token, promoted to SAM's sparse-prompt dtype. The official
+    prompt encoder is still the source of the image positional encoding and the
+    no-mask dense embedding (both are produced inside `Sam2Encoder.encode`).
     """
+
+    if bridge not in BRIDGES:
+        raise ValueError(f"unknown SAM prompt bridge {bridge!r}; expected one of {BRIDGES}")
+
+    if bridge == BRIDGE_LANGUAGE:
+        sparse = projected.to(sparse_prompt_dtype(sam))[:, None, :]
+        diagnostics = {
+            "bridge": bridge,
+            "point_prompt_used": False,
+            "uses_point_coordinates": False,
+            "uses_point_labels": False,
+            "uses_box_prompt": False,
+            "uses_mask_prompt": False,
+            "projected_norm": None,
+            "point_embedding_norm": None,
+            "ratio_projected_over_point": None,
+            "point_embedding_before_language_added": False,
+        }
+        return sparse, diagnostics
 
     batch = projected.shape[0]
     device = projected.device
@@ -441,9 +601,27 @@ def build_sparse_prompt(sam: nn.Module, projected: torch.Tensor) -> torch.Tensor
     labels = torch.ones((batch, 1), device=device, dtype=torch.int32)
 
     sparse, _dense = sam.sam_prompt_encoder(points=(anchor, labels), boxes=None, masks=None)
+    point_embedding = sparse[:, 0, :].detach().clone()
     sparse = sparse.clone()
-    sparse[:, 0, :] = sparse[:, 0, :] + projected.to(sparse.dtype)
-    return sparse
+    language = projected.to(sparse.dtype)
+    sparse[:, 0, :] = point_embedding + language
+    point_norm = float(point_embedding.float().norm(dim=-1).mean())
+    language_norm = float(language.detach().float().norm(dim=-1).mean())
+    diagnostics = {
+        "bridge": bridge,
+        "point_prompt_used": True,
+        "anchor_xy": list(PROMPT_ANCHOR_XY),
+        "point_label": "positive",
+        "uses_point_coordinates": True,
+        "uses_point_labels": True,
+        "uses_box_prompt": False,
+        "uses_mask_prompt": False,
+        "point_embedding_norm": point_norm,
+        "projected_norm": language_norm,
+        "ratio_projected_over_point": (language_norm / point_norm) if point_norm else None,
+        "point_embedding_before_language_added": True,
+    }
+    return sparse, diagnostics
 
 
 def decode_mask(
@@ -451,10 +629,11 @@ def decode_mask(
     features: Sam2Features,
     projected: torch.Tensor,
     multimask_output: bool = False,
+    bridge: str = BRIDGE_CENTRE,
 ) -> MaskDecodeResult:
     """Decode a mask from the projected `[SEG]` embedding."""
 
-    sparse = build_sparse_prompt(sam, projected)
+    sparse, diagnostics = build_sparse_prompt(sam, projected, bridge=bridge)
     low_res_logits, iou_prediction, _tokens, _obj_score = sam.sam_mask_decoder(
         image_embeddings=features.image_embeddings,
         image_pe=features.image_pe,
@@ -468,6 +647,8 @@ def decode_mask(
         low_res_logits=low_res_logits,
         iou_prediction=iou_prediction,
         sparse_prompt_shape=tuple(sparse.shape),
+        sparse_prompt=sparse.detach(),
+        prompt_diagnostics=diagnostics,
     )
 
 

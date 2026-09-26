@@ -22,7 +22,14 @@ import torch
 import torch.nn as nn
 
 from .qwen_seg import TeacherForcedBatch, forward_qwen
-from .sam2_bridge import MaskDecodeResult, ProjectionMLP, Sam2Features, decode_mask
+from .sam2_bridge import (
+    BRIDGE_CENTRE,
+    BRIDGES,
+    MaskDecodeResult,
+    ProjectionMLP,
+    Sam2Features,
+    decode_mask,
+)
 
 
 @dataclass
@@ -33,6 +40,8 @@ class MvpForwardOutput:
     mask_logits: torch.Tensor
     iou_prediction: torch.Tensor
     shapes: dict = field(default_factory=dict)
+    sparse_prompt: torch.Tensor | None = None
+    prompt_diagnostics: dict = field(default_factory=dict)
 
     def as_dict(self) -> dict:
         return {
@@ -55,13 +64,19 @@ class BuildReasonSegMvp(nn.Module):
         projection: ProjectionMLP,
         seg_token_id: int,
         token_holder: nn.Module | None = None,
+        bridge: str = BRIDGE_CENTRE,
     ) -> None:
         super().__init__()
+        if bridge not in BRIDGES:
+            raise ValueError(f"unknown SAM prompt bridge {bridge!r}; expected one of {BRIDGES}")
         self.qwen = qwen
         self.sam = sam
         self.projection = projection
         self.seg_token_id = int(seg_token_id)
         self.token_holder = token_holder
+        #: Task 6C factor 2. Threaded to every `decode_mask` call so training,
+        #: free-generation validation and the paired probe all use one bridge.
+        self.bridge = bridge
 
     # -- convenience -----------------------------------------------------
 
@@ -142,7 +157,11 @@ class BuildReasonSegMvp(nn.Module):
         lm_logits, seg_hidden = forward_qwen(self.qwen, batch)
         projected = self.projection(seg_hidden)
         decoded: MaskDecodeResult = decode_mask(
-            self.sam, sam_features, projected, multimask_output=multimask_output
+            self.sam,
+            sam_features,
+            projected,
+            multimask_output=multimask_output,
+            bridge=self.bridge,
         )
         return MvpForwardOutput(
             lm_logits=lm_logits,
@@ -155,5 +174,8 @@ class BuildReasonSegMvp(nn.Module):
                 "visual_tokens": batch.visual_tokens,
                 "sequence_length": batch.total_length,
                 "prompt_length": batch.prompt_length,
+                "bridge": self.bridge,
             },
+            sparse_prompt=decoded.sparse_prompt,
+            prompt_diagnostics=decoded.prompt_diagnostics,
         )

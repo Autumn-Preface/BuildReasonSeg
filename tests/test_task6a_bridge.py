@@ -52,13 +52,18 @@ def test_bridge_dimensions():
     projected = projection(torch.zeros(1, hidden_size, device=device))
     assert projected.shape == (1, 256)
 
-    sparse = build_sparse_prompt(rt.sam, projected)
+    # Task 6C: build_sparse_prompt also returns prompt diagnostics and takes a
+    # bridge selector; the default must still be the Task 6B centre-positive bridge.
+    sparse, diagnostics = build_sparse_prompt(rt.sam, projected)
     assert sparse.shape == (1, 2, 256), "one real prompt slot plus prompt-encoder padding"
+    assert diagnostics["bridge"] == "centre"
+    assert diagnostics["point_prompt_used"] is True
     assert tuple(PROMPT_ANCHOR_XY) == (0.5, 0.5)
 
     decoded = decode_mask(rt.sam, features, projected.detach(), multimask_output=False)
     assert decoded.low_res_logits.shape == (1, 1, 256, 256)
     assert decoded.iou_prediction.shape[0] == 1
+    assert tuple(decoded.sparse_prompt.shape) == (1, 2, 256)
     print("  [7] SAM bridge dimensions OK")
 
 
