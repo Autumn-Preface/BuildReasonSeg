@@ -1,23 +1,23 @@
 {
   "baseline_state": {
     "phase": "baseline",
-    "captured_at": "2026-09-26T13:29:28+0800",
+    "captured_at": "2026-09-26T13:41:37+0800",
     "processes": {
       "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_processes": 363,
+      "total_processes": 370,
       "watt_related": [],
       "watt_related_count": 0,
       "excluded_self_matches": [
         {
-          "pid": 12056,
+          "pid": 14384,
           "name": "node.exe"
         },
         {
-          "pid": 21808,
+          "pid": 44640,
           "name": "powershell.exe"
         },
         {
-          "pid": 2512,
+          "pid": 19128,
           "name": "python.exe"
         }
       ]
@@ -511,26 +511,27 @@
           "ok": true,
           "status": 200,
           "bytes_read": 64,
-          "seconds": 0.326
+          "seconds": 0.294
         },
         "github_api": {
           "url": "https://api.github.com/repos/facebookresearch/sam2",
           "ok": true,
           "status": 200,
           "bytes_read": 64,
-          "seconds": 0.535
+          "seconds": 0.551
         },
         "raw_githubusercontent": {
           "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
-          "ok": false,
-          "error": "RemoteDisconnected: Remote end closed connection without response",
-          "seconds": 19.45
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.246
         },
         "huggingface": {
           "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
           "ok": false,
           "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
-          "seconds": 0.039
+          "seconds": 0.0
         }
       }
     },
@@ -540,33 +541,32 @@
       "returncode": 0,
       "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
       "error": null,
-      "seconds": 1.015
+      "seconds": 1.317
     },
     "tcp": [
       {
         "host": "18.213.84.241",
         "port": 443,
         "reachable": true,
-        "seconds": 0.274
+        "seconds": 0.254
       },
       {
         "host": "185.199.108.133",
         "port": 443,
         "reachable": true,
-        "seconds": 0.079
+        "seconds": 0.092
       },
       {
         "host": "185.199.109.133",
         "port": 443,
         "reachable": true,
-        "seconds": 0.079
+        "seconds": 0.094
       },
       {
         "host": "185.199.110.133",
         "port": 443,
-        "reachable": false,
-        "error": "TimeoutError: timed out",
-        "seconds": 6.014
+        "reachable": true,
+        "seconds": 0.11
       }
     ],
     "commands_used": {
@@ -579,28 +579,28 @@
   },
   "active_state": {
     "phase": "active",
-    "captured_at": "2026-09-26T13:30:32+0800",
+    "captured_at": "2026-09-26T13:42:21+0800",
     "processes": {
       "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_processes": 369,
+      "total_processes": 374,
       "watt_related": [
         {
-          "pid": 37956,
+          "pid": 8432,
           "parent_pid": 13784,
           "name": "Steam++.exe",
           "executable_path": null,
           "command_line": ""
         },
         {
-          "pid": 41100,
-          "parent_pid": 37956,
+          "pid": 1056,
+          "parent_pid": 8432,
           "name": "Steam++.exe",
           "executable_path": null,
           "command_line": ""
         },
         {
-          "pid": 13200,
-          "parent_pid": 37956,
+          "pid": 43332,
+          "parent_pid": 8432,
           "name": "Steam++.Accelerator.exe",
           "executable_path": null,
           "command_line": ""
@@ -609,15 +609,15 @@
       "watt_related_count": 3,
       "excluded_self_matches": [
         {
-          "pid": 9668,
+          "pid": 44476,
           "name": "node.exe"
         },
         {
-          "pid": 39252,
+          "pid": 38412,
           "name": "powershell.exe"
         },
         {
-          "pid": 28960,
+          "pid": 42772,
           "name": "python.exe"
         }
       ]
@@ -634,7 +634,7 @@
         {
           "address": "0.0.0.0",
           "port": 443,
-          "pid": 13200,
+          "pid": 43332,
           "process": "Steam++.Accelerator"
         }
       ],
@@ -642,7 +642,7 @@
         {
           "address": "0.0.0.0",
           "port": 80,
-          "pid": 13200,
+          "pid": 43332,
           "process": "Steam++.Accelerator"
         }
       ],
@@ -650,13 +650,13 @@
         {
           "address": "0.0.0.0",
           "port": 443,
-          "pid": 13200,
+          "pid": 43332,
           "process": "Steam++.Accelerator"
         },
         {
           "address": "0.0.0.0",
           "port": 80,
-          "pid": 13200,
+          "pid": 43332,
           "process": "Steam++.Accelerator"
         }
       ],
@@ -1060,7 +1060,7 @@
         {
           "address": "0.0.0.0",
           "port": 443,
-          "pid": 13200,
+          "pid": 43332,
           "process": "Steam++.Accelerator"
         },
         {
@@ -1078,7 +1078,7 @@
         {
           "address": "0.0.0.0",
           "port": 80,
-          "pid": 13200,
+          "pid": 43332,
           "process": "Steam++.Accelerator"
         }
       ]
@@ -1374,13 +1374,13 @@
           "url": "https://github.com/",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.155
+          "seconds": 0.132
         },
         "github_api": {
           "url": "https://api.github.com/repos/facebookresearch/sam2",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.124
+          "seconds": 0.078
         },
         "raw_githubusercontent": {
           "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
@@ -1392,7 +1392,7 @@
           "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
           "ok": false,
           "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-          "seconds": 0.073
+          "seconds": 0.08
         }
       }
     },
@@ -1402,7 +1402,7 @@
       "returncode": 0,
       "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
       "error": null,
-      "seconds": 1.532
+      "seconds": 1.476
     },
     "tcp": [
       {
@@ -1415,19 +1415,19 @@
         "host": "18.213.84.241",
         "port": 443,
         "reachable": true,
-        "seconds": 0.225
+        "seconds": 0.233
       },
       {
         "host": "3.210.66.237",
         "port": 443,
         "reachable": true,
-        "seconds": 0.251
+        "seconds": 0.276
       },
       {
         "host": "34.198.14.237",
         "port": 443,
         "reachable": true,
-        "seconds": 0.259
+        "seconds": 0.246
       }
     ],
     "commands_used": {
@@ -1440,23 +1440,23 @@
   },
   "post_state": {
     "phase": "post",
-    "captured_at": "2026-09-26T13:32:18+0800",
+    "captured_at": "2026-09-26T13:43:08+0800",
     "processes": {
       "command": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
-      "total_processes": 363,
+      "total_processes": 364,
       "watt_related": [],
       "watt_related_count": 0,
       "excluded_self_matches": [
         {
-          "pid": 3120,
+          "pid": 21496,
           "name": "node.exe"
         },
         {
-          "pid": 37168,
+          "pid": 41552,
           "name": "powershell.exe"
         },
         {
-          "pid": 41564,
+          "pid": 33548,
           "name": "python.exe"
         }
       ]
@@ -1947,65 +1947,65 @@
       "results": {
         "github": {
           "url": "https://github.com/",
-          "ok": false,
-          "error": "TimeoutError: The read operation timed out",
-          "seconds": 25.269
+          "ok": true,
+          "status": 200,
+          "bytes_read": 64,
+          "seconds": 0.329
         },
         "github_api": {
           "url": "https://api.github.com/repos/facebookresearch/sam2",
           "ok": true,
           "status": 200,
           "bytes_read": 64,
-          "seconds": 0.575
+          "seconds": 0.511
         },
         "raw_githubusercontent": {
           "url": "https://raw.githubusercontent.com/facebookresearch/sam2/main/README.md",
-          "ok": true,
-          "status": 200,
-          "bytes_read": 64,
-          "seconds": 0.466
+          "ok": false,
+          "error": "RemoteDisconnected: Remote end closed connection without response",
+          "seconds": 19.44
         },
         "huggingface": {
           "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
           "ok": false,
           "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
-          "seconds": 0.033
+          "seconds": 0.034
         }
       }
     },
     "git": {
       "command": "git ls-remote https://github.com/facebookresearch/sam2 HEAD",
-      "ok": false,
-      "returncode": 128,
-      "head": null,
-      "error": "fatal: unable to access 'https://github.com/facebookresearch/sam2/': Failed to connect to github.com:443 after 21085 ms: Could not connect to server",
-      "seconds": 21.138
+      "ok": true,
+      "returncode": 0,
+      "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "error": null,
+      "seconds": 0.956
     },
     "tcp": [
       {
         "host": "18.213.84.241",
         "port": 443,
         "reachable": true,
-        "seconds": 0.248
+        "seconds": 0.26
       },
       {
         "host": "185.199.108.133",
         "port": 443,
         "reachable": true,
-        "seconds": 0.088
+        "seconds": 0.096
       },
       {
         "host": "185.199.109.133",
         "port": 443,
-        "reachable": true,
-        "seconds": 0.094
+        "reachable": false,
+        "error": "TimeoutError: timed out",
+        "seconds": 6.008
       },
       {
         "host": "185.199.110.133",
         "port": 443,
-        "reachable": false,
-        "error": "TimeoutError: timed out",
-        "seconds": 6.008
+        "reachable": true,
+        "seconds": 0.187
       }
     ],
     "commands_used": {
@@ -2016,23 +2016,23 @@
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
     }
   },
-  "_doc": "Standalone Watt Toolkit lifecycle test, ROUND 2 (handoff/TO_DSH.md re-run). Scope limited to starting and stopping the local accelerator; no BuildReasonSeg model work and no Task 6C. Read-only with respect to system configuration: DSH never edited the hosts file, the registry, the certificate store, PATH or the system proxy, and never force-killed a process. Every hosts change below was written by Watt Toolkit itself.",
+  "_doc": "Standalone Watt Toolkit lifecycle test, ROUND 3 (handoff/TO_DSH.md re-run). Scope limited to starting and stopping the local accelerator; no BuildReasonSeg model work and no Task 6C. Read-only with respect to system configuration: DSH never edited the hosts file, the registry, the certificate store, PATH or the system proxy, and never force-killed a process. Every hosts change below was written by Watt Toolkit itself.",
   "task": "Standalone Watt Toolkit Lifecycle Test",
-  "round": 2,
+  "round": 3,
   "test_timestamp": {
-    "baseline_captured": "2026-09-26T13:29:28+0800",
-    "app_launched": "2026-09-26T13:26:00+0800",
-    "active_captured": "2026-09-26T13:30:32+0800",
-    "window_close_attempts": "2026-09-26T13:33:00+0800",
-    "post_captured": "2026-09-26T13:32:18+0800",
-    "confirmation_cycle": "2026-09-26T13:38:00+0800"
+    "baseline_captured": "2026-09-26T13:41:37+0800",
+    "app_launched": "2026-09-26T13:44:00+0800",
+    "active_captured": "2026-09-26T13:42:21+0800",
+    "close_attempts": "2026-09-26T13:52:00+0800",
+    "post_captured": "2026-09-26T13:43:08+0800",
+    "confirmation_cycle": "2026-09-26T13:57:00+0800"
   },
-  "configuration_change_since_round_1": {
-    "_doc": "The user changed two Watt Toolkit settings and asked for a re-run focused on them.",
+  "configuration_change_since_round_2": {
+    "_doc": "The user also turned OFF 'minimize to tray on startup' and kept 'start acceleration automatically'.",
     "settings_file": "%LOCALAPPDATA%\\Packages\\4651ED44255E.47979655102CE_k6txddmbb6c52\\LocalState\\Settings\\GeneralSettings.json (read-only)",
     "GeneralSettings.json": {
       "TrayIcon": false,
-      "MinimizeOnStartup": true,
+      "MinimizeOnStartup": false,
       "AutoRunOnStartup": true,
       "WebProxyMode": "FollowSystem"
     },
@@ -2045,13 +2045,7 @@
       "SystemProxyPortId": 26561,
       "Socks5ProxyEnable": false
     },
-    "reading": "TrayIcon=false confirmed; ProgramStartupRunProxy=true means acceleration is enabled whenever the program starts, so launching the app is expected to enable acceleration by itself. ProxyMode=Hosts means acceleration works by rewriting the hosts file."
-  },
-  "previous_round": {
-    "report": "round 1 = commit 1b41060 (full record in that commit's evaluation/watt_lifecycle_test.json)",
-    "configuration": "TrayIcon was TRUE (tray icon enabled)",
-    "classification": "AUTO_START_MANUAL_STOP",
-    "why_stop_failed_then": "a bare WM_CLOSE (the .NET CloseMainWindow path) only minimized the window to tray; the tray context menu was not readable through UI Automation, so selecting Exit would have required clicking unlabelled coordinates"
+    "reading": "MinimizeOnStartup=false means the main window is expected to appear on launch; ProgramStartupRunProxy=true means acceleration is enabled automatically; ProxyMode=Hosts means acceleration rewrites the hosts file."
   },
   "environment": {
     "session_id": 1,
@@ -2083,7 +2077,7 @@
       "uninstall registry entries (only real 'Steam' matched)",
       "C:/Windows/Prefetch (no WATT/STEAM/BEYOND/TOOLKIT evidence)"
     ],
-    "note": "unchanged from round 1: Microsoft Store MSIX 3.1.2025.0, entry point Steam++.exe, capabilities internetClient/runFullTrust/allowElevation"
+    "note": "unchanged across all three rounds: Microsoft Store MSIX 3.1.2025.0, entry point Steam++.exe, capabilities internetClient/runFullTrust/allowElevation"
   },
   "baseline_summary": {
     "verified_not_assumed": true,
@@ -2106,58 +2100,67 @@
     "https": {
       "github": true,
       "github_api": true,
-      "raw_githubusercontent": false,
+      "raw_githubusercontent": true,
       "huggingface": false
     },
-    "git_ls_remote_ok": true,
-    "note": "the pre-test hosts file is 5 bytes 'ef bb bf 0d 0a' (a UTF-8 BOM and one CRLF) with zero real entries; the earlier '1 active line' count was the BOM being counted as a line, which was a counting bug in this probe and is fixed"
+    "git_ls_remote_ok": true
   },
   "startup": {
     "method": "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'",
     "rationale": "normal packaged-app activation; no elevated mode, no compatibility flags, no undocumented switches",
     "attempted": true,
     "success": true,
-    "seconds_to_process_tree": 22,
+    "window_appeared_after_ms": 1663,
+    "window_appeared_after_ms_confirmation_cycle": 1749,
+    "window_is_foreground": true,
+    "window_visible": true,
+    "window_offscreen": false,
+    "window_rect": "718,602,1438,782",
+    "window_class": "Avalonia-95a7eaf8-f1cd-460c-b211-b24afeaaca01",
+    "main_page_shown": true,
+    "main_page_evidence": "screen capture shows the Watt Toolkit window in the foreground with 首页 (home) selected in the left sidebar, the welcome banner and the 最新消息 feed; the window also raises its own toast '加速已启动成功' (acceleration started successfully)",
+    "main_page_screenshot_gitignored": "artifacts/watt_lifecycle/screen_round3_launch.png",
+    "single_window_only": true,
+    "acceleration_started_automatically": true,
+    "accelerator_listening_on_443_after_ms": 18722,
     "processes_started": [
       {
-        "pid": 37956,
+        "pid": 8432,
         "name": "Steam++.exe",
         "role": "main process and window owner"
       },
       {
-        "pid": 41100,
+        "pid": 1056,
         "name": "Steam++.exe",
         "role": "child process"
       },
       {
-        "pid": 13200,
+        "pid": 43332,
         "name": "Steam++.Accelerator.exe",
         "role": "accelerator module, owns :443 and :80"
       }
     ],
-    "window_on_first_launch": "none visible: MinimizeOnStartup=true combined with TrayIcon=false means the app comes up in the background, so a second activation is needed to surface the main window",
-    "acceleration_started_automatically": true,
-    "acceleration_evidence": "within 22 s of launch Steam++.Accelerator.exe owned 0.0.0.0:443 and 0.0.0.0:80 and the hosts file grew from 5 bytes to 6873 bytes / 214 lines with the '# Steam++ Start' ... '# Steam++ End' block redirecting github.com, api.github.com, raw.githubusercontent.com and huggingface.co to 127.0.0.1",
+    "acceleration_evidence": "Steam++.Accelerator.exe owned 0.0.0.0:443 and 0.0.0.0:80 and the hosts file grew from 5 bytes to 6873 bytes / 214 lines with the '# Steam++ Start' ... '# Steam++ End' block redirecting github.com, api.github.com, raw.githubusercontent.com and huggingface.co to 127.0.0.1",
     "gui_interaction_needed": false,
     "tray_icon_present": false
   },
   "active_summary": {
     "watt_processes": [
-      37956,
-      41100,
-      13200
+      8432,
+      1056,
+      43332
     ],
     "listeners": [
       {
         "address": "0.0.0.0",
         "port": 443,
-        "pid": 13200,
+        "pid": 43332,
         "process": "Steam++.Accelerator"
       },
       {
         "address": "0.0.0.0",
         "port": 80,
-        "pid": 13200,
+        "pid": 43332,
         "process": "Steam++.Accelerator"
       }
     ],
@@ -2187,13 +2190,7 @@
       "raw.githubusercontent.com": true,
       "huggingface.co": true,
       "hf.co": true
-    },
-    "dns_answer_github": [
-      "127.0.0.1"
-    ],
-    "dns_answer_huggingface": [
-      "127.0.0.1"
-    ]
+    }
   },
   "active_github_test": {
     "git_ls_remote": {
@@ -2202,7 +2199,7 @@
       "returncode": 0,
       "head": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
       "error": null,
-      "seconds": 1.532
+      "seconds": 1.476
     },
     "result": "OK via git's schannel backend; HEAD 2b90b9f5ceec907a1c18123530e92e794ad901a4",
     "windows_schannel_https": "Invoke-WebRequest https://api.github.com/repos/facebookresearch/sam2 -> 200",
@@ -2210,7 +2207,7 @@
       "url": "https://api.github.com/repos/facebookresearch/sam2",
       "ok": false,
       "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-      "seconds": 0.124
+      "seconds": 0.078
     }
   },
   "active_huggingface_test": {
@@ -2224,7 +2221,7 @@
       "url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json",
       "ok": false,
       "error": "URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>",
-      "seconds": 0.073
+      "seconds": 0.08
     }
   },
   "tls_integrity": {
@@ -2237,7 +2234,7 @@
       "certificate_count": 121
     },
     "python_certifi_result_under_acceleration": "CERTIFICATE_VERIFY_FAILED 'unable to get local issuer certificate' for all four probes",
-    "interpretation": "unchanged from round 1: Watt's interception root is trusted by the Windows store (git schannel, WinHTTP) but not by the project's standard certifi bundle. Recorded as a limitation; the certificate-injection workaround was NOT reintroduced."
+    "interpretation": "identical in all three rounds: Watt's interception root is trusted by the Windows store (git schannel, WinHTTP) but not by the project's standard certifi bundle. Recorded as a limitation; the certificate-injection workaround was NOT reintroduced."
   },
   "graceful_stop_attempt": {
     "acceleration_stopped_automatically": true,
@@ -2246,38 +2243,22 @@
     "attempts": [
       {
         "step": 1,
-        "action": "re-activated the packaged app (shell:AppsFolder activation) so the main window existed",
-        "result": "window 'Watt Toolkit' appeared, owner pid 37956, class Avalonia-95a8d511-..."
+        "action": "Get-Process -Id 8432 | CloseMainWindow()  # .NET posts a bare WM_CLOSE",
+        "result": "returned True but was IGNORED: 10 s later procs=3, listeners on :443/:80 = 2, hosts still 6873 bytes with the Steam++ block, the window still present"
       },
       {
         "step": 2,
-        "action": "Get-Process -Id 37956 | CloseMainWindow()  # .NET posts a bare WM_CLOSE",
-        "result": "returned True but was IGNORED: 25 s later the window was still present and not offscreen, all three processes alive, :443/:80 still listening, hosts unchanged"
+        "action": "PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0) - the message Windows sends when the user clicks the title-bar X or presses Alt+F4",
+        "result": "FULL EXIT: within 12 s procs=0, listeners=0, hosts back to 5 bytes with no Steam++ block, the window gone"
       },
       {
         "step": 3,
-        "action": "CloseMainWindow() a second time",
-        "result": "returned True, ignored again (same window handle, 3 processes)"
-      },
-      {
-        "step": 4,
-        "action": "PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0) - the message Windows sends when the user clicks the title-bar X or presses Alt+F4",
-        "result": "FULL EXIT: within 8 s all three Steam++.exe / Steam++.Accelerator.exe processes were gone, the window handle no longer existed, :443 and :80 were released and the hosts file was back to its 5-byte baseline"
-      },
-      {
-        "step": 5,
-        "action": "PostMessage(hWnd, WM_CLOSE) as a control after the exit",
-        "result": "returned 0 because the window had already gone"
-      },
-      {
-        "step": 6,
-        "action": "repeated the whole cycle once (confirmation cycle) with fresh PIDs",
-        "result": "auto-acceleration True, full exit on window close True, hosts back to baseline True"
+        "action": "repeated the whole cycle once with fresh PIDs (confirmation cycle)",
+        "result": "window popped at 1749 ms and was foreground; acceleration auto-enabled (procs=3, listeners=2, hosts 6873 bytes); SC_CLOSE produced procs=0, listeners=0 and hosts back to 5 bytes (sha f01a374e...). All four verdicts True."
       }
     ],
     "working_shutdown_sequence": [
-      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'   # start",
-      "same again                                                                  # surface the window",
+      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'   # start; window pops up by itself",
       "find the top-level window named 'Watt Toolkit' owned by Steam++.exe via UI Automation, then user32 PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0)"
     ],
     "not_attempted_because_forbidden": [
@@ -2331,36 +2312,78 @@
       ],
       "dns_huggingface_resolved": false,
       "https": {
-        "github": false,
+        "github": true,
         "github_api": true,
-        "raw_githubusercontent": true,
+        "raw_githubusercontent": false,
         "huggingface": false
       },
-      "git_ls_remote_ok": false,
-      "note": "github.com resolves again to 20.205.243.166, which black-holes TCP 443 (~21 s timeout) while 140.82.113.4 and 20.205.243.168 answer immediately; five consecutive git attempts failed on that address. This is the pre-existing intermittency recorded in Task 6B, not a Watt leftover: the hosts/DNS state is identical to baseline and huggingface.co is unresolvable again exactly as before the test."
+      "git_ls_remote_ok": true,
+      "note": "huggingface.co is unresolvable again and github.com resolves to 20.205.243.166, the address that intermittently black-holes TCP 443 on this network (already documented in Task 6B). The hosts/DNS state is identical to the pre-test baseline, so this is network behaviour rather than a Watt leftover."
     },
     "overall_returned_to_baseline": true
   },
   "configuration_effect": {
-    "question_1_acceleration_auto_starts": {
-      "answer": "YES",
-      "evidence": "accelerator child process took :443/:80 and the hosts block appeared within 22 s of launch, twice"
+    "question_1_window_pops_up_on_launch": {
+      "answer": "YES - the main page appears on its own and takes the foreground",
+      "evidence": "the 'Watt Toolkit' window existed 1663 ms after launch (1749 ms in the confirmation cycle), visible, not offscreen, and was the foreground window; the capture shows the home page with 首页 selected plus the app's own '加速已启动成功' toast"
     },
-    "question_2_window_close_exits_fully": {
+    "question_2_acceleration_works": {
+      "answer": "YES - automatically, with no GUI interaction",
+      "evidence": "Steam++.Accelerator.exe took 0.0.0.0:443/:80 within 18.7 s; hosts grew to 214 lines; git ls-remote OK, Hugging Face api/models 200 (15509 B) and config.json 200 (1505 B)"
+    },
+    "question_3_window_close_exits_fully": {
       "answer": "YES, but only through the real window-close command",
-      "evidence": "WM_SYSCOMMAND/SC_CLOSE (what the title-bar X and Alt+F4 send) produced a full exit with hosts and ports restored, twice. A bare WM_CLOSE - which is what .NET CloseMainWindow() posts - was ignored twice with the window left open."
+      "evidence": "SC_CLOSE (what the title-bar X and Alt+F4 send) produced a full exit and restored the hosts file, twice; a bare WM_CLOSE from .NET CloseMainWindow() was ignored again"
     },
-    "question_3_state_restored": {
+    "question_4_state_restored": {
       "answer": "YES",
-      "evidence": "0 processes, 0 listeners on 443/80/26561/8868/7890/10808/10809, hosts byte-identical (efbbbf0d0a), system proxy disabled"
-    },
-    "why_round_1_differed": "with TrayIcon=true the app treated a close request as 'hide to tray', so the window vanished while the accelerator kept running and the only full-exit route was the tray menu. With TrayIcon=false there is no tray to hide into, and the real close command terminates the process tree and restores the hosts file."
+      "evidence": "0 processes, 0 listeners on 443/80/26561/8868/7890/10808/10809, hosts byte-identical (efbbbf0d0a), system proxy still disabled, huggingface.co unresolvable again"
+    }
+  },
+  "three_round_comparison": {
+    "_doc": "The same lifecycle test run three times with different Watt Toolkit tray/startup settings.",
+    "rounds": [
+      {
+        "round": 1,
+        "settings": "TrayIcon=true, MinimizeOnStartup=true",
+        "commit": "1b41060",
+        "window_on_launch": "no window (minimized to tray); a second activation surfaced it",
+        "acceleration_auto": true,
+        "bare_wm_close": "hid the window to tray; accelerator kept running",
+        "sc_close": "not tested in that round",
+        "full_exit_automated": false,
+        "classification": "AUTO_START_MANUAL_STOP"
+      },
+      {
+        "round": 2,
+        "settings": "TrayIcon=false, MinimizeOnStartup=true",
+        "commit": "061afe4",
+        "window_on_launch": "no visible window; a second activation surfaced it",
+        "acceleration_auto": true,
+        "bare_wm_close": "ignored, window stayed open",
+        "sc_close": "full exit",
+        "full_exit_automated": true,
+        "classification": "FULL_AUTO_OK"
+      },
+      {
+        "round": 3,
+        "settings": "TrayIcon=false, MinimizeOnStartup=false",
+        "commit": "this commit",
+        "window_on_launch": "window pops up by itself in ~1.7 s and takes the foreground",
+        "acceleration_auto": true,
+        "bare_wm_close": "ignored, window stayed open",
+        "sc_close": "full exit",
+        "full_exit_automated": true,
+        "classification": "FULL_AUTO_OK"
+      }
+    ],
+    "conclusion": "TrayIcon controls whether a close request hides the window; MinimizeOnStartup controls whether the main page is shown at launch. Neither affects automatic acceleration. With TrayIcon=false the whole lifecycle is automatable, and the round-3 settings give the best behaviour: visible main page on launch plus a fully automatable exit."
   },
   "classification": {
     "primary": "FULL_AUTO_OK",
     "definition": "DSH can start Watt Toolkit, acceleration enables itself, connectivity can be verified, acceleration can be stopped, Watt can be exited and cleanup can be verified - all without user interaction.",
-    "caveat": "the reliable exit path is the real window-close command (WM_SYSCOMMAND/SC_CLOSE), not the .NET CloseMainWindow() default. A second activation is needed because MinimizeOnStartup=true and TrayIcon=false start the app without a visible window.",
-    "future_workflow": "DSH starts Watt Toolkit, waits for the accelerator to take :443/:80, does the networked work, then sends SC_CLOSE to the 'Watt Toolkit' window to exit and verifies the hosts file and ports are back to baseline. No user action required.",
+    "caveat": "the reliable exit path is the real window-close command (WM_SYSCOMMAND/SC_CLOSE), not the .NET CloseMainWindow() default, which posts a bare WM_CLOSE that this build ignores.",
+    "future_workflow": "DSH starts Watt Toolkit (the main page appears by itself), waits for the accelerator to take :443/:80, does the networked work, then sends SC_CLOSE to the 'Watt Toolkit' window and verifies the hosts file and ports are back to baseline. No user action required.",
     "user_interaction_required": false
   },
   "user_interaction_required": {
@@ -2371,11 +2394,11 @@
   "safety_warnings": [
     "None outstanding: the machine is back at its pre-test baseline (byte-identical hosts file, no Watt processes, no Watt listeners, system proxy still disabled).",
     "While acceleration is on, Watt intercepts TLS. Python clients using the standard certifi bundle fail certificate verification; git and WinHTTP succeed because they use the Windows trust store. Do not fix this by injecting certificates into certifi.",
-    "Disabling the tray icon makes Watt an invisible background process that a bare WM_CLOSE does not terminate; use the real window close (X / Alt+F4) or re-activate the app first."
+    "This build ignores a bare WM_CLOSE, so a programmatic CloseMainWindow() leaves Watt running invisibly; use the real window close (X / Alt+F4) or send WM_SYSCOMMAND/SC_CLOSE."
   ],
   "limitations": [
     "The app exposes no UI Automation tree, so in-app controls still cannot be invoked by name; the exit used is the operating system's window-close command, which is what a user's X click sends.",
-    "The bare-WM_CLOSE-is-ignored behaviour is specific to this Watt Toolkit 3.1.2025.0 build and should be re-checked after an app update.",
+    "The bare-WM_CLOSE-is-ignored behaviour is specific to Watt Toolkit 3.1.2025.0 and should be re-checked after an app update.",
     "GitHub reachability remains intermittent at the network level (github.com resolves to a black-holed address) independently of Watt."
   ],
   "exact_commands_actions_used": {
@@ -2387,12 +2410,13 @@
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
     },
     "settings_read_read_only": {
-      "Get-Content .../LocalState/Settings/GeneralSettings.json": "TrayIcon=false, MinimizeOnStartup=true",
+      "Get-Content .../LocalState/Settings/GeneralSettings.json": "TrayIcon=false, MinimizeOnStartup=false",
       "Get-Content .../LocalState/Plugins/Accelerator/Settings/ProxySettings.json": "ProxyMode=Hosts, ProgramStartupRunProxy=true"
     },
     "startup": {
-      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'": "accelerator auto-enabled within 22 s"
+      "Start-Process explorer.exe -ArgumentList 'shell:AppsFolder\\4651ED44255E.47979655102CE_k6txddmbb6c52!App'": "window appeared as the foreground window after 1663 ms; accelerator took :443 after 18722 ms"
     },
+    "window_detection": "UI Automation: RootElement children filtered by ProcessId of Steam++ processes and Name == 'Watt Toolkit'; IsOffscreen and GetForegroundWindow used for the visibility/foreground checks",
     "active_probe": {
       "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
       "services": "powershell -NoProfile -Command \"Get-CimInstance Win32_Service | Select-Object Name,DisplayName,State,StartMode,PathName | ConvertTo-Json -Depth 3 -Compress\"",
@@ -2406,9 +2430,8 @@
       "Invoke-WebRequest https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct/resolve/main/config.json": "200, 1505 bytes"
     },
     "shutdown": {
-      "CloseMainWindow()": "ignored (window stayed open, 3 processes)",
-      "PostMessage WM_SYSCOMMAND/SC_CLOSE": "full exit",
-      "find the top-level window named 'Watt Toolkit' owned by Steam++.exe via UI Automation, then user32 PostMessage(hWnd, WM_SYSCOMMAND=0x0112, SC_CLOSE=0xF060, 0)": "the mechanism that worked"
+      "CloseMainWindow()": "ignored (procs=3, listeners=2, hosts unchanged, window still present)",
+      "PostMessage WM_SYSCOMMAND/SC_CLOSE": "full exit (procs=0, listeners=0, hosts restored)"
     },
     "post_probe": {
       "processes": "powershell -NoProfile -Command \"Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine | ConvertTo-Json -Depth 3 -Compress\"",
@@ -2416,15 +2439,12 @@
       "listeners": "powershell -NoProfile -Command \"Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress,LocalPort,OwningProcess | ConvertTo-Json -Depth 3 -Compress\"",
       "listener_owner_names": "powershell -NoProfile -Command \"Get-Process | Select-Object Id,ProcessName | ConvertTo-Json -Compress\"",
       "git_ls_remote": "git ls-remote https://github.com/facebookresearch/sam2 HEAD"
-    },
-    "confirmation_cycle": "the same launch -> activate -> SC_CLOSE sequence repeated once with fresh PIDs; auto-acceleration True, full exit True, hosts restored True"
+    }
   },
   "artifacts": {
     "round_1_backup_gitignored": "artifacts/watt_lifecycle/round1_report.json",
-    "screenshots_gitignored": [
-      "artifacts/watt_lifecycle/screen_after_reactivate.png",
-      "artifacts/watt_lifecycle/screen_tray_menu.png"
-    ],
+    "round_2_backup_gitignored": "artifacts/watt_lifecycle/round2_report.json",
+    "round_3_screenshot_gitignored": "artifacts/watt_lifecycle/screen_round3_launch.png",
     "probe_helper_gitignored": "artifacts/watt_lifecycle/probe.py"
   }
 }
