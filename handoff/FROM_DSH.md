@@ -253,11 +253,20 @@ no-GT-in-the-inference-path, the true-total-step scheduler horizon (source + num
 one-step-row smoke assertions, forbidden components (`[REF]`, SRE, SCL, 4B), no test-split reads,
 artifact determinism, and the Task 6D.1 wording/boolean correction.
 
-Full suite: **{{TESTS_RESULT}}**.
+Full suite: **301 passed** in 789 s (`python -m pytest tests/ -q`, including the artifact-consistency
+gate) — 263 pre-existing tests plus the 38 Task 6E tests, with no regressions.
 
 ## 18. Git / Watt (section 22)
 
-{{GIT_SECTION}}
+**Commit: `ca4fb21` — `feat: add explicit spatial grounding tokens`** (staged only code, tests, docs and
+`evaluation/**` artifacts: no checkpoints, no weights, no `.conda`, no feature caches, no dataset edits;
+`artifacts/**` stays gitignored and only `evaluation/task6e_checkpoint_manifest.json` records the
+checkpoint hashes).
+
+**Watt Toolkit handling:** the pre-existing Watt processes (`Steam++.exe`,
+`Steam++.Accelerator.exe`) were left running untouched for the whole task and are used for the final
+push only under the established ownership rules — never closed, never force-killed, no hosts-file,
+certificate-store or TLS changes anywhere in this task.
 
 ## 19. Recommended Next Architecture Task (section 17)
 
