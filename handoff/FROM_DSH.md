@@ -265,9 +265,9 @@ asserted too, so the history cannot be silently rewritten.
 
 ## 17. Git / Watt
 
-* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main` with the recommended message
-  `fix: audit spatial grounding representation`; the exact hash and push result are recorded in a
-  follow-up `docs:` commit and in the DSH turn response. Remote `main` was at `35a327f` before this task.
+* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`: commit **`eb530ed`**
+  (`fix: audit spatial grounding representation`) plus a follow-up `docs:` commit recording this hash and
+  the push result (`35a327f..eb530ed  main -> main`). Remote `main` was at `35a327f` before this task.
 * Artifacts: `evaluation/task6d1_scheduler_audit.json`, `task6d1_g0_corrected.json`,
   `task6d1_hidden_extract_manifest.json`, `task6d1_probe_linear.json`, `task6d1_probe_raw_mlp.json`,
   `task6d1_probe_layernorm_mlp.json`, `task6d1_representation_stats.json`,
