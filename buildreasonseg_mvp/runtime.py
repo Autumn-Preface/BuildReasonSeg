@@ -222,6 +222,8 @@ class MvpRuntime:
     spatial_setup: object | None = None
     #: Task 6F: the single `[BOX]` query token setup (None = every other task's runtime).
     box_setup: object | None = None
+    #: Task 6G: the selected dense spatial grid (None = every other task's runtime).
+    dense_grid: int | None = None
 
     @property
     def spatial_codec(self):
@@ -736,6 +738,149 @@ class MvpRuntime:
             },
         }
 
+    # -- Task 6G: Dense Query-Visual Spatial Grounding Map -------------------
+
+    def install_dense_head(self, in_channels: int | None = None) -> dict:
+        """Attach the `DenseSpatialGroundingHead` to this runtime's model (Task 6G section 5)."""
+
+        from .dense_grounding import DenseSpatialGroundingHead
+
+        if self.box_setup is None or self.dense_grid is None:
+            raise RuntimeError("install_dense_head needs the [BOX] query setup and a selected grid")
+        head = DenseSpatialGroundingHead(
+            query_dim=int(self.reports.get("qwen_hidden_size") or 2048),
+            key_dim=int(self.cfg.get("dense_grounding", {}).get("key_dim", 128)),
+            in_channels=in_channels,
+            use_bias=bool(self.cfg.get("dense_grounding", {}).get("scalar_bias", True)),
+        ).to(self.device)
+        self.model.dense_head = head
+        self.dense_head = head
+        report = head.as_dict()
+        report.update(
+            {
+                "installed": True,
+                "grid": int(self.dense_grid),
+                "box_token_id": int(self.box_setup.box_token_id),
+                "trainable": all(parameter.requires_grad for parameter in head.parameters()),
+            }
+        )
+        self.reports["dense_head"] = report
+        return report
+
+    def freeze_for_dense_grounding(self) -> dict:
+        """Task 6G section 10 trainable set.
+
+        Train: text LoRA, the `[BOX]` query row, the `[SEG]` row and the
+        `DenseSpatialGroundingHead`. Freeze: Qwen base, the visual tower, all SAM2, the Task 6F
+        `TargetAwareBoxHead`, the Task 6D `SpatialGroundingHead`, the old Projection MLP, and any
+        Task 6E `<loc_*>` rows (none are added in Task 6G).
+        """
+
+        if self.box_setup is None or self.dense_grid is None:
+            raise RuntimeError("freeze_for_dense_grounding needs the [BOX] query and a grid")
+        report = set_phase_trainables(self.model, "A")
+        for head_name in ("grounding_head", "box_head"):
+            head = getattr(self.model, head_name, None)
+            if head is not None:
+                for parameter in head.parameters():
+                    parameter.requires_grad_(False)
+            report[f"{head_name}_trainable"] = False
+        if self.model.dense_head is not None:
+            for parameter in self.model.dense_head.parameters():
+                parameter.requires_grad_(True)
+        report["box_query_token_id"] = int(self.box_setup.box_token_id)
+        report["dense_grid"] = int(self.dense_grid)
+        report["trainable_token_ids"] = list(self.reports.get("lora", {}).get("trainable_token_ids") or [])
+        report["dense_head_trainable"] = (
+            all(parameter.requires_grad for parameter in self.model.dense_head.parameters())
+            if self.model.dense_head is not None
+            else False
+        )
+        report["sam_frozen"] = not any(p.requires_grad for p in self.model.sam.parameters())
+        report["projection_frozen"] = not any(p.requires_grad for p in self.model.projection.parameters())
+        report["loc_tokens_present"] = any(
+            name.startswith("<loc_") for name in self.tokenizer.get_added_vocab()
+        )
+        report["loc_rows_trainable"] = False  # Task 6G adds no location tokens at all
+        self.reports["dense_trainables"] = report
+        return report
+
+    def dense_train_step(self, batch, gt_mask, features, optimizer=None, timer=None) -> dict:
+        """One Task 6G step: `1.0 * L_reasoning + 2.0 * L_heatmap` (section 8).
+
+        `gt_mask` is supervision only; the soft heatmap target is the instruction-selected target
+        mask downsampled to the selected grid. The SAM2 spatial feature is a frozen encoder output
+        (from the existing CPU cache); gradients flow only through the trainable 1x1 projection.
+        """
+
+        from .box_query import box_query_forward
+        from .dense_grounding import (
+            HEATMAP_LOSS_WEIGHT,
+            REASONING_LOSS_WEIGHT,
+            downsample_target_mask,
+            feature_tensor_for_grid,
+            heatmap_loss,
+        )
+        from .losses import lm_cross_entropy
+
+        batch = batch.to(self.device)
+        use_autocast = bool(self.cfg["training"].get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                lm_logits, box_hidden, _seg_hidden = box_query_forward(self.model.qwen, batch)
+                spatial_feature = feature_tensor_for_grid(features, int(self.dense_grid)).to(self.device)
+                heatmap_logits = self.model.dense_head(box_hidden, spatial_feature).unsqueeze(1)
+                soft_target = downsample_target_mask(gt_mask, int(self.dense_grid)).to(self.device)
+                soft_target = soft_target[None, None, :, :]
+                losses = heatmap_loss(heatmap_logits, soft_target)
+                reasoning = lm_cross_entropy(lm_logits, batch.labels)
+                total = REASONING_LOSS_WEIGHT * reasoning + HEATMAP_LOSS_WEIGHT * losses["heatmap"]
+
+        with _stage("backward"):
+            if optimizer is not None:
+                optimizer.zero_grad(set_to_none=True)
+            total.backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        return {
+            "losses": {
+                "total": float(total.detach()),
+                "reasoning_ce": float(reasoning.detach()),
+                "heatmap_bce": losses["bce_raw"],
+                "heatmap_dice": losses["dice_raw"],
+                "heatmap_loss": losses["heatmap_raw"],
+                "lm_ce": float(reasoning.detach()),
+                "mask_bce": losses["bce_raw"],
+                "mask_dice": losses["dice_raw"],
+                "ground": losses["heatmap_raw"],
+            },
+            "heatmap_dice_quality": float(1.0 - losses["dice_raw"]),
+            "grad_clip_total_norm": clipped,
+            "weights": {
+                "reasoning": float(REASONING_LOSS_WEIGHT),
+                "heatmap": float(HEATMAP_LOSS_WEIGHT),
+                "heatmap_bce": 1.0,
+                "heatmap_dice": 1.0,
+            },
+        }
+
     def build_optimizer(self) -> torch.optim.AdamW:
         opt_cfg = self.cfg["optimizer"]
         groups = self.model.trainable_parameter_groups(
@@ -1027,16 +1172,26 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
 
     # Task 6F: add exactly ONE active query token `[BOX]` (no `<loc_*>` vocabulary) and make
     # its row trainable alongside `[SEG]`. Mutually exclusive with the Task 6E spatial block;
-    # absent from every Task 6A-6E configuration.
+    # absent from every Task 6A-6E configuration. Task 6G reuses this exact setup.
     box_cfg = cfg.get("box_query") or {}
     box_setup = None
     if box_cfg.get("enabled"):
         if spatial_setup is not None:
-            raise RuntimeError("cfg enables both spatial_tokens and box_query; Task 6F forbids it")
+            raise RuntimeError("cfg enables both spatial_tokens and box_query; Tasks 6F/6G forbid it")
         from .box_query import add_box_query_token
 
         box_setup = add_box_query_token(qwen, tokenizer, str(box_cfg.get("box_token", "[BOX]")))
         extra_token_ids = [int(box_setup.box_token_id)]
+
+    # Task 6G: dense spatial grounding reuses the [BOX] query token and adds a selected grid.
+    dense_cfg = cfg.get("dense_grounding") or {}
+    dense_grid = None
+    if dense_cfg.get("enabled"):
+        if box_setup is None:
+            raise RuntimeError("cfg enables dense_grounding without box_query; the [BOX] query is required")
+        dense_grid = int(dense_cfg.get("grid"))
+        if dense_grid not in (64, 128, 256):
+            raise RuntimeError(f"dense_grounding grid must be one of 64/128/256, got {dense_grid}")
 
     if cfg["token"].get("prefer_peft_trainable_token_indices", True):
         qwen, token_holder, lora_report = attach_lora(
@@ -1064,6 +1219,8 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
             "trainable_token_ids": list(lora_report.trainable_token_ids),
             "token_mechanism": lora_report.token_mechanism,
         }
+    if dense_grid is not None:
+        reports["dense_grounding"] = {"enabled": True, "grid": int(dense_grid)}
 
     if cfg["training"].get("gradient_checkpointing", False):
         qwen.gradient_checkpointing_enable()
@@ -1151,6 +1308,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         loss_weights=LossWeights(**{k: float(v) for k, v in cfg["loss"].items() if isinstance(v, (int, float))}),
         spatial_setup=spatial_setup,
         box_setup=box_setup,
+        dense_grid=dense_grid,
     )
 
 

@@ -85,6 +85,12 @@ def save_checkpoint(
             if getattr(model, "box_head", None) is not None
             else None
         ),
+        # Task 6G: the dense spatial grounding head, when the model has one.
+        "dense_head": (
+            {k: v.detach().cpu() for k, v in model.dense_head.state_dict().items()}
+            if getattr(model, "dense_head", None) is not None
+            else None
+        ),
         "geometry_kind": getattr(model, "geometry_kind", None),
         "rng_state": {
             "python": random.getstate(),
@@ -124,6 +130,10 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
     if getattr(model, "box_head", None) is not None and payload.get("box_head"):
         model.box_head.load_state_dict(payload["box_head"])
         box_head_loaded = True
+    dense_head_loaded = False
+    if getattr(model, "dense_head", None) is not None and payload.get("dense_head"):
+        model.dense_head.load_state_dict(payload["dense_head"])
+        dense_head_loaded = True
     if model.token_holder is not None and (
         "project_token_rows" in payload or "project_token_row" in payload
     ):
@@ -151,6 +161,7 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
         "unexpected_keys": len(unexpected),
         "grounding_head_loaded": head_loaded,
         "box_head_loaded": box_head_loaded,
+        "dense_head_loaded": dense_head_loaded,
         "geometry_kind": payload.get("geometry_kind"),
     }
 

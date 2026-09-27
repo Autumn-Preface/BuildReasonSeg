@@ -1,0 +1,254 @@
+{
+  "_doc": "Task 6G sections 2, 4-10. Feature-level measurement, dense-head setup and one-step gradient smoke. Every claim comes from a real forward/backward on one training sample; nothing here is assumed.",
+  "task": "6G",
+  "grid": 256,
+  "oracle_selection": {
+    "rule": "smallest grid whose snapped-point oracle keeps paired >= 18/20 and strict mIoU >= 0.4576 (continuous point oracle 0.4876 minus 0.03)",
+    "miou_threshold": 0.4576,
+    "qualifying_grids": [
+      256
+    ],
+    "selected_grid": 256,
+    "verdict": "PROCEED_WITH_GRID_256"
+  },
+  "config": "configs/mvp/task6g_dense_grounding.yaml",
+  "vocabulary": {
+    "box_token": "[BOX]",
+    "box_token_id": 151670,
+    "vocab_before": 151670,
+    "vocab_after": 151671,
+    "added_tokens": 1,
+    "embedding_shape_before": [
+      151670,
+      2048
+    ],
+    "embedding_shape_after": [
+      151671,
+      2048
+    ],
+    "tied_embeddings": true,
+    "single_token_roundtrip": true,
+    "seg_token_id": 151669,
+    "no_loc_tokens_added": true,
+    "added_vocabulary": [
+      "</think>",
+      "</tool_call>",
+      "</tool_response>",
+      "<think>",
+      "<tool_call>",
+      "<tool_response>",
+      "<|box_end|>",
+      "<|box_start|>",
+      "<|endoftext|>",
+      "<|file_sep|>",
+      "<|fim_middle|>",
+      "<|fim_pad|>",
+      "<|fim_prefix|>",
+      "<|fim_suffix|>",
+      "<|im_end|>",
+      "<|im_start|>",
+      "<|image_pad|>",
+      "<|object_ref_end|>",
+      "<|object_ref_start|>",
+      "<|quad_end|>",
+      "<|quad_start|>",
+      "<|repo_name|>",
+      "<|video_pad|>",
+      "<|vision_end|>",
+      "<|vision_pad|>",
+      "<|vision_start|>",
+      "[BOX]",
+      "[SEG]"
+    ]
+  },
+  "feature_levels": {
+    "image_embeddings_shape": [
+      1,
+      256,
+      64,
+      64
+    ],
+    "high_res_shapes": [
+      [
+        1,
+        32,
+        256,
+        256
+      ],
+      [
+        1,
+        64,
+        128,
+        128
+      ]
+    ],
+    "levels_by_grid": {
+      "64": [
+        1,
+        256,
+        64,
+        64
+      ],
+      "128": [
+        1,
+        64,
+        128,
+        128
+      ],
+      "256": [
+        1,
+        32,
+        256,
+        256
+      ]
+    }
+  },
+  "selected_level": {
+    "grid": 256,
+    "shape": [
+      1,
+      32,
+      256,
+      256
+    ],
+    "in_channels": 32,
+    "source": "high_res_features (by spatial size)"
+  },
+  "head": {
+    "class": "DenseSpatialGroundingHead",
+    "query_dim": 2048,
+    "key_dim": 128,
+    "in_channels": 32,
+    "structure": "query: LayerNorm(2048) -> Linear(2048,128); visual: Conv1x1(C,128); heatmap = dot(q, K)/sqrt(128) + scalar bias",
+    "scalar_bias": true,
+    "parameters": 270593,
+    "installed": true,
+    "grid": 256,
+    "box_token_id": 151670,
+    "trainable": true
+  },
+  "trainables": {
+    "phase": "A",
+    "trainable_tensors": 400,
+    "frozen_tensors": 1243,
+    "trainable_params": 17707265,
+    "projection_trainable": false,
+    "sam_mask_decoder_trainable": false,
+    "qwen_visual_trainable": [
+      "dense_head.visual_proj.weight",
+      "dense_head.visual_proj.bias"
+    ],
+    "grounding_head_trainable": false,
+    "box_head_trainable": false,
+    "box_query_token_id": 151670,
+    "dense_grid": 256,
+    "trainable_token_ids": [
+      151669,
+      151670
+    ],
+    "dense_head_trainable": true,
+    "sam_frozen": true,
+    "projection_frozen": true,
+    "loc_tokens_present": false,
+    "loc_rows_trainable": false
+  },
+  "optimizer_groups": [
+    {
+      "name": "lora",
+      "lr": 0.0001,
+      "weight_decay": 0.01,
+      "tensors": 392,
+      "parameters": 17432576
+    },
+    {
+      "name": "decoder",
+      "lr": 0.0003,
+      "weight_decay": 0.01,
+      "tensors": 7,
+      "parameters": 270593
+    },
+    {
+      "name": "token",
+      "lr": 0.0003,
+      "weight_decay": 0.0,
+      "tensors": 1,
+      "parameters": 4096
+    }
+  ],
+  "supervision": {
+    "heatmap_shape": [
+      1,
+      256,
+      256
+    ],
+    "expected_shape": [
+      1,
+      256,
+      256
+    ],
+    "soft_target_mass": 152.75,
+    "soft_target_mass_positive": true,
+    "soft_target_range": [
+      0.0,
+      1.0
+    ]
+  },
+  "causal_placement": {
+    "future_text_changed": true,
+    "box_hidden_bit_identical": true,
+    "box_hidden_max_abs_delta": 0.0
+  },
+  "one_step_smoke": {
+    "sample_id": "buildsr_train_1_0_1_leftmost_274a8750ef95",
+    "losses": {
+      "total": 7.808572769165039,
+      "reasoning_ce": 4.280196189880371,
+      "heatmap_bce": 0.7688170075416565,
+      "heatmap_dice": 0.9953711628913879,
+      "heatmap_loss": 1.7641881704330444,
+      "lm_ce": 4.280196189880371,
+      "mask_bce": 0.7688170075416565,
+      "mask_dice": 0.9953711628913879,
+      "ground": 1.7641881704330444
+    },
+    "weights": {
+      "reasoning": 1.0,
+      "heatmap": 2.0,
+      "heatmap_bce": 1.0,
+      "heatmap_dice": 1.0
+    },
+    "heatmap_dice_quality": 0.0046288371086120605,
+    "grad_clip_total_norm": 57.464664459228516,
+    "box_row_delta": 0.0003000013530254364,
+    "seg_row_delta": 0.0003000013530254364,
+    "box_row_grad_norm": 0.9409492015838623,
+    "seg_row_grad_norm": 0.1819678395986557,
+    "dense_head_param_max_delta": {
+      "bias": 0.00029999983962625265,
+      "query_norm.weight": 0.00030297040939331055,
+      "query_norm.bias": 0.00029996639932505786,
+      "query_proj.weight": 0.00030006468296051025,
+      "query_proj.bias": 0.0003000553697347641,
+      "visual_proj.weight": 0.00030049681663513184,
+      "visual_proj.bias": 0.0003005117177963257
+    },
+    "dense_head_param_grad_norms": {
+      "bias": 0.018625576049089432,
+      "query_norm.weight": 0.00121745013166219,
+      "query_norm.bias": 0.0011529955081641674,
+      "query_proj.weight": 0.08959167450666428,
+      "query_proj.bias": 0.0019791617523878813,
+      "visual_proj.weight": 0.0024500160943716764,
+      "visual_proj.bias": 0.010882949456572533
+    },
+    "ordinary_rows_probed": 16,
+    "ordinary_rows_max_abs_delta": 0.0,
+    "ordinary_rows_unchanged_exactly": true,
+    "base_embedding_tensor_bit_identical": true,
+    "sam2_max_abs_delta": 0.0,
+    "sam2_bit_identical": true,
+    "visual_tower_lora_modules": []
+  },
+  "seconds": 25.5,
+  "passed": true
+}

@@ -1,0 +1,61 @@
+{
+  "_doc": "Task 6G section 18. Exactly one verdict, resolved from the recorded artifacts. The dot-product query-to-map fusion is not claimed as final novelty (section 19).",
+  "task": "6G",
+  "verdict": "DENSE_GROUNDING_IMPLEMENTATION_FAILED",
+  "reason": "G0 did not pass the 20-record implementation gate after the implementation audit",
+  "evidence": {
+    "grid_oracle": {
+      "selected_grid": 256,
+      "qualifying_grids": [
+        256
+      ],
+      "miou_threshold": 0.4576,
+      "per_grid": {
+        "64": {
+          "strict_miou": 0.4950459148424367,
+          "paired_pass": 17,
+          "paired_total": 20,
+          "mean_displacement_512px": 2.225
+        },
+        "128": {
+          "strict_miou": 0.48939352240801476,
+          "paired_pass": 17,
+          "paired_total": 20,
+          "mean_displacement_512px": 1.025
+        },
+        "256": {
+          "strict_miou": 0.48829042981378734,
+          "paired_pass": 18,
+          "paired_total": 20,
+          "mean_displacement_512px": 0.5
+        }
+      }
+    },
+    "G0": {
+      "verdict": "DENSE_GROUNDING_IMPLEMENTATION_FAILED",
+      "point_inside_rate": 0.1,
+      "mean_heatmap_dice": 0.12506459653377533,
+      "paired_point_selection_pass": 0,
+      "pairs_with_distinct_points": 7,
+      "mean_same_image_point_distance": 0.335546875,
+      "gate": {
+        "kind": "g0",
+        "checks": {
+          "point_inside_own_ge": false,
+          "paired_point_selection_ge": false,
+          "heatmap_dice_ge": false,
+          "paired_points_distinct": false,
+          "no_gt_leakage": true
+        },
+        "passed": false,
+        "gate": {
+          "point_inside_own_min": 19,
+          "paired_point_selection_min": 9,
+          "heatmap_dice_min": 0.8
+        }
+      }
+    },
+    "G1": null,
+    "G2": null
+  }
+}

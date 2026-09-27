@@ -1,0 +1,150 @@
+# =============================================================================
+# Task 6G -- Dense Query-Visual Spatial Grounding Map v0.1
+#
+# Task 6F's global box regression is retired (history preserved). Task 6G reuses the causally
+# clean pre-reasoning [BOX] query (same token, same placement) but matches its hidden state
+# against the frozen SAM2 dense spatial features to produce a target-specific heatmap:
+#
+#   image + instruction -> [BOX] -> reasoning_zh [SEG] EOS
+#   q = LayerNorm([BOX] hidden) -> Linear(2048,128)
+#   K = Conv1x1(C,128)(frozen SAM2 spatial feature at the selected grid)
+#   heatmap_logits = dot(q, K)/sqrt(128) (+ scalar bias)
+#   predicted point = argmax cell centre
+#
+#   L_total = 1.0 * L_reasoning + 2.0 * (1.0 * BCEWithLogits + 1.0 * SoftDice)
+#
+# Deliberately NOT here: coordinate tokens, global box SmoothL1, [REF], SRE, SCL, 4B, a new
+# dataset, full training, true batch > 1, GUI, or any SAM2 training.
+# =============================================================================
+
+task: "6G"
+seed: 20260926
+offline: true
+
+models:
+  qwen_model_id: "Qwen/Qwen3-VL-2B-Instruct"
+  qwen_dtype: "bfloat16"
+  qwen_attn_implementation: "sdpa"
+  sam2_repo_id: "facebook/sam2.1-hiera-base-plus"
+  sam2_checkpoint_file: "sam2.1_hiera_base_plus.pt"
+  sam2_config_name: "configs/sam2.1/sam2.1_hiera_b+.yaml"
+  sam2_source_revision_expected: "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+
+paths:
+  local_cache: "local_cache"
+  hf_cache: "local_cache/huggingface"
+  models_dir: "local_cache/models"
+  sam2_source: "local_cache/sam2_source"
+  artifacts: "artifacts"
+  stage_outputs: "artifacts/stage_outputs"
+  checkpoints: "artifacts/checkpoints/task6g"
+  feature_cache: "artifacts/sam2_feature_cache"
+
+bridge:
+  mode: "centre"
+
+token:
+  seg_token: "[SEG]"
+  prefer_peft_trainable_token_indices: true
+
+# Task 6F section 4 / Task 6G section 4: the fixed pre-reasoning query token, reused unchanged.
+box_query:
+  enabled: true
+  box_token: "[BOX]"
+
+# Task 6G section 5: the dense spatial grounding head. `grid` is the spatial level selected by the
+# grid-snapped point oracle (evaluation/task6g_grid_oracle.json): 64 -> main image embedding,
+# 128 / 256 -> the matching high-resolution feature (picked by spatial size, never list order).
+dense_grounding:
+  enabled: true
+  grid: 64
+  key_dim: 128
+  scalar_bias: true
+  # Section 8: fixed weights, not swept.
+  reasoning_loss_weight: 1.0
+  heatmap_loss_weight: 2.0
+  heatmap_bce_weight: 1.0
+  heatmap_dice_weight: 1.0
+
+lora:
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  bias: "none"
+  target_suffixes: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  text_only: true
+
+projection:
+  hidden_dim: null
+  dropout: 0.0
+
+preprocessing:
+  image_budget:
+    set_explicitly: true
+    min_pixels: 262144
+    max_pixels: 262144
+
+loss:
+  # Kept for comparability; the Task 6G objective never uses the mask terms (section 8).
+  lm_ce: 2.0
+  mask_bce: 2.0
+  mask_dice: 1.0
+  note: "unused by the Task 6G objective; recorded for comparability with Task 6C"
+
+optimizer:
+  name: "adamw"
+  betas: [0.9, 0.999]
+  weight_decay: 0.01
+  grad_clip_norm: 1.0
+  # Task 6C phase-B rates, unchanged: LoRA 1e-4; token rows 3e-4; decoder group (dense head) 3e-4.
+  lora_lr: 1.0e-4
+  token_lr: 3.0e-4
+  decoder_lr: 3.0e-4
+  warmup_steps: 20
+  lr_schedule: "cosine"
+
+training:
+  bf16_autocast: true
+  gradient_checkpointing: true
+  use_cache: false
+  deterministic: true
+  deterministic_strict: true
+  collect_grad_norms: false
+  visual_feature_cache: true
+  visual_feature_cache_max_images: 512
+  train_at_original_resolution: true
+  feature_cache_images: 480
+  feature_cache_share_constants: true
+  append_eos_to_target: true
+
+g0:
+  # Section 11: 20 records (10 same-image/different-target pairs), <= 1500 optimizer steps.
+  samples: 20
+  pairs: 10
+  max_steps: 1500
+  eval_every: 250
+  log_every_steps: 50
+  min_steps_before_stop: 250
+  gate:
+    point_inside_own_min: 19     # out of 20
+    paired_point_selection_min: 9  # out of 10
+    heatmap_dice_min: 0.80
+
+g1:
+  # Section 12: 480 paired records, maximum 8 epochs; corrected scheduler horizon.
+  epochs: 8
+  max_steps: 3840
+  log_every_steps: 120
+  early_stop_patience_epochs: 3
+  early_stop_after_epoch: 3
+  gate:
+    point_inside_target_min: 0.70
+    paired_point_selection_min: 14   # out of 20
+    heatmap_dice_min: 0.35
+
+inference:
+  max_new_tokens: 96
+  validation_max_new_tokens: 96
+  do_sample: false
+  mask_threshold: 0.0
+  multimask_output: false

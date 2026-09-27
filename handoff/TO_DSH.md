@@ -1,358 +1,414 @@
-# TO_DSH — Task 6F: Target-Aware `[BOX]` Query Grounding v0.1
+# TO_DSH — Task 6G: Dense Query–Visual Spatial Grounding Map v0.1
 
 > Status: **ACTIVE**
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: replace Task 6E's failed 256-way autoregressive coordinate vocabulary with a dedicated **target-aware spatial query token** whose hidden state is directly supervised for box geometry.
+> Purpose: replace Task 6F's failed **global coordinate regression** with an explicit **query-to-spatial-feature localization map**.
 >
 > Accepted evidence:
-> - Oracle BOX → SAM2: strict mIoU `0.7506`, paired `20/20`;
-> - Task 6D.1: end-of-reasoning `[SEG]` hidden has no practically decodable target geometry under the audited readouts;
-> - Task 6E: explicit coordinate tokens overfit 20 records but fail on the 480-record paired mini-train with runaway location-token sequences.
+> - Oracle BOX → frozen SAM2: strict mIoU `0.7506`, paired `20/20`.
+> - Oracle POINT → frozen SAM2: strict mIoU `0.4876`, paired `18/20`.
+> - Task 6F `[BOX]` query is causally clean and can overfit 20 records, but on 480 records direct box regression fails: val box IoU `0.025`, geometry paired `0/20`.
+> - Task 6F query is no longer reasoning-template dominated, but is primarily image-dominated; hidden-distance vs GT-box-distance correlation is `0.476`.
 >
-> Core hypothesis:
+> Key diagnosis:
 >
-> > Spatial grounding should be read from a dedicated query token placed **before reasoning text**, so its state is conditioned by image + instruction instead of being dominated by the small reasoning-template vocabulary.
+> A single global hidden vector + SmoothL1 over four normalized box edges is a poor localization objective for WHU-scale tiny buildings. Task 6G preserves spatial structure and trains localization directly on a dense 2-D visual feature map.
 >
-> The `[BOX]` query is a fixed learned control token, identical for every sample. It contains no GT information.
+> Candidate chain:
 >
-> No 4B. No `[REF]`. No Spatial Relation Encoder. No Spatial Consistency Loss. No dataset change. No GUI.
+> **language query ↔ dense visual feature fusion → spatial grounding map → predicted point → frozen SAM2 segmentation**
+>
+> This is a capability-building architecture experiment. Do not claim generic query-to-map fusion as the final paper novelty.
 
-## 0. User-facing language
+## 0. User priority
 
-All narrative DSH UI/chat output must be **Chinese**.
-Code, paths, metric names and raw logs may remain English.
+Priority remains:
+1. correct model capability;
+2. train / predict / evaluate pipeline;
+3. architecture suitable for later paper innovation;
+4. UI/GUI last.
 
-# PART A — Freeze valid evidence
+No GUI/Web UI.
+Do not reopen generic performance tuning.
 
-## 1. Accepted facts
+# PART A — Freeze Task 6F correctly
 
-Do not rerun unless a correctness issue is found:
-- continuous Oracle BOX → SAM2: strict mIoU `0.7506`, paired `20/20`;
-- Task 6E B=256 quantized Oracle BOX: strict mIoU `0.7343`, paired `20/20`;
-- Task 6D.1: legacy end-of-reasoning `[SEG]` hidden is practically not decodable for target geometry under tested readouts;
-- Task 6E: E0 20-record coordinate-token overfit succeeds, E1 480-record autoregressive coordinate-token training fails structurally `0/120`;
-- current evidence does not indicate WHU or SAM2 as the binding constraint.
+## 1. Accepted Task 6F interpretation
 
-# PART B — Retire the failed coordinate-token path
+Do not rerun Task 6F unless a correctness issue is found.
 
-## 2. Preserve history, do not reuse its failed representation
+Freeze:
+- F0: train box IoU `0.9046`, paired `10/10`;
+- F1 best epoch 8:
+  - val box IoU `0.0250`;
+  - center-inside `0.017`;
+  - coordinate MAE `0.1543`;
+  - geometry paired `0/20`;
+- query representation:
+  - same-image centered cosine `0.626`;
+  - different-image centered cosine `0.018`;
+  - hidden-pair-distance vs GT-box-distance correlation `0.476`;
+- reasoning compatibility: `[SEG]` emission `1.0`, EOS `1.0`.
 
-Keep Task 6E code/artifacts for ablation/history.
+Do not freeze the stronger statement that “8 epochs were simply too few”.
 
-Task 6F must **not**:
-- autoregressively emit `<loc_*>`;
-- use location-token CE;
-- parse location-token runs;
-- initialize from failed Task 6E E1 weights.
+Task 6F uses `SmoothL1(beta=1.0)` over normalized box coordinates. For small buildings, a modest coordinate error can yield a numerically small loss while destroying overlap. Task 6G therefore tests a spatially aligned objective instead of blindly extending training.
 
-If loc tokens remain in the tokenizer for code-compatibility, they must be unused and frozen.
+# PART B — Spatial-grid oracle audit
 
-# PART C — Clean initialization
+## 2. Candidate SAM2 spatial feature levels
 
-## 3. Initialization source
+Verify exact current tensors/shapes. Expected from prior measurement:
+- main image embedding: approximately `C=256, H=W=64`;
+- high-resolution feature: approximately `C=64, H=W=128`;
+- high-resolution feature: approximately `C=32, H=W=256`.
 
-Use the same clean base/seed convention as Task 6E E1:
+Do not assume channel ordering.
 
-- Qwen3-VL-2B-Instruct;
-- existing `[SEG]`;
-- text-only LoRA;
-- add exactly one active Task 6F query token `[BOX]`.
+## 3. Grid-snapped POINT oracle
 
-Do not carry trained Task 6E `<loc_*>` rows into the candidate.
+For every validation target:
 
-Record exact initialization provenance, token ids, and optimizer coverage.
+1. derive the frozen Task 6D deterministic interior point (distance-transform maximum);
+2. snap it to the nearest cell centre of each candidate grid:
+   - 64×64
+   - 128×128
+   - 256×256
+3. feed the snapped point through the official frozen SAM2 positive-point prompt path.
 
-# PART D — Query-token causal placement
+Use:
+- same 120 validation records;
+- same 20 paired validation images.
 
-## 4. `[BOX]` is a fixed input query
+Report for each grid:
+- normalized displacement;
+- displacement in original 512-pixel units;
+- SAM strict mIoU;
+- Dice;
+- paired mask pass /20;
+- own-target vs cross-target mask IoU.
 
-Construct the sequence as:
+Create:
+`evaluation/task6g_grid_oracle.json`
+
+### Grid selection rule
+
+Continuous point oracle:
+- mIoU `0.4876`
+- paired `18/20`.
+
+Choose the **smallest grid** satisfying:
+- paired mask >= `18/20`;
+- strict mIoU >= `0.4576`.
+
+If none passes:
+`DENSE_GRID_POINT_PATH_INADEQUATE`
+and STOP before training.
+
+# PART C — Reuse the causal query
+
+## 4. Query token
+
+Reuse Task 6F's pre-reasoning fixed `[BOX]` query token for controlled comparison.
+
+Sequence remains:
 
 ```text
-USER:
 image + instruction
-
-ASSISTANT PREFIX:
-[BOX]
-
-ASSISTANT TARGET:
-reasoning_zh [SEG] EOS
+→ fixed [BOX] query
+→ reasoning_zh [SEG] EOS
 ```
 
-The `[BOX]` token is deterministically appended immediately after the assistant-generation prefix during both training and inference.
+The token name may remain historical; in Task 6G it functions as a general spatial grounding query.
 
-It is the same token for every sample and contains no target label.
+It must remain unable to attend to future reasoning/GT tokens.
 
-### Critical causal property
+Do not add:
+- `<loc_*>`;
+- a new query token;
+- `[REF]`.
 
-The hidden state read at `[BOX]` may attend to:
-- image tokens;
-- user instruction;
-- normal system/chat prefix;
-- its own `[BOX]` embedding.
-
-It must **not** attend to:
-- `reasoning_zh`;
-- GT target box;
-- `[SEG]`;
-- any future assistant token.
-
-Add a direct causal-position/mask test.
-
-This is the central difference from Task 6D's end-of-reasoning `[SEG]` readout.
-
-# PART E — Target-aware box head
+# PART D — Dense Spatial Grounding Head
 
 ## 5. Architecture
 
-Add:
+Implement:
 
-`TargetAwareBoxHead`
+`DenseSpatialGroundingHead`
 
-Input:
-`[BOX] hidden: 2048-d`
+Inputs:
+
+```text
+query_hidden: [B, 2048]
+spatial_feature: [B, C, H, W]
+```
 
 Use:
 
 ```text
-LayerNorm(2048)
-→ Linear(2048, 512)
-→ GELU
-→ Linear(512, 4)
-→ sigmoid
-→ differentiable box canonicalization
+query_hidden
+→ LayerNorm(2048)
+→ Linear(2048,128)
+→ q ∈ R^128
+
+SAM2 spatial feature
+→ Conv1x1(C,128)
+→ K ∈ R^(128×H×W)
+
+heatmap_logits[y,x]
+= dot(q, K[:,y,x]) / sqrt(128)
 ```
 
-Output normalized `(x1,y1,x2,y2)` with canonical ordering.
+No transformer block.
+No relation module.
+No large decoder.
 
-This deliberately reuses a simple readout so the experimental change is localized to **where the supervised representation is formed**.
+Trainable in this head:
+- query projection;
+- 1×1 visual-key projection.
 
-Do not use:
-- coordinate tokens;
-- a 256-way classifier;
-- the legacy `[SEG]` geometry readout;
-- SAM mask loss.
+An optional scalar bias is allowed.
 
-## 6. Box supervision
+The experimental question is whether retaining the 2-D visual grid fixes global-regression failure.
 
-Use the same tight normalized GT box definition frozen in Task 6D.
+## 6. Frozen visual backbone
 
-GT geometry is used only for:
-- SmoothL1 supervision;
-- evaluation.
+SAM2 image encoder and source feature tensors remain frozen.
 
-Inference must use only:
-- image;
-- instruction;
-- constant `[BOX]`;
-- learned model/head parameters.
+Gradients may flow through the new 1×1 projection, never into SAM2.
 
-# PART F — Loss and trainables
+Reuse existing SAM feature computation/cache infrastructure where possible.
 
-## 7. Objective
+Do not cache anything downstream of the trainable projection.
 
-Use:
+# PART E — Dense supervision
+
+## 7. GT spatial target
+
+Use the **instruction-selected target building mask**, not the full building semantic mask.
+
+For selected H×W:
+- downsample binary target mask with area interpolation;
+- retain soft occupancy values in `[0,1]`;
+- assert target mass > 0 for every sample.
+
+GT mask is supervision only.
+No GT enters inference.
+
+## 8. Heatmap loss
+
+Use exactly:
+
+```text
+L_heatmap =
+    1.0 * BCEWithLogits(heatmap_logits, soft_target)
+  + 1.0 * SoftDice(sigmoid(heatmap_logits), soft_target)
+```
+
+Total:
 
 ```text
 L_total =
     1.0 * L_reasoning
-  + 5.0 * L_box
+  + 2.0 * L_heatmap
 ```
 
-where:
-- `L_reasoning` = causal CE only for `reasoning_zh [SEG] EOS`;
-- `L_box` = SmoothL1(pred_box, GT_box).
-
-Do not predict `[BOX]`; it is an inserted query.
+`L_reasoning` remains CE over:
+`reasoning_zh [SEG] EOS`.
 
 Do not use:
-- location-token CE;
-- mask BCE/Dice;
-- pairwise/contrastive losses;
-- hyperparameter sweeps.
+- coordinate SmoothL1;
+- GIoU/box loss;
+- SAM-output mask loss;
+- contrastive/pairwise loss;
+- loss-weight sweep.
 
-Record both raw losses.
+Record raw BCE, Dice, heatmap loss, reasoning CE.
 
-## 8. Trainable set
+# PART F — Point extraction
+
+## 9. Predicted point
+
+Primary inference rule:
+
+```text
+(y*,x*) = argmax(heatmap_logits)
+point = centre of selected grid cell
+```
+
+Convert to normalized coordinates, then to official SAM2 point coordinates.
+
+No threshold tuning.
+No GT-guided component selection.
+
+A soft-argmax/expected coordinate may be reported as diagnostic only.
+
+# PART G — Trainables
+
+## 10. Trainable set
 
 Train:
-- text-only LoRA;
+- text-only Qwen LoRA;
 - `[BOX]` query row;
-- existing `[SEG]` row;
-- TargetAwareBoxHead.
+- `[SEG]` row;
+- DenseSpatialGroundingHead.
 
 Freeze:
 - Qwen base;
 - Qwen visual tower;
-- all SAM2 in F0/F1;
-- old Projection MLP;
+- all SAM2;
+- Task 6F TargetAwareBoxHead;
 - Task 6D SpatialGroundingHead;
-- Task 6E loc rows, if present.
+- old Projection MLP;
+- Task 6E loc rows if present.
 
 Verify optimizer coverage.
 
-# PART G — Stage F0: implementation proof
+# PART H — Stage G0: overfit sanity
 
-## 9. 20-record paired overfit
+## 11. 20-record paired overfit
 
-Use the same deterministic 20-record / 10 paired-image style as Task 6E E0.
+Use 20 records / 10 same-image different-target pairs.
 
 Maximum:
 - 1500 optimizer steps.
 
-Use corrected scheduler horizon over the real step budget.
+Use corrected scheduler horizon.
 
-Evaluate through the **inference-form query path**:
+Evaluate through the real path:
 
 ```text
 image + instruction
-→ append constant [BOX]
-→ Qwen forward
-→ read [BOX] hidden
-→ TargetAwareBoxHead
-→ predicted box
+→ fixed [BOX]
+→ query hidden
+→ dense heatmap
+→ argmax point
 ```
 
-No future reasoning tokens may be teacher-forced into the query representation.
+### G0 metrics
 
-### F0 gate
+Report:
+- low-res soft-mask Dice / IoU;
+- predicted point inside own target;
+- predicted point inside paired other target;
+- paired point selection /10;
+- same-image heatmap IoU(A,B);
+- same-image point distance.
+
+### G0 gate
 
 Require:
-- mean train box IoU >= `0.85`;
-- geometry paired >= `9/10`;
-- same-image two instructions produce non-identical predicted boxes;
-- no GT leakage.
+- point inside own target >= `19/20`;
+- paired point selection >= `9/10`;
+- mean heatmap Dice >= `0.80`;
+- paired instructions produce distinct points.
 
-If implementation audit cannot make F0 pass:
-
-`TARGET_QUERY_IMPLEMENTATION_FAILED`
-
+If unresolved after implementation audit:
+`DENSE_GROUNDING_IMPLEMENTATION_FAILED`
 and STOP.
 
-# PART H — Stage F1: 480-paired mini-train
+# PART I — Stage G1: 480 paired mini-train
 
-## 10. Training budget
+## 12. Training
 
-Only if F0 passes.
+Only if G0 passes.
 
 Train on Task 6C paired `P`:
 - 480 records / 240 images × 2 targets;
-- deterministic training;
-- maximum **8 epochs**.
+- maximum 8 epochs;
+- corrected scheduler across actual max-step budget;
+- validate each epoch.
 
-Use:
-- one corrected cosine scheduler over the full actual maximum step budget;
-- checkpoint each epoch;
-- validation each epoch.
+No mid-run recipe changes.
 
-Do not change LR/loss mid-run.
+Early stop if paired point metric and inside-target rate fail to improve for 3 consecutive epochs after epoch 3.
 
-## 11. Early stopping / selection
+## 13. Model selection
 
-Validate using the query path on:
-- fixed 120 validation records;
-- fixed 20 paired validation images.
-
-Model-selection priority:
-1. geometry paired /20;
-2. mean val box IoU;
-3. center-inside-target rate.
-
-Early stop if geometry paired and val box IoU do not improve for 3 consecutive epochs after epoch 3.
+Lexicographic:
+1. paired point selection /20;
+2. point-inside-target rate;
+3. validation heatmap Dice.
 
 Do not select by training loss.
 
-# PART I — Geometry evaluation
+# PART J — G1 evaluation
 
-## 12. Main metrics
+## 14. Metrics
 
-For each epoch report:
-- train box IoU;
-- val mean/median box IoU;
-- center-inside-target rate;
-- coordinate MAE;
-- geometry paired /20;
-- own-target box IoU;
-- cross-target box IoU;
-- own-minus-cross box margin;
-- same-image predicted-box L1 distance;
-- per-coordinate prediction spread;
+On fixed 120 val + 20 paired report:
+- heatmap BCE;
+- heatmap Dice;
+- binary heatmap IoU at fixed threshold 0.5 (diagnostic);
+- point-inside-target rate;
+- normalized point error to frozen deterministic interior point;
+- original-512-pixel point error;
+- paired point selection /20;
+- same-image predicted-point distance;
+- same-image heatmap IoU(A,B);
 - L1/L2/L3 breakdown;
 - query-family breakdown.
 
-### F1 gate
+### G1 gate
 
 Require:
-- geometry paired >= `14/20`;
-- val mean box IoU >= `0.35`;
-- center-inside-target >= `0.70`.
+- point-inside-target >= `0.70`;
+- paired point selection >= `14/20`;
+- val heatmap Dice >= `0.35`.
 
 If best epoch fails:
+`DENSE_SPATIAL_GROUNDING_FAILED`
 
-`TARGET_AWARE_QUERY_FAILED`
+Do not train SAM2 to compensate.
 
-Do not train SAM to compensate.
+# PART K — Representation/fusion diagnosis
 
-# PART J — Representation diagnosis
+## 15. Diagnose what changed
 
-## 13. Compare new `[BOX]` to legacy `[SEG]`
-
-At best F1 checkpoint, report for `[BOX]`:
-- same-image/different-instruction cosine;
+At best G1 checkpoint report:
+- `[BOX]` hidden same-image/different-instruction cosine;
 - centered cosine;
 - L2;
 - effective rank;
-- correlation between hidden-pair distance and GT-box-pair distance.
+- projected query `q` same-image distance;
+- heatmap A/B IoU;
+- correlation:
+  - query-hidden distance vs GT-point distance;
+  - heatmap distance vs GT-point distance.
 
-Use frozen Task 6D.1 legacy `[SEG]` values as comparison; do not rerun the full old audit unless necessary.
+Compare to Task 6F.
 
 Question:
 
-> Did moving the supervised query **before reasoning** create target-specific representation variation rather than template-dominated variation?
+> Does the weak target-specific component become usable when matched against a dense spatial feature map?
 
-Do not infer causality from cosine alone.
+Do not interpret cosine alone.
 
-# PART K — Reasoning compatibility
+# PART L — Stage G2: frozen-SAM2 point segmentation
 
-## 14. Secondary language compatibility
+## 16. Run only if G1 passes
 
-On fixed 20 validation samples, continue generation from:
-
-`image + instruction + fixed [BOX]`
-
-Report:
-- exactly-one `[SEG]` rate;
-- EOS termination rate;
-- reasoning-template/operation-chain diagnostic.
-
-These remain template diagnostics, not proof of reasoning.
-
-Do not gate F1 geometry on reasoning exact match.
-
-# PART L — Stage F2: frozen-SAM end-to-end test
-
-## 15. Run only if F1 passes
-
-For each validation sample:
+For every validation sample:
 
 ```text
 image + instruction
-→ constant [BOX] query
-→ predicted box
-→ official frozen SAM2 box prompt encoder
+→ fixed [BOX] query
+→ dense heatmap
+→ argmax predicted point
+→ official frozen SAM2 positive-point prompt
 → frozen SAM2 mask decoder
 → mask
 ```
 
-No SAM training.
 No GT geometry.
+No SAM2 training.
 
-## 16. F2 metrics
+## 17. G2 metrics
 
 On 120 val + 20 paired:
-- strict e2e mIoU;
+- strict end-to-end mIoU;
 - Dice;
 - mask paired /20;
 - own-target IoU;
@@ -364,115 +420,134 @@ On 120 val + 20 paired:
 
 Compare with:
 - Task 6C P_C: `0.10604`, paired `0/20`;
-- continuous Oracle BOX: `0.7506`, paired `20/20`;
-- Task 6E quantized Oracle: `0.7343`, paired `20/20`.
+- continuous Point Oracle: `0.4876`, paired `18/20`;
+- continuous Box Oracle: `0.7506`, paired `20/20`.
 
 # PART M — Verdicts
 
-## 17. Use exactly one
+## 18. Use exactly one
 
-### `TARGET_AWARE_QUERY_FIX_FOUND`
-
+### `DENSE_SPATIAL_GROUNDING_FIX_FOUND`
 Require:
-- F0 pass;
-- F1 geometry gate pass;
-- F2 mask paired >= `14/20`;
+- G0 pass;
+- G1 gate pass;
+- G2 mask paired >= `14/20`;
 - strict e2e mIoU >= `0.20`;
-- mask own-minus-cross > `0.05`;
+- own-minus-cross mask margin > `0.05`;
 - no GT leakage.
 
-### `TARGET_AWARE_QUERY_PARTIAL`
+### `DENSE_SPATIAL_GROUNDING_PARTIAL`
+Heatmap/point becomes target-specific and materially improves localization, but full gate is not met.
 
-Query becomes target-specific and geometry improves materially, but full geometry/mask gate is not met.
+### `DENSE_SPATIAL_GROUNDING_FAILED`
+Implementation valid and G0 passes, but dense grounding does not generalize.
 
-### `TARGET_AWARE_QUERY_FAILED`
+### `DENSE_GROUNDING_IMPLEMENTATION_FAILED`
+G0 cannot pass after audit.
 
-Implementation is valid and F0 passes, but 480-record query grounding does not generalize.
-
-### `TARGET_QUERY_IMPLEMENTATION_FAILED`
-
-F0 cannot be made to work under verified implementation.
+### `DENSE_GRID_POINT_PATH_INADEQUATE`
+Spatial grid is too coarse even for oracle points.
 
 ### `INVALID_EXPERIMENT`
+Leakage, wrong mask, split mismatch, backbone-freeze violation or correctness failure.
 
-Leakage, split/checkpoint mismatch, causal-position bug or other correctness failure.
+# PART N — Architecture interpretation
 
-# PART N — Dataset policy
+## 19. Not the final novelty claim
 
-## 18. WHU remains provisional
+If Task 6G works, freeze only:
 
-Do not migrate data in Task 6F.
+> Dense semantic–visual spatial grounding solves the functional target-selection bottleneck better than global `[SEG]` readout, coordinate-token generation, or global box regression.
 
-Classify failures involving:
-- tiny targets;
+Do not claim generic dot-product query-to-map fusion as final novelty.
+
+A successful spatial map may later support:
+- geometry-verifiable relation supervision;
+- reference-object grounding;
+- Spatial Relation Encoder;
+- Spatial Consistency Loss.
+
+Only after basic target selection works.
+
+# PART O — Dataset policy
+
+## 20. WHU remains provisional
+
+Do not migrate data in Task 6G.
+
+Classify errors:
+- tiny target;
 - border truncation;
-- touching/merged pseudo-instances;
-- visually ambiguous targets;
-- L3/multi-hop queries.
+- touching/merged pseudo-instance;
+- visual ambiguity;
+- relation complexity;
+- heatmap on wrong building;
+- diffuse/no-localization heatmap.
 
-If geometry works on simple cases but failures concentrate in data-quality categories, record that as evidence for a future dataset task.
+If simple L1 examples work but tiny/ambiguous cases dominate remaining errors, record that as evidence for later dataset migration.
 
-# PART O — Product-facing core API
+# PART P — Reusable inference plumbing
 
-## 19. If F1 passes, expose reusable inference
+## 21. If G1 passes
 
-Create/refactor:
-
+Expose reusable:
 ```python
-predict_box(image, instruction)
+predict_heatmap(image, instruction)
+predict_point(image, instruction)
 predict_mask(image, instruction)
-generate_reasoning(image, instruction)
 ```
 
 No GUI.
-Do not spend time on CLI cosmetics yet.
 
-# PART P — Required artifacts
+# PART Q — Required artifacts
 
-## 20. Create
+## 22. Create
 
 ```text
-evaluation/task6f_token_setup.json
-evaluation/task6f_f0_overfit.json
-evaluation/task6f_f1_training.json
-evaluation/task6f_geometry_eval.json
-evaluation/task6f_representation.json
-evaluation/task6f_reasoning_compat.json
-evaluation/task6f_segmentation_eval.json
-evaluation/task6f_paired_probe.json
-evaluation/task6f_error_analysis.json
-evaluation/task6f_checkpoint_manifest.json
-docs/task6f_target_aware_box_query.md
+evaluation/task6g_grid_oracle.json
+evaluation/task6g_token_setup.json
+evaluation/task6g_g0_overfit.json
+evaluation/task6g_g1_training.json
+evaluation/task6g_spatial_eval.json
+evaluation/task6g_representation.json
+evaluation/task6g_segmentation_eval.json
+evaluation/task6g_paired_probe.json
+evaluation/task6g_error_analysis.json
+evaluation/task6g_checkpoint_manifest.json
+docs/task6g_dense_spatial_grounding.md
 ```
 
-`task6f_segmentation_eval.json` only if F1 passes.
+`task6g_segmentation_eval.json` only if G1 passes.
 
-Weights/checkpoints stay local/gitignored.
+If G2 runs, create at least 6 paired diagnostic panels:
+image, instruction A/B, target masks, heatmaps, predicted points, SAM masks.
 
-# PART Q — Tests
+No GUI.
 
-## 21. Required tests
+# PART R — Tests
+
+## 23. Required tests
 
 Cover at least:
-1. `[BOX]` is one token and unique from `[SEG]`;
-2. `[BOX]` is inserted as a fixed query, not predicted from GT;
-3. `[BOX]` hidden cannot attend to future reasoning/GT tokens;
-4. box target uses frozen Task 6D convention;
-5. query-head output canonical/in `[0,1]`;
-6. GT box is supervision only;
-7. inference needs only image + instruction + constant `[BOX]`;
-8. `[BOX]` row receives gradient;
-9. `[SEG]` compatibility row remains valid;
-10. LoRA remains text-only;
-11. visual tower frozen;
-12. SAM2 fully frozen in F0/F1/F2;
-13. old `[SEG]` grounding head unused;
-14. Task 6E loc-token loss/parser unused;
-15. if loc tokens remain, their rows are frozen/excluded;
-16. scheduler horizon equals actual max-step budget;
-17. F0 evaluation does not teacher-force future reasoning;
-18. F1 model selection follows paired→box-IoU→center rule;
-19. F2 uses predicted box only;
+1. selected SAM feature level/shape verified;
+2. grid snapping uses cell centres;
+3. grid oracle selection obeys rule;
+4. mask downsampling uses only selected target instance;
+5. target soft mass > 0;
+6. `[BOX]` remains pre-reasoning and causally clean;
+7. DenseSpatialGroundingHead output shape;
+8. query and visual projections receive gradients;
+9. SAM2 encoder/features frozen;
+10. GT heatmap absent at inference;
+11. argmax point deterministic;
+12. no GT-guided repair;
+13. G0 same-image pairs have different targets;
+14. scheduler horizon uses actual max steps;
+15. model selection paired→inside→Dice;
+16. G2 uses predicted point only;
+17. SAM2 fully frozen in G2;
+18. Task 6F box head unused;
+19. Task 6E loc path unused;
 20. no test split;
 21. no 4B / `[REF]` / SRE / SCL;
 22. strict determinism retained.
@@ -480,72 +555,72 @@ Cover at least:
 Run:
 `python -m pytest tests/ -q`
 
-# PART R — Git / Watt
+# PART S — Git / Watt
 
-## 22. Git hygiene
+## 24. Git hygiene
 
 Do not stage:
 - weights/checkpoints;
-- hidden dumps;
+- cached feature tensors;
 - local model/tokenizer snapshots;
 - `.conda`;
-- feature caches;
 - dataset JSONL edits.
 
 Recommended commit:
-`feat: add target-aware box query`
+`feat: add dense spatial grounding map`
 
 Ignore UU completely.
 Apply established Watt ownership rule only for final push.
 
-# PART S — Handoff
+# PART T — Handoff
 
-## 23. FROM_DSH
+## 25. `handoff/FROM_DSH.md`
 
 Include:
 1. Verdict
-2. Frozen Evidence
-3. Initialization
-4. Query-Token Causal Placement
-5. TargetAwareBoxHead
-6. Trainables / Loss
-7. F0 Overfit
-8. F1 Training Curve
-9. Geometry Metrics
-10. Paired Geometry Probe
-11. `[BOX]` Representation Diagnostics
-12. Reasoning Compatibility
-13. F2 Segmentation
+2. Frozen Task 6F Evidence
+3. Grid Oracle
+4. Selected Spatial Feature Level
+5. DenseSpatialGroundingHead
+6. Target Heatmap / Loss
+7. Trainable/Frozen Parameters
+8. G0 Overfit
+9. G1 Training Curve
+10. Spatial Localization Metrics
+11. Paired Point Probe
+12. Representation/Fusion Diagnostics
+13. G2 Segmentation
 14. Paired Mask Probe
-15. Error / Data Adequacy Analysis
-16. Reusable Inference API
-17. Runtime / VRAM
-18. Tests
-19. Git / Watt
-20. Recommended next architecture step
+15. L1/L2/L3 + Query Breakdown
+16. Error / Data Adequacy Analysis
+17. Reusable Inference API
+18. Runtime / VRAM
+19. Tests
+20. Git / Watt
+21. Recommended next architecture task
 
-## 24. Final DSH UI — Chinese only
+## 26. Final DSH UI — Chinese only
 
 Report:
-- Task 6F verdict;
-- F0 box IoU / paired;
-- best F1 epoch;
-- val box IoU;
-- center-inside rate;
-- geometry paired /20;
-- same-image predicted-box distance;
-- whether `[BOX]` is more target-specific than legacy `[SEG]`;
-- reasoning `[SEG]` emission compatibility;
-- if F2 ran: strict e2e mIoU, mask paired /20, own-cross margin;
+- verdict;
+- 64/128/256 grid oracle and selected grid;
+- G0 inside / paired / heatmap Dice;
+- best G1 epoch;
+- val inside rate;
+- paired point /20;
+- val heatmap Dice;
+- same-image heatmap IoU / point distance;
+- whether dense fusion improved target specificity vs Task 6F;
+- if G2 ran: strict e2e mIoU, mask paired /20, own-cross margin;
 - dominant remaining failure;
-- whether WHU appears limiting;
+- whether WHU now appears practically limiting;
 - tests;
 - commit/push;
 - Watt handling.
 
-# 25. STOP
+# 27. STOP
 
-After Task 6F:
+After Task 6G:
 
 **STOP.**
 

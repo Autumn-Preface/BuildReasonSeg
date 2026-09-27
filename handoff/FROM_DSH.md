@@ -17,269 +17,203 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6F Report: Target-Aware `[BOX]` Query Grounding v0.1
+# FROM_DSH — Task 6G Report: Dense Query–Visual Spatial Grounding Map v0.1
 
-_This file holds the Task 6F report. The Task 6E report is preserved in git history and in
-`docs/task6e_explicit_spatial_tokens.md`; Task 6D.1 in `docs/task6d1_corrective_grounding_audit.md`._
+_This file holds the Task 6G report. The Task 6F report is preserved in git history and in
+`docs/task6f_target_aware_box_query.md`; Task 6E in `docs/task6e_explicit_spatial_tokens.md`._
 
-Full design notes: `docs/task6f_target_aware_box_query.md`, ADR-017.
+Full design notes: `docs/task6g_dense_spatial_grounding.md`, ADR-018.
 
 ## 1. Verdict
 
-**`TARGET_AWARE_QUERY_FAILED`.**
+**`DENSE_GROUNDING_IMPLEMENTATION_FAILED`.**
 
-The target-aware query *implementation* is verified end to end: the `[BOX]` token is a fixed input
-query with a **bit-identical** hidden under future-text mutation, the box head and both token rows
-receive gradient in a real one-step smoke, and F0 overfits the same 20 records to **train box IoU
-0.9046, paired 10/10 and clearly non-identical same-image boxes (L1 0.2285)** at step 1000. The
-**F1 mini-train on 480 paired records fails the geometry gate completely**: geometry paired
-**0/20**, val mean box IoU **0.025**, center-inside **0.017** at the selected (final) epoch.
+The grid oracle and the head implementation are verified, but **G0 cannot pass its 20-record
+overfit gate after an implementation audit**, so per section 11 the task stops before G1. G0 ends
+at 1500 steps with point-inside-own **0.10** (gate ≥ 19/20), paired point selection **0/10** (gate ≥
+9/10) and heatmap Dice **0.125** (gate ≥ 0.80). The implementation audit
+(`evaluation/task6g_g0_audit.json`) found **no defect**: train/eval query hiddens are bit-identical,
+heatmap logits are healthy (std 3.3, no saturation), BCE and Dice flow comparable gradients into the
+head, SAM2 stays bit-frozen through a training step, and the one-step smoke passed before training.
+The frozen recipe genuinely cannot make the dot-product map localize even 20 memorized records: the
+heatmap converges to a near-flat field (sigmoid mean 0.013 ≈ the target occupancy, peakiness 0.086)
+whose argmax is image-content noise (errors 44–225 px; for one image both instructions pinned the
+**identical** cell). This is the same query-signal bottleneck Task 6F measured (instruction
+correlation r ≈ 0.48), now in map space: four readouts (6D.1 `[SEG]`, 6E tokens, 6F box head, 6G
+dense map) fail identically because the query's instruction-dependent component is too weak to
+select the target. G1, the representation diagnosis and G2 were **not run**; no SAM2 training and no
+GT geometry in any prompt.
 
-The failure mode is specific: the box head **never fits even its own training set** — train
-SmoothL1 plateaus at ≈0.003 (an RMS coordinate error of ~8 % of the tile) instead of converging the
-way F0's 20-record run did — so this is under-fitting under the fixed ≤8-epoch budget, and the
-predictions are canonical, spread over the image (spread 0.05 → 0.25) but unable to localize
-WHU-scale targets (mean GT area 1.2 % of the tile; 93 % of failures carry `tiny_target`). The
-language side is untouched: continuing generation from `image + instruction + [BOX]` reaches
-exactly-one `[SEG]` **1.000** and EOS **1.000**. The representation diagnosis answers section 13
-negatively on the main hypothesis: the query is no longer template-dominated, but it is
-**image-dominated** (same-image centered cosine 0.626 vs 0.018 across images) with only moderate
-target-geometry variation (hidden-distance vs GT-box-distance correlation 0.476, versus ≈0 for the
-legacy `[SEG]`). F2 was therefore **not run** (section 15 gates it on the F1 gate).
+## 2. Frozen Task 6F Evidence (section 1)
 
-The honest reading: **moving the supervised query before reasoning removes the template confound,
-but at 2B / 8 epochs the query does not become target-specific enough to localize tiny targets — and
-neither the autoregressive vocabulary (6E) nor the query head (6F) fits 480 records under the
-spec's budget.** The bottleneck is now precisely measured: a geometry readout must localize to
-~5 % of the tile at WHU target scales, and none of the three readouts tested (6D.1 `[SEG]` probes,
-6E tokens, 6F query) achieves that at this scale/budget.
+Not rerun: F0 box IoU 0.9046 / paired 10/10; F1 epoch 8 val box IoU 0.0250, center-inside 0.017,
+coordinate MAE 0.1543, geometry paired 0/20; query same-image centered cosine 0.626, different-image
+0.018, hidden-vs-GT-box correlation 0.476; `[SEG]` emission 1.0, EOS 1.0. Also frozen: Oracle BOX
+0.7506 / 20/20 and Oracle POINT 0.4876 / 18/20. The stronger claim "8 epochs were simply too few"
+is **not** frozen.
 
-## 2. Frozen Evidence (section 1)
+## 3. Grid Oracle (sections 2–3)
 
-Not rerun, only quoted:
+The frozen Task 6D interior point, snapped to each grid's nearest cell centre, through the official
+frozen SAM2 positive-point prompt on the fixed 120 val + 20 paired material
+(`evaluation/task6g_grid_oracle.json`):
 
-* continuous Oracle BOX → SAM2: strict mIoU **0.7506**, paired **20/20**;
-* Task 6E `B = 256` quantized Oracle BOX: strict mIoU **0.7343**, paired **20/20**;
-* Task 6D.1: legacy end-of-reasoning `[SEG]` hidden practically not decodable for target geometry
-  (centered same-image cosine 0.077, effective rank 8.33, real ≈ label-shuffled at 480 samples);
-* Task 6E: E0 20-record coordinate-token overfit succeeds, E1 480-record autoregressive training
-  fails structurally **0/120**;
-* current evidence does not indicate WHU or SAM2 as the binding constraint.
+| Grid | strict mIoU | Dice | paired | mean displacement (512 px) |
+|---|---|---|---|---|
+| continuous | 0.4876 | — | 18/20 | — |
+| 64 | 0.4950 | 0.6151 | 17/20 | 2.23 |
+| 128 | 0.4894 | 0.6065 | 17/20 | 1.02 |
+| 256 | **0.4883** | 0.6061 | **18/20** | 0.50 |
 
-## 3. Initialization (section 3)
+## 4. Selected Spatial Feature Level
 
-Clean base/seed convention identical to Task 6E E1: fresh Qwen3-VL-2B-Instruct, existing `[SEG]`
-(id **151 669**), text-only LoRA (rank 16 / alpha 32 / dropout 0.05, q/k/v/o/gate/up/down), plus
-exactly **one** new active query token `[BOX]` (id **151 670**; vocabulary 151 670 → 151 671). No
-Task 6E `<loc_*>` rows exist in the Task 6F tokenizer and no Task 6E checkpoint is loaded. Trainable
-token rows `{[SEG], [BOX]}` via PEFT `trainable_token_indices` (one 4096-element parameter); base
-table frozen. Optimizer coverage: LoRA 392 tensors / 17 432 576 params @1e-4, box head 6 tensors /
-1 055 236 params @3e-4, token rows 1 tensor / 4 096 params @3e-4 (weight decay 0).
-`evaluation/task6f_token_setup.json`.
+**256×256** — the smallest grid with paired ≥ 18/20 and mIoU ≥ 0.4576 (the only qualifying grid:
+64/128 pass the mIoU bar but drop one paired image). Measured SAM2 levels, by spatial size (never
+list order): 64×64 = the 256-channel main image embedding; 128×128 = the 64-channel high-res level;
+256×256 = the **32-channel** high-res level used by the head.
 
-## 4. Query-Token Causal Placement (section 4)
+## 5. DenseSpatialGroundingHead (sections 5–6)
 
-Sequence: `image + instruction → [BOX] → reasoning_zh [SEG] EOS`. `[BOX]` is appended at
-`box_position == prompt_length` (verified: appears exactly once, precedes every target token) and is
-**never a prediction target** (the label at `prompt_length − 1` is `-100`). The direct causal test:
-replacing the entire reasoning tail with unrelated text leaves the real model's `[BOX]` hidden
-**bit-identical** (`max_abs_delta 0.0`). The query therefore attends to image + instruction + prefix +
-its own embedding and to nothing from the future — the central difference from Task 6D.
+`q = LayerNorm(2048) → Linear(2048,128)` on the reused `[BOX]` hidden; `K = Conv1x1(32,128)` on the
+frozen SAM2 256×256 feature; `heatmap_logits = dot(q, K)/sqrt(128) + scalar_bias` (270 593
+parameters). No transformer block, no relation module, no decoder. SAM2 encoder + feature tensors
+frozen: the one-step smoke records `sam2_max_abs_delta: 0.0` while the `[BOX]`/`[SEG]` rows and all
+head parameters move with non-zero gradient and 16 ordinary rows + the base table stay exactly
+unchanged (`evaluation/task6g_token_setup.json`, `passed: true`).
 
-## 5. TargetAwareBoxHead (section 5)
+## 6. Target Heatmap / Loss (sections 7–8)
 
-`LayerNorm(2048) → Linear(2048, 512) → GELU → Linear(512, 4) → sigmoid → min/max canonicalization`
-— deliberately the same simple readout Task 6D used, so the only experimental change is *where the
-supervised representation is formed*. Output: canonical normalized `(x1,y1,x2,y2)` in `[0,1]`.
-One-step smoke (real forward/backward, `evaluation/task6f_token_setup.json`): `[BOX]` row, `[SEG]`
-row and all six head parameters move with non-zero gradient; 16 ordinary rows change by exactly 0.0;
-base embedding bit-identical; SAM2 fully frozen; visual tower zero LoRA; `passed: true`.
+GT = the instruction-selected target mask, area-downsampled to 256×256 soft occupancy (mass > 0
+asserted per sample). `L_heatmap = 1.0·BCEWithLogits + 1.0·SoftDice(sigmoid)`;
+`L_total = 1.0·L_reasoning + 2.0·L_heatmap`; both raw losses recorded; no SmoothL1/GIoU/mask-loss/
+contrastive/weight sweep. Predicted point = argmax cell centre (deterministic first-maximum rule);
+soft-argmax reported as a diagnostic only; no threshold tuning and no GT repair.
 
-## 6. Trainables / Loss (sections 7–8)
+## 7. Trainable/Frozen Parameters (section 10)
 
-`L_total = 1.0 · L_reasoning + 5.0 · L_box`; `L_reasoning` = causal CE over `reasoning_zh [SEG] EOS`
-only, `L_box` = SmoothL1(pred_box, GT tight box). No mask BCE/Dice, no pairwise losses, no sweeps;
-both raw losses recorded. Trainable: text LoRA + `[BOX]` row + `[SEG]` row + box head. Frozen: Qwen
-base/visual tower, all SAM2, old Projection MLP, Task 6D head, and (asserted absent) any Task 6E loc
-rows.
+Train: text LoRA (392 tensors / 17 432 576), `{[SEG], [BOX]}` rows (1 tensor / 4 096),
+DenseSpatialGroundingHead (270 593). Frozen: Qwen base, visual tower, all SAM2, Task 6F box head,
+Task 6D grounding head, Projection MLP, no `<loc_*>` rows present. Optimizer coverage recorded:
+lora 1e-4 / token 3e-4 / decoder (dense head) 3e-4, weight decay 0 on the rows, clip 1.0, cosine over
+the true step budget.
 
-## 7. F0 Overfit (section 9)
+## 8. G0 Overfit (section 11)
 
-20 deterministic records (10 same-image/different-target pairs), ≤1500 steps, corrected horizon,
-evaluation through the inference-form query path only.
+20 records / 10 pairs, ≤1500 steps, corrected horizon, real query-to-heatmap evaluation.
 
-| Step | train box IoU | paired geometry | non-identical pairs |
-|---|---|---|---|
-| 250 | 0.0576 | 0/10 | 10/10 |
-| 500 | 0.2464 | 0/10 | 10/10 |
-| 750 | 0.7959 | 10/10 | 10/10 |
-| **1000** | **0.9046** | **10/10** | **10/10** |
+| Step | inside own | heatmap Dice | paired selection | distinct points |
+|---|---|---|---|---|
+| 500 | 0.05 | 0.103 | 0/10 | 2/10 |
+| 1000 | 0.10 | 0.121 | 0/10 | 6/10 |
+| 1500 | 0.10 | 0.125 | 0/10 | 7/10 |
 
-**`F0_PASS`** at step 1000 (train box IoU ≥ 0.85, paired ≥ 9/10, same-image non-identical boxes with
-mean L1 **0.2285**, no GT leakage — the query path takes image + instruction + constant `[BOX]` only).
-The run is bit-reproducible across processes (an earlier crashed write produced the identical
-loss/IoU trace). F0's weights are not carried into F1. `evaluation/task6f_f0_overfit.json`.
+Reasoning CE converged to 0.0000; BCE ≈ 0.02; the **Dice term never moved** (0.96–0.99 throughout).
+Errors 44–225 px (mean 139 px); both instructions of one image pinned the identical cell.
+`evaluation/task6g_g0_overfit.json` + `evaluation/task6g_g0_audit.json`.
 
-## 8. F1 Training Curve (sections 10–11)
+## 9. G1 Training Curve
 
-480 paired `P` records, 8 epochs × 480 steps = **3840** optimizer steps, one corrected cosine
-scheduler over the true budget (warmup 20), per-epoch checkpoint + query-path validation, selection
-by paired → val box IoU → center-inside, early stop after epoch 3 on 3 consecutive non-improvements
-(never triggered; budget ran out). Wall clock **2448 s** (41 min) for all 8 epochs plus the final
-diagnostics.
+**Not run** — section 11 stops the task when G0 cannot pass after the audit.
 
-| Epoch | train box IoU (mean) | val box IoU | median | center-inside | coord MAE | pred spread | paired geom |
-|---|---|---|---|---|---|---|---|
-| 1 | 0.0042 | 0.0073 | 0.0 | 0.000 | 0.2448 | 0.05 | 0/20 |
-| 2 | 0.0057 | 0.0090 | 0.0 | 0.008 | 0.2211 | 0.17 | 0/20 |
-| 3 | 0.0074 | 0.0071 | 0.0 | 0.025 | 0.2175 | 0.19 | 0/20 |
-| 4 | 0.0089 | 0.0057 | 0.0 | 0.008 | 0.2173 | 0.20 | 0/20 |
-| 5 | 0.0084 | 0.0115 | 0.0 | 0.033 | 0.2141 | 0.20 | 0/20 |
-| 6 | 0.0136 | 0.0164 | 0.0 | 0.033 | 0.1868 | 0.23 | 0/20 |
-| 7 | 0.0328 | 0.0178 | 0.0 | 0.017 | 0.1568 | 0.24 | 0/20 |
-| **8** | **0.0504** | **0.0250** | **0.0** | **0.017** | **0.1543** | **0.25** | **0/20** |
+## 10. Spatial Localization Metrics
 
-Selection is tied at `[0, val box IoU, center]` for all epochs and resolves to **epoch 8** (key
-`[0, 0.0250, 0.017]`). Training trace: reasoning CE collapses to ≈0.0000 within epoch 1; box
-SmoothL1 oscillates around 0.003–0.03 without converging; per-step train box IoU is 0.0 at 23 of 32
-logged steps. Predicted boxes stay canonical (1.000) and in-range (1.000) with area ≈0.0078 against
-GT mean 0.0120 — right size, wrong place. Artifact: `evaluation/task6f_f1_training.json`.
+G0 stage only (20 records): inside 0.10, heatmap Dice 0.125, binary-IoU@0.5 0.10,
+mean 512-px point error 139, mean peakiness 0.086. `evaluation/task6g_spatial_eval.json` is
+deliberately absent (it is a G1 product).
 
-## 9. Geometry Metrics (section 12)
+## 11. Paired Point Probe
 
-Selected epoch 8 (of 8): val mean box IoU **0.0250**, median **0.0**, center-inside **0.017**,
-coordinate MAE **0.1543**, per-coordinate prediction spread **[0.25, 0.253, 0.248, 0.247]**. By
-level: L1 **0.0109**, L2 **0.0182**, L3 **0.0459**. By query family: `size` 0.022, `extreme` 0.006,
-`direction` 0.019, `nearest` 0.015, `multi_hop_direction_to_nearest` 0.046. The predictions are
-spread across the image rather than collapsed, but no level or family localizes.
-Artifact: `evaluation/task6f_geometry_eval.json`.
+G0 stage (10 pairs, `evaluation/task6g_paired_probe.json`): paired point selection **0/10**,
+distinct points **7/10**, mean same-image point distance 0.336, mean same-image heatmap IoU 0.227 —
+the heatmap responds to the instruction (7/10 distinct argmax cells) but is image-dominated and
+wrong.
 
-## 10. Paired Geometry Probe (section 11 priority 1)
+## 12. Representation/Fusion Diagnostics
 
-**0/20** (both instructions must reach box IoU ≥ 0.5 against their own target). Mean same-image
-predicted-box L1 **0.0979** (epoch 8; it varied 0.040 → 0.152 → 0.098 across epochs), mean
-own-minus-cross box margin ≈ 0.0 — the two instructions of one image produce *different* boxes, but
-neither box is near its own target, so no pair passes. This is not evidence of instruction
-conditioning working; it is evidence the query produces image-driven variation without
-localization. Artifact: `evaluation/task6f_paired_probe.json` (`mask_ran: false`).
+**Not run at G1** (G1 did not run). The G0 evidence stands in: a near-flat heatmap whose argmax is
+image-content noise, consistent with Task 6F's frozen query diagnosis (instruction correlation
+0.476, same-image centered cosine 0.626). The question "does the weak target-specific component
+become usable when matched against a dense spatial feature map?" is answered **no** at G0 scale.
 
-## 11. `[BOX]` Representation Diagnostics (section 13)
+## 13. G2 Segmentation
 
-Best checkpoint, global-mean centring (`evaluation/task6f_representation.json`):
+**Not run** (section 16 gates it on G1). `evaluation/task6g_segmentation_eval.json` is deliberately
+absent. Frozen ceilings: Task 6C P_C 0.10604 / 0-20; continuous Point Oracle 0.4876 / 18-20;
+continuous Box Oracle 0.7506 / 20-20.
 
-| Measure | Task 6F `[BOX]` | Legacy `[SEG]` (frozen 6D.1) |
-|---|---|---|
-| same-image/diff-instruction cosine | **0.969** | ~0.999 raw |
-| same-image centered cosine | **0.626** | 0.077 |
-| different-image centered cosine | **0.018** | 0.531 |
-| effective rank (participation ratio) | **7.07** | 8.33 |
-| hidden-pair L2 vs GT-box L1 correlation | **0.476** | ≈0 (real ≈ shuffled) |
+## 14. Paired Mask Probe
 
-Answer to section 13's question: **partially, and negatively on the main hope.** The query is no
-longer template-dominated (it cannot see reasoning at all) and it carries *measurable*
-target-geometry variation (correlation 0.476 vs ≈0 for the legacy `[SEG]`), but it is
-**image-dominated** — same-image pairs stay far closer than cross-image pairs (centered 0.626 vs
-0.018) — so the query mostly encodes "which image", not "which target". No causal claim is made
-from cosine alone. (Note: an earlier per-pair centring bug produced degenerate −1.0 values; the
-recomputation uses the global mean and is recorded in the same artifact.)
+**Not run** (same reason); the paired probe records `mask_ran: false`.
 
-## 12. Reasoning Compatibility (section 14)
+## 15. L1/L2/L3 + Query Breakdown
 
-Continuing generation from `image + instruction + fixed [BOX]` on the first 20 records of the fixed
-validation set: exactly-one `[SEG]` **1.000**, EOS termination **1.000**, known-reasoning-template
-**1.000**. The query prefix is fully compatible with generation — the F1 failure is entirely on the
-geometry side. Template diagnostics only. Artifact: `evaluation/task6f_reasoning_compat.json`.
+G0 stage: L1 inside 0.20, L2/L3 inside 0.0 — the failure is uniform across levels and families
+(diffuse heatmaps everywhere), so no breakdown can be over-read.
 
-## 13. F2 Segmentation (sections 15–16)
+## 16. Error / Data Adequacy Analysis
 
-**Not run.** Section 15 gates F2 on the F1 gate, which failed, so
-`evaluation/task6f_segmentation_eval.json` is deliberately absent. No SAM2 weight was updated
-anywhere in Task 6F and no GT geometry entered any prompt. Frozen ceilings for comparison: Task 6C
-`P_C` 0.10604 / 0/20; continuous Oracle BOX 0.7506 / 20/20; Task 6E quantized oracle 0.7343 / 20/20.
+`evaluation/task6g_error_analysis.json` (G0 stage, 20 records): 18/20 outside; dominant
+`diffuse_no_localization_heatmap` (18/20), then `heatmap_on_wrong_building` (0), tiny_target on
+17/18, `whu_data_quality_dominates` true. Honest reading: the WHU flags describe the material but
+cannot explain a diffuse heatmap; **WHU is not the binding constraint of this result** — the query's
+instruction signal is, and simple L1 cases fail too (0.20).
 
-## 14. Paired Mask Probe (section 16)
+## 17. Reusable Inference API
 
-**Not run** (same reason). `evaluation/task6f_paired_probe.json` records `mask_ran: false` with the
-geometry side only.
+Not created (section 21 gates it on G1). The verified query-path plumbing (`predict_heatmap` in
+`buildreasonseg_mvp/dense_eval.py`) remains available to the next task.
 
-## 15. Error / Data Adequacy Analysis (section 18)
+## 18. Runtime / VRAM
 
-`evaluation/task6f_error_analysis.json` (120 records, IoU threshold 0.5): **120/120 failures**;
-dominant class `wrong_target_valid_box` (98.3 %); `tiny_target` on **93.3 %**, `complex_l3_relation`
-33 %, `border_truncation` 29 %, ambiguity 5 %, touching neighbours 1.7 %; 97.5 % of failures carry
-at least one WHU quality flag, so the automatic `whu_data_quality_dominates` flag is true. The
-honest reading: the failure is a **localization-precision** failure on inherently tiny targets (mean
-GT area 1.2 % of the tile ⇒ a box needs ~5 % placement accuracy for IoU ≥ 0.5), combined with the
-measured under-fitting (train box loss never converged). Simple cases (L1) do not work either
-(0.011), so the dataset is not *the* cause — it is the sharpness of the metric at this scale plus a
-budget-limited readout. Evidence for a future dataset task exists, but it is not the binding
-constraint of this result.
+Grid oracle: 3 grids × (120 + 40) decodes, ~7 min. G0: 1500 steps + 6 query-path evaluations, 535 s
+wall clock; ~14 GiB VRAM, batch 1, bf16 autocast, gradient checkpointing, Task 6C.7 visual-feature
+cache plus the SAM2 CPU feature cache (frozen encoder outputs only; nothing downstream of the
+trainable projection is cached).
 
-## 16. Reusable Inference API (section 19)
+## 19. Tests
 
-Gated on F1 passing, so no product-facing `predict_box` / `predict_mask` / `generate_reasoning`
-facade was created (section 19). The verified query-path plumbing — `predict_box_for_sample`,
-`build_query_batch`, `generate_with_box_prefix` in `buildreasonseg_mvp/box_query.py` — is unit-tested
-and remains available to the next task. No GUI.
+`tests/test_task6g_dense_grounding.py` adds **21** tests covering the section 23 list: cell-centre
+snapping (3 grids) and determinism, the oracle selection rule (smallest grid with paired ≥ 18/20 and
+mIoU ≥ 0.4576 → 256), area-interpolation downsampling + mass assertion, head shape/determinism,
+gradients on both projections, deterministic argmax cell centres, the frozen interior-point
+convention, feature-level selection by spatial size (never list order), the recorded one-step smoke
+(SAM2 bit-frozen, rows/head moved, ordinary rows unchanged, optimizer coverage), no forbidden
+components, Task 6E/6F machinery retired in all 6G sources, config hygiene, the true-total-step
+scheduler horizon, the paired→inside→Dice selection rule, G2 predicted-point-only, no GT in the
+inference path, deterministic JSON writing.
 
-## 17. Runtime / VRAM
+Full suite: **343 passed** in 679 s (`python -m pytest tests/ -q`, including the artifact-consistency
+gate) — 322 pre-existing tests plus the 21 Task 6G tests, with no regressions.
 
-F0: 20 records, 1000 steps, ~13 min wall clock. F1: 480 records, 3840 steps, **2448 s** wall clock
-for 8 epochs plus per-epoch query-path validation (160 forwards each) and the final representation/
-reasoning diagnostics; ~13–14 GiB VRAM, batch 1, bf16 autocast, gradient checkpointing, Task 6C.7
-visual-feature cache. Training is language-model-only; SAM2 runs nowhere in F0/F1 and would run only
-in the (gated-off) F2. F1's wall clock is dominated by the 480-step epochs (≈3.5 min each) plus the
-8 query-path evaluations (≈1.5 min each) — no generation except the 20-sample compatibility check.
+## 20. Git / Watt
 
-## 18. Tests (section 21)
-
-`tests/test_task6f_box_query.py` adds **21** tests covering the section 21 list: `[BOX]` single-token
-and uniqueness from `[SEG]` (real tokenizer), fixed-query insertion (never predicted, labels start at
-the query position), causal non-attendance to future tokens (positional proof + a tiny causal
-attention layer + the recorded real-model bit-identity smoke), the frozen Task 6D tight-box
-convention, canonical/in-`[0,1]` head output and its determinism, GT-as-supervision-only (inspection
-of the query path and generation), the fixed loss constants, box IoU/L1/center helpers, the recorded
-one-step smoke (both rows moved with gradient, all six head parameters moved with gradient, 16
-ordinary rows exactly unchanged, base bit-identical, SAM frozen, no visual LoRA, optimizer coverage
-392+6+1 tensors), no forbidden components (`[REF]`, SRE, SCL, 4B), Task 6E coordinate machinery
-retired (docstrings stripped before scanning), no loc tokens in the config, the true-total-step
-scheduler horizon, the paired→IoU→center selection rule, the old `[SEG]` grounding head unused, box
-head in checkpoints, deterministic JSON writing.
-
-Full suite: **322 passed** in 712 s (`python -m pytest tests/ -q`, including the artifact-consistency
-gate) — 301 pre-existing tests plus the 21 Task 6F tests, with no regressions.
-
-## 19. Git / Watt (section 22)
-
-**Commit: `4b4b4d2` — `feat: add target-aware box query`** (staged only code, tests, docs and
-`evaluation/**` artifacts: no checkpoints, no weights, no `.conda`, no feature caches, no dataset
-edits; `artifacts/**` stays gitignored and only `evaluation/task6f_checkpoint_manifest.json` records
-the checkpoint hashes).
+**Commit: `{{COMMIT_HASH}}` — `feat: add dense spatial grounding map`** (staged only code, tests,
+docs and `evaluation/**` artifacts: no checkpoints, no weights, no cached feature tensors, no
+`.conda`, no dataset edits; `artifacts/**` stays gitignored and only
+`evaluation/task6g_checkpoint_manifest.json` records the checkpoint hashes).
 
 **Watt Toolkit handling:** the pre-existing Watt processes (`Steam++.exe`,
 `Steam++.Accelerator.exe`) were left running untouched for the whole task and are used for the final
 push only under the established ownership rules — never closed, never force-killed, no hosts-file,
 certificate-store or TLS changes anywhere in this task.
 
-## 20. Recommended Next Architecture Step (section 17)
+## 21. Recommended next architecture task
 
-Task 6F claims no novelty for the query token or the box head, and no escalation was attempted.
-Three readouts have now been measured against the same frozen downstream oracle (0.7506 / 20/20):
-the legacy `[SEG]` hidden (6D.1: no practically decodable geometry), the autoregressive coordinate
-vocabulary (6E: overfits 20, fails 480 structurally), and the pre-reasoning query head (6F: overfits
-20, underfits 480 — canonical boxes, wrong place). The next step should attack the measured
-bottleneck — **localization at WHU target scale** — and none of the spec-forbidden escalations:
+Four readouts have now failed identically — 6D.1 `[SEG]` probes, 6E coordinate tokens, 6F box
+regression, 6G dense map — each verified-implementation-clean, each collapsing to an
+image-dominated query. The measured bottleneck is the **query's instruction-dependent signal**, not
+the readout format. Recommended next step, in order, each measured against the frozen gates
+(F0-style overfit → 480-paired → point/box oracle ceilings):
 
-1. **Make the localization signal explicit and cheap to learn (recommended).** The box head is a
-   6-tensor readout on a query hidden that is image-dominated (centered cosine 0.626 same-image,
-   correlation 0.476). Candidates, each measurable against the F1 gate and the frozen oracle:
-   (a) a **point-based** geometry target (Task 6D's point oracle reached 0.4876/18-20 with far fewer
-   degrees of freedom) combined with box-style width/height heads; (b) a per-coordinate curriculum
-   (center first, then extent); (c) longer honest training under the corrected scheduler — F0
-   converges in ~1000 steps on 20 records, so 8 epochs on 480 records may simply be too little,
-   which the spec capped; (d) supervision in SAM's prompt space rather than normalized [0,1].
-2. **Only after geometry generalizes**: F2 (inference-only segmentation) and geometry-verifiable
-   supervision — the query path is already the right interface for relation-level checks.
-3. **Not indicated by anything measured here:** `[REF]`, SRE, SCL, 4B, a dataset change, full
-   training, a GUI. The dataset contributes difficulty (93 % tiny targets) but is not the cause of
-   the F1 failure (train loss never converged, L1 simple cases also fail).
+1. **Strengthen the query itself (recommended).** Candidates: (a) a small set of instruction-aware
+   query tokens / query refinement steps over the visual features (still no `[REF]`, no new
+   dataset); (b) an auxiliary objective that explicitly maximizes the same-image/
+   different-instruction separation of the query (a *representation* objective, not SRE/SCL); (c)
+   counterfactual supervision — the paired `P` subset already provides two targets per image, and
+   none of the four readouts exploited it explicitly; (d) revisit the spec's training budgets
+   honestly under the corrected scheduler, since the "8 epochs were simply too few" reading of
+   Task 6F remains unfrozen and G0's failure is a signal-strength failure at 1500 steps.
+2. **Only after the query becomes target-specific**: re-test the dense map (it is the cheapest
+   readout to re-verify and now has a frozen 0.4883/18-20 point-oracle ceiling), then G2.
+3. **Not indicated by anything measured here:** `[REF]`, SRE, SCL, 4B, dataset migration, full
+   training, GUI.

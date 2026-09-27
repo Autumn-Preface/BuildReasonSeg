@@ -883,6 +883,27 @@ validation set and one metric path.
 
 ---
 
+## ADR-018 — Task 6G: dense query-to-visual-map grounding does not localize either — the query's instruction signal is the measured bottleneck
+
+**Status:** **Accepted** (Task 6G) for what the grid oracle and the G0 audit measure. No novelty is claimed for dot-product query-to-map fusion (section 19).
+
+**Context.** Task 6F's global box regression failed on 480 records with an image-dominated query (same-image centered cosine 0.626, hidden-vs-box correlation 0.476). Task 6G tested whether retaining the 2-D visual grid fixes the failure: the causally clean pre-reasoning `[BOX]` query is matched against the frozen SAM2 dense feature map (`q·K/√128` heatmap) with `1.0·L_reasoning + 2.0·(BCE + SoftDice)`, and the predicted point is the heatmap argmax cell centre.
+
+**Decision**
+
+1. **The point-oracle pathway is verified at every grid.** Snapping the frozen Task 6D interior point to the nearest cell centre costs essentially nothing at 256×256 (mIoU 0.4883 vs 0.4876 continuous, paired 18/20, mean displacement 0.50 px); 64/128 pass the mIoU bar (0.4950/0.4894) but drop a paired image to 17/20. Selected grid: **256** (the 32-channel SAM2 high-res feature, verified by spatial size).
+2. **The dense head is implemented faithfully and audited, not assumed.** One-step smoke: both token rows and all head parameters move with non-zero gradient, 16 ordinary rows and the base embedding stay exactly unchanged, **SAM2 stays bit-identical** through a training step, and the query hidden stays bit-identical under future-text mutation. The G0 audit adds: train/eval query-path equivalence (bit-identical hiddens), healthy logits (std 3.3, no sigmoid saturation), and comparable BCE/Dice gradient norms (0.395 vs 0.456) — the Dice supervision is not vanishing.
+3. **G0 fails anyway: the map does not localize 20 memorized records.** Inside-target 0.10, heatmap Dice 0.125, paired point selection 0/10 after 1500 steps; the heatmap is a near-flat field (sigmoid mean 0.013 ≈ target occupancy; peakiness 0.086) whose argmax is image-content noise — errors 44–225 px, and one image's two instructions pin the identical cell.
+4. **Verdict: `DENSE_GROUNDING_IMPLEMENTATION_FAILED`** (section 11 — G0 cannot pass after the audit). G1, the representation diagnosis and G2 are not run; no SAM2 training, no `[REF]`/SRE/SCL/4B/dataset change/GUI anywhere in the task.
+
+**Consequences**
+
+* The bottleneck is now measured as a *query-signal* problem, not a *readout-format* problem: four readouts (6D.1 `[SEG]` probes, 6E coordinate tokens, 6F box regression, 6G dense map) all fail the same way — a query representation whose instruction-dependent component (r ≈ 0.48, image-dominated cosines) is too weak to select the target, in whatever output space it is read. Further readout engineering alone is unlikely to help; the next task should strengthen the query's target-specificity itself (multi-token/instruction-aware querying, stronger counterfactual supervision, or a representation objective) or revisit the training budget the specs have capped.
+* The grid-snapped point oracle (0.4883/18-20 at 256) is a cheap, frozen ceiling for any future localization readout, and the `evaluation/task6g_g0_audit.json` equivalence/saturation/gradient checks are a reusable implementation-audit template.
+* All Task 6E/6F machinery stays retired; the `[BOX]` query placement and causal-placement proof remain the shared, verified interface for the next candidate.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -904,3 +925,4 @@ validation set and one metric path.
 | 015 | **Task 6C: neither paired sampling nor the centre point fixes conditioning** | Valid, bit-reproducible 2×2; all four arms 0/20 paired with margins within ±0.0036; paired training raises projected effective rank 1.50→3.74 without producing conditioning; the centre point is 1/23 of the language norm, so removing it changes little — the remaining problem is after the prompt |
 | 016 | **Task 6E: explicit box tokens are necessary but not sufficient at 2B / 3 epochs** | Enclosing quantization at `B = 256` keeps the oracle at 0.7343 mIoU / 20/20 and E0 overfits 20 records to 20/20 exact tokens (0.9166 box IoU), but E1 on 480 paired records fails with structural 0/120: `[BOX]`/EOS/reasoning are learned (accuracy 1.0) while the 256-way location values stall at the uniform floor (train CE 5.15 vs `ln 256 = 5.545`) and `[SEG]` is never predicted after the location run — fix the location learning signal/budget before adding `[REF]`, SRE, SCL or scale |
 | 017 | **Task 6F: pre-reasoning `[BOX]` query with a direct box readout** | The query hidden is provably conditioned only by image + instruction (bit-identical under future-text mutation); the same 20 records reach F0 box IoU 0.9046 / paired 10/10 on the inference-form query path; F1 (480 paired, ≤8 epochs) answers whether the target-aware representation generalizes — the Task 6E coordinate vocabulary stays retired regardless |
+| 018 | **Task 6G: dense query-to-map grounding does not localize either** | The 256×256 grid-snapped point oracle keeps 0.4883 mIoU / 18-20; the dense head is audited clean (SAM2 bit-frozen, train/eval bit-identical, healthy gradients) yet G0 cannot overfit 20 records (inside 0.10, Dice 0.125) — the heatmap is a near-flat image-dominated field, so the measured bottleneck is the query's weak instruction signal, not the readout format |

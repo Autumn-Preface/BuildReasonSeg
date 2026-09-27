@@ -1,0 +1,806 @@
+{
+  "_doc": "Task 6G section 20. Dense-path localization error classification. The dataset is not changed; the question is whether simple L1 examples work and whether the residual concentrates in WHU data-quality categories. When the task stops at G0 (section 11), the classification is computed on the G0 evaluation records and says so.",
+  "task": "6G",
+  "stage": "G0",
+  "selected_epoch": null,
+  "grid": 256,
+  "count": 20,
+  "failures_inside": 18,
+  "inside_rate": 0.1,
+  "flag_counts": {
+    "tiny_target": 16,
+    "border_truncation": 3,
+    "touching_merged_pseudo_instance": 0,
+    "visually_ambiguous_building": 1,
+    "relation_complexity": 10,
+    "heatmap_on_wrong_building": 0,
+    "diffuse_no_localization_heatmap": 18
+  },
+  "flag_share_of_failures": {
+    "tiny_target": 0.8888888888888888,
+    "border_truncation": 0.16666666666666666,
+    "touching_merged_pseudo_instance": 0.0,
+    "visually_ambiguous_building": 0.05555555555555555,
+    "relation_complexity": 0.5555555555555556,
+    "heatmap_on_wrong_building": 0.0,
+    "diffuse_no_localization_heatmap": 1.0
+  },
+  "dominant_remaining_error": "diffuse_no_localization_heatmap",
+  "ranked_flags": [
+    [
+      "diffuse_no_localization_heatmap",
+      1.0
+    ],
+    [
+      "tiny_target",
+      0.8888888888888888
+    ],
+    [
+      "relation_complexity",
+      0.5555555555555556
+    ],
+    [
+      "border_truncation",
+      0.16666666666666666
+    ],
+    [
+      "visually_ambiguous_building",
+      0.05555555555555555
+    ],
+    [
+      "touching_merged_pseudo_instance",
+      0.0
+    ],
+    [
+      "heatmap_on_wrong_building",
+      0.0
+    ]
+  ],
+  "failures_with_any_whu_quality_flag": 18,
+  "failures_with_any_whu_quality_flag_share": 1.0,
+  "simple_level1_inside_rate": 0.2,
+  "complex_level2_3_inside_rate": 0.0,
+  "whu_data_quality_dominates": true,
+  "records": [
+    {
+      "sample_id": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+      "image_id": "1_0",
+      "level": 1,
+      "query_family": "extreme",
+      "predicted_point": [
+        0.947265625,
+        0.302734375
+      ],
+      "gt_point": [
+        0.9169921875,
+        0.4462890625
+      ],
+      "point_inside_own": false,
+      "error_512px": 44.5,
+      "peakiness": 0.1502780020236969,
+      "heatmap_soft_dice": 0.23036503791809082,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2134,
+        "target_area_fraction": 0.00814056396484375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+      "image_id": "1_0",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.412109375,
+        0.251953125
+      ],
+      "gt_point": [
+        0.9990234375,
+        0.2861328125
+      ],
+      "point_inside_own": false,
+      "error_512px": 159.0,
+      "peakiness": 0.10583369433879852,
+      "heatmap_soft_dice": 0.07935148477554321,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": true,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1343,
+        "target_area_fraction": 0.005123138427734375,
+        "touches_border": true
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+      "image_id": "1_10026",
+      "level": 1,
+      "query_family": "extreme",
+      "predicted_point": [
+        0.810546875,
+        0.451171875
+      ],
+      "gt_point": [
+        0.8974609375,
+        0.8720703125
+      ],
+      "point_inside_own": false,
+      "error_512px": 130.0,
+      "peakiness": 0.1555843949317932,
+      "heatmap_soft_dice": 0.13848543167114258,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 298,
+        "target_area_fraction": 0.00113677978515625,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+      "image_id": "1_10026",
+      "level": 2,
+      "query_family": "nearest",
+      "predicted_point": [
+        0.810546875,
+        0.451171875
+      ],
+      "gt_point": [
+        0.8427734375,
+        0.9365234375
+      ],
+      "point_inside_own": false,
+      "error_512px": 132.5,
+      "peakiness": 0.0021066274493932724,
+      "heatmap_soft_dice": 0.011383891105651855,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1151,
+        "target_area_fraction": 0.004390716552734375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+      "image_id": "1_10027",
+      "level": 1,
+      "query_family": "size",
+      "predicted_point": [
+        0.763671875,
+        0.537109375
+      ],
+      "gt_point": [
+        0.7685546875,
+        0.5556640625
+      ],
+      "point_inside_own": true,
+      "error_512px": 6.0,
+      "peakiness": 0.0009059515432454646,
+      "heatmap_soft_dice": 0.02037668228149414,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1823,
+        "target_area_fraction": 0.006954193115234375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+      "image_id": "1_10027",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.791015625,
+        0.873046875
+      ],
+      "gt_point": [
+        0.9970703125,
+        0.8310546875
+      ],
+      "point_inside_own": false,
+      "error_512px": 63.5,
+      "peakiness": 0.0005845376872457564,
+      "heatmap_soft_dice": 0.029037117958068848,
+      "flags": {
+        "tiny_target": false,
+        "border_truncation": true,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 3369,
+        "target_area_fraction": 0.012851715087890625,
+        "touches_border": true
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+      "image_id": "1_10032",
+      "level": 1,
+      "query_family": "size",
+      "predicted_point": [
+        0.732421875,
+        0.998046875
+      ],
+      "gt_point": [
+        0.8857421875,
+        0.4814453125
+      ],
+      "point_inside_own": false,
+      "error_512px": 171.5,
+      "peakiness": 0.0050662304274737835,
+      "heatmap_soft_dice": 0.050575077533721924,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 29,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2560,
+        "target_area_fraction": 0.009765625,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+      "image_id": "1_10032",
+      "level": 2,
+      "query_family": "nearest",
+      "predicted_point": [
+        0.419921875,
+        0.115234375
+      ],
+      "gt_point": [
+        0.8349609375,
+        0.4189453125
+      ],
+      "point_inside_own": false,
+      "error_512px": 184.0,
+      "peakiness": 0.022239431738853455,
+      "heatmap_soft_dice": 0.022562384605407715,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 29,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 286,
+        "target_area_fraction": 0.00109100341796875,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+      "image_id": "1_10034",
+      "level": 1,
+      "query_family": "size",
+      "predicted_point": [
+        0.294921875,
+        0.658203125
+      ],
+      "gt_point": [
+        0.7255859375,
+        0.2099609375
+      ],
+      "point_inside_own": false,
+      "error_512px": 225.0,
+      "peakiness": 0.08664970099925995,
+      "heatmap_soft_dice": 0.11796540021896362,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2375,
+        "target_area_fraction": 0.009059906005859375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+      "image_id": "1_10034",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.294921875,
+        0.658203125
+      ],
+      "gt_point": [
+        0.6787109375,
+        0.4287109375
+      ],
+      "point_inside_own": false,
+      "error_512px": 157.0,
+      "peakiness": 0.016521062701940536,
+      "heatmap_soft_dice": 0.03539997339248657,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1848,
+        "target_area_fraction": 0.007049560546875,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+      "image_id": "1_1023",
+      "level": 1,
+      "query_family": "extreme",
+      "predicted_point": [
+        0.611328125,
+        0.123046875
+      ],
+      "gt_point": [
+        0.5966796875,
+        0.1650390625
+      ],
+      "point_inside_own": true,
+      "error_512px": 14.5,
+      "peakiness": 0.10606691241264343,
+      "heatmap_soft_dice": 0.5628514885902405,
+      "flags": {
+        "tiny_target": false,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": true,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 7356,
+        "target_area_fraction": 0.0280609130859375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+      "image_id": "1_1023",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.435546875,
+        0.201171875
+      ],
+      "gt_point": [
+        0.6669921875,
+        0.3544921875
+      ],
+      "point_inside_own": false,
+      "error_512px": 98.5,
+      "peakiness": 0.0910496637225151,
+      "heatmap_soft_dice": 0.16501575708389282,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": true,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 511,
+        "target_area_fraction": 0.001949310302734375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+      "image_id": "1_1029",
+      "level": 1,
+      "query_family": "extreme",
+      "predicted_point": [
+        0.091796875,
+        0.123046875
+      ],
+      "gt_point": [
+        0.7607421875,
+        0.3916015625
+      ],
+      "point_inside_own": false,
+      "error_512px": 240.0,
+      "peakiness": 0.10254614800214767,
+      "heatmap_soft_dice": 0.14306104183197021,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1324,
+        "target_area_fraction": 0.0050506591796875,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+      "image_id": "1_1029",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.384765625,
+        0.060546875
+      ],
+      "gt_point": [
+        0.1201171875,
+        0.1005859375
+      ],
+      "point_inside_own": false,
+      "error_512px": 78.0,
+      "peakiness": 0.13582643866539001,
+      "heatmap_soft_dice": 0.24676132202148438,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1450,
+        "target_area_fraction": 0.00553131103515625,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+      "image_id": "1_1030",
+      "level": 1,
+      "query_family": "extreme",
+      "predicted_point": [
+        0.333984375,
+        0.845703125
+      ],
+      "gt_point": [
+        0.9404296875,
+        0.0849609375
+      ],
+      "point_inside_own": false,
+      "error_512px": 350.0,
+      "peakiness": 0.013680344447493553,
+      "heatmap_soft_dice": 0.16339999437332153,
+      "flags": {
+        "tiny_target": false,
+        "border_truncation": true,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 4724,
+        "target_area_fraction": 0.0180206298828125,
+        "touches_border": true
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+      "image_id": "1_1030",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.658203125,
+        0.904296875
+      ],
+      "gt_point": [
+        0.1005859375,
+        0.2607421875
+      ],
+      "point_inside_own": false,
+      "error_512px": 307.5,
+      "peakiness": 0.06274469941854477,
+      "heatmap_soft_dice": 0.2961910367012024,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2264,
+        "target_area_fraction": 0.008636474609375,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1034_1_smallest_49e665afb182",
+      "image_id": "1_1034",
+      "level": 1,
+      "query_family": "size",
+      "predicted_point": [
+        0.119140625,
+        0.283203125
+      ],
+      "gt_point": [
+        0.1142578125,
+        0.3720703125
+      ],
+      "point_inside_own": false,
+      "error_512px": 24.0,
+      "peakiness": 0.41626909375190735,
+      "heatmap_soft_dice": 0.04930579662322998,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 786,
+        "target_area_fraction": 0.00299835205078125,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+      "image_id": "1_1034",
+      "level": 2,
+      "query_family": "direction",
+      "predicted_point": [
+        0.119140625,
+        0.283203125
+      ],
+      "gt_point": [
+        0.1962890625,
+        0.0498046875
+      ],
+      "point_inside_own": false,
+      "error_512px": 79.5,
+      "peakiness": 0.03740937262773514,
+      "heatmap_soft_dice": 0.036837100982666016,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1154,
+        "target_area_fraction": 0.00440216064453125,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+      "image_id": "1_1062",
+      "level": 1,
+      "query_family": "extreme",
+      "predicted_point": [
+        0.248046875,
+        0.294921875
+      ],
+      "gt_point": [
+        0.2783203125,
+        0.0849609375
+      ],
+      "point_inside_own": false,
+      "error_512px": 61.5,
+      "peakiness": 0.049185458570718765,
+      "heatmap_soft_dice": 0.07528609037399292,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": false,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 13,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 498,
+        "target_area_fraction": 0.00189971923828125,
+        "touches_border": false
+      }
+    },
+    {
+      "sample_id": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+      "image_id": "1_1062",
+      "level": 2,
+      "query_family": "nearest",
+      "predicted_point": [
+        0.330078125,
+        0.158203125
+      ],
+      "gt_point": [
+        0.7763671875,
+        0.7041015625
+      ],
+      "point_inside_own": false,
+      "error_512px": 254.0,
+      "peakiness": 0.1568225920200348,
+      "heatmap_soft_dice": 0.02707982063293457,
+      "flags": {
+        "tiny_target": true,
+        "border_truncation": false,
+        "touching_merged_pseudo_instance": false,
+        "visually_ambiguous_building": false,
+        "relation_complexity": true,
+        "heatmap_on_wrong_building": false,
+        "diffuse_no_localization_heatmap": true
+      },
+      "component_stats": {
+        "components_in_tile": 13,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 663,
+        "target_area_fraction": 0.002529144287109375,
+        "touches_border": false
+      }
+    }
+  ]
+}

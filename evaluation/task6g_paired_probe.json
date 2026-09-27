@@ -1,0 +1,137 @@
+{
+  "_doc": "Task 6G paired point probe. The task stopped at G0 (section 11: DENSE_GROUNDING_IMPLEMENTATION_FAILED), so this is the G0 10-pair evaluation probe; the fixed 20-image validation probe belongs to G1, which was not run.",
+  "task": "6G",
+  "stage": "G0",
+  "selected_epoch": null,
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6g\\G0\\g0_final.pt",
+    "bytes": 97351211,
+    "sha256": "f8eb6ac4df51c47aba49a7bb3818838906a0cff3f1b5264f817ed0ba5016d501",
+    "step": 1500,
+    "stage": "G0",
+    "name": "g0_final",
+    "relative_path": "artifacts/checkpoints/task6g/G0/g0_final.pt"
+  },
+  "geometry": {
+    "paired_total": 10,
+    "paired_point_selection_pass": 0,
+    "mean_same_image_point_distance": 0.335546875,
+    "pairs_with_distinct_points": 7,
+    "mean_same_image_heatmap_iou": 0.22677954942477507,
+    "rows": [
+      {
+        "image_id": "1_0",
+        "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+        "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.5859375,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.20856820744081173
+      },
+      {
+        "image_id": "1_10026",
+        "a": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+        "b": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.0,
+        "points_distinct": false,
+        "same_image_heatmap_iou": 0.10526315789473684
+      },
+      {
+        "image_id": "1_10027",
+        "a": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+        "b": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+        "a_inside": true,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.36328125,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.0
+      },
+      {
+        "image_id": "1_10032",
+        "a": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+        "b": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 1.1953125,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.1895734597156398
+      },
+      {
+        "image_id": "1_10034",
+        "a": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+        "b": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.0,
+        "points_distinct": false,
+        "same_image_heatmap_iou": 0.09396751740139211
+      },
+      {
+        "image_id": "1_1023",
+        "a": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+        "b": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+        "a_inside": true,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.25390625,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.09135802469135802
+      },
+      {
+        "image_id": "1_1029",
+        "a": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+        "b": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.35546875,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.4812239221140473
+      },
+      {
+        "image_id": "1_1030",
+        "a": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+        "b": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.3828125,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.37181764357608055
+      },
+      {
+        "image_id": "1_1034",
+        "a": "buildsr_train_1_1034_1_smallest_49e665afb182",
+        "b": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.0,
+        "points_distinct": false,
+        "same_image_heatmap_iou": 0.49480968858131485
+      },
+      {
+        "image_id": "1_1062",
+        "a": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+        "b": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+        "a_inside": false,
+        "b_inside": false,
+        "point_selection_passed": false,
+        "same_image_point_distance": 0.21875,
+        "points_distinct": true,
+        "same_image_heatmap_iou": 0.23121387283236994
+      }
+    ]
+  },
+  "mask": null,
+  "mask_ran": false,
+  "mask_note": "G1/G2 not run: the task stopped at G0."
+}

@@ -95,6 +95,9 @@ class BuildReasonSegMvp(nn.Module):
         #: Present only in the target-aware query candidate; every earlier task keeps
         #: `box_head is None` and therefore its exact previous behaviour.
         self.box_head = None
+        #: Task 6G: query hidden x frozen SAM2 spatial features -> DenseSpatialGroundingHead
+        #: heatmap. Present only in the dense grounding candidate.
+        self.dense_head = None
 
     # -- convenience -----------------------------------------------------
 
@@ -154,6 +157,7 @@ class BuildReasonSegMvp(nn.Module):
                 or name.startswith("sam.sam_mask_decoder.")
                 or name.startswith("grounding_head.")
                 or name.startswith("box_head.")
+                or name.startswith("dense_head.")
             ):
                 decoder.append(parameter)
             else:
