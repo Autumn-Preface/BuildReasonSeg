@@ -187,7 +187,7 @@ gate) — 322 pre-existing tests plus the 21 Task 6G tests, with no regressions.
 
 ## 20. Git / Watt
 
-**Commit: `{{COMMIT_HASH}}` — `feat: add dense spatial grounding map`** (staged only code, tests,
+**Commit: `5808464` — `feat: add dense spatial grounding map`** (staged only code, tests,
 docs and `evaluation/**` artifacts: no checkpoints, no weights, no cached feature tensors, no
 `.conda`, no dataset edits; `artifacts/**` stays gitignored and only
 `evaluation/task6g_checkpoint_manifest.json` records the checkpoint hashes).
