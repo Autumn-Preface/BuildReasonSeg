@@ -1,576 +1,538 @@
-# TO_DSH — Task 6D: Spatial Grounding Bridge v0.1
+# TO_DSH — Task 6D.1: Corrective G0 Rerun + `[SEG]` Spatial-Decodability Audit
 
 > Status: **ACTIVE**
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: return focus from performance engineering to **model capability and algorithm architecture**.
+> Purpose: audit and correct Task 6D before any new architecture is introduced.
 >
-> Task 6C established that the direct `[SEG] hidden → Projection MLP → SAM sparse prompt` path does not produce instruction-conditioned target selection on unseen images.
+> Task 6D produced a valuable oracle result, but its causal conclusion
 >
-> Task 6C.5–6C.7 are now closed as performance work.
+> > "`[SEG]` hidden state carries no usable target location"
 >
-> Task 6D introduces the first explicit spatial-grounding mechanism:
+> is **not yet accepted as frozen**, because the G0 training script contains a learning-rate scheduler defect and the grounding head begins with LayerNorm, which may itself remove a decodable signal.
 >
-> **MLLM `[SEG]` hidden state → predicted target geometry → official SAM2 spatial prompt encoder → target mask**
+> This task must correct those confounds first.
 >
-> Ground-truth geometry is used **only as training supervision / oracle diagnostic**, never as inference-time input.
+> No 4B. No `[REF]`. No Spatial Relation Encoder. No Spatial Consistency Loss. No dataset change. No G1 unless the corrected G0 gate passes.
 
-## 0. User priority
+## 0. User-facing language
 
-The user prioritizes:
-1. model capability;
-2. useful training/inference code;
-3. CMD-runnable `train.py` / `predict.py` / `evaluate.py`;
-4. architecture innovation and paper evidence;
-5. UI/GUI only much later.
+All narrative DSH UI/chat output must be **Chinese**.
 
-Do **not** build GUI/Web UI in this task.
+Code, paths, raw metric names and logs may remain English.
 
-Do **not** spend another task on generic performance tuning unless runtime blocks model development.
+# PART A — Preserve the valid Task 6D evidence
 
-## 1. Data policy
+## 1. Oracle result is accepted and must not be rerun unless a correctness issue is discovered
 
-Current BuildSpatialReason v0.1.1 / WHU-based data remains the controlled dataset for Task 6D so the architecture experiment stays comparable with Task 6C.
+Freeze:
 
-WHU is **not a permanent hard constraint anymore**.
+- Oracle Point: mIoU `0.4876`, paired `18/20`;
+- Oracle Box: mIoU `0.7506`, paired `20/20`;
+- geometry choice: **BOX**.
 
-The user allows:
-- replacing WHU with a more suitable building dataset later;
-- adapting/programmatically transforming a new dataset for BuildSpatialReason-style supervision.
+These results establish:
 
-Do not change datasets inside Task 6D. Record evidence if current pseudo-instances materially limit the architecture.
+> Given correct target geometry, the current SAM2 prompt encoder + decoder can select and segment the intended building well.
 
-## 2. Hard architecture boundaries
+Do not reinterpret this as proof that every SAM failure is solved; it is specifically an upper-bound diagnostic for the current validation material.
 
-Use:
-- Qwen3-VL-2B-Instruct;
-- SAM2.1 Hiera Base+;
-- current text-only LoRA;
-- current `[SEG]`;
-- strict deterministic training;
-- Task 6C paired subset `P`;
-- fixed Task 6B/6C validation and paired probe;
-- Task 6C.7 accepted runtime (`collect_grad_norms=false`, frozen Qwen visual cache, no redundant Phase-B transfer).
+# PART B — Correct the scheduler defect
 
-Do **not** add:
-- Qwen 4B;
-- `[REF]`;
-- Spatial Relation Encoder;
-- Spatial Consistency Loss;
-- external datasets;
-- true batch > 1;
-- UI;
-- full 15,592-sample training.
+## 2. Task 6D G0 scheduler is currently wrong
 
-Goal: prove that **the same image can produce different correct target masks under different instructions**.
+Current `scripts/task6d_train.py` creates:
 
-# PART A — Freeze the current failure baseline
+```python
+steps_per_epoch = len(train_samples)
+optimizer, scheduler, groups = make_optimizer(runtime, steps_per_epoch)
+```
 
-## 3. Baseline evidence
+and then reuses that scheduler for **2 epochs**.
 
-Do not rerun all Task 6C arms.
+With the configured cosine schedule:
 
-Use the frozen Task 6C `P_C` result:
-- strict e2e mIoU ≈ 0.10604;
-- paired mask probe = 0/20;
-- same-image prediction-to-prediction IoU ≈ 0.999;
-- valid `[SEG]` emission 120/120.
+```yaml
+warmup_steps: 20
+lr_schedule: cosine
+```
 
-Record exact artifact/hash used.
+the scheduler reaches its terminal factor at approximately step 480, i.e. the end of epoch 1, and epoch 2 then runs with the learning rate at/near zero.
 
-A small current-code sanity revalidation is allowed only if needed to prove accepted performance changes remain value-equivalent.
+This means the recorded "2 epochs" are not a valid two-epoch optimization budget.
 
-# PART B — Oracle spatial-prompt diagnostic
+### Required correction
 
-## 4. Oracle feasibility
+For a normal multi-epoch run:
 
-Before training a geometry head, establish whether SAM2 can recover the target building when given correct geometry.
+```python
+total_optimizer_steps = epochs * steps_per_epoch
+```
 
-Use fixed 120-record validation subset and 20 paired validation images.
+The scheduler must be constructed with the actual total number of optimizer steps.
 
-### Oracle Point
+If a smoke/max-step mode truncates the run, calculate the true total steps from the actual loop, not from nominal epochs.
 
-Derive one deterministic interior point from GT target mask.
+### Required LR audit
 
-Preferred:
-- maximum of Euclidean distance transform inside target mask;
-- deterministic tie-breaking.
+Every training report must record LR for each optimizer group at:
 
-Feed it through official SAM2 prompt encoder as a positive point.
+- first optimizer step;
+- after warmup;
+- end of epoch 1;
+- start of epoch 2;
+- final optimizer step.
 
-### Oracle Box
+Add a regression test proving for a 2×480 G0 run:
 
-Derive tight GT target bounding box.
+- LR is non-zero at the beginning of epoch 2;
+- cosine reaches its terminal value only at the end of the full 960-step schedule.
 
-Feed it through official SAM2 box prompt path.
+Do not silently rewrite Task 6D history. Mark the original G0 result as:
 
-### Decoder state
+`VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND`
 
-Use the same SAM2 decoder state that will initialize the Task 6D candidate.
+until this task resolves it.
 
-Do not train on validation.
+# PART C — Exact corrective rerun first
 
-Report point and box:
-- strict mask mIoU;
-- Dice;
-- paired mask selection /20;
-- mean own-target IoU;
-- mean cross-target IoU;
-- mean IoU(pred_A, pred_B).
+## 3. G0-R: corrected-scheduler replication
 
-Create:
-`evaluation/task6d_oracle_prompt_diagnostic.json`
+Before changing the architecture, rerun **exactly the Task 6D G0 model**:
 
-## 5. Geometry choice
+```text
+[SEG] hidden
+→ LayerNorm
+→ Linear(2048,512)
+→ GELU
+→ Linear(512,4)
+→ sigmoid/canonical box
+```
 
-Choose exactly one geometry head:
+Keep exactly:
 
-1. if Oracle Point paired >= 18/20 and mIoU >= 0.50, choose **POINT**, unless Oracle Box improves mIoU by >= 0.10;
-2. otherwise, if Oracle Box paired >= 18/20 and mIoU >= 0.50, choose **BOX**;
-3. if neither reaches those gates, stop before training and report `ORACLE_SPATIAL_PROMPT_INSUFFICIENT`.
+- Task 6C paired P subset: 480 records;
+- 2 epochs;
+- Qwen3-VL-2B;
+- text-only LoRA;
+- `[SEG]`;
+- BOX;
+- lambda_ground = 5.0;
+- `2.0*LM CE + 5.0*SmoothL1`;
+- same optimizer LRs;
+- strict determinism;
+- same validation set and paired probe;
+- G0 only (SAM mask decoder frozen);
+- Task 6C.7 visual cache.
 
-Do not silently choose the prettier result.
+The **only intended change** is the scheduler horizon bug fix.
 
-Do not use combined point+box in Task 6D.
+Report:
 
-# PART C — Spatial Grounding Head
+- full LR traces;
+- train raw grounding loss;
+- train box IoU;
+- train predicted-box spread;
+- validation box IoU;
+- geometry paired /20;
+- emission;
+- hidden/head representation diagnostics.
 
-## 6. Architecture
+Use the same original G0 gate:
 
-Implement:
+- emission >= 90%;
+- geometry paired >= 14/20;
+- mean GT-box IoU >= 0.35.
 
-`SpatialGroundingHead`
+### If G0-R passes
 
-Input:
-`[SEG] hidden state, 2048-d`
+Verdict:
 
-Minimal structure:
+`SCHEDULER_FIX_RECOVERS_GROUNDING`
+
+Then G1 may run under the original Task 6D rules with the corrected scheduler.
+
+### If G0-R fails
+
+Do **not** immediately invent a new architecture.
+
+Proceed to the decodability audit below.
+
+# PART D — `[SEG]` spatial-decodability audit
+
+## 4. Why this is required
+
+High cosine similarity does **not** prove the target location is absent.
+
+A small target-dependent component can exist in a high-dimensional vector while cosine remains near 1.
+
+Likewise, failure of one MLP readout does not prove information-theoretic absence.
+
+Task 6D also prepended:
 
 ```text
 LayerNorm(2048)
-→ Linear(2048, 512)
+```
+
+before the grounding MLP.
+
+LayerNorm removes per-sample mean/scale information. If spatial information is partly encoded through those statistics, Task 6D's own head can destroy it.
+
+Therefore explicitly test whether geometry is decodable from the raw hidden state.
+
+## 5. Freeze representation source
+
+Use one clearly identified frozen representation source.
+
+Preferred:
+
+- the Task 6C `P_C` checkpoint before Task 6D grounding training, if the local checkpoint is available and its hash can be verified.
+
+If not available:
+
+- use the clean Task 6D initialization reconstructed from the same seed/base/LoRA state and document the exact source.
+
+Do not use a checkpoint whose representation has already been altered by the failed grounding run unless explicitly labelled as a separate diagnostic.
+
+Extract teacher-forced `[SEG]` hidden vectors for:
+
+- all 480 P training records;
+- fixed 120 validation records.
+
+Also record image id, query type/template id, target box and target component.
+
+No test split.
+
+Save only compact feature artifacts if reasonable; large tensors may stay local/gitignored with hashes/manifests committed.
+
+# PART E — Four frozen probes
+
+## 6. Probe A — raw linear readout
+
+Freeze Qwen completely.
+
+Train only:
+
+```text
+Linear(2048, 4)
+```
+
+from the raw `[SEG]` hidden to normalized GT box coordinates.
+
+Use a simple deterministic optimizer and enough steps to test decodability, not paper performance.
+
+Primary question:
+
+> Can a linear map recover target geometry from the frozen raw hidden representation?
+
+Report train and val:
+
+- SmoothL1;
+- box IoU;
+- center-inside rate;
+- geometry paired /20.
+
+## 7. Probe B — raw MLP readout, NO LayerNorm
+
+Freeze Qwen completely.
+
+Train:
+
+```text
+Linear(2048,512)
 → GELU
-→ Linear(512, D)
-→ sigmoid
+→ Linear(512,4)
+→ sigmoid/canonicalization
 ```
 
-where:
-- `D=2` for POINT: normalized `(x, y)`;
-- `D=4` for BOX: normalized `(x1, y1, x2, y2)`.
+No LayerNorm.
 
-For BOX, parameterize/canonicalize differentiably so `x1<=x2`, `y1<=y2`.
+Use enough iterations to test:
+- 20-sample overfit;
+- then 480-sample train fit;
+- then validation.
 
-Do not use the old arbitrary projected language vector as the SAM sparse prompt in the candidate arm.
+The 20-sample overfit is important:
 
-Candidate:
-
-```text
-Image + instruction
-        ↓
-Qwen3-VL + text LoRA
-        ↓
-reasoning + [SEG]
-        ↓
-[SEG] hidden
-        ↓
-SpatialGroundingHead
-        ↓
-predicted point / box
-        ↓
-official SAM2 prompt encoder
-        ↓
-SAM2 mask decoder
-        ↓
-target mask
-```
-
-Name: **Spatial Grounding Bridge v0.1**.
-
-## 7. Geometry supervision
-
-### POINT
-Use same deterministic distance-transform interior point as oracle. Normalize to `[0,1]^2`.
-
-### BOX
-Use tight target-mask bounding box. Normalize to `[0,1]`.
-
-GT geometry is supervision only.
-
-At inference/evaluation the prompt must use **predicted geometry only**.
-
-Add tests for this separation.
-
-# PART D — Loss
-
-## 8. Objective
-
-Keep Task 6C headline losses:
-
-```text
-2.0 * LM CE
-+ 2.0 * mask BCE
-+ 1.0 * mask Dice
-```
-
-Add:
-
-```text
-lambda_ground = 5.0
-```
-
-with `SmoothL1(pred_geometry, gt_geometry)`.
-
-This is a provisional architecture-proof weight. Do not sweep weights in Task 6D.
-
-Record raw component magnitudes.
-
-# PART E — Two-stage training
-
-## 9. Stage G0 — grounding proof
-
-Training:
-- Task 6C paired `P` subset: 480 records / 240 images × 2 targets.
-
-Train:
-- text LoRA;
-- `[SEG]` trainable token machinery;
-- SpatialGroundingHead.
-
-Freeze:
-- SAM2 image encoder;
-- SAM2 decoder for G0;
-- old Projection MLP unused.
-
-Loss:
-- LM CE;
-- grounding loss.
-
-Maximum:
-- 2 epochs.
-
-Validate each epoch on fixed 120 records.
-
-Primary metrics:
-
-### POINT
-- mean normalized coordinate error;
-- predicted point inside correct GT target rate;
-- predicted point inside paired other-target rate;
-- paired point-selection /20.
-
-### BOX
-- mean box IoU with GT box;
-- predicted-box center inside target rate;
-- paired geometry-selection /20.
-
-G0 success:
-- valid `[SEG]` >= 90%;
-- geometry paired >= 14/20;
-- plus:
-  - POINT: correct-target inside >= 70%;
-  - BOX: mean GT-box IoU >= 0.35.
-
-If G0 fails, stop:
-`GROUNDING_REPRESENTATION_FAILED`.
-
-Do not compensate with 4B or extra modules.
-
-## 10. Stage G1 — joint segmentation
-
-Only if G0 passes.
-
-Train:
-- text LoRA;
-- `[SEG]`;
-- SpatialGroundingHead;
-- SAM2 mask decoder.
-
-Keep frozen:
-- Qwen base;
-- Qwen visual tower;
-- SAM2 image encoder;
-- SAM2 prompt encoder parameters by default.
-
-Loss:
-
-```text
-2.0 LM CE
-+ 2.0 mask BCE
-+ 1.0 mask Dice
-+ 5.0 grounding SmoothL1
-```
-
-Maximum:
-- 3 epochs;
-- same 480 paired samples.
-
-No hyperparameter sweep.
-
-Use Task 6C.7 visual cache.
-
-# PART F — Evaluation
-
-## 11. Free generation is primary
-
-For each val sample:
-
-```text
-image + instruction
-→ free generated reasoning + [SEG]
-→ generated [SEG] hidden
-→ predicted geometry
-→ official SAM2 prompt encoder
-→ mask
-```
-
-Exactly one `[SEG]` required.
-
-Invalid emission: mask IoU=0 and geometry failure.
+If a 1M-parameter MLP cannot fit 20 frozen hidden vectors to 20 boxes, inspect implementation/data before drawing representation conclusions.
 
 Report:
-- emission;
-- strict e2e mIoU;
-- Dice;
-- conditional mIoU;
-- L1/L2/L3;
-- query-family;
-- grounding metrics.
+- 20-sample train box IoU;
+- 480-sample train box IoU;
+- val box IoU;
+- paired /20.
 
-Teacher-forced remains diagnostic only.
+## 8. Probe C — current LayerNorm MLP
 
-## 12. Same-image paired probe is main gate
-
-For masks:
+Freeze Qwen and train exactly the Task 6D head:
 
 ```text
-IoU(pred_A, GT_A) > IoU(pred_A, GT_B)
-IoU(pred_B, GT_B) > IoU(pred_B, GT_A)
+LayerNorm
+→ Linear
+→ GELU
+→ Linear
 ```
 
-Define analogous geometry criterion.
+Use the same probe protocol as B.
 
-Report:
-- mask paired /20;
-- geometry paired /20;
-- own-target IoU;
-- cross-target IoU;
-- own-minus-cross margin;
-- IoU(pred_A, pred_B).
+This isolates whether LayerNorm itself destroys useful signal.
 
-# PART G — Verdict
+## 9. Probe D — representation-statistics ablation
 
-## 13. Use exactly one
+Measure whether GT geometry correlates with information discarded by LayerNorm:
 
-### `SPATIAL_GROUNDING_FIX_FOUND`
+For each raw `[SEG]` hidden:
+- vector mean;
+- vector standard deviation;
+- L2 norm.
 
-Require:
-- G0 passes;
-- `[SEG]` >= 90%;
-- geometry paired >= 14/20;
-- mask paired >= 14/20;
-- own-minus-cross margin > 0.05;
-- strict e2e mIoU >= 0.20;
-- no GT leakage.
+Report basic correlation / predictive usefulness with box center/size.
 
-### `SPATIAL_GROUNDING_PARTIAL`
+Do not overinterpret correlation as causation.
 
-Geometry becomes instruction-conditioned but mask gate is not fully solved.
+# PART F — Stronger representation controls
 
-### `GROUNDING_REPRESENTATION_FAILED`
+## 10. Four-condition similarity control, expanded
 
-`[SEG]` hidden cannot learn reliable target geometry.
+Repeat:
 
-### `ORACLE_SPATIAL_PROMPT_INSUFFICIENT`
+- same image / different instruction;
+- different image / same template;
+- different image / different template.
 
-Even correct GT point/box prompts cannot produce adequate masks.
+But report more than cosine:
 
-### `INVALID_EXPERIMENT`
+- cosine;
+- L2;
+- raw norm;
+- centered cosine;
+- LayerNorm-output cosine;
+- within-template variance;
+- within-image variance;
+- between-target box distance.
 
-Leakage, subset mismatch, corruption, nondeterminism or correctness failure.
+If practical, use PCA/SVD on raw `[SEG]` hiddens and report:
+- effective rank;
+- top-1/top-5/top-10 explained variance.
 
-# PART H — Diagnostics
+The purpose is not to prove reasoning, but to determine what information the token actually carries.
 
-## 14. Representation diagnosis
+# PART G — Interpretation matrix
 
-Same-image/different-instruction:
-- `[SEG]` hidden cosine/L2/norm;
-- predicted point/box distance between A and B;
-- grounding-head penultimate representation if useful;
-- mask A-vs-B IoU.
+## 11. Predeclare conclusions
 
-Key question:
+### Case A — corrected G0-R passes
 
-> Does instruction variation now produce **spatially different predicted geometry** and therefore different masks?
+Task 6D failure was materially caused by the scheduler defect.
 
-Do not require low hidden cosine if geometry is target-specific.
+Do not redesign representation yet.
 
-# PART I — CMD/product direction
+### Case B — raw probes decode geometry, LayerNorm probe fails
 
-## 15. No GUI
+Conclusion:
 
-Do not build UI.
+`LAYER_NORM_READOUT_CONFOUND`
 
-If candidate reaches FIX_FOUND or strong PARTIAL, refactor minimal reusable API:
+The `[SEG]` state contains usable location information, but Task 6D's head destroyed/suppressed it.
 
-```python
-model = load_buildreasonseg(...)
-result = model.predict(image, instruction)
-```
+Next architecture should use the successful raw readout.
 
-Result may expose:
-- generated reasoning;
-- predicted geometry;
-- mask/logits.
+### Case C — raw MLP can fit train/20-sample but not validation
 
-Do not spend time on CLI cosmetics yet.
+Conclusion:
 
-A polished `predict.py` can wait until the architecture passes paired validation.
+`LOCATION_SIGNAL_MEMORIZABLE_NOT_GENERALIZABLE`
 
-# PART J — Data adequacy
+The representation contains sample-specific information but not a robust spatial code.
 
-## 16. Record WHU pseudo-instance limitations
+This justifies changing the representation objective, but not saying "no location exists".
 
-During oracle/candidate error analysis classify failures caused by:
-- merged touching buildings;
+### Case D — even raw 1M MLP cannot overfit 20 frozen hidden vectors
+
+Conclusion:
+
+`READOUT_OR_FEATURE_IDENTITY_BUG_SUSPECTED`
+
+Do not make an information-content claim until implementation is audited.
+
+### Case E — raw MLP easily overfits 20 and 480 but val remains collapsed
+
+Conclusion:
+
+`SPATIAL_REPRESENTATION_DOES_NOT_GENERALIZE`
+
+This is strong evidence that current `[SEG]` features are unsuitable as a generalizable geometry code.
+
+### Case F — raw probes cannot meaningfully fit even 480 after implementation is verified
+
+Then and only then may the project freeze the stronger statement:
+
+> Current `[SEG]` representation contains no practically decodable target geometry under this training setup.
+
+Use `PRACTICALLY_DECODABLE`, not information-theoretic "contains no information".
+
+# PART H — If representation truly fails: one next-method recommendation only
+
+## 12. Do not implement it automatically
+
+If Case E/F is established, recommend exactly one of these for the next task, with evidence:
+
+### Option 1 — explicit coordinate/grid tokens
+
+Make target location a first-class supervised sequence target, e.g. quantized spatial tokens / coordinate tokens, rather than expecting the generic `[SEG]` hidden state to spontaneously encode geometry.
+
+### Option 2 — target-aware query token before reasoning completion
+
+Introduce a dedicated trainable grounding/query token whose hidden state is directly supervised for box geometry.
+
+### Option 3 — `[REF]`/relation mechanism
+
+Only if the evidence specifically shows multi-hop relation grounding needs a reference object.
+
+Do not implement 4B as the first response.
+
+Do not implement multiple options in the same task.
+
+# PART I — Dataset policy
+
+## 13. WHU decision remains open but unchanged in this corrective task
+
+Do not change dataset.
+
+Task 6D oracle box = 0.7506 / paired 20/20 is evidence that the current validation examples are sufficient to test this architecture pathway.
+
+However, do not declare WHU permanently adequate.
+
+Record separately:
+- pseudo-instance ambiguity;
+- touching/merged buildings;
 - border truncation;
-- ambiguous pseudo-instance boundaries;
-- insufficient instance density;
-- component artifacts.
+- tiny-target prevalence.
 
-Do **not** change dataset in Task 6D.
+Dataset migration remains allowed later if architecture results show it is beneficial.
 
-If such errors materially dominate, recommend a dedicated dataset-selection task next.
+# PART J — Required artifacts
 
-# PART K — Artifacts
-
-## 17. Create
+## 14. Create
 
 ```text
-evaluation/task6d_oracle_prompt_diagnostic.json
-evaluation/task6d_grounding_targets.json
-evaluation/task6d_g0.json
-evaluation/task6d_g1.json
-evaluation/task6d_paired_probe.json
-evaluation/task6d_representation.json
-evaluation/task6d_error_analysis.json
-evaluation/task6d_checkpoint_manifest.json
-docs/task6d_spatial_grounding_bridge.md
+evaluation/task6d1_scheduler_audit.json
+evaluation/task6d1_g0_corrected.json
+evaluation/task6d1_hidden_extract_manifest.json
+evaluation/task6d1_probe_linear.json
+evaluation/task6d1_probe_raw_mlp.json
+evaluation/task6d1_probe_layernorm_mlp.json
+evaluation/task6d1_representation_stats.json
+evaluation/task6d1_decodability_summary.json
+docs/task6d1_corrective_grounding_audit.md
 ```
 
-`task6d_g1.json` only if G0 passes.
+If G0-R passes and G1 is allowed:
 
-Checkpoints remain local/gitignored.
+```text
+evaluation/task6d1_g1.json
+evaluation/task6d1_paired_probe.json
+```
 
-Create compact qualitative panels for at least 6 paired val images:
-- image;
-- instruction A/B;
-- GT masks;
-- predicted point/box A/B;
-- predicted masks A/B.
+Large extracted hidden tensors stay local/gitignored; commit their:
+- shape;
+- dtype;
+- sample-id hash;
+- SHA256 if serialized.
 
-No GUI.
+# PART K — Tests
 
-# PART L — Tests
+## 15. Required tests
 
-## 18. Tests
+Add/regress tests for:
 
-Cover:
-1. deterministic interior point lies inside GT mask;
-2. box tightly encloses GT mask;
-3. normalized geometry valid;
-4. GT geometry only used in supervision/oracle;
-5. free inference uses predicted geometry only;
-6. grounding loss gradients reach `[SEG]`/LoRA;
-7. visual tower frozen;
-8. SAM image encoder frozen;
-9. paired samples have different target geometry;
-10. oracle uses official SAM2 prompt encoder;
-11. predicted path uses official SAM2 prompt encoder;
-12. old arbitrary language sparse token absent from candidate;
-13. visual cache value-preserving;
-14. no test split;
-15. no 4B / `[REF]` / SRE / SCL;
-16. strict determinism retained.
+1. scheduler total steps equals actual optimizer-step budget;
+2. epoch-2 initial LR is non-zero for the standard 2×480 G0;
+3. terminal cosine LR occurs only at final full-run step;
+4. smoke/max-step mode uses its actual step budget;
+5. G0-R differs from original Task 6D only by scheduler correction;
+6. frozen probe extraction does not update Qwen;
+7. probe A uses raw hidden with no LayerNorm;
+8. probe B has no LayerNorm;
+9. probe C exactly includes LayerNorm;
+10. probe labels are GT boxes used only in probe supervision;
+11. no test split;
+12. strict determinism;
+13. no 4B / `[REF]` / SRE / SCL;
+14. no dataset change;
+15. no G1 unless corrected G0 gate passes.
 
 Run:
+
 `python -m pytest tests/ -q`
+
+# PART L — Documentation correction
+
+## 16. Amend Task 6D causal wording
+
+Do not erase Task 6D numbers.
+
+Update project state / ADR / handoff language from:
+
+> "`[SEG]` hidden carries no target location"
+
+to:
+
+> "Task 6D's first grounding readout collapsed; the original result is confounded by a scheduler-horizon defect and by the use of LayerNorm before the readout. Spatial decodability is under corrective audit."
+
+Only restore a stronger conclusion if Task 6D.1 supports it.
+
+The oracle conclusion may remain frozen.
 
 # PART M — Git / Watt
 
-## 19. Git hygiene
+## 17. Git hygiene
 
-Do not stage:
-- weights/checkpoints;
-- local feature caches;
-- `.conda`;
-- raw large traces;
-- dataset JSONL changes.
+No weights/checkpoints/hidden-tensor dumps/local caches.
 
 Recommended commit:
-`feat: add spatial grounding bridge`
 
-## 20. Watt
+`fix: audit spatial grounding representation`
 
 Ignore UU.
 
-Use established Watt ownership rule for final push only.
+Use normal Watt ownership rules for final push.
 
-# PART N — Handoff
+# PART N — Final DSH UI response
 
-## 21. FROM_DSH
-
-Include:
-1. Verdict
-2. Frozen Baseline
-3. Oracle Point
-4. Oracle Box
-5. Geometry Choice
-6. SpatialGroundingHead
-7. G0 Training
-8. G0 Metrics
-9. G1 Training (if run)
-10. Strict E2E
-11. Paired Geometry Probe
-12. Paired Mask Probe
-13. Representation Diagnostics
-14. WHU/Pseudo-instance Error Analysis
-15. Runtime / VRAM
-16. Tests
-17. Git / Watt
-18. Recommendation for next architecture task
-
-## 22. Final DSH UI — Chinese only
+## 18. Chinese-only final summary
 
 Report:
-- verdict;
-- oracle point/box mIoU and paired pass;
-- selected geometry;
-- G0 geometry paired pass;
-- G1 strict e2e mIoU;
-- G1 mask paired /20;
-- own-minus-cross margin;
-- whether same-image instructions now produce different geometry/masks;
-- main remaining failure;
-- whether WHU is visibly limiting;
-- peak VRAM/runtime;
+
+- Task 6D.1 verdict;
+- scheduler bug confirmation and exact LR behavior before/after;
+- corrected G0 paired /20 and box IoU;
+- Probe A train/val;
+- Probe B 20-sample overfit, 480-train, val;
+- Probe C corresponding results;
+- whether LayerNorm is a confound;
+- raw hidden similarity/effective-rank summary;
+- the accepted causal conclusion;
+- whether G1 ran;
+- the single recommended next architecture direction;
 - tests;
 - commit/push;
 - Watt handling.
 
-# 23. STOP
+# 19. STOP
 
-After Task 6D:
+After Task 6D.1:
 
 **STOP.**
 
 Do not automatically:
+- change dataset;
+- scale to 4B;
 - add `[REF]`;
 - add Spatial Relation Encoder;
 - add Spatial Consistency Loss;
-- scale to 4B;
-- change dataset;
-- run full training;
-- build GUI.
+- build GUI;
+- run full training.
 
 Wait for ChatGPT review.

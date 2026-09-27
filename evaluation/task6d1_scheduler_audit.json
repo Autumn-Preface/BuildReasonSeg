@@ -1,0 +1,621 @@
+{
+  "_doc": "Task 6D.1 section 2. Scheduler-horizon audit for the Task 6D G0 run and its corrective rerun. The defective horizon gave epoch 2 an LR of exactly zero; the corrected horizon spreads the cosine over the real step budget. The observed block is filled from the corrective run when it exists.",
+  "task": "6D.1",
+  "config": {
+    "lora_lr": 0.0001,
+    "token_lr": 0.0003,
+    "decoder_lr": 0.0003,
+    "warmup_steps": 20,
+    "lr_schedule": "cosine",
+    "epochs": 2,
+    "steps_per_epoch": 480
+  },
+  "defect": {
+    "summary": "scripts/task6d_train.py built the AdamW scheduler with `steps_per_epoch` as its horizon and then ran two epochs. The cosine factor therefore reached its terminal value at the end of epoch 1, and epoch 2 trained with LR exactly 0.",
+    "horizon_used": 480,
+    "steps_actually_run": 960,
+    "consequences": [
+      "epoch 1 decayed to ~1e-5 of peak before its own end, so only the first few hundred steps had a meaningful learning rate",
+      "epoch 2 performed no optimisation at all, which is why the Task 6D epoch-1 and epoch-2 validation metrics were bit-identical"
+    ],
+    "checkpoints": {
+      "first_optimizer_step": {
+        "global_step": 0,
+        "label": "step 0 (before the first scheduler.step)",
+        "factor": 0.05,
+        "lrs": {
+          "lora": 5e-06,
+          "trainable_token": 1.4999999999999999e-05,
+          "decoder_and_grounding_head": 1.4999999999999999e-05
+        }
+      },
+      "after_warmup": {
+        "global_step": 20,
+        "label": "step 20",
+        "factor": 1.0,
+        "lrs": {
+          "lora": 0.0001,
+          "trainable_token": 0.0003,
+          "decoder_and_grounding_head": 0.0003
+        }
+      },
+      "end_of_epoch_1": {
+        "global_step": 479,
+        "label": "step 479",
+        "factor": 1.1660640405308786e-05,
+        "lrs": {
+          "lora": 1.1660640405308787e-09,
+          "trainable_token": 3.4981921215926356e-09,
+          "decoder_and_grounding_head": 3.4981921215926356e-09
+        }
+      },
+      "start_of_epoch_2": {
+        "global_step": 480,
+        "label": "step 480",
+        "factor": 0.0,
+        "lrs": {
+          "lora": 0.0,
+          "trainable_token": 0.0,
+          "decoder_and_grounding_head": 0.0
+        }
+      },
+      "final_optimizer_step": {
+        "global_step": 959,
+        "label": "step 959",
+        "factor": 0.0,
+        "lrs": {
+          "lora": 0.0,
+          "trainable_token": 0.0,
+          "decoder_and_grounding_head": 0.0
+        }
+      }
+    }
+  },
+  "correction": {
+    "summary": "The scheduler is constructed with the actual optimizer-step budget (epochs x steps_per_epoch, or the truncated smoke budget), so the terminal factor is reached only at the final step of the last epoch.",
+    "horizon_used": 960,
+    "checkpoints": {
+      "first_optimizer_step": {
+        "global_step": 0,
+        "label": "step 0 (before the first scheduler.step)",
+        "factor": 0.05,
+        "lrs": {
+          "lora": 5e-06,
+          "trainable_token": 1.4999999999999999e-05,
+          "decoder_and_grounding_head": 1.4999999999999999e-05
+        }
+      },
+      "after_warmup": {
+        "global_step": 20,
+        "label": "step 20",
+        "factor": 1.0,
+        "lrs": {
+          "lora": 0.0001,
+          "trainable_token": 0.0003,
+          "decoder_and_grounding_head": 0.0003
+        }
+      },
+      "end_of_epoch_1": {
+        "global_step": 479,
+        "label": "step 479",
+        "factor": 0.5183775188270642,
+        "lrs": {
+          "lora": 5.183775188270642e-05,
+          "trainable_token": 0.00015551325564811924,
+          "decoder_and_grounding_head": 0.00015551325564811924
+        }
+      },
+      "start_of_epoch_2": {
+        "global_step": 480,
+        "label": "step 480",
+        "factor": 0.5167074885038373,
+        "lrs": {
+          "lora": 5.167074885038373e-05,
+          "trainable_token": 0.00015501224655115118,
+          "decoder_and_grounding_head": 0.00015501224655115118
+        }
+      },
+      "final_optimizer_step": {
+        "global_step": 959,
+        "label": "step 959",
+        "factor": 2.7924386640787446e-06,
+        "lrs": {
+          "lora": 2.792438664078745e-10,
+          "trainable_token": 8.377315992236233e-10,
+          "decoder_and_grounding_head": 8.377315992236233e-10
+        }
+      }
+    }
+  },
+  "verification": {
+    "epoch_2_initial_factor_defective": 0.0,
+    "epoch_2_initial_factor_corrected": 0.5167074885038373,
+    "terminal_at_final_step_corrected": 2.7924386640787446e-06,
+    "epoch_2_initial_lr_nonzero_after_fix": true
+  },
+  "observed_original_run": {
+    "report": "evaluation/task6d_g0.json",
+    "scheduler_horizon": null,
+    "lr_audit": null,
+    "note": "Task 6D's report predates the LR trace, so its LRs are reconstructed analytically in `defect.checkpoints` from the same scheduler formula."
+  },
+  "observed_corrected_run": {
+    "report": "evaluation/task6d1_g0_corrected.json",
+    "scheduler_horizon": {
+      "total_optimizer_steps": 960,
+      "steps_per_epoch": 480,
+      "planned_epochs": 2,
+      "note": "Task 6D.1 section 2: the cosine horizon is the real step budget (epochs x steps_per_epoch), so the terminal factor is reached only at the final step of the last epoch. Task 6D used one epoch and trained epoch 2 at LR ~0."
+    },
+    "lr_audit": {
+      "available": true,
+      "total_optimizer_steps_scheduled": 960,
+      "warmup_steps": 20,
+      "checkpoints": {
+        "first_optimizer_step": {
+          "global_step": 1,
+          "lrs": [
+            5e-06,
+            1.4999999999999999e-05,
+            1.4999999999999999e-05
+          ]
+        },
+        "after_warmup": {
+          "global_step": 21,
+          "lrs": [
+            0.0001,
+            0.0003,
+            0.0003
+          ]
+        },
+        "end_of_epoch_1": {
+          "global_step": 480,
+          "lrs": [
+            5.183775188270642e-05,
+            0.00015551325564811924,
+            0.00015551325564811924
+          ]
+        },
+        "start_of_epoch_2": {
+          "global_step": 481,
+          "lrs": [
+            5.167074885038373e-05,
+            0.00015501224655115118,
+            0.00015501224655115118
+          ]
+        },
+        "final_optimizer_step": {
+          "global_step": 960,
+          "lrs": [
+            2.792438664078745e-10,
+            8.377315992236233e-10,
+            8.377315992236233e-10
+          ]
+        }
+      },
+      "epoch_2_initial_lr_nonzero": true,
+      "final_step_is_terminal": false,
+      "trace_every": 20,
+      "trace": [
+        {
+          "global_step": 1,
+          "lrs": [
+            5e-06,
+            1.4999999999999999e-05,
+            1.4999999999999999e-05
+          ]
+        },
+        {
+          "global_step": 21,
+          "lrs": [
+            0.0001,
+            0.0003,
+            0.0003
+          ]
+        },
+        {
+          "global_step": 41,
+          "lrs": [
+            9.988834393115767e-05,
+            0.000299665031793473,
+            0.000299665031793473
+          ]
+        },
+        {
+          "global_step": 61,
+          "lrs": [
+            9.9553874407739e-05,
+            0.000298661623223217,
+            0.000298661623223217
+          ]
+        },
+        {
+          "global_step": 81,
+          "lrs": [
+            9.899808525182935e-05,
+            0.000296994255755488,
+            0.000296994255755488
+          ]
+        },
+        {
+          "global_step": 101,
+          "lrs": [
+            9.822345875271883e-05,
+            0.00029467037625815644,
+            0.00029467037625815644
+          ]
+        },
+        {
+          "global_step": 121,
+          "lrs": [
+            9.723345458039594e-05,
+            0.00029170036374118777,
+            0.00029170036374118777
+          ]
+        },
+        {
+          "global_step": 141,
+          "lrs": [
+            9.603249433382144e-05,
+            0.0002880974830014643,
+            0.0002880974830014643
+          ]
+        },
+        {
+          "global_step": 161,
+          "lrs": [
+            9.462594179299406e-05,
+            0.00028387782537898215,
+            0.00028387782537898215
+          ]
+        },
+        {
+          "global_step": 181,
+          "lrs": [
+            9.302007896300698e-05,
+            0.0002790602368890209,
+            0.0002790602368890209
+          ]
+        },
+        {
+          "global_step": 201,
+          "lrs": [
+            9.122207801708802e-05,
+            0.00027366623405126404,
+            0.00027366623405126404
+          ]
+        },
+        {
+          "global_step": 221,
+          "lrs": [
+            8.923996926393305e-05,
+            0.0002677199077917991,
+            0.0002677199077917991
+          ]
+        },
+        {
+          "global_step": 241,
+          "lrs": [
+            8.708260528239788e-05,
+            0.0002612478158471936,
+            0.0002612478158471936
+          ]
+        },
+        {
+          "global_step": 261,
+          "lrs": [
+            8.475962138373213e-05,
+            0.0002542788641511963,
+            0.0002542788641511963
+          ]
+        },
+        {
+          "global_step": 281,
+          "lrs": [
+            8.228139257794012e-05,
+            0.0002468441777338203,
+            0.0002468441777338203
+          ]
+        },
+        {
+          "global_step": 301,
+          "lrs": [
+            7.965898723646776e-05,
+            0.00023897696170940326,
+            0.00023897696170940326
+          ]
+        },
+        {
+          "global_step": 321,
+          "lrs": [
+            7.690411765816864e-05,
+            0.00023071235297450588,
+            0.00023071235297450588
+          ]
+        },
+        {
+          "global_step": 341,
+          "lrs": [
+            7.402908775933419e-05,
+            0.00022208726327800255,
+            0.00022208726327800255
+          ]
+        },
+        {
+          "global_step": 361,
+          "lrs": [
+            7.104673812141675e-05,
+            0.00021314021436425024,
+            0.00021314021436425024
+          ]
+        },
+        {
+          "global_step": 381,
+          "lrs": [
+            6.797038864187564e-05,
+            0.0002039111659256269,
+            0.0002039111659256269
+          ]
+        },
+        {
+          "global_step": 401,
+          "lrs": [
+            6.481377904428171e-05,
+            0.0001944413371328451,
+            0.0001944413371328451
+          ]
+        },
+        {
+          "global_step": 421,
+          "lrs": [
+            6.159100751337642e-05,
+            0.00018477302254012924,
+            0.00018477302254012924
+          ]
+        },
+        {
+          "global_step": 441,
+          "lrs": [
+            5.831646772915651e-05,
+            0.0001749494031874695,
+            0.0001749494031874695
+          ]
+        },
+        {
+          "global_step": 461,
+          "lrs": [
+            5.5004784581204927e-05,
+            0.00016501435374361475,
+            0.00016501435374361475
+          ]
+        },
+        {
+          "global_step": 481,
+          "lrs": [
+            5.167074885038373e-05,
+            0.00015501224655115118,
+            0.00015501224655115118
+          ]
+        },
+        {
+          "global_step": 501,
+          "lrs": [
+            4.832925114961629e-05,
+            0.00014498775344884884,
+            0.00014498775344884884
+          ]
+        },
+        {
+          "global_step": 521,
+          "lrs": [
+            4.4995215418795085e-05,
+            0.00013498564625638522,
+            0.00013498564625638522
+          ]
+        },
+        {
+          "global_step": 541,
+          "lrs": [
+            4.1683532270843504e-05,
+            0.0001250505968125305,
+            0.0001250505968125305
+          ]
+        },
+        {
+          "global_step": 561,
+          "lrs": [
+            3.840899248662358e-05,
+            0.00011522697745987075,
+            0.00011522697745987075
+          ]
+        },
+        {
+          "global_step": 581,
+          "lrs": [
+            3.5186220955718306e-05,
+            0.0001055586628671549,
+            0.0001055586628671549
+          ]
+        },
+        {
+          "global_step": 601,
+          "lrs": [
+            3.202961135812437e-05,
+            9.608883407437309e-05,
+            9.608883407437309e-05
+          ]
+        },
+        {
+          "global_step": 621,
+          "lrs": [
+            2.895326187858326e-05,
+            8.685978563574976e-05,
+            8.685978563574976e-05
+          ]
+        },
+        {
+          "global_step": 641,
+          "lrs": [
+            2.5970912240665813e-05,
+            7.791273672199742e-05,
+            7.791273672199742e-05
+          ]
+        },
+        {
+          "global_step": 661,
+          "lrs": [
+            2.3095882341831372e-05,
+            6.92876470254941e-05,
+            6.92876470254941e-05
+          ]
+        },
+        {
+          "global_step": 681,
+          "lrs": [
+            2.0341012763532243e-05,
+            6.1023038290596715e-05,
+            6.1023038290596715e-05
+          ]
+        },
+        {
+          "global_step": 701,
+          "lrs": [
+            1.771860742205988e-05,
+            5.315582226617963e-05,
+            5.315582226617963e-05
+          ]
+        },
+        {
+          "global_step": 721,
+          "lrs": [
+            1.5240378616267886e-05,
+            4.5721135848803653e-05,
+            4.5721135848803653e-05
+          ]
+        },
+        {
+          "global_step": 741,
+          "lrs": [
+            1.2917394717602121e-05,
+            3.875218415280636e-05,
+            3.875218415280636e-05
+          ]
+        },
+        {
+          "global_step": 761,
+          "lrs": [
+            1.0760030736066951e-05,
+            3.228009220820085e-05,
+            3.228009220820085e-05
+          ]
+        },
+        {
+          "global_step": 781,
+          "lrs": [
+            8.777921982911996e-06,
+            2.6333765948735986e-05,
+            2.6333765948735986e-05
+          ]
+        },
+        {
+          "global_step": 801,
+          "lrs": [
+            6.979921036993042e-06,
+            2.0939763110979125e-05,
+            2.0939763110979125e-05
+          ]
+        },
+        {
+          "global_step": 821,
+          "lrs": [
+            5.374058207005944e-06,
+            1.612217462101783e-05,
+            1.612217462101783e-05
+          ]
+        },
+        {
+          "global_step": 841,
+          "lrs": [
+            3.967505666178556e-06,
+            1.1902516998535666e-05,
+            1.1902516998535666e-05
+          ]
+        },
+        {
+          "global_step": 861,
+          "lrs": [
+            2.7665454196040664e-06,
+            8.299636258812197e-06,
+            8.299636258812197e-06
+          ]
+        },
+        {
+          "global_step": 881,
+          "lrs": [
+            1.7765412472811716e-06,
+            5.329623741843514e-06,
+            5.329623741843514e-06
+          ]
+        },
+        {
+          "global_step": 901,
+          "lrs": [
+            1.0019147481706625e-06,
+            3.0057442445119872e-06,
+            3.0057442445119872e-06
+          ]
+        },
+        {
+          "global_step": 921,
+          "lrs": [
+            4.461255922609986e-07,
+            1.3383767767829956e-06,
+            1.3383767767829956e-06
+          ]
+        },
+        {
+          "global_step": 941,
+          "lrs": [
+            1.1165606884234181e-07,
+            3.349682065270254e-07,
+            3.349682065270254e-07
+          ]
+        },
+        {
+          "global_step": 960,
+          "lrs": [
+            2.792438664078745e-10,
+            8.377315992236233e-10,
+            8.377315992236233e-10
+          ]
+        }
+      ]
+    },
+    "available": true,
+    "verification": {
+      "available": true,
+      "trace_points": 49,
+      "peak_lr_over_run": 0.0003,
+      "first_step_lrs": [
+        5e-06,
+        1.4999999999999999e-05,
+        1.4999999999999999e-05
+      ],
+      "epoch_2_start_lrs": [
+        5.167074885038373e-05,
+        0.00015501224655115118,
+        0.00015501224655115118
+      ],
+      "final_step": 960,
+      "final_lrs": [
+        2.792438664078745e-10,
+        8.377315992236233e-10,
+        8.377315992236233e-10
+      ],
+      "final_lr_over_peak_ratio": 2.7924386640787446e-06,
+      "epoch_2_initial_lr_nonzero": true,
+      "terminal_at_final_scheduled_step": true,
+      "mid_run_is_not_terminal": true
+    }
+  }
+}

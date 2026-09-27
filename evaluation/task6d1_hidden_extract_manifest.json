@@ -1,0 +1,94 @@
+{
+  "_doc": "Task 6D.1 section 5. Frozen teacher-forced [SEG] hidden vectors extracted from the Task 6C P_C checkpoint (hash-verified) before any Task 6D grounding training. Tensors are local and gitignored; this manifest is committed instead.",
+  "task": "6D.1",
+  "representation_source": {
+    "checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6c\\P_C\\last.pt",
+      "sha256": "e2f55087142ddfd80ea6a1926ec302bc5e0b7f1b798b0acae0adb6c42a1462a8",
+      "manifest_sha256": "e2f55087142ddfd80ea6a1926ec302bc5e0b7f1b798b0acae0adb6c42a1462a8",
+      "matches_manifest": true
+    },
+    "load_report": {
+      "step": 1440,
+      "metrics": {},
+      "missing_keys": 626,
+      "unexpected_keys": 0,
+      "grounding_head_loaded": false,
+      "geometry_kind": null
+    },
+    "extraction": "torch.no_grad; Qwen frozen; teacher-forced assistant text (reasoning + [SEG])",
+    "readout_position": "final hidden layer at batch.seg_position",
+    "not_used": "no Task 6D grounding checkpoint; no test split"
+  },
+  "geometry_kind_for_labels": "box",
+  "hidden_dim": 2048,
+  "splits": {
+    "train": {
+      "path": "artifacts\\task6d1_hidden\\train.pt",
+      "samples": 480,
+      "hidden_shape": [
+        480,
+        2048
+      ],
+      "dtype": "torch.float32",
+      "bytes": 4172699,
+      "sha256": "5cb7a7d88ce0f7c74dbce4af4e9fa3d2948c15dea569403b90e03a1bcd201b8b",
+      "sample_ids_sha256": "204fc2a42cb99b5825adc2016b3795ea4599a3a69323a666181b508c01f76cd7",
+      "image_ids": 240,
+      "templates": 39,
+      "test_split_used": false
+    },
+    "val": {
+      "path": "artifacts\\task6d1_hidden\\val.pt",
+      "samples": 120,
+      "hidden_shape": [
+        120,
+        2048
+      ],
+      "dtype": "torch.float32",
+      "bytes": 1043789,
+      "sha256": "91a92c113c77a9afa6bff40b35d7d04dbe4d0cdabd0611aca7bdca674e962cce",
+      "sample_ids_sha256": "0d00364e800b6dc9e733c283424c8ef31f33047c3c8e5388f5ee9aeb99702505",
+      "image_ids": 120,
+      "templates": 37,
+      "test_split_used": false
+    },
+    "paired": {
+      "path": "artifacts\\task6d1_hidden\\paired.pt",
+      "samples": 40,
+      "hidden_shape": [
+        40,
+        2048
+      ],
+      "dtype": "torch.float32",
+      "bytes": 348514,
+      "sha256": "11f8cfcacc64bc90e738917153afd83d7e86776d71809e0098556744042e745c",
+      "sample_ids_sha256": "8b77c838b404808d6140f750b707190e74bab4a9147371449eb76a58e285bc2d",
+      "image_ids": 20,
+      "templates": 12,
+      "test_split_used": false
+    }
+  },
+  "paired_validation_images": 20,
+  "paired_samples_extracted": 40,
+  "paired_overlap_with_fixed_val_set": 6,
+  "pairs_note": "the 20 paired images are a different subset of the val split than the fixed 120-record validation set (overlap 6), so they are extracted separately for the paired probe",
+  "determinism": {
+    "requested": true,
+    "seed": 20260926,
+    "python_random_seeded": true,
+    "numpy_seeded": true,
+    "torch_manual_seed": true,
+    "torch_cuda_manual_seed_all": true,
+    "pythonhashseed": "20260926",
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "strict_requested": true,
+    "use_deterministic_algorithms": true,
+    "use_deterministic_algorithms_warn_only": false,
+    "cublas_workspace_config": ":4096:8",
+    "cublas_error": null,
+    "bit_reproducible_claimed": true,
+    "strict_effective": true
+  }
+}

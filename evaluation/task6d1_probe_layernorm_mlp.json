@@ -1,0 +1,302 @@
+{
+  "probe": "layernorm_mlp",
+  "structure": "LayerNorm(2048) -> Linear(2048,512) -> GELU -> Linear(512,4) -> sigmoid -> canonical box",
+  "trainable_parameters": 1055236,
+  "uses_layernorm": true,
+  "input_scaling": {
+    "fixed_scalar": 0.008926384838657393,
+    "note": "one constant divisor computed from the training split (raw hidden norm mean); no learnable parameters, no per-sample mean subtraction, so this is not LayerNorm"
+  },
+  "label_shuffled_control": {
+    "train_480_box_iou": 0.010029721073806286,
+    "train_480_final_loss": 0.14632241427898407,
+    "overfit_20_final_loss": 0.11153187602758408,
+    "note": "same readout, same budget, permuted box targets"
+  },
+  "decodable_signal_gap_train_480": 0.041236129589378834,
+  "implementation_audit": {
+    "overfit_loss_decreased": true,
+    "selected_lr": 0.0001,
+    "lr_attempts": [
+      {
+        "lr": 0.0001,
+        "overfit_final_loss": 1.741658525133971e-05,
+        "train_480_first_loss": 0.04452630877494812,
+        "train_480_final_loss": 0.0063079530373215675,
+        "converged": true,
+        "train_480_box_iou": 0.05126585066318512
+      },
+      {
+        "lr": 0.0003,
+        "overfit_final_loss": 4.9723562369763386e-06,
+        "train_480_first_loss": 0.04452630877494812,
+        "train_480_final_loss": 0.007974938489496708,
+        "converged": true,
+        "train_480_box_iou": 0.04653067886829376
+      },
+      {
+        "lr": 0.001,
+        "overfit_final_loss": 6.766228761989623e-05,
+        "train_480_first_loss": 0.04452630877494812,
+        "train_480_final_loss": 0.0034988801926374435,
+        "converged": true,
+        "train_480_box_iou": 0.045637886971235275
+      }
+    ],
+    "converged": true,
+    "unscaled_inputs_first_attempt": "the first version of this script fed the raw hidden vectors (norm ~112) straight into the readout; logits saturated, the loss increased, and predicted boxes became constant with zero width. That is an implementation defect, which is exactly what the Case D protocol exists to catch, not evidence about the representation."
+  },
+  "frozen": {
+    "qwen": "frozen (features extracted once)",
+    "probe_only": true
+  },
+  "protocol": {
+    "optimizer": "AdamW, weight_decay=0, full batch",
+    "seed": 20260926,
+    "overfit_samples": 20,
+    "overfit_steps": 6000,
+    "train_steps": 6000
+  },
+  "overfit_20": {
+    "steps": 6000,
+    "lr": 0.0001,
+    "first_loss": 0.044298529624938965,
+    "final_loss": 1.741658525133971e-05,
+    "box_iou_mean": 0.7778505086898804,
+    "box_iou_median": 0.7792422771453857,
+    "box_iou_min": 0.6029048562049866,
+    "box_iou_max": 0.8897747993469238,
+    "center_inside_rate": 1.0,
+    "smooth_l1": 1.8070997612085193e-05,
+    "predicted_box_std": [
+      0.29403799772262573,
+      0.25895801186561584,
+      0.28956300020217896,
+      0.2517780065536499
+    ]
+  },
+  "train_480": {
+    "steps": 6000,
+    "lr": 0.0001,
+    "first_loss": 0.04452630877494812,
+    "final_loss": 0.0063079530373215675,
+    "box_iou_mean": 0.05126585066318512,
+    "box_iou_median": 0.0,
+    "box_iou_min": 0.0,
+    "box_iou_max": 0.6443746089935303,
+    "center_inside_rate": 0.10625,
+    "smooth_l1": 0.006307407282292843,
+    "predicted_box_std": [
+      0.24595099687576294,
+      0.25447899103164673,
+      0.24661999940872192,
+      0.25229600071907043
+    ]
+  },
+  "validation": {
+    "box_iou_mean": 0.007213978562504053,
+    "box_iou_median": 0.0,
+    "box_iou_min": 0.0,
+    "box_iou_max": 0.3808118402957916,
+    "center_inside_rate": 0.025,
+    "smooth_l1": 0.03765587881207466,
+    "predicted_box_std": [
+      0.2081190049648285,
+      0.21890300512313843,
+      0.20625300705432892,
+      0.21733200550079346
+    ]
+  },
+  "paired_geometry": {
+    "pairs": [
+      {
+        "image_id": "1_1247",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.08397715538740158
+      },
+      {
+        "image_id": "1_2103",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06833206117153168
+      },
+      {
+        "image_id": "1_2757",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.30125105381011963
+      },
+      {
+        "image_id": "1_286",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.136790931224823
+      },
+      {
+        "image_id": "1_2864",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.13269288837909698
+      },
+      {
+        "image_id": "1_2866",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.14753243327140808
+      },
+      {
+        "image_id": "1_3400",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.11358778178691864
+      },
+      {
+        "image_id": "1_3604",
+        "own_a": 0.21582285892806038,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.15201418101787567
+      },
+      {
+        "image_id": "1_3999",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.059911154210567474
+      },
+      {
+        "image_id": "1_4894",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.2839590311050415
+      },
+      {
+        "image_id": "1_5008",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.15033629536628723
+      },
+      {
+        "image_id": "1_722",
+        "own_a": 0.04146975694196829,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.08274966952414058,
+        "passed": false,
+        "geometry_l1": 0.03836432471871376
+      },
+      {
+        "image_id": "1_7894",
+        "own_a": 0.13307147041282585,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.2106965184211731
+      },
+      {
+        "image_id": "1_849",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.07774002850055695
+      },
+      {
+        "image_id": "1_9568",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.04387369006872177
+      },
+      {
+        "image_id": "2_2313",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06275451928377151
+      },
+      {
+        "image_id": "2_2652",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.10343008488416672
+      },
+      {
+        "image_id": "2_2919",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.08991130754768308,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.22427210211753845
+      },
+      {
+        "image_id": "2_3482",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.17046663165092468
+      },
+      {
+        "image_id": "2_550",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06718423962593079
+      }
+    ],
+    "paired_total": 20,
+    "paired_pass": 0,
+    "mean_geometry_l1": 0.13145835530012845,
+    "mean_own_iou": 0.01200688484576344,
+    "mean_cross_iou": 0.0020687417381035143
+  },
+  "_doc": "Task 6D.1 section 6-8. Frozen-representation probe: the language model is never updated, only the readout is trained, on teacher-forced [SEG] hidden vectors from the hash-verified Task 6C P_C checkpoint. GT boxes are used only as probe supervision.",
+  "task": "6D.1",
+  "representation_source": "evaluation/task6d1_hidden_extract_manifest.json"
+}

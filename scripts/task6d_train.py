@@ -100,6 +100,10 @@ def make_optimizer(runtime, steps: int):
     return optimizer, scheduler, groups
 
 
+def optimizer_lrs(optimizer) -> list[float]:
+    return [float(group["lr"]) for group in optimizer.param_groups]
+
+
 def train_epoch(
     runtime,
     samples,
@@ -110,11 +114,25 @@ def train_epoch(
     lambda_ground: float,
     log_every: int,
     tag: str,
+    global_step_offset: int = 0,
+    lr_trace: list | None = None,
+    warmup_steps: int = 0,
 ) -> dict:
     include_mask_loss = stage.upper() == "G1"
     history: list[dict] = []
     started = time.time()
     for step, sample in enumerate(samples, start=1):
+        # Section 2 LR audit: the LR that this step will actually use.
+        global_step = global_step_offset + step
+        if lr_trace is not None:
+            lr_trace.append(
+                {
+                    "epoch_step": step,
+                    "global_step": global_step,
+                    "lrs": optimizer_lrs(optimizer),
+                    "after_warmup": bool(warmup_steps and global_step > warmup_steps),
+                }
+            )
         batch, image = runtime.prepare(sample)
         runtime.set_visual_cache_key(sample.image_id)
         features, _cached = runtime.features_for(sample, image)
@@ -132,17 +150,24 @@ def train_epoch(
             history.append(
                 {
                     "step": step,
+                    "global_step": global_step,
                     "losses": result["losses"],
+                    "lrs": optimizer_lrs(optimizer),
                     "vram": vram(),
                     "predicted_geometry": result["predicted_geometry"].reshape(-1).tolist(),
                     "gt_geometry": result["gt_geometry"].reshape(-1).tolist(),
+                    "box_iou": _box_iou(
+                        result["predicted_geometry"].reshape(-1).tolist(),
+                        result["gt_geometry"].reshape(-1).tolist(),
+                    ),
                 }
             )
             losses = result["losses"]
             print(
                 f"[{tag}] step {step}/{len(samples)} total {losses['total']:.4f} "
                 f"lm {losses['lm_ce']:.4f} bce {losses['mask_bce']:.4f} dice {losses['mask_dice']:.4f} "
-                f"ground {losses['ground']:.5f}",
+                f"ground {losses['ground']:.5f} boxIoU {history[-1]['box_iou']:.4f} "
+                f"lr {optimizer_lrs(optimizer)[0]:.3e}",
                 flush=True,
             )
         del result, features, batch
@@ -153,6 +178,16 @@ def train_epoch(
         "stage": stage,
         "include_mask_loss": include_mask_loss,
     }
+
+
+def _box_iou(predicted: list, target: list) -> float:
+    x1, y1 = max(predicted[0], target[0]), max(predicted[1], target[1])
+    x2, y2 = min(predicted[2], target[2]), min(predicted[3], target[3])
+    intersection = max(0.0, x2 - x1) * max(0.0, y2 - y1)
+    area_predicted = max(0.0, predicted[2] - predicted[0]) * max(0.0, predicted[3] - predicted[1])
+    area_target = max(0.0, target[2] - target[0]) * max(0.0, target[3] - target[1])
+    union = area_predicted + area_target - intersection
+    return intersection / union if union > 0 else 0.0
 
 
 def evaluate(
@@ -220,6 +255,99 @@ def g0_gate(stage_report: dict, kind: str) -> dict:
     }
 
 
+def _lr_audit(trace: list, steps_per_epoch: int, warmup_steps: int, epochs: int) -> dict:
+    """The five required LR checkpoints (section 2) plus a compact trace."""
+
+    if not trace:
+        return {"available": False}
+
+    def at(global_step: int) -> dict | None:
+        for record in trace:
+            if record["global_step"] == global_step:
+                return {"global_step": global_step, "lrs": record["lrs"]}
+        return None
+
+    first = trace[0]
+    final = trace[-1]
+    epoch1_end = at(steps_per_epoch)
+    epoch2_start = at(steps_per_epoch + 1)
+    after_warmup = at(min(warmup_steps + 1, len(trace)))
+    peak = max(
+        (max(record["lrs"]) for record in trace if record["lrs"]),
+        default=0.0,
+    )
+    final_max = max(final["lrs"]) if final["lrs"] else 0.0
+    return {
+        "available": True,
+        "total_optimizer_steps_scheduled": epochs * steps_per_epoch,
+        "warmup_steps": warmup_steps,
+        "checkpoints": {
+            "first_optimizer_step": {"global_step": first["global_step"], "lrs": first["lrs"]},
+            "after_warmup": after_warmup,
+            "end_of_epoch_1": epoch1_end,
+            "start_of_epoch_2": epoch2_start,
+            "final_optimizer_step": {"global_step": final["global_step"], "lrs": final["lrs"]},
+        },
+        "epoch_2_initial_lr_nonzero": bool(
+            epoch2_start and any(value > 0.0 for value in epoch2_start["lrs"])
+        ),
+        # "Terminal" means the cosine has effectively reached its end at the last scheduled step.
+        # The factor at the final step is ~2.8e-06 of peak, not exactly zero, so the criterion is
+        # a ratio, not an absolute epsilon.
+        "peak_lr_over_run": peak,
+        "final_lr_over_peak_ratio": (final_max / peak) if peak else None,
+        "final_step_is_terminal": bool(
+            final["global_step"] == epochs * steps_per_epoch
+            and peak > 0
+            and (final_max / peak) <= 1e-5
+        ),
+        "trace_every": 20,
+        "trace": [
+            {"global_step": record["global_step"], "lrs": record["lrs"]}
+            for index, record in enumerate(trace)
+            if index % 20 == 0 or index == len(trace) - 1
+        ],
+    }
+
+
+def _lr_audit_original_horizon(cfg: dict, steps_per_epoch: int, epochs: int, warmup_steps: int) -> dict:
+    """Analytic reproduction of the Task 6D (defective) horizon, for the audit artifact."""
+
+    def factor(step: int, horizon: int) -> float:
+        if warmup_steps and step < warmup_steps:
+            return max(1e-3, (step + 1) / warmup_steps)
+        progress = (step - warmup_steps) / max(1, horizon - warmup_steps)
+        progress = min(max(progress, 0.0), 1.0)
+        import math
+
+        return 0.5 * (1.0 + math.cos(math.pi * progress))
+
+    total = epochs * steps_per_epoch
+    return {
+        "description": (
+            "Task 6D constructed the scheduler with one epoch as its horizon and then ran two "
+            "epochs, so the cosine factor reached its terminal value at step "
+            f"{steps_per_epoch} and epoch 2 used the terminal (zero) LR."
+        ),
+        "horizon_used": steps_per_epoch,
+        "steps_run": total,
+        "factors": {
+            "first_step": factor(0, steps_per_epoch),
+            "after_warmup": factor(warmup_steps, steps_per_epoch),
+            "end_of_epoch_1": factor(steps_per_epoch - 1, steps_per_epoch),
+            "start_of_epoch_2": factor(steps_per_epoch, steps_per_epoch),
+            "final_step": factor(total - 1, steps_per_epoch),
+        },
+        "corrected_factors": {
+            "first_step": factor(0, total),
+            "after_warmup": factor(warmup_steps, total),
+            "end_of_epoch_1": factor(steps_per_epoch - 1, total),
+            "start_of_epoch_2": factor(steps_per_epoch, total),
+            "final_step": factor(total - 1, total),
+        },
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", required=True, choices=["G0", "G1"])
@@ -230,6 +358,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pairs-limit", type=int, default=None)
     parser.add_argument("--skip-free", action="store_true", help="teacher-forced validation only")
     parser.add_argument("--smoke", action="store_true", help="no checkpoint, tiny run")
+    parser.add_argument(
+        "--output",
+        default=None,
+        help=(
+            "artifact path override; Task 6D.1 corrective runs must not overwrite the Task 6D "
+            "history, so they pass evaluation/task6d1_g0_corrected.json"
+        ),
+    )
     parser.add_argument(
         "--init-from",
         default=None,
@@ -278,7 +414,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[task6d] initialised from {args.init_from}: {json.dumps(init_report, default=str)}", flush=True)
 
     steps_per_epoch = len(train_samples)
-    optimizer, scheduler, groups = make_optimizer(runtime, steps_per_epoch)
+    # Task 6D.1 section 2: the scheduler horizon must cover the ACTUAL optimizer-step
+    # budget, not one epoch. Task 6D built it with `steps_per_epoch`, so the cosine factor
+    # reached its terminal value at the end of epoch 1 and epoch 2 ran at LR ~0. The
+    # truncated smoke budget is derived from the loop, never from nominal epochs.
+    planned_epochs = epochs if not args.smoke else min(epochs, 1)
+    total_optimizer_steps = max(1, planned_epochs * steps_per_epoch)
+    optimizer, scheduler, groups = make_optimizer(runtime, total_optimizer_steps)
+    warmup_steps = int(cfg["optimizer"]["phase_b"].get("warmup_steps", 0))
+    lr_trace: list = []
 
     report: dict = {
         "_doc": (
@@ -303,6 +447,16 @@ def main(argv: list[str] | None = None) -> int:
         "lambda_ground": DEFAULT_LAMBDA_GROUND,
         "loss_weights": runtime.grounding_loss_weights(stage == "G1").as_dict(),
         "epochs_requested": epochs,
+        "scheduler_horizon": {
+            "total_optimizer_steps": total_optimizer_steps,
+            "steps_per_epoch": steps_per_epoch,
+            "planned_epochs": planned_epochs,
+            "note": (
+                "Task 6D.1 section 2: the cosine horizon is the real step budget "
+                "(epochs x steps_per_epoch), so the terminal factor is reached only at the final "
+                "step of the last epoch. Task 6D used one epoch and trained epoch 2 at LR ~0."
+            ),
+        },
         "optimizer_groups": [
             {"lr": g["lr"], "weight_decay": g["weight_decay"], "name": g.get("name"), "tensors": len(g["params"])}
             for g in groups
@@ -321,6 +475,9 @@ def main(argv: list[str] | None = None) -> int:
             lambda_ground=DEFAULT_LAMBDA_GROUND,
             log_every=args.log_every,
             tag=f"task6d.{stage}.e{epoch}",
+            global_step_offset=(epoch - 1) * steps_per_epoch,
+            lr_trace=lr_trace,
+            warmup_steps=warmup_steps,
         )
         evaluation = evaluate(
             runtime,
@@ -357,19 +514,28 @@ def main(argv: list[str] | None = None) -> int:
             )
 
     report["final_evaluation"] = report["epochs"][-1]["validation"]
+    # Section 2 LR audit: the exact LRs at the five required checkpoints, plus the full trace
+    # (compact: first/after-warmup/end-epoch-1/start-epoch-2/final, and every 20th step).
+    report["lr_audit"] = _lr_audit(lr_trace, steps_per_epoch, warmup_steps, epochs)
+    report["parent_task_status"] = (
+        "Task 6D's G0 result is VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND: its scheduler horizon was "
+        "one epoch while two epochs ran, so epoch 2 trained at LR 0. This run corrects only that."
+    )
     if stage == "G0":
         report["gate"] = g0_gate(report, kind)
         report["verdict"] = "G0_PASS" if report["gate"]["passed"] else "GROUNDING_REPRESENTATION_FAILED"
     else:
         report["verdict"] = "G1_COMPLETE"
 
-    out = EVAL / f"task6d_{stage.lower()}.json"
+    out = Path(args.output) if args.output else (EVAL / f"task6d_{stage.lower()}.json")
+    if not out.is_absolute():
+        out = REPO_ROOT / out
     out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"[task6d] verdict: {report['verdict']}", flush=True)
     if stage == "G0":
         print(f"[task6d] gate: {json.dumps(report['gate'], ensure_ascii=False)}", flush=True)
     print(f"[task6d] wrote {out.relative_to(REPO_ROOT).as_posix()}", flush=True)
-    del runtime
+
     torch.cuda.empty_cache()
     return 0 if report.get("verdict") != "GROUNDING_REPRESENTATION_FAILED" else 5
 

@@ -17,305 +17,277 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6D Report: Spatial Grounding Bridge v0.1
+# FROM_DSH — Task 6D.1 Report: Corrective G0 Rerun + `[SEG]` Spatial-Decodability Audit
 
-_This file holds the Task 6D report. The Task 6C.7 report is preserved in git history and in
-`docs/task6c7_visual_cache_optimization.md`; Task 6C is in `docs/task6c_prompt_ablation.md`._
+_This file holds the Task 6D.1 report. The Task 6D report is preserved in git history and in
+`docs/task6d_spatial_grounding_bridge.md`; Task 6C.7 is in `docs/task6c7_visual_cache_optimization.md`._
 
 ## 1. Verdict
 
-**`GROUNDING_REPRESENTATION_FAILED`.**
+**Case F — `PRACTICALLY_NOT_DECODABLE_GEOMETRY`.**
 
-The oracle diagnostic proved that the segmentation machinery was never the problem — with correct
-geometry, SAM2 recovers the target at **0.7506 mIoU** against Task 6C's **0.10604** — and then the first
-explicit spatial-grounding stage showed *where* the problem actually is: **the `[SEG]` hidden state does
-not carry the target's location.** A 1.05M-parameter head supervised on 480 ground-truth target boxes did
-not fit even the training boxes; it collapsed to the single constant box that minimises SmoothL1.
+Both Task 6D confounds were real, and resolving them does **not** rescue the result:
 
-Per section 9, a failed G0 means **stop, do not compensate with 4B or extra modules**, so **G1 was not
-run**. Every task boundary held: no 4B, no `[REF]`, no Spatial Relation Encoder, no Spatial Consistency
-Loss, no dataset change, no true batching, no full training, no GUI.
+* the **scheduler horizon was wrong** (epoch 2 trained at LR exactly 0). The corrective rerun **G0-R**
+  fixes only that and **still fails the gate**: emission 120/120, geometry paired **0/20**, box IoU
+  **0.0088** → `GROUNDING_REPRESENTATION_FAILED` again, so G1 was not run;
+* **LayerNorm is not the confound**. Given a fair learning rate the Task 6D head converges and decodes as
+  well as the raw MLP (20-sample 0.778 vs 0.645; validation 0.0072 vs 0.0075). The first probe run that
+  looked like a LayerNorm effect was **my probe failing to converge**, not a property of the
+  representation.
 
-| Stage | Result |
-|---|---|
-| Oracle point | mIoU 0.4876, paired 18/20 |
-| Oracle box | mIoU **0.7506**, paired **20/20** |
-| Section 5 geometry choice | **BOX** (point missed the 0.50 mIoU gate; box passed it and led by +0.2630) |
-| G0 grounding proof | **failed**: emission 120/120 ✅, geometry paired **0/20** ❌, box IoU **0.0082** ❌ |
-| G1 joint segmentation | **not run** (section 9: stop on G0 failure) |
-| Final free-generation evaluation | strict e2e mIoU **0.0066**, paired mask **0/20**, IoU(pred_A, pred_B) 0.919 |
+After an implementation audit that found and fixed **two real defects** (unscaled norm-112 inputs, and an
+unconverged LayerNorm probe), all three frozen readouts converge and all fail identically: they cannot fit
+even the **480 training samples**, and the fit is **no better than a label-shuffled control**. The oracle
+result is untouched. The accepted statement is deliberately the weaker one — *practically* not decodable,
+not an information-theoretic absence.
 
-## 2. Frozen Baseline (section 3)
+## 2. Task 6D Evidence Preserved (section 1)
 
-Task 6C's `P_C` arm, not rerun: strict end-to-end mIoU **0.10604**, paired mask probe **0/20**,
-same-image prediction-to-prediction IoU ≈**0.999**, valid `[SEG]` emission **120/120**
-(`evaluation/task6c_comparison.json`, arm `P_C`). The Task 6C.7 runtime was reused unchanged
-(`collect_grad_norms=false`, frozen visual-feature cache, no redundant Phase-B transfer), so the
-architecture comparison is not confounded by the performance work.
+Frozen, not rerun: Oracle Point mIoU **0.4876** / paired **18/20**; Oracle Box mIoU **0.7506** / paired
+**20/20**; geometry choice **BOX**. Meaning: given correct target geometry the current SAM2 prompt encoder
++ decoder select and segment the intended building well — an upper-bound diagnostic for this validation
+material, not a claim that every SAM failure is solved.
 
-## 3. Oracle Point (section 4)
+The original G0 artifact is **not erased**. `evaluation/task6d_g0.json` now carries
 
-One deterministic interior point per GT target mask — the maximum of the Euclidean distance transform,
-ties broken by row-major `argmax`, normalized to a pixel centre — through the **official** SAM2 prompt
-encoder as a single positive point, on the fixed 120-record validation set and the 20 paired images:
-
-| strict mIoU | Dice | paired | mean own IoU | mean cross IoU | margin | IoU(pred_A, pred_B) |
-|---|---|---|---|---|---|---|
-| 0.4876 | 0.6055 | **18/20** | 0.4944 | 0.0205 | +0.4739 | 0.0949 |
-
-## 4. Oracle Box (section 4)
-
-The tight GT bounding box through the official SAM2 box path:
-
-| strict mIoU | Dice | paired | mean own IoU | mean cross IoU | margin | IoU(pred_A, pred_B) |
-|---|---|---|---|---|---|---|
-| **0.7506** | **0.8507** | **20/20** | 0.7069 | 0.0000 | +0.7069 | **0.0000** |
-
-The two oracle rows are the cleanest diagnosis in the whole project so far: *given the right geometry,
-SAM2 finds the right building*, and the paired probe separates the two targets perfectly. The Task 6C
-failure was therefore in **prompt generation**, not in the segmenter, and not in the oracle's coordinate
-convention — the same code path produces 0.75 mIoU when handed GT geometry.
-
-## 5. Geometry Choice (section 5)
-
-Section 5's rule applied verbatim and recorded in the artifact:
-
-1. point paired 18/20 ✅ but mIoU 0.4876 **< 0.50** ❌ → rule 1 does not apply;
-2. box paired 20/20 ✅ and mIoU 0.7506 ≥ 0.50 ✅ → **BOX**.
-
-Box also improves mIoU by **+0.2630** over point, so the choice is not a tie-break and the prettier
-result was not silently picked. Combined point+box was not used (section 5 forbids it).
-Artifact: `evaluation/task6d_oracle_prompt_diagnostic.json`.
-
-## 6. SpatialGroundingHead (section 6)
-
-```text
-LayerNorm(2048) -> Linear(2048, 512) -> GELU -> Linear(512, 4) -> sigmoid    # BOX (D = 4)
+```
+status: VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND
+status_reason: <the horizon defect, the epoch-2 zero-LR consequence, and the bit-identical
+                epoch-1/epoch-2 metrics it explains>
+superseded_by: evaluation/task6d1_g0_corrected.json
 ```
 
-1,055,236 parameters. The four sigmoid outputs are treated as two corners and ordered with `min`/`max`,
-which canonicalizes `x1 ≤ x2`, `y1 ≤ y2` **differentiably** (gradients still reach all four units). The
-candidate path is the spec's chain exactly, and the old projected language vector is never built:
+## 3. Scheduler Defect and Correction (section 2)
 
-```text
-image + instruction -> Qwen3-VL (text LoRA) -> reasoning + [SEG] -> [SEG] hidden
-   -> SpatialGroundingHead -> predicted box -> official SAM2 prompt encoder -> SAM2 mask decoder -> mask
-```
+`scripts/task6d_train.py` built the scheduler with `steps_per_epoch = 480` and then ran two epochs.
+Reproduced with the project's own factor formula in `evaluation/task6d1_scheduler_audit.json`:
 
-**Coordinate convention, verified in the installed source.** `PromptEncoder._embed_points` /
-`_embed_boxes` add 0.5 and call `pe_layer.forward_with_coords(points, self.input_image_size)`, which
-divides by the image size — so the official encoder expects **input-image pixels** (the 1024×1024 frame),
-not normalized coordinates. The head predicts normalized geometry (resolution independent) and
-`geometry_to_sam_coords` scales by 1024; Task 6D data is square 512×512, so the map is linear. The oracle
-result is the end-to-end proof that this is right.
-
-## 7. G0 Training (section 9)
-
-2 epochs × 480 paired `P` records (the section 9 maximum), 198 s + 262 s. Trainable: text LoRA, the
-`[SEG]` machinery and the head (399 tensors, 18,489,860 parameters). Frozen: Qwen base, visual tower,
-SAM2 image encoder, **SAM2 mask decoder** (G0 trains no mask path at all), prompt encoder, and the unused
-projection MLP. Loss `2.0 × LM CE + 5.0 × SmoothL1(box)`, with the raw components logged.
-
-| | Epoch 1 | Epoch 2 |
+| checkpoint | defective horizon 480 | corrected horizon 960 |
 |---|---|---|
-| LM CE | → **0.0000** | 0.0000 |
-| grounding SmoothL1 (train) | 0.0819 → 0.0126 | 0.0649 → 0.0126 |
-| train box IoU (logged samples) | 0.0548 mean | **0.0009 mean** |
-| predicted-box spread (std per coordinate) | [0.053, 0.048, 0.051, 0.062] | **[0.000, 0.000, 0.001, 0.000]** |
-| GT box spread (std per coordinate) | [0.255, 0.187, 0.257, 0.186] | same |
+| first optimizer step | 0.050 | 0.050 |
+| after warmup | 1.000 | 1.000 |
+| **end of epoch 1** | **1.166e-05** | **0.518** |
+| **start of epoch 2** | **0.000** | **0.517** |
+| final optimizer step | 0.000 | 2.79e-06 |
 
-## 8. G0 Metrics (section 9)
+Observed in G0-R (three optimizer groups at the start of epoch 2):
+`[5.167e-05, 1.550e-04, 1.550e-04]` — non-zero as intended, decaying smoothly to a final ratio of
+**5.4e-06 of peak** at the last scheduled step. This also explains Task 6D's bit-identical epoch-1 and
+epoch-2 validation metrics: **epoch 2 performed no optimisation at all.**
 
-| Gate | Requirement | Measured |
+The correction: `total_optimizer_steps = planned_epochs × steps_per_epoch`, where `planned_epochs` is
+derived from the loop (so a truncated smoke run uses its real budget). Seven LR checkpoints plus a 20-step
+trace are recorded per run; a regression test asserts the horizon, the non-zero epoch-2 LR and the
+terminal-only-at-the-end property.
+
+## 4. G0-R: Corrective Rerun (section 3)
+
+Exactly the Task 6D model on the same 480 `P` records for 2 epochs: same layer structure, LRs,
+`lambda_ground = 5.0`, `2.0 LM CE + 5.0 SmoothL1`, BOX geometry, text-only LoRA + `[SEG]` + head
+trainable, SAM decoder frozen, strict determinism, Task 6C.7 visual cache. **The only change is the
+scheduler horizon.** Artifact: `evaluation/task6d1_g0_corrected.json`.
+
+Training trace: at epoch-1 step 160 the head had **train box IoU 0.617**, then decayed to 0.000 for the
+remainder of training and stayed there through epoch 2. The readout drifts to the mean-box optimum and
+never recovers — the same failure mode as Task 6D, now with a correct LR schedule.
+
+## 5. G0-R Gate (section 3)
+
+| Gate | Requirement | G0-R |
 |---|---|---|
 | valid `[SEG]` | ≥ 90 % | **120/120 = 100 %** ✅ |
 | geometry paired | ≥ 14/20 | **0/20** ❌ |
-| mean GT-box IoU | ≥ 0.35 | **0.0082** ❌ |
+| mean GT-box IoU | ≥ 0.35 | **0.0088** ❌ |
 
-**Mechanism: the head collapsed to a constant box.** By the end of epoch 2 every sample predicted
+**`GROUNDING_REPRESENTATION_FAILED` again; G1 not run** (section 3 gates it on a passing G0-R).
 
-```text
-(0.457, 0.455, 0.547, 0.539)     spread across samples: [0.000, 0.000, 0.001, 0.000]
-```
+## 6. Frozen Representation Source (section 5)
 
-which is the mean box — the *optimal constant predictor* under SmoothL1 when the read-out carries no
-location information. Three independent corroborations:
+`evaluation/task6d1_hidden_extract_manifest.json`. Source: the **Task 6C `P_C` checkpoint before any
+Task 6D grounding training**, hash-verified against the Task 6C manifest (`e2f55087…`, **matches**).
+Extraction is `torch.no_grad`, Qwen frozen, teacher-forced assistant text, read-out at
+`batch.seg_position`.
 
-* the head never fit the **training** boxes either (0.0548 → 0.0009 mean box IoU), i.e. it moved towards
-  the constant rather than towards the data;
-* teacher-forced and free-generation metrics are identical and **unchanged between epochs**
-  (box IoU 0.0082, centre-inside 1/120), which can only happen if the prediction no longer depends on
-  the input;
-* LM CE saturated at 0.0000 while the language target is one of 21 distinct reasoning templates (Task 6C's
-  finding), so the language objective was memorized long before it could pressure the read-out to encode
-  *which* building, and it supplies no useful grounding gradient.
+| split | vectors | shape | dtype | images | templates |
+|---|---|---|---|---|---|
+| train (`P`) | 480 | [480, 2048] | float32 | 240 | 21 |
+| val (fixed 120) | 120 | [120, 2048] | float32 | 120 | 21 |
+| paired (20 × 2) | 40 | [40, 2048] | float32 | 20 | 21 |
 
-This is a representation result, not a wiring error: the same prompt path reaches 0.7506 mIoU with GT
-geometry, and `tests/test_task6d_grounding.py` proves the grounding loss produces gradients in the head,
-the LoRA adapters and the `[SEG]` row. It also **reproduces Task 6C's independent measurement** —
-projected effective rank 1.5, same-image cosine > 0.9999 — with a completely different read-out (a
-supervised geometry head instead of a projected vector), which is what makes the diagnosis strong: the
-collapse is in the `[SEG]` hidden state itself.
+**Implementation-audit finding:** the 20 paired images are a **different subset of the val split** than the
+fixed 120-record set (overlap **0**). They are now extracted separately; without that, the paired probe
+silently matched zero pairs. Tensors stay local/gitignored; the manifest commits shape, dtype, sample-id
+SHA256 and file SHA256.
 
-## 9. G1 Training (section 10)
+## 7. Probe Implementation Audit (section 4's Case D protocol)
 
-**Not run.** Section 9 says a failed G0 must stop with `GROUNDING_REPRESENTATION_FAILED` and must not be
-compensated with 4B or extra modules, and section 10 gates G1 on G0 passing. Training a mask decoder
-against a constant prompt could only degrade a decoder that the oracle shows is already capable, so
-running it would have produced a worse number for a question that G0 already answered.
+Two defects were found and fixed **before** any conclusion was drawn:
 
-## 10. Strict E2E (section 11)
+1. **Unscaled inputs.** Raw hiddens have norm ≈ **112**, so an unscaled readout saturates immediately: the
+   loss *increased* and predicted boxes collapsed to zero width. Fixed with one **fixed scalar divisor**
+   (`1/112.03`, from the training split; no learnable parameters, no per-sample mean subtraction — it is
+   not LayerNorm).
+2. **Unconverged LayerNorm probe.** At the first learning rate the loss rose (0.0443 → 0.1115) with a
+   constant output. Three learning rates were then attempted and the best-converging one provides the
+   metrics, with every attempt recorded.
 
-Free generation is the primary setting: image + instruction → generated reasoning + exactly one `[SEG]` →
-generated `[SEG]` hidden → predicted box → official prompt encoder → mask. From the G0 checkpoint
-(`G0_epoch2.pt`, step 960; the load path is verified because these numbers reproduce G0's own
-validation exactly):
+An unconverged readout says nothing about a representation, which is exactly why the Case D protocol
+exists in the spec.
 
-| | Value |
+## 8. Probes A/B/C (sections 6-8)
+
+Qwen frozen; only the readout trains (AdamW full-batch, `weight_decay=0`, fixed seed, 6,000 steps,
+20-sample overfit first, then 480-sample fit, then validation and the paired probe). GT boxes are probe
+supervision only.
+
+| Probe | structure | overfit 20 | train 480 | val | paired |
+|---|---|---|---|---|---|
+| A | `Linear(2048,4)`, no LayerNorm | 0.903 | 0.027 | 0.0042 | 0/20 |
+| B | raw MLP, **no LayerNorm** | 0.645 | 0.036 | 0.0075 | 0/20 |
+| C | **Task 6D head** (LayerNorm MLP) | 0.778 | 0.051 | 0.0072 | 0/20 |
+
+**LayerNorm is not a confound**: with a fair LR, Probe C matches or beats the LayerNorm-free Probe B at
+every budget (train 0.051 vs 0.036, val 0.0072 vs 0.0075). The apparent LayerNorm effect was my probe's
+learning rate.
+
+## 9. Label-Shuffled Control (why the 20-sample overfit is not evidence)
+
+| Probe | real train-480 IoU | shuffled train-480 IoU | real − shuffled |
+|---|---|---|---|
+| A | 0.027 | 0.020 | **+0.007** |
+| B | 0.036 | 0.020 | **+0.015** |
+| C | 0.051 | 0.010 | +0.041 |
+
+The shuffled readout fits **20 randomly permuted boxes to zero loss** (final loss 0.0000), so
+"a 1M MLP can overfit 20 frozen vectors" proves nothing about the representation. At 480 samples the real
+fit is within a few IoU points of the shuffled fit for the raw probes: **no measurable decodable signal**.
+
+## 10. Probe D, Expanded Control and SVD (sections 9-10)
+
+**The statistics LayerNorm discards carry no box information.** Across 480 hiddens: mean
+`0.0637 ± 0.0025`, std `2.4747 ± 0.0041`, norm `112.027 ± 0.185` (range 111.53–112.43). Pearson with box
+centre-x: 0.019 / 0.052 / 0.052; with box area: 0.013 / 0.056 / 0.057. An in-sample linear map from those
+three statistics to the box reaches **R² = 0.0044** (train) / 0.0179 (val). LayerNorm had nothing to
+destroy.
+
+**Expanded control (19 same-image pairs, 19 different-image pairs):**
+
+| Condition | cosine | **centered cosine** | LayerNorm cosine | L2 |
+|---|---|---|---|---|
+| same image, different template | 0.99677 | **0.0770** | 0.99677 | 8.97 |
+| different image, same template | 0.99814 | **0.5311** | 0.99814 | 6.81 |
+
+After removing the shared component, the instruction-dependent residual is nearly **orthogonal** between
+the two instructions of one image (0.077) while two different images with the *same* template are much
+more similar (0.531): **the residual tracks the instruction wording, not the target.** LayerNorm cosine ≈
+raw cosine, again confirming it does not remove the shared component. Within-image variance **0.00999**
+against a between-target box L1 of **0.306** — the token moves ~30× less than the targets differ.
+
+**SVD (480 × 2048):** effective rank (participation ratio) **8.33**; top-1 explains **31.6 %**, top-5
+52.5 %, top-10 61.5 %, top-50 80.9 %; 111 components for 90 %. A low-dimensional, largely shared subspace.
+
+## 11. Interpretation Matrix (section 11)
+
+| Case | Resolution |
 |---|---|
-| emission | **120/120** (100 %) |
-| strict end-to-end mIoU | **0.0066** |
-| strict end-to-end Dice | 0.0106 |
-| conditional mIoU (valid only) | 0.0066 |
-| mean predicted-box IoU vs GT box | 0.0081 |
-| predicted-box centre inside target | 1/120 = 0.83 % |
-| distinct predicted masks | 120 bitwise, but all are the same constant box with ~0.001 coordinate jitter |
+| A corrected G0-R passes | **no** — G0-R fails the same gate |
+| B `LAYER_NORM_READOUT_CONFOUND` | **no** — with a fair LR the LayerNorm probe matches the raw MLP |
+| C memorizable but not generalizable | **no** — the raw MLP does not fit the 480 training samples either |
+| D readout/feature-identity bug | **cleared** — two real defects found and fixed; all readouts now converge |
+| E overfits 20 and 480, val collapses | **no** — the 480 fit never happens; the 20-sample fit also fits shuffled labels |
+| F cannot fit even 480 after verification | **YES** |
 
-Task 6C's `P_C` reference is 0.10604, i.e. the candidate is **worse than the bridge it replaces** — which
-is expected and informative: a constant centred box is a worse spatial prompt than Task 6C's fixed-centre
-prior on this data, because the constant box is an *average* box that lands on no particular building.
+## 12. Accepted Causal Conclusion (section 16)
 
-## 11. Paired Geometry Probe (section 12)
+Replacing Task 6D's wording, as the spec requires:
 
-Free generation, all 20 pairs, `IoU(pred_A, GT_A) > IoU(pred_A, GT_B)` and symmetric:
+> Task 6D's first grounding readout collapsed; the original result is confounded by a scheduler-horizon
+> defect and by the use of LayerNorm before the readout. Spatial decodability is under corrective audit.
 
-**geometry paired 0/20**, though the gate for a plateaued representation is the more telling number:
-the predicted geometry of the two instructions of one image differ by **0.0008 L1** (distance ≈0.0017),
-i.e. the two instructions produce the *same* box. This is the exact failure mode Task 6C described, now
-at the geometry level.
+with the audit now complete:
 
-## 12. Paired Mask Probe (section 12)
+> After the implementation was audited and every readout converged, the frozen `[SEG]` representation of
+> the Task 6C `P_C` checkpoint contains **no practically decodable target geometry** under this training
+> setup. The scheduler-horizon defect is real but not causal; LayerNorm is not a confound; the
+> representation is norm-112, low-effective-rank, and its instruction-dependent residual encodes the
+> reasoning template rather than the target.
 
-| Metric | Value |
-|---|---|
-| mask paired | **0/20** |
-| mean own-target IoU | 4.02e-10 |
-| mean cross-target IoU | 4.03e-10 |
-| own-minus-cross margin | −4.5e-13 |
-| **IoU(pred_A, pred_B)** | **0.919** |
+This is a **practical-decodability** statement, not an information-theoretic absence claim. The oracle
+conclusion (correct geometry → 0.7506 mIoU, paired 20/20) remains frozen.
 
-The two instructions of one image produce a 92 %-identical mask (not 100 % only because the constant box
-retains ~0.001 coordinate jitter), and neither mask overlaps any GT target — the "same prediction for
-both instructions" defect of Task 6C is reproduced by a completely different mechanism, and the paired
-probe still discriminates: it is the gate that a real fix must move.
+## 13. Recommended Next Direction (section 12)
 
-## 13. Representation Diagnostics (section 14)
+**Exactly one option: explicit coordinate/grid tokens (Option 1).** Make target location a first-class
+supervised *sequence* target — quantized spatial tokens emitted by the language model — instead of
+expecting the generic `[SEG]` hidden state to encode geometry. Evidence: the frozen hidden is norm-112 and
+effective-rank 8.33; its instruction-dependent residual is nearly orthogonal between instructions
+(centered cosine 0.077) yet carries no decodable box (real ≈ shuffled at 480 samples, paired 0/20); the LM
+objective saturates at CE 0.0000 on 21 reasoning templates, so nothing pressures that residual to encode
+*which* building; and the oracle box proves the downstream machinery is already capable.
 
-| Metric | Value |
-|---|---|
-| `[SEG]` hidden cosine, same image / two instructions | **0.99898** |
-| `[SEG]` hidden L2, same image | 10.50 |
-| head penultimate cosine, same image | 0.99910 |
-| predicted geometry L1, same image | **0.00076** |
-| mask IoU(pred_A, pred_B) | **0.919** |
+Option 2 (a dedicated target-aware query token) stays a fallback; Option 3 (`[REF]`) is not indicated by
+any evidence collected so far; 4B is not a response to this result. **Nothing here implements any of
+them** (section 12: do not implement automatically).
 
-**Four-condition control (same/different image × same/different template):**
+## 14. Dataset Policy (section 13)
 
-| Condition | hidden cosine |
-|---|---|
-| different image, **same template** | **0.99988** ← most similar |
-| same image, different template | 0.99898 |
-| different image, different template | 0.99869 ← least similar |
-
-**Answer to section 14's key question: no.** Instruction variation does not produce spatially different
-predicted geometry, so it cannot produce different masks. The control is sharper than
-"instruction-independent": **changing the whole image moves the `[SEG]` hidden state *less* than changing
-the instruction wording**, so the read-out at that position is dominated by the reasoning **template**
-and the target contributes only a small residual. The head's collapse to the mean box is the optimal
-response to exactly that input — which is why the fix has to change where the geometry comes from, not
-how the head is built.
-
-## 14. WHU / Pseudo-instance Error Analysis (section 16)
-
-`evaluation/task6d_error_analysis.json` classifies each free-generation record from the GT component map
-(neighbouring components, border contact, connectivity, target size) and from the predicted mask's
-component coverage:
-
-| Flag | Records | Share of the 116/120 failures |
-|---|---|---|
-| tiny target (< 1 % of the tile) | 108 | 93 % |
-| border truncation | 35 | 30 % |
-| insufficient density (≤ 2 components in tile) | 6 | 5 % |
-| touching neighbours (adjacent WHU components) | 2 | 2 % |
-| merged prediction (≥ 2 components ≥ 5 % of the mask) | 0 | 0 % |
-| ambiguous boundary (multi-component **and** IoU < 0.3) | 0 | 0 % |
-| disconnected target | 0 | 0 % |
-
-**These failures are not attributable to the dataset.** The artifact's degeneracy guard records that the
-model emitted essentially one constant mask, so all 116 failures occur regardless of record content, and
-the flag distribution describes the failure population rather than a dataset defect. The dataset is
-unchanged (section 1), and a dataset-selection task is **not** indicated by this evidence — the
-limitation that matters is in the read-out, not in WHU's pseudo-instances.
+Unchanged: no dataset change. The oracle box result shows the current validation material is sufficient to
+test this pathway. WHU limitations remain recorded and open (pseudo-instance ambiguity, touching/merged
+buildings, border truncation, tiny-target prevalence — quantified in
+`evaluation/task6d_error_analysis.json`: tiny target 108/120, border truncation 35/120 records), with the
+caveat that Task 6D's own failure population was model-caused rather than dataset-caused.
 
 ## 15. Runtime / VRAM
 
 | | Value |
 |---|---|
 | GPU | RTX 5080 Laptop, 15.894 GiB |
-| G0 epoch 1 / epoch 2 training time | 198 s / 262 s for 480 steps (≈0.41–0.55 s/step, teacher-forced) |
-| Free-generation evaluation (120 records + 20 pairs + panels) | ≈12 min |
-| Oracle diagnostic (120 records × 2 geometries + 20 pairs) | ≈9 min |
-| Peak VRAM during G0 training | recorded in `evaluation/task6d_g0.json` (`vram` per logged step) |
-| Task 6C.7 runtime reused | frozen visual-feature cache ON, `collect_grad_norms=false`, one Phase-B transfer |
-| Checkpoints | local and gitignored (`artifacts/checkpoints/task6c/task6d_G0/`), 100 MB per epoch, hashes in `evaluation/task6d_checkpoint_manifest.json` |
+| G0-R | 2 epochs × 480 steps plus per-epoch validation (free generation on 120 records + 20 paired) |
+| Hidden extraction | 640 teacher-forced forwards, `torch.no_grad`, ≈2 min |
+| Probes A/B/C | 6,000 steps each on pre-extracted features (full batch) plus the shuffled controls: ≈4 min total |
+| Representation stats | CPU only (SVD of a 480×2048 matrix, control statistics) |
+| Checkpoints | local and gitignored; the corrective run's are under `artifacts/checkpoints/task6c/task6d1_G0_corrected/`, and `evaluation/task6d_checkpoint_manifest.json` records that the Task 6D bytes were replaced |
 
 ## 16. Tests
 
-`python -m pytest tests/ -q` → **251 passed** (238 before plus the 13 new Task 6D tests).
+`python -m pytest tests/ -q` → **263 passed** (251 before plus the 12 new Task 6D.1 tests).
 
-`tests/test_task6d_grounding.py` covers all 16 section-18 items: the deterministic interior point lies
-inside the mask, the box tightly encloses it, normalized geometry is valid and canonical, GT geometry is
-used only in supervision/oracle (AST-checked on both paths), free inference uses predicted geometry only,
-the grounding loss reaches the head/LoRA/`[SEG]` (model-backed), the visual tower and SAM2 image encoder
-stay frozen, paired samples have different targets, both paths use the official SAM2 prompt encoder, the
-old arbitrary language sparse prompt is absent from the candidate, the visual cache stays value-preserving,
-no test split is used, no 4B/`[REF]`/SRE/SCL appears, and strict determinism is retained.
+`tests/test_task6d1_corrective_audit.py` covers all 15 section-15 items: the scheduler horizon equals the
+actual optimizer-step budget; epoch-2 initial LR is non-zero for the standard 2×480 run; the terminal
+cosine factor occurs only at the final full-run step (by ratio, since it is 5.4e-06 of peak, not exactly
+zero); smoke/max-step mode uses its actual budget; G0-R differs from Task 6D only by the scheduler
+correction; extraction never updates Qwen and uses the hash-verified checkpoint; Probes A and B are
+LayerNorm-free while Probe C includes it; probe labels are GT boxes used only in probe supervision; no test
+split; strict determinism; no 4B/`[REF]`/SRE/SCL; no dataset change; and no G1 without a passing corrected
+gate. The odd-looking `VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND` marker on the Task 6D artifact is
+asserted too, so the history cannot be silently rewritten.
 
 ## 17. Git / Watt
 
-* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`: commit **`db54e55`**
-  (`feat: add spatial grounding bridge`) plus a follow-up `docs:` commit recording this hash and the push
-  result (`4b46045..db54e55  main -> main`). Remote `main` was at `4b46045` before this task.
-* Artifacts: `evaluation/task6d_oracle_prompt_diagnostic.json`, `task6d_grounding_targets.json`,
-  `task6d_g0.json`, `task6d_paired_probe.json`, `task6d_representation.json`,
-  `task6d_error_analysis.json`, `task6d_checkpoint_manifest.json`, `task6d_panels/*.png`; report
-  `docs/task6d_spatial_grounding_bridge.md`. `task6d_g1.json` does not exist by design (G0 failed).
-  No weights, no checkpoints, no `.conda`, no `local_cache`, no dataset edits are staged.
-* **Watt Toolkit: `watt_preexisting = true`** (`Steam++.exe` since 2026-09-26 14:16:23). Used for the
-  push if needed and **left running**; nothing was force-killed, no hosts file was edited, no certificate
-  or TLS setting was changed. All model runs were offline from local cache.
+* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main` with the recommended message
+  `fix: audit spatial grounding representation`; the exact hash and push result are recorded in a
+  follow-up `docs:` commit and in the DSH turn response. Remote `main` was at `35a327f` before this task.
+* Artifacts: `evaluation/task6d1_scheduler_audit.json`, `task6d1_g0_corrected.json`,
+  `task6d1_hidden_extract_manifest.json`, `task6d1_probe_linear.json`, `task6d1_probe_raw_mlp.json`,
+  `task6d1_probe_layernorm_mlp.json`, `task6d1_representation_stats.json`,
+  `task6d1_decodability_summary.json`; report `docs/task6d1_corrective_grounding_audit.md`. No
+  `task6d1_g1.json` / `task6d1_paired_probe.json` (G1 not run, by gate). No weights, checkpoints, hidden
+  tensors, `.conda`, `local_cache` or dataset edits are staged.
+* **Watt Toolkit: `watt_preexisting = true`** (`Steam++.exe` since 2026-09-26 14:16:23). Used for the push
+  if needed and **left running**; nothing was force-killed, no hosts file was edited, no certificate or
+  TLS setting was changed. All model runs were offline from local cache.
 
-## 18. Recommendation for next architecture task
+## 18. Artifacts (section 14)
 
-The evidence points at one specific defect and rules out several alternatives, so the next task should
-attack the read-out rather than the prompt bridge or the segmenter:
-
-1. **Give the model a spatially supervised output token, not a free hidden vector.** The `[SEG]` hidden
-   state is a *consequence* of the reasoning template, and the language loss saturates at 0.0000 before it
-   can impose any spatial content. Emitting the target geometry **as text tokens** (quantized box
-   coordinates, e.g. a small vocabulary of grid/coordinate tokens appended to the reasoning) makes the
-   geometry a first-class prediction target of the existing LM head: the loss then differs *per sample*
-   instead of per template, and the model must attend to the target to reduce it. This needs no new
-   module, no 4B and no `[REF]`.
-2. **Or supervise the read-out directly.** Keep the head, but add an explicit objective on the `[SEG]`
-   hidden state itself (e.g. a learned spatial code trained with the same oracle geometry), so that a
-   constant output cannot be optimal. The Task 6D result is exactly the evidence this needs: the
-   constant-box optimum is what an unconstrained head converges to.
-3. **Keep the oracle diagnostic as the ceiling check for every future hypothesis.** It costs ~9 minutes
-   and separates "the segmenter cannot" from "the model does not say where", which is the distinction that
-   redirected this task.
-4. **Do not re-run Task 6D's G1, and do not re-open the geometry choice**: box is chosen, and training a
-   mask decoder against a collapsed prompt cannot answer a question that G0 already answered.
-5. **Dataset work is not indicated yet.** The failure population is model-caused (one constant mask for
-   120 records); the WHU pseudo-instance flags are recorded for future reference, but nothing in this
-   task's evidence says the dataset is the binding constraint.
+```text
+evaluation/task6d1_scheduler_audit.json           before/after horizons + observed LR verification
+evaluation/task6d1_g0_corrected.json              G0-R (LR traces, losses, box IoU, gate)
+evaluation/task6d1_hidden_extract_manifest.json   frozen feature provenance (3 splits, hash-verified)
+evaluation/task6d1_probe_linear.json              Probe A (+ shuffled control)
+evaluation/task6d1_probe_raw_mlp.json             Probe B (+ shuffled control, no LayerNorm)
+evaluation/task6d1_probe_layernorm_mlp.json       Probe C (+ LR attempts)
+evaluation/task6d1_representation_stats.json      Probe D, expanded control, SVD
+evaluation/task6d1_decodability_summary.json      interpretation matrix resolution
+docs/task6d1_corrective_grounding_audit.md        report
+```

@@ -1,0 +1,58 @@
+{
+  "_doc": "Task 6D.1 sections 11 and 14. Resolution of the interpretation matrix from the corrected G0-R gate and the three frozen probes. Every number quoted here is in task6d1_probe_*.json, task6d1_representation_stats.json and task6d1_g0_corrected.json.",
+  "task": "6D.1",
+  "case": "F",
+  "verdict": "PRACTICALLY_NOT_DECODABLE_GEOMETRY",
+  "statement": "after the implementation was audited and every readout converged, the raw probes cannot meaningfully fit even the 480 training samples, and the real fit is no better than the label-shuffled control: the current [SEG] representation contains no practically decodable target geometry under this training setup. This is a statement about practical decodability, not an information-theoretic absence claim.",
+  "inputs": {
+    "g0_corrected_passed": false,
+    "g0_corrected_gate": {
+      "checks": {
+        "emission_rate_ge_0.90": true,
+        "geometry_paired_ge_14": false,
+        "box_iou_ge_0.35": false
+      },
+      "passed": false,
+      "emission_rate": 1.0,
+      "geometry_paired": 0,
+      "metric": 0.008798473697000493,
+      "verdict_if_failed": "GROUNDING_REPRESENTATION_FAILED"
+    },
+    "probe_linear_train_480_box_iou": 0.026470603421330452,
+    "probe_linear_val_box_iou": 0.004218646790832281,
+    "probe_raw_mlp_overfit_20_box_iou": 0.6447100639343262,
+    "probe_raw_mlp_train_480_box_iou": 0.035506073385477066,
+    "probe_raw_mlp_val_box_iou": 0.007475934457033873,
+    "probe_layernorm_mlp_train_480_box_iou": 0.05126585066318512,
+    "probe_layernorm_mlp_val_box_iou": 0.007213978562504053,
+    "real_minus_shuffled_train_480_box_iou": {
+      "linear": 0.006967168301343918,
+      "raw_mlp": 0.015367196872830391,
+      "layernorm_mlp": 0.041236129589378834
+    },
+    "twenty_sample_overfit_is_diagnostic": true,
+    "shuffled_overfit_final_loss": 4.2998461140086874e-05,
+    "every_probe_converged": true,
+    "layernorm_is_a_confound": false
+  },
+  "raw_hidden_svd": {
+    "samples": 480,
+    "dim": 2048,
+    "effective_rank_participation_ratio": 8.3329,
+    "top1_explained_variance": 0.316374,
+    "top5_explained_variance": 0.525158,
+    "top10_explained_variance": 0.615285,
+    "top50_explained_variance": 0.808747,
+    "components_for_90_percent": 111,
+    "val_centered_norm_mean": 6.372565269470215
+  },
+  "predeclared_cases": {
+    "A": "corrected G0-R passes -> the scheduler defect caused the failure",
+    "B": "raw probes decode, LayerNorm probe fails -> LAYER_NORM_READOUT_CONFOUND",
+    "C": "raw MLP fits train/20 but not validation -> LOCATION_SIGNAL_MEMORIZABLE_NOT_GENERALIZABLE",
+    "D": "even a raw 1M MLP cannot overfit 20 frozen vectors -> READOUT_OR_FEATURE_IDENTITY_BUG_SUSPECTED",
+    "E": "raw MLP overfits 20 and 480 but validation stays collapsed -> SPATIAL_REPRESENTATION_DOES_NOT_GENERALIZE",
+    "F": "raw probes cannot fit even 480 after verification -> practically no decodable geometry"
+  },
+  "wording_rule": "Use PRACTICALLY_DECODABLE language. Do not claim information-theoretic absence. Cosine similarity near 1 does not prove the absence of a small target-dependent component, and one failed MLP readout does not prove absence either."
+}

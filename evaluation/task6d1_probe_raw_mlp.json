@@ -1,0 +1,286 @@
+{
+  "probe": "raw_mlp",
+  "structure": "Linear(2048,512) -> GELU -> Linear(512,4) -> sigmoid -> canonical box; NO LayerNorm",
+  "trainable_parameters": 1051140,
+  "uses_layernorm": false,
+  "input_scaling": {
+    "fixed_scalar": 0.008926384838657393,
+    "note": "one constant divisor computed from the training split (raw hidden norm mean); no learnable parameters, no per-sample mean subtraction, so this is not LayerNorm"
+  },
+  "label_shuffled_control": {
+    "train_480_box_iou": 0.020138876512646675,
+    "train_480_final_loss": 0.014294757507741451,
+    "overfit_20_final_loss": 4.2998461140086874e-05,
+    "note": "same readout, same budget, permuted box targets"
+  },
+  "decodable_signal_gap_train_480": 0.015367196872830391,
+  "implementation_audit": {
+    "overfit_loss_decreased": true,
+    "selected_lr": 0.003,
+    "lr_attempts": [
+      {
+        "lr": 0.003,
+        "overfit_final_loss": 3.0217051971703768e-05,
+        "train_480_first_loss": 0.0448414571583271,
+        "train_480_final_loss": 0.009140519425272942,
+        "converged": true,
+        "train_480_box_iou": 0.035506073385477066
+      }
+    ],
+    "converged": true,
+    "unscaled_inputs_first_attempt": "the first version of this script fed the raw hidden vectors (norm ~112) straight into the readout; logits saturated, the loss increased, and predicted boxes became constant with zero width. That is an implementation defect, which is exactly what the Case D protocol exists to catch, not evidence about the representation."
+  },
+  "frozen": {
+    "qwen": "frozen (features extracted once)",
+    "probe_only": true
+  },
+  "protocol": {
+    "optimizer": "AdamW, weight_decay=0, full batch",
+    "seed": 20260926,
+    "overfit_samples": 20,
+    "overfit_steps": 6000,
+    "train_steps": 6000
+  },
+  "overfit_20": {
+    "steps": 6000,
+    "lr": 0.003,
+    "first_loss": 0.04680353403091431,
+    "final_loss": 3.0217051971703768e-05,
+    "box_iou_mean": 0.6447100639343262,
+    "box_iou_median": 0.6168874502182007,
+    "box_iou_min": 0.41690075397491455,
+    "box_iou_max": 0.8341614007949829,
+    "center_inside_rate": 1.0,
+    "smooth_l1": 6.275344640016556e-05,
+    "predicted_box_std": [
+      0.29303300380706787,
+      0.25931501388549805,
+      0.2946600019931793,
+      0.25013500452041626
+    ]
+  },
+  "train_480": {
+    "steps": 6000,
+    "lr": 0.003,
+    "first_loss": 0.0448414571583271,
+    "final_loss": 0.009140519425272942,
+    "box_iou_mean": 0.035506073385477066,
+    "box_iou_median": 0.0,
+    "box_iou_min": 0.0,
+    "box_iou_max": 0.6427076458930969,
+    "center_inside_rate": 0.07916666666666666,
+    "smooth_l1": 0.009210518561303616,
+    "predicted_box_std": [
+      0.23212699592113495,
+      0.24568399786949158,
+      0.24271799623966217,
+      0.24964399635791779
+    ]
+  },
+  "validation": {
+    "box_iou_mean": 0.007475934457033873,
+    "box_iou_median": 0.0,
+    "box_iou_min": 0.0,
+    "box_iou_max": 0.23894530534744263,
+    "center_inside_rate": 0.03333333333333333,
+    "smooth_l1": 0.03915450721979141,
+    "predicted_box_std": [
+      0.19250799715518951,
+      0.2105250060558319,
+      0.20248399674892426,
+      0.21584700047969818
+    ]
+  },
+  "paired_geometry": {
+    "pairs": [
+      {
+        "image_id": "1_1247",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.09458194673061371
+      },
+      {
+        "image_id": "1_2103",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06440676748752594
+      },
+      {
+        "image_id": "1_2757",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.27541154623031616
+      },
+      {
+        "image_id": "1_286",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.15298479795455933
+      },
+      {
+        "image_id": "1_2864",
+        "own_a": 0.06340139695892015,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.11618274450302124
+      },
+      {
+        "image_id": "1_2866",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.11656367033720016
+      },
+      {
+        "image_id": "1_3400",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.09674155712127686
+      },
+      {
+        "image_id": "1_3604",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.15390832722187042
+      },
+      {
+        "image_id": "1_3999",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.0870138630270958
+      },
+      {
+        "image_id": "1_4894",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.2930212616920471
+      },
+      {
+        "image_id": "1_5008",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.1158316433429718
+      },
+      {
+        "image_id": "1_722",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.03993108123540878
+      },
+      {
+        "image_id": "1_7894",
+        "own_a": 0.07875594473727843,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.24094559252262115
+      },
+      {
+        "image_id": "1_849",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06933397054672241
+      },
+      {
+        "image_id": "1_9568",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.07055968046188354
+      },
+      {
+        "image_id": "2_2313",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06419935822486877
+      },
+      {
+        "image_id": "2_2652",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.08942633122205734
+      },
+      {
+        "image_id": "2_2919",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.21084332466125488
+      },
+      {
+        "image_id": "2_3482",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.17094525694847107
+      },
+      {
+        "image_id": "2_550",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.046309489756822586
+      }
+    ],
+    "paired_total": 20,
+    "paired_pass": 0,
+    "mean_geometry_l1": 0.12845711056143044,
+    "mean_own_iou": 0.0035539335424049647,
+    "mean_cross_iou": 0.0
+  },
+  "_doc": "Task 6D.1 section 6-8. Frozen-representation probe: the language model is never updated, only the readout is trained, on teacher-forced [SEG] hidden vectors from the hash-verified Task 6C P_C checkpoint. GT boxes are used only as probe supervision.",
+  "task": "6D.1",
+  "representation_source": "evaluation/task6d1_hidden_extract_manifest.json"
+}

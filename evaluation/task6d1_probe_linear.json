@@ -1,0 +1,286 @@
+{
+  "probe": "linear",
+  "structure": "Linear(2048,4) -> sigmoid -> canonical box; no LayerNorm",
+  "trainable_parameters": 8196,
+  "uses_layernorm": false,
+  "input_scaling": {
+    "fixed_scalar": 0.008926384838657393,
+    "note": "one constant divisor computed from the training split (raw hidden norm mean); no learnable parameters, no per-sample mean subtraction, so this is not LayerNorm"
+  },
+  "label_shuffled_control": {
+    "train_480_box_iou": 0.019503435119986534,
+    "train_480_final_loss": 0.017912736162543297,
+    "overfit_20_final_loss": 2.649197449500207e-05,
+    "note": "same readout, same budget, permuted box targets"
+  },
+  "decodable_signal_gap_train_480": 0.006967168301343918,
+  "implementation_audit": {
+    "overfit_loss_decreased": true,
+    "selected_lr": 0.01,
+    "lr_attempts": [
+      {
+        "lr": 0.01,
+        "overfit_final_loss": 1.8966627976624295e-05,
+        "train_480_first_loss": 0.04474475607275963,
+        "train_480_final_loss": 0.011428681202232838,
+        "converged": true,
+        "train_480_box_iou": 0.026470603421330452
+      }
+    ],
+    "converged": true,
+    "unscaled_inputs_first_attempt": "the first version of this script fed the raw hidden vectors (norm ~112) straight into the readout; logits saturated, the loss increased, and predicted boxes became constant with zero width. That is an implementation defect, which is exactly what the Case D protocol exists to catch, not evidence about the representation."
+  },
+  "frozen": {
+    "qwen": "frozen (features extracted once)",
+    "probe_only": true
+  },
+  "protocol": {
+    "optimizer": "AdamW, weight_decay=0, full batch",
+    "seed": 20260926,
+    "overfit_samples": 20,
+    "overfit_steps": 6000,
+    "train_steps": 6000
+  },
+  "overfit_20": {
+    "steps": 6000,
+    "lr": 0.01,
+    "first_loss": 0.046837057918310165,
+    "final_loss": 1.8966627976624295e-05,
+    "box_iou_mean": 0.9028283953666687,
+    "box_iou_median": 0.9251145124435425,
+    "box_iou_min": 0.6481134295463562,
+    "box_iou_max": 0.9885515570640564,
+    "center_inside_rate": 1.0,
+    "smooth_l1": 1.896238791232463e-05,
+    "predicted_box_std": [
+      0.2924639880657196,
+      0.2563549876213074,
+      0.2878510057926178,
+      0.2521910071372986
+    ]
+  },
+  "train_480": {
+    "steps": 6000,
+    "lr": 0.01,
+    "first_loss": 0.04474475607275963,
+    "final_loss": 0.011428681202232838,
+    "box_iou_mean": 0.026470603421330452,
+    "box_iou_median": 0.0,
+    "box_iou_min": 0.0,
+    "box_iou_max": 0.6738867163658142,
+    "center_inside_rate": 0.04375,
+    "smooth_l1": 0.011427176184952259,
+    "predicted_box_std": [
+      0.19035400450229645,
+      0.2006639987230301,
+      0.1926870048046112,
+      0.19926400482654572
+    ]
+  },
+  "validation": {
+    "box_iou_mean": 0.004218646790832281,
+    "box_iou_median": 0.0,
+    "box_iou_min": 0.0,
+    "box_iou_max": 0.1387408971786499,
+    "center_inside_rate": 0.016666666666666666,
+    "smooth_l1": 0.03287016227841377,
+    "predicted_box_std": [
+      0.14367899298667908,
+      0.1676740050315857,
+      0.14663900434970856,
+      0.16774000227451324
+    ]
+  },
+  "paired_geometry": {
+    "pairs": [
+      {
+        "image_id": "1_1247",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.08169660717248917
+      },
+      {
+        "image_id": "1_2103",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.03955499082803726
+      },
+      {
+        "image_id": "1_2757",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.23130089044570923
+      },
+      {
+        "image_id": "1_286",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.12221226096153259
+      },
+      {
+        "image_id": "1_2864",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.07632298022508621
+      },
+      {
+        "image_id": "1_2866",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.09351745247840881
+      },
+      {
+        "image_id": "1_3400",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.06233111396431923
+      },
+      {
+        "image_id": "1_3604",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.10014650225639343
+      },
+      {
+        "image_id": "1_3999",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.05585283041000366
+      },
+      {
+        "image_id": "1_4894",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.21469441056251526
+      },
+      {
+        "image_id": "1_5008",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.12984398007392883
+      },
+      {
+        "image_id": "1_722",
+        "own_a": 0.26061321525883746,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.22323914346352675,
+        "passed": false,
+        "geometry_l1": 0.02507772296667099
+      },
+      {
+        "image_id": "1_7894",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.16540846228599548
+      },
+      {
+        "image_id": "1_849",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.034383222460746765
+      },
+      {
+        "image_id": "1_9568",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.08684636652469635
+      },
+      {
+        "image_id": "2_2313",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.08682659268379211
+      },
+      {
+        "image_id": "2_2652",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.025803714990615845
+      },
+      {
+        "image_id": "2_2919",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.11903095291243146,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.18475142121315002
+      },
+      {
+        "image_id": "2_3482",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.13047875463962555
+      },
+      {
+        "image_id": "2_550",
+        "own_a": 0.0,
+        "cross_a": 0.0,
+        "own_b": 0.0,
+        "cross_b": 0.0,
+        "passed": false,
+        "geometry_l1": 0.02162870764732361
+      }
+    ],
+    "paired_total": 20,
+    "paired_pass": 0,
+    "mean_geometry_l1": 0.09843394923955202,
+    "mean_own_iou": 0.009491104204281722,
+    "mean_cross_iou": 0.005580978586588169
+  },
+  "_doc": "Task 6D.1 section 6-8. Frozen-representation probe: the language model is never updated, only the readout is trained, on teacher-forced [SEG] hidden vectors from the hash-verified Task 6C P_C checkpoint. GT boxes are used only as probe supervision.",
+  "task": "6D.1",
+  "representation_source": "evaluation/task6d1_hidden_extract_manifest.json"
+}

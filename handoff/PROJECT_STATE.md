@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6D._
+_Last updated by DSH at the end of Task 6D.1._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -61,7 +61,8 @@ The block above is machine-checked against
 | 6C.5 | **Batch-1 training-pipeline throughput audit + value-preserving optimization** | **done → `OPTIMIZATION_PARTIAL`** |
 | 6C.6 | **Launch-overhead candidates + formal-path integration of the 6C.5 winner** | **done → `OPTIMIZATION_PARTIAL`** |
 | 6C.7 | **Frozen Qwen visual-feature cache + remaining batch-1 sync audit** | **done → `OPTIMIZATION_PARTIAL`** |
-| 6D | **Spatial Grounding Bridge v0.1 (oracle diagnostic + geometry head)** | **done → `GROUNDING_REPRESENTATION_FAILED`** |
+| 6D | **Spatial Grounding Bridge v0.1 (oracle diagnostic + geometry head)** | **done → `GROUNDING_REPRESENTATION_FAILED`** (`VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND`) |
+| 6D.1 | **Corrective G0 rerun + `[SEG]` spatial-decodability audit** | **done → `PRACTICALLY_NOT_DECODABLE_GEOMETRY`** |
 
 ## Task 6C measured results
 
@@ -172,6 +173,45 @@ training loop; every other candidate was measured and rejected. Full detail:
    references for screening, per-run re-seeding in every equivalence gate, and `PYTHONUTF8=1` when
    reading `torch.compile` errors on this Windows locale (otherwise the real `TritonMissing` cause is
    hidden behind a `UnicodeDecodeError`).
+
+## Task 6D.1 measured results
+
+Corrective audit of Task 6D. Full detail: `docs/task6d1_corrective_grounding_audit.md`,
+`evaluation/task6d1_*.json`.
+
+| | Value |
+|---|---|
+| Scheduler defect | horizon was one epoch (480) while two ran → **epoch 2 LR exactly 0**; end-of-epoch-1 factor 1.17e-05 |
+| Scheduler fixed | horizon 960 → epoch-2 start factor 0.517, terminal only at the final step (5.4e-06 of peak) |
+| G0-R (scheduler fix only) | emission **120/120** ✅, geometry paired **0/20** ❌, box IoU **0.0088** ❌ → G1 not run |
+| Probe A (linear, raw) | overfit-20 0.903, train-480 0.027, val 0.004, paired 0/20 |
+| Probe B (raw MLP, no LayerNorm) | overfit-20 0.645, train-480 0.036, val 0.008 |
+| Probe C (Task 6D LayerNorm head) | overfit-20 0.778, train-480 0.051, val 0.007 |
+| Label-shuffled control | real ≈ shuffled at 480 (0.027 vs 0.020; 0.036 vs 0.020); shuffled also fits 20 samples to loss 0 |
+| LayerNorm | **not a confound** — with a fair LR the LayerNorm head matches/beats the raw MLP |
+| Representation | norm ≈112, effective rank **8.33**, top-1 31.6 %; centered cosine same-image/diff-template **0.077** vs diff-image/same-template 0.531 |
+| Verdict | **Case F — `PRACTICALLY_NOT_DECODABLE_GEOMETRY`** |
+
+1. **The scheduler defect was real but not causal.** Task 6D built the cosine scheduler with one epoch as
+   its horizon and ran two, so epoch 2 trained at LR 0 (which is why its epoch-1/epoch-2 metrics were
+   bit-identical). The corrective rerun G0-R fixes only that and fails the same gate.
+2. **LayerNorm is not a confound, and neither was the head.** The first probe run appeared to show
+   LayerNorm destroying the signal; that was **my probe failing to converge** (plus unscaled norm-112
+   inputs). After fixing both, all three readouts converge and the LayerNorm head performs as well as the
+   raw MLP.
+3. **The 20-sample overfit is not evidence**: a shuffled-label readout fits 20 permuted boxes to zero loss
+   too. The informative number is the 480-sample fit, where the real fit is within a few IoU points of the
+   shuffled fit.
+4. **Accepted statement (weaker, per the spec's wording rule)**: after the implementation audit, the frozen
+   `[SEG]` representation of the Task 6C `P_C` checkpoint contains **no practically decodable target
+   geometry** under this training setup. This is not an information-theoretic absence claim, and it
+   replaces Task 6D's "carries no target location" wording.
+5. **The residual encodes the instruction wording, not the target**: with the shared component removed, the
+   two instructions of one image are nearly orthogonal (centered cosine 0.077) while two different images
+   with the same template are much more similar (0.531), and the within-image token variance (0.00999) is
+   ~30× smaller than the between-target box L1 (0.306).
+6. **Oracle conclusion unchanged**: correct geometry → 0.7506 mIoU, paired 20/20. The downstream machinery
+   works; the failure is in what the read-out can express.
 
 ## Task 6D measured results
 
@@ -286,9 +326,12 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
 
 ## Measured limitations (carry into Task 6D)
 
-1. **Instruction conditioning of the mask is still absent**, and Task 6D localizes it: the `[SEG]` hidden
-   state is template-dominated (different-image/same-template cosine 0.99988 > same-image/different-template
-   0.99898) and carries no usable target location. This remains the blocking defect for the MVP.
+1. **Instruction conditioning of the mask is still absent**, and Task 6D + Task 6D.1 localize it precisely:
+   the frozen `[SEG]` hidden state is norm-112, effective-rank 8.33, and its instruction-dependent residual
+   (centered cosine 0.077 between the two instructions of one image) is **not practically decodable**
+   into target geometry — three converging readouts cannot fit even the 480 training samples better than a
+   label-shuffled control. This remains the blocking defect for the MVP. Task 6D's original wording
+   ("carries no target location") is superseded by this audit (§16 of Task 6D.1).
 2. **Mask quality is not usable**: strict end-to-end mIoU 0.093–0.109, L3 nontrivial 0.076–0.088.
 3. **Language metrics are template metrics**: `reasoning_zh` has 21 distinct values in the whole training
    mini-set, so exact match and operation-chain accuracy cannot support a reasoning claim.
@@ -311,24 +354,23 @@ search space is narrow and explicit.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6D results**, then an architecture task aimed at the read-out, since
-Task 6D localized the defect precisely:
+**ChatGPT review of the pushed Task 6D.1 results**, then **exactly one** architecture direction, with the
+evidence Task 6D.1 produced:
 
-1. **Make the target position a supervised *token*, not a free hidden vector.** The `[SEG]` hidden is a
-   consequence of the reasoning template and the language loss saturates at 0.0000 before it can impose
-   spatial content. Emitting geometry as text tokens (quantized coordinates / grid tokens appended to the
-   reasoning) makes the geometry a first-class target of the existing LM head, so the loss differs *per
-   sample* instead of per template. No new module, no 4B, no `[REF]`.
-2. **Or supervise the read-out directly** (a learned spatial code on the `[SEG]` hidden trained with the
-   same oracle geometry) so that a constant output cannot be optimal — Task 6D's constant-box optimum is
-   the evidence that this is needed.
-3. **Keep the oracle diagnostic as the standing ceiling check** (~9 min) for every future hypothesis: it
-   separates "the segmenter cannot" from "the model does not say where".
-4. **Do not re-run G1 and do not re-open the geometry choice** (box is chosen); do not add `[REF]`, a
-   Spatial Relation Encoder, a Spatial Consistency Loss, 4B, a new dataset or full training.
-5. **Dataset work is not indicated yet** — the failure population is model-caused.
+1. **Explicit coordinate/grid tokens (recommended).** Make target location a first-class supervised
+   *sequence* target — quantized spatial tokens emitted by the language model — instead of expecting the
+   generic `[SEG]` hidden state to encode geometry. Justification: the frozen hidden is norm-112 and
+   effective-rank 8.33; its instruction-dependent residual is nearly orthogonal between instructions
+   (centered cosine 0.077) yet carries no decodable box (real ≈ shuffled at 480 samples, paired 0/20); and
+   the LM objective saturates at CE 0.0000 on 21 reasoning templates, so nothing pressures that residual to
+   encode *which* building.
+2. Fallbacks, in order, only if (1) is rejected on design grounds: a dedicated target-aware query token.
+   `[REF]` is **not** indicated by any evidence collected so far, and 4B is not a response to this result.
+3. **Do not implement any of them in the corrective task** (Task 6D.1 implemented none), do not change the
+   dataset, do not add Spatial Relation Encoder / Spatial Consistency Loss, do not build a GUI, do not run
+   full training.
 
-Full detail: `handoff/FROM_DSH.md`, `docs/task6d_spatial_grounding_bridge.md`,
-`evaluation/task6d_oracle_prompt_diagnostic.json`, `evaluation/task6d_representation.json`,
-`evaluation/task6d_paired_probe.json`, `docs/task6c_prompt_ablation.md`,
-`docs/task6c7_visual_cache_optimization.md`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).
+Full detail: `handoff/FROM_DSH.md`, `docs/task6d1_corrective_grounding_audit.md`,
+`docs/task6d_spatial_grounding_bridge.md`, `evaluation/task6d1_decodability_summary.json`,
+`evaluation/task6d1_representation_stats.json`, `evaluation/task6d1_scheduler_audit.json`,
+`evaluation/task6d_oracle_prompt_diagnostic.json`, `docs/architecture_decisions.md` (ADR-014, ADR-015).

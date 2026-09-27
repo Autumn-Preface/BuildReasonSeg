@@ -1,0 +1,181 @@
+{
+  "_doc": "Task 6D.1 sections 9-10. Representation statistics: the three LayerNorm-discarded statistics and their relation to the target box, the expanded four-condition similarity control, and an SVD/PCA profile of the raw [SEG] hiddens from the hash-verified Task 6C P_C checkpoint.",
+  "task": "6D.1",
+  "representation_source": "evaluation/task6d1_hidden_extract_manifest.json",
+  "probe_d_train": {
+    "split": "train",
+    "samples": 480,
+    "statistics": {
+      "mean_of_mean": 0.0636666789650917,
+      "std_of_mean": 0.0024657114408910275,
+      "mean_of_std": 2.4746603965759277,
+      "std_of_std": 0.004094693344086409,
+      "mean_of_norm": 112.02745819091797,
+      "std_of_norm": 0.18502889573574066,
+      "norm_range": [
+        111.53369140625,
+        112.42655944824219
+      ]
+    },
+    "pearson_with_box": {
+      "center_x": {
+        "mean": 0.01854966674764939,
+        "std": 0.051501919009417564,
+        "norm": 0.051865479647212887
+      },
+      "center_y": {
+        "mean": 0.059078706496571216,
+        "std": 0.003324448450218988,
+        "norm": 0.004234328138916963
+      },
+      "width": {
+        "mean": 0.020069882052606427,
+        "std": 0.04985660128029752,
+        "norm": 0.05023940276112396
+      },
+      "height": {
+        "mean": 0.06380247756689497,
+        "std": -0.004010417618158041,
+        "norm": -0.003043908404731989
+      },
+      "area": {
+        "mean": 0.013239405270419438,
+        "std": 0.056289333370798236,
+        "norm": 0.056566812033153994
+      }
+    },
+    "linear_prediction_from_three_statistics": {
+      "in_sample_r_squared": 0.004422,
+      "note": "an in-sample fit of 480 rows with 4 parameters; interpret as an upper bound only"
+    }
+  },
+  "probe_d_val": {
+    "split": "val",
+    "samples": 120,
+    "statistics": {
+      "mean_of_mean": 0.06374043971300125,
+      "std_of_mean": 0.002780102426186204,
+      "mean_of_std": 2.47446346282959,
+      "std_of_std": 0.0038850943092256784,
+      "mean_of_norm": 112.0186538696289,
+      "std_of_norm": 0.1750425398349762,
+      "norm_range": [
+        111.61964416503906,
+        112.37227630615234
+      ]
+    },
+    "pearson_with_box": {
+      "center_x": {
+        "mean": 0.02477207729778349,
+        "std": -0.019224123468702628,
+        "norm": -0.018839466356412808
+      },
+      "center_y": {
+        "mean": -0.14701675452233806,
+        "std": 0.10966660727845878,
+        "norm": 0.1073509906662269
+      },
+      "width": {
+        "mean": -0.03966006953513752,
+        "std": -0.06084104020826775,
+        "norm": -0.06181546533904157
+      },
+      "height": {
+        "mean": 0.07180634892810099,
+        "std": -0.039125642940514085,
+        "norm": -0.03796617038417098
+      },
+      "area": {
+        "mean": -0.03402562370282942,
+        "std": -0.022628319935200036,
+        "norm": -0.023365726288014282
+      }
+    },
+    "linear_prediction_from_three_statistics": {
+      "in_sample_r_squared": 0.017887,
+      "note": "an in-sample fit of 480 rows with 4 parameters; interpret as an upper bound only"
+    }
+  },
+  "four_condition_control": {
+    "conditions": {
+      "same_image_different_template": {
+        "sample_left": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+        "sample_right": "buildsr_val_1_1247_3_largest_to_right_of_to_nearest_0be0bf7c8b0a",
+        "same_image": true,
+        "same_template": false,
+        "cosine": 0.9964713454246521,
+        "centered_cosine": 0.07087406516075134,
+        "layernorm_cosine": 0.9964689612388611,
+        "l2": 9.415034294128418,
+        "norm_left": 112.16985321044922,
+        "norm_right": 111.81189727783203,
+        "box_l1": 0.0615234375
+      },
+      "different_image_same_template": {
+        "sample_left": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+        "sample_right": "buildsr_val_1_2103_1_largest_9ccf675337a3",
+        "same_image": false,
+        "same_template": true,
+        "cosine": 0.9979892373085022,
+        "centered_cosine": 0.5330588817596436,
+        "layernorm_cosine": 0.9979878067970276,
+        "l2": 7.114655494689941,
+        "norm_left": 112.16985321044922,
+        "norm_right": 112.2041244506836,
+        "box_l1": 0.16259765625
+      },
+      "different_image_different_template": {
+        "sample_left": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+        "sample_right": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+        "same_image": false,
+        "same_template": false,
+        "cosine": 0.995858371257782,
+        "centered_cosine": -0.136459082365036,
+        "layernorm_cosine": 0.9958556890487671,
+        "l2": 10.208090782165527,
+        "norm_left": 112.16985321044922,
+        "norm_right": 112.14933776855469,
+        "box_l1": 0.4619140625
+      },
+      "_aggregated": {
+        "same_image_different_template": {
+          "n": 19,
+          "mean_cosine": 0.9967675020820216,
+          "mean_centered_cosine": 0.07703785063992989,
+          "mean_layernorm_cosine": 0.9967656323784276,
+          "mean_l2": 8.96689974634271
+        },
+        "different_image_same_template": {
+          "n": 19,
+          "mean_cosine": 0.9981437921524048,
+          "mean_centered_cosine": 0.5310588777065277,
+          "mean_layernorm_cosine": 0.9981429670986376,
+          "mean_l2": 6.811813505072343
+        }
+      }
+    },
+    "global_mean_norm": 111.84455108642578,
+    "within_image_variance": {
+      "groups_with_repeats": 20,
+      "mean_within_group_variance": 0.00999070021789521
+    },
+    "within_template_variance": {
+      "groups_with_repeats": 8,
+      "mean_within_group_variance": 0.006501546886283904
+    },
+    "between_target_box_l1_mean": 0.3058819110576923,
+    "interpretation": "centered and LayerNorm cosines separate 'the token is constant' from 'the token has a large shared component'; within-image variance shows how much the instruction moves the token relative to the between-target box distance."
+  },
+  "svd": {
+    "samples": 480,
+    "dim": 2048,
+    "effective_rank_participation_ratio": 8.3329,
+    "top1_explained_variance": 0.316374,
+    "top5_explained_variance": 0.525158,
+    "top10_explained_variance": 0.615285,
+    "top50_explained_variance": 0.808747,
+    "components_for_90_percent": 111,
+    "val_centered_norm_mean": 6.372565269470215
+  },
+  "causality_caveat": "correlation is not causation: these statistics are descriptive of the frozen checkpoint and are reported to decide whether LayerNorm could be discarding signal."
+}
