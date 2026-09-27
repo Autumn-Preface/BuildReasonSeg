@@ -1,0 +1,3840 @@
+{
+  "_doc": "Task 6E section 10. Stage E0: overfit 20 deterministic records (10 same-image/different-target pairs) with the explicit spatial targets and measure the free-generation gate. A pass is implementation sanity only; it is not a generalization claim.",
+  "task": "6E",
+  "stage": "E0",
+  "bins": 256,
+  "oracle_selection": {
+    "rule": "smallest B whose quantized oracle keeps paired 20/20 and strict mIoU >= 0.7206 (continuous oracle 0.7506 minus 0.03)",
+    "miou_threshold": 0.7206,
+    "qualifying_bins": [
+      256
+    ],
+    "selected_bins": 256,
+    "verdict": "PROCEED_WITH_B256"
+  },
+  "trainables": {
+    "phase": "A",
+    "trainable_tensors": 393,
+    "frozen_tensors": 1243,
+    "trainable_params": 17960960,
+    "projection_trainable": false,
+    "sam_mask_decoder_trainable": false,
+    "qwen_visual_trainable": [],
+    "spatial_bins": 256,
+    "trainable_token_ids": [
+      151669,
+      151670,
+      151671,
+      151672,
+      151673,
+      151674,
+      151675,
+      151676,
+      151677,
+      151678,
+      151679,
+      151680,
+      151681,
+      151682,
+      151683,
+      151684,
+      151685,
+      151686,
+      151687,
+      151688,
+      151689,
+      151690,
+      151691,
+      151692,
+      151693,
+      151694,
+      151695,
+      151696,
+      151697,
+      151698,
+      151699,
+      151700,
+      151701,
+      151702,
+      151703,
+      151704,
+      151705,
+      151706,
+      151707,
+      151708,
+      151709,
+      151710,
+      151711,
+      151712,
+      151713,
+      151714,
+      151715,
+      151716,
+      151717,
+      151718,
+      151719,
+      151720,
+      151721,
+      151722,
+      151723,
+      151724,
+      151725,
+      151726,
+      151727,
+      151728,
+      151729,
+      151730,
+      151731,
+      151732,
+      151733,
+      151734,
+      151735,
+      151736,
+      151737,
+      151738,
+      151739,
+      151740,
+      151741,
+      151742,
+      151743,
+      151744,
+      151745,
+      151746,
+      151747,
+      151748,
+      151749,
+      151750,
+      151751,
+      151752,
+      151753,
+      151754,
+      151755,
+      151756,
+      151757,
+      151758,
+      151759,
+      151760,
+      151761,
+      151762,
+      151763,
+      151764,
+      151765,
+      151766,
+      151767,
+      151768,
+      151769,
+      151770,
+      151771,
+      151772,
+      151773,
+      151774,
+      151775,
+      151776,
+      151777,
+      151778,
+      151779,
+      151780,
+      151781,
+      151782,
+      151783,
+      151784,
+      151785,
+      151786,
+      151787,
+      151788,
+      151789,
+      151790,
+      151791,
+      151792,
+      151793,
+      151794,
+      151795,
+      151796,
+      151797,
+      151798,
+      151799,
+      151800,
+      151801,
+      151802,
+      151803,
+      151804,
+      151805,
+      151806,
+      151807,
+      151808,
+      151809,
+      151810,
+      151811,
+      151812,
+      151813,
+      151814,
+      151815,
+      151816,
+      151817,
+      151818,
+      151819,
+      151820,
+      151821,
+      151822,
+      151823,
+      151824,
+      151825,
+      151826,
+      151827,
+      151828,
+      151829,
+      151830,
+      151831,
+      151832,
+      151833,
+      151834,
+      151835,
+      151836,
+      151837,
+      151838,
+      151839,
+      151840,
+      151841,
+      151842,
+      151843,
+      151844,
+      151845,
+      151846,
+      151847,
+      151848,
+      151849,
+      151850,
+      151851,
+      151852,
+      151853,
+      151854,
+      151855,
+      151856,
+      151857,
+      151858,
+      151859,
+      151860,
+      151861,
+      151862,
+      151863,
+      151864,
+      151865,
+      151866,
+      151867,
+      151868,
+      151869,
+      151870,
+      151871,
+      151872,
+      151873,
+      151874,
+      151875,
+      151876,
+      151877,
+      151878,
+      151879,
+      151880,
+      151881,
+      151882,
+      151883,
+      151884,
+      151885,
+      151886,
+      151887,
+      151888,
+      151889,
+      151890,
+      151891,
+      151892,
+      151893,
+      151894,
+      151895,
+      151896,
+      151897,
+      151898,
+      151899,
+      151900,
+      151901,
+      151902,
+      151903,
+      151904,
+      151905,
+      151906,
+      151907,
+      151908,
+      151909,
+      151910,
+      151911,
+      151912,
+      151913,
+      151914,
+      151915,
+      151916,
+      151917,
+      151918,
+      151919,
+      151920,
+      151921,
+      151922,
+      151923,
+      151924,
+      151925,
+      151926
+    ],
+    "sam_frozen": true,
+    "projection_frozen": true
+  },
+  "loss": {
+    "assistant_weight": 1.0,
+    "location_weight": 5.0,
+    "mask_loss": false
+  },
+  "budget": {
+    "steps_per_epoch": 20,
+    "max_steps": 1500,
+    "epochs_equivalent": 75.0,
+    "scheduler_horizon": 1500,
+    "warmup_steps": 20,
+    "note": "Task 6D.1 section 2: the cosine horizon is the real optimizer-step budget, so the terminal factor is reached only at the final step."
+  },
+  "sample_ids": [
+    "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+    "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+    "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+    "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+    "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+    "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+    "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+    "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+    "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+    "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+    "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+    "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+    "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+    "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+    "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+    "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+    "buildsr_train_1_1034_1_smallest_49e665afb182",
+    "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+    "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+    "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6"
+  ],
+  "pair_images": [
+    "1_0",
+    "1_10026",
+    "1_10027",
+    "1_10032",
+    "1_10034",
+    "1_1023",
+    "1_1029",
+    "1_1030",
+    "1_1034",
+    "1_1062"
+  ],
+  "history": [
+    {
+      "step": 50,
+      "losses": {
+        "total": 43.92603302001953,
+        "assistant_ce": 1.4735175371170044,
+        "location_ce": 8.490503311157227,
+        "lm_ce": 1.4735175371170044,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.0,
+      "location_abs_bin_error": 174.25,
+      "lrs": [
+        9.989865272804063e-05,
+        0.00029969595818412183
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 100,
+      "losses": {
+        "total": 25.426687240600586,
+        "assistant_ce": 1.0403668880462646,
+        "location_ce": 4.877264022827148,
+        "lm_ce": 1.0403668880462646,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.0,
+      "location_abs_bin_error": 106.25,
+      "lrs": [
+        9.928079551738543e-05,
+        0.00029784238655215626
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 150,
+      "losses": {
+        "total": 23.460540771484375,
+        "assistant_ce": 0.6778439283370972,
+        "location_ce": 4.556539535522461,
+        "lm_ce": 0.6778439283370972,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.0,
+      "location_abs_bin_error": 103.75,
+      "lrs": [
+        9.810833007044247e-05,
+        0.00029432499021132737
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 200,
+      "losses": {
+        "total": 17.537803649902344,
+        "assistant_ce": 0.6099244356155396,
+        "location_ce": 3.385575771331787,
+        "lm_ce": 0.6099244356155396,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.0,
+      "location_abs_bin_error": 57.5,
+      "lrs": [
+        9.639445136482548e-05,
+        0.0002891833540944764
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 250,
+      "losses": {
+        "total": 9.0258150100708,
+        "assistant_ce": 0.38342350721359253,
+        "location_ce": 1.728478193283081,
+        "lm_ce": 0.38342350721359253,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.25,
+      "location_abs_bin_error": 82.0,
+      "lrs": [
+        9.415844746673047e-05,
+        0.0002824753424001914
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 300,
+      "losses": {
+        "total": 4.243780136108398,
+        "assistant_ce": 0.3671523332595825,
+        "location_ce": 0.77532559633255,
+        "lm_ce": 0.3671523332595825,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.5,
+      "location_abs_bin_error": 4.75,
+      "lrs": [
+        9.142548246219212e-05,
+        0.0002742764473865763
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 350,
+      "losses": {
+        "total": 1.2017943859100342,
+        "assistant_ce": 0.11976625770330429,
+        "location_ce": 0.21640563011169434,
+        "lm_ce": 0.11976625770330429,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 1.0,
+      "location_abs_bin_error": 0.0,
+      "lrs": [
+        8.822631325935463e-05,
+        0.00026467893977806387
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 400,
+      "losses": {
+        "total": 0.9273021221160889,
+        "assistant_ce": 0.023453325033187866,
+        "location_ce": 0.18076975643634796,
+        "lm_ce": 0.023453325033187866,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 0.75,
+      "location_abs_bin_error": 50.0,
+      "lrs": [
+        8.459694344887732e-05,
+        0.00025379083034663194
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 450,
+      "losses": {
+        "total": 0.00843199621886015,
+        "assistant_ce": 0.0005492165801115334,
+        "location_ce": 0.0015765558928251266,
+        "lm_ce": 0.0005492165801115334,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 1.0,
+      "location_abs_bin_error": 0.0,
+      "lrs": [
+        8.057821811794458e-05,
+        0.0002417346543538337
+      ],
+      "vram_gib": 7.508711338043213
+    },
+    {
+      "step": 500,
+      "losses": {
+        "total": 0.0040778787806630135,
+        "assistant_ce": 0.0015299881342798471,
+        "location_ce": 0.0005095781525596976,
+        "lm_ce": 0.0015299881342798471,
+        "mask_bce": 0.0,
+        "mask_dice": 0.0,
+        "ground": 0.0
+      },
+      "location_token_accuracy": 1.0,
+      "location_abs_bin_error": 0.0,
+      "lrs": [
+        7.621536417786159e-05,
+        0.00022864609253358474
+      ],
+      "vram_gib": 7.508711338043213
+    }
+  ],
+  "evaluations": [
+    {
+      "step": 250,
+      "metrics": {
+        "count": 20,
+        "structural_valid": 0,
+        "structural_valid_rate": 0.0,
+        "exact_four_token_sequence": 0,
+        "exact_four_token_accuracy": 0.0,
+        "per_coordinate_token_accuracy": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_absolute_bin_error": null,
+        "normalized_coordinate_error": null,
+        "mean_predicted_box_iou": null,
+        "mean_predicted_box_iou_valid_only": null,
+        "center_inside_rate": 0.0,
+        "emit_box_token_count": {
+          "one": 0,
+          "zero": 20,
+          "more": 0
+        },
+        "seg_count_histogram": {
+          "0": 17,
+          "1": 2,
+          "2": 1
+        },
+        "by_level": {
+          "1": {
+            "count": 10,
+            "structural_valid": 0,
+            "mean_box_iou": null
+          },
+          "2": {
+            "count": 10,
+            "structural_valid": 0,
+            "mean_box_iou": null
+          }
+        },
+        "by_query_family": {
+          "direction": {
+            "count": 7,
+            "structural_valid": 0,
+            "mean_box_iou": null
+          },
+          "extreme": {
+            "count": 6,
+            "structural_valid": 0,
+            "mean_box_iou": null
+          },
+          "nearest": {
+            "count": 3,
+            "structural_valid": 0,
+            "mean_box_iou": null
+          },
+          "size": {
+            "count": 4,
+            "structural_valid": 0,
+            "mean_box_iou": null
+          }
+        }
+      },
+      "paired": {
+        "paired_total": 10,
+        "geometry_paired_pass": 0,
+        "both_structural_valid": 0,
+        "mean_same_image_predicted_box_l1": null,
+        "pairs_with_identical_predicted_box": 0,
+        "rows": [
+          {
+            "image_id": "1_0",
+            "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+            "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_10026",
+            "a": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+            "b": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_10027",
+            "a": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+            "b": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_10032",
+            "a": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+            "b": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_10034",
+            "a": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+            "b": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_1023",
+            "a": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+            "b": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_1029",
+            "a": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+            "b": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_1030",
+            "a": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+            "b": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_1034",
+            "a": "buildsr_train_1_1034_1_smallest_49e665afb182",
+            "b": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          },
+          {
+            "image_id": "1_1062",
+            "a": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+            "b": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+            "both_structural_valid": false,
+            "a_box_iou": null,
+            "b_box_iou": null,
+            "a_center_inside": null,
+            "b_center_inside": null,
+            "same_image_predicted_box_l1": null,
+            "same_image_predicted_box_identical": null,
+            "geometry_passed": false
+          }
+        ]
+      },
+      "gate": {
+        "kind": "e0",
+        "checks": {
+          "structural_valid_ge": false,
+          "exact_four_token_ge": false,
+          "mean_box_iou_ge": false
+        },
+        "passed": false,
+        "gate": {
+          "structural_valid_min": 19,
+          "exact_four_token_min": 18,
+          "mean_box_iou_min": 0.7
+        }
+      },
+      "records": [
+        {
+          "sample_id": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+          "image_id": "1_0",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "bottommost",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            221,
+            101,
+            253,
+            128
+          ],
+          "gt_box": [
+            0.8671875,
+            0.396484375,
+            0.990234375,
+            0.501953125
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中最下方的建筑区域，将其作为参考区域。<loc_221><loc_221><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128>",
+          "prompt_length": 274
+        },
+        {
+          "sample_id": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+          "image_id": "1_0",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_above",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 37,
+          "seg_count": 1,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            237,
+            52,
+            255,
+            85
+          ],
+          "gt_box": [
+            0.9296875,
+            0.20703125,
+            1.0,
+            0.33203125
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 79,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域上方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_237><loc_237><loc_052><loc_255><loc_255><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225>[SEG]<|im_end|>",
+          "prompt_length": 278
+        },
+        {
+          "sample_id": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+          "image_id": "1_10026",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "rightmost",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            221,
+            219,
+            234,
+            226
+          ],
+          "gt_box": [
+            0.8671875,
+            0.859375,
+            0.916015625,
+            0.884765625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中最右侧的建筑区域，将其作为参考区域。<loc_221><loc_221><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226><loc_226>",
+          "prompt_length": 278
+        },
+        {
+          "sample_id": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+          "image_id": "1_10026",
+          "level": 2,
+          "query_family": "nearest",
+          "query_type": "largest_to_nearest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 62,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            209,
+            219,
+            221,
+            248
+          ],
+          "gt_box": [
+            0.822265625,
+            0.859375,
+            0.86328125,
+            0.970703125
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。<loc_221><loc_219><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248>",
+          "prompt_length": 281
+        },
+        {
+          "sample_id": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+          "image_id": "1_10027",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "smallest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 81,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            188,
+            134,
+            231,
+            158
+          ],
+          "gt_box": [
+            0.73828125,
+            0.52734375,
+            0.90234375,
+            0.6171875
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。<loc_188><loc_134><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158>",
+          "prompt_length": 277
+        },
+        {
+          "sample_id": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+          "image_id": "1_10027",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "smallest_to_below",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 55,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            215,
+            189,
+            255,
+            225
+          ],
+          "gt_box": [
+            0.84375,
+            0.744140625,
+            1.0,
+            0.87890625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_215><loc_215><loc_189><loc_189><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225><loc_225>",
+          "prompt_length": 279
+        },
+        {
+          "sample_id": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+          "image_id": "1_10032",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "largest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            210,
+            102,
+            248,
+            144
+          ],
+          "gt_box": [
+            0.826171875,
+            0.40234375,
+            0.96875,
+            0.5625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。<loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_102><loc_248><loc_102><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+          "image_id": "1_10032",
+          "level": 2,
+          "query_family": "nearest",
+          "query_type": "largest_to_nearest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 62,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            206,
+            101,
+            219,
+            115
+          ],
+          "gt_box": [
+            0.80859375,
+            0.396484375,
+            0.85546875,
+            0.447265625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。<loc_192><loc_174><loc_203><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248><loc_248>",
+          "prompt_length": 285
+        },
+        {
+          "sample_id": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+          "image_id": "1_10034",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "largest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            172,
+            43,
+            194,
+            86
+          ],
+          "gt_box": [
+            0.67578125,
+            0.171875,
+            0.759765625,
+            0.3359375
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。<loc_172><loc_172><loc_043><loc_043><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086><loc_086>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+          "image_id": "1_10034",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_below",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 56,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            165,
+            102,
+            204,
+            122
+          ],
+          "gt_box": [
+            0.6484375,
+            0.400390625,
+            0.798828125,
+            0.474609375
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_018><loc_165><loc_204><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+          "image_id": "1_1023",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "topmost",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            103,
+            28,
+            174,
+            58
+          ],
+          "gt_box": [
+            0.40625,
+            0.111328125,
+            0.6796875,
+            0.224609375
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。<loc_013><loc_013><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_128><loc_078><loc_078><loc_078><loc_078><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+          "image_id": "1_1023",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_below",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 56,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            165,
+            79,
+            175,
+            96
+          ],
+          "gt_box": [
+            0.6484375,
+            0.310546875,
+            0.685546875,
+            0.373046875
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_018><loc_165><loc_175><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+          "image_id": "1_1029",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "bottommost",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            188,
+            95,
+            201,
+            129
+          ],
+          "gt_box": [
+            0.740234375,
+            0.373046875,
+            0.78515625,
+            0.505859375
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中最下方的建筑区域，将其作为参考区域。<loc_221><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128>",
+          "prompt_length": 274
+        },
+        {
+          "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+          "image_id": "1_1029",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_left_of",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 35,
+          "seg_count": 1,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            18,
+            11,
+            51,
+            36
+          ],
+          "gt_box": [
+            0.072265625,
+            0.044921875,
+            0.19921875,
+            0.140625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 77,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_018><loc_018><loc_074><loc_074><loc_074><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122><loc_122>[SEG]<|im_end|>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+          "image_id": "1_1030",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "topmost",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            177,
+            10,
+            255,
+            50
+          ],
+          "gt_box": [
+            0.6953125,
+            0.041015625,
+            1.0,
+            0.1953125
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。<loc_013><loc_013><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128><loc_128>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+          "image_id": "1_1030",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "smallest_to_left_of",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 54,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            18,
+            59,
+            61,
+            74
+          ],
+          "gt_box": [
+            0.07421875,
+            0.234375,
+            0.23828125,
+            0.2890625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_018><loc_018><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074><loc_074>博彩<loc_074><loc_074><loc_074>",
+          "prompt_length": 278
+        },
+        {
+          "sample_id": "buildsr_train_1_1034_1_smallest_49e665afb182",
+          "image_id": "1_1034",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "smallest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 81,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            21,
+            88,
+            46,
+            108
+          ],
+          "gt_box": [
+            0.083984375,
+            0.345703125,
+            0.177734375,
+            0.419921875
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。<loc_021><loc_088><loc_108><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158><loc_158>",
+          "prompt_length": 275
+        },
+        {
+          "sample_id": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+          "image_id": "1_1034",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_above",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 22,
+          "seg_count": 2,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            36,
+            5,
+            58,
+            33
+          ],
+          "gt_box": [
+            0.14453125,
+            0.021484375,
+            0.224609375,
+            0.12890625
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 65,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域上方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。<loc_018><loc_036><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058><loc_058>[SEG][SEG]<|im_end|>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+          "image_id": "1_1062",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "topmost",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 82,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            63,
+            13,
+            78,
+            31
+          ],
+          "gt_box": [
+            0.248046875,
+            0.0546875,
+            0.3046875,
+            0.12109375
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。<loc_013><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078><loc_078>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+          "image_id": "1_1062",
+          "level": 2,
+          "query_family": "nearest",
+          "query_type": "largest_to_nearest",
+          "structural_valid": false,
+          "exact_four_token_sequence": false,
+          "failure": "expected exactly one [BOX], found 0",
+          "box_token_count": 0,
+          "loc_token_count": 62,
+          "seg_count": 0,
+          "seg_after_box": false,
+          "predicted_codes": null,
+          "predicted_box": null,
+          "gt_codes": [
+            192,
+            174,
+            203,
+            198
+          ],
+          "gt_box": [
+            0.75390625,
+            0.685546875,
+            0.79296875,
+            0.7734375
+          ],
+          "box_iou": null,
+          "center_inside": null,
+          "code_error": null,
+          "generated_token_count": 96,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。<loc_192><loc_174><loc_203><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198><loc_198>",
+          "prompt_length": 285
+        }
+      ]
+    },
+    {
+      "step": 500,
+      "metrics": {
+        "count": 20,
+        "structural_valid": 20,
+        "structural_valid_rate": 1.0,
+        "exact_four_token_sequence": 20,
+        "exact_four_token_accuracy": 1.0,
+        "per_coordinate_token_accuracy": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_absolute_bin_error": 0.0,
+        "normalized_coordinate_error": 0.0,
+        "mean_predicted_box_iou": 0.9166398994940115,
+        "mean_predicted_box_iou_valid_only": 0.9166398994940115,
+        "center_inside_rate": 1.0,
+        "emit_box_token_count": {
+          "one": 20,
+          "zero": 0,
+          "more": 0
+        },
+        "seg_count_histogram": {
+          "1": 20
+        },
+        "by_level": {
+          "1": {
+            "count": 10,
+            "structural_valid": 10,
+            "mean_box_iou": 0.9282662787778978
+          },
+          "2": {
+            "count": 10,
+            "structural_valid": 10,
+            "mean_box_iou": 0.9050135202101248
+          }
+        },
+        "by_query_family": {
+          "direction": {
+            "count": 7,
+            "structural_valid": 7,
+            "mean_box_iou": 0.9286913579270113
+          },
+          "extreme": {
+            "count": 6,
+            "structural_valid": 6,
+            "mean_box_iou": 0.9285963000975531
+          },
+          "nearest": {
+            "count": 3,
+            "structural_valid": 3,
+            "mean_box_iou": 0.8497652322040565
+          },
+          "size": {
+            "count": 4,
+            "structural_valid": 4,
+            "mean_box_iou": 0.9277712467984148
+          }
+        }
+      },
+      "paired": {
+        "paired_total": 10,
+        "geometry_paired_pass": 10,
+        "both_structural_valid": 10,
+        "mean_same_image_predicted_box_l1": 0.23009803921568625,
+        "pairs_with_identical_predicted_box": 0,
+        "rows": [
+          {
+            "image_id": "1_0",
+            "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+            "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9766995906829832,
+            "b_box_iou": 0.9621360085227277,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.10784313725490195,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_10026",
+            "a": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+            "b": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+            "both_structural_valid": true,
+            "a_box_iou": 0.8858953203473781,
+            "b_box_iou": 0.8532088378380073,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.04607843137254902,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_10027",
+            "a": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+            "b": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9287479311920879,
+            "b_box_iou": 0.9508609771728519,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.16960784313725488,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_10032",
+            "a": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+            "b": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9303455065963859,
+            "b_box_iou": 0.850459507533483,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.061764705882352944,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_10034",
+            "a": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+            "b": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9471026333895606,
+            "b_box_iou": 0.9305081000694861,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.10980392156862748,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_1023",
+            "a": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+            "b": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9456204696440363,
+            "b_box_iou": 0.8871459960937508,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.14901960784313725,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_1029",
+            "a": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+            "b": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+            "both_structural_valid": true,
+            "a_box_iou": 0.8777178250826336,
+            "b_box_iou": 0.9576259959827769,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.4872549019607843,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_1030",
+            "a": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+            "b": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9798002243041991,
+            "b_box_iou": 0.904519724291424,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.4176470588235294,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_1034",
+            "a": "buildsr_train_1_1034_1_smallest_49e665afb182",
+            "b": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9048889160156249,
+            "b_box_iou": 0.9080427033560615,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.18137254901960784,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          },
+          {
+            "image_id": "1_1062",
+            "a": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+            "b": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+            "both_structural_valid": true,
+            "a_box_iou": 0.9058443705240883,
+            "b_box_iou": 0.8456273512406792,
+            "a_center_inside": true,
+            "b_center_inside": true,
+            "same_image_predicted_box_l1": 0.5705882352941176,
+            "same_image_predicted_box_identical": false,
+            "geometry_passed": true
+          }
+        ]
+      },
+      "gate": {
+        "kind": "e0",
+        "checks": {
+          "structural_valid_ge": true,
+          "exact_four_token_ge": true,
+          "mean_box_iou_ge": true
+        },
+        "passed": true,
+        "gate": {
+          "structural_valid_min": 19,
+          "exact_four_token_min": 18,
+          "mean_box_iou_min": 0.7
+        }
+      },
+      "records": [
+        {
+          "sample_id": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+          "image_id": "1_0",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "bottommost",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            221,
+            101,
+            253,
+            128
+          ],
+          "predicted_box": [
+            0.8666666666666667,
+            0.396078431372549,
+            0.9921568627450981,
+            0.5019607843137255
+          ],
+          "gt_codes": [
+            221,
+            101,
+            253,
+            128
+          ],
+          "gt_box": [
+            0.8671875,
+            0.396484375,
+            0.990234375,
+            0.501953125
+          ],
+          "box_iou": 0.9766995906829832,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[BOX]<loc_221><loc_101><loc_253><loc_128>[SEG]<|im_end|>",
+          "prompt_length": 274
+        },
+        {
+          "sample_id": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+          "image_id": "1_0",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_above",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            237,
+            52,
+            255,
+            85
+          ],
+          "predicted_box": [
+            0.9294117647058824,
+            0.20392156862745098,
+            1.0,
+            0.3333333333333333
+          ],
+          "gt_codes": [
+            237,
+            52,
+            255,
+            85
+          ],
+          "gt_box": [
+            0.9296875,
+            0.20703125,
+            1.0,
+            0.33203125
+          ],
+          "box_iou": 0.9621360085227277,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 47,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域上方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_237><loc_052><loc_255><loc_085>[SEG]<|im_end|>",
+          "prompt_length": 278
+        },
+        {
+          "sample_id": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+          "image_id": "1_10026",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "rightmost",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            221,
+            219,
+            234,
+            226
+          ],
+          "predicted_box": [
+            0.8666666666666667,
+            0.8588235294117647,
+            0.9176470588235294,
+            0.8862745098039215
+          ],
+          "gt_codes": [
+            221,
+            219,
+            234,
+            226
+          ],
+          "gt_box": [
+            0.8671875,
+            0.859375,
+            0.916015625,
+            0.884765625
+          ],
+          "box_iou": 0.8858953203473781,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中最右侧的建筑区域，将其作为参考区域。[BOX]<loc_221><loc_219><loc_234><loc_226>[SEG]<|im_end|>",
+          "prompt_length": 278
+        },
+        {
+          "sample_id": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+          "image_id": "1_10026",
+          "level": 2,
+          "query_family": "nearest",
+          "query_type": "largest_to_nearest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            209,
+            219,
+            221,
+            248
+          ],
+          "predicted_box": [
+            0.8196078431372549,
+            0.8588235294117647,
+            0.8666666666666667,
+            0.9725490196078431
+          ],
+          "gt_codes": [
+            209,
+            219,
+            221,
+            248
+          ],
+          "gt_box": [
+            0.822265625,
+            0.859375,
+            0.86328125,
+            0.970703125
+          ],
+          "box_iou": 0.8532088378380073,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 40,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的面积，选择距离最近的区域作为目标。[BOX]<loc_209><loc_219><loc_221><loc_248>[SEG]<|im_end|>",
+          "prompt_length": 281
+        },
+        {
+          "sample_id": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+          "image_id": "1_10027",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "smallest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            188,
+            134,
+            231,
+            158
+          ],
+          "predicted_box": [
+            0.7372549019607844,
+            0.5254901960784314,
+            0.9058823529411765,
+            0.6196078431372549
+          ],
+          "gt_codes": [
+            188,
+            134,
+            231,
+            158
+          ],
+          "gt_box": [
+            0.73828125,
+            0.52734375,
+            0.90234375,
+            0.6171875
+          ],
+          "box_iou": 0.9287479311920879,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考。[BOX]<loc_188><loc_134><loc_231><loc_158>[SEG]<|im_end|>",
+          "prompt_length": 277
+        },
+        {
+          "sample_id": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+          "image_id": "1_10027",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "smallest_to_below",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            215,
+            189,
+            255,
+            225
+          ],
+          "predicted_box": [
+            0.8431372549019608,
+            0.7411764705882353,
+            1.0,
+            0.8823529411764706
+          ],
+          "gt_codes": [
+            215,
+            189,
+            255,
+            225
+          ],
+          "gt_box": [
+            0.84375,
+            0.744140625,
+            1.0,
+            0.87890625
+          ],
+          "box_iou": 0.9508609771728519,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 48,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_215><loc_189><loc_255><loc_225>[SEG]<|im_end|>",
+          "prompt_length": 279
+        },
+        {
+          "sample_id": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+          "image_id": "1_10032",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "largest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            210,
+            102,
+            248,
+            144
+          ],
+          "predicted_box": [
+            0.8235294117647058,
+            0.4,
+            0.9725490196078431,
+            0.5647058823529412
+          ],
+          "gt_codes": [
+            210,
+            102,
+            248,
+            144
+          ],
+          "gt_box": [
+            0.826171875,
+            0.40234375,
+            0.96875,
+            0.5625
+          ],
+          "box_iou": 0.9303455065963859,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[BOX]<loc_210><loc_102><loc_248><loc_144>[SEG]<|im_end|>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+          "image_id": "1_10032",
+          "level": 2,
+          "query_family": "nearest",
+          "query_type": "largest_to_nearest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            206,
+            101,
+            219,
+            115
+          ],
+          "predicted_box": [
+            0.807843137254902,
+            0.396078431372549,
+            0.8588235294117647,
+            0.45098039215686275
+          ],
+          "gt_codes": [
+            206,
+            101,
+            219,
+            115
+          ],
+          "gt_box": [
+            0.80859375,
+            0.396484375,
+            0.85546875,
+            0.447265625
+          ],
+          "box_iou": 0.850459507533483,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 41,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。[BOX]<loc_206><loc_101><loc_219><loc_115>[SEG]<|im_end|>",
+          "prompt_length": 285
+        },
+        {
+          "sample_id": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+          "image_id": "1_10034",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "largest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            172,
+            43,
+            194,
+            86
+          ],
+          "predicted_box": [
+            0.6745098039215687,
+            0.16862745098039217,
+            0.7607843137254902,
+            0.33725490196078434
+          ],
+          "gt_codes": [
+            172,
+            43,
+            194,
+            86
+          ],
+          "gt_box": [
+            0.67578125,
+            0.171875,
+            0.759765625,
+            0.3359375
+          ],
+          "box_iou": 0.9471026333895606,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[BOX]<loc_172><loc_043><loc_194><loc_086>[SEG]<|im_end|>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+          "image_id": "1_10034",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_below",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            165,
+            102,
+            204,
+            122
+          ],
+          "predicted_box": [
+            0.6470588235294118,
+            0.4,
+            0.8,
+            0.47843137254901963
+          ],
+          "gt_codes": [
+            165,
+            102,
+            204,
+            122
+          ],
+          "gt_box": [
+            0.6484375,
+            0.400390625,
+            0.798828125,
+            0.474609375
+          ],
+          "box_iou": 0.9305081000694861,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 47,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_165><loc_102><loc_204><loc_122>[SEG]<|im_end|>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+          "image_id": "1_1023",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "topmost",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            103,
+            28,
+            174,
+            58
+          ],
+          "predicted_box": [
+            0.403921568627451,
+            0.10980392156862745,
+            0.6823529411764706,
+            0.22745098039215686
+          ],
+          "gt_codes": [
+            103,
+            28,
+            174,
+            58
+          ],
+          "gt_box": [
+            0.40625,
+            0.111328125,
+            0.6796875,
+            0.224609375
+          ],
+          "box_iou": 0.9456204696440363,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[BOX]<loc_103><loc_028><loc_174><loc_058>[SEG]<|im_end|>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+          "image_id": "1_1023",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_below",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            165,
+            79,
+            175,
+            96
+          ],
+          "predicted_box": [
+            0.6470588235294118,
+            0.30980392156862746,
+            0.6862745098039216,
+            0.3764705882352941
+          ],
+          "gt_codes": [
+            165,
+            79,
+            175,
+            96
+          ],
+          "gt_box": [
+            0.6484375,
+            0.310546875,
+            0.685546875,
+            0.373046875
+          ],
+          "box_iou": 0.8871459960937508,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 47,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_165><loc_079><loc_175><loc_096>[SEG]<|im_end|>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+          "image_id": "1_1029",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "bottommost",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            188,
+            95,
+            201,
+            129
+          ],
+          "predicted_box": [
+            0.7372549019607844,
+            0.37254901960784315,
+            0.788235294117647,
+            0.5058823529411764
+          ],
+          "gt_codes": [
+            188,
+            95,
+            201,
+            129
+          ],
+          "gt_box": [
+            0.740234375,
+            0.373046875,
+            0.78515625,
+            0.505859375
+          ],
+          "box_iou": 0.8777178250826336,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[BOX]<loc_188><loc_095><loc_201><loc_129>[SEG]<|im_end|>",
+          "prompt_length": 274
+        },
+        {
+          "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+          "image_id": "1_1029",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_left_of",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            18,
+            11,
+            51,
+            36
+          ],
+          "predicted_box": [
+            0.07058823529411765,
+            0.043137254901960784,
+            0.2,
+            0.1411764705882353
+          ],
+          "gt_codes": [
+            18,
+            11,
+            51,
+            36
+          ],
+          "gt_box": [
+            0.072265625,
+            0.044921875,
+            0.19921875,
+            0.140625
+          ],
+          "box_iou": 0.9576259959827769,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 49,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于面积最大的建筑区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_018><loc_011><loc_051><loc_036>[SEG]<|im_end|>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+          "image_id": "1_1030",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "topmost",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            177,
+            10,
+            255,
+            50
+          ],
+          "predicted_box": [
+            0.6941176470588235,
+            0.0392156862745098,
+            1.0,
+            0.19607843137254902
+          ],
+          "gt_codes": [
+            177,
+            10,
+            255,
+            50
+          ],
+          "gt_box": [
+            0.6953125,
+            0.041015625,
+            1.0,
+            0.1953125
+          ],
+          "box_iou": 0.9798002243041991,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[BOX]<loc_177><loc_010><loc_255><loc_050>[SEG]<|im_end|>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+          "image_id": "1_1030",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "smallest_to_left_of",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            18,
+            59,
+            61,
+            74
+          ],
+          "predicted_box": [
+            0.07058823529411765,
+            0.23137254901960785,
+            0.23921568627450981,
+            0.2901960784313726
+          ],
+          "gt_codes": [
+            18,
+            59,
+            61,
+            74
+          ],
+          "gt_box": [
+            0.07421875,
+            0.234375,
+            0.23828125,
+            0.2890625
+          ],
+          "box_iou": 0.904519724291424,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 48,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_018><loc_059><loc_061><loc_074>[SEG]<|im_end|>",
+          "prompt_length": 278
+        },
+        {
+          "sample_id": "buildsr_train_1_1034_1_smallest_49e665afb182",
+          "image_id": "1_1034",
+          "level": 1,
+          "query_family": "size",
+          "query_type": "smallest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            21,
+            88,
+            46,
+            108
+          ],
+          "predicted_box": [
+            0.08235294117647059,
+            0.34509803921568627,
+            0.1803921568627451,
+            0.4235294117647059
+          ],
+          "gt_codes": [
+            21,
+            88,
+            46,
+            108
+          ],
+          "gt_box": [
+            0.083984375,
+            0.345703125,
+            0.177734375,
+            0.419921875
+          ],
+          "box_iou": 0.9048889160156249,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 22,
+          "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。[BOX]<loc_021><loc_088><loc_046><loc_108>[SEG]<|im_end|>",
+          "prompt_length": 275
+        },
+        {
+          "sample_id": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+          "image_id": "1_1034",
+          "level": 2,
+          "query_family": "direction",
+          "query_type": "largest_to_above",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            36,
+            5,
+            58,
+            33
+          ],
+          "predicted_box": [
+            0.1411764705882353,
+            0.0196078431372549,
+            0.22745098039215686,
+            0.12941176470588237
+          ],
+          "gt_codes": [
+            36,
+            5,
+            58,
+            33
+          ],
+          "gt_box": [
+            0.14453125,
+            0.021484375,
+            0.224609375,
+            0.12890625
+          ],
+          "box_iou": 0.9080427033560615,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 47,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域上方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_036><loc_005><loc_058><loc_033>[SEG]<|im_end|>",
+          "prompt_length": 280
+        },
+        {
+          "sample_id": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+          "image_id": "1_1062",
+          "level": 1,
+          "query_family": "extreme",
+          "query_type": "topmost",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            63,
+            13,
+            78,
+            31
+          ],
+          "predicted_box": [
+            0.24705882352941178,
+            0.050980392156862744,
+            0.3058823529411765,
+            0.12156862745098039
+          ],
+          "gt_codes": [
+            63,
+            13,
+            78,
+            31
+          ],
+          "gt_box": [
+            0.248046875,
+            0.0546875,
+            0.3046875,
+            0.12109375
+          ],
+          "box_iou": 0.9058443705240883,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 21,
+          "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[BOX]<loc_063><loc_013><loc_078><loc_031>[SEG]<|im_end|>",
+          "prompt_length": 276
+        },
+        {
+          "sample_id": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+          "image_id": "1_1062",
+          "level": 2,
+          "query_family": "nearest",
+          "query_type": "largest_to_nearest",
+          "structural_valid": true,
+          "exact_four_token_sequence": true,
+          "failure": null,
+          "box_token_count": 1,
+          "loc_token_count": 4,
+          "seg_count": 1,
+          "seg_after_box": true,
+          "predicted_codes": [
+            192,
+            174,
+            203,
+            198
+          ],
+          "predicted_box": [
+            0.7529411764705882,
+            0.6823529411764706,
+            0.796078431372549,
+            0.7764705882352941
+          ],
+          "gt_codes": [
+            192,
+            174,
+            203,
+            198
+          ],
+          "gt_box": [
+            0.75390625,
+            0.685546875,
+            0.79296875,
+            0.7734375
+          ],
+          "box_iou": 0.8456273512406792,
+          "center_inside": true,
+          "code_error": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "generated_token_count": 41,
+          "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。[BOX]<loc_192><loc_174><loc_203><loc_198>[SEG]<|im_end|>",
+          "prompt_length": 285
+        }
+      ]
+    }
+  ],
+  "final": {
+    "step": 500,
+    "metrics": {
+      "count": 20,
+      "structural_valid": 20,
+      "structural_valid_rate": 1.0,
+      "exact_four_token_sequence": 20,
+      "exact_four_token_accuracy": 1.0,
+      "per_coordinate_token_accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_absolute_bin_error": 0.0,
+      "normalized_coordinate_error": 0.0,
+      "mean_predicted_box_iou": 0.9166398994940115,
+      "mean_predicted_box_iou_valid_only": 0.9166398994940115,
+      "center_inside_rate": 1.0,
+      "emit_box_token_count": {
+        "one": 20,
+        "zero": 0,
+        "more": 0
+      },
+      "seg_count_histogram": {
+        "1": 20
+      },
+      "by_level": {
+        "1": {
+          "count": 10,
+          "structural_valid": 10,
+          "mean_box_iou": 0.9282662787778978
+        },
+        "2": {
+          "count": 10,
+          "structural_valid": 10,
+          "mean_box_iou": 0.9050135202101248
+        }
+      },
+      "by_query_family": {
+        "direction": {
+          "count": 7,
+          "structural_valid": 7,
+          "mean_box_iou": 0.9286913579270113
+        },
+        "extreme": {
+          "count": 6,
+          "structural_valid": 6,
+          "mean_box_iou": 0.9285963000975531
+        },
+        "nearest": {
+          "count": 3,
+          "structural_valid": 3,
+          "mean_box_iou": 0.8497652322040565
+        },
+        "size": {
+          "count": 4,
+          "structural_valid": 4,
+          "mean_box_iou": 0.9277712467984148
+        }
+      }
+    },
+    "paired": {
+      "paired_total": 10,
+      "geometry_paired_pass": 10,
+      "both_structural_valid": 10,
+      "mean_same_image_predicted_box_l1": 0.23009803921568625,
+      "pairs_with_identical_predicted_box": 0,
+      "rows": [
+        {
+          "image_id": "1_0",
+          "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+          "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9766995906829832,
+          "b_box_iou": 0.9621360085227277,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.10784313725490195,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_10026",
+          "a": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+          "b": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+          "both_structural_valid": true,
+          "a_box_iou": 0.8858953203473781,
+          "b_box_iou": 0.8532088378380073,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.04607843137254902,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_10027",
+          "a": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+          "b": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9287479311920879,
+          "b_box_iou": 0.9508609771728519,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.16960784313725488,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_10032",
+          "a": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+          "b": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9303455065963859,
+          "b_box_iou": 0.850459507533483,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.061764705882352944,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_10034",
+          "a": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+          "b": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9471026333895606,
+          "b_box_iou": 0.9305081000694861,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.10980392156862748,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_1023",
+          "a": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+          "b": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9456204696440363,
+          "b_box_iou": 0.8871459960937508,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.14901960784313725,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_1029",
+          "a": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+          "b": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+          "both_structural_valid": true,
+          "a_box_iou": 0.8777178250826336,
+          "b_box_iou": 0.9576259959827769,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.4872549019607843,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_1030",
+          "a": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+          "b": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9798002243041991,
+          "b_box_iou": 0.904519724291424,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.4176470588235294,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_1034",
+          "a": "buildsr_train_1_1034_1_smallest_49e665afb182",
+          "b": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9048889160156249,
+          "b_box_iou": 0.9080427033560615,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.18137254901960784,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        },
+        {
+          "image_id": "1_1062",
+          "a": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+          "b": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+          "both_structural_valid": true,
+          "a_box_iou": 0.9058443705240883,
+          "b_box_iou": 0.8456273512406792,
+          "a_center_inside": true,
+          "b_center_inside": true,
+          "same_image_predicted_box_l1": 0.5705882352941176,
+          "same_image_predicted_box_identical": false,
+          "geometry_passed": true
+        }
+      ]
+    },
+    "gate": {
+      "kind": "e0",
+      "checks": {
+        "structural_valid_ge": true,
+        "exact_four_token_ge": true,
+        "mean_box_iou_ge": true
+      },
+      "passed": true,
+      "gate": {
+        "structural_valid_min": 19,
+        "exact_four_token_min": 18,
+        "mean_box_iou_min": 0.7
+      }
+    },
+    "records": [
+      {
+        "sample_id": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+        "image_id": "1_0",
+        "level": 1,
+        "query_family": "extreme",
+        "query_type": "bottommost",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          221,
+          101,
+          253,
+          128
+        ],
+        "predicted_box": [
+          0.8666666666666667,
+          0.396078431372549,
+          0.9921568627450981,
+          0.5019607843137255
+        ],
+        "gt_codes": [
+          221,
+          101,
+          253,
+          128
+        ],
+        "gt_box": [
+          0.8671875,
+          0.396484375,
+          0.990234375,
+          0.501953125
+        ],
+        "box_iou": 0.9766995906829832,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[BOX]<loc_221><loc_101><loc_253><loc_128>[SEG]<|im_end|>",
+        "prompt_length": 274
+      },
+      {
+        "sample_id": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+        "image_id": "1_0",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "largest_to_above",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          237,
+          52,
+          255,
+          85
+        ],
+        "predicted_box": [
+          0.9294117647058824,
+          0.20392156862745098,
+          1.0,
+          0.3333333333333333
+        ],
+        "gt_codes": [
+          237,
+          52,
+          255,
+          85
+        ],
+        "gt_box": [
+          0.9296875,
+          0.20703125,
+          1.0,
+          0.33203125
+        ],
+        "box_iou": 0.9621360085227277,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 47,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域上方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_237><loc_052><loc_255><loc_085>[SEG]<|im_end|>",
+        "prompt_length": 278
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_1_rightmost_fc1c73d62181",
+        "image_id": "1_10026",
+        "level": 1,
+        "query_family": "extreme",
+        "query_type": "rightmost",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          221,
+          219,
+          234,
+          226
+        ],
+        "predicted_box": [
+          0.8666666666666667,
+          0.8588235294117647,
+          0.9176470588235294,
+          0.8862745098039215
+        ],
+        "gt_codes": [
+          221,
+          219,
+          234,
+          226
+        ],
+        "gt_box": [
+          0.8671875,
+          0.859375,
+          0.916015625,
+          0.884765625
+        ],
+        "box_iou": 0.8858953203473781,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中最右侧的建筑区域，将其作为参考区域。[BOX]<loc_221><loc_219><loc_234><loc_226>[SEG]<|im_end|>",
+        "prompt_length": 278
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_2_largest_to_nearest_8d2ec193f1a6",
+        "image_id": "1_10026",
+        "level": 2,
+        "query_family": "nearest",
+        "query_type": "largest_to_nearest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          209,
+          219,
+          221,
+          248
+        ],
+        "predicted_box": [
+          0.8196078431372549,
+          0.8588235294117647,
+          0.8666666666666667,
+          0.9725490196078431
+        ],
+        "gt_codes": [
+          209,
+          219,
+          221,
+          248
+        ],
+        "gt_box": [
+          0.822265625,
+          0.859375,
+          0.86328125,
+          0.970703125
+        ],
+        "box_iou": 0.8532088378380073,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 40,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的面积，选择距离最近的区域作为目标。[BOX]<loc_209><loc_219><loc_221><loc_248>[SEG]<|im_end|>",
+        "prompt_length": 281
+      },
+      {
+        "sample_id": "buildsr_train_1_10027_1_smallest_90b0f89c7cca",
+        "image_id": "1_10027",
+        "level": 1,
+        "query_family": "size",
+        "query_type": "smallest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          188,
+          134,
+          231,
+          158
+        ],
+        "predicted_box": [
+          0.7372549019607844,
+          0.5254901960784314,
+          0.9058823529411765,
+          0.6196078431372549
+        ],
+        "gt_codes": [
+          188,
+          134,
+          231,
+          158
+        ],
+        "gt_box": [
+          0.73828125,
+          0.52734375,
+          0.90234375,
+          0.6171875
+        ],
+        "box_iou": 0.9287479311920879,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考。[BOX]<loc_188><loc_134><loc_231><loc_158>[SEG]<|im_end|>",
+        "prompt_length": 277
+      },
+      {
+        "sample_id": "buildsr_train_1_10027_2_smallest_to_below_f6ca76928905",
+        "image_id": "1_10027",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "smallest_to_below",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          215,
+          189,
+          255,
+          225
+        ],
+        "predicted_box": [
+          0.8431372549019608,
+          0.7411764705882353,
+          1.0,
+          0.8823529411764706
+        ],
+        "gt_codes": [
+          215,
+          189,
+          255,
+          225
+        ],
+        "gt_box": [
+          0.84375,
+          0.744140625,
+          1.0,
+          0.87890625
+        ],
+        "box_iou": 0.9508609771728519,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 48,
+        "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_215><loc_189><loc_255><loc_225>[SEG]<|im_end|>",
+        "prompt_length": 279
+      },
+      {
+        "sample_id": "buildsr_train_1_10032_1_largest_82c6d1c8571e",
+        "image_id": "1_10032",
+        "level": 1,
+        "query_family": "size",
+        "query_type": "largest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          210,
+          102,
+          248,
+          144
+        ],
+        "predicted_box": [
+          0.8235294117647058,
+          0.4,
+          0.9725490196078431,
+          0.5647058823529412
+        ],
+        "gt_codes": [
+          210,
+          102,
+          248,
+          144
+        ],
+        "gt_box": [
+          0.826171875,
+          0.40234375,
+          0.96875,
+          0.5625
+        ],
+        "box_iou": 0.9303455065963859,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[BOX]<loc_210><loc_102><loc_248><loc_144>[SEG]<|im_end|>",
+        "prompt_length": 276
+      },
+      {
+        "sample_id": "buildsr_train_1_10032_2_largest_to_nearest_ed1c4a9007a0",
+        "image_id": "1_10032",
+        "level": 2,
+        "query_family": "nearest",
+        "query_type": "largest_to_nearest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          206,
+          101,
+          219,
+          115
+        ],
+        "predicted_box": [
+          0.807843137254902,
+          0.396078431372549,
+          0.8588235294117647,
+          0.45098039215686275
+        ],
+        "gt_codes": [
+          206,
+          101,
+          219,
+          115
+        ],
+        "gt_box": [
+          0.80859375,
+          0.396484375,
+          0.85546875,
+          0.447265625
+        ],
+        "box_iou": 0.850459507533483,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 41,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。[BOX]<loc_206><loc_101><loc_219><loc_115>[SEG]<|im_end|>",
+        "prompt_length": 285
+      },
+      {
+        "sample_id": "buildsr_train_1_10034_1_largest_9bcedf8cbf16",
+        "image_id": "1_10034",
+        "level": 1,
+        "query_family": "size",
+        "query_type": "largest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          172,
+          43,
+          194,
+          86
+        ],
+        "predicted_box": [
+          0.6745098039215687,
+          0.16862745098039217,
+          0.7607843137254902,
+          0.33725490196078434
+        ],
+        "gt_codes": [
+          172,
+          43,
+          194,
+          86
+        ],
+        "gt_box": [
+          0.67578125,
+          0.171875,
+          0.759765625,
+          0.3359375
+        ],
+        "box_iou": 0.9471026333895606,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[BOX]<loc_172><loc_043><loc_194><loc_086>[SEG]<|im_end|>",
+        "prompt_length": 276
+      },
+      {
+        "sample_id": "buildsr_train_1_10034_2_largest_to_below_68d5fe1ad3dd",
+        "image_id": "1_10034",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "largest_to_below",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          165,
+          102,
+          204,
+          122
+        ],
+        "predicted_box": [
+          0.6470588235294118,
+          0.4,
+          0.8,
+          0.47843137254901963
+        ],
+        "gt_codes": [
+          165,
+          102,
+          204,
+          122
+        ],
+        "gt_box": [
+          0.6484375,
+          0.400390625,
+          0.798828125,
+          0.474609375
+        ],
+        "box_iou": 0.9305081000694861,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 47,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_165><loc_102><loc_204><loc_122>[SEG]<|im_end|>",
+        "prompt_length": 280
+      },
+      {
+        "sample_id": "buildsr_train_1_1023_1_topmost_a9b411c281c1",
+        "image_id": "1_1023",
+        "level": 1,
+        "query_family": "extreme",
+        "query_type": "topmost",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          103,
+          28,
+          174,
+          58
+        ],
+        "predicted_box": [
+          0.403921568627451,
+          0.10980392156862745,
+          0.6823529411764706,
+          0.22745098039215686
+        ],
+        "gt_codes": [
+          103,
+          28,
+          174,
+          58
+        ],
+        "gt_box": [
+          0.40625,
+          0.111328125,
+          0.6796875,
+          0.224609375
+        ],
+        "box_iou": 0.9456204696440363,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[BOX]<loc_103><loc_028><loc_174><loc_058>[SEG]<|im_end|>",
+        "prompt_length": 276
+      },
+      {
+        "sample_id": "buildsr_train_1_1023_2_largest_to_below_45c4116875f1",
+        "image_id": "1_1023",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "largest_to_below",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          165,
+          79,
+          175,
+          96
+        ],
+        "predicted_box": [
+          0.6470588235294118,
+          0.30980392156862746,
+          0.6862745098039216,
+          0.3764705882352941
+        ],
+        "gt_codes": [
+          165,
+          79,
+          175,
+          96
+        ],
+        "gt_box": [
+          0.6484375,
+          0.310546875,
+          0.685546875,
+          0.373046875
+        ],
+        "box_iou": 0.8871459960937508,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 47,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_165><loc_079><loc_175><loc_096>[SEG]<|im_end|>",
+        "prompt_length": 280
+      },
+      {
+        "sample_id": "buildsr_train_1_1029_1_bottommost_e07c7868143d",
+        "image_id": "1_1029",
+        "level": 1,
+        "query_family": "extreme",
+        "query_type": "bottommost",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          188,
+          95,
+          201,
+          129
+        ],
+        "predicted_box": [
+          0.7372549019607844,
+          0.37254901960784315,
+          0.788235294117647,
+          0.5058823529411764
+        ],
+        "gt_codes": [
+          188,
+          95,
+          201,
+          129
+        ],
+        "gt_box": [
+          0.740234375,
+          0.373046875,
+          0.78515625,
+          0.505859375
+        ],
+        "box_iou": 0.8777178250826336,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[BOX]<loc_188><loc_095><loc_201><loc_129>[SEG]<|im_end|>",
+        "prompt_length": 274
+      },
+      {
+        "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+        "image_id": "1_1029",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "largest_to_left_of",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          18,
+          11,
+          51,
+          36
+        ],
+        "predicted_box": [
+          0.07058823529411765,
+          0.043137254901960784,
+          0.2,
+          0.1411764705882353
+        ],
+        "gt_codes": [
+          18,
+          11,
+          51,
+          36
+        ],
+        "gt_box": [
+          0.072265625,
+          0.044921875,
+          0.19921875,
+          0.140625
+        ],
+        "box_iou": 0.9576259959827769,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 49,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于面积最大的建筑区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_018><loc_011><loc_051><loc_036>[SEG]<|im_end|>",
+        "prompt_length": 280
+      },
+      {
+        "sample_id": "buildsr_train_1_1030_1_topmost_e839c0ca5f6f",
+        "image_id": "1_1030",
+        "level": 1,
+        "query_family": "extreme",
+        "query_type": "topmost",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          177,
+          10,
+          255,
+          50
+        ],
+        "predicted_box": [
+          0.6941176470588235,
+          0.0392156862745098,
+          1.0,
+          0.19607843137254902
+        ],
+        "gt_codes": [
+          177,
+          10,
+          255,
+          50
+        ],
+        "gt_box": [
+          0.6953125,
+          0.041015625,
+          1.0,
+          0.1953125
+        ],
+        "box_iou": 0.9798002243041991,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[BOX]<loc_177><loc_010><loc_255><loc_050>[SEG]<|im_end|>",
+        "prompt_length": 276
+      },
+      {
+        "sample_id": "buildsr_train_1_1030_2_smallest_to_left_of_d21738429adb",
+        "image_id": "1_1030",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "smallest_to_left_of",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          18,
+          59,
+          61,
+          74
+        ],
+        "predicted_box": [
+          0.07058823529411765,
+          0.23137254901960785,
+          0.23921568627450981,
+          0.2901960784313726
+        ],
+        "gt_codes": [
+          18,
+          59,
+          61,
+          74
+        ],
+        "gt_box": [
+          0.07421875,
+          0.234375,
+          0.23828125,
+          0.2890625
+        ],
+        "box_iou": 0.904519724291424,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 48,
+        "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_018><loc_059><loc_061><loc_074>[SEG]<|im_end|>",
+        "prompt_length": 278
+      },
+      {
+        "sample_id": "buildsr_train_1_1034_1_smallest_49e665afb182",
+        "image_id": "1_1034",
+        "level": 1,
+        "query_family": "size",
+        "query_type": "smallest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          21,
+          88,
+          46,
+          108
+        ],
+        "predicted_box": [
+          0.08235294117647059,
+          0.34509803921568627,
+          0.1803921568627451,
+          0.4235294117647059
+        ],
+        "gt_codes": [
+          21,
+          88,
+          46,
+          108
+        ],
+        "gt_box": [
+          0.083984375,
+          0.345703125,
+          0.177734375,
+          0.419921875
+        ],
+        "box_iou": 0.9048889160156249,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 22,
+        "generated_text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。[BOX]<loc_021><loc_088><loc_046><loc_108>[SEG]<|im_end|>",
+        "prompt_length": 275
+      },
+      {
+        "sample_id": "buildsr_train_1_1034_2_largest_to_above_100c449ca1ce",
+        "image_id": "1_1034",
+        "level": 2,
+        "query_family": "direction",
+        "query_type": "largest_to_above",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          36,
+          5,
+          58,
+          33
+        ],
+        "predicted_box": [
+          0.1411764705882353,
+          0.0196078431372549,
+          0.22745098039215686,
+          0.12941176470588237
+        ],
+        "gt_codes": [
+          36,
+          5,
+          58,
+          33
+        ],
+        "gt_box": [
+          0.14453125,
+          0.021484375,
+          0.224609375,
+          0.12890625
+        ],
+        "box_iou": 0.9080427033560615,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 47,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域上方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。[BOX]<loc_036><loc_005><loc_058><loc_033>[SEG]<|im_end|>",
+        "prompt_length": 280
+      },
+      {
+        "sample_id": "buildsr_train_1_1062_1_topmost_6c599dbf09bc",
+        "image_id": "1_1062",
+        "level": 1,
+        "query_family": "extreme",
+        "query_type": "topmost",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          63,
+          13,
+          78,
+          31
+        ],
+        "predicted_box": [
+          0.24705882352941178,
+          0.050980392156862744,
+          0.3058823529411765,
+          0.12156862745098039
+        ],
+        "gt_codes": [
+          63,
+          13,
+          78,
+          31
+        ],
+        "gt_box": [
+          0.248046875,
+          0.0546875,
+          0.3046875,
+          0.12109375
+        ],
+        "box_iou": 0.9058443705240883,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 21,
+        "generated_text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[BOX]<loc_063><loc_013><loc_078><loc_031>[SEG]<|im_end|>",
+        "prompt_length": 276
+      },
+      {
+        "sample_id": "buildsr_train_1_1062_2_largest_to_nearest_f40bd9b223d6",
+        "image_id": "1_1062",
+        "level": 2,
+        "query_family": "nearest",
+        "query_type": "largest_to_nearest",
+        "structural_valid": true,
+        "exact_four_token_sequence": true,
+        "failure": null,
+        "box_token_count": 1,
+        "loc_token_count": 4,
+        "seg_count": 1,
+        "seg_after_box": true,
+        "predicted_codes": [
+          192,
+          174,
+          203,
+          198
+        ],
+        "predicted_box": [
+          0.7529411764705882,
+          0.6823529411764706,
+          0.796078431372549,
+          0.7764705882352941
+        ],
+        "gt_codes": [
+          192,
+          174,
+          203,
+          198
+        ],
+        "gt_box": [
+          0.75390625,
+          0.685546875,
+          0.79296875,
+          0.7734375
+        ],
+        "box_iou": 0.8456273512406792,
+        "center_inside": true,
+        "code_error": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "generated_token_count": 41,
+        "generated_text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。[BOX]<loc_192><loc_174><loc_203><loc_198>[SEG]<|im_end|>",
+        "prompt_length": 285
+      }
+    ],
+    "stop_reason": "gate_passed"
+  },
+  "verdict": "E0_PASS",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6e\\E0\\e0_final.pt",
+    "bytes": 100460530,
+    "sha256": "cc5d51c6df71b6bd6cac31ce821a93ebed401bcf55989a9ccd857bb27b320864",
+    "step": 500,
+    "stage": "E0",
+    "name": "e0_final",
+    "relative_path": "artifacts/checkpoints/task6e/E0/e0_final.pt"
+  },
+  "selection": {
+    "carried_into_e1": false,
+    "reason": "E0 is a 20-sample implementation sanity check. Its weights are fitted to those 20 records, so E1 starts from the same frozen base with fresh LoRA and token rows instead of continuing from an overfit checkpoint."
+  },
+  "seconds": 610.1
+}

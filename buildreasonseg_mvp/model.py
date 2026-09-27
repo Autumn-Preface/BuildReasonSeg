@@ -124,14 +124,14 @@ class BuildReasonSegMvp(nn.Module):
         the `[SEG]` row therefore trained at 1e-3 rather than the configured 3e-4.
         """
 
-        from .qwen_seg import is_token_parameter, output_row_param_ids
+        from .qwen_seg import is_token_parameter, output_row_param_ids, token_holder_parameters
 
         decoder_lr = decoder_lr if decoder_lr is not None else head_lr
         token_lr = token_lr if token_lr is not None else decoder_lr
 
         token_param_ids: set[int] = set(output_row_param_ids(self))
-        if self.token_holder is not None:
-            token_param_ids.add(id(self.token_holder.row))
+        for parameter in token_holder_parameters(self.token_holder):
+            token_param_ids.add(id(parameter))
         for name, parameter in self.named_parameters():
             if is_token_parameter(name):
                 token_param_ids.add(id(parameter))

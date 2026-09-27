@@ -1,0 +1,295 @@
+{
+  "_doc": "Task 6E section 16. Exactly one verdict, resolved from the recorded artifacts. Section 17: coordinate tokens are not the final novelty claim.",
+  "task": "6E",
+  "verdict": "EXPLICIT_SPATIAL_TOKENS_FAILED",
+  "reason": "E1 geometry gate failed (structural validity 0.0, mean box IoU None, paired 0): the assistant format tokens were learned but the four location tokens were not: teacher forcing gives [BOX] accuracy 1.0 and [SEG] accuracy 0.0, and free generation emits [BOX] then a runaway location run (51-81 tokens) with no [SEG] at all, so the sequence is malformed rather than a valid-but-wrong box",
+  "evidence": {
+    "quantized_oracle": {
+      "selected_bins": 256,
+      "qualifying_bins": [
+        256
+      ],
+      "miou_threshold": 0.7206,
+      "per_bin": {
+        "32": {
+          "strict_mask_miou": 0.5400253371646007,
+          "paired_pass": 20,
+          "paired_total": 20,
+          "mean_quantization_box_iou": 0.5608030300332134
+        },
+        "64": {
+          "strict_mask_miou": 0.6472725749015809,
+          "paired_pass": 20,
+          "paired_total": 20,
+          "mean_quantization_box_iou": 0.7192901534487416
+        },
+        "128": {
+          "strict_mask_miou": 0.7129014862080415,
+          "paired_pass": 20,
+          "paired_total": 20,
+          "mean_quantization_box_iou": 0.8412570956217562
+        },
+        "256": {
+          "strict_mask_miou": 0.7343326538801194,
+          "paired_pass": 20,
+          "paired_total": 20,
+          "mean_quantization_box_iou": 0.9129414605034072
+        }
+      }
+    },
+    "E0": {
+      "verdict": "E0_PASS",
+      "structural_valid": 20,
+      "count": 20,
+      "exact_four_token_sequence": 20,
+      "mean_predicted_box_iou": 0.9166398994940115,
+      "gate": {
+        "kind": "e0",
+        "checks": {
+          "structural_valid_ge": true,
+          "exact_four_token_ge": true,
+          "mean_box_iou_ge": true
+        },
+        "passed": true,
+        "gate": {
+          "structural_valid_min": 19,
+          "exact_four_token_min": 18,
+          "mean_box_iou_min": 0.7
+        }
+      }
+    },
+    "E1": {
+      "verdict": "EXPLICIT_SPATIAL_TOKENS_FAILED",
+      "selected_epoch": 1,
+      "structural_valid_rate": 0.0,
+      "mean_predicted_box_iou": null,
+      "geometry_paired_pass": 0,
+      "paired_total": 20,
+      "gate": {
+        "kind": "e1",
+        "checks": {
+          "structural_valid_rate_ge": false,
+          "geometry_paired_ge": false,
+          "mean_box_iou_ge": false
+        },
+        "passed": false,
+        "gate": {
+          "structural_valid_rate_min": 0.9,
+          "geometry_paired_min": 14,
+          "mean_box_iou_min": 0.35
+        }
+      }
+    },
+    "E2": null,
+    "same_image_instruction_divergence": {
+      "compared_pairs": 0,
+      "pairs_with_different_tokens": 0,
+      "pairs_with_identical_boxes": 0,
+      "mean_predicted_box_l1": null,
+      "rows": [
+        {
+          "image_id": "1_1247",
+          "a": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+          "b": "buildsr_val_1_1247_3_largest_to_right_of_to_nearest_0be0bf7c8b0a",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_2103",
+          "a": "buildsr_val_1_2103_1_largest_9ccf675337a3",
+          "b": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_2757",
+          "a": "buildsr_val_1_2757_1_largest_f9ed1e8c8949",
+          "b": "buildsr_val_1_2757_3_largest_to_left_of_to_nearest_21f7f5f71d7d",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_286",
+          "a": "buildsr_val_1_286_1_largest_76ca4af3c712",
+          "b": "buildsr_val_1_286_2_largest_to_left_of_056216b5b322",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_2864",
+          "a": "buildsr_val_1_2864_1_largest_90b650948e0d",
+          "b": "buildsr_val_1_2864_2_largest_to_left_of_987279555505",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_2866",
+          "a": "buildsr_val_1_2866_1_largest_d012eb1a741d",
+          "b": "buildsr_val_1_2866_2_largest_to_below_81ccfad4014b",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_3400",
+          "a": "buildsr_val_1_3400_1_largest_bf204efb4cc1",
+          "b": "buildsr_val_1_3400_2_largest_to_below_281be38b0776",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_3604",
+          "a": "buildsr_val_1_3604_1_largest_abc1fd1ca1cf",
+          "b": "buildsr_val_1_3604_3_largest_to_left_of_to_nearest_926a4e3b6386",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_3999",
+          "a": "buildsr_val_1_3999_1_largest_7d347989fb00",
+          "b": "buildsr_val_1_3999_2_largest_to_below_cff46ded87f4",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_4894",
+          "a": "buildsr_val_1_4894_1_largest_db5e08abd804",
+          "b": "buildsr_val_1_4894_2_largest_to_below_5e40a082053a",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_5008",
+          "a": "buildsr_val_1_5008_1_largest_c3e0967d1f1f",
+          "b": "buildsr_val_1_5008_3_largest_to_left_of_to_nearest_1d120644b62e",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_722",
+          "a": "buildsr_val_1_722_1_largest_32d2e11a178f",
+          "b": "buildsr_val_1_722_3_largest_to_below_to_nearest_40fc647818a6",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_7894",
+          "a": "buildsr_val_1_7894_1_bottommost_eaf3e0d3ca3a",
+          "b": "buildsr_val_1_7894_3_largest_to_right_of_to_nearest_9d912b0ec000",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_849",
+          "a": "buildsr_val_1_849_1_largest_f4a151ab7a70",
+          "b": "buildsr_val_1_849_3_largest_to_left_of_to_nearest_6ec94d5f986e",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "1_9568",
+          "a": "buildsr_val_1_9568_1_largest_7fa5c1803b3a",
+          "b": "buildsr_val_1_9568_3_largest_to_left_of_to_nearest_6c2c19306953",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "2_2313",
+          "a": "buildsr_val_2_2313_1_largest_07c72f9d4583",
+          "b": "buildsr_val_2_2313_3_largest_to_right_of_to_nearest_b9fc8edeb033",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "2_2652",
+          "a": "buildsr_val_2_2652_1_largest_eeebfde1eab7",
+          "b": "buildsr_val_2_2652_3_largest_to_below_to_nearest_c44be238b069",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "2_2919",
+          "a": "buildsr_val_2_2919_1_largest_39a7a62c6776",
+          "b": "buildsr_val_2_2919_3_largest_to_right_of_to_nearest_6b4d595fb9eb",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "2_3482",
+          "a": "buildsr_val_2_3482_1_largest_b121ad32cb7d",
+          "b": "buildsr_val_2_3482_3_largest_to_right_of_to_nearest_320cb19834ba",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        },
+        {
+          "image_id": "2_550",
+          "a": "buildsr_val_2_550_1_largest_d73cd4c6320c",
+          "b": "buildsr_val_2_550_3_largest_to_below_to_nearest_7fc3f107dfda",
+          "both_structural_valid": false,
+          "different_predicted_tokens": null,
+          "predicted_box_l1": null,
+          "a_codes": null,
+          "b_codes": null
+        }
+      ]
+    }
+  },
+  "claim_if_fix_found": "We repaired the functional spatial-grounding bottleneck and established a usable reasoning -> explicit geometry -> segmentation pathway.",
+  "not_claimed": "Coordinate tokens are not claimed as the final paper novelty; geometry-verifiable supervision, reference/relation mechanisms, SRE, SCL and relation-level evaluation remain open directions."
+}

@@ -114,6 +114,11 @@ Verdict: **`GROUNDING_REPRESENTATION_FAILED`**, and section 9 says to stop rathe
 **Mechanism — the head collapsed to a constant box, because the `[SEG]` hidden state carries no target
 location.** By the end of epoch 2 every sample produced the same prediction, to three decimals:
 
+> Superseded wording (Task 6E §2.1). Task 6D.1 §16 replaced this sentence with the narrower, audited
+> claim: *under the audited Task 6C training setup, the frozen `[SEG]` representation contains no
+> **practically decodable** target geometry with the tested readouts; this is not an information-theoretic
+> absence claim.* The mechanism and numbers below are unchanged.
+
 ```text
 predicted box (every validation and training sample): (0.457, 0.455, 0.547, 0.539)
 spread across samples:                                [0.000, 0.000, 0.001, 0.000]

@@ -259,15 +259,25 @@ def _summary(probes: dict, stats: dict, g0: dict) -> dict:
     ln_train, ln_val = train_iou(ln), val_iou(ln)
     linear_train, linear_val = train_iou(linear), val_iou(linear)
 
-    # The 20-sample overfit is only diagnostic if shuffled labels do NOT fit equally well.
+    # The 20-sample overfit is NOT evidence of decodability, and Task 6E section 2.2 renames the field
+    # so the artifact and the human report agree. Measured: the real readout reaches final loss
+    # 3.02e-05 on 20 samples, but the label-shuffled control reaches 4.30e-05 on 20 *permuted* boxes.
+    # A diagnostic that a memorising readout also passes cannot separate a decodable representation
+    # from memorisation. It remains usable only as a *negative* gate for case D (an implementation-bug
+    # claim needs a low overfit IoU that the shuffled control does NOT reproduce).
     shuffled_overfit_loss = ((raw.get("label_shuffled_control") or {}).get("overfit_20_final_loss"))
-    raw_overfit_loss = ((raw.get("overfit_20") or {}).get("final_loss"))
     real_overfit_loss = ((raw.get("overfit_20") or {}).get("final_loss"))
-    overfit_is_diagnostic = bool(
-        shuffled_overfit_loss is None
-        or real_overfit_loss is None
-        or shuffled_overfit_loss > 0.5 * max(real_overfit_loss, 1e-9)
+    shuffled_control_also_overfits_twenty = bool(
+        shuffled_overfit_loss is not None
+        and shuffled_overfit_loss <= max(0.01, 10.0 * max(real_overfit_loss or 0.0, 1e-12))
     )
+    overfit_is_evidence_of_decodability = bool(
+        raw_overfit is not None
+        and raw_overfit >= 0.50
+        and shuffled_overfit_loss is not None
+        and not shuffled_control_also_overfits_twenty
+    )
+    overfit_blocks_implementation_bug_claim = not shuffled_control_also_overfits_twenty
     signal_gap = {
         name: (probe.get("decodable_signal_gap_train_480"))
         for name, probe in probes.items()
@@ -283,7 +293,7 @@ def _summary(probes: dict, stats: dict, g0: dict) -> dict:
             "the corrected scheduler recovers grounding, so the Task 6D failure was caused by the "
             "scheduler-horizon defect rather than by the representation",
         )
-    elif raw_overfit is not None and raw_overfit < 0.50 and overfit_is_diagnostic:
+    elif raw_overfit is not None and raw_overfit < 0.50 and overfit_blocks_implementation_bug_claim:
         case, verdict, statement = (
             "D",
             "READOUT_OR_FEATURE_IDENTITY_BUG_SUSPECTED",
@@ -357,8 +367,17 @@ def _summary(probes: dict, stats: dict, g0: dict) -> dict:
             "probe_layernorm_mlp_train_480_box_iou": ln_train,
             "probe_layernorm_mlp_val_box_iou": ln_val,
             "real_minus_shuffled_train_480_box_iou": signal_gap,
-            "twenty_sample_overfit_is_diagnostic": overfit_is_diagnostic,
+            "twenty_sample_overfit_is_evidence_of_decodability": overfit_is_evidence_of_decodability,
+            "twenty_sample_overfit_semantics": (
+                "NOT evidence of decodability: the label-shuffled control also fits 20 permuted boxes "
+                "to near-zero loss (real 3.02e-05 vs shuffled 4.30e-05), so this diagnostic cannot "
+                "separate a decodable representation from a memorising readout. The informative number "
+                "is the 480-sample fit, where real and shuffled are within a few IoU points."
+            ),
+            "shuffled_control_also_overfits_twenty": shuffled_control_also_overfits_twenty,
+            "overfit_twenty_is_implementation_bug_diagnostic": overfit_blocks_implementation_bug_claim,
             "shuffled_overfit_final_loss": shuffled_overfit_loss,
+            "twenty_sample_overfit_final_loss": real_overfit_loss,
             "every_probe_converged": implementation_verified,
             "layernorm_is_a_confound": bool(
                 raw_val is not None

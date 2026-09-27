@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6D.1._
+_Last updated by DSH at the end of Task 6E._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -63,6 +63,45 @@ The block above is machine-checked against
 | 6C.7 | **Frozen Qwen visual-feature cache + remaining batch-1 sync audit** | **done → `OPTIMIZATION_PARTIAL`** |
 | 6D | **Spatial Grounding Bridge v0.1 (oracle diagnostic + geometry head)** | **done → `GROUNDING_REPRESENTATION_FAILED`** (`VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND`) |
 | 6D.1 | **Corrective G0 rerun + `[SEG]` spatial-decodability audit** | **done → `PRACTICALLY_NOT_DECODABLE_GEOMETRY`** |
+| 6E | **Explicit Spatial Token Grounding v0.1 (`[BOX]` + 256 `<loc_*>` tokens)** | **done → `EXPLICIT_SPATIAL_TOKENS_FAILED`** (E0 passes 20/20; E1 structural 0/120) |
+
+## Task 6E measured results
+
+The box became an explicit autoregressive target (`reasoning [BOX] <loc_x1> <loc_y1> <loc_x2>
+<loc_y2> [SEG]`) over one shared 256-token location family, with `L = 1.0·L_assistant +
+5.0·L_location` and no mask loss. Full detail: `docs/task6e_explicit_spatial_tokens.md`, ADR-016,
+`evaluation/task6e_*.json`.
+
+| | Value |
+|---|---|
+| Quantized oracle, `B = 32 / 64 / 128 / 256` | 0.5400 / 0.6473 / 0.7129 / **0.7343** mIoU, all paired **20/20** |
+| Selected bin count | **`B = 256`** (smallest with paired 20/20 and mIoU ≥ `0.7506 − 0.03`) |
+| Added vocabulary | `[BOX]` + `<loc_000>…<loc_255>` = **257** tokens; **258** trainable rows ([SEG] + [BOX] + all loc) |
+| E0 (20 records, ≤1500 steps) | structural **20/20**, exact four-token **20/20**, box IoU **0.9166**, paired **10/10** at step 500 → `E0_PASS` |
+| E1 (480 paired records, 3 epochs × 480 steps) | structural **0/120** at every epoch, paired **0/20** |
+| E1 teacher-forced | reasoning 1.000, `[BOX]` 1.000, EOS 1.000, **loc 0.075, `[SEG]` 0.000** |
+| E1 free generation | exactly one `[BOX]` in 120/120, then a **51–81-token location run**, `[SEG]` count 0 in 120/120 |
+| E1 train location CE | 9.64 → **5.15** (256-way uniform floor `ln 256 = 5.545`) |
+| E2 strict e2e segmentation | **not run** (section 14 gates it on the E1 gate) |
+| Error classification | 120 structural, **0 localization**, 0 quantization-limited, `whu_data_quality_dominates: null` |
+
+1. **The pathway is verified up to the box, and the box is where it stops.** Given a 256-bin
+   quantized box, the frozen SAM2 prompt path still reaches **0.7343 mIoU / paired 20/20** (97.8 % of
+   the continuous-oracle 0.7506). The tokenizer, the 258 trainable rows, the label/loss plumbing and
+   the token-id parser are verified by a real one-step smoke and by E0's 20/20 exact-token overfit.
+2. **E1's failure is a vocabulary-learning failure, not a formatting or leakage failure.** Teacher
+   forcing reaches 1.000 on reasoning, `[BOX]` and EOS but only 0.075 on the location values and
+   **0.000** on `[SEG]`; free generation therefore emits `[BOX]` and then a runaway location run with
+   no `[SEG]`, so no sequence is structurally valid.
+3. **The same code, loss and schedule overfit the first 20 of those same 480 records to 20/20** (E0),
+   so this is an optimization/budget limit of the fixed ≤3-epoch schedule on a new 256-way vocabulary,
+   not an implementation defect. The location CE does not even fit the *training* set (5.15 vs 5.545
+   uniform floor).
+4. **Neither the dataset nor SAM2 is the constraint.** 0/120 localization failures, 0 samples whose
+   quantized GT box is below 0.5 IoU, and every failure is structural.
+5. **Accepted verdict (section 16): `EXPLICIT_SPATIAL_TOKENS_FAILED`**, with no escalation attempted
+   (no `[REF]`, SRE, SCL, 4B, dataset change, full training, GUI) and SAM2 never trained.
+
 
 ## Task 6C measured results
 
@@ -232,7 +271,10 @@ localizes the Task 6C failure to a specific component. Full detail:
 1. **The segmenter was never the problem.** Given the correct geometry, SAM2 recovers the target at
    **0.7506 mIoU** (box) against Task 6C's **0.10604**, with a paired probe of 20/20 and *zero* overlap
    between the two targets' predicted masks. The Task 6C failure was entirely in prompt generation.
-2. **The `[SEG]` hidden state does not carry the target's location.** A 1.05M-parameter head supervised on
+2. **Superseded wording (Task 6E §2.1; accepted statement in Task 6D.1 §16): under the audited Task 6C
+   training setup, the frozen `[SEG]` representation contains no *practically decodable* target geometry
+   with the tested readouts. This is not an information-theoretic absence claim.** The Task 6D evidence: a
+   1.05M-parameter head supervised on
    480 GT boxes did not fit even the training boxes; by epoch 2 it collapsed to the single constant box
    `(0.457, 0.455, 0.547, 0.539)` with per-coordinate spread `[0.000, 0.000, 0.001, 0.000]` — the optimal
    constant predictor under SmoothL1 for an uninformative read-out.
@@ -324,53 +366,66 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
 4. The SAM2 CPU feature cache holds all 480 training images inside the budget by sharing the two
    image-independent tensors once (7.508 GiB instead of 11.25 GiB), and it never mutates stored entries.
 
-## Measured limitations (carry into Task 6D)
+## Measured limitations (carry into Task 6F)
 
-1. **Instruction conditioning of the mask is still absent**, and Task 6D + Task 6D.1 localize it precisely:
+1. **Instruction conditioning of the mask is still absent**, and Tasks 6D + 6D.1 localize it precisely:
    the frozen `[SEG]` hidden state is norm-112, effective-rank 8.33, and its instruction-dependent residual
    (centered cosine 0.077 between the two instructions of one image) is **not practically decodable**
    into target geometry — three converging readouts cannot fit even the 480 training samples better than a
-   label-shuffled control. This remains the blocking defect for the MVP. Task 6D's original wording
-   ("carries no target location") is superseded by this audit (§16 of Task 6D.1).
-2. **Mask quality is not usable**: strict end-to-end mIoU 0.093–0.109, L3 nontrivial 0.076–0.088.
-3. **Language metrics are template metrics**: `reasoning_zh` has 21 distinct values in the whole training
+   label-shuffled control. Task 6D's original wording ("carries no target location") is superseded by this
+   audit (§16 of Task 6D.1).
+2. **The explicit-spatial-token route is implemented but not learned at this budget.** `[BOX]` + 256
+   `<loc_*>` tokens, 258 trainable rows, `1.0·L_assistant + 5.0·L_location`; E0 overfits 20 records to
+   20/20 exact tokens, but E1 (480 paired records, 3 epochs) never predicts a correct location value or
+   `[SEG]`, so free generation is structurally invalid 0/120 and the training location CE stalls at the
+   256-way uniform floor. This is a learning-signal/budget limitation of the new vocabulary, not a
+   dataset, SAM2 or formatting defect (§16/§18 of Task 6E, ADR-016).
+3. **Mask quality is not usable**: strict end-to-end mIoU 0.093–0.109, L3 nontrivial 0.076–0.088.
+4. **Language metrics are template metrics**: `reasoning_zh` has 21 distinct values in the whole training
    mini-set, so exact match and operation-chain accuracy cannot support a reasoning claim.
-4. **More prompt diversity did not become mask diversity**: effective rank 3.4–4.1 still yields
+5. **More prompt diversity did not become mask diversity**: effective rank 3.4–4.1 still yields
    IoU(pred_A, pred_B) 0.999.
-5. **The best mIoU arm is not the most diverse arm** (`U_L` 0.1087 vs `P_L` 0.0928), so mIoU alone remains
+6. **The best mIoU arm is not the most diverse arm** (`U_L` 0.1087 vs `P_L` 0.0928), so mIoU alone remains
    a misleading selection signal.
-6. **Training throughput is launch-bound at batch 1** and the removable overhead is now exhausted:
+7. **Training throughput is launch-bound at batch 1** and the removable overhead is now exhausted:
    the adopted runtime is Task 6C.6's integration plus Task 6C.7's frozen visual-feature cache, worth
    +9.94 % on top (paired ablation), with 8.4 % fewer kernels and 43 % fewer sync ops. Caching (SAM),
    pinning, prefetch, `torch.compile`, optimizer/clipping implementations, SDPA backends and
    checkpointing-off are all measured and closed; the remaining lever is arithmetic intensity (true
-   batching ≥2), which is a new experiment, not a perf tweak.
+   batching ≥2), which is a new experiment, not a perf tweak. Task 6E added one measured datapoint:
+   free-generation evaluation, not the 1440 training steps, dominates a geometry experiment's wall clock
+   (7027 s for E1, of which the three 160-generation evaluations are the bulk).
 
 ## Current blockers
 
-**None for the next task to start.** The failure is characterised, the two candidate causes are excluded by
-a valid controlled experiment, the throughput question is audited and closed at batch 1, and the remaining
-search space is narrow and explicit.
+**The geometry interface is verified; the coordinate vocabulary is not learned.** Everything up to the
+box is now measured and closed: the quantized oracle keeps 0.7343 mIoU / paired 20/20 at `B = 256`, the
+tokenizer/row/loss/parser machinery is verified by a one-step smoke, and E0 proves the pathway can be
+driven to 20/20 exact tokens. What blocks the MVP is that the 480-record location objective does not fit
+inside the fixed ≤3-epoch budget, so no valid box is ever emitted at evaluation time. The next task
+starts from that, not from a fresh diagnosis.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6D.1 results**, then **exactly one** architecture direction, with the
-evidence Task 6D.1 produced:
+**ChatGPT review of the pushed Task 6E results**, then **exactly one** task aimed at the location-token
+learning signal, with the evidence Task 6E produced:
 
-1. **Explicit coordinate/grid tokens (recommended).** Make target location a first-class supervised
-   *sequence* target — quantized spatial tokens emitted by the language model — instead of expecting the
-   generic `[SEG]` hidden state to encode geometry. Justification: the frozen hidden is norm-112 and
-   effective-rank 8.33; its instruction-dependent residual is nearly orthogonal between instructions
-   (centered cosine 0.077) yet carries no decodable box (real ≈ shuffled at 480 samples, paired 0/20); and
-   the LM objective saturates at CE 0.0000 on 21 reasoning templates, so nothing pressures that residual to
-   encode *which* building.
-2. Fallbacks, in order, only if (1) is rejected on design grounds: a dedicated target-aware query token.
-   `[REF]` is **not** indicated by any evidence collected so far, and 4B is not a response to this result.
-3. **Do not implement any of them in the corrective task** (Task 6D.1 implemented none), do not change the
-   dataset, do not add Spatial Relation Encoder / Spatial Consistency Loss, do not build a GUI, do not run
-   full training.
+1. **Fix the coordinate learning signal/budget (recommended).** Candidates, all measurable against the
+   same E1 gate and the 0.7343 mIoU quantized-oracle ceiling: (a) a `[BOX] … [SEG]` first-stage
+   curriculum that masks the four coordinate values before adding them; (b) a location-only logit head
+   over the existing 256 loc ids (no new vocabulary, ordinary vocabulary stays frozen); (c) coarse-to-fine
+   bins (256 → 64 → 256 refinement); (d) honestly longer training under the corrected scheduler, since
+   Task 6E was capped at 3 epochs by its own spec.
+2. **Only after geometry generalizes**: E2 inference-only segmentation from the generated box, then
+   geometry-verifiable supervision (the emitted box makes BuildSpatialReason's target-independent geometry
+   checkable at token level).
+3. **Not indicated by any evidence collected so far**: `[REF]`, Spatial Relation Encoder, Spatial
+   Consistency Loss, 4B, a dataset change, full training, a GUI. The dataset is not the constraint
+   (0/120 localization failures, 0 quantization-limited samples) and SAM2 is not the constraint
+   (0.7343 mIoU given the box).
 
-Full detail: `handoff/FROM_DSH.md`, `docs/task6d1_corrective_grounding_audit.md`,
-`docs/task6d_spatial_grounding_bridge.md`, `evaluation/task6d1_decodability_summary.json`,
-`evaluation/task6d1_representation_stats.json`, `evaluation/task6d1_scheduler_audit.json`,
-`evaluation/task6d_oracle_prompt_diagnostic.json`, `docs/architecture_decisions.md` (ADR-014, ADR-015).
+Full detail: `handoff/FROM_DSH.md`, `docs/task6e_explicit_spatial_tokens.md`,
+`evaluation/task6e_verdict.json`, `evaluation/task6e_quantized_oracle.json`,
+`evaluation/task6e_token_setup.json`, `evaluation/task6e_e0_overfit.json`,
+`evaluation/task6e_e1_training.json`, `evaluation/task6e_geometry_eval.json`,
+`evaluation/task6e_error_analysis.json`, `docs/architecture_decisions.md` (ADR-016).

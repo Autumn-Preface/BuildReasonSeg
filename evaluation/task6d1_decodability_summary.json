@@ -30,8 +30,12 @@
       "raw_mlp": 0.015367196872830391,
       "layernorm_mlp": 0.041236129589378834
     },
-    "twenty_sample_overfit_is_diagnostic": true,
+    "twenty_sample_overfit_is_evidence_of_decodability": false,
+    "twenty_sample_overfit_semantics": "NOT evidence of decodability: the label-shuffled control also fits 20 permuted boxes to near-zero loss (real 3.02e-05 vs shuffled 4.30e-05), so this diagnostic cannot separate a decodable representation from a memorising readout. The informative number is the 480-sample fit, where real and shuffled are within a few IoU points.",
+    "shuffled_control_also_overfits_twenty": true,
+    "overfit_twenty_is_implementation_bug_diagnostic": false,
     "shuffled_overfit_final_loss": 4.2998461140086874e-05,
+    "twenty_sample_overfit_final_loss": 3.0217051971703768e-05,
     "every_probe_converged": true,
     "layernorm_is_a_confound": false
   },

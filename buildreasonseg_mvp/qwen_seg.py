@@ -113,33 +113,79 @@ def setup_seg_token(model, tokenizer) -> SegTokenSetup:
 # --------------------------------------------------------------------------
 
 
-class TrainableTokenRow(nn.Module):
-    """A single trainable embedding row, injected without unfreezing the table.
+def _token_id_list(token_ids) -> list[int]:
+    """Accept an int, a sequence of ints or a 1-D tensor and return a list of ints."""
 
-    `nn.Parameter` holder only; the injection itself is a forward hook so the
-    base embedding module keeps its identity and every call site is covered.
+    if isinstance(token_ids, int):
+        return [int(token_ids)]
+    if torch.is_tensor(token_ids):
+        return [int(value) for value in token_ids.flatten().tolist()]
+    return [int(value) for value in token_ids]
+
+
+class TrainableTokenRow(nn.Module):
+    """One trainable embedding row per token, injected without unfreezing the table.
+
+    Task 6E section 7 generalizes this holder from the single `[SEG]` row to the whole
+    trainable set `{[SEG], [BOX], <loc_0> ... <loc_{B-1}>}`: `rows` is one parameter of
+    shape `[n, hidden]`, so the base vocabulary table is still never handed to the
+    optimizer and ordinary rows stay bit-identical.
+
+    `nn.Parameter` holder only; the injection itself is a forward hook so the base
+    embedding module keeps its identity and every call site is covered.
     """
 
-    def __init__(self, token_id: int, initial_row: torch.Tensor) -> None:
+    def __init__(self, token_ids, initial_rows: torch.Tensor) -> None:
         super().__init__()
-        self.token_id = int(token_id)
-        self.row = nn.Parameter(initial_row.detach().clone())
+        ids = _token_id_list(token_ids)
+        if initial_rows.dim() == 1:
+            initial_rows = initial_rows[None, :]
+        if int(initial_rows.shape[0]) != len(ids):
+            raise ValueError(f"{len(ids)} token ids but {tuple(initial_rows.shape)} initial rows")
+        self.token_ids: list[int] = ids
+        self.token_id = ids[0]
+        self.rows = nn.Parameter(initial_rows.detach().clone())
+
+    @property
+    def row(self) -> torch.Tensor:
+        """First trainable row (the `[SEG]` row); kept for the single-token callers."""
+
+        return self.rows[0]
 
     def as_dict(self) -> dict:
-        return {"token_id": self.token_id, "shape": list(self.row.shape), "numel": int(self.row.numel())}
+        return {
+            "token_ids": self.token_ids,
+            "shape": list(self.rows.shape),
+            "numel": int(self.rows.numel()),
+        }
 
 
-def install_trainable_token_row(model, token_id: int) -> TrainableTokenRow:
-    """Attach a forward hook that substitutes one embedding row.
+def token_holder_parameters(holder) -> list[nn.Parameter]:
+    """The trainable parameter(s) inside a `TrainableTokenRow` holder (Task 6E)."""
 
-    With tied input/output embeddings the *output* classifier row still comes
-    from the frozen base table. That is acceptable for Task 6A because the
-    signal that trains this row is the mask loss flowing through the hidden
-    state, and it is recorded as a known limitation rather than hidden.
-    """
+    if holder is None:
+        return []
+    rows = getattr(holder, "rows", None)
+    if isinstance(rows, nn.Parameter):
+        return [rows]
+    row = getattr(holder, "row", None)
+    return [row] if isinstance(row, nn.Parameter) else []
 
+
+def install_trainable_token_rows(model, token_ids) -> TrainableTokenRow:
+    """Attach a forward hook that substitutes the given embedding rows."""
+
+    ids = _token_id_list(token_ids)
+    if not ids:
+        raise ValueError("no token ids given")
     embedding = model.get_input_embeddings()
-    holder = TrainableTokenRow(token_id, embedding.weight.data[token_id])
+    # Task 6E section 7: the vocabulary table is never handed to the optimizer. PEFT's
+    # `get_peft_model` already froze it on the preferred path; this makes the invariant hold
+    # for the project-owned fallback too, instead of relying on the caller.
+    if hasattr(embedding, "weight"):
+        embedding.weight.requires_grad_(False)
+    holder = TrainableTokenRow(ids, embedding.weight.data[ids])
+    ids_tensor = torch.tensor(ids, dtype=torch.long)
 
     def hook(module, args, output):  # noqa: ANN001
         if not torch.is_tensor(output):
@@ -147,14 +193,24 @@ def install_trainable_token_row(model, token_id: int) -> TrainableTokenRow:
         input_ids = args[0] if args else None
         if not torch.is_tensor(input_ids):
             return output
-        mask = input_ids == holder.token_id
-        if not bool(mask.any()):
+        lookup = ids_tensor.to(device=input_ids.device)
+        matches = input_ids.unsqueeze(-1) == lookup  # [..., n]
+        present = matches.any(dim=-1)
+        if not bool(present.any()):
             return output
-        row = holder.row.to(dtype=output.dtype, device=output.device)
-        return torch.where(mask.unsqueeze(-1), row, output)
+        position = matches.to(torch.long).argmax(dim=-1)
+        rows = holder.rows.to(dtype=output.dtype, device=output.device)
+        gathered = rows[position]
+        return torch.where(present.unsqueeze(-1), gathered, output)
 
     holder._handle = embedding.register_forward_hook(hook)  # type: ignore[attr-defined]
     return holder
+
+
+def install_trainable_token_row(model, token_id: int) -> TrainableTokenRow:
+    """Single-token convenience wrapper around `install_trainable_token_rows`."""
+
+    return install_trainable_token_rows(model, [int(token_id)])
 
 
 def uninstall_trainable_token_row(holder: TrainableTokenRow) -> None:
@@ -204,6 +260,8 @@ class LoraAttachReport:
     peft_wraps_output_head: bool = False
     output_row_installed: bool = False
     output_row_params: int = 0
+    trainable_token_ids: list[int] = field(default_factory=list)
+    n_trainable_token_ids: int = 0
 
     def as_dict(self) -> dict:
         return {
@@ -221,6 +279,8 @@ class LoraAttachReport:
             "peft_wraps_output_head": self.peft_wraps_output_head,
             "output_row_installed": self.output_row_installed,
             "output_row_params": self.output_row_params,
+            "n_trainable_token_ids": self.n_trainable_token_ids,
+            "trainable_token_ids": self.trainable_token_ids,
         }
 
 
@@ -231,8 +291,16 @@ def attach_lora(
     alpha: int = 32,
     dropout: float = 0.05,
     prefer_peft_token_indices: bool = True,
+    extra_token_ids=(),
 ):
-    """Attach LoRA to text projections and make only the `[SEG]` row trainable."""
+    """Attach LoRA to text projections and make only the token rows trainable.
+
+    Task 6E section 7 generalizes the trainable token set from `{[SEG]}` to
+    `{[SEG]} ∪ extra_token_ids` (`[BOX]` and every `<loc_*>` row). Both mechanisms take
+    the whole set: PEFT's `trainable_token_indices` accepts a list, and the project-owned
+    forward-hook adapter stores one row per id. The base vocabulary table stays frozen
+    either way.
+    """
 
     from peft import LoraConfig, get_peft_model
 
@@ -240,12 +308,17 @@ def attach_lora(
     if not targets:
         raise RuntimeError("no language-model projection modules found for LoRA")
 
+    trainable_token_ids: list[int] = []
+    for value in [int(seg_token_id), *[int(v) for v in extra_token_ids]]:
+        if value not in trainable_token_ids:
+            trainable_token_ids.append(value)
+
     supports_token_indices = "trainable_token_indices" in inspect.signature(LoraConfig.__init__).parameters
 
     kwargs: dict = {}
     token_mechanism = "project_forward_hook"
     if prefer_peft_token_indices and supports_token_indices:
-        kwargs["trainable_token_indices"] = [int(seg_token_id)]
+        kwargs["trainable_token_indices"] = list(trainable_token_ids)
         token_mechanism = "peft_trainable_token_indices"
 
     config = LoraConfig(
@@ -261,10 +334,10 @@ def attach_lora(
 
     token_holder = None
     if token_mechanism == "project_forward_hook":
-        token_holder = install_trainable_token_row(peft_model, seg_token_id)
+        token_holder = install_trainable_token_rows(peft_model, trainable_token_ids)
 
     # With peft >= 0.21 the token adapter also wraps the tied OUTPUT head, so the
-    # [SEG] row is trainable on both sides. Its delta is created lazily on the
+    # new rows are trainable on both sides. Their deltas are created lazily on the
     # first forward, which is why the parameter count grows after one step.
     # `SegOutputRowLinear` below is retained only as a fallback for peft builds
     # that do not wrap the output head; it is installed only when needed.
@@ -272,7 +345,7 @@ def attach_lora(
     peft_wraps_output_head = type(output_head).__name__ == "TrainableTokensWrapper"
     output_wrapper = None
     if not peft_wraps_output_head:
-        output_wrapper = install_trainable_output_row(peft_model, seg_token_id)
+        output_wrapper = install_trainable_output_rows(peft_model, trainable_token_ids)
 
     visual_lora = [
         name
@@ -291,14 +364,17 @@ def attach_lora(
         peft_wraps_output_head=bool(peft_wraps_output_head),
         output_row_installed=output_wrapper is not None,
         output_row_params=int(output_wrapper.delta.numel()) if output_wrapper is not None else 0,
+        trainable_token_ids=list(trainable_token_ids),
+        n_trainable_token_ids=len(trainable_token_ids),
     )
     return peft_model, token_holder, report
 
 
-#: Parameter-name fragments that identify the trainable `[SEG]` representation.
-#: PEFT's `trainable_token_indices` names it `...trainable_tokens_delta.<id>`;
-#: the project fallback names it `token_row` / `trainable_tokens`.
-TOKEN_PARAM_MARKERS = ("trainable_tokens", "token_row")
+#: Parameter-name fragments that identify the trainable token rows.
+#: PEFT's `trainable_token_indices` names them `...trainable_tokens_delta.<id>`;
+#: the project fallback names them `token_row` (Task 6A) or `token_holder.rows` (Task 6E,
+#: one row per trainable token).
+TOKEN_PARAM_MARKERS = ("trainable_tokens", "token_row", "token_holder")
 
 
 def is_token_parameter(name: str) -> bool:
@@ -306,21 +382,26 @@ def is_token_parameter(name: str) -> bool:
 
 
 class SegOutputRowLinear(nn.Module):
-    """`lm_head` with exactly one trainable output row for `[SEG]`.
+    """`lm_head` with exactly one trainable output row per new token.
 
     Why this exists: PEFT's `trainable_token_indices` wraps the **input** embedding,
-    so the `[SEG]` input row becomes trainable while the tied output classifier row
-    stays frozen. A model cannot then learn to *emit* `[SEG]` during free
+    so the new rows become trainable while the tied output classifier row
+    stays frozen. A model cannot then learn to *emit* them during free
     generation, which Task 6A section 16.5 measures. This wrapper keeps the base
-    output matrix frozen and adds a trainable residual to the single `[SEG]`
-    column, so the vocabulary matrix is never handed to the optimizer.
+    output matrix frozen and adds a trainable residual to the single
+    column of each token, so the vocabulary matrix is never handed to the optimizer.
+
+    Task 6E section 7 generalizes `delta` from one row to `[n, hidden]` so `[BOX]`
+    and every `<loc_*>` row can be emitted, not just `[SEG]`.
     """
 
-    def __init__(self, base: nn.Linear, token_id: int) -> None:
+    def __init__(self, base: nn.Linear, token_ids) -> None:
         super().__init__()
+        ids = _token_id_list(token_ids)
         self.base = base
-        self.token_id = int(token_id)
-        self.delta = nn.Parameter(torch.zeros(base.weight.shape[1], dtype=base.weight.dtype))
+        self.token_ids = ids
+        self.token_id = ids[0]
+        self.delta = nn.Parameter(torch.zeros(len(ids), base.weight.shape[1], dtype=base.weight.dtype))
         for parameter in self.base.parameters():
             parameter.requires_grad_(False)
 
@@ -334,15 +415,13 @@ class SegOutputRowLinear(nn.Module):
 
     def forward(self, hidden: torch.Tensor) -> torch.Tensor:
         logits = self.base(hidden)
-        extra = torch.nn.functional.linear(
-            hidden.to(self.delta.dtype), self.delta.view(1, -1)
-        ).squeeze(-1)
-        index = torch.tensor([self.token_id], device=logits.device)
+        extra = torch.nn.functional.linear(hidden.to(self.delta.dtype), self.delta)
+        index = torch.tensor(self.token_ids, device=logits.device)
         return logits.index_add(-1, index, extra.to(logits.dtype))
 
 
-def install_trainable_output_row(model, token_id: int) -> SegOutputRowLinear | None:
-    """Wrap the output head so the `[SEG]` column has one trainable residual row."""
+def install_trainable_output_rows(model, token_ids) -> SegOutputRowLinear | None:
+    """Wrap the output head so each new token column has a trainable residual row."""
 
     output = model.get_output_embeddings()
     if output is None or not isinstance(output, nn.Linear):
@@ -360,9 +439,15 @@ def install_trainable_output_row(model, token_id: int) -> SegOutputRowLinear | N
     if parent is None or attribute is None:
         return None
 
-    wrapper = SegOutputRowLinear(output, token_id)
+    wrapper = SegOutputRowLinear(output, token_ids)
     setattr(parent, attribute, wrapper)
     return wrapper
+
+
+def install_trainable_output_row(model, token_id: int) -> SegOutputRowLinear | None:
+    """Single-token convenience wrapper around `install_trainable_output_rows`."""
+
+    return install_trainable_output_rows(model, [int(token_id)])
 
 
 def output_row_param_ids(model) -> set[int]:
@@ -386,6 +471,117 @@ def _embedding_of(model):
     return None
 
 
+def token_adapter_state(model) -> dict | None:
+    """PEFT trainable-token adapter state: ids and their replacement rows.
+
+    Task 6E section 7 needs to *prove* that the new rows are trainable, so the smoke test
+    reads the very tensor the forward replaces the embedding rows with. PEFT's
+    `TrainableTokensLayer` stores the full replacement row (not a zero delta) in
+    `trainable_tokens_delta[adapter_name]`, ordered like `token_indices[adapter_name]`.
+    """
+
+    embedding = model.get_input_embeddings()
+    if embedding is None:
+        return None
+    adapter = getattr(embedding, "token_adapter", None)
+    if adapter is None:
+        return None
+    deltas = getattr(adapter, "trainable_tokens_delta", None)
+    indices = getattr(adapter, "token_indices", None)
+    if not deltas or not indices:
+        return None
+    name = next(iter(deltas))
+    return {
+        "adapter_name": str(name),
+        "token_indices": [int(value) for value in indices[name]],
+        "rows": deltas[name],
+    }
+
+
+def effective_token_rows(model, token_ids, holder=None) -> torch.Tensor:
+    """The rows the forward actually uses for `token_ids`, in the requested order."""
+
+    ids = _token_id_list(token_ids)
+    state = token_adapter_state(model)
+    if state is not None:
+        position = {token_id: index for index, token_id in enumerate(state["token_indices"])}
+        missing = [token_id for token_id in ids if token_id not in position]
+        if not missing:
+            rows = state["rows"].detach().float().cpu()
+            return torch.stack([rows[position[token_id]] for token_id in ids])
+    parameters = token_holder_parameters(holder)
+    if parameters:
+        holder_ids = [int(value) for value in getattr(holder, "token_ids", [])]
+        position = {token_id: index for index, token_id in enumerate(holder_ids)}
+        if all(token_id in position for token_id in ids):
+            rows = parameters[0].detach().float().cpu()
+            return torch.stack([rows[position[token_id]] for token_id in ids])
+    embedding = _embedding_of(model)
+    if embedding is None or not hasattr(embedding, "weight"):
+        raise RuntimeError("no effective embedding table found")
+    base = getattr(embedding, "base_layer", embedding)
+    return base.weight.detach().float().cpu()[ids]
+
+
+def base_embedding_weight(model) -> torch.Tensor:
+    """The frozen base embedding matrix (never handed to the optimizer)."""
+
+    state = token_adapter_state(model)
+    if state is not None:
+        embedding = model.get_input_embeddings()
+        return embedding.token_adapter.base_layer.weight
+    embedding = _embedding_of(model)
+    return getattr(embedding, "base_layer", embedding).weight
+
+
+def output_row_gradients(model, token_ids) -> dict:
+    """Gradient each token's *output* row receives from a direct head-only loss.
+
+    Inputs are irrelevant here: the hidden state is random and no `input_ids` are used, so
+    any non-zero gradient can only come through the output classifier. This is how Task 6E
+    section 7's "every new output row receives gradient and can be emitted" is verified
+    rather than assumed.
+    """
+
+    import torch.nn.functional as F
+
+    ids = _token_id_list(token_ids)
+    head = model.get_output_embeddings()
+    state = token_adapter_state(model)
+    if state is None:
+        return {"mechanism": "none", "rows": {}}
+    delta = state["rows"]
+    position = {token_id: index for index, token_id in enumerate(state["token_indices"])}
+    # The head's own weight dtype decides the acceptable hidden dtype: peft builds the merged
+    # classifier in the base layer's dtype, so a hidden in any other dtype fails the matmul.
+    base = getattr(head, "base_layer", head)
+    base_weight = getattr(base, "weight", None)
+    dtype = base_weight.dtype if base_weight is not None else delta.dtype
+    hidden = torch.randn(1, 1, int(delta.shape[1]), dtype=dtype, device=delta.device)
+    if delta.grad is not None:
+        delta.grad = None
+    logits = head(hidden)
+    loss = F.cross_entropy(logits.reshape(-1, logits.shape[-1]).float(), torch.tensor([ids[0]], device=logits.device))
+    loss.backward()
+    grad = delta.grad
+    rows = {}
+    for token_id in ids:
+        if token_id in position and grad is not None:
+            rows[str(token_id)] = float(grad[position[token_id]].detach().float().norm())
+        else:
+            rows[str(token_id)] = None
+    base_grad_parameter = getattr(base, "weight", None)
+    if not isinstance(base_grad_parameter, torch.nn.Parameter):
+        base_grad_parameter = None
+    base_grad = None if base_grad_parameter is None else base_grad_parameter.grad
+    return {
+        "mechanism": "peft_trainable_token_indices",
+        "rows": rows,
+        "base_output_weight_grad_is_none": base_grad is None,
+        "base_output_weight_grad_norm": None if base_grad is None else float(base_grad.detach().float().norm()),
+    }
+
+
 def parameter_report(model: nn.Module, seg_token_id: int, token_holder: TrainableTokenRow | None) -> dict:
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -403,7 +599,7 @@ def parameter_report(model: nn.Module, seg_token_id: int, token_holder: Trainabl
         elif "lora_" in name:
             lora += parameter.numel()
     if token_holder is not None:
-        token += int(token_holder.row.numel())
+        token += sum(int(parameter.numel()) for parameter in token_holder_parameters(token_holder))
 
     embedding = _embedding_of(model)
     base_layer = getattr(getattr(embedding, "token_adapter", None), "base_layer", None)
@@ -517,6 +713,7 @@ def build_teacher_forcing_batch(
     assistant_text: str,
     seg_token_id: int,
     append_eos: bool = True,
+    target_ids: torch.Tensor | None = None,
 ) -> TeacherForcedBatch:
     """Chat input from image + instruction, then the assistant target appended.
 
@@ -527,6 +724,11 @@ def build_teacher_forcing_batch(
     Without it the model is never taught to STOP, so free generation runs to the
     token cap and repeats `[SEG]` -- which is exactly what the first recorded
     Stage 2 run showed (`seg_count` between 4 and 13).
+
+    `target_ids` (Task 6E) lets a caller supply the assistant target as explicit
+    token ids — used by the spatial-token path so `[BOX]` and the four `<loc_*>`
+    tokens are placed exactly, with no text round-trip. When supplied it replaces
+    `assistant_text` and the caller owns EOS handling.
     """
 
     messages = [
@@ -548,10 +750,20 @@ def build_teacher_forcing_batch(
     prompt_ids = prompt["input_ids"]
     prompt_length = int(prompt_ids.shape[1])
 
-    target_ids = tokenizer(assistant_text, add_special_tokens=False, return_tensors="pt")["input_ids"]
-    if append_eos and tokenizer.eos_token_id is not None:
-        eos = torch.tensor([[int(tokenizer.eos_token_id)]], dtype=target_ids.dtype)
-        target_ids = torch.cat([target_ids, eos], dim=1)
+    if target_ids is not None:
+        if not torch.is_tensor(target_ids):
+            target_ids = torch.tensor([list(target_ids)], dtype=torch.long)
+        target_ids = target_ids.to(dtype=torch.long)
+        if target_ids.dim() == 1:
+            target_ids = target_ids[None, :]
+        if target_ids.dim() != 2 or target_ids.shape[0] != 1:
+            raise RuntimeError(f"target_ids must be a single sequence, got {tuple(target_ids.shape)}")
+        # Explicit ids: the caller owns EOS handling (see the docstring).
+    else:
+        target_ids = tokenizer(assistant_text, add_special_tokens=False, return_tensors="pt")["input_ids"]
+        if append_eos and tokenizer.eos_token_id is not None:
+            eos = torch.tensor([[int(tokenizer.eos_token_id)]], dtype=target_ids.dtype)
+            target_ids = torch.cat([target_ids, eos], dim=1)
 
     input_ids = torch.cat([prompt_ids, target_ids], dim=1)
     attention_mask = torch.ones_like(input_ids)

@@ -87,6 +87,10 @@ def save_checkpoint(
         },
     }
     if model.token_holder is not None:
+        rows = getattr(model.token_holder, "rows", None)
+        if rows is not None:
+            # Task 6E: the holder carries one row per trainable token ([SEG], [BOX], <loc_*>).
+            payload["project_token_rows"] = rows.detach().cpu()
         payload["project_token_row"] = model.token_holder.row.detach().cpu()
     if include_optimizer and optimizer is not None:
         payload["optimizer"] = optimizer.state_dict()
@@ -110,9 +114,23 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
     if getattr(model, "grounding_head", None) is not None and payload.get("grounding_head"):
         model.grounding_head.load_state_dict(payload["grounding_head"])
         head_loaded = True
-    if model.token_holder is not None and "project_token_row" in payload:
-        with torch.no_grad():
-            model.token_holder.row.copy_(payload["project_token_row"].to(model.token_holder.row.device))
+    if model.token_holder is not None and (
+        "project_token_rows" in payload or "project_token_row" in payload
+    ):
+        rows = getattr(model.token_holder, "rows", None)
+        stored_rows = payload.get("project_token_rows")
+        if rows is not None and stored_rows is not None:
+            if tuple(stored_rows.shape) != tuple(rows.shape):
+                raise RuntimeError(
+                    f"checkpoint token rows {tuple(stored_rows.shape)} != holder {tuple(rows.shape)}"
+                )
+            with torch.no_grad():
+                rows.copy_(stored_rows.to(rows.device))
+        else:
+            with torch.no_grad():
+                model.token_holder.row.copy_(
+                    payload["project_token_row"].to(model.token_holder.row.device)
+                )
     if optimizer is not None and "optimizer" in payload:
         optimizer.load_state_dict(payload["optimizer"])
 

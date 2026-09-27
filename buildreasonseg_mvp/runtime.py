@@ -218,6 +218,18 @@ class MvpRuntime:
     device: str
     reports: dict = field(default_factory=dict)
     loss_weights: LossWeights = field(default_factory=LossWeights)
+    #: Task 6E: `[BOX]` + `<loc_*>` vocabulary added on top of `[SEG]` (None = Task 6C/6D runtime).
+    spatial_setup: object | None = None
+
+    @property
+    def spatial_codec(self):
+        """The deterministic quantized-box codec this runtime's spatial tokens use."""
+
+        from .spatial_tokens import QuantizedBoxCodec
+
+        if self.spatial_setup is None:
+            raise RuntimeError("runtime has no spatial token setup")
+        return QuantizedBoxCodec(int(self.spatial_setup.bins))
 
     @property
     def bridge(self) -> str:
@@ -258,6 +270,18 @@ class MvpRuntime:
         )
         if use_cache:
             return self.feature_cache.get(sample.image_id, image)
+        return self.sam_encoder.encode(image), False
+
+    def features_for_image(self, image: np.ndarray, image_id: str | None = None):
+        """SAM2 image features for a bare frame (Task 6E section 19 inference plumbing)."""
+
+        use_cache = bool(
+            image_id
+            and self.cfg.get("stage2_overfit", {}).get("use_sam_feature_cache", True)
+            and self.cfg.get("training", {}).get("use_sam_feature_cache", True)
+        )
+        if use_cache:
+            return self.feature_cache.get(str(image_id), image)
         return self.sam_encoder.encode(image), False
 
     # -- Task 6C.7: frozen Qwen visual-feature cache ---------------------
@@ -499,6 +523,92 @@ class MvpRuntime:
         }
 
     # -- optimisation ----------------------------------------------------
+
+    def freeze_for_spatial_tokens(self) -> dict:
+        """Task 6E sections 10-11 trainable set.
+
+        Train: text LoRA + `[SEG]` + `[BOX]` + every `<loc_*>` row.
+        Freeze: Qwen base, the visual tower, all of SAM2, the old Projection MLP and the
+        Task 6D `SpatialGroundingHead` (when one happens to be attached).
+        """
+
+        if self.spatial_setup is None:
+            raise RuntimeError("freeze_for_spatial_tokens needs a spatial token setup")
+        report = set_phase_trainables(self.model, "A")
+        if self.model.grounding_head is not None:
+            for parameter in self.model.grounding_head.parameters():
+                parameter.requires_grad_(False)
+            report["grounding_head_trainable"] = False
+        report["spatial_bins"] = int(self.spatial_setup.bins)
+        report["trainable_token_ids"] = list(self.reports.get("lora", {}).get("trainable_token_ids") or [])
+        report["sam_frozen"] = not any(p.requires_grad for p in self.model.sam.parameters())
+        report["projection_frozen"] = not any(p.requires_grad for p in self.model.projection.parameters())
+        self.reports["spatial_trainables"] = report
+        return report
+
+    def spatial_train_step(self, batch, example, optimizer=None, timer=None) -> dict:
+        """One Task 6E step: `1.0 * assistant CE + 5.0 * location CE` on the language model.
+
+        No mask loss and no SAM forward: the Task 6E objective supervises the emitted
+        coordinate tokens, and SAM2 stays completely frozen (sections 9 and 11).
+        """
+
+        from .qwen_seg import forward_qwen
+        from .spatial_training import spatial_loss, spatial_teacher_forced_metrics
+
+        batch = batch.to(self.device)
+        use_autocast = bool(self.cfg["training"].get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                lm_logits, _hidden = forward_qwen(self.model.qwen, batch)
+                losses = spatial_loss(lm_logits, batch, example, self.spatial_setup)
+
+        with _stage("backward"):
+            if optimizer is not None:
+                optimizer.zero_grad(set_to_none=True)
+            losses["total"].backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        with torch.no_grad():
+            diagnostics = spatial_teacher_forced_metrics(lm_logits, batch, example)
+
+        return {
+            "losses": {
+                "total": losses["total_raw"],
+                "assistant_ce": losses["assistant_ce_raw"],
+                "location_ce": losses["location_ce_raw"],
+                "lm_ce": losses["assistant_ce_raw"],
+                "mask_bce": 0.0,
+                "mask_dice": 0.0,
+                "ground": 0.0,
+            },
+            "location_token_accuracy": losses["location_token_accuracy"],
+            "location_abs_bin_error": losses["location_abs_bin_error"],
+            "teacher_forced": diagnostics,
+            "grad_clip_total_norm": clipped,
+            "weights": {
+                "assistant": losses["assistant_weight"],
+                "location": losses["location_weight"],
+            },
+            "example": example.as_dict(),
+        }
 
     def build_optimizer(self) -> torch.optim.AdamW:
         opt_cfg = self.cfg["optimizer"]
@@ -776,6 +886,19 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
     token_setup = setup_seg_token(qwen, tokenizer)
     reports["token"] = token_setup.as_dict()
 
+    # Task 6E parts D/E: add `[BOX]` + `<loc_000>..<loc_{B-1}>` and make their rows trainable
+    # alongside `[SEG]`. `cfg["spatial_tokens"]["bins"]` is absent (or null) for every
+    # Task 6A-6D configuration, which keeps those paths bit-identical.
+    spatial_cfg = cfg.get("spatial_tokens") or {}
+    spatial_bins = spatial_cfg.get("bins")
+    spatial_setup = None
+    extra_token_ids: list[int] = []
+    if spatial_bins:
+        from .spatial_tokens import add_spatial_tokens, location_token_ids
+
+        spatial_setup = add_spatial_tokens(qwen, tokenizer, int(spatial_bins))
+        extra_token_ids = location_token_ids(spatial_setup)
+
     if cfg["token"].get("prefer_peft_trainable_token_indices", True):
         qwen, token_holder, lora_report = attach_lora(
             qwen,
@@ -783,6 +906,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
             rank=int(cfg["lora"]["rank"]),
             alpha=int(cfg["lora"]["alpha"]),
             dropout=float(cfg["lora"]["dropout"]),
+            extra_token_ids=extra_token_ids,
         )
     else:
         qwen, token_holder, lora_report = attach_lora(
@@ -792,6 +916,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
             alpha=int(cfg["lora"]["alpha"]),
             dropout=float(cfg["lora"]["dropout"]),
             prefer_peft_token_indices=False,
+            extra_token_ids=extra_token_ids,
         )
     reports["lora"] = lora_report.as_dict()
 
@@ -879,6 +1004,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         device=device,
         reports=reports,
         loss_weights=LossWeights(**{k: float(v) for k, v in cfg["loss"].items() if isinstance(v, (int, float))}),
+        spatial_setup=spatial_setup,
     )
 
 

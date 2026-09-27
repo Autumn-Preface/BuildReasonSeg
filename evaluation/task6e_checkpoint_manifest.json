@@ -1,0 +1,42 @@
+{
+  "_doc": "Task 6E: hashes of every Task 6E checkpoint. The checkpoint files themselves stay gitignored (artifacts/); only this manifest is tracked.",
+  "task": "6E",
+  "checkpoints": {
+    "E0/e0_final": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6e\\E0\\e0_final.pt",
+      "bytes": 100460530,
+      "sha256": "cc5d51c6df71b6bd6cac31ce821a93ebed401bcf55989a9ccd857bb27b320864",
+      "step": 500,
+      "stage": "E0",
+      "name": "e0_final",
+      "relative_path": "artifacts/checkpoints/task6e/E0/e0_final.pt"
+    },
+    "E1/e1_epoch1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6e\\E1\\e1_epoch1.pt",
+      "bytes": 100461067,
+      "sha256": "9b62f98a1f55faf16723f812bb48754eb6b00f1d8f82924e002043da6c55bd0b",
+      "step": 480,
+      "stage": "E1",
+      "name": "e1_epoch1",
+      "relative_path": "artifacts/checkpoints/task6e/E1/e1_epoch1.pt"
+    },
+    "E1/e1_epoch2": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6e\\E1\\e1_epoch2.pt",
+      "bytes": 100461067,
+      "sha256": "c774ecdcf64ea7361119a8db0832410019803df22e45a484da31d60df50f9e4b",
+      "step": 960,
+      "stage": "E1",
+      "name": "e1_epoch2",
+      "relative_path": "artifacts/checkpoints/task6e/E1/e1_epoch2.pt"
+    },
+    "E1/e1_epoch3": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6e\\E1\\e1_epoch3.pt",
+      "bytes": 100461067,
+      "sha256": "35da98b93a2303a323640cbf7240033a9274cb4324ad50a19f96d51ebb752ecd",
+      "step": 1440,
+      "stage": "E1",
+      "name": "e1_epoch3",
+      "relative_path": "artifacts/checkpoints/task6e/E1/e1_epoch3.pt"
+    }
+  }
+}

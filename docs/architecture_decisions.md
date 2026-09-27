@@ -836,6 +836,30 @@ validation set and one metric path.
 
 ---
 
+## ADR-016 — Task 6E: making the box an explicit language target is necessary but not sufficient at 2B/3-epoch scale
+
+**Status:** **Accepted** (Task 6E) for what the E0/E1 experiments measure. No novelty is claimed for coordinate tokens themselves.
+
+**Context.** Task 6D.1 established (ADR-014/015 lineage) that the frozen `[SEG]` hidden state of the Task 6C `P_C` checkpoint contains no *practically decodable* target geometry, while the downstream machinery is sound: given the correct box, SAM2 reaches 0.7506 mIoU / paired 20/20. Task 6E replaced the implicit `[SEG] hidden → geometry` readout with an explicit autoregressive target `reasoning [BOX] <loc_x1> <loc_y1> <loc_x2> <loc_y2> [SEG]` over one shared 256-token location family, with `L = 1.0·L_assistant + 5.0·L_location` and no mask loss.
+
+**Decision**
+
+1. **The quantized-box pathway is viable.** Deterministic enclosing quantization at `B = 256` (the smallest bin count whose oracle keeps paired 20/20 within `oracle − 0.03` mIoU) recovers **0.7343 mIoU / paired 20/20** on the official frozen SAM2 box prompt, versus 0.7506 continuous and 0.10604 for Task 6C `P_C`. Quantization is not the bottleneck (0/120 validation samples have a quantized GT box below 0.5 IoU against the continuous box).
+2. **The tokenizer/row/loss implementation is verified, not assumed.** 257 new tokens (each single-id and round-tripping); 258 trainable rows through PEFT `trainable_token_indices` with the base table frozen; a real one-step smoke shows `[SEG]`, `[BOX]` and the four target `<loc_*>` rows moving while 16 ordinary rows and the base embedding tensor are bit-identical, and every new **output** row receiving gradient from an output-head-only loss (so the tokens are emittable). Causal label positions are asserted against `input_ids[i+1]`, and the parser reads token ids, never text.
+3. **E0 overfits by construction.** 20 records (10 same-image/different-target pairs) reach **20/20 structural, 20/20 exact four-token sequences and 0.9166 mean box IoU** in 500 steps; per-coordinate token accuracy is 1.0, so the residual is the quantization ceiling, not model error.
+4. **E1 fails on the location values, not on the format.** On the 480-record paired `P` subset, 3 epochs × 480 steps: structural validity **0/120** at every epoch. Teacher forcing reaches reasoning 1.000, `[BOX]` 1.000 and EOS 1.000, but location-token accuracy only 0.021 → 0.058 → 0.075 with `[SEG]` accuracy **0.000**; free generation emits exactly one `[BOX]` and then a 51–81-token location run with no `[SEG]`. The training location CE stalls at 5.15 against the 256-way uniform floor `ln 256 = 5.545`, i.e. the objective does not fit even its own training data inside the fixed budget — while the *same* code path, loss and schedule overfit the first 20 of those 480 records (E0).
+5. **Verdict `EXPLICIT_SPATIAL_TOKENS_FAILED`; E2 not run** (section 14 gates it on the E1 gate). SAM2 was never trained, no GT geometry entered any prompt, and no escalation (`[REF]`, SRE, SCL, 4B, dataset change, full training, GUI) was attempted.
+6. **The dataset is not the constraint.** Error classification finds 120 structural and **0 localization** failures, 0 quantization-limited samples, and `whu_data_quality_dominates: null`.
+
+**Consequences**
+
+* "Make geometry an explicit language target" is **necessary but not sufficient**: it removes the decodability question entirely, and it exposes a vocabulary-learning problem that the hidden-state route never had. The next task should attack that signal/budget question (loss weighting or a `[BOX]`-first curriculum, coarse-to-fine bins, or a location-only logit head over the existing 256 tokens) before adding new modules.
+* The 0.7343 mIoU / 20/20 quantized-oracle ceiling is the number to beat, and it is a *box-quality* ceiling: any future geometry improvement can be measured there without running SAM2.
+* The `[SEG]` hidden-state route stays closed as diagnosed by Task 6D.1; Task 6E does not reopen it.
+* Coordinate tokens are not the paper's novelty claim; geometry-verifiable supervision, reference/relation mechanisms, SRE and SCL remain the intended contribution and are now testable against a verified geometry *interface*.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -855,3 +879,4 @@ validation set and one metric path.
 | 013 | **Task 6A measured proof stack** | 2B + Base+ measured working; 4B still unmeasured; `[SEG]` selectively trainable on both tied rows; separate Qwen/SAM preprocessing; SAM2 CUDA extension disabled |
 | 014 | **Task 6B: the `[SEG]`→prompt interface is the MVP bottleneck** | Language generalises (120/120 emission, 1.000 chain accuracy) but the mask does not (0.1102 mIoU, paired probe 0/20); the projection collapses to a near-constant 256-d prompt; loss weighting and mask LR do not fix it, so effort goes to the interface, not to 4B. **Causal reading PROVISIONAL — see 015** |
 | 015 | **Task 6C: neither paired sampling nor the centre point fixes conditioning** | Valid, bit-reproducible 2×2; all four arms 0/20 paired with margins within ±0.0036; paired training raises projected effective rank 1.50→3.74 without producing conditioning; the centre point is 1/23 of the language norm, so removing it changes little — the remaining problem is after the prompt |
+| 016 | **Task 6E: explicit box tokens are necessary but not sufficient at 2B / 3 epochs** | Enclosing quantization at `B = 256` keeps the oracle at 0.7343 mIoU / 20/20 and E0 overfits 20 records to 20/20 exact tokens (0.9166 box IoU), but E1 on 480 paired records fails with structural 0/120: `[BOX]`/EOS/reasoning are learned (accuracy 1.0) while the 256-way location values stall at the uniform floor (train CE 5.15 vs `ln 256 = 5.545`) and `[SEG]` is never predicted after the location run — fix the location learning signal/budget before adding `[REF]`, SRE, SCL or scale |
