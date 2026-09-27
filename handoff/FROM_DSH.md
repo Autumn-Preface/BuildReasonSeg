@@ -17,192 +17,176 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6I Report: Visual Query Refinement Block v0.1
+# FROM_DSH — Task 6J Report: Structured Proposal Grounding Feasibility
 
-_This file holds the Task 6I report. The Task 6H.1 report is preserved in git history and in
-`docs/task6h1_bounded_point_counterfactual.md`; Task 6H in `docs/task6h_counterfactual_pair_grounding.md`;
-Task 6G in `docs/task6g_dense_spatial_grounding.md`._
+_This file holds the Task 6J report. The Task 6I report is preserved in git history and in
+`docs/task6i_visual_query_refinement.md`; Task 6H.1 in `docs/task6h1_bounded_point_counterfactual.md`;
+Task 6H in `docs/task6h_counterfactual_pair_grounding.md`; Task 6G in `docs/task6g_dense_spatial_grounding.md`._
 
-Full design notes: `docs/task6i_visual_query_refinement.md`, ADR-021.
+Full design notes: `docs/task6j_structured_proposal_grounding.md`, ADR-022.
 
 ## 1. Verdict
 
-**`VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`.**
+**`PROPOSAL_QUALITY_LIMIT`.**
 
-The first explicitly allowed architecture change since 6G is implemented faithfully and verified:
-the causally clean `[BOX]` query q0 cross-attends the frozen SAM2 64×64 embedding exactly once
-(embed 256, 4 heads, residual + FFN 256→512→256), the refined q1 scores the frozen 256×256 /
-32-channel feature, and the frozen Task 6H.1 point-cell CE + bounded probability-mass pair
-objective drives training. The refinement step **works but under-shoots**: over 1500 pair steps on
-the 10 memorized H0 pairs, inside-own **7 → 13/20** (gate 18), paired point **2 → 5/10** (gate 9),
-bounded pair ranking **8 → 10/10** (gate 9 ✓), normalized point error **0.167 → 0.084** (gate
-< 0.08), own mass **0.184 → 0.417** vs cross mass 0.046 → 0.024. The audit shows the mechanism:
-the 1×4096 cross-attention peaks (entropy 8.31 → 1.46 nats) but only ~2.5 % of its mass lands on
-the target, so the single query slot — even with one allowed look at the visual features — cannot
-**aim itself** at the target. Per sections 8/14 the task **stops at I0**: I1 (240-pair mini-train)
-and I2 (frozen-SAM2 segmentation) were not run; no SAM2 training, no second refinement layer, no
-multiple queries, no `[REF]`/SRE/SCL/4B/dataset migration/GUI.
+The structured route decomposes cleanly: the relation executor is **exact** with oracle candidates
+(J0: 120/120, paired 20/20, zero abstentions, bit-level agreement with the frozen generator), the
+instruction → canonical-program parser is **perfect** (J2: 1.000 accuracy / 1.000 macro F1 on the
+fixed 120, paired 20/20, and 1.000 on the full 3,884-record val split), and the predicted-program +
+oracle-candidate route is therefore also exact (J3: 1.000, paired 20/20). The binding failure is
+the **frozen YOLO proposal chain**: recall passes (0.919/0.869/0.594 at IoU 0.25/0.5/0.75) and
+oracle-program mIoU passes (0.3712 ≥ 0.30), but paired mask selection is **5/20** (gate 12/20)
+with 35/120 executor abstentions driven by proposal-geometry mismatch — J4 was therefore correctly
+**not run** (section 15). No SAM2 training, no YOLO retraining, no `[REF]`/SRE/SCL, no 4B, no
+dataset migration, no GUI.
 
-## 2. Frozen Task 6H.1 Evidence
+## 2. Strategic Pivot
 
-Not rerun and **not rewritten**: H0-R inside-own 7/20, paired point 2/10, bounded ranking 8/10;
-point CE 11.0965 → 4.7427, point error 0.4658 → 0.1673, own mass 0.1835 vs cross 0.0456, margin
-−0 → +0.1385. The Task 6H.1 scalar objective (weights 0.5 / 1.0 / 1.0, eps 1e-8, no margin) is
-reused **byte-for-byte** in Task 6I — the 6I pair step imports the same `spatial_objective`
-functions and constants. Also frozen: grid-256 snapped point oracle 0.4883 mIoU / 18-20, box
-oracle 0.7506 / 20-20, Task 6C `P_C` 0.10604 / 0-20.
+Tasks 6D–6I froze as evidence (6C `P_C` 0.10604 / 0-20; point oracle ≈0.488/18-20; box oracle
+0.7506/20-20; 6I I0 inside 13/20, paired point 5/10, ranking 10/10, norm-err 0.0838). Task 6I's
+attention mass DID rise above initialization — the claim is "insufficient", never "zero
+information". Task 6J is a deliberate architecture-path pivot, not a deletion of prior work:
+`instruction → relation program → building candidates → explicit geometry execution → mask`.
 
-## 3. Architecture
+## 3. Program Vocabulary
 
-```
-image + instruction
-  -> Qwen pre-reasoning [BOX] query q0                 [B, 2048]  (causally clean)
-  -> q0 -> LayerNorm -> Linear(2048, 256) -> q         [B, 1, 256]
-  -> F64 [B,256,64,64] -> Conv1x1(256,256) -> flatten -> LayerNorm   [B, 4096, 256]
-  -> q_ref = q + CrossAttention(q, F64)   (embed 256, 4 heads, exactly ONE layer)
-  -> q1 = q_ref + FFN(LayerNorm(q_ref))    (256 -> 512 -> 256, GELU)
-  -> F256 [B,32,256,256] -> Conv1x1(32,256) -> K256
-  -> heatmap_logits[y,x] = dot(q1, K256[:,y,x]) / sqrt(256) + scalar bias
-  -> argmax point -> frozen SAM2 positive-point prompt (I2, not reached)
-```
+`evaluation/task6j_program_spec.json`: **20 canonical programs, 1:1 with the actual frozen
+v0.1.1 query types** (no invented semantics). Each program's ordered operations were verified to
+be the unique stored `reasoning_steps` pattern of its query type across train+val+test
+(25,229 records). Operations: `argmin/argmax_centroid_{x,y}`, `argmax/argmin_area`,
+`filter_relation(above|below|left_of|right_of)` (frozen `relation(subject, object)` convention),
+`argmin_boundary_distance` (frozen `nearest_within`: boundary distance, non-border anchor, frozen
+margins). Symbolic reference role `@1` = the step-1 anchor; L1 = single arg; L2-A = arg+nearest;
+L2-B = arg+filter (unique kept); L3 = arg+filter+nearest.
 
-Verified: F64 is exactly the main image embedding `[1,256,64,64]`; F256 is the 256×256 high-res
-level selected **by size** `[1,32,256,256]`; exactly one `nn.MultiheadAttention`; q1 feeds the
-scorer (bit-identical to the combined forward); 1,129,985 block parameters. The old Task 6G
-`DenseSpatialGroundingHead` stays installed as frozen evidence only and is absent from the
-candidate forward. The 1×4096 attention weights are exposed for diagnostics only (never
-supervised).
+## 4. J0 Oracle Executor
 
-## 4. Trainables / Frozen Parameters
+`buildreasonseg_mvp/structured_grounding.py` executor consumes ONLY program + candidate geometry
+(mask/bbox/centroid/area/border flag); it never reads target id, GT reasoning or target mask.
+On the fixed 120 val records + 20 paired images: exact accuracy **1.000 (120/120)**, paired
+**20/20**, zero abstentions, L1/L2/L3 all 1.000, and **120/120 agreement** with the frozen
+`recompute_target_from_steps` (bit-level executor-fidelity proof). Gate (≥0.98 / ≥19-20): **PASS**.
 
-Train: text LoRA (17,432,576 params, 392 tensors, lr 1e-4), the refinement block (1,129,985
-params, 21 tensors, lr 3e-4, weight decay 0.01), the `[BOX]`/`[SEG]` rows (4,096 params, lr 3e-4,
-no decay). Frozen: Qwen base, Qwen visual tower, all SAM2, the Task 6G head, the Task 6F box
-head, the Task 6D grounding head, the Projection MLP, and any `<loc_*>` rows (none exist).
+## 5. YOLO Baseline Provenance
 
-Verified on the real model (`evaluation/task6i_architecture_setup.json`, all pass): point-CE and
-bounded-CF gradients reach query_proj / coarse_proj / cross_attn / ffn / fine_proj / Qwen LoRA /
-token rows with `frozen_or_other == 0.0`; one pair step moves every block parameter and both token
-rows, leaves the frozen Task 6G head **bit-identical** with zero gradient, SAM2 **bit-identical**
-with zero gradient, the shared F64/F256 features **bit-identical**, and ordinary embedding rows
-exactly unchanged; retired BCE/Dice + raw-logit ranking carry zero gradient.
+Frozen YOLOv8m-seg-WHU (`WHU_Building_Segment/runs/segment/logs/whu_building_v1/weights/best.pt`,
+100 epochs, imgsz 640): SHA-256 `d9a6a65b7e0819ce4ecbbd9d44a5c8f9dcd2e60ea78203ba8fdf90ba6aaa1f91`,
+re-hashed before inference and re-verified after (match: true). Invoked read-only through the
+existing `yolo_sam_env` (Python 3.10.20, ultralytics 8.4.67, torch 2.13.0+cu132, cuda:0). Nothing
+installed; no legacy file modified; proposal cache gitignored under
+`artifacts/task6j_yolo_proposals/` (131 unique images).
 
-## 5. Attention Diagnostics
+## 6. Proposal Recall
 
-Clean initialization: uniform attention, entropy 8.31 nats (= ln 4096), top-10 mass 0.0035,
-target mass ≈ background mass ≈ 0.008. After I0: entropy **1.46**, top-10 mass concentrated, but
-mean attention mass inside the target's 64×64 region only **0.025** (pair-level own mass 0.0125)
-with the cross-target mass collapsed to ~1e-5. The attention peaks, but not on the target — it is
-diagnosed, not supervised, throughout.
+Target recall @ IoU 0.25/0.50/0.75 = **0.919 / 0.869 / 0.594**; mean/median best IoU 0.701/0.786;
+missing-target rate 13.1 %; ≈9.5 proposals/image; duplicate pairs (IoU>0.7) 21/7,862; all-component
+recall@0.5 target 0.869 vs non-target 0.851; tiny-component recall 0.391; border-component recall
+0.797. Recall gate (≥0.75): **PASS** — but tiny components and 13 % missing targets foreshadow the
+J1 result.
 
-## 6. I0 Overfit (10 pairs)
+## 7. J1 Oracle Program + YOLO
 
-Clean initialization, 1500 pair steps, eval every 250 steps via `argmax(refined heatmap)` in eval
-mode: inside-own 4/7/11/13/13/13 at steps 250/500/750/1000/1250/1500; top-1 0/3/8/9/9/9; paired
-point 1/3/4/5/5/5; bounded ranking 2/8/9/10/10/10; normalized error 0.200/0.225/0.096/0.076/
-0.084/0.084; own mass 0.098/0.183/0.293/0.374/0.410/0.417 vs cross 0.067/0.052/0.041/0.028/
-0.025/0.024; mean |logit| 5.0/10.7/17.9/30.5/35.7/36.1; attention entropy ≈ 1.4; q0 same-image L2
-156 → 159, q1 same-image L2 394 → 1742. The trajectory plateaus from step 1000. Gate: **FAILED**
-(13/20, 5/10, 10/10, 0.0838). Verdict `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`, 1377 s.
+Canonical templates executed over predicted proposal geometry (no GT in execution): strict mIoU
+**0.3712** (gate 0.30 ✓), Dice 0.4174, **35/120 abstentions** (nearest_relation_invalid 13,
+no_eligible 9, filter_multi 9, extreme_invalid 4), paired mask selection **5/20** (gate 12/20 ✗),
+mean own IoU 0.131 vs cross 0.160. **J1 viability gate FAILS** → J4 not run. Failure attribution
+over 120 rows: 55 good selections, 35 abstentions, 18 proposal-geometry-changes-outcome, 8
+target-absent-or-poor, 4 correct-selection-poor-mask-quality.
 
-## 7. I0 Audit (implementation clean)
+## 8. ProgramHead Architecture
 
-`evaluation/task6i_i0_audit.json`: q0 causal bit-identity holds (fp32 probe, delta 0.0); F64/F256
-shared features bit-identical; gradients reach attention Q/K/V/out, FFN, F64 projection, F256
-scorer, Qwen LoRA and `[BOX]` with **no gradient into SAM2**; point CE 11.0876 → 3.1833 and
-bounded CF loss 0.8527 → 0.0967 both decrease; target-cell probability 1.53e-5 → 0.2683, top-1
-rate 0.00 → 0.45, inside rate 0.05 → 0.65, spatial entropy 11.09 → 4.21, max non-target
-probability 1.66e-5 → 0.0580; q1 same-image L2 2.2 → 1755.6 vs q0 27.4 → 162.6; attention target
-mass 0.0079 → 0.0250; attention/logits finite. Two procedure findings were fixed: inference now
-runs in **eval mode** (LoRA dropout p=0.05 is training-only noise — measured 0.56–1.39 same-batch
-delta in train mode vs 0.0 in eval), and the causal probe runs in **fp32** (bf16 sdpa rounds the
-shared prefix differently for different sequence lengths — 0.31 delta vs 0.0 in fp32; kernel
-rounding, not information flow).
+Text-only Qwen3-VL-2B: instruction (chat format, NO image tokens) → text-only LoRA → last prompt
+position hidden (assistant-prefix representation) → `LayerNorm → Linear(2048, 20)` → program id.
+Trainable: text-only LoRA + ProgramHead; frozen: Qwen base, visual tower, everything else.
+query_type appears only as the CE target. No free-form generation.
 
-## 8. I1 Training
+## 9. J2 Program Parsing
 
-**Not run.** Per sections 10/14 the 240-pair mini-train is gated on I0 passing; I0 failed cleanly
-after the audit.
+Query-type-stratified train-only subset (100 × 20 = 2000 records), 5 epochs, batch 16, cosine over
+625 steps, strict determinism. Fixed-120 accuracy **1.0000**, macro F1 **1.0000**, paired program
+correctness **20/20**, full-val (3,884) accuracy **1.0000**. Gate (≥0.90/≥0.85/≥18-20): **PASS**.
+Checkpoint `artifacts/checkpoints/task6j/j2_best.pt` (manifest recorded).
 
-## 9. Point Localization
+## 10. J3 Predicted Program + Oracle Candidates
 
-I0 final (eval mode, argmax path): inside-own **13/20**, target-cell top-1 9/20, top-5 10/20,
-normalized point error **0.0838**, 512px error from `evaluation/task6i_i0_overfit.json`. The
-6H.1 H0-R baselines were 7/20 inside and 0.1673 error — the refinement block roughly doubles the
-localization signal but does not reach the 18/20 gate.
+Instruction → trained ProgramHead → program → oracle candidates → executor: selected-target
+accuracy **1.0000 (120/120)**, paired **20/20**, zero failures, program accuracy 1.0000. No GT
+program fallback anywhere. Gate (≥0.85/≥17-20): **PASS**.
 
-## 10. Pair Preference
+## 11. J4 Structured End-to-End
 
-Bounded pair ranking **10/10** at I0 final (6H.1 H0-R: 8/10); own mass 0.4166 vs cross mass
-0.0236 (6H.1: 0.1835 vs 0.0456); paired point selection **5/10** (gate 9). Preference is
-region-level correct while point placement misses — see the error analysis.
+**Not run** — section 15 gates J4 on the J1 viability gate, which failed on paired selection
+(5/20 < 12/20). `evaluation/task6j_j4_structured_end_to_end.json` records `ran: false` and the
+blockers; the J4 script exists and refuses without the gates.
 
-## 11. q0 vs q1 Representation
+## 12. Optional SAM Refinement
 
-The full §11 representation diagnosis belongs to the best I1 checkpoint; since I1 did not run, the
-I0-level evidence stands in: same-image q0 L2 159.4 (q0 barely moves from 155.7 across training)
-vs q1 L2 **1742.4** (growing monotonically 394 → 1742). One refinement step massively amplifies
-the instruction contrast in q1 — but the amplification follows the wrong spatial hypothesis (see
-§5). The main §11 question is answered provisionally: **no** — a single visual refinement step
-does not turn the weak instruction signal into a target-specific q1, because the attention cannot
-aim itself at the target.
+Not exercised (J4 gated off). The J4 source contains no SAM2 calls at all; if added later it must
+consume only predicted proposal geometry.
 
-## 12. I2 Segmentation
+## 13. L1/L2/L3 + Query Breakdown
 
-**Not run** (gated on I1, which is gated on I0).
+J0: L1/L2/L3 all 1.000 (oracle executor). J2: per-query-type accuracy 1.000 for all 20 programs.
+J1 (proposal chain): mIoU by query type ranges from 0.000 (smallest_to_left_of) to 0.790
+(rightmost); the L2/L3 multi-step programs suffer the abstentions and geometry shifts documented
+in §7.
 
-## 13. Paired Mask Probe
+## 14. Failure Attribution
 
-Not run (I2 did not run). `evaluation/task6i_paired_probe.json` records the I0-stage point-side
-probe: preference 10/10, paired point 5/10.
+`evaluation/task6j_error_attribution.json`: binding failure = **proposal_chain_j1_paired_selection**.
+J3 failures: none. J1 failures: 35 executor abstentions, 18 proposal-geometry-changes-relation-outcome,
+8 target-absent-or-poor-in-proposal-set, 4 correct-selection-poor-mask-quality. The parser and the
+executor are not the problem; the proposal backbone is.
 
-## 14. L1/L2/L3 + Query Breakdown
+## 15. Dataset / Proposal Adequacy
 
-Not run (I1/I2 did not run). The I0 error analysis (`evaluation/task6i_error_analysis.json`)
-provides the level/quality breakdown instead: dominant pair failure
-`pair_preference_correct_point_outside`; `attention_misses_target` 100 % of records (attention
-mass inside target < 0.5); WHU data-quality flags cover > 50 % of failing records
-(`whu_data_quality_dominates: true`).
+Tiny-component recall@0.5 is 0.391, border-component recall 0.797, 13.1 % of targets have no
+proposal at IoU ≥ 0.5, and 21 images contain duplicate (IoU>0.7) proposal pairs. Merged/touching
+buildings are the known upstream limitation of the binary component maps. Recommendation: a
+proposal-backbone/dataset task next (instance segmentation aligned with component semantics, or
+proposal-level post-processing) — no automatic data migration.
 
-## 15. Error / Data Adequacy
+## 16. Reusable Core API
 
-The failure is representation-level, not objective- or data-level alone: the pair preference is
-perfect (10/10) while points miss, so the model prefers the right target region and cannot resolve
-where inside it the point goes; the cross-attention (its one chance to look) is peaked at
-~2.5 % target mass. Data quality contributes to the residual but is not the dominant mechanism:
-the same 10 pairs are the ones 6H.1 audited in depth.
+`buildreasonseg_mvp/structured_grounding.py`: `parse_program(instruction, parser, template_map)`,
+`extract_building_candidates(image)` (CandidateSet), `execute_program(program, candidates)`,
+`execute_program_by_id(program_id, candidates)`, `predict_structured_mask(image, instruction, ...)`,
+plus `build_program_spec`, `canonical_program_template`, `CandidateSet.from_component_map` /
+`from_proposals`. No GUI.
 
-## 16. Runtime / VRAM
+## 17. Runtime / VRAM
 
-One pair step ≈ 0.9 s on the RTX 5080 Laptop (bf16 autocast, gradient checkpointing, frozen
-visual-feature cache, strict determinism on); I0 = 1500 pair steps + 6 evaluations ≈ 1377 s.
-Block adds 1.13 M trainable parameters; optimizer groups LoRA 1e-4 / decoder 3e-4 / token 3e-4,
-cosine over the pair-step budget, warmup 20.
+YOLO inference: 131 images ≈ minutes on cuda:0 (read-only env). J2: 625 optimizer steps ≈ 8 min
+on the RTX 5080 Laptop (text-only bf16, strict determinism). J0/J1/J3 executor runs: pure CPU
+geometry over cached proposals/component maps. No new packages, no new environments.
 
-## 17. Tests
+## 18. Tests
 
-`python -m pytest tests/ -q` → **418 passed** (32 warnings), including 28 new Task 6I tests
-(`tests/test_task6i_visual_query_refinement.py`): single cross-attention layer, attention
-geometry, exact F64/F256 shape validation, q0→q1 and FFN residual exactness, scorer-uses-q1,
-attention diagnostics, frozen 6H.1 constants, detached legacy terms, one-pair-one-step, pair-step
-scheduler horizon, shared SAM features, SAM2/visual-tower freeze, no-GT-in-inference, old-head/
-box-head/loc-path absence, no test split, predicted-point-only I2, no `[REF]`/SRE/SCL/4B, strict
-determinism, checkpoint round-trip for the block, parameter-group bucket, and the
-`evaluation/task6i_architecture_setup.json` pass gate.
+`python -m pytest tests/ -q` → **444 passed** (32 warnings), including 26 new Task 6J tests
+(`tests/test_task6j_structured_grounding.py`): vocabulary-from-frozen-query-types, frozen relation
+convention, executor-cannot-read-target-id, oracle-candidates-diagnostic-only, synthetic unit
+reproduction of every operation, real-data equivalence with the frozen recompute, YOLO provenance
+hash checks, legacy read-only hygiene, no package installation, proposal geometry without GT,
+recall matching evaluation-only, ProgramHead text-only/no-image-tokens, query_type as CE target
+only, split hygiene, J3 no-GT-program fallback, J4 predicted-only inputs, no old direct-pixel
+head, no `[REF]`/SRE/SCL/4B, strict determinism, no GUI, auditable failure attribution, and the
+J0/J1/J2/J3 artifact gates.
 
-## 18. Git / Watt
+## 19. Git / Watt
 
-Task commit `ee0e589` (`feat: add visual query refinement`) followed by the `docs:` handoff
-commit; weights/checkpoints/caches and hidden/attention dumps stay gitignored; only `evaluation/`
-manifests and JSONs are tracked. Watt was already running from earlier tasks and is used as
-transport-only for the push; ownership rules apply — no hosts/cert/TLS edits, no insecure flags.
+Task commit `5a5daf0` (`feat: audit structured proposal grounding`) followed by the `docs:`
+handoff commit; YOLO weights, prediction caches and checkpoints stay gitignored (only
+hashes/manifests tracked); no legacy files, no dataset JSONL edits. Watt already running from
+earlier tasks; transport-only for the push, ownership rules respected — no hosts/cert/TLS edits.
 
-## 19. Recommended Next Architecture Decision
+## 20. Recommended Next Architecture Decision
 
-**Multiple learned query slots** (an object-query set in the style of OMG-Seg/OMG-LLaVA): the
-I0 evidence shows the single `[BOX]` slot cannot direct its own cross-attention at the target —
-one free look at the whole map peaks on salient-but-wrong regions (2.5 % target mass). A small set
-of learned queries with the 6H.1 point-aligned bounded objective would let each slot specialize
-and let the head select the most peaked refined heatmap. Alternatives: a stronger/larger MLLM, or
-architecture-level reference/relation grounding. Per section 14 none of these may be implemented
-without review; the task stops here.
+**Proposal-backbone / dataset step.** The parser and the executor are solved and reusable; the
+measured blocker is that YOLO instances do not match the component semantics the frozen relation
+engine was calibrated on (split/merged/border instances → 35/120 abstentions and 5/20 paired
+selection). Evaluate an instance-segmentation backbone whose instances align with the component
+maps (or deterministic proposal post-processing such as split/merge against the relation
+eligibility flags) and re-run the J1/J4 gates. Keep the 20-program vocabulary, the executor and
+the ProgramHead frozen. Per section 26 the task stops here; no learned SRE, no `[REF]`, no SCL,
+no YOLO retraining, no 4B, no dataset migration, no full training, no GUI — waiting for
+ChatGPT review.

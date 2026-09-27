@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6I._
+_Last updated by DSH at the end of Task 6J._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -69,6 +69,38 @@ The block above is machine-checked against
 | 6H | **Counterfactual Pair-Aligned Dense Grounding v0.1 (pair step + own-vs-cross ranking)** | **done → `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** (H0 ranking 10/10 but inside-own 3/20) — **causal wording narrowed in Task 6H.1 §3: the logit ranking was scale-degenerate; query learnability was unresolved** |
 | 6H.1 | **Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding** | **done → `BOUNDED_POINT_OBJECTIVE_FAILED`** (H0-R point CE 11.10→4.74, inside-own 7/20) |
 | 6I | **Visual Query Refinement Block v0.1 (single query cross-attends frozen 64×64 SAM2 embedding once)** | **done → `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`** (I0 inside-own 7→13/20, paired point 2→5/10; attention peaks at only ~2.5 % target mass) |
+| 6J | **Structured Proposal Grounding Feasibility (instruction → relation program → building candidates → explicit geometry execution)** | **done → `PROPOSAL_QUALITY_LIMIT`** (J0 executor 1.000/20-20; J2 parser 1.000 acc, 1.000 full-val; J3 1.000/20-20; J1 frozen-YOLO chain 5/20 paired → J4 not run) |
+
+## Task 6J measured results
+
+The structured route is audited stage by stage with a 20-program canonical vocabulary derived 1:1
+from the frozen v0.1.1 query types (verified against all 25,229 records), an independent executor
+that reuses the frozen Task 3B relation engine (never reads target id/GT reasoning/target mask),
+a text-only Qwen ProgramHead, and the frozen YOLOv8m-seg-WHU baseline invoked read-only with hashed
+provenance. Full detail: `docs/task6j_structured_proposal_grounding.md`, ADR-022,
+`evaluation/task6j_*.json`.
+
+| | Value |
+|---|---|
+| J0 oracle executor | exact **1.000 (120/120)**, paired **20/20**, 0 abstentions, **120/120 agreement** with the frozen `recompute_target_from_steps` → gate (0.98/19) **PASS** |
+| YOLO provenance | best.pt sha256 `d9a6a65b…`, yolo_sam_env (py 3.10.20, ultralytics 8.4.67), read-only, hash re-verified |
+| Proposal recall | @0.25/0.50/0.75 = **0.919/0.869/0.594**, mean best IoU 0.701, missing 13.1 %, ≈9.5 proposals/img, tiny-component recall 0.391 |
+| J1 oracle program + YOLO | mIoU **0.3712** (gate 0.30 ✓), **35/120 abstentions**, paired mask **5/20** (gate 12 ✗) → viability gate **FAIL** → J4 not run |
+| J2 ProgramHead (text-only) | fixed-120 acc **1.0000**, macro F1 **1.0000**, paired **20/20**, full-val (3,884) **1.0000** → gate **PASS** |
+| J3 predicted program + oracle candidates | selected-target **1.0000**, paired **20/20** → gate **PASS** |
+| Verdict | **`PROPOSAL_QUALITY_LIMIT`** — parser + executor solved; the frozen YOLO proposal chain (instance semantics mismatch with components) is the binding failure |
+
+1. **Parsing and execution are solved, not the problem.** J0/J2/J3 all pass at ceiling: the 20
+   canonical programs reproduce the generator exactly, and a 2B text-only classifier maps
+   instructions to programs perfectly (the instructions are template-generated and semantically
+   complete, so 100 % is expected and informative: program parsing is NOT the bottleneck).
+2. **The proposal backbone is the binding constraint.** Recall and single-mask mIoU pass, but
+   YOLO instances (split/merged/border-clipped) change relation outcomes under the frozen
+   component-calibrated semantics: 35/120 abstentions and 5/20 paired selection.
+3. **J4 is correctly not run** (section 15). Next recommended step: a proposal-backbone/dataset
+   task (instance segmentation aligned with component semantics, or deterministic proposal
+   post-processing) with the parser/executor frozen. No YOLO retraining, no learned SRE, no
+   `[REF]`/SCL, no 4B, no dataset migration, no GUI — waiting for review.
 
 ## Task 6I measured results
 
