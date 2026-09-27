@@ -183,7 +183,7 @@ gate) — 365 pre-existing tests plus the 24 Task 6H.1 tests, with no regression
 
 ## 19. Git/Watt
 
-**Commit: `{{COMMIT_HASH}}` — `fix: align counterfactual grounding with point localization`** (staged
+**Commit: `2879136` — `fix: align counterfactual grounding with point localization`** (staged
 only code, tests, docs and `evaluation/**` artifacts: no weights/checkpoints, no feature caches, no
 hidden dumps, no `.conda`, no dataset changes; `artifacts/**` stays gitignored and only
 `evaluation/task6h1_checkpoint_manifest.json` records the checkpoint hash).
