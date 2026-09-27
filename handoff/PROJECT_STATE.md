@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6H._
+_Last updated by DSH at the end of Task 6I._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -68,6 +68,40 @@ The block above is machine-checked against
 | 6G | **Dense Query–Visual Spatial Grounding Map v0.1 (query × frozen SAM2 map → heatmap point)** | **done → `DENSE_GROUNDING_IMPLEMENTATION_FAILED`** (grid-256 oracle 0.4883/18-20; G0 inside 0.10) |
 | 6H | **Counterfactual Pair-Aligned Dense Grounding v0.1 (pair step + own-vs-cross ranking)** | **done → `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** (H0 ranking 10/10 but inside-own 3/20) — **causal wording narrowed in Task 6H.1 §3: the logit ranking was scale-degenerate; query learnability was unresolved** |
 | 6H.1 | **Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding** | **done → `BOUNDED_POINT_OBJECTIVE_FAILED`** (H0-R point CE 11.10→4.74, inside-own 7/20) |
+| 6I | **Visual Query Refinement Block v0.1 (single query cross-attends frozen 64×64 SAM2 embedding once)** | **done → `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`** (I0 inside-own 7→13/20, paired point 2→5/10; attention peaks at only ~2.5 % target mass) |
+
+## Task 6I measured results
+
+The frozen Task 6H.1 objective and paired training are reused byte-for-byte; the only addition is
+one `VisualQueryRefinementBlock` (q0 → LayerNorm → Linear(2048,256) → one cross-attention over the
+frozen 64×64 SAM2 embedding, embed 256 / 4 heads, residual + FFN(256→512→256) → q1 → scores the
+frozen 256×256/32-ch feature). Full detail: `docs/task6i_visual_query_refinement.md`, ADR-021,
+`evaluation/task6i_*.json`.
+
+| | Value |
+|---|---|
+| Architecture proof | F64 `[1,256,64,64]`, F256 `[1,32,256,256]` (by size), exactly 1 cross-attention layer, block 1,129,985 params, scorer = dot(q1,K256)/√256 + bias (bit-identical to the combined forward) |
+| Freeze proof | gradients reach query/coarse/attention/FFN/fine projections + LoRA + token rows with `frozen_or_other == 0.0`; SAM2 and the frozen Task 6G head bit-identical, zero grad; shared F64/F256 bit-identical |
+| Causal proof | `[BOX]` bit-identical under future-text mutation in **fp32** (bf16 sdpa rounds the shared prefix per sequence length: 0.31 delta vs 0.0 fp32) |
+| **I0** (10 pairs, 1500 pair steps) | inside-own **13/20**, top-1 9/20, paired point **5/10**, bounded ranking **10/10**, norm-err **0.0838**, own mass **0.4166** vs cross **0.0236**, mean \|logit\| 36.1 → **failed** (gates 18/20, 9/10, 9/10, <0.08) |
+| I0 audit | point CE 11.0876 → **3.1833**, CF loss 0.8527 → 0.0967, target-cell prob 1.5e-5 → 0.268, top-1 rate 0 → 0.45, q1 same-image L2 2.2 → **1755.6** vs q0 27.4 → 162.6; **attention target mass 0.0079 → 0.0250** (peaked but not on target) |
+| I1 / I2 | **not run** (sections 8/14 stop at the failed I0) |
+
+1. **The refinement step works but under-shoots.** One visual look raises the single-query
+   localization roughly 2× (inside 7→13, paired point 2→5, own mass 0.18→0.42, error 0.167→0.084) —
+   a real, verified improvement over the frozen 6H.1 baseline — but the gates are far away.
+2. **The attention cannot aim itself.** The 1×4096 cross-attention peaks (entropy 8.31→1.46 nats)
+   with only ~2.5 % mass inside the target's 64×64 region, and that share barely moves during
+   training. A single query slot has no target hypothesis to test against the map, so it locks onto
+   a salient but task-irrelevant location and the scorer amplifies it (q1 L2 → 1756, \|logit\| → 36).
+3. **Accepted verdict (section 13): `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`** → clean failure,
+   task stops before I1/I2. Recommended for review (section 14): **multiple learned query slots**
+   (OMG-Seg/OMG-LLaVA-style object queries), a stronger/larger MLLM, or architecture-level
+   reference/relation grounding — none implemented automatically. No SAM2 training, no second
+   refinement layer, no multiple queries, no `[REF]`/SRE/SCL/4B/dataset migration/GUI.
+4. **Two methodology fixes adopted for all later inference paths**: inference runs the Qwen model
+   in **eval mode** (LoRA dropout p=0.05 is training-only noise), and causal bit-identity probes
+   run in **fp32**.
 
 ## Task 6H.1 measured results
 
