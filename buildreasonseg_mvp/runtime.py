@@ -21,7 +21,7 @@ import yaml
 
 from . import data as data_mod
 from .checkpointing import write_json
-from .losses import LossWeights, combined_loss
+from .losses import LossWeights, combined_loss, lm_cross_entropy, mask_bce_with_logits, mask_soft_dice
 from .model import BuildReasonSegMvp
 from .qwen_seg import (
     TeacherForcedBatch,
@@ -301,6 +301,202 @@ class MvpRuntime:
         if cache is None:
             return {"enabled": False, "installed": False}
         return {"installed": True, **cache.stats()}
+
+    # -- Task 6D: Spatial Grounding Bridge -------------------------------
+
+    def install_grounding_head(self, kind: str, hidden_dim: int | None = None, mid_dim: int = 512) -> dict:
+        """Attach the `SpatialGroundingHead` to this runtime's model (Task 6D section 6)."""
+
+        from .grounding import SpatialGroundingHead
+
+        hidden = int(hidden_dim or self.reports.get("qwen_hidden_size") or 2048)
+        head = SpatialGroundingHead(hidden_dim=hidden, mid_dim=mid_dim, kind=kind).to(self.device)
+        self.model.grounding_head = head
+        self.model.geometry_kind = kind
+        self.grounding_kind = kind
+        report = {
+            "installed": True,
+            "hidden_dim": hidden,
+            "device": str(self.device),
+            **head.as_dict(),
+            "frozen_sam_image_encoder": True,
+            "projection_used_by_candidate": False,
+        }
+        self.reports["grounding_head"] = report
+        return report
+
+    def set_grounding_trainables(self, stage: str) -> dict:
+        """Task 6D section 9/10 trainable sets.
+
+        * ``G0`` — grounding proof: text LoRA + `[SEG]` machinery + the head. The SAM2
+          decoder and the projection MLP stay frozen, so no mask gradient flows at all.
+        * ``G1`` — joint segmentation: additionally the SAM2 mask decoder. The prompt
+          encoder, the SAM2 image encoder, the Qwen base and the visual tower stay frozen,
+          and the projection MLP is never used by the candidate.
+        """
+
+        stage = stage.upper()
+        if stage not in ("G0", "G1"):
+            raise ValueError(f"stage must be 'G0' or 'G1', got {stage!r}")
+
+        model = self.model
+        for parameter in model.projection.parameters():
+            parameter.requires_grad_(False)
+        for parameter in model.sam.sam_mask_decoder.parameters():
+            parameter.requires_grad_(stage == "G1")
+        if model.grounding_head is not None:
+            for parameter in model.grounding_head.parameters():
+                parameter.requires_grad_(True)
+
+        trainable = [name for name, p in model.named_parameters() if p.requires_grad]
+        groups = {
+            "lora_or_adapter": [n for n in trainable if "lora_" in n or "token_holder" in n],
+            "grounding_head": [n for n in trainable if n.startswith("grounding_head.")],
+            "sam_mask_decoder": [n for n in trainable if n.startswith("sam.sam_mask_decoder.")],
+            "projection": [n for n in trainable if n.startswith("projection.")],
+        }
+        report = {
+            "stage": stage,
+            "trainable_tensors": len(trainable),
+            "trainable_params": sum(p.numel() for p in model.parameters() if p.requires_grad),
+            "grounding_head_trainable": any(p.requires_grad for p in model.grounding_head.parameters())
+            if model.grounding_head is not None
+            else False,
+            "sam_mask_decoder_trainable": any(
+                p.requires_grad for p in model.sam.sam_mask_decoder.parameters()
+            ),
+            "projection_trainable": any(p.requires_grad for p in model.projection.parameters()),
+            "sam_prompt_encoder_trainable": any(
+                p.requires_grad for p in model.sam.sam_prompt_encoder.parameters()
+            ),
+            "sam_image_encoder_trainable": any(
+                p.requires_grad for p in model.sam.image_encoder.parameters()
+            ),
+            "qwen_visual_trainable": [
+                n for n in trainable if "visual" in n or "vision_tower" in n or "vision_model" in n
+            ],
+            "group_counts": {key: len(value) for key, value in groups.items()},
+        }
+        self.reports["grounding_trainables"] = report
+        return report
+
+    def grounding_loss_weights(self, include_mask_loss: bool) -> "LossWeights":
+        """Task 6D section 8: keep the Task 6C headline weights, add lambda_ground."""
+
+        base = self.cfg.get("loss", {})
+        return LossWeights(
+            lm_ce=float(base.get("lm_ce", 2.0)),
+            mask_bce=float(base.get("mask_bce", 2.0)) if include_mask_loss else 0.0,
+            mask_dice=float(base.get("mask_dice", 1.0)) if include_mask_loss else 0.0,
+        )
+
+    def grounding_train_step(
+        self,
+        batch,
+        gt_mask,
+        features,
+        optimizer=None,
+        *,
+        lambda_ground: float = 5.0,
+        include_mask_loss: bool = False,
+        geometry_kind: str | None = None,
+        timer=None,
+    ) -> dict:
+        """One Spatial Grounding Bridge step (Task 6D sections 8-10).
+
+        `gt_mask` is supervision only. GT geometry is derived from it here and is never an
+        input to the model; the prompt path always uses the head's prediction.
+        """
+
+        from .grounding import geometry_smooth_l1, target_geometry
+
+        kind = geometry_kind or getattr(self.model, "geometry_kind", None)
+        if kind is None:
+            raise RuntimeError("no geometry kind set; call install_grounding_head first")
+
+        training_cfg = self.cfg["training"]
+        batch = batch.to(self.device)
+        use_autocast = bool(training_cfg.get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        weights = self.grounding_loss_weights(include_mask_loss)
+
+        with _stage("grounding_forward"):
+            with autocast:
+                output = self.model.forward_grounded(batch, features)
+                lm_ce = lm_cross_entropy(output.lm_logits, batch.labels)
+                target_geometry_tensor = torch.as_tensor(
+                    target_geometry(gt_mask, kind), dtype=torch.float32, device=self.device
+                ).reshape(1, -1)
+                ground = geometry_smooth_l1(output.predicted_geometry, target_geometry_tensor)
+
+        total = weights.lm_ce * lm_ce + lambda_ground * ground
+        breakdown = {
+            "lm_ce": lm_ce,
+            "mask_bce": torch.zeros((), device=self.device),
+            "mask_dice": torch.zeros((), device=self.device),
+            "ground": ground,
+        }
+
+        if include_mask_loss:
+            with _stage("mask_loss"):
+                with autocast:
+                    target, supervision_logits, supervision_mode = self.build_mask_supervision(
+                        gt_mask, output.mask_logits
+                    )
+                    mask_bce = mask_bce_with_logits(supervision_logits, target)
+                    mask_dice = mask_soft_dice(supervision_logits, target)
+            breakdown["mask_bce"] = mask_bce
+            breakdown["mask_dice"] = mask_dice
+            total = (
+                weights.lm_ce * lm_ce
+                + weights.mask_bce * mask_bce
+                + weights.mask_dice * mask_dice
+                + lambda_ground * ground
+            )
+
+        if optimizer is not None:
+            optimizer.zero_grad(set_to_none=True)
+        with _stage("backward"):
+            total.backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        return {
+            "losses": {
+                "total": float(total.detach()),
+                "lm_ce": float(lm_ce.detach()),
+                "mask_bce": float(breakdown["mask_bce"].detach()),
+                "mask_dice": float(breakdown["mask_dice"].detach()),
+                "ground": float(ground.detach()),
+                "lm_ce_raw": float(lm_ce.detach()),
+                "mask_bce_raw": float(breakdown["mask_bce"].detach()),
+                "mask_dice_raw": float(breakdown["mask_dice"].detach()),
+                "ground_raw": float(ground.detach()),
+            },
+            "predicted_geometry": output.predicted_geometry.detach().float().cpu(),
+            "gt_geometry": target_geometry_tensor.detach().float().cpu(),
+            "grad_clip_total_norm": clipped,
+            "geometry_kind": kind,
+            "lambda_ground": lambda_ground,
+            "include_mask_loss": include_mask_loss,
+            "mask_supervision": None if not include_mask_loss else supervision_mode,
+            "weights": weights.as_dict(),
+        }
 
     # -- optimisation ----------------------------------------------------
 

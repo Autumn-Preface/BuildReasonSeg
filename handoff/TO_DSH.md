@@ -1,440 +1,576 @@
-# TO_DSH — Task 6C.7: Frozen Qwen Visual-Feature Cache + Sync-Hotspot Cleanup
+# TO_DSH — Task 6D: Spatial Grounding Bridge v0.1
 
 > Status: **ACTIVE**
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: continue performance optimization after Task 6C.6.
+> Purpose: return focus from performance engineering to **model capability and algorithm architecture**.
 >
-> Task 6C.6 correctly established that:
-> - host data preparation is not the bottleneck;
-> - batch-1 execution launches ~57k CUDA kernels/step;
-> - ~2,545 host↔device synchronization events remain per step;
-> - `torch.compile` is not usable/adoptable in the current environment;
-> - the Task 6C.5 gradient-norm optimization is now integrated.
+> Task 6C established that the direct `[SEG] hidden → Projection MLP → SAM sparse prompt` path does not produce instruction-conditioned target selection on unseen images.
 >
-> However, **do not declare batch-1 optimization exhausted yet**.
+> Task 6C.5–6C.7 are now closed as performance work.
 >
-> Two issues remain:
-> 1. the formal `task6c_train.py` Phase-B path still performs an unnecessary device copy (`moved = batch.to(...)`) and then passes the original CPU `batch` to `runtime.train_step`, which performs its own `.to(device)`;
-> 2. the Qwen visual tower is frozen / has no visual LoRA, but its deterministic image features are recomputed every optimization step. Those features may be cacheable without caching any trainable language-model hidden state.
+> Task 6D introduces the first explicit spatial-grounding mechanism:
 >
-> This task investigates and, if safe, adopts those optimizations.
+> **MLLM `[SEG]` hidden state → predicted target geometry → official SAM2 spatial prompt encoder → target mask**
 >
-> **Do not start batch>1. Do not start Task 6D model-quality work.**
+> Ground-truth geometry is used **only as training supervision / oracle diagnostic**, never as inference-time input.
 
-## 0. User-facing language
+## 0. User priority
 
-All narrative DSH UI output must be **Chinese**.
+The user prioritizes:
+1. model capability;
+2. useful training/inference code;
+3. CMD-runnable `train.py` / `predict.py` / `evaluate.py`;
+4. architecture innovation and paper evidence;
+5. UI/GUI only much later.
 
-Commands, paths, profiler operator names and metric identifiers may remain English.
+Do **not** build GUI/Web UI in this task.
 
-## 1. Hard boundaries
+Do **not** spend another task on generic performance tuning unless runtime blocks model development.
 
-Do not change:
-- Qwen3-VL-2B base model;
-- SAM2.1 Base+;
-- LoRA rank/targets;
-- `[SEG]`;
-- SAM bridge;
-- loss weights;
-- optimizer/scheduler;
-- sample order;
-- number of optimizer steps;
-- effective batch size;
-- dataset;
-- inference/GT semantics;
-- strict-determinism policy.
+## 1. Data policy
 
-Do not use:
-- 4B;
+Current BuildSpatialReason v0.1.1 / WHU-based data remains the controlled dataset for Task 6D so the architecture experiment stays comparable with Task 6C.
+
+WHU is **not a permanent hard constraint anymore**.
+
+The user allows:
+- replacing WHU with a more suitable building dataset later;
+- adapting/programmatically transforming a new dataset for BuildSpatialReason-style supervision.
+
+Do not change datasets inside Task 6D. Record evidence if current pseudo-instances materially limit the architecture.
+
+## 2. Hard architecture boundaries
+
+Use:
+- Qwen3-VL-2B-Instruct;
+- SAM2.1 Hiera Base+;
+- current text-only LoRA;
+- current `[SEG]`;
+- strict deterministic training;
+- Task 6C paired subset `P`;
+- fixed Task 6B/6C validation and paired probe;
+- Task 6C.7 accepted runtime (`collect_grad_norms=false`, frozen Qwen visual cache, no redundant Phase-B transfer).
+
+Do **not** add:
+- Qwen 4B;
 - `[REF]`;
 - Spatial Relation Encoder;
 - Spatial Consistency Loss;
-- true batching;
-- gradient accumulation as a throughput claim;
-- new external datasets.
+- external datasets;
+- true batch > 1;
+- UI;
+- full 15,592-sample training.
 
-This is performance engineering only.
+Goal: prove that **the same image can produce different correct target masks under different instructions**.
 
-## 2. UU / Watt
+# PART A — Freeze the current failure baseline
 
-Ignore UU completely.
+## 3. Baseline evidence
 
-For Watt Toolkit:
-- inspect only Watt/Steam++ state at task start;
-- if pre-existing, leave it alone;
-- if DSH starts it for final push, close it afterward through the verified `WM_SYSCOMMAND / SC_CLOSE` lifecycle and verify cleanup;
-- training and profiling remain offline.
+Do not rerun all Task 6C arms.
 
-# PART A — Fix the formal-loop redundant device transfer
+Use the frozen Task 6C `P_C` result:
+- strict e2e mIoU ≈ 0.10604;
+- paired mask probe = 0/20;
+- same-image prediction-to-prediction IoU ≈ 0.999;
+- valid `[SEG]` emission 120/120.
 
-## 3. Verify and remove the redundant transfer
+Record exact artifact/hash used.
 
-Current Phase-B structure in `scripts/task6c_train.py` is effectively:
+A small current-code sanity revalidation is allowed only if needed to prove accepted performance changes remain value-equivalent.
 
-```python
-batch, image = runtime.prepare(sample)
-moved = batch.to(runtime.device)
+# PART B — Oracle spatial-prompt diagnostic
 
-# Phase B:
-result = runtime.train_step(batch, ...)
-```
+## 4. Oracle feasibility
 
-and `runtime.train_step()` itself performs:
+Before training a geometry head, establish whether SAM2 can recover the target building when given correct geometry.
 
-```python
-batch = batch.to(self.device)
-```
+Use fixed 120-record validation subset and 20 paired validation images.
 
-Therefore the first `moved` allocation is unused in Phase B.
+### Oracle Point
 
-Refactor the formal loop so:
-- Phase A moves the batch exactly once because it directly calls Qwen;
-- Phase B either passes already-moved `moved` to `runtime.train_step`, or does not create `moved` at all and lets `runtime.train_step` move once.
+Derive one deterministic interior point from GT target mask.
 
-Prefer the simpler path.
+Preferred:
+- maximum of Euclidean distance transform inside target mask;
+- deterministic tie-breaking.
 
-Add a regression test proving Phase B performs one logical device transfer, not two.
+Feed it through official SAM2 prompt encoder as a positive point.
 
-Measure the isolated effect using the same Task 6C.6 benchmark protocol.
+### Oracle Box
 
-This is expected to be small; do not overclaim it.
+Derive tight GT target bounding box.
 
-# PART B — Identify the remaining synchronization hotspots
+Feed it through official SAM2 box prompt path.
 
-## 4. Resolve the unexplained `aten::item` count
+### Decoder state
 
-Task 6C.6 profiler reports approximately:
-- `aten::item`: 1,051 per step;
-- `cudaStreamSynchronize`: ~130 per step;
-- total sync events: ~2,545 per step.
+Use the same SAM2 decoder state that will initialize the Task 6D candidate.
 
-Project-owned explicit scalar conversions explain only a few events per step, so the remaining large count is not yet localized.
+Do not train on validation.
 
-Run a short profiler with stack/module attribution sufficient to answer:
-- which call sites produce the majority of `aten::item`;
-- which call sites produce `cudaStreamSynchronize`;
-- whether those calls originate from Qwen visual tower, Qwen language model, PEFT/trainable-token wrappers, gradient checkpointing, SAM decoder, project logging/loss code, or other Transformers internals.
-
-Do not commit large traces.
-
-Create a compact ranked table:
-
-```text
-callsite/module
-item/sync events per step
-share
-avoidable? yes/no/unknown
-```
-
-If stack attribution is unavailable, use scoped profiling by temporarily profiling:
-- Qwen vision only;
-- Qwen LM only;
-- SAM only;
-- optimizer only;
-without changing training semantics.
-
-Do not patch third-party Transformers internals blindly.
-
-# PART C — Frozen Qwen visual-feature cache
-
-## 5. Establish cache eligibility first
-
-The visual tower must be proven cache-safe before implementation.
-
-Verify on the current runtime:
-1. all Qwen visual-tower parameters have `requires_grad=False`;
-2. zero LoRA modules exist in the visual tower;
-3. visual output for the same image is deterministic under actual training-mode/runtime settings;
-4. no training-time state in the visual tower changes between steps;
-5. the visual representation injected into the language model is independent of instruction text, LoRA parameters, `[SEG]` adapter and optimizer state.
-
-If any condition fails, do **not** cache visual outputs.
-
-Record:
-`evaluation/task6c7_visual_cache_eligibility.json`
-
-## 6. Find the narrowest safe cache boundary
-
-Inspect the installed `transformers` Qwen3-VL implementation and current model forward path.
-
-Find the exact boundary:
-
-```text
-pixel_values / image_grid_thw
-        ↓
-frozen Qwen visual encoder
-        ↓
-image token embeddings / visual features
-        ↓
-trainable language-model path with LoRA
-```
-
-Prefer caching the **last output produced exclusively by the frozen visual tower**, before it is mixed with trainable text hidden states.
-
-Potential interfaces may include:
-- an official `get_image_features`/visual method;
-- a model submodule call;
-- a carefully defined helper mirroring the official forward.
-
-Do not cache:
-- language-model hidden states;
-- `[SEG]` hidden states;
-- logits;
-- anything downstream of trainable LoRA.
-
-Do not monkey-patch opaque internals unless there is no cleaner interface.
-
-## 7. Exact-equivalence proof for visual features
-
-For at least 16 representative samples compare normal forward visual features vs cached/reused features.
-
-Require:
-- same shape;
-- same dtype;
-- exact equality if possible;
-- otherwise document max abs/relative difference before proceeding.
-
-Then run an end-to-end 12-step training equivalence gate:
-- clean identical initialization;
-- same samples/order;
-- same per-run seed;
-- strict deterministic ON;
-- one run recomputes Qwen visual features;
-- one run uses cached Qwen visual features.
-
-Preferred adoption category:
-`BIT_EQUIVALENT`
-
-Require:
-- per-step losses identical;
-- gradient fingerprints identical;
-- post-step parameter fingerprints identical.
-
-A `NUMERICALLY_EQUIVALENT` path is allowed only with explicit tight tolerances and caution.
-
-Do not adopt if equivalence fails.
-
-## 8. Cache design
-
-If eligible, implement a bounded CPU cache.
-
-Key by immutable **source image identity**, not sample id, because multiple instructions can share one image.
-
-Record:
-- feature tensor shape;
-- dtype;
-- bytes/image;
-- 480-image Task 6C estimate;
-- full 2,508-WHU-train-image estimate;
-- actual cache-build time;
-- hit latency.
-
-Stay within 32 GB system RAM.
-
-Do not exceed approximately 8 GB for this new cache without explicit justification.
-
-If the native exact visual feature is BF16, keep it BF16.
-
-Do not pin the whole cache unless separately measured and justified.
-
-# PART D — Benchmark
-
-## 9. Benchmark variants
-
-Use the same fixed Task 6C.5/6C.6 64-record benchmark IDs and protocol:
-- 8 warmup;
-- 64 measured;
-- batch 1;
-- strict deterministic ON;
-- SAM cache warm;
-- `collect_grad_norms=false`;
-- same initial state;
-- bracket/interleave references due laptop drift.
-
-Benchmark:
-
-### V0
-Current integrated Task 6C.6 runtime.
-
-### V1
-Formal-loop duplicate-H2D fix only.
-
-### V2
-V1 + frozen Qwen visual-feature cache.
-
-### V3
-Only if useful: V2 + removal/deferment of project-owned scalar logging syncs.
-
-Do not combine unproven variants before isolated measurements exist.
-
-Report:
-- samples/sec;
-- speedup vs interpolated/reference baseline;
-- GPU utilization;
-- CPU utilization;
-- kernel count/step;
-- `aten::item` count/step;
-- sync count/step;
-- VRAM;
-- RSS;
-- cache bytes;
-- first-epoch/cold-cache cost.
-
-# PART E — Project-owned scalar synchronization
-
-## 10. Optimize only if it matters
-
-The project currently materializes the four loss tensors and clip norm as Python floats each step.
-
-If profiling proves these are a meaningful fraction of remaining synchronization cost, test deferring scalar materialization to logging intervals.
-
-However:
-- do not weaken NaN/Inf safety silently;
-- scheduler/optimizer semantics must not change;
-- equivalence is mandatory.
-
-If the project-owned scalar reads are negligible, leave them alone.
-
-# PART F — Decision rules
-
-## 11. Adoption rules
-
-Adopt the visual-feature cache only if:
-1. eligibility passes;
-2. end-to-end equivalence is acceptable;
-3. no trainable signal is bypassed;
-4. no OOM/paging;
-5. warm throughput improves by >= **8%** over V1, or >=5% with a material reduction in sync/kernel count;
-6. cold-cache build has a reasonable break-even.
-
-Adopt the duplicate-H2D fix if:
-- equivalence is exact;
-- code is simpler/correcter even if speed gain is small.
-
-Prefer the simplest valid winner.
-
-## 12. Do not declare batch-1 exhausted until this closes
-
-Only after:
-- redundant Phase-B H2D is removed;
-- remaining `aten::item`/sync hotspots are localized;
-- frozen Qwen visual-cache feasibility is measured;
-
-may the report conclude that true batch>1 is the next performance lever.
-
-# PART G — Artifacts
-
-## 13. Required outputs
+Report point and box:
+- strict mask mIoU;
+- Dice;
+- paired mask selection /20;
+- mean own-target IoU;
+- mean cross-target IoU;
+- mean IoU(pred_A, pred_B).
 
 Create:
+`evaluation/task6d_oracle_prompt_diagnostic.json`
+
+## 5. Geometry choice
+
+Choose exactly one geometry head:
+
+1. if Oracle Point paired >= 18/20 and mIoU >= 0.50, choose **POINT**, unless Oracle Box improves mIoU by >= 0.10;
+2. otherwise, if Oracle Box paired >= 18/20 and mIoU >= 0.50, choose **BOX**;
+3. if neither reaches those gates, stop before training and report `ORACLE_SPATIAL_PROMPT_INSUFFICIENT`.
+
+Do not silently choose the prettier result.
+
+Do not use combined point+box in Task 6D.
+
+# PART C — Spatial Grounding Head
+
+## 6. Architecture
+
+Implement:
+
+`SpatialGroundingHead`
+
+Input:
+`[SEG] hidden state, 2048-d`
+
+Minimal structure:
 
 ```text
-evaluation/task6c7_visual_cache_eligibility.json
-evaluation/task6c7_sync_hotspots.json
-evaluation/task6c7_equivalence.json
-evaluation/task6c7_variants.json
-evaluation/task6c7_final_benchmark.json
-evaluation/task6c7_resource_usage.json
-docs/task6c7_visual_cache_optimization.md
+LayerNorm(2048)
+→ Linear(2048, 512)
+→ GELU
+→ Linear(512, D)
+→ sigmoid
 ```
 
-If visual caching is impossible, eligibility must explain exactly why.
+where:
+- `D=2` for POINT: normalized `(x, y)`;
+- `D=4` for BOX: normalized `(x1, y1, x2, y2)`.
 
-# PART H — Tests
+For BOX, parameterize/canonicalize differentiably so `x1<=x2`, `y1<=y2`.
 
-## 14. Required tests
+Do not use the old arbitrary projected language vector as the SAM sparse prompt in the candidate arm.
 
-Add/regress tests for:
-1. Phase-B formal loop no longer performs redundant batch transfer;
-2. Phase-A behavior remains correct;
-3. visual-tower params all frozen under current formal config;
-4. zero visual LoRA;
-5. visual-cache key is image-based;
-6. cache contains no trainable-language hidden state;
-7. repeated same-image visual feature is deterministic;
-8. cache hit returns correct shape/dtype;
-9. uncached/cached visual features equal or within declared tolerance;
-10. 12-step end-to-end equivalence;
-11. no test split;
-12. batch remains 1;
-13. no architecture/loss/optimizer/data changes;
-14. strict determinism preserved;
-15. no `[REF]`/4B/SRE/SCL.
+Candidate:
+
+```text
+Image + instruction
+        ↓
+Qwen3-VL + text LoRA
+        ↓
+reasoning + [SEG]
+        ↓
+[SEG] hidden
+        ↓
+SpatialGroundingHead
+        ↓
+predicted point / box
+        ↓
+official SAM2 prompt encoder
+        ↓
+SAM2 mask decoder
+        ↓
+target mask
+```
+
+Name: **Spatial Grounding Bridge v0.1**.
+
+## 7. Geometry supervision
+
+### POINT
+Use same deterministic distance-transform interior point as oracle. Normalize to `[0,1]^2`.
+
+### BOX
+Use tight target-mask bounding box. Normalize to `[0,1]`.
+
+GT geometry is supervision only.
+
+At inference/evaluation the prompt must use **predicted geometry only**.
+
+Add tests for this separation.
+
+# PART D — Loss
+
+## 8. Objective
+
+Keep Task 6C headline losses:
+
+```text
+2.0 * LM CE
++ 2.0 * mask BCE
++ 1.0 * mask Dice
+```
+
+Add:
+
+```text
+lambda_ground = 5.0
+```
+
+with `SmoothL1(pred_geometry, gt_geometry)`.
+
+This is a provisional architecture-proof weight. Do not sweep weights in Task 6D.
+
+Record raw component magnitudes.
+
+# PART E — Two-stage training
+
+## 9. Stage G0 — grounding proof
+
+Training:
+- Task 6C paired `P` subset: 480 records / 240 images × 2 targets.
+
+Train:
+- text LoRA;
+- `[SEG]` trainable token machinery;
+- SpatialGroundingHead.
+
+Freeze:
+- SAM2 image encoder;
+- SAM2 decoder for G0;
+- old Projection MLP unused.
+
+Loss:
+- LM CE;
+- grounding loss.
+
+Maximum:
+- 2 epochs.
+
+Validate each epoch on fixed 120 records.
+
+Primary metrics:
+
+### POINT
+- mean normalized coordinate error;
+- predicted point inside correct GT target rate;
+- predicted point inside paired other-target rate;
+- paired point-selection /20.
+
+### BOX
+- mean box IoU with GT box;
+- predicted-box center inside target rate;
+- paired geometry-selection /20.
+
+G0 success:
+- valid `[SEG]` >= 90%;
+- geometry paired >= 14/20;
+- plus:
+  - POINT: correct-target inside >= 70%;
+  - BOX: mean GT-box IoU >= 0.35.
+
+If G0 fails, stop:
+`GROUNDING_REPRESENTATION_FAILED`.
+
+Do not compensate with 4B or extra modules.
+
+## 10. Stage G1 — joint segmentation
+
+Only if G0 passes.
+
+Train:
+- text LoRA;
+- `[SEG]`;
+- SpatialGroundingHead;
+- SAM2 mask decoder.
+
+Keep frozen:
+- Qwen base;
+- Qwen visual tower;
+- SAM2 image encoder;
+- SAM2 prompt encoder parameters by default.
+
+Loss:
+
+```text
+2.0 LM CE
++ 2.0 mask BCE
++ 1.0 mask Dice
++ 5.0 grounding SmoothL1
+```
+
+Maximum:
+- 3 epochs;
+- same 480 paired samples.
+
+No hyperparameter sweep.
+
+Use Task 6C.7 visual cache.
+
+# PART F — Evaluation
+
+## 11. Free generation is primary
+
+For each val sample:
+
+```text
+image + instruction
+→ free generated reasoning + [SEG]
+→ generated [SEG] hidden
+→ predicted geometry
+→ official SAM2 prompt encoder
+→ mask
+```
+
+Exactly one `[SEG]` required.
+
+Invalid emission: mask IoU=0 and geometry failure.
+
+Report:
+- emission;
+- strict e2e mIoU;
+- Dice;
+- conditional mIoU;
+- L1/L2/L3;
+- query-family;
+- grounding metrics.
+
+Teacher-forced remains diagnostic only.
+
+## 12. Same-image paired probe is main gate
+
+For masks:
+
+```text
+IoU(pred_A, GT_A) > IoU(pred_A, GT_B)
+IoU(pred_B, GT_B) > IoU(pred_B, GT_A)
+```
+
+Define analogous geometry criterion.
+
+Report:
+- mask paired /20;
+- geometry paired /20;
+- own-target IoU;
+- cross-target IoU;
+- own-minus-cross margin;
+- IoU(pred_A, pred_B).
+
+# PART G — Verdict
+
+## 13. Use exactly one
+
+### `SPATIAL_GROUNDING_FIX_FOUND`
+
+Require:
+- G0 passes;
+- `[SEG]` >= 90%;
+- geometry paired >= 14/20;
+- mask paired >= 14/20;
+- own-minus-cross margin > 0.05;
+- strict e2e mIoU >= 0.20;
+- no GT leakage.
+
+### `SPATIAL_GROUNDING_PARTIAL`
+
+Geometry becomes instruction-conditioned but mask gate is not fully solved.
+
+### `GROUNDING_REPRESENTATION_FAILED`
+
+`[SEG]` hidden cannot learn reliable target geometry.
+
+### `ORACLE_SPATIAL_PROMPT_INSUFFICIENT`
+
+Even correct GT point/box prompts cannot produce adequate masks.
+
+### `INVALID_EXPERIMENT`
+
+Leakage, subset mismatch, corruption, nondeterminism or correctness failure.
+
+# PART H — Diagnostics
+
+## 14. Representation diagnosis
+
+Same-image/different-instruction:
+- `[SEG]` hidden cosine/L2/norm;
+- predicted point/box distance between A and B;
+- grounding-head penultimate representation if useful;
+- mask A-vs-B IoU.
+
+Key question:
+
+> Does instruction variation now produce **spatially different predicted geometry** and therefore different masks?
+
+Do not require low hidden cosine if geometry is target-specific.
+
+# PART I — CMD/product direction
+
+## 15. No GUI
+
+Do not build UI.
+
+If candidate reaches FIX_FOUND or strong PARTIAL, refactor minimal reusable API:
+
+```python
+model = load_buildreasonseg(...)
+result = model.predict(image, instruction)
+```
+
+Result may expose:
+- generated reasoning;
+- predicted geometry;
+- mask/logits.
+
+Do not spend time on CLI cosmetics yet.
+
+A polished `predict.py` can wait until the architecture passes paired validation.
+
+# PART J — Data adequacy
+
+## 16. Record WHU pseudo-instance limitations
+
+During oracle/candidate error analysis classify failures caused by:
+- merged touching buildings;
+- border truncation;
+- ambiguous pseudo-instance boundaries;
+- insufficient instance density;
+- component artifacts.
+
+Do **not** change dataset in Task 6D.
+
+If such errors materially dominate, recommend a dedicated dataset-selection task next.
+
+# PART K — Artifacts
+
+## 17. Create
+
+```text
+evaluation/task6d_oracle_prompt_diagnostic.json
+evaluation/task6d_grounding_targets.json
+evaluation/task6d_g0.json
+evaluation/task6d_g1.json
+evaluation/task6d_paired_probe.json
+evaluation/task6d_representation.json
+evaluation/task6d_error_analysis.json
+evaluation/task6d_checkpoint_manifest.json
+docs/task6d_spatial_grounding_bridge.md
+```
+
+`task6d_g1.json` only if G0 passes.
+
+Checkpoints remain local/gitignored.
+
+Create compact qualitative panels for at least 6 paired val images:
+- image;
+- instruction A/B;
+- GT masks;
+- predicted point/box A/B;
+- predicted masks A/B.
+
+No GUI.
+
+# PART L — Tests
+
+## 18. Tests
+
+Cover:
+1. deterministic interior point lies inside GT mask;
+2. box tightly encloses GT mask;
+3. normalized geometry valid;
+4. GT geometry only used in supervision/oracle;
+5. free inference uses predicted geometry only;
+6. grounding loss gradients reach `[SEG]`/LoRA;
+7. visual tower frozen;
+8. SAM image encoder frozen;
+9. paired samples have different target geometry;
+10. oracle uses official SAM2 prompt encoder;
+11. predicted path uses official SAM2 prompt encoder;
+12. old arbitrary language sparse token absent from candidate;
+13. visual cache value-preserving;
+14. no test split;
+15. no 4B / `[REF]` / SRE / SCL;
+16. strict determinism retained.
 
 Run:
 `python -m pytest tests/ -q`
 
-# PART I — Git / Watt
+# PART M — Git / Watt
 
-## 15. Git hygiene
+## 19. Git hygiene
 
 Do not stage:
-- visual cache tensors;
-- weights;
-- checkpoints;
-- raw profiler traces;
+- weights/checkpoints;
+- local feature caches;
 - `.conda`;
-- `local_cache`;
+- raw large traces;
 - dataset JSONL changes.
 
 Recommended commit:
-`perf: cache frozen Qwen visual features`
+`feat: add spatial grounding bridge`
 
-If visual caching is rejected and only cleanup remains:
-`perf: close remaining batch-1 sync overhead`
+## 20. Watt
 
-## 16. Final push
+Ignore UU.
 
-Apply Watt ownership rule.
+Use established Watt ownership rule for final push only.
 
-Ignore UU entirely.
+# PART N — Handoff
 
-# PART J — Handoff / final UI
-
-## 17. `handoff/FROM_DSH.md`
+## 21. FROM_DSH
 
 Include:
 1. Verdict
-2. Formal H2D Fix
-3. Remaining Sync Hotspots
-4. Visual-Tower Cache Eligibility
-5. Cache Boundary
-6. Equivalence
-7. V0/V1/V2/V3 Results
-8. Kernel / Sync Changes
-9. Throughput / GPU / CPU
-10. RAM / VRAM / Cold Cost
-11. Tests
-12. Git / Watt
-13. Whether true batching is now justified
+2. Frozen Baseline
+3. Oracle Point
+4. Oracle Box
+5. Geometry Choice
+6. SpatialGroundingHead
+7. G0 Training
+8. G0 Metrics
+9. G1 Training (if run)
+10. Strict E2E
+11. Paired Geometry Probe
+12. Paired Mask Probe
+13. Representation Diagnostics
+14. WHU/Pseudo-instance Error Analysis
+15. Runtime / VRAM
+16. Tests
+17. Git / Watt
+18. Recommendation for next architecture task
 
-## 18. Final DSH UI — Chinese only
+## 22. Final DSH UI — Chinese only
 
 Report:
 - verdict;
-- duplicate-H2D finding/fix;
-- top source of remaining ~1,051 `aten::item`;
-- visual cache eligible or not;
-- cached tensor shape / bytes per image;
-- baseline and final samples/sec;
-- speedup;
-- GPU utilization;
-- sync/kernel-count reduction;
-- equivalence category;
-- VRAM/RAM;
+- oracle point/box mIoU and paired pass;
+- selected geometry;
+- G0 geometry paired pass;
+- G1 strict e2e mIoU;
+- G1 mask paired /20;
+- own-minus-cross margin;
+- whether same-image instructions now produce different geometry/masks;
+- main remaining failure;
+- whether WHU is visibly limiting;
+- peak VRAM/runtime;
 - tests;
 - commit/push;
-- Watt handling;
-- whether Task 6C.8 true batching should be next.
+- Watt handling.
 
-# 19. STOP
+# 23. STOP
 
-After Task 6C.7:
+After Task 6D:
 
 **STOP.**
 
-Do not start batch>1, Task 6D, 4B, `[REF]`, Spatial Relation Encoder, Spatial Consistency Loss or full training.
+Do not automatically:
+- add `[REF]`;
+- add Spatial Relation Encoder;
+- add Spatial Consistency Loss;
+- scale to 4B;
+- change dataset;
+- run full training;
+- build GUI.
 
 Wait for ChatGPT review.

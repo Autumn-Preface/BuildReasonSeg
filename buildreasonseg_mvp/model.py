@@ -42,14 +42,21 @@ class MvpForwardOutput:
     shapes: dict = field(default_factory=dict)
     sparse_prompt: torch.Tensor | None = None
     prompt_diagnostics: dict = field(default_factory=dict)
+    #: Task 6D: the predicted target geometry when the grounded path is used.
+    predicted_geometry: torch.Tensor | None = None
 
     def as_dict(self) -> dict:
         return {
             "lm_logits_shape": list(self.lm_logits.shape),
             "seg_hidden_shape": list(self.seg_hidden.shape),
-            "projected_shape": list(self.projected.shape),
+            "projected_shape": list(self.projected.shape) if self.projected is not None else None,
             "mask_logits_shape": list(self.mask_logits.shape),
             "iou_prediction_shape": list(self.iou_prediction.shape),
+            "predicted_geometry": (
+                self.predicted_geometry.detach().float().cpu().tolist()
+                if self.predicted_geometry is not None
+                else None
+            ),
             **self.shapes,
         }
 
@@ -65,6 +72,8 @@ class BuildReasonSegMvp(nn.Module):
         seg_token_id: int,
         token_holder: nn.Module | None = None,
         bridge: str = BRIDGE_CENTRE,
+        grounding_head: nn.Module | None = None,
+        geometry_kind: str | None = None,
     ) -> None:
         super().__init__()
         if bridge not in BRIDGES:
@@ -77,6 +86,11 @@ class BuildReasonSegMvp(nn.Module):
         #: Task 6C factor 2. Threaded to every `decode_mask` call so training,
         #: free-generation validation and the paired probe all use one bridge.
         self.bridge = bridge
+        #: Task 6D: `[SEG]` hidden -> predicted target geometry -> official SAM2 prompt.
+        #: Present only in the Spatial Grounding Bridge candidate; the Task 6C arms keep
+        #: `grounding_head is None` and therefore their exact previous behaviour.
+        self.grounding_head = grounding_head
+        self.geometry_kind = geometry_kind
 
     # -- convenience -----------------------------------------------------
 
@@ -130,7 +144,9 @@ class BuildReasonSegMvp(nn.Module):
                 continue
             if id(parameter) in token_param_ids:
                 token.append(parameter)
-            elif name.startswith("projection.") or name.startswith("sam.sam_mask_decoder."):
+            elif name.startswith("projection.") or name.startswith("sam.sam_mask_decoder.") or name.startswith(
+                "grounding_head."
+            ):
                 decoder.append(parameter)
             else:
                 adapters.append(parameter)
@@ -178,4 +194,50 @@ class BuildReasonSegMvp(nn.Module):
             },
             sparse_prompt=decoded.sparse_prompt,
             prompt_diagnostics=decoded.prompt_diagnostics,
+        )
+
+    def forward_grounded(
+        self,
+        batch: TeacherForcedBatch,
+        sam_features: Sam2Features,
+        multimask_output: bool = False,
+    ) -> MvpForwardOutput:
+        """Task 6D candidate path: `[SEG]` hidden -> predicted geometry -> SAM2.
+
+        The projection MLP is not used and the old arbitrary projected language vector is
+        never built, let alone fed to SAM. The only prompt is the geometry the head
+        predicts; the language model contributes through the `[SEG]` hidden state.
+        """
+
+        if self.grounding_head is None or self.geometry_kind is None:
+            raise RuntimeError("this model has no SpatialGroundingHead; call install_grounding_head first")
+
+        from .grounding import decode_mask_from_geometry
+
+        lm_logits, seg_hidden = forward_qwen(self.qwen, batch)
+        geometry = self.grounding_head(seg_hidden)
+        decoded = decode_mask_from_geometry(
+            self.sam,
+            sam_features,
+            geometry,
+            self.geometry_kind,
+            multimask_output=multimask_output,
+        )
+        return MvpForwardOutput(
+            lm_logits=lm_logits,
+            seg_hidden=seg_hidden,
+            projected=None,
+            mask_logits=decoded.low_res_logits,
+            iou_prediction=decoded.iou_prediction,
+            shapes={
+                "sparse_prompt_shape": list(decoded.sparse_prompt_shape),
+                "visual_tokens": batch.visual_tokens,
+                "sequence_length": batch.total_length,
+                "prompt_length": batch.prompt_length,
+                "bridge": "grounding",
+                "geometry_kind": self.geometry_kind,
+            },
+            sparse_prompt=None,
+            prompt_diagnostics=decoded.prompt_diagnostics,
+            predicted_geometry=geometry,
         )

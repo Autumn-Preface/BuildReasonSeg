@@ -1,0 +1,3764 @@
+{
+  "_doc": "Task 6D section 16. WHU pseudo-instance error classification for the free-generation validation records. Flags are derived from the GT component map (the WHU polygon components) and the GT mask, never from a prediction.",
+  "task": "6D",
+  "records": 120,
+  "failure_threshold_iou": 0.1,
+  "failures": 116,
+  "flag_counts_all_records": {
+    "border_truncation": 35,
+    "touching_neighbours": 2,
+    "merged_prediction": 0,
+    "ambiguous_boundary": 0,
+    "insufficient_density": 6,
+    "tiny_target": 112,
+    "disconnected_target": 0
+  },
+  "flag_counts_failures": {
+    "border_truncation": 35,
+    "touching_neighbours": 2,
+    "merged_prediction": 0,
+    "ambiguous_boundary": 0,
+    "insufficient_density": 6,
+    "tiny_target": 108,
+    "disconnected_target": 0
+  },
+  "flag_share_of_failures": {
+    "border_truncation": 0.3017241379310345,
+    "touching_neighbours": 0.017241379310344827,
+    "merged_prediction": 0.0,
+    "ambiguous_boundary": 0.0,
+    "insufficient_density": 0.05172413793103448,
+    "tiny_target": 0.9310344827586207,
+    "disconnected_target": 0.0
+  },
+  "dominant_flag_among_failures": "tiny_target",
+  "detail": [
+    {
+      "sample_id": "buildsr_val_1_10035_1_bottommost_f1fa659a1dcf",
+      "iou": 4.1580042187128186e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 9,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 710,
+        "target_area_fraction": 0.00270843505859375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1695,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_104_1_largest_58eab6af1a4f",
+      "iou": 3.1979532910675346e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1938,
+        "target_area_fraction": 0.00739288330078125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1189,
+        "components_covered": [
+          {
+            "component_id": 6,
+            "share": 0.3473507148864592
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1061_1_leftmost_af4b9beed365",
+      "iou": 4.2900041852256265e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 9,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1472,
+        "target_area_fraction": 0.005615234375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 859,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1083_1_rightmost_2e34c6a9b20f",
+      "iou": 5.540166103656929e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 912,
+        "target_area_fraction": 0.00347900390625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 893,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1089_1_topmost_de92b4dfea6b",
+      "iou": 5.53709855743989e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 644,
+        "target_area_fraction": 0.0024566650390625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1162,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1119_1_bottommost_d5fb9e3c56bd",
+      "iou": 4.807692022268384e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 19,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 107,
+        "target_area_fraction": 0.000408172607421875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1973,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1247_1_smallest_5448946ed580",
+      "iou": 9.233610542835891e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 14,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 300,
+        "target_area_fraction": 0.0011444091796875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 783,
+        "components_covered": [
+          {
+            "component_id": 7,
+            "share": 0.5977011494252874
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1260_1_leftmost_19419a29edf6",
+      "iou": 3.216468202893452e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1913,
+        "target_area_fraction": 0.007297515869140625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1196,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1266_1_largest_383492f4433c",
+      "iou": 2.787068076326449e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2022,
+        "target_area_fraction": 0.00771331787109375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1566,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1267_1_topmost_9bfeae7326dd",
+      "iou": 6.79347800236485e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 220,
+        "target_area_fraction": 0.0008392333984375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1252,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1331_1_rightmost_8592d4a61c5d",
+      "iou": 3.7650602080496753e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1262,
+        "target_area_fraction": 0.00481414794921875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1394,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1340_1_smallest_8d3c21c86dfc",
+      "iou": 3.567606210452823e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1291,
+        "target_area_fraction": 0.004924774169921875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1512,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1348_1_bottommost_9fed6fadf214",
+      "iou": 3.033980566780059e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1810,
+        "target_area_fraction": 0.00690460205078125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1486,
+        "components_covered": [
+          {
+            "component_id": 4,
+            "share": 0.0006729475100942127
+          }
+        ],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1371_1_largest_633acea20d7a",
+      "iou": 2.1640338132566939e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": true,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2963,
+        "target_area_fraction": 0.011302947998046875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1658,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1406_1_leftmost_3d7937c4ee80",
+      "iou": 0.2252941131591797,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 960,
+        "target_area_fraction": 0.003662109375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1123,
+        "components_covered": [
+          {
+            "component_id": 1,
+            "share": 0.3410507569011576
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1428_1_rightmost_cad6fa621abf",
+      "iou": 6.123698770288399e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 29,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 297,
+        "target_area_fraction": 0.001132965087890625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1336,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1455_1_topmost_a289ef218f17",
+      "iou": 7.262164203325483e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 287,
+        "target_area_fraction": 0.001094818115234375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1090,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1460_1_bottommost_74ab7cc9c72c",
+      "iou": 2.878526306204776e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2352,
+        "target_area_fraction": 0.00897216796875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1122,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_150_1_smallest_1fb854a967b5",
+      "iou": 4.945598375272198e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 565,
+        "target_area_fraction": 0.002155303955078125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1457,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_151_1_largest_ed0cbd2a8bf0",
+      "iou": 3.179650154283564e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1962,
+        "target_area_fraction": 0.00748443603515625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1183,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_152_1_leftmost_12e540c488a1",
+      "iou": 2.6652452467246235e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2367,
+        "target_area_fraction": 0.009029388427734375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1385,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1556_1_rightmost_4474231629d1",
+      "iou": 4.4345899175013415e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 869,
+        "target_area_fraction": 0.003314971923828125,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1386,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1586_1_topmost_27263665550f",
+      "iou": 4.1562758790192333e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1502,
+        "target_area_fraction": 0.00572967529296875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 904,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1622_1_smallest_49f9c80045a5",
+      "iou": 7.189072670499286e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 577,
+        "target_area_fraction": 0.002201080322265625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 814,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1626_1_bottommost_1817dd94f089",
+      "iou": 4.317789181751408e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 530,
+        "target_area_fraction": 0.00202178955078125,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1786,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1628_1_largest_404a30fc05aa",
+      "iou": 5.020080462436738e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1315,
+        "target_area_fraction": 0.005016326904296875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 677,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1632_1_leftmost_265bb4f0c80d",
+      "iou": 7.43494432686731e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 202,
+        "target_area_fraction": 0.00077056884765625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1143,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1646_1_rightmost_6304eb87304c",
+      "iou": 5.316321272097468e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 443,
+        "target_area_fraction": 0.001689910888671875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1438,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1715_1_topmost_f7b76efd66be",
+      "iou": 2.6205451697514093e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2419,
+        "target_area_fraction": 0.009227752685546875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1397,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1737_1_bottommost_44ce1d284377",
+      "iou": 1.0593220745036547e-09,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 272,
+        "target_area_fraction": 0.00103759765625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 672,
+        "components_covered": [
+          {
+            "component_id": 4,
+            "share": 0.2931547619047619
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1742_1_largest_add161a185c4",
+      "iou": 2.75557993090203e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2479,
+        "target_area_fraction": 0.009456634521484375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1150,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1800_1_leftmost_45e92f630b87",
+      "iou": 3.6297639893767553e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1298,
+        "target_area_fraction": 0.00495147705078125,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1457,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1801_1_rightmost_4cd6ab25d96b",
+      "iou": 5.959475690708871e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 14,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 433,
+        "target_area_fraction": 0.001651763916015625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1245,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1802_1_topmost_173b5452b09b",
+      "iou": 3.767897382989105e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1337,
+        "target_area_fraction": 0.005100250244140625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1317,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1812_1_smallest_07931f47f210",
+      "iou": 6.105005945222786e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 23,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 228,
+        "target_area_fraction": 0.0008697509765625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1410,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1813_1_bottommost_61d0cb4989ca",
+      "iou": 8.583690980223935e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 16,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 167,
+        "target_area_fraction": 0.000637054443359375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 998,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1817_1_largest_f372cf644027",
+      "iou": 9.938382061758233e-11,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 9044,
+        "target_area_fraction": 0.0345001220703125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1018,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1836_1_leftmost_a762ef7d39fc",
+      "iou": 7.662835366240017e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 268,
+        "target_area_fraction": 0.0010223388671875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1037,
+        "components_covered": [
+          {
+            "component_id": 5,
+            "share": 0.4821600771456123
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1862_1_smallest_8822cd0376e0",
+      "iou": 4.812319431835022e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 13,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 514,
+        "target_area_fraction": 0.00196075439453125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1564,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1930_1_rightmost_473f373d8327",
+      "iou": 5.747126663457891e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 782,
+        "target_area_fraction": 0.00298309326171875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 958,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_1952_2_largest_to_nearest_b37b5cdcef35",
+      "iou": 3.2658392656870205e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1861,
+        "target_area_fraction": 0.007099151611328125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1201,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2048_2_smallest_to_nearest_ed71da0c7a57",
+      "iou": 2.601456827733273e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2794,
+        "target_area_fraction": 0.01065826416015625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1050,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2051_2_smallest_to_right_of_5ba0958bfdc0",
+      "iou": 8.736676659903964e-11,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": true,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 10144,
+        "target_area_fraction": 0.0386962890625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1302,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+      "iou": 5.770340316679778e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": true,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 598,
+        "target_area_fraction": 0.00228118896484375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1135,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2144_2_largest_to_nearest_f531531af1e9",
+      "iou": 3.4340658094933474e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 9,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1610,
+        "target_area_fraction": 0.00614166259765625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1302,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2252_2_largest_to_right_of_14527f32571c",
+      "iou": 5.246589829255299e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 20,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 256,
+        "target_area_fraction": 0.0009765625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1650,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2255_2_smallest_to_below_7dc209fac712",
+      "iou": 2.889338213130088e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2035,
+        "target_area_fraction": 0.007762908935546875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1426,
+        "components_covered": [
+          {
+            "component_id": 4,
+            "share": 0.8092566619915849
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2295_2_smallest_to_nearest_413e8536868b",
+      "iou": 2.913752850108864e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1853,
+        "target_area_fraction": 0.007068634033203125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1579,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2330_2_largest_to_left_of_29f6b8cbc310",
+      "iou": 4.2408820899453303e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1110,
+        "target_area_fraction": 0.00423431396484375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1248,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2455_2_smallest_to_above_4e4317db152f",
+      "iou": 2.919708086412953e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2028,
+        "target_area_fraction": 0.0077362060546875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1397,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2517_2_smallest_to_left_of_2f55931ea0bf",
+      "iou": 3.4554251127083546e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1374,
+        "target_area_fraction": 0.00524139404296875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1520,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2713_2_smallest_to_left_of_62ad87d4a828",
+      "iou": 3.713330753996047e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1354,
+        "target_area_fraction": 0.00516510009765625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1339,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2757_3_largest_to_left_of_to_nearest_21f7f5f71d7d",
+      "iou": 4.750593807223424e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1242,
+        "target_area_fraction": 0.00473785400390625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 863,
+        "components_covered": [
+          {
+            "component_id": 6,
+            "share": 0.010428736964078795
+          },
+          {
+            "component_id": 7,
+            "share": 0.002317497103128621
+          }
+        ],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2758_2_largest_to_above_a35f06c8bf16",
+      "iou": 5.007511072463444e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 713,
+        "target_area_fraction": 0.002719879150390625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1284,
+        "components_covered": [
+          {
+            "component_id": 5,
+            "share": 0.6526479750778816
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2822_2_largest_to_above_17a5d4da0a54",
+      "iou": 3.157562267208647e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1982,
+        "target_area_fraction": 0.00756072998046875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1185,
+        "components_covered": [
+          {
+            "component_id": 6,
+            "share": 0.4919831223628692
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2842_2_smallest_to_below_2aba4af010b3",
+      "iou": 1.9912385629261564e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 4191,
+        "target_area_fraction": 0.015987396240234375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 831,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2863_2_largest_to_below_4927085bd4f9",
+      "iou": 6.910850225416709e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 732,
+        "target_area_fraction": 0.0027923583984375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 715,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2864_2_largest_to_left_of_987279555505",
+      "iou": 7.501875232129862e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": true,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 106,
+        "target_area_fraction": 0.00040435791015625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1227,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2866_2_largest_to_below_81ccfad4014b",
+      "iou": 5.068423458709503e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": true,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1178,
+        "target_area_fraction": 0.00449371337890625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 795,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_286_2_largest_to_left_of_056216b5b322",
+      "iou": 6.706908362019703e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": true,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 2,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 226,
+        "target_area_fraction": 0.00086212158203125,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1265,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2878_2_largest_to_nearest_071fd1a28bc3",
+      "iou": 3.687315730527274e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1567,
+        "target_area_fraction": 0.005977630615234375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1145,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_2917_2_largest_to_above_0f3c8a32200c",
+      "iou": 3.6656891411190884e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1301,
+        "target_area_fraction": 0.004962921142578125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1427,
+        "components_covered": [
+          {
+            "component_id": 9,
+            "share": 0.08128941836019622
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3001_2_largest_to_above_6c9c4e4dd5fe",
+      "iou": 0.10555020719766617,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2107,
+        "target_area_fraction": 0.008037567138671875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1339,
+        "components_covered": [
+          {
+            "component_id": 11,
+            "share": 0.24570575056011948
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3040_2_largest_to_below_7b25497e82ff",
+      "iou": 4.422821830996071e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1324,
+        "target_area_fraction": 0.0050506591796875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 937,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3065_2_largest_to_right_of_5671211b5bb6",
+      "iou": 4.13223150141917e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1257,
+        "target_area_fraction": 0.004795074462890625,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1163,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3074_2_smallest_to_nearest_fa10173708ab",
+      "iou": 3.354579114489553e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1835,
+        "target_area_fraction": 0.006999969482421875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1146,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3111_2_largest_to_below_4f5b6d06177f",
+      "iou": 4.3975373342775015e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 380,
+        "target_area_fraction": 0.0014495849609375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1894,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3137_2_smallest_to_above_b8bbd60b7ecf",
+      "iou": 3.8461539508816145e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1116,
+        "target_area_fraction": 0.0042572021484375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1484,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3238_2_largest_to_nearest_779cda9468c3",
+      "iou": 4.496402972176128e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 3,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1180,
+        "target_area_fraction": 0.0045013427734375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1044,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3258_2_largest_to_left_of_954cf02d1846",
+      "iou": 5.51267920201326e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 999,
+        "target_area_fraction": 0.003810882568359375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 815,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3290_2_smallest_to_left_of_0eedbe066cc7",
+      "iou": 6.48508413636506e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 797,
+        "target_area_fraction": 0.003040313720703125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 745,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3302_3_largest_to_below_to_nearest_7fb998522216",
+      "iou": 5.443658301906851e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 15,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 373,
+        "target_area_fraction": 0.001422882080078125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1464,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3414_2_smallest_to_above_660520f5bd81",
+      "iou": 3.4270047910567314e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1827,
+        "target_area_fraction": 0.006969451904296875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1091,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3425_3_largest_to_left_of_to_nearest_8398febb1cd4",
+      "iou": 4.659831964737293e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 763,
+        "target_area_fraction": 0.002910614013671875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1383,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3604_2_largest_to_right_of_49297093eb77",
+      "iou": 5.665722335734813e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 675,
+        "target_area_fraction": 0.002574920654296875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1090,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3611_2_smallest_to_below_12c3d426a249",
+      "iou": 2.25123822361617e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 3083,
+        "target_area_fraction": 0.011760711669921875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1359,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3642_2_smallest_to_nearest_b8390bdf75d7",
+      "iou": 3.7950664832919756e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1623,
+        "target_area_fraction": 0.006191253662109375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1012,
+        "components_covered": [
+          {
+            "component_id": 3,
+            "share": 0.010869565217391304
+          }
+        ],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3780_2_smallest_to_left_of_3eb4d6daf77c",
+      "iou": 3.1094526953268087e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1831,
+        "target_area_fraction": 0.006984710693359375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1385,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3784_3_largest_to_above_to_nearest_8956fbdab852",
+      "iou": 2.7917365641449976e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2375,
+        "target_area_fraction": 0.009059906005859375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1207,
+        "components_covered": [
+          {
+            "component_id": 6,
+            "share": 0.768019884009942
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3827_3_largest_to_left_of_to_nearest_f48c2eb64950",
+      "iou": 4.264392450270549e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1305,
+        "target_area_fraction": 0.004978179931640625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1040,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3907_2_smallest_to_below_5962313b372a",
+      "iou": 1.50511741958681e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 16,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 5954,
+        "target_area_fraction": 0.02271270751953125,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 690,
+        "components_covered": [
+          {
+            "component_id": 6,
+            "share": 0.030434782608695653
+          }
+        ],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3972_2_smallest_to_right_of_d1f0119488a3",
+      "iou": 3.897116240825227e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1713,
+        "target_area_fraction": 0.006534576416015625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 853,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3975_3_largest_to_right_of_to_nearest_44900fa05308",
+      "iou": 3.6576444650826545e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1950,
+        "target_area_fraction": 0.00743865966796875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 784,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3978_3_largest_to_above_to_nearest_02d16c54669d",
+      "iou": 2.8901733784003625e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2221,
+        "target_area_fraction": 0.008472442626953125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1239,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_3999_2_smallest_to_right_of_d9a24cbca487",
+      "iou": 5.130836311373344e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 999,
+        "target_area_fraction": 0.003810882568359375,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 950,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_401_3_largest_to_below_to_nearest_1ba6bf52b039",
+      "iou": 3.215434030146014e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 20,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2299,
+        "target_area_fraction": 0.008769989013671875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 811,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_402_2_smallest_to_right_of_bde58c40af8b",
+      "iou": 3.834355888354679e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": true,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 14,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1310,
+        "target_area_fraction": 0.00499725341796875,
+        "touches_border": true
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1298,
+        "components_covered": [
+          {
+            "component_id": 11,
+            "share": 0.010015408320493066
+          }
+        ],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4156_3_largest_to_right_of_to_nearest_5b31c0361c0f",
+      "iou": 5.063290897666661e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1493,
+        "target_area_fraction": 0.005695343017578125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 482,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4182_3_largest_to_right_of_to_nearest_5653fdea797e",
+      "iou": 3.930817615849236e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1453,
+        "target_area_fraction": 0.005542755126953125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1091,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4268_3_largest_to_above_to_nearest_a58890ced4db",
+      "iou": 4.6146747534336896e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1364,
+        "target_area_fraction": 0.0052032470703125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 803,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4269_3_largest_to_left_of_to_nearest_dd46753a460e",
+      "iou": 0.3556291460990906,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 786,
+        "target_area_fraction": 0.00299835205078125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1261,
+        "components_covered": [
+          {
+            "component_id": 6,
+            "share": 0.42585249801744646
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4441_2_smallest_to_above_ac6a46ae3e94",
+      "iou": 4.863813241051673e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 795,
+        "target_area_fraction": 0.003032684326171875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1261,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4453_3_largest_to_right_of_to_nearest_ea59f1ee6e46",
+      "iou": 4.020908606072737e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1154,
+        "target_area_fraction": 0.00440216064453125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1333,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4480_3_largest_to_right_of_to_nearest_008dc2ee09e9",
+      "iou": 3.6140224146663513e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 13,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1476,
+        "target_area_fraction": 0.0056304931640625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1291,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_453_3_largest_to_right_of_to_nearest_5efd0a6bd438",
+      "iou": 4.64252553067368e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 993,
+        "target_area_fraction": 0.003787994384765625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1161,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_454_3_largest_to_below_to_nearest_35d5b0fc95af",
+      "iou": 5.279831016835601e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 475,
+        "target_area_fraction": 0.001811981201171875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1419,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4641_3_largest_to_above_to_nearest_c1254d906b0c",
+      "iou": 6.199628033165538e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 12,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 399,
+        "target_area_fraction": 0.001522064208984375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1214,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4709_3_largest_to_below_to_nearest_730e21d73948",
+      "iou": 3.941663384576799e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1406,
+        "target_area_fraction": 0.00536346435546875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1131,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_474_3_largest_to_left_of_to_nearest_515a5730eb0e",
+      "iou": 3.152585137389252e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1453,
+        "target_area_fraction": 0.005542755126953125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1719,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4799_3_largest_to_below_to_nearest_ac06cb603575",
+      "iou": 7.027406989656981e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 6,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1046,
+        "target_area_fraction": 0.00399017333984375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 377,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4819_3_largest_to_above_to_nearest_896a3d3f71ce",
+      "iou": 3.8940808910759017e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1575,
+        "target_area_fraction": 0.006008148193359375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 993,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_4822_3_largest_to_right_of_to_nearest_d515e2fc274f",
+      "iou": 3.844675133812814e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 13,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1226,
+        "target_area_fraction": 0.00467681884765625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1375,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5008_3_largest_to_left_of_to_nearest_1d120644b62e",
+      "iou": 5.010020176499097e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 420,
+        "target_area_fraction": 0.0016021728515625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1576,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5259_3_largest_to_below_to_nearest_9592ea7addfd",
+      "iou": 0.00031172099988907576,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1509,
+        "target_area_fraction": 0.005756378173828125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1700,
+        "components_covered": [
+          {
+            "component_id": 5,
+            "share": 0.000588235294117647
+          }
+        ],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5287_3_largest_to_left_of_to_nearest_cfdbc0cf86d4",
+      "iou": 3.604902765186324e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 13,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1774,
+        "target_area_fraction": 0.00676727294921875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1000,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_529_3_largest_to_above_to_nearest_c8a52087a952",
+      "iou": 5.339028108508614e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 5,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 545,
+        "target_area_fraction": 0.002079010009765625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1328,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_531_3_largest_to_below_to_nearest_340a0e52ba50",
+      "iou": 0.10037484019994736,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 29,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1632,
+        "target_area_fraction": 0.0062255859375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1010,
+        "components_covered": [
+          {
+            "component_id": 16,
+            "share": 0.2386138613861386
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5365_3_largest_to_above_to_nearest_6b5a60e24dbb",
+      "iou": 5.698005955956376e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": true,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 9,
+        "target_component_present": true,
+        "touching_neighbour_ids": [
+          8
+        ],
+        "touching_neighbour_count": 1,
+        "target_connected_components": 1,
+        "target_area_px": 426,
+        "target_area_fraction": 0.00162506103515625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1329,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_536_3_largest_to_below_to_nearest_98fe1b17ac32",
+      "iou": 3.734129949695131e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": true,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 11,
+        "target_component_present": true,
+        "touching_neighbour_ids": [
+          5
+        ],
+        "touching_neighbour_count": 1,
+        "target_connected_components": 1,
+        "target_area_px": 1348,
+        "target_area_fraction": 0.0051422119140625,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1330,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5418_3_largest_to_left_of_to_nearest_5dfeecf53e97",
+      "iou": 7.390982825761228e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 671,
+        "target_area_fraction": 0.002559661865234375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 682,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5431_3_largest_to_below_to_nearest_96c5e53a36ee",
+      "iou": 1.1439030278559414e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": false,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 7,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 7470,
+        "target_area_fraction": 0.02849578857421875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1272,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5615_3_largest_to_below_to_nearest_3f9eb3eda008",
+      "iou": 4.533091679803647e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 795,
+        "target_area_fraction": 0.003032684326171875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1411,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5690_3_largest_to_left_of_to_nearest_6506f303deda",
+      "iou": 6.325110435412284e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 4,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 540,
+        "target_area_fraction": 0.0020599365234375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1041,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5737_3_largest_to_above_to_nearest_a86af9c91556",
+      "iou": 6.925207629571162e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 15,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 343,
+        "target_area_fraction": 0.001308441162109375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1101,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5797_3_largest_to_left_of_to_nearest_a102055f31cc",
+      "iou": 3.7230082905459483e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 9,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2246,
+        "target_area_fraction": 0.00856781005859375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 440,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_5893_3_largest_to_right_of_to_nearest_2f753fbc88c5",
+      "iou": 3.4118047276265884e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 17,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1784,
+        "target_area_fraction": 0.006805419921875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1147,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_6175_3_largest_to_right_of_to_nearest_fb3c90ba04ea",
+      "iou": 2.477086868957201e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 19,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 2322,
+        "target_area_fraction": 0.00885772705078125,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1715,
+        "components_covered": [
+          {
+            "component_id": 11,
+            "share": 0.928862973760933
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_6266_3_largest_to_above_to_nearest_cbbf86fc6a19",
+      "iou": 5.042864459348095e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 35,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 963,
+        "target_area_fraction": 0.003673553466796875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1020,
+        "components_covered": [
+          {
+            "component_id": 21,
+            "share": 0.2735294117647059
+          }
+        ],
+        "significant_component_count": 1,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_6348_3_largest_to_above_to_nearest_1f6850a1fd1f",
+      "iou": 3.3288946599263625e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 10,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 1903,
+        "target_area_fraction": 0.007259368896484375,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1101,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    },
+    {
+      "sample_id": "buildsr_val_1_639_3_largest_to_right_of_to_nearest_f8a7e1abb5df",
+      "iou": 5.800463998006933e-10,
+      "seg_valid": true,
+      "flags": {
+        "border_truncation": false,
+        "touching_neighbours": false,
+        "merged_prediction": false,
+        "ambiguous_boundary": false,
+        "insufficient_density": false,
+        "tiny_target": true,
+        "disconnected_target": false
+      },
+      "component_stats": {
+        "components_in_tile": 8,
+        "target_component_present": true,
+        "touching_neighbour_ids": [],
+        "touching_neighbour_count": 0,
+        "target_connected_components": 1,
+        "target_area_px": 507,
+        "target_area_fraction": 0.001934051513671875,
+        "touches_border": false
+      },
+      "prediction_overlap": {
+        "predicted_area_px": 1217,
+        "components_covered": [],
+        "significant_component_count": 0,
+        "multi_component": false
+      }
+    }
+  ],
+  "prediction_degeneracy": {
+    "distinct_predicted_masks": 120,
+    "valid_records": 120,
+    "mean_own_iou": 0.006559667325285229,
+    "degenerate": true
+  },
+  "whu_limitation_judgement": {
+    "materially_limiting": false,
+    "dominant_flag": "tiny_target",
+    "dominant_share": 0.9310344827586207,
+    "failure_rate": 0.9666666666666667,
+    "reason": "NOT attributable to the dataset: the model emitted essentially one constant mask, so all 116/120 records fail regardless of their content. The flag distribution (`tiny_target` at 93% of failures) describes the failure population, not a dataset defect, and this evidence does not indicate a dataset-selection task."
+  },
+  "note": "The dataset is not changed in Task 6D (section 1)."
+}

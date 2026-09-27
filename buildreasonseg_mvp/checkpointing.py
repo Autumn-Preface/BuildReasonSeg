@@ -72,6 +72,14 @@ def save_checkpoint(
         "sam_mask_decoder": {
             k: v.detach().cpu() for k, v in model.sam.sam_mask_decoder.state_dict().items()
         },
+        # Task 6D: the Spatial Grounding Bridge head, when the model has one. It is absent
+        # for the Task 6A-6C arms, so their checkpoints stay compatible with this change.
+        "grounding_head": (
+            {k: v.detach().cpu() for k, v in model.grounding_head.state_dict().items()}
+            if getattr(model, "grounding_head", None) is not None
+            else None
+        ),
+        "geometry_kind": getattr(model, "geometry_kind", None),
         "rng_state": {
             "python": random.getstate(),
             "torch": torch.get_rng_state(),
@@ -98,6 +106,10 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
     missing, unexpected = model.qwen.load_state_dict(payload["lora_and_token_state"], strict=False)
     model.projection.load_state_dict(payload["projection"])
     model.sam.sam_mask_decoder.load_state_dict(payload["sam_mask_decoder"])
+    head_loaded = False
+    if getattr(model, "grounding_head", None) is not None and payload.get("grounding_head"):
+        model.grounding_head.load_state_dict(payload["grounding_head"])
+        head_loaded = True
     if model.token_holder is not None and "project_token_row" in payload:
         with torch.no_grad():
             model.token_holder.row.copy_(payload["project_token_row"].to(model.token_holder.row.device))
@@ -109,6 +121,8 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
         "metrics": payload.get("metrics", {}),
         "missing_keys": len(missing),
         "unexpected_keys": len(unexpected),
+        "grounding_head_loaded": head_loaded,
+        "geometry_kind": payload.get("geometry_kind"),
     }
 
 

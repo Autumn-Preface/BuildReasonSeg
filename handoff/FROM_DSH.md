@@ -17,289 +17,305 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6C.7 Report: Frozen Qwen Visual-Feature Cache & Remaining Batch-1 Sync Overhead
+# FROM_DSH — Task 6D Report: Spatial Grounding Bridge v0.1
 
-_This file holds the Task 6C.7 report. The Task 6C.6 report is preserved in git history and in
-`docs/task6c6_launch_optimization.md`; Task 6C.5 is in `docs/task6c5_training_optimization.md`; Task 6C is
-in `docs/task6c_prompt_ablation.md`._
+_This file holds the Task 6D report. The Task 6C.7 report is preserved in git history and in
+`docs/task6c7_visual_cache_optimization.md`; Task 6C is in `docs/task6c_prompt_ablation.md`._
 
 ## 1. Verdict
 
-**`OPTIMIZATION_PARTIAL` — two changes adopted.**
+**`GROUNDING_REPRESENTATION_FAILED`.**
 
-| Change | Status |
+The oracle diagnostic proved that the segmentation machinery was never the problem — with correct
+geometry, SAM2 recovers the target at **0.7506 mIoU** against Task 6C's **0.10604** — and then the first
+explicit spatial-grounding stage showed *where* the problem actually is: **the `[SEG]` hidden state does
+not carry the target's location.** A 1.05M-parameter head supervised on 480 ground-truth target boxes did
+not fit even the training boxes; it collapsed to the single constant box that minimises SmoothL1.
+
+Per section 9, a failed G0 means **stop, do not compensate with 4B or extra modules**, so **G1 was not
+run**. Every task boundary held: no 4B, no `[REF]`, no Spatial Relation Encoder, no Spatial Consistency
+Loss, no dataset change, no true batching, no full training, no GUI.
+
+| Stage | Result |
 |---|---|
-| Section 3: remove the formal Phase-B duplicate device transfer | **adopted** — exact, simpler, and it fixes a real ownership bug |
-| Section 5-8: frozen Qwen visual-tower feature cache | **adopted** — `BIT_EQUIVALENT`, **+9.94 %** warm paired throughput, −8.44 % kernels, −43.5 % sync ops, 2 GiB bound |
-| Section 4: remaining scalar read-backs | **localized and dismissed** — 97.7 % of them are PyTorch's own optimizer bookkeeping on CPU-hosted `step` counters, they do not synchronize, and the project's share is <1 % |
-| Section 10: defer project-owned scalar logging (V3) | **not implemented** — the profiling shows it is not worth any complexity |
+| Oracle point | mIoU 0.4876, paired 18/20 |
+| Oracle box | mIoU **0.7506**, paired **20/20** |
+| Section 5 geometry choice | **BOX** (point missed the 0.50 mIoU gate; box passed it and led by +0.2630) |
+| G0 grounding proof | **failed**: emission 120/120 ✅, geometry paired **0/20** ❌, box IoU **0.0082** ❌ |
+| G1 joint segmentation | **not run** (section 9: stop on G0 failure) |
+| Final free-generation evaluation | strict e2e mIoU **0.0066**, paired mask **0/20**, IoU(pred_A, pred_B) 0.919 |
 
-No model, loss, data, optimizer-mathematics, sample-order or batch-size semantics changed, and no Task 6C
-model-quality conclusion is reinterpreted.
+## 2. Frozen Baseline (section 3)
 
-## 2. Formal H2D Fix (section 3)
+Task 6C's `P_C` arm, not rerun: strict end-to-end mIoU **0.10604**, paired mask probe **0/20**,
+same-image prediction-to-prediction IoU ≈**0.999**, valid `[SEG]` emission **120/120**
+(`evaluation/task6c_comparison.json`, arm `P_C`). The Task 6C.7 runtime was reused unchanged
+(`collect_grad_norms=false`, frozen visual-feature cache, no redundant Phase-B transfer), so the
+architecture comparison is not confounded by the performance work.
 
-`scripts/task6c_train.py` built an unused copy on every Phase-B step:
+## 3. Oracle Point (section 4)
 
-```python
-batch, image = runtime.prepare(sample)
-moved = batch.to(runtime.device)          # allocated and filled …
-result = runtime.train_step(batch, ...)   # … never used: train_step copies again
+One deterministic interior point per GT target mask — the maximum of the Euclidean distance transform,
+ties broken by row-major `argmax`, normalized to a pixel centre — through the **official** SAM2 prompt
+encoder as a single positive point, on the fixed 120-record validation set and the 20 paired images:
+
+| strict mIoU | Dice | paired | mean own IoU | mean cross IoU | margin | IoU(pred_A, pred_B) |
+|---|---|---|---|---|---|---|
+| 0.4876 | 0.6055 | **18/20** | 0.4944 | 0.0205 | +0.4739 | 0.0949 |
+
+## 4. Oracle Box (section 4)
+
+The tight GT bounding box through the official SAM2 box path:
+
+| strict mIoU | Dice | paired | mean own IoU | mean cross IoU | margin | IoU(pred_A, pred_B) |
+|---|---|---|---|---|---|---|
+| **0.7506** | **0.8507** | **20/20** | 0.7069 | 0.0000 | +0.7069 | **0.0000** |
+
+The two oracle rows are the cleanest diagnosis in the whole project so far: *given the right geometry,
+SAM2 finds the right building*, and the paired probe separates the two targets perfectly. The Task 6C
+failure was therefore in **prompt generation**, not in the segmenter, and not in the oracle's coordinate
+convention — the same code path produces 0.75 mIoU when handed GT geometry.
+
+## 5. Geometry Choice (section 5)
+
+Section 5's rule applied verbatim and recorded in the artifact:
+
+1. point paired 18/20 ✅ but mIoU 0.4876 **< 0.50** ❌ → rule 1 does not apply;
+2. box paired 20/20 ✅ and mIoU 0.7506 ≥ 0.50 ✅ → **BOX**.
+
+Box also improves mIoU by **+0.2630** over point, so the choice is not a tie-break and the prettier
+result was not silently picked. Combined point+box was not used (section 5 forbids it).
+Artifact: `evaluation/task6d_oracle_prompt_diagnostic.json`.
+
+## 6. SpatialGroundingHead (section 6)
+
+```text
+LayerNorm(2048) -> Linear(2048, 512) -> GELU -> Linear(512, 4) -> sigmoid    # BOX (D = 4)
 ```
 
-`MvpRuntime.train_step` performs `batch = batch.to(self.device)` itself. The loop now creates `moved`
-**inside the Phase-A branch only** (Phase A calls Qwen directly and has no other mover), so Phase B
-transfers exactly once and the loop no longer owns a copy it does not use.
+1,055,236 parameters. The four sigmoid outputs are treated as two corners and ordered with `min`/`max`,
+which canonicalizes `x1 ≤ x2`, `y1 ≤ y2` **differentiably** (gradients still reach all four units). The
+candidate path is the spec's chain exactly, and the old projected language vector is never built:
 
-The regression tests run the real `train_phase` against a stub runtime that mirrors the production
-`train_step` and counts `.to()` calls: **Phase B = 1 transfer, Phase A = 1 transfer**. Writing that test
-found a live defect the refactor had introduced — Phase B still executed a trailing `del batch, moved`,
-which raised `UnboundLocalError` on the very first Phase-B step. Fixed (`del batch`), covered, and worth
-recording because the benchmark harness does not go through `train_phase` and would never have caught it.
-
-The saved work is one H2D copy of a ~2.5 MB batch per step, so this is a correctness/clarity fix first.
-Section 3 says not to overclaim it and the benchmark agrees: V0 (pre-fix) versus V1 measured −13.1 %
-against a drifting reference whose uncertainty was larger than that, i.e. **unresolvable**. No number is
-claimed for it.
-
-## 3. Remaining Sync Hotspots (section 4)
-
-Task 6C.6 counted ~1,051 `aten::item` per step; this task names them. Three measurements were needed
-because the first plausible answer was wrong.
-
-**Stack capture is unavailable on this build.** `KinetoEvent.stack` is always an empty list and
-`torch._C._get_python_stack` does not exist, so section 4's scoped-window fallback was used, plus a
-`sys.setprofile` `c_call` hook that recovers the calling Python frame of every `Tensor.item()`.
-
-Scoped windows, per step (one Phase-B step, 1,048 scalar reads by this run's convention):
-
-| Component | Scalar reads/step | Share | Sync ops/step | Kernels/step |
-|---|---|---|---|---|
-| **optimizer + clipping (`optimizer.step()`)** | **1,024** | **97.7 %** | **1** | 2,639 |
-| forward (Qwen + vision + SAM decode + loss) | 19 | 1.8 % | 267 | 20,501 |
-| — vision tower | 9 | 0.9 % | 200 | 3,297 |
-| — language model | 10 | 0.9 % | 67 | 17,204 |
-| backward pass | 5 | 0.5 % | 159 | 34,123 |
-| data preparation | 3 | 0.3 % | 1 | 0 |
-| project loss scalars + clip norm | ~4 | 0.4 % | — | — |
-| SAM projection + decode | 2 | 0.2 % | 14 | 742 |
-
-The `sys.setprofile` tracer is decisive: **99.5 % of `.item()` calls are issued under `runtime.py:423`,
-which is `optimizer.step()`**, and the mechanism is inside PyTorch:
-
-```
-torch/optim/adam.py:770-776   bias_correction1 = [1 - beta1 ** _get_value(step) for step in device_state_steps]
-                              bias_correction2 = [1 - beta2 ** _get_value(step) for step in device_state_steps]
-torch/optim/optimizer.py:95   return x.item() if isinstance(x, torch.Tensor) else x
-torch/optim/adam.py:165-176   # Deliberately host `step` on CPU if both capturable and fused are off.
-                              # This is because kernel launches are costly on CUDA and XLA.
+```text
+image + instruction -> Qwen3-VL (text LoRA) -> reasoning + [SEG] -> [SEG] hidden
+   -> SpatialGroundingHead -> predicted box -> official SAM2 prompt encoder -> SAM2 mask decoder -> mask
 ```
 
-With `capturable=False, fused=False` — the project's configuration — AdamW keeps each parameter's `step`
-counter as a **CPU scalar tensor** and converts it twice per parameter per step: 2 × 528 ≈ 1,056, which
-is what is measured.
+**Coordinate convention, verified in the installed source.** `PromptEncoder._embed_points` /
+`_embed_boxes` add 0.5 and call `pe_layer.forward_with_coords(points, self.input_image_size)`, which
+divides by the image size — so the official encoder expects **input-image pixels** (the 1024×1024 frame),
+not normalized coordinates. The head predicts normalized geometry (resolution independent) and
+`geometry_to_sam_coords` scales by 1024; Task 6D data is square 512×512, so the map is linear. The oracle
+result is the end-to-end proof that this is right.
 
-**What this rules out, with evidence:**
+## 7. G0 Training (section 9)
 
-* **Not the backward pass.** The first scoped run pointed there because its optimizer window called
-  `zero_grad(set_to_none=True)`, which sets every `grad` to `None`; AdamW then skipped every parameter
-  and the window measured nothing. Corrected, the optimizer takes 1,024 of 1,048 reads and backward 5.
-* **Not gradient checkpointing.** A probe runtime with checkpointing disabled measured 1,048 → 1,048
-  reads/step (backward 5 either way).
-* **Not expensive, and not synchronizing.** 1,024 reads in the optimizer window come with **one** sync
-  op: these are host-tensor conversions. The supported removal is `fused=True`, which hosts `step` on
-  the GPU — Task 6C.6 measured it at −0.71 % (inside the noise band) and `NOT_EQUIVALENT`. Section 4
-  forbids patching third-party internals, and section 10 says to leave the project's own ~7 reads alone.
+2 epochs × 480 paired `P` records (the section 9 maximum), 198 s + 262 s. Trainable: text LoRA, the
+`[SEG]` machinery and the head (399 tensors, 18,489,860 parameters). Frozen: Qwen base, visual tower,
+SAM2 image encoder, **SAM2 mask decoder** (G0 trains no mask path at all), prompt encoder, and the unused
+projection MLP. Loss `2.0 × LM CE + 5.0 × SmoothL1(box)`, with the raw components logged.
 
-Artifact: `evaluation/task6c7_sync_hotspots.json`.
-
-## 4. Visual-Tower Cache Eligibility (section 5)
-
-`evaluation/task6c7_visual_cache_eligibility.json` — **all conditions pass**:
-
-| Condition | Result |
-|---|---|
-| every visual-tower parameter frozen | **true** (315 tensors, all bf16, `requires_grad=False`) |
-| zero LoRA modules in the visual tower | **true** (0; `lora.text_only: true`, no visual target suffixes) |
-| visual output deterministic under training settings | **true** — recomputation is bit-identical, max abs difference **0.0** |
-| no training-time visual state changes during a step | **true** — parameters *and* buffers unchanged after a real optimizer step |
-| independent of instruction / `[SEG]` / LoRA / optimizer state | **true** — 8 same-image instruction pairs: `pixel_values` identical and visual features bit-identical |
-| no dropout in the tower (why bit-equivalence is plausible rather than lucky) | **true** — no `Dropout(p>0)` in the tower, so it consumes no RNG |
-
-The only registered buffers are `rotary_pos_emb.inv_freq` / `original_inv_freq` — constants that did not
-move during the step.
-
-## 5. Cache Boundary (section 6)
-
-`Qwen3VLModel.forward` reads exactly two things from the tower:
-
-```python
-image_outputs = self.get_image_features(pixel_values, image_grid_thw)
-image_embeds  = image_outputs.pooler_output         # merger output, split per image
-deepstack     = image_outputs.deepstack_features    # deepstack merger outputs
-```
-
-so the cache holds **`pooler_output` + `deepstack_features`** — the last tensors produced exclusively by
-frozen parameters, before they are mixed with trainable text hidden states. Not cached: the tower's
-pre-merger `last_hidden_state` (the language model never reads it and it would double the footprint),
-language-model hidden states, the `[SEG]` state, logits.
-
-The integration is an **instance-level method replacement on the project's own Qwen module**
-(`model.qwen.model.get_image_features`), not a patch of library source: the original bound method is kept
-as `_task6c7_original_get_image_features` and called unchanged on a miss, so the miss path is
-byte-identical to the previous behaviour, and `remove_visual_feature_cache` restores it. This
-`transformers` version has no "pass precomputed image features" argument
-(`accepts_precomputed_kwargs` only rewrites modality-prefixed kwargs), so this was the narrowest clean
-boundary available.
-
-**Keying.** `image:<image_id>` when the caller supplies source-image identity (the formal loop does),
-else `content:<blake2b of pixel_values + image_grid_thw>`. Both are functions of the source image alone,
-so two instructions on one image share one entry, and no sample-id plumbing mistake can return another
-image's features. Both key strategies are gated and both are `BIT_EQUIVALENT`.
-
-## 6. Equivalence (section 7)
-
-`evaluation/task6c7_equivalence.json`, 12 steps, same initial trainable state, same samples in the same
-order, strict determinism, per-run re-seeding.
-
-| Object | Result |
-|---|---|
-| 16-sample feature equality (uncached vs cache hit) | **bit-identical**, max abs difference **0.0**, shapes and dtype equal |
-| reference run twice | `BIT_EQUIVALENT` (the gate reproduces itself) |
-| cached, image-identity key | **`BIT_EQUIVALENT`** — losses, gradients, post-step parameters identical |
-| cached, content-hash key | **`BIT_EQUIVALENT`** |
-| first-step total loss, cached vs uncached | `9.425538063049316` both |
-
-Boundary cost measured: hit **1.07 ms**, miss **30.9 ms** (host launch time of the tower's kernels).
-
-## 7. V0 / V1 / V2 / V3 Results (section 9)
-
-Whole-variant runs (`evaluation/task6c7_variants.json`, 8 warmup + 64 measured steps):
-
-| Variant | samples/s | vs interpolated reference | kernels/step | syncs/step | cache |
-|---|---|---|---|---|---|
-| V1 (section 3 fix) | 2.978 / 2.246 (bracket) | reference | 57,341 | 444 | none |
-| V0 (pre-fix duplicate H2D) | 2.428 | −13.1 % (*unresolvable*) | 57,382 | 456 | none |
-| V2 (V1 + cache, image key) | 2.348 | −10.1 % (*unresolvable*) | **52,501** | **251** | 0.125 GiB |
-| V2b (V1 + cache, content key) | 2.323 | −4.4 % (*unresolvable*) | **52,501** | **251** | 0.125 GiB |
-
-The reference drifted −24.6 % across that group, so nothing in it is resolvable, and the four-run
-interleaved V1/V2 head-to-head was no better: **round 1 favoured V1 by 15.7 %, round 2 favoured V2 by
-8.9 %** — rounds that disagree in sign, i.e. drift rather than a cache effect. The adoption decision
-therefore does not rest on those numbers.
-
-**The decision rests on a paired ablation** (`evaluation/task6c7_paired_ablation.json`): inside one
-runtime, 8-step blocks alternate cache-off / cache-on so each adjacent off/on pair is an observation at
-nearly the same thermal state.
-
-| Block | Arm | ms/step | samples/s | ON vs OFF |
-|---|---|---|---|---|
-| 1 | off | 322.6 | 3.1000 | — |
-| 2 | on | 288.5 | 3.4667 | **+11.8 %** |
-| 3 | off | 319.9 | 3.1256 | — |
-| 4 | on | 283.8 | 3.5236 | **+12.7 %** |
-| 5 | off | 317.5 | 3.1492 | — |
-| 6 | on | 293.9 | 3.4028 | **+8.1 %** |
-| 7 | off | 328.5 | 3.0438 | — |
-| 8 | on | 301.4 | 3.3183 | **+9.0 %** |
-
-**Paired mean +10.41 %, warm-only +9.94 %, 4/4 pairs in favour of the cache.**
-
-**A measurement error found and fixed here changed the answer.** The first paired run warmed the cache
-while it was still disabled, so nothing was stored and every ON block paid misses; it reported **+2.31 %**
-and the cache would have been rejected as sub-threshold. Enabling the cache during the warm-up — which is
-what "warm throughput" means — moves the same measurement to **+9.94 %**. Both runs are in git history,
-and the artifact records the warm-up rule.
-
-**V3 (deferred project-owned scalar logging): not implemented.** Section 10 makes it conditional on the
-profiling showing those reads matter. They are ~4 loss floats plus the clip norm out of 1,048 reads
-(≈0.4 %), and the clip norm's own `.item()` is what the training loop logs every step, so there is
-nothing worth the change; the decision is recorded in `task6c7_variants.json` under `v3_decision`.
-
-## 8. Kernel / Sync Changes
-
-| Per step | Cache OFF | Cache ON | Change |
-|---|---|---|---|
-| CUDA kernels | 57,341 | **52,501** | **−8.44 %** |
-| Host↔device sync ops | 444 | **251** | **−43.47 %** |
-| Scalar read-backs | 1,051 | 1,042 | −0.9 % |
-
-The removed kernels are the frozen tower's ~3,297 per step plus its 200 sync ops. Scalar read-backs barely
-move, consistent with §3: they belong to the optimizer, not the tower.
-
-## 9. Throughput / GPU / CPU
-
-| | Cache OFF | Cache ON (adopted) |
+| | Epoch 1 | Epoch 2 |
 |---|---|---|
-| ms/step (paired, warm) | ~322 (317.5 – 328.5) | **~292 (283.8 – 301.4)** |
-| samples/s (paired, warm) | ~3.11 | **~3.43** |
-| Speedup | — | **+9.94 %** |
-| GPU utilization | 39.6 / 40.3 % | 40.4 % |
+| LM CE | → **0.0000** | 0.0000 |
+| grounding SmoothL1 (train) | 0.0819 → 0.0126 | 0.0649 → 0.0126 |
+| train box IoU (logged samples) | 0.0548 mean | **0.0009 mean** |
+| predicted-box spread (std per coordinate) | [0.053, 0.048, 0.051, 0.062] | **[0.000, 0.000, 0.001, 0.000]** |
+| GT box spread (std per coordinate) | [0.255, 0.187, 0.257, 0.186] | same |
 
-Section 11 adoption checklist: eligibility ✅, equivalence `BIT_EQUIVALENT` ✅, no trainable signal
-bypassed ✅, no OOM/paging ✅, warm throughput **+9.94 % ≥ 8 %** ✅, break-even immediate ✅.
-Adopted runtime: section 3 fix + visual cache, enabled by
-`training.visual_feature_cache: true` with `visual_feature_cache_max_images: 512`.
+## 8. G0 Metrics (section 9)
 
-## 10. RAM / VRAM / Cold Cost
+| Gate | Requirement | Measured |
+|---|---|---|
+| valid `[SEG]` | ≥ 90 % | **120/120 = 100 %** ✅ |
+| geometry paired | ≥ 14/20 | **0/20** ❌ |
+| mean GT-box IoU | ≥ 0.35 | **0.0082** ❌ |
+
+**Mechanism: the head collapsed to a constant box.** By the end of epoch 2 every sample predicted
+
+```text
+(0.457, 0.455, 0.547, 0.539)     spread across samples: [0.000, 0.000, 0.001, 0.000]
+```
+
+which is the mean box — the *optimal constant predictor* under SmoothL1 when the read-out carries no
+location information. Three independent corroborations:
+
+* the head never fit the **training** boxes either (0.0548 → 0.0009 mean box IoU), i.e. it moved towards
+  the constant rather than towards the data;
+* teacher-forced and free-generation metrics are identical and **unchanged between epochs**
+  (box IoU 0.0082, centre-inside 1/120), which can only happen if the prediction no longer depends on
+  the input;
+* LM CE saturated at 0.0000 while the language target is one of 21 distinct reasoning templates (Task 6C's
+  finding), so the language objective was memorized long before it could pressure the read-out to encode
+  *which* building, and it supplies no useful grounding gradient.
+
+This is a representation result, not a wiring error: the same prompt path reaches 0.7506 mIoU with GT
+geometry, and `tests/test_task6d_grounding.py` proves the grounding loss produces gradients in the head,
+the LoRA adapters and the `[SEG]` row. It also **reproduces Task 6C's independent measurement** —
+projected effective rank 1.5, same-image cosine > 0.9999 — with a completely different read-out (a
+supervised geometry head instead of a projected vector), which is what makes the diagnosis strong: the
+collapse is in the `[SEG]` hidden state itself.
+
+## 9. G1 Training (section 10)
+
+**Not run.** Section 9 says a failed G0 must stop with `GROUNDING_REPRESENTATION_FAILED` and must not be
+compensated with 4B or extra modules, and section 10 gates G1 on G0 passing. Training a mask decoder
+against a constant prompt could only degrade a decoder that the oracle shows is already capable, so
+running it would have produced a worse number for a question that G0 already answered.
+
+## 10. Strict E2E (section 11)
+
+Free generation is the primary setting: image + instruction → generated reasoning + exactly one `[SEG]` →
+generated `[SEG]` hidden → predicted box → official prompt encoder → mask. From the G0 checkpoint
+(`G0_epoch2.pt`, step 960; the load path is verified because these numbers reproduce G0's own
+validation exactly):
 
 | | Value |
 |---|---|
-| Adopted reserved VRAM | **8.582 GiB** (limit 14) |
-| Adopted RSS | **4.751 GiB** (limit 24); +128 MiB resident cache at 32 images |
-| Cache bound at 512 images | **2.0 GiB** (guidance 8 GiB) |
-| Bytes per image | 4,194,304 (4.0 MiB): `pooler_output` 1 MiB + 3 × `deepstack_features` 1 MiB, bf16 kept native |
-| Task 6C 480-image estimate | 1.875 GiB |
-| Full 2,508-image WHU-train estimate | 9.797 GiB — above the 8 GiB guidance, so the bound stays at 512 |
-| Cold build (32 unique images) | 1.32 s after a warm step; 15.7 s when measured before any step in the process (first-call kernel setup) |
-| Miss / hit per image | 30.9 ms / 1.07 ms (33 ms/image once warm) |
-| Break-even | immediate — a cold epoch performs the same tower work it would anyway; from the second epoch the cache saves ~30 ms per step |
-| Peak across Task 6C.7 experiments | 13.166 GiB reserved, 5.305 GiB RSS, 16.3 GiB system RAM, 76.1 °C, 111 W, no paging/OOM |
+| emission | **120/120** (100 %) |
+| strict end-to-end mIoU | **0.0066** |
+| strict end-to-end Dice | 0.0106 |
+| conditional mIoU (valid only) | 0.0066 |
+| mean predicted-box IoU vs GT box | 0.0081 |
+| predicted-box centre inside target | 1/120 = 0.83 % |
+| distinct predicted masks | 120 bitwise, but all are the same constant box with ~0.001 coordinate jitter |
 
-## 11. Tests
+Task 6C's `P_C` reference is 0.10604, i.e. the candidate is **worse than the bridge it replaces** — which
+is expected and informative: a constant centred box is a worse spatial prompt than Task 6C's fixed-centre
+prior on this data, because the constant box is an *average* box that lands on no particular building.
 
-`python -m pytest tests/ -q` → **238 passed** (236 from before plus the 13 new ones, minus the two Task
-6C.6 stub tests that were extended for the new runtime API), 31 warnings, ~462 s.
+## 11. Paired Geometry Probe (section 12)
 
-`tests/test_task6c7_visual_cache.py` covers all 15 section-14 items: the formal Phase-B loop performs one
-logical transfer, Phase A still trains and transfers once, the visual tower is frozen with zero visual
-LoRA, the cache key is image-based (not sample-based), the cache stores no trainable language state, cache
-hits preserve shape/dtype and recomputation is deterministic, cached and uncached features match exactly,
-the 12-step end-to-end gate is bit-equivalent, no test split is used, batch stays 1, no
-architecture/loss/optimizer/data change, strict determinism is preserved, and no `[REF]`/4B/SRE/SCL
-appears. It also asserts the sync attribution artifact keeps naming the optimizer as the dominant source.
+Free generation, all 20 pairs, `IoU(pred_A, GT_A) > IoU(pred_A, GT_B)` and symmetric:
 
-## 12. Git / Watt
+**geometry paired 0/20**, though the gate for a plateaued representation is the more telling number:
+the predicted geometry of the two instructions of one image differ by **0.0008 L1** (distance ≈0.0017),
+i.e. the two instructions produce the *same* box. This is the exact failure mode Task 6C described, now
+at the geometry level.
 
-* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`: commit **`4d62c8f`**
-  (`perf: cache frozen Qwen visual features`) plus a follow-up `docs:` commit recording this hash and the
-  push result (`5f515a0..4d62c8f  main -> main`). Remote `main` was at `5f515a0` before this task.
-* Artifacts: `evaluation/task6c7_visual_cache_eligibility.json`, `task6c7_sync_hotspots.json`,
-  `task6c7_equivalence.json`, `task6c7_variants.json`, `task6c7_paired_ablation.json`,
-  `task6c7_final_benchmark.json`, `task6c7_resource_usage.json`; report
-  `docs/task6c7_visual_cache_optimization.md`. No weights, no checkpoints, no `.conda`, no
-  `local_cache`, no dataset edits, no raw profiler traces, and no cache tensors are staged.
-* **Watt Toolkit: `watt_preexisting = true`** (`Steam++.exe` running since 14:16:23). Used for the push if
-  needed and **left running** — DSH did not start it, so DSH did not close it. Nothing was force-killed,
-  no hosts file was edited, no certificate or TLS setting was changed, and every model run was offline
-  from local cache.
+## 12. Paired Mask Probe (section 12)
 
-## 13. Whether true batching is now justified (section 12)
+| Metric | Value |
+|---|---|
+| mask paired | **0/20** |
+| mean own-target IoU | 4.02e-10 |
+| mean cross-target IoU | 4.03e-10 |
+| own-minus-cross margin | −4.5e-13 |
+| **IoU(pred_A, pred_B)** | **0.919** |
 
-**Yes.** Section 12 permits that conclusion only after the redundant Phase-B H2D is removed, the remaining
-`aten::item`/sync hotspots are localized, and the frozen visual-cache feasibility is measured. All three
-are done:
+The two instructions of one image produce a 92 %-identical mask (not 100 % only because the constant box
+retains ~0.001 coordinate jitter), and neither mask overlaps any GT target — the "same prediction for
+both instructions" defect of Task 6C is reproduced by a completely different mechanism, and the paired
+probe still discriminates: it is the gate that a real fix must move.
 
-1. the duplicate transfer is gone, with a regression test that proved Phase B transfers once;
-2. the remaining ~1,051 scalar read-backs are localized to PyTorch's own optimizer bookkeeping on
-   CPU-hosted `step` counters — third-party, by design, non-synchronizing, and worth ~0.25 % of the step,
-   with the project's own share under 1 %;
-3. the frozen visual cache — the last large, removable, semantics-preserving batch-1 win — is eligible,
-   bit-equivalent and adopted at **+9.94 %**.
+## 13. Representation Diagnostics (section 14)
 
-What is left is the *shape* of execution: ~52,500 CUDA kernels per step at a ~2 µs median, one sample per
-optimizer step, GPU utilization ~40 %. No further batch-1 change of this class is visible. The next lever
-is arithmetic intensity, i.e. a **Task 6C.8 true-batching feasibility experiment** (VRAM headroom at
-batch 2/4 with checkpointing ON, an explicit equivalence story for a changed effective batch, and its own
-adoption gate). Nothing in Task 6C.7 authorizes starting it, and Task 6D model work remains gated on
-review.
+| Metric | Value |
+|---|---|
+| `[SEG]` hidden cosine, same image / two instructions | **0.99898** |
+| `[SEG]` hidden L2, same image | 10.50 |
+| head penultimate cosine, same image | 0.99910 |
+| predicted geometry L1, same image | **0.00076** |
+| mask IoU(pred_A, pred_B) | **0.919** |
+
+**Four-condition control (same/different image × same/different template):**
+
+| Condition | hidden cosine |
+|---|---|
+| different image, **same template** | **0.99988** ← most similar |
+| same image, different template | 0.99898 |
+| different image, different template | 0.99869 ← least similar |
+
+**Answer to section 14's key question: no.** Instruction variation does not produce spatially different
+predicted geometry, so it cannot produce different masks. The control is sharper than
+"instruction-independent": **changing the whole image moves the `[SEG]` hidden state *less* than changing
+the instruction wording**, so the read-out at that position is dominated by the reasoning **template**
+and the target contributes only a small residual. The head's collapse to the mean box is the optimal
+response to exactly that input — which is why the fix has to change where the geometry comes from, not
+how the head is built.
+
+## 14. WHU / Pseudo-instance Error Analysis (section 16)
+
+`evaluation/task6d_error_analysis.json` classifies each free-generation record from the GT component map
+(neighbouring components, border contact, connectivity, target size) and from the predicted mask's
+component coverage:
+
+| Flag | Records | Share of the 116/120 failures |
+|---|---|---|
+| tiny target (< 1 % of the tile) | 108 | 93 % |
+| border truncation | 35 | 30 % |
+| insufficient density (≤ 2 components in tile) | 6 | 5 % |
+| touching neighbours (adjacent WHU components) | 2 | 2 % |
+| merged prediction (≥ 2 components ≥ 5 % of the mask) | 0 | 0 % |
+| ambiguous boundary (multi-component **and** IoU < 0.3) | 0 | 0 % |
+| disconnected target | 0 | 0 % |
+
+**These failures are not attributable to the dataset.** The artifact's degeneracy guard records that the
+model emitted essentially one constant mask, so all 116 failures occur regardless of record content, and
+the flag distribution describes the failure population rather than a dataset defect. The dataset is
+unchanged (section 1), and a dataset-selection task is **not** indicated by this evidence — the
+limitation that matters is in the read-out, not in WHU's pseudo-instances.
+
+## 15. Runtime / VRAM
+
+| | Value |
+|---|---|
+| GPU | RTX 5080 Laptop, 15.894 GiB |
+| G0 epoch 1 / epoch 2 training time | 198 s / 262 s for 480 steps (≈0.41–0.55 s/step, teacher-forced) |
+| Free-generation evaluation (120 records + 20 pairs + panels) | ≈12 min |
+| Oracle diagnostic (120 records × 2 geometries + 20 pairs) | ≈9 min |
+| Peak VRAM during G0 training | recorded in `evaluation/task6d_g0.json` (`vram` per logged step) |
+| Task 6C.7 runtime reused | frozen visual-feature cache ON, `collect_grad_norms=false`, one Phase-B transfer |
+| Checkpoints | local and gitignored (`artifacts/checkpoints/task6c/task6d_G0/`), 100 MB per epoch, hashes in `evaluation/task6d_checkpoint_manifest.json` |
+
+## 16. Tests
+
+`python -m pytest tests/ -q` → **251 passed** (238 before plus the 13 new Task 6D tests).
+
+`tests/test_task6d_grounding.py` covers all 16 section-18 items: the deterministic interior point lies
+inside the mask, the box tightly encloses it, normalized geometry is valid and canonical, GT geometry is
+used only in supervision/oracle (AST-checked on both paths), free inference uses predicted geometry only,
+the grounding loss reaches the head/LoRA/`[SEG]` (model-backed), the visual tower and SAM2 image encoder
+stay frozen, paired samples have different targets, both paths use the official SAM2 prompt encoder, the
+old arbitrary language sparse prompt is absent from the candidate, the visual cache stays value-preserving,
+no test split is used, no 4B/`[REF]`/SRE/SCL appears, and strict determinism is retained.
+
+## 17. Git / Watt
+
+* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main` with the recommended message
+  `feat: add spatial grounding bridge`; the exact hash and push result are recorded in a follow-up
+  `docs:` commit and in the DSH turn response. Remote `main` was at `4b46045` before this task.
+* Artifacts: `evaluation/task6d_oracle_prompt_diagnostic.json`, `task6d_grounding_targets.json`,
+  `task6d_g0.json`, `task6d_paired_probe.json`, `task6d_representation.json`,
+  `task6d_error_analysis.json`, `task6d_checkpoint_manifest.json`, `task6d_panels/*.png`; report
+  `docs/task6d_spatial_grounding_bridge.md`. `task6d_g1.json` does not exist by design (G0 failed).
+  No weights, no checkpoints, no `.conda`, no `local_cache`, no dataset edits are staged.
+* **Watt Toolkit: `watt_preexisting = true`** (`Steam++.exe` since 2026-09-26 14:16:23). Used for the
+  push if needed and **left running**; nothing was force-killed, no hosts file was edited, no certificate
+  or TLS setting was changed. All model runs were offline from local cache.
+
+## 18. Recommendation for next architecture task
+
+The evidence points at one specific defect and rules out several alternatives, so the next task should
+attack the read-out rather than the prompt bridge or the segmenter:
+
+1. **Give the model a spatially supervised output token, not a free hidden vector.** The `[SEG]` hidden
+   state is a *consequence* of the reasoning template, and the language loss saturates at 0.0000 before it
+   can impose any spatial content. Emitting the target geometry **as text tokens** (quantized box
+   coordinates, e.g. a small vocabulary of grid/coordinate tokens appended to the reasoning) makes the
+   geometry a first-class prediction target of the existing LM head: the loss then differs *per sample*
+   instead of per template, and the model must attend to the target to reduce it. This needs no new
+   module, no 4B and no `[REF]`.
+2. **Or supervise the read-out directly.** Keep the head, but add an explicit objective on the `[SEG]`
+   hidden state itself (e.g. a learned spatial code trained with the same oracle geometry), so that a
+   constant output cannot be optimal. The Task 6D result is exactly the evidence this needs: the
+   constant-box optimum is what an unconstrained head converges to.
+3. **Keep the oracle diagnostic as the ceiling check for every future hypothesis.** It costs ~9 minutes
+   and separates "the segmenter cannot" from "the model does not say where", which is the distinction that
+   redirected this task.
+4. **Do not re-run Task 6D's G1, and do not re-open the geometry choice**: box is chosen, and training a
+   mask decoder against a collapsed prompt cannot answer a question that G0 already answered.
+5. **Dataset work is not indicated yet.** The failure population is model-caused (one constant mask for
+   120 records); the WHU pseudo-instance flags are recorded for future reference, but nothing in this
+   task's evidence says the dataset is the binding constraint.

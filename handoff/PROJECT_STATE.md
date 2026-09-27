@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6C.7._
+_Last updated by DSH at the end of Task 6D._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -61,6 +61,7 @@ The block above is machine-checked against
 | 6C.5 | **Batch-1 training-pipeline throughput audit + value-preserving optimization** | **done → `OPTIMIZATION_PARTIAL`** |
 | 6C.6 | **Launch-overhead candidates + formal-path integration of the 6C.5 winner** | **done → `OPTIMIZATION_PARTIAL`** |
 | 6C.7 | **Frozen Qwen visual-feature cache + remaining batch-1 sync audit** | **done → `OPTIMIZATION_PARTIAL`** |
+| 6D | **Spatial Grounding Bridge v0.1 (oracle diagnostic + geometry head)** | **done → `GROUNDING_REPRESENTATION_FAILED`** |
 
 ## Task 6C measured results
 
@@ -172,6 +173,44 @@ training loop; every other candidate was measured and rejected. Full detail:
    reading `torch.compile` errors on this Windows locale (otherwise the real `TritonMissing` cause is
    hidden behind a `UnicodeDecodeError`).
 
+## Task 6D measured results
+
+Architecture task: the first explicit spatial-grounding mechanism, and the first measurement that
+localizes the Task 6C failure to a specific component. Full detail:
+`docs/task6d_spatial_grounding_bridge.md`, `evaluation/task6d_*.json`.
+
+| | Value |
+|---|---|
+| Oracle point (GT point prompt → SAM2) | mIoU **0.4876**, Dice 0.6055, paired **18/20** |
+| Oracle box (GT box prompt → SAM2) | mIoU **0.7506**, Dice 0.8507, paired **20/20**, IoU(pred_A, pred_B) **0.0000** |
+| Section 5 geometry choice | **BOX** (point missed the 0.50 mIoU gate; box passed it and led by +0.2630) |
+| G0 (2 epochs × 480 paired records) | emission **120/120** ✅, geometry paired **0/20** ❌, box IoU **0.0082** ❌ |
+| G1 | **not run** (section 9: stop on G0 failure, do not compensate) |
+| Free-generation strict e2e mIoU | **0.0066** (Task 6C `P_C` reference 0.10604) |
+| Paired mask probe | **0/20**, own ≈ cross ≈ 4e-10, IoU(pred_A, pred_B) **0.919** |
+
+1. **The segmenter was never the problem.** Given the correct geometry, SAM2 recovers the target at
+   **0.7506 mIoU** (box) against Task 6C's **0.10604**, with a paired probe of 20/20 and *zero* overlap
+   between the two targets' predicted masks. The Task 6C failure was entirely in prompt generation.
+2. **The `[SEG]` hidden state does not carry the target's location.** A 1.05M-parameter head supervised on
+   480 GT boxes did not fit even the training boxes; by epoch 2 it collapsed to the single constant box
+   `(0.457, 0.455, 0.547, 0.539)` with per-coordinate spread `[0.000, 0.000, 0.001, 0.000]` — the optimal
+   constant predictor under SmoothL1 for an uninformative read-out.
+3. **The read-out is template-dominated, not merely instruction-independent.** Four-condition control on
+   `[SEG]` hidden cosines: different image + **same template** 0.99988 (most similar) vs same image +
+   different template 0.99898 vs different image + different template 0.99869 (least similar). Changing
+   the whole image moves the hidden state *less* than changing the instruction wording.
+4. **The language objective cannot fix it.** LM CE saturates at 0.0000 because the assistant target is one
+   of only 21 distinct reasoning templates (Task 6C's finding), so it is memorized long before it could
+   pressure the read-out to encode *which* building.
+5. **This reproduces Task 6C with a different read-out.** Task 6C measured the projected prompt at
+   effective rank 1.5 with same-image cosine > 0.9999; Task 6D measures a *supervised geometry head* on
+   the raw `[SEG]` hidden and finds the same collapse. Two independent read-outs agreeing makes the
+   diagnosis strong.
+6. **Dataset is not the binding constraint (yet).** The 116/120 failures carry `tiny_target` (93 %) and
+   `border_truncation` (30 %) flags, but the artifact's degeneracy guard shows all of them fail from one
+   constant mask regardless of content, so a dataset-selection task is not indicated by this evidence.
+
 ## Task 6C.7 measured results
 
 Performance-only task; two changes adopted, and the model/loss/data/optimizer semantics are untouched.
@@ -247,8 +286,9 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
 
 ## Measured limitations (carry into Task 6D)
 
-1. **Instruction conditioning of the mask is still absent** (0/20 in all four arms). This remains the
-   blocking defect for the MVP.
+1. **Instruction conditioning of the mask is still absent**, and Task 6D localizes it: the `[SEG]` hidden
+   state is template-dominated (different-image/same-template cosine 0.99988 > same-image/different-template
+   0.99898) and carries no usable target location. This remains the blocking defect for the MVP.
 2. **Mask quality is not usable**: strict end-to-end mIoU 0.093–0.109, L3 nontrivial 0.076–0.088.
 3. **Language metrics are template metrics**: `reasoning_zh` has 21 distinct values in the whole training
    mini-set, so exact match and operation-chain accuracy cannot support a reasoning claim.
@@ -271,27 +311,24 @@ search space is narrow and explicit.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6C.7 results**, then either
+**ChatGPT review of the pushed Task 6D results**, then an architecture task aimed at the read-out, since
+Task 6D localized the defect precisely:
 
-* **Task 6D aimed after the prompt** (if model quality is the priority):
+1. **Make the target position a supervised *token*, not a free hidden vector.** The `[SEG]` hidden is a
+   consequence of the reasoning template and the language loss saturates at 0.0000 before it can impose
+   spatial content. Emitting geometry as text tokens (quantized coordinates / grid tokens appended to the
+   reasoning) makes the geometry a first-class target of the existing LM head, so the loss differs *per
+   sample* instead of per template. No new module, no 4B, no `[REF]`.
+2. **Or supervise the read-out directly** (a learned spatial code on the `[SEG]` hidden trained with the
+   same oracle geometry) so that a constant output cannot be optimal — Task 6D's constant-box optimum is
+   the evidence that this is needed.
+3. **Keep the oracle diagnostic as the standing ceiling check** (~9 min) for every future hypothesis: it
+   separates "the segmenter cannot" from "the model does not say where".
+4. **Do not re-run G1 and do not re-open the geometry choice** (box is chosen); do not add `[REF]`, a
+   Spatial Relation Encoder, a Spatial Consistency Loss, 4B, a new dataset or full training.
+5. **Dataset work is not indicated yet** — the failure population is model-caused.
 
-  1. make the `[SEG]` hidden state instruction-conditional (auxiliary point-inside-the-mask supervision from
-     ground-truth geometry used *as supervision only*, or a second explicitly negative prompt slot);
-  2. only then test prompt normalisation / whitening and a multi-token prompt, which Task 6C has now earned
-     the right to try;
-  3. keep the paired instruction-dependence probe as the primary gate and keep the four correctness fixes;
-  4. do not scale to 4B and do not add `[REF]` on the strength of anything measured so far;
-
-  or
-
-* **Task 6C.8 true-batching feasibility** (the performance question Task 6C.7 now qualifies) — VRAM headroom
-  at batch 2/4 with checkpointing ON, an explicit equivalence story for a changed effective batch, and its
-  own adoption gate. It is not authorised by Task 6C.7.
-
-Do not re-open pipeline caching, `torch.compile`, the optimizer/clipping implementations, SDPA backend
-pinning, checkpointing-off or the visual-feature cache: all seven are measured, gated and closed.
-
-Full detail: `handoff/FROM_DSH.md`, `docs/task6c_prompt_ablation.md`,
-`docs/task6c5_training_optimization.md`, `docs/task6c6_launch_optimization.md`,
-`docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c_comparison.json`,
-`evaluation/task6c7_paired_ablation.json`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).
+Full detail: `handoff/FROM_DSH.md`, `docs/task6d_spatial_grounding_bridge.md`,
+`evaluation/task6d_oracle_prompt_diagnostic.json`, `evaluation/task6d_representation.json`,
+`evaluation/task6d_paired_probe.json`, `docs/task6c_prompt_ablation.md`,
+`docs/task6c7_visual_cache_optimization.md`, `docs/architecture_decisions.md` (ADR-014 amendment, ADR-015).

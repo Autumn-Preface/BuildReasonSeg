@@ -1,0 +1,1088 @@
+{
+  "_doc": "Task 6D section 12. Same-image paired probe under free generation: masks AND geometry must favour the own target. GT geometry is used only to score.",
+  "task": "6D",
+  "geometry_kind": "box",
+  "checkpoint": "artifacts\\checkpoints\\task6c\\task6d_G0\\G0_epoch2.pt",
+  "paired": {
+    "kind": "box",
+    "free_generation": true,
+    "pairs": [
+      {
+        "image_id": "1_1247",
+        "sample_a": "buildsr_val_1_1247_1_largest_2312f74e97f8",
+        "sample_b": "buildsr_val_1_1247_3_largest_to_right_of_to_nearest_0be0bf7c8b0a",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 3.5650624119476504e-10,
+        "own_iou_b": 4.64252553067368e-10,
+        "cross_iou_a": 4.612546178339727e-10,
+        "cross_iou_b": 3.582945051761044e-10,
+        "mean_own_iou": 4.103793971310665e-10,
+        "mean_cross_iou": 4.0977456150503855e-10,
+        "own_minus_cross_margin": 6.048356260279775e-13,
+        "iou_prediction_a_vs_prediction_b": 0.9650872817955112,
+        "geometry_a": [
+          0.45690229535102844,
+          0.45345115661621094,
+          0.5454794764518738,
+          0.5376285910606384
+        ],
+        "geometry_b": [
+          0.4570566415786743,
+          0.4547851085662842,
+          0.5450851321220398,
+          0.5389634966850281
+        ],
+        "gt_geometry_a": [
+          0.236328125,
+          0.634765625,
+          0.333984375,
+          0.78515625
+        ],
+        "gt_geometry_b": [
+          0.3515625,
+          0.642578125,
+          0.43359375,
+          0.76171875
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0019340969571332376
+      },
+      {
+        "image_id": "1_2103",
+        "sample_a": "buildsr_val_1_2103_1_largest_9ccf675337a3",
+        "sample_b": "buildsr_val_1_2103_2_largest_to_right_of_26f09300cd70",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.858776548819719e-10,
+        "own_iou_b": 5.770340316679778e-10,
+        "cross_iou_a": 5.847953232773762e-10,
+        "cross_iou_b": 2.840102319989768e-10,
+        "mean_own_iou": 4.314558432749749e-10,
+        "mean_cross_iou": 4.3440277763817647e-10,
+        "own_minus_cross_margin": -2.946934363201592e-12,
+        "iou_prediction_a_vs_prediction_b": 0.9693251533742331,
+        "geometry_a": [
+          0.45655763149261475,
+          0.4536454677581787,
+          0.5452450513839722,
+          0.5373490452766418
+        ],
+        "geometry_b": [
+          0.4569661021232605,
+          0.45443910360336304,
+          0.5455282330513,
+          0.5387019515037537
+        ],
+        "gt_geometry_a": [
+          0.01953125,
+          0.783203125,
+          0.16796875,
+          0.904296875
+        ],
+        "gt_geometry_b": [
+          0.908203125,
+          0.943359375,
+          0.986328125,
+          1.0
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0016453732789036373
+      },
+      {
+        "image_id": "1_2757",
+        "sample_a": "buildsr_val_1_2757_1_largest_f9ed1e8c8949",
+        "sample_b": "buildsr_val_1_2757_3_largest_to_left_of_to_nearest_21f7f5f71d7d",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 3.57525925531732e-10,
+        "own_iou_b": 4.750593807223424e-10,
+        "cross_iou_a": 4.694835631369187e-10,
+        "cross_iou_b": 3.6075034626215086e-10,
+        "mean_own_iou": 4.1629265312703723e-10,
+        "mean_cross_iou": 4.151169546995348e-10,
+        "own_minus_cross_margin": 1.1756984275024251e-12,
+        "iou_prediction_a_vs_prediction_b": 0.9348066298342541,
+        "geometry_a": [
+          0.4570346772670746,
+          0.4535236656665802,
+          0.5453734397888184,
+          0.537503182888031
+        ],
+        "geometry_b": [
+          0.4569462239742279,
+          0.45466482639312744,
+          0.5450686812400818,
+          0.5388669371604919
+        ],
+        "gt_geometry_a": [
+          0.80859375,
+          0.798828125,
+          0.96875,
+          0.865234375
+        ],
+        "gt_geometry_b": [
+          0.484375,
+          0.845703125,
+          0.609375,
+          0.953125
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.001806315387055298
+      },
+      {
+        "image_id": "1_286",
+        "sample_a": "buildsr_val_1_286_1_largest_76ca4af3c712",
+        "sample_b": "buildsr_val_1_286_2_largest_to_left_of_056216b5b322",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.8328611678674065e-10,
+        "own_iou_b": 6.706908362019703e-10,
+        "cross_iou_a": 7.763975018448832e-10,
+        "cross_iou_b": 2.678810506751006e-10,
+        "mean_own_iou": 4.769884764943555e-10,
+        "mean_cross_iou": 5.221392762599919e-10,
+        "own_minus_cross_margin": -4.515079976563641e-11,
+        "iou_prediction_a_vs_prediction_b": 0.8108949416342413,
+        "geometry_a": [
+          0.45684710144996643,
+          0.4535073935985565,
+          0.5454029440879822,
+          0.5378032922744751
+        ],
+        "geometry_b": [
+          0.4571099877357483,
+          0.45462027192115784,
+          0.5457593202590942,
+          0.5389502048492432
+        ],
+        "gt_geometry_a": [
+          0.779296875,
+          0.796875,
+          0.9453125,
+          0.931640625
+        ],
+        "gt_geometry_b": [
+          0.662109375,
+          0.970703125,
+          0.71875,
+          1.0
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0016583183619756836
+      },
+      {
+        "image_id": "1_2864",
+        "sample_a": "buildsr_val_1_2864_1_largest_90b650948e0d",
+        "sample_b": "buildsr_val_1_2864_2_largest_to_left_of_987279555505",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.3557125694573244e-10,
+        "own_iou_b": 7.501875232129862e-10,
+        "cross_iou_a": 7.692307901763229e-10,
+        "cross_iou_b": 2.337540994101772e-10,
+        "mean_own_iou": 4.928793900793593e-10,
+        "mean_cross_iou": 5.014924447932501e-10,
+        "own_minus_cross_margin": -8.613054713890733e-12,
+        "iou_prediction_a_vs_prediction_b": 0.9555735056542811,
+        "geometry_a": [
+          0.4572676420211792,
+          0.45333197712898254,
+          0.5448886752128601,
+          0.5380533337593079
+        ],
+        "geometry_b": [
+          0.45688918232917786,
+          0.454364538192749,
+          0.5454850196838379,
+          0.5389955639839172
+        ],
+        "gt_geometry_a": [
+          0.064453125,
+          0.818359375,
+          0.244140625,
+          0.96484375
+        ],
+        "gt_geometry_b": [
+          0.0,
+          0.958984375,
+          0.017578125,
+          1.0
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0015661540834507697
+      },
+      {
+        "image_id": "1_2866",
+        "sample_a": "buildsr_val_1_2866_1_largest_d012eb1a741d",
+        "sample_b": "buildsr_val_1_2866_2_largest_to_below_81ccfad4014b",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 4.3252595949283545e-10,
+        "own_iou_b": 5.068423458709503e-10,
+        "cross_iou_a": 5.073566566871079e-10,
+        "cross_iou_b": 4.3215211964486855e-10,
+        "mean_own_iou": 4.696841526818929e-10,
+        "mean_cross_iou": 4.697543881659882e-10,
+        "own_minus_cross_margin": -7.023548409534897e-14,
+        "iou_prediction_a_vs_prediction_b": 0.9899749373433584,
+        "geometry_a": [
+          0.4574427008628845,
+          0.4533444046974182,
+          0.5453225374221802,
+          0.5378698706626892
+        ],
+        "geometry_b": [
+          0.45673078298568726,
+          0.45425933599472046,
+          0.5459080338478088,
+          0.5389264822006226
+        ],
+        "gt_geometry_a": [
+          0.12890625,
+          0.560546875,
+          0.177734375,
+          0.693359375
+        ],
+        "gt_geometry_b": [
+          0.1484375,
+          0.8984375,
+          0.208984375,
+          1.0
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0016742641216887046
+      },
+      {
+        "image_id": "1_3400",
+        "sample_a": "buildsr_val_1_3400_1_largest_bf204efb4cc1",
+        "sample_b": "buildsr_val_1_3400_2_largest_to_below_281be38b0776",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.034588053589914e-10,
+        "own_iou_b": 5.047955387027514e-10,
+        "cross_iou_a": 4.670714370824669e-10,
+        "cross_iou_b": 2.103049401291912e-10,
+        "mean_own_iou": 3.541271720308714e-10,
+        "mean_cross_iou": 3.3868818860582905e-10,
+        "own_minus_cross_margin": 1.5438983425042352e-11,
+        "iou_prediction_a_vs_prediction_b": 0.8072727272727273,
+        "geometry_a": [
+          0.4571848213672638,
+          0.45365121960639954,
+          0.5454587340354919,
+          0.5375857949256897
+        ],
+        "geometry_b": [
+          0.45681098103523254,
+          0.45436620712280273,
+          0.5458177924156189,
+          0.5390377044677734
+        ],
+        "gt_geometry_a": [
+          0.1640625,
+          0.59765625,
+          0.32421875,
+          0.818359375
+        ],
+        "gt_geometry_b": [
+          0.130859375,
+          0.921875,
+          0.2421875,
+          1.0
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.001699390473434183
+      },
+      {
+        "image_id": "1_3604",
+        "sample_a": "buildsr_val_1_3604_1_largest_abc1fd1ca1cf",
+        "sample_b": "buildsr_val_1_3604_3_largest_to_left_of_to_nearest_926a4e3b6386",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 3.972983608768743e-10,
+        "own_iou_b": 4.714756918211549e-10,
+        "cross_iou_a": 4.737091274797933e-10,
+        "cross_iou_b": 3.95726146296127e-10,
+        "mean_own_iou": 4.343870263490146e-10,
+        "mean_cross_iou": 4.3471763688796017e-10,
+        "own_minus_cross_margin": -3.306105389455638e-13,
+        "iou_prediction_a_vs_prediction_b": 0.9799453053783045,
+        "geometry_a": [
+          0.4568278193473816,
+          0.45365917682647705,
+          0.545364499092102,
+          0.5374866127967834
+        ],
+        "geometry_b": [
+          0.45663222670555115,
+          0.45478355884552,
+          0.5455151796340942,
+          0.5388837456703186
+        ],
+        "gt_geometry_a": [
+          0.80078125,
+          0.74609375,
+          0.90234375,
+          0.826171875
+        ],
+        "gt_geometry_b": [
+          0.4609375,
+          0.91796875,
+          0.546875,
+          0.98046875
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0018102972955658465
+      },
+      {
+        "image_id": "1_3999",
+        "sample_a": "buildsr_val_1_3999_1_largest_7d347989fb00",
+        "sample_b": "buildsr_val_1_3999_2_largest_to_below_cff46ded87f4",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 3.6075034626215086e-10,
+        "own_iou_b": 5.165289307385024e-10,
+        "cross_iou_a": 4.970178713037399e-10,
+        "cross_iou_b": 3.7091987814541483e-10,
+        "mean_own_iou": 4.386396385003266e-10,
+        "mean_cross_iou": 4.3396887472457735e-10,
+        "own_minus_cross_margin": 4.670763775749265e-12,
+        "iou_prediction_a_vs_prediction_b": 0.8950437317784257,
+        "geometry_a": [
+          0.4564949572086334,
+          0.453386515378952,
+          0.5452151894569397,
+          0.5376729369163513
+        ],
+        "geometry_b": [
+          0.4568887948989868,
+          0.4544384181499481,
+          0.5455930829048157,
+          0.5386729836463928
+        ],
+        "gt_geometry_a": [
+          0.28515625,
+          0.58203125,
+          0.4296875,
+          0.69140625
+        ],
+        "gt_geometry_b": [
+          0.189453125,
+          0.9375,
+          0.291015625,
+          1.0
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0015506464736317089
+      },
+      {
+        "image_id": "1_4894",
+        "sample_a": "buildsr_val_1_4894_1_largest_db5e08abd804",
+        "sample_b": "buildsr_val_1_4894_2_largest_to_below_5e40a082053a",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。该方向上恰好只有一个满足条件的候选区域，因此它即为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.018570866013647e-10,
+        "own_iou_b": 8.635578363502816e-10,
+        "cross_iou_a": 8.103727688890672e-10,
+        "cross_iou_b": 2.05002043118796e-10,
+        "mean_own_iou": 5.327074614758232e-10,
+        "mean_cross_iou": 5.076874060039316e-10,
+        "own_minus_cross_margin": 2.5020055471891567e-11,
+        "iou_prediction_a_vs_prediction_b": 0.8092783505154639,
+        "geometry_a": [
+          0.4568999409675598,
+          0.45340514183044434,
+          0.5453335046768188,
+          0.5379598736763
+        ],
+        "geometry_b": [
+          0.45734724402427673,
+          0.4543672800064087,
+          0.5459142327308655,
+          0.5390617847442627
+        ],
+        "gt_geometry_a": [
+          0.640625,
+          0.287109375,
+          0.794921875,
+          0.517578125
+        ],
+        "gt_geometry_b": [
+          0.978515625,
+          0.806640625,
+          1.0,
+          0.85546875
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0016362282752268044
+      },
+      {
+        "image_id": "1_5008",
+        "sample_a": "buildsr_val_1_5008_1_largest_c3e0967d1f1f",
+        "sample_b": "buildsr_val_1_5008_3_largest_to_left_of_to_nearest_1d120644b62e",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.976190405235002e-10,
+        "own_iou_b": 5.010020176499097e-10,
+        "cross_iou_a": 5.307855821534702e-10,
+        "cross_iou_b": 2.880184424292054e-10,
+        "mean_own_iou": 3.9931052908670495e-10,
+        "mean_cross_iou": 4.0940201229133777e-10,
+        "own_minus_cross_margin": -1.0091483204632823e-11,
+        "iou_prediction_a_vs_prediction_b": 0.8491484184914841,
+        "geometry_a": [
+          0.4564600884914398,
+          0.4534195363521576,
+          0.5458714365959167,
+          0.5375844240188599
+        ],
+        "geometry_b": [
+          0.45674073696136475,
+          0.4547227919101715,
+          0.5458048582077026,
+          0.5386815071105957
+        ],
+        "gt_geometry_a": [
+          0.396484375,
+          0.134765625,
+          0.515625,
+          0.19921875
+        ],
+        "gt_geometry_b": [
+          0.361328125,
+          0.181640625,
+          0.39453125,
+          0.234375
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0017277912504452685
+      },
+      {
+        "image_id": "1_722",
+        "sample_a": "buildsr_val_1_722_1_largest_32d2e11a178f",
+        "sample_b": "buildsr_val_1_722_3_largest_to_below_to_nearest_40fc647818a6",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.2301516189315862e-10,
+        "own_iou_b": 6.024096221857178e-10,
+        "cross_iou_a": 6.002400798621466e-10,
+        "cross_iou_b": 2.2331397842023648e-10,
+        "mean_own_iou": 4.127123920394382e-10,
+        "mean_cross_iou": 4.117770291411915e-10,
+        "own_minus_cross_margin": 9.353628982466944e-13,
+        "iou_prediction_a_vs_prediction_b": 0.9700551615445232,
+        "geometry_a": [
+          0.4567262530326843,
+          0.45353221893310547,
+          0.5455998182296753,
+          0.5377552509307861
+        ],
+        "geometry_b": [
+          0.4569237232208252,
+          0.45481982827186584,
+          0.5456638932228088,
+          0.538955569267273
+        ],
+        "gt_geometry_a": [
+          0.158203125,
+          0.57421875,
+          0.328125,
+          0.701171875
+        ],
+        "gt_geometry_b": [
+          0.203125,
+          0.71875,
+          0.26171875,
+          0.783203125
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0017725129049230826
+      },
+      {
+        "image_id": "1_7894",
+        "sample_a": "buildsr_val_1_7894_1_bottommost_eaf3e0d3ca3a",
+        "sample_b": "buildsr_val_1_7894_3_largest_to_right_of_to_nearest_9d912b0ec000",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中最下方的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.9163021997291594e-10,
+        "own_iou_b": 3.606202558792404e-10,
+        "cross_iou_a": 3.6724201457616346e-10,
+        "cross_iou_b": 2.8743890601035105e-10,
+        "mean_own_iou": 3.2612523792607817e-10,
+        "mean_cross_iou": 3.2734046029325725e-10,
+        "own_minus_cross_margin": -1.2152223671790807e-12,
+        "iou_prediction_a_vs_prediction_b": 0.8871473354231975,
+        "geometry_a": [
+          0.4578123688697815,
+          0.45417389273643494,
+          0.5457768440246582,
+          0.5383965969085693
+        ],
+        "geometry_b": [
+          0.4567146599292755,
+          0.45487961173057556,
+          0.5452172160148621,
+          0.5392271280288696
+        ],
+        "gt_geometry_a": [
+          0.58984375,
+          0.59765625,
+          0.71875,
+          0.724609375
+        ],
+        "gt_geometry_b": [
+          0.826171875,
+          0.6171875,
+          0.94140625,
+          0.697265625
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0016449831816445026
+      },
+      {
+        "image_id": "1_849",
+        "sample_a": "buildsr_val_1_849_1_largest_f4a151ab7a70",
+        "sample_b": "buildsr_val_1_849_3_largest_to_left_of_to_nearest_6ec94d5f986e",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.4612356597231155e-10,
+        "own_iou_b": 4.3840420183016704e-10,
+        "cross_iou_a": 4.264392450270549e-10,
+        "cross_iou_b": 2.5006252624137915e-10,
+        "mean_own_iou": 3.422638839012393e-10,
+        "mean_cross_iou": 3.38250885634217e-10,
+        "own_minus_cross_margin": 4.012998267022283e-12,
+        "iou_prediction_a_vs_prediction_b": 0.8957654723127035,
+        "geometry_a": [
+          0.4567142724990845,
+          0.4535270631313324,
+          0.5454888343811035,
+          0.5376297235488892
+        ],
+        "geometry_b": [
+          0.4566957652568817,
+          0.4547116458415985,
+          0.5453874468803406,
+          0.5386102795600891
+        ],
+        "gt_geometry_a": [
+          0.5625,
+          0.68359375,
+          0.744140625,
+          0.837890625
+        ],
+        "gt_geometry_b": [
+          0.37890625,
+          0.841796875,
+          0.458984375,
+          0.931640625
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0015412164779441842
+      },
+      {
+        "image_id": "1_9568",
+        "sample_a": "buildsr_val_1_9568_1_largest_7fa5c1803b3a",
+        "sample_b": "buildsr_val_1_9568_3_largest_to_left_of_to_nearest_6c2c19306953",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域左侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 1.8751171448894155e-10,
+        "own_iou_b": 4.374453299593739e-10,
+        "cross_iou_a": 4.3440487318413545e-10,
+        "cross_iou_b": 1.8807598534120729e-10,
+        "mean_own_iou": 3.1247852222415773e-10,
+        "mean_cross_iou": 3.1124042926267137e-10,
+        "own_minus_cross_margin": 1.238092961486359e-12,
+        "iou_prediction_a_vs_prediction_b": 0.9795361527967258,
+        "geometry_a": [
+          0.45700955390930176,
+          0.45365598797798157,
+          0.5454544425010681,
+          0.5375527143478394
+        ],
+        "geometry_b": [
+          0.45687684416770935,
+          0.4549274742603302,
+          0.5451656579971313,
+          0.5387552380561829
+        ],
+        "gt_geometry_a": [
+          0.662109375,
+          0.048828125,
+          0.9609375,
+          0.115234375
+        ],
+        "gt_geometry_b": [
+          0.66015625,
+          0.115234375,
+          0.705078125,
+          0.197265625
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.001778693059680757
+      },
+      {
+        "image_id": "2_2313",
+        "sample_a": "buildsr_val_2_2313_1_largest_07c72f9d4583",
+        "sample_b": "buildsr_val_2_2313_3_largest_to_right_of_to_nearest_b9fc8edeb033",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.7662516721704833e-10,
+        "own_iou_b": 5.437738037628037e-10,
+        "cross_iou_a": 5.293806504269583e-10,
+        "cross_iou_b": 2.8050489708775217e-10,
+        "mean_own_iou": 4.10199485489926e-10,
+        "mean_cross_iou": 4.049427737573552e-10,
+        "own_minus_cross_margin": 5.256711732570807e-12,
+        "iou_prediction_a_vs_prediction_b": 0.9207459207459208,
+        "geometry_a": [
+          0.457479327917099,
+          0.4534189701080322,
+          0.5451040863990784,
+          0.5377799868583679
+        ],
+        "geometry_b": [
+          0.4567181468009949,
+          0.4547131359577179,
+          0.5455919504165649,
+          0.5390093922615051
+        ],
+        "gt_geometry_a": [
+          0.16015625,
+          0.828125,
+          0.302734375,
+          0.978515625
+        ],
+        "gt_geometry_b": [
+          0.29296875,
+          0.888671875,
+          0.361328125,
+          0.95703125
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0020009275056401344
+      },
+      {
+        "image_id": "2_2652",
+        "sample_a": "buildsr_val_2_2652_1_largest_eeebfde1eab7",
+        "sample_b": "buildsr_val_2_2652_3_largest_to_below_to_nearest_c44be238b069",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 3.3311126079738074e-10,
+        "own_iou_b": 4.1152262153509866e-10,
+        "cross_iou_a": 4.111841978016173e-10,
+        "cross_iou_b": 3.333333331578814e-10,
+        "mean_own_iou": 3.723169411662397e-10,
+        "mean_cross_iou": 3.7225876547974934e-10,
+        "own_minus_cross_margin": 5.81756864903582e-14,
+        "iou_prediction_a_vs_prediction_b": 0.9276595744680851,
+        "geometry_a": [
+          0.4565894901752472,
+          0.45349302887916565,
+          0.5453183650970459,
+          0.5373591780662537
+        ],
+        "geometry_b": [
+          0.45678967237472534,
+          0.4548189640045166,
+          0.5454042553901672,
+          0.538739025592804
+        ],
+        "gt_geometry_a": [
+          0.64453125,
+          0.3203125,
+          0.8203125,
+          0.41796875
+        ],
+        "gt_geometry_b": [
+          0.619140625,
+          0.896484375,
+          0.751953125,
+          0.955078125
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.001926014851605975
+      },
+      {
+        "image_id": "2_2919",
+        "sample_a": "buildsr_val_2_2919_1_largest_39a7a62c6776",
+        "sample_b": "buildsr_val_2_2919_3_largest_to_right_of_to_nearest_6b4d595fb9eb",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 2.8169014343326637e-10,
+        "own_iou_b": 4.1876047074396183e-10,
+        "cross_iou_a": 4.127115038610185e-10,
+        "cross_iou_b": 2.8449501088267937e-10,
+        "mean_own_iou": 3.502253070886141e-10,
+        "mean_cross_iou": 3.4860325737184894e-10,
+        "own_minus_cross_margin": 1.6220497167651615e-12,
+        "iou_prediction_a_vs_prediction_b": 0.9532538955087076,
+        "geometry_a": [
+          0.457049161195755,
+          0.45357948541641235,
+          0.5454980134963989,
+          0.5375171899795532
+        ],
+        "geometry_b": [
+          0.4567660093307495,
+          0.45496585965156555,
+          0.5450709462165833,
+          0.5387899875640869
+        ],
+        "gt_geometry_a": [
+          0.076171875,
+          0.53515625,
+          0.22265625,
+          0.62890625
+        ],
+        "gt_geometry_b": [
+          0.41796875,
+          0.572265625,
+          0.529296875,
+          0.62890625
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0019505406048674462
+      },
+      {
+        "image_id": "2_3482",
+        "sample_a": "buildsr_val_2_3482_1_largest_b121ad32cb7d",
+        "sample_b": "buildsr_val_2_3482_3_largest_to_right_of_to_nearest_320cb19834ba",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域右侧的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 3.6523009616651336e-10,
+        "own_iou_b": 4.1254125116019225e-10,
+        "cross_iou_a": 4.1459369271024116e-10,
+        "cross_iou_b": 3.6363637101466395e-10,
+        "mean_own_iou": 3.888856736633528e-10,
+        "mean_cross_iou": 3.8911503186245255e-10,
+        "own_minus_cross_margin": -2.2935819909974953e-13,
+        "iou_prediction_a_vs_prediction_b": 0.9387234042553192,
+        "geometry_a": [
+          0.4571208357810974,
+          0.45337092876434326,
+          0.5450989007949829,
+          0.537600576877594
+        ],
+        "geometry_b": [
+          0.4565508961677551,
+          0.4547645151615143,
+          0.545581579208374,
+          0.5386167764663696
+        ],
+        "gt_geometry_a": [
+          0.111328125,
+          0.65625,
+          0.2265625,
+          0.75390625
+        ],
+        "gt_geometry_b": [
+          0.47265625,
+          0.708984375,
+          0.568359375,
+          0.822265625
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0018795090487194763
+      },
+      {
+        "image_id": "2_550",
+        "sample_a": "buildsr_val_2_550_1_largest_d73cd4c6320c",
+        "sample_b": "buildsr_val_2_550_3_largest_to_below_to_nearest_7fc3f107dfda",
+        "emission_valid_a": true,
+        "emission_valid_b": true,
+        "generated_text_a": "首先确定图像中面积最大的建筑区域，将其作为参考区域。 [SEG]<|im_end|>",
+        "generated_text_b": "首先确定图像中面积最大的建筑区域，将其作为参考区域。随后筛选位于参考区域下方的建筑区域。最后比较这些候选区域与参考区域的边界距离，选择距离最近的区域作为目标。 [SEG]<|im_end|>",
+        "paired_mask_pass": false,
+        "paired_geometry_pass": false,
+        "own_iou_a": 1.6578249883991703e-10,
+        "own_iou_b": 3.8066236274225673e-10,
+        "cross_iou_a": 3.816793825439646e-10,
+        "cross_iou_b": 1.6559033311214222e-10,
+        "mean_own_iou": 2.732224307910869e-10,
+        "mean_cross_iou": 2.736348578280534e-10,
+        "own_minus_cross_margin": -4.1242703696653393e-13,
+        "iou_prediction_a_vs_prediction_b": 0.9375459221160911,
+        "geometry_a": [
+          0.45666489005088806,
+          0.4533361494541168,
+          0.5455435514450073,
+          0.5377262234687805
+        ],
+        "geometry_b": [
+          0.45707061886787415,
+          0.4546840488910675,
+          0.5457333922386169,
+          0.5390844345092773
+        ],
+        "gt_geometry_a": [
+          0.37890625,
+          0.001953125,
+          0.689453125,
+          0.109375
+        ],
+        "gt_geometry_b": [
+          0.681640625,
+          0.37890625,
+          0.78125,
+          0.48046875
+        ],
+        "geometry_decision": {
+          "own_a": 0.0,
+          "cross_a": 0.0,
+          "own_b": 0.0,
+          "cross_b": 0.0,
+          "passed": false,
+          "margin": 0.0
+        },
+        "geometry_distance": 0.0019652545693906167
+      }
+    ],
+    "paired_total": 20,
+    "mask_paired_pass": 0,
+    "geometry_paired_pass": 0,
+    "mean_own_iou": 4.02264080726078e-10,
+    "mean_cross_iou": 4.0271540061032065e-10,
+    "mean_own_minus_cross_margin": -4.5131988424262916e-13,
+    "mean_iou_pred_a_vs_b": 0.9188391911121782,
+    "mean_geometry_distance": 0.0017584264081463657,
+    "emission_valid_pairs": 20
+  },
+  "free_generation_summary": {
+    "kind": "box",
+    "count": 120,
+    "emission_valid": 120,
+    "emission_rate": 1.0,
+    "strict_end_to_end_miou": 0.006559667325285229,
+    "strict_end_to_end_dice": 0.010553466388798134,
+    "conditional_miou": 0.006559667325285229,
+    "conditional_dice": 0.010553466388798134,
+    "mean_geometry_metric": 0.00813724089336271,
+    "mean_box_iou": 0.00813724089336271,
+    "center_inside_rate": 0.008333333333333333,
+    "distinct_predicted_masks": 120
+  },
+  "verdict": {
+    "checks": {
+      "g0_passed": false,
+      "emission_rate_ge_0.90": true,
+      "geometry_paired_ge_14": false,
+      "mask_paired_ge_14": false,
+      "margin_gt_0.05": false,
+      "strict_miou_ge_0.20": false,
+      "no_gt_leakage": true
+    },
+    "verdict": "GROUNDING_REPRESENTATION_FAILED",
+    "reason": "G0 did not reach its gate: the [SEG] hidden state did not learn reliable target geometry"
+  }
+}
