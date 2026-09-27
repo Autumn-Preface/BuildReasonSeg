@@ -283,9 +283,9 @@ no test split is used, no 4B/`[REF]`/SRE/SCL appears, and strict determinism is 
 
 ## 17. Git / Watt
 
-* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main` with the recommended message
-  `feat: add spatial grounding bridge`; the exact hash and push result are recorded in a follow-up
-  `docs:` commit and in the DSH turn response. Remote `main` was at `4b46045` before this task.
+* Committed and pushed to `Autumn-Preface/BuildReasonSeg` on `main`: commit **`db54e55`**
+  (`feat: add spatial grounding bridge`) plus a follow-up `docs:` commit recording this hash and the push
+  result (`4b46045..db54e55  main -> main`). Remote `main` was at `4b46045` before this task.
 * Artifacts: `evaluation/task6d_oracle_prompt_diagnostic.json`, `task6d_grounding_targets.json`,
   `task6d_g0.json`, `task6d_paired_probe.json`, `task6d_representation.json`,
   `task6d_error_analysis.json`, `task6d_checkpoint_manifest.json`, `task6d_panels/*.png`; report
