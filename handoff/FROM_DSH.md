@@ -17,212 +17,193 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6H Report: Counterfactual Pair-Aligned Dense Grounding v0.1
+# FROM_DSH — Task 6H.1 Report: Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding
 
-_This file holds the Task 6H report. The Task 6G report is preserved in git history and in
-`docs/task6g_dense_spatial_grounding.md`; Task 6F in `docs/task6f_target_aware_box_query.md`._
+_This file holds the Task 6H.1 report. The Task 6H report is preserved in git history and in
+`docs/task6h_counterfactual_pair_grounding.md`; Task 6G in `docs/task6g_dense_spatial_grounding.md`._
 
-Full design notes: `docs/task6h_counterfactual_pair_grounding.md`, ADR-019.
+Full design notes: `docs/task6h1_bounded_point_counterfactual.md`, ADR-020.
 
 ## 1. Verdict
 
-**`COUNTERFACTUAL_QUERY_SIGNAL_FAILED`.**
+**`BOUNDED_POINT_OBJECTIVE_FAILED`.**
 
-The pair machinery is correct and fully verified, and the specified counterfactual ranking objective
-is *learned* — after 1500 pair steps on 10 pairs the own-vs-cross ranking is **10/10** with mean
-margin **+5.58** (gate ≥ 9/10 and > 0.5) — but the objective is **scale-degenerate**: the audit
-shows the mean absolute logit growing 0.148 → **16.32** while the probability-space margin reaches
-only **+0.112** and the argmax point lands inside its own target **3/20** (gate ≥ 18/20), with
-paired point selection **0/10** (gate ≥ 9/10). The ranking gate is passed by magnifying the logit
-field, not by localizing. Per section 12 the task **stops at H0**: H1, the H1 representation
-diagnosis and H2 were not run; no SAM2 training; no `[REF]`/SRE/SCL/4B/dataset migration/GUI.
+The corrected objective is implemented faithfully, verified, and **healthy** — it is not the Task 6H
+degeneracy. Over 1500 pair steps on the 10 memorized H0 pairs the point cross-entropy falls
+**11.0965 → 4.7427** (chance = `ln 65536` = 11.090), the spatial-softmax entropy falls **11.09 → 6.21**
+nats, the target cell gains ~2 500× probability, the argmax point error falls **0.4658 → 0.1673**, and
+the bounded own-vs-cross preference margin becomes clearly positive (**−0.0000 → +0.1385**, own mass
+0.184 vs cross 0.045). Yet **H0-R fails its gates**: inside-own **7/20** (gate 18), paired point
+**2/10** (gate 9), bounded pair ranking **8/10** (gate 9), final mean |logit| 13.2 (limit 10). The
+audit explains why: the largest **non-target** cell holds 0.0532 probability against a 0.0515 mean
+target probability, so top-1 is 25 % and the mode is not reliably the target. Per section 13 the task
+**stops at H0-R**: H1-R and H2-R were not run, no SAM2 training, no `[REF]`/SRE/SCL/4B/dataset
+migration/GUI.
 
-## 2. Frozen Task 6G Evidence (section 2)
+## 2. Frozen Task 6H Evidence
 
-Not rerun: selected grid 256×256 / 32 channels; point oracle 0.4883 mIoU / paired 18-20;
-`DenseSpatialGroundingHead` = `LayerNorm(2048)→Linear(128)` query, `Conv1x1(32,128)` visual,
-dot-product heatmap (270 593 parameters); G0 after 1500 steps: inside-own 0.10, paired point 0/10,
-heatmap Dice 0.125; implementation audit found no train/eval, gradient, frozen-backbone or
-saturation defect. Accepted conclusion: with only per-sample BCE+Dice the query does not become
-instruction-specific enough even on 20 records.
+Not rerun and **not rewritten**: H0 pair ranking 10/10, strict margin 10/10, mean logit margin +5.58,
+inside-own 3/20, paired point 0/10, heatmap Dice 0.134; audit: `L_cf` 1.3133 → 0.0212, mean |logit|
+0.148 → 16.32, probability margin 0.1124, point-inside 0.15; machine verdict
+`COUNTERFACTUAL_QUERY_SIGNAL_FAILED`. Also frozen: 256-grid snapped point oracle 0.4883 mIoU / 18-20.
 
-## 3. Canonical Pair Construction (section 4)
+## 3. Corrected Causal Interpretation (section 3)
 
-`evaluation/task6h_pair_manifest.json`: **240 pairs / 240 images**, assertions all enforced (same
-source image, different sample ids, different target component ids, different masks, deterministic
-Task 6C `P` payload order, no sample reuse, no test split). Canonical identity hash
-`c56f0507da41fd5506ffd0d3c37b056d017de7d48c6f4cc448941a9aaf997c3b`. Every pair carries its
-downsampled soft-target overlap diagnostic and **no pair was discarded**: 0/240 pairs overlap (max
-soft IoU 0.000).
+Task 6H successfully learned the specified own-vs-cross **logit** ranking, but the loss was
+**scale-degenerate**: it could be minimized by magnifying logits without moving the heatmap peak onto
+the target. Query learnability therefore remained **unresolved** until a bounded, localization-aligned
+objective was tested — which Task 6H.1 supplies. The 6H verdict remains its original machine verdict;
+the new interpretation is explicit here and in `handoff/PROJECT_STATE.md`.
 
-## 4. Pair-Step Semantics (section 6)
+## 4. Point-Cell Target (section 4)
 
-One optimizer step = one pair: one shared frozen SAM2 256×256 feature → query forward for A → query
-forward for B (both graphs retained) → both heatmaps → per-sample BCE+Dice + `L_cf` → **one**
-backward and optimizer step. Scheduler horizon counts **pair** steps (240/epoch), not record steps.
-`evaluation/task6h_token_setup.json` verifies: architecture identical to Task 6G (level
-`[1,32,256,256]`, head 270 593 parameters), SAM2 and the shared feature **bit-identical** through a
-pair step, `[BOX]`/`[SEG]` rows and all head parameters moved with non-zero gradient, 16 ordinary
-rows + the base table exactly unchanged, visual tower carries zero LoRA, `[BOX]` still causally clean
-(hidden bit-identical under future-text mutation).
+Frozen Task 6D interior point → Task 6G 256-cell snap → `target_index = y_cell*256 + x_cell`. Verified
+in `evaluation/task6h1_objective_setup.json`: indices 29418 / 18943 for the first canonical pair
+(different and in range), 12 candidate cells → 65 536 classes, GT used for supervision only, inference
+remains `argmax(heatmap_logits)` with no GT repair.
 
-## 5. Counterfactual Loss (sections 7–9)
+## 5. Spatial-Softmax Objective (sections 5, 8-9)
 
-`s_XY = sum(H_X·M_Y)/max(sum(M_Y), eps)` on the 256×256 soft target masks (logits, as specified);
-`L_cf = 0.5*(softplus(1-(s_AA-s_AB)) + softplus(1-(s_BB-s_BA)))`, margin 1.0 fixed;
-`L_total = 0.5*(L_reasoning_A+L_reasoning_B) + 1.0*(L_heatmap_A+L_heatmap_B) + 2.0*L_cf`. All
-weights and the margin are constants; nothing was swept. Recorded components per step: reasoning CE,
-BCE and Dice per sample, the four region scores, both margins, `L_cf`, total.
+`L_point = CrossEntropy(H.flatten(), target_index)` with no class weighting, no temperature and no
+label smoothing; diagnostics per record: point CE, target-cell probability, top-1/top-5/top-25 cell
+accuracy, spatial entropy, max non-target probability, mean |logit|, logit std.
+**Zero-gradient retirement is verified**: Task 6G's BCE+Dice and Task 6H's raw-logit ranking are built
+detached (`bce_dice_requires_grad: false`, `logit_ranking_requires_grad: false`, recorded gradient
+contribution 0.0) and are logged as historical diagnostics only.
 
-## 6. Trainables/Frozen Parameters (section 5/10)
+## 6. Bounded Counterfactual Mass Loss (sections 6-7)
 
-Train: text LoRA (392 tensors / 17 432 576), `{[SEG], [BOX]}` rows (1 tensor / 4 096), the Task 6G
-`DenseSpatialGroundingHead` (270 593). Frozen: Qwen base, visual tower, all SAM2, Task 6F box head,
-Task 6D grounding head, Projection MLP, no `<loc_*>` rows. Optimizer groups recorded: lora 1e-4 /
-token 3e-4 / decoder (dense head) 3e-4, weight decay 0 on the rows, clip 1.0, cosine over the true
-pair-step budget.
+`P = softmax(H.flatten())` (sums to 1), `mass(P, M) = sum(P * M)` — **not** divided by target area and
+bounded in [0,1]; `p_AA/p_AB/p_BB/p_BA` recorded with own/cross margins and own/(own+cross) ratios;
+`L_cf = 0.5*(-log((p_own+eps)/(p_own+p_cross+2eps)))` with eps 1e-8 and **no margin hyperparameter**;
+pair preference passes iff `p_AA > p_AB` and `p_BB > p_BA`.
 
-## 7. H0 Overfit (sections 11–12)
+## 7. Pair-Step Semantics (sections 10-11)
 
-1500 **pair** steps on the same 10 pairs as Task 6G G0, clean Task 6G initialization convention.
+One optimizer step = one canonical pair: one shared frozen SAM2 256×256 feature, query forward for A,
+query forward for B (both graphs retained), one backward, one optimizer step; scheduler horizon counts
+**pair** steps (240/epoch). `L_total = 0.5*(L_reasoning_A+L_reasoning_B) + 1.0*(L_point_A+L_point_B) +
+1.0*L_cf`, weights fixed. Gradient coverage of both terms into the query projection, query norm, visual
+1×1, Qwen LoRA and token rows is recorded; SAM2 and the shared feature stay bit-identical; `[BOX]` stays
+causally clean; the Task 6G/6H architecture is unchanged (level `[1,32,256,256]`, head 270 593 params).
 
-| Pair step | pair ranking | strict margin | inside-own | paired point | mean margin | heatmap Dice |
-|---|---|---|---|---|---|---|
-| 250 | 10/10 | 10/10 | 0/20 | 0/10 | +3.68 | 0.003 |
-| 500 | 10/10 | 10/10 | 5/20 | 1/10 | +4.94 | 0.008 |
-| 1000 | 10/10 | 10/10 | 4/20 | 1/10 | +5.37 | 0.127 |
-| 1500 | **10/10** | **10/10** | **3/20** | **0/10** | **+5.58** | **0.134** |
+## 8. H0-R Overfit (sections 12-13)
 
-Gate: ranking ✅, margin ✅, inside-own ❌ (3/20), paired point ❌ (0/10) → **H0 failed**.
-`evaluation/task6h_h0_overfit.json`.
+Clean Task 6G/6H initialization (never the scale-exploded Task 6H checkpoint), same 10 canonical pairs,
+1500 pair steps.
 
-## 8. H0 Audit (section 13)
+| Pair step | inside-own | top-1 cell | paired point | bounded ranking | own mass | cross mass | \|logit\| |
+|---|---|---|---|---|---|---|---|
+| 500 | 4/20 | 1 | 1/10 | 5/10 | — | — | 5.65 |
+| 750 | 2/20 | 1 | 0/10 | 6/10 | — | — | 9.73 |
+| 1000 | 5/20 | 3 | 1/10 | 8/10 | 0.0030 | 0.0062 | 11.20 |
+| 1250 | 7/20 | 4 | 2/10 | 8/10 | — | — | 12.95 |
+| **1500** | **7/20** | **5** | **2/10** | **8/10** | **0.1835** | **0.0456** | **13.21** |
 
-`evaluation/task6h_h0_audit.json` — clean initialization vs the H0 checkpoint:
+Gate (inside ≥ 18/20, paired point ≥ 9/10, ranking ≥ 9/10, own mass > cross mass, |logit| < 10.0):
+**failed**. `evaluation/task6h1_h0r_overfit.json`, checkpoint `artifacts/checkpoints/task6h1/H0R/`.
 
-| Quantity | Before | After |
-|---|---|---|
-| `L_cf` (mean over the 10 pairs) | 1.3133 | **0.0212** |
-| own−cross margin (logits) | −0.0001 | **+5.5788** |
-| own−cross margin (probabilities) | −0.0000 | **+0.1124** |
-| mean abs logit | 0.148 | **16.32** |
-| argmax peakiness | 1.6e-05 | 0.403 |
-| point-inside rate | 0.00 | **0.15** |
-| A/B hidden distance | 27.4 | 167.7 |
-| A/B projected-query distance | 1.49 | 779.5 |
+## 9. H0-R Audit (section 14)
 
-Sign correct (own-score up lowers `L_cf`, cross-score up raises it); `L_cf` decreased over the
-history (1.28 → 0.009); `L_cf` gradients reach **every** trainable group (query projection 0.031,
-query norm 0.0004, visual 1×1 0.0041, Qwen LoRA 0.0164, token rows 0.0710). Shared feature
-bit-identity re-confirmed; pair ordering and target-mask distinctness re-confirmed against the
-manifest. Diagnosis: **the specified logit-space margin is scale-degenerate** — it is minimized by
-magnifying the field, not by sharpening/relocating the peak.
+`evaluation/task6h1_h0r_audit.json` (clean init → H0-R checkpoint): point CE 11.0965 → **4.7427**;
+target-cell probability 0.00002 → **0.0515**; max non-target probability 0.00002 → **0.0532**; top-1
+0.00 → 0.25; inside 0.00 → 0.35; normalized point error 0.4658 → **0.1673**; entropy 11.090 → **6.205**;
+own mass 0.0072 → **0.1838**; cross mass 0.0072 → **0.0453**; probability margin −0.0000 → **+0.1385**;
+bounded `L_cf` 0.854 → 0.243; A/B hidden distance 27.4 → 135.7; A/B projected-query distance 1.49 →
+636.8; point-CE gradients reach every trainable group (query projection 0.881); pair identities and
+target indices verified; shared feature bit-identical. The objective is healthy; the mode is still not
+reliably the target — that is a **query-signal** limit, not an objective-limit.
 
-## 9. H1 Training Curve
+## 10. H1-R Training
 
-**Not run** — section 12 stops the task at the failed H0. `evaluation/task6h_h1_training.json` and
-`evaluation/task6h_spatial_eval.json` are deliberately absent.
-
-## 10. Pair-Ranking Metrics
-
-H0 stage (10 pairs): ranking 10/10, strict margin 10/10, mean margin +5.5788 (min +4.41, max +8.24),
-probability-space margin +0.112. `evaluation/task6h_paired_probe.json` (stage H0) records the full
-per-pair table.
+**Not run** — section 13 stops the task at the failed H0-R. `evaluation/task6h1_h1r_training.json` and
+`evaluation/task6h1_spatial_eval.json` are deliberately absent.
 
 ## 11. Point Localization Metrics
 
-H0 stage: point-inside-own 3/20 (0.15), paired point selection 0/10, mean same-image point distance
-0.498, **same-image heatmap A/B IoU 0.0032** (the two instructions' thresholded maps barely overlap —
-they differ by scale/offset, not by location), heatmap Dice 0.134 (diagnostic), mean 512-px point
-error from the record table. The point metrics are exactly the gates that expose the degenerate
-ranking solution.
+H0-R stage (20 records at 1500 pair steps): inside-own **7/20**, top-1 cell **5/20**, top-5 cell
+8/20, mean target-cell probability 0.0515, normalized point error 0.1673 (≈86 px at 512), mean spatial
+entropy 6.21 nats, mean |logit| 13.2. Full per-record rows in the H0-R artifact and error analysis.
 
-## 12. Representation Diagnostics
+## 12. Pair Preference Metrics
 
-Recorded inside the audit (before/after): A/B hidden distance 27.4 → 167.7, projected-query distance
-1.49 → 779.5. The query/output separation grew by **magnitude**, not into target specificity — the
-opposite of the section 17 hypothesis. A full H1-level representation artifact was not produced
-because H1 was not run.
+H0-R stage (10 pairs): bounded ranking **8/10**, own mass 0.1835 vs cross 0.0456, margin **+0.1380**,
+bounded `L_cf` 0.243 at the end (0.854 at initialization). Task 6H for comparison: ranking 10/10 but a
+logit-space margin of +5.58 with probability margin only +0.112.
 
-## 13. H2 Segmentation
+## 13. Representation/Entropy Diagnostics
 
-**Not run** (section 18 gates it on H1). `evaluation/task6h_segmentation_eval.json` is deliberately
+Recorded in the audit: entropy 11.09 → 6.21 nats (real sharpening), target-cell probability ×2 500,
+max non-target probability 0.0532 ≈ mean target probability 0.0515 (the decisive number), A/B
+hidden/projected distances 27.4 → 135.7 and 1.49 → 636.8 (separation grows, but the peak still does
+not land on the target). A full H1-R-level representation artifact was not produced because H1-R was
+not run.
+
+## 14. H2-R Segmentation
+
+**Not run** (section 20 gates it on H1-R). `evaluation/task6h1_segmentation_eval.json` is deliberately
 absent. Frozen ceilings: Task 6C `P_C` 0.10604 / 0-20; point oracle 0.4876 / 18-20; box oracle
 0.7506 / 20-20.
 
-## 14. Paired Mask Probe
+## 15. Paired Mask Probe
 
-**Not run**; the paired probe records `mask_ran: false`.
+**Not run**; the paired probe records `mask_ran: false` with the H0-R 10-pair stage.
 
-## 15. L1/L2/L3 + Query Breakdown
+## 16. Error/Data Adequacy Analysis
 
-H0 stage only; the record table in `evaluation/task6h_error_analysis.json` carries per-record level,
-query family, point-inside, 512-px error, peakiness and heatmap Dice. No level or family localizes.
+`evaluation/task6h1_error_analysis.json` (H0-R stage): pair preference 8/10, both points inside 2/10,
+dominant failure class `tiny_target`; record-level inside rate 0.350, top-1 0.250; the WHU quality
+flags are reported alongside. The residual is localization precision on WHU-scale targets — the
+objective, the pair construction and the frozen backbone are all verified, so **WHU difficulty is a
+contributing factor but not the binding constraint of this result** (the same 10 memorized pairs are
+only 35 % inside).
 
-## 16. Error / Data Adequacy Analysis
+## 17. Runtime/VRAM
 
-`evaluation/task6h_error_analysis.json` (H0 stage): all **10/10** failing pairs classified
-`pair_ranking_correct_point_outside` — the dominant failure is "ranking correct, point outside",
-i.e. the objective's own degeneracy, not data quality. Record-level inside rate 0.150; the WHU
-quality flags (tiny target / border / pseudo-instance ambiguity) are reported alongside but cannot
-explain a failure that is uniform at 10/10 pairs on memorized records. **WHU is not the binding
-constraint of this result.**
+Objective setup + one-pair smoke: one model load, ~6 min. H0-R: 1500 pair steps + 6 evaluations in
+**~31 min** wall clock; ~14 GiB VRAM, batch 1, bf16 autocast, gradient checkpointing, Task 6C.7
+visual-feature cache plus the SAM2 CPU feature cache (frozen encoder outputs only, shared by both
+instructions of a pair). H0-R audit: two model states in one process, ~8 min.
 
-## 17. Reusable Inference API
+## 18. Tests
 
-Not created (section 23 gates it on H1). The verified 6G/6H plumbing (`predict_heatmap`,
-`forward_heatmap`, `evaluate_pair`) remains available.
+`tests/test_task6h1_point_objective.py` adds **24** tests covering the section 26 list: the frozen
+256-grid target-cell convention and the deterministic interior point, the flat `y*grid+x` index and its
+inverse, spatial softmax summing to 1 and shift invariance, bounded region mass that is explicitly not
+area-normalised, own/cross mass correctness, pair-preference invariance to additive logit shifts,
+`L_cf` monotonicity in own and cross mass, the absence of a margin parameter, entropy/top-k helpers,
+the recorded zero-gradient retirement of BCE+Dice and the logit ranking, two-forwards-one-backward in
+the pair step with an objective that contains only the point CE and bounded `L_cf`, the pair-step
+scheduler horizon, the recorded architecture/freeze facts, the H0-R verdict with its non-degeneracy
+evidence, Task 6E/6F retirement, H2-R predicted-point-only, config hygiene, no test split, forbidden
+components, deterministic JSON, and the section 3 wording correction with unchanged 6H numbers.
 
-## 18. Runtime / VRAM
+Full suite: **389 passed** in 680 s (`python -m pytest tests/ -q`, including the artifact-consistency
+gate) — 365 pre-existing tests plus the 24 Task 6H.1 tests, with no regressions.
 
-Pair manifest: seconds (no GPU). Token setup + one-pair smoke: one model load, ~5 min. H0: 1500 pair
-steps + 6 query-path evaluations in **~29 min** wall clock (pair steps cost ~1.6× a single-sample
-step); ~14 GiB VRAM, batch 1, bf16 autocast, gradient checkpointing, Task 6C.7 visual-feature cache
-plus the SAM2 CPU feature cache (frozen encoder outputs only, shared by both instructions of a
-pair). Audit: two model states in one process, ~8 min.
+## 19. Git/Watt
 
-## 19. Tests
-
-`tests/test_task6h_counterfactual_grounding.py` adds **22** tests covering the section 25 list: 240
-canonical pairs in the recorded manifest, same-image / different-sample / different-target /
-different-mask assertions, deterministic order + stable identity hash, builder rejection cases
-(wrong image, identical targets, reused samples), region scores on the correct masks, `L_cf` sign
-(both analytic and numeric), fixed weights/margin, the recorded architecture identity (Task 6G
-unchanged), SAM2 and shared-feature bit-identity, both-forwards-one-backward in the pair step,
-pair-step scheduler horizon, the retired Task 6E/6F paths, `[BOX]` causal cleanliness, H2
-predicted-point-only, forbidden components, config hygiene, no test split, deterministic JSON, and
-the neutral Watt wording with preserved history.
-
-Full suite: **365 passed** in 678 s (`python -m pytest tests/ -q`, including the artifact-consistency
-gate) — 343 pre-existing tests plus the 22 Task 6H tests, with no regressions.
-
-## 20. Git / Watt
-
-**Commit: `b4e986e` — `feat: add counterfactual pair grounding loss`** (staged only code,
-tests, docs and `evaluation/**` artifacts: no checkpoints, no weights, no feature caches, no
-`.conda`, no dataset changes; `artifacts/**` stays gitignored and only
-`evaluation/task6h_checkpoint_manifest.json` records the checkpoint hashes).
+**Commit: `{{COMMIT_HASH}}` — `fix: align counterfactual grounding with point localization`** (staged
+only code, tests, docs and `evaluation/**` artifacts: no weights/checkpoints, no feature caches, no
+hidden dumps, no `.conda`, no dataset changes; `artifacts/**` stays gitignored and only
+`evaluation/task6h1_checkpoint_manifest.json` records the checkpoint hash).
 
 **Watt Toolkit handling:** the pre-existing Watt processes (`Steam++.exe`,
 `Steam++.Accelerator.exe`) were left running untouched for the whole task and are used for the final
 push only under the established ownership rules — never closed, never force-killed, no hosts-file,
-certificate-store or TLS changes anywhere in this task. The neutral `PROJECT_STATE.md` identity-row
-wording (section 3) is now in place and no historical per-task Watt record was altered.
+certificate-store or TLS changes anywhere in this task.
 
-## 21. Recommended next architecture step
+## 20. Recommended next architecture decision
 
-Five readouts have now failed with verified implementations, and Task 6H supplies the sharpest
-diagnosis: **the objective, not the plumbing, is degenerate**. Recommendations, in order, each
-measurable against the frozen gates and the paired `P` material:
+Per section 23 the clean H0-R failure means **stop redesigning scalar losses**. Six readouts have now
+failed with verified implementations; the last two rule out the readout format (6G) and the objective's
+scale/sign (6H.1). Recommended, in order, for review:
 
-1. **Re-define the counterfactual objective on a bounded scale (recommended).** The same pair
-   supervision with `s_XY` computed on `sigmoid(H)` (or a softmax over the map) removes the
-   magnification shortcut, and the audit's probability margin (+0.112) is the honest number to
-   push. Add a peak/coverage term only if the bounded version still fails.
-2. **Strengthen the query signal itself** — instruction-aware query refinement over the visual
-   features, or an explicit representation objective that separates the two instructions of one
-   image (still no `[REF]`, no new dataset).
-3. **Only after a localization gate passes**: re-test the dense readout, then H2-style frozen-SAM2
-   segmentation and geometry-verifiable supervision.
-4. **Not indicated by anything measured here:** `[REF]`, SRE, SCL, 4B, dataset migration, full
-   training, GUI.
+1. **Instruction-aware query representation (recommended)**: multiple query tokens or a small number of
+   refinement steps over the frozen visual features, so one instruction can select among competing
+   buildings; the canonical pairs, the frozen 0.4883/18-20 point oracle and the point-CE + bounded-mass
+   objective are ready to measure it.
+2. **Stronger MLLM representation** (larger Qwen) — a scale question to pose explicitly against the
+   measured bottleneck rather than by default.
+3. **Architecture-level reference/relation grounding** only after a target-selection gate passes.
+4. **Not indicated**: another scalar loss, dataset migration, full training, GUI.

@@ -66,7 +66,43 @@ The block above is machine-checked against
 | 6E | **Explicit Spatial Token Grounding v0.1 (`[BOX]` + 256 `<loc_*>` tokens)** | **done → `EXPLICIT_SPATIAL_TOKENS_FAILED`** (E0 passes 20/20; E1 structural 0/120) |
 | 6F | **Target-Aware `[BOX]` Query Grounding v0.1 (pre-reasoning query + box head)** | **done → `TARGET_AWARE_QUERY_FAILED`** (F0 passes 0.9046/10-10; F1 paired 0/20) |
 | 6G | **Dense Query–Visual Spatial Grounding Map v0.1 (query × frozen SAM2 map → heatmap point)** | **done → `DENSE_GROUNDING_IMPLEMENTATION_FAILED`** (grid-256 oracle 0.4883/18-20; G0 inside 0.10) |
-| 6H | **Counterfactual Pair-Aligned Dense Grounding v0.1 (pair step + own-vs-cross ranking)** | **done → `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** (H0 ranking 10/10 but inside-own 3/20) |
+| 6H | **Counterfactual Pair-Aligned Dense Grounding v0.1 (pair step + own-vs-cross ranking)** | **done → `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** (H0 ranking 10/10 but inside-own 3/20) — **causal wording narrowed in Task 6H.1 §3: the logit ranking was scale-degenerate; query learnability was unresolved** |
+| 6H.1 | **Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding** | **done → `BOUNDED_POINT_OBJECTIVE_FAILED`** (H0-R point CE 11.10→4.74, inside-own 7/20) |
+
+## Task 6H.1 measured results
+
+Architecture frozen at Task 6G/6H; only the spatial supervision target changed: a 65,536-class
+spatial cross-entropy on the deterministic target **point-cell** plus a **bounded** own-vs-cross
+target **probability-mass** preference, with Task 6G's BCE+Dice and Task 6H's raw-logit ranking
+detached to zero gradient. Full detail: `docs/task6h1_bounded_point_counterfactual.md`, ADR-020,
+`evaluation/task6h1_*.json`.
+
+| | Value |
+|---|---|
+| Objective | `0.5*(L_reasoning_A+L_reasoning_B) + 1.0*(L_point_A+L_point_B) + 1.0*L_cf`, `L_point` = CE over 65 536 spatial classes, `mass(P,M)=sum(P*M)` (bounded, no area division), `L_cf = -log(p_own/(p_own+p_cross))`, eps 1e-8, **no margin** |
+| Retirement proof | `bce_dice_requires_grad: false`, `logit_ranking_requires_grad: false`, gradient contribution 0.0 |
+| Gradient coverage | point-CE reaches query projection 0.881, query norm 0.0136, visual 1×1 0.109, LoRA 0.109, token rows 0.322; bounded `L_cf` reaches all five groups too |
+| **H0-R** (10 pairs, 1500 pair steps) | inside-own **7/20**, top-1 cell 5/20, paired point **2/10**, bounded ranking **8/10**, own mass **0.1835** > cross **0.0456**, mean \|logit\| 13.2 → **failed** (gates 18/20, 9/10, 9/10, <10.0) |
+| H0-R audit | point CE **11.0965 → 4.7427** (chance 11.090), entropy **11.09 → 6.21**, target-cell probability ×2 500, point error **0.4658 → 0.1673**, bounded margin **−0.000 → +0.1385**, but max **non-target** probability 0.0532 vs target 0.0515 |
+| H1-R / H2-R | **not run** (section 13 stops at the failed H0-R) |
+
+1. **The corrected objective is healthy and not degenerate**: the point cross-entropy falls from
+   exactly chance to 4.74, the softmax sharpens (entropy 11.09 → 6.21 nats), the target cell gains
+   ~2 500× probability, the argmax point error falls 0.466 → 0.167, and the bounded preference margin
+   becomes clearly positive with own mass 4× cross mass. Task 6H's magnification shortcut is gone.
+2. **H0-R still fails**: the largest non-target cell holds 0.0532 probability against a 0.0515 mean
+   target probability, so top-1 is 25 % and inside-target 35 % — far from the 90 % gate. The single
+   `[BOX]` query does not carry enough target-specific spatial signal even under a directly aligned,
+   bounded objective.
+3. **Task 6H's verdict and numbers are preserved**; only its causal wording was narrowed (section 3):
+   6H learned the specified logit ranking but the loss was scale-degenerate, so it did not establish
+   that the query signal is unlearnable — 6H.1 supplies that bounded test and shows real but
+   insufficient spatial signal.
+4. **Accepted verdict (section 22): `BOUNDED_POINT_OBJECTIVE_FAILED`** → per section 23 this is a
+   clean failure and the task stops for review: the next candidates are representation-level
+   (instruction-aware multi-query / iterative refinement, stronger MLLM, reference/relation
+   grounding), **not another scalar loss**, and none may be implemented automatically. No SAM2
+   training, no `[REF]`/SRE/SCL/4B/dataset migration/GUI.
 
 ## Task 6H measured results
 
@@ -100,8 +136,12 @@ ADR-019, `evaluation/task6h_*.json`.
    keeps passing while localization stays at chance.
 4. **WHU is not the binding constraint** of this result (the failure is uniform at 10/10 pairs on
    memorized records). No SAM2 training, no `[REF]`/SRE/SCL/4B/dataset migration/GUI.
-5. **Accepted verdict (section 20): `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** — H0 cannot learn a
-   localizing own-vs-cross preference after the focused audit; the task stops before H1.
+5. **Machine verdict (section 20): `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** — kept as the task's
+   original verdict. **Corrected causal interpretation (Task 6H.1 section 3):** Task 6H successfully
+   learned the specified own-vs-cross *logit* ranking, but the loss was **scale-degenerate** — it could
+   be minimized by magnifying logits without moving the heatmap peak onto the target. Query
+   learnability therefore remained **unresolved** until a bounded, localization-aligned objective was
+   tested; Task 6H.1 provides that test.
 
 ## Task 6G measured results
 
@@ -507,35 +547,34 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
 
 ## Current blockers
 
-**The supervised objective is satisfiable without localizing, and the query stays image-dominated.**
-Task 6H removed every remaining implementation doubt: the pair construction, the shared-feature
-identity, the loss sign, the gradient coverage, the frozen backbone and the scheduler horizon are all
-verified, yet the specified ranking objective is minimized by rescaling the logit field. Localization
-gates (point-inside-own 3/20, paired point 0/10) expose it. The next task must change the objective to a
-bounded form and/or strengthen the query's instruction dependence — another readout swap is not
-indicated.
+**The single `[BOX]` query does not carry enough target-specific spatial signal.** Six readouts have
+failed with verified implementations (6D.1 `[SEG]` probes, 6E coordinate tokens, 6F box regression,
+6G dense map, 6H logit-ranked dense map, 6H.1 point-aligned bounded dense map). The last two rule out
+the readout format (6G: image-dominated feature map) and the objective's scale/sign (6H.1: point CE
+falls to 4.74 and the bounded margin is clearly positive, yet the max non-target cell still rivals the
+target cell). What remains is the query representation itself and the strength of the 2B MLLM's
+instruction-conditioned spatial signal. Per Task 6H.1 section 23, further scalar-loss redesign is
+**not** indicated.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6H results**, then **exactly one** task aimed at the objective and
-the query signal, with the evidence Tasks 6D.1/6E/6F/6G/6H produced:
+**ChatGPT review of the pushed Task 6H.1 results**, then **exactly one** representation-level task,
+with the evidence Tasks 6D.1–6H.1 produced:
 
-1. **Bounded counterfactual ranking (recommended).** Re-run the same pair step with `s_XY` on
-   `sigmoid(H)` (or a softmax over the map) so the margin cannot be bought with logit scale; the audit's
-   probability margin (+0.112) is the honest baseline to beat. Add a peak/coverage term only if the
-   bounded version still fails.
-2. **Strengthen the query representation**: instruction-aware query refinement over the visual features,
-   or an explicit representation objective separating the two instructions of one image (no `[REF]`, no
-   new dataset).
-3. **Only after a localization gate passes**: re-test the dense readout, then frozen-SAM2 segmentation
-   and geometry-verifiable supervision.
-4. **Not indicated by any evidence collected so far**: `[REF]`, Spatial Relation Encoder, Spatial
-   Consistency Loss, 4B, dataset migration, full training, a GUI.
+1. **Instruction-aware query refinement (recommended).** Multiple query tokens (or a small number of
+   refinement steps) over the frozen visual features, so the instruction can select among competing
+   buildings in one image; the canonical pair material, the frozen point oracle ceiling and the
+   point-CE + bounded-mass objective are ready-made measurement infrastructure.
+2. **Stronger MLLM representation** (e.g. a larger Qwen) if the 2B hidden is the binding constraint —
+   a scale question that the project has so far refused to answer by default and should now be posed
+   explicitly against the measured bottleneck.
+3. **Architecture-level reference/relation grounding** (`[REF]`-style reference tokens, SRE) only
+   after a target-selection gate passes; the current evidence still does not justify SRE/SCL.
+4. **Not indicated**: another scalar loss, dataset migration, full training, GUI.
 
-Full detail: `handoff/FROM_DSH.md`, `docs/task6h_counterfactual_pair_grounding.md`,
-`docs/task6g_dense_spatial_grounding.md`, `docs/task6f_target_aware_box_query.md`,
-`evaluation/task6h_verdict.json`, `evaluation/task6h_pair_manifest.json`,
-`evaluation/task6h_token_setup.json`, `evaluation/task6h_h0_overfit.json`,
-`evaluation/task6h_h0_audit.json`, `evaluation/task6h_error_analysis.json`,
-`evaluation/task6g_*.json`, `evaluation/task6f_*.json`, `evaluation/task6e_*.json`,
-`docs/architecture_decisions.md` (ADR-016 … ADR-019).
+Full detail: `handoff/FROM_DSH.md`, `docs/task6h1_bounded_point_counterfactual.md`,
+`docs/task6h_counterfactual_pair_grounding.md`, `docs/task6g_dense_spatial_grounding.md`,
+`evaluation/task6h1_verdict.json`, `evaluation/task6h1_objective_setup.json`,
+`evaluation/task6h1_h0r_overfit.json`, `evaluation/task6h1_h0r_audit.json`,
+`evaluation/task6h1_error_analysis.json`, `evaluation/task6h_*.json`, `evaluation/task6g_*.json`,
+`docs/architecture_decisions.md` (ADR-016 … ADR-020).

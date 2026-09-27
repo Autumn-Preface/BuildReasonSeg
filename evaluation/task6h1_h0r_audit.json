@@ -1,0 +1,200 @@
+{
+  "_doc": "Task 6H.1 section 14. Focused H0-R audit of the corrected objective: gradient coverage, target-cell probability / entropy / non-target probability evolution, point-CE and bounded-L_cf trends, argmax-vs-GT-point error, A/B query geometry, target-index bookkeeping and shared-feature bit identity. No architecture or loss change.",
+  "task": "6H.1",
+  "h0r_verdict": "BOUNDED_POINT_OBJECTIVE_FAILED",
+  "h0r_final": {
+    "point_inside_count": 7,
+    "record_count": 20,
+    "paired_point_selection_pass": 2,
+    "pair_ranking_pass": 8,
+    "mean_own_mass": 0.18353383424691855,
+    "mean_cross_mass": 0.045554216569871644,
+    "mean_abs_logit": 13.207030498981476,
+    "gate": {
+      "kind": "h0r",
+      "checks": {
+        "point_inside_own_ge": false,
+        "paired_point_selection_ge": false,
+        "pair_ranking_ge": false,
+        "own_mass_exceeds_cross_mass": true,
+        "mean_abs_logit_below_limit": false,
+        "no_gt_leakage": true
+      },
+      "passed": false,
+      "gate": {
+        "point_inside_own_min": 18,
+        "paired_point_selection_min": 9,
+        "pair_ranking_min": 9,
+        "max_mean_abs_logit": 10.0
+      },
+      "max_mean_abs_logit_constant": 10.0
+    }
+  },
+  "before_training": {
+    "pairs": 10,
+    "mean_point_ce": 11.096496391296387,
+    "mean_target_cell_probability": 1.5166419825618504e-05,
+    "target_cell_top1_rate": 0.0,
+    "point_inside_rate": 0.0,
+    "mean_normalized_point_error": 0.465771484375,
+    "mean_spatial_entropy": 11.090282773971557,
+    "mean_max_non_target_probability": 1.5748471560073086e-05,
+    "mean_p_aa": 0.009036987693980337,
+    "mean_p_ab": 0.005324726877734065,
+    "mean_p_bb": 0.005323950620368123,
+    "mean_p_ba": 0.00904349961783737,
+    "mean_own_mass": 0.0071804691571742294,
+    "mean_cross_mass": 0.007184113247785717,
+    "mean_probability_margin": -3.644044045358896e-06,
+    "mean_cf_loss": 0.8544684767723083,
+    "mean_ab_hidden_distance": 27.368862915039063,
+    "mean_ab_projected_query_distance": 1.4930176496505738
+  },
+  "after_training": {
+    "pairs": 10,
+    "mean_point_ce": 4.74271505177021,
+    "mean_target_cell_probability": 0.05151284553430742,
+    "target_cell_top1_rate": 0.25,
+    "point_inside_rate": 0.35,
+    "mean_normalized_point_error": 0.16728515625,
+    "mean_spatial_entropy": 6.205206251144409,
+    "mean_max_non_target_probability": 0.053201327874558044,
+    "mean_p_aa": 0.15692814742214978,
+    "mean_p_ab": 0.051471770103671585,
+    "mean_p_bb": 0.2107006771489978,
+    "mean_p_ba": 0.039161432231776414,
+    "mean_own_mass": 0.18381441228557377,
+    "mean_cross_mass": 0.045316601167724,
+    "mean_probability_margin": 0.13849781127646565,
+    "mean_cf_loss": 0.24286286639980972,
+    "mean_ab_hidden_distance": 135.68242721557618,
+    "mean_ab_projected_query_distance": 636.8363800048828
+  },
+  "trends": {
+    "point_ce": {
+      "before": 11.096496391296387,
+      "after": 4.74271505177021,
+      "decreased": true
+    },
+    "target_cell_probability": {
+      "before": 1.5166419825618504e-05,
+      "after": 0.05151284553430742
+    },
+    "point_inside_rate": {
+      "before": 0.0,
+      "after": 0.35
+    },
+    "normalized_point_error": {
+      "before": 0.465771484375,
+      "after": 0.16728515625
+    },
+    "spatial_entropy": {
+      "before": 11.090282773971557,
+      "after": 6.205206251144409
+    },
+    "max_non_target_probability": {
+      "before": 1.5748471560073086e-05,
+      "after": 0.053201327874558044
+    },
+    "probability_margin": {
+      "before": -3.644044045358896e-06,
+      "after": 0.13849781127646565
+    },
+    "cf_loss": {
+      "before": 0.8544684767723083,
+      "after": 0.24286286639980972
+    },
+    "history_first": {
+      "total": 21.35120391845703,
+      "reasoning_ce": 0.002234832150861621,
+      "point_ce_a": 10.836041450500488,
+      "point_ce_b": 9.805455207824707,
+      "point_ce_sum": 20.641496658325195,
+      "cf": 0.7085889577865601,
+      "cf_a": 0.8575787544250488,
+      "cf_b": 0.5595991611480713,
+      "lm_ce": 0.002234832150861621,
+      "mask_bce": 3.921003580093384,
+      "mask_dice": 0.0,
+      "ground": 0.7085889577865601
+    },
+    "history_last": {
+      "total": 13.200082778930664,
+      "reasoning_ce": 0.002755136927589774,
+      "point_ce_a": 7.74688196182251,
+      "point_ce_b": 5.2835001945495605,
+      "point_ce_sum": 13.03038215637207,
+      "cf": 0.168323814868927,
+      "cf_a": 0.29723626375198364,
+      "cf_b": 0.03941137716174126,
+      "lm_ce": 0.002755136927589774,
+      "mask_bce": 2.20329213142395,
+      "mask_dice": 0.0,
+      "ground": 0.168323814868927
+    }
+  },
+  "gradients": {
+    "point_ce": {
+      "dense_head.query_proj": 0.8810854583220272,
+      "dense_head.query_norm": 0.01359231959843668,
+      "dense_head.visual_proj": 0.10913918349732762,
+      "qwen_lora": 0.10920562000915181,
+      "token_rows": 0.32161250710487366,
+      "other": 0.000522613525390625
+    },
+    "bounded_cf": {
+      "dense_head.query_proj": 0.059027999273725186,
+      "dense_head.query_norm": 0.0010078316850355073,
+      "dense_head.visual_proj": 0.007067293187936579,
+      "qwen_lora": 0.013556177850366247,
+      "token_rows": 0.05312535539269447,
+      "other": 7.76052474975586e-05
+    }
+  },
+  "pair_identity": {
+    "pairs": 10,
+    "target_indices_a": [
+      29418,
+      57317,
+      36548,
+      31714,
+      13753,
+      10904,
+      25794,
+      5616,
+      24349,
+      5447
+    ],
+    "target_indices_b": [
+      18943,
+      61399,
+      54527,
+      27605,
+      28077,
+      23210,
+      6430,
+      16921,
+      3122,
+      46278
+    ],
+    "indices_differ_for_all_pairs": true
+  },
+  "shared_feature_max_abs_delta": 0.0,
+  "shared_feature_bit_identical": true,
+  "checkpoint_load": {
+    "step": 1500,
+    "metrics": {
+      "gate_passed": false,
+      "point_inside_own": 7,
+      "paired_point_selection": 2,
+      "pair_ranking": 8,
+      "mean_abs_logit": 13.207030498981476
+    },
+    "missing_keys": 626,
+    "unexpected_keys": 0,
+    "grounding_head_loaded": false,
+    "box_head_loaded": false,
+    "dense_head_loaded": true,
+    "geometry_kind": null
+  }
+}

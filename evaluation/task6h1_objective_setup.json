@@ -1,0 +1,326 @@
+{
+  "_doc": "Task 6H.1 sections 4-11. Architecture-identity check, target-cell convention, the training objective's gradient coverage, the zero-gradient status of the retired Task 6G BCE+Dice and Task 6H logit ranking, and a one-pair optimizer-step smoke on a real canonical pair. Every claim comes from a real forward/backward.",
+  "task": "6H.1",
+  "pair": {
+    "image_id": "1_0",
+    "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+    "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+    "target_a": 1,
+    "target_b": 3
+  },
+  "architecture": {
+    "grid": 256,
+    "selected_level_shape": [
+      1,
+      32,
+      256,
+      256
+    ],
+    "in_channels": 32,
+    "head": {
+      "class": "DenseSpatialGroundingHead",
+      "query_dim": 2048,
+      "key_dim": 128,
+      "in_channels": 32,
+      "structure": "query: LayerNorm(2048) -> Linear(2048,128); visual: Conv1x1(C,128); heatmap = dot(q, K)/sqrt(128) + scalar bias",
+      "scalar_bias": true,
+      "parameters": 270593,
+      "installed": true,
+      "grid": 256,
+      "box_token_id": 151670,
+      "trainable": true
+    },
+    "task6g_reference": {
+      "grid": 256,
+      "level_shape": [
+        1,
+        32,
+        256,
+        256
+      ],
+      "head_parameters": 270593
+    },
+    "unchanged_from_task6g": true
+  },
+  "feature_levels": {
+    "image_embeddings_shape": [
+      1,
+      256,
+      64,
+      64
+    ],
+    "high_res_shapes": [
+      [
+        1,
+        32,
+        256,
+        256
+      ],
+      [
+        1,
+        64,
+        128,
+        128
+      ]
+    ],
+    "levels_by_grid": {
+      "64": [
+        1,
+        256,
+        64,
+        64
+      ],
+      "128": [
+        1,
+        64,
+        128,
+        128
+      ],
+      "256": [
+        1,
+        32,
+        256,
+        256
+      ]
+    }
+  },
+  "trainables": {
+    "phase": "A",
+    "trainable_tensors": 400,
+    "frozen_tensors": 1243,
+    "trainable_params": 17707265,
+    "projection_trainable": false,
+    "sam_mask_decoder_trainable": false,
+    "qwen_visual_trainable": [
+      "dense_head.visual_proj.weight",
+      "dense_head.visual_proj.bias"
+    ],
+    "grounding_head_trainable": false,
+    "box_head_trainable": false,
+    "box_query_token_id": 151670,
+    "dense_grid": 256,
+    "trainable_token_ids": [
+      151669,
+      151670
+    ],
+    "dense_head_trainable": true,
+    "sam_frozen": true,
+    "projection_frozen": true,
+    "loc_tokens_present": false,
+    "loc_rows_trainable": false,
+    "task": "6H.1",
+    "pair_step": {
+      "pair_steps_per_epoch": 240,
+      "margin": 1.0,
+      "weights": {
+        "reasoning": 0.5,
+        "heatmap": 1.0,
+        "cf": 2.0
+      }
+    },
+    "objective": {
+      "point_cross_entropy": true,
+      "bounded_pair_mass": true,
+      "legacy_bce_dice_gradient": false,
+      "legacy_logit_ranking_gradient": false,
+      "weights": {
+        "reasoning": 0.5,
+        "classification": 1.0,
+        "cf": 1.0
+      },
+      "eps": 1e-08
+    }
+  },
+  "optimizer_groups": [
+    {
+      "name": "lora",
+      "lr": 0.0001,
+      "weight_decay": 0.01,
+      "tensors": 392,
+      "parameters": 17432576
+    },
+    {
+      "name": "decoder",
+      "lr": 0.0003,
+      "weight_decay": 0.01,
+      "tensors": 7,
+      "parameters": 270593
+    },
+    {
+      "name": "token",
+      "lr": 0.0003,
+      "weight_decay": 0.0,
+      "tensors": 1,
+      "parameters": 4096
+    }
+  ],
+  "causal_placement": {
+    "future_text_changed": true,
+    "box_hidden_bit_identical": true,
+    "box_hidden_max_abs_delta": 0.0
+  },
+  "target_cells": {
+    "a": {
+      "index": 29418,
+      "x_cell": 234,
+      "y_cell": 114,
+      "point": [
+        0.9169921875,
+        0.4462890625
+      ],
+      "cell_centre": [
+        0.916015625,
+        0.447265625
+      ],
+      "grid": 256
+    },
+    "b": {
+      "index": 18943,
+      "x_cell": 255,
+      "y_cell": 73,
+      "point": [
+        0.9990234375,
+        0.2861328125
+      ],
+      "cell_centre": [
+        0.998046875,
+        0.287109375
+      ],
+      "grid": 256
+    },
+    "different_indices": true,
+    "index_convention": "index = y_cell * grid + x_cell",
+    "index_within_range": true
+  },
+  "objective": {
+    "point_ce_a": 11.093849182128906,
+    "point_ce_b": 11.087729454040527,
+    "softmax_sums_to_one": true,
+    "masses": {
+      "p_aa": 0.008094165474176407,
+      "p_ab": 0.0050866263918578625,
+      "p_bb": 0.005077618174254894,
+      "p_ba": 0.008102276362478733,
+      "margin_a": 0.0030075390823185444,
+      "margin_b": -0.003024658188223839,
+      "mean_margin": -8.55955295264721e-06,
+      "ratio_a": 0.6140870451927185,
+      "ratio_b": 0.38525426387786865,
+      "bounded": true
+    },
+    "pair_preference_pass": false,
+    "cf_loss": 0.7207335233688354,
+    "spatial_entropy_a": 11.090330123901367,
+    "target_cell_top1_a": false,
+    "mean_abs_logit_a": 0.1533203125
+  },
+  "retired_terms": {
+    "bce_dice_requires_grad": false,
+    "logit_ranking_requires_grad": false,
+    "bce_dice_value": 1.755320429801941,
+    "logit_ranking_margin": -0.0013926848769187927,
+    "gradient_contribution": 0.0,
+    "note": "computed detached under torch.no_grad(); they are logged only (sections 8-9)"
+  },
+  "gradients": {
+    "point_ce": {
+      "norms": {
+        "dense_head.query_proj": 0.8810854583220272,
+        "dense_head.query_norm": 0.01359231959843668,
+        "dense_head.visual_proj": 0.10913918349732762,
+        "qwen_lora": 0.10879901284779223,
+        "token_rows": 0.32161250710487366,
+        "other": 0.000522613525390625
+      },
+      "tensor_counts": {
+        "dense_head.query_proj": 2,
+        "dense_head.query_norm": 2,
+        "dense_head.visual_proj": 2,
+        "qwen_lora": 392,
+        "token_rows": 1,
+        "other": 1
+      }
+    },
+    "bounded_cf": {
+      "norms": {
+        "dense_head.query_proj": 0.059027999273725186,
+        "dense_head.query_norm": 0.0010078316850355073,
+        "dense_head.visual_proj": 0.007067293187936579,
+        "qwen_lora": 0.013395397804386313,
+        "token_rows": 0.05312535539269447,
+        "other": 7.76052474975586e-05
+      },
+      "tensor_counts": {
+        "dense_head.query_proj": 2,
+        "dense_head.query_norm": 2,
+        "dense_head.visual_proj": 2,
+        "qwen_lora": 392,
+        "token_rows": 1,
+        "other": 1
+      }
+    }
+  },
+  "one_pair_step": {
+    "losses": {
+      "total": 24.77532958984375,
+      "reasoning_ce": 3.7460312843322754,
+      "point_ce_a": 11.093849182128906,
+      "point_ce_b": 11.087729454040527,
+      "point_ce_sum": 22.18157958984375,
+      "cf": 0.7207335233688354,
+      "cf_a": 0.4876173138618469,
+      "cf_b": 0.9538497924804688,
+      "lm_ce": 3.7460312843322754,
+      "mask_bce": 3.5225871801376343,
+      "mask_dice": 0.0,
+      "ground": 0.7207335233688354
+    },
+    "weights": {
+      "reasoning": 0.5,
+      "classification": 1.0,
+      "cf": 1.0,
+      "eps": 1e-08
+    },
+    "region_masses": {
+      "p_aa": 0.008094165474176407,
+      "p_ab": 0.0050866263918578625,
+      "p_bb": 0.005077618174254894,
+      "p_ba": 0.008102276362478733,
+      "margin_a": 0.0030075390823185444,
+      "margin_b": -0.003024658188223839,
+      "mean_margin": -8.55955295264721e-06,
+      "ratio_a": 0.6140870451927185,
+      "ratio_b": 0.38525426387786865,
+      "bounded": true
+    },
+    "pair_preference_pass": false,
+    "mean_abs_logit": 0.158203125,
+    "logit_std": 0.007537841796875,
+    "diagnostics_require_grad": false,
+    "grad_clip_total_norm": 16.136857986450195,
+    "box_row_delta": 0.0003000013530254364,
+    "seg_row_delta": 0.0003000013530254364,
+    "box_row_grad_norm": 0.9206629991531372,
+    "seg_row_grad_norm": 0.20421969890594482,
+    "dense_head_param_max_delta": {
+      "bias": 0.0002999527205247432,
+      "query_norm.weight": 0.00030297040939331055,
+      "query_norm.bias": 0.0002999423013534397,
+      "query_proj.weight": 0.00030006468296051025,
+      "query_proj.bias": 0.0003000497817993164,
+      "visual_proj.weight": 0.0003005117177963257,
+      "visual_proj.bias": 0.0003002285957336426
+    },
+    "ordinary_rows_probed": 16,
+    "ordinary_rows_max_abs_delta": 0.0,
+    "ordinary_rows_unchanged_exactly": true,
+    "base_embedding_tensor_bit_identical": true,
+    "sam2_max_abs_delta": 0.0,
+    "sam2_bit_identical": true,
+    "shared_feature_max_abs_delta": 0.0,
+    "shared_feature_bit_identical": true,
+    "visual_tower_lora_modules": []
+  },
+  "seconds": 26.55,
+  "passed": true
+}

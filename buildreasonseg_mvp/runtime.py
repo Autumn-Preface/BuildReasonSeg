@@ -1010,6 +1010,182 @@ class MvpRuntime:
             },
         }
 
+    # -- Task 6H.1: bounded spatial-softmax point objective ------------------
+
+    def freeze_for_point_objective(self) -> dict:
+        """Task 6H.1 section 1 trainable set: identical to Task 6G/6H (architecture frozen)."""
+
+        report = self.freeze_for_counterfactual()
+        report["task"] = "6H.1"
+        report["objective"] = {
+            "point_cross_entropy": True,
+            "bounded_pair_mass": True,
+            "legacy_bce_dice_gradient": False,
+            "legacy_logit_ranking_gradient": False,
+            "weights": {"reasoning": 0.5, "classification": 1.0, "cf": 1.0},
+            "eps": 1e-8,
+        }
+        self.reports["point_objective_trainables"] = report
+        return report
+
+    def bounded_pair_train_step(self, batch_a, batch_b, mask_a, mask_b, features,
+                                optimizer=None, timer=None) -> dict:
+        """Task 6H.1 sections 5-11: one pair step with the point-aligned bounded objective.
+
+        `L_total = 0.5*(L_reasoning_A+L_reasoning_B) + 1.0*(L_point_A+L_point_B) + 1.0*L_cf`, where
+        `L_point` is the 65,536-class spatial cross-entropy of the target point-cell and `L_cf` is
+        the bounded own-vs-cross target **probability mass** preference. Task 6G's BCE+Dice and
+        Task 6H's raw-logit ranking are computed under `torch.no_grad()` for logging and therefore
+        contribute **zero** gradient.
+        """
+
+        from .box_query import box_query_forward
+        from .counterfactual import region_scores
+        from .dense_grounding import downsample_target_mask, feature_tensor_for_grid, heatmap_loss
+        from .losses import lm_cross_entropy
+        from .spatial_objective import (
+            POINT_CF_WEIGHT,
+            POINT_CLASSIFICATION_WEIGHT,
+            POINT_REASONING_WEIGHT,
+            bounded_pair_loss,
+            counterfactual_masses,
+            max_non_target_probability,
+            point_cross_entropy,
+            spatial_entropy,
+            spatial_probabilities,
+            target_cell,
+            target_cell_probability,
+            topk_hit,
+        )
+
+        batch_a = batch_a.to(self.device)
+        batch_b = batch_b.to(self.device)
+        grid = int(self.dense_grid)
+        use_autocast = bool(self.cfg["training"].get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                spatial_feature = feature_tensor_for_grid(features, grid).to(self.device)
+                logits_a, hidden_a, _seg_a = box_query_forward(self.model.qwen, batch_a)
+                heatmap_a = self.model.dense_head(hidden_a, spatial_feature)
+                logits_b, hidden_b, _seg_b = box_query_forward(self.model.qwen, batch_b)
+                heatmap_b = self.model.dense_head(hidden_b, spatial_feature)
+
+                target_a = downsample_target_mask(mask_a, grid).to(self.device)[None, None, :, :]
+                target_b = downsample_target_mask(mask_b, grid).to(self.device)[None, None, :, :]
+                cell_a = target_cell(mask_a, grid)
+                cell_b = target_cell(mask_b, grid)
+
+                point_a = point_cross_entropy(heatmap_a[0], cell_a.index)
+                point_b = point_cross_entropy(heatmap_b[0], cell_b.index)
+
+                probabilities_a = spatial_probabilities(heatmap_a[0])
+                probabilities_b = spatial_probabilities(heatmap_b[0])
+                masses = counterfactual_masses(
+                    probabilities_a, probabilities_b, target_a[0, 0], target_b[0, 0]
+                )
+                cf = bounded_pair_loss(masses["p_aa"], masses["p_ab"], masses["p_bb"], masses["p_ba"])
+                reasoning = 0.5 * (
+                    lm_cross_entropy(logits_a, batch_a.labels)
+                    + lm_cross_entropy(logits_b, batch_b.labels)
+                )
+                total = (
+                    POINT_REASONING_WEIGHT * reasoning
+                    + POINT_CLASSIFICATION_WEIGHT * (point_a + point_b)
+                    + POINT_CF_WEIGHT * cf["loss"]
+                )
+
+        with _stage("backward"):
+            if optimizer is not None:
+                optimizer.zero_grad(set_to_none=True)
+            total.backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        # ---- legacy diagnostics: detached, therefore gradient-free (sections 8-9) ----
+        with torch.no_grad():
+            heatmap_a_1 = heatmap_a.detach().unsqueeze(1) if heatmap_a.dim() == 3 else heatmap_a.detach()
+            heatmap_b_1 = heatmap_b.detach().unsqueeze(1) if heatmap_b.dim() == 3 else heatmap_b.detach()
+            legacy_a = heatmap_loss(heatmap_a_1, target_a)
+            legacy_b = heatmap_loss(heatmap_b_1, target_b)
+            legacy_ranking = region_scores(
+                heatmap_a.detach()[0], heatmap_b.detach()[0], target_a[0, 0], target_b[0, 0]
+            )
+            diagnostics = {
+                "target_cell_a": cell_a.as_dict(),
+                "target_cell_b": cell_b.as_dict(),
+                "target_cell_probability_a": target_cell_probability(probabilities_a, cell_a.index),
+                "target_cell_probability_b": target_cell_probability(probabilities_b, cell_b.index),
+                "target_cell_top1_a": topk_hit(heatmap_a[0], cell_a.index, 1),
+                "target_cell_top5_a": topk_hit(heatmap_a[0], cell_a.index, 5),
+                "target_cell_top25_a": topk_hit(heatmap_a[0], cell_a.index, 25),
+                "target_cell_top1_b": topk_hit(heatmap_b[0], cell_b.index, 1),
+                "spatial_entropy_a": spatial_entropy(probabilities_a),
+                "spatial_entropy_b": spatial_entropy(probabilities_b),
+                "max_non_target_probability_a": max_non_target_probability(
+                    probabilities_a, target_a[0, 0]
+                ),
+                "mean_abs_logit_a": float(heatmap_a.detach().abs().mean()),
+                "mean_abs_logit_b": float(heatmap_b.detach().abs().mean()),
+                "logit_std_a": float(heatmap_a.detach().std()),
+                "logit_std_b": float(heatmap_b.detach().std()),
+                "legacy_bce_dice_a": legacy_a["heatmap_raw"],
+                "legacy_bce_dice_b": legacy_b["heatmap_raw"],
+                "legacy_logit_ranking_margin": legacy_ranking["raw"]["mean_margin"],
+                "legacy_terms_require_grad": bool(
+                    legacy_a["heatmap"].requires_grad
+                    or legacy_b["heatmap"].requires_grad
+                    or legacy_ranking["mean_margin"].requires_grad
+                ),
+            }
+
+        mean_abs_logit = 0.5 * (
+            diagnostics["mean_abs_logit_a"] + diagnostics["mean_abs_logit_b"]
+        )
+        return {
+            "losses": {
+                "total": float(total.detach()),
+                "reasoning_ce": float(reasoning.detach()),
+                "point_ce_a": float(point_a.detach()),
+                "point_ce_b": float(point_b.detach()),
+                "point_ce_sum": float((point_a + point_b).detach()),
+                "cf": cf["raw"],
+                "cf_a": cf["raw_a"],
+                "cf_b": cf["raw_b"],
+                "lm_ce": float(reasoning.detach()),
+                "mask_bce": diagnostics["legacy_bce_dice_a"] + diagnostics["legacy_bce_dice_b"],
+                "mask_dice": 0.0,
+                "ground": cf["raw"],
+            },
+            "region_masses": masses["raw"],
+            "pair_preference_pass": masses["pair_preference_pass"],
+            "mean_abs_logit": mean_abs_logit,
+            "logit_std": 0.5 * (diagnostics["logit_std_a"] + diagnostics["logit_std_b"]),
+            "diagnostics": diagnostics,
+            "grad_clip_total_norm": clipped,
+            "weights": {
+                "reasoning": POINT_REASONING_WEIGHT,
+                "classification": POINT_CLASSIFICATION_WEIGHT,
+                "cf": POINT_CF_WEIGHT,
+                "eps": cf["eps"],
+            },
+        }
+
     def build_optimizer(self) -> torch.optim.AdamW:
         opt_cfg = self.cfg["optimizer"]
         groups = self.model.trainable_parameter_groups(

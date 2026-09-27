@@ -925,6 +925,27 @@ validation set and one metric path.
 
 ---
 
+## ADR-020 — Task 6H.1: the point-aligned bounded objective is healthy; the single `[BOX]` query's spatial signal is the limit
+
+**Status:** **Accepted** (Task 6H.1) for what the objective setup, H0-R and its audit measure. No novelty is claimed for the objective itself.
+
+**Context.** Task 6H's own-vs-cross ranking was defined on unbounded logits and could be minimized by magnifying the field (mean |logit| 0.148 → 16.32) without moving the peak. Task 6H.1 froze the Task 6G/6H architecture and replaced only the objective: a 65,536-class spatial cross-entropy on the deterministic target point-cell plus a **bounded** own-vs-cross target **probability-mass** preference (`L_total = 0.5*(reasoning_A+reasoning_B) + 1.0*(L_point_A+L_point_B) + 1.0*L_cf`), with Task 6G's BCE+Dice and Task 6H's logit ranking detached to zero gradient.
+
+**Decision**
+
+1. **The objective is implemented faithfully and verified.** Target cells follow the frozen interior point + 256-cell convention (indices `y*256+x`); the softmax sums to 1; the four masses are bounded in [0,1] and not area-normalised; the pair preference is shift-invariant; the point-CE and bounded-`L_cf` gradients reach the query projection, the query norm, the visual 1×1 projection, the Qwen LoRA and the token rows; the retired terms carry `requires_grad == False` and zero gradient; SAM2 and the shared frozen feature stay bit-identical; the `[BOX]` query stays causally clean.
+2. **The objective works, and it is *not* degenerate.** Over 1500 pair steps on 10 memorized pairs: point CE **11.0965 → 4.7427** (chance = `ln 65536` = 11.090), spatial entropy **11.09 → 6.21** nats, target-cell probability ×2 500, normalized point error **0.4658 → 0.1673**, bounded preference margin **−0.0000 → +0.1385**, own mass 0.184 vs cross mass 0.045. Contrast Task 6H, where the "improvement" was logit magnification with a probability margin of 0.112.
+3. **H0-R still fails: `BOUNDED_POINT_OBJECTIVE_FAILED`.** Inside-target **7/20** (gate 18), paired point **2/10** (gate 9), bounded ranking **8/10** (gate 9), final mean |logit| 13.2 (limit 10). The audit shows why: the largest **non-target** cell holds 0.0532 probability against a 0.0515 mean target probability, so top-1 is 25 % and the mode is not reliably the target. The single `[BOX]` query does not carry enough target-specific spatial signal even under a directly aligned, bounded objective. The task stops before H1-R/H2-R (section 13).
+4. **Task 6H's verdict and numbers are preserved**; only its causal wording is narrowed: the failure was objective degeneracy, not proof that the query signal is unlearnable. Task 6H.1 supplies the missing bounded test and shows the query *does* produce real, insufficient spatial signal.
+
+**Consequences**
+
+* Six readouts have now failed with verified implementations (6D.1 `[SEG]` probes, 6E coordinate tokens, 6F box regression, 6G dense map, 6H logit-ranked dense map, 6H.1 point-aligned bounded dense map). The two most recent tasks rule out both the readout format (6G) and the objective scale/sign (6H.1) — what remains is the **query representation and the strength of the MLLM's instruction-conditioned spatial signal**.
+* Per section 23 the next candidates are therefore representation-level, not another scalar loss: instruction-aware multi-query / iterative query refinement, a stronger MLLM, or architecture-level reference/relation grounding. None may be implemented without review.
+* The reusable pieces stay: canonical pair construction + manifest hash (6H), the audit template for objective health (6H/6H.1), the frozen point oracle ceiling (0.4883 mIoU / 18-20 at grid 256) and the `[BOX]`-query causal-placement proof.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -948,3 +969,4 @@ validation set and one metric path.
 | 017 | **Task 6F: pre-reasoning `[BOX]` query with a direct box readout** | The query hidden is provably conditioned only by image + instruction (bit-identical under future-text mutation); the same 20 records reach F0 box IoU 0.9046 / paired 10/10 on the inference-form query path; F1 (480 paired, ≤8 epochs) answers whether the target-aware representation generalizes — the Task 6E coordinate vocabulary stays retired regardless |
 | 018 | **Task 6G: dense query-to-map grounding does not localize either** | The 256×256 grid-snapped point oracle keeps 0.4883 mIoU / 18-20; the dense head is audited clean (SAM2 bit-frozen, train/eval bit-identical, healthy gradients) yet G0 cannot overfit 20 records (inside 0.10, Dice 0.125) — the heatmap is a near-flat image-dominated field, so the measured bottleneck is the query's weak instruction signal, not the readout format |
 | 019 | **Task 6H: own-vs-cross ranking on unbounded logits is satisfiable without localizing** | 240 canonical same-image counterfactual pairs, one pair step with one shared frozen feature and a single backward; H0 reaches pair ranking 10/10 and mean margin +5.58 while inside-own is 3/20 — the audit shows the margin grew with a 110× logit-scale increase (probability margin only +0.112, point-inside 0.15), so the specified objective is scale-degenerate and the task stops at H0 |
+| 020 | **Task 6H.1: the point-aligned bounded objective is healthy; the query's spatial signal is the limit** | Spatial cross-entropy on the deterministic point-cell plus a bounded probability-mass preference (BCE/Dice and logit ranking detached to zero gradient); H0-R shows point CE 11.10 → 4.74, entropy 11.09 → 6.21, point error 0.466 → 0.167, bounded margin +0.139, yet inside-own is 7/20 and the max non-target probability (0.0532) still rivals the target cell (0.0515) — a clean failure of the single `[BOX]` query representation, so the next candidates are representation-level (multi-query refinement, stronger MLLM, reference/relation grounding) |
