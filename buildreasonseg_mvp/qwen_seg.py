@@ -669,6 +669,8 @@ class TeacherForcedBatch:
     total_length: int
     seg_position: int
     visual_tokens: int
+    #: Task 6F: position of the inserted `[BOX]` query token (None for every other task).
+    box_position: int | None = None
     extra_inputs: dict = field(default_factory=dict)
 
     def to(self, device: str, non_blocking: bool = False) -> "TeacherForcedBatch":
@@ -701,6 +703,7 @@ class TeacherForcedBatch:
             total_length=self.total_length,
             seg_position=self.seg_position,
             visual_tokens=self.visual_tokens,
+            box_position=self.box_position,
             **moved,
         )
 

@@ -220,6 +220,8 @@ class MvpRuntime:
     loss_weights: LossWeights = field(default_factory=LossWeights)
     #: Task 6E: `[BOX]` + `<loc_*>` vocabulary added on top of `[SEG]` (None = Task 6C/6D runtime).
     spatial_setup: object | None = None
+    #: Task 6F: the single `[BOX]` query token setup (None = every other task's runtime).
+    box_setup: object | None = None
 
     @property
     def spatial_codec(self):
@@ -610,6 +612,130 @@ class MvpRuntime:
             "example": example.as_dict(),
         }
 
+    # -- Task 6F: Target-Aware [BOX] Query --------------------------------
+
+    def install_box_head(self, hidden_dim: int | None = None, mid_dim: int = 512) -> dict:
+        """Attach the `TargetAwareBoxHead` to this runtime's model (Task 6F section 5)."""
+
+        from .box_query import TargetAwareBoxHead
+
+        if self.box_setup is None:
+            raise RuntimeError("install_box_head needs the Task 6F [BOX] query setup")
+        hidden = int(hidden_dim or self.reports.get("qwen_hidden_size") or 2048)
+        head = TargetAwareBoxHead(hidden_dim=hidden, mid_dim=int(mid_dim)).to(self.device)
+        self.model.box_head = head
+        self.box_head = head
+        report = head.as_dict()
+        report.update(
+            {
+                "installed": True,
+                "box_token_id": int(self.box_setup.box_token_id),
+                "trainable": all(parameter.requires_grad for parameter in head.parameters()),
+            }
+        )
+        self.reports["box_head"] = report
+        return report
+
+    def freeze_for_box_query(self) -> dict:
+        """Task 6F section 8 trainable set.
+
+        Train: text LoRA, the `[BOX]` query row, the `[SEG]` row and the `TargetAwareBoxHead`.
+        Freeze: Qwen base, the visual tower, all SAM2, the old Projection MLP, the Task 6D
+        `SpatialGroundingHead`, and any Task 6E `<loc_*>` rows (none are added in Task 6F, and
+        the freeze assertion below records that the location vocabulary is absent).
+        """
+
+        if self.box_setup is None:
+            raise RuntimeError("freeze_for_box_query needs the Task 6F [BOX] query setup")
+        report = set_phase_trainables(self.model, "A")
+        if self.model.grounding_head is not None:
+            for parameter in self.model.grounding_head.parameters():
+                parameter.requires_grad_(False)
+            report["grounding_head_trainable"] = False
+        if self.model.box_head is not None:
+            for parameter in self.model.box_head.parameters():
+                parameter.requires_grad_(True)
+        report["box_query_token_id"] = int(self.box_setup.box_token_id)
+        report["trainable_token_ids"] = list(self.reports.get("lora", {}).get("trainable_token_ids") or [])
+        report["box_head_trainable"] = (
+            all(parameter.requires_grad for parameter in self.model.box_head.parameters())
+            if self.model.box_head is not None
+            else False
+        )
+        report["sam_frozen"] = not any(p.requires_grad for p in self.model.sam.parameters())
+        report["projection_frozen"] = not any(p.requires_grad for p in self.model.projection.parameters())
+        report["loc_tokens_present"] = any(
+            name.startswith("<loc_") for name in self.tokenizer.get_added_vocab()
+        )
+        report["loc_rows_trainable"] = False  # Task 6F adds no location tokens at all
+        self.reports["box_query_trainables"] = report
+        return report
+
+    def box_query_train_step(self, batch, gt_mask, optimizer=None, timer=None) -> dict:
+        """One Task 6F step: `1.0 * L_reasoning + 5.0 * L_box` (section 7).
+
+        `gt_mask` is supervision only: the GT box is derived from it and the query hidden is
+        produced purely by the prompt + constant `[BOX]` under causal attention. No mask loss
+        and no SAM forward; SAM2 stays completely frozen in F0/F1.
+        """
+
+        from .box_query import box_query_forward, box_query_loss
+        from .grounding import target_geometry
+
+        batch = batch.to(self.device)
+        use_autocast = bool(self.cfg["training"].get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                lm_logits, box_hidden, _seg_hidden = box_query_forward(self.model.qwen, batch)
+                predicted_box = self.model.box_head(box_hidden)
+                gt_box = torch.as_tensor(
+                    target_geometry(gt_mask, "box"), dtype=torch.float32, device=self.device
+                ).reshape(1, -1)
+                losses = box_query_loss(lm_logits, batch, predicted_box, gt_box)
+
+        with _stage("backward"):
+            if optimizer is not None:
+                optimizer.zero_grad(set_to_none=True)
+            losses["total"].backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        return {
+            "losses": {
+                "total": losses["total_raw"],
+                "reasoning_ce": losses["reasoning_ce_raw"],
+                "box_loss": losses["box_loss_raw"],
+                "lm_ce": losses["reasoning_ce_raw"],
+                "mask_bce": 0.0,
+                "mask_dice": 0.0,
+                "ground": losses["box_loss_raw"],
+            },
+            "box_iou": losses["box_iou"],
+            "predicted_box": predicted_box.detach().float().cpu().reshape(-1).tolist(),
+            "gt_box": gt_box.detach().float().cpu().reshape(-1).tolist(),
+            "grad_clip_total_norm": clipped,
+            "weights": {
+                "reasoning": losses["reasoning_weight"],
+                "box": losses["box_weight"],
+            },
+        }
+
     def build_optimizer(self) -> torch.optim.AdamW:
         opt_cfg = self.cfg["optimizer"]
         groups = self.model.trainable_parameter_groups(
@@ -899,6 +1025,19 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         spatial_setup = add_spatial_tokens(qwen, tokenizer, int(spatial_bins))
         extra_token_ids = location_token_ids(spatial_setup)
 
+    # Task 6F: add exactly ONE active query token `[BOX]` (no `<loc_*>` vocabulary) and make
+    # its row trainable alongside `[SEG]`. Mutually exclusive with the Task 6E spatial block;
+    # absent from every Task 6A-6E configuration.
+    box_cfg = cfg.get("box_query") or {}
+    box_setup = None
+    if box_cfg.get("enabled"):
+        if spatial_setup is not None:
+            raise RuntimeError("cfg enables both spatial_tokens and box_query; Task 6F forbids it")
+        from .box_query import add_box_query_token
+
+        box_setup = add_box_query_token(qwen, tokenizer, str(box_cfg.get("box_token", "[BOX]")))
+        extra_token_ids = [int(box_setup.box_token_id)]
+
     if cfg["token"].get("prefer_peft_trainable_token_indices", True):
         qwen, token_holder, lora_report = attach_lora(
             qwen,
@@ -919,6 +1058,12 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
             extra_token_ids=extra_token_ids,
         )
     reports["lora"] = lora_report.as_dict()
+    if box_setup is not None:
+        reports["box_query"] = {
+            **box_setup.as_dict(),
+            "trainable_token_ids": list(lora_report.trainable_token_ids),
+            "token_mechanism": lora_report.token_mechanism,
+        }
 
     if cfg["training"].get("gradient_checkpointing", False):
         qwen.gradient_checkpointing_enable()
@@ -1005,6 +1150,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         reports=reports,
         loss_weights=LossWeights(**{k: float(v) for k, v in cfg["loss"].items() if isinstance(v, (int, float))}),
         spatial_setup=spatial_setup,
+        box_setup=box_setup,
     )
 
 

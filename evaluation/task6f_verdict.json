@@ -1,0 +1,95 @@
+{
+  "_doc": "Task 6F section 17. Exactly one verdict, resolved from the recorded artifacts. Task 6E's coordinate-token pathway is retired and is not part of this verdict.",
+  "task": "6F",
+  "verdict": "TARGET_AWARE_QUERY_FAILED",
+  "reason": "the implementation is valid and F0 passes, but 480-record query grounding does not generalize: the F1 geometry gate failed on the selected epoch",
+  "evidence": {
+    "token_setup": {
+      "passed": true,
+      "box_token_id": 151670,
+      "causal_placement": {
+        "future_text_changed": true,
+        "box_hidden_bit_identical": true,
+        "box_hidden_max_abs_delta": 0.0
+      },
+      "structure": {
+        "box_token_count": 1,
+        "box_position": 279,
+        "prompt_length": 279,
+        "box_immediately_after_prompt": true,
+        "box_before_all_target_tokens": true,
+        "box_not_a_prediction_target": true,
+        "labels_start_at_box_position": true,
+        "seg_token_count": 1
+      },
+      "trainables": {
+        "phase": "A",
+        "trainable_tensors": 399,
+        "frozen_tensors": 1243,
+        "trainable_params": 18491908,
+        "projection_trainable": false,
+        "sam_mask_decoder_trainable": false,
+        "qwen_visual_trainable": [],
+        "box_query_token_id": 151670,
+        "trainable_token_ids": [
+          151669,
+          151670
+        ],
+        "box_head_trainable": true,
+        "sam_frozen": true,
+        "projection_frozen": true,
+        "loc_tokens_present": false,
+        "loc_rows_trainable": false
+      }
+    },
+    "F0": {
+      "verdict": "F0_PASS",
+      "train_box_iou": 0.904625216126442,
+      "geometry_paired_pass": 10,
+      "paired_total": 10,
+      "pairs_with_non_identical_boxes": 10,
+      "mean_same_image_predicted_box_l1": 0.228521728515625,
+      "gate": {
+        "kind": "f0",
+        "checks": {
+          "train_box_iou_ge": true,
+          "geometry_paired_ge": true,
+          "same_image_boxes_non_identical": true,
+          "no_gt_leakage": true
+        },
+        "passed": true,
+        "gate": {
+          "train_box_iou_min": 0.85,
+          "geometry_paired_min": 9,
+          "same_image_boxes_identical_max": 0
+        }
+      }
+    },
+    "F1": {
+      "verdict": "TARGET_AWARE_QUERY_FAILED",
+      "selected_epoch": 8,
+      "stop_reason": "budget_exhausted",
+      "train_box_iou_mean": 0.050413311527033024,
+      "mean_val_box_iou": 0.025016153071192093,
+      "center_inside_rate": 0.016666666666666666,
+      "geometry_paired_pass": 0,
+      "paired_total": 20,
+      "mean_same_image_predicted_box_l1": 0.0979278564453125,
+      "gate": {
+        "kind": "f1",
+        "checks": {
+          "geometry_paired_ge": false,
+          "val_box_iou_ge": false,
+          "center_inside_ge": false
+        },
+        "passed": false,
+        "gate": {
+          "geometry_paired_min": 14,
+          "val_box_iou_min": 0.35,
+          "center_inside_min": 0.7
+        }
+      }
+    },
+    "F2": null
+  }
+}

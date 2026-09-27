@@ -1,0 +1,43 @@
+{
+  "_doc": "Task 6F section 13. [BOX]-query hidden representation diagnostics at the best F1 checkpoint, with global-mean centring, compared against the frozen Task 6D.1 legacy [SEG] values. Do not infer causality from cosine alone.",
+  "task": "6F",
+  "selected_epoch": 8,
+  "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch8.pt",
+  "checkpoint_load": {
+    "step": 3840,
+    "metrics": {
+      "epoch": 8,
+      "mean_val_box_iou": 0.025016153071192093,
+      "center_inside_rate": 0.016666666666666666,
+      "geometry_paired_pass": 0,
+      "train_box_iou_mean": 0.050413311527033024
+    },
+    "missing_keys": 626,
+    "unexpected_keys": 0,
+    "grounding_head_loaded": false,
+    "box_head_loaded": true,
+    "geometry_kind": null
+  },
+  "representation": {
+    "paired_sample_count": 40,
+    "val_sample_count": 120,
+    "same_image_different_instruction_cosine": 0.9686869948164144,
+    "same_image_different_instruction_centered_cosine": 0.62580092563182,
+    "different_image_cosine": 0.912408618497082,
+    "different_image_centered_cosine": 0.018105316575656588,
+    "mean_hidden_l2_norm": 171.39487842496627,
+    "effective_rank_participation_ratio": 7.066945726639052,
+    "hidden_distance_vs_gt_box_distance_correlation": 0.4763290189694157,
+    "compared_pairs_sampled": 199,
+    "different_image_pairs_are_cross_image": true,
+    "centering": "global mean over the analysed hidden set (paired + val)",
+    "legacy_seg_reference": {
+      "source": "evaluation/task6d1_representation_stats.json",
+      "centered_cosine_same_image_diff_template": 0.077,
+      "centered_cosine_diff_image_same_template": 0.531,
+      "effective_rank_participation_ratio": 8.3329,
+      "note": "frozen Task 6D.1 values, not rerun; same-image cosine is the discriminative number — Task 6D.1 measured the template (0.077), Task 6F asks whether the pre-reasoning [BOX] query carries target-specific variation instead"
+    }
+  },
+  "seconds": 62.6
+}

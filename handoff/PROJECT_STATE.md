@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6E._
+_Last updated by DSH at the end of Task 6F._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -64,6 +64,47 @@ The block above is machine-checked against
 | 6D | **Spatial Grounding Bridge v0.1 (oracle diagnostic + geometry head)** | **done → `GROUNDING_REPRESENTATION_FAILED`** (`VALID_MEASUREMENT_WITH_SCHEDULER_CONFOUND`) |
 | 6D.1 | **Corrective G0 rerun + `[SEG]` spatial-decodability audit** | **done → `PRACTICALLY_NOT_DECODABLE_GEOMETRY`** |
 | 6E | **Explicit Spatial Token Grounding v0.1 (`[BOX]` + 256 `<loc_*>` tokens)** | **done → `EXPLICIT_SPATIAL_TOKENS_FAILED`** (E0 passes 20/20; E1 structural 0/120) |
+| 6F | **Target-Aware `[BOX]` Query Grounding v0.1 (pre-reasoning query + box head)** | **done → `TARGET_AWARE_QUERY_FAILED`** (F0 passes 0.9046/10-10; F1 paired 0/20) |
+
+## Task 6F measured results
+
+Task 6E's coordinate vocabulary is retired; Task 6F inserts a fixed learned `[BOX]` query before
+reasoning and regresses the box from its hidden state. Full detail:
+`docs/task6f_target_aware_box_query.md`, ADR-017, `evaluation/task6f_*.json`.
+
+| | Value |
+|---|---|
+| Vocabulary | `[SEG]` 151 669 + exactly one new `[BOX]` 151 670 (no `<loc_*>` tokens added) |
+| Trainables | text LoRA (17 432 576) + `{[SEG], [BOX]}` rows (4 096) + `TargetAwareBoxHead` (1 055 236) |
+| Loss | `1.0 · L_reasoning + 5.0 · L_box` (SmoothL1 vs Task 6D tight box), no mask loss |
+| Causal placement | `[BOX]` at `prompt_length`, never predicted; hidden **bit-identical** under future-text mutation |
+| F0 (20 records, ≤1500 steps) | train box IoU **0.9046**, paired **10/10**, non-identical same-image boxes (L1 0.2285) at step 1000 → `F0_PASS` |
+| F1 (480 paired, ≤8 epochs) | train box IoU **0.050** (never converged), val box IoU **0.025**, center-inside **0.017**, paired **0/20** at epoch 8/8 |
+
+1. **The query mechanism itself is verified, not assumed.** `[BOX]` sits at the generation prefix
+   and is never a prediction target; replacing the entire reasoning tail leaves its hidden
+   **bit-identical** (recorded on the real model). The one-step smoke shows both token rows and all
+   six head parameters moving with non-zero gradient while ordinary rows and the base table stay
+   exactly unchanged, and SAM2 stays frozen.
+2. **F0 passes decisively** (train box IoU **0.9046**, paired **10/10**, same-image non-identical
+   boxes with L1 0.2285 at step 1000), so the implementation is not the problem.
+3. **F1 underfits rather than overfits**: the box head never fits even its own 480 training records
+   (train SmoothL1 plateaus ≈0.003 ≈ 8 % RMS coordinate error; per-step train IoU 0.0 at most logged
+   steps), the predictions are canonical and spread over the image but wrongly placed (val coord MAE
+   0.154, box IoU 0.025, paired 0/20). Same pattern as Task 6E, now on the regression side: 20
+   records memorize, 480 do not fit inside the spec's budget.
+4. **Representation answer (section 13):** the query is no longer template-dominated, but it is
+   **image-dominated** — same-image centered cosine 0.626 vs 0.018 across images — with moderate
+   target-geometry variation (hidden-vs-GT-box distance correlation 0.476 vs ≈0 for the legacy
+   `[SEG]`). Effective rank 7.07 vs legacy 8.33.
+5. **Language compatibility is perfect** (exactly-one `[SEG]` 1.000, EOS 1.000, known template
+   1.000), and **F2 was correctly not run** (section 15 gate). Error analysis: 120/120 failures,
+   dominant class `wrong_target_valid_box` (98 %), `tiny_target` on 93 % — the localization-precision
+   difficulty of WHU-scale targets is real, but the F1 failure is primarily budget-limited
+   under-fitting, not a data defect.
+6. **Accepted verdict (section 17): `TARGET_AWARE_QUERY_FAILED`**, with no escalation attempted
+   (no `[REF]`, SRE, SCL, 4B, dataset change, full training, GUI) and SAM2 never trained. Task 6E's
+   coordinate machinery stayed retired throughout.
 
 ## Task 6E measured results
 
@@ -366,7 +407,7 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
 4. The SAM2 CPU feature cache holds all 480 training images inside the budget by sharing the two
    image-independent tensors once (7.508 GiB instead of 11.25 GiB), and it never mutates stored entries.
 
-## Measured limitations (carry into Task 6F)
+## Measured limitations (carry into Task 6G)
 
 1. **Instruction conditioning of the mask is still absent**, and Tasks 6D + 6D.1 localize it precisely:
    the frozen `[SEG]` hidden state is norm-112, effective-rank 8.33, and its instruction-dependent residual
@@ -374,12 +415,13 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
    into target geometry — three converging readouts cannot fit even the 480 training samples better than a
    label-shuffled control. Task 6D's original wording ("carries no target location") is superseded by this
    audit (§16 of Task 6D.1).
-2. **The explicit-spatial-token route is implemented but not learned at this budget.** `[BOX]` + 256
-   `<loc_*>` tokens, 258 trainable rows, `1.0·L_assistant + 5.0·L_location`; E0 overfits 20 records to
-   20/20 exact tokens, but E1 (480 paired records, 3 epochs) never predicts a correct location value or
-   `[SEG]`, so free generation is structurally invalid 0/120 and the training location CE stalls at the
-   256-way uniform floor. This is a learning-signal/budget limitation of the new vocabulary, not a
-   dataset, SAM2 or formatting defect (§16/§18 of Task 6E, ADR-016).
+2. **All three geometry readouts measured so far fail to generalize at 480 records:** the legacy `[SEG]`
+   probes (6D.1: real ≈ shuffled), the autoregressive coordinate vocabulary (6E: structural 0/120), and the
+   pre-reasoning `[BOX]` query head (6F: val box IoU 0.025, paired 0/20, never fitting its own training
+   set). Each overfits 20 records; none fits 480 within the spec's budget. The common bottleneck is now
+   precisely measured: **localization at WHU target scale** (mean GT area 1.2 % of the tile ⇒ ~5 % placement
+   accuracy for box IoU ≥ 0.5), and the query representation is image-dominated (same-image centered cosine
+   0.626) with only moderate target variation (correlation 0.476).
 3. **Mask quality is not usable**: strict end-to-end mIoU 0.093–0.109, L3 nontrivial 0.076–0.088.
 4. **Language metrics are template metrics**: `reasoning_zh` has 21 distinct values in the whole training
    mini-set, so exact match and operation-chain accuracy cannot support a reasoning claim.
@@ -392,40 +434,43 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
    +9.94 % on top (paired ablation), with 8.4 % fewer kernels and 43 % fewer sync ops. Caching (SAM),
    pinning, prefetch, `torch.compile`, optimizer/clipping implementations, SDPA backends and
    checkpointing-off are all measured and closed; the remaining lever is arithmetic intensity (true
-   batching ≥2), which is a new experiment, not a perf tweak. Task 6E added one measured datapoint:
-   free-generation evaluation, not the 1440 training steps, dominates a geometry experiment's wall clock
-   (7027 s for E1, of which the three 160-generation evaluations are the bulk).
+   batching ≥2), which is a new experiment, not a perf tweak. Task 6F adds: a query-path geometry epoch
+   (480 steps + 160 forwards) costs ~3.5 min, so a regression-based task is cheap compared with Task 6E's
+   generation-bound evaluations.
 
 ## Current blockers
 
-**The geometry interface is verified; the coordinate vocabulary is not learned.** Everything up to the
-box is now measured and closed: the quantized oracle keeps 0.7343 mIoU / paired 20/20 at `B = 256`, the
-tokenizer/row/loss/parser machinery is verified by a one-step smoke, and E0 proves the pathway can be
-driven to 20/20 exact tokens. What blocks the MVP is that the 480-record location objective does not fit
-inside the fixed ≤3-epoch budget, so no valid box is ever emitted at evaluation time. The next task
-starts from that, not from a fresh diagnosis.
+**Localization at WHU target scale.** Everything else is measured and closed: the causal query machinery
+is verified (bit-identical hidden under future-text mutation), the oracle ceilings are frozen (0.7506 /
+0.7343 mIoU, paired 20/20), and the language path is intact (exactly-one `[SEG]` 1.000, EOS 1.000 after
+the `[BOX]` prefix). What blocks the MVP is that none of the three geometry readouts — legacy `[SEG]`,
+coordinate tokens, query head — can localize a ~1 %-area target well enough (≈5 % placement) to feed the
+box prompt, at 2B under the spec's training budgets. The next task starts from that single, well-measured
+bottleneck.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6E results**, then **exactly one** task aimed at the location-token
-learning signal, with the evidence Task 6E produced:
+**ChatGPT review of the pushed Task 6F results**, then **exactly one** task aimed at localization, with the
+evidence Tasks 6D.1/6E/6F produced:
 
-1. **Fix the coordinate learning signal/budget (recommended).** Candidates, all measurable against the
-   same E1 gate and the 0.7343 mIoU quantized-oracle ceiling: (a) a `[BOX] … [SEG]` first-stage
-   curriculum that masks the four coordinate values before adding them; (b) a location-only logit head
-   over the existing 256 loc ids (no new vocabulary, ordinary vocabulary stays frozen); (c) coarse-to-fine
-   bins (256 → 64 → 256 refinement); (d) honestly longer training under the corrected scheduler, since
-   Task 6E was capped at 3 epochs by its own spec.
-2. **Only after geometry generalizes**: E2 inference-only segmentation from the generated box, then
-   geometry-verifiable supervision (the emitted box makes BuildSpatialReason's target-independent geometry
-   checkable at token level).
+1. **Change the geometry target and/or the readout (recommended).** Candidates, all measurable against the
+   F1-style gate and the frozen oracle ceilings: (a) a **point + extent** target (Task 6D's point oracle
+   already reaches 0.4876 mIoU / 18-20 with two degrees of freedom — far easier to learn than a 4-corner
+   box); (b) a center-first curriculum (learn the centre, then width/height); (c) geometry supervision in
+   SAM prompt space rather than normalized [0,1]; (d) honestly longer training under the corrected
+   scheduler — 20 records converge in ~1000 steps, and the spec's 8-epoch cap may simply be under the
+   task's sample complexity; (e) multi-scale/cropped views to make 1 %-area targets effectively larger.
+2. **Only after geometry generalizes**: F2 (inference-only segmentation) and geometry-verifiable
+   supervision — the verified `[BOX]`-query interface is the right substrate for relation-level checks.
 3. **Not indicated by any evidence collected so far**: `[REF]`, Spatial Relation Encoder, Spatial
-   Consistency Loss, 4B, a dataset change, full training, a GUI. The dataset is not the constraint
-   (0/120 localization failures, 0 quantization-limited samples) and SAM2 is not the constraint
-   (0.7343 mIoU given the box).
+   Consistency Loss, 4B, a dataset change, full training, a GUI. The dataset contributes difficulty
+   (93 % tiny targets) but is not the cause of the F1 failure (train loss never converged; simple L1
+   cases also fail).
 
-Full detail: `handoff/FROM_DSH.md`, `docs/task6e_explicit_spatial_tokens.md`,
-`evaluation/task6e_verdict.json`, `evaluation/task6e_quantized_oracle.json`,
-`evaluation/task6e_token_setup.json`, `evaluation/task6e_e0_overfit.json`,
-`evaluation/task6e_e1_training.json`, `evaluation/task6e_geometry_eval.json`,
-`evaluation/task6e_error_analysis.json`, `docs/architecture_decisions.md` (ADR-016).
+Full detail: `handoff/FROM_DSH.md`, `docs/task6f_target_aware_box_query.md`,
+`docs/task6e_explicit_spatial_tokens.md`, `evaluation/task6f_verdict.json`,
+`evaluation/task6f_token_setup.json`, `evaluation/task6f_f0_overfit.json`,
+`evaluation/task6f_f1_training.json`, `evaluation/task6f_geometry_eval.json`,
+`evaluation/task6f_representation.json`, `evaluation/task6f_reasoning_compat.json`,
+`evaluation/task6f_error_analysis.json`, `evaluation/task6e_*.json`,
+`docs/architecture_decisions.md` (ADR-016, ADR-017).

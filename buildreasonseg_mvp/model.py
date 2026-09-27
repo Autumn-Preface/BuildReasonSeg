@@ -91,6 +91,10 @@ class BuildReasonSegMvp(nn.Module):
         #: `grounding_head is None` and therefore their exact previous behaviour.
         self.grounding_head = grounding_head
         self.geometry_kind = geometry_kind
+        #: Task 6F: the `[BOX]` query hidden -> TargetAwareBoxHead -> normalized box.
+        #: Present only in the target-aware query candidate; every earlier task keeps
+        #: `box_head is None` and therefore its exact previous behaviour.
+        self.box_head = None
 
     # -- convenience -----------------------------------------------------
 
@@ -114,7 +118,8 @@ class BuildReasonSegMvp(nn.Module):
           callers keep their behaviour.
         * decoder/projection -- the randomly-initialised projection and the
           repurposed SAM2 mask decoder need a higher learning rate than the
-          pretrained LoRA adapters;
+          pretrained LoRA adapters; the Task 6D `SpatialGroundingHead` and the
+          Task 6F `TargetAwareBoxHead` join this group for the same reason;
         * LoRA adapters -- pretrained-adjacent, so the lowest rate.
 
         Recorded defect (Task 6B): before `token_lr` existed this method always gave
@@ -144,8 +149,11 @@ class BuildReasonSegMvp(nn.Module):
                 continue
             if id(parameter) in token_param_ids:
                 token.append(parameter)
-            elif name.startswith("projection.") or name.startswith("sam.sam_mask_decoder.") or name.startswith(
-                "grounding_head."
+            elif (
+                name.startswith("projection.")
+                or name.startswith("sam.sam_mask_decoder.")
+                or name.startswith("grounding_head.")
+                or name.startswith("box_head.")
             ):
                 decoder.append(parameter)
             else:

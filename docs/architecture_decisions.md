@@ -860,6 +860,29 @@ validation set and one metric path.
 
 ---
 
+## ADR-017 — Task 6F: the target-aware `[BOX]` query token — pre-reasoning placement, box readout, and the F1 outcome
+
+**Status:** **Accepted** (Task 6F) for what the F0/F1 experiments measure. No novelty is claimed for the query token itself.
+
+**Context.** Task 6E retired the autoregressive coordinate vocabulary (E0 overfits 20 records; E1 fails 0/120 structurally). Task 6F keeps the box an explicit target but forms the representation in a dedicated query token placed **before** reasoning: `image + instruction → [BOX] → reasoning_zh [SEG] EOS`, where `[BOX]` is a fixed learned input token (never predicted) and its hidden state feeds the same simple readout Task 6D used (`LayerNorm → Linear → GELU → Linear → sigmoid → min/max`) to regress `(x1,y1,x2,y2)` under `L = 1.0·L_reasoning + 5.0·L_box` (SmoothL1, no mask loss).
+
+**Decision**
+
+1. **The query hidden is provably conditioned only by its allowed context.** Structurally, `[BOX]` sits at `prompt_length` and is never a label; functionally, replacing the whole reasoning tail with unrelated text leaves the `[BOX]` hidden **bit-identical** on the real model (recorded in `evaluation/task6f_token_setup.json`). This is the direct fix for the confound Task 6D's end-of-reasoning `[SEG]` readout had.
+2. **F0 proves the mechanism.** The same 20 records Task 6E E0 used reach **train box IoU 0.9046, geometry paired 10/10 and non-identical same-image boxes (L1 0.2285)** at step 1000, on the inference-form query path, with no GT leakage. The 6-tensor head (1 055 236 parameters) and the `{[SEG], [BOX]}` rows are the only new trainables beyond the text LoRA.
+3. **F1 underfits: `TARGET_AWARE_QUERY_FAILED`.** On 480 paired records (8 epochs × 480 steps, one corrected cosine horizon), the box head never fits even its own training set (train SmoothL1 ≈0.003 ≈ 8 % RMS coordinate error; val box IoU **0.025**, center-inside 0.017, geometry paired **0/20** at the selected final epoch). The predictions are canonical and spread (per-coordinate spread 0.05 → 0.25) but wrongly placed on inherently tiny targets (mean GT area 1.2 % of the tile; 93 % of failures carry `tiny_target`). The language side is untouched (exactly-one `[SEG]` 1.000, EOS 1.000), and F2 is not run.
+4. **The query is image-dominated, not target-dominated.** Same-image/different-instruction centered cosine **0.626** vs **0.018** across images; hidden-distance vs GT-box-distance correlation **0.476** (vs ≈0 for the legacy `[SEG]`); effective rank 7.07 (legacy 8.33). Moving the query before reasoning removed the template confound but replaced it with image domination — measurable target variation exists, but it is far below the ~5 % placement accuracy WHU-scale targets require.
+5. **Verdict:** see `evaluation/task6f_verdict.json` (section 17). Task 6E machinery stays retired either way: no `<loc_*>` vocabulary, no location CE, no location-run parsing, no Task 6E checkpoint initialization.
+
+**Consequences**
+
+* Whatever the F1 gate outcome, the causal placement machinery (query at the generation prefix, box head on its hidden, bit-identity proof) is a reusable, verified interface for any future geometry readout — including geometry-verifiable supervision and relation-aware heads.
+* The Task 6D/6D.1 `[SEG]` readout remains retired as diagnosed; the Task 6E coordinate vocabulary remains retired as measured.
+* SAM2 stays the frozen oracle/downstream path: 0.7506 (continuous box) and 0.7343 (Task 6E B=256 quantized box) remain the ceilings to compare any predicted-box segmentation against.
+* Coordinate tokens, query tokens and box heads are none of them the paper's novelty claim; they are interfaces for the project's intended contribution (relation reasoning with verifiable geometry).
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -880,3 +903,4 @@ validation set and one metric path.
 | 014 | **Task 6B: the `[SEG]`→prompt interface is the MVP bottleneck** | Language generalises (120/120 emission, 1.000 chain accuracy) but the mask does not (0.1102 mIoU, paired probe 0/20); the projection collapses to a near-constant 256-d prompt; loss weighting and mask LR do not fix it, so effort goes to the interface, not to 4B. **Causal reading PROVISIONAL — see 015** |
 | 015 | **Task 6C: neither paired sampling nor the centre point fixes conditioning** | Valid, bit-reproducible 2×2; all four arms 0/20 paired with margins within ±0.0036; paired training raises projected effective rank 1.50→3.74 without producing conditioning; the centre point is 1/23 of the language norm, so removing it changes little — the remaining problem is after the prompt |
 | 016 | **Task 6E: explicit box tokens are necessary but not sufficient at 2B / 3 epochs** | Enclosing quantization at `B = 256` keeps the oracle at 0.7343 mIoU / 20/20 and E0 overfits 20 records to 20/20 exact tokens (0.9166 box IoU), but E1 on 480 paired records fails with structural 0/120: `[BOX]`/EOS/reasoning are learned (accuracy 1.0) while the 256-way location values stall at the uniform floor (train CE 5.15 vs `ln 256 = 5.545`) and `[SEG]` is never predicted after the location run — fix the location learning signal/budget before adding `[REF]`, SRE, SCL or scale |
+| 017 | **Task 6F: pre-reasoning `[BOX]` query with a direct box readout** | The query hidden is provably conditioned only by image + instruction (bit-identical under future-text mutation); the same 20 records reach F0 box IoU 0.9046 / paired 10/10 on the inference-form query path; F1 (480 paired, ≤8 epochs) answers whether the target-aware representation generalizes — the Task 6E coordinate vocabulary stays retired regardless |

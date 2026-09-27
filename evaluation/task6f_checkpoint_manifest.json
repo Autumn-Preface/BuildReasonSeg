@@ -1,0 +1,87 @@
+{
+  "_doc": "Task 6F: hashes of every Task 6F checkpoint. The checkpoint files themselves stay gitignored (artifacts/); only this manifest is tracked.",
+  "task": "6F",
+  "checkpoints": {
+    "F0/f0_final": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F0\\f0_final.pt",
+      "bytes": 100488684,
+      "sha256": "0528360b5a9488e2a1b9e99b0f8d01efcd986b65ae1e931e5162d5482feeebff",
+      "step": 1000,
+      "stage": "F0",
+      "name": "f0_final",
+      "relative_path": "artifacts/checkpoints/task6f/F0/f0_final.pt"
+    },
+    "F1/f1_epoch1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch1.pt",
+      "bytes": 100489355,
+      "sha256": "f402cf5e58629b27b129157e1363efe5f5cc43a8e7be84a261d2cd41b1167b5d",
+      "step": 480,
+      "stage": "F1",
+      "name": "f1_epoch1",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch1.pt"
+    },
+    "F1/f1_epoch2": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch2.pt",
+      "bytes": 100489291,
+      "sha256": "4e3b281a8b0d5f43013c07029c440bd8a1533a695d3eb1bad9383665881d7b07",
+      "step": 960,
+      "stage": "F1",
+      "name": "f1_epoch2",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch2.pt"
+    },
+    "F1/f1_epoch3": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch3.pt",
+      "bytes": 100489291,
+      "sha256": "9d6876e145711e2a9d971c48f50e2bcf72ef5cdf319cd8365582dce181389ff7",
+      "step": 1440,
+      "stage": "F1",
+      "name": "f1_epoch3",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch3.pt"
+    },
+    "F1/f1_epoch4": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch4.pt",
+      "bytes": 100489291,
+      "sha256": "7d1c734bae77e2eb0ec8219a6f1996c93c637a6b7c0488589870e40ea5422f14",
+      "step": 1920,
+      "stage": "F1",
+      "name": "f1_epoch4",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch4.pt"
+    },
+    "F1/f1_epoch5": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch5.pt",
+      "bytes": 100489291,
+      "sha256": "9a9a994547debad4acf56a0ce60b8e1bb624dca92979ad6e37a616defbc3ae90",
+      "step": 2400,
+      "stage": "F1",
+      "name": "f1_epoch5",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch5.pt"
+    },
+    "F1/f1_epoch6": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch6.pt",
+      "bytes": 100489355,
+      "sha256": "15fad5422b8b5b457e7e375e55fff6c1453192c4e079408033572b8f42a09e92",
+      "step": 2880,
+      "stage": "F1",
+      "name": "f1_epoch6",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch6.pt"
+    },
+    "F1/f1_epoch7": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch7.pt",
+      "bytes": 100489291,
+      "sha256": "d272f264f8d021468b0b2d63a124fcf5f6c7c81b23df183d5fd9e9147671b2a2",
+      "step": 3360,
+      "stage": "F1",
+      "name": "f1_epoch7",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch7.pt"
+    },
+    "F1/f1_epoch8": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch8.pt",
+      "bytes": 100489291,
+      "sha256": "11d8060b61eb919546312d3b87a0fe7c1664ca4f56270625b2017ab817f2b322",
+      "step": 3840,
+      "stage": "F1",
+      "name": "f1_epoch8",
+      "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch8.pt"
+    }
+  }
+}

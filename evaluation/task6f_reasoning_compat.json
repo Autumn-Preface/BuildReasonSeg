@@ -1,0 +1,202 @@
+{
+  "_doc": "Task 6F section 14. Secondary language compatibility: continuing generation from image + instruction + fixed [BOX] on the first 20 records of the fixed validation set. Template diagnostics, not proof of reasoning.",
+  "task": "6F",
+  "selected_epoch": 8,
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6f\\F1\\f1_epoch8.pt",
+    "bytes": 100489291,
+    "sha256": "11d8060b61eb919546312d3b87a0fe7c1664ca4f56270625b2017ab817f2b322",
+    "step": 3840,
+    "stage": "F1",
+    "name": "f1_epoch8",
+    "relative_path": "artifacts/checkpoints/task6f/F1/f1_epoch8.pt"
+  },
+  "reasoning_compat": {
+    "count": 20,
+    "exactly_one_seg_rate": 1.0,
+    "eos_termination_rate": 1.0,
+    "template_known_rate": 1.0,
+    "rows": [
+      {
+        "sample_id": "buildsr_val_1_10035_1_bottommost_f1fa659a1dcf",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_104_1_largest_58eab6af1a4f",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1061_1_leftmost_af4b9beed365",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最左侧的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1083_1_rightmost_2e34c6a9b20f",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最右侧的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1089_1_topmost_de92b4dfea6b",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1119_1_bottommost_d5fb9e3c56bd",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1247_1_smallest_5448946ed580",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 17,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1260_1_leftmost_19419a29edf6",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最左侧的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1266_1_largest_383492f4433c",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1267_1_topmost_9bfeae7326dd",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1331_1_rightmost_8592d4a61c5d",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最右侧的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1340_1_smallest_8d3c21c86dfc",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 17,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1348_1_bottommost_9fed6fadf214",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1371_1_largest_633acea20d7a",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1406_1_leftmost_3d7937c4ee80",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最左侧的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1428_1_rightmost_cad6fa621abf",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最右侧的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1455_1_topmost_a289ef218f17",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最上方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_1460_1_bottommost_74ab7cc9c72c",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中最下方的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_150_1_smallest_1fb854a967b5",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 17,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最小的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      },
+      {
+        "sample_id": "buildsr_val_1_151_1_largest_ed0cbd2a8bf0",
+        "seg_count": 1,
+        "exactly_one_seg": true,
+        "terminated_with_eos": true,
+        "generated_token_count": 16,
+        "reasoning_template_known": true,
+        "text": "首先确定图像中面积最大的建筑区域，将其作为参考区域。[SEG]<|im_end|>"
+      }
+    ]
+  }
+}

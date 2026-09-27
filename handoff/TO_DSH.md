@@ -1,366 +1,359 @@
-# TO_DSH — Task 6E: Explicit Spatial Token Grounding v0.1
+# TO_DSH — Task 6F: Target-Aware `[BOX]` Query Grounding v0.1
 
 > Status: **ACTIVE**
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: replace the failed implicit `[SEG] hidden → geometry` readout with an **explicit, sample-specific spatial token target**.
+> Purpose: replace Task 6E's failed 256-way autoregressive coordinate vocabulary with a dedicated **target-aware spatial query token** whose hidden state is directly supervised for box geometry.
 >
-> Accepted evidence before this task:
-> - Oracle BOX → SAM2: strict mIoU **0.7506**, paired **20/20**.
-> - Corrected Task 6D G0 still fails: geometry paired **0/20**, box IoU **0.0088**.
-> - Frozen Task 6C `[SEG]` hidden is **practically not decodable for target geometry** under the audited readouts.
+> Accepted evidence:
+> - Oracle BOX → SAM2: strict mIoU `0.7506`, paired `20/20`;
+> - Task 6D.1: end-of-reasoning `[SEG]` hidden has no practically decodable target geometry under the audited readouts;
+> - Task 6E: explicit coordinate tokens overfit 20 records but fail on the 480-record paired mini-train with runaway location-token sequences.
 >
-> Therefore Task 6E makes the box coordinates a first-class autoregressive language target instead of expecting a generic `[SEG]` hidden state to spontaneously contain location.
+> Core hypothesis:
 >
-> This is a **capability-enabling architecture experiment**, not yet the project's final novelty claim.
+> > Spatial grounding should be read from a dedicated query token placed **before reasoning text**, so its state is conditioned by image + instruction instead of being dominated by the small reasoning-template vocabulary.
+>
+> The `[BOX]` query is a fixed learned control token, identical for every sample. It contains no GT information.
+>
+> No 4B. No `[REF]`. No Spatial Relation Encoder. No Spatial Consistency Loss. No dataset change. No GUI.
 
-## 0. User priorities
+## 0. User-facing language
 
-The user's project priorities remain:
-1. correct model capability;
-2. training / prediction / evaluation that can eventually run from CMD;
-3. architecture that can support a paper;
-4. UI/GUI only at the very end.
+All narrative DSH UI/chat output must be **Chinese**.
+Code, paths, metric names and raw logs may remain English.
 
-Do **not** build GUI/Web UI.
-Do **not** reopen performance tuning in this task.
+# PART A — Freeze valid evidence
 
-## 1. Fixed model/data/runtime
+## 1. Accepted facts
+
+Do not rerun unless a correctness issue is found:
+- continuous Oracle BOX → SAM2: strict mIoU `0.7506`, paired `20/20`;
+- Task 6E B=256 quantized Oracle BOX: strict mIoU `0.7343`, paired `20/20`;
+- Task 6D.1: legacy end-of-reasoning `[SEG]` hidden is practically not decodable for target geometry under tested readouts;
+- Task 6E: E0 20-record coordinate-token overfit succeeds, E1 480-record autoregressive coordinate-token training fails structurally `0/120`;
+- current evidence does not indicate WHU or SAM2 as the binding constraint.
+
+# PART B — Retire the failed coordinate-token path
+
+## 2. Preserve history, do not reuse its failed representation
+
+Keep Task 6E code/artifacts for ablation/history.
+
+Task 6F must **not**:
+- autoregressively emit `<loc_*>`;
+- use location-token CE;
+- parse location-token runs;
+- initialize from failed Task 6E E1 weights.
+
+If loc tokens remain in the tokenizer for code-compatibility, they must be unused and frozen.
+
+# PART C — Clean initialization
+
+## 3. Initialization source
+
+Use the same clean base/seed convention as Task 6E E1:
+
+- Qwen3-VL-2B-Instruct;
+- existing `[SEG]`;
+- text-only LoRA;
+- add exactly one active Task 6F query token `[BOX]`.
+
+Do not carry trained Task 6E `<loc_*>` rows into the candidate.
+
+Record exact initialization provenance, token ids, and optimizer coverage.
+
+# PART D — Query-token causal placement
+
+## 4. `[BOX]` is a fixed input query
+
+Construct the sequence as:
+
+```text
+USER:
+image + instruction
+
+ASSISTANT PREFIX:
+[BOX]
+
+ASSISTANT TARGET:
+reasoning_zh [SEG] EOS
+```
+
+The `[BOX]` token is deterministically appended immediately after the assistant-generation prefix during both training and inference.
+
+It is the same token for every sample and contains no target label.
+
+### Critical causal property
+
+The hidden state read at `[BOX]` may attend to:
+- image tokens;
+- user instruction;
+- normal system/chat prefix;
+- its own `[BOX]` embedding.
+
+It must **not** attend to:
+- `reasoning_zh`;
+- GT target box;
+- `[SEG]`;
+- any future assistant token.
+
+Add a direct causal-position/mask test.
+
+This is the central difference from Task 6D's end-of-reasoning `[SEG]` readout.
+
+# PART E — Target-aware box head
+
+## 5. Architecture
+
+Add:
+
+`TargetAwareBoxHead`
+
+Input:
+`[BOX] hidden: 2048-d`
 
 Use:
-- Qwen3-VL-2B-Instruct;
-- SAM2.1 Hiera Base+;
-- text-only LoRA;
-- existing `[SEG]`;
-- strict deterministic mode;
-- Task 6C paired `P` train subset (480 records / 240 images × 2 targets);
-- fixed 120 validation records;
-- fixed 20 paired validation images;
-- Task 6C.7 accepted visual-feature cache;
-- corrected multi-epoch scheduler logic from Task 6D.1.
+
+```text
+LayerNorm(2048)
+→ Linear(2048, 512)
+→ GELU
+→ Linear(512, 4)
+→ sigmoid
+→ differentiable box canonicalization
+```
+
+Output normalized `(x1,y1,x2,y2)` with canonical ordering.
+
+This deliberately reuses a simple readout so the experimental change is localized to **where the supervised representation is formed**.
 
 Do not use:
-- Qwen 4B;
-- `[REF]`;
-- Spatial Relation Encoder;
-- Spatial Consistency Loss;
-- new dataset;
-- full training;
-- true batch > 1;
-- GUI.
+- coordinate tokens;
+- a 256-way classifier;
+- the legacy `[SEG]` geometry readout;
+- SAM mask loss.
 
-WHU remains provisional, not permanent.
+## 6. Box supervision
 
-# PART A — Documentation hygiene before new experiments
+Use the same tight normalized GT box definition frozen in Task 6D.
 
-## 2. Correct two stale/inconsistent statements
+GT geometry is used only for:
+- SmoothL1 supervision;
+- evaluation.
 
-Do not alter historical numeric results.
+Inference must use only:
+- image;
+- instruction;
+- constant `[BOX]`;
+- learned model/head parameters.
 
-### 2.1 Task 6D wording
+# PART F — Loss and trainables
 
-Where current project-state text still says:
-
-> "`[SEG]` hidden state does not carry the target's location"
-
-replace/supersede it with:
-
-> "Under the audited Task 6C training setup, the frozen `[SEG]` representation contains no **practically decodable** target geometry with the tested readouts. This is not an information-theoretic absence claim."
-
-### 2.2 Decodability-summary boolean
-
-`evaluation/task6d1_decodability_summary.json` currently contains:
-`twenty_sample_overfit_is_diagnostic: true`
-
-while the human report concludes that the 20-sample overfit is **not evidence of spatial decodability**, because shuffled labels can also be overfit.
-
-Correct the field semantics/name/value so the machine artifact and human report agree.
-Do not change measured probe numbers.
-
-# PART B — Quantized box representation
-
-## 3. Quantization candidates
-
-Before changing the tokenizer, determine how many spatial bins are needed.
-
-Test:
-`B ∈ {32, 64, 128, 256}`
-
-Use one shared location-token family:
-`<loc_000> ... <loc_{B-1}>`
-
-A box is four ordered tokens:
-`<loc_x1> <loc_y1> <loc_x2> <loc_y2>`
-
-Token position determines x1/y1/x2/y2. Do not create separate X/Y vocabularies unless a tokenizer correctness issue requires it.
-
-## 4. Deterministic enclosing-box quantization
-
-For normalized GT box `(x1,y1,x2,y2)` in `[0,1]`, use:
-
-- min edges: `q1 = floor(c1 * (B - 1))`
-- max edges: `q2 = ceil(c2 * (B - 1))`
-
-Clip to `[0, B-1]`.
-
-For a non-empty target, ensure dequantized width/height remain non-zero. If equality occurs, expand minimally and deterministically within bounds.
-
-Dequantize with:
-`c_hat = q / (B - 1)`.
-
-The same quantizer must be used by target generation, oracle audit, parser/evaluator, and tests.
-
-# PART C — Quantized-oracle ceiling
-
-## 5. Measure quantization loss before training
-
-Using the frozen Task 6D Oracle BOX path, replace continuous GT boxes with quantized/dequantized GT boxes for every B.
-
-Evaluate on:
-- same 120 validation records;
-- same 20 paired validation images.
-
-Report:
-- quantized-box IoU vs continuous GT box;
-- SAM strict mask mIoU;
-- Dice;
-- paired mask pass /20;
-- own/cross margin.
-
-Create:
-`evaluation/task6e_quantized_oracle.json`
-
-### Bin selection rule
-
-Let unquantized oracle mIoU = `0.7506`.
-
-Choose the **smallest B** satisfying both:
-- paired mask = **20/20**;
-- strict mIoU >= **0.7206** (`oracle - 0.03`).
-
-If no candidate satisfies both:
-`QUANTIZED_BOX_REPRESENTATION_INADEQUATE`
-and STOP before tokenizer/model modification.
-
-# PART D — Explicit spatial vocabulary
-
-## 6. New target tokens
-
-After B is selected, add exactly:
-- `[BOX]`;
-- B tokens `<loc_000>` ... `<loc_{B-1}>`;
-- retain existing `[SEG]`.
-
-Every new token must:
-- encode to exactly one id;
-- decode round-trip with `skip_special_tokens=False`;
-- have a unique id;
-- be available to free generation.
-
-Target assistant sequence:
-
-`{reasoning_zh} [BOX] <loc_x1> <loc_y1> <loc_x2> <loc_y2> [SEG]`
-
-Freeze and test the exact whitespace/token convention.
-
-There must be:
-- exactly one `[BOX]`;
-- exactly four loc tokens after it;
-- exactly one `[SEG]`;
-- `[SEG]` after the four loc tokens.
-
-## 7. Generalize trainable-token support safely
-
-Current code was built around one trainable `[SEG]` row.
-
-Generalize to the set:
-`{[SEG], [BOX], all selected <loc_*> tokens}`
-
-Preferred:
-- PEFT `trainable_token_indices=[...]` with all ids, if supported and verified.
-
-Fallback:
-- generalize the project-owned token-row adapter to multiple rows.
-
-Requirements:
-- base embedding table frozen;
-- ordinary rows unchanged;
-- tied input/output behavior valid;
-- every new output row receives gradient and can be emitted;
-- never unfreeze the full vocabulary.
-
-One-step smoke must prove:
-- `[BOX]` row changes;
-- sampled loc rows change;
-- `[SEG]` row changes where expected;
-- at least 16 ordinary rows change exactly 0;
-- visual tower has zero LoRA.
-
-Create:
-`evaluation/task6e_token_setup.json`
-
-# PART E — Token-aware teacher forcing and loss
-
-## 8. Build explicit token-position masks
-
-Do not infer coordinate positions from decoded strings.
-
-Batch construction must expose masks/positions for:
-- reasoning tokens;
-- `[BOX]`;
-- four loc tokens;
-- `[SEG]`;
-- EOS.
-
-Preserve the project's causal-label rule:
-`logits at position i predict token i+1`.
-
-Add tests for off-by-one correctness.
-
-## 9. Training objective
+## 7. Objective
 
 Use:
 
-`L_total = 1.0 * L_assistant + 5.0 * L_location`
+```text
+L_total =
+    1.0 * L_reasoning
+  + 5.0 * L_box
+```
 
 where:
-- `L_assistant` = normal assistant-span causal CE;
-- `L_location` = causal CE only at the four location-token prediction positions.
+- `L_reasoning` = causal CE only for `reasoning_zh [SEG] EOS`;
+- `L_box` = SmoothL1(pred_box, GT_box).
 
-Thus location tokens receive explicit additional supervision while normal sequence behavior is retained.
+Do not predict `[BOX]`; it is an inserted query.
 
-Do not add mask loss.
-Do not add SmoothL1 on hidden states.
-Do not sweep loss weights.
+Do not use:
+- location-token CE;
+- mask BCE/Dice;
+- pairwise/contrastive losses;
+- hyperparameter sweeps.
 
-Record raw assistant CE, location CE, total.
+Record both raw losses.
 
-# PART F — Stage E0: implementation sanity
-
-## 10. E0 20-sample overfit
-
-Use deterministic 20 records, including same-image/different-target pairs where possible.
+## 8. Trainable set
 
 Train:
-- text LoRA;
-- `[SEG]`;
-- `[BOX]`;
-- loc-token rows.
+- text-only LoRA;
+- `[BOX]` query row;
+- existing `[SEG]` row;
+- TargetAwareBoxHead.
 
 Freeze:
 - Qwen base;
 - Qwen visual tower;
-- all SAM2;
+- all SAM2 in F0/F1;
 - old Projection MLP;
-- Task 6D SpatialGroundingHead.
+- Task 6D SpatialGroundingHead;
+- Task 6E loc rows, if present.
 
-Maximum 1,500 optimizer steps.
-Use corrected scheduler horizon for the actual budget.
+Verify optimizer coverage.
 
-### Free-generation E0 gate
+# PART G — Stage F0: implementation proof
 
-From image + instruction only:
-- structural validity >= **19/20**;
-- exact four-loc-token sequence >= **18/20**;
-- mean dequantized box IoU >= **0.70**.
+## 9. 20-record paired overfit
 
-If unresolved after implementation audit:
-`SPATIAL_TOKEN_IMPLEMENTATION_FAILED`.
+Use the same deterministic 20-record / 10 paired-image style as Task 6E E0.
 
-# PART G — Stage E1: paired mini-train
+Maximum:
+- 1500 optimizer steps.
 
-## 11. E1 training
+Use corrected scheduler horizon over the real step budget.
 
-Only if E0 passes.
+Evaluate through the **inference-form query path**:
 
-Train on 480 paired P records, maximum 3 epochs.
+```text
+image + instruction
+→ append constant [BOX]
+→ Qwen forward
+→ read [BOX] hidden
+→ TargetAwareBoxHead
+→ predicted box
+```
 
-Trainables remain:
-- text LoRA;
-- `[SEG]`;
-- `[BOX]`;
-- loc rows.
+No future reasoning tokens may be teacher-forced into the query representation.
 
-SAM remains fully frozen.
-No mask loss.
+### F0 gate
 
-Use corrected scheduler over the actual total optimizer-step count.
+Require:
+- mean train box IoU >= `0.85`;
+- geometry paired >= `9/10`;
+- same-image two instructions produce non-identical predicted boxes;
+- no GT leakage.
 
-Evaluate after each epoch.
+If implementation audit cannot make F0 pass:
 
-Model selection priority:
-1. geometry paired pass;
-2. validation mean box IoU;
-3. structural validity.
+`TARGET_QUERY_IMPLEMENTATION_FAILED`
 
-# PART H — Free-generation geometry evaluation
+and STOP.
 
-## 12. Parse token ids, not text
+# PART H — Stage F1: 480-paired mini-train
 
-Free generation:
+## 10. Training budget
 
-`image + instruction → reasoning → [BOX] → 4 loc tokens → [SEG]`
+Only if F0 passes.
 
-Parser must operate on token ids.
+Train on Task 6C paired `P`:
+- 480 records / 240 images × 2 targets;
+- deterministic training;
+- maximum **8 epochs**.
 
-Valid sample requires:
-- exactly one `[BOX]`;
-- exactly four consecutive loc tokens in the required span;
-- canonical non-empty dequantized box;
-- exactly one `[SEG]` after the box.
+Use:
+- one corrected cosine scheduler over the full actual maximum step budget;
+- checkpoint each epoch;
+- validation each epoch.
 
-Invalid structure = geometry failure.
+Do not change LR/loss mid-run.
 
-Do not repair invalid output using GT or prose heuristics.
+## 11. Early stopping / selection
 
-## 13. Geometry metrics
+Validate using the query path on:
+- fixed 120 validation records;
+- fixed 20 paired validation images.
 
-On 120 val + 20 paired:
-- structural-valid rate;
-- exact 4-token sequence accuracy;
-- per-coordinate token accuracy;
-- mean absolute bin error;
-- normalized coordinate error;
-- mean predicted-box IoU;
+Model-selection priority:
+1. geometry paired /20;
+2. mean val box IoU;
+3. center-inside-target rate.
+
+Early stop if geometry paired and val box IoU do not improve for 3 consecutive epochs after epoch 3.
+
+Do not select by training loss.
+
+# PART I — Geometry evaluation
+
+## 12. Main metrics
+
+For each epoch report:
+- train box IoU;
+- val mean/median box IoU;
 - center-inside-target rate;
+- coordinate MAE;
 - geometry paired /20;
+- own-target box IoU;
+- cross-target box IoU;
+- own-minus-cross box margin;
 - same-image predicted-box L1 distance;
+- per-coordinate prediction spread;
 - L1/L2/L3 breakdown;
 - query-family breakdown.
 
-Teacher-forced token accuracy is diagnostic only.
-Free generation is primary.
-
-### E1 geometry gate
+### F1 gate
 
 Require:
-- structural valid >= **90%**;
-- geometry paired >= **14/20**;
-- mean predicted-box IoU >= **0.35**.
+- geometry paired >= `14/20`;
+- val mean box IoU >= `0.35`;
+- center-inside-target >= `0.70`.
 
-If this fails:
-`EXPLICIT_SPATIAL_TOKENS_FAILED`
+If best epoch fails:
 
-Do not train SAM to hide the failure.
+`TARGET_AWARE_QUERY_FAILED`
 
-# PART I — Stage E2: end-to-end segmentation
+Do not train SAM to compensate.
 
-## 14. E2 is inference-only
+# PART J — Representation diagnosis
 
-If E1 geometry gate passes:
+## 13. Compare new `[BOX]` to legacy `[SEG]`
 
-`generated loc tokens → dequantized box → official frozen SAM2 box prompt → frozen current mask decoder → mask`
+At best F1 checkpoint, report for `[BOX]`:
+- same-image/different-instruction cosine;
+- centered cosine;
+- L2;
+- effective rank;
+- correlation between hidden-pair distance and GT-box-pair distance.
 
-No GT geometry may enter the prompt.
-No SAM weights may update.
+Use frozen Task 6D.1 legacy `[SEG]` values as comparison; do not rerun the full old audit unless necessary.
 
-## 15. E2 metrics
+Question:
 
-On fixed 120 val + 20 paired:
+> Did moving the supervised query **before reasoning** create target-specific representation variation rather than template-dominated variation?
+
+Do not infer causality from cosine alone.
+
+# PART K — Reasoning compatibility
+
+## 14. Secondary language compatibility
+
+On fixed 20 validation samples, continue generation from:
+
+`image + instruction + fixed [BOX]`
+
+Report:
+- exactly-one `[SEG]` rate;
+- EOS termination rate;
+- reasoning-template/operation-chain diagnostic.
+
+These remain template diagnostics, not proof of reasoning.
+
+Do not gate F1 geometry on reasoning exact match.
+
+# PART L — Stage F2: frozen-SAM end-to-end test
+
+## 15. Run only if F1 passes
+
+For each validation sample:
+
+```text
+image + instruction
+→ constant [BOX] query
+→ predicted box
+→ official frozen SAM2 box prompt encoder
+→ frozen SAM2 mask decoder
+→ mask
+```
+
+No SAM training.
+No GT geometry.
+
+## 16. F2 metrics
+
+On 120 val + 20 paired:
 - strict e2e mIoU;
 - Dice;
-- conditional mIoU for valid spatial-token generations;
 - mask paired /20;
 - own-target IoU;
 - cross-target IoU;
@@ -369,201 +362,182 @@ On fixed 120 val + 20 paired:
 - L1/L2/L3 breakdown;
 - query-family breakdown.
 
-Invalid coordinate sequence => strict mask IoU 0.
+Compare with:
+- Task 6C P_C: `0.10604`, paired `0/20`;
+- continuous Oracle BOX: `0.7506`, paired `20/20`;
+- Task 6E quantized Oracle: `0.7343`, paired `20/20`.
 
-Compare against:
-- Task 6C P_C: mIoU `0.10604`, paired `0/20`;
-- selected quantized-oracle ceiling;
-- continuous Oracle BOX: mIoU `0.7506`, paired `20/20`.
+# PART M — Verdicts
 
-# PART J — Verdicts
+## 17. Use exactly one
 
-## 16. Use exactly one
+### `TARGET_AWARE_QUERY_FIX_FOUND`
 
-### `EXPLICIT_SPATIAL_TOKENS_FIX_FOUND`
 Require:
-- E0 pass;
-- E1 geometry gate pass;
-- E2 mask paired >= **14/20**;
-- strict e2e mIoU >= **0.20**;
-- own-minus-cross margin > **0.05**;
+- F0 pass;
+- F1 geometry gate pass;
+- F2 mask paired >= `14/20`;
+- strict e2e mIoU >= `0.20`;
+- mask own-minus-cross > `0.05`;
 - no GT leakage.
 
-### `EXPLICIT_SPATIAL_TOKENS_PARTIAL`
-Generated boxes become clearly instruction-conditioned, but full mask gate is not met.
+### `TARGET_AWARE_QUERY_PARTIAL`
 
-### `EXPLICIT_SPATIAL_TOKENS_FAILED`
-Generation is structurally valid but geometry does not generalize.
+Query becomes target-specific and geometry improves materially, but full geometry/mask gate is not met.
 
-### `SPATIAL_TOKEN_IMPLEMENTATION_FAILED`
-E0 cannot pass after correctness audit.
+### `TARGET_AWARE_QUERY_FAILED`
 
-### `QUANTIZED_BOX_REPRESENTATION_INADEQUATE`
-Quantization itself destroys the oracle pathway.
+Implementation is valid and F0 passes, but 480-record query grounding does not generalize.
+
+### `TARGET_QUERY_IMPLEMENTATION_FAILED`
+
+F0 cannot be made to work under verified implementation.
 
 ### `INVALID_EXPERIMENT`
-Leakage, split mismatch, tokenizer/checkpoint corruption or other correctness failure.
 
-# PART K — Interpretation rule
+Leakage, split/checkpoint mismatch, causal-position bug or other correctness failure.
 
-## 17. Coordinate tokens are not the final novelty claim
+# PART N — Dataset policy
 
-If they work, conclude only:
+## 18. WHU remains provisional
 
-> We repaired the functional spatial-grounding bottleneck and established a usable `reasoning → explicit geometry → segmentation` pathway.
+Do not migrate data in Task 6F.
 
-Do not claim coordinate tokens themselves as the final paper innovation.
-
-Later novelty may still come from:
-- geometry-verifiable BuildSpatialReason supervision;
-- reference/relation mechanisms;
-- Spatial Relation Encoder;
-- Spatial Consistency Loss;
-- relation-level evaluation.
-
-# PART L — Data observation
-
-## 18. Keep WHU, but classify errors
-
-Do not change dataset.
-
-Classify coordinate-token errors:
-- tiny target / quantization sensitivity;
+Classify failures involving:
+- tiny targets;
 - border truncation;
-- touching/merged pseudo-instance;
-- visually ambiguous buildings;
-- complex L3 relation;
-- valid token sequence but wrong target.
+- touching/merged pseudo-instances;
+- visually ambiguous targets;
+- L3/multi-hop queries.
 
-If data quality dominates, flag it for ChatGPT.
+If geometry works on simple cases but failures concentrate in data-quality categories, record that as evidence for a future dataset task.
 
-# PART M — Reusable inference path
+# PART O — Product-facing core API
 
-## 19. Reusable API only if E1 passes
+## 19. If F1 passes, expose reusable inference
 
-If geometry works, create reusable core functions:
+Create/refactor:
 
 ```python
-generate_spatial_tokens(image, instruction)
-parse_box_tokens(token_ids)
 predict_box(image, instruction)
-predict_mask_from_generated_box(image, instruction)
+predict_mask(image, instruction)
+generate_reasoning(image, instruction)
 ```
 
 No GUI.
+Do not spend time on CLI cosmetics yet.
 
-A polished top-level `predict.py` can wait for ChatGPT review.
-
-# PART N — Required artifacts
+# PART P — Required artifacts
 
 ## 20. Create
 
 ```text
-evaluation/task6e_quantized_oracle.json
-evaluation/task6e_token_setup.json
-evaluation/task6e_e0_overfit.json
-evaluation/task6e_e1_training.json
-evaluation/task6e_geometry_eval.json
-evaluation/task6e_segmentation_eval.json
-evaluation/task6e_paired_probe.json
-evaluation/task6e_error_analysis.json
-evaluation/task6e_checkpoint_manifest.json
-docs/task6e_explicit_spatial_tokens.md
+evaluation/task6f_token_setup.json
+evaluation/task6f_f0_overfit.json
+evaluation/task6f_f1_training.json
+evaluation/task6f_geometry_eval.json
+evaluation/task6f_representation.json
+evaluation/task6f_reasoning_compat.json
+evaluation/task6f_segmentation_eval.json
+evaluation/task6f_paired_probe.json
+evaluation/task6f_error_analysis.json
+evaluation/task6f_checkpoint_manifest.json
+docs/task6f_target_aware_box_query.md
 ```
 
-`task6e_segmentation_eval.json` only if E1 gate passes.
+`task6f_segmentation_eval.json` only if F1 passes.
 
-Checkpoints/tokenizer local state stay gitignored; commit hashes/manifests only.
+Weights/checkpoints stay local/gitignored.
 
-# PART O — Tests
+# PART Q — Tests
 
 ## 21. Required tests
 
 Cover at least:
-1. enclosing quantizer deterministic;
-2. quantizer/dequantizer canonical;
-3. non-empty GT remains non-empty after quantization;
-4. selected B obeys the oracle rule;
-5. `[BOX]` single-token roundtrip;
-6. every loc token single-token roundtrip;
-7. token ids unique;
-8. base embedding frozen;
-9. all new token rows receive gradients;
-10. ordinary rows unchanged after one step;
-11. tied output side can emit all new tokens;
-12. causal location-label positions off-by-one correct;
-13. target format has one `[BOX]`, four loc tokens, one `[SEG]` in order;
-14. parser uses token ids and rejects malformed output;
-15. no GT geometry enters free generation or SAM prompt;
-16. E0/E1 scheduler uses true total steps;
-17. SAM weights stay frozen;
-18. old SpatialGroundingHead unused;
-19. no test split;
-20. no 4B / `[REF]` / SRE / SCL;
-21. strict determinism;
-22. Task 6D.1 stale wording/boolean correction is consistent.
+1. `[BOX]` is one token and unique from `[SEG]`;
+2. `[BOX]` is inserted as a fixed query, not predicted from GT;
+3. `[BOX]` hidden cannot attend to future reasoning/GT tokens;
+4. box target uses frozen Task 6D convention;
+5. query-head output canonical/in `[0,1]`;
+6. GT box is supervision only;
+7. inference needs only image + instruction + constant `[BOX]`;
+8. `[BOX]` row receives gradient;
+9. `[SEG]` compatibility row remains valid;
+10. LoRA remains text-only;
+11. visual tower frozen;
+12. SAM2 fully frozen in F0/F1/F2;
+13. old `[SEG]` grounding head unused;
+14. Task 6E loc-token loss/parser unused;
+15. if loc tokens remain, their rows are frozen/excluded;
+16. scheduler horizon equals actual max-step budget;
+17. F0 evaluation does not teacher-force future reasoning;
+18. F1 model selection follows paired→box-IoU→center rule;
+19. F2 uses predicted box only;
+20. no test split;
+21. no 4B / `[REF]` / SRE / SCL;
+22. strict determinism retained.
 
 Run:
 `python -m pytest tests/ -q`
 
-# PART P — Git / Watt
+# PART R — Git / Watt
 
 ## 22. Git hygiene
 
 Do not stage:
-- weights;
-- checkpoints;
-- local tokenizer/model cache snapshots;
+- weights/checkpoints;
+- hidden dumps;
+- local model/tokenizer snapshots;
 - `.conda`;
-- visual/SAM feature caches;
+- feature caches;
 - dataset JSONL edits.
 
 Recommended commit:
-`feat: add explicit spatial grounding tokens`
+`feat: add target-aware box query`
 
 Ignore UU completely.
-Use established Watt ownership rules for final push only.
+Apply established Watt ownership rule only for final push.
 
-# PART Q — Handoff
+# PART S — Handoff
 
 ## 23. FROM_DSH
 
 Include:
 1. Verdict
 2. Frozen Evidence
-3. Quantized Oracle by Bin Count
-4. Selected Bin Count
-5. Vocabulary / Trainable Token Setup
-6. Target Sequence and Loss
-7. E0 Overfit
-8. E1 Training
-9. Free-Generation Geometry
+3. Initialization
+4. Query-Token Causal Placement
+5. TargetAwareBoxHead
+6. Trainables / Loss
+7. F0 Overfit
+8. F1 Training Curve
+9. Geometry Metrics
 10. Paired Geometry Probe
-11. E2 End-to-End Segmentation
-12. Paired Mask Probe
-13. L1/L2/L3 + Query Breakdown
-14. Error / Data Adequacy Analysis
-15. Reusable Inference Plumbing
-16. Runtime / VRAM
-17. Tests
-18. Git / Watt
-19. Recommended next architecture task
+11. `[BOX]` Representation Diagnostics
+12. Reasoning Compatibility
+13. F2 Segmentation
+14. Paired Mask Probe
+15. Error / Data Adequacy Analysis
+16. Reusable Inference API
+17. Runtime / VRAM
+18. Tests
+19. Git / Watt
+20. Recommended next architecture step
 
 ## 24. Final DSH UI — Chinese only
 
 Report:
-- verdict;
-- unquantized oracle and each quantized-oracle result;
-- selected B;
-- added-token count and trainable-token mechanism;
-- E0 exact-token / box-IoU;
-- E1 structural validity;
-- E1 val box IoU;
+- Task 6F verdict;
+- F0 box IoU / paired;
+- best F1 epoch;
+- val box IoU;
+- center-inside rate;
 - geometry paired /20;
-- if E2 ran: strict e2e mIoU, mask paired /20, own-cross margin;
-- comparison to Task 6C P_C and Oracle BOX;
-- whether same-image different instructions now emit different spatial tokens/boxes;
-- dominant remaining error;
+- same-image predicted-box distance;
+- whether `[BOX]` is more target-specific than legacy `[SEG]`;
+- reasoning `[SEG]` emission compatibility;
+- if F2 ran: strict e2e mIoU, mask paired /20, own-cross margin;
+- dominant remaining failure;
 - whether WHU appears limiting;
 - tests;
 - commit/push;
@@ -571,7 +545,7 @@ Report:
 
 # 25. STOP
 
-After Task 6E:
+After Task 6F:
 
 **STOP.**
 

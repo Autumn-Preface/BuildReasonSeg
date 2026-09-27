@@ -79,6 +79,12 @@ def save_checkpoint(
             if getattr(model, "grounding_head", None) is not None
             else None
         ),
+        # Task 6F: the target-aware box head, when the model has one.
+        "box_head": (
+            {k: v.detach().cpu() for k, v in model.box_head.state_dict().items()}
+            if getattr(model, "box_head", None) is not None
+            else None
+        ),
         "geometry_kind": getattr(model, "geometry_kind", None),
         "rng_state": {
             "python": random.getstate(),
@@ -114,6 +120,10 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
     if getattr(model, "grounding_head", None) is not None and payload.get("grounding_head"):
         model.grounding_head.load_state_dict(payload["grounding_head"])
         head_loaded = True
+    box_head_loaded = False
+    if getattr(model, "box_head", None) is not None and payload.get("box_head"):
+        model.box_head.load_state_dict(payload["box_head"])
+        box_head_loaded = True
     if model.token_holder is not None and (
         "project_token_rows" in payload or "project_token_row" in payload
     ):
@@ -140,6 +150,7 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
         "missing_keys": len(missing),
         "unexpected_keys": len(unexpected),
         "grounding_head_loaded": head_loaded,
+        "box_head_loaded": box_head_loaded,
         "geometry_kind": payload.get("geometry_kind"),
     }
 

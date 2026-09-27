@@ -1,0 +1,209 @@
+{
+  "_doc": "Task 6F sections 3-4 and 8. Token setup, causal placement proof and one-step trainable-row/head smoke. Every claim comes from a real forward/backward on one training sample; nothing here is assumed.",
+  "task": "6F",
+  "config": "configs/mvp/task6f_box_query.yaml",
+  "vocabulary": {
+    "box_token": "[BOX]",
+    "box_token_id": 151670,
+    "vocab_before": 151670,
+    "vocab_after": 151671,
+    "added_tokens": 1,
+    "embedding_shape_before": [
+      151670,
+      2048
+    ],
+    "embedding_shape_after": [
+      151671,
+      2048
+    ],
+    "tied_embeddings": true,
+    "single_token_roundtrip": true,
+    "seg_token_id": 151669,
+    "unique_from_seg": true,
+    "no_loc_tokens_added": true,
+    "added_vocabulary": [
+      "</think>",
+      "</tool_call>",
+      "</tool_response>",
+      "<think>",
+      "<tool_call>",
+      "<tool_response>",
+      "<|box_end|>",
+      "<|box_start|>",
+      "<|endoftext|>",
+      "<|file_sep|>",
+      "<|fim_middle|>",
+      "<|fim_pad|>",
+      "<|fim_prefix|>",
+      "<|fim_suffix|>",
+      "<|im_end|>",
+      "<|im_start|>",
+      "<|image_pad|>",
+      "<|object_ref_end|>",
+      "<|object_ref_start|>",
+      "<|quad_end|>",
+      "<|quad_start|>",
+      "<|repo_name|>",
+      "<|video_pad|>",
+      "<|vision_end|>",
+      "<|vision_pad|>",
+      "<|vision_start|>",
+      "[BOX]",
+      "[SEG]"
+    ]
+  },
+  "head": {
+    "kind": "box",
+    "dim": 4,
+    "hidden_dim": 2048,
+    "mid_dim": 512,
+    "structure": "LayerNorm -> Linear(2048,512) -> GELU -> Linear(512,D) -> sigmoid",
+    "box_canonicalization": "two sigmoid corners ordered with min/max",
+    "parameters": 1055236,
+    "class": "TargetAwareBoxHead",
+    "input": "[BOX] hidden (2048-d), pre-reasoning query position",
+    "installed": true,
+    "box_token_id": 151670,
+    "trainable": true
+  },
+  "trainables": {
+    "phase": "A",
+    "trainable_tensors": 399,
+    "frozen_tensors": 1243,
+    "trainable_params": 18491908,
+    "projection_trainable": false,
+    "sam_mask_decoder_trainable": false,
+    "qwen_visual_trainable": [],
+    "box_query_token_id": 151670,
+    "trainable_token_ids": [
+      151669,
+      151670
+    ],
+    "box_head_trainable": true,
+    "sam_frozen": true,
+    "projection_frozen": true,
+    "loc_tokens_present": false,
+    "loc_rows_trainable": false
+  },
+  "optimizer_groups": [
+    {
+      "name": "lora",
+      "lr": 0.0001,
+      "weight_decay": 0.01,
+      "tensors": 392,
+      "parameters": 17432576
+    },
+    {
+      "name": "decoder",
+      "lr": 0.0003,
+      "weight_decay": 0.01,
+      "tensors": 6,
+      "parameters": 1055236
+    },
+    {
+      "name": "token",
+      "lr": 0.0003,
+      "weight_decay": 0.0,
+      "tensors": 1,
+      "parameters": 4096
+    }
+  ],
+  "structure": {
+    "box_token_count": 1,
+    "box_position": 279,
+    "prompt_length": 279,
+    "box_immediately_after_prompt": true,
+    "box_before_all_target_tokens": true,
+    "box_not_a_prediction_target": true,
+    "labels_start_at_box_position": true,
+    "seg_token_count": 1
+  },
+  "causal_placement": {
+    "future_text_changed": true,
+    "box_hidden_bit_identical": true,
+    "box_hidden_max_abs_delta": 0.0
+  },
+  "one_step_smoke": {
+    "sample_id": "buildsr_train_1_0_1_leftmost_274a8750ef95",
+    "losses": {
+      "total": 4.42703104019165,
+      "reasoning_ce": 4.280196189880371,
+      "box_loss": 0.02936697006225586,
+      "lm_ce": 4.280196189880371,
+      "mask_bce": 0.0,
+      "mask_dice": 0.0,
+      "ground": 0.02936697006225586
+    },
+    "weights": {
+      "reasoning": 1.0,
+      "box": 5.0
+    },
+    "predicted_box": [
+      0.46484375,
+      0.58203125,
+      0.470703125,
+      0.5859375
+    ],
+    "gt_box": [
+      0.404296875,
+      0.21484375,
+      0.47265625,
+      0.275390625
+    ],
+    "grad_clip_total_norm": 53.122257232666016,
+    "box_row_delta": 0.0003000013530254364,
+    "seg_row_delta": 0.0003000013530254364,
+    "box_row_grad_norm": 0.9347250461578369,
+    "seg_row_grad_norm": 0.19684255123138428,
+    "box_head_param_max_delta": {
+      "norm.weight": 0.00030297040939331055,
+      "norm.bias": 0.00029995120712555945,
+      "fc1.weight": 0.000300062820315361,
+      "fc1.bias": 0.000300038605928421,
+      "fc2.weight": 0.0003001280128955841,
+      "fc2.bias": 0.00030008330941200256
+    },
+    "box_head_param_grad_norms": {
+      "norm.weight": 0.0007670416380278766,
+      "norm.bias": 0.0005972011131234467,
+      "fc1.weight": 0.04617001861333847,
+      "fc1.bias": 0.001020103576593101,
+      "fc2.weight": 0.022157270461320877,
+      "fc2.bias": 0.002768454607576132
+    },
+    "ordinary_rows_probed": 16,
+    "ordinary_rows_probed_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "ordinary_rows_max_abs_delta": 0.0,
+    "ordinary_rows_unchanged_exactly": true,
+    "base_embedding_tensor_bit_identical": true,
+    "seg_output_row_gradient_probe": {
+      "mechanism": "peft_trainable_token_indices",
+      "rows": {
+        "151669": 45.99111557006836
+      },
+      "base_output_weight_grad_is_none": true,
+      "base_output_weight_grad_norm": null
+    },
+    "visual_tower_lora_modules": [],
+    "sam_frozen": true
+  },
+  "seconds": 33.73,
+  "passed": true
+}
