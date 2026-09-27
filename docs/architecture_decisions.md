@@ -946,6 +946,27 @@ validation set and one metric path.
 
 ---
 
+## ADR-021 — Task 6I: one free cross-attention refinement step improves the query but cannot aim itself
+
+**Status:** **Accepted** (Task 6I) for what the architecture setup, I0 and its audit measure.
+
+**Context.** Task 6H.1 left the query representation as the measured bottleneck. Task 6I is the first architecture change since 6G: the causally clean `[BOX]` query q0 cross-attends the frozen SAM2 64×64 embedding exactly once (embed 256, 4 heads, residual + FFN(256→512→256)), and the refined q1 scores the frozen 256×256/32-ch feature (`dot(q1,K256)/sqrt(256)` + bias). The Task 6H.1 point-cell CE + bounded probability-mass pair objective is frozen byte-for-byte; the old Task 6G head is frozen and unused.
+
+**Decision**
+
+1. **The implementation is clean.** Exactly one cross-attention layer; F64 `[1,256,64,64]` and F256 `[1,32,256,256]` verified by size; q1 feeds the scorer (bit-identical to the combined forward); gradients reach every block component and the LoRA/token rows with zero gradient into SAM2, the old head or the box head; SAM2 and the shared features stay bit-identical; the `[BOX]` query stays causally clean (fp32 probe).
+2. **The refinement step works but under-shoots.** I0 over 1500 pair steps: inside-own 7 → **13/20**, paired point 2 → **5/10**, bounded ranking 8 → **10/10**, own mass 0.184 → **0.417** vs cross 0.046 → 0.024, normalized point error 0.167 → **0.084** — versus gates 18 / 9 / 9 / <0.08.
+3. **The attention cannot aim itself.** The 1×4096 cross-attention peaks (entropy 8.31 → 1.46 nats) but only ~2.5 % of its mass lands inside the target's 64×64 region, and that share barely moves (0.0079 → 0.0250); q1's same-image L2 distance grows to 1756 while q0's stays at 163, and the logit scale grows again (36). One free look at the whole map gives the query no target hypothesis to test, so it locks onto a salient but task-irrelevant location and the scorer amplifies it.
+4. **Verdict `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`**: I0 fails its gates cleanly after the audit; per the task the run stops before I1/I2 (no 240-pair train, no SAM2 segmentation, no further architecture changes).
+
+**Consequences**
+
+* Seven readouts have now failed with verified implementations. The remaining hypothesis is structural: a single query slot cannot *direct itself* toward the target even with one allowed visual inspection. The next candidates are therefore **multiple learned query slots** (object-query sets, e.g. OMG-Seg/OMG-LLaVA style, with the head picking the most peaked refined heatmap), a **stronger/larger MLLM**, or architecture-level reference/relation grounding. None may be implemented without review.
+* Two methodology fixes are adopted for all later inference paths: inference runs the Qwen model in **eval mode** (LoRA dropout p=0.05 is training-only noise, 0.56–1.39 measured same-batch delta in train mode vs 0.0 in eval), and causal bit-identity probes run in **fp32** (bf16 sdpa rounds the shared prefix differently for different sequence lengths: 0.31 delta vs 0.0 in fp32).
+* The frozen baselines are unchanged: grid-256 point oracle 0.4883/18-20, box oracle 0.7506/20-20, Task 6C `P_C` 0.10604/0-20.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -970,3 +991,4 @@ validation set and one metric path.
 | 018 | **Task 6G: dense query-to-map grounding does not localize either** | The 256×256 grid-snapped point oracle keeps 0.4883 mIoU / 18-20; the dense head is audited clean (SAM2 bit-frozen, train/eval bit-identical, healthy gradients) yet G0 cannot overfit 20 records (inside 0.10, Dice 0.125) — the heatmap is a near-flat image-dominated field, so the measured bottleneck is the query's weak instruction signal, not the readout format |
 | 019 | **Task 6H: own-vs-cross ranking on unbounded logits is satisfiable without localizing** | 240 canonical same-image counterfactual pairs, one pair step with one shared frozen feature and a single backward; H0 reaches pair ranking 10/10 and mean margin +5.58 while inside-own is 3/20 — the audit shows the margin grew with a 110× logit-scale increase (probability margin only +0.112, point-inside 0.15), so the specified objective is scale-degenerate and the task stops at H0 |
 | 020 | **Task 6H.1: the point-aligned bounded objective is healthy; the query's spatial signal is the limit** | Spatial cross-entropy on the deterministic point-cell plus a bounded probability-mass preference (BCE/Dice and logit ranking detached to zero gradient); H0-R shows point CE 11.10 → 4.74, entropy 11.09 → 6.21, point error 0.466 → 0.167, bounded margin +0.139, yet inside-own is 7/20 and the max non-target probability (0.0532) still rivals the target cell (0.0515) — a clean failure of the single `[BOX]` query representation, so the next candidates are representation-level (multi-query refinement, stronger MLLM, reference/relation grounding) |
+| 021 | **Task 6I: one free cross-attention refinement step improves the query but cannot aim itself** | `[BOX]` q0 cross-attends the frozen 64×64 SAM2 embedding exactly once (256/4 heads, residual + FFN); refined q1 scores the 256×256 feature; frozen 6H.1 objective; I0 raises inside-own 7→13/20 and paired point 2→5/10 (gates 18/9) while the 1×4096 attention peaks (entropy 8.31→1.46) with only ~2.5 % mass on the target — a single query slot cannot direct itself at the target even with one allowed look, so the next candidates are multiple learned query slots, a stronger MLLM, or reference/relation grounding |

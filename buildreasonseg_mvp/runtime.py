@@ -224,6 +224,8 @@ class MvpRuntime:
     box_setup: object | None = None
     #: Task 6G: the selected dense spatial grid (None = every other task's runtime).
     dense_grid: int | None = None
+    #: Task 6I: the visual-query-refinement config block (None = every other task's runtime).
+    refine_setup: dict | None = None
 
     @property
     def spatial_codec(self):
@@ -881,6 +883,263 @@ class MvpRuntime:
             },
         }
 
+    # -- Task 6I: Visual Query Refinement Block ------------------------------
+
+    def install_refinement_block(self, coarse_channels: int | None = None,
+                                 fine_channels: int | None = None) -> dict:
+        """Attach the `VisualQueryRefinementBlock` to this runtime's model (Task 6I sections 4-5)."""
+
+        from .query_refine import VisualQueryRefinementBlock
+
+        if self.box_setup is None or self.refine_setup is None:
+            raise RuntimeError("install_refinement_block needs the [BOX] query and the refinement setup")
+        block = VisualQueryRefinementBlock(
+            query_dim=int(self.reports.get("qwen_hidden_size") or 2048),
+            embed_dim=int(self.refine_setup["embed_dim"]),
+            num_heads=int(self.refine_setup["num_heads"]),
+            ff_dim=int(self.refine_setup["ff_dim"]),
+            coarse_channels=coarse_channels,
+            fine_channels=fine_channels,
+            use_bias=bool(self.refine_setup["scalar_bias"]),
+        ).to(self.device)
+        self.model.refine_block = block
+        self.refine_block = block
+        report = block.as_dict()
+        report.update(
+            {
+                "installed": True,
+                "box_token_id": int(self.box_setup.box_token_id),
+                "fine_grid": int(self.refine_setup["fine_grid"]),
+                "trainable": all(parameter.requires_grad for parameter in block.parameters()),
+            }
+        )
+        self.reports["refinement_block"] = report
+        return report
+
+    def freeze_for_refinement(self) -> dict:
+        """Task 6I section 6 trainable set.
+
+        Train: text LoRA, the `[BOX]` query row, the `[SEG]` row and the
+        `VisualQueryRefinementBlock` (F64 projection, attention, FFN, F256 scorer). Freeze: Qwen
+        base, the visual tower, all SAM2, the Task 6G `DenseSpatialGroundingHead` (when attached),
+        the Task 6F `TargetAwareBoxHead`, the Task 6D `SpatialGroundingHead` and the old
+        Projection MLP.
+        """
+
+        if self.box_setup is None or self.refine_setup is None:
+            raise RuntimeError("freeze_for_refinement needs the [BOX] query and the refinement setup")
+        report = set_phase_trainables(self.model, "A")
+        for head_name in ("grounding_head", "box_head", "dense_head"):
+            head = getattr(self.model, head_name, None)
+            if head is not None:
+                for parameter in head.parameters():
+                    parameter.requires_grad_(False)
+            report[f"{head_name}_trainable"] = False
+        if self.model.refine_block is not None:
+            for parameter in self.model.refine_block.parameters():
+                parameter.requires_grad_(True)
+        report["box_query_token_id"] = int(self.box_setup.box_token_id)
+        report["trainable_token_ids"] = list(self.reports.get("lora", {}).get("trainable_token_ids") or [])
+        report["refine_block_trainable"] = (
+            all(parameter.requires_grad for parameter in self.model.refine_block.parameters())
+            if self.model.refine_block is not None
+            else False
+        )
+        report["sam_frozen"] = not any(p.requires_grad for p in self.model.sam.parameters())
+        report["projection_frozen"] = not any(p.requires_grad for p in self.model.projection.parameters())
+        report["loc_tokens_present"] = any(
+            name.startswith("<loc_") for name in self.tokenizer.get_added_vocab()
+        )
+        report["loc_rows_trainable"] = False  # Task 6I adds no location tokens at all
+        self.reports["refinement_trainables"] = report
+        return report
+
+    def refinement_pair_train_step(self, batch_a, batch_b, mask_a, mask_b, features,
+                                   optimizer=None, timer=None) -> dict:
+        """Task 6I section 8: one pair step through the refined path with the frozen objective.
+
+        The scalar objective is the Task 6H.1 one, byte-for-byte in shape and weights:
+
+            L_total = 0.5*(L_reasoning_A+L_reasoning_B) + 1.0*(L_point_A+L_point_B) + 1.0*L_cf
+
+        where `L_point` is the 65,536-class point-cell CE of the refined heatmap and `L_cf` the
+        bounded own-vs-cross probability-mass preference. Both query paths share one frozen SAM2
+        feature set; the refinement block consumes the same F64/F256 tensors for A and B. Task 6G
+        BCE+Dice and Task 6H raw-logit ranking stay detached diagnostics (zero gradient). The old
+        Task 6G `dense_head` is never called by the candidate forward.
+        """
+
+        from .box_query import box_query_forward
+        from .counterfactual import region_scores
+        from .dense_grounding import downsample_target_mask, feature_tensor_for_grid, heatmap_loss
+        from .losses import lm_cross_entropy
+        from .query_refine import COARSE_GRID, attention_diagnostics
+        from .spatial_objective import (
+            POINT_CF_WEIGHT,
+            POINT_CLASSIFICATION_WEIGHT,
+            POINT_REASONING_WEIGHT,
+            bounded_pair_loss,
+            counterfactual_masses,
+            max_non_target_probability,
+            point_cross_entropy,
+            spatial_entropy,
+            spatial_probabilities,
+            target_cell,
+            target_cell_probability,
+            topk_hit,
+        )
+
+        batch_a = batch_a.to(self.device)
+        batch_b = batch_b.to(self.device)
+        grid = int(self.dense_grid)
+        if self.model.refine_block is None:
+            raise RuntimeError("no VisualQueryRefinementBlock; call install_refinement_block first")
+        use_autocast = bool(self.cfg["training"].get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                # One frozen SAM2 feature set, shared by both instructions of the same image.
+                f64 = feature_tensor_for_grid(features, COARSE_GRID).to(self.device)
+                f256 = feature_tensor_for_grid(features, grid).to(self.device)
+                logits_a, hidden_a, _seg_a = box_query_forward(self.model.qwen, batch_a)
+                q1_a, heatmap_a, attn_a = self.model.refine_block(hidden_a, f64, f256)
+                logits_b, hidden_b, _seg_b = box_query_forward(self.model.qwen, batch_b)
+                q1_b, heatmap_b, attn_b = self.model.refine_block(hidden_b, f64, f256)
+
+                target_a = downsample_target_mask(mask_a, grid).to(self.device)[None, None, :, :]
+                target_b = downsample_target_mask(mask_b, grid).to(self.device)[None, None, :, :]
+                cell_a = target_cell(mask_a, grid)
+                cell_b = target_cell(mask_b, grid)
+
+                point_a = point_cross_entropy(heatmap_a[0], cell_a.index)
+                point_b = point_cross_entropy(heatmap_b[0], cell_b.index)
+
+                probabilities_a = spatial_probabilities(heatmap_a[0])
+                probabilities_b = spatial_probabilities(heatmap_b[0])
+                masses = counterfactual_masses(
+                    probabilities_a, probabilities_b, target_a[0, 0], target_b[0, 0]
+                )
+                cf = bounded_pair_loss(masses["p_aa"], masses["p_ab"], masses["p_bb"], masses["p_ba"])
+                reasoning = 0.5 * (
+                    lm_cross_entropy(logits_a, batch_a.labels)
+                    + lm_cross_entropy(logits_b, batch_b.labels)
+                )
+                total = (
+                    POINT_REASONING_WEIGHT * reasoning
+                    + POINT_CLASSIFICATION_WEIGHT * (point_a + point_b)
+                    + POINT_CF_WEIGHT * cf["loss"]
+                )
+
+        with _stage("backward"):
+            if optimizer is not None:
+                optimizer.zero_grad(set_to_none=True)
+            total.backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        # ---- detached diagnostics: zero gradient (Task 6H.1 sections 8-9) ----
+        with torch.no_grad():
+            heatmap_a_1 = heatmap_a.detach().unsqueeze(1) if heatmap_a.dim() == 3 else heatmap_a.detach()
+            heatmap_b_1 = heatmap_b.detach().unsqueeze(1) if heatmap_b.dim() == 3 else heatmap_b.detach()
+            legacy_a = heatmap_loss(heatmap_a_1, target_a)
+            legacy_b = heatmap_loss(heatmap_b_1, target_b)
+            legacy_ranking = region_scores(
+                heatmap_a.detach()[0], heatmap_b.detach()[0], target_a[0, 0], target_b[0, 0]
+            )
+            soft64_a = downsample_target_mask(mask_a, COARSE_GRID)
+            soft64_b = downsample_target_mask(mask_b, COARSE_GRID)
+            attn_diag_a = attention_diagnostics(attn_a.detach()[0], soft64_a)
+            attn_diag_b = attention_diagnostics(attn_b.detach()[0], soft64_b)
+            diagnostics = {
+                "target_cell_a": cell_a.as_dict(),
+                "target_cell_b": cell_b.as_dict(),
+                "target_cell_probability_a": target_cell_probability(probabilities_a, cell_a.index),
+                "target_cell_probability_b": target_cell_probability(probabilities_b, cell_b.index),
+                "target_cell_top1_a": topk_hit(heatmap_a[0], cell_a.index, 1),
+                "target_cell_top5_a": topk_hit(heatmap_a[0], cell_a.index, 5),
+                "target_cell_top25_a": topk_hit(heatmap_a[0], cell_a.index, 25),
+                "target_cell_top1_b": topk_hit(heatmap_b[0], cell_b.index, 1),
+                "spatial_entropy_a": spatial_entropy(probabilities_a),
+                "spatial_entropy_b": spatial_entropy(probabilities_b),
+                "max_non_target_probability_a": max_non_target_probability(
+                    probabilities_a, target_a[0, 0]
+                ),
+                "mean_abs_logit_a": float(heatmap_a.detach().abs().mean()),
+                "mean_abs_logit_b": float(heatmap_b.detach().abs().mean()),
+                "logit_std_a": float(heatmap_a.detach().std()),
+                "logit_std_b": float(heatmap_b.detach().std()),
+                "legacy_bce_dice_a": legacy_a["heatmap_raw"],
+                "legacy_bce_dice_b": legacy_b["heatmap_raw"],
+                "legacy_logit_ranking_margin": legacy_ranking["raw"]["mean_margin"],
+                "legacy_terms_require_grad": bool(
+                    legacy_a["heatmap"].requires_grad
+                    or legacy_b["heatmap"].requires_grad
+                    or legacy_ranking["mean_margin"].requires_grad
+                ),
+            }
+            attention = {
+                "entropy_a": attn_diag_a["attn_entropy"],
+                "entropy_b": attn_diag_b["attn_entropy"],
+                "top10_mass_a": attn_diag_a["attn_top10_mass"],
+                "top10_mass_b": attn_diag_b["attn_top10_mass"],
+                "target_mass_a": attn_diag_a["attn_target_mass"],
+                "target_mass_b": attn_diag_b["attn_target_mass"],
+                "cross_mass_a": float(
+                    (attn_a.detach()[0].cpu().reshape(-1) * soft64_b.reshape(-1)).sum()
+                ),
+                "cross_mass_b": float(
+                    (attn_b.detach()[0].cpu().reshape(-1) * soft64_a.reshape(-1)).sum()
+                ),
+            }
+
+        mean_abs_logit = 0.5 * (
+            diagnostics["mean_abs_logit_a"] + diagnostics["mean_abs_logit_b"]
+        )
+        return {
+            "losses": {
+                "total": float(total.detach()),
+                "reasoning_ce": float(reasoning.detach()),
+                "point_ce_a": float(point_a.detach()),
+                "point_ce_b": float(point_b.detach()),
+                "point_ce_sum": float((point_a + point_b).detach()),
+                "cf": cf["raw"],
+                "cf_a": cf["raw_a"],
+                "cf_b": cf["raw_b"],
+                "lm_ce": float(reasoning.detach()),
+                "mask_bce": diagnostics["legacy_bce_dice_a"] + diagnostics["legacy_bce_dice_b"],
+                "mask_dice": 0.0,
+                "ground": cf["raw"],
+            },
+            "region_masses": masses["raw"],
+            "pair_preference_pass": masses["pair_preference_pass"],
+            "mean_abs_logit": mean_abs_logit,
+            "logit_std": 0.5 * (diagnostics["logit_std_a"] + diagnostics["logit_std_b"]),
+            "attention": attention,
+            "diagnostics": diagnostics,
+            "grad_clip_total_norm": clipped,
+            "weights": {
+                "reasoning": POINT_REASONING_WEIGHT,
+                "classification": POINT_CLASSIFICATION_WEIGHT,
+                "cf": POINT_CF_WEIGHT,
+                "eps": cf["eps"],
+            },
+        }
+
     # -- Task 6H: counterfactual pair-aligned dense grounding ----------------
 
     def freeze_for_counterfactual(self) -> dict:
@@ -1498,6 +1757,30 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         if dense_grid not in (64, 128, 256):
             raise RuntimeError(f"dense_grounding grid must be one of 64/128/256, got {dense_grid}")
 
+    # Task 6I: the visual query refinement block reuses the [BOX] query and the 256x256 fine grid;
+    # the coarse grid is fixed at the 64x64 SAM2 main image embedding (section 3).
+    refine_cfg = cfg.get("visual_query_refinement") or {}
+    refine_setup = None
+    if refine_cfg.get("enabled"):
+        if box_setup is None or dense_grid is None:
+            raise RuntimeError("cfg enables visual_query_refinement without box_query + dense_grounding")
+        refine_setup = {
+            "coarse_grid": int(refine_cfg.get("coarse_grid", 64)),
+            "fine_grid": int(refine_cfg.get("fine_grid", 256)),
+            "embed_dim": int(refine_cfg.get("embed_dim", 256)),
+            "num_heads": int(refine_cfg.get("num_heads", 4)),
+            "ff_dim": int(refine_cfg.get("ff_dim", 512)),
+            "scalar_bias": bool(refine_cfg.get("scalar_bias", True)),
+        }
+        if refine_setup["coarse_grid"] != 64:
+            raise RuntimeError(f"visual_query_refinement coarse grid must be 64, got {refine_setup['coarse_grid']}")
+        if refine_setup["fine_grid"] != dense_grid:
+            raise RuntimeError(
+                f"visual_query_refinement fine grid {refine_setup['fine_grid']} must equal the "
+                f"dense_grounding grid {dense_grid}"
+            )
+        reports["visual_query_refinement"] = {"enabled": True, **refine_setup}
+
     if cfg["token"].get("prefer_peft_trainable_token_indices", True):
         qwen, token_holder, lora_report = attach_lora(
             qwen,
@@ -1614,6 +1897,7 @@ def build_runtime(cfg: dict | None = None, device: str = "cuda", verbose: bool =
         spatial_setup=spatial_setup,
         box_setup=box_setup,
         dense_grid=dense_grid,
+        refine_setup=refine_setup,
     )
 
 

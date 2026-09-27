@@ -91,6 +91,12 @@ def save_checkpoint(
             if getattr(model, "dense_head", None) is not None
             else None
         ),
+        # Task 6I: the visual query refinement block, when the model has one.
+        "refine_block": (
+            {k: v.detach().cpu() for k, v in model.refine_block.state_dict().items()}
+            if getattr(model, "refine_block", None) is not None
+            else None
+        ),
         "geometry_kind": getattr(model, "geometry_kind", None),
         "rng_state": {
             "python": random.getstate(),
@@ -134,6 +140,10 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
     if getattr(model, "dense_head", None) is not None and payload.get("dense_head"):
         model.dense_head.load_state_dict(payload["dense_head"])
         dense_head_loaded = True
+    refine_block_loaded = False
+    if getattr(model, "refine_block", None) is not None and payload.get("refine_block"):
+        model.refine_block.load_state_dict(payload["refine_block"])
+        refine_block_loaded = True
     if model.token_holder is not None and (
         "project_token_rows" in payload or "project_token_row" in payload
     ):
@@ -162,6 +172,7 @@ def load_checkpoint(path: Path, model, optimizer=None) -> dict:
         "grounding_head_loaded": head_loaded,
         "box_head_loaded": box_head_loaded,
         "dense_head_loaded": dense_head_loaded,
+        "refine_block_loaded": refine_block_loaded,
         "geometry_kind": payload.get("geometry_kind"),
     }
 

@@ -1,0 +1,297 @@
+{
+  "_doc": "Task 6I section 13. Exactly one verdict, resolved from the recorded artifacts. The frozen Task 6H.1 objective and the Task 6H/6H.1 numbers are preserved for comparison.",
+  "task": "6I",
+  "verdict": "VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT",
+  "reason": "I0 cannot pass after the focused audit: inside-own 13/20, paired point 5/10, ranking 10/10",
+  "evidence": {
+    "architecture_setup": {
+      "passed": true,
+      "architecture": {
+        "grid": 256,
+        "coarse": {
+          "coarse_shape": [
+            1,
+            256,
+            64,
+            64
+          ],
+          "fine_shape": [
+            1,
+            32,
+            256,
+            256
+          ],
+          "coarse_exact": true,
+          "fine_exact": true,
+          "coarse_is_main_embedding": true,
+          "expected_coarse": [
+            1,
+            256,
+            64,
+            64
+          ],
+          "expected_fine": [
+            1,
+            32,
+            256,
+            256
+          ]
+        },
+        "level_report": {
+          "image_embeddings_shape": [
+            1,
+            256,
+            64,
+            64
+          ],
+          "high_res_shapes": [
+            [
+              1,
+              32,
+              256,
+              256
+            ],
+            [
+              1,
+              64,
+              128,
+              128
+            ]
+          ],
+          "levels_by_grid": {
+            "64": [
+              1,
+              256,
+              64,
+              64
+            ],
+            "128": [
+              1,
+              64,
+              128,
+              128
+            ],
+            "256": [
+              1,
+              32,
+              256,
+              256
+            ]
+          }
+        },
+        "block": {
+          "class": "VisualQueryRefinementBlock",
+          "query_dim": 2048,
+          "embed_dim": 256,
+          "num_heads": 4,
+          "ff_dim": 512,
+          "coarse_channels": 256,
+          "fine_channels": 32,
+          "coarse_grid": 64,
+          "fine_grid": 256,
+          "cross_attention_layers": 1,
+          "scalar_bias": true,
+          "structure": "q0 -> LayerNorm -> Linear(2048,256) -> q [B,1,256]; F64 -> Conv1x1(256,256) -> flatten [B,4096,256] -> LayerNorm; CrossAttention(embed 256, 4 heads, ONE layer) -> q_ref = q + attn(q, F64); q1 = q_ref + FFN(LayerNorm(q_ref)) (256 -> 512 -> 256, GELU); heatmap = dot(q1, Conv1x1(32,256)(F256))/sqrt(256) + optional scalar bias",
+          "parameters": 1129985,
+          "installed": true,
+          "box_token_id": 151670,
+          "trainable": true
+        },
+        "single_cross_attention_layer": true,
+        "attention_geometry": {
+          "embed_dim": 256,
+          "num_heads": 4,
+          "matches_spec": true
+        },
+        "frozen_task6g_head": {
+          "class": "DenseSpatialGroundingHead",
+          "query_dim": 2048,
+          "key_dim": 128,
+          "in_channels": 32,
+          "structure": "query: LayerNorm(2048) -> Linear(2048,128); visual: Conv1x1(C,128); heatmap = dot(q, K)/sqrt(128) + scalar bias",
+          "scalar_bias": true,
+          "parameters": 270593,
+          "installed": true,
+          "grid": 256,
+          "box_token_id": 151670,
+          "trainable": true
+        },
+        "frozen_task6g_head_parameters": 270593,
+        "task6g_reference": {
+          "grid": 256,
+          "level_shape": [
+            1,
+            32,
+            256,
+            256
+          ],
+          "head_parameters": 270593
+        }
+      },
+      "causal_placement": {
+        "future_text_changed": true,
+        "box_hidden_bit_identical": true,
+        "box_hidden_max_abs_delta": 0.0
+      },
+      "objective": {
+        "point_ce_a": 11.08151912689209,
+        "point_ce_b": 11.080734252929688,
+        "softmax_sums_to_one": true,
+        "masses": {
+          "p_aa": 0.008215781301259995,
+          "p_ab": 0.005154546350240707,
+          "p_bb": 0.005154948681592941,
+          "p_ba": 0.00822053849697113,
+          "margin_a": 0.003061234951019287,
+          "margin_b": -0.003065589815378189,
+          "mean_margin": -2.1774321794509888e-06,
+          "ratio_a": 0.6144777536392212,
+          "ratio_b": 0.385402113199234,
+          "bounded": true
+        },
+        "pair_preference_pass": false,
+        "cf_loss": 0.7202236652374268,
+        "spatial_entropy_a": 11.090218544006348,
+        "target_cell_top1_a": false,
+        "mean_abs_logit_a": 0.0272216796875,
+        "q1_norm_a": 11.016042709350586,
+        "attention": {
+          "a": {
+            "attn_entropy": 8.312093734741211,
+            "attn_top1_index": 2025,
+            "attn_top1_cell": [
+              41,
+              31
+            ],
+            "attn_top1_centre": [
+              0.6484375,
+              0.4921875
+            ],
+            "attn_top10_mass": 0.003460448933765292,
+            "attn_target_mass": 0.008468815125524998
+          },
+          "b": {
+            "attn_entropy": 8.31236743927002,
+            "attn_top1_index": 2025,
+            "attn_top1_cell": [
+              41,
+              31
+            ],
+            "attn_top1_centre": [
+              0.6484375,
+              0.4921875
+            ],
+            "attn_top10_mass": 0.003449277486652136,
+            "attn_target_mass": 0.005379181355237961
+          },
+          "rows_sum_a": 1.0,
+          "rows_sum_b": 1.0,
+          "finite": true,
+          "scorer_matches_combined_forward": true
+        }
+      },
+      "retired_terms": {
+        "bce_dice_requires_grad": false,
+        "logit_ranking_requires_grad": false,
+        "bce_dice_value": 1.6900970935821533,
+        "logit_ranking_margin": -0.00023600086569786072,
+        "gradient_contribution": 0.0,
+        "note": "computed detached under torch.no_grad(); they are logged only (Task 6H.1 sections 8-9)"
+      },
+      "gradients": {
+        "point_ce": {
+          "norms": {
+            "refine_block.query_proj": 0.8558666618402283,
+            "refine_block.coarse_proj": 0.11804112581292314,
+            "refine_block.cross_attn": 0.16729102677970825,
+            "refine_block.ffn": 0.166692852188348,
+            "refine_block.fine_proj": 0.12918879854774137,
+            "refine_block_norms_bias": 0.018753412115950926,
+            "qwen_lora": 0.212814540320687,
+            "token_rows": 0.8609438538551331,
+            "frozen_or_other": 0.0
+          },
+          "tensor_counts": {
+            "refine_block.query_proj": 2,
+            "refine_block.coarse_proj": 2,
+            "refine_block.cross_attn": 4,
+            "refine_block.ffn": 6,
+            "refine_block.fine_proj": 2,
+            "refine_block_norms_bias": 5,
+            "qwen_lora": 392,
+            "token_rows": 1,
+            "frozen_or_other": 0
+          }
+        },
+        "bounded_cf": {
+          "norms": {
+            "refine_block.query_proj": 0.06157911049155757,
+            "refine_block.coarse_proj": 0.00853489160752395,
+            "refine_block.cross_attn": 0.011805528374063044,
+            "refine_block.ffn": 0.0120386452039363,
+            "refine_block.fine_proj": 0.008443858986917277,
+            "refine_block_norms_bias": 0.0012599816042077358,
+            "qwen_lora": 0.013301918364526037,
+            "token_rows": 0.037361182272434235,
+            "frozen_or_other": 0.0
+          },
+          "tensor_counts": {
+            "refine_block.query_proj": 2,
+            "refine_block.coarse_proj": 2,
+            "refine_block.cross_attn": 4,
+            "refine_block.ffn": 6,
+            "refine_block.fine_proj": 2,
+            "refine_block_norms_bias": 5,
+            "qwen_lora": 392,
+            "token_rows": 1,
+            "frozen_or_other": 0
+          }
+        }
+      },
+      "one_pair_step": {
+        "mean_abs_logit": 0.03863525390625,
+        "pair_preference_pass": false,
+        "sam2_bit_identical": true
+      }
+    },
+    "I0": {
+      "verdict": "VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT",
+      "point_inside_count": 13,
+      "record_count": 20,
+      "target_cell_top1_count": 9,
+      "target_cell_top5_count": 10,
+      "paired_point_selection_pass": 5,
+      "pair_ranking_pass": 10,
+      "pair_count": 10,
+      "mean_own_mass": 0.41658494165167215,
+      "mean_cross_mass": 0.023600781553392382,
+      "mean_normalized_error": 0.083837890625,
+      "mean_abs_logit": 36.084913802146914,
+      "attention": {
+        "mean_entropy": 1.4341268479824065,
+        "mean_top10_mass": 0.9993242710828781,
+        "mean_target_mass": 0.012501815260238918,
+        "pair_own_mass": 0.012501815260238922,
+        "pair_cross_mass": 4.3398381853024607e-07
+      },
+      "gate": {
+        "kind": "i0",
+        "checks": {
+          "point_inside_own_ge": false,
+          "paired_point_selection_ge": false,
+          "pair_ranking_ge": true,
+          "mean_normalized_error_below": false
+        },
+        "passed": false,
+        "gate": {
+          "point_inside_own_min": 18,
+          "paired_point_selection_min": 9,
+          "pair_ranking_min": 9,
+          "max_mean_normalized_error": 0.08
+        }
+      }
+    },
+    "I1": null,
+    "I2": null
+  }
+}

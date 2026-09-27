@@ -1,0 +1,434 @@
+{
+  "_doc": "Task 6I sections 3-7. Exact coarse/fine feature shapes, the single-cross-attention block structure, the q1-based scorer, the frozen Task 6H.1 objective's gradient coverage, the zero-gradient status of the retired Task 6G BCE+Dice and Task 6H logit ranking, section 7 attention diagnostics, and a one-pair optimizer-step smoke on a real canonical pair. Every claim comes from a real forward/backward.",
+  "task": "6I",
+  "pair": {
+    "image_id": "1_0",
+    "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+    "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+    "target_a": 1,
+    "target_b": 3
+  },
+  "architecture": {
+    "grid": 256,
+    "coarse": {
+      "coarse_shape": [
+        1,
+        256,
+        64,
+        64
+      ],
+      "fine_shape": [
+        1,
+        32,
+        256,
+        256
+      ],
+      "coarse_exact": true,
+      "fine_exact": true,
+      "coarse_is_main_embedding": true,
+      "expected_coarse": [
+        1,
+        256,
+        64,
+        64
+      ],
+      "expected_fine": [
+        1,
+        32,
+        256,
+        256
+      ]
+    },
+    "level_report": {
+      "image_embeddings_shape": [
+        1,
+        256,
+        64,
+        64
+      ],
+      "high_res_shapes": [
+        [
+          1,
+          32,
+          256,
+          256
+        ],
+        [
+          1,
+          64,
+          128,
+          128
+        ]
+      ],
+      "levels_by_grid": {
+        "64": [
+          1,
+          256,
+          64,
+          64
+        ],
+        "128": [
+          1,
+          64,
+          128,
+          128
+        ],
+        "256": [
+          1,
+          32,
+          256,
+          256
+        ]
+      }
+    },
+    "block": {
+      "class": "VisualQueryRefinementBlock",
+      "query_dim": 2048,
+      "embed_dim": 256,
+      "num_heads": 4,
+      "ff_dim": 512,
+      "coarse_channels": 256,
+      "fine_channels": 32,
+      "coarse_grid": 64,
+      "fine_grid": 256,
+      "cross_attention_layers": 1,
+      "scalar_bias": true,
+      "structure": "q0 -> LayerNorm -> Linear(2048,256) -> q [B,1,256]; F64 -> Conv1x1(256,256) -> flatten [B,4096,256] -> LayerNorm; CrossAttention(embed 256, 4 heads, ONE layer) -> q_ref = q + attn(q, F64); q1 = q_ref + FFN(LayerNorm(q_ref)) (256 -> 512 -> 256, GELU); heatmap = dot(q1, Conv1x1(32,256)(F256))/sqrt(256) + optional scalar bias",
+      "parameters": 1129985,
+      "installed": true,
+      "box_token_id": 151670,
+      "trainable": true
+    },
+    "single_cross_attention_layer": true,
+    "attention_geometry": {
+      "embed_dim": 256,
+      "num_heads": 4,
+      "matches_spec": true
+    },
+    "frozen_task6g_head": {
+      "class": "DenseSpatialGroundingHead",
+      "query_dim": 2048,
+      "key_dim": 128,
+      "in_channels": 32,
+      "structure": "query: LayerNorm(2048) -> Linear(2048,128); visual: Conv1x1(C,128); heatmap = dot(q, K)/sqrt(128) + scalar bias",
+      "scalar_bias": true,
+      "parameters": 270593,
+      "installed": true,
+      "grid": 256,
+      "box_token_id": 151670,
+      "trainable": true
+    },
+    "frozen_task6g_head_parameters": 270593,
+    "task6g_reference": {
+      "grid": 256,
+      "level_shape": [
+        1,
+        32,
+        256,
+        256
+      ],
+      "head_parameters": 270593
+    }
+  },
+  "trainables": {
+    "phase": "A",
+    "trainable_tensors": 421,
+    "frozen_tensors": 1243,
+    "trainable_params": 18837250,
+    "projection_trainable": false,
+    "sam_mask_decoder_trainable": false,
+    "qwen_visual_trainable": [
+      "dense_head.visual_proj.weight",
+      "dense_head.visual_proj.bias"
+    ],
+    "grounding_head_trainable": false,
+    "box_head_trainable": false,
+    "dense_head_trainable": false,
+    "box_query_token_id": 151670,
+    "trainable_token_ids": [
+      151669,
+      151670
+    ],
+    "refine_block_trainable": true,
+    "sam_frozen": true,
+    "projection_frozen": true,
+    "loc_tokens_present": false,
+    "loc_rows_trainable": false
+  },
+  "optimizer_groups": [
+    {
+      "name": "lora",
+      "lr": 0.0001,
+      "weight_decay": 0.01,
+      "tensors": 392,
+      "parameters": 17432576
+    },
+    {
+      "name": "decoder",
+      "lr": 0.0003,
+      "weight_decay": 0.01,
+      "tensors": 21,
+      "parameters": 1129985
+    },
+    {
+      "name": "token",
+      "lr": 0.0003,
+      "weight_decay": 0.0,
+      "tensors": 1,
+      "parameters": 4096
+    }
+  ],
+  "causal_placement": {
+    "future_text_changed": true,
+    "box_hidden_bit_identical": true,
+    "box_hidden_max_abs_delta": 0.0
+  },
+  "target_cells": {
+    "a": {
+      "index": 29418,
+      "x_cell": 234,
+      "y_cell": 114,
+      "point": [
+        0.9169921875,
+        0.4462890625
+      ],
+      "cell_centre": [
+        0.916015625,
+        0.447265625
+      ],
+      "grid": 256
+    },
+    "b": {
+      "index": 18943,
+      "x_cell": 255,
+      "y_cell": 73,
+      "point": [
+        0.9990234375,
+        0.2861328125
+      ],
+      "cell_centre": [
+        0.998046875,
+        0.287109375
+      ],
+      "grid": 256
+    },
+    "different_indices": true,
+    "index_convention": "index = y_cell * grid + x_cell",
+    "index_within_range": true
+  },
+  "objective": {
+    "point_ce_a": 11.08151912689209,
+    "point_ce_b": 11.080734252929688,
+    "softmax_sums_to_one": true,
+    "masses": {
+      "p_aa": 0.008215781301259995,
+      "p_ab": 0.005154546350240707,
+      "p_bb": 0.005154948681592941,
+      "p_ba": 0.00822053849697113,
+      "margin_a": 0.003061234951019287,
+      "margin_b": -0.003065589815378189,
+      "mean_margin": -2.1774321794509888e-06,
+      "ratio_a": 0.6144777536392212,
+      "ratio_b": 0.385402113199234,
+      "bounded": true
+    },
+    "pair_preference_pass": false,
+    "cf_loss": 0.7202236652374268,
+    "spatial_entropy_a": 11.090218544006348,
+    "target_cell_top1_a": false,
+    "mean_abs_logit_a": 0.0272216796875,
+    "q1_norm_a": 11.016042709350586,
+    "attention": {
+      "a": {
+        "attn_entropy": 8.312093734741211,
+        "attn_top1_index": 2025,
+        "attn_top1_cell": [
+          41,
+          31
+        ],
+        "attn_top1_centre": [
+          0.6484375,
+          0.4921875
+        ],
+        "attn_top10_mass": 0.003460448933765292,
+        "attn_target_mass": 0.008468815125524998
+      },
+      "b": {
+        "attn_entropy": 8.31236743927002,
+        "attn_top1_index": 2025,
+        "attn_top1_cell": [
+          41,
+          31
+        ],
+        "attn_top1_centre": [
+          0.6484375,
+          0.4921875
+        ],
+        "attn_top10_mass": 0.003449277486652136,
+        "attn_target_mass": 0.005379181355237961
+      },
+      "rows_sum_a": 1.0,
+      "rows_sum_b": 1.0,
+      "finite": true,
+      "scorer_matches_combined_forward": true
+    }
+  },
+  "retired_terms": {
+    "bce_dice_requires_grad": false,
+    "logit_ranking_requires_grad": false,
+    "bce_dice_value": 1.6900970935821533,
+    "logit_ranking_margin": -0.00023600086569786072,
+    "gradient_contribution": 0.0,
+    "note": "computed detached under torch.no_grad(); they are logged only (Task 6H.1 sections 8-9)"
+  },
+  "gradients": {
+    "point_ce": {
+      "norms": {
+        "refine_block.query_proj": 0.8558666618402283,
+        "refine_block.coarse_proj": 0.11804112581292314,
+        "refine_block.cross_attn": 0.16729102677970825,
+        "refine_block.ffn": 0.166692852188348,
+        "refine_block.fine_proj": 0.12918879854774137,
+        "refine_block_norms_bias": 0.018753412115950926,
+        "qwen_lora": 0.212814540320687,
+        "token_rows": 0.8609438538551331,
+        "frozen_or_other": 0.0
+      },
+      "tensor_counts": {
+        "refine_block.query_proj": 2,
+        "refine_block.coarse_proj": 2,
+        "refine_block.cross_attn": 4,
+        "refine_block.ffn": 6,
+        "refine_block.fine_proj": 2,
+        "refine_block_norms_bias": 5,
+        "qwen_lora": 392,
+        "token_rows": 1,
+        "frozen_or_other": 0
+      }
+    },
+    "bounded_cf": {
+      "norms": {
+        "refine_block.query_proj": 0.06157911049155757,
+        "refine_block.coarse_proj": 0.00853489160752395,
+        "refine_block.cross_attn": 0.011805528374063044,
+        "refine_block.ffn": 0.0120386452039363,
+        "refine_block.fine_proj": 0.008443858986917277,
+        "refine_block_norms_bias": 0.0012599816042077358,
+        "qwen_lora": 0.013301918364526037,
+        "token_rows": 0.037361182272434235,
+        "frozen_or_other": 0.0
+      },
+      "tensor_counts": {
+        "refine_block.query_proj": 2,
+        "refine_block.coarse_proj": 2,
+        "refine_block.cross_attn": 4,
+        "refine_block.ffn": 6,
+        "refine_block.fine_proj": 2,
+        "refine_block_norms_bias": 5,
+        "qwen_lora": 392,
+        "token_rows": 1,
+        "frozen_or_other": 0
+      }
+    }
+  },
+  "one_pair_step": {
+    "losses": {
+      "total": 24.755495071411133,
+      "reasoning_ce": 3.7460312843322754,
+      "point_ce_a": 11.08151912689209,
+      "point_ce_b": 11.080734252929688,
+      "point_ce_sum": 22.162254333496094,
+      "cf": 0.7202236652374268,
+      "cf_a": 0.48698127269744873,
+      "cf_b": 0.9534661173820496,
+      "lm_ce": 3.7460312843322754,
+      "mask_bce": 3.398160696029663,
+      "mask_dice": 0.0,
+      "ground": 0.7202236652374268
+    },
+    "weights": {
+      "reasoning": 0.5,
+      "classification": 1.0,
+      "cf": 1.0,
+      "eps": 1e-08
+    },
+    "region_masses": {
+      "p_aa": 0.008215781301259995,
+      "p_ab": 0.005154546350240707,
+      "p_bb": 0.005154948681592941,
+      "p_ba": 0.00822053849697113,
+      "margin_a": 0.003061234951019287,
+      "margin_b": -0.003065589815378189,
+      "mean_margin": -2.1774321794509888e-06,
+      "ratio_a": 0.6144777536392212,
+      "ratio_b": 0.385402113199234,
+      "bounded": true
+    },
+    "pair_preference_pass": false,
+    "mean_abs_logit": 0.03863525390625,
+    "logit_std": 0.0162353515625,
+    "attention": {
+      "entropy_a": 8.312093734741211,
+      "entropy_b": 8.31236743927002,
+      "top10_mass_a": 0.003460448933765292,
+      "top10_mass_b": 0.003449277486652136,
+      "target_mass_a": 0.008468815125524998,
+      "target_mass_b": 0.005379181355237961,
+      "cross_mass_a": 0.005521065555512905,
+      "cross_mass_b": 0.008345060981810093
+    },
+    "diagnostics_require_grad": false,
+    "grad_clip_total_norm": 16.417346954345703,
+    "box_row_delta": 0.0003000013530254364,
+    "seg_row_delta": 0.0003000013530254364,
+    "box_row_grad_norm": 0.9239999651908875,
+    "seg_row_grad_norm": 0.2007306069135666,
+    "refine_block_param_max_delta": {
+      "bias": 0.00029994614305906,
+      "query_norm.weight": 0.00030297040939331055,
+      "query_norm.bias": 0.000299938052194193,
+      "query_proj.weight": 0.00030006468296051025,
+      "query_proj.bias": 0.0003000441938638687,
+      "coarse_proj.weight": 0.00030017271637916565,
+      "coarse_proj.bias": 0.0003001689910888672,
+      "coarse_norm.weight": 0.00030291080474853516,
+      "coarse_norm.bias": 0.0002999613352585584,
+      "cross_attn.in_proj_weight": 0.0003001987934112549,
+      "cross_attn.in_proj_bias": 0.00029997644014656544,
+      "cross_attn.out_proj.weight": 0.0003001689910888672,
+      "cross_attn.out_proj.bias": 0.0002999868302140385,
+      "ffn_norm.weight": 0.00030291080474853516,
+      "ffn_norm.bias": 0.00029991508927196264,
+      "ffn.0.weight": 0.00030017271637916565,
+      "ffn.0.bias": 0.00030014291405677795,
+      "ffn.2.weight": 0.00030011311173439026,
+      "ffn.2.bias": 0.0003001019358634949,
+      "fine_proj.weight": 0.0003005117177963257,
+      "fine_proj.bias": 0.0002999156713485718
+    },
+    "frozen_dense_head_param_max_delta": {
+      "bias": 0.0,
+      "query_norm.weight": 0.0,
+      "query_norm.bias": 0.0,
+      "query_proj.weight": 0.0,
+      "query_proj.bias": 0.0,
+      "visual_proj.weight": 0.0,
+      "visual_proj.bias": 0.0
+    },
+    "frozen_dense_head_bit_identical": true,
+    "frozen_dense_head_any_grad": false,
+    "ordinary_rows_probed": 16,
+    "ordinary_rows_max_abs_delta": 0.0,
+    "ordinary_rows_unchanged_exactly": true,
+    "base_embedding_tensor_bit_identical": true,
+    "sam2_max_abs_delta": 0.0,
+    "sam2_bit_identical": true,
+    "sam2_any_grad": false,
+    "shared_f64_max_abs_delta": 0.0,
+    "shared_f256_max_abs_delta": 0.0,
+    "shared_features_bit_identical": true,
+    "visual_tower_lora_modules": []
+  },
+  "seconds": 26.39,
+  "passed": true
+}

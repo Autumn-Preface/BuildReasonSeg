@@ -98,6 +98,9 @@ class BuildReasonSegMvp(nn.Module):
         #: Task 6G: query hidden x frozen SAM2 spatial features -> DenseSpatialGroundingHead
         #: heatmap. Present only in the dense grounding candidate.
         self.dense_head = None
+        #: Task 6I: [BOX] q0 -> one cross-attention over the frozen 64x64 SAM2 embedding ->
+        #: refined q1 -> F256 scorer. The Task 6G `dense_head` stays frozen and unused.
+        self.refine_block = None
 
     # -- convenience -----------------------------------------------------
 
@@ -158,6 +161,7 @@ class BuildReasonSegMvp(nn.Module):
                 or name.startswith("grounding_head.")
                 or name.startswith("box_head.")
                 or name.startswith("dense_head.")
+                or name.startswith("refine_block.")
             ):
                 decoder.append(parameter)
             else:

@@ -1,597 +1,448 @@
-# TO_DSH — Task 6H.1: Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding
+# TO_DSH — Task 6I: Visual Query Refinement v0.1
 
-> Status: **ACTIVE**
+> Status: ACTIVE
 >
-> Repository: `BuildReasonSeg`
+> Repository: BuildReasonSeg
 >
-> Purpose: correct Task 6H's scale-degenerate logit-ranking objective **without changing the Task 6G/6H architecture**.
+> Goal: replace the failed direct single-query readout with one explicit instruction-conditioned visual query refinement step, while keeping the proven Task 6H.1 point-cell objective and paired supervision unchanged.
 >
-> Accepted diagnosis from Task 6H:
+> Accepted evidence:
+> - 256-grid snapped point -> frozen SAM2: mIoU 0.4883, paired 18/20.
+> - Task 6H.1 fixed the previous scale-degenerate loss: point CE 11.0965 -> 4.7427, point error 0.4658 -> 0.1673, own mass 0.1835 vs cross 0.0456.
+> - Yet H0-R still failed: inside 7/20, paired point 2/10.
 >
-> - same-image pair machinery is correct;
-> - logit-space pair ranking reaches 10/10 and `L_cf` ≈ 0.02;
-> - mean absolute logits grow from ~0.15 to ~16.3;
-> - probability-space own-vs-cross margin remains only ~+0.112;
-> - point-inside-own remains 3/20 and paired point 0/10.
+> Hypothesis: the Qwen [BOX] query needs one explicit opportunity to inspect frozen visual features before high-resolution localization.
 >
-> Therefore the historical Task 6H verdict is preserved, but the accepted causal conclusion is:
+> Candidate:
 >
-> **the Task 6H logit-space ranking objective is scale-degenerate; Task 6H does not establish that the query signal itself is unlearnable.**
+> image + instruction
+> -> Qwen pre-reasoning [BOX] query q0
+> -> cross-attend q0 to frozen SAM2 64x64 feature
+> -> refined query q1
+> -> q1 scores frozen SAM2 256x256 feature
+> -> heatmap -> argmax point -> frozen SAM2
 >
-> Task 6H.1 replaces the objective with one directly aligned to the deployed inference operation:
->
-> **spatial softmax → target point-cell classification + bounded own-vs-cross target-region probability mass.**
->
-> No architecture change. No 4B. No `[REF]`. No SRE. No SCL. No dataset migration. No GUI.
+> No 4B, [REF], SRE, SCL, dataset migration or GUI.
 
-## 0. User-facing language
+## 0. UI language
 
-All DSH narrative/UI output must be **Chinese**.
+Narrative DSH output in Chinese. Code/paths/metric keys may be English.
 
-Code, paths, metric keys and raw logs may remain English.
+## 1. Freeze Task 6H.1 objective
 
-# PART A — Freeze architecture and evidence
+Keep exactly:
 
-## 1. Architecture is frozen
-
-Reuse exactly Task 6G/6H:
-
-```text
-image + instruction
-→ fixed pre-reasoning [BOX] query
-→ Qwen query hidden
-→ DenseSpatialGroundingHead
-   query: LayerNorm(2048) → Linear(128)
-   visual: Conv1x1(32,128) on frozen SAM2 256×256 feature
-   dot-product heatmap
-→ point from heatmap
-```
-
-Keep:
-- Qwen3-VL-2B-Instruct;
-- text-only LoRA;
-- `[BOX]` query row;
-- `[SEG]` row;
-- SAM2 256×256 / 32-channel high-res feature;
-- all SAM2 frozen;
-- Task 6G head dimensions unchanged;
-- same canonical 240 train pairs;
-- same fixed validation material.
-
-Do not add:
-- extra query tokens;
-- coordinate channels;
-- cross-attention;
-- visual LoRA;
-- larger decoder;
-- new dataset.
-
-## 2. Frozen downstream ceiling
-
-Do not rerun unless a correctness issue is found:
-
-- 256-grid snapped point → frozen SAM2:
-  - strict mIoU `0.4883`;
-  - paired mask `18/20`.
-
-# PART B — Correct Task 6H interpretation in docs
-
-## 3. Preserve numbers, narrow the causal wording
-
-Do not rewrite historical Task 6H measurements.
-
-Where project-state/handoff summary implies:
-
-> counterfactual query signal itself failed
-
-supersede it with:
-
-> Task 6H successfully learned the specified own-vs-cross logit ranking, but the loss was scale-degenerate: it could be minimized by magnifying logits without moving the heatmap peak onto the target. Query learnability remains unresolved until a bounded, localization-aligned objective is tested.
-
-Historical verdict may remain `COUNTERFACTUAL_QUERY_SIGNAL_FAILED` as the task's original machine verdict, but the new accepted interpretation must be explicit.
-
-# PART C — Deterministic target point-cell
-
-## 4. Point target
-
-For each instruction-selected target mask:
-
-1. use the frozen Task 6D deterministic interior point;
-2. snap it to the selected 256×256 grid cell using the Task 6G convention;
-3. convert `(x_cell, y_cell)` to:
-
-```text
-target_index = y_cell * 256 + x_cell
-```
-
-This is the primary spatial training target.
-
-GT point/cell is supervision only.
-
-At inference the point remains:
-
-```text
-argmax(heatmap_logits)
-```
-
-with no GT repair.
-
-# PART D — Spatial-softmax point classification
-
-## 5. Primary localization loss
-
-For:
-
-```text
-H ∈ R^(256×256)
-```
-
-flatten to 65,536 spatial classes and use:
-
-```text
-L_point = CrossEntropy(H.flatten(), target_index)
-```
-
-No class weighting.
-No temperature sweep.
-No label smoothing.
-
-Report:
-- point CE;
-- top-1 target-cell accuracy;
-- top-5 / top-25 cell accuracy;
-- target-cell probability;
-- argmax point-inside-target.
-
-# PART E — Bounded counterfactual region mass
-
-## 6. Spatial probability distribution
-
-Define:
-
-```text
-P = softmax(H.flatten(), dim=-1).reshape(256,256)
-```
-
-For target soft mask `M`:
-
-```text
-mass(P, M) = sum(P * M)
-```
-
-Do **not** divide by target area.
-
-For pair A/B:
-
-```text
-p_AA = mass(P_A, M_A)
-p_AB = mass(P_A, M_B)
-p_BB = mass(P_B, M_B)
-p_BA = mass(P_B, M_A)
-```
-
-All are bounded in `[0,1]`.
-
-## 7. Bounded pair-preference loss
-
-Use:
-
-```text
-eps = 1e-8
-
-L_cf_A = -log((p_AA + eps) / (p_AA + p_AB + 2*eps))
-L_cf_B = -log((p_BB + eps) / (p_BB + p_BA + 2*eps))
-
-L_cf = 0.5 * (L_cf_A + L_cf_B)
-```
-
-No margin hyperparameter.
-
-Report:
-- `p_AA`, `p_AB`, `p_BB`, `p_BA`;
-- probability-mass own-minus-cross margins;
-- own/(own+cross) ratios;
-- `L_cf`.
-
-Pair ranking passes iff:
-
-```text
-p_AA > p_AB
-and
-p_BB > p_BA
-```
-
-# PART F — Remove mismatched old objectives
-
-## 8. Disable Task 6H raw-logit ranking
-
-Task 6H's raw-logit region ranking must contribute **zero gradient** in Task 6H.1.
-
-It may be logged only as historical diagnostic.
-
-## 9. Disable BCE+Dice from the optimizer objective
-
-Task 6G/6H heatmap BCE+Dice must also contribute **zero gradient** in Task 6H.1.
-
-They may be logged as diagnostics.
-
-Reason:
-- inference uses one prompt point;
-- point CE is directly aligned with argmax;
-- Task 6G showed severe tiny-target imbalance / near-zero-map behavior.
-
-# PART G — Pair-step objective
-
-## 10. One optimizer step = one pair
-
-Keep Task 6H pair semantics:
-- one shared frozen SAM feature;
-- query A forward;
-- query B forward;
-- both graphs retained;
-- one backward;
-- one optimizer step.
-
-Scheduler horizon counts pair steps.
-
-## 11. Fixed total loss
-
-Use:
-
-```text
 L_total =
-    0.5 * (L_reasoning_A + L_reasoning_B)
-  + 1.0 * (L_point_A + L_point_B)
-  + 1.0 * L_cf
-```
+  0.5*(L_reasoning_A + L_reasoning_B)
+  + 1.0*(L_point_A + L_point_B)
+  + 1.0*L_cf_bounded
 
-No weight sweep.
+Where:
+- L_point = 65,536-way point-cell CE on the 256x256 grid.
+- L_cf_bounded = spatial-softmax own-vs-cross target probability-mass preference.
 
-# PART H — H0-R: corrected 10-pair overfit
+Do not re-enable:
+- Task 6G BCE+Dice,
+- Task 6H raw-logit ranking,
+- box SmoothL1,
+- coordinate-token CE.
 
-## 12. Clean initialization
+No loss-weight sweep.
 
-Use clean Task 6G/6H initialization.
+Keep one optimizer step = one canonical pair, same 240 train pairs, same deterministic pair order, same corrected pair-step scheduler.
 
-Do not initialize from the scale-exploded Task 6H H0 checkpoint.
+## 2. Keep the initial query
+
+Reuse Task 6F/6G/6H causally clean pre-reasoning [BOX] token:
+
+image + instruction -> fixed [BOX] -> q0
+
+q0 must not attend to future reasoning or GT.
+
+Do not add new language special tokens.
+
+## 3. Coarse visual feature
+
+Use frozen SAM2 64x64 main image embedding.
+
+Verify exact shape; expected approximately [B,256,64,64].
+
+Flatten to 4096 visual tokens.
+
+No gradient into SAM2.
+
+## 4. VisualQueryRefinementBlock
+
+Implement exactly one refinement block.
+
+Recommended structure:
+
+q0 [B,2048]
+-> LayerNorm
+-> Linear(2048,256)
+-> q [B,1,256]
+
+F64
+-> Conv1x1(256,256)
+-> flatten [B,4096,256]
+-> LayerNorm
+
+CrossAttention:
+- query=q
+- key/value=F64 tokens
+- embed_dim=256
+- num_heads=4
+
+Residual:
+q_ref = q + cross_attn_output
+
+Then:
+q_ref
+-> LayerNorm
+-> FFN(256 -> 512 -> 256, GELU)
+-> residual
+-> q1
+
+Constraints:
+- exactly one cross-attention refinement layer;
+- no second refinement step;
+- no self-attention stack;
+- no extra learned image queries;
+- no coordinate channels;
+- no deformable attention.
+
+## 5. High-resolution scorer
+
+Use frozen SAM2 256x256 / 32-channel feature.
+
+F256 -> Conv1x1(32,256) -> K256
+
+heatmap_logits[y,x] = dot(q1, K256[:,y,x]) / sqrt(256)
+
+Optional scalar bias allowed.
+
+The candidate forward must use q1, not q0 and not the old Task 6G head.
+
+## 6. Trainables
+
+Train:
+- text-only Qwen LoRA;
+- [BOX] row;
+- [SEG] row;
+- VisualQueryRefinementBlock;
+- F64 projection;
+- F256 scorer projection.
+
+Freeze:
+- Qwen base;
+- Qwen visual tower;
+- all SAM2;
+- Task 6G old DenseSpatialGroundingHead;
+- Task 6F box head;
+- Task 6D grounding head;
+- Task 6E loc-token path.
+
+No visual LoRA.
+
+Verify optimizer coverage and frozen-backbone bit identity.
+
+## 7. Attention diagnostics
+
+Expose the 1x4096 cross-attention weights for diagnostics.
+
+Report:
+- attention entropy;
+- top-1 visual cell;
+- top-10 attention mass;
+- attention mass inside target building after downsampling target mask to 64x64;
+- attention mass inside paired other target.
+
+Diagnostics only; do not supervise attention directly.
+
+## 8. I0: 10-pair overfit
 
 Use the same 10 canonical H0 pairs.
 
-Maximum:
-`1500 pair optimizer steps`.
+Clean initialization only; do not load failed Task 6H.1 H0-R weights.
 
-## 13. H0-R metrics
+Maximum 1500 pair optimizer steps.
 
-At 250/500/750/1000/1500 pair steps report:
+Use frozen Task 6H.1 point CE + bounded pair mass objective exactly.
 
-- target-cell top-1 /20;
-- target-cell top-5 /20;
+At 250/500/750/1000/1500 report:
 - point-inside-own /20;
-- paired point-selection /10;
+- paired point /10;
 - bounded pair ranking /10;
-- mean own target probability mass;
-- mean cross target probability mass;
-- mean own-minus-cross probability mass;
-- same-image point distance;
-- same-image probability-map overlap;
-- mean absolute raw logit;
-- logit std;
-- loss components.
+- target-cell top-1/top-5 /20;
+- target-cell probability;
+- own/cross target probability mass;
+- normalized and 512px point error;
+- spatial entropy;
+- mean abs high-res logit;
+- cross-attention entropy;
+- target vs cross attention mass;
+- same-image q0 distance;
+- same-image q1 distance;
+- same-image predicted-point distance.
 
-### H0-R gate
+I0 gate:
+- inside >= 18/20;
+- paired point >= 9/10;
+- bounded pair ranking >= 9/10;
+- mean normalized point error < 0.08.
 
-Require:
+No hard gate on exact target-cell top-1.
 
-- point-inside-own >= `18/20`;
-- paired point-selection >= `9/10`;
-- bounded pair ranking >= `9/10`;
-- mean own target probability mass > mean cross target probability mass;
-- final mean absolute logit < `10.0`.
+If I0 fails after implementation audit:
+VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT
+and STOP.
 
-Target-cell top-1 is not a hard gate because any interior target cell can be a valid SAM prompt.
+## 9. I0 audit if needed
 
-If H0-R fails, run the focused audit and STOP.
+Audit only:
+- q0 causal cleanliness;
+- same-image different-instruction cross-attention outputs differ when appropriate;
+- F64/F256 shared features bit-identical for pair A/B;
+- gradients reach Qwen LoRA, [BOX], attention Q/K/V/out, FFN, F64 projection and F256 scorer;
+- no gradient reaches SAM2;
+- point CE and bounded pair loss decrease;
+- attention/logits finite;
+- q1 separation vs q0 separation.
 
-# PART I — Focused audit on failure
+Do not add a second refinement layer during audit.
 
-## 14. Audit only the corrected objective
+## 10. I1: 240-pair mini-train
 
-If H0-R fails, inspect:
-
-- point-CE gradient norms into query projection, visual projection, LoRA, `[BOX]` row;
-- bounded `L_cf` gradients;
-- target-cell probability evolution;
-- maximum non-target probability;
-- spatial-softmax entropy;
-- whether `L_point` decreases;
-- whether argmax approaches GT point;
-- A/B query and projected-query distances;
-- pair identities / target indices;
-- shared-feature bit identity.
-
-Do not change architecture or loss during audit.
-
-Possible verdict:
-`BOUNDED_POINT_OBJECTIVE_FAILED`.
-
-# PART J — H1-R: 240-pair mini-train
-
-## 15. Run only if H0-R passes
+Only if I0 passes.
 
 Train:
-- 240 canonical pairs / epoch;
-- maximum 8 epochs;
+- 240 canonical pairs/epoch;
+- max 8 epochs;
 - deterministic order;
-- corrected cosine scheduler over actual pair steps;
-- validate every epoch.
+- corrected pair-step scheduler;
+- validate each epoch.
 
-No mid-run tuning.
+No mid-run architecture or loss changes.
 
-## 16. Validation metrics
+Model selection:
+1. paired point /20;
+2. bounded pair ranking /20;
+3. 120-record point-inside rate.
 
-Primary fixed 20 paired validation images:
-- bounded pair ranking /20;
-- paired point-selection /20;
-- own/cross target probability mass;
-- point-inside-own.
-
-Independent 120 validation records:
-- point-inside-target rate;
-- target-cell top-1/top-5;
-- normalized point error;
-- 512-pixel point error;
-- spatial entropy;
-- L1/L2/L3;
-- query-family breakdown.
-
-## 17. Model selection
-
-Lexicographic:
-1. paired point-selection /20;
-2. pair ranking /20;
-3. 120-record point-inside-target rate.
-
-## 18. H1-R gate
-
-Require:
-- paired point-selection >= `14/20`;
-- bounded pair ranking >= `14/20`;
-- 120-record point-inside-target >= `0.60`.
+I1 gate:
+- paired point >= 14/20;
+- pair ranking >= 14/20;
+- 120-record point-inside >= 0.60.
 
 If best epoch fails:
-`BOUNDED_COUNTERFACTUAL_GROUNDING_FAILED`.
+VISUAL_QUERY_REFINEMENT_NO_GENERALIZATION
+and STOP before segmentation.
 
-Do not train SAM2 to hide failure.
+## 11. Representation diagnosis
 
-# PART K — Representation/output diagnosis
+At best I1 checkpoint compare q0 vs q1 on same-image/different-instruction pairs.
 
-## 19. Compare against Task 6H
+q0:
+- raw cosine;
+- centered cosine;
+- L2.
 
-At best H1-R checkpoint report:
-- `[BOX]` same-image centered cosine;
-- projected-query distance;
-- spatial-softmax entropy;
-- own target probability mass;
-- cross target probability mass;
-- own-minus-cross probability margin;
-- same-image probability-map overlap;
-- predicted-point distance;
-- correlation between probability-mass margin and localization correctness;
-- correlation between projected-query distance and GT point distance.
+q1:
+- raw cosine;
+- centered cosine;
+- L2;
+- effective rank if practical.
 
-Key question:
+Also report:
+- q0 distance vs GT-point-distance correlation;
+- q1 distance vs GT-point-distance correlation;
+- probability-mass margin vs localization correctness;
+- attention target mass vs localization correctness.
 
-> Did the bounded point-aligned objective convert same-image instruction differences into correct spatial selection rather than magnitude-only separation?
+Main question:
+Does one visual refinement step turn the weak instruction signal in q0 into a target-specific q1?
 
-# PART L — H2-R frozen-SAM2 segmentation
+## 12. I2: frozen-SAM2 segmentation
 
-## 20. Run only if H1-R passes
+Only if I1 passes.
 
 Inference:
 
-```text
 image + instruction
-→ [BOX] query
-→ dense heatmap logits
-→ argmax point
-→ official frozen SAM2 positive-point prompt
-→ frozen SAM2 decoder
-→ mask
-```
+-> q0
+-> visual refinement q1
+-> 256x256 heatmap
+-> argmax predicted point
+-> official frozen SAM2 positive-point prompt
+-> frozen SAM2 decoder
+-> mask
 
-No GT.
-No SAM2 training.
+No GT and no SAM2 training.
 
-## 21. H2-R metrics
-
-On fixed 120 val + 20 paired:
+Report on fixed 120 val + 20 paired:
 - strict e2e mIoU;
 - Dice;
 - mask paired /20;
-- own-target mask IoU;
-- cross-target mask IoU;
+- own-target IoU;
+- cross-target IoU;
 - own-minus-cross mask margin;
 - IoU(pred_A,pred_B);
 - L1/L2/L3;
 - query-family breakdown.
 
-Compare to:
-- Task 6C P_C `0.10604 / 0/20`;
-- point oracle `0.4876 / 18/20`;
-- box oracle `0.7506 / 20/20`.
+Compare:
+- Task 6C P_C 0.10604 / 0/20;
+- selected-grid point oracle 0.4883 / 18/20;
+- box oracle 0.7506 / 20/20.
 
-# PART M — Verdicts
+## 13. Verdicts
 
-## 22. Use exactly one
+Use exactly one:
 
-### `BOUNDED_COUNTERFACTUAL_FIX_FOUND`
-Require:
-- H0-R pass;
-- H1-R gate pass;
-- H2-R mask paired >= `14/20`;
-- strict e2e mIoU >= `0.20`;
-- mask own-minus-cross > `0.05`;
+VISUAL_QUERY_REFINEMENT_FIX_FOUND
+- I0 pass;
+- I1 pass;
+- I2 mask paired >=14/20;
+- strict e2e mIoU >=0.20;
+- mask own-minus-cross >0.05;
 - no GT leakage.
 
-### `BOUNDED_COUNTERFACTUAL_PARTIAL`
-Corrected objective yields real localization improvement but misses full H1/H2 gate.
+VISUAL_QUERY_REFINEMENT_PARTIAL
+- real target-specific localization improvement, but not full gate.
 
-### `BOUNDED_COUNTERFACTUAL_GROUNDING_FAILED`
-H0-R passes but generalization fails.
+VISUAL_QUERY_REFINEMENT_NO_GENERALIZATION
+- I0 passes, I1 fails.
 
-### `BOUNDED_POINT_OBJECTIVE_FAILED`
-H0-R cannot pass after audit.
+VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT
+- implementation clean, I0 fails.
 
-### `INVALID_EXPERIMENT`
-Loss/sign/pair/target-index/leakage/freeze/split or correctness failure.
+INVALID_EXPERIMENT
+- causal/freeze/shape/loss/pair/split correctness failure.
 
-# PART N — Next-decision discipline
+## 14. Decision rule
 
-## 23. If H0-R still fails
-
-Do **not** keep redesigning scalar losses indefinitely.
-
-A clean failure of point CE + bounded pair mass means the existing single `[BOX]` query representation is inadequate even under a directly aligned spatial objective.
-
-Then stop for review. Candidate next classes are:
-- instruction-aware multi-query / iterative query refinement;
-- stronger MLLM representation;
+If I0 fails cleanly:
+STOP. Recommend one for review:
+- stronger/larger MLLM representation;
+- multiple learned query slots;
 - architecture-level reference/relation grounding.
 
-Do not implement them automatically.
+Do not implement automatically.
 
-## 24. If H0-R passes but H1-R fails
+If I0 passes but I1 fails:
+STOP. Review training-data scale, dataset suitability, 2B vs larger MLLM, stronger query architecture.
 
-Then the problem becomes generalization/data/representation capacity, not basic optimization.
+## 15. Required artifacts
 
-Stop for review and explicitly reconsider:
-- training-set scale;
-- dataset quality;
-- 2B vs larger MLLM;
-- stronger query architecture.
+Create as applicable:
 
-# PART O — Required artifacts
+evaluation/task6i_architecture_setup.json
+evaluation/task6i_i0_overfit.json
+evaluation/task6i_i0_audit.json
+evaluation/task6i_i1_training.json
+evaluation/task6i_spatial_eval.json
+evaluation/task6i_representation.json
+evaluation/task6i_attention_diagnostics.json
+evaluation/task6i_segmentation_eval.json
+evaluation/task6i_paired_probe.json
+evaluation/task6i_error_analysis.json
+evaluation/task6i_checkpoint_manifest.json
+docs/task6i_visual_query_refinement.md
 
-## 25. Create
+Weights/checkpoints/caches local and gitignored.
 
-```text
-evaluation/task6h1_objective_setup.json
-evaluation/task6h1_h0r_overfit.json
-evaluation/task6h1_h0r_audit.json
-evaluation/task6h1_h1r_training.json
-evaluation/task6h1_spatial_eval.json
-evaluation/task6h1_representation.json
-evaluation/task6h1_segmentation_eval.json
-evaluation/task6h1_paired_probe.json
-evaluation/task6h1_error_analysis.json
-evaluation/task6h1_checkpoint_manifest.json
-docs/task6h1_bounded_point_counterfactual.md
-```
-
-Conditional files only when their stage runs.
-
-# PART P — Tests
-
-## 26. Required tests
+## 16. Required tests
 
 Cover at least:
-
-1. frozen 256-grid target-cell convention;
-2. target cell corresponds to deterministic interior point;
-3. point-CE target index correct;
-4. spatial softmax sums to 1;
-5. region probability mass bounded `[0,1]`;
-6. region mass is not divided by target area;
-7. pair preference is invariant to additive logit shift;
-8. increasing own probability mass lowers `L_cf`;
-9. increasing cross probability mass raises `L_cf`;
-10. Task 6H raw-logit loss contributes zero gradient;
-11. BCE/Dice contributes zero gradient;
+1. q0 is causally clean pre-reasoning [BOX];
+2. exact F64 shape verified;
+3. exact F256 shape verified;
+4. exactly one cross-attention refinement layer;
+5. attention dim 256 / heads 4;
+6. q0->q1 residual correct;
+7. FFN residual correct;
+8. high-res scorer uses q1;
+9. Task 6H.1 point CE unchanged;
+10. bounded pair mass unchanged;
+11. old BCE/Dice and raw-logit ranking remain zero-gradient;
 12. one pair = one optimizer step;
-13. scheduler uses pair-step horizon;
-14. architecture identical to Task 6G/6H;
-15. SAM2 fully frozen;
+13. scheduler counts pair steps;
+14. shared SAM features identical for A/B;
+15. SAM2 bit-frozen;
 16. Qwen visual tower frozen;
-17. `[BOX]` causally pre-reasoning;
-18. no Task 6F box head;
-19. no Task 6E loc path;
-20. no test split;
-21. H2-R uses predicted point only;
-22. no 4B / `[REF]` / SRE / SCL;
-23. strict determinism;
-24. Task 6H causal wording corrected without changing historical metrics.
+17. attention diagnostics do not inject GT into inference;
+18. Task 6G old head absent from candidate forward;
+19. Task 6F box head absent;
+20. Task 6E loc path absent;
+21. no test split;
+22. I2 uses predicted point only;
+23. no 4B/[REF]/SRE/SCL;
+24. strict determinism.
 
 Run:
-`python -m pytest tests/ -q`
+python -m pytest tests/ -q
 
-# PART Q — Git / Watt
+## 17. Git / Watt
 
-## 27. Git hygiene
-
-Do not stage weights/checkpoints/caches/hidden dumps/`.conda`/dataset JSONL changes.
+Do not stage weights/checkpoints/caches/hidden or attention dumps/.conda/dataset JSONL edits.
 
 Recommended commit:
-`fix: align counterfactual grounding with point localization`
+feat: add visual query refinement
 
 Use established Watt ownership rules for final push only.
 
-# PART R — Handoff
-
-## 28. FROM_DSH
+## 18. FROM_DSH
 
 Include:
 1. Verdict
-2. Frozen Task 6H Evidence
-3. Corrected Causal Interpretation
-4. Point-Cell Target
-5. Spatial-Softmax Objective
-6. Bounded Counterfactual Mass Loss
-7. Pair-Step Semantics
-8. H0-R Overfit
-9. H0-R Audit if needed
-10. H1-R Training
-11. Point Localization Metrics
-12. Pair Preference Metrics
-13. Representation/Entropy Diagnostics
-14. H2-R Segmentation
-15. Paired Mask Probe
-16. Error/Data Adequacy Analysis
-17. Runtime/VRAM
-18. Tests
-19. Git/Watt
-20. Recommended next architecture decision
+2. Frozen Task 6H.1 Evidence
+3. Architecture
+4. Trainables/Frozen Parameters
+5. Attention Diagnostics
+6. I0 Overfit
+7. I0 Audit if needed
+8. I1 Training
+9. Point Localization
+10. Pair Preference
+11. q0 vs q1 Representation
+12. I2 Segmentation
+13. Paired Mask Probe
+14. L1/L2/L3 + Query Breakdown
+15. Error/Data Adequacy
+16. Runtime/VRAM
+17. Tests
+18. Git/Watt
+19. Recommended next architecture decision
 
-## 29. Final DSH UI — Chinese only
+## 19. Final DSH UI — Chinese only
 
 Report:
 - verdict;
-- H0-R inside-own /20;
-- H0-R paired point /10;
-- H0-R bounded pair ranking /10;
-- final mean abs logit vs Task 6H 16.32;
-- target/cross probability mass;
-- if H1-R ran: best epoch, paired point /20, pair ranking /20, 120-val inside rate;
-- if H2-R ran: strict mIoU, mask paired /20, mask own-cross margin;
-- whether objective degeneracy is fixed;
+- I0 inside /20;
+- I0 paired point /10;
+- I0 bounded pair ranking /10;
+- q0 vs q1 same-image separation;
+- target vs cross attention mass;
+- if I1 ran: best epoch, paired point /20, pair ranking /20, 120-val inside;
+- if I2 ran: strict mIoU, mask paired /20, mask own-cross margin;
+- whether visual refinement solved the single-query bottleneck;
 - dominant remaining failure;
 - tests;
 - commit/push;
 - Watt handling.
 
-# 30. STOP
+## 20. STOP
 
-After Task 6H.1:
+After Task 6I STOP.
 
-**STOP.**
-
-Do not automatically:
-- add multi-query refinement;
-- add cross-attention;
-- add `[REF]`;
-- add SRE/SCL;
-- scale to 4B;
-- migrate dataset;
-- run full training;
-- build GUI.
+Do not automatically add:
+- second refinement layer;
+- multiple query tokens;
+- [REF];
+- SRE/SCL;
+- 4B;
+- dataset migration;
+- full training;
+- GUI.
 
 Wait for ChatGPT review.

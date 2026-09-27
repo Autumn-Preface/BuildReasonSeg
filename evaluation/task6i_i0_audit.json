@@ -1,0 +1,104 @@
+{
+  "_doc": "Task 6I section 9. Focused I0 audit: causal q0, gradient coverage of the refinement block, frozen SAM2, objective decrease and q0 vs q1 separation. No second refinement layer, no loss change.",
+  "task": "6I",
+  "causal_placement": {
+    "box_hidden_bit_identical": true,
+    "box_hidden_max_abs_delta": 0.0
+  },
+  "gradients": {
+    "point_ce": {
+      "refine_block.query_proj": 0.14201570026440297,
+      "refine_block.coarse_proj": 0.4543880151347055,
+      "refine_block.cross_attn": 0.3265931752986888,
+      "refine_block.ffn": 0.5330587672003082,
+      "refine_block.fine_proj": 2.819425408850617,
+      "qwen_lora": 0.8400020676428475,
+      "token_rows": 0.14238670468330383,
+      "frozen_or_other": 0.058535452654368395
+    },
+    "bounded_cf": {
+      "refine_block.query_proj": 0.051027534354236855,
+      "refine_block.coarse_proj": 0.43734299917141106,
+      "refine_block.cross_attn": 0.13127154564397125,
+      "refine_block.ffn": 0.13586550964250552,
+      "refine_block.fine_proj": 0.5679130669262629,
+      "qwen_lora": 0.7869177008633927,
+      "token_rows": 0.1386113464832306,
+      "frozen_or_other": 0.02385394275770702
+    }
+  },
+  "sam2_any_grad": false,
+  "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6i\\I0\\i0_final.pt",
+  "checkpoint_load": {
+    "step": 1500,
+    "metrics": {
+      "gate_passed": false,
+      "point_inside_own": 13,
+      "paired_point_selection": 5,
+      "pair_ranking": 10,
+      "mean_normalized_error": 0.083837890625,
+      "mean_abs_logit": 36.084913802146914
+    },
+    "missing_keys": 626,
+    "unexpected_keys": 0,
+    "grounding_head_loaded": false,
+    "box_head_loaded": false,
+    "dense_head_loaded": true,
+    "refine_block_loaded": true,
+    "geometry_kind": null
+  },
+  "objective": {
+    "point_ce_decreased": true,
+    "bounded_cf_loss_decreased": true,
+    "before": {
+      "mean_point_ce": 11.0875834941864,
+      "mean_target_cell_probability": 1.5305120541597717e-05,
+      "target_cell_top1_rate": 0.0,
+      "point_inside_rate": 0.05,
+      "mean_spatial_entropy": 11.090151357650758,
+      "mean_max_non_target_probability": 1.6565847181482242e-05,
+      "mean_q0_same_image_l2": 27.368862915039063,
+      "mean_q1_same_image_l2": 2.160031425952911,
+      "mean_p_aa": 0.009188643097877503,
+      "mean_p_ab": 0.005401776544749737,
+      "mean_p_bb": 0.00540381830651313,
+      "mean_p_ba": 0.009197603282518684,
+      "mean_margin": -3.4591415897011756e-06,
+      "mean_cf_loss": 0.8527386486530304,
+      "mean_attention_entropy": 8.31210298538208,
+      "mean_attention_target_mass": 0.007874183147214353,
+      "mean_attention_cross_mass": 0.007927898550406098
+    },
+    "after": {
+      "mean_point_ce": 3.1832892261445522,
+      "mean_target_cell_probability": 0.2684248601508443,
+      "target_cell_top1_rate": 0.45,
+      "point_inside_rate": 0.65,
+      "mean_spatial_entropy": 4.205611312389374,
+      "mean_max_non_target_probability": 0.05773137292126194,
+      "mean_q0_same_image_l2": 159.42618789672852,
+      "mean_q1_same_image_l2": 1742.3569946289062,
+      "mean_p_aa": 0.3120565749704838,
+      "mean_p_ab": 0.037658412642042546,
+      "mean_p_bb": 0.5211133083328605,
+      "mean_p_ba": 0.009543150464742212,
+      "mean_margin": 0.39298416627570987,
+      "mean_cf_loss": 0.09671381149400986,
+      "mean_attention_entropy": 1.4341268479824065,
+      "mean_attention_target_mass": 0.012501815260238922,
+      "mean_attention_cross_mass": 4.3398381853024607e-07
+    },
+    "point_ce_delta": -7.904294268041848,
+    "cf_loss_delta": -0.7560248371590206,
+    "q1_separation_grew_vs_q0": true,
+    "attention_finite": true,
+    "logits_finite": true
+  },
+  "i0_reference": {
+    "point_inside_own": 13,
+    "paired_point": 5,
+    "pair_ranking": 10,
+    "mean_normalized_error": 0.083837890625
+  },
+  "seconds": 32.83
+}
