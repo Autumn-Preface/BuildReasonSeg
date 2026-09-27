@@ -1,0 +1,14 @@
+{
+  "_doc": "Task 6J section 15. Stage J4 was NOT run: J1 viability gate failed. The structured end-to-end test is gated on all three, so no predicted-program + predicted-proposal execution is performed.",
+  "task": "6J",
+  "stage": "J4",
+  "ran": false,
+  "blockers": [
+    "J1 viability gate failed"
+  ],
+  "gates": {
+    "j1_viable": false,
+    "j2_passed": true,
+    "j3_passed": true
+  }
+}

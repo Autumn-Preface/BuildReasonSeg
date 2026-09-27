@@ -967,6 +967,26 @@ validation set and one metric path.
 
 ---
 
+## ADR-022 — Task 6J: program parsing + relation execution are solved; the proposal backbone is the binding limit
+
+**Status:** **Accepted** (Task 6J) for what J0-J3 and the J1 audit measure.
+
+**Context.** After seven failed direct pixel-grounding readouts (6D.1–6I), Task 6J audits the structured route: instruction → canonical relation program → building candidates → explicit geometry execution with the frozen Task 3B relation engine → selected mask. 20 canonical programs derive 1:1 from the frozen v0.1.1 query types (verified against all 25,229 records); a compact executor consumes only program + candidate geometry and never reads target id / GT reasoning / target mask.
+
+**Decision**
+
+1. **The executor semantics are exact (J0).** The independent executor agrees with the frozen generator's own `recompute_target_from_steps` on 120/120 fixed val samples; exact accuracy 1.000, paired 20/20, zero abstentions with oracle candidates.
+2. **Instruction → program is solved at 2B (J2).** Text-only Qwen LoRA + `LayerNorm → Linear(2048, 20)` over the last prompt position reaches 1.000 accuracy on the fixed 120, 1.000 macro F1, 20/20 paired and 1.000 on the full 3,884-record val split. Predicted program + oracle candidates (J3) is therefore also exact: 1.000 / 20-20. Program parsing is not the bottleneck.
+3. **The frozen YOLO proposal chain is the binding limit (J1).** Recall passes (0.919/0.869/0.594 at IoU 0.25/0.5/0.75; missing 13.1 %; tiny components 0.391) and oracle-program mIoU passes (0.3712 ≥ 0.30), but paired mask selection is **5/20** (gate 12/20): 35/120 executor abstentions plus proposal-geometry-induced wrong selections — the frozen semantics were calibrated on connected components, and YOLO instances (split/merged/border-clipped) change relation outcomes. J4 is therefore correctly not run.
+4. **Verdict `PROPOSAL_QUALITY_LIMIT`** (J0/J2/J3 healthy; the proposal chain is the binding failure). Per the interpretation discipline nothing more is claimed than: explicit program parsing + proposal-level geometry execution is a viable functional target-selection architecture conditional on a better proposal backbone.
+
+**Consequences**
+
+* The next step is a **proposal-backbone/dataset task** (instance segmentation aligned with the component semantics, or proposal post-processing), not a parser or executor change. No YOLO retraining, no dataset migration, no `[REF]`/SRE/SCL/4B/GUI.
+* The reusable API (`parse_program`, `extract_building_candidates`, `execute_program`, `predict_structured_mask` in `buildreasonseg_mvp/structured_grounding.py`) and the 20-program vocabulary (`evaluation/task6j_program_spec.json`) are the durable artifacts; the frozen YOLO baseline is invoked read-only with hashed provenance (`d9a6a65b…`, yolo_sam_env, ultralytics 8.4.67).
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -992,3 +1012,4 @@ validation set and one metric path.
 | 019 | **Task 6H: own-vs-cross ranking on unbounded logits is satisfiable without localizing** | 240 canonical same-image counterfactual pairs, one pair step with one shared frozen feature and a single backward; H0 reaches pair ranking 10/10 and mean margin +5.58 while inside-own is 3/20 — the audit shows the margin grew with a 110× logit-scale increase (probability margin only +0.112, point-inside 0.15), so the specified objective is scale-degenerate and the task stops at H0 |
 | 020 | **Task 6H.1: the point-aligned bounded objective is healthy; the query's spatial signal is the limit** | Spatial cross-entropy on the deterministic point-cell plus a bounded probability-mass preference (BCE/Dice and logit ranking detached to zero gradient); H0-R shows point CE 11.10 → 4.74, entropy 11.09 → 6.21, point error 0.466 → 0.167, bounded margin +0.139, yet inside-own is 7/20 and the max non-target probability (0.0532) still rivals the target cell (0.0515) — a clean failure of the single `[BOX]` query representation, so the next candidates are representation-level (multi-query refinement, stronger MLLM, reference/relation grounding) |
 | 021 | **Task 6I: one free cross-attention refinement step improves the query but cannot aim itself** | `[BOX]` q0 cross-attends the frozen 64×64 SAM2 embedding exactly once (256/4 heads, residual + FFN); refined q1 scores the 256×256 feature; frozen 6H.1 objective; I0 raises inside-own 7→13/20 and paired point 2→5/10 (gates 18/9) while the 1×4096 attention peaks (entropy 8.31→1.46) with only ~2.5 % mass on the target — a single query slot cannot direct itself at the target even with one allowed look, so the next candidates are multiple learned query slots, a stronger MLLM, or reference/relation grounding |
+| 022 | **Task 6J: program parsing + relation execution are solved; the proposal backbone is the binding limit** | 20 canonical programs derived 1:1 from the frozen query types; the independent executor reproduces the frozen generator on 120/120 samples (J0 1.000, paired 20/20); text-only Qwen ProgramHead parses instructions perfectly (J2 1.000 acc / 1.000 macro F1 / 20-20 paired / 1.000 full val; J3 1.000 / 20-20) — but the frozen YOLO proposal chain fails the J1 paired gate (5/20 vs 12/20; recall@0.5 0.869; 35/120 abstentions from proposal-geometry mismatch), so the next step is a proposal-backbone/dataset task, not parser or executor changes |

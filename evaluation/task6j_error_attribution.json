@@ -1,0 +1,55 @@
+{
+  "_doc": "Task 6J section 19. Failure attribution across the structured route, read from the recorded artifacts. Parser and executor are near-perfect with oracle candidates; the proposal chain (frozen YOLO) is the binding failure.",
+  "task": "6J",
+  "j0": {
+    "exact_accuracy": 1.0,
+    "paired": 20
+  },
+  "j2": {
+    "fixed_120_accuracy": 1.0,
+    "macro_f1": 1.0,
+    "paired_correct": 20,
+    "full_val_accuracy": 1.0
+  },
+  "j3": {
+    "selected_target_accuracy": 1.0,
+    "program_accuracy": 1.0,
+    "failure_counts": {}
+  },
+  "j1": {
+    "strict_miou": 0.37123434708629205,
+    "paired_mask_pass": 5,
+    "paired_total": 20,
+    "abstention_counts": {
+      "extreme_margin_ambiguous_under_proposals": 4,
+      "no_eligible_candidates_under_proposals": 9,
+      "filter_kept_multiple_proposals": 9,
+      "nearest_anchor_or_margin_ineligible_under_proposals": 13
+    },
+    "failure_counts": {
+      "proposal_geometry_changes_relation_outcome": 18,
+      "executor_abstained_under_proposals": 35,
+      "target_absent_or_poor_in_proposal_set": 8,
+      "correct_selection_poor_mask_quality": 4
+    }
+  },
+  "binding_failure": "proposal_chain_j1_paired_selection",
+  "proposal_data_adequacy": {
+    "proposal_quality": {
+      "recall_at_0_50": 0.86875,
+      "missing_target_rate": 0.13125,
+      "mean_best_iou": 0.7013331884476749
+    },
+    "duplicates": {
+      "proposal_pairs_checked": 7862,
+      "pairs_with_iou_gt_0_7": 21,
+      "images_with_duplicate_pair": 21
+    },
+    "components": {
+      "tiny_component_recall_at_0_50": 0.391304347826087,
+      "border_component_recall_at_0_50": 0.7966101694915254,
+      "merge_suspected_recall_at_0_50": null
+    }
+  },
+  "conclusion": "The parser (J2) and the executor with oracle candidates (J0/J3) are essentially perfect; the frozen YOLO proposal chain is the binding constraint: recall is decent (0.869 @0.5) but proposal geometry (split/merged instances, border handling, anchor eligibility) changes relation outcomes and drives 35 abstentions plus wrong selections on the paired probe (5/20). Per section 19 the next step is a proposal-backbone/dataset task, not a parser or executor change."
+}

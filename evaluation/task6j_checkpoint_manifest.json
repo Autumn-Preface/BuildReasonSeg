@@ -1,0 +1,12 @@
+{
+  "_doc": "Task 6J: hashes of every Task 6J checkpoint. Checkpoint bytes stay gitignored.",
+  "task": "6J",
+  "checkpoints": {
+    "J2/j2_best": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6j\\j2_best.pt",
+      "bytes": 210252896,
+      "sha256": "224f70c97f60d9eb21284cfefdd806eabf300b42375f10d45a25d19547097457",
+      "step": 625
+    }
+  }
+}

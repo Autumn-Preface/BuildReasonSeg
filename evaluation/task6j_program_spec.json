@@ -1,0 +1,716 @@
+{
+  "_doc": "Task 6J section 2. Canonical program vocabulary built 1:1 from the frozen BuildSpatialReason v0.1.1 query types: each program id IS a frozen query type, the ordered operations are the dataset's stored reasoning-step patterns (verified to be unique per query type across train+val+test), and sample counts come from the dataset. The test split is listed for completeness and is never used for training or tuning.",
+  "task": "6J",
+  "program_count": 20,
+  "expected_query_types": [
+    "leftmost",
+    "rightmost",
+    "topmost",
+    "bottommost",
+    "largest",
+    "smallest",
+    "largest_to_nearest",
+    "smallest_to_nearest",
+    "largest_to_above",
+    "largest_to_below",
+    "largest_to_left_of",
+    "largest_to_right_of",
+    "smallest_to_above",
+    "smallest_to_below",
+    "smallest_to_left_of",
+    "smallest_to_right_of",
+    "largest_to_above_to_nearest",
+    "largest_to_below_to_nearest",
+    "largest_to_left_of_to_nearest",
+    "largest_to_right_of_to_nearest"
+  ],
+  "programs": {
+    "leftmost": {
+      "program_id": "leftmost",
+      "query_type": "leftmost",
+      "operations": [
+        {
+          "operation": "argmin_centroid_x"
+        }
+      ],
+      "reference_roles": [],
+      "output_role": "single_candidate",
+      "level": 1,
+      "sample_counts_by_split": {
+        "train": 2187,
+        "val": 548,
+        "test": 784
+      },
+      "template": [
+        {
+          "operation": "argmin_centroid_x"
+        }
+      ]
+    },
+    "rightmost": {
+      "program_id": "rightmost",
+      "query_type": "rightmost",
+      "operations": [
+        {
+          "operation": "argmax_centroid_x"
+        }
+      ],
+      "reference_roles": [],
+      "output_role": "single_candidate",
+      "level": 1,
+      "sample_counts_by_split": {
+        "train": 2197,
+        "val": 548,
+        "test": 782
+      },
+      "template": [
+        {
+          "operation": "argmax_centroid_x"
+        }
+      ]
+    },
+    "topmost": {
+      "program_id": "topmost",
+      "query_type": "topmost",
+      "operations": [
+        {
+          "operation": "argmin_centroid_y"
+        }
+      ],
+      "reference_roles": [],
+      "output_role": "single_candidate",
+      "level": 1,
+      "sample_counts_by_split": {
+        "train": 2161,
+        "val": 559,
+        "test": 771
+      },
+      "template": [
+        {
+          "operation": "argmin_centroid_y"
+        }
+      ]
+    },
+    "bottommost": {
+      "program_id": "bottommost",
+      "query_type": "bottommost",
+      "operations": [
+        {
+          "operation": "argmax_centroid_y"
+        }
+      ],
+      "reference_roles": [],
+      "output_role": "single_candidate",
+      "level": 1,
+      "sample_counts_by_split": {
+        "train": 2166,
+        "val": 541,
+        "test": 787
+      },
+      "template": [
+        {
+          "operation": "argmax_centroid_y"
+        }
+      ]
+    },
+    "largest": {
+      "program_id": "largest",
+      "query_type": "largest",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        }
+      ],
+      "reference_roles": [],
+      "output_role": "single_candidate",
+      "level": 1,
+      "sample_counts_by_split": {
+        "train": 1269,
+        "val": 317,
+        "test": 491
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        }
+      ]
+    },
+    "smallest": {
+      "program_id": "smallest",
+      "query_type": "smallest",
+      "operations": [
+        {
+          "operation": "argmin_area"
+        }
+      ],
+      "reference_roles": [],
+      "output_role": "single_candidate",
+      "level": 1,
+      "sample_counts_by_split": {
+        "train": 733,
+        "val": 174,
+        "test": 260
+      },
+      "template": [
+        {
+          "operation": "argmin_area"
+        }
+      ]
+    },
+    "largest_to_nearest": {
+      "program_id": "largest_to_nearest",
+      "query_type": "largest_to_nearest",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "single_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 857,
+        "val": 201,
+        "test": 361
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "all"
+        }
+      ]
+    },
+    "smallest_to_nearest": {
+      "program_id": "smallest_to_nearest",
+      "query_type": "smallest_to_nearest",
+      "operations": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "single_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 530,
+        "val": 135,
+        "test": 191
+      },
+      "template": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "all"
+        }
+      ]
+    },
+    "largest_to_above": {
+      "program_id": "largest_to_above",
+      "query_type": "largest_to_above",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "above",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 275,
+        "val": 63,
+        "test": 100
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "above",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "largest_to_below": {
+      "program_id": "largest_to_below",
+      "query_type": "largest_to_below",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "below",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 255,
+        "val": 62,
+        "test": 89
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "below",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "largest_to_left_of": {
+      "program_id": "largest_to_left_of",
+      "query_type": "largest_to_left_of",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "left_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 298,
+        "val": 74,
+        "test": 93
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "left_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "largest_to_right_of": {
+      "program_id": "largest_to_right_of",
+      "query_type": "largest_to_right_of",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "right_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 271,
+        "val": 69,
+        "test": 94
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "right_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "smallest_to_above": {
+      "program_id": "smallest_to_above",
+      "query_type": "smallest_to_above",
+      "operations": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "above",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 148,
+        "val": 48,
+        "test": 62
+      },
+      "template": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "above",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "smallest_to_below": {
+      "program_id": "smallest_to_below",
+      "query_type": "smallest_to_below",
+      "operations": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "below",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 142,
+        "val": 47,
+        "test": 43
+      },
+      "template": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "below",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "smallest_to_left_of": {
+      "program_id": "smallest_to_left_of",
+      "query_type": "smallest_to_left_of",
+      "operations": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "left_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 169,
+        "val": 37,
+        "test": 63
+      },
+      "template": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "left_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "smallest_to_right_of": {
+      "program_id": "smallest_to_right_of",
+      "query_type": "smallest_to_right_of",
+      "operations": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "right_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "unique_filtered_candidate",
+      "level": 2,
+      "sample_counts_by_split": {
+        "train": 161,
+        "val": 36,
+        "test": 62
+      },
+      "template": [
+        {
+          "operation": "argmin_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "right_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        }
+      ]
+    },
+    "largest_to_above_to_nearest": {
+      "program_id": "largest_to_above_to_nearest",
+      "query_type": "largest_to_above_to_nearest",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "above",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "single_candidate",
+      "level": 3,
+      "sample_counts_by_split": {
+        "train": 457,
+        "val": 96,
+        "test": 167
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "above",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ]
+    },
+    "largest_to_below_to_nearest": {
+      "program_id": "largest_to_below_to_nearest",
+      "query_type": "largest_to_below_to_nearest",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "below",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "single_candidate",
+      "level": 3,
+      "sample_counts_by_split": {
+        "train": 426,
+        "val": 103,
+        "test": 195
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "below",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ]
+    },
+    "largest_to_left_of_to_nearest": {
+      "program_id": "largest_to_left_of_to_nearest",
+      "query_type": "largest_to_left_of_to_nearest",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "left_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "single_candidate",
+      "level": 3,
+      "sample_counts_by_split": {
+        "train": 441,
+        "val": 102,
+        "test": 181
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "left_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ]
+    },
+    "largest_to_right_of_to_nearest": {
+      "program_id": "largest_to_right_of_to_nearest",
+      "query_type": "largest_to_right_of_to_nearest",
+      "operations": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "right_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ],
+      "reference_roles": [
+        "@1"
+      ],
+      "output_role": "single_candidate",
+      "level": 3,
+      "sample_counts_by_split": {
+        "train": 449,
+        "val": 124,
+        "test": 177
+      },
+      "template": [
+        {
+          "operation": "argmax_area"
+        },
+        {
+          "operation": "filter_relation",
+          "relation": "right_of",
+          "reference_component_id": "@1",
+          "input_component_ids": "all"
+        },
+        {
+          "operation": "argmin_boundary_distance",
+          "reference_component_id": "@1",
+          "candidate_component_ids": "previous"
+        }
+      ]
+    }
+  },
+  "operation_vocabulary": [
+    "argmin_centroid_x",
+    "argmax_centroid_x",
+    "argmin_centroid_y",
+    "argmax_centroid_y",
+    "argmax_area",
+    "argmin_area",
+    "filter_relation",
+    "argmin_boundary_distance"
+  ],
+  "reference_roles": {
+    "@1": "the single output of step 1 (the argument-step anchor)"
+  },
+  "note": "filter_relation uses relation(subject, reference) in the frozen Task 3B convention; argmin_boundary_distance uses the frozen nearest_within semantics (boundary distance, non-border anchor, frozen margins).",
+  "test_split_used_for_training": false
+}

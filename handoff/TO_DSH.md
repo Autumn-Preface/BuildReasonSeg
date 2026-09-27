@@ -1,448 +1,586 @@
-# TO_DSH — Task 6I: Visual Query Refinement v0.1
+# TO_DSH — Task 6J: Structured Proposal Grounding Feasibility v0.1
 
-> Status: ACTIVE
+> Status: **ACTIVE**
 >
-> Repository: BuildReasonSeg
+> Repository: `BuildReasonSeg`
 >
-> Goal: replace the failed direct single-query readout with one explicit instruction-conditioned visual query refinement step, while keeping the proven Task 6H.1 point-cell objective and paired supervision unchanged.
+> Purpose: stop trying to make one global query directly localize pixels and test a more structured route that matches the project's original spatial-reasoning idea:
 >
-> Accepted evidence:
-> - 256-grid snapped point -> frozen SAM2: mIoU 0.4883, paired 18/20.
-> - Task 6H.1 fixed the previous scale-degenerate loss: point CE 11.0965 -> 4.7427, point error 0.4658 -> 0.1673, own mass 0.1835 vs cross 0.0456.
-> - Yet H0-R still failed: inside 7/20, paired point 2/10.
+> **instruction → relation program → building candidates → explicit geometry execution → selected building mask**
 >
-> Hypothesis: the Qwen [BOX] query needs one explicit opportunity to inspect frozen visual features before high-resolution localization.
+> This task is a feasibility / causal audit, not the final paper method.
 >
-> Candidate:
+> Accepted evidence before this task:
 >
-> image + instruction
-> -> Qwen pre-reasoning [BOX] query q0
-> -> cross-attend q0 to frozen SAM2 64x64 feature
-> -> refined query q1
-> -> q1 scores frozen SAM2 256x256 feature
-> -> heatmap -> argmax point -> frozen SAM2
+> - frozen SAM2 point/box prompts are strong when target geometry is known;
+> - direct pixel-grounding attempts 6D–6I repeatedly fail to generalize, although Task 6I improves 10-pair memorization to inside 13/20 and paired point 5/10;
+> - Task 6I final heatmap already places much more probability on the correct region (own mass ~0.417 vs cross ~0.024), so language semantics are not absent, but converting them into a reliable single pixel is still unstable;
+> - the project already owns an audited spatial relation engine and a frozen YOLOv8m-seg building baseline.
 >
-> No 4B, [REF], SRE, SCL, dataset migration or GUI.
+> Task 6J therefore decomposes the problem:
+>
+> 1. Can the existing relation semantics select the correct target from **oracle building candidates**?
+> 2. Can the frozen YOLO baseline provide a sufficiently complete **inference-time candidate set**?
+> 3. Can Qwen parse the natural-language instruction into the correct **canonical relation program**?
+> 4. If all three work, what is the end-to-end result using predicted program + predicted candidates?
+>
+> No new pixel-grounding head. No 4B. No `[REF]`. No SRE. No SCL. No new dataset. No GUI.
 
-## 0. UI language
+## 0. User-facing language
 
-Narrative DSH output in Chinese. Code/paths/metric keys may be English.
+All DSH narrative/UI output must be **Chinese**.
 
-## 1. Freeze Task 6H.1 objective
+Code, paths, raw logs, enum names and metric keys may remain English.
 
-Keep exactly:
+# PART A — Strategic freeze
 
-L_total =
-  0.5*(L_reasoning_A + L_reasoning_B)
-  + 1.0*(L_point_A + L_point_B)
-  + 1.0*L_cf_bounded
+## 1. Freeze Tasks 6D–6I as evidence
 
-Where:
-- L_point = 65,536-way point-cell CE on the 256x256 grid.
-- L_cf_bounded = spatial-softmax own-vs-cross target probability-mass preference.
+Do not rerun their training.
 
-Do not re-enable:
-- Task 6G BCE+Dice,
-- Task 6H raw-logit ranking,
-- box SmoothL1,
-- coordinate-token CE.
+Preserve:
+- Task 6C P_C: `0.10604 / paired 0/20`;
+- Point Oracle: about `0.488 / 18/20`;
+- Box Oracle: `0.7506 / 20/20`;
+- Task 6I I0:
+  - inside `13/20`;
+  - paired point `5/10`;
+  - bounded ranking `10/10`;
+  - normalized error `0.0838`.
 
-No loss-weight sweep.
+Do not claim Task 6I proved attention has zero target information. Its target attention mass rose above initialization, but was insufficient.
 
-Keep one optimizer step = one canonical pair, same 240 train pairs, same deterministic pair order, same corrected pair-step scheduler.
+Task 6J is a deliberate architecture-path pivot, not a deletion of prior work.
 
-## 2. Keep the initial query
+# PART B — Canonical relation programs
 
-Reuse Task 6F/6G/6H causally clean pre-reasoning [BOX] token:
+## 2. Build a canonical program vocabulary from actual `query_type`
 
-image + instruction -> fixed [BOX] -> q0
+Do not invent new semantics.
 
-q0 must not attend to future reasoning or GT.
+Map existing BuildSpatialReason v0.1.1 query types to deterministic canonical programs, preserving the frozen Task 3B relation convention.
 
-Do not add new language special tokens.
+Use the actual existing query types in the dataset/artifacts.
 
-## 3. Coarse visual feature
+Create:
 
-Use frozen SAM2 64x64 main image embedding.
+`evaluation/task6j_program_spec.json`
 
-Verify exact shape; expected approximately [B,256,64,64].
+For each query type record:
+- canonical program id;
+- ordered operations;
+- required reference role(s);
+- expected output role;
+- sample counts by split.
 
-Flatten to 4096 visual tokens.
+No test split used for training.
 
-No gradient into SAM2.
+# PART C — J0: Oracle program + oracle candidates
 
-## 4. VisualQueryRefinementBlock
+## 3. Oracle candidate set
 
-Implement exactly one refinement block.
+Use frozen component maps / pseudo-instance representation.
 
-Recommended structure:
+For each fixed validation sample:
+- all visible building components are candidates;
+- geometry comes only from the component map:
+  - mask;
+  - centroid;
+  - bbox;
+  - area;
+  - border flag only for diagnostics.
 
-q0 [B,2048]
--> LayerNorm
--> Linear(2048,256)
--> q [B,1,256]
+Diagnostic only; not inference.
 
-F64
--> Conv1x1(256,256)
--> flatten [B,4096,256]
--> LayerNorm
+## 4. Independent program executor
 
-CrossAttention:
-- query=q
-- key/value=F64 tokens
-- embed_dim=256
-- num_heads=4
+Implement a compact executor consuming:
 
-Residual:
-q_ref = q + cross_attn_output
+```text
+canonical program + candidate geometry
+```
 
-Then:
-q_ref
--> LayerNorm
--> FFN(256 -> 512 -> 256, GELU)
--> residual
--> q1
+and returning one candidate id.
 
-Constraints:
-- exactly one cross-attention refinement layer;
-- no second refinement step;
-- no self-attention stack;
-- no extra learned image queries;
-- no coordinate channels;
-- no deformable attention.
+Reuse frozen Task 3B semantics/thresholds.
 
-## 5. High-resolution scorer
+The executor must not read:
+- target component id;
+- GT reasoning;
+- target mask except for post-selection scoring.
 
-Use frozen SAM2 256x256 / 32-channel feature.
+## 5. J0 gate
 
-F256 -> Conv1x1(32,256) -> K256
+Run on:
+- fixed 120 validation records;
+- fixed 20 paired validation images;
+- optionally full v0.1.1 val as secondary consistency audit if cheap.
 
-heatmap_logits[y,x] = dot(q1, K256[:,y,x]) / sqrt(256)
+Report:
+- exact target candidate accuracy;
+- paired target-selection /20;
+- L1/L2/L3;
+- query-type breakdown;
+- abstentions/ambiguities.
 
-Optional scalar bias allowed.
+Gate:
 
-The candidate forward must use q1, not q0 and not the old Task 6G head.
+```text
+exact target accuracy >= 0.98
+paired selection >= 19/20
+```
 
-## 6. Trainables
+If J0 fails:
+`STRUCTURED_EXECUTOR_SEMANTICS_MISMATCH`
+and STOP.
+
+# PART D — J1: Oracle program + predicted YOLO proposals
+
+## 6. Existing YOLO baseline is read-only
+
+Only if J0 passes.
+
+Use the already frozen YOLOv8m-seg-WHU baseline from the legacy project.
+
+Rules:
+- legacy repo/directory read-only;
+- weights read-only;
+- verify expected baseline provenance/hash before inference;
+- do not retrain YOLO;
+- do not modify the old Ultralytics fork;
+- do not install packages into existing environments.
+
+If the existing YOLO inference environment is available, it may be invoked **read-only** with its existing Python / `conda run`.
+
+Do not create or modify another environment solely for J1.
+
+If model/environment cannot be safely resolved:
+`YOLO_BASELINE_INFERENCE_UNAVAILABLE`
+and stop J1/J4 without installing anything.
+
+## 7. Proposal material
+
+Run frozen YOLO segmentation inference on unique images needed for:
+- fixed 120 validation records;
+- fixed 20 paired validation images.
+
+Cache predicted metadata/masks only under gitignored artifacts.
+
+For each proposal record:
+- mask;
+- bbox;
+- centroid;
+- area;
+- confidence.
+
+Do not use GT to alter proposals.
+
+## 8. Proposal recall audit
+
+For each GT target candidate, measure best predicted-proposal IoU.
+
+Report:
+- recall @ mask IoU 0.25 / 0.50 / 0.75;
+- mean/median best IoU;
+- proposal-count distribution;
+- missing-target rate;
+- duplicate/merged proposal diagnostics;
+- border/tiny breakdown.
+
+Also report all-building candidate recall per image if practical.
+
+## 9. Oracle-program execution on YOLO proposals
+
+Execute same canonical program over predicted proposal geometry.
+
+No GT target id may influence execution.
+
+Score selected predicted mask against GT target mask.
+
+Report:
+- strict target mask mIoU;
+- Dice;
+- paired target selection /20 using own-vs-cross mask IoU;
+- selected proposal best-match identity;
+- missing-proposal vs wrong-relation failures.
+
+J1 viability gate:
+
+```text
+target proposal recall@0.50 >= 0.75
+oracle-program selected-mask mIoU >= 0.30
+paired mask selection >= 12/20
+```
+
+If proposal recall fails, do not blame the language model.
+
+# PART E — J2: Instruction → canonical program
+
+## 10. Program parser objective
+
+This branch answers only:
+
+> What spatial program does the instruction request?
+
+It does not localize pixels and sees no GT geometry.
+
+Use Qwen3-VL-2B as language backbone, but make this branch **instruction-semantic first**.
+
+Preferred input:
+- instruction text only;
+- normal tokenizer/chat formatting;
+- no image tokens.
+
+This deliberately avoids the image-dominated `[BOX]` problem.
+
+## 11. ProgramHead
+
+Use a minimal classifier over a clearly documented text representation, e.g. final instruction-token / assistant-prefix representation:
+
+```text
+Qwen text representation
+→ LayerNorm
+→ Linear(hidden_dim, num_programs)
+```
 
 Train:
-- text-only Qwen LoRA;
-- [BOX] row;
-- [SEG] row;
-- VisualQueryRefinementBlock;
-- F64 projection;
-- F256 scorer projection.
+- text-only LoRA;
+- ProgramHead.
 
 Freeze:
 - Qwen base;
 - Qwen visual tower;
 - all SAM2;
-- Task 6G old DenseSpatialGroundingHead;
-- Task 6F box head;
-- Task 6D grounding head;
-- Task 6E loc-token path.
+- all prior grounding heads.
 
-No visual LoRA.
+Do not use free-form program generation in Task 6J.
 
-Verify optimizer coverage and frozen-backbone bit identity.
+## 12. Training subset
 
-## 7. Attention diagnostics
+Use deterministic query-type-stratified train-only data.
 
-Expose the 1x4096 cross-attention weights for diagnostics.
+Preferred:
+- up to ~100 records per canonical program;
+- total capped around 1,500–2,000 records;
+- no test split.
+
+If a program has fewer records, use all and report imbalance.
+
+Do not train all 15,592 unless the capped subset is clearly insufficient and documented.
+
+## 13. J2 evaluation
+
+Evaluate on:
+- fixed 120 validation records;
+- fixed 20 paired validation images;
+- optionally full val classification if cheap.
 
 Report:
-- attention entropy;
-- top-1 visual cell;
-- top-10 attention mass;
-- attention mass inside target building after downsampling target mask to 64x64;
-- attention mass inside paired other target.
+- exact program accuracy;
+- macro F1;
+- confusion matrix;
+- L1/L2/L3 accuracy;
+- query-type accuracy;
+- paired program correctness /20.
 
-Diagnostics only; do not supervise attention directly.
+J2 gate:
 
-## 8. I0: 10-pair overfit
+```text
+program accuracy >= 0.90
+macro F1 >= 0.85
+paired program correctness >= 18/20
+```
 
-Use the same 10 canonical H0 pairs.
+If J2 fails:
+`PROGRAM_PARSER_NOT_READY`.
 
-Clean initialization only; do not load failed Task 6H.1 H0-R weights.
+Do not compensate with GT program later.
 
-Maximum 1500 pair optimizer steps.
+# PART F — J3: Predicted program + oracle candidates
 
-Use frozen Task 6H.1 point CE + bounded pair mass objective exactly.
+## 14. Parser ceiling
 
-At 250/500/750/1000/1500 report:
-- point-inside-own /20;
-- paired point /10;
-- bounded pair ranking /10;
-- target-cell top-1/top-5 /20;
-- target-cell probability;
-- own/cross target probability mass;
-- normalized and 512px point error;
-- spatial entropy;
-- mean abs high-res logit;
-- cross-attention entropy;
-- target vs cross attention mass;
-- same-image q0 distance;
-- same-image q1 distance;
-- same-image predicted-point distance.
+Only if J2 passes.
 
-I0 gate:
-- inside >= 18/20;
-- paired point >= 9/10;
-- bounded pair ranking >= 9/10;
-- mean normalized point error < 0.08.
+Pipeline:
 
-No hard gate on exact target-cell top-1.
+```text
+instruction
+→ predicted canonical program
+→ GT/oracle candidate set
+→ program executor
+→ selected candidate
+```
 
-If I0 fails after implementation audit:
-VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT
-and STOP.
+Oracle candidates remain diagnostic only.
 
-## 9. I0 audit if needed
+Report:
+- exact selected-target accuracy;
+- paired selection /20;
+- program-error vs executor-error attribution.
 
-Audit only:
-- q0 causal cleanliness;
-- same-image different-instruction cross-attention outputs differ when appropriate;
-- F64/F256 shared features bit-identical for pair A/B;
-- gradients reach Qwen LoRA, [BOX], attention Q/K/V/out, FFN, F64 projection and F256 scorer;
-- no gradient reaches SAM2;
-- point CE and bounded pair loss decrease;
-- attention/logits finite;
-- q1 separation vs q0 separation.
+Gate:
 
-Do not add a second refinement layer during audit.
+```text
+selected-target accuracy >= 0.85
+paired >= 17/20
+```
 
-## 10. I1: 240-pair mini-train
+# PART G — J4: Predicted program + predicted YOLO candidates
 
-Only if I0 passes.
+## 15. First structured inference-time end-to-end test
 
-Train:
-- 240 canonical pairs/epoch;
-- max 8 epochs;
-- deterministic order;
-- corrected pair-step scheduler;
-- validate each epoch.
+Only if:
+- J1 viability gate passes;
+- J2 passes;
+- J3 passes.
 
-No mid-run architecture or loss changes.
+Pipeline:
 
-Model selection:
-1. paired point /20;
-2. bounded pair ranking /20;
-3. 120-record point-inside rate.
+```text
+image → frozen YOLO building proposals
+instruction → Qwen ProgramHead → canonical program
+program + proposal geometry → explicit relation executor
+→ selected proposal mask
+```
 
-I1 gate:
-- paired point >= 14/20;
-- pair ranking >= 14/20;
-- 120-record point-inside >= 0.60.
+No GT geometry/mask/id enters inference.
 
-If best epoch fails:
-VISUAL_QUERY_REFINEMENT_NO_GENERALIZATION
-and STOP before segmentation.
+No SAM2 training.
 
-## 11. Representation diagnosis
+Optional diagnostic:
+- derive predicted point/bbox from selected predicted proposal;
+- feed it to frozen SAM2;
+- report proposal mask and SAM-refined mask separately.
 
-At best I1 checkpoint compare q0 vs q1 on same-image/different-instruction pairs.
+Do not silently replace one with the other.
 
-q0:
-- raw cosine;
-- centered cosine;
-- L2.
+## 16. J4 metrics
 
-q1:
-- raw cosine;
-- centered cosine;
-- L2;
-- effective rank if practical.
-
-Also report:
-- q0 distance vs GT-point-distance correlation;
-- q1 distance vs GT-point-distance correlation;
-- probability-mass margin vs localization correctness;
-- attention target mass vs localization correctness.
-
-Main question:
-Does one visual refinement step turn the weak instruction signal in q0 into a target-specific q1?
-
-## 12. I2: frozen-SAM2 segmentation
-
-Only if I1 passes.
-
-Inference:
-
-image + instruction
--> q0
--> visual refinement q1
--> 256x256 heatmap
--> argmax predicted point
--> official frozen SAM2 positive-point prompt
--> frozen SAM2 decoder
--> mask
-
-No GT and no SAM2 training.
-
-Report on fixed 120 val + 20 paired:
-- strict e2e mIoU;
+On fixed 120 val + 20 paired:
+- strict selected-mask mIoU;
 - Dice;
-- mask paired /20;
-- own-target IoU;
-- cross-target IoU;
-- own-minus-cross mask margin;
-- IoU(pred_A,pred_B);
+- paired mask selection /20;
+- own-target vs cross-target IoU;
 - L1/L2/L3;
-- query-family breakdown.
+- query-type breakdown.
 
-Compare:
-- Task 6C P_C 0.10604 / 0/20;
-- selected-grid point oracle 0.4883 / 18/20;
-- box oracle 0.7506 / 20/20.
+Failure attribution:
+- wrong predicted program;
+- target absent from proposal set;
+- proposal geometry changes relation outcome;
+- correct selected proposal but poor mask quality.
 
-## 13. Verdicts
+J4 success gate:
 
-Use exactly one:
+```text
+strict mIoU >= 0.20
+paired mask selection >= 12/20
+```
 
-VISUAL_QUERY_REFINEMENT_FIX_FOUND
-- I0 pass;
-- I1 pass;
-- I2 mask paired >=14/20;
-- strict e2e mIoU >=0.20;
-- mask own-minus-cross >0.05;
-- no GT leakage.
+This is a feasibility gate, not final paper performance.
 
-VISUAL_QUERY_REFINEMENT_PARTIAL
-- real target-specific localization improvement, but not full gate.
+# PART H — Verdicts
 
-VISUAL_QUERY_REFINEMENT_NO_GENERALIZATION
-- I0 passes, I1 fails.
+## 17. Use one primary verdict
 
-VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT
-- implementation clean, I0 fails.
+### `STRUCTURED_PROPOSAL_GROUNDING_PROMISING`
+J0/J1/J2/J3 pass and J4 reaches success gate.
 
-INVALID_EXPERIMENT
-- causal/freeze/shape/loss/pair/split correctness failure.
+### `PROPOSAL_QUALITY_LIMIT`
+J0/J2/J3 healthy but proposal recall or J1/J4 is the binding failure.
 
-## 14. Decision rule
+### `PROGRAM_PARSER_NOT_READY`
+J0 passes but J2 misses semantic parser gate.
 
-If I0 fails cleanly:
-STOP. Recommend one for review:
-- stronger/larger MLLM representation;
-- multiple learned query slots;
-- architecture-level reference/relation grounding.
+### `STRUCTURED_EXECUTOR_SEMANTICS_MISMATCH`
+J0 fails with oracle program + oracle candidates.
 
-Do not implement automatically.
+### `YOLO_BASELINE_INFERENCE_UNAVAILABLE`
+Legacy model/env cannot be safely used read-only.
 
-If I0 passes but I1 fails:
-STOP. Review training-data scale, dataset suitability, 2B vs larger MLLM, stronger query architecture.
+### `STRUCTURED_ROUTE_PARTIAL`
+Some major gates pass and route materially improves target selection but J4 misses full gate.
 
-## 15. Required artifacts
+### `INVALID_EXPERIMENT`
+Leakage, split misuse, GT used in inference, provenance mismatch or correctness failure.
 
-Create as applicable:
+# PART I — Interpretation discipline
 
-evaluation/task6i_architecture_setup.json
-evaluation/task6i_i0_overfit.json
-evaluation/task6i_i0_audit.json
-evaluation/task6i_i1_training.json
-evaluation/task6i_spatial_eval.json
-evaluation/task6i_representation.json
-evaluation/task6i_attention_diagnostics.json
-evaluation/task6i_segmentation_eval.json
-evaluation/task6i_paired_probe.json
-evaluation/task6i_error_analysis.json
-evaluation/task6i_checkpoint_manifest.json
-docs/task6i_visual_query_refinement.md
+## 18. Do not claim final novelty
 
-Weights/checkpoints/caches local and gitignored.
+If route works, freeze only:
 
-## 16. Required tests
+> Explicit program parsing + proposal-level geometry execution is a viable functional target-selection architecture for current BuildSpatialReason tasks.
+
+Do not yet claim:
+- deterministic relation execution is final innovation;
+- YOLO proposals are final segmentation backbone;
+- current templates prove open-vocabulary reasoning.
+
+Later work may replace/augment executor with:
+- learned Spatial Relation Encoder;
+- `[REF]`-style reference grounding;
+- relation-level Spatial Consistency Loss;
+- richer natural-language paraphrases.
+
+# PART J — Dataset/proposal adequacy
+
+## 19. Separate failure sources
+
+Report:
+- merged/touching proposal failures;
+- tiny-target misses;
+- border truncation;
+- pseudo-instance ambiguity;
+- relation instability from missing/merged proposals.
+
+If parser/executor works but proposal/data quality dominates, recommend a proposal-backbone/dataset task next.
+
+Do not migrate data automatically.
+
+# PART K — Reusable API
+
+## 20. If J4 runs
+
+Create/refactor:
+
+```python
+parse_program(instruction)
+extract_building_candidates(image)
+execute_program(program, candidates)
+predict_structured_mask(image, instruction)
+```
+
+No GUI.
+
+# PART L — Required artifacts
+
+## 21. Create as applicable
+
+```text
+evaluation/task6j_program_spec.json
+evaluation/task6j_j0_oracle_executor.json
+evaluation/task6j_yolo_proposal_recall.json
+evaluation/task6j_j1_oracle_program_yolo.json
+evaluation/task6j_parser_setup.json
+evaluation/task6j_j2_program_parser.json
+evaluation/task6j_j3_predicted_program_oracle_candidates.json
+evaluation/task6j_j4_structured_end_to_end.json
+evaluation/task6j_error_attribution.json
+evaluation/task6j_checkpoint_manifest.json
+docs/task6j_structured_proposal_grounding.md
+```
+
+Large YOLO prediction caches stay local/gitignored.
+
+# PART M — Tests
+
+## 22. Required tests
 
 Cover at least:
-1. q0 is causally clean pre-reasoning [BOX];
-2. exact F64 shape verified;
-3. exact F256 shape verified;
-4. exactly one cross-attention refinement layer;
-5. attention dim 256 / heads 4;
-6. q0->q1 residual correct;
-7. FFN residual correct;
-8. high-res scorer uses q1;
-9. Task 6H.1 point CE unchanged;
-10. bounded pair mass unchanged;
-11. old BCE/Dice and raw-logit ranking remain zero-gradient;
-12. one pair = one optimizer step;
-13. scheduler counts pair steps;
-14. shared SAM features identical for A/B;
-15. SAM2 bit-frozen;
-16. Qwen visual tower frozen;
-17. attention diagnostics do not inject GT into inference;
-18. Task 6G old head absent from candidate forward;
-19. Task 6F box head absent;
-20. Task 6E loc path absent;
-21. no test split;
-22. I2 uses predicted point only;
-23. no 4B/[REF]/SRE/SCL;
-24. strict determinism.
+
+1. program vocabulary comes from actual frozen query types;
+2. executor uses frozen relation convention;
+3. oracle executor cannot read target id;
+4. oracle candidates are diagnostic-only;
+5. J0 exact reproduction on synthetic/unit cases;
+6. legacy YOLO path/hash provenance checked;
+7. legacy project/env never modified;
+8. no package installation into existing environments;
+9. proposal geometry computed without GT;
+10. proposal recall matching is evaluation-only;
+11. ProgramHead input contains instruction text only;
+12. ProgramHead has no image tokens;
+13. query_type appears only as CE target, never inference input;
+14. train/val/test split hygiene;
+15. J3 never falls back to GT program;
+16. J4 uses predicted program + predicted proposals only;
+17. optional SAM refinement uses predicted proposal geometry only;
+18. no old direct-pixel grounding head in J4;
+19. no 4B / `[REF]` / SRE / SCL;
+20. strict determinism where supported;
+21. no GUI;
+22. failure attribution auditable.
 
 Run:
-python -m pytest tests/ -q
+`python -m pytest tests/ -q`
 
-## 17. Git / Watt
+If YOLO inference runs through a separate existing conda env, record command/version output and keep that env read-only.
 
-Do not stage weights/checkpoints/caches/hidden or attention dumps/.conda/dataset JSONL edits.
+# PART N — Git / Watt
+
+## 23. Git hygiene
+
+Do not stage:
+- YOLO weights;
+- YOLO prediction caches;
+- checkpoints;
+- `.conda`;
+- legacy files;
+- dataset JSONL edits.
 
 Recommended commit:
-feat: add visual query refinement
+`feat: audit structured proposal grounding`
 
 Use established Watt ownership rules for final push only.
 
-## 18. FROM_DSH
+# PART O — Handoff
+
+## 24. FROM_DSH
 
 Include:
-1. Verdict
-2. Frozen Task 6H.1 Evidence
-3. Architecture
-4. Trainables/Frozen Parameters
-5. Attention Diagnostics
-6. I0 Overfit
-7. I0 Audit if needed
-8. I1 Training
-9. Point Localization
-10. Pair Preference
-11. q0 vs q1 Representation
-12. I2 Segmentation
-13. Paired Mask Probe
-14. L1/L2/L3 + Query Breakdown
-15. Error/Data Adequacy
-16. Runtime/VRAM
-17. Tests
-18. Git/Watt
-19. Recommended next architecture decision
 
-## 19. Final DSH UI — Chinese only
+1. Verdict
+2. Strategic Pivot
+3. Program Vocabulary
+4. J0 Oracle Executor
+5. YOLO Baseline Provenance
+6. Proposal Recall
+7. J1 Oracle Program + YOLO
+8. ProgramHead Architecture
+9. J2 Program Parsing
+10. J3 Predicted Program + Oracle Candidates
+11. J4 Structured End-to-End
+12. Optional SAM Refinement
+13. L1/L2/L3 + Query Breakdown
+14. Failure Attribution
+15. Dataset / Proposal Adequacy
+16. Reusable Core API
+17. Runtime / VRAM
+18. Tests
+19. Git / Watt
+20. Recommended next architecture decision
+
+## 25. Final DSH UI — Chinese only
 
 Report:
-- verdict;
-- I0 inside /20;
-- I0 paired point /10;
-- I0 bounded pair ranking /10;
-- q0 vs q1 same-image separation;
-- target vs cross attention mass;
-- if I1 ran: best epoch, paired point /20, pair ranking /20, 120-val inside;
-- if I2 ran: strict mIoU, mask paired /20, mask own-cross margin;
-- whether visual refinement solved the single-query bottleneck;
-- dominant remaining failure;
+- primary verdict;
+- J0 oracle target accuracy / paired;
+- YOLO target recall@0.5 and mean best IoU;
+- J1 oracle-program+YOLO mIoU / paired;
+- J2 program accuracy / macro F1 / paired;
+- J3 selected-target accuracy / paired;
+- if J4 ran: strict mIoU / paired;
+- largest remaining error source: parser, proposal, executor or mask quality;
+- whether route is materially better than direct pixel grounding;
+- whether WHU/proposal quality is now a practical limitation;
 - tests;
 - commit/push;
 - Watt handling.
 
-## 20. STOP
+# 26. STOP
 
-After Task 6I STOP.
+After Task 6J STOP.
 
-Do not automatically add:
-- second refinement layer;
-- multiple query tokens;
-- [REF];
-- SRE/SCL;
-- 4B;
-- dataset migration;
-- full training;
-- GUI.
+Do not automatically:
+- add learned SRE;
+- add `[REF]`;
+- add Spatial Consistency Loss;
+- retrain YOLO;
+- scale to 4B;
+- migrate dataset;
+- run full training;
+- build GUI.
 
 Wait for ChatGPT review.

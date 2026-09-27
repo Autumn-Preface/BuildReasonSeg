@@ -1,0 +1,112 @@
+{
+  "_doc": "Task 6J section 17. Exactly one primary verdict, resolved from the recorded artifacts.",
+  "task": "6J",
+  "verdict": "PROPOSAL_QUALITY_LIMIT",
+  "reason": "J0/J2/J3 are healthy (executor 1.000, parser 1.000, predicted-program route 1.000), but the frozen YOLO proposal chain is the binding failure: J1 paired mask selection 5/20 (gate 12/20) with recall@0.50 0.86875 and oracle-program mIoU 0.371",
+  "evidence": {
+    "program_spec": {
+      "program_count": 20
+    },
+    "J0": {
+      "gate": {
+        "checks": {
+          "exact_accuracy_ge": true,
+          "paired_selection_ge": true,
+          "frozen_recompute_full_agreement": true
+        },
+        "passed": true,
+        "gate": {
+          "exact_accuracy_min": 0.98,
+          "paired_selection_min": 19
+        }
+      },
+      "exact_accuracy": 1.0,
+      "paired": 20
+    },
+    "proposal_recall": {
+      "samples": 160,
+      "recall_at_0_25": 0.91875,
+      "recall_at_0_50": 0.86875,
+      "recall_at_0_75": 0.59375,
+      "mean_best_iou": 0.7013331884476749,
+      "median_best_iou": 0.7858867213890913,
+      "missing_target_rate": 0.13125,
+      "proposal_count_mean": 9.53125,
+      "proposal_count_median": 8.0,
+      "proposal_count_min": 1,
+      "proposal_count_max": 39
+    },
+    "J1": {
+      "viable": false,
+      "metrics": {
+        "strict_selected_mask_miou": 0.37123434708629205,
+        "mean_dice": 0.41744064742072357,
+        "abstained": 35,
+        "abstain_reasons": {
+          "extreme_relation_invalid": 4,
+          "filter_multi_candidate": 9,
+          "nearest_relation_invalid": 13,
+          "no_eligible_candidates": 9
+        }
+      },
+      "paired": {
+        "mask_paired_pass": 5,
+        "paired_total": 20
+      },
+      "gate": {
+        "checks": {
+          "recall_at_0_50_ge": true,
+          "oracle_program_miou_ge": true,
+          "paired_mask_ge": false,
+          "provenance_matches": true
+        },
+        "passed": false,
+        "gate": {
+          "recall_at_0_50_min": 0.75,
+          "oracle_program_miou_min": 0.3,
+          "paired_mask_min": 12
+        }
+      }
+    },
+    "J2": {
+      "val_accuracy": 1.0,
+      "macro_f1": 1.0,
+      "paired_correct": 20,
+      "full_val_accuracy": 1.0,
+      "gate": {
+        "checks": {
+          "program_accuracy_ge": true,
+          "macro_f1_ge": true,
+          "paired_program_correct_ge": true
+        },
+        "passed": true,
+        "gate": {
+          "program_accuracy_min": 0.9,
+          "macro_f1_min": 0.85,
+          "paired_program_correct_min": 18
+        }
+      }
+    },
+    "J3": {
+      "selected_target_accuracy": 1.0,
+      "paired": 20,
+      "gate": {
+        "checks": {
+          "selected_target_accuracy_ge": true,
+          "paired_ge": true
+        },
+        "passed": true,
+        "gate": {
+          "selected_target_accuracy_min": 0.85,
+          "paired_min": 17
+        }
+      }
+    },
+    "J4": {
+      "ran": false,
+      "blockers": [
+        "J1 viability gate failed"
+      ]
+    }
+  }
+}
