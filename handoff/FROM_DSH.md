@@ -198,7 +198,7 @@ gate) — 343 pre-existing tests plus the 22 Task 6H tests, with no regressions.
 
 ## 20. Git / Watt
 
-**Commit: `{{COMMIT_HASH}}` — `feat: add counterfactual pair grounding loss`** (staged only code,
+**Commit: `b4e986e` — `feat: add counterfactual pair grounding loss`** (staged only code,
 tests, docs and `evaluation/**` artifacts: no checkpoints, no weights, no feature caches, no
 `.conda`, no dataset changes; `artifacts/**` stays gitignored and only
 `evaluation/task6h_checkpoint_manifest.json` records the checkpoint hashes).
