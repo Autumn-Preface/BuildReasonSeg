@@ -246,11 +246,20 @@ retired (docstrings stripped before scanning), no loc tokens in the config, the 
 scheduler horizon, the paired→IoU→center selection rule, the old `[SEG]` grounding head unused, box
 head in checkpoints, deterministic JSON writing.
 
-Full suite: **{{TESTS_RESULT}}**.
+Full suite: **322 passed** in 712 s (`python -m pytest tests/ -q`, including the artifact-consistency
+gate) — 301 pre-existing tests plus the 21 Task 6F tests, with no regressions.
 
 ## 19. Git / Watt (section 22)
 
-{{GIT_SECTION}}
+**Commit: `4b4b4d2` — `feat: add target-aware box query`** (staged only code, tests, docs and
+`evaluation/**` artifacts: no checkpoints, no weights, no `.conda`, no feature caches, no dataset
+edits; `artifacts/**` stays gitignored and only `evaluation/task6f_checkpoint_manifest.json` records
+the checkpoint hashes).
+
+**Watt Toolkit handling:** the pre-existing Watt processes (`Steam++.exe`,
+`Steam++.Accelerator.exe`) were left running untouched for the whole task and are used for the final
+push only under the established ownership rules — never closed, never force-killed, no hosts-file,
+certificate-store or TLS changes anywhere in this task.
 
 ## 20. Recommended Next Architecture Step (section 17)
 
