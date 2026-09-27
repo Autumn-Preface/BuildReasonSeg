@@ -881,6 +881,135 @@ class MvpRuntime:
             },
         }
 
+    # -- Task 6H: counterfactual pair-aligned dense grounding ----------------
+
+    def freeze_for_counterfactual(self) -> dict:
+        """Task 6H section 5 trainable set: identical to Task 6G (no new module).
+
+        Train: text LoRA, the `[BOX]` query row, the `[SEG]` row and the Task 6G
+        `DenseSpatialGroundingHead`. Freeze: everything else, including the Task 6F box head and
+        the Task 6D grounding head.
+        """
+
+        report = self.freeze_for_dense_grounding()
+        report["task"] = "6H"
+        report["pair_step"] = {
+            "pair_steps_per_epoch": int(self.cfg.get("counterfactual", {}).get("pairs_per_epoch", 240)),
+            "margin": float(self.cfg.get("counterfactual", {}).get("margin", 1.0)),
+            "weights": {
+                "reasoning": 0.5,
+                "heatmap": 1.0,
+                "cf": 2.0,
+            },
+        }
+        self.reports["counterfactual_trainables"] = report
+        return report
+
+    def pair_train_step(self, batch_a, batch_b, mask_a, mask_b, features, optimizer=None,
+                        timer=None) -> dict:
+        """Task 6H sections 6-9: one optimizer step = one same-image counterfactual pair.
+
+        Both query paths run sequentially with both graphs retained against **one shared frozen
+        SAM2 feature**, and a single backward/optimizer step consumes the combined objective:
+
+            L_total = 0.5 * (L_reasoning_A + L_reasoning_B)
+                    + 1.0 * (L_heatmap_A + L_heatmap_B)
+                    + 2.0 * L_cf
+        """
+
+        from .box_query import box_query_forward
+        from .counterfactual import counterfactual_loss, region_scores
+        from .dense_grounding import downsample_target_mask, feature_tensor_for_grid, heatmap_loss
+        from .losses import lm_cross_entropy
+
+        batch_a = batch_a.to(self.device)
+        batch_b = batch_b.to(self.device)
+        margin = float(self.cfg.get("counterfactual", {}).get("margin", 1.0))
+        use_autocast = bool(self.cfg["training"].get("bf16_autocast", True))
+        autocast = torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_autocast)
+
+        def _stage(name):
+            if timer is None:
+                return contextlib.nullcontext()
+            return timer.stage(name)
+
+        with _stage("qwen_forward"):
+            with autocast:
+                # One frozen visual feature, shared by both instructions of the same image.
+                spatial_feature = feature_tensor_for_grid(features, int(self.dense_grid)).to(self.device)
+                logits_a, hidden_a, _seg_a = box_query_forward(self.model.qwen, batch_a)
+                heatmap_a = self.model.dense_head(hidden_a, spatial_feature).unsqueeze(1)
+                logits_b, hidden_b, _seg_b = box_query_forward(self.model.qwen, batch_b)
+                heatmap_b = self.model.dense_head(hidden_b, spatial_feature).unsqueeze(1)
+
+                target_a = downsample_target_mask(mask_a, int(self.dense_grid)).to(self.device)
+                target_b = downsample_target_mask(mask_b, int(self.dense_grid)).to(self.device)
+                target_a = target_a[None, None, :, :]
+                target_b = target_b[None, None, :, :]
+
+                losses_a = heatmap_loss(heatmap_a, target_a)
+                losses_b = heatmap_loss(heatmap_b, target_b)
+                reasoning = 0.5 * (
+                    lm_cross_entropy(logits_a, batch_a.labels)
+                    + lm_cross_entropy(logits_b, batch_b.labels)
+                )
+                scores = region_scores(heatmap_a[0, 0], heatmap_b[0, 0], target_a[0, 0], target_b[0, 0])
+                cf = counterfactual_loss(scores, margin)
+                total = (
+                    0.5 * reasoning
+                    + 1.0 * (losses_a["heatmap"] + losses_b["heatmap"])
+                    + 2.0 * cf["loss"]
+                )
+
+        with _stage("backward"):
+            if optimizer is not None:
+                optimizer.zero_grad(set_to_none=True)
+            total.backward()
+
+        clipped = None
+        if optimizer is not None:
+            with _stage("optimizer_step"):
+                clipped = float(
+                    torch.nn.utils.clip_grad_norm_(
+                        [p for p in self.model.parameters() if p.requires_grad],
+                        float(self.cfg["optimizer"]["grad_clip_norm"]),
+                    )
+                )
+                optimizer.step()
+
+        return {
+            "losses": {
+                "total": float(total.detach()),
+                "reasoning_ce": float(reasoning.detach()),
+                "heatmap_a": losses_a["heatmap_raw"],
+                "heatmap_b": losses_b["heatmap_raw"],
+                "heatmap_sum": losses_a["heatmap_raw"] + losses_b["heatmap_raw"],
+                "bce_a": losses_a["bce_raw"],
+                "bce_b": losses_b["bce_raw"],
+                "dice_a": losses_a["dice_raw"],
+                "dice_b": losses_b["dice_raw"],
+                "cf": cf["raw"],
+                "cf_a": cf["raw_a"],
+                "cf_b": cf["raw_b"],
+                "lm_ce": float(reasoning.detach()),
+                "mask_bce": losses_a["bce_raw"] + losses_b["bce_raw"],
+                "mask_dice": losses_a["dice_raw"] + losses_b["dice_raw"],
+                "ground": cf["raw"],
+            },
+            "region_scores": scores["raw"],
+            "pair_ranking_pass": cf["pair_ranking_pass"],
+            "strict_margin_pass": cf["strict_margin_pass"],
+            "heatmap_dice_quality_a": float(1.0 - losses_a["dice_raw"]),
+            "heatmap_dice_quality_b": float(1.0 - losses_b["dice_raw"]),
+            "grad_clip_total_norm": clipped,
+            "weights": {
+                "reasoning": 0.5,
+                "heatmap": 1.0,
+                "cf": 2.0,
+                "cf_margin": margin,
+            },
+        }
+
     def build_optimizer(self) -> torch.optim.AdamW:
         opt_cfg = self.cfg["optimizer"]
         groups = self.model.trainable_parameter_groups(

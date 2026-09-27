@@ -330,20 +330,27 @@ def test_g2_uses_predicted_point_only():
 
 
 def test_inference_path_takes_no_ground_truth():
+    """Task 6H refactored the path into `forward_heatmap` + `record_from_raw`; the property holds
+    for both halves: the model input is built from image + instruction only, and the GT mask is
+    read exclusively by the scoring layer."""
+
     import inspect
 
     from buildreasonseg_mvp import dense_eval
 
-    signature = inspect.signature(dense_eval.predict_heatmap)
-    parameters = set(signature.parameters)
-    assert not (parameters & {"mask", "gt", "box", "geometry", "target"})
-    source = inspect.getsource(dense_eval.predict_heatmap)
-    assert "instruction_zh" in source and "build_query_batch" in source
-    # the GT mask enters the function only through scoring helpers (downsample/point-inside),
-    # never through the model inputs
-    assert "build_query_batch(runtime, image, sample.instruction_zh)" in source
-    model_call = source.split("build_query_batch(runtime, image, sample.instruction_zh)")[1]
-    assert "target_mask" not in model_call.split("soft_target =")[0]
+    for function in (dense_eval.predict_heatmap, dense_eval.forward_heatmap):
+        parameters = set(inspect.signature(function).parameters)
+        assert not (parameters & {"mask", "gt", "box", "geometry", "target"}), function.__name__
+    forward_source = inspect.getsource(dense_eval.forward_heatmap)
+    assert "build_query_batch(runtime, image, sample.instruction_zh)" in forward_source
+    # the model inputs are assembled before any GT read
+    model_call = forward_source.split("build_query_batch(runtime, image, sample.instruction_zh)")[0]
+    assert "target_mask" not in model_call
+    # ... and the only GT read happens after the forward, for scoring
+    scoring_source = inspect.getsource(dense_eval.record_from_raw)
+    assert "point_inside_mask" in scoring_source and "soft_dice_from_logits" in scoring_source
+    for function in (dense_eval.predict_heatmap, dense_eval.forward_heatmap):
+        assert "target_mask" not in inspect.getsource(function).split("downsample_target_mask")[0].split("build_query_batch")[0]
 
 
 def test_json_artifacts_are_written_deterministically():

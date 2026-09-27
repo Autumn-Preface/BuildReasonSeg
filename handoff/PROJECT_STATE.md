@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6G._
+_Last updated by DSH at the end of Task 6H._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -37,7 +37,7 @@ The block above is machine-checked against
 | MVP environment | **`.conda/buildreasonseg-mvp`** (conda `--prefix`, Python 3.11.16, PyTorch 2.13.0+cu132) |
 | MVP stack (measured) | **Qwen3-VL-2B-Instruct + SAM2.1 Hiera Base+ + `[SEG]`** (ADR-013) |
 | Design stack (unmeasured) | Qwen3-VL-4B-Instruct + SAM 2.1 hiera-large (ADR-012) |
-| Network posture | offline (`HF_HUB_OFFLINE=1`); Watt Toolkit stopped during training; no hosts edit, no cert-store edit, no insecure TLS flag |
+| Network posture | model/data execution is offline from local assets (`HF_HUB_OFFLINE=1`); Watt is transport-only when needed, and ownership rules determine whether it is left running or closed; no hosts edit, no cert-store edit, no insecure TLS flag |
 | Reproducibility | **strict deterministic mode, cross-process bit reproducible** (Task 6C) |
 
 ## Completed tasks
@@ -66,6 +66,42 @@ The block above is machine-checked against
 | 6E | **Explicit Spatial Token Grounding v0.1 (`[BOX]` + 256 `<loc_*>` tokens)** | **done → `EXPLICIT_SPATIAL_TOKENS_FAILED`** (E0 passes 20/20; E1 structural 0/120) |
 | 6F | **Target-Aware `[BOX]` Query Grounding v0.1 (pre-reasoning query + box head)** | **done → `TARGET_AWARE_QUERY_FAILED`** (F0 passes 0.9046/10-10; F1 paired 0/20) |
 | 6G | **Dense Query–Visual Spatial Grounding Map v0.1 (query × frozen SAM2 map → heatmap point)** | **done → `DENSE_GROUNDING_IMPLEMENTATION_FAILED`** (grid-256 oracle 0.4883/18-20; G0 inside 0.10) |
+| 6H | **Counterfactual Pair-Aligned Dense Grounding v0.1 (pair step + own-vs-cross ranking)** | **done → `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** (H0 ranking 10/10 but inside-own 3/20) |
+
+## Task 6H measured results
+
+Task 6G's architecture is frozen; Task 6H changed only the training semantics: one optimizer step per
+canonical same-image counterfactual pair (240 pairs / 240 images from the Task 6C `P` subset) plus an
+own-vs-cross region-ranking loss. Full detail: `docs/task6h_counterfactual_pair_grounding.md`,
+ADR-019, `evaluation/task6h_*.json`.
+
+| | Value |
+|---|---|
+| Canonical pairs | **240 / 240 images**, all assertions enforced, identity hash `c56f0507da41fd55…`, 0/240 pairs overlap, no pair discarded |
+| Pair step | one shared frozen SAM2 feature (bit-identical through the step), two query forwards with retained graphs, **one** backward; horizon counts **pair** steps (240/epoch) |
+| Loss | `0.5*(reasoning_A+reasoning_B) + 1.0*(heatmap_A+heatmap_B) + 2.0*L_cf`, `L_cf` margin 1.0 on `s_XY = sum(H_X·M_Y)/sum(M_Y)` (logits) |
+| Architecture check | identical to Task 6G (level `[1,32,256,256]`, head 270 593 params); `[BOX]` still causally clean |
+| **H0** (10 pairs, 1500 pair steps) | pair ranking **10/10**, strict margin 10/10, mean margin **+5.58** — but point-inside-own **3/20** and paired point **0/10** → **failed** |
+| H0 audit | `L_cf` 1.3133 → 0.0212, margin (logits) −0.0001 → +5.5788, **mean abs logit 0.148 → 16.32**, probability margin only **+0.112**, peakiness 1.6e-05 → 0.403, point-inside 0.00 → **0.15** |
+| H1 / H2 | **not run** (section 12 stops on H0 failure) |
+
+1. **The pair machinery is correct and verified**: canonical pair construction with hash and
+   zero-overlap audit, one shared frozen feature, single backward per pair, correct loss sign,
+   `L_cf` gradients reaching every trainable group (query projection, query norm, visual 1×1, Qwen
+   LoRA, token rows), SAM2 bit-frozen through the step, Task 6G head unchanged.
+2. **The specified ranking objective is scale-degenerate.** H0 satisfies ranking 10/10 and margin
+   +5.58 by growing the heatmap logit scale ~110× while the probability-space margin stays +0.112
+   and the argmax lands inside the target 15 % of the time. Error classification: 10/10 failing
+   pairs are `pair_ranking_correct_point_outside`.
+3. **Five readouts now fail with verified implementations** (6D.1 `[SEG]` probes, 6E coordinate
+   tokens, 6F box regression, 6G dense map, 6H ranked dense map). Task 6H's contribution is the
+   diagnosis: a future pair/contrastive objective for this project must be defined on a **bounded**
+   scale (probability/softmax) or carry an explicit peak-sharpness term, otherwise the ranking gate
+   keeps passing while localization stays at chance.
+4. **WHU is not the binding constraint** of this result (the failure is uniform at 10/10 pairs on
+   memorized records). No SAM2 training, no `[REF]`/SRE/SCL/4B/dataset migration/GUI.
+5. **Accepted verdict (section 20): `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`** — H0 cannot learn a
+   localizing own-vs-cross preference after the focused audit; the task stops before H1.
 
 ## Task 6G measured results
 
@@ -441,7 +477,7 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
 4. The SAM2 CPU feature cache holds all 480 training images inside the budget by sharing the two
    image-independent tensors once (7.508 GiB instead of 11.25 GiB), and it never mutates stored entries.
 
-## Measured limitations (carry into Task 6H)
+## Measured limitations (carry into Task 6I)
 
 1. **Instruction conditioning of the mask is still absent**, and Tasks 6D + 6D.1 localize it precisely:
    the frozen `[SEG]` hidden state is norm-112, effective-rank 8.33, and its instruction-dependent residual
@@ -449,14 +485,14 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
    into target geometry — three converging readouts cannot fit even the 480 training samples better than a
    label-shuffled control. Task 6D's original wording ("carries no target location") is superseded by this
    audit (§16 of Task 6D.1).
-2. **Four geometry readouts now fail identically and the failure is localized to the query signal.**
-   The legacy `[SEG]` probes (6D.1: real ≈ shuffled), the autoregressive coordinate vocabulary (6E:
-   structural 0/120 on 480), the global box regression (6F: val box IoU 0.025, paired 0/20) and the dense
-   query-to-visual map (6G: G0 inside 0.10, Dice 0.125 — cannot even overfit 20 records) each pass their
-   20-record/implementation checks where applicable, and each collapses to an **image-dominated query**
-   whose instruction-dependent component (r ≈ 0.48) is too weak to select the target in any output space.
-   The 6G audit (train/eval bit-equivalence, healthy logits, comparable BCE/Dice gradients, SAM2 bit-frozen)
-   rules out the readout implementation; the bottleneck is the query representation itself.
+2. **Five geometry readouts fail with verified implementations, and Task 6H identifies the objective as
+   the culprit, not the plumbing.** The legacy `[SEG]` probes (6D.1), the coordinate vocabulary (6E:
+   structural 0/120), the global box regression (6F: val box IoU 0.025), the dense map (6G: G0 inside
+   0.10) and the counterfactually ranked dense map (6H: ranking 10/10 but inside-own 3/20) all collapse
+   to an image-dominated query. Task 6H's audit shows the specified own-vs-cross margin on **unbounded
+   logits** is minimized by magnifying the field (mean |logit| 0.148 → 16.32, probability margin only
+   +0.112). A future ranking/contrastive term must be bounded or carry a peak-sharpness term, and the
+   query's instruction dependence must be strengthened deliberately.
 3. **Mask quality is not usable**: strict end-to-end mIoU 0.093–0.109, L3 nontrivial 0.076–0.088.
 4. **Language metrics are template metrics**: `reasoning_zh` has 21 distinct values in the whole training
    mini-set, so exact match and operation-chain accuracy cannot support a reasoning claim.
@@ -466,42 +502,40 @@ Full detail: `docs/task6c7_visual_cache_optimization.md`, `evaluation/task6c7_*.
    a misleading selection signal.
 7. **Training throughput is launch-bound at batch 1** and the removable overhead is now exhausted:
    the adopted runtime is Task 6C.6's integration plus Task 6C.7's frozen visual-feature cache, worth
-   +9.94 % on top (paired ablation), with 8.4 % fewer kernels and 43 % fewer sync ops. Caching (SAM),
-   pinning, prefetch, `torch.compile`, optimizer/clipping implementations, SDPA backends and
-   checkpointing-off are all measured and closed; the remaining lever is arithmetic intensity (true
-   batching ≥2), which is a new experiment, not a perf tweak.
+   +9.94 % on top (paired ablation). Task 6H adds one datapoint: a pair step (two query forwards, one
+   shared frozen feature, one backward) costs ~1.6× a single-sample step, so 1500 pair steps ≈ 29 min.
 
 ## Current blockers
 
-**The query's instruction-dependent signal is too weak to select the target.** Four readouts (6D.1
-`[SEG]`, 6E tokens, 6F box head, 6G dense map) have been measured with verified implementations and
-fail identically: each produces an image-dominated representation that cannot localize WHU-scale
-targets, in whatever output space (hidden probe, token sequence, box, heatmap). The frozen oracle
-ceilings (Box 0.7506/20-20, Point 0.4876/18-20, grid-256 point 0.4883/18-20) confirm the downstream
-path is not the problem. The next task must strengthen the query itself — not add another readout.
+**The supervised objective is satisfiable without localizing, and the query stays image-dominated.**
+Task 6H removed every remaining implementation doubt: the pair construction, the shared-feature
+identity, the loss sign, the gradient coverage, the frozen backbone and the scheduler horizon are all
+verified, yet the specified ranking objective is minimized by rescaling the logit field. Localization
+gates (point-inside-own 3/20, paired point 0/10) expose it. The next task must change the objective to a
+bounded form and/or strengthen the query's instruction dependence — another readout swap is not
+indicated.
 
 ## Recommended next task
 
-**ChatGPT review of the pushed Task 6G results**, then **exactly one** task aimed at the query
-representation, with the evidence Tasks 6D.1/6E/6F/6G produced:
+**ChatGPT review of the pushed Task 6H results**, then **exactly one** task aimed at the objective and
+the query signal, with the evidence Tasks 6D.1/6E/6F/6G/6H produced:
 
-1. **Strengthen the query (recommended).** Candidates, all measurable against the frozen gates
-   (20-record overfit → 480-paired → point/box oracle ceilings): (a) instruction-aware query
-   refinement over the visual features (still no `[REF]`, no new dataset); (b) an explicit
-   representation objective that separates same-image/different-instruction queries (a
-   representation loss, not SRE/SCL); (c) explicit counterfactual supervision — the paired `P`
-   subset already provides two targets per image and no task has exploited it; (d) honestly
-   revisit the spec's training budgets under the corrected scheduler ("8 epochs were simply too
-   few" is unfrozen).
-2. **Only after the query becomes target-specific**: re-test the dense map readout (cheapest to
-   re-verify, with the frozen 0.4883/18-20 point ceiling), then G2-style segmentation.
-3. **Not indicated by any evidence collected so far**: `[REF]`, Spatial Relation Encoder, Spatial
+1. **Bounded counterfactual ranking (recommended).** Re-run the same pair step with `s_XY` on
+   `sigmoid(H)` (or a softmax over the map) so the margin cannot be bought with logit scale; the audit's
+   probability margin (+0.112) is the honest baseline to beat. Add a peak/coverage term only if the
+   bounded version still fails.
+2. **Strengthen the query representation**: instruction-aware query refinement over the visual features,
+   or an explicit representation objective separating the two instructions of one image (no `[REF]`, no
+   new dataset).
+3. **Only after a localization gate passes**: re-test the dense readout, then frozen-SAM2 segmentation
+   and geometry-verifiable supervision.
+4. **Not indicated by any evidence collected so far**: `[REF]`, Spatial Relation Encoder, Spatial
    Consistency Loss, 4B, dataset migration, full training, a GUI.
 
-Full detail: `handoff/FROM_DSH.md`, `docs/task6g_dense_spatial_grounding.md`,
-`docs/task6f_target_aware_box_query.md`, `docs/task6e_explicit_spatial_tokens.md`,
-`evaluation/task6g_verdict.json`, `evaluation/task6g_grid_oracle.json`,
-`evaluation/task6g_token_setup.json`, `evaluation/task6g_g0_overfit.json`,
-`evaluation/task6g_g0_audit.json`, `evaluation/task6g_error_analysis.json`,
-`evaluation/task6f_*.json`, `evaluation/task6e_*.json`,
-`docs/architecture_decisions.md` (ADR-016, ADR-017, ADR-018).
+Full detail: `handoff/FROM_DSH.md`, `docs/task6h_counterfactual_pair_grounding.md`,
+`docs/task6g_dense_spatial_grounding.md`, `docs/task6f_target_aware_box_query.md`,
+`evaluation/task6h_verdict.json`, `evaluation/task6h_pair_manifest.json`,
+`evaluation/task6h_token_setup.json`, `evaluation/task6h_h0_overfit.json`,
+`evaluation/task6h_h0_audit.json`, `evaluation/task6h_error_analysis.json`,
+`evaluation/task6g_*.json`, `evaluation/task6f_*.json`, `evaluation/task6e_*.json`,
+`docs/architecture_decisions.md` (ADR-016 … ADR-019).

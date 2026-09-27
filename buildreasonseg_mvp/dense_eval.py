@@ -25,13 +25,12 @@ from .validation import family_of
 
 
 @torch.no_grad()
-def predict_heatmap(runtime, sample, image=None, features=None, *,
-                    with_hidden: bool = False, with_heatmap: bool = False) -> dict:
-    """The section 9 inference path: query hidden x frozen spatial features -> heatmap + point.
+def forward_heatmap(runtime, sample, image=None, features=None) -> dict:
+    """The section 9 inference path: query hidden x frozen spatial features -> raw tensors.
 
-    `with_hidden` / `with_heatmap` gate the storage of the 2048-d hiddens and the binary heatmap
-    (used by the representation diagnosis and the paired probe); the per-epoch evaluations keep
-    them off so the training artifact stays small. All stored arrays are plain lists for JSON.
+    Returns the CPU heatmap logits, the downsampled soft target and the frozen interior point so
+    callers (the JSON record builder and the Task 6H pair evaluator) share one forward
+    implementation. GT is read for scoring only.
     """
 
     from .box_query import build_query_batch
@@ -49,35 +48,65 @@ def predict_heatmap(runtime, sample, image=None, features=None, *,
         spatial_feature = feature_tensor_for_grid(features, int(runtime.dense_grid)).to(runtime.device)
         heatmap_logits = runtime.model.dense_head(box_hidden, spatial_feature)
     logits = heatmap_logits[0].detach().float().cpu()
-    soft_target = downsample_target_mask(sample.target_mask(), int(runtime.dense_grid))
-    extraction = argmax_point_from_logits(logits, int(runtime.dense_grid))
-    gt_point = distance_transform_point(sample.target_mask())
-    binary = (torch.sigmoid(logits.float()) > 0.5).detach().cpu().numpy()
+    target_mask = sample.target_mask()
+    return {
+        "sample_id": str(sample.sample_id),
+        "grid": int(runtime.dense_grid),
+        "logits": logits,
+        "soft_target": downsample_target_mask(target_mask, int(runtime.dense_grid)),
+        "target_mask": target_mask,
+        "gt_point": list(distance_transform_point(target_mask)),
+        "box_hidden": box_hidden[0].detach().float().cpu(),
+        "query_projected": runtime.model.dense_head.query_proj(
+            runtime.model.dense_head.query_norm(box_hidden.float())
+        )[0].detach().float().cpu(),
+    }
+
+
+def record_from_raw(sample, raw: dict, *, with_hidden: bool = False, with_heatmap: bool = False) -> dict:
+    """Build the JSON-safe record from a `forward_heatmap` result."""
+
+    logits = raw["logits"]
+    soft_target = raw["soft_target"]
+    extraction = argmax_point_from_logits(logits, int(raw["grid"]))
+    gt_point = raw["gt_point"]
     record = {
         "sample_id": str(sample.sample_id),
         "image_id": str(sample.image_id),
         "level": int(sample.level),
         "query_type": str(sample.query_type),
         "query_family": family_of(str(sample.query_type)),
-        "grid": int(runtime.dense_grid),
+        "grid": int(raw["grid"]),
         "predicted_point": extraction["point"],
         "soft_argmax_point": extraction["soft_argmax_point"],
         "peakiness": extraction["peakiness"],
         "gt_point": list(gt_point),
-        "point_inside_own": point_inside_mask(sample.target_mask(), extraction["point"]),
+        "point_inside_own": point_inside_mask(raw["target_mask"], extraction["point"]),
         **normalized_point_error(extraction["point"], gt_point),
         "heatmap_soft_dice": soft_dice_from_logits(logits, soft_target),
         "heatmap_binary_iou_05": binary_iou_from_logits(logits, soft_target),
     }
     if with_hidden:
-        record["box_hidden"] = box_hidden[0].detach().float().cpu().numpy().astype(np.float32).tolist()
-        record["query_projected"] = (
-            runtime.model.dense_head.query_proj(runtime.model.dense_head.query_norm(box_hidden.float()))[0]
-            .detach().float().cpu().numpy().astype(np.float32).tolist()
-        )
+        record["box_hidden"] = raw["box_hidden"].numpy().astype(np.float32).tolist()
+        record["query_projected"] = raw["query_projected"].numpy().astype(np.float32).tolist()
     if with_heatmap:
-        record["heatmap_binary"] = binary.astype(bool).tolist()
+        record["heatmap_binary"] = (torch.sigmoid(logits.float()) > 0.5).numpy().astype(bool).tolist()
     return record
+
+
+@torch.no_grad()
+def predict_heatmap(runtime, sample, image=None, features=None, *,
+                    with_hidden: bool = False, with_heatmap: bool = False) -> dict:
+    """The section 9 inference path: query hidden x frozen spatial features -> heatmap + point.
+
+    `with_hidden` / `with_heatmap` gate the storage of the 2048-d hiddens and the binary heatmap
+    (used by the representation diagnosis and the paired probe); the per-epoch evaluations keep
+    them off so the training artifact stays small. All stored arrays are plain lists for JSON.
+    """
+
+    raw = forward_heatmap(runtime, sample, image=image, features=features)
+    return record_from_raw(sample, raw, with_hidden=with_hidden, with_heatmap=with_heatmap)
+
 
 
 def _mean(values) -> float | None:
@@ -119,7 +148,9 @@ def spatial_metrics(records: list[dict]) -> dict:
 def paired_point_report(records_by_id: dict[str, dict], pairs: list[dict]) -> dict:
     """Section 14 paired probe: point selection, same-image point distance, heatmap A/B IoU."""
 
-    def _iou_binary(a: np.ndarray, b: np.ndarray) -> float:
+    def _iou_binary(a, b) -> float | None:
+        if a is None or b is None:
+            return None
         left = np.asarray(a).astype(bool)
         right = np.asarray(b).astype(bool)
         union = np.logical_or(left, right).sum()
@@ -144,7 +175,9 @@ def paired_point_report(records_by_id: dict[str, dict], pairs: list[dict]) -> di
                 "point_selection_passed": bool(a["point_inside_own"] and b["point_inside_own"]),
                 "same_image_point_distance": distance,
                 "points_distinct": bool(distance > 0.0),
-                "same_image_heatmap_iou": _iou_binary(a["heatmap_binary"], b["heatmap_binary"]),
+                "same_image_heatmap_iou": _iou_binary(
+                    a.get("heatmap_binary"), b.get("heatmap_binary")
+                ),
             }
         )
     return {

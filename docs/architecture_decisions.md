@@ -904,6 +904,27 @@ validation set and one metric path.
 
 ---
 
+## ADR-019 — Task 6H: an own-vs-cross region-ranking loss on unbounded logits is satisfiable without localizing
+
+**Status:** **Accepted** (Task 6H) for what the pair-manifest, H0 and the focused audit measure. No novelty is claimed for same-image counterfactual supervision (section 21).
+
+**Context.** Task 6G's dense head was implementation-clean yet localized nothing (G0 inside 0.10, Dice 0.125). Task 6H kept the architecture frozen and changed only the training semantics: one optimizer step per canonical same-image counterfactual pair (240 pairs over 240 images from the Task 6C `P` subset, identity hash recorded, 0/240 overlapping), adding `L_total = 0.5*(L_reasoning_A+L_reasoning_B) + 1.0*(L_heatmap_A+L_heatmap_B) + 2.0*L_cf` with `L_cf = 0.5*(softplus(1-(s_AA-s_AB)) + softplus(1-(s_BB-s_BA)))` and `s_XY = sum(H_X·M_Y)/sum(M_Y)` on the 256×256 soft target masks.
+
+**Decision**
+
+1. **The pair machinery is correct and verified.** The one-pair step shares one frozen SAM2 feature (bit-identical through the step), runs both query forwards with retained graphs and a single backward; SAM2 stays bit-frozen, the `[BOX]`/`[SEG]` rows and all head parameters move with gradient, the Task 6G head is unchanged (270 593 parameters, level `[1,32,256,256]`), and the scheduler horizon counts pair steps. The pair loss has the correct sign (own-score up lowers it, cross-score up raises it) and its gradient reaches every trainable group (query projection, query norm, visual 1×1, Qwen LoRA, token rows).
+2. **H0 fails on the point gates while passing the ranking gates.** After 1500 pair steps: pair ranking **10/10**, strict margin **10/10**, mean own−cross margin **+5.58** — but point-inside-own **3/20**, paired point selection **0/10**, heatmap Dice **0.134**.
+3. **The audit explains the failure precisely: the specified margin is scale-degenerate.** Between clean initialization and the H0 checkpoint the mean absolute logit grows 0.148 → **16.32**, the logit margin grows −0.0001 → **+5.58**, but the *probability* margin only reaches **+0.112** and the point-inside rate **0.15**. The pair loss is minimized (1.31 → 0.021) by magnifying the logit field, not by sharpening or relocating the peak; A/B separation explodes by magnitude (projected-query distance 1.49 → 779.5) rather than becoming target-specific. 10/10 failing pairs are classified `pair_ranking_correct_point_outside`.
+4. **Verdict `COUNTERFACTUAL_QUERY_SIGNAL_FAILED`; the task stops at H0** (section 12). H1/H2 are not run; no SAM2 training; no `[REF]`/SRE/SCL/4B/dataset change/GUI.
+
+**Consequences**
+
+* **A ranking objective on unbounded logits is not a localization objective.** Any future pair/contrastive term for this project must be defined on a bounded scale (probability/softmax) or must carry an explicit peak-sharpness/coverage term; otherwise the ranking gate passes at chance localization, as it did here. This is the sharpest formulation yet of the project's bottleneck: five readouts (6D.1 `[SEG]`, 6E tokens, 6F box, 6G dense map, 6H ranked dense map) fail while their implementations are verified.
+* The canonical pair construction (manifest + hash + zero-overlap audit) and the audit template (before/after geometry, logit scale, probability margin, peakiness, point-inside rate, gradient groups) are reusable for the next candidate.
+* The frozen ceilings remain the comparison points: point oracle 0.4876/18-20, box oracle 0.7506/20-20, grid-256 point oracle 0.4883/18-20, Task 6C `P_C` 0.10604/0-20.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -926,3 +947,4 @@ validation set and one metric path.
 | 016 | **Task 6E: explicit box tokens are necessary but not sufficient at 2B / 3 epochs** | Enclosing quantization at `B = 256` keeps the oracle at 0.7343 mIoU / 20/20 and E0 overfits 20 records to 20/20 exact tokens (0.9166 box IoU), but E1 on 480 paired records fails with structural 0/120: `[BOX]`/EOS/reasoning are learned (accuracy 1.0) while the 256-way location values stall at the uniform floor (train CE 5.15 vs `ln 256 = 5.545`) and `[SEG]` is never predicted after the location run — fix the location learning signal/budget before adding `[REF]`, SRE, SCL or scale |
 | 017 | **Task 6F: pre-reasoning `[BOX]` query with a direct box readout** | The query hidden is provably conditioned only by image + instruction (bit-identical under future-text mutation); the same 20 records reach F0 box IoU 0.9046 / paired 10/10 on the inference-form query path; F1 (480 paired, ≤8 epochs) answers whether the target-aware representation generalizes — the Task 6E coordinate vocabulary stays retired regardless |
 | 018 | **Task 6G: dense query-to-map grounding does not localize either** | The 256×256 grid-snapped point oracle keeps 0.4883 mIoU / 18-20; the dense head is audited clean (SAM2 bit-frozen, train/eval bit-identical, healthy gradients) yet G0 cannot overfit 20 records (inside 0.10, Dice 0.125) — the heatmap is a near-flat image-dominated field, so the measured bottleneck is the query's weak instruction signal, not the readout format |
+| 019 | **Task 6H: own-vs-cross ranking on unbounded logits is satisfiable without localizing** | 240 canonical same-image counterfactual pairs, one pair step with one shared frozen feature and a single backward; H0 reaches pair ranking 10/10 and mean margin +5.58 while inside-own is 3/20 — the audit shows the margin grew with a 110× logit-scale increase (probability margin only +0.112, point-inside 0.15), so the specified objective is scale-degenerate and the task stops at H0 |

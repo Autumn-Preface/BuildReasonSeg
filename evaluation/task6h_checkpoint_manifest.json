@@ -1,0 +1,15 @@
+{
+  "_doc": "Task 6H: hashes of every Task 6H checkpoint. The checkpoint files themselves stay gitignored (artifacts/); only this manifest is tracked.",
+  "task": "6H",
+  "checkpoints": {
+    "H0/h0_final": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6h\\H0\\h0_final.pt",
+      "bytes": 97350891,
+      "sha256": "08485d09b53d0b14e7191aba9eae646ca4451c7461b30327fe436ddb164b5470",
+      "step": 1500,
+      "stage": "H0",
+      "name": "h0_final",
+      "relative_path": "artifacts/checkpoints/task6h/H0/h0_final.pt"
+    }
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "_doc": "Task 6H sections 5-9. Architecture-identity check, causal-placement re-verification and one-pair optimizer-step smoke on a real canonical pair. Every claim comes from a real forward/backward; nothing here is assumed.",
+  "task": "6H",
+  "pair": {
+    "image_id": "1_0",
+    "a": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+    "b": "buildsr_train_1_0_2_largest_to_above_13ffc95b4a7b",
+    "target_a": 1,
+    "target_b": 3
+  },
+  "architecture": {
+    "grid": 256,
+    "selected_level_shape": [
+      1,
+      32,
+      256,
+      256
+    ],
+    "in_channels": 32,
+    "head": {
+      "class": "DenseSpatialGroundingHead",
+      "query_dim": 2048,
+      "key_dim": 128,
+      "in_channels": 32,
+      "structure": "query: LayerNorm(2048) -> Linear(2048,128); visual: Conv1x1(C,128); heatmap = dot(q, K)/sqrt(128) + scalar bias",
+      "scalar_bias": true,
+      "parameters": 270593,
+      "installed": true,
+      "grid": 256,
+      "box_token_id": 151670,
+      "trainable": true
+    },
+    "task6g_reference": {
+      "grid": 256,
+      "selected_level_shape": [
+        1,
+        32,
+        256,
+        256
+      ],
+      "head_parameters": 270593,
+      "source": "evaluation/task6g_token_setup.json"
+    },
+    "unchanged_from_task6g": true
+  },
+  "feature_levels": {
+    "image_embeddings_shape": [
+      1,
+      256,
+      64,
+      64
+    ],
+    "high_res_shapes": [
+      [
+        1,
+        32,
+        256,
+        256
+      ],
+      [
+        1,
+        64,
+        128,
+        128
+      ]
+    ],
+    "levels_by_grid": {
+      "64": [
+        1,
+        256,
+        64,
+        64
+      ],
+      "128": [
+        1,
+        64,
+        128,
+        128
+      ],
+      "256": [
+        1,
+        32,
+        256,
+        256
+      ]
+    }
+  },
+  "trainables": {
+    "phase": "A",
+    "trainable_tensors": 400,
+    "frozen_tensors": 1243,
+    "trainable_params": 17707265,
+    "projection_trainable": false,
+    "sam_mask_decoder_trainable": false,
+    "qwen_visual_trainable": [
+      "dense_head.visual_proj.weight",
+      "dense_head.visual_proj.bias"
+    ],
+    "grounding_head_trainable": false,
+    "box_head_trainable": false,
+    "box_query_token_id": 151670,
+    "dense_grid": 256,
+    "trainable_token_ids": [
+      151669,
+      151670
+    ],
+    "dense_head_trainable": true,
+    "sam_frozen": true,
+    "projection_frozen": true,
+    "loc_tokens_present": false,
+    "loc_rows_trainable": false,
+    "task": "6H",
+    "pair_step": {
+      "pair_steps_per_epoch": 240,
+      "margin": 1.0,
+      "weights": {
+        "reasoning": 0.5,
+        "heatmap": 1.0,
+        "cf": 2.0
+      }
+    }
+  },
+  "optimizer_groups": [
+    {
+      "name": "lora",
+      "lr": 0.0001,
+      "weight_decay": 0.01,
+      "tensors": 392,
+      "parameters": 17432576
+    },
+    {
+      "name": "decoder",
+      "lr": 0.0003,
+      "weight_decay": 0.01,
+      "tensors": 7,
+      "parameters": 270593
+    },
+    {
+      "name": "token",
+      "lr": 0.0003,
+      "weight_decay": 0.0,
+      "tensors": 1,
+      "parameters": 4096
+    }
+  ],
+  "causal_placement": {
+    "future_text_changed": true,
+    "box_hidden_bit_identical": true,
+    "box_hidden_max_abs_delta": 0.0,
+    "ab_hidden_distance": 0.0
+  },
+  "region_scores_before": {
+    "s_aa": 0.14715775847434998,
+    "s_ab": 0.1456855982542038,
+    "s_bb": 0.15418416261672974,
+    "s_ba": 0.15836970508098602,
+    "margin_a": 0.0014721602201461792,
+    "margin_b": -0.004185542464256287,
+    "mean_margin": -0.0013566911220550537,
+    "probability_margin_a": 0.0003668069839477539,
+    "probability_margin_b": -0.0010409355163574219
+  },
+  "region_scores_after": {
+    "s_aa": -0.136942520737648,
+    "s_ab": -0.1347568929195404,
+    "s_bb": -0.13401593267917633,
+    "s_ba": -0.13424210250377655,
+    "margin_a": -0.002185627818107605,
+    "margin_b": 0.00022616982460021973,
+    "mean_margin": -0.0009797289967536926,
+    "probability_margin_a": -0.0005443394184112549,
+    "probability_margin_b": 5.671381950378418e-05
+  },
+  "one_pair_step": {
+    "losses": {
+      "total": 8.024164199829102,
+      "reasoning_ce": 3.7460312843322754,
+      "heatmap_a": 1.755320429801941,
+      "heatmap_b": 1.7672667503356934,
+      "heatmap_sum": 3.5225871801376343,
+      "bce_a": 0.7713165283203125,
+      "bce_b": 0.7773748636245728,
+      "dice_a": 0.9840039014816284,
+      "dice_b": 0.9898918271064758,
+      "cf": 1.3142807483673096,
+      "cf_a": 1.3121856451034546,
+      "cf_b": 1.316375970840454,
+      "lm_ce": 3.7460312843322754,
+      "mask_bce": 1.5486913919448853,
+      "mask_dice": 1.9738957285881042,
+      "ground": 1.3142807483673096
+    },
+    "weights": {
+      "reasoning": 0.5,
+      "heatmap": 1.0,
+      "cf": 2.0,
+      "cf_margin": 1.0
+    },
+    "region_scores": {
+      "s_aa": 0.14715775847434998,
+      "s_ab": 0.1456855982542038,
+      "s_bb": 0.15436340868473053,
+      "s_ba": 0.1586209386587143,
+      "margin_a": 0.0014721602201461792,
+      "margin_b": -0.004257529973983765,
+      "mean_margin": -0.0013926848769187927,
+      "probability_margin_a": 0.0003668069839477539,
+      "probability_margin_b": -0.0010587573051452637
+    },
+    "pair_ranking_pass": false,
+    "strict_margin_pass": false,
+    "grad_clip_total_norm": 19.372879028320312,
+    "box_row_delta": 0.0003000013530254364,
+    "seg_row_delta": 0.0003000013530254364,
+    "box_row_grad_norm": 0.9042938351631165,
+    "seg_row_grad_norm": 0.17010709643363953,
+    "dense_head_param_max_delta": {
+      "bias": 0.000299999926937744,
+      "query_norm.weight": 0.00030297040939331055,
+      "query_norm.bias": 0.0002999885764438659,
+      "query_proj.weight": 0.00030006468296051025,
+      "query_proj.bias": 0.000300062820315361,
+      "visual_proj.weight": 0.0003005117177963257,
+      "visual_proj.bias": 0.00030052661895751953
+    },
+    "dense_head_param_grad_norms": {
+      "bias": 0.05504634603857994,
+      "query_norm.weight": 0.0036617685109376907,
+      "query_norm.bias": 0.0034147605765610933,
+      "query_proj.weight": 0.26424041390419006,
+      "query_proj.bias": 0.005861226934939623,
+      "visual_proj.weight": 0.007145940791815519,
+      "visual_proj.bias": 0.031727384775877
+    },
+    "ordinary_rows_probed": 16,
+    "ordinary_rows_max_abs_delta": 0.0,
+    "ordinary_rows_unchanged_exactly": true,
+    "base_embedding_tensor_bit_identical": true,
+    "sam2_max_abs_delta": 0.0,
+    "sam2_bit_identical": true,
+    "shared_feature_max_abs_delta": 0.0,
+    "shared_feature_bit_identical": true,
+    "visual_tower_lora_modules": []
+  },
+  "margin": 1.0,
+  "seconds": 26.44,
+  "passed": true
+}

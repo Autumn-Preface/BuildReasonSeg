@@ -1,0 +1,109 @@
+{
+  "_doc": "Task 6H section 13. Focused H0 audit: does the counterfactual loss reach every trainable group, does it have the correct sign, did the [BOX] query geometry and the region margins move between clean initialization and the H0 checkpoint, and is the pair construction sound. No architecture module was added.",
+  "task": "6H",
+  "h0_verdict": "COUNTERFACTUAL_QUERY_SIGNAL_FAILED",
+  "h0_final": {
+    "pair_ranking_pass": 10,
+    "pair_count": 10,
+    "point_inside_own": 3,
+    "record_count": 20,
+    "mean_own_minus_cross_margin": 5.578812599182129,
+    "heatmap_dice": 0.13399638533592223
+  },
+  "before_training": {
+    "pairs": 10,
+    "mean_ab_hidden_distance": 27.368862915039063,
+    "mean_ab_projected_query_distance": 1.4930176496505738,
+    "mean_own_minus_cross_margin": -5.726255476474762e-05,
+    "mean_probability_margin": -1.4156103134155273e-05,
+    "mean_cf_loss": 1.3133050918579101,
+    "mean_argmax_peakiness": 1.5748471560073086e-05,
+    "mean_abs_logit": 0.14767298847436905,
+    "point_inside_rate": 0.0
+  },
+  "after_training": {
+    "pairs": 10,
+    "mean_ab_hidden_distance": 167.6509567260742,
+    "mean_ab_projected_query_distance": 779.5231323242188,
+    "mean_own_minus_cross_margin": 5.578802633285522,
+    "mean_probability_margin": 0.11237360970135342,
+    "mean_cf_loss": 0.0211699333274737,
+    "mean_argmax_peakiness": 0.40283577106893065,
+    "mean_abs_logit": 16.32005524635315,
+    "point_inside_rate": 0.15
+  },
+  "margin_change": {
+    "before": -5.726255476474762e-05,
+    "after": 5.578802633285522,
+    "delta": 5.578859895840287,
+    "probability_margin_before": -1.4156103134155273e-05,
+    "probability_margin_after": 0.11237360970135342,
+    "mean_abs_logit_before": 0.14767298847436905,
+    "mean_abs_logit_after": 16.32005524635315,
+    "mean_argmax_peakiness_before": 1.5748471560073086e-05,
+    "mean_argmax_peakiness_after": 0.40283577106893065,
+    "point_inside_rate_before": 0.0,
+    "point_inside_rate_after": 0.15,
+    "interpretation": "the margin is measured in logit units (section 7); a margin that grows while the argmax probability, the point-inside rate and the heatmap Dice stay flat means the ranking objective was satisfied by rescaling the logit field rather than by sharpening or relocating the peak"
+  },
+  "cf_loss_change": {
+    "before": 1.3133050918579101,
+    "after": 0.0211699333274737,
+    "delta": -1.2921351585304364,
+    "decreased": true,
+    "history_first": 1.2838844060897827,
+    "history_last": 0.008856774307787418
+  },
+  "pair_loss_sign": {
+    "d_cf_d_s_aa": null,
+    "d_cf_d_s_ab": null,
+    "d_cf_d_s_bb": null,
+    "d_cf_d_s_ba": null,
+    "own_up_lowers_loss": true,
+    "cross_up_raises_loss": true,
+    "own_up_loss_delta": -0.00033402442932128906,
+    "cross_up_loss_delta": 0.0005316734313964844
+  },
+  "gradient_groups_of_cf_loss": {
+    "norms": {
+      "dense_head.query_proj": 0.03095185197889805,
+      "dense_head.query_norm": 0.0003972772683482617,
+      "dense_head.visual_proj": 0.004053316698724995,
+      "qwen_lora": 0.01642336097240567,
+      "token_rows": 0.07097195088863373,
+      "other": 0.0
+    },
+    "tensor_counts": {
+      "dense_head.query_proj": 2,
+      "dense_head.query_norm": 2,
+      "dense_head.visual_proj": 2,
+      "qwen_lora": 392,
+      "token_rows": 1,
+      "other": 1
+    }
+  },
+  "shared_feature_max_abs_delta": 0.0,
+  "shared_feature_bit_identical": true,
+  "pair_ordering": {
+    "pair_count": 240,
+    "hash": "c56f0507da41fd5506ffd0d3c37b056d017de7d48c6f4cc448941a9aaf997c3b",
+    "overlapping_pairs": 0,
+    "h0_pair_ids_match_manifest_prefix": true,
+    "target_masks_differ_for_all_h0_pairs": true
+  },
+  "checkpoint_load": {
+    "step": 1500,
+    "metrics": {
+      "gate_passed": false,
+      "pair_ranking_pass": 10,
+      "point_inside_own": 3,
+      "mean_own_minus_cross_margin": 5.578812599182129
+    },
+    "missing_keys": 626,
+    "unexpected_keys": 0,
+    "grounding_head_loaded": false,
+    "box_head_loaded": false,
+    "dense_head_loaded": true,
+    "geometry_kind": null
+  }
+}

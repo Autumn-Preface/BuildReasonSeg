@@ -1,0 +1,137 @@
+{
+  "_doc": "Task 6H section 20. Exactly one verdict, resolved from the recorded artifacts. Section 21: same-image counterfactual supervision is not claimed as paper novelty and is not called Spatial Consistency Loss.",
+  "task": "6H",
+  "verdict": "COUNTERFACTUAL_QUERY_SIGNAL_FAILED",
+  "reason": "H0 could not learn own-vs-cross preference after the focused audit: pair ranking 10/10, mean margin 5.578812599182129",
+  "evidence": {
+    "pair_manifest": {
+      "pair_count": 240,
+      "image_count": 240,
+      "pair_identity_sha256": "c56f0507da41fd5506ffd0d3c37b056d017de7d48c6f4cc448941a9aaf997c3b",
+      "overlap_summary": {
+        "pairs_with_overlapping_targets": 0,
+        "mean_raw_iou": 0.0,
+        "max_raw_iou": 0.0
+      },
+      "assertions": {
+        "same_source_image": true,
+        "different_sample_ids": true,
+        "different_target_component_ids": true,
+        "target_masks_differ": true,
+        "deterministic_order": true
+      }
+    },
+    "token_setup": {
+      "passed": true,
+      "architecture": {
+        "grid": 256,
+        "selected_level_shape": [
+          1,
+          32,
+          256,
+          256
+        ],
+        "in_channels": 32,
+        "head": {
+          "class": "DenseSpatialGroundingHead",
+          "query_dim": 2048,
+          "key_dim": 128,
+          "in_channels": 32,
+          "structure": "query: LayerNorm(2048) -> Linear(2048,128); visual: Conv1x1(C,128); heatmap = dot(q, K)/sqrt(128) + scalar bias",
+          "scalar_bias": true,
+          "parameters": 270593,
+          "installed": true,
+          "grid": 256,
+          "box_token_id": 151670,
+          "trainable": true
+        },
+        "task6g_reference": {
+          "grid": 256,
+          "selected_level_shape": [
+            1,
+            32,
+            256,
+            256
+          ],
+          "head_parameters": 270593,
+          "source": "evaluation/task6g_token_setup.json"
+        },
+        "unchanged_from_task6g": true
+      },
+      "region_scores_before": {
+        "s_aa": 0.14715775847434998,
+        "s_ab": 0.1456855982542038,
+        "s_bb": 0.15418416261672974,
+        "s_ba": 0.15836970508098602,
+        "margin_a": 0.0014721602201461792,
+        "margin_b": -0.004185542464256287,
+        "mean_margin": -0.0013566911220550537,
+        "probability_margin_a": 0.0003668069839477539,
+        "probability_margin_b": -0.0010409355163574219
+      },
+      "region_scores_after": {
+        "s_aa": -0.136942520737648,
+        "s_ab": -0.1347568929195404,
+        "s_bb": -0.13401593267917633,
+        "s_ba": -0.13424210250377655,
+        "margin_a": -0.002185627818107605,
+        "margin_b": 0.00022616982460021973,
+        "mean_margin": -0.0009797289967536926,
+        "probability_margin_a": -0.0005443394184112549,
+        "probability_margin_b": 5.671381950378418e-05
+      },
+      "one_pair_step": {
+        "losses": {
+          "total": 8.024164199829102,
+          "reasoning_ce": 3.7460312843322754,
+          "heatmap_a": 1.755320429801941,
+          "heatmap_b": 1.7672667503356934,
+          "heatmap_sum": 3.5225871801376343,
+          "bce_a": 0.7713165283203125,
+          "bce_b": 0.7773748636245728,
+          "dice_a": 0.9840039014816284,
+          "dice_b": 0.9898918271064758,
+          "cf": 1.3142807483673096,
+          "cf_a": 1.3121856451034546,
+          "cf_b": 1.316375970840454,
+          "lm_ce": 3.7460312843322754,
+          "mask_bce": 1.5486913919448853,
+          "mask_dice": 1.9738957285881042,
+          "ground": 1.3142807483673096
+        },
+        "sam2_bit_identical": true,
+        "shared_feature_bit_identical": true
+      }
+    },
+    "H0": {
+      "verdict": "COUNTERFACTUAL_QUERY_SIGNAL_FAILED",
+      "pair_ranking_pass": 10,
+      "pair_count": 10,
+      "strict_margin_pass": 10,
+      "point_inside_own": 3,
+      "record_count": 20,
+      "paired_point_selection_pass": 0,
+      "mean_own_minus_cross_margin": 5.578812599182129,
+      "heatmap_dice_diagnostic": 0.13399638533592223,
+      "gate": {
+        "kind": "h0",
+        "checks": {
+          "pair_ranking_ge": true,
+          "point_inside_own_ge": false,
+          "paired_point_selection_ge": false,
+          "mean_margin_gt": true,
+          "no_gt_leakage": true
+        },
+        "passed": false,
+        "gate": {
+          "pair_ranking_min": 9,
+          "point_inside_own_min": 18,
+          "paired_point_selection_min": 9,
+          "mean_margin_min": 0.5
+        }
+      }
+    },
+    "H1": null,
+    "H2": null
+  }
+}
