@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6K._
+_Last updated by DSH at the end of Task 6K.1._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -70,7 +70,47 @@ The block above is machine-checked against
 | 6H.1 | **Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding** | **done → `BOUNDED_POINT_OBJECTIVE_FAILED`** (H0-R point CE 11.10→4.74, inside-own 7/20) |
 | 6I | **Visual Query Refinement Block v0.1 (single query cross-attends frozen 64×64 SAM2 embedding once)** | **done → `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`** (I0 inside-own 7→13/20, paired point 2→5/10; attention peaks at only ~2.5 % target mass) |
 | 6J | **Structured Proposal Grounding Feasibility (instruction → relation program → building candidates → explicit geometry execution)** | **done → `PROPOSAL_QUALITY_LIMIT`** (J0 executor 1.000/20-20; J2 parser 1.000 acc, 1.000 full-val; J3 1.000/20-20; J1 frozen-YOLO chain 5/20 paired → J4 not run) |
-| 6K | **WHU source → pseudo-instance data audit (read-only)** | **done → `KEEP_WHU_AS_PRIMARY_FOR_NOW`** (`legacy_baseline_role: keep`; conversion drift 4.33 % weighted, `<50` deletion 3.61 % of contours / 0.058 % of foreground, YOLO re-emulation IoU 1.00000, J1 failures 75.4 % proposal-model) |
+| 6K | **WHU source → pseudo-instance data audit (read-only)** | **done → `KEEP_WHU_AS_PRIMARY_FOR_NOW`** (`legacy_baseline_role: keep`; conversion drift 4.33 % weighted, `<50` deletion 3.61 % of contours / 0.058 % of foreground, YOLO re-emulation IoU 1.00000, J1 failures 75.4 % proposal-model) — **superseded as a project-level decision by Task 6K.1** |
+| 6K.1 | **Recover and validate the native WHU East-Asia vector ground truth (read-only)** | **done → `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`** (`keep_whu_imagery: true`, `keep_historical_pseudo_baseline: true`; `EA.shp` = 34,085 manually delineated polygons, vector↔raster mean IoU 0.9505, tile mapping validated, VECTOR-vs-PSEUDO relation change 6.96 % weighted, 5.24 % of native buildings missing from the pseudo view, merges only 1.34 %) |
+
+## Task 6K.1 measured results
+
+Read-only recovery and validation of the native WHU East-Asia vector map discovered by Task 6K
+(`2. The shape file of the whole images\EA.shp`), parsed with a standard-library ESRI reader because
+no shapefile/GDAL/rasterio/tifffile package is installed. No source, converted or legacy file was
+modified (`evaluation/task6k1_read_only_proof.json`), no model trained, no dataset regenerated.
+Full detail: `docs/task6k1_whu_native_vector_groundtruth.md`, ADR-024, `evaluation/task6k1_*.json`.
+
+| | Value |
+|---|---|
+| Vector record count | **34,085** polygons (`.shp` == `.shx` == `.dbf`; 0 deleted rows; 0 unclosed rings; 5 with holes; 5 multipart) |
+| DBF attributes | **degenerate** — all fields constant over all records (`OBJECTID` 27, `Shape_Area` 211.7518) → identity = `.shp` record order |
+| CRS | `WGS_1984_World_Mercator` (map-unit areas, not ground m²) |
+| Rasters | BigTIFF RGB 8-bit tiled 128×128 (train1 95,521×27,801; train2 34,772×27,802; test 35,765×27,802), labels LZW/PackBits 1-bit, `.tfw` pixel 0.33956958 m |
+| Tile mapping | grid capacity == cropped tiles exactly (10,044 / 3,618 / 3,726); RGB windows **pixel-identical**; labels exact; best offset (0,0) in 240/240 |
+| Vector ↔ raster | mean IoU **0.9505**; 4,036/4,038 tiles ≥ 0.90; 0 tiles < 0.50 |
+| Instances | 38,824 clipped native instances, 32,590 distinct features, border-truncated 34.1 % |
+| Matching vs pseudo | 94.76 % at IoU 0.50; unmatched native **5.24 %**; unmatched pseudo 0.37 % |
+| Merges (primary, per semantic component) | **1.32 %** of components contain ≥ 2 native buildings (max 4) |
+| Merges (per pseudo-instance, containment ≥ 0.8) | **1.34 %** (2.65 % of native buildings affected) |
+| Splits | 0.13 % of native buildings span ≥ 2 pseudo-instances |
+| `<50` filter effect | **100 %** of native buildings < 50 px are unmatched (1,039/1,039) |
+| **VECTOR vs PSEUDO relation drift** | **6.96 %** weighted (L1 7.87 %, L2 3.38 %, L3 5.03 %); 39.5 % of tiles change ≥ 1 program |
+| Task 6J re-attribution | 51/65 = **78.5 %** proposal-model on clean single native buildings; **0 %** merged-target cases |
+| Split/geographic | **100 %** of val tiles adjacent to effective-training tiles (nearest distance 1 for all 627); test 0 % adjacency |
+| Verdict | **`MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`**, imagery kept, historical pseudo baseline kept |
+
+1. **The archive contains true instance ground truth** that the semantic raster cannot express:
+   34,085 manually delineated polygons, aligned to the imagery at IoU 0.95 with zero residual shift.
+2. **The old "touching buildings merged" story is small** (1.32–1.34 %). The measurable conversion
+   defect is the opposite: **5.24 % of native buildings are missing** from the pseudo view, traced to
+   the `<50 contourArea` filter (100 % of sub-50 px buildings are absent) plus hole filling and
+   polygon simplification.
+3. **Relation answers shift by 6.96 % weighted**, so migrating the instance source is a deliberate,
+   budgeted change — the frozen artifacts stay valid and comparable.
+4. **Task 6J is settled:** the J1 failure is the proposal chain (78.5 % on clean single buildings), not
+   the instance definition. The next task builds the vector-derived canonical dataset and
+   BuildSpatialReason-v0.2 on the unchanged imagery.
 
 ## Task 6K measured results
 
