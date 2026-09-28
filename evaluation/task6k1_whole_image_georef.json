@@ -1,0 +1,290 @@
+{
+  "_doc": "Task 6K.1 section 4. Whole-area raster georeferencing: TIFF/BigTIFF structure read with a standard-library IFD parser (metadata only - the multi-gigapixel rasters are NEVER fully decoded), the label-side .tfw world files, the CRS WKT and the raster/label/cropped inventory. Pixel-level mapping validation lives in task6k1_tile_mapping.json.",
+  "crs": {
+    "projection_name": "WGS_1984_World_Mercator",
+    "units": "meter",
+    "wkt": "PROJCS[\"WGS_1984_World_Mercator\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Mercator\"],PARAMETER[\"false_easting\",0.0],PARAMETER[\"false_northing\",0.0],PARAMETER[\"central_meridian\",0.0],PARAMETER[\"standard_parallel_1\",0.0],UNIT[\"Meter\",1.0]]"
+  },
+  "crs_wkt": "PROJCS[\"WGS_1984_World_Mercator\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Mercator\"],PARAMETER[\"false_easting\",0.0],PARAMETER[\"false_northing\",0.0],PARAMETER[\"central_meridian\",0.0],PARAMETER[\"standard_parallel_1\",0.0],UNIT[\"Meter\",1.0]]",
+  "method": {
+    "full_decode_performed": false,
+    "georeferencing": "label-side .tfw (A, D, B, E, C, F), corner-based",
+    "pixel_reader": "PIL windowed crop (existing read-only tool), never a full decode",
+    "tiff_reader": "standard-library TIFF/BigTIFF IFD reader (metadata only)",
+    "tile_size": 512
+  },
+  "rasters": {
+    "test": {
+      "capacity_minus_cropped": 0,
+      "cropped_tile_counts": {
+        "test": 903,
+        "test_no": 2823,
+        "train": 3135,
+        "train_no": 10527
+      },
+      "cropped_tiles_in_region": 3726,
+      "image_metadata": {
+        "bigtiff": true,
+        "bits_per_sample": [
+          8,
+          8,
+          8
+        ],
+        "bytes": 3001216122,
+        "compression": 1,
+        "compression_name": "none",
+        "endianness": "little",
+        "height": 27802,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\image\\test.tif",
+        "photometric": 2,
+        "pixels": 994338530,
+        "planar_config": 1,
+        "predictor": 1,
+        "rows_per_strip": null,
+        "sample_format": [
+          1,
+          1,
+          1
+        ],
+        "samples_per_pixel": 3,
+        "tile_count": 1,
+        "tile_height": 128,
+        "tile_width": 128,
+        "tiled": true,
+        "width": 35765
+      },
+      "label_metadata": {
+        "bigtiff": false,
+        "bits_per_sample": 8,
+        "bytes": 16692182,
+        "compression": 32773,
+        "compression_name": "PackBits",
+        "endianness": "little",
+        "height": 27802,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\label\\test.tif",
+        "photometric": 1,
+        "pixels": 994338530,
+        "planar_config": 1,
+        "predictor": 1,
+        "rows_per_strip": 434,
+        "sample_format": null,
+        "samples_per_pixel": 1,
+        "tile_count": null,
+        "tile_height": null,
+        "tile_width": null,
+        "tiled": false,
+        "width": 35765
+      },
+      "tile_grid": {
+        "bottom_margin_px": 154,
+        "capacity": 3726,
+        "columns": 69,
+        "height": 27802,
+        "raster": "test",
+        "right_margin_px": 437,
+        "rows": 54,
+        "tile": 512,
+        "width": 35765
+      },
+      "tile_grid_capacity": 3726,
+      "world_file": {
+        "a": 0.33956958,
+        "b": 0.0,
+        "c": 13974852.277333252,
+        "d": 0.0,
+        "e": -0.33956958,
+        "f": 4790946.6209542435,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\label\\test.tfw",
+        "pixel_size_x": 0.33956958,
+        "pixel_size_y": 0.33956958,
+        "rotated": false,
+        "upper_left_map": [
+          13974852.277333252,
+          4790946.6209542435
+        ]
+      }
+    },
+    "train1": {
+      "capacity_minus_cropped": 0,
+      "cropped_tile_counts": {
+        "test": 903,
+        "test_no": 2823,
+        "train": 3135,
+        "train_no": 10527
+      },
+      "cropped_tiles_in_region": 10044,
+      "image_metadata": {
+        "bigtiff": true,
+        "bits_per_sample": [
+          8,
+          8,
+          8
+        ],
+        "bytes": 8006812933,
+        "compression": 1,
+        "compression_name": "none",
+        "endianness": "little",
+        "height": 27801,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\image\\train1.tif",
+        "photometric": 2,
+        "pixels": 2655579321,
+        "planar_config": 1,
+        "predictor": 1,
+        "rows_per_strip": null,
+        "sample_format": [
+          1,
+          1,
+          1
+        ],
+        "samples_per_pixel": 3,
+        "tile_count": 1,
+        "tile_height": 128,
+        "tile_width": 128,
+        "tiled": true,
+        "width": 95521
+      },
+      "label_metadata": {
+        "bigtiff": true,
+        "bits_per_sample": 1,
+        "bytes": 19456982,
+        "compression": 5,
+        "compression_name": "LZW",
+        "endianness": "little",
+        "height": 27801,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\label\\train1.tif",
+        "photometric": 1,
+        "pixels": 2655607122,
+        "planar_config": 1,
+        "predictor": 1,
+        "rows_per_strip": null,
+        "sample_format": 1,
+        "samples_per_pixel": 1,
+        "tile_count": 1,
+        "tile_height": 128,
+        "tile_width": 128,
+        "tiled": true,
+        "width": 95522
+      },
+      "tile_grid": {
+        "bottom_margin_px": 153,
+        "capacity": 10044,
+        "columns": 186,
+        "height": 27801,
+        "raster": "train1",
+        "right_margin_px": 289,
+        "rows": 54,
+        "tile": 512,
+        "width": 95521
+      },
+      "tile_grid_capacity": 10044,
+      "world_file": {
+        "a": 0.33956958,
+        "b": 0.0,
+        "c": 13942416.196335083,
+        "d": 0.0,
+        "e": -0.33956958,
+        "f": 4790946.486518458,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\label\\train1.tfw",
+        "pixel_size_x": 0.33956958,
+        "pixel_size_y": 0.33956958,
+        "rotated": false,
+        "upper_left_map": [
+          13942416.196335083,
+          4790946.486518458
+        ]
+      }
+    },
+    "train2": {
+      "capacity_minus_cropped": 0,
+      "cropped_tile_counts": {
+        "test": 903,
+        "test_no": 2823,
+        "train": 3135,
+        "train_no": 10527
+      },
+      "cropped_tiles_in_region": 3618,
+      "image_metadata": {
+        "bigtiff": true,
+        "bits_per_sample": [
+          8,
+          8,
+          8
+        ],
+        "bytes": 2915467130,
+        "compression": 1,
+        "compression_name": "none",
+        "endianness": "little",
+        "height": 27802,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\image\\train2.tif",
+        "photometric": 2,
+        "pixels": 966731144,
+        "planar_config": 1,
+        "predictor": 1,
+        "rows_per_strip": null,
+        "sample_format": [
+          1,
+          1,
+          1
+        ],
+        "samples_per_pixel": 3,
+        "tile_count": 1,
+        "tile_height": 128,
+        "tile_width": 128,
+        "tiled": true,
+        "width": 34772
+      },
+      "label_metadata": {
+        "bigtiff": false,
+        "bits_per_sample": 8,
+        "bytes": 17070508,
+        "compression": 32773,
+        "compression_name": "PackBits",
+        "endianness": "little",
+        "height": 27802,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\label\\train2.tif",
+        "photometric": 1,
+        "pixels": 966731144,
+        "planar_config": 1,
+        "predictor": 1,
+        "rows_per_strip": 434,
+        "sample_format": null,
+        "samples_per_pixel": 1,
+        "tile_count": null,
+        "tile_height": null,
+        "tile_width": null,
+        "tiled": false,
+        "width": 34772
+      },
+      "tile_grid": {
+        "bottom_margin_px": 154,
+        "capacity": 3618,
+        "columns": 67,
+        "height": 27802,
+        "raster": "train2",
+        "right_margin_px": 468,
+        "rows": 54,
+        "tile": 512,
+        "width": 34772
+      },
+      "tile_grid_capacity": 3618,
+      "world_file": {
+        "a": 0.33956958,
+        "b": 0.0,
+        "c": 13986996.983487345,
+        "d": 0.0,
+        "e": -0.33956958,
+        "f": 4790946.620954243,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\label\\train2.tfw",
+        "pixel_size_x": 0.33956958,
+        "pixel_size_y": 0.33956958,
+        "rotated": false,
+        "upper_left_map": [
+          13986996.983487345,
+          4790946.620954243
+        ]
+      }
+    }
+  },
+  "seconds": 901.61,
+  "task": "6K.1"
+}

@@ -1,0 +1,208 @@
+{
+  "_doc": "Task 6K.1 section 9. Native vector instances vs the raw semantic components and the historical pseudo-instance view. The PRIMARY touching-building merge measure is the number of native features per SEMANTIC COMPONENT; containment-based counts are also reported per pseudo-instance, and splits are attributed to rasterization/disconnection, tile-boundary clipping or other causes.",
+  "breakdown": {
+    "border_truncated": {
+      "matched": 11685,
+      "unmatched_vector": 1567,
+      "unmatched_vector_rate": 0.11824630244491398,
+      "vectors": 13252
+    },
+    "dense_tile": {
+      "matched": 24908,
+      "unmatched_vector": 1442,
+      "unmatched_vector_rate": 0.05472485768500949,
+      "vectors": 26350
+    },
+    "not_dense_tile": {
+      "matched": 11883,
+      "unmatched_vector": 591,
+      "unmatched_vector_rate": 0.04737854737854738,
+      "vectors": 12474
+    },
+    "small_area": {
+      "unmatched_vector": 1039,
+      "unmatched_vector_rate": 1.0,
+      "vectors": 1039
+    }
+  },
+  "by_split": {
+    "test": {
+      "components": 9223,
+      "matched_0_50": 8854,
+      "pseudos": 8873,
+      "tiles": 903,
+      "unmatched_vector_0_50": 469,
+      "vectors": 9323
+    },
+    "train": {
+      "components": 22696,
+      "matched_0_50": 21771,
+      "pseudos": 21867,
+      "tiles": 2508,
+      "unmatched_vector_0_50": 1235,
+      "vectors": 23006
+    },
+    "val": {
+      "components": 6390,
+      "matched_0_50": 6166,
+      "pseudos": 6186,
+      "tiles": 627,
+      "unmatched_vector_0_50": 329,
+      "vectors": 6495
+    }
+  },
+  "counts": {
+    "clipped_native_instances": 38824,
+    "distinct_native_features_represented": 32590,
+    "native_features_total": 34085,
+    "native_instances_per_tile": 9.614660723130262,
+    "pseudo_instances": 36926,
+    "pseudo_instances_per_tile": 9.144626052501238,
+    "raster_components_per_tile": 9.487122337790986,
+    "raster_semantic_components": 38309,
+    "tiles": 4038
+  },
+  "definitions": {
+    "dense_tile_instances": 10,
+    "feature_belongs_to_component": ">= 0.50 of the native feature's pixels inside the component",
+    "feature_inside_pseudo": ">= 0.80 of the native feature's pixels inside the pseudo-instance",
+    "small_area_px": 50
+  },
+  "many_vector_to_one_pseudo_instance": {
+    "components_contained_per_pseudo_summary": {
+      "count": 36926,
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "p5": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "p95": 1.0
+    },
+    "features_inside_multi_feature_pseudo_rate": 0.026452709664125284,
+    "histogram": {
+      "0": 349,
+      "1": 36081,
+      "2": 463,
+      "3": 31,
+      "4": 2,
+      "5": 0
+    },
+    "pseudo_instances_containing_multiple_features": 496,
+    "pseudo_instances_evaluated": 36926,
+    "rate": 0.013432269945295998
+  },
+  "many_vector_to_one_semantic_component": {
+    "components_containing_multiple_features_rate": 0.013156177399566682,
+    "components_evaluated": 38309,
+    "features_per_component_histogram": {
+      "0": 391,
+      "1": 37414,
+      "2": 471,
+      "3+": 33
+    },
+    "features_per_component_summary": {
+      "count": 38309,
+      "max": 4.0,
+      "mean": 1.0038633219347934,
+      "median": 1.0,
+      "min": 0.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "p5": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "p95": 1.0
+    },
+    "interpretation": "This is the primary measure of touching-building merge in the semantic raster: a component with >= 2 native features contains that many distinct manually delineated buildings.",
+    "max_features_in_one_component": 4,
+    "rate_with_0": 0.010206478895298755,
+    "rate_with_1": 0.9766373437051346,
+    "rate_with_2": 0.012294761022214102,
+    "rate_with_3_plus": 0.0008614163773525803
+  },
+  "matched_pseudo_over_vector_area_ratio_0_50": {
+    "count": 36791,
+    "max": 1.982400632786237,
+    "mean": 0.9477164872021812,
+    "median": 0.9494444444444444,
+    "min": 0.5132390279289082,
+    "p10": 0.9054054054054054,
+    "p25": 0.9316493313521546,
+    "p5": 0.8823529411764706,
+    "p75": 0.9631696897869046,
+    "p90": 0.9741723002253424,
+    "p95": 0.9811218964003512
+  },
+  "matching": {
+    "0.25": {
+      "merged_pseudo_instances": 496,
+      "one_to_one_rate_over_pseudo": 0.9975356117640687,
+      "one_to_one_rate_over_vector": 0.9487688028023903,
+      "pairs": 36835,
+      "split_pseudo_instances": 51,
+      "unmatched_pseudo_instances": 91,
+      "unmatched_pseudo_rate": 0.0024643882359313223,
+      "unmatched_vector_instances": 1989,
+      "unmatched_vector_rate": 0.051231197197609726
+    },
+    "0.5": {
+      "merged_pseudo_instances": 496,
+      "one_to_one_rate_over_pseudo": 0.9963440394302118,
+      "one_to_one_rate_over_vector": 0.9476354832062641,
+      "pairs": 36791,
+      "split_pseudo_instances": 51,
+      "unmatched_pseudo_instances": 135,
+      "unmatched_pseudo_rate": 0.003655960569788225,
+      "unmatched_vector_instances": 2033,
+      "unmatched_vector_rate": 0.052364516793735834
+    },
+    "0.75": {
+      "merged_pseudo_instances": 496,
+      "one_to_one_rate_over_pseudo": 0.9856198884254996,
+      "one_to_one_rate_over_vector": 0.9374356068411291,
+      "pairs": 36395,
+      "split_pseudo_instances": 51,
+      "unmatched_pseudo_instances": 531,
+      "unmatched_pseudo_rate": 0.014380111574500353,
+      "unmatched_vector_instances": 2429,
+      "unmatched_vector_rate": 0.0625643931588708
+    }
+  },
+  "one_vector_to_many_components": {
+    "native_features_spanning_multiple_pseudo": 51,
+    "pseudos_per_vector_summary": {
+      "count": 38824,
+      "max": 2.0,
+      "mean": 0.9640171028229961,
+      "median": 1.0,
+      "min": 0.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "p5": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "p95": 1.0
+    },
+    "rate": 0.001313620440964352,
+    "split_causes": {
+      "rasterization_or_disconnection": 46,
+      "tile_boundary": 5
+    }
+  },
+  "per_tile_detail": {
+    "keys": [
+      "per_tile"
+    ],
+    "moved_to_gitignored_cache": "artifacts/task6k1/task6k1_vector_vs_pseudo_matching_per_tile.json",
+    "note": "per-tile rows are kept out of the repository to keep the committed JSON small; they are regenerated by re-running the measurement scripts",
+    "rows": {
+      "per_tile": 4038
+    }
+  },
+  "seconds": 1133.2,
+  "task": "6K.1"
+}

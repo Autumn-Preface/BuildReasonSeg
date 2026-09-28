@@ -1,513 +1,480 @@
-# TO_DSH — Task 6K: WHU Source → Pseudo-Instance Data Audit
+# TO_DSH — Task 6K.1: Recover and Validate Native WHU East-Asia Vector Ground Truth
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Goal: audit the original WHU Satellite Dataset II (East Asia) semantic masks against the historical semantic→YOLO pseudo-instance conversion and the current BuildReasonSeg component representation, so we can make an evidence-based **KEEP-AS-BASELINE vs REPLACE-PRIMARY-DATASET** decision.
+> Goal: determine whether the original WHU Satellite Dataset II (East Asia) archive already contains a native manually delineated building vector map that can replace our semantic→connected-component pseudo-instances **without changing the imagery dataset**.
 >
-> This is a read-only dataset audit. Do not retrain any model and do not modify any dataset.
+> This task exists because Task 6K discovered:
+>
+> `C:\D\resources\Satellite dataset Ⅱ (East Asia)\2. The shape file of the whole images\EA.shp`
+>
+> with the associated `.shx/.dbf/.prj/...`, but Task 6K did not inspect or align those vector records.
+>
+> Do not accept Task 6K's `KEEP_WHU_AS_PRIMARY_FOR_NOW` as a final project-level dataset decision until this vector source is resolved.
 
-## 0. UI language
-All DSH narrative/UI output must be Chinese. Code/paths/metric keys may remain English.
+## 0. User-facing language
+
+All DSH narrative/UI output must be **Chinese**.
+
+Code, paths and metric keys may remain English.
 
 ## 1. Read-only sources
 
-Original WHU semantic dataset:
-`C:\D\resources\Satellite dataset Ⅱ (East Asia)`
+### Original WHU archive — READ ONLY
 
-Likely historical subtree:
-`C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels`
-
-Historical converted YOLO dataset:
-`C:\D\resources\WHU_YOLO_dataset`
-
-Canonical repo:
-`C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-
-Legacy project:
-`C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment`
-
-Rules:
-- original WHU: READ ONLY;
-- converted YOLO: READ ONLY;
-- legacy project: READ ONLY;
-- do not move/rename/re-encode/regenerate source files;
-- write only to BuildReasonSeg gitignored temp/artifact paths, evaluation/docs/tests/scripts/handoff as appropriate.
-
-## 2. Historical conversion semantics
-
-Audit against the exact user-supplied conversion semantics:
-
-```python
-mask = cv2.imread(str(label_path), cv2.IMREAD_GRAYSCALE)
-if mask is None:
-    from PIL import Image
-    mask = np.array(Image.open(label_path).convert("L"))
-
-_, mask = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)
-
-contours, _ = cv2.findContours(
-    mask,
-    cv2.RETR_EXTERNAL,
-    cv2.CHAIN_APPROX_SIMPLE,
-)
-
-for contour in contours:
-    if cv2.contourArea(contour) < 50:
-        continue
-    epsilon = 0.001 * cv2.arcLength(contour, True)
-    approx = cv2.approxPolyDP(contour, epsilon, True)
+```text
+C:\D\resources\Satellite dataset Ⅱ (East Asia)
 ```
 
-Important:
-- threshold 127;
-- `RETR_EXTERNAL`;
-- `CHAIN_APPROX_SIMPLE`;
-- filter is `cv2.contourArea(contour) < 50`;
-- simplification epsilon = `0.001 * arcLength`;
-- one class: building;
-- Pillow is I/O fallback only.
+Important subtrees:
 
-Do NOT rerun and overwrite the historical split.
-
-Historical split code used:
-```python
-stems = set(...)
-return list(stems)
-random.seed(42)
-random.shuffle(train_stems_all)
+```text
+1. The cropped image data and raster labels
+2. The shape file of the whole images
+3. The whole images
 ```
 
-Record the reproducibility caveat:
-`list(set(...))` order is not cross-process guaranteed, so seed 42 alone does not guarantee the same split. Recover the actual split from the existing converted folders.
+Vector files discovered by Task 6K:
 
-# PART A — Source inventory
+```text
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\2. The shape file of the whole images\EA.shp
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\2. The shape file of the whole images\EA.shx
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\2. The shape file of the whole images\EA.dbf
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\2. The shape file of the whole images\EA.prj
+```
 
-## 3. Inventory original data
-For every discovered original split/subtree report:
-- image count;
-- label count;
-- matched stems;
-- missing images/labels;
-- extensions;
-- image shape distribution;
-- label shape distribution;
-- image dtype/channels;
-- label dtype;
-- label unique values;
-- empty/non-empty mask counts;
-- foreground-pixel fraction distribution.
+Task 6K recorded:
+- `EA.shp`: 4,999,904 bytes
+- `EA.shx`: 272,780 bytes
+- `EA.dbf`: 1,636,210 bytes
+- `EA.prj`: 354 bytes
 
-Measure before thresholding. Record exact resolved paths.
+For a standard ESRI `.shx`, `(272780 - 100) / 8 = 34085` index records. Treat this only as a **strong hypothesis** until the local shapefile is parsed and validated.
 
-## 4. Recover actual historical split
-From `WHU_YOLO_dataset/images/{train,val,test}` and labels:
-- exact stem counts;
-- train/val/test overlap;
-- map current stems to original source split;
-- whether current train+val exactly partitions original source train;
-- whether current test exactly matches original source test.
+### Historical converted YOLO dataset — READ ONLY
 
-Do not regenerate split from seed 42.
+```text
+C:\D\resources\WHU_YOLO_dataset
+```
 
-# PART B — Raw semantic component audit
+### Canonical repository
 
-## 5. Raw connected-component statistics
-After threshold 127:
-- primary diagnostic: 8-connectivity;
-- secondary sensitivity diagnostic: 4-connectivity.
+```text
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
+```
 
-For 8-connectivity report:
-- total components;
-- components/tile;
-- area px distribution: min, p1, p5, p10, p25, median, p75, p90, p95, p99, max;
-- bbox width/height distribution;
-- border-touch count/rate;
-- foreground area/tile;
-- tiles with 1 / 2–4 / 5–9 / 10–19 / >=20 components.
+### Legacy project — READ ONLY
 
-Terminology rule:
-These are semantic connected components, NOT verified physical-building instances.
+```text
+C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment
+```
 
-# PART C — Conversion-loss audit
+No source mutation, no downloads, no retraining.
 
-## 6. Reproduce historical contour pipeline in memory
-For each raw binary mask reproduce:
-- external contours before filter;
-- contourArea;
-- `<50` removal;
-- polygon simplification.
+## 2. External facts already checked by ChatGPT
+
+These are context, not substitutes for local validation:
+
+1. The official WHU Building Dataset paper states the released dataset contains both raster labels and vector maps and can support building instance segmentation.
+2. Published descriptions of Satellite Dataset II (East Asia) state that its vector building map was manually delineated in ArcGIS.
+3. Published counts are inconsistent across versions/papers (e.g. 29,085 vs 34,085), so **the local archive is authoritative for this project**.
+4. Task 6K's local `.shx` byte size is consistent with 34,085 standard shapefile index records.
+
+Do not hard-code any external building count. Parse the local files.
+
+# PART A — Native vector structure
+
+## 3. Parse `EA.shp/.shx/.dbf/.prj`
+
+First check existing packages:
+- `shapefile` / pyshp;
+- `fiona`;
+- `geopandas`;
+- GDAL/OGR CLI;
+- `rasterio`;
+- `tifffile`.
+
+Do not install anything.
+
+If no shapefile reader is available, implement the minimal read-only ESRI Shapefile parsing needed for polygon records using Python standard library. The `.shx` and `.dbf` headers can also be parsed directly.
 
 Report:
+- `.shp` file header validity;
+- shape type;
+- record count from `.shx`;
+- record count from `.dbf`;
+- deleted DBF rows if any;
+- DBF fields;
+- CRS/WKT from `.prj`;
+- geometry-type distribution;
+- polygon vs multipart polygon counts;
+- null/empty/invalid records;
+- ring counts;
+- vertices per feature;
+- bounding box of all features;
+- feature area distribution in coordinate units;
+- stable vector instance id = shapefile record index or another explicit stable id if present.
 
-### `<50` filter
-- external contour count before filter;
-- count removed;
-- percentage removed;
-- pixel foreground area removed;
-- percentage of total foreground pixels removed;
-- tiles affected;
-- mean/median removed contours per affected tile.
+Do not call records “buildings” yet until spatial validation against labels/images succeeds.
 
-Report both raster pixel area and `cv2.contourArea`.
+# PART B — Whole-image georeferencing and tile reconstruction
 
-### `RETR_EXTERNAL` topology loss
+## 4. Inspect whole-image files safely
+
+Task 6K found very large TIFFs such as:
+
+```text
+train1.tif
+train2.tif
+test.tif
+```
+
+and `.tfw` files.
+
+Do NOT load whole images into RAM.
+
+Use, in preference order:
+- rasterio metadata/window reads if already installed;
+- tifffile metadata/memmap/windowed access if already installed;
+- another existing read-only TIFF tool;
+- only if necessary, a minimal metadata parser.
+
+Do not disable safety and then decode the full multi-gigapixel images.
+
+Report for each whole image:
+- width/height;
+- band count/dtype;
+- affine/world-file transform;
+- CRS if available;
+- geographic/projected bounds;
+- source file size.
+
+## 5. Recover exact cropped-tile → whole-image mapping
+
+This is critical.
+
+Do not assume row-major naming without validation.
+
+For every cropped source group:
+- determine which whole image it belongs to;
+- determine tile row/column/global pixel extent;
+- determine geospatial extent from the `.tfw`/affine transform.
+
+Possible evidence:
+- filename/prefix/index convention;
+- whole-image dimensions;
+- 512×512 seamless crop ordering;
+- pixel-content verification on deterministic sample windows.
+
+Validate the recovered mapping on at least 100 deterministic tiles per source image by comparing the cropped RGB tile with the corresponding whole-image window:
+- exact byte/pixel agreement if possible;
+- otherwise quantify differences and explain why.
+
+If exact mapping cannot be established, STOP before claiming vector-derived instance labels.
+
+# PART C — Validate that EA.shp is the East-Asia building footprint map
+
+## 6. Raster/vector spatial validation
+
+Overlay/clip vector features against the whole-image raster-label coordinate system.
+
+Use vector geometry + georeferencing to rasterize deterministic windows/tiles.
+
+Compare vector-union rasterization with the original binary semantic labels.
+
+Report:
+- tile-level IoU/Dice/precision/recall;
+- global foreground agreement using streaming/windowed aggregation;
+- vector features with no raster-label overlap;
+- raster foreground with no vector overlap;
+- systematic offset if present;
+- best simple alignment correction ONLY as a diagnostic (do not mutate source geometry);
+- train1/train2/test separately.
+
+The spatial agreement must clearly establish whether the shapefile represents the same building annotation source as the raster labels.
+
+Use representative visual overlays under:
+`evaluation/task6k1_samples/`.
+
+## 7. Resolve local feature count
+
+Report the exact local count.
+
+If it is 34,085, record that this matches the `.shx` structural expectation.
+
+If it is another number, report the actual number and do not force agreement with literature.
+
+# PART D — Build a temporary canonical true-instance view
+
+## 8. Clip vector features to 512×512 tiles
+
+Without modifying the original data, create a temporary/audit-only canonical instance view for the 4,038 positive tiles currently used by BuildReasonSeg.
+
+For each tile:
+- preserve stable source vector feature id;
+- clip polygon to tile boundary;
+- preserve whether the feature is truncated by tile border;
+- support multipart geometry correctly;
+- compute raster mask/bbox/centroid/area;
+- distinguish:
+  - one physical/vector instance appearing in multiple tiles;
+  - multiple vector instances touching in raster space.
+
+Write audit metadata under gitignored artifacts, with only summary JSON committed.
+
+Do NOT create a full new dataset yet.
+
+# PART E — True-vector vs semantic connected-component comparison
+
+## 9. Quantify the exact pseudo-instance error
+
+This replaces Task 6K's heuristic merge-risk analysis with vector-grounded evidence.
+
+For the 4,038 positive tiles compare:
+- vector instances;
+- raw 8-connected semantic components;
+- current 36,926 pseudo-instances.
+
 Measure:
-- source components containing holes;
-- hole pixel count;
-- reconstruction difference from external-contour-only rasterization.
 
-Do not overstate physical meaning.
+### Counts
+- total unique source vector features represented;
+- total clipped vector instances across tiles;
+- vector instances/tile;
+- pseudo-instances/tile.
 
-### `approxPolyDP` loss
-Rasterize simplified polygons and compare against post-filter external-contour target:
-- IoU;
-- Dice;
-- precision;
-- recall;
-- area bias;
-- boundary displacement if inexpensive.
+### Many-vector → one-semantic-component merges
+For each semantic connected component:
+- number of overlapping vector feature ids;
+- count/rate with 1;
+- count/rate with 2;
+- 3+;
+- max.
 
-Separate loss due to:
-1. `<50` filtering;
-2. `RETR_EXTERNAL`;
-3. polygon approximation.
+This is the primary measure of touching-building merge.
 
-# PART D — Actual current YOLO fidelity
+### One-vector → multiple semantic/pseudo components
+Measure splits caused by:
+- rasterization/disconnection;
+- tile boundaries;
+- other causes.
 
-## 7. Compare actual YOLO labels with the historical emulator
-For every current stem:
-- parse actual YOLO polygons;
-- rasterize to source-label resolution;
-- compare to emulator.
+### Pseudo ↔ vector matching
+At IoU thresholds 0.25 / 0.50 / 0.75:
+- one-to-one match rate;
+- unmatched vector instances;
+- unmatched pseudo-instances;
+- merged pseudo-instances;
+- split pseudo-instances.
+
+Break down by:
+- small area;
+- border truncated;
+- dense tile;
+- train/val/test.
+
+# PART F — Re-evaluate spatial reasoning semantics using native vector instances
+
+## 10. VECTOR vs current PSEUDO relation drift
+
+This is more important than Task 6K's RAW-semantic vs CONVERTED comparison.
+
+Use:
+- VECTOR candidate set = clipped native vector building instances;
+- PSEUDO candidate set = current BuildReasonSeg pseudo-instances.
+
+Use the same frozen Task 3B relation semantics where meaningful.
+
+Run all 20 canonical programs.
 
 Report:
-- object-count agreement;
-- raster IoU/Dice;
-- missing/extra objects;
-- malformed/degenerate labels;
-- coordinate clipping if recoverable.
-
-If current labels differ from the supplied converter, classify why; do not assume the supplied code was the final exact converter.
-
-## 8. Component lineage
-Compare:
-- raw thresholded semantic connected components;
-- historical conversion emulator;
-- actual `WHU_YOLO_dataset`;
-- current `datasets/whu/` / BuildSpatialReason component metadata.
-
-Explain how the recorded current `36,926` components arise.
-
-# PART E — Relation-semantic drift
-
-## 9. Critical experiment: RAW vs CONVERTED candidate sets
-
-For each aligned image construct:
-
-RAW:
-- all 8-connected semantic components after threshold 127;
-- no `<50` filter.
-
-CONVERTED:
-- candidate set implied by the actual historical conversion/current component representation.
-
-Use the same frozen BuildSpatialReason relation semantics.
-
-Compare target identity for all applicable canonical programs:
-- leftmost/rightmost/topmost/bottommost;
-- largest/smallest;
-- largest/smallest → nearest;
-- largest/smallest → left/right/above/below;
-- Level-3 reference → direction → nearest.
-
-For each program report:
-- valid in both;
+- constructible queries in VECTOR;
+- constructible queries in PSEUDO;
+- comparable;
 - target unchanged;
 - target changed;
-- became invalid/ambiguous;
+- became invalid;
 - became newly valid;
-- change rate.
+- by L1/L2/L3;
+- by query type.
 
-Attribute changes:
-- small component removed;
-- ranking changed;
-- nearest changed;
-- directional candidate-set changed;
-- border/eligibility changed;
-- polygon geometry changed.
+When matching target identity across representations, use stable source-vector ids and geometric overlap; do not use annotation ids as inference inputs.
 
-Also report:
-- fraction of images with any relation-semantic change;
-- overall current-query target-change rate;
-- by L1/L2/L3.
+Attribute differences:
+- multiple true vector instances merged into one pseudo-instance;
+- true vector instance split;
+- `<50` removal;
+- border clipping;
+- geometry approximation;
+- eligibility/ranking consequences.
 
-This measures conversion sensitivity only. It does not establish physical-building truth.
+This result, not Task 6K's 4.33% RAW-vs-CONVERTED number, should drive the final annotation decision if native vector GT is confirmed.
 
-# PART F — Split/geographic audit
+# PART G — Revisit Task 6J against vector truth
 
-## 10. Historical split reproducibility
-Record that `set -> list -> shuffle(seed=42)` is not guaranteed cross-process reproducible without controlled hash/set order.
+## 11. J1 proposal diagnosis
 
-Current folder split is the historical authority.
+For the fixed Task 6J 120 records / 20 pairs:
+- map current pseudo target and YOLO proposals to native vector instances;
+- identify cases where current pseudo target itself merges/splits true vector instances;
+- measure YOLO proposal recall against vector-instance targets where a clean correspondence exists;
+- classify failures:
+  - proposal-model error against clean vector target;
+  - pseudo-label definition error;
+  - representation mismatch;
+  - ambiguous/inseparable.
 
-## 11. Geographic/spatial correlation
-Inspect local naming/layout/metadata.
+Do not retrain YOLO in this task.
 
-If source-scene/tile adjacency is recoverable:
-- estimate train↔val same-scene/adjacency mixing;
-- quantify spatial-correlation risk.
+# PART H — Split / geographic structure
 
-If not recoverable:
-- explicitly say geographic leakage cannot be quantified from available metadata;
-- do not invent coordinates.
+## 12. Use recovered tile coordinates
 
-State whether current split supports:
-- random tile generalization;
-- geographic/cross-city generalization.
+If tile→whole-image mapping is successfully recovered:
+- quantify train/val spatial adjacency;
+- nearest train-tile distance for each val tile in tile-grid units;
+- same whole-image source rate;
+- identify whether val is spatially interleaved with train;
+- quantify test separation by source image/region.
 
-# PART G — Merge-risk heuristic
+State precisely what the split can and cannot support as a paper claim.
 
-## 12. Touching/merged-building risk
-Binary semantic masks cannot reveal physical instance identity.
+# PART I — Decision
 
-Do NOT claim true instance recovery.
+## 13. Final verdict: exactly one
 
-Provide only a clearly labelled heuristic risk analysis, e.g.:
-- thin-neck/bridge split sensitivity under 1–2 px erosion;
-- multiple large distance-transform peaks;
-- strongly multi-lobed shapes.
+### `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`
+Use if:
+- `EA.shp` is confirmed as the native manually delineated building footprint map;
+- tile mapping is reliable;
+- vector instances can be aligned with the current imagery/raster labels;
+- true instance IDs/polygons materially improve the annotation basis.
 
-Report:
-- low/medium/high risk counts;
-- representative sample IDs;
-- whether risk concentrates in dense-building tiles.
+This means:
+- KEEP WHU imagery;
+- STOP using semantic connected components as the primary instance truth;
+- next task builds a vector-derived canonical instance dataset and BuildSpatialReason-v0.2.
 
-# PART H — Cross-analyze Task 6J
+### `KEEP_CURRENT_PSEUDO_INSTANCES`
+Use only if:
+- shapefile is not building footprints, or
+- it cannot be reliably aligned, or
+- it provides no meaningful instance advantage.
 
-## 13. Freeze Task 6J facts
-Use existing artifacts only:
-- J0: 120/120, paired 20/20;
-- J2: current-template parser 1.000 fixed-120 and full-val;
-- J3: 120/120, paired 20/20;
-- YOLO target proposal recall@0.5 = 0.869;
-- tiny-component recall@0.5 = 0.391;
-- J1 mIoU = 0.3712;
-- J1 abstentions = 35/120;
-- J1 paired mask selection = 5/20.
-
-Cross-reference J1 failing sample IDs against:
-- raw source component size;
-- distance to `<50` threshold;
-- border status;
-- merge-risk status;
-- proposal count;
-- RAW-vs-CONVERTED relation drift.
-
-Estimate what share of J1 failures are:
-- plausibly conversion/data related;
-- proposal-model related on otherwise clean targets;
-- inseparable with current evidence.
-
-Do not force attribution when unsupported.
-
-# PART I — Qwen2B interpretation
-
-## 14. Qualify Task 6J J2 correctly
-Current BuildSpatialReason has:
-- 20 closed program classes;
-- finite templated instruction families (at least 3 template variants per family in the current generator);
-- program id is 1:1 with current `query_type`.
-
-Therefore record:
-
-> Task 6J proves Qwen3-VL-2B is sufficient for the current closed-template 20-program classification task.
-
-It does NOT prove:
-- 2B is sufficient for arbitrary natural language;
-- 2B is sufficient for paraphrase/OOD instructions;
-- 4B cannot help the final system.
-
-Do not run a 2B-vs-4B experiment in Task 6K.
-
-# PART J — Dataset-role verdict
-
-## 15. Use exactly one
-
-### `REPLACE_PRIMARY_DATASET`
-Use if evidence shows the current semantic→pseudo-instance source is structurally unsuitable as the main corpus for instance-level spatial reasoning, including material conversion-induced relation drift, substantial small-object deletion, high merge risk, lack of real instance identity becoming binding, Task 6J mismatch tied to pseudo-instance semantics, or split structure unsuitable for intended paper claims.
-
-WHU still remains a historical baseline.
-
-### `KEEP_WHU_AS_PRIMARY_FOR_NOW`
-Only if conversion loss is small, relation targets are very stable, pseudo-instance identity is sufficiently reliable, and Task 6J failure is mainly a replaceable proposal-model problem.
+### `REPLACE_WHU_WITH_NEW_DATASET`
+Use only if:
+- native vector GT is unusable AND the semantic/pseudo path is structurally inadequate for final goals.
 
 ### `INSUFFICIENT_EVIDENCE`
-Only if source/converted data cannot be aligned reliably.
+Use if local files cannot be parsed/aligned.
 
 Also report:
-`legacy_baseline_role: keep / do_not_keep`
+- `keep_whu_imagery: true/false`
+- `keep_historical_pseudo_baseline: true/false`
 
-Expected default is `keep`.
-
-# PART K — Reusable future dataset audit protocol
-
-## 16. Create a reusable schema
-Create `evaluation/dataset_audit_schema_v1.json` covering:
-- annotation type: semantic / raster instance / vector polygon;
-- true stable instance ID available;
-- image count / instance count;
-- instances per tile;
-- area distribution;
-- tiny-target rate;
-- border-truncation rate;
-- multi-instance tile rate;
-- candidate density;
-- L1/L2/L3 constructible-query rate;
-- nearest constructibility;
-- directional relation constructibility;
-- relation ambiguity rate;
-- geographic diversity metadata;
-- local storage footprint if known;
-- license: UNKNOWN unless externally verified;
-- source resolution: UNKNOWN unless locally/officially verified.
-
-This schema will later be reused for SpaceNet 2 / WHU-Mix Vector or other candidates.
-
-Do not fabricate external dataset facts.
-
-# PART L — Required artifacts
+# PART J — Required artifacts
 
 Create:
+
 ```text
-evaluation/task6k_source_inventory.json
-evaluation/task6k_raw_component_stats.json
-evaluation/task6k_conversion_loss.json
-evaluation/task6k_actual_yolo_fidelity.json
-evaluation/task6k_component_lineage.json
-evaluation/task6k_relation_semantic_drift.json
-evaluation/task6k_split_audit.json
-evaluation/task6k_merge_risk.json
-evaluation/task6k_task6j_cross_analysis.json
-evaluation/task6k_dataset_decision.json
-evaluation/dataset_audit_schema_v1.json
-docs/task6k_whu_source_pseudoinstance_audit.md
+evaluation/task6k1_vector_structure.json
+evaluation/task6k1_whole_image_georef.json
+evaluation/task6k1_tile_mapping.json
+evaluation/task6k1_vector_raster_alignment.json
+evaluation/task6k1_vector_instance_stats.json
+evaluation/task6k1_vector_vs_pseudo_matching.json
+evaluation/task6k1_vector_vs_pseudo_relation_drift.json
+evaluation/task6k1_task6j_vector_cross_analysis.json
+evaluation/task6k1_split_geographic_audit.json
+evaluation/task6k1_dataset_decision.json
+docs/task6k1_whu_native_vector_groundtruth.md
 ```
 
-Optional small diagnostics:
-`evaluation/task6k_samples/`
+Small representative overlays:
+`evaluation/task6k1_samples/`
 
-No large raster dumps.
+Large per-tile caches must be gitignored.
 
-# PART M — Tests
+# PART K — Tests
 
-At minimum cover:
-1. no writes under `C:\D\resources`;
-2. no writes under legacy project;
-3. threshold 127 exact;
-4. `RETR_EXTERNAL` exact;
-5. `<50 contourArea` exact;
-6. epsilon `0.001*arcLength` exact;
-7. OpenCV/Pillow fallback does not change binary semantics;
-8. historical split recovered from current folders, not regenerated;
-9. split reproducibility caveat recorded;
-10. YOLO rasterization parser correct;
-11. loss decomposition separates filter/topology/approximation;
-12. raw components never called true physical instances;
-13. relation drift uses frozen relation config;
-14. no target-id leakage;
-15. merge-risk labelled heuristic;
-16. Task 6J cross-analysis uses frozen artifacts;
-17. J2 qualification recorded;
+## 14. Required checks
+
+At minimum:
+1. no writes under original WHU root;
+2. no writes under `WHU_YOLO_dataset`;
+3. no writes under legacy project;
+4. no package installation;
+5. shapefile record count independently agrees between `.shx` and `.dbf`;
+6. geometry parsing is deterministic;
+7. CRS parsed from local `.prj`;
+8. whole TIFFs never fully decoded into RAM;
+9. tile mapping validated by image-window evidence;
+10. vector/raster alignment measured, not assumed;
+11. stable source vector ids preserved;
+12. tile clipping preserves border-truncation metadata;
+13. many-vector→one-component merge metric correct on synthetic test;
+14. one-vector→many-component split metric correct;
+15. no vector id/GT target leakage into inference execution;
+16. relation drift uses frozen Task 3B semantics;
+17. Task 6J artifacts are read-only/frozen;
 18. no model training;
-19. no dataset mutation;
-20. deterministic JSON where applicable.
+19. no dataset regeneration;
+20. final verdict is one of the four allowed values.
 
 Run:
 `python -m pytest tests/ -q`
 
-# PART N — Runtime/dependencies
-
-This is deterministic data/statistics work.
+# PART L — Runtime / dependencies
 
 No model training.
-No external downloads.
-Use existing environments only.
+No external download.
+No new Conda env.
+No package install.
 
-If a core audit cannot run without a missing package, STOP and report it. Do not install packages automatically.
+Use existing installed readers when available.
 
-# PART O — Git/Watt
+If alignment becomes difficult:
+- keep DeepSeek V4.1 Flash;
+- it is acceptable to increase reasoning effort from High → Max;
+- do not switch to V4 Pro merely because the task is important.
 
-Do not stage:
-- original data;
-- converted YOLO dataset;
-- masks/raster dumps;
-- weights/checkpoints;
-- caches;
-- `.conda`.
+# PART M — Git / Watt
 
-Commit only scripts/tests/small JSON/docs/handoff and a few small diagnostic images if useful.
+Do not stage source shapefiles, whole TIFFs, cropped imagery, generated full vector tiles, weights, or caches.
+
+Commit scripts/tests/small JSON/docs/handoff and a small number of overlays only.
 
 Recommended commit:
-`audit: compare WHU source and pseudo-instance conversion`
+`audit: validate WHU native vector ground truth`
 
-Use established Watt ownership rules only for final Git push if needed.
+Use established Watt ownership rules only if needed for final push.
 
-# PART P — Handoff
+# PART N — Handoff
 
-`handoff/FROM_DSH.md` must include:
-1. Verdict
-2. Source Inventory
-3. Historical Split Recovery
-4. Raw Semantic Component Statistics
-5. `<50` Filter Loss
-6. `RETR_EXTERNAL` Topology Loss
-7. Polygon Approximation Loss
-8. Actual YOLO Fidelity
-9. Component Lineage
-10. Relation-Semantic Drift
-11. Split/Geographic Audit
-12. Merge-Risk Heuristic
-13. Task 6J Cross-Analysis
-14. Qwen2B Parser Qualification
-15. Primary-Dataset Decision
-16. Future Dataset Audit Protocol
-17. Runtime
-18. Tests
-19. Git/Watt
-20. Recommended Next Step
+Update:
+- `handoff/FROM_DSH.md`
+- `handoff/PROJECT_STATE.md`
 
-Final DSH UI in Chinese must report:
-- dataset-role verdict;
-- source image/label counts;
-- raw semantic component count;
-- current pseudo-instance/component count;
-- `<50` removed component count/rate;
-- foreground area removed rate;
-- current-YOLO raster vs source IoU/recall;
-- fraction of images with any relation-semantic drift;
-- target-change rate overall and L1/L2/L3;
-- merge-risk heuristic rate;
-- split reproducibility/geographic finding;
-- share of Task 6J failures plausibly data/conversion vs proposal-model;
-- whether WHU should remain only historical baseline;
-- tests;
-- commit/push.
+The handoff must explicitly state:
+1. exact local vector record count;
+2. whether the shapefile is confirmed building footprints;
+3. vector↔raster alignment quality;
+4. tile mapping confidence;
+5. exact true-vector merge/split rates against pseudo-instances;
+6. VECTOR↔PSEUDO relation drift;
+7. revised interpretation of Task 6K;
+8. revised Task 6J attribution;
+9. split/geographic result;
+10. final four-way verdict;
+11. tests;
+12. commit/push.
 
-# 17. STOP
+# 15. STOP
 
-After Task 6K STOP.
+After Task 6K.1 STOP.
 
-Do not automatically:
-- download a new dataset;
-- delete WHU;
-- regenerate BuildSpatialReason;
-- retrain YOLO;
-- train a new instance backbone;
-- switch Qwen to 4B;
-- add `[REF]`, SRE or SCL;
-- run full training;
-- build GUI.
+Do not automatically regenerate BuildSpatialReason, convert all vector labels into production form, retrain YOLO, train a new proposal backbone, switch Qwen to 4B, download SpaceNet/WHU-Mix, add `[REF]`/SRE/SCL, run formal training, or build GUI.
 
 Wait for ChatGPT review.

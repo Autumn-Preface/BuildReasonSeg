@@ -1,0 +1,117 @@
+{
+  "_doc": "Task 6K.1 section 14. `dataset_audit_schema_v1` instance for the NATIVE WHU East-Asia vector map (true instance identity), for direct comparison with Task 6K's pseudo-instance instance of the same schema.",
+  "comparison_with_pseudo_instance_schema_instance": {
+    "border_truncation_rate": {
+      "native_vector": 0.3413352565423449,
+      "pseudo_instances": null
+    },
+    "caveat": "counts differ by view: 34085 native features, 36926 pseudo-instances, 38309 raw semantic components",
+    "instance_count": {
+      "native_vector": 34085,
+      "pseudo_instances": null
+    },
+    "pseudo_instance_schema_artifact": "evaluation/dataset_audit_schema_v1.json",
+    "true_instance_identity": {
+      "native_vector": true,
+      "pseudo_instances": null
+    }
+  },
+  "dataset_name": "WHU Satellite Dataset II (East Asia) ---native vector building map",
+  "instance": {
+    "annotation_type": "manually delineated polygon building footprint map (ESRI shapefile)",
+    "area_distribution_map_units": {
+      "count": 34085,
+      "max": 18976.02734375,
+      "mean": 226.84835899680945,
+      "median": 157.484375,
+      "min": 0.00390625,
+      "p10": 55.834375,
+      "p25": 106.671875,
+      "p5": 39.5,
+      "p75": 245.4453125,
+      "p90": 393.84140625000003,
+      "p95": 573.2914062499997
+    },
+    "area_units_note": "areas are in WGS_1984_World_Mercator map units (metres, inflated by 1/cos(lat)^2 relative to ground area); no conversion to ground m^2 is attempted",
+    "border_truncation_rate": 0.3413352565423449,
+    "candidate_density": {
+      "instances_per_pixel": 3.6677019970437096e-05,
+      "pseudo_instances_same_corpus": 36926,
+      "raster_semantic_components_same_corpus": 38309
+    },
+    "corpus_clipped_instances": 38824,
+    "distinct_features_touched_in_corpus": 32590,
+    "features_with_holes": 5,
+    "geographic_diversity": {
+      "approx_lon_lat_bbox_all": "125.246856, 39.605662 to 125.751973, 39.670870",
+      "reference_crs": "WGS_1984_World_Mercator",
+      "split_is_geographic": false,
+      "test_extent_km": [
+        11.996,
+        9.388
+      ],
+      "test_tiles_adjacent_to_train_or_val_rate": 0.0,
+      "train_extent_km": [
+        56.229,
+        9.389
+      ],
+      "val_tiles_adjacent_to_train_rate": 1.0
+    },
+    "identity_key": "shp record order (1-based)",
+    "identity_key_note": "the DBF attribute table is degenerate (every field constant over all 34085 records), so OBJECTID cannot be used as an identity key",
+    "image_count": 3,
+    "image_pixels": 4616648995,
+    "instance_count": 34085,
+    "instances_per_tile": {
+      "max": 55.0,
+      "mean": 9.614660723130262,
+      "median": 7.0,
+      "p90": 20.0
+    },
+    "license": "UNKNOWN",
+    "local_storage": {
+      "dbf_bytes": 1636210,
+      "prj_bytes": 354,
+      "shp_bytes": 4999904,
+      "shx_bytes": 272780
+    },
+    "merge_split_structure": {
+      "component_merge_rate_primary": 0.013156177399566682,
+      "merge_rate_pseudo_instances_containing_multiple_buildings": 0.013432269945295998,
+      "share_of_buildings_inside_merged_pseudo": 0.026452709664125284,
+      "split_rate_buildings_spanning_multiple_pseudo": 0.001313620440964352,
+      "vector_instances_missing_from_pseudo": 0.052364516793735834
+    },
+    "multipart_features": 5,
+    "provenance": {
+      "external_counts_ignored": [
+        "29085",
+        "34085-as-published"
+      ],
+      "reader": "standard-library ESRI Shapefile reader (no shapefile package installed)",
+      "shp": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images\\EA.shp"
+    },
+    "relation_constructibility": {
+      "level_1_valid_tiles": 3497,
+      "level_2_valid_tiles_example": 850,
+      "level_3_valid_tiles_example": 1632,
+      "note": "per-program valid-tile counts for the native vector candidate set"
+    },
+    "source_resolution": "UNKNOWN",
+    "tiny_target_rate": {
+      "definition": "< 50 map-unit^2 features",
+      "note": "not used as a gate here; Task 6K measured the pseudo-side equivalent",
+      "value": null
+    },
+    "true_instance_identity_available": true,
+    "vector_raster_agreement": {
+      "best_offset_zero_everywhere": true,
+      "mean_iou": 0.9504547069448748,
+      "tiles_ge_0_90": 4036,
+      "tiles_lt_0_50": 0
+    },
+    "verdict": "MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES"
+  },
+  "per_tile_source": "evaluation/task6k1_vector_instance_stats.json",
+  "schema_version": "v1"
+}

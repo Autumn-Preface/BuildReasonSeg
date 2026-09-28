@@ -1,0 +1,351 @@
+{
+  "_doc": "Task 6K.1 section 12. Split/geographic audit using the recovered tile -> map-extent mapping. Adjacency is computed on the 512-tile grids, so it is exact rather than inferred from region names. Approximate latitude/longitude uses the inverse ellipsoidal Mercator for readability only; all distances are reported in map units (metres).",
+  "adjacency": {
+    "test_vs_train_effective": {
+      "fully_surrounded_rate": 0.0,
+      "mean_neighbours": 0.0,
+      "nearest_train_effective_tile_distance_grid_units": {
+        "distance_1_rate": 0.0,
+        "distance_le_2_rate": 0.0,
+        "histogram": {},
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "tiles_without_other_group_in_same_raster": 3726
+      },
+      "neighbour_count_histogram": {
+        "0": 3726,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "rate": 0.0,
+      "target_tiles": 3726,
+      "tiles_with_at_least_one_neighbour_in_train_effective": 0
+    },
+    "test_vs_train_pool": {
+      "fully_surrounded_rate": 0.0,
+      "mean_neighbours": 0.0,
+      "nearest_train_tile_distance_grid_units": {
+        "distance_1_rate": 0.0,
+        "distance_le_2_rate": 0.0,
+        "histogram": {},
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "tiles_without_other_group_in_same_raster": 3726
+      },
+      "neighbour_count_histogram": {
+        "0": 3726,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "rate": 0.0,
+      "target_tiles": 3726,
+      "tiles_with_at_least_one_neighbour_in_train": 0
+    },
+    "test_vs_val": {
+      "fully_surrounded_rate": 0.0,
+      "mean_neighbours": 0.0,
+      "nearest_val_tile_distance_grid_units": {
+        "distance_1_rate": 0.0,
+        "distance_le_2_rate": 0.0,
+        "histogram": {},
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "tiles_without_other_group_in_same_raster": 3726
+      },
+      "neighbour_count_histogram": {
+        "0": 3726,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "rate": 0.0,
+      "target_tiles": 3726,
+      "tiles_with_at_least_one_neighbour_in_val": 0
+    },
+    "train_effective_vs_test": {
+      "fully_surrounded_rate": 0.0,
+      "mean_neighbours": 0.0,
+      "nearest_test_tile_distance_grid_units": {
+        "distance_1_rate": 0.0,
+        "distance_le_2_rate": 0.0,
+        "histogram": {},
+        "max": null,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "tiles_without_other_group_in_same_raster": 13035
+      },
+      "neighbour_count_histogram": {
+        "0": 13035,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0
+      },
+      "rate": 0.0,
+      "target_tiles": 13035,
+      "tiles_with_at_least_one_neighbour_in_test": 0
+    },
+    "train_effective_vs_val": {
+      "fully_surrounded_rate": 0.0,
+      "mean_neighbours": 0.3324127349443805,
+      "nearest_val_tile_distance_grid_units": {
+        "distance_1_rate": 0.24142692750287686,
+        "distance_le_2_rate": 0.4689681626390487,
+        "histogram": {
+          "1": 3147,
+          "10": 123,
+          "11": 95,
+          "12": 82,
+          "2": 2966,
+          "3": 2274,
+          "4": 1590,
+          "5": 1010,
+          "6": 638,
+          "7": 429,
+          "8": 320,
+          "9": 188
+        },
+        "max": 21,
+        "mean": 3.388722669735328,
+        "median": 3.0,
+        "min": 1,
+        "tiles_without_other_group_in_same_raster": 0
+      },
+      "neighbour_count_histogram": {
+        "0": 9888,
+        "1": 2225,
+        "2": 712,
+        "3": 169,
+        "4": 32,
+        "5": 6,
+        "6": 2,
+        "7": 1,
+        "8": 0
+      },
+      "rate": 0.24142692750287686,
+      "target_tiles": 13035,
+      "tiles_with_at_least_one_neighbour_in_val": 3147
+    },
+    "val_vs_train_effective": {
+      "fully_surrounded_rate": 0.40669856459330145,
+      "mean_neighbours": 6.910685805422648,
+      "nearest_train_effective_tile_distance_grid_units": {
+        "distance_1_rate": 1.0,
+        "distance_le_2_rate": 1.0,
+        "histogram": {
+          "1": 627
+        },
+        "max": 1,
+        "mean": 1.0,
+        "median": 1.0,
+        "min": 1,
+        "tiles_without_other_group_in_same_raster": 0
+      },
+      "neighbour_count_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 5,
+        "4": 21,
+        "5": 62,
+        "6": 104,
+        "7": 180,
+        "8": 255
+      },
+      "rate": 1.0,
+      "target_tiles": 627,
+      "tiles_with_at_least_one_neighbour_in_train_effective": 627
+    },
+    "val_vs_train_pool_including_val": {
+      "fully_surrounded_rate": 0.9473684210526315,
+      "mean_neighbours": 7.842105263157895,
+      "nearest_train_tile_distance_grid_units": {
+        "distance_1_rate": 0.8373205741626795,
+        "distance_le_2_rate": 1.0,
+        "histogram": {
+          "0": 102,
+          "1": 525
+        },
+        "max": 1,
+        "mean": 0.8373205741626795,
+        "median": 1.0,
+        "min": 0,
+        "tiles_without_other_group_in_same_raster": 0
+      },
+      "neighbour_count_histogram": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 33,
+        "6": 0,
+        "7": 0,
+        "8": 594
+      },
+      "rate": 1.0,
+      "target_tiles": 627,
+      "tiles_with_at_least_one_neighbour_in_train": 627
+    }
+  },
+  "adjacency_definition": "`train_effective` = the source train pool minus the val tiles (the tiles actually used for training); `train` = the whole source train pool, which CONTAINS the val tiles. The effective set is the meaningful comparison.",
+  "counts": {
+    "test": 903,
+    "test_no": 2823,
+    "train": 3135,
+    "train_no": 10527,
+    "val": 627
+  },
+  "extents": {
+    "test": {
+      "approx_lon_lat_bbox": [
+        125.538234,
+        39.605663,
+        125.645999,
+        39.67087
+      ],
+      "by_raster": {
+        "test": 3726
+      },
+      "col_range": [
+        0,
+        68
+      ],
+      "map_extent": [
+        13974852.277333252,
+        4781558.201206404,
+        13986848.591455491,
+        4790946.6209542435
+      ],
+      "map_extent_km": [
+        11.996,
+        9.388
+      ],
+      "row_range": [
+        0,
+        53
+      ],
+      "tiles": 3726
+    },
+    "train": {
+      "approx_lon_lat_bbox": [
+        125.246856,
+        39.605662,
+        125.751973,
+        39.67087
+      ],
+      "by_raster": {
+        "train1": 10044,
+        "train2": 3618
+      },
+      "col_range": [
+        0,
+        185
+      ],
+      "map_extent": [
+        13942416.196335083,
+        4781558.066770619,
+        13998645.578359665,
+        4790946.620954243
+      ],
+      "map_extent_km": [
+        56.229,
+        9.389
+      ],
+      "row_range": [
+        0,
+        53
+      ],
+      "tiles": 13662
+    },
+    "val": {
+      "approx_lon_lat_bbox": [
+        125.248417,
+        39.605662,
+        125.751973,
+        39.67087
+      ],
+      "by_raster": {
+        "train1": 333,
+        "train2": 294
+      },
+      "col_range": [
+        0,
+        185
+      ],
+      "map_extent": [
+        13942590.055960042,
+        4781558.066770619,
+        13998645.578359665,
+        4790946.620954243
+      ],
+      "map_extent_km": [
+        56.056,
+        9.389
+      ],
+      "row_range": [
+        0,
+        53
+      ],
+      "tiles": 627
+    }
+  },
+  "seconds": 9.25,
+  "spatial_correlation_risk": {
+    "conclusion": "val is drawn from the same two whole-area rasters as train and its tiles are interleaved with training tiles, so scene-level leakage between train and val is certain; the test split comes from a separate raster and is spatially disjoint. The split therefore supports random-tile generalization only.",
+    "regions_shared_between_train_and_test": [],
+    "regions_shared_between_train_and_val": [
+      "train1",
+      "train2"
+    ],
+    "same_whole_image_source_rate": {
+      "test_sharing_a_raster_with_train": 0.0,
+      "val_sharing_a_raster_with_train": 1.0
+    },
+    "supported_paper_claim": "Random-tile generalization within the same two source scenes (train vs val) and one spatially disjoint scene (test). It does NOT support a claim of geographic generalization across cities/regions or of unseen-scene robustness beyond the single held-out test raster.",
+    "test_tiles_directly_adjacent_to_train_or_val_rate": 0.0,
+    "val_is_spatially_interleaved_with_train": true,
+    "val_nearest_train_tile_distance_grid_units": {
+      "distance_1_rate": 1.0,
+      "distance_le_2_rate": 1.0,
+      "histogram": {
+        "1": 627
+      },
+      "max": 1,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1,
+      "tiles_without_other_group_in_same_raster": 0
+    },
+    "val_tiles_directly_adjacent_to_train_tiles_rate": 1.0
+  },
+  "task": "6K.1"
+}

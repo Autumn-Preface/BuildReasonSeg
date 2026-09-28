@@ -1011,6 +1011,32 @@ validation set and one metric path.
 
 ---
 
+## ADR-024 — Task 6K.1: the archive contains a native manually delineated vector map; migrate the instance source to it
+
+**Status:** **Accepted** (Task 6K.1) for the read-only measurements in `evaluation/task6k1_*.json`.
+
+**Context.** Task 6K found `2. The shape file of the whole images\EA.shp` but never parsed it, and its `KEEP_WHU_AS_PRIMARY_FOR_NOW` verdict rested on the assumption that the semantic raster is the only label source. Task 6K.1 resolves that vector source before any project-level dataset decision.
+
+**Decision**
+
+1. **The shapefile is a genuine building footprint map.** 34,085 polygon features, consistent across `.shp`/`.shx`/`.dbf`, 0 unclosed rings, 0 self-intersections in the sampled validity probe, median 5 vertices per feature. No shapefile library is installed (no pyshp/fiona/geopandas/GDAL/rasterio/tifffile) and nothing may be installed, so the audit implements a standard-library read-only ESRI reader.
+2. **Two operational findings:** the DBF attribute table is **degenerate** (every field constant over all 34,085 records → no per-feature identity, no usable area/length; identity is the `.shp` record order), and the CRS is **WGS_1984_World_Mercator**, so map-unit areas must never be presented as ground m².
+3. **The tile mapping is validated, not assumed.** The whole-area rasters are BigTIFF; only full 512×512 windows were cropped, so `columns = floor(width/512)`; the derived grid capacity equals the cropped tile count exactly for all three rasters (10,044 / 3,618 / 3,726), the sampled RGB windows are pixel-identical to the cropped tiles, the labels match exactly, and the best offset is (0,0) in 240/240 tiles.
+4. **The vector reproduces the raster labels:** mean IoU 0.9505 over all 4,038 positive tiles, 4,036/4,038 ≥ 0.90, none below 0.50.
+5. **The original merge hypothesis is quantitatively small.** Measured by containment (IoU under-detects merges because a merged pseudo is much larger than either building): **1.34 %** of pseudo-instances contain ≥ 2 native buildings (2.65 % of native buildings live inside one). The dominant deviation is the opposite: **5.24 %** of native buildings are absent from the pseudo view — the `<50 contourArea` filter, hole filling and polygon simplification measured in Task 6K.
+6. **Relation answers change by 6.96 % weighted** (L1 7.9 %, L2 3.4 %, L3 5.0 %; 39.5 % of tiles change at least one program), above the 5 % materiality bar. This, not Task 6K's 4.33 % RAW-vs-CONVERTED figure, is the number that drives the annotation decision.
+7. **Task 6J is confirmed on native truth:** 78.5 % of J1 failures are proposal-model errors against *single* native buildings, and **0 %** involve merged pseudo-instance targets.
+8. **Verdict `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`**, `keep_whu_imagery: true`, `keep_historical_pseudo_baseline: true`.
+
+**Consequences**
+
+* WHU imagery stays primary and the historical pseudo-instance baseline stays frozen and reproducible (the 36,926-component mapping, Task 3B relations and J1/J4 results are untouched by this audit).
+* The **instance truth source changes** for future work: semantic connected components stop being the primary instance truth. The next task builds a vector-derived canonical instance dataset and BuildSpatialReason-v0.2, and must budget for the measured **6.96 %** relation-answer change.
+* The split remains the recorded limitation: 100 % of val tiles are directly adjacent to training tiles (94.7 % fully surrounded) and share their source rasters, while the test scene is spatially disjoint — so only random-tile generalisation within the same scenes is supported, never geographic generalisation.
+* Reusable pieces: `buildreasonseg_mvp/shapefile_reader.py` (stdlib ESRI reader), `buildreasonseg_mvp/whu_vector_audit.py` (BigTIFF metadata, world files, tile grids, rasterisation, merge/split metrics), `scripts/task6k1_*.py`, small tracked overlays in `evaluation/task6k1_samples/`, and gitignored per-tile caches.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -1038,3 +1064,4 @@ validation set and one metric path.
 | 021 | **Task 6I: one free cross-attention refinement step improves the query but cannot aim itself** | `[BOX]` q0 cross-attends the frozen 64×64 SAM2 embedding exactly once (256/4 heads, residual + FFN); refined q1 scores the 256×256 feature; frozen 6H.1 objective; I0 raises inside-own 7→13/20 and paired point 2→5/10 (gates 18/9) while the 1×4096 attention peaks (entropy 8.31→1.46) with only ~2.5 % mass on the target — a single query slot cannot direct itself at the target even with one allowed look, so the next candidates are multiple learned query slots, a stronger MLLM, or reference/relation grounding |
 | 022 | **Task 6J: program parsing + relation execution are solved; the proposal backbone is the binding limit** | 20 canonical programs derived 1:1 from the frozen query types; the independent executor reproduces the frozen generator on 120/120 samples (J0 1.000, paired 20/20); text-only Qwen ProgramHead parses instructions perfectly (J2 1.000 acc / 1.000 macro F1 / 20-20 paired / 1.000 full val; J3 1.000 / 20-20) — but the frozen YOLO proposal chain fails the J1 paired gate (5/20 vs 12/20; recall@0.5 0.869; 35/120 abstentions from proposal-geometry mismatch), so the next step is a proposal-backbone/dataset task, not parser or executor changes |
 | 023 | **Task 6K: the WHU semantic→pseudo-instance conversion is faithful and light; keep WHU as primary** | Read-only audit: 36,926/36,926 actual YOLO objects re-emulate exactly (union IoU 1.00000, count agreement 4,038/4,038) from 38,309 raw 8-connected semantic components; `<50` deletion 3.61 % of contours but only 0.058 % of foreground; hole filling +0.021 %; approx IoU 0.99955; RAW-vs-CONVERTED relation target change 4.33 % weighted (L1 5.0 %, L2/L3 0.03 %); merge high risk 1.40 %; 75.4 % of Task 6J J1 failures are proposal-model related → `KEEP_WHU_AS_PRIMARY_FOR_NOW` with no-true-instance-identity and random-train/val-split limitations recorded, and a reusable schema v1 for future candidates |
+| 024 | **Task 6K.1: the archive ships a native vector building map with true instance identity → migrate the instance source** | The local `EA.shp` parses to **34,085** polygon features (consistent across `.shp`/`.shx`/`.dbf`, 0 unclosed rings, 0 self-intersections in the sampled validity probe), CRS `WGS_1984_World_Mercator`, DBF attributes **degenerate** (all fields constant → identity is the record order); the tile→whole-image mapping is **validated** (RGB windows pixel-identical, labels exact, grid capacity == cropped tiles for all three rasters, best offset (0,0) in 240/240); the vector reproduces the raster labels at **mean IoU 0.9505** (4,036/4,038 tiles ≥ 0.90); vs the pseudo view: 94.8 % match at IoU 0.5, **merges are small (1.34 % of pseudo-instances contain ≥ 2 buildings)** but **5.24 % of native buildings are absent from the pseudo view**, and VECTOR-vs-PSEUDO relation answers change by **6.96 % weighted** (L1 7.9 %, L2 3.4 %, L3 5.0 %); Task 6J re-attribution: 78.5 % of J1 failures are proposal-model errors on clean single native buildings, **0 %** merged-target cases → verdict **`MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`** with `keep_whu_imagery: true` and `keep_historical_pseudo_baseline: true`; the frozen artifacts stay valid and the next task builds a vector-derived canonical instance dataset + BuildSpatialReason-v0.2 |

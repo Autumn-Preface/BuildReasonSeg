@@ -1,0 +1,1235 @@
+{
+  "_doc": "Task 6K.1 section 10. VECTOR (native manually delineated instances) vs PSEUDO (current component representation) relation-answer drift for all 20 canonical programs under the frozen Task 3B semantics. Targets are compared through mask-overlap matching because ids are not comparable across candidate sets.",
+  "by_level": {
+    "1": {
+      "at_least_one_valid": 22016,
+      "became_invalid": 285,
+      "became_newly_valid": 399,
+      "change_rate": 0.07866116632289519,
+      "comparable": 21332,
+      "target_changed": 1678,
+      "unstable_rate": 0.10728561046511628
+    },
+    "2": {
+      "at_least_one_valid": 13780,
+      "became_invalid": 861,
+      "became_newly_valid": 818,
+      "change_rate": 0.0337988595983803,
+      "comparable": 12101,
+      "target_changed": 409,
+      "unstable_rate": 0.15152394775036285
+    },
+    "3": {
+      "at_least_one_valid": 6759,
+      "became_invalid": 261,
+      "became_newly_valid": 236,
+      "change_rate": 0.050303417438518044,
+      "comparable": 6262,
+      "target_changed": 315,
+      "unstable_rate": 0.12013611480988312
+    }
+  },
+  "changed_examples": [
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "rightmost",
+      "pseudo_selected": 3,
+      "stem": "1_0",
+      "vector_selected": 4
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "topmost",
+      "pseudo_selected": 2,
+      "stem": "1_0",
+      "vector_selected": 4
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest",
+      "pseudo_selected": 5,
+      "stem": "1_10033",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_nearest",
+      "pseudo_selected": 7,
+      "stem": "1_10033",
+      "vector_selected": 3
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_right_of_to_nearest",
+      "pseudo_selected": 6,
+      "stem": "1_10033",
+      "vector_selected": 5
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "border_clipping"
+      },
+      "program": "leftmost",
+      "pseudo_selected": 1,
+      "stem": "1_1032",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "border_clipping"
+      },
+      "program": "bottommost",
+      "pseudo_selected": 1,
+      "stem": "1_1032",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "border_clipping"
+      },
+      "program": "topmost",
+      "pseudo_selected": 4,
+      "stem": "1_1034",
+      "vector_selected": 5
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "rightmost",
+      "pseudo_selected": 9,
+      "stem": "1_1063",
+      "vector_selected": 13
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest",
+      "pseudo_selected": 3,
+      "stem": "1_1063",
+      "vector_selected": 11
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_nearest",
+      "pseudo_selected": 4,
+      "stem": "1_1063",
+      "vector_selected": 9
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_above_to_nearest",
+      "pseudo_selected": 5,
+      "stem": "1_1063",
+      "vector_selected": 12
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_right_of_to_nearest",
+      "pseudo_selected": 4,
+      "stem": "1_1063",
+      "vector_selected": 9
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "topmost",
+      "pseudo_selected": 9,
+      "stem": "1_1064",
+      "vector_selected": 9
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "border_clipping"
+      },
+      "program": "leftmost",
+      "pseudo_selected": 6,
+      "stem": "1_1065",
+      "vector_selected": 2
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "leftmost",
+      "pseudo_selected": 6,
+      "stem": "1_1066",
+      "vector_selected": 3
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "leftmost",
+      "pseudo_selected": 22,
+      "stem": "1_1088",
+      "vector_selected": 23
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "topmost",
+      "pseudo_selected": 20,
+      "stem": "1_1088",
+      "vector_selected": 23
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": true,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "multiple_vector_merged_into_one_pseudo"
+      },
+      "program": "smallest_to_nearest",
+      "pseudo_selected": 8,
+      "stem": "1_1090",
+      "vector_selected": 10
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest",
+      "pseudo_selected": 15,
+      "stem": "1_1091",
+      "vector_selected": 22
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "smallest_to_nearest",
+      "pseudo_selected": 25,
+      "stem": "1_1091",
+      "vector_selected": 28
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_above_to_nearest",
+      "pseudo_selected": 17,
+      "stem": "1_1091",
+      "vector_selected": 25
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_below_to_nearest",
+      "pseudo_selected": 8,
+      "stem": "1_1091",
+      "vector_selected": 11
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_left_of_to_nearest",
+      "pseudo_selected": 12,
+      "stem": "1_1091",
+      "vector_selected": 15
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest",
+      "pseudo_selected": 19,
+      "stem": "1_1092",
+      "vector_selected": 17
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_nearest",
+      "pseudo_selected": 17,
+      "stem": "1_1092",
+      "vector_selected": 15
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_below_to_nearest",
+      "pseudo_selected": 17,
+      "stem": "1_1092",
+      "vector_selected": 15
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "rightmost",
+      "pseudo_selected": 4,
+      "stem": "1_1118",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "bottommost",
+      "pseudo_selected": 1,
+      "stem": "1_1118",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "bottommost",
+      "pseudo_selected": 1,
+      "stem": "1_1145",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": true,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "one_vector_to_multiple_pseudo"
+      },
+      "program": "leftmost",
+      "pseudo_selected": 5,
+      "stem": "1_1159",
+      "vector_selected": 4
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "smallest",
+      "pseudo_selected": 7,
+      "stem": "1_12",
+      "vector_selected": 3
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "smallest_to_nearest",
+      "pseudo_selected": 6,
+      "stem": "1_12",
+      "vector_selected": 4
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_above_to_nearest",
+      "pseudo_selected": 6,
+      "stem": "1_12",
+      "vector_selected": 4
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_left_of_to_nearest",
+      "pseudo_selected": 4,
+      "stem": "1_12",
+      "vector_selected": 3
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "bottommost",
+      "pseudo_selected": 1,
+      "stem": "1_1220",
+      "vector_selected": 1
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "topmost",
+      "pseudo_selected": 5,
+      "stem": "1_1250",
+      "vector_selected": 6
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": true,
+          "border_clipping": true,
+          "eligibility_ranking_consequences": false,
+          "geometry_approximation": false,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": true
+        },
+        "primary": "below_50_removal"
+      },
+      "program": "leftmost",
+      "pseudo_selected": 14,
+      "stem": "1_1251",
+      "vector_selected": 3
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest",
+      "pseudo_selected": 11,
+      "stem": "1_1251",
+      "vector_selected": 5
+    },
+    {
+      "attribution": {
+        "flags": {
+          "below_50_removal": false,
+          "border_clipping": false,
+          "eligibility_ranking_consequences": true,
+          "geometry_approximation": true,
+          "multiple_vector_merged_into_one_pseudo": false,
+          "one_vector_to_multiple_pseudo": false,
+          "vector_target_missing_in_pseudo": false
+        },
+        "primary": "eligibility_ranking_consequences"
+      },
+      "program": "largest_to_nearest",
+      "pseudo_selected": 8,
+      "stem": "1_1251",
+      "vector_selected": 4
+    }
+  ],
+  "overall_current_query_target_change_rate": 0.06959497111912616,
+  "per_program": {
+    "bottommost": {
+      "attribution_primary": {
+        "below_50_removal": 191,
+        "border_clipping": 90,
+        "geometry_approximation": 11,
+        "multiple_vector_merged_into_one_pseudo": 9,
+        "one_vector_to_multiple_pseudo": 1,
+        "vector_target_missing_in_pseudo": 7
+      },
+      "became_invalid": 71,
+      "became_newly_valid": 123,
+      "change_rate": 0.09166419460100861,
+      "comparable": 3371,
+      "invalid_in_both": 0,
+      "level": 1,
+      "operations": [
+        "argmax_centroid_y"
+      ],
+      "pseudo_valid_tiles": 3494,
+      "target_changed": 309,
+      "target_unchanged": 3062,
+      "unstable": 503,
+      "unstable_rate": 0.14109396914446004,
+      "vector_valid_tiles": 3442
+    },
+    "largest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 192,
+        "multiple_vector_merged_into_one_pseudo": 4
+      },
+      "became_invalid": 6,
+      "became_newly_valid": 1,
+      "change_rate": 0.050922317485061055,
+      "comparable": 3849,
+      "invalid_in_both": 0,
+      "level": 1,
+      "operations": [
+        "argmax_area"
+      ],
+      "pseudo_valid_tiles": 3850,
+      "target_changed": 196,
+      "target_unchanged": 3653,
+      "unstable": 203,
+      "unstable_rate": 0.052645228215767635,
+      "vector_valid_tiles": 3855
+    },
+    "largest_to_above": {
+      "attribution_primary": {
+        "border_clipping": 1,
+        "eligibility_ranking_consequences": 4,
+        "multiple_vector_merged_into_one_pseudo": 1,
+        "one_vector_to_multiple_pseudo": 1
+      },
+      "became_invalid": 87,
+      "became_newly_valid": 73,
+      "change_rate": 0.009536784741144414,
+      "comparable": 734,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmax_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 807,
+      "target_changed": 7,
+      "target_unchanged": 727,
+      "unstable": 167,
+      "unstable_rate": 0.18680089485458612,
+      "vector_valid_tiles": 821
+    },
+    "largest_to_above_to_nearest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 66,
+        "multiple_vector_merged_into_one_pseudo": 6
+      },
+      "became_invalid": 62,
+      "became_newly_valid": 66,
+      "change_rate": 0.047151277013752456,
+      "comparable": 1527,
+      "invalid_in_both": 0,
+      "level": 3,
+      "operations": [
+        "argmax_area",
+        "filter_relation",
+        "argmin_boundary_distance"
+      ],
+      "pseudo_valid_tiles": 1593,
+      "target_changed": 72,
+      "target_unchanged": 1455,
+      "unstable": 200,
+      "unstable_rate": 0.12084592145015106,
+      "vector_valid_tiles": 1589
+    },
+    "largest_to_below": {
+      "attribution_primary": {
+        "below_50_removal": 1,
+        "border_clipping": 1,
+        "eligibility_ranking_consequences": 2
+      },
+      "became_invalid": 95,
+      "became_newly_valid": 89,
+      "change_rate": 0.005813953488372093,
+      "comparable": 688,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmax_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 777,
+      "target_changed": 4,
+      "target_unchanged": 684,
+      "unstable": 188,
+      "unstable_rate": 0.21559633027522937,
+      "vector_valid_tiles": 783
+    },
+    "largest_to_below_to_nearest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 77,
+        "multiple_vector_merged_into_one_pseudo": 4
+      },
+      "became_invalid": 68,
+      "became_newly_valid": 47,
+      "change_rate": 0.05149396058486968,
+      "comparable": 1573,
+      "invalid_in_both": 0,
+      "level": 3,
+      "operations": [
+        "argmax_area",
+        "filter_relation",
+        "argmin_boundary_distance"
+      ],
+      "pseudo_valid_tiles": 1620,
+      "target_changed": 81,
+      "target_unchanged": 1492,
+      "unstable": 196,
+      "unstable_rate": 0.11611374407582939,
+      "vector_valid_tiles": 1641
+    },
+    "largest_to_left_of": {
+      "attribution_primary": {
+        "below_50_removal": 2,
+        "border_clipping": 1,
+        "eligibility_ranking_consequences": 1,
+        "multiple_vector_merged_into_one_pseudo": 1
+      },
+      "became_invalid": 94,
+      "became_newly_valid": 105,
+      "change_rate": 0.006613756613756613,
+      "comparable": 756,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmax_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 861,
+      "target_changed": 5,
+      "target_unchanged": 751,
+      "unstable": 204,
+      "unstable_rate": 0.2136125654450262,
+      "vector_valid_tiles": 850
+    },
+    "largest_to_left_of_to_nearest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 79,
+        "multiple_vector_merged_into_one_pseudo": 3
+      },
+      "became_invalid": 71,
+      "became_newly_valid": 57,
+      "change_rate": 0.05253042921204356,
+      "comparable": 1561,
+      "invalid_in_both": 0,
+      "level": 3,
+      "operations": [
+        "argmax_area",
+        "filter_relation",
+        "argmin_boundary_distance"
+      ],
+      "pseudo_valid_tiles": 1618,
+      "target_changed": 82,
+      "target_unchanged": 1479,
+      "unstable": 210,
+      "unstable_rate": 0.12433392539964476,
+      "vector_valid_tiles": 1632
+    },
+    "largest_to_nearest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 182,
+        "multiple_vector_merged_into_one_pseudo": 8
+      },
+      "became_invalid": 66,
+      "became_newly_valid": 59,
+      "change_rate": 0.06223386832623649,
+      "comparable": 3053,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmax_area",
+        "argmin_boundary_distance"
+      ],
+      "pseudo_valid_tiles": 3112,
+      "target_changed": 190,
+      "target_unchanged": 2863,
+      "unstable": 315,
+      "unstable_rate": 0.09911894273127753,
+      "vector_valid_tiles": 3119
+    },
+    "largest_to_right_of": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 6
+      },
+      "became_invalid": 94,
+      "became_newly_valid": 80,
+      "change_rate": 0.008253094910591471,
+      "comparable": 727,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmax_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 807,
+      "target_changed": 6,
+      "target_unchanged": 721,
+      "unstable": 180,
+      "unstable_rate": 0.1997780244173141,
+      "vector_valid_tiles": 821
+    },
+    "largest_to_right_of_to_nearest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 75,
+        "multiple_vector_merged_into_one_pseudo": 5
+      },
+      "became_invalid": 60,
+      "became_newly_valid": 66,
+      "change_rate": 0.04996876951905059,
+      "comparable": 1601,
+      "invalid_in_both": 0,
+      "level": 3,
+      "operations": [
+        "argmax_area",
+        "filter_relation",
+        "argmin_boundary_distance"
+      ],
+      "pseudo_valid_tiles": 1667,
+      "target_changed": 80,
+      "target_unchanged": 1521,
+      "unstable": 206,
+      "unstable_rate": 0.11928199189345687,
+      "vector_valid_tiles": 1661
+    },
+    "leftmost": {
+      "attribution_primary": {
+        "below_50_removal": 200,
+        "border_clipping": 100,
+        "geometry_approximation": 6,
+        "multiple_vector_merged_into_one_pseudo": 8,
+        "one_vector_to_multiple_pseudo": 3,
+        "vector_target_missing_in_pseudo": 5
+      },
+      "became_invalid": 63,
+      "became_newly_valid": 85,
+      "change_rate": 0.0937682003494467,
+      "comparable": 3434,
+      "invalid_in_both": 0,
+      "level": 1,
+      "operations": [
+        "argmin_centroid_x"
+      ],
+      "pseudo_valid_tiles": 3519,
+      "target_changed": 322,
+      "target_unchanged": 3112,
+      "unstable": 470,
+      "unstable_rate": 0.13121161362367392,
+      "vector_valid_tiles": 3497
+    },
+    "rightmost": {
+      "attribution_primary": {
+        "below_50_removal": 190,
+        "border_clipping": 89,
+        "geometry_approximation": 3,
+        "multiple_vector_merged_into_one_pseudo": 11,
+        "one_vector_to_multiple_pseudo": 6,
+        "vector_target_missing_in_pseudo": 2
+      },
+      "became_invalid": 65,
+      "became_newly_valid": 100,
+      "change_rate": 0.08783192296469215,
+      "comparable": 3427,
+      "invalid_in_both": 0,
+      "level": 1,
+      "operations": [
+        "argmax_centroid_x"
+      ],
+      "pseudo_valid_tiles": 3527,
+      "target_changed": 301,
+      "target_unchanged": 3126,
+      "unstable": 466,
+      "unstable_rate": 0.1297327394209354,
+      "vector_valid_tiles": 3492
+    },
+    "smallest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 241,
+        "multiple_vector_merged_into_one_pseudo": 4
+      },
+      "became_invalid": 5,
+      "became_newly_valid": 1,
+      "change_rate": 0.06365289685632632,
+      "comparable": 3849,
+      "invalid_in_both": 0,
+      "level": 1,
+      "operations": [
+        "argmin_area"
+      ],
+      "pseudo_valid_tiles": 3850,
+      "target_changed": 245,
+      "target_unchanged": 3604,
+      "unstable": 251,
+      "unstable_rate": 0.06511024643320364,
+      "vector_valid_tiles": 3854
+    },
+    "smallest_to_above": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 2,
+        "one_vector_to_multiple_pseudo": 1
+      },
+      "became_invalid": 82,
+      "became_newly_valid": 105,
+      "change_rate": 0.003952569169960474,
+      "comparable": 759,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmin_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 864,
+      "target_changed": 3,
+      "target_unchanged": 756,
+      "unstable": 190,
+      "unstable_rate": 0.20084566596194503,
+      "vector_valid_tiles": 841
+    },
+    "smallest_to_below": {
+      "attribution_primary": {
+        "border_clipping": 2,
+        "eligibility_ranking_consequences": 3
+      },
+      "became_invalid": 102,
+      "became_newly_valid": 86,
+      "change_rate": 0.007142857142857143,
+      "comparable": 700,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmin_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 786,
+      "target_changed": 5,
+      "target_unchanged": 695,
+      "unstable": 193,
+      "unstable_rate": 0.21734234234234234,
+      "vector_valid_tiles": 802
+    },
+    "smallest_to_left_of": {
+      "attribution_primary": {
+        "border_clipping": 1,
+        "eligibility_ranking_consequences": 2
+      },
+      "became_invalid": 89,
+      "became_newly_valid": 93,
+      "change_rate": 0.0038860103626943004,
+      "comparable": 772,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmin_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 865,
+      "target_changed": 3,
+      "target_unchanged": 769,
+      "unstable": 185,
+      "unstable_rate": 0.19392033542976939,
+      "vector_valid_tiles": 861
+    },
+    "smallest_to_nearest": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 175,
+        "multiple_vector_merged_into_one_pseudo": 7
+      },
+      "became_invalid": 54,
+      "became_newly_valid": 44,
+      "change_rate": 0.057741116751269035,
+      "comparable": 3152,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmin_area",
+        "argmin_boundary_distance"
+      ],
+      "pseudo_valid_tiles": 3196,
+      "target_changed": 182,
+      "target_unchanged": 2970,
+      "unstable": 280,
+      "unstable_rate": 0.08615384615384615,
+      "vector_valid_tiles": 3206
+    },
+    "smallest_to_right_of": {
+      "attribution_primary": {
+        "eligibility_ranking_consequences": 3,
+        "multiple_vector_merged_into_one_pseudo": 1
+      },
+      "became_invalid": 98,
+      "became_newly_valid": 84,
+      "change_rate": 0.005263157894736842,
+      "comparable": 760,
+      "invalid_in_both": 0,
+      "level": 2,
+      "operations": [
+        "argmin_area",
+        "filter_relation"
+      ],
+      "pseudo_valid_tiles": 844,
+      "target_changed": 4,
+      "target_unchanged": 756,
+      "unstable": 186,
+      "unstable_rate": 0.19745222929936307,
+      "vector_valid_tiles": 858
+    },
+    "topmost": {
+      "attribution_primary": {
+        "below_50_removal": 198,
+        "border_clipping": 88,
+        "geometry_approximation": 7,
+        "multiple_vector_merged_into_one_pseudo": 3,
+        "one_vector_to_multiple_pseudo": 6,
+        "vector_target_missing_in_pseudo": 3
+      },
+      "became_invalid": 75,
+      "became_newly_valid": 89,
+      "change_rate": 0.08965314520870077,
+      "comparable": 3402,
+      "invalid_in_both": 0,
+      "level": 1,
+      "operations": [
+        "argmin_centroid_y"
+      ],
+      "pseudo_valid_tiles": 3491,
+      "target_changed": 305,
+      "target_unchanged": 3097,
+      "unstable": 469,
+      "unstable_rate": 0.1315199102636007,
+      "vector_valid_tiles": 3477
+    }
+  },
+  "scope": {
+    "matched_vector_instances_iou_0_5": 36791,
+    "merge_metric_note": "The merge rate (several native buildings inside one pseudo-instance) is measured by CONTAINMENT in evaluation/task6k1_vector_vs_pseudo_matching.json; the 1:1 matching used here can never express a merge, so no merge number is reported in this artifact.",
+    "programs": 20,
+    "pseudo_instances": 36926,
+    "tiles_scanned": 4038,
+    "vector_instances": 38824,
+    "vector_instances_without_pseudo_match": 2033,
+    "vector_instances_without_pseudo_match_rate": 0.052364516793735834
+  },
+  "seconds": 242.91,
+  "task": "6K.1",
+  "tiles_with_any_relation_semantic_change": {
+    "rate": 0.3952451708766716,
+    "tiles": 1596
+  },
+  "weighting": {
+    "method": "per-program target-change rate weighted by the frozen BuildSpatialReason v0.1.1 query-type counts",
+    "query_records": 25229
+  }
+}

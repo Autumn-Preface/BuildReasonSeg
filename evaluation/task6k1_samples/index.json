@@ -1,0 +1,104 @@
+{
+  "_doc": "Task 6K.1 sample overlays. Columns: RGB crop | raster semantic label | native vector instances | current pseudo-instances | disagreement (grey shared, red pseudo-only, green vector-only). Small representative panels only; large caches are gitignored.",
+  "columns": [
+    "rgb",
+    "raster_label",
+    "vector_instances",
+    "pseudo_instances",
+    "disagreement"
+  ],
+  "panels": [
+    {
+      "disagreement_pixels": 4314,
+      "file": "1_0_panel.png",
+      "pseudo_instances": 3,
+      "pseudo_only_pixels": 15,
+      "split": "train",
+      "stem": "1_0",
+      "vector_instances": 4,
+      "vector_only_pixels": 226
+    },
+    {
+      "disagreement_pixels": 3155,
+      "file": "1_2670_panel.png",
+      "pseudo_instances": 2,
+      "pseudo_only_pixels": 0,
+      "split": "train",
+      "stem": "1_2670",
+      "vector_instances": 2,
+      "vector_only_pixels": 140
+    },
+    {
+      "disagreement_pixels": 20008,
+      "file": "1_5896_panel.png",
+      "pseudo_instances": 17,
+      "pseudo_only_pixels": 68,
+      "split": "train",
+      "stem": "1_5896",
+      "vector_instances": 17,
+      "vector_only_pixels": 1140
+    },
+    {
+      "disagreement_pixels": 31731,
+      "file": "2_1176_panel.png",
+      "pseudo_instances": 16,
+      "pseudo_only_pixels": 4,
+      "split": "train",
+      "stem": "2_1176",
+      "vector_instances": 18,
+      "vector_only_pixels": 1309
+    },
+    {
+      "disagreement_pixels": 11295,
+      "file": "2_3038_panel.png",
+      "pseudo_instances": 8,
+      "pseudo_only_pixels": 9,
+      "split": "train",
+      "stem": "2_3038",
+      "vector_instances": 8,
+      "vector_only_pixels": 589
+    },
+    {
+      "disagreement_pixels": 3564,
+      "file": "1_530_panel.png",
+      "pseudo_instances": 3,
+      "pseudo_only_pixels": 18,
+      "split": "val",
+      "stem": "1_530",
+      "vector_instances": 4,
+      "vector_only_pixels": 296
+    },
+    {
+      "disagreement_pixels": 2920,
+      "file": "1365_panel.png",
+      "pseudo_instances": 1,
+      "pseudo_only_pixels": 0,
+      "split": "test",
+      "stem": "1365",
+      "vector_instances": 1,
+      "vector_only_pixels": 86
+    },
+    {
+      "disagreement_pixels": 13884,
+      "file": "470_panel.png",
+      "pseudo_instances": 7,
+      "pseudo_only_pixels": 0,
+      "split": "test",
+      "stem": "470",
+      "vector_instances": 8,
+      "vector_only_pixels": 691
+    },
+    {
+      "disagreement_pixels": 5980,
+      "file": "954_panel.png",
+      "pseudo_instances": 5,
+      "pseudo_only_pixels": 1,
+      "split": "test",
+      "stem": "954",
+      "vector_instances": 5,
+      "vector_only_pixels": 295
+    }
+  ],
+  "seconds": 1.4,
+  "task": "6K.1"
+}

@@ -1,0 +1,131 @@
+{
+  "_doc": "Task 6K.1 section 13. Four-way verdict for the native WHU East-Asia vector ground truth. Gates were declared before the verdict; every measured value is reported next to its threshold, and no external building count was hard-coded.",
+  "allowed_verdicts": [
+    "MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES",
+    "KEEP_CURRENT_PSEUDO_INSTANCES",
+    "REPLACE_WHU_WITH_NEW_DATASET",
+    "INSUFFICIENT_EVIDENCE"
+  ],
+  "gates": {
+    "pseudo_instances_materially_merge_true_buildings": {
+      "measured": {
+        "pseudo_instances_containing_multiple_vector_rate": 0.013432269945295998,
+        "threshold": 0.05,
+        "vector_instances_inside_merged_pseudo_rate": 0.026452709664125284
+      },
+      "passed": false
+    },
+    "relation_answers_materially_change": {
+      "measured": {
+        "threshold": 0.05,
+        "vector_instances_missing_from_pseudo_rate": 0.052364516793735834,
+        "weighted_current_query_target_change_rate": 0.06959497111912616
+      },
+      "passed": true
+    },
+    "tile_mapping_validated": {
+      "measured": {
+        "grid_capacity_equals_cropped_tiles": true,
+        "label_identity_all_exact_or_both_empty": true,
+        "rgb_identity_all_sampled": true,
+        "zero_offset_best_everywhere": true
+      },
+      "passed": true
+    },
+    "true_instance_identity_available": {
+      "measured": {
+        "dbf_attributes_usable": false,
+        "distinct_polygon_features": 34085,
+        "identity_source": "shp record order (DBF attributes are degenerate)"
+      },
+      "passed": true
+    },
+    "vector_map_is_confirmed_building_footprints": {
+      "measured": {
+        "consistent_across_shp_shx_dbf": true,
+        "record_count": 34085,
+        "rings_closed_all": true,
+        "self_intersections_sampled": 0,
+        "shape_type": "Polygon",
+        "tile_iou_ge_0_75_rate": 1.0,
+        "vector_vs_raster_mean_iou": 0.9504547069448748
+      },
+      "passed": true
+    }
+  },
+  "keep_flags": {
+    "keep_existing_pseudo_instance_artifacts_frozen": true,
+    "keep_historical_pseudo_baseline": true,
+    "keep_native_vector_as_ground_truth": true,
+    "keep_whu_imagery": true,
+    "migration_risk_measured_weighted_target_change_rate": 0.06959497111912616,
+    "migration_would_change_current_relation_answers": true,
+    "recommend_migrating_instance_source_to_native_vector_next": true,
+    "stop_using_semantic_connected_components_as_primary_instance_truth": true
+  },
+  "measured_summary": {
+    "best_offset_all_zero": true,
+    "component_merge_rate_primary": 0.013156177399566682,
+    "dbf_attributes_usable": false,
+    "distinct_features_touched": 32590,
+    "is_building_footprint_map": true,
+    "j1_failures_on_merged_targets_share": 0.0,
+    "j1_failures_proposal_model_on_single_building_share": 0.7846153846153846,
+    "local_vector_feature_count": 34085,
+    "merge_rate_pseudo_instances": 0.013432269945295998,
+    "pseudo_instances": 36926,
+    "raster_semantic_components": 38309,
+    "val_tiles_adjacent_to_train_rate": 1.0,
+    "vector_instances_in_corpus": 38824,
+    "vector_instances_inside_merged_pseudo_rate": 0.026452709664125284,
+    "vector_match_rate_pseudo_0_50": 0.9476354832062641,
+    "vector_missing_from_pseudo_rate": 0.052364516793735834,
+    "vector_spanning_multiple_pseudo_rate": 0.001313620440964352,
+    "vector_vs_pseudo_relation_target_change_rate": 0.06959497111912616,
+    "vector_vs_raster_mean_iou": 0.9504547069448748
+  },
+  "reason": "EA.shp is confirmed as the native manually delineated building footprint map (34085 polygons); the tile mapping is validated (pixel identity on the sampled tiles and exact grid capacity); the vector aligns with the raster labels (mean IoU 0.9505); the native features carry TRUE instance identity; and the VECTOR-vs-PSEUDO relation answers differ by 0.0696 weighted (threshold 0.05) with 0.0524 of native buildings absent from the pseudo view",
+  "revised_task6j_attribution": {
+    "conclusion": "Task 6J's J1 failure is not explained by pseudo-instance merging (Merge rate 0.013432269945295998); 0.785 of failures are proposal-model failures on single native buildings, so the proposal-model conclusion of Task 6K/6J is confirmed on native-vector ground truth.",
+    "failure_on_merged_pseudo_target_share": 0.0,
+    "failure_proposal_model_on_single_native_building_share": 0.7846153846153846,
+    "j1_failures": 65,
+    "j1_samples": 120
+  },
+  "revised_task6k_interpretation": {
+    "revised": [
+      "the archived shapefile is a genuine manually delineated building vector map (34,085 polygons) with TRUE instance identity that the semantic raster cannot express",
+      "the pseudo-instance limitation is NOT mainly 'touching buildings were merged': measured merge rate is 0.013432269945295998 of pseudo-instances (threshold 0.05)",
+      "the measurable deviation is that a share of native buildings is absent from the pseudo view (vector instances without a pseudo match at IoU 0.5: 0.052364516793735834)",
+      "the conversion-loss audit of Task 6K stands, but a replacement candidate now exists WITHOUT changing the imagery dataset"
+    ],
+    "still_correct": [
+      "the semantic-raster to polygon conversion is faithfully reproduced (YOLO re-emulation IoU 1.00000)",
+      "the imagery corpus is unaffected and remains primary"
+    ],
+    "task6k_verdict": null
+  },
+  "seconds": 0.03,
+  "split_and_geographic_result": {
+    "conclusion": "val is drawn from the same two whole-area rasters as train and its tiles are interleaved with training tiles, so scene-level leakage between train and val is certain; the test split comes from a separate raster and is spatially disjoint. The split therefore supports random-tile generalization only.",
+    "regions_shared_train_val": [
+      "train1",
+      "train2"
+    ],
+    "test_adjacent_to_train_or_val_rate": 0.0,
+    "val_tiles_adjacent_to_train_rate": 1.0
+  },
+  "task": "6K.1",
+  "thresholds": {
+    "alignment_mean_iou_min": 0.9,
+    "alignment_tile_iou_ge_0_75_rate_min": 0.9,
+    "best_offset_zero_dominance_required": true,
+    "feature_count_consistency_required": true,
+    "geometry_validity_required": true,
+    "merge_rate_material": 0.05,
+    "relation_drift_material": 0.05,
+    "rgb_identity_all_sampled_required": true,
+    "vector_missing_from_pseudo_material": 0.05
+  },
+  "verdict": "MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES"
+}

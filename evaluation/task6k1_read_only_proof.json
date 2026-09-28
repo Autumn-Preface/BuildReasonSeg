@@ -1,0 +1,59 @@
+{
+  "_doc": "Task 6K.1 read-only proof: the newest modification time under every read-only root is compared with the oldest Task 6K.1 artifact, so a write into any source tree would show up as modified_after_audit_start = true.",
+  "all_read_only_roots_untouched": true,
+  "no_dataset_regeneration": true,
+  "no_model_training": true,
+  "no_package_installation": true,
+  "reference_artifact_mtime_utc": "2026-09-28T11:43:46.702731+00:00",
+  "roots": {
+    "converted_dataset": {
+      "exists": true,
+      "files": 8078,
+      "modified_after_audit_start": false,
+      "newest_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\WHU_Building_Segment\\dataset\\WHU_YOLO_dataset\\labels\\val.cache",
+      "newest_mtime_utc": "2026-08-03T17:49:56.755318+00:00",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\WHU_Building_Segment\\dataset\\WHU_YOLO_dataset"
+    },
+    "cropped_subtree": {
+      "exists": true,
+      "files": 34777,
+      "modified_after_audit_start": false,
+      "newest_file": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\label\\998.tif",
+      "newest_mtime_utc": "2018-12-07T07:58:18.080724+00:00",
+      "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels"
+    },
+    "legacy_project": {
+      "exists": true,
+      "files": 9014,
+      "modified_after_audit_start": false,
+      "newest_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\WHU_Building_Segment\\runs\\segment\\predict\\998.jpg",
+      "newest_mtime_utc": "2026-08-03T19:19:31.724803+00:00",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\WHU_Building_Segment"
+    },
+    "original_whu_root": {
+      "exists": true,
+      "files": 34797,
+      "modified_after_audit_start": false,
+      "newest_file": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\mask_to_yolo.py",
+      "newest_mtime_utc": "2026-08-03T17:16:33.954403+00:00",
+      "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)"
+    },
+    "shapefile_dir": {
+      "exists": true,
+      "files": 8,
+      "modified_after_audit_start": false,
+      "newest_file": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images\\EA.shp.xml",
+      "newest_mtime_utc": "2018-12-07T07:08:49.440364+00:00",
+      "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images"
+    },
+    "whole_area_dir": {
+      "exists": true,
+      "files": 10,
+      "modified_after_audit_start": false,
+      "newest_file": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset\\image\\train1.tif",
+      "newest_mtime_utc": "2018-12-07T06:44:12.771274+00:00",
+      "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset"
+    }
+  },
+  "task": "6K.1"
+}
