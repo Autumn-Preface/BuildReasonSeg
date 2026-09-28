@@ -1,0 +1,113 @@
+{
+  "_doc": "Task 6K section 15. Dataset-role verdict resolved mechanically from the recorded audit artifacts with thresholds declared in this file. WHU remains a historical baseline either way; the verdict concerns its role as the PRIMARY corpus for instance-level spatial reasoning.",
+  "dataset_role_verdict": "KEEP_WHU_AS_PRIMARY_FOR_NOW",
+  "evidence_gates": {
+    "alignment_complete": true,
+    "conversion_relation_drift_material": {
+      "material": false,
+      "threshold": 0.05,
+      "value": 0.04326803889184377
+    },
+    "merge_risk_heuristic": {
+      "high": false,
+      "high_rate": 0.014043697303505704,
+      "label": "heuristic, not instance ground truth",
+      "medium_rate": 0.04286199065493748,
+      "threshold": 0.15
+    },
+    "pipeline_fidelity": {
+      "emulator_reproduces_actual_labels": true,
+      "object_count_agreement_rate": 1.0,
+      "supplied_snippet_differs_by": "The supplied snippet omits two details present in the historical script: the `if len(approx) < 3: continue` skip (line 117-118) and the [0, 1] coordinate clipping (lines 123-124). Any polygon whose simplification yields fewer than three vertices therefore appears in the snippet emulator but never in the actual labels.",
+      "union_iou_mean": 1.0
+    },
+    "small_object_deletion_substantial": {
+      "contour_rate_threshold": 0.05,
+      "foreground_share_threshold": 0.01,
+      "raw_semantic_components_below_50px": 1116,
+      "removed_contour_rate": 0.036101177269049045,
+      "removed_contours": 1383,
+      "removed_foreground_share": 0.0005818162883919192,
+      "substantial": false
+    },
+    "split_structure": {
+      "geographic_leakage_quantifiable": false,
+      "geographic_or_scene_metadata_available": false,
+      "note": "val is a random subset of the same contiguous source pool as train, and no scene/city metadata exists locally, so scene-level train/val leakage cannot be ruled out or quantified. The split supports random-tile generalization only.",
+      "source_test_equals_converted_test": true,
+      "train_plus_val_equals_source_train": true,
+      "val_is_random_20_percent_of_source_train": true
+    },
+    "task6j_failure_attribution": {
+      "conversion_or_data_share": 0.03076923076923077,
+      "inseparable_share": 0.2153846153846154,
+      "proposal_model_dominates": true,
+      "proposal_model_share": 0.7538461538461538,
+      "tied_to_pseudo_instance_semantics": false
+    },
+    "true_instance_identity_available": {
+      "annotation_type": {
+        "[0, 255]": 3135
+      },
+      "available": false,
+      "note": "binary semantic raster; the current representation is connected components (pseudo-instances)"
+    }
+  },
+  "keep_conditions_met": [
+    "small-object deletion below the recorded thresholds",
+    "conversion-induced relation drift below the recorded threshold",
+    "heuristic merge risk below the recorded threshold",
+    "Task 6J failures are dominated by a replaceable proposal-model problem"
+  ],
+  "key_numbers": {
+    "actual_polygons_vs_source_label_recall_mean": null,
+    "actual_polygons_vs_source_label_union_iou_mean": 1.0,
+    "converted_relation_target_change_rate_current_queries": 0.04326803889184377,
+    "current_pseudo_instances": 36926,
+    "j1_failure_conversion_share": 0.03076923076923077,
+    "j1_failure_proposal_share": 0.7538461538461538,
+    "merge_risk_high_rate": 0.014043697303505704,
+    "raw_semantic_components_8conn": 38309,
+    "removed_foreground_share": 0.0005818162883919192,
+    "removed_small_contour_rate": 0.036101177269049045,
+    "removed_small_contours": 1383,
+    "source_images_total": 17388,
+    "source_images_with_buildings": 4038,
+    "tiles_with_any_relation_change_rate": 0.2647350173353145
+  },
+  "legacy_baseline_role": "keep",
+  "read_only_guarantees": {
+    "downloaded_data": false,
+    "empirical_check": {
+      "all_read_only_roots_untouched": true,
+      "artifact": "evaluation/task6k_read_only_proof.json",
+      "modified_after_audit_start": {
+        "converted_dataset": false,
+        "cropped_subtree": false,
+        "legacy_project": false,
+        "original_whu_root": false
+      },
+      "newest_mtime_utc": {
+        "converted_dataset": "2026-08-03T17:49:56.755318+00:00",
+        "cropped_subtree": "2018-12-07T07:58:18.080724+00:00",
+        "legacy_project": "2026-08-03T19:19:31.724803+00:00",
+        "original_whu_root": "2026-08-03T17:16:33.954403+00:00"
+      },
+      "reference_artifact_mtime_utc": "2026-09-28T10:38:02.221523+00:00"
+    },
+    "modified_legacy_project": false,
+    "modified_sources": false,
+    "trained_model": false,
+    "wrote_outside_buildreasonseg": false
+  },
+  "reason": "small-object deletion below the recorded thresholds; conversion-induced relation drift below the recorded threshold; heuristic merge risk below the recorded threshold; Task 6J failures are dominated by a replaceable proposal-model problem",
+  "replace_conditions_met": [],
+  "task": "6K",
+  "thresholds": {
+    "conversion_relation_drift_material": 0.05,
+    "merge_risk_high_rate_high": 0.15,
+    "proposal_model_dominance": 0.5,
+    "small_object_deletion_contour_rate_substantial": 0.05,
+    "small_object_deletion_foreground_share_substantial": 0.01
+  }
+}

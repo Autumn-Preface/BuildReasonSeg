@@ -1,0 +1,407 @@
+{
+  "_doc": "Task 6K section 3. Read-only inventory of the original WHU Satellite Dataset II (East Asia) cropped subtrees, measured BEFORE thresholding. Shapes/dtypes/unique values/foreground fractions come from the raster LABELS; image shape/mode come from a deterministic sample plus full file-size statistics.",
+  "cropped_root": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels",
+  "original_root": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)",
+  "seconds": 24.99,
+  "shapefile_subtree": {
+    "exists": true,
+    "files": [
+      {
+        "bytes": 0,
+        "name": "_system~.ini"
+      },
+      {
+        "bytes": 1636210,
+        "name": "EA.dbf"
+      },
+      {
+        "bytes": 354,
+        "name": "EA.prj"
+      },
+      {
+        "bytes": 362124,
+        "name": "EA.sbn"
+      },
+      {
+        "bytes": 25196,
+        "name": "EA.sbx"
+      },
+      {
+        "bytes": 4999904,
+        "name": "EA.shp"
+      },
+      {
+        "bytes": 6270,
+        "name": "EA.shp.xml"
+      },
+      {
+        "bytes": 272780,
+        "name": "EA.shx"
+      }
+    ],
+    "resolved_root": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images"
+  },
+  "splits": {
+    "test": {
+      "empty_masks": 0,
+      "foreground_fraction": {
+        "count": 903,
+        "max": 0.32123565673828125,
+        "mean": 0.05044114629295577,
+        "median": 0.03617095947265625,
+        "min": 0.010009765625,
+        "p1": 0.0105865478515625,
+        "p10": 0.014300537109375,
+        "p25": 0.021276473999023438,
+        "p5": 0.011919403076171875,
+        "p75": 0.061187744140625,
+        "p90": 0.10460891723632813,
+        "p95": 0.14686660766601561,
+        "p99": 0.24022048950195352
+      },
+      "image_count": 903,
+      "image_extensions": {
+        ".tif": 903
+      },
+      "image_stats": {
+        "channel_distribution": {},
+        "dtype_distribution": {},
+        "file_bytes": {
+          "count": 300,
+          "max": 793304.0,
+          "mean": 791241.7933333333,
+          "median": 791892.0,
+          "min": 759146.0,
+          "p1": 783241.72,
+          "p10": 788985.6,
+          "p25": 790868.5,
+          "p5": 787978.6,
+          "p75": 792552.0,
+          "p90": 792910.4,
+          "p95": 793085.7,
+          "p99": 793272.04
+        },
+        "mode_distribution": {
+          "RGB": 300
+        },
+        "sampled": 300,
+        "shape_distribution": {
+          "(512, 512)": 300
+        }
+      },
+      "images_without_labels": [],
+      "label_count": 903,
+      "label_dtype_distribution": {
+        "uint8": 903
+      },
+      "label_extensions": {
+        ".tif": 903
+      },
+      "label_shape_distribution": {
+        "(512, 512)": 903
+      },
+      "label_unique_value_sets": {
+        "[0, 255]": 903
+      },
+      "label_unusual_unique_value_sets": {},
+      "labels_without_images": [],
+      "matched_stems": 903,
+      "n_images_without_labels": 0,
+      "n_labels_without_images": 0,
+      "non_empty_masks": 903,
+      "overall_foreground_fraction": 0.05044114629295577,
+      "resolved_image_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image",
+      "resolved_label_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\label",
+      "total_foreground_pixels": 11940228,
+      "total_pixels": 236716032
+    },
+    "test_no": {
+      "empty_masks": 2537,
+      "foreground_fraction": {
+        "count": 2823,
+        "max": 0.009960174560546875,
+        "mean": 0.00046120000738562145,
+        "median": 0.0,
+        "min": 0.0,
+        "p1": 0.0,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p5": 0.0,
+        "p75": 0.0,
+        "p90": 2.2125244140625694e-05,
+        "p95": 0.004500961303710938,
+        "p99": 0.008697128295898441
+      },
+      "image_count": 2823,
+      "image_extensions": {
+        ".tif": 2823
+      },
+      "image_stats": {
+        "channel_distribution": {},
+        "dtype_distribution": {},
+        "file_bytes": {
+          "count": 300,
+          "max": 793310.0,
+          "mean": 791153.5133333333,
+          "median": 792335.0,
+          "min": 771518.0,
+          "p1": 777253.02,
+          "p10": 787892.2,
+          "p25": 790482.0,
+          "p5": 784395.1,
+          "p75": 793154.0,
+          "p90": 793290.0,
+          "p95": 793292.0,
+          "p99": 793300.02
+        },
+        "mode_distribution": {
+          "RGB": 300
+        },
+        "sampled": 300,
+        "shape_distribution": {
+          "(512, 512)": 300
+        }
+      },
+      "images_without_labels": [],
+      "label_count": 2823,
+      "label_dtype_distribution": {
+        "uint8": 2823
+      },
+      "label_extensions": {
+        ".tif": 2823
+      },
+      "label_shape_distribution": {
+        "(512, 512)": 2823
+      },
+      "label_unique_value_sets": {
+        "[0, 255]": 286,
+        "[0]": 2537
+      },
+      "label_unusual_unique_value_sets": {},
+      "labels_without_images": [],
+      "matched_stems": 2823,
+      "n_images_without_labels": 0,
+      "n_labels_without_images": 0,
+      "non_empty_masks": 286,
+      "overall_foreground_fraction": 0.00046120000738562145,
+      "resolved_image_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test_no\\image",
+      "resolved_label_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test_no\\label",
+      "total_foreground_pixels": 341303,
+      "total_pixels": 740032512
+    },
+    "train": {
+      "empty_masks": 0,
+      "foreground_fraction": {
+        "count": 3135,
+        "max": 0.5734024047851562,
+        "mean": 0.06408457292133922,
+        "median": 0.0371551513671875,
+        "min": 0.010013580322265625,
+        "p1": 0.010288238525390625,
+        "p10": 0.013066864013671875,
+        "p25": 0.02033233642578125,
+        "p5": 0.011536026000976562,
+        "p75": 0.08156776428222656,
+        "p90": 0.15544967651367186,
+        "p95": 0.2060932159423828,
+        "p99": 0.31133575439453065
+      },
+      "image_count": 3135,
+      "image_extensions": {
+        ".tif": 3135
+      },
+      "image_stats": {
+        "channel_distribution": {},
+        "dtype_distribution": {},
+        "file_bytes": {
+          "count": 300,
+          "max": 793276.0,
+          "mean": 777676.2,
+          "median": 788699.0,
+          "min": 539350.0,
+          "p1": 638324.96,
+          "p10": 751293.0,
+          "p25": 774752.5,
+          "p5": 730392.4,
+          "p75": 792058.0,
+          "p90": 792840.0,
+          "p95": 792994.4,
+          "p99": 793106.36
+        },
+        "mode_distribution": {
+          "RGB": 300
+        },
+        "sampled": 300,
+        "shape_distribution": {
+          "(512, 512)": 300
+        }
+      },
+      "images_without_labels": [],
+      "label_count": 3135,
+      "label_dtype_distribution": {
+        "uint8": 3135
+      },
+      "label_extensions": {
+        ".tif": 3135
+      },
+      "label_shape_distribution": {
+        "(512, 512)": 3135
+      },
+      "label_unique_value_sets": {
+        "[0, 255]": 3135
+      },
+      "label_unusual_unique_value_sets": {},
+      "labels_without_images": [],
+      "matched_stems": 3135,
+      "n_images_without_labels": 0,
+      "n_labels_without_images": 0,
+      "non_empty_masks": 3135,
+      "overall_foreground_fraction": 0.06408457292133922,
+      "resolved_image_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image",
+      "resolved_label_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\label",
+      "total_foreground_pixels": 52666076,
+      "total_pixels": 821821440
+    },
+    "train_no": {
+      "empty_masks": 9378,
+      "foreground_fraction": {
+        "count": 10527,
+        "max": 0.009952545166015625,
+        "mean": 0.0005257386274347734,
+        "median": 0.0,
+        "min": 0.0,
+        "p1": 0.0,
+        "p10": 0.0,
+        "p25": 0.0,
+        "p5": 0.0,
+        "p75": 0.0,
+        "p90": 0.0005195617675781208,
+        "p95": 0.005094528198242167,
+        "p99": 0.008921585083007812
+      },
+      "image_count": 10527,
+      "image_extensions": {
+        ".tif": 10527
+      },
+      "image_stats": {
+        "channel_distribution": {},
+        "dtype_distribution": {},
+        "file_bytes": {
+          "count": 300,
+          "max": 793354.0,
+          "mean": 680524.2066666667,
+          "median": 790721.0,
+          "min": 13004.0,
+          "p1": 13004.0,
+          "p10": 13004.0,
+          "p25": 724868.0,
+          "p5": 13004.0,
+          "p75": 792964.0,
+          "p90": 793290.0,
+          "p95": 793296.0,
+          "p99": 793318.04
+        },
+        "mode_distribution": {
+          "RGB": 300
+        },
+        "sampled": 300,
+        "shape_distribution": {
+          "(512, 512)": 300
+        }
+      },
+      "images_without_labels": [],
+      "label_count": 10527,
+      "label_dtype_distribution": {
+        "uint8": 10527
+      },
+      "label_extensions": {
+        ".tif": 10527
+      },
+      "label_shape_distribution": {
+        "(512, 512)": 10527
+      },
+      "label_unique_value_sets": {
+        "[0, 255]": 1149,
+        "[0]": 9378
+      },
+      "label_unusual_unique_value_sets": {},
+      "labels_without_images": [],
+      "matched_stems": 10527,
+      "n_images_without_labels": 0,
+      "n_labels_without_images": 0,
+      "non_empty_masks": 1149,
+      "overall_foreground_fraction": 0.0005257386274347734,
+      "resolved_image_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train_no\\image",
+      "resolved_label_dir": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train_no\\label",
+      "total_foreground_pixels": 1450823,
+      "total_pixels": 2759589888
+    }
+  },
+  "task": "6K",
+  "whole_area_subtree": {
+    "exists": true,
+    "files": [
+      {
+        "bytes": 3001216122,
+        "extension": ".tif",
+        "kind": "image",
+        "name": "test.tif",
+        "read_error": "DecompressionBombError: Image size (994338530 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack."
+      },
+      {
+        "bytes": 8006812933,
+        "extension": ".tif",
+        "kind": "image",
+        "name": "train1.tif",
+        "read_error": "DecompressionBombError: Image size (2655579321 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack."
+      },
+      {
+        "bytes": 2915467130,
+        "extension": ".tif",
+        "kind": "image",
+        "name": "train2.tif",
+        "read_error": "DecompressionBombError: Image size (966731144 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack."
+      },
+      {
+        "bytes": 92,
+        "extension": ".tfw",
+        "kind": "label",
+        "name": "test.tfw"
+      },
+      {
+        "bytes": 16692182,
+        "extension": ".tif",
+        "kind": "label",
+        "name": "test.tif",
+        "read_error": "DecompressionBombError: Image size (994338530 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack."
+      },
+      {
+        "bytes": 92,
+        "extension": ".tfw",
+        "kind": "label",
+        "name": "train1.tfw"
+      },
+      {
+        "bytes": 19456982,
+        "extension": ".tif",
+        "kind": "label",
+        "name": "train1.tif",
+        "read_error": "DecompressionBombError: Image size (2655607122 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack."
+      },
+      {
+        "bytes": 92,
+        "extension": ".tfw",
+        "kind": "label",
+        "name": "train2.tfw"
+      },
+      {
+        "bytes": 17070508,
+        "extension": ".tif",
+        "kind": "label",
+        "name": "train2.tif",
+        "read_error": "DecompressionBombError: Image size (966731144 pixels) exceeds limit of 178956970 pixels, could be decompression bomb DOS attack."
+      }
+    ],
+    "resolved_root": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\3. The whole area image dataset"
+  }
+}

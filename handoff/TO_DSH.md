@@ -1,585 +1,512 @@
-# TO_DSH — Task 6J: Structured Proposal Grounding Feasibility v0.1
+# TO_DSH — Task 6K: WHU Source → Pseudo-Instance Data Audit
 
-> Status: **ACTIVE**
+> Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Purpose: stop trying to make one global query directly localize pixels and test a more structured route that matches the project's original spatial-reasoning idea:
+> Goal: audit the original WHU Satellite Dataset II (East Asia) semantic masks against the historical semantic→YOLO pseudo-instance conversion and the current BuildReasonSeg component representation, so we can make an evidence-based **KEEP-AS-BASELINE vs REPLACE-PRIMARY-DATASET** decision.
 >
-> **instruction → relation program → building candidates → explicit geometry execution → selected building mask**
->
-> This task is a feasibility / causal audit, not the final paper method.
->
-> Accepted evidence before this task:
->
-> - frozen SAM2 point/box prompts are strong when target geometry is known;
-> - direct pixel-grounding attempts 6D–6I repeatedly fail to generalize, although Task 6I improves 10-pair memorization to inside 13/20 and paired point 5/10;
-> - Task 6I final heatmap already places much more probability on the correct region (own mass ~0.417 vs cross ~0.024), so language semantics are not absent, but converting them into a reliable single pixel is still unstable;
-> - the project already owns an audited spatial relation engine and a frozen YOLOv8m-seg building baseline.
->
-> Task 6J therefore decomposes the problem:
->
-> 1. Can the existing relation semantics select the correct target from **oracle building candidates**?
-> 2. Can the frozen YOLO baseline provide a sufficiently complete **inference-time candidate set**?
-> 3. Can Qwen parse the natural-language instruction into the correct **canonical relation program**?
-> 4. If all three work, what is the end-to-end result using predicted program + predicted candidates?
->
-> No new pixel-grounding head. No 4B. No `[REF]`. No SRE. No SCL. No new dataset. No GUI.
+> This is a read-only dataset audit. Do not retrain any model and do not modify any dataset.
 
-## 0. User-facing language
+## 0. UI language
+All DSH narrative/UI output must be Chinese. Code/paths/metric keys may remain English.
 
-All DSH narrative/UI output must be **Chinese**.
+## 1. Read-only sources
 
-Code, paths, raw logs, enum names and metric keys may remain English.
+Original WHU semantic dataset:
+`C:\D\resources\Satellite dataset Ⅱ (East Asia)`
 
-# PART A — Strategic freeze
+Likely historical subtree:
+`C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels`
 
-## 1. Freeze Tasks 6D–6I as evidence
+Historical converted YOLO dataset:
+`C:\D\resources\WHU_YOLO_dataset`
 
-Do not rerun their training.
+Canonical repo:
+`C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 
-Preserve:
-- Task 6C P_C: `0.10604 / paired 0/20`;
-- Point Oracle: about `0.488 / 18/20`;
-- Box Oracle: `0.7506 / 20/20`;
-- Task 6I I0:
-  - inside `13/20`;
-  - paired point `5/10`;
-  - bounded ranking `10/10`;
-  - normalized error `0.0838`.
-
-Do not claim Task 6I proved attention has zero target information. Its target attention mass rose above initialization, but was insufficient.
-
-Task 6J is a deliberate architecture-path pivot, not a deletion of prior work.
-
-# PART B — Canonical relation programs
-
-## 2. Build a canonical program vocabulary from actual `query_type`
-
-Do not invent new semantics.
-
-Map existing BuildSpatialReason v0.1.1 query types to deterministic canonical programs, preserving the frozen Task 3B relation convention.
-
-Use the actual existing query types in the dataset/artifacts.
-
-Create:
-
-`evaluation/task6j_program_spec.json`
-
-For each query type record:
-- canonical program id;
-- ordered operations;
-- required reference role(s);
-- expected output role;
-- sample counts by split.
-
-No test split used for training.
-
-# PART C — J0: Oracle program + oracle candidates
-
-## 3. Oracle candidate set
-
-Use frozen component maps / pseudo-instance representation.
-
-For each fixed validation sample:
-- all visible building components are candidates;
-- geometry comes only from the component map:
-  - mask;
-  - centroid;
-  - bbox;
-  - area;
-  - border flag only for diagnostics.
-
-Diagnostic only; not inference.
-
-## 4. Independent program executor
-
-Implement a compact executor consuming:
-
-```text
-canonical program + candidate geometry
-```
-
-and returning one candidate id.
-
-Reuse frozen Task 3B semantics/thresholds.
-
-The executor must not read:
-- target component id;
-- GT reasoning;
-- target mask except for post-selection scoring.
-
-## 5. J0 gate
-
-Run on:
-- fixed 120 validation records;
-- fixed 20 paired validation images;
-- optionally full v0.1.1 val as secondary consistency audit if cheap.
-
-Report:
-- exact target candidate accuracy;
-- paired target-selection /20;
-- L1/L2/L3;
-- query-type breakdown;
-- abstentions/ambiguities.
-
-Gate:
-
-```text
-exact target accuracy >= 0.98
-paired selection >= 19/20
-```
-
-If J0 fails:
-`STRUCTURED_EXECUTOR_SEMANTICS_MISMATCH`
-and STOP.
-
-# PART D — J1: Oracle program + predicted YOLO proposals
-
-## 6. Existing YOLO baseline is read-only
-
-Only if J0 passes.
-
-Use the already frozen YOLOv8m-seg-WHU baseline from the legacy project.
+Legacy project:
+`C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment`
 
 Rules:
-- legacy repo/directory read-only;
-- weights read-only;
-- verify expected baseline provenance/hash before inference;
-- do not retrain YOLO;
-- do not modify the old Ultralytics fork;
-- do not install packages into existing environments.
-
-If the existing YOLO inference environment is available, it may be invoked **read-only** with its existing Python / `conda run`.
-
-Do not create or modify another environment solely for J1.
-
-If model/environment cannot be safely resolved:
-`YOLO_BASELINE_INFERENCE_UNAVAILABLE`
-and stop J1/J4 without installing anything.
-
-## 7. Proposal material
-
-Run frozen YOLO segmentation inference on unique images needed for:
-- fixed 120 validation records;
-- fixed 20 paired validation images.
-
-Cache predicted metadata/masks only under gitignored artifacts.
-
-For each proposal record:
-- mask;
-- bbox;
-- centroid;
-- area;
-- confidence.
-
-Do not use GT to alter proposals.
-
-## 8. Proposal recall audit
-
-For each GT target candidate, measure best predicted-proposal IoU.
-
-Report:
-- recall @ mask IoU 0.25 / 0.50 / 0.75;
-- mean/median best IoU;
-- proposal-count distribution;
-- missing-target rate;
-- duplicate/merged proposal diagnostics;
-- border/tiny breakdown.
-
-Also report all-building candidate recall per image if practical.
-
-## 9. Oracle-program execution on YOLO proposals
-
-Execute same canonical program over predicted proposal geometry.
-
-No GT target id may influence execution.
-
-Score selected predicted mask against GT target mask.
-
-Report:
-- strict target mask mIoU;
-- Dice;
-- paired target selection /20 using own-vs-cross mask IoU;
-- selected proposal best-match identity;
-- missing-proposal vs wrong-relation failures.
-
-J1 viability gate:
-
-```text
-target proposal recall@0.50 >= 0.75
-oracle-program selected-mask mIoU >= 0.30
-paired mask selection >= 12/20
-```
-
-If proposal recall fails, do not blame the language model.
-
-# PART E — J2: Instruction → canonical program
-
-## 10. Program parser objective
-
-This branch answers only:
-
-> What spatial program does the instruction request?
-
-It does not localize pixels and sees no GT geometry.
-
-Use Qwen3-VL-2B as language backbone, but make this branch **instruction-semantic first**.
-
-Preferred input:
-- instruction text only;
-- normal tokenizer/chat formatting;
-- no image tokens.
-
-This deliberately avoids the image-dominated `[BOX]` problem.
-
-## 11. ProgramHead
-
-Use a minimal classifier over a clearly documented text representation, e.g. final instruction-token / assistant-prefix representation:
-
-```text
-Qwen text representation
-→ LayerNorm
-→ Linear(hidden_dim, num_programs)
-```
-
-Train:
-- text-only LoRA;
-- ProgramHead.
-
-Freeze:
-- Qwen base;
-- Qwen visual tower;
-- all SAM2;
-- all prior grounding heads.
-
-Do not use free-form program generation in Task 6J.
-
-## 12. Training subset
-
-Use deterministic query-type-stratified train-only data.
-
-Preferred:
-- up to ~100 records per canonical program;
-- total capped around 1,500–2,000 records;
-- no test split.
-
-If a program has fewer records, use all and report imbalance.
-
-Do not train all 15,592 unless the capped subset is clearly insufficient and documented.
-
-## 13. J2 evaluation
-
-Evaluate on:
-- fixed 120 validation records;
-- fixed 20 paired validation images;
-- optionally full val classification if cheap.
-
-Report:
-- exact program accuracy;
-- macro F1;
-- confusion matrix;
-- L1/L2/L3 accuracy;
-- query-type accuracy;
-- paired program correctness /20.
-
-J2 gate:
-
-```text
-program accuracy >= 0.90
-macro F1 >= 0.85
-paired program correctness >= 18/20
-```
-
-If J2 fails:
-`PROGRAM_PARSER_NOT_READY`.
-
-Do not compensate with GT program later.
-
-# PART F — J3: Predicted program + oracle candidates
-
-## 14. Parser ceiling
-
-Only if J2 passes.
-
-Pipeline:
-
-```text
-instruction
-→ predicted canonical program
-→ GT/oracle candidate set
-→ program executor
-→ selected candidate
-```
-
-Oracle candidates remain diagnostic only.
-
-Report:
-- exact selected-target accuracy;
-- paired selection /20;
-- program-error vs executor-error attribution.
-
-Gate:
-
-```text
-selected-target accuracy >= 0.85
-paired >= 17/20
-```
-
-# PART G — J4: Predicted program + predicted YOLO candidates
-
-## 15. First structured inference-time end-to-end test
-
-Only if:
-- J1 viability gate passes;
-- J2 passes;
-- J3 passes.
-
-Pipeline:
-
-```text
-image → frozen YOLO building proposals
-instruction → Qwen ProgramHead → canonical program
-program + proposal geometry → explicit relation executor
-→ selected proposal mask
-```
-
-No GT geometry/mask/id enters inference.
-
-No SAM2 training.
-
-Optional diagnostic:
-- derive predicted point/bbox from selected predicted proposal;
-- feed it to frozen SAM2;
-- report proposal mask and SAM-refined mask separately.
-
-Do not silently replace one with the other.
-
-## 16. J4 metrics
-
-On fixed 120 val + 20 paired:
-- strict selected-mask mIoU;
-- Dice;
-- paired mask selection /20;
-- own-target vs cross-target IoU;
-- L1/L2/L3;
-- query-type breakdown.
-
-Failure attribution:
-- wrong predicted program;
-- target absent from proposal set;
-- proposal geometry changes relation outcome;
-- correct selected proposal but poor mask quality.
-
-J4 success gate:
-
-```text
-strict mIoU >= 0.20
-paired mask selection >= 12/20
-```
-
-This is a feasibility gate, not final paper performance.
-
-# PART H — Verdicts
-
-## 17. Use one primary verdict
-
-### `STRUCTURED_PROPOSAL_GROUNDING_PROMISING`
-J0/J1/J2/J3 pass and J4 reaches success gate.
-
-### `PROPOSAL_QUALITY_LIMIT`
-J0/J2/J3 healthy but proposal recall or J1/J4 is the binding failure.
-
-### `PROGRAM_PARSER_NOT_READY`
-J0 passes but J2 misses semantic parser gate.
-
-### `STRUCTURED_EXECUTOR_SEMANTICS_MISMATCH`
-J0 fails with oracle program + oracle candidates.
-
-### `YOLO_BASELINE_INFERENCE_UNAVAILABLE`
-Legacy model/env cannot be safely used read-only.
-
-### `STRUCTURED_ROUTE_PARTIAL`
-Some major gates pass and route materially improves target selection but J4 misses full gate.
-
-### `INVALID_EXPERIMENT`
-Leakage, split misuse, GT used in inference, provenance mismatch or correctness failure.
-
-# PART I — Interpretation discipline
-
-## 18. Do not claim final novelty
-
-If route works, freeze only:
-
-> Explicit program parsing + proposal-level geometry execution is a viable functional target-selection architecture for current BuildSpatialReason tasks.
-
-Do not yet claim:
-- deterministic relation execution is final innovation;
-- YOLO proposals are final segmentation backbone;
-- current templates prove open-vocabulary reasoning.
-
-Later work may replace/augment executor with:
-- learned Spatial Relation Encoder;
-- `[REF]`-style reference grounding;
-- relation-level Spatial Consistency Loss;
-- richer natural-language paraphrases.
-
-# PART J — Dataset/proposal adequacy
-
-## 19. Separate failure sources
-
-Report:
-- merged/touching proposal failures;
-- tiny-target misses;
-- border truncation;
-- pseudo-instance ambiguity;
-- relation instability from missing/merged proposals.
-
-If parser/executor works but proposal/data quality dominates, recommend a proposal-backbone/dataset task next.
-
-Do not migrate data automatically.
-
-# PART K — Reusable API
-
-## 20. If J4 runs
-
-Create/refactor:
+- original WHU: READ ONLY;
+- converted YOLO: READ ONLY;
+- legacy project: READ ONLY;
+- do not move/rename/re-encode/regenerate source files;
+- write only to BuildReasonSeg gitignored temp/artifact paths, evaluation/docs/tests/scripts/handoff as appropriate.
+
+## 2. Historical conversion semantics
+
+Audit against the exact user-supplied conversion semantics:
 
 ```python
-parse_program(instruction)
-extract_building_candidates(image)
-execute_program(program, candidates)
-predict_structured_mask(image, instruction)
+mask = cv2.imread(str(label_path), cv2.IMREAD_GRAYSCALE)
+if mask is None:
+    from PIL import Image
+    mask = np.array(Image.open(label_path).convert("L"))
+
+_, mask = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)
+
+contours, _ = cv2.findContours(
+    mask,
+    cv2.RETR_EXTERNAL,
+    cv2.CHAIN_APPROX_SIMPLE,
+)
+
+for contour in contours:
+    if cv2.contourArea(contour) < 50:
+        continue
+    epsilon = 0.001 * cv2.arcLength(contour, True)
+    approx = cv2.approxPolyDP(contour, epsilon, True)
 ```
 
-No GUI.
+Important:
+- threshold 127;
+- `RETR_EXTERNAL`;
+- `CHAIN_APPROX_SIMPLE`;
+- filter is `cv2.contourArea(contour) < 50`;
+- simplification epsilon = `0.001 * arcLength`;
+- one class: building;
+- Pillow is I/O fallback only.
+
+Do NOT rerun and overwrite the historical split.
+
+Historical split code used:
+```python
+stems = set(...)
+return list(stems)
+random.seed(42)
+random.shuffle(train_stems_all)
+```
+
+Record the reproducibility caveat:
+`list(set(...))` order is not cross-process guaranteed, so seed 42 alone does not guarantee the same split. Recover the actual split from the existing converted folders.
+
+# PART A — Source inventory
+
+## 3. Inventory original data
+For every discovered original split/subtree report:
+- image count;
+- label count;
+- matched stems;
+- missing images/labels;
+- extensions;
+- image shape distribution;
+- label shape distribution;
+- image dtype/channels;
+- label dtype;
+- label unique values;
+- empty/non-empty mask counts;
+- foreground-pixel fraction distribution.
+
+Measure before thresholding. Record exact resolved paths.
+
+## 4. Recover actual historical split
+From `WHU_YOLO_dataset/images/{train,val,test}` and labels:
+- exact stem counts;
+- train/val/test overlap;
+- map current stems to original source split;
+- whether current train+val exactly partitions original source train;
+- whether current test exactly matches original source test.
+
+Do not regenerate split from seed 42.
+
+# PART B — Raw semantic component audit
+
+## 5. Raw connected-component statistics
+After threshold 127:
+- primary diagnostic: 8-connectivity;
+- secondary sensitivity diagnostic: 4-connectivity.
+
+For 8-connectivity report:
+- total components;
+- components/tile;
+- area px distribution: min, p1, p5, p10, p25, median, p75, p90, p95, p99, max;
+- bbox width/height distribution;
+- border-touch count/rate;
+- foreground area/tile;
+- tiles with 1 / 2–4 / 5–9 / 10–19 / >=20 components.
+
+Terminology rule:
+These are semantic connected components, NOT verified physical-building instances.
+
+# PART C — Conversion-loss audit
+
+## 6. Reproduce historical contour pipeline in memory
+For each raw binary mask reproduce:
+- external contours before filter;
+- contourArea;
+- `<50` removal;
+- polygon simplification.
+
+Report:
+
+### `<50` filter
+- external contour count before filter;
+- count removed;
+- percentage removed;
+- pixel foreground area removed;
+- percentage of total foreground pixels removed;
+- tiles affected;
+- mean/median removed contours per affected tile.
+
+Report both raster pixel area and `cv2.contourArea`.
+
+### `RETR_EXTERNAL` topology loss
+Measure:
+- source components containing holes;
+- hole pixel count;
+- reconstruction difference from external-contour-only rasterization.
+
+Do not overstate physical meaning.
+
+### `approxPolyDP` loss
+Rasterize simplified polygons and compare against post-filter external-contour target:
+- IoU;
+- Dice;
+- precision;
+- recall;
+- area bias;
+- boundary displacement if inexpensive.
+
+Separate loss due to:
+1. `<50` filtering;
+2. `RETR_EXTERNAL`;
+3. polygon approximation.
+
+# PART D — Actual current YOLO fidelity
+
+## 7. Compare actual YOLO labels with the historical emulator
+For every current stem:
+- parse actual YOLO polygons;
+- rasterize to source-label resolution;
+- compare to emulator.
+
+Report:
+- object-count agreement;
+- raster IoU/Dice;
+- missing/extra objects;
+- malformed/degenerate labels;
+- coordinate clipping if recoverable.
+
+If current labels differ from the supplied converter, classify why; do not assume the supplied code was the final exact converter.
+
+## 8. Component lineage
+Compare:
+- raw thresholded semantic connected components;
+- historical conversion emulator;
+- actual `WHU_YOLO_dataset`;
+- current `datasets/whu/` / BuildSpatialReason component metadata.
+
+Explain how the recorded current `36,926` components arise.
+
+# PART E — Relation-semantic drift
+
+## 9. Critical experiment: RAW vs CONVERTED candidate sets
+
+For each aligned image construct:
+
+RAW:
+- all 8-connected semantic components after threshold 127;
+- no `<50` filter.
+
+CONVERTED:
+- candidate set implied by the actual historical conversion/current component representation.
+
+Use the same frozen BuildSpatialReason relation semantics.
+
+Compare target identity for all applicable canonical programs:
+- leftmost/rightmost/topmost/bottommost;
+- largest/smallest;
+- largest/smallest → nearest;
+- largest/smallest → left/right/above/below;
+- Level-3 reference → direction → nearest.
+
+For each program report:
+- valid in both;
+- target unchanged;
+- target changed;
+- became invalid/ambiguous;
+- became newly valid;
+- change rate.
+
+Attribute changes:
+- small component removed;
+- ranking changed;
+- nearest changed;
+- directional candidate-set changed;
+- border/eligibility changed;
+- polygon geometry changed.
+
+Also report:
+- fraction of images with any relation-semantic change;
+- overall current-query target-change rate;
+- by L1/L2/L3.
+
+This measures conversion sensitivity only. It does not establish physical-building truth.
+
+# PART F — Split/geographic audit
+
+## 10. Historical split reproducibility
+Record that `set -> list -> shuffle(seed=42)` is not guaranteed cross-process reproducible without controlled hash/set order.
+
+Current folder split is the historical authority.
+
+## 11. Geographic/spatial correlation
+Inspect local naming/layout/metadata.
+
+If source-scene/tile adjacency is recoverable:
+- estimate train↔val same-scene/adjacency mixing;
+- quantify spatial-correlation risk.
+
+If not recoverable:
+- explicitly say geographic leakage cannot be quantified from available metadata;
+- do not invent coordinates.
+
+State whether current split supports:
+- random tile generalization;
+- geographic/cross-city generalization.
+
+# PART G — Merge-risk heuristic
+
+## 12. Touching/merged-building risk
+Binary semantic masks cannot reveal physical instance identity.
+
+Do NOT claim true instance recovery.
+
+Provide only a clearly labelled heuristic risk analysis, e.g.:
+- thin-neck/bridge split sensitivity under 1–2 px erosion;
+- multiple large distance-transform peaks;
+- strongly multi-lobed shapes.
+
+Report:
+- low/medium/high risk counts;
+- representative sample IDs;
+- whether risk concentrates in dense-building tiles.
+
+# PART H — Cross-analyze Task 6J
+
+## 13. Freeze Task 6J facts
+Use existing artifacts only:
+- J0: 120/120, paired 20/20;
+- J2: current-template parser 1.000 fixed-120 and full-val;
+- J3: 120/120, paired 20/20;
+- YOLO target proposal recall@0.5 = 0.869;
+- tiny-component recall@0.5 = 0.391;
+- J1 mIoU = 0.3712;
+- J1 abstentions = 35/120;
+- J1 paired mask selection = 5/20.
+
+Cross-reference J1 failing sample IDs against:
+- raw source component size;
+- distance to `<50` threshold;
+- border status;
+- merge-risk status;
+- proposal count;
+- RAW-vs-CONVERTED relation drift.
+
+Estimate what share of J1 failures are:
+- plausibly conversion/data related;
+- proposal-model related on otherwise clean targets;
+- inseparable with current evidence.
+
+Do not force attribution when unsupported.
+
+# PART I — Qwen2B interpretation
+
+## 14. Qualify Task 6J J2 correctly
+Current BuildSpatialReason has:
+- 20 closed program classes;
+- finite templated instruction families (at least 3 template variants per family in the current generator);
+- program id is 1:1 with current `query_type`.
+
+Therefore record:
+
+> Task 6J proves Qwen3-VL-2B is sufficient for the current closed-template 20-program classification task.
+
+It does NOT prove:
+- 2B is sufficient for arbitrary natural language;
+- 2B is sufficient for paraphrase/OOD instructions;
+- 4B cannot help the final system.
+
+Do not run a 2B-vs-4B experiment in Task 6K.
+
+# PART J — Dataset-role verdict
+
+## 15. Use exactly one
+
+### `REPLACE_PRIMARY_DATASET`
+Use if evidence shows the current semantic→pseudo-instance source is structurally unsuitable as the main corpus for instance-level spatial reasoning, including material conversion-induced relation drift, substantial small-object deletion, high merge risk, lack of real instance identity becoming binding, Task 6J mismatch tied to pseudo-instance semantics, or split structure unsuitable for intended paper claims.
+
+WHU still remains a historical baseline.
+
+### `KEEP_WHU_AS_PRIMARY_FOR_NOW`
+Only if conversion loss is small, relation targets are very stable, pseudo-instance identity is sufficiently reliable, and Task 6J failure is mainly a replaceable proposal-model problem.
+
+### `INSUFFICIENT_EVIDENCE`
+Only if source/converted data cannot be aligned reliably.
+
+Also report:
+`legacy_baseline_role: keep / do_not_keep`
+
+Expected default is `keep`.
+
+# PART K — Reusable future dataset audit protocol
+
+## 16. Create a reusable schema
+Create `evaluation/dataset_audit_schema_v1.json` covering:
+- annotation type: semantic / raster instance / vector polygon;
+- true stable instance ID available;
+- image count / instance count;
+- instances per tile;
+- area distribution;
+- tiny-target rate;
+- border-truncation rate;
+- multi-instance tile rate;
+- candidate density;
+- L1/L2/L3 constructible-query rate;
+- nearest constructibility;
+- directional relation constructibility;
+- relation ambiguity rate;
+- geographic diversity metadata;
+- local storage footprint if known;
+- license: UNKNOWN unless externally verified;
+- source resolution: UNKNOWN unless locally/officially verified.
+
+This schema will later be reused for SpaceNet 2 / WHU-Mix Vector or other candidates.
+
+Do not fabricate external dataset facts.
 
 # PART L — Required artifacts
 
-## 21. Create as applicable
-
+Create:
 ```text
-evaluation/task6j_program_spec.json
-evaluation/task6j_j0_oracle_executor.json
-evaluation/task6j_yolo_proposal_recall.json
-evaluation/task6j_j1_oracle_program_yolo.json
-evaluation/task6j_parser_setup.json
-evaluation/task6j_j2_program_parser.json
-evaluation/task6j_j3_predicted_program_oracle_candidates.json
-evaluation/task6j_j4_structured_end_to_end.json
-evaluation/task6j_error_attribution.json
-evaluation/task6j_checkpoint_manifest.json
-docs/task6j_structured_proposal_grounding.md
+evaluation/task6k_source_inventory.json
+evaluation/task6k_raw_component_stats.json
+evaluation/task6k_conversion_loss.json
+evaluation/task6k_actual_yolo_fidelity.json
+evaluation/task6k_component_lineage.json
+evaluation/task6k_relation_semantic_drift.json
+evaluation/task6k_split_audit.json
+evaluation/task6k_merge_risk.json
+evaluation/task6k_task6j_cross_analysis.json
+evaluation/task6k_dataset_decision.json
+evaluation/dataset_audit_schema_v1.json
+docs/task6k_whu_source_pseudoinstance_audit.md
 ```
 
-Large YOLO prediction caches stay local/gitignored.
+Optional small diagnostics:
+`evaluation/task6k_samples/`
+
+No large raster dumps.
 
 # PART M — Tests
 
-## 22. Required tests
-
-Cover at least:
-
-1. program vocabulary comes from actual frozen query types;
-2. executor uses frozen relation convention;
-3. oracle executor cannot read target id;
-4. oracle candidates are diagnostic-only;
-5. J0 exact reproduction on synthetic/unit cases;
-6. legacy YOLO path/hash provenance checked;
-7. legacy project/env never modified;
-8. no package installation into existing environments;
-9. proposal geometry computed without GT;
-10. proposal recall matching is evaluation-only;
-11. ProgramHead input contains instruction text only;
-12. ProgramHead has no image tokens;
-13. query_type appears only as CE target, never inference input;
-14. train/val/test split hygiene;
-15. J3 never falls back to GT program;
-16. J4 uses predicted program + predicted proposals only;
-17. optional SAM refinement uses predicted proposal geometry only;
-18. no old direct-pixel grounding head in J4;
-19. no 4B / `[REF]` / SRE / SCL;
-20. strict determinism where supported;
-21. no GUI;
-22. failure attribution auditable.
+At minimum cover:
+1. no writes under `C:\D\resources`;
+2. no writes under legacy project;
+3. threshold 127 exact;
+4. `RETR_EXTERNAL` exact;
+5. `<50 contourArea` exact;
+6. epsilon `0.001*arcLength` exact;
+7. OpenCV/Pillow fallback does not change binary semantics;
+8. historical split recovered from current folders, not regenerated;
+9. split reproducibility caveat recorded;
+10. YOLO rasterization parser correct;
+11. loss decomposition separates filter/topology/approximation;
+12. raw components never called true physical instances;
+13. relation drift uses frozen relation config;
+14. no target-id leakage;
+15. merge-risk labelled heuristic;
+16. Task 6J cross-analysis uses frozen artifacts;
+17. J2 qualification recorded;
+18. no model training;
+19. no dataset mutation;
+20. deterministic JSON where applicable.
 
 Run:
 `python -m pytest tests/ -q`
 
-If YOLO inference runs through a separate existing conda env, record command/version output and keep that env read-only.
+# PART N — Runtime/dependencies
 
-# PART N — Git / Watt
+This is deterministic data/statistics work.
 
-## 23. Git hygiene
+No model training.
+No external downloads.
+Use existing environments only.
+
+If a core audit cannot run without a missing package, STOP and report it. Do not install packages automatically.
+
+# PART O — Git/Watt
 
 Do not stage:
-- YOLO weights;
-- YOLO prediction caches;
-- checkpoints;
-- `.conda`;
-- legacy files;
-- dataset JSONL edits.
+- original data;
+- converted YOLO dataset;
+- masks/raster dumps;
+- weights/checkpoints;
+- caches;
+- `.conda`.
+
+Commit only scripts/tests/small JSON/docs/handoff and a few small diagnostic images if useful.
 
 Recommended commit:
-`feat: audit structured proposal grounding`
+`audit: compare WHU source and pseudo-instance conversion`
 
-Use established Watt ownership rules for final push only.
+Use established Watt ownership rules only for final Git push if needed.
 
-# PART O — Handoff
+# PART P — Handoff
 
-## 24. FROM_DSH
-
-Include:
-
+`handoff/FROM_DSH.md` must include:
 1. Verdict
-2. Strategic Pivot
-3. Program Vocabulary
-4. J0 Oracle Executor
-5. YOLO Baseline Provenance
-6. Proposal Recall
-7. J1 Oracle Program + YOLO
-8. ProgramHead Architecture
-9. J2 Program Parsing
-10. J3 Predicted Program + Oracle Candidates
-11. J4 Structured End-to-End
-12. Optional SAM Refinement
-13. L1/L2/L3 + Query Breakdown
-14. Failure Attribution
-15. Dataset / Proposal Adequacy
-16. Reusable Core API
-17. Runtime / VRAM
+2. Source Inventory
+3. Historical Split Recovery
+4. Raw Semantic Component Statistics
+5. `<50` Filter Loss
+6. `RETR_EXTERNAL` Topology Loss
+7. Polygon Approximation Loss
+8. Actual YOLO Fidelity
+9. Component Lineage
+10. Relation-Semantic Drift
+11. Split/Geographic Audit
+12. Merge-Risk Heuristic
+13. Task 6J Cross-Analysis
+14. Qwen2B Parser Qualification
+15. Primary-Dataset Decision
+16. Future Dataset Audit Protocol
+17. Runtime
 18. Tests
-19. Git / Watt
-20. Recommended next architecture decision
+19. Git/Watt
+20. Recommended Next Step
 
-## 25. Final DSH UI — Chinese only
-
-Report:
-- primary verdict;
-- J0 oracle target accuracy / paired;
-- YOLO target recall@0.5 and mean best IoU;
-- J1 oracle-program+YOLO mIoU / paired;
-- J2 program accuracy / macro F1 / paired;
-- J3 selected-target accuracy / paired;
-- if J4 ran: strict mIoU / paired;
-- largest remaining error source: parser, proposal, executor or mask quality;
-- whether route is materially better than direct pixel grounding;
-- whether WHU/proposal quality is now a practical limitation;
+Final DSH UI in Chinese must report:
+- dataset-role verdict;
+- source image/label counts;
+- raw semantic component count;
+- current pseudo-instance/component count;
+- `<50` removed component count/rate;
+- foreground area removed rate;
+- current-YOLO raster vs source IoU/recall;
+- fraction of images with any relation-semantic drift;
+- target-change rate overall and L1/L2/L3;
+- merge-risk heuristic rate;
+- split reproducibility/geographic finding;
+- share of Task 6J failures plausibly data/conversion vs proposal-model;
+- whether WHU should remain only historical baseline;
 - tests;
-- commit/push;
-- Watt handling.
+- commit/push.
 
-# 26. STOP
+# 17. STOP
 
-After Task 6J STOP.
+After Task 6K STOP.
 
 Do not automatically:
-- add learned SRE;
-- add `[REF]`;
-- add Spatial Consistency Loss;
+- download a new dataset;
+- delete WHU;
+- regenerate BuildSpatialReason;
 - retrain YOLO;
-- scale to 4B;
-- migrate dataset;
+- train a new instance backbone;
+- switch Qwen to 4B;
+- add `[REF]`, SRE or SCL;
 - run full training;
 - build GUI.
 

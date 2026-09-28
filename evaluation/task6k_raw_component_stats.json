@@ -1,0 +1,183 @@
+{
+  "_doc": "Task 6K section 5. Raw 8-connected semantic components of the original WHU raster labels after the historical threshold 127 (4-connectivity is reported as a sensitivity diagnostic). TERMINOLOGY: these are semantic connected components, NOT verified physical-building instances; the source raster is binary, so mutually touching buildings are already merged here.",
+  "area_px_8": {
+    "count": 38309,
+    "max": 131549.0,
+    "mean": 1686.452374115743,
+    "median": 1209.0,
+    "min": 1.0,
+    "p1": 10.0,
+    "p10": 272.0,
+    "p25": 646.0,
+    "p5": 118.0,
+    "p75": 1921.0,
+    "p90": 3126.0,
+    "p95": 4512.5999999999985,
+    "p99": 10619.63999999997
+  },
+  "bbox_height_px_8": {
+    "count": 38309,
+    "max": 483.0,
+    "mean": 48.11381137591689,
+    "median": 44.0,
+    "min": 1.0,
+    "p1": 3.0,
+    "p10": 19.0,
+    "p25": 30.0,
+    "p5": 12.0,
+    "p75": 59.0,
+    "p90": 78.0,
+    "p95": 97.0,
+    "p99": 167.0
+  },
+  "bbox_width_px_8": {
+    "count": 38309,
+    "max": 512.0,
+    "mean": 52.33527369547626,
+    "median": 48.0,
+    "min": 1.0,
+    "p1": 3.0,
+    "p10": 18.0,
+    "p25": 31.0,
+    "p5": 12.0,
+    "p75": 64.0,
+    "p90": 88.0,
+    "p95": 109.0,
+    "p99": 185.0
+  },
+  "border_touch": {
+    "components": 13091,
+    "rate": 0.34172126654310997
+  },
+  "by_split": {
+    "test": {
+      "components_per_tile_mean": 10.213732004429678,
+      "current_components": 8873,
+      "raw_components_4": 9265,
+      "raw_components_8": 9223,
+      "tiles": 903
+    },
+    "train": {
+      "components_per_tile_mean": 9.049441786283891,
+      "current_components": 21867,
+      "raw_components_4": 22809,
+      "raw_components_8": 22696,
+      "tiles": 2508
+    },
+    "val": {
+      "components_per_tile_mean": 10.191387559808613,
+      "current_components": 6186,
+      "raw_components_4": 6417,
+      "raw_components_8": 6390,
+      "tiles": 627
+    }
+  },
+  "components_per_tile_4": {
+    "count": 4038,
+    "max": 53.0,
+    "mean": 9.532194155522536,
+    "median": 7.0,
+    "min": 1.0,
+    "p1": 1.0,
+    "p10": 3.0,
+    "p25": 4.0,
+    "p5": 2.0,
+    "p75": 13.0,
+    "p90": 20.0,
+    "p95": 26.0,
+    "p99": 36.0
+  },
+  "components_per_tile_8": {
+    "count": 4038,
+    "max": 53.0,
+    "mean": 9.487122337790986,
+    "median": 7.0,
+    "min": 1.0,
+    "p1": 1.0,
+    "p10": 3.0,
+    "p25": 4.0,
+    "p5": 2.0,
+    "p75": 13.0,
+    "p90": 20.0,
+    "p95": 25.0,
+    "p99": 36.0
+  },
+  "current_components_per_tile": {
+    "count": 4038,
+    "max": 52.0,
+    "mean": 9.144626052501238,
+    "median": 7.0,
+    "min": 1.0,
+    "p1": 1.0,
+    "p10": 2.0,
+    "p25": 4.0,
+    "p5": 2.0,
+    "p75": 12.0,
+    "p90": 19.0,
+    "p95": 25.0,
+    "p99": 34.63000000000011
+  },
+  "current_representation_reference": {
+    "source": "datasets/whu/component_manifest.json",
+    "total_components": 36926
+  },
+  "foreground_fraction_per_tile": {
+    "count": 4038,
+    "max": 0.5734024047851562,
+    "mean": 0.06103355403936045,
+    "median": 0.036773681640625,
+    "min": 0.010009765625,
+    "p1": 0.010372581481933594,
+    "p10": 0.013309478759765625,
+    "p25": 0.02052021026611328,
+    "p5": 0.011596107482910156,
+    "p75": 0.07501792907714844,
+    "p90": 0.14559631347656252,
+    "p95": 0.19563045501708984,
+    "p99": 0.30505451202392614
+  },
+  "foreground_pixels_per_tile": {
+    "count": 4038,
+    "max": 150314.0,
+    "mean": 15999.579990094106,
+    "median": 9640.0,
+    "min": 2624.0,
+    "p1": 2719.11,
+    "p10": 3489.0,
+    "p25": 5379.25,
+    "p5": 3039.85,
+    "p75": 19665.5,
+    "p90": 38167.200000000004,
+    "p95": 51283.35,
+    "p99": 79968.2100000001
+  },
+  "scope": {
+    "primary_connectivity": 8,
+    "representation": "original WHU raster semantic labels (threshold 127)",
+    "sensitivity_connectivity": 4,
+    "splits": "current BuildReasonSeg train+val+test (2508/627/903)",
+    "tiles": 4038
+  },
+  "small_components_below_area_50": {
+    "count": 1116,
+    "note": "These are the raw semantic components whose RASTER area is below the historical cv2.contourArea < 50 filter; the filter itself uses contourArea, so the removed set is measured directly in task6k_conversion_loss.json.",
+    "pixels": 21257,
+    "rate_of_raw_components": 0.02913153567046908,
+    "share_of_foreground_pixels": 0.00032902361973840817
+  },
+  "task": "6K",
+  "tiles_by_component_count_8": {
+    "1": 104,
+    "10-19": 1056,
+    "2-4": 1091,
+    "20": 429,
+    "5-9": 1358
+  },
+  "totals": {
+    "components_8_minus_current": 1383,
+    "current_components": 36926,
+    "empty_tiles": 0,
+    "raw_components_4": 38491,
+    "raw_components_8": 38309
+  }
+}

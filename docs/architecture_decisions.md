@@ -987,6 +987,30 @@ validation set and one metric path.
 
 ---
 
+## ADR-023 — Task 6K: the WHU semantic→pseudo-instance conversion is faithful and light; keep WHU as primary
+
+**Status:** **Accepted** (Task 6K) for the read-only measurements recorded in `evaluation/task6k_*.json`.
+
+**Context.** After Task 6J attributed the structured-route failure to the proposal chain, the open question was whether the *source and conversion* are structurally unsuitable for instance-level spatial reasoning. Task 6K audited the chain original WHU Satellite Dataset II (East Asia) binary semantic raster → historical `mask_to_yolo.py` polygon conversion → current BuildReasonSeg component representation, entirely read-only (no source/converted/legacy file modified, no model trained, nothing installed).
+
+**Decision**
+
+1. **The conversion is exactly reproduced and numerically light.** All 4,038 tiles were re-emulated in memory and all 36,926 actual YOLO objects match object-by-object (per-object IoU ≥ 0.5 for 36,926/36,926, object-count agreement 4,038/4,038, mean union IoU **1.00000**). The current 36,926 components are exactly the surviving polygons (`component_id = polygon index + 1`) of 38,309 raw 8-connected semantic components.
+2. **Loss decomposition.** `<50 contourArea` filter: 1,383 contours (3.61 %) removed = **0.058 %** of foreground area; `RETR_EXTERNAL` hole filling: 13,399 px **added** (0.021 %); `approxPolyDP`: IoU 0.99955, boundary 0.0086 px, 25/4,038 tiles below 0.99. The supplied snippet omits the historical `len(approx) < 3` skip and the `[0, 1]` clipping; the skip never fires in this dataset (0 polygons) and the difference is recorded.
+3. **Relation-semantic drift is modest and concentrated.** RAW (38,309 candidates, no filter) vs CONVERTED (36,926) under the frozen Task 3B semantics: **4.33 %** weighted current-query target change (L1 5.0 %, L2 0.03 %, L3 0.03 %); the L1 extremes move because a deleted sub-50 px speck can be the extreme component; corpus constructibility changes ≤ ±0.5 % per program.
+4. **Heuristic merge risk is low** (high 1.40 %, medium 4.29 % of raw components) and is explicitly labelled a heuristic, never instance ground truth.
+5. **The historical split is recovered, not regenerated** (train 2,508 + val 627 = the whole source train pool; test 903 = the source test pool), with the `set→list→shuffle(42)` reproducibility caveat recorded and region-level geographic correlation shown to be certain for train/val.
+6. **Task 6J's failure is not a data defect:** 49/65 (75.4 %) of J1 failures are proposal-model related on clean targets, 2/65 (3.1 %) plausibly conversion/data related, 14/65 inseparable.
+7. **Verdict `KEEP_WHU_AS_PRIMARY_FOR_NOW`** (`legacy_baseline_role: keep`) — no replace gate fires against the declared thresholds (drift > 0.05, contour deletion > 0.05, foreground deletion > 0.01, high merge risk > 0.15).
+
+**Consequences**
+
+* WHU stays the primary corpus and the historical baseline, with two recorded structural limitations: **no true instance identity** anywhere in the chain (instances are connected components) and a **random train/val split** over the same contiguous regions (supports random-tile generalization only; only the test region is unseen).
+* The next step remains a **proposal-backbone task** (instance segmentation aligned with component semantics, or deterministic proposal post-processing) evaluated with the same J1/J4 gates. Any candidate replacement dataset must first be audited with `evaluation/dataset_audit_schema_v1.json` (schema v1); license and source resolution stay `UNKNOWN` until externally verified and no external facts are fabricated.
+* Reusable pieces: `buildreasonseg_mvp/whu_source_audit.py` (read-only historical-pipeline emulator + raw component/merge-risk/heuristic tooling), `scripts/task6k_*.py`, and the gitignored per-tile evidence cache `artifacts/task6k/`.
+
+---
+
 ## Summary
 
 | ADR | Decision | Primary constraint |
@@ -1013,3 +1037,4 @@ validation set and one metric path.
 | 020 | **Task 6H.1: the point-aligned bounded objective is healthy; the query's spatial signal is the limit** | Spatial cross-entropy on the deterministic point-cell plus a bounded probability-mass preference (BCE/Dice and logit ranking detached to zero gradient); H0-R shows point CE 11.10 → 4.74, entropy 11.09 → 6.21, point error 0.466 → 0.167, bounded margin +0.139, yet inside-own is 7/20 and the max non-target probability (0.0532) still rivals the target cell (0.0515) — a clean failure of the single `[BOX]` query representation, so the next candidates are representation-level (multi-query refinement, stronger MLLM, reference/relation grounding) |
 | 021 | **Task 6I: one free cross-attention refinement step improves the query but cannot aim itself** | `[BOX]` q0 cross-attends the frozen 64×64 SAM2 embedding exactly once (256/4 heads, residual + FFN); refined q1 scores the 256×256 feature; frozen 6H.1 objective; I0 raises inside-own 7→13/20 and paired point 2→5/10 (gates 18/9) while the 1×4096 attention peaks (entropy 8.31→1.46) with only ~2.5 % mass on the target — a single query slot cannot direct itself at the target even with one allowed look, so the next candidates are multiple learned query slots, a stronger MLLM, or reference/relation grounding |
 | 022 | **Task 6J: program parsing + relation execution are solved; the proposal backbone is the binding limit** | 20 canonical programs derived 1:1 from the frozen query types; the independent executor reproduces the frozen generator on 120/120 samples (J0 1.000, paired 20/20); text-only Qwen ProgramHead parses instructions perfectly (J2 1.000 acc / 1.000 macro F1 / 20-20 paired / 1.000 full val; J3 1.000 / 20-20) — but the frozen YOLO proposal chain fails the J1 paired gate (5/20 vs 12/20; recall@0.5 0.869; 35/120 abstentions from proposal-geometry mismatch), so the next step is a proposal-backbone/dataset task, not parser or executor changes |
+| 023 | **Task 6K: the WHU semantic→pseudo-instance conversion is faithful and light; keep WHU as primary** | Read-only audit: 36,926/36,926 actual YOLO objects re-emulate exactly (union IoU 1.00000, count agreement 4,038/4,038) from 38,309 raw 8-connected semantic components; `<50` deletion 3.61 % of contours but only 0.058 % of foreground; hole filling +0.021 %; approx IoU 0.99955; RAW-vs-CONVERTED relation target change 4.33 % weighted (L1 5.0 %, L2/L3 0.03 %); merge high risk 1.40 %; 75.4 % of Task 6J J1 failures are proposal-model related → `KEEP_WHU_AS_PRIMARY_FOR_NOW` with no-true-instance-identity and random-train/val-split limitations recorded, and a reusable schema v1 for future candidates |

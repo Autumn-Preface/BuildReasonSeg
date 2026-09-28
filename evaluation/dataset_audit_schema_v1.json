@@ -1,0 +1,177 @@
+{
+  "_doc": "Task 6K section 16. Reusable dataset-audit schema v1: the same questions that were asked of WHU, so a future candidate dataset can be scored on identical fields. Fields whose value is not verified locally are marked UNKNOWN; no external dataset facts are fabricated.",
+  "candidate_template": {
+    "_comment": "Copy this template for each future candidate (SpaceNet 2, WHU-Mix Vector, ...). Leave license/source_resolution as UNKNOWN until externally verified.",
+    "annotation_type": "UNKNOWN",
+    "area_distribution": "UNKNOWN",
+    "border_truncation_rate": "UNKNOWN",
+    "candidate_density": "UNKNOWN",
+    "directional_relation_constructibility": "UNKNOWN",
+    "geographic_diversity_metadata": "UNKNOWN",
+    "image_count": null,
+    "instance_count": null,
+    "instances_per_tile": "UNKNOWN",
+    "l1_l2_l3_constructible_query_rate": "UNKNOWN",
+    "license": "UNKNOWN",
+    "local_storage_footprint": "UNKNOWN",
+    "multi_instance_tile_rate": "UNKNOWN",
+    "nearest_constructibility": "UNKNOWN",
+    "relation_ambiguity_rate": "UNKNOWN",
+    "source_resolution": "UNKNOWN",
+    "tiny_target_rate": "UNKNOWN",
+    "true_stable_instance_id_available": null
+  },
+  "decision_gates": {
+    "insufficient_evidence_when": [
+      "source and converted data cannot be aligned reliably"
+    ],
+    "keep_as_primary_when": [
+      "conversion loss is small",
+      "relation targets are very stable",
+      "pseudo-instance identity is sufficiently reliable",
+      "the Task 6J failure is mainly a replaceable proposal-model problem"
+    ],
+    "replace_primary_dataset_when": [
+      "material conversion-induced relation drift (weighted current-query target-change rate above the recorded threshold)",
+      "substantial small-object deletion",
+      "high heuristic merge risk",
+      "lack of true instance identity becomes binding for the intended claims",
+      "the Task 6J mismatch is tied to pseudo-instance semantics rather than a replaceable proposal model",
+      "split structure unsuitable for the intended paper claims"
+    ]
+  },
+  "fields": {
+    "annotation_type": {
+      "allowed": [
+        "semantic",
+        "raster_instance",
+        "vector_polygon",
+        "unknown"
+      ],
+      "question": "Is ground truth a semantic mask, a raster instance map, or vector polygons?",
+      "type": "enum"
+    },
+    "area_distribution": {
+      "question": "Instance area distribution (state the unit).",
+      "type": "distribution"
+    },
+    "border_truncation_rate": {
+      "question": "Share of instances touching the tile border.",
+      "type": "rate"
+    },
+    "candidate_density": {
+      "question": "Candidates per tile, i.e. the size of the selection problem.",
+      "type": "distribution"
+    },
+    "directional_relation_constructibility": {
+      "question": "Share of tiles where a directional filter yields exactly one candidate.",
+      "type": "rate"
+    },
+    "geographic_diversity_metadata": {
+      "question": "Is scene/city/region metadata available for a geographic split?",
+      "type": "object"
+    },
+    "image_count": {
+      "question": "Number of source tiles/images.",
+      "type": "integer"
+    },
+    "instance_count": {
+      "question": "Number of instances (or derived pseudo-instances) in the corpus.",
+      "type": "integer"
+    },
+    "instances_per_tile": {
+      "question": "min/median/mean/p90/max instances per tile.",
+      "type": "distribution"
+    },
+    "l1_l2_l3_constructible_query_rate": {
+      "question": "Share of tiles where L1/L2/L3 canonical programs are constructible.",
+      "type": "rate"
+    },
+    "license": {
+      "question": "License status; UNKNOWN unless externally verified.",
+      "type": "string"
+    },
+    "local_storage_footprint": {
+      "question": "Local bytes per split/subtree, if known.",
+      "type": "object"
+    },
+    "multi_instance_tile_rate": {
+      "question": "Share of tiles with >= 2 instances (relation queries need >= 2).",
+      "type": "rate"
+    },
+    "nearest_constructibility": {
+      "question": "Share of tiles where the frozen `nearest` relation yields a target.",
+      "type": "rate"
+    },
+    "relation_ambiguity_rate": {
+      "question": "Share of relation evaluations rejected as ambiguous by the frozen thresholds.",
+      "type": "rate"
+    },
+    "source_resolution": {
+      "question": "Native ground sample distance/resolution; UNKNOWN unless verified.",
+      "type": "string"
+    },
+    "tiny_target_rate": {
+      "question": "Share of instances below a declared tiny threshold (state the threshold).",
+      "type": "rate"
+    },
+    "true_stable_instance_id_available": {
+      "question": "Does the source provide a stable per-instance identity (not derived)?",
+      "type": "boolean"
+    }
+  },
+  "instances": {
+    "whu_satellite_ii_east_asia": {
+      "annotation_type": "semantic_raster_binary",
+      "area_distribution_px": {
+        "max": 131054,
+        "median": 1176,
+        "min": 50,
+        "p90": 3072
+      },
+      "audit_artifacts": [
+        "evaluation/task6k_source_inventory.json",
+        "evaluation/task6k_raw_component_stats.json",
+        "evaluation/task6k_conversion_loss.json",
+        "evaluation/task6k_actual_yolo_fidelity.json",
+        "evaluation/task6k_component_lineage.json",
+        "evaluation/task6k_relation_semantic_drift.json",
+        "evaluation/task6k_split_audit.json",
+        "evaluation/task6k_merge_risk.json",
+        "evaluation/task6k_task6j_cross_analysis.json",
+        "evaluation/task6k_dataset_decision.json"
+      ],
+      "audited_in": "Task 6K",
+      "border_truncation_rate": "MEASURED_IN_task6k_raw_component_stats",
+      "candidate_density": "MEASURED_IN_task6k_raw_component_stats",
+      "directional_relation_constructibility": "MEASURED_IN_task6k_relation_semantic_drift",
+      "geographic_diversity_metadata": {
+        "available": false,
+        "detail": "No scene/geographic grouping metadata is present in the labels or the stripped local copy; the shapefile subtree exists locally but was not joined to tiles in this audit."
+      },
+      "geometry_source_of_truth": "rasterized_polygon_component_map",
+      "image_count": 17388,
+      "image_count_with_buildings": 4038,
+      "instance_count": 36926,
+      "instance_identity_note": "The source label is a binary semantic mask. Instances in the current representation are connected components (pseudo-instances) produced by RETR_EXTERNAL, so no true physical instance id exists anywhere in the chain.",
+      "instances_per_tile": {
+        "max": 52,
+        "mean": 9.14,
+        "median": 7,
+        "min": 1,
+        "p90": 19
+      },
+      "l1_l2_l3_constructible_query_rate": "MEASURED_IN_task6k_relation_semantic_drift",
+      "license": "UNKNOWN",
+      "local_storage_footprint": "MEASURED_IN_task6k_source_inventory",
+      "multi_instance_tile_rate": "MEASURED_IN_task6k_raw_component_stats",
+      "nearest_constructibility": "MEASURED_IN_task6k_relation_semantic_drift",
+      "relation_ambiguity_rate": "MEASURED_IN_task6k_relation_semantic_drift",
+      "source_resolution": "UNKNOWN",
+      "tiny_target_rate": "MEASURED_IN_task6k_raw_component_stats",
+      "true_stable_instance_id_available": false
+    }
+  },
+  "purpose": "Decide whether a candidate source dataset is suitable as the PRIMARY corpus for instance-level spatial-reasoning annotations, and how it must be split.",
+  "schema_version": "v1"
+}

@@ -1,0 +1,33 @@
+{
+  "_doc": "Task 6K section 8. Component lineage from the original WHU semantic raster to the current BuildReasonSeg representation, with the measured arithmetic at every stage.",
+  "chain": [
+    "original WHU binary semantic raster label (threshold 127)",
+    "8-connected semantic components (RAW candidates)",
+    "external contours per component (RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)",
+    "`cv2.contourArea < 50` removal (+ `len(approx) < 3` skip)",
+    "`approxPolyDP(0.001 * arcLength)` simplified polygons -> YOLO labels",
+    "`cv2.fillPoly` rasterization -> current component map (component_id = polygon index + 1)"
+  ],
+  "how_36926_arises": "38309 raw 8-connected semantic components produce 38309 external contours; the historical `contourArea < 50` filter (plus the `len(approx) < 3` skip) removes 1383, leaving 36926 polygons, which are exactly the 36926 YOLO polygon labels and therefore the 36926 current components (`component_id = source_polygon_index + 1`). The current component count is thus the number of SURVIVING POLYGONS, not the number of raw semantic components -- the difference is the conversion loss.",
+  "identities": {
+    "actual_polygons_equal_current_components": true,
+    "kept_contours_equal_actual_polygons": true,
+    "raw_components_equal_external_contours": true,
+    "tiles_where_kept_equals_polygons": 4038,
+    "tiles_where_polygons_equal_current": 4038,
+    "tiles_where_raw_equals_current": 2939
+  },
+  "measured": {
+    "actual_yolo_polygons": 36926,
+    "contours_kept_as_polygons": 36926,
+    "contours_removed_below_three_vertices": 0,
+    "contours_removed_by_filter": 1383,
+    "current_components": 36926,
+    "current_components_with_zero_raster_area": 0,
+    "external_contours_before_filter": 38309,
+    "raw_semantic_components_8": 38309
+  },
+  "seconds": 198.74,
+  "task": "6K",
+  "terminology": "A current component is a rasterized simplified polygon derived from one external contour of the binary semantic mask. It is a pseudo-instance (connected component), never a verified physical building instance."
+}

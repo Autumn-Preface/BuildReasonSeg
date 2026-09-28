@@ -1,0 +1,107 @@
+{
+  "_doc": "Task 6K section 7. Actual WHU_YOLO_dataset polygons vs the historical pipeline reproduced in memory (EMULATOR, with the `len(approx) < 3` skip and clipping) and vs the SUPPLIED SNIPPET (without them). Object matching uses per-object raster IoU >= 0.5.",
+  "coordinate_clipping": {
+    "note": "The saved labels are ALREADY clipped to [0, 1] by the historical script (mask_to_yolo.py lines 123-124), so pre-clip coordinates are NOT recoverable from the current labels; vertices exactly on 0/1 are the recoverable clipping evidence.",
+    "out_of_range_vertices_in_saved_labels": 0,
+    "vertices_exactly_on_0_or_1": 13544,
+    "vertices_total": 2331082
+  },
+  "difference_classification": {
+    "emulator_matches_actual_better_or_equally": true,
+    "explanation": "The supplied snippet omits two details present in the historical script: the `if len(approx) < 3: continue` skip (line 117-118) and the [0, 1] coordinate clipping (lines 123-124). Any polygon whose simplification yields fewer than three vertices therefore appears in the snippet emulator but never in the actual labels."
+  },
+  "malformed_and_degenerate": {
+    "degenerate_actual_objects_zero_pixels": 0,
+    "malformed_lines": 0,
+    "wrong_class_lines": 0
+  },
+  "object_count_agreement": {
+    "rate_equal_emulator": 1.0,
+    "rate_equal_snippet": 1.0,
+    "tiles_equal_emulator": 4038,
+    "tiles_equal_snippet": 4038
+  },
+  "object_matching": {
+    "actual_vs_emulator": {
+      "extra_actual_objects_not_in_emulator": 0,
+      "matched": 36926,
+      "missing_emulator_objects_not_in_actual": 0
+    },
+    "actual_vs_snippet": {
+      "extra_actual_objects_not_in_snippet": 0,
+      "matched": 36926,
+      "missing_snippet_objects_not_in_actual": 0
+    }
+  },
+  "scope": {
+    "tiles": 4038
+  },
+  "seconds": 198.4,
+  "task": "6K",
+  "totals": {
+    "actual_objects": 36926,
+    "degenerate_actual_objects": 0,
+    "emulator_objects": 36926,
+    "extra_actual_vs_emulator": 0,
+    "extra_actual_vs_snippet": 0,
+    "malformed_lines": 0,
+    "matched_actual_vs_emulator": 36926,
+    "matched_actual_vs_snippet": 36926,
+    "missing_actual_vs_emulator": 0,
+    "missing_actual_vs_snippet": 0,
+    "snippet_objects": 36926,
+    "tiles": 4038,
+    "vertices_at_boundary": 13544,
+    "vertices_total": 2331082,
+    "wrong_class_lines": 0
+  },
+  "union_raster_agreement": {
+    "dice_actual_vs_emulator": {
+      "count": 4038,
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p1": 1.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "p5": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "p95": 1.0,
+      "p99": 1.0
+    },
+    "iou_actual_vs_emulator": {
+      "count": 4038,
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p1": 1.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "p5": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "p95": 1.0,
+      "p99": 1.0
+    },
+    "iou_actual_vs_snippet": {
+      "count": 4038,
+      "max": 1.0,
+      "mean": 1.0,
+      "median": 1.0,
+      "min": 1.0,
+      "p1": 1.0,
+      "p10": 1.0,
+      "p25": 1.0,
+      "p5": 1.0,
+      "p75": 1.0,
+      "p90": 1.0,
+      "p95": 1.0,
+      "p99": 1.0
+    },
+    "tiles_iou_below_0_99_vs_emulator": 0,
+    "tiles_iou_below_0_99_vs_snippet": 0
+  }
+}

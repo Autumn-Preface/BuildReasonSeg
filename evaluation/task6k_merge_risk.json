@@ -1,0 +1,276 @@
+{
+  "_doc": "Task 6K section 12. HEURISTIC merge-risk analysis of the raw semantic components. A binary semantic mask cannot reveal physical instance identity: this measures the sensitivity of a connected component to 1-px erosion, the number of distance-transform peaks and the solidity (area / convex-hull area). It does NOT recover true instances and must not be read as merge ground truth.",
+  "current_components": {
+    "counts": {
+      "high": 399,
+      "low": 34819,
+      "medium": 1708
+    },
+    "high_examples": [
+      {
+        "area_px": 2173,
+        "component_id": 8,
+        "split": "train",
+        "stem": "1_1090"
+      },
+      {
+        "area_px": 1556,
+        "component_id": 28,
+        "split": "train",
+        "stem": "1_1091"
+      },
+      {
+        "area_px": 2699,
+        "component_id": 19,
+        "split": "train",
+        "stem": "1_1092"
+      },
+      {
+        "area_px": 2363,
+        "component_id": 4,
+        "split": "train",
+        "stem": "1_12"
+      },
+      {
+        "area_px": 1736,
+        "component_id": 13,
+        "split": "train",
+        "stem": "1_1276"
+      },
+      {
+        "area_px": 2361,
+        "component_id": 18,
+        "split": "train",
+        "stem": "1_1276"
+      },
+      {
+        "area_px": 6359,
+        "component_id": 4,
+        "split": "train",
+        "stem": "1_1277"
+      },
+      {
+        "area_px": 3031,
+        "component_id": 21,
+        "split": "train",
+        "stem": "1_1277"
+      },
+      {
+        "area_px": 9154,
+        "component_id": 8,
+        "split": "train",
+        "stem": "1_1334"
+      },
+      {
+        "area_px": 1750,
+        "component_id": 3,
+        "split": "train",
+        "stem": "1_1551"
+      }
+    ],
+    "total": 36926
+  },
+  "dense_tile_concentration": {
+    "definition": "dense tile = raw 8-connected component count >= 10",
+    "dense_components": 25705,
+    "dense_high_rate": 0.014783116125267459,
+    "dense_tiles": 1485,
+    "risk_concentrates_in_dense_tiles": true,
+    "sparse_components": 12604,
+    "sparse_high_rate": 0.012535702951443985,
+    "sparse_tiles": 2553
+  },
+  "heuristic_definition": {
+    "applied_to": "raw 8-connected semantic components with raster area >= 150 px (the frozen tiny threshold)",
+    "high": "1-px erosion splits into >= 2 pieces, OR >= 3 distance-transform peaks",
+    "low": "none of the above",
+    "medium": "exactly 2 distance-transform peaks, OR solidity < 0.75, OR the component vanishes under 1-px erosion (everywhere <= 2 px thick)",
+    "revision_note": "A first version of this heuristic classified `1-px erosion yields exactly 1 piece` as medium, which fired for 92.7% of components (the base rate) and carried no information; that clause was removed so the classes are discriminative."
+  },
+  "raw_components": {
+    "by_split": {
+      "test": {
+        "high": 101,
+        "low": 8832,
+        "medium": 290,
+        "tiles": 903
+      },
+      "train": {
+        "high": 339,
+        "low": 21296,
+        "medium": 1061,
+        "tiles": 2508
+      },
+      "val": {
+        "high": 98,
+        "low": 6001,
+        "medium": 291,
+        "tiles": 627
+      }
+    },
+    "counts": {
+      "high": 538,
+      "low": 36129,
+      "medium": 1642
+    },
+    "high_examples": [
+      {
+        "area_px": 2173,
+        "border": false,
+        "component_id": 8,
+        "dt_peaks": 1,
+        "erosion1_pieces": 2,
+        "solidity": 0.6868,
+        "split": "train",
+        "stem": "1_1090"
+      },
+      {
+        "area_px": 1556,
+        "border": true,
+        "component_id": 11,
+        "dt_peaks": 2,
+        "erosion1_pieces": 2,
+        "solidity": 0.7478,
+        "split": "train",
+        "stem": "1_1091"
+      },
+      {
+        "area_px": 2221,
+        "border": false,
+        "component_id": 25,
+        "dt_peaks": 1,
+        "erosion1_pieces": 2,
+        "solidity": 0.8918,
+        "split": "train",
+        "stem": "1_1091"
+      },
+      {
+        "area_px": 2699,
+        "border": false,
+        "component_id": 2,
+        "dt_peaks": 2,
+        "erosion1_pieces": 2,
+        "solidity": 0.8679,
+        "split": "train",
+        "stem": "1_1092"
+      },
+      {
+        "area_px": 2363,
+        "border": false,
+        "component_id": 4,
+        "dt_peaks": 3,
+        "erosion1_pieces": 1,
+        "solidity": 0.5861,
+        "split": "train",
+        "stem": "1_12"
+      },
+      {
+        "area_px": 2207,
+        "border": false,
+        "component_id": 5,
+        "dt_peaks": 2,
+        "erosion1_pieces": 2,
+        "solidity": 0.6795,
+        "split": "train",
+        "stem": "1_12"
+      },
+      {
+        "area_px": 11083,
+        "border": true,
+        "component_id": 1,
+        "dt_peaks": 3,
+        "erosion1_pieces": 1,
+        "solidity": 0.9882,
+        "split": "train",
+        "stem": "1_1275"
+      },
+      {
+        "area_px": 2360,
+        "border": false,
+        "component_id": 1,
+        "dt_peaks": 2,
+        "erosion1_pieces": 3,
+        "solidity": 0.5936,
+        "split": "train",
+        "stem": "1_1276"
+      },
+      {
+        "area_px": 2073,
+        "border": false,
+        "component_id": 5,
+        "dt_peaks": 2,
+        "erosion1_pieces": 2,
+        "solidity": 0.6337,
+        "split": "train",
+        "stem": "1_1276"
+      },
+      {
+        "area_px": 1736,
+        "border": true,
+        "component_id": 9,
+        "dt_peaks": 3,
+        "erosion1_pieces": 1,
+        "solidity": 0.6668,
+        "split": "train",
+        "stem": "1_1276"
+      },
+      {
+        "area_px": 3031,
+        "border": true,
+        "component_id": 8,
+        "dt_peaks": 1,
+        "erosion1_pieces": 2,
+        "solidity": 0.8858,
+        "split": "train",
+        "stem": "1_1277"
+      },
+      {
+        "area_px": 6360,
+        "border": false,
+        "component_id": 25,
+        "dt_peaks": 2,
+        "erosion1_pieces": 2,
+        "solidity": 0.6695,
+        "split": "train",
+        "stem": "1_1277"
+      },
+      {
+        "area_px": 2312,
+        "border": false,
+        "component_id": 18,
+        "dt_peaks": 2,
+        "erosion1_pieces": 2,
+        "solidity": 0.7818,
+        "split": "train",
+        "stem": "1_1278"
+      },
+      {
+        "area_px": 1750,
+        "border": false,
+        "component_id": 1,
+        "dt_peaks": 3,
+        "erosion1_pieces": 1,
+        "solidity": 0.6973,
+        "split": "train",
+        "stem": "1_1551"
+      },
+      {
+        "area_px": 2401,
+        "border": false,
+        "component_id": 4,
+        "dt_peaks": 1,
+        "erosion1_pieces": 2,
+        "solidity": 0.6089,
+        "split": "train",
+        "stem": "1_1584"
+      }
+    ],
+    "rates": {
+      "high": 0.014043697303505704,
+      "low": 0.9430943120415568,
+      "medium": 0.04286199065493748
+    },
+    "total": 38309
+  },
+  "task": "6K"
+}

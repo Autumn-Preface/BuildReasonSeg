@@ -1,0 +1,88 @@
+{
+  "_doc": "Task 6K section 4/10. The historical split is RECOVERED from the existing converted folders; seed 42 is never re-run. The historical converter built train/val from the source `train` pool (`VALIDATION_RATIO = 0.2`) and test from the source `test` pool.",
+  "converted_dataset_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\WHU_Building_Segment\\dataset\\WHU_YOLO_dataset",
+  "counts": {
+    "converted_test": 903,
+    "converted_total": 4038,
+    "converted_train": 2508,
+    "converted_val": 627,
+    "source_test": 903,
+    "source_train": 3135
+  },
+  "geographic_audit": {
+    "geographic_leakage_quantification": "Region-level mixing IS recoverable from the naming (all val tiles come from regions also present in train), so train/val scene-level leakage is certain at region granularity. Per-tile adjacency and exact geographic overlap are NOT recoverable: the cropped tiles carry no world files or coordinates, and no coordinates are invented here. The test split comes from a separate region, so it is geographically disjoint.",
+    "local_geo_evidence_available": {
+      "cropped_tile_coordinates": "absent",
+      "shapefile": "EA.shp/.dbf/.prj/.shx present locally; not joined to tiles in this audit",
+      "whole_area_georeferenced_rasters": true,
+      "world_files": ".tfw present for the whole-area images only (92 bytes each)"
+    },
+    "region_definition": "numeric prefix of the tile stem (`1_x`/`2_x` = source train regions; bare index = source test region)",
+    "supports": {
+      "geographic_or_cross_region_generalization": "partial: only the test region provides an unseen region",
+      "random_tile_generalization": true
+    },
+    "test_geographically_disjoint_from_train_and_val": true,
+    "test_regions": {
+      "test": 903
+    },
+    "train_regions": {
+      "1": 1403,
+      "2": 1105
+    },
+    "train_test_shared_regions": [],
+    "train_val_shared_regions": [
+      "1",
+      "2"
+    ],
+    "train_val_spatially_correlated": true,
+    "val_regions": {
+      "1": 333,
+      "2": 294
+    },
+    "val_same_region_mixing_rate": 1.0,
+    "val_test_shared_regions": [],
+    "val_tiles": 627,
+    "val_tiles_in_shared_regions": 627
+  },
+  "overlaps": {
+    "examples": {
+      "train_test": [],
+      "train_val": [],
+      "val_test": []
+    },
+    "train_test": 0,
+    "train_val": 0,
+    "val_test": 0
+  },
+  "reproducibility_caveat": {
+    "caveat": "`list(set(...))` iteration order depends on the per-process string hash seed (PYTHONHASHSEED), so `random.seed(42)` alone does NOT guarantee the same split across processes. The split is therefore recovered from the existing converted folders rather than regenerated.",
+    "historical_code": [
+      "stems = set(); ... return list(stems)   # get_image_stems()",
+      "random.seed(42)",
+      "random.shuffle(train_stems_all)",
+      "val_size = int(len(train_stems_all) * 0.2)",
+      "val_stems = set(train_stems_all[:val_size]); train_stems = set(train_stems_all[val_size:])"
+    ],
+    "split_authority": "existing converted folders (WHU_YOLO_dataset/images|labels/{train,val,test})",
+    "val_size_formula_check": {
+      "consistent": true,
+      "int(len(train_stems) * 0.2)": 627,
+      "observed_val_count": 627
+    }
+  },
+  "seconds": 25.26,
+  "source_mapping": {
+    "converted_test_subset_of_source_test": true,
+    "missing_from_converted_train_val": [],
+    "n_missing_from_converted_train_val": 0,
+    "n_unexpected_extra_stems": 0,
+    "source_test_equals_converted_test": true,
+    "train_and_val_subset_of_source_train": true,
+    "train_plus_val_equals_source_train": true,
+    "train_test_disjoint_from_source_train": true,
+    "train_val_partition_exactly": true,
+    "unexpected_extra_stems": []
+  },
+  "task": "6K"
+}
