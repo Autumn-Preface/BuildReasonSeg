@@ -3,19 +3,23 @@
   "dataset_version": "v1.0",
   "files": {
     "instance_index": "datasets/whu_native_vector/v1.0/instances/index.jsonl",
-    "instance_schema": "datasets/whu_native_vector/v1.0/instances/schema.json",
+    "instance_index_note": "the per-instance index lives under `datasets/**/instances/`, which the repository's .gitignore treats as regenerable annotation bulk (the same rule that keeps datasets/whu/components/ and the v0.1.1 JSONL records out of Git); regenerate with `python scripts/task6l_build_dataset.py`",
+    "instance_index_tracked": false,
+    "instance_schema": "datasets/whu_native_vector/v1.0/instance_schema.json",
     "sample_geometry": "datasets/whu_native_vector/v1.0/instances/sample_geometry.jsonl",
+    "sample_geometry_tracked": false,
     "splits": [
       "datasets/whu_native_vector/v1.0/splits/legacy_compat_v1.json",
       "datasets/whu_native_vector/v1.0/splits/scene_disjoint_v1.json"
     ],
     "statistics": "datasets/whu_native_vector/v1.0/statistics.json",
-    "tile_index": "datasets/whu_native_vector/v1.0/tiles/index.jsonl"
+    "tile_index": "datasets/whu_native_vector/v1.0/tiles/index.jsonl",
+    "tile_index_tracked": true
   },
   "generation": {
     "limit_applied": null,
     "rgb_hash_skipped": false,
-    "runtime_seconds": 122.85
+    "runtime_seconds": 130.92
   },
   "geometry_cache": {
     "contents": "uint8 label map, clipped polygon rings (pixel coords), per-instance scalars",
@@ -55,5 +59,20 @@
     "includes_negative_folders": true,
     "tiles_indexed": 17388
   },
-  "tile_id_definition": "tile_id is the archive's own tile name (e.g. `1_0`, `0`), unique across the cropped archive; grid_id = `<raster>:<row>:<col>` is the whole-raster coordinate identity"
+  "tile_id_definition": "tile_id is the archive's own tile name (e.g. `1_0`, `0`), unique across the cropped archive; grid_id = `<raster>:<row>:<col>` is the whole-raster coordinate identity",
+  "tracked_vs_local_only": {
+    "committed": [
+      "manifest.json",
+      "statistics.json",
+      "instance_schema.json",
+      "splits/*.json",
+      "tiles/index.jsonl"
+    ],
+    "convention": "`datasets/**/instances/` and `datasets/build_spatial_reason/**/*.jsonl` are ignored by the repository's existing rules, exactly as for the v0.1.1 baseline records",
+    "local_only_regenerable": [
+      "instances/index.jsonl",
+      "instances/sample_geometry.jsonl",
+      "instances/<tile_id>.npz"
+    ]
+  }
 }

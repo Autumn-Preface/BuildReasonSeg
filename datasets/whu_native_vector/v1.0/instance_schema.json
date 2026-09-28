@@ -1,0 +1,23 @@
+{
+  "_doc": "Per-instance schema of WHU-EA-NativeVector v1.0 (one record per tile-clipped feature).",
+  "fields": {
+    "area_map_units": "complete-feature area in World Mercator map units (never ground m^2)",
+    "bbox_xyxy_px": "[x0, y0, x1, y1) of the clipped rasterisation",
+    "centroid_px": "[x, y] centroid of the clipped rasterisation",
+    "clipped_area_px": "rasterised area inside the tile window",
+    "clipped_by_tile": "visible_fraction < 0.999",
+    "full_area_px": "rasterised area of the complete feature (unclipped)",
+    "multipart": "more than one outer ring after clipping",
+    "n_hole_rings_full": "hole rings of the complete feature",
+    "n_holes": "hole rings after clipping",
+    "n_outer_rings_full": "outer rings of the complete feature",
+    "n_rings": "rings after clipping",
+    "source_feature_id": "1-based EA.shp record order (stable source identity)",
+    "tile_id": "archive tile name",
+    "tile_instance_id": "1-based index inside the tile (label-map value)",
+    "tiny_area": "clipped area below the historical 50 px threshold (retained, flagged only)",
+    "touches_tile_border": "clipped rasterisation reaches the tile edge",
+    "visible_fraction": "clipped_area_px / full_area_px (<= 1)"
+  },
+  "geometry": "full pixel-space rings live in instances/sample_geometry.jsonl and the gitignored per-tile cache"
+}

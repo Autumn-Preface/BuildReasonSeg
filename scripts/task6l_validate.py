@@ -354,9 +354,9 @@ def main(argv: list[str] | None = None) -> int:
     for relative in (
         "datasets/whu_native_vector/v1.0/manifest.json",
         "datasets/whu_native_vector/v1.0/statistics.json",
+        "datasets/whu_native_vector/v1.0/instance_schema.json",
         "datasets/whu_native_vector/v1.0/tiles/index.jsonl",
         "datasets/whu_native_vector/v1.0/instances/index.jsonl",
-        "datasets/whu_native_vector/v1.0/instances/schema.json",
         "datasets/whu_native_vector/v1.0/instances/sample_geometry.jsonl",
         "datasets/whu_native_vector/v1.0/splits/legacy_compat_v1.json",
         "datasets/whu_native_vector/v1.0/splits/scene_disjoint_v1.json",
@@ -380,6 +380,7 @@ def main(argv: list[str] | None = None) -> int:
             {
                 "path": relative,
                 "exists": path.is_file(),
+                "tracked": _is_tracked(relative),
                 "bytes": path.stat().st_size if path.is_file() else None,
                 "sha256": sha256_file(path) if path.is_file() else None,
             }
@@ -387,11 +388,18 @@ def main(argv: list[str] | None = None) -> int:
     _write(
         EVAL / "task6l_artifact_index.json",
         {
-            "_doc": "Task 6L Part H. Index of every required artifact with size and content hash.",
+            "_doc": "Task 6L Part H. Index of every required artifact with size, content hash and Git tracking status.",
             "task": "6L",
             "artifacts": index_entries,
             "all_present": all(entry["exists"] for entry in index_entries),
             "missing": [entry["path"] for entry in index_entries if not entry["exists"]],
+            "local_only": [entry["path"] for entry in index_entries if entry["exists"] and not entry["tracked"]],
+            "tracking_convention": (
+                "the repository's .gitignore keeps generated dataset records local "
+                "(`datasets/build_spatial_reason/**/*.jsonl`, `datasets/**/instances/`), exactly as "
+                "for the v0.1.1 baseline; every artifact in this index is reproducible with the "
+                "commands in docs/task6l_vector_dataset_migration.md"
+            ),
             "gitignored_caches": [
                 "artifacts/whu_native_vector/instances/<tile_id>.npz",
                 "artifacts/whu_native_vector/reasoning_view/<split_view>/...",
@@ -499,6 +507,20 @@ def _determinism_check() -> dict:
         "runs": digests,
         "real_v02_untouched": True,
     }
+
+
+def _is_tracked(relative: str) -> bool:
+    """True when the path is tracked by Git (the repo keeps generated records local-only)."""
+
+    import subprocess
+
+    result = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", relative],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    return result.returncode == 0
 
 
 def _write(path: Path, payload: dict) -> None:

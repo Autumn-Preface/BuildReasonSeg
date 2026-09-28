@@ -423,14 +423,37 @@ def main(argv: list[str] | None = None) -> int:
         },
         "files": {
             "tile_index": "datasets/whu_native_vector/v1.0/tiles/index.jsonl",
+            "tile_index_tracked": True,
             "instance_index": "datasets/whu_native_vector/v1.0/instances/index.jsonl",
-            "instance_schema": "datasets/whu_native_vector/v1.0/instances/schema.json",
+            "instance_index_tracked": False,
+            "instance_index_note": (
+                "the per-instance index lives under `datasets/**/instances/`, which the repository's "
+                ".gitignore treats as regenerable annotation bulk (the same rule that keeps "
+                "datasets/whu/components/ and the v0.1.1 JSONL records out of Git); regenerate with "
+                "`python scripts/task6l_build_dataset.py`"
+            ),
+            "instance_schema": "datasets/whu_native_vector/v1.0/instance_schema.json",
             "sample_geometry": "datasets/whu_native_vector/v1.0/instances/sample_geometry.jsonl",
+            "sample_geometry_tracked": False,
             "statistics": "datasets/whu_native_vector/v1.0/statistics.json",
             "splits": [
                 f"datasets/whu_native_vector/v1.0/splits/{LEGACY_COMPAT_VIEW}.json",
                 f"datasets/whu_native_vector/v1.0/splits/{SCENE_DISJOINT_VIEW}.json",
             ],
+        },
+        "tracked_vs_local_only": {
+            "committed": [
+                "manifest.json", "statistics.json", "instance_schema.json",
+                "splits/*.json", "tiles/index.jsonl",
+            ],
+            "local_only_regenerable": [
+                "instances/index.jsonl", "instances/sample_geometry.jsonl",
+                "instances/<tile_id>.npz",
+            ],
+            "convention": (
+                "`datasets/**/instances/` and `datasets/build_spatial_reason/**/*.jsonl` are ignored "
+                "by the repository's existing rules, exactly as for the v0.1.1 baseline records"
+            ),
         },
         "geometry_cache": {
             "path": "artifacts/whu_native_vector/instances/<tile_id>.npz",
@@ -447,7 +470,7 @@ def main(argv: list[str] | None = None) -> int:
     write_json(DATASET_ROOT / "manifest.json", manifest)
 
     write_json(
-        DATASET_ROOT / "instances" / "schema.json",
+        DATASET_ROOT / "instance_schema.json",
         {
             "_doc": "Per-instance schema of WHU-EA-NativeVector v1.0 (one record per tile-clipped feature).",
             "fields": {

@@ -233,7 +233,7 @@
     },
     "total_samples": 28108
   },
-  "seconds": 36.39,
+  "seconds": 37.59,
   "source_component_representation_version": "whu-native-vector-v1.0",
   "split_view": "scene_disjoint_v1",
   "structural_checks": {

@@ -1,143 +1,172 @@
 {
-  "_doc": "Task 6L Part H. Index of every required artifact with size and content hash.",
+  "_doc": "Task 6L Part H. Index of every required artifact with size, content hash and Git tracking status.",
   "all_present": true,
   "artifacts": [
     {
-      "bytes": 2956,
+      "bytes": 3907,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/manifest.json",
-      "sha256": "3ae996bbff5bcff8ea3b61269c740e2e54f66db483f19a752549ffd7ff6067bf"
+      "sha256": "35ba3a90139e96e11108b9a15e1192b9b025c4c76aa100002cebeb8a598df353",
+      "tracked": true
     },
     {
       "bytes": 2944,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/statistics.json",
-      "sha256": "32dffab734d37ee1cb8b2e19377fcef0051e22164f936fa03ccc34e9692e3c14"
+      "sha256": "32dffab734d37ee1cb8b2e19377fcef0051e22164f936fa03ccc34e9692e3c14",
+      "tracked": true
+    },
+    {
+      "bytes": 1376,
+      "exists": true,
+      "path": "datasets/whu_native_vector/v1.0/instance_schema.json",
+      "sha256": "21b84fd541b9a7703c5926b78f9b2051456c336ef36a0157260d298a603991c8",
+      "tracked": true
     },
     {
       "bytes": 11969604,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/tiles/index.jsonl",
-      "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad"
+      "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad",
+      "tracked": true
     },
     {
       "bytes": 18233822,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/instances/index.jsonl",
-      "sha256": "b4df51dd289c3361bf3649710af321e3b032a9a077c5e02d412b17eac21bfb53"
-    },
-    {
-      "bytes": 1376,
-      "exists": true,
-      "path": "datasets/whu_native_vector/v1.0/instances/schema.json",
-      "sha256": "21b84fd541b9a7703c5926b78f9b2051456c336ef36a0157260d298a603991c8"
+      "sha256": "b4df51dd289c3361bf3649710af321e3b032a9a077c5e02d412b17eac21bfb53",
+      "tracked": false
     },
     {
       "bytes": 75008,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/instances/sample_geometry.jsonl",
-      "sha256": "2be051bde1dce46de2ab740d3857c72daa372c16226d88887a95b62c9f05e500"
+      "sha256": "2be051bde1dce46de2ab740d3857c72daa372c16226d88887a95b62c9f05e500",
+      "tracked": false
     },
     {
       "bytes": 250368,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/splits/legacy_compat_v1.json",
-      "sha256": "57630b8394e5c0f3ae3e43e02d0486159e6fa91f451adce5402564468da32759"
+      "sha256": "57630b8394e5c0f3ae3e43e02d0486159e6fa91f451adce5402564468da32759",
+      "tracked": true
     },
     {
       "bytes": 250610,
       "exists": true,
       "path": "datasets/whu_native_vector/v1.0/splits/scene_disjoint_v1.json",
-      "sha256": "cd049045fe3446b255504f58eeb36b09e4158edea984113c036488d65976ea7e"
+      "sha256": "cd049045fe3446b255504f58eeb36b09e4158edea984113c036488d65976ea7e",
+      "tracked": true
     },
     {
       "bytes": 6551,
       "exists": true,
       "path": "datasets/build_spatial_reason/v0.2/manifest.json",
-      "sha256": "635cc471cca4f0e008c6e712cb80d2cde33e9878e7dffb2ee9b4c172647ae615"
+      "sha256": "635cc471cca4f0e008c6e712cb80d2cde33e9878e7dffb2ee9b4c172647ae615",
+      "tracked": true
     },
     {
       "bytes": 5988,
       "exists": true,
       "path": "datasets/build_spatial_reason/v0.2/statistics.json",
-      "sha256": "846afe9eb06c902ac4b526b56ea9dfa7e3dde811a68f8507bffecaac09d8dc67"
+      "sha256": "846afe9eb06c902ac4b526b56ea9dfa7e3dde811a68f8507bffecaac09d8dc67",
+      "tracked": true
     },
     {
       "bytes": 29572306,
       "exists": true,
       "path": "datasets/build_spatial_reason/v0.2/train.jsonl",
-      "sha256": "a1b36a0de99d33d47136572f7d546976b3cca8b5a4e991c0ea587212928a5237"
+      "sha256": "a1b36a0de99d33d47136572f7d546976b3cca8b5a4e991c0ea587212928a5237",
+      "tracked": false
     },
     {
       "bytes": 21084930,
       "exists": true,
       "path": "datasets/build_spatial_reason/v0.2/val.jsonl",
-      "sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f"
+      "sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f",
+      "tracked": false
     },
     {
       "bytes": 14415287,
       "exists": true,
       "path": "datasets/build_spatial_reason/v0.2/test.jsonl",
-      "sha256": "72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc"
+      "sha256": "72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc",
+      "tracked": false
     },
     {
       "bytes": 3945,
       "exists": true,
       "path": "configs/build_spatial_reason_v0.2.yaml",
-      "sha256": "51106e2af3888a48cebe6edf89767875b28493b3c39782311d6a78a9b16993b6"
+      "sha256": "51106e2af3888a48cebe6edf89767875b28493b3c39782311d6a78a9b16993b6",
+      "tracked": true
     },
     {
       "bytes": 24344,
       "exists": true,
       "path": "buildreasonseg_mvp/whu_native_vector.py",
-      "sha256": "9ae8025ed3b0b94803ae996f76785eef18a8a140fc5a88fa9b396aca8f7330b3"
+      "sha256": "9ae8025ed3b0b94803ae996f76785eef18a8a140fc5a88fa9b396aca8f7330b3",
+      "tracked": true
     },
     {
       "bytes": 15794,
       "exists": true,
       "path": "buildreasonseg_mvp/native_vector_adapter.py",
-      "sha256": "01ef83a1b179f263fd941280fd5c8211c72b7c6bb8eada2fd76a795364377c4a"
+      "sha256": "01ef83a1b179f263fd941280fd5c8211c72b7c6bb8eada2fd76a795364377c4a",
+      "tracked": true
     },
     {
       "bytes": 1996,
       "exists": true,
       "path": "evaluation/task6l_vector_dataset_integrity.json",
-      "sha256": "684a3768d061ef632cd4576ce25bb6925e8202109bafd87f2e52edd928e699e3"
+      "sha256": "7c8c7cfec2490ad5147d6e369e17ee21bd5e60c1bcc5634a3c83f2b381657966",
+      "tracked": true
     },
     {
       "bytes": 1636,
       "exists": true,
       "path": "evaluation/task6l_scene_disjoint_split_audit.json",
-      "sha256": "4199691def5cb16b7fef26f2541d20176b5146f38f4441e69bc0d7b2e662d088"
+      "sha256": "4199691def5cb16b7fef26f2541d20176b5146f38f4441e69bc0d7b2e662d088",
+      "tracked": true
     },
     {
       "bytes": 8901,
       "exists": true,
       "path": "evaluation/task6l_build_spatial_reason_v0.2_quality.json",
-      "sha256": "c3e6ba73d969620c373463bf0213dc4f9b2a607392084c64c0fdd571acf4b399"
+      "sha256": "64af54e263b216dae43515d0702dd119a62ed2aaa0860a62e962042e5f9fb902",
+      "tracked": true
     },
     {
       "bytes": 4349,
       "exists": true,
       "path": "evaluation/task6l_v01_vs_v02_comparison.json",
-      "sha256": "0edc221cf39a5ad3355caff41eaddcb9ab653cc45e71ef3f2f606ca6f7cfd4dc"
+      "sha256": "0edc221cf39a5ad3355caff41eaddcb9ab653cc45e71ef3f2f606ca6f7cfd4dc",
+      "tracked": true
     },
     {
       "bytes": 5180,
       "exists": true,
       "path": "evaluation/task6l_verdict.json",
-      "sha256": "ad8dce4c3310bdbba8478b16f4e12f7700a37ada03ca617bc6eb260111b1c463"
+      "sha256": "f76c32d1c75f993ce6b378875b840e45987f9a781f62423b19230f9c0b737bde",
+      "tracked": true
     },
     {
-      "bytes": 11280,
+      "bytes": 12354,
       "exists": true,
       "path": "docs/task6l_vector_dataset_migration.md",
-      "sha256": "dd82d7564001d6b8f5ae05319f7e048a97728dc71cea6fb455df147130950a31"
+      "sha256": "098224a1259a3a33ed32df47156e6a71843e597cd5a888bac0a200bb5f5a98f1",
+      "tracked": true
     }
   ],
   "gitignored_caches": [
     "artifacts/whu_native_vector/instances/<tile_id>.npz",
     "artifacts/whu_native_vector/reasoning_view/<split_view>/..."
+  ],
+  "local_only": [
+    "datasets/whu_native_vector/v1.0/instances/index.jsonl",
+    "datasets/whu_native_vector/v1.0/instances/sample_geometry.jsonl",
+    "datasets/build_spatial_reason/v0.2/train.jsonl",
+    "datasets/build_spatial_reason/v0.2/val.jsonl",
+    "datasets/build_spatial_reason/v0.2/test.jsonl"
   ],
   "missing": [],
   "overlay_samples": [
@@ -172,5 +201,6 @@
       "tile_id": "2_1168"
     }
   ],
-  "task": "6L"
+  "task": "6L",
+  "tracking_convention": "the repository's .gitignore keeps generated dataset records local (`datasets/build_spatial_reason/**/*.jsonl`, `datasets/**/instances/`), exactly as for the v0.1.1 baseline; every artifact in this index is reproducible with the commands in docs/task6l_vector_dataset_migration.md"
 }

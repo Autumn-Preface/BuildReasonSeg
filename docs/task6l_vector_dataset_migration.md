@@ -66,11 +66,14 @@ merging, no `RETR_EXTERNAL` hole loss, no `approxPolyDP` simplification. Holes a
 are carried as explicit `outer`/`hole` rings in tile pixel coordinates; tiny instances are flagged
 but kept, so filtering can only happen later, at query-eligibility time.
 
-The per-instance schema is documented in `instances/schema.json`; per-instance scalars for the whole
-corpus are in `instances/index.jsonl`; full pixel-space rings are in
-`instances/sample_geometry.jsonl` (a deterministic sample) and in the gitignored per-tile cache
-`artifacts/whu_native_vector/instances/<tile_id>.npz`, which is regenerated deterministically by
-`scripts/task6l_build_dataset.py`.
+The per-instance schema is documented in the **tracked** `instance_schema.json`; per-instance scalars
+for the whole corpus are written to `instances/index.jsonl`, full pixel-space rings to
+`instances/sample_geometry.jsonl` (a deterministic sample) and the full per-tile geometry to the
+per-tile cache `artifacts/whu_native_vector/instances/<tile_id>.npz`. The two `instances/` files and
+the per-tile cache are **local-only**, because the repository's existing `.gitignore` rule
+`datasets/**/instances/` treats generated annotation bulk as regenerable — the same rule that keeps
+`datasets/whu/components/` and the v0.1.1 JSONL records out of Git. All of them are regenerated
+deterministically by `scripts/task6l_build_dataset.py`.
 
 ## 4. Split design (two views)
 
@@ -202,15 +205,29 @@ J0/J1/J2/J3 artifacts remain frozen and **J4 was not run** with an untrained or 
 
 ## 11. Storage / Git
 
-Committed: canonical manifest/statistics/index/splits/schema/sample geometry, the v0.2 dataset, the
-evaluation artifacts, scripts, tests and this document. **Not committed:** raw TIFFs, the source
-shapefile, per-instance raster dumps, per-tile geometry caches or the reasoning view. Those live
-under the gitignored `artifacts/whu_native_vector/` and are regenerated deterministically:
+**Tracked** (in the repository): the canonical `manifest.json`, `statistics.json`,
+`instance_schema.json`, `tiles/index.jsonl` and `splits/*.json`; the v0.2 `manifest.json` +
+`statistics.json`; `configs/build_spatial_reason_v0.2.yaml`; the two library modules; every
+`evaluation/task6l_*.json` artifact; the small overlay panels in `evaluation/task6l_samples/`; the
+scripts, tests and this document.
+
+**Local-only, by the repository's existing convention** (`.gitignore`:
+`datasets/build_spatial_reason/**/*.jsonl`, `datasets/**/instances/`): the v0.2 split records
+(`train/val/test.jsonl`, 62 MB), `instances/index.jsonl` (17.4 MB) and
+`instances/sample_geometry.jsonl` — exactly as the v0.1.1 baseline records are untracked. Nothing is
+lost: `task6l_artifact_index.json` records every one of them with size, SHA256 and an explicit
+`tracked` flag.
+
+**Never stored anywhere**: raw TIFFs, the source shapefile, per-instance raster dumps, the per-tile
+geometry caches and the reasoning view (the last two live under the gitignored
+`artifacts/whu_native_vector/`).
+
+Regeneration, in order:
 
 ```text
-python scripts/task6l_build_dataset.py            # canonical instances (cache)
-python scripts/task6l_build_reasoning_view.py     # reasoning view (cache)
-python scripts/task6l_build_v0_2.py               # BuildSpatialReason v0.2
+python scripts/task6l_build_dataset.py            # canonical instances (incl. local-only index)
+python scripts/task6l_build_reasoning_view.py     # reasoning view (gitignored cache)
+python scripts/task6l_build_v0_2.py               # BuildSpatialReason v0.2 records
 python scripts/task6l_compare_v01_v02.py          # section 18 comparison
 python scripts/task6l_validate.py                 # gates, verdict, artifact index
 ```
