@@ -1,0 +1,115 @@
+{
+  "border_truncated_instances": 14583,
+  "border_truncated_rate": 0.3540766279803817,
+  "dataset_name": "WHU-EA-NativeVector",
+  "dataset_version": "v1.0",
+  "distinct_source_features_represented": 33788,
+  "empty_tiles": 11909,
+  "empty_tiles_by_raster": {
+    "test": 2535,
+    "train1": 7523,
+    "train2": 1851
+  },
+  "instance_area_px": {
+    "count": 41186,
+    "max": 132014.0,
+    "mean": 1682.920604088768,
+    "median": 1234.0,
+    "min": 1.0,
+    "p5": 116.0,
+    "p90": 3118.0
+  },
+  "instance_overlap_or_rounding": {
+    "definition": "sum of per-instance rasterised areas minus the number of non-background pixels in the combined uint8 label map; a small positive delta means adjacent instances share boundary pixels, where the later instance owns the pixel",
+    "delta_distribution": {
+      "1": 86,
+      "10-49": 96,
+      "2": 50,
+      "3-4": 68,
+      "5-9": 67,
+      "50": 3
+    },
+    "delta_max_px": 96,
+    "delta_sum_px": 2966,
+    "tiles_with_nonzero_delta": 370
+  },
+  "instances_by_raster": {
+    "test": 9791,
+    "train1": 15721,
+    "train2": 15674
+  },
+  "instances_per_tile": {
+    "count": 17388,
+    "max": 55.0,
+    "mean": 2.368645042558086,
+    "median": 0.0,
+    "min": 0.0,
+    "p5": 0.0,
+    "p90": 8.0
+  },
+  "instances_per_tile_distribution": {
+    "0": 11909,
+    "1": 921,
+    "10-19": 1065,
+    "2": 686,
+    "20-49": 438,
+    "3-4": 1004,
+    "5-9": 1360,
+    "50": 5
+  },
+  "instances_with_holes": 6,
+  "label_map_uint8_limit": 255,
+  "max_instances_per_tile": 55,
+  "max_instances_per_tile_id": "2_3091",
+  "multipart_instances": 0,
+  "non_empty_tiles": 5479,
+  "preservation_guarantees": {
+    "approx_poly_dp_simplification": false,
+    "connected_component_merging": false,
+    "min_contour_area_filter": null,
+    "note": "native polygon geometry is preserved exactly as tile clipping permits",
+    "retr_external_hole_loss": false,
+    "tiny_instances_retained": true
+  },
+  "schema_version": "1.0",
+  "source_feature_count": 34085,
+  "splits": {
+    "legacy_compat_v1": {
+      "test": 903,
+      "train": 2508,
+      "unassigned": 13350,
+      "val": 627
+    },
+    "scene_disjoint_v1": {
+      "excluded_boundary_crossing_features": 0,
+      "test": 3726,
+      "train": 10044,
+      "val": 3618
+    }
+  },
+  "tile_counts_by_category": {
+    "test": 903,
+    "test_no": 2823,
+    "train": 3135,
+    "train_no": 10527
+  },
+  "tiles_by_raster": {
+    "test": 3726,
+    "train1": 10044,
+    "train2": 3618
+  },
+  "tiles_expected": 17388,
+  "tiles_indexed": 17388,
+  "tiny_instance_rate": 0.029985917544796774,
+  "tiny_instances": 1235,
+  "total_clipped_instances": 41186,
+  "visible_fraction": {
+    "count": 41186,
+    "max": 1.0,
+    "mean": 0.8189359066706575,
+    "median": 1.0,
+    "min": 4.2033143133360655e-05,
+    "p5": 0.06926108125835667,
+    "p90": 1.0
+  }
+}

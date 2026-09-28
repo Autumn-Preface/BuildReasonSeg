@@ -1,0 +1,59 @@
+{
+  "dataset_name": "WHU-EA-NativeVector",
+  "dataset_version": "v1.0",
+  "files": {
+    "instance_index": "datasets/whu_native_vector/v1.0/instances/index.jsonl",
+    "instance_schema": "datasets/whu_native_vector/v1.0/instances/schema.json",
+    "sample_geometry": "datasets/whu_native_vector/v1.0/instances/sample_geometry.jsonl",
+    "splits": [
+      "datasets/whu_native_vector/v1.0/splits/legacy_compat_v1.json",
+      "datasets/whu_native_vector/v1.0/splits/scene_disjoint_v1.json"
+    ],
+    "statistics": "datasets/whu_native_vector/v1.0/statistics.json",
+    "tile_index": "datasets/whu_native_vector/v1.0/tiles/index.jsonl"
+  },
+  "generation": {
+    "limit_applied": null,
+    "rgb_hash_skipped": false,
+    "runtime_seconds": 122.85
+  },
+  "geometry_cache": {
+    "contents": "uint8 label map, clipped polygon rings (pixel coords), per-instance scalars",
+    "gitignored": true,
+    "path": "artifacts/whu_native_vector/instances/<tile_id>.npz",
+    "regenerate_with": "python scripts/task6l_build_dataset.py"
+  },
+  "instance_identity": {
+    "dbf_fields_are_identity": false,
+    "source_feature_id": "1-based EA.shp record order within this exact archive",
+    "tile_instance_id": "deterministic 1-based order of clipped features in one tile",
+    "uid": "(EA.shp SHA256, source_feature_id)"
+  },
+  "predecessor": "Task 6K.1 verdict MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES",
+  "primary_annotation_truth": "native EA.shp polygon geometry (Task 6K.1 validated)",
+  "project_name": "BuildReasonSeg",
+  "schema_version": "1.0",
+  "shapefile_provenance": {
+    "dbf_sha256": "0a56dc0229f8ccac3dbe4917ece04208d081d4548ebeccd7a239fb4003bdbb04",
+    "identity_note": "source_feature_id is the 1-based .shp record order within this exact archive; the DBF attribute table is degenerate (Task 6K.1) and is never used for identity",
+    "prj_sha256": "e6da869114537fcbb76b4e47e07c0a636beb1b54c0cc7de10f804091bf598e7e",
+    "shp_bytes": 4999904,
+    "shp_path_logical": "2. The shape file of the whole images/EA.shp",
+    "shp_sha256": "9bbd1e06d6cd075fb9ad5c99926dbf411c667587876afb8a067da7859b541b44",
+    "shx_sha256": "5b6e089a62bbb488eab5a8557938bf4dab2ac8f9effcef20c9c36e76c3a519be",
+    "uid_definition": "stable instance UID = (EA.shp SHA256, source_feature_id)"
+  },
+  "source_root_note": "the external WHU archive root is supplied at runtime (--source-root); committed metadata stores only logical paths relative to that root, never absolute paths",
+  "tile_coverage": {
+    "categories": {
+      "test": 903,
+      "test_no": 2823,
+      "train": 3135,
+      "train_no": 10527
+    },
+    "includes_empty_tiles": true,
+    "includes_negative_folders": true,
+    "tiles_indexed": 17388
+  },
+  "tile_id_definition": "tile_id is the archive's own tile name (e.g. `1_0`, `0`), unique across the cropped archive; grid_id = `<raster>:<row>:<col>` is the whole-raster coordinate identity"
+}

@@ -1,0 +1,150 @@
+{
+  "dataset_name": "BuildSpatialReason",
+  "dataset_version": "v0.2",
+  "discard_reasons": {
+    "ambiguous": 1941,
+    "level3_nearest_semantic_ineligible": 1571,
+    "multiple_direction_candidates": 4024,
+    "nearest_margin_fail": 370,
+    "nearest_semantic_ineligible": 918,
+    "no_direction_candidate": 11301,
+    "quota_downsample": 507,
+    "semantic_ambiguous": 5460,
+    "semantic_target_ineligible": 13602,
+    "single_component_image": 12830
+  },
+  "frozen_relation_settings": {
+    "ambiguous_policy": "discard",
+    "direction_alpha": 1.2,
+    "direction_preset": "medium",
+    "direction_tau": 0.04,
+    "nearest_anchor_non_border": true,
+    "nearest_target_non_border": true,
+    "ratio_margin": 1.1
+  },
+  "generation_seed": 20260804,
+  "generation_source": {
+    "file_sha256": {
+      "buildreasonseg_mvp/native_vector_adapter.py": "01ef83a1b179f263fd941280fd5c8211c72b7c6bb8eada2fd76a795364377c4a",
+      "scripts/task6l_build_v0_2.py": "5ea8196b82d13b7aae140e0b4e39ff4aa1d361a9b485bf3178c9945e20065c9c",
+      "spatial_reasoning/annotator.py": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca",
+      "spatial_reasoning/component_quality.py": "ec8e86462670d33fe47391b82c20cd6fb3e527fcfc633df007114ae36a75ca33",
+      "spatial_reasoning/geometry.py": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807",
+      "spatial_reasoning/relations.py": "ec0fd6139cf312bcb77bd8dded89c44da4fc6a84c331f0a81a49a058f036c7dc",
+      "spatial_reasoning/semantic_policy.py": "69a7dc6a64804d7e1211d32029c198a68577af386e09a6d349dce4c79f071aa8",
+      "spatial_reasoning/templates.py": "29b63ae1ca11d9d18e0d75edaa6ca67646f0206caf003e29a58783a4d3b66dc1",
+      "spatial_reasoning/thresholds.py": "22ba70feb85fd1d8550384b9c527795a29d7d63715c637e5aaa0cb04b5ef6570"
+    },
+    "hash_definition": "SHA256 of the working-tree file content (LF-normalised by Git on commit)"
+  },
+  "generator_code_version": "v0.1.1",
+  "generator_config": "configs/build_spatial_reason_v0.2.yaml",
+  "generator_config_sha256": "51106e2af3888a48cebe6edf89767875b28493b3c39782311d6a78a9b16993b6",
+  "generator_version": "v0.1.1",
+  "known_limitations": [
+    {
+      "detail": "A 'building region' now maps to a native EA.shp polygon. This is materially better than a semantic connected component, but it is still an annotation, not a verified physical building inventory.",
+      "id": "KL-01",
+      "limitation": "instance truth is a manually delineated vector map"
+    },
+    {
+      "detail": "Task 6K.1 measured a 6.96% weighted VECTOR-vs-PSEUDO target change on the historical tiles; v0.2 is therefore not answer-compatible with v0.1.1, and Task 6L section 18 quantifies the delta.",
+      "id": "KL-02",
+      "limitation": "annotation migration changes some relation answers"
+    },
+    {
+      "detail": "train1/train2/test are three whole rasters of the same East-Asia acquisition. This supports scene separation; it does NOT support cross-city or broad geographic generalization claims.",
+      "id": "KL-03",
+      "limitation": "scene-disjoint split separates scenes, not cities"
+    },
+    {
+      "detail": "No annotation of use, type, or function exists in the source data.",
+      "id": "KL-04",
+      "limitation": "no building-function semantics"
+    },
+    {
+      "detail": "Native instances clipped by a tile edge keep their clipped geometry and a visible_fraction; eligibility still follows the frozen relation rules.",
+      "id": "KL-05",
+      "limitation": "border-truncated instances remain"
+    },
+    {
+      "detail": "Instructions come from the same deterministic v0.1 template families as v0.1.1 so the two versions stay comparable.",
+      "id": "KL-06",
+      "limitation": "language is template-generated rather than human-authored"
+    },
+    {
+      "detail": "Task 6K.1 proved the shipped DBF is degenerate; identity is (EA.shp SHA256, source_feature_id), recorded in the canonical manifest.",
+      "id": "KL-07",
+      "limitation": "DBF attributes of the source archive are unusable"
+    }
+  ],
+  "program_count": 20,
+  "program_vocabulary_unchanged": true,
+  "project_name": "BuildReasonSeg",
+  "relation_config": "configs/spatial_relations_v1.yaml",
+  "relation_config_sha256": "f6cba54ee0d6883ef286d1a903431e08b79bf9df2ae37a2e26101728f7185628",
+  "relation_config_version": "spatial_relations_v1",
+  "sample_counts": {
+    "by_level": {
+      "1": 19769,
+      "2": 5323,
+      "3": 3016
+    },
+    "by_query_type": {
+      "bottommost": 4032,
+      "largest": 2410,
+      "largest_to_above": 521,
+      "largest_to_above_to_nearest": 736,
+      "largest_to_below": 471,
+      "largest_to_below_to_nearest": 743,
+      "largest_to_left_of": 559,
+      "largest_to_left_of_to_nearest": 763,
+      "largest_to_nearest": 1503,
+      "largest_to_right_of": 535,
+      "largest_to_right_of_to_nearest": 774,
+      "leftmost": 4093,
+      "rightmost": 4089,
+      "smallest": 1068,
+      "smallest_to_above": 240,
+      "smallest_to_below": 218,
+      "smallest_to_left_of": 241,
+      "smallest_to_nearest": 783,
+      "smallest_to_right_of": 252,
+      "topmost": 4077
+    },
+    "by_split": {
+      "test": 6219,
+      "train": 12778,
+      "val": 9111
+    },
+    "level2": {
+      "invariant_holds": true,
+      "reference_to_direction": 3037,
+      "reference_to_nearest": 2286,
+      "total_level2": 5323
+    },
+    "level3": {
+      "nontrivial": 1624,
+      "trivial": 1392
+    },
+    "total": 28108
+  },
+  "semantic_visibility_policy_version": "1.0",
+  "source_component_representation_version": "whu-native-vector-v1.0",
+  "source_dataset": "WHU Building Dataset",
+  "source_instances": {
+    "dataset_name": "WHU-EA-NativeVector",
+    "dataset_version": "v1.0",
+    "geometry_cache": "artifacts/whu_native_vector/instances",
+    "instance_index": "datasets/whu_native_vector/v1.0/instances/index.jsonl",
+    "manifest": "datasets/whu_native_vector/v1.0/manifest.json",
+    "reasoning_view_cache": "artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1",
+    "split_view": "scene_disjoint_v1",
+    "statistics": "datasets/whu_native_vector/v1.0/statistics.json",
+    "tile_index": "datasets/whu_native_vector/v1.0/tiles/index.jsonl"
+  },
+  "source_subset": "Satellite dataset II (East Asia)",
+  "split_view": "scene_disjoint_v1",
+  "statistics_file": "datasets/build_spatial_reason/v0.2/statistics.json",
+  "template_version": "v0.1"
+}

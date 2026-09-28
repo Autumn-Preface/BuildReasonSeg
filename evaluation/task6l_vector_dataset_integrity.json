@@ -1,0 +1,54 @@
+{
+  "_doc": "Task 6L section 16. Structural integrity of the canonical native-vector dataset: tile coverage, identity stability, geometry preservation and cache consistency.",
+  "all_tiles_accounted": true,
+  "cache": {
+    "directory": "artifacts/whu_native_vector/instances",
+    "files_written": 17388,
+    "gitignored": true
+  },
+  "category_counts_match_archive": true,
+  "determinism": {
+    "clipping": "Sutherland-Hodgman against the validated tile window",
+    "geometry_source": "EA.shp bytes",
+    "runtime_seconds": 122.86,
+    "shp_sha256": "9bbd1e06d6cd075fb9ad5c99926dbf411c667587876afb8a067da7859b541b44"
+  },
+  "distinct_source_features_represented": 33788,
+  "empty_tiles_supported": {
+    "empty_tiles": 11909,
+    "non_empty_tiles": 5479
+  },
+  "grid_id_unique": true,
+  "holes_preserved": {
+    "features_with_holes_in_source": 5,
+    "hole_loss": false,
+    "instances_with_holes": 6
+  },
+  "instances_with_no_source_feature_id": 0,
+  "multipart_preserved": {
+    "multipart_features_in_source": 5,
+    "multipart_instances": 0,
+    "multipart_loss": false,
+    "note": "no tile-clipped instance has more than one outer ring because the 5 multipart source features have widely separated parts that never fall in the same 512x512 window; their parts are still preserved as separate clipped instances of the same source_feature_id"
+  },
+  "no_global_area_deletion": {
+    "min_contour_area_filter": null,
+    "note": "tiny instances are flagged (tiny_area) but never removed from the canonical GT",
+    "tiny_instances_retained": 1235
+  },
+  "source_feature_count": 34085,
+  "stable_source_ids_survive_clipping": true,
+  "task": "6L",
+  "tile_counts_by_category": {
+    "test": 903,
+    "test_no": 2823,
+    "train": 3135,
+    "train_no": 10527
+  },
+  "tile_id_unique": true,
+  "tiles_expected": 17388,
+  "tiles_indexed": 17388,
+  "total_clipped_instances": 41186,
+  "unique_grid_ids": 17388,
+  "unique_tile_ids": 17388
+}

@@ -1,0 +1,113 @@
+# =============================================================================
+# BuildSpatialReason v0.2 generation config
+#
+# Successor to v0.1.1. Task 6L migrates the ANNOTATION TRUTH and the SPLIT only:
+#
+#   * candidate truth      : native WHU East-Asia vector instances (WHU-EA-NativeVector v1.0)
+#   * primary split        : scene_disjoint_v1 (train1 / train2 / test whole rasters)
+#   * program vocabulary   : the SAME 20 canonical query types as v0.1.1
+#   * relation semantics   : the SAME frozen configs/spatial_relations_v1.yaml
+#   * visibility policy    : UNCHANGED at "1.0" (native visibility metadata is stored but is
+#                            not used for eligibility, so no policy version bump is claimed)
+#
+# See docs/task6l_vector_dataset_migration.md and ADR-025.
+# =============================================================================
+
+dataset:
+  name: BuildSpatialReason
+  version: v0.2
+  project: BuildReasonSeg
+  source_dataset: WHU Building Dataset
+  source_subset: Satellite dataset II (East Asia)
+  component_representation_version: whu-native-vector-v1.0
+  semantic_visibility_policy_version: "1.0"
+
+# Canonical native-vector instance dataset this version is generated from.
+source_instances:
+  dataset_name: WHU-EA-NativeVector
+  dataset_version: v1.0
+  manifest: datasets/whu_native_vector/v1.0/manifest.json
+  statistics: datasets/whu_native_vector/v1.0/statistics.json
+  tile_index: datasets/whu_native_vector/v1.0/tiles/index.jsonl
+  instance_index: datasets/whu_native_vector/v1.0/instances/index.jsonl
+  split_view: scene_disjoint_v1
+  geometry_cache: artifacts/whu_native_vector/instances
+  reasoning_view_cache: artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1
+
+# Frozen relation layer. Read-only: the generator must not modify these.
+relations:
+  config: configs/spatial_relations_v1.yaml
+  config_version: spatial_relations_v1
+  frozen:
+    ratio_margin: 1.10
+    direction_preset: medium
+    nearest_anchor_non_border: true
+    nearest_target_non_border: true
+    ambiguous_policy: discard
+
+generator:
+  version: v0.2
+  code_version: v0.1.1          # the frozen annotator/templates/relations code is reused unchanged
+  seed: 20260804
+  template_version: v0.1
+
+# -----------------------------------------------------------------------------
+# Semantic visibility policy - UNCHANGED from v0.1.1 on purpose.
+#
+# Task 6L section 14 allows a v2.0 policy when vector geometry exposes better
+# visibility. This migration deliberately does NOT change eligibility, so the
+# v0.1.1 <-> v0.2 comparison isolates annotation truth + split.
+# -----------------------------------------------------------------------------
+semantic_policy:
+  version: "1.0"
+  semantic_universe: visible_components
+  on_semantic_target_ineligible: discard
+  on_semantic_ambiguous: discard
+  allow_runner_up_substitution: false
+  id_free_reasoning: true
+
+# -----------------------------------------------------------------------------
+# Query types - identical to v0.1.1 (20 canonical programs).
+# -----------------------------------------------------------------------------
+level1:
+  enabled: true
+  query_types: [leftmost, rightmost, topmost, bottommost, largest, smallest]
+  max_per_image: 6
+
+level2:
+  enabled: true
+  nearest:
+    enabled: true
+    references: [largest, smallest]
+  direction:
+    enabled: true
+    references: [largest, smallest]
+    relations: [left_of, right_of, above, below]
+  max_per_image: 4
+
+level3:
+  enabled: true
+  references: [largest]
+  relations: [left_of, right_of, above, below]
+  max_per_image: 2
+  emit_trivial: true
+
+quotas:
+  max_per_image: 12
+  max_per_query_type_per_image: 1
+  max_per_level_per_image:
+    level1: 6
+    level2: 4
+    level3: 2
+  max_per_query_type_total: null
+  max_per_level_total: null
+  downsample_seed: 20260804
+
+output:
+  root: datasets/build_spatial_reason
+  version_dir: v0.2
+
+language:
+  emit_zh: true
+  emit_en: true
+  template_families_min: 3

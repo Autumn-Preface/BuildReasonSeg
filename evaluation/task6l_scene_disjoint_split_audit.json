@@ -1,0 +1,41 @@
+{
+  "_doc": "Task 6L section 8/18. Scene-disjoint split audit: tile overlap, source-feature identity leakage, RGB duplicate hashes and the documented boundary exclusions.",
+  "definition": {
+    "test": "test",
+    "train": "train1",
+    "val": "train2"
+  },
+  "excluded_boundary_crossing_feature_count": 0,
+  "excluded_boundary_crossing_features": [],
+  "excluded_boundary_instance_rows": 0,
+  "exclusion_reason": "a feature crossing the ~1 m overlap between adjacent whole rasters would otherwise appear in two splits; these features are excluded from the scene-disjoint view only",
+  "interpretation": "scene/raster separation only - not unseen-city or broad geographic generalization; no cross-city claim may be made from this split",
+  "rgb_duplicate_hashes": {
+    "all_cross_split_duplicates_degenerate": true,
+    "cross_split_examples": {},
+    "cross_split_groups": 0,
+    "duplicate_groups": 1,
+    "duplicate_tiles": 1302,
+    "hash_definition": "SHA256 of the 64x64 bilinear grayscale downsample of the tile image",
+    "note": "cross-split duplicates are only acceptable when the content is degenerate (near-uniform tiles); any non-degenerate cross-split duplicate is a leakage finding"
+  },
+  "source_feature_leakage_zero": true,
+  "source_feature_overlap_after_exclusions": {
+    "train_test": 0,
+    "train_val": 0,
+    "val_test": 0
+  },
+  "split_sizes": {
+    "test": 3726,
+    "train": 10044,
+    "val": 3618
+  },
+  "task": "6L",
+  "tile_overlap": {
+    "train_test": 0,
+    "train_val": 0,
+    "val_test": 0
+  },
+  "tile_overlap_zero": true,
+  "view": "scene_disjoint_v1"
+}

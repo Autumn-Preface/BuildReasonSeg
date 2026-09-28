@@ -1,0 +1,152 @@
+{
+  "_doc": "Task 6L section 18. v0.1.1 (pseudo-instance truth, random split) vs v0.2 (native-vector truth) on the identical 4,038 historical tiles under legacy_compat_v1. The comparison unit is (tile_id, query_type); targets are compared by mask IoU >= 0.5.",
+  "answer_change": {
+    "became_invalid_in_v02": 2019,
+    "became_valid_in_v02": 1160,
+    "comparable": 23210,
+    "target_change_rate": 0.05704437742352434,
+    "target_changed": 1324,
+    "target_unchanged": 21886,
+    "unmatched_geometry": 0
+  },
+  "by_level": {
+    "1": {
+      "change_rate": 0.07605394241282955,
+      "changed": 1252,
+      "unchanged": 15210
+    },
+    "2": {
+      "change_rate": 0.007382710169087878,
+      "changed": 31,
+      "unchanged": 4168
+    },
+    "3": {
+      "change_rate": 0.016084739113377794,
+      "changed": 41,
+      "unchanged": 2508
+    }
+  },
+  "by_query_type": {
+    "bottommost": {
+      "change_rate": 0.0912863070539419,
+      "changed": 308,
+      "unchanged": 3066
+    },
+    "largest": {
+      "change_rate": 0.007664793050587634,
+      "changed": 15,
+      "unchanged": 1942
+    },
+    "largest_to_above": {
+      "change_rate": 0.0,
+      "unchanged": 389
+    },
+    "largest_to_above_to_nearest": {
+      "change_rate": 0.014263074484944533,
+      "changed": 9,
+      "unchanged": 622
+    },
+    "largest_to_below": {
+      "change_rate": 0.0,
+      "unchanged": 350
+    },
+    "largest_to_below_to_nearest": {
+      "change_rate": 0.015822784810126583,
+      "changed": 10,
+      "unchanged": 622
+    },
+    "largest_to_left_of": {
+      "change_rate": 0.0024752475247524753,
+      "changed": 1,
+      "unchanged": 403
+    },
+    "largest_to_left_of_to_nearest": {
+      "change_rate": 0.01904761904761905,
+      "changed": 12,
+      "unchanged": 618
+    },
+    "largest_to_nearest": {
+      "change_rate": 0.018590240123934933,
+      "changed": 24,
+      "unchanged": 1267
+    },
+    "largest_to_right_of": {
+      "change_rate": 0.0,
+      "unchanged": 384
+    },
+    "largest_to_right_of_to_nearest": {
+      "change_rate": 0.01524390243902439,
+      "changed": 10,
+      "unchanged": 646
+    },
+    "leftmost": {
+      "change_rate": 0.09260337798485731,
+      "changed": 318,
+      "unchanged": 3116
+    },
+    "rightmost": {
+      "change_rate": 0.08719743365412656,
+      "changed": 299,
+      "unchanged": 3130
+    },
+    "smallest": {
+      "change_rate": 0.012761020881670533,
+      "changed": 11,
+      "unchanged": 851
+    },
+    "smallest_to_above": {
+      "change_rate": 0.0,
+      "unchanged": 187
+    },
+    "smallest_to_below": {
+      "change_rate": 0.0,
+      "unchanged": 170
+    },
+    "smallest_to_left_of": {
+      "change_rate": 0.0,
+      "unchanged": 202
+    },
+    "smallest_to_nearest": {
+      "change_rate": 0.00792393026941363,
+      "changed": 5,
+      "unchanged": 626
+    },
+    "smallest_to_right_of": {
+      "change_rate": 0.005235602094240838,
+      "changed": 1,
+      "unchanged": 190
+    },
+    "topmost": {
+      "change_rate": 0.08837345860246623,
+      "changed": 301,
+      "unchanged": 3105
+    }
+  },
+  "reconciliation": {
+    "note": "Task 6K.1's 6.96% is a VECTOR-vs-PSEUDO drift over all 20 programs with the frozen executor; this comparison runs the actual v0.1.1/v0.2 generated datasets and is expected to land in the same range. Differences come from quota/eligibility interaction, not from a different relation definition.",
+    "task6k1_vector_vs_pseudo_weighted_drift": 0.06959
+  },
+  "runtime_seconds": 267.29,
+  "scope": {
+    "common_query_groups": 23210,
+    "comparison_unit": "(tile_id, query_type) group; every member target must have a distinct counterpart at IoU >= 0.5",
+    "group_size_distribution_v011": {
+      "1": 23210
+    },
+    "group_size_distribution_v02": {
+      "1": 23210
+    },
+    "only_v0.1.1_groups": 2019,
+    "only_v0.2_groups": 1160,
+    "split_view": "legacy_compat_v1",
+    "tiles": 4038,
+    "v0.1.1_answers": 25229,
+    "v0.2_answers": 24370
+  },
+  "task": "6L",
+  "weighted_current_query_target_change_rate": 0.054473525780998705,
+  "weighting": {
+    "method": "per-query-type target-change rate weighted by the frozen v0.1.1 query-type counts",
+    "weight_records": 25229
+  }
+}

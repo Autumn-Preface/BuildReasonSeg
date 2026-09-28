@@ -1,0 +1,151 @@
+{
+  "_doc": "Task 6L section 19. Acceptance gates and the migration verdict. Every gate reports its measured value next to the boolean.",
+  "allowed_verdicts": [
+    "VECTOR_DATASET_MIGRATION_PASS",
+    "VECTOR_DATASET_MIGRATION_NEEDS_FIX"
+  ],
+  "failed_gates": [],
+  "gates": {
+    "all_17388_tiles_have_canonical_records": {
+      "measured": {
+        "tiles_indexed": 17388,
+        "unique_tile_ids": 17388
+      },
+      "passed": true
+    },
+    "artifact_consistency": {
+      "measured": {
+        "program_count": 20,
+        "source_component_representation_version": "whu-native-vector-v1.0",
+        "split_view": "scene_disjoint_v1"
+      },
+      "passed": true
+    },
+    "every_program_represented_in_val_and_test": {
+      "measured": {
+        "missing_programs_by_split": {
+          "test": [],
+          "train": [],
+          "val": []
+        }
+      },
+      "passed": true
+    },
+    "generator_and_validator_deterministic": {
+      "measured": {
+        "identical": true,
+        "real_v02_untouched": true,
+        "runs": [
+          {
+            "test.jsonl": "301bfb0aa0f9b9320cec5e1f944eb88157ae58303c3a3b469d7106e7dce32b7d",
+            "train.jsonl": "c6731446a7c4a6bc96c1e1e011a1474c66b3f2d6966b4981dae9b425339f81b9",
+            "val.jsonl": "5224ab28641638a000d71e8b1b443bdf2b15ce47edb3a92a9b16c5513f4b62bc"
+          },
+          {
+            "test.jsonl": "301bfb0aa0f9b9320cec5e1f944eb88157ae58303c3a3b469d7106e7dce32b7d",
+            "train.jsonl": "c6731446a7c4a6bc96c1e1e011a1474c66b3f2d6966b4981dae9b425339f81b9",
+            "val.jsonl": "5224ab28641638a000d71e8b1b443bdf2b15ce47edb3a92a9b16c5513f4b62bc"
+          }
+        ],
+        "subset": "25 tiles per split (debug limit), written to a scratch directory"
+      },
+      "passed": true
+    },
+    "no_cross_split_source_feature_leakage": {
+      "measured": {
+        "excluded_boundary_features": 0,
+        "rgb_cross_split_groups": 0,
+        "source_feature_overlap": {
+          "train_test": 0,
+          "train_val": 0,
+          "val_test": 0
+        },
+        "tile_overlap": {
+          "train_test": 0,
+          "train_val": 0,
+          "val_test": 0
+        }
+      },
+      "passed": true
+    },
+    "no_test_data_influences_thresholds": {
+      "measured": {
+        "configs": "configs/spatial_relations_v1.yaml (unchanged from v0.1.1)",
+        "relation_config_sha256_v011": "f6cba54ee0d6883ef286d1a903431e08b79bf9df2ae37a2e26101728f7185628",
+        "relation_config_sha256_v02": "f6cba54ee0d6883ef286d1a903431e08b79bf9df2ae37a2e26101728f7185628"
+      },
+      "passed": true
+    },
+    "random_audit_samples_agree_with_native_vector": {
+      "measured": {
+        "identical_label_maps": 40,
+        "min_iou": 1.0,
+        "sampled_tiles": 40
+      },
+      "passed": true
+    },
+    "stable_source_ids_survive_clipping": {
+      "measured": {
+        "distinct_features": 33788,
+        "instances_with_no_source_feature_id": 0
+      },
+      "passed": true
+    },
+    "v011_frozen_unchanged": {
+      "measured": {
+        "manifest.json": "e491cb238ef3ac8b316d9f033cbfda85b868d6bbbe184f73adaed97264b51e6f",
+        "statistics.json": "240f924fef317629c3f7f4d1846dcc3cfbcd11583dc946e8e22df763385278ea",
+        "test.jsonl": "6f7e9525f29044779f0ad8123870f61830449202c13207723b540216d1c5b29d",
+        "train.jsonl": "85e3ae168e8d2f6a15bf675eb18fea986e1e0e5732cc93cbdd80e806bb594eee",
+        "val.jsonl": "c561d74778c962600bdb33473df2e93de498712a8755634099f9ba27cd246d55"
+      },
+      "passed": true
+    },
+    "v01_comparison_reconciles_with_task6k1": {
+      "measured": {
+        "target_change_rate": 0.05704437742352434,
+        "task6k1_reference": 0.06959,
+        "weighted_answer_change_rate": 0.054473525780998705
+      },
+      "passed": true
+    },
+    "vector_provenance_resolves_to_ea_shp": {
+      "measured": {
+        "shp_bytes": 4999904,
+        "shp_sha256_recomputed": "9bbd1e06d6cd075fb9ad5c99926dbf411c667587876afb8a067da7859b541b44",
+        "shp_sha256_recorded": "9bbd1e06d6cd075fb9ad5c99926dbf411c667587876afb8a067da7859b541b44",
+        "uid_definition": "stable instance UID = (EA.shp SHA256, source_feature_id)"
+      },
+      "passed": true
+    }
+  },
+  "keep_flags": {
+    "keep_historical_pseudo_baseline_v0_1_1": true,
+    "keep_whu_imagery": true,
+    "legacy_compat_v1_retained_for_comparability": true,
+    "scene_disjoint_v1_is_primary_split": true,
+    "v0_2_is_primary_going_forward": true
+  },
+  "seconds": 36.39,
+  "summary": {
+    "clipped_instances": 41186,
+    "distinct_source_features": 33788,
+    "overlay_min_iou": 1.0,
+    "scene_disjoint_split_sizes": {
+      "excluded_boundary_crossing_features": 0,
+      "test": 3726,
+      "train": 10044,
+      "val": 3618
+    },
+    "tiles_indexed": 17388,
+    "v02_by_split": {
+      "test": 6219,
+      "train": 12778,
+      "val": 9111
+    },
+    "v02_samples": 28108,
+    "weighted_v011_to_v02_answer_change": 0.054473525780998705
+  },
+  "task": "6L",
+  "verdict": "VECTOR_DATASET_MIGRATION_PASS"
+}
