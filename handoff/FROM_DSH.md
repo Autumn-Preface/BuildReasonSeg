@@ -183,14 +183,19 @@ consistency (including per-file SHA256 against `task6l_artifact_index.json`).
 
 ## 15. Git / Watt
 
-Commit `feat: migrate WHU to native vector instances` plus a `docs:` handoff commit. Not committed:
-raw TIFFs, the source shapefile, per-instance raster dumps, per-tile geometry caches, the reasoning
-view, weights or `.conda`. The committed migration is ~92 MB of derived metadata and records
-(canonical `tiles/index.jsonl` 11.4 MB + `instances/index.jsonl` 17.4 MB + the v0.2 JSONL 62 MB),
-comparable to the 39 MB v0.1.1 baseline it sits beside; the WHU archive itself is publicly
-distributed by its authors but this project holds no explicit redistribution licence, so raw data
-stays external and only derived metadata is committed (citation recorded in the docs). Watt was not
-required for this task; established ownership rules were respected for the push.
+Commit `feat: migrate WHU to native vector instances` plus a `docs:` handoff commit. The commit is
+deliberately small: the repository's existing `.gitignore` keeps generated dataset records local
+(`datasets/build_spatial_reason/**/*.jsonl`, `datasets/**/instances/`), exactly as it already does
+for the v0.1.1 records, so what lands in Git is the canonical `manifest.json` / `statistics.json` /
+`instance_schema.json` / `tiles/index.jsonl` / `splits/*.json`, the v0.2 `manifest.json` +
+`statistics.json`, the config, the libraries, the scripts, the tests, the evaluation artifacts and
+the small overlay panels. The 62 MB of v0.2 records, the 17.4 MB instance index and the per-tile
+geometry caches are regenerable with the commands in section 13 and are recorded (size, SHA256,
+`tracked` flag) in `evaluation/task6l_artifact_index.json`. Never committed: raw TIFFs, the source
+shapefile, per-instance raster dumps, the reasoning view, weights or `.conda`. The WHU archive is
+publicly distributed by its authors, but this project holds no explicit redistribution licence, so
+raw data stays external and only derived metadata is committed (citation recorded in the docs).
+Watt was not required for this task; established ownership rules were respected for the push.
 
 ## 16. Recommended Next Step
 
