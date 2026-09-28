@@ -1,0 +1,1672 @@
+{
+  "_doc": "Task 6M section 2: frozen val fixed120 evaluation pack. Deterministic stratified sample over (level, program family), one record per tile.",
+  "construction": {
+    "dataset": "BuildSpatialReason v0.2",
+    "frozen_before_training": true,
+    "instances": "WHU-EA-NativeVector v1.0",
+    "one_record_per_tile": true,
+    "program_families": {
+      "extreme": [
+        "leftmost",
+        "rightmost",
+        "topmost",
+        "bottommost"
+      ],
+      "reference_to_direction": [
+        "largest_to_left_of",
+        "largest_to_right_of",
+        "largest_to_above",
+        "largest_to_below",
+        "smallest_to_left_of",
+        "smallest_to_right_of",
+        "smallest_to_above",
+        "smallest_to_below"
+      ],
+      "reference_to_nearest": [
+        "largest_to_nearest",
+        "smallest_to_nearest"
+      ],
+      "size_rank": [
+        "largest",
+        "smallest"
+      ],
+      "triple_composition": [
+        "largest_to_left_of_to_nearest",
+        "largest_to_right_of_to_nearest",
+        "largest_to_above_to_nearest",
+        "largest_to_below_to_nearest"
+      ]
+    },
+    "seed": 20260810,
+    "stratification": [
+      "level",
+      "program_family"
+    ],
+    "target_size": 120
+  },
+  "counts": {
+    "by_family": {
+      "extreme": 24,
+      "reference_to_direction": 24,
+      "reference_to_nearest": 24,
+      "size_rank": 24,
+      "triple_composition": 24
+    },
+    "by_level": {
+      "1": 48,
+      "2": 48,
+      "3": 24
+    },
+    "by_query_type": {
+      "bottommost": 8,
+      "largest": 15,
+      "largest_to_above": 4,
+      "largest_to_above_to_nearest": 10,
+      "largest_to_below": 1,
+      "largest_to_below_to_nearest": 6,
+      "largest_to_left_of": 4,
+      "largest_to_left_of_to_nearest": 3,
+      "largest_to_nearest": 19,
+      "largest_to_right_of": 4,
+      "largest_to_right_of_to_nearest": 5,
+      "leftmost": 6,
+      "rightmost": 5,
+      "smallest": 9,
+      "smallest_to_above": 4,
+      "smallest_to_below": 2,
+      "smallest_to_left_of": 3,
+      "smallest_to_nearest": 5,
+      "smallest_to_right_of": 2,
+      "topmost": 5
+    },
+    "total": 120
+  },
+  "records": [
+    {
+      "family": "extreme",
+      "instruction_en": "Segment the bottommost building region in the image.",
+      "instruction_zh": "分割图像中最下方的建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1007_1_bottommost_9a4a8e8a08d0",
+      "target_instance": 1,
+      "target_source_feature": 24226,
+      "tile_id": "2_1007"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Segment the bottommost building region in the image.",
+      "instruction_zh": "分割图像中最下方的建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1031_1_bottommost_174ea1008e9a",
+      "target_instance": 1,
+      "target_source_feature": 24580,
+      "tile_id": "2_1031"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region below the largest building region.",
+      "instruction_zh": "找出面积最大的建筑区域下方唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "largest_to_below",
+      "reference_instances": [
+        5
+      ],
+      "sample_id": "buildsr_val_2_1037_2_largest_to_below_5002561182b2",
+      "target_instance": 1,
+      "target_source_feature": 23895,
+      "tile_id": "2_1037"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the smallest area.",
+      "instruction_zh": "请标出画面中占地面积最小的建筑区域。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1039_1_smallest_26525845dd7b",
+      "target_instance": 1,
+      "target_source_feature": 24158,
+      "tile_id": "2_1039"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region to the left of the largest building region.",
+      "instruction_zh": "分割位于面积最大的建筑区域左侧的建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_left_of",
+      "reference_instances": [
+        28
+      ],
+      "sample_id": "buildsr_val_2_1043_2_largest_to_left_of_7b7514b760cc",
+      "target_instance": 29,
+      "target_source_feature": 24864,
+      "tile_id": "2_1043"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned highest.",
+      "instruction_zh": "找出图中位置最高的建筑区域并分割。",
+      "level": 1,
+      "query_type": "topmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_104_1_topmost_e6eac088dbe7",
+      "target_instance": 14,
+      "target_source_feature": 33217,
+      "tile_id": "2_104"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region nearest the bottom of the image.",
+      "instruction_zh": "请标出画面中最靠下的那栋建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1079_1_bottommost_6cac2e310256",
+      "target_instance": 1,
+      "target_source_feature": 23518,
+      "tile_id": "2_1079"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_below_to_nearest",
+      "reference_instances": [
+        14
+      ],
+      "sample_id": "buildsr_val_2_1091_3_largest_to_below_to_nearest_b134b8112ed4",
+      "target_instance": 10,
+      "target_source_feature": 23474,
+      "tile_id": "2_1091"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_1101_2_largest_to_nearest_7402cb2755ce",
+      "target_instance": 3,
+      "target_source_feature": 23836,
+      "tile_id": "2_1101"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region above the smallest building region.",
+      "instruction_zh": "分割位于面积最小的建筑区域上方的建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_above",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_1171_2_smallest_to_above_afe7c1d6099d",
+      "target_instance": 3,
+      "target_source_feature": 22654,
+      "tile_id": "2_1171"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_1172_3_largest_to_above_to_nearest_dd1dc1c4bb24",
+      "target_instance": 5,
+      "target_source_feature": 22321,
+      "tile_id": "2_1172"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_below_to_nearest",
+      "reference_instances": [
+        20
+      ],
+      "sample_id": "buildsr_val_2_1228_3_largest_to_below_to_nearest_4ad8f6490e02",
+      "target_instance": 15,
+      "target_source_feature": 22011,
+      "tile_id": "2_1228"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_1234_3_largest_to_above_to_nearest_6ad650d413a1",
+      "target_instance": 4,
+      "target_source_feature": 22117,
+      "tile_id": "2_1234"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the smallest area.",
+      "instruction_zh": "找出图中面积最小的建筑区域并分割。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1260_1_smallest_868bad6c858e",
+      "target_instance": 5,
+      "target_source_feature": 21910,
+      "tile_id": "2_1260"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region below the smallest building region.",
+      "instruction_zh": "找出面积最小的建筑区域下方唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "smallest_to_below",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_1277_2_smallest_to_below_2b4d7320e793",
+      "target_instance": 1,
+      "target_source_feature": 21209,
+      "tile_id": "2_1277"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1304_1_largest_0ca98b0c43f8",
+      "target_instance": 3,
+      "target_source_feature": 20749,
+      "tile_id": "2_1304"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_below_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_1393_3_largest_to_below_to_nearest_5ed2c86889cc",
+      "target_instance": 2,
+      "target_source_feature": 19888,
+      "tile_id": "2_1393"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "instruction_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。",
+      "level": 3,
+      "query_type": "largest_to_right_of_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_1414_3_largest_to_right_of_to_nearest_e7f64eb3ba85",
+      "target_instance": 6,
+      "target_source_feature": 19521,
+      "tile_id": "2_1414"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region to the left of the smallest building region.",
+      "instruction_zh": "分割位于面积最小的建筑区域左侧的建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_left_of",
+      "reference_instances": [
+        7
+      ],
+      "sample_id": "buildsr_val_2_1429_2_smallest_to_left_of_b6bc8de344a1",
+      "target_instance": 10,
+      "target_source_feature": 19616,
+      "tile_id": "2_1429"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1463_1_largest_72a759746e33",
+      "target_instance": 3,
+      "target_source_feature": 19138,
+      "tile_id": "2_1463"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region furthest to the right.",
+      "instruction_zh": "请标出画面中最右边的那栋建筑区域。",
+      "level": 1,
+      "query_type": "rightmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1464_1_rightmost_9cfd8e7699cd",
+      "target_instance": 3,
+      "target_source_feature": 19389,
+      "tile_id": "2_1464"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_below_to_nearest",
+      "reference_instances": [
+        7
+      ],
+      "sample_id": "buildsr_val_2_1468_3_largest_to_below_to_nearest_d07b119eae68",
+      "target_instance": 5,
+      "target_source_feature": 19528,
+      "tile_id": "2_1468"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_right_of_to_nearest",
+      "reference_instances": [
+        7
+      ],
+      "sample_id": "buildsr_val_2_1471_3_largest_to_right_of_to_nearest_0bfc12c31efa",
+      "target_instance": 5,
+      "target_source_feature": 19272,
+      "tile_id": "2_1471"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region above the largest building region.",
+      "instruction_zh": "分割位于面积最大的建筑区域上方的建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_above",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_1473_2_largest_to_above_2d08184fcbb0",
+      "target_instance": 2,
+      "target_source_feature": 19737,
+      "tile_id": "2_1473"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "instruction_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。",
+      "level": 3,
+      "query_type": "largest_to_right_of_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_1483_3_largest_to_right_of_to_nearest_ce853e53e470",
+      "target_instance": 2,
+      "target_source_feature": 18590,
+      "tile_id": "2_1483"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1540_1_largest_99bbda1c8eb2",
+      "target_instance": 4,
+      "target_source_feature": 18832,
+      "tile_id": "2_1540"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_1553_2_largest_to_nearest_30883273bf91",
+      "target_instance": 5,
+      "target_source_feature": 17982,
+      "tile_id": "2_1553"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the upper side of the smallest building region.",
+      "instruction_zh": "请标出面积最小的建筑区域上方的那栋建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_above",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_1620_2_smallest_to_above_411b430ab282",
+      "target_instance": 6,
+      "target_source_feature": 17629,
+      "tile_id": "2_1620"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned furthest left.",
+      "instruction_zh": "找出图中位置最靠左的建筑区域并分割。",
+      "level": 1,
+      "query_type": "leftmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1728_1_leftmost_1bbdd033aefd",
+      "target_instance": 13,
+      "target_source_feature": 16934,
+      "tile_id": "2_1728"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the smallest area.",
+      "instruction_zh": "找出图中面积最小的建筑区域并分割。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1730_1_smallest_a78d0aa4cbd7",
+      "target_instance": 1,
+      "target_source_feature": 16507,
+      "tile_id": "2_1730"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned highest.",
+      "instruction_zh": "找出图中位置最高的建筑区域并分割。",
+      "level": 1,
+      "query_type": "topmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1749_1_topmost_a59de4f0004e",
+      "target_instance": 2,
+      "target_source_feature": 16161,
+      "tile_id": "2_1749"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_below_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_1790_3_largest_to_below_to_nearest_db1d616790bb",
+      "target_instance": 2,
+      "target_source_feature": 16094,
+      "tile_id": "2_1790"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_1923_3_largest_to_above_to_nearest_d98751859a3d",
+      "target_instance": 2,
+      "target_source_feature": 14998,
+      "tile_id": "2_1923"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Find the largest building region and segment the other building region nearest to it.",
+      "instruction_zh": "找到面积最大的建筑区域，并分割距离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_1984_2_largest_to_nearest_cf320f307fb2",
+      "target_instance": 5,
+      "target_source_feature": 14365,
+      "tile_id": "2_1984"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the smallest building region in the image.",
+      "instruction_zh": "分割图像中面积最小的建筑区域。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_1992_1_smallest_732eeab64adc",
+      "target_instance": 1,
+      "target_source_feature": 14311,
+      "tile_id": "2_1992"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Segment the bottommost building region in the image.",
+      "instruction_zh": "分割图像中最下方的建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2000_1_bottommost_fd6114172695",
+      "target_instance": 1,
+      "target_source_feature": 14374,
+      "tile_id": "2_2000"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region to the right of the smallest building region.",
+      "instruction_zh": "找出面积最小的建筑区域右边唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "smallest_to_right_of",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_2023_2_smallest_to_right_of_648b97f88d62",
+      "target_instance": 2,
+      "target_source_feature": 14153,
+      "tile_id": "2_2023"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region nearest the bottom of the image.",
+      "instruction_zh": "请标出画面中最靠下的那栋建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2128_1_bottommost_417b25bfaa12",
+      "target_instance": 1,
+      "target_source_feature": 13512,
+      "tile_id": "2_2128"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the right side of the largest building region.",
+      "instruction_zh": "请标出面积最大的建筑区域右侧的那栋建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_right_of",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2134_2_largest_to_right_of_3d73b5cfb2b3",
+      "target_instance": 3,
+      "target_source_feature": 13485,
+      "tile_id": "2_2134"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "instruction_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。",
+      "level": 3,
+      "query_type": "largest_to_right_of_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_2250_3_largest_to_right_of_to_nearest_6d3006b38949",
+      "target_instance": 6,
+      "target_source_feature": 12884,
+      "tile_id": "2_2250"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        5
+      ],
+      "sample_id": "buildsr_val_2_226_2_largest_to_nearest_718c749c0124",
+      "target_instance": 3,
+      "target_source_feature": 31350,
+      "tile_id": "2_226"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region nearest the bottom of the image.",
+      "instruction_zh": "请标出画面中最靠下的那栋建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2271_1_bottommost_22ea07b55a06",
+      "target_instance": 1,
+      "target_source_feature": 12330,
+      "tile_id": "2_2271"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Find the largest building region and segment the other building region nearest to it.",
+      "instruction_zh": "找到面积最大的建筑区域，并分割距离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        7
+      ],
+      "sample_id": "buildsr_val_2_227_2_largest_to_nearest_e2715e93e55f",
+      "target_instance": 2,
+      "target_source_feature": 31478,
+      "tile_id": "2_227"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        5
+      ],
+      "sample_id": "buildsr_val_2_2299_2_largest_to_nearest_398e3beeb484",
+      "target_instance": 4,
+      "target_source_feature": 12158,
+      "tile_id": "2_2299"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned furthest right.",
+      "instruction_zh": "找出图中位置最靠右的建筑区域并分割。",
+      "level": 1,
+      "query_type": "rightmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2331_1_rightmost_6dfb011834fa",
+      "target_instance": 4,
+      "target_source_feature": 11867,
+      "tile_id": "2_2331"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2338_2_largest_to_nearest_fad8e3068270",
+      "target_instance": 1,
+      "target_source_feature": 12060,
+      "tile_id": "2_2338"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Find the smallest building region and segment the other building region nearest to it.",
+      "instruction_zh": "找到面积最小的建筑区域，并分割距离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_2362_2_smallest_to_nearest_bcb15c970d23",
+      "target_instance": 2,
+      "target_source_feature": 11059,
+      "tile_id": "2_2362"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the right side of the largest building region.",
+      "instruction_zh": "请标出面积最大的建筑区域右侧的那栋建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_right_of",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2370_2_largest_to_right_of_779a2975b987",
+      "target_instance": 1,
+      "target_source_feature": 10923,
+      "tile_id": "2_2370"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2372_1_largest_e88d22b54215",
+      "target_instance": 10,
+      "target_source_feature": 11306,
+      "tile_id": "2_2372"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_2426_3_largest_to_above_to_nearest_df330e0f0115",
+      "target_instance": 5,
+      "target_source_feature": 10594,
+      "tile_id": "2_2426"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        12
+      ],
+      "sample_id": "buildsr_val_2_2435_3_largest_to_above_to_nearest_63539b53d7d4",
+      "target_instance": 18,
+      "target_source_feature": 10866,
+      "tile_id": "2_2435"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_right_of_to_nearest",
+      "reference_instances": [
+        6
+      ],
+      "sample_id": "buildsr_val_2_2436_3_largest_to_right_of_to_nearest_9120f78c18f7",
+      "target_instance": 10,
+      "target_source_feature": 10671,
+      "tile_id": "2_2436"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_2530_2_largest_to_nearest_28bce2f81302",
+      "target_instance": 2,
+      "target_source_feature": 10040,
+      "tile_id": "2_2530"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        11
+      ],
+      "sample_id": "buildsr_val_2_2576_2_largest_to_nearest_14f6ddbc5176",
+      "target_instance": 9,
+      "target_source_feature": 9790,
+      "tile_id": "2_2576"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Find the largest building region and segment the other building region nearest to it.",
+      "instruction_zh": "找到面积最大的建筑区域，并分割距离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        9
+      ],
+      "sample_id": "buildsr_val_2_2626_2_largest_to_nearest_574abf0143ca",
+      "target_instance": 12,
+      "target_source_feature": 9251,
+      "tile_id": "2_2626"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Find the largest building region and segment the other building region nearest to it.",
+      "instruction_zh": "找到面积最大的建筑区域，并分割距离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_2635_2_largest_to_nearest_28515d184b00",
+      "target_instance": 4,
+      "target_source_feature": 8971,
+      "tile_id": "2_2635"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the largest building region in the image.",
+      "instruction_zh": "分割图像中面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2647_1_largest_f10bfb778a09",
+      "target_instance": 5,
+      "target_source_feature": 9070,
+      "tile_id": "2_2647"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the smallest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最小的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2670_2_smallest_to_nearest_bedd042c1882",
+      "target_instance": 1,
+      "target_source_feature": 8972,
+      "tile_id": "2_2670"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_left_of_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2702_3_largest_to_left_of_to_nearest_c5204cb6b4f5",
+      "target_instance": 3,
+      "target_source_feature": 8365,
+      "tile_id": "2_2702"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the smallest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最小的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_2711_2_smallest_to_nearest_869a5bcf00c8",
+      "target_instance": 1,
+      "target_source_feature": 8343,
+      "tile_id": "2_2711"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_left_of_to_nearest",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_2718_3_largest_to_left_of_to_nearest_b0b6989e4a0d",
+      "target_instance": 2,
+      "target_source_feature": 8567,
+      "tile_id": "2_2718"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the largest building region in the image.",
+      "instruction_zh": "分割图像中面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2726_1_largest_f7f17768b343",
+      "target_instance": 2,
+      "target_source_feature": 8196,
+      "tile_id": "2_2726"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned highest.",
+      "instruction_zh": "找出图中位置最高的建筑区域并分割。",
+      "level": 1,
+      "query_type": "topmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2756_1_topmost_c845ef2286db",
+      "target_instance": 18,
+      "target_source_feature": 8154,
+      "tile_id": "2_2756"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the upper side of the largest building region.",
+      "instruction_zh": "请标出面积最大的建筑区域上方的那栋建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_above",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_2793_2_largest_to_above_ab5efa6325b1",
+      "target_instance": 4,
+      "target_source_feature": 8147,
+      "tile_id": "2_2793"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the right side of the largest building region.",
+      "instruction_zh": "请标出面积最大的建筑区域右侧的那栋建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_right_of",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2803_2_largest_to_right_of_a9f46c9f52f7",
+      "target_instance": 1,
+      "target_source_feature": 7524,
+      "tile_id": "2_2803"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the smallest building region in the image.",
+      "instruction_zh": "分割图像中面积最小的建筑区域。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2838_1_smallest_5b0a70763a02",
+      "target_instance": 1,
+      "target_source_feature": 6975,
+      "tile_id": "2_2838"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the largest area.",
+      "instruction_zh": "找出图中面积最大的建筑区域并分割。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2860_1_largest_765a22a1193a",
+      "target_instance": 3,
+      "target_source_feature": 7244,
+      "tile_id": "2_2860"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region to the left of the smallest building region.",
+      "instruction_zh": "分割位于面积最小的建筑区域左侧的建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_left_of",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_2876_2_smallest_to_left_of_245de89bddd0",
+      "target_instance": 3,
+      "target_source_feature": 7282,
+      "tile_id": "2_2876"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region furthest to the right.",
+      "instruction_zh": "请标出画面中最右边的那栋建筑区域。",
+      "level": 1,
+      "query_type": "rightmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2879_1_rightmost_3d76374ff009",
+      "target_instance": 1,
+      "target_source_feature": 6933,
+      "tile_id": "2_2879"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the left side of the largest building region.",
+      "instruction_zh": "请标出面积最大的建筑区域左侧的那栋建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_left_of",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_2880_2_largest_to_left_of_9065eef966bf",
+      "target_instance": 2,
+      "target_source_feature": 6933,
+      "tile_id": "2_2880"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "instruction_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_2897_3_largest_to_above_to_nearest_e82397642184",
+      "target_instance": 8,
+      "target_source_feature": 6625,
+      "tile_id": "2_2897"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "instruction_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。",
+      "level": 3,
+      "query_type": "largest_to_left_of_to_nearest",
+      "reference_instances": [
+        8
+      ],
+      "sample_id": "buildsr_val_2_28_3_largest_to_left_of_to_nearest_4d4b2f068086",
+      "target_instance": 6,
+      "target_source_feature": 33361,
+      "tile_id": "2_28"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region above the smallest building region.",
+      "instruction_zh": "找出面积最小的建筑区域上方唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "smallest_to_above",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2908_2_smallest_to_above_206805fa2a84",
+      "target_instance": 4,
+      "target_source_feature": 6673,
+      "tile_id": "2_2908"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the smallest building region in the image.",
+      "instruction_zh": "分割图像中面积最小的建筑区域。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2915_1_smallest_64841d481db9",
+      "target_instance": 2,
+      "target_source_feature": 6707,
+      "tile_id": "2_2915"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region furthest to the right.",
+      "instruction_zh": "请标出画面中最右边的那栋建筑区域。",
+      "level": 1,
+      "query_type": "rightmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2920_1_rightmost_cddb7af5dc37",
+      "target_instance": 1,
+      "target_source_feature": 6502,
+      "tile_id": "2_2920"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region to the left of the largest building region.",
+      "instruction_zh": "找出面积最大的建筑区域左边唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "largest_to_left_of",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_2928_2_largest_to_left_of_582351a6a6c2",
+      "target_instance": 1,
+      "target_source_feature": 6387,
+      "tile_id": "2_2928"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Segment the topmost building region in the image.",
+      "instruction_zh": "分割图像中最上方的建筑区域。",
+      "level": 1,
+      "query_type": "topmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2941_1_topmost_4e93411bb602",
+      "target_instance": 2,
+      "target_source_feature": 6892,
+      "tile_id": "2_2941"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region nearest the bottom of the image.",
+      "instruction_zh": "请标出画面中最靠下的那栋建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2957_1_bottommost_2ca2d43efc3c",
+      "target_instance": 1,
+      "target_source_feature": 5839,
+      "tile_id": "2_2957"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the largest area.",
+      "instruction_zh": "找出图中面积最大的建筑区域并分割。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_2963_1_largest_67e428a65bc3",
+      "target_instance": 2,
+      "target_source_feature": 6309,
+      "tile_id": "2_2963"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Find the largest building region and segment the other building region nearest to it.",
+      "instruction_zh": "找到面积最大的建筑区域，并分割距离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        7
+      ],
+      "sample_id": "buildsr_val_2_3014_2_largest_to_nearest_06107915611d",
+      "target_instance": 5,
+      "target_source_feature": 6312,
+      "tile_id": "2_3014"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_3019_2_largest_to_nearest_2acf38680075",
+      "target_instance": 2,
+      "target_source_feature": 5323,
+      "tile_id": "2_3019"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the upper side of the largest building region.",
+      "instruction_zh": "请标出面积最大的建筑区域上方的那栋建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_above",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_3037_2_largest_to_above_ab74efd1eb5f",
+      "target_instance": 2,
+      "target_source_feature": 5881,
+      "tile_id": "2_3037"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_3039_3_largest_to_above_to_nearest_5491accc7398",
+      "target_instance": 4,
+      "target_source_feature": 5386,
+      "tile_id": "2_3039"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the smallest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最小的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_nearest",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_3046_2_smallest_to_nearest_52610a9cb869",
+      "target_instance": 3,
+      "target_source_feature": 5406,
+      "tile_id": "2_3046"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the smallest area.",
+      "instruction_zh": "找出图中面积最小的建筑区域并分割。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3047_1_smallest_1de6c6523316",
+      "target_instance": 1,
+      "target_source_feature": 5334,
+      "tile_id": "2_3047"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region nearest the top of the image.",
+      "instruction_zh": "请标出画面中最靠上的那栋建筑区域。",
+      "level": 1,
+      "query_type": "topmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3062_1_topmost_4a0364dd7f21",
+      "target_instance": 2,
+      "target_source_feature": 5791,
+      "tile_id": "2_3062"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the smallest area.",
+      "instruction_zh": "找出图中面积最小的建筑区域并分割。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3114_1_smallest_6214df49e1bd",
+      "target_instance": 2,
+      "target_source_feature": 5041,
+      "tile_id": "2_3114"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the smallest building region in the image.",
+      "instruction_zh": "分割图像中面积最小的建筑区域。",
+      "level": 1,
+      "query_type": "smallest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3122_1_smallest_be05d9267028",
+      "target_instance": 2,
+      "target_source_feature": 5085,
+      "tile_id": "2_3122"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_3134_2_largest_to_nearest_593e9923f0b6",
+      "target_instance": 1,
+      "target_source_feature": 5032,
+      "tile_id": "2_3134"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Segment the largest building region in the image.",
+      "instruction_zh": "分割图像中面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3140_1_largest_a36285c92205",
+      "target_instance": 2,
+      "target_source_feature": 4637,
+      "tile_id": "2_3140"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_3141_2_largest_to_nearest_81a43170097a",
+      "target_instance": 1,
+      "target_source_feature": 4781,
+      "tile_id": "2_3141"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the left side of the smallest building region.",
+      "instruction_zh": "请标出面积最小的建筑区域左侧的那栋建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_left_of",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_3146_2_smallest_to_left_of_635419e56e88",
+      "target_instance": 2,
+      "target_source_feature": 4791,
+      "tile_id": "2_3146"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned furthest left.",
+      "instruction_zh": "找出图中位置最靠左的建筑区域并分割。",
+      "level": 1,
+      "query_type": "leftmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3154_1_leftmost_e2f388131002",
+      "target_instance": 16,
+      "target_source_feature": 4405,
+      "tile_id": "2_3154"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region nearest the bottom of the image.",
+      "instruction_zh": "请标出画面中最靠下的那栋建筑区域。",
+      "level": 1,
+      "query_type": "bottommost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3182_1_bottommost_a1fcbb8a9a33",
+      "target_instance": 1,
+      "target_source_feature": 4456,
+      "tile_id": "2_3182"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the largest area.",
+      "instruction_zh": "找出图中面积最大的建筑区域并分割。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3209_1_largest_27b6f1036722",
+      "target_instance": 6,
+      "target_source_feature": 4455,
+      "tile_id": "2_3209"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region below the smallest building region.",
+      "instruction_zh": "找出面积最小的建筑区域下方唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "smallest_to_below",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_3245_2_smallest_to_below_bfddd36683b1",
+      "target_instance": 1,
+      "target_source_feature": 3537,
+      "tile_id": "2_3245"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region to the left of the largest building region.",
+      "instruction_zh": "分割位于面积最大的建筑区域左侧的建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_left_of",
+      "reference_instances": [
+        3
+      ],
+      "sample_id": "buildsr_val_2_3362_2_largest_to_left_of_59f54dbd7d9c",
+      "target_instance": 4,
+      "target_source_feature": 2236,
+      "tile_id": "2_3362"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        2
+      ],
+      "sample_id": "buildsr_val_2_3380_2_largest_to_nearest_fd59fcce6c15",
+      "target_instance": 3,
+      "target_source_feature": 2403,
+      "tile_id": "2_3380"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3442_1_largest_e02ecef1954e",
+      "target_instance": 1,
+      "target_source_feature": 1555,
+      "tile_id": "2_3442"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned furthest left.",
+      "instruction_zh": "找出图中位置最靠左的建筑区域并分割。",
+      "level": 1,
+      "query_type": "leftmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3486_1_leftmost_33b56f09ad16",
+      "target_instance": 5,
+      "target_source_feature": 707,
+      "tile_id": "2_3486"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the largest area.",
+      "instruction_zh": "找出图中面积最大的建筑区域并分割。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_3490_1_largest_e7f6e9899e28",
+      "target_instance": 14,
+      "target_source_feature": 811,
+      "tile_id": "2_3490"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        9
+      ],
+      "sample_id": "buildsr_val_2_3507_2_largest_to_nearest_960d946308e8",
+      "target_instance": 8,
+      "target_source_feature": 987,
+      "tile_id": "2_3507"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        15
+      ],
+      "sample_id": "buildsr_val_2_38_3_largest_to_above_to_nearest_ed20cd501b0c",
+      "target_instance": 21,
+      "target_source_feature": 33659,
+      "tile_id": "2_38"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "instruction_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。",
+      "level": 3,
+      "query_type": "largest_to_below_to_nearest",
+      "reference_instances": [
+        17
+      ],
+      "sample_id": "buildsr_val_2_48_3_largest_to_below_to_nearest_807ca5d58f96",
+      "target_instance": 7,
+      "target_source_feature": 33376,
+      "tile_id": "2_48"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "Using the largest building region as reference, segment the other building region with the smallest boundary distance to it.",
+      "instruction_zh": "以面积最大的建筑区域为参照，分割与它边界距离最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        9
+      ],
+      "sample_id": "buildsr_val_2_532_2_largest_to_nearest_f10e2e87f7df",
+      "target_instance": 7,
+      "target_source_feature": 29406,
+      "tile_id": "2_532"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the smallest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最小的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_nearest",
+      "reference_instances": [
+        4
+      ],
+      "sample_id": "buildsr_val_2_554_2_smallest_to_nearest_94279b29db47",
+      "target_instance": 5,
+      "target_source_feature": 28992,
+      "tile_id": "2_554"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region to the right of the smallest building region.",
+      "instruction_zh": "分割位于面积最小的建筑区域右侧的建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_right_of",
+      "reference_instances": [
+        5
+      ],
+      "sample_id": "buildsr_val_2_598_2_smallest_to_right_of_b03f9107c595",
+      "target_instance": 7,
+      "target_source_feature": 29147,
+      "tile_id": "2_598"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_5_1_largest_61ae5258cecf",
+      "target_instance": 4,
+      "target_source_feature": 33762,
+      "tile_id": "2_5"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Locate and segment the building region positioned furthest left.",
+      "instruction_zh": "找出图中位置最靠左的建筑区域并分割。",
+      "level": 1,
+      "query_type": "leftmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_607_1_leftmost_7a08dd51830c",
+      "target_instance": 1,
+      "target_source_feature": 28271,
+      "tile_id": "2_607"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Please outline the building region with the greatest area.",
+      "instruction_zh": "请标出画面中占地面积最大的建筑区域。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_703_1_largest_c598fbcc0a76",
+      "target_instance": 4,
+      "target_source_feature": 28058,
+      "tile_id": "2_703"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Please outline the building region on the upper side of the smallest building region.",
+      "instruction_zh": "请标出面积最小的建筑区域上方的那栋建筑区域。",
+      "level": 2,
+      "query_type": "smallest_to_above",
+      "reference_instances": [
+        6
+      ],
+      "sample_id": "buildsr_val_2_741_2_smallest_to_above_4ec76f150834",
+      "target_instance": 7,
+      "target_source_feature": 27836,
+      "tile_id": "2_741"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Please outline the building region furthest to the right.",
+      "instruction_zh": "请标出画面中最右边的那栋建筑区域。",
+      "level": 1,
+      "query_type": "rightmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_742_1_rightmost_bbb8a8d6109e",
+      "target_instance": 6,
+      "target_source_feature": 27660,
+      "tile_id": "2_742"
+    },
+    {
+      "family": "size_rank",
+      "instruction_en": "Locate and segment the building region with the largest area.",
+      "instruction_zh": "找出图中面积最大的建筑区域并分割。",
+      "level": 1,
+      "query_type": "largest",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_760_1_largest_369696d81b65",
+      "target_instance": 2,
+      "target_source_feature": 27663,
+      "tile_id": "2_760"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Locate and segment the single building region above the largest building region.",
+      "instruction_zh": "找出面积最大的建筑区域上方唯一的建筑区域并分割。",
+      "level": 2,
+      "query_type": "largest_to_above",
+      "reference_instances": [
+        1
+      ],
+      "sample_id": "buildsr_val_2_782_2_largest_to_above_d2c6cf1eec9b",
+      "target_instance": 2,
+      "target_source_feature": 27834,
+      "tile_id": "2_782"
+    },
+    {
+      "family": "reference_to_direction",
+      "instruction_en": "Segment the building region to the right of the largest building region.",
+      "instruction_zh": "分割位于面积最大的建筑区域右侧的建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_right_of",
+      "reference_instances": [
+        5
+      ],
+      "sample_id": "buildsr_val_2_807_2_largest_to_right_of_53bc9d6fe7c2",
+      "target_instance": 2,
+      "target_source_feature": 26713,
+      "tile_id": "2_807"
+    },
+    {
+      "family": "reference_to_nearest",
+      "instruction_en": "First determine the largest building region, then segment the other building region closest to it.",
+      "instruction_zh": "先确定图中面积最大的建筑区域，再分割离它最近的另一建筑区域。",
+      "level": 2,
+      "query_type": "largest_to_nearest",
+      "reference_instances": [
+        24
+      ],
+      "sample_id": "buildsr_val_2_839_2_largest_to_nearest_d926b8b2bb39",
+      "target_instance": 19,
+      "target_source_feature": 26993,
+      "tile_id": "2_839"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Segment the leftmost building region in the image.",
+      "instruction_zh": "分割图像中最左侧的建筑区域。",
+      "level": 1,
+      "query_type": "leftmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_883_1_leftmost_3f1e5d8e2cfa",
+      "target_instance": 6,
+      "target_source_feature": 25986,
+      "tile_id": "2_883"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        5
+      ],
+      "sample_id": "buildsr_val_2_889_3_largest_to_above_to_nearest_5a4d90d00b80",
+      "target_instance": 8,
+      "target_source_feature": 26340,
+      "tile_id": "2_889"
+    },
+    {
+      "family": "triple_composition",
+      "instruction_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "instruction_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。",
+      "level": 3,
+      "query_type": "largest_to_above_to_nearest",
+      "reference_instances": [
+        8
+      ],
+      "sample_id": "buildsr_val_2_91_3_largest_to_above_to_nearest_44100b50515c",
+      "target_instance": 10,
+      "target_source_feature": 32934,
+      "tile_id": "2_91"
+    },
+    {
+      "family": "extreme",
+      "instruction_en": "Segment the leftmost building region in the image.",
+      "instruction_zh": "分割图像中最左侧的建筑区域。",
+      "level": 1,
+      "query_type": "leftmost",
+      "reference_instances": [],
+      "sample_id": "buildsr_val_2_959_1_leftmost_ecb0cf3ebb8f",
+      "target_instance": 4,
+      "target_source_feature": 25569,
+      "tile_id": "2_959"
+    }
+  ],
+  "split": "val",
+  "task": "6M"
+}

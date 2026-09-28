@@ -1,0 +1,124 @@
+{
+  "_doc": "Task 6M section 9. M1 training of YOLO26m-seg on the derived native-vector export (scene_disjoint_v1: train=train1, val=train2). Records the epochs actually completed, the best epoch, metrics, resources and checkpoint hashes. The test split was never used.",
+  "checkpoints": {
+    "best": {
+      "bytes": 162481487,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg\\weights\\best.pt",
+      "sha256": "fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44"
+    },
+    "last": {
+      "bytes": 162482447,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg\\weights\\last.pt",
+      "sha256": "ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e"
+    }
+  },
+  "config": {
+    "amp": "true",
+    "batch": "16",
+    "deterministic": "true",
+    "device": "'0'",
+    "epochs": "80",
+    "fraction": "1.0",
+    "imgsz": "640",
+    "patience": "15",
+    "pretrained": "true",
+    "seed": "20260812",
+    "workers": "4"
+  },
+  "data": {
+    "data_yaml": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6m_yolo_native\\data.yaml",
+    "export_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6m_yolo_native"
+  },
+  "finalized_at": "2026-09-28T19:57:14Z",
+  "pretrained_weights": {
+    "bytes": 54750385,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\pretrained\\yolo26m-seg.pt",
+    "sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5"
+  },
+  "resources": {
+    "epochs_completed": 18,
+    "mean_epoch_seconds": 312.6,
+    "reported_train_seconds": 5626.8
+  },
+  "results": {
+    "best": {
+      "column": "metrics/mAP50-95(M)",
+      "epoch": 14,
+      "value": 0.36392
+    },
+    "epochs_recorded": 18,
+    "final": {
+      "epoch": "18",
+      "lr/pg0": "0.026812",
+      "lr/pg1": "0.00893732",
+      "lr/pg2": "0.026812",
+      "lr/pg3": "0.00893732",
+      "lr/pg4": "0.026812",
+      "lr/pg5": "0.00893732",
+      "lr/pg6": "0.026812",
+      "lr/pg7": "0.00893732",
+      "metrics/mAP50(B)": "0.69842",
+      "metrics/mAP50(M)": "0.68266",
+      "metrics/mAP50-95(B)": "0.39715",
+      "metrics/mAP50-95(M)": "0.35437",
+      "metrics/precision(B)": "0.75173",
+      "metrics/precision(M)": "0.76284",
+      "metrics/recall(B)": "0.6105",
+      "metrics/recall(M)": "0.59876",
+      "time": "5626.9",
+      "train/box_loss": "1.59169",
+      "train/cls_loss": "1.21579",
+      "train/l1_loss": "0.00639",
+      "train/seg_loss": "2.07101",
+      "train/sem_loss": "0.61939",
+      "val/box_loss": "1.5612",
+      "val/cls_loss": "1.33678",
+      "val/l1_loss": "0.00912",
+      "val/seg_loss": "2.26061",
+      "val/sem_loss": "0"
+    },
+    "metric_columns": [
+      "metrics/precision(B)",
+      "metrics/recall(B)",
+      "metrics/mAP50(B)",
+      "metrics/mAP50-95(B)",
+      "metrics/precision(M)",
+      "metrics/recall(M)",
+      "metrics/mAP50(M)",
+      "metrics/mAP50-95(M)"
+    ],
+    "nan_or_inf": false,
+    "per_epoch_seconds": [
+      782.1,
+      509.3,
+      278.6,
+      279.1,
+      278.7,
+      278.2,
+      278.7,
+      280.3,
+      280.0,
+      284.1,
+      279.8,
+      277.8,
+      282.2,
+      269.7,
+      248.4,
+      245.8,
+      246.5,
+      247.5
+    ],
+    "total_hours": 1.56,
+    "total_seconds": 5626.8
+  },
+  "run": "m1_yolo26m_seg",
+  "run_dir": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg",
+  "stop": {
+    "patience": 15,
+    "requested_epochs": 80,
+    "stop_reason": "session wall-clock budget reached; training stopped after the last completed epoch (configured cap was 80 epochs with patience 15)",
+    "stopped_early": true
+  },
+  "task": "6M",
+  "test_split_used": false
+}

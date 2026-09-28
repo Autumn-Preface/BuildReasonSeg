@@ -1,0 +1,358 @@
+{
+  "_doc": "Task 6M section 7. Derived Ultralytics export of the canonical native-vector dataset and its fidelity audit. The export is DERIVED: all evaluation uses the canonical exact native masks, never these TXT labels.",
+  "counts": {
+    "empty_label_files": 11909,
+    "instances_polygons": 41186,
+    "per_split": {
+      "test": {
+        "instances": 9791,
+        "tiles": 3726
+      },
+      "train": {
+        "instances": 15721,
+        "tiles": 10044
+      },
+      "val": {
+        "instances": 15674,
+        "tiles": 3618
+      }
+    },
+    "tiles": 17388
+  },
+  "export_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6m_yolo_native",
+  "fidelity": {
+    "gate_interpretation": "the 0.995 mean-IoU gate is applied to the tile-level union mask (the training target's actual fidelity) and, separately, to the per-instance mean restricted to instances of at least 9 px; sub-pixel instances cannot be represented exactly by an integer-pixel polygon and are repaired to a 1-px box instead of being dropped",
+    "hole_instances_affected": 6,
+    "hole_instances_detail": [
+      {
+        "hole_area_px": 7243,
+        "holes": 1,
+        "tile_id": "1_1275",
+        "tile_instance_id": 1
+      },
+      {
+        "hole_area_px": 264,
+        "holes": 1,
+        "tile_id": "1_44",
+        "tile_instance_id": 5
+      },
+      {
+        "hole_area_px": 2605,
+        "holes": 1,
+        "tile_id": "1_45",
+        "tile_instance_id": 3
+      },
+      {
+        "hole_area_px": 36,
+        "holes": 1,
+        "tile_id": "2_2556",
+        "tile_instance_id": 3
+      },
+      {
+        "hole_area_px": 1983,
+        "holes": 1,
+        "tile_id": "2_3091",
+        "tile_instance_id": 37
+      },
+      {
+        "hole_area_px": 1,
+        "holes": 1,
+        "tile_id": "2_3155",
+        "tile_instance_id": 12
+      }
+    ],
+    "malformed_labels": 0,
+    "mean_per_instance_iou_area_ge_9px": 0.9958658918076655,
+    "mean_tile_union_iou": 0.998804467982126,
+    "missing_examples": [],
+    "missing_non_hole_instances": 0,
+    "per_instance_iou": {
+      "count": 41186,
+      "max": 1.0,
+      "mean": 0.9920383054756751,
+      "median": 1.0,
+      "min": 0.1111111111111111,
+      "p1": 0.7692307692307693,
+      "p5": 0.9825969518242079,
+      "p90": 1.0
+    },
+    "per_instance_iou_area_ge_9px": {
+      "count": 40789,
+      "max": 1.0,
+      "mean": 0.9958658918076655,
+      "median": 1.0,
+      "min": 0.45454545454545453,
+      "p1": 0.8846153846153846,
+      "p5": 0.9879521613311629,
+      "p90": 1.0
+    },
+    "sub_pixel_polygons_repaired": 172,
+    "sub_pixel_repair_examples": [
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          0,
+          125,
+          1,
+          127
+        ],
+        "tile_id": "1_1252",
+        "tile_instance_id": 12
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          342,
+          0,
+          343,
+          1
+        ],
+        "tile_id": "1_1276",
+        "tile_instance_id": 25
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          50,
+          511,
+          51,
+          512
+        ],
+        "tile_id": "1_1347",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          511,
+          510,
+          512,
+          512
+        ],
+        "tile_id": "1_14",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          372,
+          0,
+          374,
+          1
+        ],
+        "tile_id": "1_1405",
+        "tile_instance_id": 2
+      },
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          0,
+          239,
+          1,
+          241
+        ],
+        "tile_id": "1_1648",
+        "tile_instance_id": 13
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          482,
+          511,
+          483,
+          512
+        ],
+        "tile_id": "1_1801",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 6,
+        "repaired_bbox_px": [
+          414,
+          17,
+          415,
+          23
+        ],
+        "tile_id": "1_1832",
+        "tile_instance_id": 8
+      },
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          301,
+          407,
+          303,
+          409
+        ],
+        "tile_id": "1_1994",
+        "tile_instance_id": 6
+      },
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          511,
+          0,
+          512,
+          2
+        ],
+        "tile_id": "1_200",
+        "tile_instance_id": 2
+      },
+      {
+        "area_px": 3,
+        "repaired_bbox_px": [
+          511,
+          99,
+          512,
+          102
+        ],
+        "tile_id": "1_2007",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 2,
+        "repaired_bbox_px": [
+          0,
+          482,
+          1,
+          484
+        ],
+        "tile_id": "1_2174",
+        "tile_instance_id": 3
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          0,
+          7,
+          1,
+          8
+        ],
+        "tile_id": "1_2290",
+        "tile_instance_id": 2
+      },
+      {
+        "area_px": 13,
+        "repaired_bbox_px": [
+          128,
+          511,
+          141,
+          512
+        ],
+        "tile_id": "1_2380",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 6,
+        "repaired_bbox_px": [
+          511,
+          277,
+          512,
+          283
+        ],
+        "tile_id": "1_2386",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          279,
+          511,
+          280,
+          512
+        ],
+        "tile_id": "1_2455",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          68,
+          0,
+          69,
+          1
+        ],
+        "tile_id": "1_2796",
+        "tile_instance_id": 4
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          403,
+          511,
+          404,
+          512
+        ],
+        "tile_id": "1_3383",
+        "tile_instance_id": 1
+      },
+      {
+        "area_px": 1,
+        "repaired_bbox_px": [
+          267,
+          0,
+          268,
+          1
+        ],
+        "tile_id": "1_3406",
+        "tile_instance_id": 6
+      },
+      {
+        "area_px": 27,
+        "repaired_bbox_px": [
+          485,
+          511,
+          512,
+          512
+        ],
+        "tile_id": "1_345",
+        "tile_instance_id": 1
+      }
+    ],
+    "tile_min_instance_iou": {
+      "count": 17388,
+      "max": 1.0,
+      "mean": 0.9836865682192527,
+      "median": 1.0,
+      "min": 0.1111111111111111,
+      "p1": 0.47799171842650107,
+      "p5": 0.9379360076918968,
+      "p90": 1.0
+    },
+    "tile_union_iou": {
+      "count": 17388,
+      "max": 1.0,
+      "mean": 0.998804467982126,
+      "median": 1.0,
+      "min": 0.25,
+      "p1": 0.989268071527978,
+      "p5": 0.9981753397845332,
+      "p90": 1.0
+    },
+    "tiny_instances_recovered": 1235,
+    "tiny_instances_total": 1235
+  },
+  "gates": {
+    "mean_per_instance_iou_area_ge_9px_ge_0_995": true,
+    "mean_tile_union_iou_ge_0_995": true,
+    "no_non_hole_instance_missing": true,
+    "zero_malformed_labels": true
+  },
+  "gitignored": true,
+  "image_linking": {
+    "copied": 0,
+    "fallback": "copy2 when the filesystem refuses a hardlink; sources are never modified or moved",
+    "hardlinked": 17388
+  },
+  "rules": {
+    "connected_component_conversion": false,
+    "empty_tiles_kept": true,
+    "min_contour_area_filter": null,
+    "polygon_form": "exterior rings only (Ultralytics TXT cannot express holes)",
+    "tiny_instances_kept": true
+  },
+  "runtime_seconds": 284.29,
+  "source": "WHU-EA-NativeVector v1.0, scene_disjoint_v1",
+  "task": "6M",
+  "verdict": "EXPORT_VALID"
+}

@@ -1,0 +1,58 @@
+{
+  "_doc": "Task 6M section 16. Exactly one verdict from the allowed set, with every gate measured.",
+  "allowed_verdicts": [
+    "STRUCTURED_DEMO_READY",
+    "PROPOSAL_MODEL_NEEDS_IMPROVEMENT",
+    "PROGRAM_PARSER_NEEDS_IMPROVEMENT",
+    "TRAINING_EXPORT_INVALID",
+    "INVALID_EXPERIMENT"
+  ],
+  "diagnosis": [
+    {
+      "cause": "proposal_recall_below_gate",
+      "detail": "overall recall@0.50 = 0.6333 < 0.92"
+    },
+    {
+      "cause": "tiny_instance_recall_below_gate",
+      "detail": "tiny recall@0.50 = 0.0023 < 0.60"
+    },
+    {
+      "cause": "executor_abstention_high",
+      "detail": "full-val abstention rate 0.2768"
+    }
+  ],
+  "failed_gates": [
+    "j1v2_gate_passed",
+    "j4v2_fixed120_miou_ge_0_40",
+    "j4v2_paired_pass_ge_14"
+  ],
+  "gates": {
+    "demo_cli_gate_passed": true,
+    "export_valid": true,
+    "j1v2_gate_passed": false,
+    "j4v2_fixed120_miou_ge_0_40": false,
+    "j4v2_paired_pass_ge_14": false,
+    "parser_ready": true,
+    "smoke_passed": true
+  },
+  "keep_flags": {
+    "keep_task6j_historical_artifacts_frozen": true,
+    "keep_v0_1_1_and_v0_2_datasets_frozen": true,
+    "keep_whu_imagery": true,
+    "no_4b_upgrade": true,
+    "no_framework_switch": true
+  },
+  "measured": {
+    "demo_images_audited": 12,
+    "j1v2_fixed120_miou": 0.2800895280652553,
+    "j1v2_paired_pass": 4,
+    "j4v2_fixed120_miou": 0.2574653379258732,
+    "j4v2_paired_pass": 5,
+    "parser_v02_accuracy": 1.0,
+    "proposal_recall_at_0_50": 0.6332780400663519,
+    "proposal_tiny_recall_at_0_50": 0.0022675736961451248,
+    "training_epochs_recorded": 18
+  },
+  "task": "6M",
+  "verdict": "PROPOSAL_MODEL_NEEDS_IMPROVEMENT"
+}

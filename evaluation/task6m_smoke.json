@@ -1,0 +1,151 @@
+{
+  "_doc": "Task 6M section 8. M0 smoke: checkpoint load, 2-image forward/backward, deterministic subset training, canonical mask-decoding validation, empty-image handling and tiny-label participation. No architecture conclusion is drawn from M0.",
+  "checkpoint_load": {
+    "model_name": "yolo26s-seg.yaml",
+    "parameters": 11505800,
+    "task": "segment",
+    "weights": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\pretrained\\yolo26s-seg.pt"
+  },
+  "empty_image_handling": {
+    "empty_label_tiles_present": true,
+    "note": "empty tiles are exported with a valid empty label file and are passed to training"
+  },
+  "environment": {
+    "cuda": true,
+    "device": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "python": "3.11.16",
+    "torch": "2.13.0+cu132",
+    "ultralytics": "8.4.164"
+  },
+  "forward_backward_ok": true,
+  "gates": {
+    "checkpoint_loaded": true,
+    "empty_images_handled": true,
+    "forward_backward_ok": true,
+    "mask_decoding_validated": true,
+    "subset_training_completed": true,
+    "tiny_labels_enter_training": true
+  },
+  "mask_decoding": {
+    "all_mask_shapes_512": true,
+    "best_gt_iou_mean": {
+      "count": 8,
+      "max": 0.12007520139982814,
+      "mean": 0.03957643194938185,
+      "median": 0.0,
+      "min": 0.0,
+      "p1": 0.0,
+      "p5": 0.0,
+      "p90": 0.11495908993602152
+    },
+    "rows": [
+      {
+        "best_gt_iou_mean": 0.0,
+        "gt_instances": 2,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_0"
+      },
+      {
+        "best_gt_iou_mean": 0.0,
+        "gt_instances": 9,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_1"
+      },
+      {
+        "best_gt_iou_mean": null,
+        "gt_instances": 0,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_10"
+      },
+      {
+        "best_gt_iou_mean": 0.0,
+        "gt_instances": 11,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_100"
+      },
+      {
+        "best_gt_iou_mean": null,
+        "gt_instances": 0,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_1000"
+      },
+      {
+        "best_gt_iou_mean": 0.11276647073724726,
+        "gt_instances": 6,
+        "mask_shape_ok": true,
+        "predicted_masks": 1,
+        "tile_id": "2_1001"
+      },
+      {
+        "best_gt_iou_mean": 0.0,
+        "gt_instances": 8,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_1002"
+      },
+      {
+        "best_gt_iou_mean": 0.0,
+        "gt_instances": 1,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_1003"
+      },
+      {
+        "best_gt_iou_mean": null,
+        "gt_instances": 0,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_1004"
+      },
+      {
+        "best_gt_iou_mean": 0.12007520139982814,
+        "gt_instances": 12,
+        "mask_shape_ok": true,
+        "predicted_masks": 2,
+        "tile_id": "2_1005"
+      },
+      {
+        "best_gt_iou_mean": null,
+        "gt_instances": 0,
+        "mask_shape_ok": true,
+        "predicted_masks": 0,
+        "tile_id": "2_1006"
+      },
+      {
+        "best_gt_iou_mean": 0.08376978345797945,
+        "gt_instances": 11,
+        "mask_shape_ok": true,
+        "predicted_masks": 2,
+        "tile_id": "2_1007"
+      }
+    ],
+    "tiles_checked": 12
+  },
+  "run": {
+    "best_checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\smoke\\m0\\weights\\best.pt",
+    "results_csv": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\smoke\\m0\\results.csv",
+    "save_dir": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\smoke\\m0"
+  },
+  "runtime_seconds": 74.27,
+  "subset": {
+    "batch": 8,
+    "empty_label_tiles_in_subset": 454,
+    "epochs": 2,
+    "imgsz": 640,
+    "seed": 20260811,
+    "selection": "deterministic random sample of scene_disjoint_v1 train tiles",
+    "tiles": 600,
+    "tiny_instances_in_subset": 29
+  },
+  "task": "6M",
+  "tiny_label_handling": {
+    "all_tiny_decodable": true,
+    "tiny_instances_decodable_from_export": 29,
+    "tiny_instances_in_subset": 29
+  }
+}

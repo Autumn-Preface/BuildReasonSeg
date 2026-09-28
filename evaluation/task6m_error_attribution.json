@@ -1,0 +1,128 @@
+{
+  "_doc": "Task 6M sections 12-16. Failure attribution for the native J1-v2/J4-v2 chain and the single final verdict.",
+  "attribution": {
+    "border_target_miou": 0.2495865815674204,
+    "by_level_miou": {
+      "1": 0.32473058161442686,
+      "2": 0.2024866731499146,
+      "3": 0.28123730466856295
+    },
+    "dense_tile_miou": 0.24106371584605873,
+    "fixed120_abstention_reasons": {
+      "extreme_relation_invalid": 4,
+      "filter_multi_candidate": 9,
+      "nearest_relation_invalid": 16,
+      "no_eligible_candidates": 6
+    },
+    "fixed120_abstentions": 35,
+    "fixed120_miou": 0.2800895280652553,
+    "full_val_abstention_reasons": {
+      "extreme_relation_invalid": 1197,
+      "filter_multi_candidate": 370,
+      "nearest_relation_invalid": 535,
+      "no_eligible_candidates": 333,
+      "no_proposals": 87
+    },
+    "full_val_abstentions": 2522,
+    "full_val_miou": 0.2972519283120487,
+    "paired_pass": 4,
+    "paired_total": 20,
+    "proposal_border_recall_at_0_50": 0.5461133069828722,
+    "proposal_recall_at_0_50": 0.6332780400663519,
+    "proposal_tiny_recall_at_0_50": 0.0022675736961451248,
+    "tiny_target_miou": 0.00525234972298092,
+    "weakest_programs": [
+      {
+        "miou": 0.12142386680859871,
+        "program": "smallest_to_below",
+        "records": 78
+      },
+      {
+        "miou": 0.141417022772491,
+        "program": "largest_to_right_of",
+        "records": 173
+      },
+      {
+        "miou": 0.17178220704750238,
+        "program": "smallest_to_above",
+        "records": 88
+      },
+      {
+        "miou": 0.1894297223195645,
+        "program": "largest_to_nearest",
+        "records": 458
+      },
+      {
+        "miou": 0.19043584965807894,
+        "program": "smallest_to_right_of",
+        "records": 88
+      },
+      {
+        "miou": 0.19524584483964588,
+        "program": "largest_to_above",
+        "records": 164
+      },
+      {
+        "miou": 0.23197984667143273,
+        "program": "largest_to_below",
+        "records": 139
+      },
+      {
+        "miou": 0.24531707277292567,
+        "program": "largest_to_left_of",
+        "records": 192
+      }
+    ]
+  },
+  "diagnosis": [
+    {
+      "cause": "proposal_recall_below_gate",
+      "detail": "overall recall@0.50 = 0.6333 < 0.92"
+    },
+    {
+      "cause": "tiny_instance_recall_below_gate",
+      "detail": "tiny recall@0.50 = 0.0023 < 0.60"
+    },
+    {
+      "cause": "executor_abstention_high",
+      "detail": "full-val abstention rate 0.2768"
+    }
+  ],
+  "runtime": {
+    "pretrained_weights": {
+      "yolo26m-seg.pt": {
+        "bytes": 54750385,
+        "local_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\pretrained\\yolo26m-seg.pt",
+        "method": "powershell+os_trust_store",
+        "sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+        "status": "downloaded",
+        "url": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26m-seg.pt"
+      },
+      "yolo26s-seg.pt": {
+        "bytes": 23467933,
+        "local_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\pretrained\\yolo26s-seg.pt",
+        "method": "powershell+os_trust_store",
+        "sha256": "3da1d83e31caec96f9300eb4064f4f62882c133c7c264d63dfe61a7c197837a4",
+        "status": "downloaded",
+        "url": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26s-seg.pt"
+      }
+    },
+    "ultralytics": null
+  },
+  "task": "6M",
+  "training": {
+    "best": {
+      "column": "metrics/mAP50-95(M)",
+      "epoch": 14,
+      "value": 0.36392
+    },
+    "checkpoint": {
+      "bytes": 162481487,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg\\weights\\best.pt",
+      "sha256": "fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44"
+    },
+    "epochs_recorded": 18,
+    "peak_vram_gb": null,
+    "wall_time_hours": null
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "_doc": "Task 6M environment and weight provenance.",
+  "authorized_downloads_used": [
+    "pypi:ultralytics==8.4.164 (+ declared dependencies)",
+    "github.com/ultralytics/assets/releases/download/v8.4.0/yolo26m-seg.pt",
+    "github.com/ultralytics/assets/releases/download/v8.4.0/yolo26s-seg.pt (smoke only)"
+  ],
+  "download_authorization": "Task 6M section 6 allows only: the official ultralytics package/dependencies, yolo26m-seg.pt, and optionally yolo26s-seg.pt for smoke testing.",
+  "environment": {
+    "conda_env_gitignored": true,
+    "conda_env_prefix": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal",
+    "created_by": "conda create --clone .conda/buildreasonseg-mvp (Task 6A env clone) + pip install of the official released ultralytics package",
+    "packages": {
+      "accelerate": "1.15.0",
+      "matplotlib": "3.11.2",
+      "numpy": "2.4.6",
+      "opencv-python": "5.0.0.93",
+      "pillow": "12.3.0",
+      "polars": "1.44.2",
+      "psutil": "7.2.2",
+      "pyyaml": "6.0.3",
+      "requests": "2.34.2",
+      "safetensors": "0.8.0",
+      "scipy": "1.17.1",
+      "tokenizers": "0.23.2",
+      "torch": "2.13.0+cu132",
+      "torchvision": "0.28.0+cu132",
+      "transformers": "5.17.0",
+      "ultralytics": "8.4.164",
+      "ultralytics-thop": "2.2.1"
+    },
+    "pip": "pip 26.2.1 from C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\Lib\\site-packages\\pip (python 3.11)",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.11.16",
+    "ultralytics_import_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\Lib\\site-packages\\ultralytics",
+    "ultralytics_official_release": "pypi:ultralytics==8.4.164",
+    "why_not_yolo_sam_env": "the historical yolo_sam_env installs an editable Ultralytics checkout from a local modified tree; Task 6M section 5 forbids using it for new training"
+  },
+  "hardware": {
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "gpu_total_memory_gb": 15.89,
+    "torch_cuda": "13.2"
+  },
+  "license_note": "Ultralytics open-source stack and pre-trained models are distributed under AGPL-3.0, with enterprise licensing available for proprietary/commercial use. This repository's LICENSE is NOT changed by Task 6M and no commercial-licensing claim is made. Training/evaluation here is research use of the official released package and official weights.",
+  "pretrained_weights": {
+    "yolo26m-seg.pt": {
+      "bytes": 54750385,
+      "local_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\pretrained\\yolo26m-seg.pt",
+      "method": "powershell+os_trust_store",
+      "sha256": "16b636f04e8fb6a325b3370f22dc5e5535ff473e384f4d041fd28d788f6ee9f5",
+      "status": "downloaded",
+      "url": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26m-seg.pt"
+    },
+    "yolo26s-seg.pt": {
+      "bytes": 23467933,
+      "local_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\pretrained\\yolo26s-seg.pt",
+      "method": "powershell+os_trust_store",
+      "sha256": "3da1d83e31caec96f9300eb4064f4f62882c133c7c264d63dfe61a7c197837a4",
+      "status": "downloaded",
+      "url": "https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26s-seg.pt"
+    }
+  },
+  "runtime_seconds": 35.27,
+  "task": "6M",
+  "unauthorized_downloads": []
+}

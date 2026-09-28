@@ -1,0 +1,40 @@
+{
+  "_doc": "Task 6M section 2 manifest. Freezes the evaluation-pack construction policy, the seeds, the source dataset hashes and the resulting pack hashes BEFORE any training or tuning.",
+  "artifacts": {
+    "task6m_test_fixed120.json": {
+      "bytes": 66858,
+      "sha256": "651fe7584a8cd5aaffb31a688a886e8360f8c1d2006866083c424d5f60bb4ca9"
+    },
+    "task6m_test_paired20.json": {
+      "bytes": 16980,
+      "sha256": "981a60a737f2bbf8975459d784bd16ec949eca74cddee46c86abb5db7a9137a5"
+    },
+    "task6m_val_fixed120.json": {
+      "bytes": 67402,
+      "sha256": "277586a098024e161b794d8dd64bba3ce97b25ca7c2e24e270848600f374474b"
+    },
+    "task6m_val_paired20.json": {
+      "bytes": 17734,
+      "sha256": "3fadbc03ee8e35a71b4c09085a9bc8826b75749bc21e749d5ade5cdd9d87d16c"
+    }
+  },
+  "construction_policy": {
+    "fixed120": "deterministic stratified sample over (level, program family), one record per tile",
+    "frozen_before_training": true,
+    "paired20": "same tile, same reference instances, same level, different native target instances",
+    "seed_base": 20260810,
+    "test_packs_not_inspected_during_development": true
+  },
+  "purpose": "close the Task 6L paired_counterfactual_availability gap with frozen eval packs",
+  "runtime_seconds": 1.48,
+  "sources": {
+    "build_spatial_reason_v0.2": {
+      "test": "datasets/build_spatial_reason/v0.2/test.jsonl",
+      "train": "datasets/build_spatial_reason/v0.2/train.jsonl",
+      "val": "datasets/build_spatial_reason/v0.2/val.jsonl"
+    },
+    "canonical_instances": "datasets/whu_native_vector/v1.0/manifest.json",
+    "split_view": "scene_disjoint_v1"
+  },
+  "task": "6M"
+}

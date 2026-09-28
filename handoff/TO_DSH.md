@@ -1,525 +1,482 @@
-# TO_DSH — Task 6L: WHU Native-Vector Canonical Dataset + BuildSpatialReason v0.2
+# TO_DSH — Task 6M: Native-Vector Proposal Model + Structured Demo Gate
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Predecessor verdict: Task 6K.1 → `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`
+> Predecessor: Task 6L → `VECTOR_DATASET_MIGRATION_PASS`
 >
-> Goal: migrate the PRIMARY annotation source from semantic connected-component pseudo-instances to the validated native WHU East-Asia vector polygons, while preserving all historical artifacts as frozen baselines. Build a production-ready canonical vector-instance representation and a new reasoning dataset `BuildSpatialReason v0.2`.
+> Goal: train a modern instance-segmentation proposal model on `WHU-EA-NativeVector v1.0`, evaluate the native-vector version of the Task 6J structured grounding chain under the primary `scene_disjoint_v1` split, and produce a CMD-runnable structured Demo path.
 >
-> This is a **data migration / regeneration task only**. Do not train a proposal model, MLLM, SAM2, or final model.
+> This task is about **proposal quality + end-to-end structured inference**. It is NOT the final `[REF]` / SRE / SCL paper architecture.
 
 ## 0. User-facing language
-
-All DSH narrative/UI output must be Chinese.
-
-Code, file names, metric keys and canonical tokens may remain English.
-
-## 1. Frozen evidence from Task 6K.1
-
-Treat the following as already measured and immutable unless a direct implementation bug is found:
-
-- `EA.shp`: 34,085 polygon records (`.shp == .shx == .dbf`);
-- native vector ↔ raster mean IoU: 0.9505;
-- tile mapping validated by pixel/window identity;
-- 38,824 clipped native instances on the historical 4,038 positive tiles;
-- 32,590 distinct vector features represented there;
-- current pseudo-instances: 36,926;
-- unmatched native instances vs pseudo at IoU 0.50: 5.24%;
-- semantic-component merge rate: 1.32%;
-- pseudo merge rate: 1.34%;
-- vector→pseudo split rate: 0.13%;
-- VECTOR↔PSEUDO weighted relation target-change rate: 6.96%;
-- Task 6J failure remains proposal-dominated: 51/65 = 78.5% on clean single native buildings;
-- current random val split is spatially interleaved with train; test is a separate raster.
-
-Do not rerun Task 6K.1 except for small consistency assertions.
-
-## 2. Read-only external sources
-
-Original WHU archive — READ ONLY:
-
-`C:\D\resources\Satellite dataset Ⅱ (East Asia)`
-
-Historical YOLO dataset — READ ONLY:
-
-`C:\D\resources\WHU_YOLO_dataset`
-
-Legacy project — READ ONLY:
-
-`C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment`
-
-Canonical repo:
-
-`C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-
-No source mutation. No external download. No package installation.
-
-## 3. Historical artifacts are frozen
-
-Keep unchanged:
-- `datasets/whu/`
-- `datasets/build_spatial_reason/v0.1.1/`
-- all Task 1–6K.1 evaluation artifacts;
-- old YOLO baseline/provenance;
-- current `BuildSpatialReason v0.1.1` artifact-fact block.
-
-Do NOT silently rewrite old manifests to pretend they came from vector GT.
-
-`v0.1.1` remains the pseudo-instance historical baseline.
-
-# PART A — Canonical native-vector dataset
-
-## 4. Dataset identity
-
-Create a new canonical dataset namespace:
-
-`datasets/whu_native_vector/`
-
-Suggested version:
-
-`v1.0`
-
-Canonical name:
-
-`WHU-EA-NativeVector`
-
-Primary annotation truth:
-- native `EA.shp` polygon geometry;
-- `source_feature_id` = 1-based `.shp` record order within this exact archive;
-- define a canonical reproducible UID as `(EA.shp SHA256, source_feature_id)` and record the shapefile hash in the manifest, because record order alone is only stable for this exact file/version;
-- DBF fields are NOT identity because Task 6K.1 proved them degenerate.
-
-A tile-clipped annotation identity must explicitly include:
-- `source_feature_id`
-- `tile_id`
-- optional deterministic `tile_instance_id`
-
-Never replace the stable source id with only a per-tile renumbering.
-
-## 5. Cover the COMPLETE cropped archive, not only the historical 4,038 positive tiles
-
-Task 6K found:
-- train: 3,135
-- train_no: 10,527
-- test: 903
-- test_no: 2,823
-- total: 17,388 tiles
-
-Task 6K.1 proved the whole-image grid capacity equals the cropped-tile count.
-
-Therefore the canonical vector dataset must index **all 17,388 tiles**, including:
-- truly empty tiles;
-- `_no` tiles with small/partial building labels;
-- positive historical tiles.
-
-Do not discard `_no` tiles merely because the old semantic workflow did.
-
-For every tile record include at least:
-- canonical tile id;
-- source whole raster: `train1 | train2 | test`;
-- grid row/column;
-- logical source image path relative to the external WHU root;
-- logical source raster-label path;
-- image size;
-- native vector instances clipped to tile;
-- instance count;
-- empty/non-empty flag;
-- old folder category (`train`, `train_no`, `test`, `test_no`);
-- historical pseudo split if applicable (`train`, `val`, `test`, or null);
-- source geospatial bounds if available;
-- provenance version.
-
-Committed metadata must NOT hard-code `C:\D\...` absolute paths.
-
-Use a logical source root / CLI `--source-root` for runtime.
-
-## 6. Per-instance schema
-
-For each clipped native instance store:
-- `source_feature_id`;
-- `tile_instance_id`;
-- polygon/multipolygon geometry in tile pixel coordinates;
-- bbox xyxy;
-- centroid;
-- clipped area px;
-- full source-feature area in the same projected/image-compatible units where safely computed;
-- `touches_tile_border`;
-- `visible_fraction` when computable as clipped/full feature area;
-- ring/hole metadata;
-- multipart flag;
-- tiny-area flags (do not remove);
-- source provenance.
-
-Do not convert map-coordinate area into “ground m²”. The local `.tfw`/CRS-derived scale must be treated as authoritative for alignment only; do not reuse the public webpage's nominal 2.7 m GSD to convert pixel area unless that discrepancy is separately reconciled.
-
-## 7. Preserve all native instances
-
-Unlike the historical converter:
-- NO `<50 contourArea` deletion;
-- NO semantic connected-component merging;
-- NO loss of holes via `RETR_EXTERNAL`;
-- NO `approxPolyDP` simplification unless a separately documented derived export needs it.
-
-The canonical ground truth must preserve native vector geometry as faithfully as tile clipping permits.
-
-# PART B — Split design
-
-## 8. Maintain TWO split views
-
-### A. `legacy_compat_v1`
-
-Purpose: fair comparison with old Task 1–6K.1 experiments.
-
-For the historical 4,038 positive tiles:
-- reuse the exact recovered old train/val/test stems;
-- do not recreate from seed.
-
-Other tiles may be `unassigned` in this view.
-
-### B. `scene_disjoint_v1`
-
-Purpose: cleaner future model development and paper evaluation.
-
-Use whole-raster provenance:
-
-- train = `train1`
-- val = `train2`
-- test = `test`
-
-for all mapped cropped tiles.
-
-Before freezing, prove:
-- zero tile overlap;
-- zero `source_feature_id` overlap between train/val/test, OR explicitly list and exclude rare boundary-crossing features/tiles until identity leakage is zero;
-- zero RGB duplicate hash overlap where feasible;
-- train/val/test query constructibility is non-zero for every intended program family.
-
-If any program class has insufficient validation/test support, do not silently fall back to random splitting. Report and STOP for review.
-
-## 9. Split interpretation
-
-Record explicitly:
-- `legacy_compat_v1` is for historical comparability only;
-- `scene_disjoint_v1` is the new primary development/evaluation split;
-- it provides scene/raster separation, NOT unseen-city or broad geographic generalization.
-
-Do not claim cross-city generalization.
-
-# PART C — Canonical adapter
-
-## 10. Implement reusable dataset adapter
-
-Create a reusable interface, e.g.:
-
-```python
-load_tile(tile_id, split_view=...)
-list_instances(tile_id)
-get_instance_geometry(tile_id, tile_instance_id)
-get_source_feature_id(...)
-iter_tiles(split, split_view=...)
-```
-
-It must be independent of YOLO and independent of the old pseudo-component format.
-
-Provide an adapter layer that exposes the geometry fields expected by the existing Task 3B relation engine.
-
-Do not rewrite the relation engine unless a genuine incompatibility is found.
-
-# PART D — BuildSpatialReason v0.2
-
-## 11. Dataset version
-
-Create:
-
-`datasets/build_spatial_reason/v0.2/`
-
-Primary source:
-`WHU-EA-NativeVector v1.0`
-
-Use native vector instances as candidate truth.
-
-Use `scene_disjoint_v1` as the primary split.
-
-Keep `legacy_compat_v1` support for comparison, but not as the primary v0.2 split.
-
-## 12. Program vocabulary
-
-Keep the current **20 canonical program/query types** unchanged.
-
-Reason:
-- isolate annotation truth + split migration;
-- retain Task 6J ProgramHead/executor comparability;
-- avoid changing language semantics and instance truth in the same task.
-
-No new relation types in Task 6L.
-
-## 13. Relation semantics
-
-Start from the frozen Task 3B semantics:
-- left/right/above/below;
-- area ranking;
-- boundary-distance nearest;
-- ambiguity/discard rules.
-
-Candidate geometry now comes from native vector instances.
-
-Do not use pseudo ids.
-
-## 14. Visibility / truncation metadata
-
-Compute/store:
-- `touches_tile_border`;
-- `visible_fraction` where robust;
-- tiny-area flags.
-
-Do NOT invent a complex new visibility threshold merely to improve counts.
-
-Canonical GT must preserve all instances; filtering may happen only at reasoning-query eligibility time.
-
-If eligibility must change because vector geometry exposes better visibility:
-- make it explicit as `semantic_visibility_policy_version = 2.0`;
-- document the reason;
-- provide a compatibility audit against v0.1.1;
-- do not tune on test.
-
-## 15. Reasoning records
-
-Each reasoning record must include enough provenance to audit the target:
-- `tile_id`;
-- source-feature / tile-instance metadata for reference and target;
-- query type/program id;
-- reasoning steps;
-- instruction zh/en;
-- target geometry reference;
-- split view/version;
-- dataset version;
-- relation config version;
-- visibility policy version.
-
-Source/instance ids may exist in metadata/evaluation, but must not leak into the natural-language model input.
-
-# PART E — v0.2 validation
-
-## 16. Structural checks
+All DSH narrative/UI output must be Chinese. Code/model names/metric keys/program ids may remain English.
+
+## 1. Frozen inputs
+Treat these as frozen:
+- `WHU-EA-NativeVector v1.0`
+- `BuildSpatialReason v0.2`
+- `scene_disjoint_v1`
+- frozen Task 3B relation semantics
+- 20 canonical programs
+- Task 6J J0/J2/J3 historical artifacts
+- Task 6K/6K.1/6L audit artifacts
+- historical YOLOv8m-seg baseline and pseudo-instance artifacts
+
+Do NOT rewrite v0.1.1 or v0.2.
+
+Task 6L measured:
+- 17,388 canonical tiles;
+- 41,186 clipped native instances;
+- train/val/test tiles = 10,044 / 3,618 / 3,726;
+- v0.2 samples = 12,778 / 9,111 / 6,219;
+- all 20 programs supported in every split;
+- 1,235 native instances <50 px retained;
+- 35.4% instances touch tile border.
+
+## 2. Fix the Task 6L paired-evaluation gap first
+Task 6L currently reports `paired_counterfactual_availability: null`.
+
+Before training, freeze deterministic native-vector evaluation packs.
+
+Validation:
+- 120 records
+- 20 same-image paired counterfactual pairs
+- stratified over L1/L2/L3 and program families
+- each pair: same tile, different native target instances/masks
+
+Test:
+- 120 records
+- 20 same-image paired counterfactual pairs
+- same construction policy
+- freeze before tuning
+- do not inspect test results until model + inference thresholds are frozen on validation
+
+Write:
+- `evaluation/task6m_val_fixed120.json`
+- `evaluation/task6m_val_paired20.json`
+- `evaluation/task6m_test_fixed120.json`
+- `evaluation/task6m_test_paired20.json`
+- `evaluation/task6m_eval_pack_manifest.json`
+
+# PART A — Proposal framework
+
+## 3. Primary model: YOLO26m-seg
+Use **Ultralytics YOLO26m-seg** as the primary proposal model.
+
+Rationale already checked by ChatGPT against current official Ultralytics docs:
+- YOLO26 is the current released family recommended for new projects;
+- instance segmentation is officially supported;
+- official COCO segmentation table reports YOLO26m-seg at 23.6M fused params and 44.1 mask mAP50-95;
+- YOLO26 training includes Small-Target-Aware Label Assignment (STAL), relevant to retained small buildings;
+- RTX 5080 Laptop 16GB should be sufficient for a controlled `m` experiment, but local VRAM must be measured.
+
+This is a Demo engineering choice, not paper novelty and not proof of global optimality.
+
+Do not run a broad framework bake-off in Task 6M.
+
+## 4. License/provenance
+Current official Ultralytics guidance places the open-source stack/models under AGPL-3.0, with enterprise licensing for proprietary/commercial use.
+
+Record:
+- exact Ultralytics package version;
+- package source;
+- pretrained weight source;
+- pretrained weight SHA256;
+- license note in Task 6M docs.
+
+Do NOT change the repository license automatically.
+Do NOT make commercial-licensing claims.
+
+# PART B — Environment
+
+## 5. New project-local environment
+Do not use the historical editable `yolo_sam_env` for new training.
+
+Create if needed:
+`.conda/buildreasonseg-proposal`
+
+Rules:
+- Conda mandatory;
+- no modification to base/jupyter/yolo_sam_env;
+- `.conda/` remains gitignored;
+- official released packages only;
+- pin exact versions;
+- do not clone/edit Ultralytics source.
+
+It is acceptable to clone the working Task 6A project env and add official Ultralytics.
+
+## 6. Download authorization
+No dataset downloads.
+
+Authorized for Task 6M only:
+- official released `ultralytics` package/dependencies if missing;
+- official `yolo26m-seg.pt`;
+- optionally `yolo26s-seg.pt` only for smoke testing.
+
+Use verified HTTPS and established Watt ownership rules.
+Record source, size, SHA256.
+
+No other downloads.
+
+# PART C — Native-vector training export
+
+## 7. Derived Ultralytics export
+Create gitignored:
+`artifacts/task6m_yolo_native/`
+
+Use `scene_disjoint_v1`:
+- train = train1
+- val = train2
+- test = test
+
+Requirements:
+- retain all empty tiles with valid empty labels;
+- retain all native instances including tiny;
+- no `<50` filter;
+- no connected-component conversion;
+- source images hardlinked if safe/possible; otherwise documented non-destructive fallback;
+- never modify/move source images.
+
+Ultralytics polygon TXT cannot preserve holes. For derived training export only:
+- use required exterior polygon form;
+- record affected hole instances;
+- canonical GT stays unchanged;
+- all evaluation uses canonical exact native masks.
+
+Quantify export fidelity:
+- mean/median/p1 IoU vs canonical masks;
+- tiny-instance fidelity;
+- hole-instance fidelity;
+- malformed/degenerate count.
+
+Gate:
+- mean IoU >= 0.995
+- no non-hole instance silently missing
+- 0 malformed labels
+
+Otherwise verdict `TRAINING_EXPORT_INVALID` and STOP.
+
+# PART D — Smoke
+
+## 8. M0 smoke
+Before full training:
+1. load official YOLO26 segmentation checkpoint;
+2. 2-image train forward/backward;
+3. deterministic 500–1000 tile subset, ~2 epochs;
+4. validate mask decoding with canonical evaluator;
+5. verify empty-image handling;
+6. verify tiny labels enter training.
+
+`yolo26s-seg` may be used for smoke only if materially faster.
+
+No architecture conclusions from M0.
+
+# PART E — Full training
+
+## 9. M1 YOLO26m-seg
+Train on `scene_disjoint_v1`.
+
+Initial config:
+- COCO pretrained checkpoint
+- imgsz 640
+- max epochs 80
+- patience 15
+- fixed seed
+- AMP if stable
+- device RTX 5080 Laptop
+- conservative Windows-safe workers
+- best + last checkpoints
+- deterministic settings where supported
+- no test usage during training/tuning
+
+Batch:
+- short memory probe first
+- choose largest stable fixed batch
+
+If OOM:
+1. reduce batch
+2. gradient accumulation if supported
+3. do NOT silently reduce imgsz before reporting
+
+Record:
+- wall time
+- max VRAM
+- losses
+- box/mask metrics
+- best epoch
+- early stop
+- NaN/Inf
+- checkpoint SHA256
+
+# PART F — Proposal evaluation
+
+## 10. Native-vector metrics
+GT = canonical native masks, not training TXT.
+
+On full val compute:
+- recall @ IoU 0.25 / 0.50 / 0.75
+- mask precision/recall
+- mask AP50 / AP50-95 where available
+- mean/median best GT→proposal IoU
+- proposals/tile
+- empty-tile false-proposal rate
+- tiny-instance recall
+- border-truncated recall
+- dense-tile recall
+- size breakdown
+
+Matching is diagnostic only; GT must never repair proposals.
+
+## 11. Validation-only threshold tuning
+Sweep only a small declared set of:
+- confidence
+- max_det
+- NMS/e2e mode if safely supported
+
+Selection hierarchy:
+1. target recall @0.50
+2. oracle-program structured selected-mask performance
+3. reasonable proposal burden
+
+Freeze before test:
+`evaluation/task6m_inference_config_frozen.json`
+
+# PART G — Structured chain
+
+## 12. Native J1-v2
+Oracle program + predicted proposals.
+
+Run on:
+- full val
+- fixed val120
+- val paired20
 
 Report:
-- total tiles indexed;
-- total native source features;
-- total clipped tile instances;
-- empty/non-empty tile counts;
-- instances/tile distribution;
-- per-split tile and instance counts;
-- border-truncated rate;
-- visible-fraction distribution;
-- tiny-instance distribution;
-- holes/multipart preservation.
+- strict selected-mask mIoU
+- Dice
+- abstentions/reasons
+- target selection success
+- paired own-vs-cross mask performance
+- proposal recall
 
-## 17. Query-generation checks
+Development gate:
+- overall recall@0.50 >= 0.92
+- tiny recall@0.50 >= 0.60
+- fixed120 mIoU >= 0.50
+- paired pass >= 14/20
+- abstentions <= 20/120
 
-For `BuildSpatialReason v0.2` report:
-- total samples;
-- by split;
-- by L1/L2/L3;
-- by all 20 query types;
-- trivial/nontrivial L3;
-- paired counterfactual availability;
-- samples/image;
-- discard reasons;
-- ambiguity rate;
-- reference/target border/tiny distributions.
+If fail, do failure attribution; do not auto-train l/x or switch framework.
 
-Every intended program class must have non-zero val and test support.
+## 13. Program parser on v0.2
+First evaluate frozen Task 6J Qwen3-VL-2B ProgramHead on v0.2 val:
+- accuracy
+- macro F1
+- fixed120
+- full val
 
-## 18. v0.1.1 comparison
+Instruction text only.
 
-On the exact historical 4,038 positive tiles under `legacy_compat_v1` compare:
-- common query count;
-- target unchanged/changed;
-- became valid/invalid;
-- weighted answer change;
-- by level/query type.
+If checkpoint missing or val accuracy <0.95:
+- retrain same 2B text-only ProgramHead on v0.2 train only
+- no image tokens
+- no query_type leakage
+- freeze before test
 
-This should broadly reconcile with Task 6K.1's ~6.96% VECTOR↔PSEUDO drift.
+Do not upgrade to 4B.
 
-Do not require exact equality if an explicit visibility-policy change explains the delta.
+## 14. Native J4-v2
+After proposal config + parser freeze, run ONCE on:
+- full test
+- fixed test120
+- test paired20
 
-## 19. Acceptance gates
+No GT in inference.
 
-Accept only if:
-- all 17,388 tiles have deterministic canonical records;
-- vector provenance resolves to native `EA.shp`;
-- stable source ids survive clipping;
-- no cross-split source-feature leakage in `scene_disjoint_v1`;
-- every intended program class is represented in val and test;
-- generator/validator deterministic;
-- no test data influences thresholds;
-- random audit samples agree with native vector overlays;
-- v0.1.1 comparison reconciles with Task 6K.1;
-- artifact consistency checks pass.
+Chain:
+instruction → Qwen2B ProgramHead → canonical program
 
-Verdict:
-- `VECTOR_DATASET_MIGRATION_PASS`
-or
-- `VECTOR_DATASET_MIGRATION_NEEDS_FIX`
+image → YOLO26m-seg proposals → mask/bbox/centroid/area
 
-# PART F — Task 6J bridge
+program + proposal geometry → deterministic relation executor → selected proposal mask
 
-## 20. Do NOT train yet
+GT only for evaluation.
 
-Do not retrain YOLO or a new proposal backbone.
+Report:
+- parser accuracy
+- proposal recall
+- strict selected-mask mIoU/Dice
+- abstention
+- paired pass
+- L1/L2/L3
+- per program
+- tiny/border/dense breakdown
 
-Prepare only the reusable native-vector evaluation interface needed next:
-- proposal recall vs native vector masks;
-- selected-mask mIoU;
-- proposal geometry extraction;
-- structured executor candidate API.
+# PART H — Demo CLI
 
-Old Task 6J J0/J1/J2/J3 artifacts remain frozen.
-
-Do not run J4 with an untrained/new proposal model.
-
-# PART G — Storage / Git
-
-## 21. Avoid duplicating imagery
-
-Do not copy 17,388 TIFF images into Git.
-
-Canonical metadata should reference logical paths under the external source root.
-
-Large regenerable per-tile geometry caches may be gitignored under:
-`artifacts/whu_native_vector/`
-
-Do not stage raw shapefiles or source rasters. The official WHU page exposes the dataset for public/free download, but Task 6L must not assume a formal redistribution license that is not explicitly present in the local archive/official page; record provenance/citation and keep raw data external.
-
-# PART H — Required artifacts
-
-Create at minimum:
+## 15. CMD-runnable inference
+Create:
 
 ```text
-datasets/whu_native_vector/v1.0/manifest.json
-datasets/whu_native_vector/v1.0/statistics.json
-datasets/whu_native_vector/v1.0/splits/legacy_compat_v1.json
-datasets/whu_native_vector/v1.0/splits/scene_disjoint_v1.json
-
-datasets/build_spatial_reason/v0.2/manifest.json
-datasets/build_spatial_reason/v0.2/statistics.json
-
-evaluation/task6l_vector_dataset_integrity.json
-evaluation/task6l_scene_disjoint_split_audit.json
-evaluation/task6l_build_spatial_reason_v0.2_quality.json
-evaluation/task6l_v01_vs_v02_comparison.json
-evaluation/task6l_artifact_index.json
-evaluation/task6l_verdict.json
-
-docs/task6l_vector_dataset_migration.md
+python predict_structured.py ^
+  --image path\to\image.tif ^
+  --prompt "分割面积最大的建筑物右侧最近的建筑物" ^
+  --proposal-checkpoint checkpoints\proposal\best.pt ^
+  --parser-checkpoint checkpoints\program_parser\best.pt ^
+  --out-dir outputs\demo
 ```
 
-Use JSONL/index files as needed.
+Outputs:
+- parsed canonical program
+- compact reasoning/program trace
+- proposal count
+- selected proposal
+- selected mask PNG
+- overlay PNG
+- JSON result
+- explicit abstention reason
 
-Update:
-- `handoff/FROM_DSH.md`
-- `handoff/PROJECT_STATE.md`
-- architecture decisions if warranted.
+Must not require GT or annotation files.
 
-# PART I — Tests
+Unsupported instruction/program:
+- explicit failure
+- do not map to unrelated program
 
-## 22. Required tests
+# PART I — Verdict
 
-At minimum:
+## 16. Exactly one
+`STRUCTURED_DEMO_READY` if:
+- export/training valid
+- val development gate passes
+- parser ready
+- test fixed120 J4 mIoU >= 0.40
+- test paired pass >= 14/20
+- CLI works without GT on >=10 audited images
 
-1. original WHU source read-only;
-2. old YOLO dataset read-only;
-3. legacy project read-only;
-4. v0.1.1 frozen unchanged;
-5. native source feature ids stable;
-6. all 17,388 cropped tiles accounted for;
-7. tile→whole-raster mapping deterministic;
-8. vector clipping deterministic;
-9. holes/multipart not silently dropped;
-10. no `<50` global deletion in canonical GT;
-11. empty tiles supported;
-12. `legacy_compat_v1` exact historical stems;
-13. `scene_disjoint_v1` train1/train2/test mapping correct;
-14. zero tile overlap across scene-disjoint splits;
-15. zero source-feature-id split leakage after any explicitly documented exclusions;
-16. no test-driven threshold tuning;
-17. relation engine consumes vector geometry;
-18. all 20 program ids preserved;
-19. ids absent from model-input instruction text;
-20. zh/en semantic parity;
-21. generator deterministic;
-22. validator catches invalid target provenance;
-23. every program has val/test support;
-24. v0.1.1 comparison reconciles with Task 6K.1;
-25. no model training;
-26. no downloads/installations;
-27. no GUI;
-28. full artifact consistency.
+`PROPOSAL_MODEL_NEEDS_IMPROVEMENT`
+`PROGRAM_PARSER_NEEDS_IMPROVEMENT`
+`TRAINING_EXPORT_INVALID`
+`INVALID_EXPERIMENT`
+
+# PART J — Required artifacts
+
+Create:
+- `evaluation/task6m_eval_pack_manifest.json`
+- `evaluation/task6m_val_fixed120.json`
+- `evaluation/task6m_val_paired20.json`
+- `evaluation/task6m_test_fixed120.json`
+- `evaluation/task6m_test_paired20.json`
+- `evaluation/task6m_training_export_audit.json`
+- `evaluation/task6m_environment_manifest.json`
+- `evaluation/task6m_training_summary.json`
+- `evaluation/task6m_proposal_val.json`
+- `evaluation/task6m_inference_config_frozen.json`
+- `evaluation/task6m_j1v2_val.json`
+- `evaluation/task6m_parser_v02.json`
+- `evaluation/task6m_j4v2_test.json`
+- `evaluation/task6m_error_attribution.json`
+- `evaluation/task6m_demo_cli_audit.json`
+- `evaluation/task6m_verdict.json`
+- `docs/task6m_native_vector_proposal_demo.md`
+
+Add scripts/config/tests.
+
+Checkpoints and large exports stay gitignored. Record local paths + SHA256 in small manifests.
+
+# PART K — Tests
+
+At least:
+1. canonical native dataset unchanged
+2. v0.2 unchanged
+3. v0.1.1 unchanged
+4. no source mutation
+5. export preserves all non-hole instances
+6. empty labels valid
+7. no `<50` filter
+8. hole loss only recorded in derived export
+9. correct scene_disjoint split
+10. zero feature leakage
+11. test pack frozen before tuning
+12. no test metrics before frozen inference config
+13. GT never repairs proposals
+14. parser text-only
+15. no query_type in parser input
+16. no GT in J4
+17. executor gets predicted geometry only
+18. pairs same-image/different-native-target
+19. all intended programs represented
+20. CLI works without annotations
+21. eval-mode determinism
+22. unsupported program explicit failure
+23. model hashes recorded
+24. no large weights staged
+25. no old editable Ultralytics fork used
+26. no 4B
+27. no `[REF]`, SRE, SCL
+28. no GUI
 
 Run:
 `python -m pytest tests/ -q`
 
-# PART J — Model choice / runtime
+# PART L — Git / Watt
+Commit code/config/tests/small eval/docs/handoff only.
 
-Recommended:
-- DeepSeek V4.1 Flash + High.
-
-If a genuinely difficult cross-file/geospatial bug appears:
-- V4.1 Flash + Max.
-
-Do not move to V4 Pro merely because the task is important.
-
-# PART K — Git / Watt
+Do not commit:
+- `.conda`
+- pretrained/trained weights
+- derived image export
+- caches
+- source imagery/vector data
 
 Recommended commit:
-`feat: migrate WHU to native vector instances`
+`feat: train native-vector proposal model for structured demo`
 
-Then a separate docs/handoff commit if needed.
+Use Watt ownership rules. If DSH starts Watt, close it after network work; if pre-existing, leave it.
 
-Do not commit raw TIFFs, source shapefile, model weights, per-instance raster dumps, huge caches, or `.conda`.
+# PART M — DSH model
+Default:
+- DeepSeek V4.1 Flash + High
 
-Use established Watt ownership rules only if needed for push.
+Escalate to:
+- V4.1 Flash + Max only for a genuine difficult runtime/causal bug
 
-# PART L — Final handoff
+Do not use V4 Pro by default.
 
-`handoff/FROM_DSH.md` must include:
+# PART N — Handoff
+Update `handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md`.
 
+Include:
 1. Verdict
-2. Canonical Dataset Identity
-3. Full 17,388-Tile Coverage
-4. Native Instance Statistics
-5. Split Design
-6. Leakage Audit
-7. Adapter/API
-8. BuildSpatialReason v0.2
-9. v0.2 Distribution
-10. v0.1.1 vs v0.2 Comparison
-11. Visibility/Truncation Policy
-12. Task 6J Bridge Preparedness
-13. Reproducibility
-14. Tests
-15. Git/Watt
-16. Recommended Next Step
+2. Fixed Eval Packs
+3. YOLO26 Provenance
+4. Export Audit
+5. Environment
+6. Smoke
+7. Full Training
+8. Proposal Metrics
+9. Frozen Inference Config
+10. J1-v2
+11. Program Parser
+12. J4-v2 Test
+13. Failure Attribution
+14. Demo CLI
+15. License Note
+16. Tests
+17. Git/Watt
+18. Recommended Next Step
 
-Final UI in Chinese must report at minimum:
-- Task verdict;
-- total indexed tiles;
-- total clipped native instances / distinct source features;
-- scene-disjoint split sizes;
-- excluded leakage boundary cases if any;
-- v0.2 sample counts by split/level;
-- all 20 program support status;
-- v0.1.1↔v0.2 target-change rate;
-- acceptance checks;
-- tests;
-- commit/push.
+# 17. STOP
+After Task 6M STOP.
 
-# 23. STOP
-
-After Task 6L STOP.
-
-Do not automatically retrain YOLO, select a new proposal architecture, run Task 6J J4, upgrade Qwen to 4B, add `[REF]`/SRE/SCL, download another dataset, perform formal final-model training, or build GUI.
+Do not automatically:
+- train YOLO26l/x
+- switch frameworks
+- upgrade Qwen to 4B
+- add `[REF]`, SRE or SCL
+- download another dataset
+- start formal final-model training
+- build GUI
 
 Wait for ChatGPT review.
