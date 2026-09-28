@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6K.1._
+_Last updated by DSH at the end of Task 6L._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -72,6 +72,41 @@ The block above is machine-checked against
 | 6J | **Structured Proposal Grounding Feasibility (instruction → relation program → building candidates → explicit geometry execution)** | **done → `PROPOSAL_QUALITY_LIMIT`** (J0 executor 1.000/20-20; J2 parser 1.000 acc, 1.000 full-val; J3 1.000/20-20; J1 frozen-YOLO chain 5/20 paired → J4 not run) |
 | 6K | **WHU source → pseudo-instance data audit (read-only)** | **done → `KEEP_WHU_AS_PRIMARY_FOR_NOW`** (`legacy_baseline_role: keep`; conversion drift 4.33 % weighted, `<50` deletion 3.61 % of contours / 0.058 % of foreground, YOLO re-emulation IoU 1.00000, J1 failures 75.4 % proposal-model) — **superseded as a project-level decision by Task 6K.1** |
 | 6K.1 | **Recover and validate the native WHU East-Asia vector ground truth (read-only)** | **done → `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`** (`keep_whu_imagery: true`, `keep_historical_pseudo_baseline: true`; `EA.shp` = 34,085 manually delineated polygons, vector↔raster mean IoU 0.9505, tile mapping validated, VECTOR-vs-PSEUDO relation change 6.96 % weighted, 5.24 % of native buildings missing from the pseudo view, merges only 1.34 %) |
+| 6L | **Native-vector canonical dataset + scene-disjoint split + BuildSpatialReason v0.2** | **done → `VECTOR_DATASET_MIGRATION_PASS`** (all 17,388 tiles indexed; 41,186 clipped instances from 33,788 distinct `EA.shp` features; `scene_disjoint_v1` train1 10,044 / train2 3,618 / test 3,726 with zero tile, feature and RGB leakage; v0.2 = 28,108 samples with all 20 programs supported in val and test; v0.1.1↔v0.2 target change 5.70 % / 5.45 % weighted, reconciling with 6K.1's 6.96 %) |
+
+## Task 6L measured results
+
+Migration of the primary annotation source from semantic connected-component pseudo-instances to the
+validated native vector polygons (Task 6K.1 verdict), plus a scene-disjoint split and
+BuildSpatialReason v0.2. No model training, no downloads, no installations; `datasets/whu/` and
+v0.1.1 stay frozen. Full detail: `docs/task6l_vector_dataset_migration.md`, ADR-025,
+`evaluation/task6l_*.json`.
+
+| | Value |
+|---|---|
+| Canonical dataset | `datasets/whu_native_vector/v1.0/` — `WHU-EA-NativeVector` v1.0, UID `(EA.shp SHA256, source_feature_id)` |
+| Tile coverage | **17,388 / 17,388** (train 3,135 · train_no 10,527 · test 903 · test_no 2,823); 11,909 empty, 5,479 non-empty |
+| Instances | **41,186** clipped instances · **33,788** distinct source features · max 55/tile (uint8-safe) |
+| Preservation | no `<50` deletion (1,235 tiny retained and flagged), no component merging, no hole loss (6 instances with holes), no simplification |
+| Truncation / visibility | border-truncated 35.4 % · visible_fraction median 1.0, p5 0.069 |
+| Split views | `legacy_compat_v1` (historical 2,508 / 627 / 903) and primary `scene_disjoint_v1` (**10,044 / 3,618 / 3,726**) |
+| Leakage | tile overlap **0**, source-feature overlap **0**, cross-split RGB duplicates **0** |
+| v0.2 samples | **28,108** (train 12,778 · val 9,111 · test 6,219); L1 19,769 · L2 5,323 · L3 3,016; L3 trivial 1,392 / nontrivial 1,624 |
+| Program support | all **20 / 20** programs present in train, val and test |
+| v0.1.1 ↔ v0.2 | common 23,210 groups · unchanged 21,886 · changed **1,324 (5.70 %)** · weighted **5.45 %** (L1 7.61 %, L2 0.74 %, L3 1.61 %) vs Task 6K.1's 6.96 % → reconciles |
+| Acceptance gates | **11 / 11 PASS** (determinism rerun byte-identical; independent overlay audit min IoU **1.0**) |
+| Verdict | **`VECTOR_DATASET_MIGRATION_PASS`** |
+
+1. **The migration is complete and verified**, not assumed: every tile has a canonical record, every
+   instance keeps its stable source id, and the committed label maps are exactly reproducible from
+   `EA.shp`.
+2. **The scene-disjoint split is clean** (zero tile/feature/RGB leakage) but only separates scenes —
+   it is not a cross-city generalization claim, and no such claim is made.
+3. **v0.2 is deliberately not answer-compatible with v0.1.1** (5.45 % weighted change); the two
+   versions must never be mixed in one table without stating the version.
+4. **Next step is a model task**: train/select an instance-segmentation proposal backbone and run the
+   prepared J1/J4 evaluation against native instance masks, reporting deltas against the frozen
+   v0.1.1 baseline.
 
 ## Task 6K.1 measured results
 
