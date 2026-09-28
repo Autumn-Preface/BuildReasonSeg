@@ -17,176 +17,223 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6J Report: Structured Proposal Grounding Feasibility
+# FROM_DSH — Task 6K Report: WHU Source → Pseudo-Instance Data Audit
 
-_This file holds the Task 6J report. The Task 6I report is preserved in git history and in
-`docs/task6i_visual_query_refinement.md`; Task 6H.1 in `docs/task6h1_bounded_point_counterfactual.md`;
-Task 6H in `docs/task6h_counterfactual_pair_grounding.md`; Task 6G in `docs/task6g_dense_spatial_grounding.md`._
+_This file holds the Task 6K report. The Task 6J report is preserved in git history and in
+`docs/task6j_structured_proposal_grounding.md`; Task 6I in `docs/task6i_visual_query_refinement.md`;
+Task 6H.1 in `docs/task6h1_bounded_point_counterfactual.md`._
 
-Full design notes: `docs/task6j_structured_proposal_grounding.md`, ADR-022.
+Full design notes: `docs/task6k_whu_source_pseudoinstance_audit.md`, ADR-023.
 
 ## 1. Verdict
 
-**`PROPOSAL_QUALITY_LIMIT`.**
+**`KEEP_WHU_AS_PRIMARY_FOR_NOW`** — `legacy_baseline_role: keep`.
 
-The structured route decomposes cleanly: the relation executor is **exact** with oracle candidates
-(J0: 120/120, paired 20/20, zero abstentions, bit-level agreement with the frozen generator), the
-instruction → canonical-program parser is **perfect** (J2: 1.000 accuracy / 1.000 macro F1 on the
-fixed 120, paired 20/20, and 1.000 on the full 3,884-record val split), and the predicted-program +
-oracle-candidate route is therefore also exact (J3: 1.000, paired 20/20). The binding failure is
-the **frozen YOLO proposal chain**: recall passes (0.919/0.869/0.594 at IoU 0.25/0.5/0.75) and
-oracle-program mIoU passes (0.3712 ≥ 0.30), but paired mask selection is **5/20** (gate 12/20)
-with 35/120 executor abstentions driven by proposal-geometry mismatch — J4 was therefore correctly
-**not run** (section 15). No SAM2 training, no YOLO retraining, no `[REF]`/SRE/SCL, no 4B, no
-dataset migration, no GUI.
+The conversion is faithfully implemented and numerically light: the current 36,926 components are
+exactly the 36,926 surviving polygons of the historical pipeline (all 36,926 objects re-emulate at
+union IoU 1.00000, object-count agreement 4,038/4,038 tiles), the `<50` filter deletes 1,383 of
+38,309 contours (3.61 % of components, **0.058 %** of foreground area), hole filling adds 0.021 %,
+and polygon simplification is effectively lossless (IoU 0.99955, boundary 0.0086 px). The decisive
+relation-semantic measurement — RAW (all 8-connected semantic components, no filter) vs CONVERTED
+(current representation) under the frozen Task 3B semantics — gives **4.33 %** weighted
+current-query target change (below the declared 5 % materiality threshold), concentrated in the
+level-1 extremes (5.0 %) and essentially zero for L2/L3 (0.03 %); heuristic high merge risk is
+1.40 %. Task 6J's J1 failures are dominated by the **proposal model** (49/65 = 75.4 % on clean
+targets; only 2/65 = 3.1 % conversion/data related). WHU therefore remains the primary corpus, with
+two recorded structural limitations (no true instance identity anywhere in the chain; train/val is
+a random split of the same contiguous regions). Read-only throughout: no source, converted or
+legacy file was modified, no dataset regenerated, no model trained, nothing installed.
 
-## 2. Strategic Pivot
+## 2. Source Inventory
 
-Tasks 6D–6I froze as evidence (6C `P_C` 0.10604 / 0-20; point oracle ≈0.488/18-20; box oracle
-0.7506/20-20; 6I I0 inside 13/20, paired point 5/10, ranking 10/10, norm-err 0.0838). Task 6I's
-attention mass DID rise above initialization — the claim is "insufficient", never "zero
-information". Task 6J is a deliberate architecture-path pivot, not a deletion of prior work:
-`instruction → relation program → building candidates → explicit geometry execution → mask`.
+17,388 cropped tiles: train 3,135 · train_no 10,527 · test 903 · test_no 2,823; all labels present,
+0 missing on either side, `.tif` only, 512×512 uint8, **binary** (`[0, 255]`, or `[0]` for empty
+tiles). Empty masks: train 0, test 0, train_no 9,378, test_no 2,537 (so the `_no` folders are
+mostly — not purely — empty). Foreground fraction (train): min 1.0 %, median 3.7 %, mean 6.4 %,
+max 57.3 %. Images: RGB uint8 (300-tile deterministic sample), median 789 KB. Whole-area subtree:
+3 georeferenced rasters (994 Mpx / 2.66 Gpx / 967 Mpx) with `.tfw` world files, which Pillow
+refuses to decode (decompression-bomb limit — recorded, not bypassed). Shapefile subtree: `EA.shp`
++ `.dbf/.prj/.shx/.sbn/.sbx/.shp.xml`.
 
-## 3. Program Vocabulary
+## 3. Historical Split Recovery
 
-`evaluation/task6j_program_spec.json`: **20 canonical programs, 1:1 with the actual frozen
-v0.1.1 query types** (no invented semantics). Each program's ordered operations were verified to
-be the unique stored `reasoning_steps` pattern of its query type across train+val+test
-(25,229 records). Operations: `argmin/argmax_centroid_{x,y}`, `argmax/argmin_area`,
-`filter_relation(above|below|left_of|right_of)` (frozen `relation(subject, object)` convention),
-`argmin_boundary_distance` (frozen `nearest_within`: boundary distance, non-border anchor, frozen
-margins). Symbolic reference role `@1` = the step-1 anchor; L1 = single arg; L2-A = arg+nearest;
-L2-B = arg+filter (unique kept); L3 = arg+filter+nearest.
+Recovered from the existing converted folders, never regenerated: train 2,508 + val 627 = 3,135 =
+the **entire** source train pool; test 903 = the source test pool; zero train∩val, train∩test,
+val∩test overlaps; zero missing or extra stems; `int(3135 × 0.2) = 627` matches the observed val
+size. **Reproducibility caveat recorded**: the historical `get_image_stems` returned
+`list(set(...))`, whose iteration order depends on the per-process hash seed, so `random.seed(42)`
+alone does not guarantee the same split across processes — the folders are the authority.
+**Geographic finding**: tile-prefix regions (`1_x`/`2_x` vs bare test index) show that **100 % of
+val tiles come from regions also present in train** (train/val scene-level correlation is certain
+at region granularity), while the test region is disjoint. Per-tile adjacency/overlap cannot be
+quantified (no coordinates in the cropped tiles) and none were invented. The split supports
+random-tile generalization only; only the test region is unseen.
 
-## 4. J0 Oracle Executor
+## 4. Raw Semantic Component Statistics
 
-`buildreasonseg_mvp/structured_grounding.py` executor consumes ONLY program + candidate geometry
-(mask/bbox/centroid/area/border flag); it never reads target id, GT reasoning or target mask.
-On the fixed 120 val records + 20 paired images: exact accuracy **1.000 (120/120)**, paired
-**20/20**, zero abstentions, L1/L2/L3 all 1.000, and **120/120 agreement** with the frozen
-`recompute_target_from_steps` (bit-level executor-fidelity proof). Gate (≥0.98 / ≥19-20): **PASS**.
+After threshold 127, **8-connected (primary): 38,309 components** over the 4,038 aligned tiles
+(4-connected sensitivity: 38,491). Components/tile mean 9.49, median 7, p90 20, max 53. Area px:
+min 1, p5 118, p25 646, median 1,209, p75 1,921, p95 4,513, max 131,549. Border-touching 13,091
+(**34.2 %**). Tiles by component count: 1 → 104, 2–4 → 1,091, 5–9 → 1,358, 10–19 → 1,056, ≥20 →
+429. Foreground/tile mean 6.1 %, median 3.7 %. **Terminology enforced**: these are semantic
+connected components, NOT verified physical-building instances.
 
-## 5. YOLO Baseline Provenance
+## 5. `<50` Filter Loss
 
-Frozen YOLOv8m-seg-WHU (`WHU_Building_Segment/runs/segment/logs/whu_building_v1/weights/best.pt`,
-100 epochs, imgsz 640): SHA-256 `d9a6a65b7e0819ce4ecbbd9d44a5c8f9dcd2e60ea78203ba8fdf90ba6aaa1f91`,
-re-hashed before inference and re-verified after (match: true). Invoked read-only through the
-existing `yolo_sam_env` (Python 3.10.20, ultralytics 8.4.67, torch 2.13.0+cu132, cuda:0). Nothing
-installed; no legacy file modified; proposal cache gitignored under
-`artifacts/task6j_yolo_proposals/` (131 unique images).
+External contours before filter 38,309 → removed **1,383 (3.61 %)**, kept 36,926; removed raster
+pixels 37,589 = **0.058 % of foreground**; 1,099 tiles affected (27.2 %); removed-per-affected-tile
+median 1; the `len(approx) < 3` skip removed **0**; 1,116 raw components have raster area < 50 px
+(2.91 %, 0.033 % of foreground). Both raster pixel area and `cv2.contourArea` are reported.
 
-## 6. Proposal Recall
+## 6. `RETR_EXTERNAL` Topology Loss
 
-Target recall @ IoU 0.25/0.50/0.75 = **0.919 / 0.869 / 0.594**; mean/median best IoU 0.701/0.786;
-missing-target rate 13.1 %; ≈9.5 proposals/image; duplicate pairs (IoU>0.7) 21/7,862; all-component
-recall@0.5 target 0.869 vs non-target 0.851; tiny-component recall 0.391; border-component recall
-0.797. Recall gate (≥0.75): **PASS** — but tiny components and 13 % missing targets foreshadow the
-J1 result.
+6,757 components contain interior holes; 297 tiles have holes; **13,399 hole pixels are added**
+(0.021 % of foreground) by external-contour filling; reconstruction difference
+(filled ∧ ¬foreground) equals exactly the hole pixels. Effect: components are filled exterior
+polygons, slightly *larger* than the true footprint — area is added, never lost.
 
-## 7. J1 Oracle Program + YOLO
+## 7. Polygon Approximation Loss
 
-Canonical templates executed over predicted proposal geometry (no GT in execution): strict mIoU
-**0.3712** (gate 0.30 ✓), Dice 0.4174, **35/120 abstentions** (nearest_relation_invalid 13,
-no_eligible 9, filter_multi 9, extreme_invalid 4), paired mask selection **5/20** (gate 12/20 ✗),
-mean own IoU 0.131 vs cross 0.160. **J1 viability gate FAILS** → J4 not run. Failure attribution
-over 120 rows: 55 good selections, 35 abstentions, 18 proposal-geometry-changes-outcome, 8
-target-absent-or-poor, 4 correct-selection-poor-mask-quality.
+Post-filter raster vs simplified polygons: IoU mean **0.99955** (p1 0.99178), boundary displacement
+mean **0.0086 px** (p95 0.26 px), area bias ≈ 0; only 25/4,038 tiles below IoU 0.99. Cumulative
+raw-vs-post-filter IoU mean 0.99902. Loss ranking: filter (0.058 % of foreground) ≫ hole filling
+(0.021 %) ≫ approximation (≈0).
 
-## 8. ProgramHead Architecture
+## 8. Actual YOLO Fidelity
 
-Text-only Qwen3-VL-2B: instruction (chat format, NO image tokens) → text-only LoRA → last prompt
-position hidden (assistant-prefix representation) → `LayerNorm → Linear(2048, 20)` → program id.
-Trainable: text-only LoRA + ProgramHead; frozen: Qwen base, visual tower, everything else.
-query_type appears only as the CE target. No free-form generation.
+All 4,038 label files re-parsed and rasterized object by object: 36,926 actual polygons, **36,926
+matched** to the in-memory emulator at per-object IoU ≥ 0.5, **object-count agreement 4,038/4,038
+tiles**, mean union raster IoU **1.00000**, 0 malformed lines, 0 wrong-class lines, 0 degenerate
+(0-pixel) polygons. Difference vs the supplied snippet: the snippet omits `if len(approx) < 3:
+continue` and the `[0, 1]` clipping that the historical script contains; in this dataset the
+`< 3` branch never fires (0 polygons), so both agree here — recorded because a future label dump
+built from the snippet alone could differ. Pre-clip coordinates are unrecoverable from the saved
+labels; vertices exactly on 0/1 are the recoverable clipping evidence.
 
-## 9. J2 Program Parsing
+## 9. Component Lineage
 
-Query-type-stratified train-only subset (100 × 20 = 2000 records), 5 epochs, batch 16, cosine over
-625 steps, strict determinism. Fixed-120 accuracy **1.0000**, macro F1 **1.0000**, paired program
-correctness **20/20**, full-val (3,884) accuracy **1.0000**. Gate (≥0.90/≥0.85/≥18-20): **PASS**.
-Checkpoint `artifacts/checkpoints/task6j/j2_best.pt` (manifest recorded).
+```
+38,309 raw 8-connected semantic components
+  → 38,309 external contours (RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
+  → 1,383 removed by `contourArea < 50`
+  → 36,926 simplified polygons == 36,926 actual YOLO label lines
+  → 36,926 current components (component_id = source_polygon_index + 1; 0 zero-area)
+```
 
-## 10. J3 Predicted Program + Oracle Candidates
+Identities verified: raw == external contours, kept contours == actual polygons, actual polygons ==
+current components, 4,038/4,038 tiles equal at the polygon/component stage, 2,939/4,038 tiles equal
+at the raw/current stage. **36,926 is the number of surviving polygons, not of raw semantic
+components**; the difference is the conversion loss.
 
-Instruction → trained ProgramHead → program → oracle candidates → executor: selected-target
-accuracy **1.0000 (120/120)**, paired **20/20**, zero failures, program accuracy 1.0000. No GT
-program fallback anywhere. Gate (≥0.85/≥17-20): **PASS**.
+## 10. Relation-Semantic Drift
 
-## 11. J4 Structured End-to-End
+All 20 canonical programs on RAW (38,309 candidates, no filter) vs CONVERTED (36,926; 36,926/36,926
+matched) under the frozen relation config: **1,069/4,038 tiles (26.5 %) show any change**;
+**weighted current-query target-change rate 4.33 %**; L1 **5.0 %** (1,071/21,430), L2 0.03 %
+(4/12,569), L3 0.03 % (2/6,496). Per program: `topmost` 8.2 %, `leftmost` 7.9 %, `bottommost`
+7.5 %, `rightmost` 7.4 %, `smallest` 0.16 %, `largest` 0.03 %, all `*_to_nearest` ≤ 0.13 %, all
+`*_to_{dir}` 0 %. Attribution: L1 extremes are `small_component_removed` (≈300 tiles each) plus a
+few `polygon_geometry_changed`; size ranks from `ranking_changed`; nearest from `nearest_changed`.
+Answerability flips both ways (569 became-invalid, 653 became-newly-valid) but **cancel**: corpus
+constructibility per program moves only +39…−18 out of ~3,500. Measures conversion sensitivity
+only — not physical-building truth.
 
-**Not run** — section 15 gates J4 on the J1 viability gate, which failed on paired selection
-(5/20 < 12/20). `evaluation/task6j_j4_structured_end_to_end.json` records `ran: false` and the
-blockers; the J4 script exists and refuses without the gates.
+## 11. Split / Geographic Audit
 
-## 12. Optional SAM Refinement
+See §3. Additional recorded facts: no geographic/scene metadata in the cropped tiles; the
+whole-area georeferenced rasters and the EA shapefile exist locally but were not joined to tiles
+(no coordinates fabricated); `val` is a random 20 % of a contiguous source pool, so scene-level
+train/val leakage is certain at region granularity and unquantifiable at tile granularity.
 
-Not exercised (J4 gated off). The J4 source contains no SAM2 calls at all; if added later it must
-consume only predicted proposal geometry.
+## 12. Merge-Risk Heuristic
 
-## 13. L1/L2/L3 + Query Breakdown
+**Clearly labelled heuristic — not instance ground truth.** Raw components: high **538 (1.40 %)**,
+medium 1,642 (4.29 %), low 36,129 (94.31 %); current components: high 399, medium 1,708, low
+34,819. High risk concentrates slightly in dense tiles (1.48 % vs 1.25 % at < 10 components).
+A first version classified "1-px erosion yields exactly one piece" as medium — 92.7 % of components,
+the base rate — and was revised so the classes are discriminative; the revision is recorded in the
+artifact.
 
-J0: L1/L2/L3 all 1.000 (oracle executor). J2: per-query-type accuracy 1.000 for all 20 programs.
-J1 (proposal chain): mIoU by query type ranges from 0.000 (smallest_to_left_of) to 0.790
-(rightmost); the L2/L3 multi-step programs suffer the abstentions and geometry shifts documented
-in §7.
+## 13. Task 6J Cross-Analysis
 
-## 14. Failure Attribution
+Frozen 6J facts (J0 1.000 / paired 20-20; J1 mIoU 0.3712, 35/120 abstentions, paired 5/20; YOLO
+target recall@0.5 0.869 and tiny recall 0.391; J2 1.000 fixed-120 and full-val; J3 1.000 / paired
+20-20) cross-referenced against source evidence for every J1 failure (65/120):
+**49 (75.4 %) proposal-model related on clean targets** (a proposal at IoU ≥ 0.5 exists and no
+conversion flag holds); **2 (3.1 %) plausibly conversion/data related** (HIGH merge risk / measured
+RAW-vs-CONVERTED target change); **14 (21.5 %) inseparable** with current evidence. Conversion-flag
+discriminative power (failures vs successes): `raw_vs_converted_target_changed` 1.5 % vs 0 %,
+`target_merge_risk_high` 1.5 % vs 0 %, `target_below_area_50` 0 % vs 0 %, missing raw counterpart
+0 % vs 0 %. The medium merge-risk class fires for 63/65 failures **and** 54/55 successes, so it is
+recorded but not used as evidence. Conclusion: the binding constraint is the proposal model, not
+the source data or the conversion.
 
-`evaluation/task6j_error_attribution.json`: binding failure = **proposal_chain_j1_paired_selection**.
-J3 failures: none. J1 failures: 35 executor abstentions, 18 proposal-geometry-changes-relation-outcome,
-8 target-absent-or-poor-in-proposal-set, 4 correct-selection-poor-mask-quality. The parser and the
-executor are not the problem; the proposal backbone is.
+## 14. Qwen2B Parser Qualification
 
-## 15. Dataset / Proposal Adequacy
+Task 6J proves **Qwen3-VL-2B is sufficient for the current closed-template 20-program
+classification task** (20 closed program classes, program id 1:1 with `query_type`, finite
+templated instruction families with ≥ 3 variants each). It does **not** prove 2B suffices for
+arbitrary natural language, for paraphrase/OOD instructions, or that 4B cannot help the final
+system. No 2B-vs-4B experiment was run in Task 6K.
 
-Tiny-component recall@0.5 is 0.391, border-component recall 0.797, 13.1 % of targets have no
-proposal at IoU ≥ 0.5, and 21 images contain duplicate (IoU>0.7) proposal pairs. Merged/touching
-buildings are the known upstream limitation of the binary component maps. Recommendation: a
-proposal-backbone/dataset task next (instance segmentation aligned with component semantics, or
-proposal-level post-processing) — no automatic data migration.
+## 15. Primary-Dataset Decision
 
-## 16. Reusable Core API
+`REPLACE_PRIMARY_DATASET` requires material conversion-induced drift, substantial small-object
+deletion, high merge risk, identity limits becoming binding, or an unsuitable split. Measured
+against the declared thresholds (drift > 0.05, contour deletion > 0.05, foreground deletion > 0.01,
+high merge risk > 0.15, proposal-model dominance): **0.0433 / 0.0361 / 0.00058 / 0.0140** and
+75.4 % proposal-model dominance → no replace condition fires, so **`KEEP_WHU_AS_PRIMARY_FOR_NOW`**
+with `legacy_baseline_role: keep`. Recorded limitations: no true instance identity in the chain
+(instances are connected components) and a random train/val split over the same regions.
 
-`buildreasonseg_mvp/structured_grounding.py`: `parse_program(instruction, parser, template_map)`,
-`extract_building_candidates(image)` (CandidateSet), `execute_program(program, candidates)`,
-`execute_program_by_id(program_id, candidates)`, `predict_structured_mask(image, instruction, ...)`,
-plus `build_program_spec`, `canonical_program_template`, `CandidateSet.from_component_map` /
-`from_proposals`. No GUI.
+## 16. Future Dataset Audit Protocol
 
-## 17. Runtime / VRAM
+`evaluation/dataset_audit_schema_v1.json` (schema v1) with the required fields, the WHU instance
+filled from this audit, a blank `candidate_template` for SpaceNet 2 / WHU-Mix Vector or later
+candidates, and the decision gates recorded verbatim. License and source resolution remain
+`UNKNOWN` — no external dataset fact was fabricated.
 
-YOLO inference: 131 images ≈ minutes on cuda:0 (read-only env). J2: 625 optimizer steps ≈ 8 min
-on the RTX 5080 Laptop (text-only bf16, strict determinism). J0/J1/J3 executor runs: pure CPU
-geometry over cached proposals/component maps. No new packages, no new environments.
+## 17. Runtime
+
+Deterministic CPU work only: inventory 25 s · per-tile scan 369 s · aggregates 83 s · YOLO fidelity
++ lineage 199 s · relation drift 152 s. No model training, no downloads, no package installation,
+no GPU. All reads are read-only; the only writes are BuildReasonSeg artifacts (large per-tile caches
+under gitignored `artifacts/task6k/`). **Empirical read-only proof** (`evaluation/task6k_read_only_proof.json`):
+the newest modification time under every read-only root predates the audit — original WHU root
+2026-08-03 (`mask_to_yolo.py`), cropped subtree 2018-12-07, converted dataset 2026-08-03
+(`labels/val.cache`), legacy project 2026-08-03 — so no source, converted or legacy file was
+touched (`modified_after_audit_start: false` for all four roots).
 
 ## 18. Tests
 
-`python -m pytest tests/ -q` → **444 passed** (32 warnings), including 26 new Task 6J tests
-(`tests/test_task6j_structured_grounding.py`): vocabulary-from-frozen-query-types, frozen relation
-convention, executor-cannot-read-target-id, oracle-candidates-diagnostic-only, synthetic unit
-reproduction of every operation, real-data equivalence with the frozen recompute, YOLO provenance
-hash checks, legacy read-only hygiene, no package installation, proposal geometry without GT,
-recall matching evaluation-only, ProgramHead text-only/no-image-tokens, query_type as CE target
-only, split hygiene, J3 no-GT-program fallback, J4 predicted-only inputs, no old direct-pixel
-head, no `[REF]`/SRE/SCL/4B, strict determinism, no GUI, auditable failure attribution, and the
-J0/J1/J2/J3 artifact gates.
+`python -m pytest tests/ -q` → **468 passed** (24 new Task 6K checks). The new file
+`tests/test_task6k_whu_audit.py` covers the required 20 items: no writes under `C:\D\resources`, no
+writes in the legacy project, threshold 127 exactness, `RETR_EXTERNAL` exactness, `<50 contourArea`
+exactness (including the 8×8 → 49 px boundary case), `0.001 * arcLength` epsilon exactness,
+OpenCV/Pillow fallback binary equivalence, split recovered-not-regenerated, reproducibility caveat
+recorded, YOLO parser/rasterizer correctness, three-stage loss decomposition, component terminology
+discipline, frozen relation config use, no target-id leakage in the drift experiment, merge-risk
+heuristic labelling, Task 6J frozen-artifact cross-analysis, the Qwen qualification, no model
+training, no dataset mutation, deterministic JSON, plus the empirical read-only proof and artifact
+existence/alignment/verdict checks.
 
 ## 19. Git / Watt
 
-Task commit `5a5daf0` (`feat: audit structured proposal grounding`) followed by the `docs:`
-handoff commit; YOLO weights, prediction caches and checkpoints stay gitignored (only
-hashes/manifests tracked); no legacy files, no dataset JSONL edits. Watt already running from
-earlier tasks; transport-only for the push, ownership rules respected — no hosts/cert/TLS edits.
+Task commit `audit: compare WHU source and pseudo-instance conversion` followed by the `docs:`
+handoff commit; no source data, converted dataset, masks/raster dumps, weights, caches or `.conda`
+staged. Watt is not required for this task; the established ownership rules were respected for the
+final push only.
 
-## 20. Recommended Next Architecture Decision
+## 20. Recommended Next Step
 
-**Proposal-backbone / dataset step.** The parser and the executor are solved and reusable; the
-measured blocker is that YOLO instances do not match the component semantics the frozen relation
-engine was calibrated on (split/merged/border instances → 35/120 abstentions and 5/20 paired
-selection). Evaluate an instance-segmentation backbone whose instances align with the component
-maps (or deterministic proposal post-processing such as split/merge against the relation
-eligibility flags) and re-run the J1/J4 gates. Keep the 20-program vocabulary, the executor and
-the ProgramHead frozen. Per section 26 the task stops here; no learned SRE, no `[REF]`, no SCL,
-no YOLO retraining, no 4B, no dataset migration, no full training, no GUI — waiting for
-ChatGPT review.
+Keep the WHU corpus and the frozen relation/program stack unchanged. The measured binding
+constraint is the **proposal model**, so the next step remains a proposal-backbone task (an
+instance-segmentation model whose instances align with the component semantics, or deterministic
+proposal post-processing), evaluated with the same J1/J4 gates. Two dataset-level follow-ups are
+recorded but **not** started: (a) quantify geographic train/val correlation by joining the
+whole-area rasters + `EA.shp` to the cropped tiles if coordinates can be recovered without
+inventing them; (b) run the same audit (schema v1) against a candidate dataset that provides true
+instance identity, e.g. SpaceNet 2 or WHU-Mix Vector, before any replacement decision. Per section
+17 the task stops here — no dataset download, no WHU deletion, no BuildSpatialReason regeneration,
+no YOLO retraining, no new instance backbone, no 4B, no `[REF]`/SRE/SCL, no full training, no GUI —
+waiting for ChatGPT review.

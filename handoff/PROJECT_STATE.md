@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6J._
+_Last updated by DSH at the end of Task 6K._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -70,6 +70,43 @@ The block above is machine-checked against
 | 6H.1 | **Spatial-Softmax Point Supervision + Bounded Counterfactual Grounding** | **done → `BOUNDED_POINT_OBJECTIVE_FAILED`** (H0-R point CE 11.10→4.74, inside-own 7/20) |
 | 6I | **Visual Query Refinement Block v0.1 (single query cross-attends frozen 64×64 SAM2 embedding once)** | **done → `VISUAL_QUERY_REFINEMENT_FAILED_AT_OVERFIT`** (I0 inside-own 7→13/20, paired point 2→5/10; attention peaks at only ~2.5 % target mass) |
 | 6J | **Structured Proposal Grounding Feasibility (instruction → relation program → building candidates → explicit geometry execution)** | **done → `PROPOSAL_QUALITY_LIMIT`** (J0 executor 1.000/20-20; J2 parser 1.000 acc, 1.000 full-val; J3 1.000/20-20; J1 frozen-YOLO chain 5/20 paired → J4 not run) |
+| 6K | **WHU source → pseudo-instance data audit (read-only)** | **done → `KEEP_WHU_AS_PRIMARY_FOR_NOW`** (`legacy_baseline_role: keep`; conversion drift 4.33 % weighted, `<50` deletion 3.61 % of contours / 0.058 % of foreground, YOLO re-emulation IoU 1.00000, J1 failures 75.4 % proposal-model) |
+
+## Task 6K measured results
+
+Read-only audit of the chain original WHU semantic raster → historical polygon conversion
+(`mask_to_yolo.py`) → current BuildReasonSeg component representation. No source, converted or
+legacy file was modified; no model trained; nothing installed. Full detail:
+`docs/task6k_whu_source_pseudoinstance_audit.md`, ADR-023, `evaluation/task6k_*.json`,
+`evaluation/dataset_audit_schema_v1.json`.
+
+| | Value |
+|---|---|
+| Source inventory | 17,388 tiles: train 3,135 · train_no 10,527 · test 903 · test_no 2,823; labels binary `[0,255]`; empty masks 11,915; 0 missing pairs |
+| Historical split | recovered from the folders: train 2,508 + val 627 = source train (exactly) · test 903 = source test; 0 overlaps; `int(3135 × 0.2) = 627` ✓; `set→list→shuffle(42)` caveat recorded |
+| Raw semantic components (8-conn) | **38,309** (4-conn: 38,491); 9.49/tile; median area 1,209 px; border-touching 34.2 % |
+| Current pseudo-instances | **36,926** = exactly the surviving polygons (`component_id = polygon index + 1`) |
+| `<50` filter loss | 1,383 contours removed (**3.61 %**), 37,589 px = **0.058 % of foreground**; 1,099 tiles affected; `len(approx)<3` removed 0 |
+| `RETR_EXTERNAL` loss | 6,757 components with holes; 13,399 hole px **added** (0.021 %) |
+| Approx loss | IoU **0.99955**, boundary 0.0086 px; 25/4,038 tiles below 0.99 |
+| Actual-YOLO fidelity | 36,926/36,926 objects matched, count agreement 4,038/4,038, union IoU **1.00000**, 0 malformed |
+| **Relation drift RAW vs CONVERTED** | 26.5 % of tiles change something; **4.33 %** weighted current-query target change; L1 **5.0 %**, L2 0.03 %, L3 0.03 %; flips cancel (constructibility ±0.5 %) |
+| Merge risk (heuristic) | raw high **1.40 %**, medium 4.29 %, low 94.31 % |
+| Task 6J cross-analysis | 65/120 J1 failures: **49 (75.4 %) proposal-model on clean targets**, 2 (3.1 %) conversion/data, 14 (21.5 %) inseparable |
+| Verdict | **`KEEP_WHU_AS_PRIMARY_FOR_NOW`** — no replace gate fires (drift 0.0433 < 0.05, deletion 0.0361 < 0.05, foreground 0.00058 < 0.01, merge high 0.0140 < 0.15) |
+
+1. **The conversion is faithful and light.** All 36,926 objects re-emulate exactly (IoU 1.00000);
+the only material loss is the `<50` small-object filter, which deletes 3.6 % of contours but only
+0.058 % of foreground area.
+2. **Relation targets are stable except at the extremes.** Compositional L2/L3 programs drift
+0.03 %; the L1 extremes drift 5 % because a deleted sub-50 px speck can be the extreme component.
+Corpus-level answerability is essentially unchanged (per-program constructibility moves ±0.5 %).
+3. **WHU's structural limits are recorded, not repaired:** no true instance identity anywhere in
+the chain (instances are connected components) and a random train/val split over the same
+contiguous regions (region-level correlation certain; tile-level unquantifiable).
+4. **Next step unchanged:** the binding constraint is the proposal model, so a proposal-backbone
+task (or deterministic proposal post-processing) is next, evaluated with the same J1/J4 gates, plus
+the schema-v1 audit of any candidate replacement dataset before a decision.
 
 ## Task 6J measured results
 
