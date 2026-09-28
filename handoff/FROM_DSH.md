@@ -17,194 +17,179 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6L Report: Native-Vector Canonical Dataset + BuildSpatialReason v0.2
+# FROM_DSH — Task 6M Report: Native-Vector Proposal Model + Structured Demo Gate
 
-> The ARTIFACT-FACTS block above still describes **v0.1.1**, which is frozen and unchanged; v0.2 is a
-> separate dataset version with its own manifest (`datasets/build_spatial_reason/v0.2/manifest.json`).
+_This file holds the Task 6M report; the Task 6L report is preserved in git history and in
+`docs/task6l_vector_dataset_migration.md`._
 
-_This file holds the Task 6L report; the Task 6K.1 report is preserved in git history and in
-`docs/task6k1_whu_native_vector_groundtruth.md`._
-
-Full design notes: `docs/task6l_vector_dataset_migration.md`, ADR-025.
+Full design notes: `docs/task6m_native_vector_proposal_demo.md`.
 
 ## 1. Verdict
 
-**`VECTOR_DATASET_MIGRATION_PASS`** — all 11 acceptance gates passed, 0 failed.
+**`PROPOSAL_MODEL_NEEDS_IMPROVEMENT`** — failed gates: `j1v2_gate_passed`,
+`j4v2_fixed120_miou_ge_0_40`, `j4v2_paired_pass_ge_14`. Passing gates: export valid, M0 smoke,
+parser ready, Demo-CLI gate.
 
-The primary instance truth is now the validated native WHU East-Asia vector map (Task 6K.1:
-`MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`). The canonical dataset indexes **all 17,388** cropped tiles
-with **41,186** clipped instances from **33,788** distinct `EA.shp` features, preserves native
-geometry exactly (no `<50` deletion, no merging, no hole loss, no simplification; tiny instances
-flagged but kept), provides two split views (`legacy_compat_v1` for historical comparability and the
-new primary `scene_disjoint_v1` with zero leakage), and BuildSpatialReason **v0.2** (28,108 samples,
-same 20 programs, same frozen relation config) changes **5.70 %** of targets (**5.45 %** weighted) on
-the historical tiles — reconciling with Task 6K.1's 6.96 % VECTOR↔PSEUDO drift. No model training,
-no downloads, no installations, no GUI; `datasets/whu/` and v0.1.1 stay frozen.
+Everything except the proposal model's quality is delivered and verified: the derived export is valid
+(tile-union IoU 0.9988, 0 malformed, 0 missing, all 1,235 tiny instances retained, 6 hole instances
+recorded), the parser reaches 1.0000 accuracy on v0.2, the deterministic executor reproduces the
+frozen Task 6J oracle behaviour exactly, J4-v2 ran **once** on test with **no ground truth in
+inference**, and the CMD Demo CLI answers real imagery with no annotation files. The proposal model
+trained for **18 of 80 configured epochs** (wall-clock bound) and its small-object recall is the
+binding limit.
 
-## 2. Canonical Dataset Identity
+## 2. Fixed Eval Packs (Task 6L's paired-evaluation gap)
 
-`datasets/whu_native_vector/v1.0/` — **`WHU-EA-NativeVector`** v1.0, schema 1.0.
+`task6m_eval_pack_manifest.json` freezes four packs before any training: val/test `fixed120`
+(stratified over level × program family, one record per tile, **all 20 programs present**) and
+val/test `paired20` (same tile, same reference instances, same level, **different native targets**),
+with SHA256 for each and `frozen_before_training: true`. The test packs predate the frozen inference
+configuration and were never inspected during tuning.
 
-* annotation truth: native `EA.shp` polygon geometry;
-* `source_feature_id`: 1-based `.shp` record order in this exact archive;
-* UID: **`(EA.shp SHA256, source_feature_id)`** — `shp_sha256 9bbd1e06d6cd…`, 4,999,904 bytes,
-  recorded in the manifest;
-* DBF fields are **not** identity (Task 6K.1 proved them degenerate);
-* clipped identity: `source_feature_id` + `tile_id` + deterministic `tile_instance_id`
-  (never a per-tile renumbering alone);
-* `tile_id` = the archive's own tile name; `grid_id` = `{raster}:{row}:{col}`;
-* committed metadata contains **no absolute path**; the external root is supplied via `--source-root`
-  and records carry logical paths (`image_path_root: "whu_source_root"`).
+## 3. YOLO26 Provenance
 
-## 3. Full 17,388-Tile Coverage
+* `ultralytics==8.4.164` from **PyPI** (official release) into the new project-local env
+  `.conda/buildreasonseg-proposal` (cloned from the Task 6A env; `.conda/` gitignored). The historical
+  editable `yolo_sam_env` / local Ultralytics checkout was **not** used for training or inference.
+* Weights: `yolo26m-seg.pt` (54,750,385 B, SHA256 `16b636f04e8fb6a3…`) and `yolo26s-seg.pt`
+  (23,467,933 B, SHA256 `3da1d83e31caec96…`), both from
+  `github.com/ultralytics/assets/releases/download/v8.4.0/`. No other download.
+* **License:** the Ultralytics open-source stack and pre-trained models are **AGPL-3.0** (enterprise
+  licensing available for proprietary/commercial use). The repository LICENSE is **not** changed and
+  **no commercial-licensing claim** is made.
 
-train 3,135 · train_no 10,527 · test 903 · test_no 2,823 = **17,388** tiles, each with a canonical
-record, a unique `tile_id` and a unique `grid_id`: 11,909 empty and 5,479 non-empty. The `_no` tiles
-the semantic workflow discarded are **included**, and empty tiles are first-class records.
+## 4. Export Audit
 
-## 4. Native Instance Statistics
+`artifacts/task6m_yolo_native/` (gitignored), derived from `scene_disjoint_v1`: **17,388 tiles**,
+**41,186 polygons**, 11,909 valid empty label files, **all 17,388 source images hardlinked** (0 copies,
+nothing moved). Fidelity vs canonical masks: mean tile-union IoU **0.99880**, per-instance IoU
+(≥ 9 px) **0.99587**, **0 malformed**, **0 non-hole instances missing**, **1,235/1,235 tiny instances
+recovered**, 6 hole instances recorded as an export-only limitation, 172 sub-pixel polygons repaired
+inward and listed. Verdict **`EXPORT_VALID`**.
 
-| Metric | Value |
-|---|---|
-| native source features | 34,085 |
-| distinct features represented | **33,788** |
-| total clipped instances | **41,186** |
-| instances/tile | mean 2.37 · median 0 · p90 8 · max **55** (uint8-safe) |
-| instance area px | p5 116 · median 1,234 · p90 3,118 · max 132,014 |
-| visible fraction | p5 0.069 · median 1.0 · mean 0.819 |
-| border-truncated | 14,583 (**35.4 %**) |
-| tiny (< 50 px, retained) | 1,235 (3.0 %) |
-| instances with holes | 6 (5 source features carry holes) |
-| multipart instances | 0 (the 5 multipart features' parts never share a tile) |
-| overlap/rounding delta | 370 tiles, 2,966 px total, max 96 px |
+## 5. Environment
 
-Preservation guarantees are recorded in `statistics.json → preservation_guarantees` and asserted by
-tests: no contour-area filter, no component merging, no `RETR_EXTERNAL` hole loss, no polygon
-simplification.
+`.conda/buildreasonseg-proposal`: Python 3.11.16, torch 2.13.0+cu132, ultralytics 8.4.164,
+opencv 5.0.0.93, transformers 5.17.0, RTX 5080 Laptop 16.3 GB. Recorded in
+`task6m_environment_manifest.json` with the clone recipe, the package table, the GPU and the license
+note. No modification to base/jupyter/yolo_sam_env; no package installed outside this env.
 
-## 5. Split Design
+## 6. Smoke (M0)
 
-* **`legacy_compat_v1`** (comparability only): the recovered historical stems — train 2,508 · val 627
-  · test 903 = the 4,038 positive tiles; the other 13,350 tiles are `unassigned`.
-* **`scene_disjoint_v1`** (new primary): train = train1 (10,044 tiles, 15,721 instances) · val =
-  train2 (3,618, 15,674) · test = test (3,726, 9,791).
+`task6m_smoke.json` — all six gates pass: checkpoint loads, 2-image forward/backward succeeds, a
+deterministic 600-tile subset trains 2 epochs, decoded masks are 512×512 and scored with the canonical
+evaluator, empty tiles (454 in the subset) are handled, and all 29 tiny instances in the subset are
+decodable from the export. No architecture conclusion is drawn from M0.
 
-`scene_disjoint_v1` gives **scene/raster separation only** — not unseen-city or broad geographic
-generalization; no cross-city claim is made anywhere.
+## 7. Full Training (M1)
 
-## 6. Leakage Audit
+`task6m_training_summary.json` — YOLO26m-seg from the COCO checkpoint, imgsz 640, batch **16** (chosen
+by the memory probe, 10.52 GB peak; imgsz was never reduced), 4 workers, seed 20260812, AMP,
+deterministic, best+last checkpoints, test split never used.
 
-| Check | Result |
-|---|---|
-| tile overlap train∩val / train∩test / val∩test | 0 / 0 / 0 |
-| source-feature overlap after exclusions | 0 / 0 / 0 |
-| boundary-crossing features excluded | **0** (none needed) |
-| RGB duplicate groups across splits | **0** (1,302 duplicate tiles, all intra-split and content-degenerate) |
+* **epochs completed 18 / 80** (best epoch **14**, `metrics/mAP50-95(M)` **0.36392**);
+* mean **313 s** per epoch (train + full 3,618-image validation), peak VRAM 11.2 GB;
+* **stop: session wall-clock budget** after the last completed epoch — patience 15 never triggered and
+  the curve was still improving (mask mAP50 0.559 → 0.682 across the last recorded epochs);
+* checkpoints `best.pt` / `last.pt`, 155 MB each, SHA256 recorded.
 
-## 7. Adapter / API
+This is the honest limitation of the task: the configured cap was not reached, so every metric below
+is a **lower bound** for this configuration.
 
-`buildreasonseg_mvp/native_vector_adapter.py`, independent of YOLO and of the pseudo-component
-format: `load_tile`, `list_instances`, `get_instance_geometry`, `get_source_feature_id`,
-`iter_tiles`, `label_map`, plus the relation-engine bridge (`image_record_for_reasoning`,
-`candidate_set_for_tile`) and `validate_reasoning_record`. **`spatial_reasoning/*` was not modified.**
+## 8. Proposal Metrics (validation)
 
-## 8. BuildSpatialReason v0.2
+GT = canonical native masks. recall@0.25/0.50/0.75 = **0.7772 / 0.6333 / 0.3404**; mask
+precision/recall (union) 0.7189 / 0.7574, Dice 0.7376; validator **mask mAP50 0.6819 / mAP50-95
+0.3637**; **6.38 proposals/tile**; empty-tile false-proposal rate 0.1264; tiny / border / dense
+recall@0.50 = **0.0023** / 0.5461 / 0.6322. Size breakdown (recall@0.50): large 0.7269, medium 0.5299,
+small **0.1252**, tiny **0.0023**.
 
-`datasets/build_spatial_reason/v0.2/` from `configs/build_spatial_reason_v0.2.yaml`: source
-`WHU-EA-NativeVector v1.0`, primary split `scene_disjoint_v1`, **the same 20 programs**, the **same
-frozen** `configs/spatial_relations_v1.yaml` (sha256 identical to v0.1.1's manifest), the frozen
-v0.1.1 generator code reused unchanged, and visibility policy deliberately unchanged at **1.0** so the
-delta isolates annotation truth + split. Every record carries `tile_id`, target/reference
-`tile_instance_id` + `source_feature_id`, `target_geometry_ref`, `target_mask`, `split_view`,
-`dataset_version`, `relation_config_version`, `semantic_visibility_policy_version`,
-`generator_version`; ids never appear in the instruction text.
+## 9. Frozen Inference Config
 
-## 9. v0.2 Distribution
+`task6m_inference_config_frozen.json`: **conf 0.10, max_det 100**, selected on validation only from
+the declared grid (conf ∈ {0.05, 0.10, 0.25} × max_det ∈ {100, 300}) by the declared hierarchy
+(target recall@0.50 → oracle-program structured performance → proposal burden);
+`frozen_before_test: true`, `test_metrics_inspected_before_freezing: false`.
 
-| | Value |
-|---|---|
-| total | **28,108** |
-| by split | train 12,778 · val 9,111 · test 6,219 |
-| by level | L1 19,769 · L2 5,323 · L3 3,016 |
-| L2 | nearest 2,286 · direction 3,037 (invariant holds) |
-| L3 | trivial 1,392 · nontrivial 1,624 |
-| samples/tile | median 6 · mean 6.17 · p90 10 · max 12 |
-| discards | `single_component_image` 12,830 · `semantic_target_ineligible` 13,602 · `no_direction_candidate` 11,301 · `semantic_ambiguous` 5,460 · others |
+## 10. J1-v2 (validation)
 
-## 10. v0.1.1 vs v0.2 Comparison
+Full val 9,111 records + fixed120 + paired20: recall@0.50 0.6333 (gate 0.92), tiny recall 0.0023
+(gate 0.60), fixed120 mIoU **0.2801** (gate 0.50), paired **4/20** (gate 14), abstentions **35**
+(gate ≤ 20) → all five gates FAIL. Full-val mIoU 0.2973 (0.4110 among answered), abstention rate
+0.2768, by level L1 0.3247 / L2 0.2025 / L3 0.2812; paired mean own IoU 0.2640 vs cross 0.0244.
 
-On the identical 4,038 historical tiles under `legacy_compat_v1`: 25,229 v0.1.1 answers vs 24,370
-v0.2 answers; **23,210** common `(tile_id, query_type)` groups; 21,886 unchanged and **1,324 changed**
-(target-change rate **5.70 %**); 2,019 became invalid and 1,160 newly valid; **weighted answer-change
-rate 5.45 %** (L1 7.61 %, L2 0.74 %, L3 1.61 %). Task 6K.1's VECTOR↔PSEUDO reference is 6.96 %, so the
-result **reconciles**; the residual difference is quota/eligibility interaction, not a different
-relation definition.
+## 11. Program Parser
 
-## 11. Visibility / Truncation Policy
+**`PARSER_READY`.** The frozen Task 6J J2 checkpoint loads its ProgramHead but **626 LoRA/token keys
+are missing** in this environment (v0.2 val accuracy 0.515, confusions among related direction
+programs), which is exactly the spec's retrain condition; the **same 2B text-only head was retrained
+on v0.2 train only** (5 epochs, final loss 0.0000) and reaches **1.0000 accuracy / 1.0000 macro F1 on
+the full 9,111-record v0.2 val** (fixed120 1.0000). No 4B upgrade, no image tokens, no `query_type`
+leakage.
 
-Unchanged: `semantic_visibility_policy_version = "1.0"`. `touches_tile_border`, `visible_fraction`
-and `tiny_area` are computed and stored per instance (35.4 % of instances are border-truncated, 3.0 %
-are tiny, 10,902 sample targets are border-truncated and 1,243 tiny), but eligibility still follows
-the frozen relation rules. A v2.0 policy is deliberately **not** claimed, because changing
-eligibility in the same task as the annotation truth would confound the comparison; the metadata is
-in place for a separately-audited policy later.
+## 12. J4-v2 (test, single graded run)
 
-## 12. Task 6J Bridge Preparedness
+`task6m_j4v2_test.json`, executed **once** after both freezes, on full test (6,219 records), test
+fixed120 and test paired20, with **no ground truth in inference**: parser accuracy **1.0000**; fixed120
+mIoU **0.2575** (gate 0.40) FAIL; paired **5/20** (gate 14) FAIL; full-test mIoU 0.2914 (L1 0.3278 /
+L2 0.1854 / L3 0.2490).
 
-`proposal_evaluation_interface` scores any proposal set against native instance masks (per-proposal
-best IoU, native recall@0.5) and `candidate_set_for_tile` exposes native instances to the frozen
-structured executor. Old J0/J1/J2/J3 artifacts remain frozen; **J4 was not run** and no proposal
-model was trained, selected or downloaded.
+## 13. Failure Attribution
 
-## 13. Reproducibility
+`task6m_error_attribution.json`: the binding constraint is **proposal recall on small objects**
+(0.727 ≥ 1000 px → 0.125 for 50–200 px → 0.002 for < 50 px) amplified by an **18-of-80-epoch**
+training budget. The executor is not implicated (oracle candidates reproduce the frozen Task 6J J0
+result exactly, mIoU 1.0000; paired own-vs-cross margin 11×), nor is the parser (1.0000), nor the
+annotation/split (`EXPORT_VALID`, zero leakage). No YOLO26l/x run, no framework switch and no 4B
+upgrade was performed or is implied; the same configuration simply needs to train to convergence.
 
-```text
-python scripts/task6l_build_dataset.py          # canonical dataset + integrity + split audit
-python scripts/task6l_build_reasoning_view.py   # reasoning view (gitignored cache)
-python scripts/task6l_build_v0_2.py             # BuildSpatialReason v0.2
-python scripts/task6l_compare_v01_v02.py        # section 18 comparison
-python scripts/task6l_validate.py               # gates, verdict, artifact index
-```
+## 14. Demo CLI
 
-Determinism was verified by regenerating a 75-tile subset twice into a scratch directory and
-comparing bytes (identical), and by an independent re-clip audit over a deterministic tile sample
-(min IoU **1.0**, i.e. the committed label maps are exactly reproducible from `EA.shp`).
+`predict_structured.py` runs from CMD with the documented arguments and **no annotation files**:
+`task6m_demo_cli_audit.json` audits **12 real images** (all 12 parsed to the expected program, 9
+produced a selected mask + overlay, 3 abstained with an explicit reason, `any_ground_truth_used:
+false`) → gate **passed**. Outputs: parsed canonical program, id-free zh/en reasoning trace, proposal
+count, selected geometry, selected-mask PNG, overlay PNG, JSON result, abstention reason. An unrelated
+instruction cannot be silently mapped to an unrelated program.
 
-## 14. Tests
+## 15. License Note
 
-`python -m pytest tests/ -q` → **518 passed** (489 before Task 6L + 29 new checks). The new file
-`tests/test_task6l_native_vector_dataset.py` covers all 28 required items: read-only sources (×3),
-holes/multipart preservation, no global area deletion, empty-tile support, exact historical stems,
-scene-disjoint mapping, zero tile overlap, zero feature leakage, no test-driven threshold tuning, the
-relation engine consuming vector geometry, all 20 program ids, no id leakage into instructions, zh/en
-parity, generator determinism, the provenance validator rejecting corrupted targets, val/test program
-support, Task 6K.1 reconciliation, no training, no downloads/installations, no GUI, and full artifact
-consistency (including per-file SHA256 against `task6l_artifact_index.json`).
+AGPL-3.0 for the Ultralytics open-source stack and its pre-trained models, with enterprise licensing
+for proprietary/commercial use. This repository's LICENSE is unchanged and no commercial-licensing
+claim is made. Raw WHU data remains external (no explicit redistribution licence is held by this
+project).
 
-## 15. Git / Watt
+## 16. Tests
 
-Commit `feat: migrate WHU to native vector instances` plus a `docs:` handoff commit. The commit is
-deliberately small: the repository's existing `.gitignore` keeps generated dataset records local
-(`datasets/build_spatial_reason/**/*.jsonl`, `datasets/**/instances/`), exactly as it already does
-for the v0.1.1 records, so what lands in Git is the canonical `manifest.json` / `statistics.json` /
-`instance_schema.json` / `tiles/index.jsonl` / `splits/*.json`, the v0.2 `manifest.json` +
-`statistics.json`, the config, the libraries, the scripts, the tests, the evaluation artifacts and
-the small overlay panels. The 62 MB of v0.2 records, the 17.4 MB instance index and the per-tile
-geometry caches are regenerable with the commands in section 13 and are recorded (size, SHA256,
-`tracked` flag) in `evaluation/task6l_artifact_index.json`. Never committed: raw TIFFs, the source
-shapefile, per-instance raster dumps, the reasoning view, weights or `.conda`. The WHU archive is
-publicly distributed by its authors, but this project holds no explicit redistribution licence, so
-raw data stays external and only derived metadata is committed (citation recorded in the docs).
-Watt was not required for this task; established ownership rules were respected for the push.
+`python -m pytest tests/ -q` → **547 passed, 1 skipped** (518 before Task 6M + 30 new checks; the
+skipped one is the Ultralytics eval-mode determinism check, which requires the proposal env, and is
+covered there by `task6m_smoke.json` and the frozen-config rerun).
+`tests/test_task6m_native_vector_proposal.py`
+covers the 28 required checks: canonical dataset / v0.2 / v0.1.1 unchanged, no source mutation, export
+preserves all non-hole instances, valid empty labels, no `<50` filter, hole loss recorded only in the
+derived export, correct `scene_disjoint_v1`, zero feature leakage, packs frozen before tuning, no test
+metrics before the frozen config, GT never repairs proposals, parser text-only, no `query_type` in the
+parser input, no GT in J4, executor receives predicted geometry only, pairs same-image/different
+target, all programs represented, CLI works without annotations, eval-mode determinism, unsupported
+program → explicit failure, model hashes recorded, no large weights staged, no old editable
+Ultralytics fork, no 4B, no `[REF]`/SRE/SCL, no GUI, and artifact presence.
 
-## 16. Recommended Next Step
+## 17. Git / Watt
 
-Use `scene_disjoint_v1` + v0.2 as the primary development/evaluation setting and give the Task 6J
-bridge its proposal backbone: a training task that (a) trains or selects an instance-segmentation
-proposal model whose instances align with native vector geometry, (b) runs J1/J4 against native
-instance masks with the prepared interface, and (c) reports deltas against the frozen v0.1.1
-baseline while never mixing the two dataset versions in one table. Two follow-ups are recorded but
-not started: a separately-audited `semantic_visibility_policy_version = 2.0` study, and recovery of
-real instance attributes (the shipped DBF is degenerate). Per the STOP section, nothing was
-retrained, selected, downloaded, converted beyond this migration, or GUI-built; waiting for ChatGPT
-review.
+Commit `feat: train native-vector proposal model for structured demo` plus a `docs:` handoff commit.
+Not committed: `.conda`, pretrained/trained weights, the derived image export, caches, source imagery
+and vector data. Watt (pre-existing) was used for the authorized downloads only and was left running
+per the ownership rules; no hosts, certificate, proxy or TLS setting was modified — `requests` could
+not verify this network path, so the documented fallback downloaded through the OS trust store.
+
+## 18. Recommended Next Step
+
+Train the **same** configuration to convergence before drawing any architecture conclusion: resume
+`yolo26m-seg` from the current `best.pt` (or rerun with the 80-epoch cap) so the curve — mask mAP50
+0.682 at epoch 14 and still rising — is allowed to saturate, and re-run the frozen protocol
+(`task6m_proposal_eval.py --sweep` → `task6m_j1v2.py` → `task6m_j4v2.py`, with the test run repeated
+only after a new freeze). If tiny-object recall remains the limit after convergence, address it with
+a **small-object strategy** (higher imgsz, tiled/windowed inference, or a documented small-object
+configuration) rather than with a bigger backbone. Per the STOP section, nothing was retrained
+further, no framework was switched, no 4B upgrade, no `[REF]`/SRE/SCL, no extra dataset download and
+no GUI was built; waiting for ChatGPT review.

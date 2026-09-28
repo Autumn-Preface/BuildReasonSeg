@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6L._
+_Last updated by DSH at the end of Task 6M._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -73,6 +73,37 @@ The block above is machine-checked against
 | 6K | **WHU source → pseudo-instance data audit (read-only)** | **done → `KEEP_WHU_AS_PRIMARY_FOR_NOW`** (`legacy_baseline_role: keep`; conversion drift 4.33 % weighted, `<50` deletion 3.61 % of contours / 0.058 % of foreground, YOLO re-emulation IoU 1.00000, J1 failures 75.4 % proposal-model) — **superseded as a project-level decision by Task 6K.1** |
 | 6K.1 | **Recover and validate the native WHU East-Asia vector ground truth (read-only)** | **done → `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`** (`keep_whu_imagery: true`, `keep_historical_pseudo_baseline: true`; `EA.shp` = 34,085 manually delineated polygons, vector↔raster mean IoU 0.9505, tile mapping validated, VECTOR-vs-PSEUDO relation change 6.96 % weighted, 5.24 % of native buildings missing from the pseudo view, merges only 1.34 %) |
 | 6L | **Native-vector canonical dataset + scene-disjoint split + BuildSpatialReason v0.2** | **done → `VECTOR_DATASET_MIGRATION_PASS`** (all 17,388 tiles indexed; 41,186 clipped instances from 33,788 distinct `EA.shp` features; `scene_disjoint_v1` train1 10,044 / train2 3,618 / test 3,726 with zero tile, feature and RGB leakage; v0.2 = 28,108 samples with all 20 programs supported in val and test; v0.1.1↔v0.2 target change 5.70 % / 5.45 % weighted, reconciling with 6K.1's 6.96 %) |
+| 6M | **Native-vector proposal model (YOLO26m-seg) + J1-v2/J4-v2 structured evaluation + CMD Demo CLI** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT`** (export `EXPORT_VALID` at tile-union IoU 0.9988 with 0 malformed / 0 missing and all 1,235 tiny instances kept; parser `PARSER_READY` at 1.0000 accuracy on full v0.2 val after retraining the same 2B text-only head; Demo CLI gate passed on 12 real images without GT; proposal recall@0.50 **0.6333** with tiny recall **0.0023** → J1-v2 fixed120 mIoU 0.2801 / paired 4-20 and J4-v2 test fixed120 mIoU 0.2575 / paired 5-20 FAIL; M1 trained 18 of 80 epochs, wall-clock bound) |
+
+## Task 6M measured results
+
+Proposal-model task on the migrated annotation source: YOLO26m-seg trained on a derived export of
+`WHU-EA-NativeVector v1.0` under `scene_disjoint_v1`, evaluated through the native-vector structured
+chain (J1-v2 validation, J4-v2 single graded test run) with a CMD-runnable Demo path. Full detail:
+`docs/task6m_native_vector_proposal_demo.md`, `evaluation/task6m_*.json`.
+
+| | Value |
+|---|---|
+| Eval packs (frozen pre-training) | val/test fixed120 + paired20, SHA256-recorded, all 20 programs represented |
+| Model / env | YOLO26m-seg (official weights, SHA256 recorded) on `ultralytics==8.4.164` (PyPI) in `.conda/buildreasonseg-proposal`; AGPL-3.0 note recorded |
+| Export | 17,388 tiles (all hardlinked), 41,186 polygons, 11,909 empty labels; tile-union IoU **0.99880**, per-instance (≥9 px) **0.99587**, 0 malformed, 0 missing, tiny 1,235/1,235, 172 documented sub-pixel repairs → **`EXPORT_VALID`** |
+| M0 smoke | 6/6 gates pass (checkpoint, 2-image fwd/bwd, 600-tile 2-epoch subset, 512×512 mask decoding, empty tiles, tiny labels) |
+| M1 training | **18/80 epochs** (best epoch 14, `mAP50-95(M)` 0.36392), batch 16 at 10.5–11.2 GB VRAM, 313 s/epoch, stopped by session wall-clock budget |
+| Proposal metrics (val) | recall@0.25/0.50/0.75 **0.7772 / 0.6333 / 0.3404**; mask mAP50 **0.6819**; 6.38 proposals/tile; empty-tile FP 0.1264; tiny/border/dense recall 0.0023 / 0.5461 / 0.6322; size recall large 0.727 → small 0.125 → tiny 0.002 |
+| Frozen inference config | conf 0.10, max_det 100, validation-selected, frozen before test |
+| J1-v2 (val) | fixed120 mIoU 0.2801, paired 4/20, abstentions 35/120, full-val mIoU 0.2973, abstention rate 0.2768 → all 5 gates FAIL |
+| Parser (v0.2) | frozen J2 head loaded only partially (626 LoRA keys missing → 0.515); retrained same 2B head on v0.2 train → **1.0000 accuracy / 1.0000 macro F1** on 9,111 val records → **`PARSER_READY`** |
+| J4-v2 (test, once) | parser 1.0000; fixed120 mIoU **0.2575** (gate 0.40) FAIL; paired **5/20** (gate 14) FAIL; full-test mIoU 0.2914 |
+| Demo CLI | **gate passed** — 12 real images, 12 correct programs, 9 selected masks + overlays, 3 explicit abstentions, no GT |
+| Verdict | **`PROPOSAL_MODEL_NEEDS_IMPROVEMENT`** |
+
+1. **The pipeline is delivered end-to-end** — export, environment, smoke, training, val tuning
+   (frozen), J1-v2, parser, single graded J4-v2, Demo CLI and attribution all exist as artifacts.
+2. **The binding constraint is proposal quality on small objects**, amplified by an 18-of-80-epoch
+   training budget; the executor, parser, annotation and split are all exonerated by measurement.
+3. **Next step: train the same configuration to convergence**, then re-run the frozen protocol; if
+   tiny-object recall still limits, address it with an explicit small-object strategy (resolution /
+   tiling), not a bigger backbone.
 
 ## Task 6L measured results
 
