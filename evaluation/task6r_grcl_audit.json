@@ -1,0 +1,254 @@
+{
+  "_doc": "Task 6R section 9. Deterministic GRCL v0.1 audit: gradient existence/finiteness/L1 on non-binary soft target logits with non-symmetric reference masks across all four relations, plus the numerical directional sanity check.",
+  "constants": {
+    "alpha": 1.2,
+    "eps": 1e-06,
+    "lambda_grcl": 0.5,
+    "tau": 0.04
+  },
+  "directional_sanity": [
+    {
+      "correct_side_loss": 0.0,
+      "losses_at_distances": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "monotone_non_increasing": true,
+      "passed": true,
+      "relation": "left_of",
+      "wrong_side_higher": true,
+      "wrong_side_loss": 0.5394872426986694
+    },
+    {
+      "correct_side_loss": 0.0,
+      "losses_at_distances": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "monotone_non_increasing": true,
+      "passed": true,
+      "relation": "right_of",
+      "wrong_side_higher": true,
+      "wrong_side_loss": 0.5394871830940247
+    },
+    {
+      "correct_side_loss": 0.0,
+      "losses_at_distances": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "monotone_non_increasing": true,
+      "passed": true,
+      "relation": "above",
+      "wrong_side_higher": true,
+      "wrong_side_loss": 0.5394871234893799
+    },
+    {
+      "correct_side_loss": 0.0,
+      "losses_at_distances": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "monotone_non_increasing": true,
+      "passed": true,
+      "relation": "below",
+      "wrong_side_higher": true,
+      "wrong_side_loss": 0.5394871830940247
+    }
+  ],
+  "directional_sanity_passed": true,
+  "gradient_check_passed": true,
+  "gradient_rows": [
+    {
+      "axis_term": 0.06400270015001297,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.027050381526350975,
+      "hinge_active": true,
+      "index": 0,
+      "loss": 0.1657884269952774,
+      "loss_finite": true,
+      "margin_term": 0.10178572684526443,
+      "passed": true,
+      "reference_centre": [
+        0.3,
+        0.3
+      ],
+      "reference_non_symmetric": true,
+      "relation": "left_of",
+      "target_centre": [
+        0.36,
+        0.3
+      ]
+    },
+    {
+      "axis_term": 0.07286759465932846,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.026943160220980644,
+      "hinge_active": true,
+      "index": 1,
+      "loss": 0.18355029821395874,
+      "loss_finite": true,
+      "margin_term": 0.11068270355463028,
+      "passed": true,
+      "reference_centre": [
+        0.35,
+        0.33999999999999997
+      ],
+      "reference_non_symmetric": true,
+      "relation": "right_of",
+      "target_centre": [
+        0.27999999999999997,
+        0.33999999999999997
+      ]
+    },
+    {
+      "axis_term": 0.059991974383592606,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.026939403265714645,
+      "hinge_active": true,
+      "index": 2,
+      "loss": 0.1587165892124176,
+      "loss_finite": true,
+      "margin_term": 0.0987246111035347,
+      "passed": true,
+      "reference_centre": [
+        0.4,
+        0.38
+      ],
+      "reference_non_symmetric": true,
+      "relation": "above",
+      "target_centre": [
+        0.4,
+        0.44
+      ]
+    },
+    {
+      "axis_term": 0.06998999416828156,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.02707904949784279,
+      "hinge_active": true,
+      "index": 3,
+      "loss": 0.17806828022003174,
+      "loss_finite": true,
+      "margin_term": 0.10807829350233078,
+      "passed": true,
+      "reference_centre": [
+        0.45,
+        0.3
+      ],
+      "reference_non_symmetric": true,
+      "relation": "below",
+      "target_centre": [
+        0.45,
+        0.22999999999999998
+      ]
+    },
+    {
+      "axis_term": 0.060172658413648605,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.026917068287730217,
+      "hinge_active": true,
+      "index": 4,
+      "loss": 0.160076305270195,
+      "loss_finite": true,
+      "margin_term": 0.0999036505818367,
+      "passed": true,
+      "reference_centre": [
+        0.3,
+        0.33999999999999997
+      ],
+      "reference_non_symmetric": true,
+      "relation": "left_of",
+      "target_centre": [
+        0.36,
+        0.33999999999999997
+      ]
+    },
+    {
+      "axis_term": 0.07218801975250244,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.027082564309239388,
+      "hinge_active": true,
+      "index": 5,
+      "loss": 0.1829186975955963,
+      "loss_finite": true,
+      "margin_term": 0.11073068529367447,
+      "passed": true,
+      "reference_centre": [
+        0.35,
+        0.38
+      ],
+      "reference_non_symmetric": true,
+      "relation": "right_of",
+      "target_centre": [
+        0.27999999999999997,
+        0.38
+      ]
+    },
+    {
+      "axis_term": 0.06194056198000908,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.026924435049295425,
+      "hinge_active": true,
+      "index": 6,
+      "loss": 0.16269676387310028,
+      "loss_finite": true,
+      "margin_term": 0.1007562056183815,
+      "passed": true,
+      "reference_centre": [
+        0.4,
+        0.3
+      ],
+      "reference_non_symmetric": true,
+      "relation": "above",
+      "target_centre": [
+        0.4,
+        0.36
+      ]
+    },
+    {
+      "axis_term": 0.07049748301506042,
+      "gradient_exists": true,
+      "gradient_finite": true,
+      "gradient_l1": 0.026984507218003273,
+      "hinge_active": true,
+      "index": 7,
+      "loss": 0.18064823746681213,
+      "loss_finite": true,
+      "margin_term": 0.1101507619023323,
+      "passed": true,
+      "reference_centre": [
+        0.45,
+        0.33999999999999997
+      ],
+      "reference_non_symmetric": true,
+      "relation": "below",
+      "target_centre": [
+        0.45,
+        0.26999999999999996
+      ]
+    }
+  ],
+  "min_gradient_l1": 1e-08,
+  "module": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\grcl_directional.py",
+  "module_sha256": "276ac6f17408404e0bea4005a50d0e22ede270b643949e10c6673b68c104f000",
+  "runtime_seconds": 0.04,
+  "size": [
+    64,
+    64
+  ],
+  "stage": "C-grcl-audit",
+  "task": "6R",
+  "verdict": "GRCL_VALID"
+}
