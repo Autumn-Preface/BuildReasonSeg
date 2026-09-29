@@ -1,0 +1,184 @@
+{
+  "_doc": "Task 6U sections 13-16. ProposalSetRanker v0.1 trained only on the train-side U-RankerTrain split using the frozen selected proposal configuration (U-C1). It addresses REFERENCE_SELECTION_WRONG only: records whose best eligible proposal is below IoU 0.50 are excluded from the loss and counted as untrainable_not_covered. GT builds training labels only; inference never uses GT. Support infrastructure, not a claimed novelty.",
+  "task": "6U",
+  "stage": "G-ranker-training",
+  "proposal_config": {
+    "id": "U-C1",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+  },
+  "selection_scope": "REFERENCE_SELECTION_WRONG only; the ranker cannot create missing proposals",
+  "data": {
+    "split": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6u_reference_train_split.json",
+    "records": 625,
+    "by_family": {
+      "smallest": 234,
+      "largest": 391
+    },
+    "examples": 625,
+    "trainable": 598,
+    "untrainable_not_covered": 27,
+    "no_eligible": 0,
+    "internal_train": 538,
+    "internal_holdout": 60,
+    "coverage_threshold": 0.5,
+    "labeling": "target = eligible proposal with highest GT IoU; ties -> higher confidence -> lower original proposal index"
+  },
+  "feature_vector": {
+    "dim": 14,
+    "names": [
+      "log_area",
+      "area_ratio",
+      "area_over_set_max",
+      "set_min_over_area",
+      "area_rank_desc",
+      "area_rank_asc",
+      "confidence",
+      "bbox_extent_ratio",
+      "width_ratio",
+      "height_ratio",
+      "fill_ratio",
+      "proposal_count_norm",
+      "family_largest",
+      "family_smallest"
+    ],
+    "family_one_hot": {
+      "largest": [
+        1,
+        0
+      ],
+      "smallest": [
+        0,
+        1
+      ]
+    },
+    "excluded": [
+      "GT-derived features",
+      "target relation",
+      "centroid x/y",
+      "image location",
+      "SAM2 features",
+      "target mask",
+      "source feature id"
+    ]
+  },
+  "architecture": {
+    "input_dim": 14,
+    "layers": [
+      "Linear(14,32)",
+      "GELU",
+      "Linear(32,16)",
+      "GELU",
+      "Linear(16,1)"
+    ],
+    "attention": false,
+    "transformer": false,
+    "gnn": false,
+    "total_parameters": 1025,
+    "feature_names": [
+      "log_area",
+      "area_ratio",
+      "area_over_set_max",
+      "set_min_over_area",
+      "area_rank_desc",
+      "area_rank_asc",
+      "confidence",
+      "bbox_extent_ratio",
+      "width_ratio",
+      "height_ratio",
+      "fill_ratio",
+      "proposal_count_norm",
+      "family_largest",
+      "family_smallest"
+    ]
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "batch_sets": 64,
+    "max_epochs": 50,
+    "early_stopping_patience": 6,
+    "seed": 20260930,
+    "sweep": false,
+    "selection_metric": [
+      "internal holdout top-1 accuracy",
+      "tie-break mean selected-reference IoU"
+    ]
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.7956831322775946,
+      "holdout_top1_accuracy": 0.4166666666666667,
+      "holdout_mean_selected_iou": 0.3618890337571767
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.8066019349628024,
+      "holdout_top1_accuracy": 0.45,
+      "holdout_mean_selected_iou": 0.4510461516613346
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.809506310356988,
+      "holdout_top1_accuracy": 0.4166666666666667,
+      "holdout_mean_selected_iou": 0.4364164975444972
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.809572246339586,
+      "holdout_top1_accuracy": 0.38333333333333336,
+      "holdout_mean_selected_iou": 0.4072273884430306
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.7798067066404555,
+      "holdout_top1_accuracy": 0.38333333333333336,
+      "holdout_mean_selected_iou": 0.4072273884430306
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.7776083416408963,
+      "holdout_top1_accuracy": 0.36666666666666664,
+      "holdout_mean_selected_iou": 0.4036028178836302
+    },
+    {
+      "epoch": 7,
+      "train_loss": 1.713578012254503,
+      "holdout_top1_accuracy": 0.36666666666666664,
+      "holdout_mean_selected_iou": 0.4036028178836302
+    },
+    {
+      "epoch": 8,
+      "train_loss": 1.6758533981111314,
+      "holdout_top1_accuracy": 0.36666666666666664,
+      "holdout_mean_selected_iou": 0.4036028178836302
+    }
+  ],
+  "selected_epoch": 2,
+  "internal_holdout": {
+    "records": 60,
+    "top1_accuracy": 0.45,
+    "mean_selected_iou": 0.4510461516613346
+  },
+  "internal_train_final": {
+    "records": 538,
+    "top1_accuracy": 0.4368029739776952,
+    "mean_selected_iou": 0.42289128009537114
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6u\\reference_ranker_v01.pt",
+    "exists": true,
+    "sha256": "c738fcf77419626f5f9bde21ff8cd477547418c095537b4bf50f1d6c1b1a46c0",
+    "committed": false,
+    "wall_seconds": 28.6,
+    "peak_vram_gb": 0.163
+  },
+  "test_split_used": false,
+  "refval_used_for_training": false,
+  "runtime_seconds": 28.6,
+  "verdict": "RANKER_TRAINED"
+}

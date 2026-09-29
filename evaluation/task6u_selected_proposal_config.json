@@ -1,0 +1,71 @@
+{
+  "_doc": "Task 6U section 10. The single frozen proposal inference configuration, selected on the train-only U-Calib200 split by the exact section 10 priority order and immutable afterwards.",
+  "task": "6U",
+  "stage": "E-selected-config",
+  "selected_config": "U-C1",
+  "selected": {
+    "id": "U-C1",
+    "label": "lower confidence / larger candidate cap",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false,
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "source_image_size": [
+      512,
+      512
+    ],
+    "masks_restored_to_source": true
+  },
+  "priority_rule": [
+    "highest smallest eligible coverage@0.50",
+    "then highest overall eligible coverage@0.50",
+    "then highest largest eligible coverage@0.50",
+    "then lower mean eligible proposals per record",
+    "then lower imgsz",
+    "then higher conf",
+    "then lower config id"
+  ],
+  "priority_key_of_selected": [
+    0.94,
+    0.96,
+    0.98,
+    -7.525,
+    -640,
+    0.05,
+    -1
+  ],
+  "ranking": [
+    "U-C1",
+    "U-C0",
+    "U-C3",
+    "U-C2"
+  ],
+  "candidates_considered": [
+    "U-C0",
+    "U-C1",
+    "U-C2",
+    "U-C3"
+  ],
+  "frozen": true,
+  "immutable_after_creation": true,
+  "selection_inputs": {
+    "u_calib200": true,
+    "refval_unique": false,
+    "minival240": false,
+    "test_split": false
+  },
+  "selected_metrics": {
+    "smallest_eligible_coverage@0.50": 0.94,
+    "overall_eligible_coverage@0.50": 0.96,
+    "largest_eligible_coverage@0.50": 0.98,
+    "mean_eligible_proposals_per_record": 7.525
+  },
+  "evidence": {
+    "calibration": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6u_calibration_candidate_coverage.json"
+  },
+  "test_split_used": false
+}

@@ -1,0 +1,353 @@
+{
+  "_doc": "Task 6U sections 7-10. U0 candidate-coverage selection: the exact four declared proposal inference configurations of the frozen Task 6M.1 YOLO26m-seg checkpoint evaluated on the train-only U-Calib200 split (100 largest + 100 smallest references), with the unchanged Task 6Q family eligibility. GT reference masks are used for scoring only.",
+  "task": "6U",
+  "stage": "E-candidate-coverage",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "expected_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "retrained": false
+  },
+  "calibration_split": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6u_reference_train_split.json",
+    "records": 200,
+    "tiles": 195,
+    "by_family": {
+      "largest": 100,
+      "smallest": 100
+    }
+  },
+  "eligibility": "Task 6Q family rules unchanged (largest: no border + extent<=0.20; smallest: same + area>=150)",
+  "configurations": {
+    "U-C0": {
+      "id": "U-C0",
+      "label": "frozen baseline",
+      "imgsz": 640,
+      "conf": 0.1,
+      "max_det": 100,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "expected_checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "source_image_size": [
+        512,
+        512
+      ],
+      "masks_restored_to_source": true,
+      "super_resolution": false,
+      "proposal_cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6u\\proposals\\U-C0",
+      "coverage": {
+        "overall": {
+          "records": 200,
+          "all_coverage@0.25": 0.98,
+          "eligible_coverage@0.25": 0.965,
+          "all_coverage@0.50": 0.96,
+          "eligible_coverage@0.50": 0.945,
+          "all_coverage@0.75": 0.705,
+          "eligible_coverage@0.75": 0.69,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 6.27
+        },
+        "largest": {
+          "records": 100,
+          "all_coverage@0.25": 1.0,
+          "eligible_coverage@0.25": 1.0,
+          "all_coverage@0.50": 0.98,
+          "eligible_coverage@0.50": 0.98,
+          "all_coverage@0.75": 0.74,
+          "eligible_coverage@0.75": 0.74,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 6.45
+        },
+        "smallest": {
+          "records": 100,
+          "all_coverage@0.25": 0.96,
+          "eligible_coverage@0.25": 0.93,
+          "all_coverage@0.50": 0.94,
+          "eligible_coverage@0.50": 0.91,
+          "all_coverage@0.75": 0.67,
+          "eligible_coverage@0.75": 0.64,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 6.09
+        }
+      },
+      "proposals_per_tile": {
+        "records": 195,
+        "mean": 7.743589743589744,
+        "median": 6.0,
+        "p90": 16.599999999999994
+      },
+      "eligible_proposals_per_record": {
+        "records": 200,
+        "mean": 6.27,
+        "median": 5.0,
+        "p90": 14.0
+      },
+      "no_proposal_tiles": 0,
+      "no_eligible_records": 0,
+      "inference": {
+        "tiles": 195,
+        "mean_seconds_per_tile": null,
+        "median_seconds_per_tile": null,
+        "total_seconds": null,
+        "peak_vram_gb": null,
+        "cached_tiles": 195
+      }
+    },
+    "U-C1": {
+      "id": "U-C1",
+      "label": "lower confidence / larger candidate cap",
+      "imgsz": 640,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "expected_checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "source_image_size": [
+        512,
+        512
+      ],
+      "masks_restored_to_source": true,
+      "super_resolution": false,
+      "proposal_cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6u\\proposals\\U-C1",
+      "coverage": {
+        "overall": {
+          "records": 200,
+          "all_coverage@0.25": 0.99,
+          "eligible_coverage@0.25": 0.975,
+          "all_coverage@0.50": 0.975,
+          "eligible_coverage@0.50": 0.96,
+          "all_coverage@0.75": 0.715,
+          "eligible_coverage@0.75": 0.7,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 7.525
+        },
+        "largest": {
+          "records": 100,
+          "all_coverage@0.25": 1.0,
+          "eligible_coverage@0.25": 1.0,
+          "all_coverage@0.50": 0.98,
+          "eligible_coverage@0.50": 0.98,
+          "all_coverage@0.75": 0.74,
+          "eligible_coverage@0.75": 0.74,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 7.76
+        },
+        "smallest": {
+          "records": 100,
+          "all_coverage@0.25": 0.98,
+          "eligible_coverage@0.25": 0.95,
+          "all_coverage@0.50": 0.97,
+          "eligible_coverage@0.50": 0.94,
+          "all_coverage@0.75": 0.69,
+          "eligible_coverage@0.75": 0.66,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 7.29
+        }
+      },
+      "proposals_per_tile": {
+        "records": 195,
+        "mean": 9.666666666666666,
+        "median": 7.0,
+        "p90": 18.599999999999994
+      },
+      "eligible_proposals_per_record": {
+        "records": 200,
+        "mean": 7.525,
+        "median": 5.5,
+        "p90": 16.0
+      },
+      "no_proposal_tiles": 0,
+      "no_eligible_records": 0,
+      "inference": {
+        "tiles": 195,
+        "mean_seconds_per_tile": null,
+        "median_seconds_per_tile": null,
+        "total_seconds": null,
+        "peak_vram_gb": null,
+        "cached_tiles": 195
+      }
+    },
+    "U-C2": {
+      "id": "U-C2",
+      "label": "higher network input resolution",
+      "imgsz": 1024,
+      "conf": 0.1,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "expected_checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "source_image_size": [
+        512,
+        512
+      ],
+      "masks_restored_to_source": true,
+      "super_resolution": false,
+      "proposal_cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6u\\proposals\\U-C2",
+      "coverage": {
+        "overall": {
+          "records": 200,
+          "all_coverage@0.25": 0.96,
+          "eligible_coverage@0.25": 0.95,
+          "all_coverage@0.50": 0.93,
+          "eligible_coverage@0.50": 0.92,
+          "all_coverage@0.75": 0.66,
+          "eligible_coverage@0.75": 0.65,
+          "no_proposals": 0,
+          "no_eligible": 1,
+          "eligible_per_record_mean": 6.225
+        },
+        "largest": {
+          "records": 100,
+          "all_coverage@0.25": 0.99,
+          "eligible_coverage@0.25": 0.99,
+          "all_coverage@0.50": 0.96,
+          "eligible_coverage@0.50": 0.96,
+          "all_coverage@0.75": 0.66,
+          "eligible_coverage@0.75": 0.66,
+          "no_proposals": 0,
+          "no_eligible": 1,
+          "eligible_per_record_mean": 6.18
+        },
+        "smallest": {
+          "records": 100,
+          "all_coverage@0.25": 0.93,
+          "eligible_coverage@0.25": 0.91,
+          "all_coverage@0.50": 0.9,
+          "eligible_coverage@0.50": 0.88,
+          "all_coverage@0.75": 0.66,
+          "eligible_coverage@0.75": 0.64,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 6.27
+        }
+      },
+      "proposals_per_tile": {
+        "records": 195,
+        "mean": 7.774358974358974,
+        "median": 6.0,
+        "p90": 17.0
+      },
+      "eligible_proposals_per_record": {
+        "records": 200,
+        "mean": 6.225,
+        "median": 4.5,
+        "p90": 15.099999999999994
+      },
+      "no_proposal_tiles": 0,
+      "no_eligible_records": 1,
+      "inference": {
+        "tiles": 195,
+        "mean_seconds_per_tile": null,
+        "median_seconds_per_tile": null,
+        "total_seconds": null,
+        "peak_vram_gb": null,
+        "cached_tiles": 195
+      }
+    },
+    "U-C3": {
+      "id": "U-C3",
+      "label": "higher resolution + recall-oriented threshold",
+      "imgsz": 1024,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "expected_checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "source_image_size": [
+        512,
+        512
+      ],
+      "masks_restored_to_source": true,
+      "super_resolution": false,
+      "proposal_cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6u\\proposals\\U-C3",
+      "coverage": {
+        "overall": {
+          "records": 200,
+          "all_coverage@0.25": 0.98,
+          "eligible_coverage@0.25": 0.965,
+          "all_coverage@0.50": 0.94,
+          "eligible_coverage@0.50": 0.93,
+          "all_coverage@0.75": 0.665,
+          "eligible_coverage@0.75": 0.655,
+          "no_proposals": 0,
+          "no_eligible": 1,
+          "eligible_per_record_mean": 7.695
+        },
+        "largest": {
+          "records": 100,
+          "all_coverage@0.25": 1.0,
+          "eligible_coverage@0.25": 0.99,
+          "all_coverage@0.50": 0.96,
+          "eligible_coverage@0.50": 0.96,
+          "all_coverage@0.75": 0.66,
+          "eligible_coverage@0.75": 0.66,
+          "no_proposals": 0,
+          "no_eligible": 1,
+          "eligible_per_record_mean": 7.65
+        },
+        "smallest": {
+          "records": 100,
+          "all_coverage@0.25": 0.96,
+          "eligible_coverage@0.25": 0.94,
+          "all_coverage@0.50": 0.92,
+          "eligible_coverage@0.50": 0.9,
+          "all_coverage@0.75": 0.67,
+          "eligible_coverage@0.75": 0.65,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 7.74
+        }
+      },
+      "proposals_per_tile": {
+        "records": 195,
+        "mean": 9.876923076923077,
+        "median": 8.0,
+        "p90": 22.599999999999994
+      },
+      "eligible_proposals_per_record": {
+        "records": 200,
+        "mean": 7.695,
+        "median": 6.0,
+        "p90": 18.099999999999994
+      },
+      "no_proposal_tiles": 0,
+      "no_eligible_records": 1,
+      "inference": {
+        "tiles": 195,
+        "mean_seconds_per_tile": null,
+        "median_seconds_per_tile": null,
+        "total_seconds": null,
+        "peak_vram_gb": null,
+        "cached_tiles": 195
+      }
+    }
+  },
+  "ranking": [
+    "U-C1",
+    "U-C0",
+    "U-C3",
+    "U-C2"
+  ],
+  "runtime_seconds": 15.1,
+  "test_split_used": false,
+  "refval_used_for_selection": false,
+  "minival_used_for_selection": false
+}
