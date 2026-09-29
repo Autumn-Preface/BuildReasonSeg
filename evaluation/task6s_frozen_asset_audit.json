@@ -1,0 +1,85 @@
+{
+  "_doc": "Task 6S sections 5-8. Frozen-asset integrity audit for the directional end-to-end chain: ProgramHead (text-only, 20 canonical ids, exact SHA256), Task 6Q proposal resolver configuration, Task 6O B3 checkpoint and the unchanged GeometricRelationField v0.2.",
+  "grcl_in_primary_chain": false,
+  "oracle_reference_in_inference": false,
+  "program_head": {
+    "candidates": [
+      {
+        "matches_expected": true,
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\program_parser_v02_best.pt",
+        "present": true,
+        "sha256": "eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3"
+      }
+    ],
+    "expected_sha256": "eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3",
+    "image_input": false,
+    "matches_expected": true,
+    "path_note": "the Task 6S default path `artifacts/checkpoints/task6j/j2_best.pt` hashes to 224f70c97f60d9eb21284cfefdd806eabf300b42375f10d45a25d19547097457; the checkpoint whose SHA256 equals the Task 6S expected frozen hash is artifacts/checkpoints/task6m/program_parser_v02_best.pt, which is exactly the text-only ProgramHead the Task 6M structured CLI uses (section 5). The SHA256 is treated as authoritative; no checkpoint was retrained or replaced.",
+    "resolved_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\program_parser_v02_best.pt",
+    "resolved_sha256": "eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3",
+    "retrained": false,
+    "text_only": true,
+    "vocabulary_is_frozen_20": true,
+    "vocabulary_size": 20
+  },
+  "proposal_resolver": {
+    "conf": 0.1,
+    "config": {
+      "checkpoint": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "conf": 0.1,
+      "family": "YOLO26m-seg",
+      "imgsz": 640,
+      "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+      "max_det": 100,
+      "merge_bbox_extent_ratio_max": 0.2,
+      "nms": "default",
+      "threshold_sweep": false,
+      "tiling": false,
+      "tiny_component_area_px": 150,
+      "tta": false
+    },
+    "eligibility_ranking_changed": false,
+    "expected_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "imgsz": 640,
+    "matches_expected": true,
+    "max_det": 100,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "retrained": false,
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+  },
+  "reference_source": "predicted_proposal_reference",
+  "relation_field": {
+    "alpha": 1.2,
+    "modified": false,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\geometric_relation_field_v02.py",
+    "s_axis": 0.02,
+    "s_margin": 0.02,
+    "sha256": "b6d3367f250549f02641a15097403f3290c7578894865451e3beb449359e2de6",
+    "tau": 0.04
+  },
+  "runtime_seconds": 216.9,
+  "stage": "B-frozen-assets",
+  "supported_programs": [
+    "largest_to_left_of",
+    "largest_to_right_of",
+    "largest_to_above",
+    "largest_to_below",
+    "smallest_to_left_of",
+    "smallest_to_right_of",
+    "smallest_to_above",
+    "smallest_to_below"
+  ],
+  "target_decoder": {
+    "architecture": "Task 6O B3 (frozen SAM2 visual + field v0.2 + relation)",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "matches_expected": true,
+    "parameters": 274625,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "retrained": false,
+    "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+  },
+  "task": "6S",
+  "test_split_used": false,
+  "verdict": "ASSETS_FROZEN"
+}

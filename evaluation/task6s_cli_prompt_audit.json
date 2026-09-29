@@ -1,0 +1,701 @@
+{
+  "_doc": "Task 6S sections 18-19 and 13. The real CLI executed as a subprocess on the exact 24 fixed supported paraphrases and the 8 unsupported controls, plus an on-the-fly frozen SAM2 encoder proof on a source image with no precomputed feature-cache key. No retraining and no threshold tuning followed any paraphrase failure; GT is not available to the CLI.",
+  "checkpoints": {
+    "program_head": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\program_parser_v02_best.pt",
+      "sha256": "eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3"
+    },
+    "proposal": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+    },
+    "target": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+      "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+    }
+  },
+  "cli": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\predict_buildreasonseg_directional.py",
+  "cli_sha256": "02ce66d5020beab1127084d1d7818fddd26cff71db44ea758e7cff85ecc75145",
+  "control_count": 8,
+  "controls": [
+    {
+      "downstream_called": false,
+      "exit_code": 4,
+      "expected_exit_code": 4,
+      "index": 1,
+      "kind": "ood",
+      "parsed_program": null,
+      "passed": true,
+      "prompt": "Write a poem about the sea.",
+      "status": "unsupported_instruction",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": false,
+      "exit_code": 4,
+      "expected_exit_code": 4,
+      "index": 2,
+      "kind": "ood",
+      "parsed_program": null,
+      "passed": true,
+      "prompt": "今天天气怎么样？",
+      "status": "unsupported_instruction",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": false,
+      "exit_code": 4,
+      "expected_exit_code": 4,
+      "index": 3,
+      "kind": "ood",
+      "parsed_program": null,
+      "passed": true,
+      "prompt": "检测道路。",
+      "status": "unsupported_instruction",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": false,
+      "exit_code": 4,
+      "expected_exit_code": 4,
+      "index": 4,
+      "kind": "ood",
+      "parsed_program": null,
+      "passed": true,
+      "prompt": "",
+      "status": "unsupported_instruction",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": false,
+      "exit_code": 5,
+      "expected_exit_code": 5,
+      "index": 5,
+      "kind": "valid_but_out_of_scope",
+      "parsed_program": "largest",
+      "passed": true,
+      "prompt": "分割面积最大的建筑物。",
+      "status": "unsupported_directional_program",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": false,
+      "exit_code": 5,
+      "expected_exit_code": 5,
+      "index": 6,
+      "kind": "valid_but_out_of_scope",
+      "parsed_program": "leftmost",
+      "passed": true,
+      "prompt": "分割最左侧的建筑物。",
+      "status": "unsupported_directional_program",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": true,
+      "exit_code": 3,
+      "expected_exit_code": 5,
+      "index": 7,
+      "kind": "valid_but_out_of_scope",
+      "parsed_program": "largest_to_right_of",
+      "passed": false,
+      "prompt": "分割面积最大的建筑物右侧最近的建筑物。",
+      "status": "reference_abstention",
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_called": true,
+      "exit_code": 3,
+      "expected_exit_code": 5,
+      "index": 8,
+      "kind": "valid_but_out_of_scope",
+      "parsed_program": "largest_to_right_of",
+      "passed": false,
+      "prompt": "segment the building nearest to the right of the largest building",
+      "status": "reference_abstention",
+      "wrote": [
+        "result.json"
+      ]
+    }
+  ],
+  "controls_exactly_eight": true,
+  "downstream_never_called_for_controls": false,
+  "ground_truth_required_by_cli": false,
+  "on_the_fly_sam2": {
+    "exit_code": 0,
+    "feature_cache_key_present": false,
+    "image": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6m_yolo_native\\images\\val\\2_0.tif",
+    "in_mini_val_240": false,
+    "parsed_program": "largest_to_below",
+    "sam2_encoder_path_exercised": true,
+    "sam2_feature_seconds": 0.206,
+    "sample_id": "buildsr_val_2_0_2_largest_to_below_d598294b4458",
+    "status": "ok",
+    "target_positive_pixels": 273,
+    "tile_id": "2_0",
+    "wrote": [
+      "overlay.png",
+      "reference_mask.png",
+      "relation_field.png",
+      "result.json",
+      "target_mask.png"
+    ]
+  },
+  "ood_all_exit_4": true,
+  "out_of_scope_all_exit_5": false,
+  "runtime_seconds": 352.7,
+  "stage": "F-cli-prompt-audit",
+  "supported_count": 24,
+  "supported_exact_prompts_match_spec": true,
+  "supported_gate": {
+    "measured": 21,
+    "passed": false,
+    "required": 22
+  },
+  "supported_parser_correct": 21,
+  "supported_prompts": [
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_left_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_1626.tif",
+      "index": 1,
+      "parsed_program": "largest_to_left_of",
+      "parser_correct": true,
+      "prompt": "分割面积最大的建筑物左侧的建筑物。",
+      "reference_family": "largest",
+      "relation": "left_of",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.85,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": false,
+      "exit_code": 0,
+      "expected_program": "largest_to_left_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_1626.tif",
+      "index": 2,
+      "parsed_program": "smallest_to_left_of",
+      "parser_correct": false,
+      "prompt": "找出最大建筑左边的建筑物。",
+      "reference_family": "smallest",
+      "relation": "left_of",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.99,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_left_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_1626.tif",
+      "index": 3,
+      "parsed_program": "largest_to_left_of",
+      "parser_correct": true,
+      "prompt": "segment the building to the left of the largest building",
+      "reference_family": "largest",
+      "relation": "left_of",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.0,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 3,
+      "expected_program": "largest_to_right_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_735.tif",
+      "index": 4,
+      "parsed_program": "largest_to_right_of",
+      "parser_correct": true,
+      "prompt": "分割面积最大的建筑物右侧的建筑物。",
+      "reference_family": "largest",
+      "relation": "right_of",
+      "status": "reference_abstention",
+      "supported": true,
+      "wall_seconds": 11.96,
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_branch_ok": false,
+      "exit_code": 3,
+      "expected_program": "largest_to_right_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_735.tif",
+      "index": 5,
+      "parsed_program": "smallest_to_right_of",
+      "parser_correct": false,
+      "prompt": "找出最大建筑右边的建筑物。",
+      "reference_family": "smallest",
+      "relation": "right_of",
+      "status": "reference_abstention",
+      "supported": true,
+      "wall_seconds": 11.85,
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 3,
+      "expected_program": "largest_to_right_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_735.tif",
+      "index": 6,
+      "parsed_program": "largest_to_right_of",
+      "parser_correct": true,
+      "prompt": "segment the building to the right of the largest building",
+      "reference_family": "largest",
+      "relation": "right_of",
+      "status": "reference_abstention",
+      "supported": true,
+      "wall_seconds": 12.02,
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_above",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_3489.tif",
+      "index": 7,
+      "parsed_program": "largest_to_above",
+      "parser_correct": true,
+      "prompt": "分割面积最大的建筑物上方的建筑物。",
+      "reference_family": "largest",
+      "relation": "above",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.03,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_above",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_3489.tif",
+      "index": 8,
+      "parsed_program": "largest_to_above",
+      "parser_correct": true,
+      "prompt": "找出最大建筑上面的建筑物。",
+      "reference_family": "largest",
+      "relation": "above",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.98,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_above",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_3489.tif",
+      "index": 9,
+      "parsed_program": "largest_to_above",
+      "parser_correct": true,
+      "prompt": "segment the building above the largest building",
+      "reference_family": "largest",
+      "relation": "above",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.13,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_below",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_552.tif",
+      "index": 10,
+      "parsed_program": "largest_to_below",
+      "parser_correct": true,
+      "prompt": "分割面积最大的建筑物下方的建筑物。",
+      "reference_family": "largest",
+      "relation": "below",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.15,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": false,
+      "exit_code": 0,
+      "expected_program": "largest_to_below",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_552.tif",
+      "index": 11,
+      "parsed_program": "smallest_to_below",
+      "parser_correct": false,
+      "prompt": "找出最大建筑下面的建筑物。",
+      "reference_family": "smallest",
+      "relation": "below",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.97,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "largest_to_below",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_552.tif",
+      "index": 12,
+      "parsed_program": "largest_to_below",
+      "parser_correct": true,
+      "prompt": "segment the building below the largest building",
+      "reference_family": "largest",
+      "relation": "below",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.97,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_left_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_953.tif",
+      "index": 13,
+      "parsed_program": "smallest_to_left_of",
+      "parser_correct": true,
+      "prompt": "分割面积最小的建筑物左侧的建筑物。",
+      "reference_family": "smallest",
+      "relation": "left_of",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.1,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_left_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_953.tif",
+      "index": 14,
+      "parsed_program": "smallest_to_left_of",
+      "parser_correct": true,
+      "prompt": "找出最小建筑左边的建筑物。",
+      "reference_family": "smallest",
+      "relation": "left_of",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.92,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_left_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_953.tif",
+      "index": 15,
+      "parsed_program": "smallest_to_left_of",
+      "parser_correct": true,
+      "prompt": "segment the building to the left of the smallest building",
+      "reference_family": "smallest",
+      "relation": "left_of",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.06,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 3,
+      "expected_program": "smallest_to_right_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train_no\\image\\2_2595.tif",
+      "index": 16,
+      "parsed_program": "smallest_to_right_of",
+      "parser_correct": true,
+      "prompt": "分割面积最小的建筑物右侧的建筑物。",
+      "reference_family": "smallest",
+      "relation": "right_of",
+      "status": "reference_abstention",
+      "supported": true,
+      "wall_seconds": 11.79,
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 3,
+      "expected_program": "smallest_to_right_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train_no\\image\\2_2595.tif",
+      "index": 17,
+      "parsed_program": "smallest_to_right_of",
+      "parser_correct": true,
+      "prompt": "找出最小建筑右边的建筑物。",
+      "reference_family": "smallest",
+      "relation": "right_of",
+      "status": "reference_abstention",
+      "supported": true,
+      "wall_seconds": 11.87,
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 3,
+      "expected_program": "smallest_to_right_of",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train_no\\image\\2_2595.tif",
+      "index": 18,
+      "parsed_program": "smallest_to_right_of",
+      "parser_correct": true,
+      "prompt": "segment the building to the right of the smallest building",
+      "reference_family": "smallest",
+      "relation": "right_of",
+      "status": "reference_abstention",
+      "supported": true,
+      "wall_seconds": 12.04,
+      "wrote": [
+        "result.json"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_above",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_2381.tif",
+      "index": 19,
+      "parsed_program": "smallest_to_above",
+      "parser_correct": true,
+      "prompt": "分割面积最小的建筑物上方的建筑物。",
+      "reference_family": "smallest",
+      "relation": "above",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.03,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_above",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_2381.tif",
+      "index": 20,
+      "parsed_program": "smallest_to_above",
+      "parser_correct": true,
+      "prompt": "找出最小建筑上面的建筑物。",
+      "reference_family": "smallest",
+      "relation": "above",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.96,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_above",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_2381.tif",
+      "index": 21,
+      "parsed_program": "smallest_to_above",
+      "parser_correct": true,
+      "prompt": "segment the building above the smallest building",
+      "reference_family": "smallest",
+      "relation": "above",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.0,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_below",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_2437.tif",
+      "index": 22,
+      "parsed_program": "smallest_to_below",
+      "parser_correct": true,
+      "prompt": "分割面积最小的建筑物下方的建筑物。",
+      "reference_family": "smallest",
+      "relation": "below",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.98,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_below",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_2437.tif",
+      "index": 23,
+      "parsed_program": "smallest_to_below",
+      "parser_correct": true,
+      "prompt": "找出最小建筑下面的建筑物。",
+      "reference_family": "smallest",
+      "relation": "below",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 12.14,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    },
+    {
+      "downstream_branch_ok": true,
+      "exit_code": 0,
+      "expected_program": "smallest_to_below",
+      "ground_truth_used": false,
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\train\\image\\2_2437.tif",
+      "index": 24,
+      "parsed_program": "smallest_to_below",
+      "parser_correct": true,
+      "prompt": "segment the building below the smallest building",
+      "reference_family": "smallest",
+      "relation": "below",
+      "status": "ok",
+      "supported": true,
+      "wall_seconds": 11.9,
+      "wrote": [
+        "overlay.png",
+        "reference_mask.png",
+        "relation_field.png",
+        "result.json",
+        "target_mask.png"
+      ]
+    }
+  ],
+  "task": "6S",
+  "test_split_used": false
+}

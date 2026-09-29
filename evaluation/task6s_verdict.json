@@ -1,0 +1,125 @@
+{
+  "_doc": "Task 6S section 24. Exactly one verdict by the fixed priority order, with the section 22 integration gates, the section 23 regression check and the protocol audit. READY_FOR_HARDENING does not mean the final model or paper is ready.",
+  "all_gates_passed": false,
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "PARSER_CHECKPOINT_UNAVAILABLE",
+    "END_TO_END_INTEGRATION_REGRESSION",
+    "DIRECTIONAL_PARSER_HARDENING_REQUIRED",
+    "DIRECTIONAL_CHAIN_BELOW_GATE",
+    "DIRECTIONAL_END_TO_END_CHAIN_READY_FOR_HARDENING"
+  ],
+  "failure_attribution_aggregation": {
+    "parser_fail": 0,
+    "parser_fail_rate": 0.0,
+    "reference_fail": 117,
+    "reference_fail_minus_target_fail": 50,
+    "target_fail": 67
+  },
+  "failure_attribution_counts": {
+    "PARSER_WRONG": 0,
+    "REFERENCE_GEOMETRY_POOR": 1,
+    "REFERENCE_NOT_COVERED_IOU50": 68,
+    "REFERENCE_NO_ELIGIBLE": 3,
+    "REFERENCE_NO_PROPOSALS": 3,
+    "REFERENCE_SELECTION_WRONG": 42,
+    "TARGET_FAIL_WITH_REFERENCE_OK": 67,
+    "TARGET_OK": 56
+  },
+  "gate_constants": {
+    "answered_only_miou_min": 0.2893521927137638,
+    "own_cross_margin_min": 0.22,
+    "paired_min": 9,
+    "paraphrase_min": 22,
+    "parser_accuracy_min": 0.95,
+    "strict_all_240_miou_min": 0.28
+  },
+  "gates": {
+    "10_no_test_split": {
+      "measured": true,
+      "passed": true
+    },
+    "1_parser_accuracy": {
+      "measured": 1.0,
+      "passed": true,
+      "required": 0.95
+    },
+    "2_strict_all_240_miou": {
+      "measured": 0.2969667241009681,
+      "passed": true,
+      "required": 0.28
+    },
+    "3_answered_only_miou": {
+      "measured": 0.3045812554881724,
+      "passed": true,
+      "required": 0.2893521927137638
+    },
+    "4_paired": {
+      "measured": 10,
+      "passed": true,
+      "required": 9
+    },
+    "5_own_cross_margin": {
+      "measured": 0.27370032940000916,
+      "passed": true,
+      "required": 0.22
+    },
+    "6_paraphrase_pack": {
+      "measured": 21,
+      "passed": false,
+      "required": 22
+    },
+    "7_ood_exit_4": {
+      "measured": true,
+      "passed": true
+    },
+    "8_out_of_scope_exit_5": {
+      "measured": false,
+      "passed": false
+    },
+    "9_no_gt_dependency": {
+      "measured": true,
+      "passed": true
+    }
+  },
+  "hardening_checkpoint": "evaluation/task6s_hardening_checkpoint.json",
+  "headline_metrics": {
+    "abstention_rate": 0.025000000000000022,
+    "answered_only_dice": 0.38494490136334186,
+    "answered_only_miou": 0.3045812554881724,
+    "answered_records": 234,
+    "dominant_bottleneck": "REFERENCE",
+    "own_cross_margin": 0.27370032940000916,
+    "paired": "10/20",
+    "paraphrase_pack": "21/24",
+    "parser_accuracy": 1.0,
+    "strict_all_240_dice": 0.3753212788292584,
+    "strict_all_240_miou": 0.2969667241009681
+  },
+  "no_module_or_threshold_changed_by_dsh": true,
+  "protocol": {
+    "changed_paths": "",
+    "clean": true,
+    "frozen_artifacts_unchanged": true,
+    "grcl_in_primary_chain": false,
+    "ground_truth_required_by_cli": false,
+    "oracle_reference_in_inference": false,
+    "test_split_used": false
+  },
+  "reason": "paraphrase accuracy 21/24 < 22",
+  "regression_check": {
+    "absolute_delta": 0.0,
+    "answered_records": 234,
+    "expected_task6q_answered_miou": 0.3045812554881724,
+    "material_difference": false,
+    "measured_answered_miou": 0.3045812554881724,
+    "parser_accuracy_is_1_0": true,
+    "same_answered_set": true,
+    "task6q_answered_records": 234,
+    "tolerance": 1e-06
+  },
+  "runtime_seconds": 0.04,
+  "task": "6S",
+  "test_split_used": false,
+  "verdict": "DIRECTIONAL_PARSER_HARDENING_REQUIRED"
+}

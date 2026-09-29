@@ -1,0 +1,62 @@
+{
+  "_doc": "Task 6S section 25. Architecture-freeze checkpoint: the integrated primary chain, the modules with positive evidence, the negative/non-primary evidence, the known technical debt, the dominant bottleneck computed by the fixed rule and the next research decision (always WAIT_FOR_CHATGPT). DSH does not prescribe a repair.",
+  "dominant_bottleneck": "REFERENCE",
+  "dominant_bottleneck_detail": {
+    "parser_fail": 0,
+    "parser_fail_rate": 0.0,
+    "reference_fail": 117,
+    "reference_fail_minus_target_fail": 50,
+    "target_fail": 67
+  },
+  "evidence_paths": {
+    "cli_prompt_audit": "evaluation/task6s_cli_prompt_audit.json",
+    "end_to_end": "evaluation/task6s_end_to_end_val.json",
+    "failure_attribution": "evaluation/task6s_failure_attribution.json",
+    "frozen_asset_audit": "evaluation/task6s_frozen_asset_audit.json",
+    "paired": "evaluation/task6s_end_to_end_paired_val.json",
+    "parser_audit": "evaluation/task6s_parser_val.json"
+  },
+  "frozen_asset_hashes": {
+    "program_head": "eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3",
+    "proposal_resolver": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "relation_field": "b6d3367f250549f02641a15097403f3290c7578894865451e3beb449359e2de6",
+    "target_decoder": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+  },
+  "known_technical_debt": [
+    "reference proposal coverage / extreme ranking, especially smallest",
+    "tiny buildings",
+    "directional-only current scope",
+    "no nearest",
+    "no L3 multi-hop",
+    "no cross-dataset generalization"
+  ],
+  "negative_or_non_primary_evidence": [
+    "Task6P dense ReferenceMaskHead",
+    "Task6R GRCL v0.1"
+  ],
+  "next_research_decision": "WAIT_FOR_CHATGPT",
+  "primary_chain": {
+    "grcl_primary": false,
+    "parser": "frozen Qwen3-VL-2B ProgramHead",
+    "reference": "frozen Task6Q proposal resolver",
+    "relation_field": "v0.2",
+    "target_decoder": "frozen Task6O B3"
+  },
+  "proven_positive_modules": [
+    "GeometricRelationField v0.2 + dense visual target decoder"
+  ],
+  "task": "6S",
+  "task6r_negative_evidence": {
+    "gate_erratum": "the predeclared Task 6R criterion `R1 relation_accuracy >= R0 relation_accuracy + 0.08` was ill-posed: the frozen baseline measured R0 = 0.95, leaving only 0.05 of headroom below the metric ceiling 1.0. This is recorded, not mutated; Task 6R artifacts and verdict are unchanged.",
+    "paired_r0": 14,
+    "paired_r1": 12,
+    "paired_transfer_r0": 10,
+    "paired_transfer_r1": 2,
+    "proposal_reference_transfer_miou": 0.3045812554881724,
+    "proposal_reference_transfer_r1_miou": 0.283782,
+    "r0_b3_miou": 0.4299680351479113,
+    "r0_relation_accuracy": 0.95,
+    "r1_b3_grcl_miou": 0.41185668634454997,
+    "r1_relation_accuracy": 0.9541666666666667
+  }
+}
