@@ -54,9 +54,24 @@ SAM2_SOURCE_REVISION_EXPECTED = "2b90b9f5ceec907a1c18123530e92e794ad901a4"
 WHU_SOURCE_ROOT = Path(r"C:\D\resources\Satellite dataset Ⅱ (East Asia)")
 
 VARIANTS: tuple[str, ...] = ("B0", "B1", "B2")
-VARIANT_LABELS = {"B0": "N-B0", "B1": "N-B1", "B2": "N-B2"}
-VARIANT_USES_REFERENCE = {"B0": False, "B1": True, "B2": True}
-VARIANT_USES_FIELD = {"B0": False, "B1": False, "B2": True}
+#: Task 6O section 8-9: two further causal-decomposition variants of the same decoder family.
+TASK6O_VARIANTS: tuple[str, ...] = ("B3", "B4")
+ALL_VARIANTS: tuple[str, ...] = VARIANTS + TASK6O_VARIANTS
+VARIANT_LABELS = {
+    "B0": "N-B0", "B1": "N-B1", "B2": "N-B2", "B3": "N-B3", "B4": "N-B4",
+}
+VARIANT_USES_REFERENCE = {
+    "B0": False, "B1": True, "B2": True,
+    # Task 6O: neither B3 nor B4 receives the direct reference-mask channel.
+    "B3": False, "B4": False,
+}
+VARIANT_USES_FIELD = {
+    "B0": False, "B1": False, "B2": True,
+    # B3 concatenates the raw field; B4 projects the field 1 -> 128 first (section 9).
+    "B3": True, "B4": False,
+}
+#: B4 is the geometry-only control: it receives no RGB-derived visual feature at all.
+VARIANT_USES_VISUAL = {"B0": True, "B1": True, "B2": True, "B3": True, "B4": False}
 
 
 # --------------------------------------------------------------------------- decoder
@@ -74,6 +89,8 @@ class DecoderConfig:
 
 
 def first_conv_in_channels(variant: str, config: DecoderConfig) -> int:
+    """Fusion-trunk input width. B3 = 128 + 1 + 16 = 145; B4 = 128 + 16 = 144."""
+
     channels = config.width + config.relation_dim
     if VARIANT_USES_REFERENCE[variant]:
         channels += 1
@@ -83,20 +100,33 @@ def first_conv_in_channels(variant: str, config: DecoderConfig) -> int:
 
 
 class RelationMaskDecoder(nn.Module):
-    """Section 9: visual projection → relation embedding → fusion trunk → single-channel logits."""
+    """Sections 9 (Task 6N) and 8-9 (Task 6O): visual/field projection → relation embedding → trunk.
+
+    B0/B1/B2 are the frozen Task 6N variants and keep their exact structure and parameter names.
+    B3 (visual + field + relation, no direct reference channel) and B4 (field + relation only, no
+    visual) are the Task 6O causal-decomposition variants.
+    """
 
     def __init__(self, variant: str, config: DecoderConfig | None = None) -> None:
         super().__init__()
-        if variant not in VARIANTS:
-            raise ValueError(f"unknown variant {variant!r}; expected one of {VARIANTS}")
+        if variant not in ALL_VARIANTS:
+            raise ValueError(f"unknown variant {variant!r}; expected one of {ALL_VARIANTS}")
         self.variant = variant
         self.config = config or DecoderConfig()
 
-        self.project = nn.Sequential(
-            nn.Conv2d(self.config.visual_channels, self.config.width, kernel_size=1),
-            nn.GroupNorm(self.config.norm_groups, self.config.width),
-            nn.GELU(),
-        )
+        if VARIANT_USES_VISUAL[variant]:
+            self.project = nn.Sequential(
+                nn.Conv2d(self.config.visual_channels, self.config.width, kernel_size=1),
+                nn.GroupNorm(self.config.norm_groups, self.config.width),
+                nn.GELU(),
+            )
+        else:
+            # Task 6O section 9: B4 projects the single-channel field to 128 channels instead.
+            self.field_project = nn.Sequential(
+                nn.Conv2d(1, self.config.width, kernel_size=1),
+                nn.GroupNorm(self.config.norm_groups, self.config.width),
+                nn.GELU(),
+            )
         self.relation_embedding = nn.Embedding(self.config.relation_count, self.config.relation_dim)
         nn.init.normal_(self.relation_embedding.weight, mean=0.0, std=0.02)
 
@@ -113,15 +143,28 @@ class RelationMaskDecoder(nn.Module):
 
     def forward(
         self,
-        visual: torch.Tensor,
+        visual: torch.Tensor | None,
         relation_index: torch.Tensor,
         mask_ref_down: torch.Tensor | None = None,
         field: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        """Return logits at the native visual resolution (``h, w``)."""
+        """Return logits at the native feature resolution (``h, w``).
 
-        projected = self.project(visual)
-        batch, _, height, width = projected.shape
+        Extra tensors that a variant does not use are simply ignored, so the "not used" property is
+        directly testable. ``mask_ref_down`` is never read by B3 or B4, and B4 never reads ``visual``.
+        """
+
+        if VARIANT_USES_VISUAL[self.variant]:
+            if visual is None:
+                raise ValueError(f"{self.variant} requires the frozen visual feature")
+            projected = self.project(visual)
+            batch, _, height, width = projected.shape
+        else:
+            if field is None:
+                raise ValueError(f"{self.variant} requires the relation field")
+            projected = self.field_project(field)
+            batch, _, height, width = projected.shape
+
         embedding = self.relation_embedding(relation_index).view(batch, -1, 1, 1)
         embedding = embedding.expand(batch, self.config.relation_dim, height, width)
 
@@ -140,19 +183,24 @@ class RelationMaskDecoder(nn.Module):
     def parameter_report(self) -> dict:
         total = sum(parameter.numel() for parameter in self.parameters())
         trainable = sum(parameter.numel() for parameter in self.parameters() if parameter.requires_grad)
+        by_module = {
+            "relation_embedding": int(sum(p.numel() for p in self.relation_embedding.parameters())),
+            "trunk": int(sum(p.numel() for p in self.trunk.parameters())),
+        }
+        if VARIANT_USES_VISUAL[self.variant]:
+            by_module["project"] = int(sum(p.numel() for p in self.project.parameters()))
+        else:
+            by_module["field_project"] = int(sum(p.numel() for p in self.field_project.parameters()))
         return {
             "variant": self.variant,
             "label": VARIANT_LABELS[self.variant],
             "first_conv_in_channels": first_conv_in_channels(self.variant, self.config),
+            "uses_visual": VARIANT_USES_VISUAL[self.variant],
             "uses_reference_mask": VARIANT_USES_REFERENCE[self.variant],
             "uses_relation_field": VARIANT_USES_FIELD[self.variant],
             "total_parameters": int(total),
             "trainable_parameters": int(trainable),
-            "by_module": {
-                "project": int(sum(p.numel() for p in self.project.parameters())),
-                "relation_embedding": int(sum(p.numel() for p in self.relation_embedding.parameters())),
-                "trunk": int(sum(p.numel() for p in self.trunk.parameters())),
-            },
+            "by_module": by_module,
         }
 
 
@@ -400,6 +448,7 @@ def collate_samples(
 
 
 __all__ = [
+    "ALL_VARIANTS",
     "DIRECTIONAL_PROGRAMS",
     "DecoderConfig",
     "FrozenFeatureStore",
@@ -407,12 +456,14 @@ __all__ = [
     "RelationMaskDecoder",
     "SAM2_CHECKPOINT",
     "SAM2_CONFIG_NAME",
+    "TASK6O_VARIANTS",
     "Task6NBatch",
     "Task6NSample",
     "VARIANTS",
     "VARIANT_LABELS",
     "VARIANT_USES_FIELD",
     "VARIANT_USES_REFERENCE",
+    "VARIANT_USES_VISUAL",
     "WHU_SOURCE_ROOT",
     "collate_samples",
     "first_conv_in_channels",
