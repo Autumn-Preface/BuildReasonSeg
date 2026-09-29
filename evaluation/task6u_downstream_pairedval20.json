@@ -1,0 +1,42 @@
+{
+  "_doc": "Task 6U section 20. PairedVal20 through the three reference systems with canonical program ids; a pair passes only if both members prefer their own GT target over the paired alternative by IoU.",
+  "task": "6U",
+  "stage": "I-downstream-pairedval20",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json",
+    "pairs": 20,
+    "sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3"
+  },
+  "systems": {
+    "U-S0": {
+      "passed": 10,
+      "pairs": 20,
+      "mean_own_iou": 0.2779456770946652,
+      "mean_cross_iou": 0.0042453476946561096,
+      "own_cross_margin": 0.2737003294000091,
+      "reference_abstention_pairs": 0
+    },
+    "U-S1": {
+      "passed": 11,
+      "pairs": 20,
+      "mean_own_iou": 0.32486974166141314,
+      "mean_cross_iou": 0.003987540932794465,
+      "own_cross_margin": 0.32088220072861867,
+      "reference_abstention_pairs": 0
+    },
+    "U-S2": {
+      "passed": 11,
+      "pairs": 20,
+      "mean_own_iou": 0.336263585099329,
+      "mean_cross_iou": 0.003089312591311396,
+      "own_cross_margin": 0.3331742725080176,
+      "reference_abstention_pairs": 0
+    }
+  },
+  "configs": {
+    "U-S0": "U-C0",
+    "U-S1": "U-C1",
+    "U-S2": "U-C1"
+  },
+  "test_split_used": false
+}

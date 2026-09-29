@@ -1,0 +1,187 @@
+{
+  "_doc": "Task 6U section 19. Downstream causal evaluation on MiniVal240 with canonical program ids (no parser): canonical program -> family/relation -> U-S0/U-S1/U-S2 reference -> field v0.2 -> frozen SAM2 feature -> frozen B3 -> target mask. Only the proposal/reference stage differs between systems. GT is for evaluation only.",
+  "task": "6U",
+  "stage": "I-downstream-minival240",
+  "reference_source": "predicted_proposal_reference",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+    "records": 240,
+    "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+  },
+  "configs": {
+    "U-S0": "U-C0",
+    "U-S1": "U-C1",
+    "U-S2": "U-C1"
+  },
+  "selectors": {
+    "U-S0": "deterministic",
+    "U-S1": "deterministic",
+    "U-S2": "ranker"
+  },
+  "target_decoder": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+  },
+  "systems": {
+    "U-S0": {
+      "label": "U-S0",
+      "records": 240,
+      "strict_all_miou": 0.2969667241009681,
+      "strict_all_dice": 0.3753212788292584,
+      "answered_records": 234,
+      "answered_only_miou": 0.3045812554881724,
+      "answered_only_dice": 0.3849449013633419,
+      "precision_at_0_5": 0.2916666666666667,
+      "abstentions": 6,
+      "abstention_rate": 0.025,
+      "reference_fail_count": 117,
+      "parser_fail_count": 0,
+      "parser_bucket_status": "not applicable (canonical program ids)",
+      "buckets": {
+        "NO_PROPOSALS": 3,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 68,
+        "REFERENCE_SELECTION_WRONG": 42,
+        "SELECTED_MASK_GEOMETRY_POOR": 1,
+        "REFERENCE_OK": 0,
+        "TARGET_FAIL_WITH_REFERENCE_OK": 67,
+        "TARGET_OK": 56
+      },
+      "largest": {
+        "records": 120,
+        "miou": 0.33221314672278296
+      },
+      "smallest": {
+        "records": 120,
+        "miou": 0.26172030147915315
+      },
+      "per_direction": {
+        "left_of": 0.329744361889556,
+        "right_of": 0.23058052998512055,
+        "above": 0.3291496641462853,
+        "below": 0.2983923403829104
+      },
+      "border_target": {
+        "records": 114,
+        "miou": 0.294267348072426
+      },
+      "tiny_target": {
+        "records": 4,
+        "miou": 7.42794373054799e-08
+      },
+      "reference_miou": {
+        "mean": 0.42802505734489843,
+        "precision_at_0_5": 0.5299145299145299,
+        "centroid_median": 0.014374223063578625
+      }
+    },
+    "U-S1": {
+      "label": "U-S1",
+      "records": 240,
+      "strict_all_miou": 0.3089007548027875,
+      "strict_all_dice": 0.3895799147410453,
+      "answered_records": 236,
+      "answered_only_miou": 0.31413636081639407,
+      "answered_only_dice": 0.396182964143436,
+      "precision_at_0_5": 0.3125,
+      "abstentions": 4,
+      "abstention_rate": 0.016666666666666666,
+      "reference_fail_count": 115,
+      "parser_fail_count": 0,
+      "parser_bucket_status": "not applicable (canonical program ids)",
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 54,
+        "REFERENCE_SELECTION_WRONG": 57,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 0,
+        "TARGET_FAIL_WITH_REFERENCE_OK": 69,
+        "TARGET_OK": 56
+      },
+      "largest": {
+        "records": 120,
+        "miou": 0.32413485375787326
+      },
+      "smallest": {
+        "records": 120,
+        "miou": 0.29366665584770174
+      },
+      "per_direction": {
+        "left_of": 0.3582755568000863,
+        "right_of": 0.25139096797490074,
+        "above": 0.33072395744328403,
+        "below": 0.29521253699287886
+      },
+      "border_target": {
+        "records": 114,
+        "miou": 0.2895708330732922
+      },
+      "tiny_target": {
+        "records": 4,
+        "miou": 7.42794373054799e-08
+      },
+      "reference_miou": {
+        "mean": 0.4362263200504391,
+        "precision_at_0_5": 0.5296610169491526,
+        "centroid_median": 0.013425216503756634
+      }
+    },
+    "U-S2": {
+      "label": "U-S2",
+      "records": 240,
+      "strict_all_miou": 0.242473910471719,
+      "strict_all_dice": 0.31153033393899426,
+      "answered_records": 236,
+      "answered_only_miou": 0.2465836377678498,
+      "answered_only_dice": 0.31681050909050257,
+      "precision_at_0_5": 0.22916666666666666,
+      "abstentions": 4,
+      "abstention_rate": 0.016666666666666666,
+      "reference_fail_count": 158,
+      "parser_fail_count": 0,
+      "parser_bucket_status": "not applicable (canonical program ids)",
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 54,
+        "REFERENCE_SELECTION_WRONG": 100,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 0,
+        "TARGET_FAIL_WITH_REFERENCE_OK": 45,
+        "TARGET_OK": 37
+      },
+      "largest": {
+        "records": 120,
+        "miou": 0.33930113458780287
+      },
+      "smallest": {
+        "records": 120,
+        "miou": 0.14564668635563516
+      },
+      "per_direction": {
+        "left_of": 0.2882777505108069,
+        "right_of": 0.14850704536628292,
+        "above": 0.2679402318699952,
+        "below": 0.26517061413979093
+      },
+      "border_target": {
+        "records": 114,
+        "miou": 0.2666497069028388
+      },
+      "tiny_target": {
+        "records": 4,
+        "miou": 7.42794373054799e-08
+      },
+      "reference_miou": {
+        "mean": 0.30464424169765586,
+        "precision_at_0_5": 0.3474576271186441,
+        "centroid_median": 0.08960331238300993
+      }
+    }
+  },
+  "test_split_used": false,
+  "parser_used": false,
+  "runtime_seconds": 24.0
+}

@@ -1,0 +1,194 @@
+{
+  "_doc": "Task 6U section 11. Reference candidate audit on the untouched Task 6P RefValUnique: the frozen U-C0 baseline configuration versus the frozen selected configuration, with the oracle-selection ceiling (diagnostic only; GT never enters inference).",
+  "task": "6U",
+  "stage": "F-refval-candidate-audit",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_val_unique.json",
+    "records": 219,
+    "sha256": "3896e11ba82b01aa1b46bcc91a02b2cf11824a5dcf32e92f7b541148253cb498",
+    "by_family": {
+      "largest": 110,
+      "smallest": 109
+    }
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+  },
+  "configs": {
+    "baseline": {
+      "id": "U-C0",
+      "label": "frozen baseline",
+      "imgsz": 640,
+      "conf": 0.1,
+      "max_det": 100,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "coverage": {
+        "overall": {
+          "records": 219,
+          "all_coverage@0.25": 0.7488584474885844,
+          "eligible_coverage@0.25": 0.7397260273972602,
+          "all_coverage@0.50": 0.6940639269406392,
+          "eligible_coverage@0.50": 0.6894977168949772,
+          "all_coverage@0.75": 0.4611872146118721,
+          "eligible_coverage@0.75": 0.45662100456621,
+          "no_proposals": 3,
+          "no_eligible": 6,
+          "eligible_per_record_mean": 6.36986301369863
+        },
+        "largest": {
+          "records": 110,
+          "all_coverage@0.25": 0.9,
+          "eligible_coverage@0.25": 0.9,
+          "all_coverage@0.50": 0.8363636363636363,
+          "eligible_coverage@0.50": 0.8363636363636363,
+          "all_coverage@0.75": 0.6090909090909091,
+          "eligible_coverage@0.75": 0.6,
+          "no_proposals": 1,
+          "no_eligible": 1,
+          "eligible_per_record_mean": 7.627272727272727
+        },
+        "smallest": {
+          "records": 109,
+          "all_coverage@0.25": 0.5963302752293578,
+          "eligible_coverage@0.25": 0.5779816513761468,
+          "all_coverage@0.50": 0.5504587155963303,
+          "eligible_coverage@0.50": 0.5412844036697247,
+          "all_coverage@0.75": 0.3119266055045872,
+          "eligible_coverage@0.75": 0.3119266055045872,
+          "no_proposals": 2,
+          "no_eligible": 5,
+          "eligible_per_record_mean": 5.10091743119266
+        }
+      },
+      "tiles": {
+        "tiles": 212,
+        "mean_seconds_per_tile": 0.04441650943396227,
+        "peak_vram_gb": 0.264
+      }
+    },
+    "selected": {
+      "id": "U-C1",
+      "label": "lower confidence / larger candidate cap",
+      "imgsz": 640,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "coverage": {
+        "overall": {
+          "records": 219,
+          "all_coverage@0.25": 0.817351598173516,
+          "eligible_coverage@0.25": 0.817351598173516,
+          "all_coverage@0.50": 0.7534246575342466,
+          "eligible_coverage@0.50": 0.7534246575342466,
+          "all_coverage@0.75": 0.4748858447488584,
+          "eligible_coverage@0.75": 0.4703196347031963,
+          "no_proposals": 1,
+          "no_eligible": 4,
+          "eligible_per_record_mean": 8.105022831050228
+        },
+        "largest": {
+          "records": 110,
+          "all_coverage@0.25": 0.9545454545454546,
+          "eligible_coverage@0.25": 0.9545454545454546,
+          "all_coverage@0.50": 0.8727272727272727,
+          "eligible_coverage@0.50": 0.8727272727272727,
+          "all_coverage@0.75": 0.6272727272727273,
+          "eligible_coverage@0.75": 0.6181818181818182,
+          "no_proposals": 0,
+          "no_eligible": 0,
+          "eligible_per_record_mean": 9.672727272727272
+        },
+        "smallest": {
+          "records": 109,
+          "all_coverage@0.25": 0.6788990825688074,
+          "eligible_coverage@0.25": 0.6788990825688074,
+          "all_coverage@0.50": 0.6330275229357798,
+          "eligible_coverage@0.50": 0.6330275229357798,
+          "all_coverage@0.75": 0.3211009174311927,
+          "eligible_coverage@0.75": 0.3211009174311927,
+          "no_proposals": 1,
+          "no_eligible": 4,
+          "eligible_per_record_mean": 6.522935779816514
+        }
+      },
+      "tiles": {
+        "tiles": 212,
+        "mean_seconds_per_tile": 0.016783018867924528,
+        "peak_vram_gb": 0.267
+      }
+    }
+  },
+  "oracle_selection_ceiling": {
+    "baseline": {
+      "available_records": 213,
+      "overall": {
+        "records": 213,
+        "selected_reference_miou": 0.576364747677947,
+        "dice": 0.6565955665583735,
+        "precision_at_0_5": 0.7089201877934272,
+        "centroid_error_median": 0.005286470772476377,
+        "centroid_error_p90": 0.2255792876986603
+      },
+      "largest": {
+        "records": 109,
+        "selected_reference_miou": 0.6964521824910347,
+        "dice": 0.7887769523749807,
+        "precision_at_0_5": 0.8440366972477065,
+        "centroid_error_median": 0.004532509445130329,
+        "centroid_error_p90": 0.04715663985378157
+      },
+      "smallest": {
+        "records": 104,
+        "selected_reference_miou": 0.4505038784988453,
+        "dice": 0.5180593064236599,
+        "precision_at_0_5": 0.5673076923076923,
+        "centroid_error_median": 0.006633970059049275,
+        "centroid_error_p90": 0.37036241231886463
+      }
+    },
+    "selected": {
+      "available_records": 215,
+      "overall": {
+        "records": 215,
+        "selected_reference_miou": 0.6202994712525458,
+        "dice": 0.7091789625568412,
+        "precision_at_0_5": 0.7674418604651163,
+        "centroid_error_median": 0.004642266288301866,
+        "centroid_error_p90": 0.1080499331154414
+      },
+      "largest": {
+        "records": 110,
+        "selected_reference_miou": 0.7221030801796035,
+        "dice": 0.8182555646951024,
+        "precision_at_0_5": 0.8727272727272727,
+        "centroid_error_median": 0.004417634839048317,
+        "centroid_error_p90": 0.033053359990629506
+      },
+      "smallest": {
+        "records": 105,
+        "selected_reference_miou": 0.5136480714241995,
+        "dice": 0.5949082365072338,
+        "precision_at_0_5": 0.6571428571428571,
+        "centroid_error_median": 0.005098795109642843,
+        "centroid_error_p90": 0.2650971573158523
+      }
+    }
+  },
+  "candidate_coverage_improved": true,
+  "delta": {
+    "overall_eligible_coverage@0.50": 0.0639269406392694,
+    "smallest_eligible_coverage@0.50": 0.09174311926605505,
+    "largest_eligible_coverage@0.50": 0.036363636363636376
+  },
+  "task6q_reference_values": {
+    "overall": 0.6895,
+    "largest": 0.8364,
+    "smallest": 0.5413
+  },
+  "test_split_used": false
+}

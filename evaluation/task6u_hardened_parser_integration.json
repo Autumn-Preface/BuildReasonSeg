@@ -1,0 +1,38 @@
+{
+  "_doc": "Task 6U section 21. One final integration check: the Task 6T hardened ProgramHead + the U-S2 reference path + the frozen field/B3 on MiniVal240. Never used to train or choose U-S2; no nearest/L3 execution is evaluated.",
+  "task": "6U",
+  "stage": "J-hardened-parser-integration",
+  "parser_checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e"
+  },
+  "reference_system": "U-S2",
+  "reference_config": "U-C1",
+  "target_decoder": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+  },
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+    "records": 240
+  },
+  "parser": {
+    "exact_correct": 240,
+    "records": 240,
+    "exact_accuracy": 1.0
+  },
+  "strict_all_miou": 0.242473910471719,
+  "answered_only_miou": 0.2465836377678498,
+  "abstentions": 4,
+  "abstention_rate": 0.016666666666666666,
+  "buckets": {
+    "TARGET_FAIL_WITH_REFERENCE_OK": 181,
+    "TARGET_OK": 55,
+    "REFERENCE_NOT_COVERED_IOU50": 4
+  },
+  "reference_fail_count": 4,
+  "nearest_or_l3_execution_evaluated": false,
+  "test_split_used": false,
+  "runtime_seconds": 57.4
+}
