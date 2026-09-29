@@ -1,0 +1,1249 @@
+{
+  "_doc": "Task 6P section 3.4. GeometricRelationField v0.2 autocraft audit: numerical equivalence to the frozen v0.1 on deterministic binary oracle reference masks, plus a gradient check on deterministic non-binary soft masks.",
+  "eps_effect": {
+    "eps": 1e-06,
+    "note": "v0.2 adds eps=1e-6 to the mask mass so it stays well defined for a vanishing soft mask; for a binary mask with area A the centroid perturbation is ~1e-6/A, which is why the measured error above stays inside the fixed v0.1-equivalence tolerances"
+  },
+  "equivalence": {
+    "masks": 64,
+    "max_abs_error": 0.0,
+    "max_abs_ok": true,
+    "max_abs_tolerance": 1e-06,
+    "mean_abs_error": 0.0,
+    "mean_abs_ok": true,
+    "mean_abs_tolerance": 1e-07,
+    "passed": true,
+    "per_direction": {
+      "above": 16,
+      "below": 16,
+      "left_of": 16,
+      "right_of": 16
+    },
+    "worst_rows": [
+      {
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "reference_area_px": 24485,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1036_2_largest_to_left_of_64ac0904911f",
+        "tile_id": "2_1036",
+        "v01_centroid": [
+          0.2872230112552643,
+          0.47408556938171387
+        ],
+        "v02_centroid": [
+          0.2872230112552643,
+          0.47408556938171387
+        ]
+      },
+      {
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "reference_area_px": 283,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1038_2_smallest_to_left_of_7a5ba53b2985",
+        "tile_id": "2_1038",
+        "v01_centroid": [
+          0.2806530296802521,
+          0.046381544321775436
+        ],
+        "v02_centroid": [
+          0.2806530296802521,
+          0.046381544321775436
+        ]
+      },
+      {
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "reference_area_px": 1259,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1066_2_smallest_to_left_of_238fbb681f30",
+        "tile_id": "2_1066",
+        "v01_centroid": [
+          0.8975369334220886,
+          0.5278269648551941
+        ],
+        "v02_centroid": [
+          0.8975369334220886,
+          0.5278269648551941
+        ]
+      },
+      {
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "reference_area_px": 1221,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1078_2_smallest_to_left_of_1940ecc0e10e",
+        "tile_id": "2_1078",
+        "v01_centroid": [
+          0.5826351046562195,
+          0.5934484601020813
+        ],
+        "v02_centroid": [
+          0.5826351046562195,
+          0.5934484601020813
+        ]
+      },
+      {
+        "max_abs_error": 0.0,
+        "mean_abs_error": 0.0,
+        "reference_area_px": 4496,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1082_2_largest_to_left_of_b50d8366a4f1",
+        "tile_id": "2_1082",
+        "v01_centroid": [
+          0.3671623170375824,
+          0.17477254569530487
+        ],
+        "v02_centroid": [
+          0.3671623170375824,
+          0.17477254569530487
+        ]
+      }
+    ]
+  },
+  "gradient_check": {
+    "all_four_directions": true,
+    "directions": [
+      "above",
+      "below",
+      "left_of",
+      "right_of"
+    ],
+    "masks": 8,
+    "min_gradient_l1": 1e-08,
+    "passed": true,
+    "rows": [
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 12735.56640625,
+        "gradient_max_abs": 8.469191551208496,
+        "index": 0,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "left_of",
+        "scalar": 799.3687133789062
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 27288.46484375,
+        "gradient_max_abs": 18.738237380981445,
+        "index": 1,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "right_of",
+        "scalar": 4010.33837890625
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 11986.5322265625,
+        "gradient_max_abs": 7.605955123901367,
+        "index": 2,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "above",
+        "scalar": 1248.3843994140625
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 25317.775390625,
+        "gradient_max_abs": 17.089252471923828,
+        "index": 3,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "below",
+        "scalar": 5112.0546875
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 17852.142578125,
+        "gradient_max_abs": 11.191524505615234,
+        "index": 4,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "left_of",
+        "scalar": 1604.966064453125
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 22641.3671875,
+        "gradient_max_abs": 13.602239608764648,
+        "index": 5,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "right_of",
+        "scalar": 2514.467041015625
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 11833.330078125,
+        "gradient_max_abs": 7.483841896057129,
+        "index": 6,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "above",
+        "scalar": 1053.0845947265625
+      },
+      {
+        "gradient_exists": true,
+        "gradient_finite": true,
+        "gradient_l1": 23106.166015625,
+        "gradient_max_abs": 13.246702194213867,
+        "index": 7,
+        "mask_is_non_binary": true,
+        "passed": true,
+        "relation": "below",
+        "scalar": 4914.49072265625
+      }
+    ],
+    "weighting": "W = 1 + 2x + 3y^2 (fixed nonuniform)"
+  },
+  "reference_source": "oracle_native_gt",
+  "rows": [
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 24485,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1036_2_largest_to_left_of_64ac0904911f",
+      "tile_id": "2_1036",
+      "v01_centroid": [
+        0.2872230112552643,
+        0.47408556938171387
+      ],
+      "v02_centroid": [
+        0.2872230112552643,
+        0.47408556938171387
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 283,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1038_2_smallest_to_left_of_7a5ba53b2985",
+      "tile_id": "2_1038",
+      "v01_centroid": [
+        0.2806530296802521,
+        0.046381544321775436
+      ],
+      "v02_centroid": [
+        0.2806530296802521,
+        0.046381544321775436
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1259,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1066_2_smallest_to_left_of_238fbb681f30",
+      "tile_id": "2_1066",
+      "v01_centroid": [
+        0.8975369334220886,
+        0.5278269648551941
+      ],
+      "v02_centroid": [
+        0.8975369334220886,
+        0.5278269648551941
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1221,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1078_2_smallest_to_left_of_1940ecc0e10e",
+      "tile_id": "2_1078",
+      "v01_centroid": [
+        0.5826351046562195,
+        0.5934484601020813
+      ],
+      "v02_centroid": [
+        0.5826351046562195,
+        0.5934484601020813
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 4496,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1082_2_largest_to_left_of_b50d8366a4f1",
+      "tile_id": "2_1082",
+      "v01_centroid": [
+        0.3671623170375824,
+        0.17477254569530487
+      ],
+      "v02_centroid": [
+        0.3671623170375824,
+        0.17477254569530487
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 7450,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_109_2_largest_to_left_of_87f1a37bfeb4",
+      "tile_id": "2_109",
+      "v01_centroid": [
+        0.45057806372642517,
+        0.3381131887435913
+      ],
+      "v02_centroid": [
+        0.45057806372642517,
+        0.3381131887435913
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 319,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1133_2_smallest_to_left_of_ed37567733f9",
+      "tile_id": "2_1133",
+      "v01_centroid": [
+        0.3564453125,
+        0.6601899266242981
+      ],
+      "v02_centroid": [
+        0.3564453125,
+        0.6601899266242981
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2662,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1211_2_largest_to_left_of_2a084ad072bf",
+      "tile_id": "2_1211",
+      "v01_centroid": [
+        0.5652374625205994,
+        0.6662709712982178
+      ],
+      "v02_centroid": [
+        0.5652374625205994,
+        0.6662709712982178
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2676,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1274_2_largest_to_left_of_e8aae976a8e4",
+      "tile_id": "2_1274",
+      "v01_centroid": [
+        0.16665279865264893,
+        0.7417590618133545
+      ],
+      "v02_centroid": [
+        0.16665279865264893,
+        0.7417590618133545
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 750,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1291_2_smallest_to_left_of_4722c9828f38",
+      "tile_id": "2_1291",
+      "v01_centroid": [
+        0.32659634947776794,
+        0.3348463475704193
+      ],
+      "v02_centroid": [
+        0.32659634947776794,
+        0.3348463475704193
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 3640,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1324_2_largest_to_left_of_37d8a502ecfb",
+      "tile_id": "2_1324",
+      "v01_centroid": [
+        0.29442286491394043,
+        0.1160515770316124
+      ],
+      "v02_centroid": [
+        0.29442286491394043,
+        0.1160515770316124
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1618,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1334_2_smallest_to_left_of_121a76743d50",
+      "tile_id": "2_1334",
+      "v01_centroid": [
+        0.5714616775512695,
+        0.4806751608848572
+      ],
+      "v02_centroid": [
+        0.5714616775512695,
+        0.4806751608848572
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1985,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1385_2_largest_to_left_of_19c75b7efff7",
+      "tile_id": "2_1385",
+      "v01_centroid": [
+        0.45124125480651855,
+        0.8538103103637695
+      ],
+      "v02_centroid": [
+        0.45124125480651855,
+        0.8538103103637695
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 892,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1464_2_smallest_to_left_of_f90d4fdd0f23",
+      "tile_id": "2_1464",
+      "v01_centroid": [
+        0.41751551628112793,
+        0.7224767208099365
+      ],
+      "v02_centroid": [
+        0.41751551628112793,
+        0.7224767208099365
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 4182,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1622_2_largest_to_left_of_4569e247bcc3",
+      "tile_id": "2_1622",
+      "v01_centroid": [
+        0.27118080854415894,
+        0.8936709761619568
+      ],
+      "v02_centroid": [
+        0.27118080854415894,
+        0.8936709761619568
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 4303,
+      "relation": "left_of",
+      "sample_id": "buildsr_val_2_1626_2_largest_to_left_of_03d2a0775a6b",
+      "tile_id": "2_1626",
+      "v01_centroid": [
+        0.1553269922733307,
+        0.6889703869819641
+      ],
+      "v02_centroid": [
+        0.1553269922733307,
+        0.6889703869819641
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 3747,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_103_2_largest_to_right_of_57c49e3c4a4c",
+      "tile_id": "2_103",
+      "v01_centroid": [
+        0.7858893871307373,
+        0.6128029823303223
+      ],
+      "v02_centroid": [
+        0.7858893871307373,
+        0.6128029823303223
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1762,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1129_2_largest_to_right_of_f3758e3f181e",
+      "tile_id": "2_1129",
+      "v01_centroid": [
+        0.592466413974762,
+        0.32470980286598206
+      ],
+      "v02_centroid": [
+        0.592466413974762,
+        0.32470980286598206
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 420,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1158_2_smallest_to_right_of_d5d922ba713b",
+      "tile_id": "2_1158",
+      "v01_centroid": [
+        0.4765625,
+        0.0166015625
+      ],
+      "v02_centroid": [
+        0.4765625,
+        0.0166015625
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 924,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1163_2_smallest_to_right_of_30df32d3b7dd",
+      "tile_id": "2_1163",
+      "v01_centroid": [
+        0.48824742436408997,
+        0.5708853602409363
+      ],
+      "v02_centroid": [
+        0.48824742436408997,
+        0.5708853602409363
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 333,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1203_2_smallest_to_right_of_dc21cf4346a5",
+      "tile_id": "2_1203",
+      "v01_centroid": [
+        0.5759050250053406,
+        0.14752545952796936
+      ],
+      "v02_centroid": [
+        0.5759050250053406,
+        0.14752545952796936
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2667,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1215_2_largest_to_right_of_7e361ace2b20",
+      "tile_id": "2_1215",
+      "v01_centroid": [
+        0.5761693120002747,
+        0.4792468547821045
+      ],
+      "v02_centroid": [
+        0.5761693120002747,
+        0.4792468547821045
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2227,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1258_2_largest_to_right_of_2d78c685b14a",
+      "tile_id": "2_1258",
+      "v01_centroid": [
+        0.13404515385627747,
+        0.5676634311676025
+      ],
+      "v02_centroid": [
+        0.13404515385627747,
+        0.5676634311676025
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1550,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1269_2_smallest_to_right_of_48771a7ca0da",
+      "tile_id": "2_1269",
+      "v01_centroid": [
+        0.0686517134308815,
+        0.6049533486366272
+      ],
+      "v02_centroid": [
+        0.0686517134308815,
+        0.6049533486366272
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2676,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1274_2_largest_to_right_of_cf62110fc62f",
+      "tile_id": "2_1274",
+      "v01_centroid": [
+        0.16665279865264893,
+        0.7417590618133545
+      ],
+      "v02_centroid": [
+        0.16665279865264893,
+        0.7417590618133545
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 5237,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1306_2_largest_to_right_of_41ce23734424",
+      "tile_id": "2_1306",
+      "v01_centroid": [
+        0.875740110874176,
+        0.14732332527637482
+      ],
+      "v02_centroid": [
+        0.875740110874176,
+        0.14732332527637482
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 754,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1351_2_smallest_to_right_of_c753d07570ca",
+      "tile_id": "2_1351",
+      "v01_centroid": [
+        0.4478665888309479,
+        0.024960625916719437
+      ],
+      "v02_centroid": [
+        0.4478665888309479,
+        0.024960625916719437
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 6516,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1501_2_largest_to_right_of_984dbac831b0",
+      "tile_id": "2_1501",
+      "v01_centroid": [
+        0.22461088001728058,
+        0.7968875765800476
+      ],
+      "v02_centroid": [
+        0.22461088001728058,
+        0.7968875765800476
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 3517,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1552_2_largest_to_right_of_4121da0a3d75",
+      "tile_id": "2_1552",
+      "v01_centroid": [
+        0.6564224362373352,
+        0.6529037952423096
+      ],
+      "v02_centroid": [
+        0.6564224362373352,
+        0.6529037952423096
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 803,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1730_2_smallest_to_right_of_5ede871a4d1d",
+      "tile_id": "2_1730",
+      "v01_centroid": [
+        0.19920051097869873,
+        0.9165008664131165
+      ],
+      "v02_centroid": [
+        0.19920051097869873,
+        0.9165008664131165
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 214,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1931_2_smallest_to_right_of_d956435a989b",
+      "tile_id": "2_1931",
+      "v01_centroid": [
+        0.7628322243690491,
+        0.05221414938569069
+      ],
+      "v02_centroid": [
+        0.7628322243690491,
+        0.05221414938569069
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2862,
+      "relation": "right_of",
+      "sample_id": "buildsr_val_2_1987_2_largest_to_right_of_43c5a99e720e",
+      "tile_id": "2_1987",
+      "v01_centroid": [
+        0.6780469417572021,
+        0.5986328125
+      ],
+      "v02_centroid": [
+        0.6780469417572021,
+        0.5986328125
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1402,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1001_2_largest_to_above_97e1aa8e0db3",
+      "tile_id": "2_1001",
+      "v01_centroid": [
+        0.526785135269165,
+        0.5981494188308716
+      ],
+      "v02_centroid": [
+        0.526785135269165,
+        0.5981494188308716
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 3842,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1002_2_largest_to_above_0fc35aa0f4dc",
+      "tile_id": "2_1002",
+      "v01_centroid": [
+        0.15129855275154114,
+        0.5286873579025269
+      ],
+      "v02_centroid": [
+        0.15129855275154114,
+        0.5286873579025269
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1774,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1005_2_largest_to_above_2b2a099dff06",
+      "tile_id": "2_1005",
+      "v01_centroid": [
+        0.619318962097168,
+        0.2105543613433838
+      ],
+      "v02_centroid": [
+        0.619318962097168,
+        0.2105543613433838
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 247,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1042_2_smallest_to_above_f85e192c99fb",
+      "tile_id": "2_1042",
+      "v01_centroid": [
+        0.9697265625,
+        0.3310546875
+      ],
+      "v02_centroid": [
+        0.9697265625,
+        0.3310546875
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1259,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1066_2_smallest_to_above_acd174ea374d",
+      "tile_id": "2_1066",
+      "v01_centroid": [
+        0.8975369334220886,
+        0.5278269648551941
+      ],
+      "v02_centroid": [
+        0.8975369334220886,
+        0.5278269648551941
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 319,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1133_2_smallest_to_above_bfdd687694e2",
+      "tile_id": "2_1133",
+      "v01_centroid": [
+        0.3564453125,
+        0.6601899266242981
+      ],
+      "v02_centroid": [
+        0.3564453125,
+        0.6601899266242981
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 691,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1164_2_smallest_to_above_2b8628411581",
+      "tile_id": "2_1164",
+      "v01_centroid": [
+        0.4115454852581024,
+        0.7735010981559753
+      ],
+      "v02_centroid": [
+        0.4115454852581024,
+        0.7735010981559753
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 333,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1203_2_smallest_to_above_64506653e6c4",
+      "tile_id": "2_1203",
+      "v01_centroid": [
+        0.5759050250053406,
+        0.14752545952796936
+      ],
+      "v02_centroid": [
+        0.5759050250053406,
+        0.14752545952796936
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1905,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1272_2_largest_to_above_b32fb8b54180",
+      "tile_id": "2_1272",
+      "v01_centroid": [
+        0.23983913660049438,
+        0.20655091106891632
+      ],
+      "v02_centroid": [
+        0.23983913660049438,
+        0.20655091106891632
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1618,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1334_2_smallest_to_above_118a6e3c74de",
+      "tile_id": "2_1334",
+      "v01_centroid": [
+        0.5714616775512695,
+        0.4806751608848572
+      ],
+      "v02_centroid": [
+        0.5714616775512695,
+        0.4806751608848572
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1859,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1336_2_largest_to_above_40f1e7f85096",
+      "tile_id": "2_1336",
+      "v01_centroid": [
+        0.18321815133094788,
+        0.4793934226036072
+      ],
+      "v02_centroid": [
+        0.18321815133094788,
+        0.4793934226036072
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 39668,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1436_2_largest_to_above_255e94ad3698",
+      "tile_id": "2_1436",
+      "v01_centroid": [
+        0.739751935005188,
+        0.6582903861999512
+      ],
+      "v02_centroid": [
+        0.739751935005188,
+        0.6582903861999512
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2756,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1591_2_largest_to_above_abe4e2e4a91a",
+      "tile_id": "2_1591",
+      "v01_centroid": [
+        0.18172353506088257,
+        0.2616322934627533
+      ],
+      "v02_centroid": [
+        0.18172353506088257,
+        0.2616322934627533
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2116,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1603_2_smallest_to_above_159bbfb4400f",
+      "tile_id": "2_1603",
+      "v01_centroid": [
+        0.9112749695777893,
+        0.267216295003891
+      ],
+      "v02_centroid": [
+        0.9112749695777893,
+        0.267216295003891
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 839,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1605_2_smallest_to_above_cad894274dbc",
+      "tile_id": "2_1605",
+      "v01_centroid": [
+        0.12423527985811234,
+        0.5982673168182373
+      ],
+      "v02_centroid": [
+        0.12423527985811234,
+        0.5982673168182373
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2617,
+      "relation": "above",
+      "sample_id": "buildsr_val_2_1914_2_smallest_to_above_44141a02659c",
+      "tile_id": "2_1914",
+      "v01_centroid": [
+        0.6081849932670593,
+        0.8450877666473389
+      ],
+      "v02_centroid": [
+        0.6081849932670593,
+        0.8450877666473389
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 13138,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1100_2_largest_to_below_465c9573ce8a",
+      "tile_id": "2_1100",
+      "v01_centroid": [
+        0.3447253704071045,
+        0.19114594161510468
+      ],
+      "v02_centroid": [
+        0.3447253704071045,
+        0.19114594161510468
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 4286,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_111_2_largest_to_below_d81cade4b8ff",
+      "tile_id": "2_111",
+      "v01_centroid": [
+        0.23741178214550018,
+        0.7997996807098389
+      ],
+      "v02_centroid": [
+        0.23741178214550018,
+        0.7997996807098389
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 691,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1164_2_smallest_to_below_595f677b1ba8",
+      "tile_id": "2_1164",
+      "v01_centroid": [
+        0.4115454852581024,
+        0.7735010981559753
+      ],
+      "v02_centroid": [
+        0.4115454852581024,
+        0.7735010981559753
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 420,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1242_2_smallest_to_below_d3cd33852985",
+      "tile_id": "2_1242",
+      "v01_centroid": [
+        0.166015625,
+        0.166015625
+      ],
+      "v02_centroid": [
+        0.166015625,
+        0.166015625
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 3629,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1268_2_largest_to_below_11a0338e65d4",
+      "tile_id": "2_1268",
+      "v01_centroid": [
+        0.7909276485443115,
+        0.6167415976524353
+      ],
+      "v02_centroid": [
+        0.7909276485443115,
+        0.6167415976524353
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1905,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1272_2_largest_to_below_5e69fcf43f35",
+      "tile_id": "2_1272",
+      "v01_centroid": [
+        0.23983913660049438,
+        0.20655091106891632
+      ],
+      "v02_centroid": [
+        0.23983913660049438,
+        0.20655091106891632
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1241,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1277_2_smallest_to_below_2b4d7320e793",
+      "tile_id": "2_1277",
+      "v01_centroid": [
+        0.5454530715942383,
+        0.09772942960262299
+      ],
+      "v02_centroid": [
+        0.5454530715942383,
+        0.09772942960262299
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1455,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1295_2_largest_to_below_c810dd40f643",
+      "tile_id": "2_1295",
+      "v01_centroid": [
+        0.07101656496524811,
+        0.1278531700372696
+      ],
+      "v02_centroid": [
+        0.07101656496524811,
+        0.1278531700372696
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2345,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1348_2_largest_to_below_05288df60f2b",
+      "tile_id": "2_1348",
+      "v01_centroid": [
+        0.2342546433210373,
+        0.6199389696121216
+      ],
+      "v02_centroid": [
+        0.2342546433210373,
+        0.6199389696121216
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 495,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1587_2_smallest_to_below_7a3aec0fb227",
+      "tile_id": "2_1587",
+      "v01_centroid": [
+        0.9495758414268494,
+        0.6710838675498962
+      ],
+      "v02_centroid": [
+        0.9495758414268494,
+        0.6710838675498962
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 4249,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_176_2_largest_to_below_779c1dd9f340",
+      "tile_id": "2_176",
+      "v01_centroid": [
+        0.8773863315582275,
+        0.6598411202430725
+      ],
+      "v02_centroid": [
+        0.8773863315582275,
+        0.6598411202430725
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 226,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1789_2_smallest_to_below_db7e0a83193e",
+      "tile_id": "2_1789",
+      "v01_centroid": [
+        0.6653761267662048,
+        0.6702935099601746
+      ],
+      "v02_centroid": [
+        0.6653761267662048,
+        0.6702935099601746
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 383,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1923_2_smallest_to_below_b7d37ebdc44f",
+      "tile_id": "2_1923",
+      "v01_centroid": [
+        0.8632531762123108,
+        0.3878992795944214
+      ],
+      "v02_centroid": [
+        0.8632531762123108,
+        0.3878992795944214
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 1437,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1927_2_largest_to_below_492af41ba04f",
+      "tile_id": "2_1927",
+      "v01_centroid": [
+        0.24991777539253235,
+        0.9054446816444397
+      ],
+      "v02_centroid": [
+        0.24991777539253235,
+        0.9054446816444397
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 2862,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1987_2_largest_to_below_9f22d3aed150",
+      "tile_id": "2_1987",
+      "v01_centroid": [
+        0.6780469417572021,
+        0.5986328125
+      ],
+      "v02_centroid": [
+        0.6780469417572021,
+        0.5986328125
+      ]
+    },
+    {
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "reference_area_px": 599,
+      "relation": "below",
+      "sample_id": "buildsr_val_2_1990_2_smallest_to_below_9f695e062224",
+      "tile_id": "2_1990",
+      "v01_centroid": [
+        0.7984580397605896,
+        0.38283368945121765
+      ],
+      "v02_centroid": [
+        0.7984580397605896,
+        0.38283368945121765
+      ]
+    }
+  ],
+  "runtime_seconds": 0.35,
+  "selection_problems": [],
+  "size": [
+    64,
+    64
+  ],
+  "stage": "B-v02-audit",
+  "task": "6P",
+  "v01_differentiable_wrt_reference_mask": false,
+  "v01_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\geometric_relation_field.py",
+  "v01_file_sha256": "6009feb409d6840df3305077c02c30c5887814f0ecb98006ccb210e1fcd5082e",
+  "v01_reason": "v0.1 calls .detach() on tensor masks and converts the centroid to a Python float, so it is not differentiable with respect to the input reference mask; that did not invalidate Task 6N/6O because the reference mask was oracle and frozen",
+  "v02_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\geometric_relation_field_v02.py",
+  "verdict": "FIELD_V02_VALID"
+}
