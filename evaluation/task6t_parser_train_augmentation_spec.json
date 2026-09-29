@@ -1,0 +1,253 @@
+{
+  "_doc": "Task 6T section 5.2. Tracked grammar specification for the deterministic paraphrase augmentation of the ProgramHead training data. Only BuildSpatialReason v0.2 TRAIN split instruction text and this grammar (derived from train-split/program semantics) are used for optimisation. The grammar covers reference-family contrasts (largest vs smallest), level contrasts (L1 / direction / nearest / direction+nearest), all four directions and lexical variation in both languages. It never reproduces an exact evaluation string; a deterministic pre-training filter removes any residual collision.",
+  "task": "6T",
+  "seed": 20260930,
+  "cap_per_program_per_language": 45,
+  "generated_prompts": 1800,
+  "generated_by_language": {
+    "zh": 900,
+    "en": 900
+  },
+  "generated_by_program": {
+    "bottommost": 90,
+    "largest": 90,
+    "largest_to_above": 90,
+    "largest_to_above_to_nearest": 90,
+    "largest_to_below": 90,
+    "largest_to_below_to_nearest": 90,
+    "largest_to_left_of": 90,
+    "largest_to_left_of_to_nearest": 90,
+    "largest_to_nearest": 90,
+    "largest_to_right_of": 90,
+    "largest_to_right_of_to_nearest": 90,
+    "leftmost": 90,
+    "rightmost": 90,
+    "smallest": 90,
+    "smallest_to_above": 90,
+    "smallest_to_below": 90,
+    "smallest_to_left_of": 90,
+    "smallest_to_nearest": 90,
+    "smallest_to_right_of": 90,
+    "topmost": 90
+  },
+  "generated_by_template": {
+    "l1": 360,
+    "l1_long": 130,
+    "l1_short": 50,
+    "l2_direction": 624,
+    "l2_direction_short": 96,
+    "l2_nearest": 180,
+    "l3_nearest": 360
+  },
+  "inventories": {
+    "zh_verbs": [
+      "请分割",
+      "请标出",
+      "分割",
+      "标出",
+      "请找出",
+      "找出"
+    ],
+    "zh_short_verbs": [
+      "请分割",
+      "分割",
+      "请标出",
+      "标出"
+    ],
+    "zh_nouns": [
+      "建筑区域",
+      "建筑物",
+      "建筑",
+      "楼房",
+      "房屋"
+    ],
+    "zh_short_nouns": [
+      "建筑",
+      "建筑物",
+      "楼房"
+    ],
+    "zh_superlatives_long": {
+      "largest": "面积最大的",
+      "smallest": "面积最小的"
+    },
+    "zh_superlatives_short": {
+      "largest": "最大",
+      "smallest": "最小"
+    },
+    "zh_directions": {
+      "left_of": [
+        "左侧",
+        "左边"
+      ],
+      "right_of": [
+        "右侧",
+        "右边"
+      ],
+      "above": [
+        "上方",
+        "上面"
+      ],
+      "below": [
+        "下方",
+        "下面"
+      ]
+    },
+    "zh_nearest": [
+      "最近的",
+      "距离最近的",
+      "最靠近的"
+    ],
+    "zh_l1": {
+      "leftmost": [
+        "最左侧的",
+        "最左边的"
+      ],
+      "rightmost": [
+        "最右侧的",
+        "最右边的"
+      ],
+      "topmost": [
+        "最上方的",
+        "最上面的"
+      ],
+      "bottommost": [
+        "最下方的",
+        "最下面的"
+      ]
+    },
+    "en_verbs": [
+      "Please segment",
+      "Segment",
+      "Please outline",
+      "Outline",
+      "Mark",
+      "Please mark"
+    ],
+    "en_nouns": [
+      "building region",
+      "building",
+      "structure",
+      "building structure"
+    ],
+    "en_superlatives": {
+      "largest": [
+        "largest",
+        "greatest-area"
+      ],
+      "smallest": [
+        "smallest",
+        "least-area"
+      ]
+    },
+    "en_directions": {
+      "left_of": [
+        "to the left of",
+        "left of"
+      ],
+      "right_of": [
+        "to the right of",
+        "right of"
+      ],
+      "above": [
+        "above",
+        "over"
+      ],
+      "below": [
+        "below",
+        "under"
+      ]
+    },
+    "en_nearest": [
+      "nearest",
+      "closest",
+      "with the smallest boundary distance to it"
+    ],
+    "en_l1": {
+      "leftmost": [
+        "furthest left",
+        "leftmost"
+      ],
+      "rightmost": [
+        "furthest right",
+        "rightmost"
+      ],
+      "topmost": [
+        "highest",
+        "topmost"
+      ],
+      "bottommost": [
+        "lowest",
+        "bottommost"
+      ]
+    }
+  },
+  "contrast_coverage": {
+    "reference_family": "largest vs smallest in L1, L2, L2-nearest and L3-nearest forms",
+    "level": [
+      "largest",
+      "largest_to_direction",
+      "largest_to_nearest",
+      "largest_to_direction_to_nearest"
+    ],
+    "direction": [
+      "left_of",
+      "right_of",
+      "above",
+      "below"
+    ],
+    "lexical_variation": {
+      "zh": [
+        "面积最大/最大/最大的",
+        "面积最小/最小/最小的",
+        "左侧/左边",
+        "右侧/右边",
+        "上方/上面",
+        "下方/下面",
+        "最近/距离最近/最靠近"
+      ],
+      "en": [
+        "largest/greatest-area",
+        "smallest/least-area",
+        "to the left of/left of",
+        "to the right of/right of",
+        "above/over",
+        "below/under",
+        "nearest/closest"
+      ]
+    }
+  },
+  "forbidden_shortcuts": [
+    "keyword remapping",
+    "regex/class-id override",
+    "hard-coded handling of specific failures",
+    "deterministic largest/smallest post-correction",
+    "bypassing ProgramHead"
+  ],
+  "outputs": {
+    "augmented": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6t\\parser_train_augmented\\parser_train_augmented.jsonl",
+    "combined": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6t\\parser_train_augmented\\parser_train_combined.jsonl",
+    "augmented_is_gitignored": true
+  },
+  "counts": {
+    "build_spatial_reason_v02_train_records": 12778,
+    "v02_train_examples_both_languages": 25556,
+    "v02_train_examples_kept": 24161,
+    "augmented_generated": 1800,
+    "augmented_kept": 1800,
+    "combined": 25961
+  },
+  "deterministic_collision_filter": {
+    "dropped_train_examples": 1395,
+    "dropped_augmented": 0,
+    "dropped_train_examples_sample": [
+      "Segment the building region to the left of the largest building region.",
+      "Please outline the building region on the upper side of the smallest building region.",
+      "Locate and segment the single building region below the smallest building region.",
+      "Please outline the building region on the lower side of the largest building region.",
+      "Please outline the building region on the lower side of the largest building region."
+    ],
+    "dropped_augmented_sample": [],
+    "reason": "exact or normalized overlap with a frozen evaluation prompt; removed before training so that the frozen leakage audit is exactly zero"
+  },
+  "runtime_seconds": 0.5
+}
