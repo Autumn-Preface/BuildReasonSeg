@@ -44,6 +44,75 @@ DEFAULT_CONF = 0.25
 DEFAULT_MAX_DET = 300
 DEFAULT_IMGSZ = 640
 
+# ------------------------------------------------------------------ domain gate (Task 6M.1 section 13)
+#
+# A closed-Demo grammar/domain guard, NOT open-domain OOD detection: a prompt is accepted only when
+# it names a building/object anchor AND a supported relation/selection anchor. The check runs before
+# ProgramHead and before YOLO, so an unsupported prompt costs no inference at all.
+
+DOMAIN_OBJECT_ANCHORS = (
+    # Chinese
+    "建筑", "建筑物", "建筑区域", "房屋", "楼",
+    # English
+    "building", "buildings", "structure",
+)
+DOMAIN_RELATION_ANCHORS = (
+    # Chinese
+    "最大", "最小", "最左", "最右", "最上", "最下",
+    "最靠左", "最靠右", "最靠上", "最靠下",
+    "最近", "左侧", "右侧", "上方", "下方",
+    "左边", "右边", "上面", "下面",
+    # Chinese: the frozen BuildSpatialReason v0.2 templates phrase topmost/bottommost as 位置最高 /
+    # 位置最低, so the two equivalents of the documented 最上 / 最下 anchors are required; without
+    # them every topmost/bottommost record (899 of 9,111 val records) is falsely rejected.
+    "最高", "最低",
+    # English
+    "largest", "smallest", "leftmost", "rightmost", "topmost", "bottommost",
+    "nearest", "closest", "left of", "right of", "above", "below",
+    # English: the v0.2 templates also phrase these selections as highest / lowest / furthest
+    # left|right / furthest to the left|right (the greatest area == largest).
+    "highest", "lowest", "greatest",
+    "furthest left", "furthest right", "furthest to the left", "furthest to the right",
+)
+
+UNSUPPORTED_STATUS = "unsupported_instruction"
+UNSUPPORTED_REASON = "out_of_domain_prompt"
+UNSUPPORTED_EXIT_CODE = 4
+
+
+def check_domain(prompt: str) -> dict:
+    """Deterministic domain gate: object anchor AND relation/selection anchor are both required."""
+
+    text = (prompt or "").strip()
+    if not text:
+        return {
+            "supported": False,
+            "object_anchor": None,
+            "relation_anchor": None,
+            "reason": "empty_prompt",
+        }
+    lowered = text.lower()
+    object_anchor = next(
+        (anchor for anchor in DOMAIN_OBJECT_ANCHORS if anchor in text or anchor.lower() in lowered),
+        None,
+    )
+    relation_anchor = next(
+        (anchor for anchor in DOMAIN_RELATION_ANCHORS if anchor in text or anchor.lower() in lowered),
+        None,
+    )
+    if object_anchor is None:
+        reason = "missing_object_anchor"
+    elif relation_anchor is None:
+        reason = "missing_relation_anchor"
+    else:
+        reason = None
+    return {
+        "supported": object_anchor is not None and relation_anchor is not None,
+        "object_anchor": object_anchor,
+        "relation_anchor": relation_anchor,
+        "reason": reason,
+    }
+
 
 def parse_instruction(runtime, prompt: str, verbose: bool) -> tuple[str, dict]:
     """Text-only program classification; the image never enters the parser."""
@@ -135,6 +204,40 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: parser checkpoint not found: {args.parser_checkpoint}", file=sys.stderr)
         return 2
 
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # ---------------- domain gate FIRST: no parser, no proposal model, no inference
+    gate = check_domain(args.prompt)
+    if not gate["supported"]:
+        payload = {
+            "status": UNSUPPORTED_STATUS,
+            "abstention_reason": UNSUPPORTED_REASON,
+            "prompt": args.prompt,
+            "domain_gate": {
+                "supported": False,
+                "reason": gate["reason"],
+                "object_anchor": gate["object_anchor"],
+                "relation_anchor": gate["relation_anchor"],
+                "object_anchors": list(DOMAIN_OBJECT_ANCHORS),
+                "relation_anchors": list(DOMAIN_RELATION_ANCHORS),
+                "checked_before_parser": True,
+                "checked_before_proposal_model": True,
+            },
+            "parsed_program": None,
+            "proposal_count": None,
+            "image": str(args.image),
+            "ground_truth_used": False,
+            "runtime_seconds": round(time.time() - started, 2),
+        }
+        (out_dir / "result.json").write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        print(f"[demo] status: {UNSUPPORTED_STATUS} ({UNSUPPORTED_REASON}: {gate['reason']})")
+        print("[demo] the parser and the proposal model were NOT called")
+        print(f"[demo] result json: {out_dir / 'result.json'}")
+        return UNSUPPORTED_EXIT_CODE
+
     frozen_path = REPO_ROOT / "evaluation" / "task6m_inference_config_frozen.json"
     conf = args.conf
     max_det = args.max_det
@@ -146,9 +249,6 @@ def main(argv: list[str] | None = None) -> int:
         max_det = max_det if max_det is not None else int(frozen["max_det"])
     conf = DEFAULT_CONF if conf is None else conf
     max_det = DEFAULT_MAX_DET if max_det is None else max_det
-
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
 
     # ---------------- parser
     from buildreasonseg_mvp.program_parser import build_program_parser, load_parser_checkpoint

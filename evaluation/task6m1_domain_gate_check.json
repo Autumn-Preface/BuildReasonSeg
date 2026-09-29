@@ -1,0 +1,166 @@
+{
+  "_doc": "Task 6M.1 section 14. Deterministic domain gate verification: the closed-Demo grammar guard rejects out-of-domain prompts before ProgramHead and before the proposal model.",
+  "cli_probe": {
+    "abstention_reason": "out_of_domain_prompt",
+    "checked_before_parser": true,
+    "checked_before_proposal_model": true,
+    "exit_code": 4,
+    "expected_exit_code": 4,
+    "parsed_program": null,
+    "prompt": "Write a poem about the sea.",
+    "proposal_count": null,
+    "status": "unsupported_instruction"
+  },
+  "gate": {
+    "no_program_mapped_for_ood": true,
+    "no_proposals_run_for_ood": true,
+    "ood_rejected_with_exit_4": true,
+    "passed": true
+  },
+  "gate_rows": [
+    {
+      "expected": "rejected",
+      "object_anchor": null,
+      "prompt": "Write a poem about the sea.",
+      "reason": "missing_object_anchor",
+      "relation_anchor": null,
+      "supported": false
+    },
+    {
+      "expected": "rejected",
+      "object_anchor": null,
+      "prompt": "今天天气怎么样？",
+      "reason": "missing_object_anchor",
+      "relation_anchor": null,
+      "supported": false
+    },
+    {
+      "expected": "rejected",
+      "object_anchor": null,
+      "prompt": "请总结这张图片。",
+      "reason": "missing_object_anchor",
+      "relation_anchor": null,
+      "supported": false
+    },
+    {
+      "expected": "rejected",
+      "object_anchor": null,
+      "prompt": "检测道路。",
+      "reason": "missing_object_anchor",
+      "relation_anchor": null,
+      "supported": false
+    },
+    {
+      "expected": "rejected",
+      "object_anchor": null,
+      "prompt": "segment the airplane",
+      "reason": "missing_object_anchor",
+      "relation_anchor": null,
+      "supported": false
+    },
+    {
+      "expected": "rejected",
+      "object_anchor": null,
+      "prompt": "   ",
+      "reason": "empty_prompt",
+      "relation_anchor": null,
+      "supported": false
+    },
+    {
+      "expected": "accepted",
+      "object_anchor": "建筑",
+      "prompt": "分割面积最大的建筑物。",
+      "reason": null,
+      "relation_anchor": "最大",
+      "supported": true
+    },
+    {
+      "expected": "accepted",
+      "object_anchor": "建筑",
+      "prompt": "找出最左侧的建筑区域。",
+      "reason": null,
+      "relation_anchor": "最左",
+      "supported": true
+    },
+    {
+      "expected": "accepted",
+      "object_anchor": "建筑",
+      "prompt": "分割面积最大的建筑物右侧最近的建筑物。",
+      "reason": null,
+      "relation_anchor": "最大",
+      "supported": true
+    },
+    {
+      "expected": "accepted",
+      "object_anchor": "building",
+      "prompt": "segment the building nearest to the right of the largest building",
+      "reason": null,
+      "relation_anchor": "largest",
+      "supported": true
+    },
+    {
+      "expected": "accepted",
+      "object_anchor": "建筑",
+      "prompt": "找出最小建筑物上方的建筑。",
+      "reason": null,
+      "relation_anchor": "最小",
+      "supported": true
+    }
+  ],
+  "object_anchors": [
+    "建筑",
+    "建筑物",
+    "建筑区域",
+    "房屋",
+    "楼",
+    "building",
+    "buildings",
+    "structure"
+  ],
+  "out_of_domain_all_rejected": true,
+  "positive_prompts_all_accepted": true,
+  "relation_anchors": [
+    "最大",
+    "最小",
+    "最左",
+    "最右",
+    "最上",
+    "最下",
+    "最靠左",
+    "最靠右",
+    "最靠上",
+    "最靠下",
+    "最近",
+    "左侧",
+    "右侧",
+    "上方",
+    "下方",
+    "左边",
+    "右边",
+    "上面",
+    "下面",
+    "最高",
+    "最低",
+    "largest",
+    "smallest",
+    "leftmost",
+    "rightmost",
+    "topmost",
+    "bottommost",
+    "nearest",
+    "closest",
+    "left of",
+    "right of",
+    "above",
+    "below",
+    "highest",
+    "lowest",
+    "greatest",
+    "furthest left",
+    "furthest right",
+    "furthest to the left",
+    "furthest to the right"
+  ],
+  "runtime_seconds": 0.15,
+  "task": "6M.1"
+}
