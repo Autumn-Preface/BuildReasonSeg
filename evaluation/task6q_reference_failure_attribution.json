@@ -1,0 +1,1796 @@
+{
+  "_doc": "Task 6Q section 8. Exactly one failure category per RefValUnique record in the fixed priority order: NO_PROPOSALS, NO_ELIGIBLE_PROPOSALS, REFERENCE_NOT_COVERED_IOU50, EXTREME_SELECTION_WRONG, SELECTED_MASK_GEOMETRY_POOR, REFERENCE_OK.",
+  "counts": {
+    "EXTREME_SELECTION_WRONG": 39,
+    "NO_ELIGIBLE_PROPOSALS": 3,
+    "NO_PROPOSALS": 3,
+    "REFERENCE_NOT_COVERED_IOU50": 62,
+    "REFERENCE_OK": 111,
+    "SELECTED_MASK_GEOMETRY_POOR": 1
+  },
+  "counts_by_family": {
+    "largest": {
+      "EXTREME_SELECTION_WRONG": 21,
+      "NO_PROPOSALS": 1,
+      "REFERENCE_NOT_COVERED_IOU50": 17,
+      "REFERENCE_OK": 70,
+      "SELECTED_MASK_GEOMETRY_POOR": 1
+    },
+    "smallest": {
+      "EXTREME_SELECTION_WRONG": 18,
+      "NO_ELIGIBLE_PROPOSALS": 3,
+      "NO_PROPOSALS": 2,
+      "REFERENCE_NOT_COVERED_IOU50": 45,
+      "REFERENCE_OK": 41
+    }
+  },
+  "pack": {
+    "count": 219,
+    "name": "RefValUnique"
+  },
+  "priority_order": [
+    "NO_PROPOSALS",
+    "NO_ELIGIBLE_PROPOSALS",
+    "REFERENCE_NOT_COVERED_IOU50",
+    "EXTREME_SELECTION_WRONG",
+    "SELECTED_MASK_GEOMETRY_POOR",
+    "REFERENCE_OK"
+  ],
+  "records": [
+    {
+      "best_iou_eligible": 0.8415446072959091,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1001_2_largest_to_above_97e1aa8e0db3",
+      "selected_iou": 0.8415446072959091,
+      "tile_id": "2_1001"
+    },
+    {
+      "best_iou_eligible": 0.7954720864946045,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1002_2_largest_to_above_0fc35aa0f4dc",
+      "selected_iou": 0.7954720864946045,
+      "tile_id": "2_1002"
+    },
+    {
+      "best_iou_eligible": 0.8815653965594411,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1005_2_largest_to_above_2b2a099dff06",
+      "selected_iou": 2.515723269807365e-10,
+      "tile_id": "2_1005"
+    },
+    {
+      "best_iou_eligible": 0.758737045129251,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_103_2_largest_to_right_of_57c49e3c4a4c",
+      "selected_iou": 0.758737045129251,
+      "tile_id": "2_103"
+    },
+    {
+      "best_iou_eligible": 0.5025762980775832,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1036_2_largest_to_left_of_64ac0904911f",
+      "selected_iou": 0.44149891836462807,
+      "tile_id": "2_1036"
+    },
+    {
+      "best_iou_eligible": 1.5015014992469946e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1038_2_smallest_to_left_of_7a5ba53b2985",
+      "selected_iou": 1.5015014992469946e-09,
+      "tile_id": "2_1038"
+    },
+    {
+      "best_iou_eligible": 1.5772870637582223e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1042_2_smallest_to_above_f85e192c99fb",
+      "selected_iou": 1.5772870637582223e-09,
+      "tile_id": "2_1042"
+    },
+    {
+      "best_iou_eligible": 0.8707581228369977,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1066_2_smallest_to_above_acd174ea374d",
+      "selected_iou": 4.10004099872897e-10,
+      "tile_id": "2_1066"
+    },
+    {
+      "best_iou_eligible": 0.8237335185123292,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1078_2_smallest_to_left_of_1940ecc0e10e",
+      "selected_iou": 4.351610093841771e-10,
+      "tile_id": "2_1078"
+    },
+    {
+      "best_iou_eligible": 0.8821452218313517,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1082_2_largest_to_left_of_b50d8366a4f1",
+      "selected_iou": 0.8821452218313517,
+      "tile_id": "2_1082"
+    },
+    {
+      "best_iou_eligible": 0.734270006141201,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_109_2_largest_to_left_of_87f1a37bfeb4",
+      "selected_iou": 6.611570247496755e-11,
+      "tile_id": "2_109"
+    },
+    {
+      "best_iou_eligible": 4.936077792342362e-11,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1100_2_largest_to_below_465c9573ce8a",
+      "selected_iou": 4.936077792342362e-11,
+      "tile_id": "2_1100"
+    },
+    {
+      "best_iou_eligible": 0.8162544170017105,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_111_2_largest_to_below_d81cade4b8ff",
+      "selected_iou": 0.47265570090360526,
+      "tile_id": "2_111"
+    },
+    {
+      "best_iou_eligible": 0.8578404775595005,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1129_2_largest_to_right_of_f3758e3f181e",
+      "selected_iou": 0.8578404775595005,
+      "tile_id": "2_1129"
+    },
+    {
+      "best_iou_eligible": 9.182736447031462e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1133_2_smallest_to_above_bfdd687694e2",
+      "selected_iou": 9.182736447031462e-10,
+      "tile_id": "2_1133"
+    },
+    {
+      "best_iou_eligible": 0.6809523817120181,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1158_2_smallest_to_right_of_d5d922ba713b",
+      "selected_iou": 0.6809523817120181,
+      "tile_id": "2_1158"
+    },
+    {
+      "best_iou_eligible": 0.005535853385906422,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1163_2_smallest_to_right_of_30df32d3b7dd",
+      "selected_iou": 4.882812497615814e-10,
+      "tile_id": "2_1163"
+    },
+    {
+      "best_iou_eligible": 4.0733197539416215e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1164_2_smallest_to_above_2b8628411581",
+      "selected_iou": 4.0733197539416215e-10,
+      "tile_id": "2_1164"
+    },
+    {
+      "best_iou_eligible": 0.7909319904510529,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1203_2_smallest_to_above_64506653e6c4",
+      "selected_iou": 0.7909319904510529,
+      "tile_id": "2_1203"
+    },
+    {
+      "best_iou_eligible": 0.8550677857149556,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1211_2_largest_to_left_of_2a084ad072bf",
+      "selected_iou": 0.8550677857149556,
+      "tile_id": "2_1211"
+    },
+    {
+      "best_iou_eligible": 0.8543554007476114,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1215_2_largest_to_right_of_7e361ace2b20",
+      "selected_iou": 0.8543554007476114,
+      "tile_id": "2_1215"
+    },
+    {
+      "best_iou_eligible": 0.6757741353811035,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1242_2_smallest_to_below_d3cd33852985",
+      "selected_iou": 0.6757741353811035,
+      "tile_id": "2_1242"
+    },
+    {
+      "best_iou_eligible": 3.2754667529395786e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1258_2_largest_to_right_of_2d78c685b14a",
+      "selected_iou": 3.2754667529395786e-10,
+      "tile_id": "2_1258"
+    },
+    {
+      "best_iou_eligible": 0.7067090958083508,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1268_2_largest_to_below_11a0338e65d4",
+      "selected_iou": 0.7067090958083508,
+      "tile_id": "2_1268"
+    },
+    {
+      "best_iou_eligible": 0.7406862746369185,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1269_2_smallest_to_right_of_48771a7ca0da",
+      "selected_iou": 5.518763793863817e-10,
+      "tile_id": "2_1269"
+    },
+    {
+      "best_iou_eligible": 0.8032786886253696,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1272_2_largest_to_above_b32fb8b54180",
+      "selected_iou": 0.7837837838765407,
+      "tile_id": "2_1272"
+    },
+    {
+      "best_iou_eligible": 0.859164653138017,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1274_2_largest_to_left_of_e8aae976a8e4",
+      "selected_iou": 0.859164653138017,
+      "tile_id": "2_1274"
+    },
+    {
+      "best_iou_eligible": 0.41379310391836954,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1277_2_smallest_to_below_2b4d7320e793",
+      "selected_iou": 0.41379310391836954,
+      "tile_id": "2_1277"
+    },
+    {
+      "best_iou_eligible": 0.15470803724311397,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1291_2_smallest_to_left_of_4722c9828f38",
+      "selected_iou": 3.6245016297120325e-10,
+      "tile_id": "2_1291"
+    },
+    {
+      "best_iou_eligible": 0.7775202782285514,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1295_2_largest_to_below_c810dd40f643",
+      "selected_iou": 0.7775202782285514,
+      "tile_id": "2_1295"
+    },
+    {
+      "best_iou_eligible": 0.1196000756235427,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1306_2_largest_to_right_of_41ce23734424",
+      "selected_iou": 1.2042389208569075e-10,
+      "tile_id": "2_1306"
+    },
+    {
+      "best_iou_eligible": 0.8893506493793895,
+      "failure_category": "SELECTED_MASK_GEOMETRY_POOR",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1324_2_largest_to_left_of_37d8a502ecfb",
+      "selected_iou": 0.528118841969362,
+      "tile_id": "2_1324"
+    },
+    {
+      "best_iou_eligible": 0.868372943407451,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1334_2_smallest_to_above_118a6e3c74de",
+      "selected_iou": 0.868372943407451,
+      "tile_id": "2_1334"
+    },
+    {
+      "best_iou_eligible": 0.9100152516980096,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1336_2_largest_to_above_40f1e7f85096",
+      "selected_iou": 2.1281123638799504e-10,
+      "tile_id": "2_1336"
+    },
+    {
+      "best_iou_eligible": 0.9209340434572167,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1348_2_largest_to_below_05288df60f2b",
+      "selected_iou": 0.9209340434572167,
+      "tile_id": "2_1348"
+    },
+    {
+      "best_iou_eligible": 9.310986955948801e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1351_2_smallest_to_right_of_c753d07570ca",
+      "selected_iou": 9.310986955948801e-10,
+      "tile_id": "2_1351"
+    },
+    {
+      "best_iou_eligible": 0.8190997055872531,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1385_2_largest_to_left_of_19c75b7efff7",
+      "selected_iou": 0.8190997055872531,
+      "tile_id": "2_1385"
+    },
+    {
+      "best_iou_eligible": 0.47571962758863356,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1436_2_largest_to_above_255e94ad3698",
+      "selected_iou": 0.47571962758863356,
+      "tile_id": "2_1436"
+    },
+    {
+      "best_iou_eligible": 0.7571305101494118,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1464_2_smallest_to_left_of_f90d4fdd0f23",
+      "selected_iou": 0.7571305101494118,
+      "tile_id": "2_1464"
+    },
+    {
+      "best_iou_eligible": 0.8299570288781527,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1501_2_largest_to_right_of_984dbac831b0",
+      "selected_iou": 0.8299570288781527,
+      "tile_id": "2_1501"
+    },
+    {
+      "best_iou_eligible": 0.9292741292397569,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1552_2_largest_to_right_of_4121da0a3d75",
+      "selected_iou": 0.9292741292397569,
+      "tile_id": "2_1552"
+    },
+    {
+      "best_iou_eligible": 0.5229759305000263,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1587_2_smallest_to_below_7a3aec0fb227",
+      "selected_iou": 0.5229759305000263,
+      "tile_id": "2_1587"
+    },
+    {
+      "best_iou_eligible": 0.8751238850759419,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1591_2_largest_to_above_abe4e2e4a91a",
+      "selected_iou": 0.8751238850759419,
+      "tile_id": "2_1591"
+    },
+    {
+      "best_iou_eligible": 0.8868243243721181,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1603_2_smallest_to_above_159bbfb4400f",
+      "selected_iou": 0.862736066392107,
+      "tile_id": "2_1603"
+    },
+    {
+      "best_iou_eligible": 3.7230081892319404e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1605_2_smallest_to_above_cad894274dbc",
+      "selected_iou": 3.7230081892319404e-10,
+      "tile_id": "2_1605"
+    },
+    {
+      "best_iou_eligible": 0.9244065453043543,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1622_2_largest_to_left_of_4569e247bcc3",
+      "selected_iou": 1.030821564680876e-10,
+      "tile_id": "2_1622"
+    },
+    {
+      "best_iou_eligible": 0.9079545454754647,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1626_2_largest_to_left_of_03d2a0775a6b",
+      "selected_iou": 0.9079545454754647,
+      "tile_id": "2_1626"
+    },
+    {
+      "best_iou_eligible": 0.8098434006601304,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1730_2_smallest_to_right_of_5ede871a4d1d",
+      "selected_iou": 0.8098434006601304,
+      "tile_id": "2_1730"
+    },
+    {
+      "best_iou_eligible": 0.7627494457288803,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_176_2_largest_to_below_779c1dd9f340",
+      "selected_iou": 1.2517211163785552e-10,
+      "tile_id": "2_176"
+    },
+    {
+      "best_iou_eligible": 7.246376806343205e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1789_2_smallest_to_below_db7e0a83193e",
+      "selected_iou": 7.246376806343205e-10,
+      "tile_id": "2_1789"
+    },
+    {
+      "best_iou_eligible": 0.7431328880897305,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1790_2_smallest_to_left_of_e5b983f17ad1",
+      "selected_iou": 5.020080318765019e-10,
+      "tile_id": "2_1790"
+    },
+    {
+      "best_iou_eligible": 0.8018494056790956,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1810_2_smallest_to_left_of_18f8bb1af167",
+      "selected_iou": 5.065856127119627e-10,
+      "tile_id": "2_1810"
+    },
+    {
+      "best_iou_eligible": 0.8604852687517458,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1866_2_largest_to_left_of_3f73c1d2a8b8",
+      "selected_iou": 0.8604852687517458,
+      "tile_id": "2_1866"
+    },
+    {
+      "best_iou_eligible": 0.38913525521465814,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1914_2_smallest_to_above_44141a02659c",
+      "selected_iou": 0.38913525521465814,
+      "tile_id": "2_1914"
+    },
+    {
+      "best_iou_eligible": 0.8785517874067132,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1918_2_largest_to_above_41f287d1eaad",
+      "selected_iou": 0.8785517874067132,
+      "tile_id": "2_1918"
+    },
+    {
+      "best_iou_eligible": 7.072135780005561e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1923_2_smallest_to_below_b7d37ebdc44f",
+      "selected_iou": 7.072135780005561e-10,
+      "tile_id": "2_1923"
+    },
+    {
+      "best_iou_eligible": 0.5998778255345889,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1924_2_largest_to_above_a97aec225027",
+      "selected_iou": 2.9682398328975247e-10,
+      "tile_id": "2_1924"
+    },
+    {
+      "best_iou_eligible": 6.752194458641326e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1926_2_smallest_to_left_of_decda060bf70",
+      "selected_iou": 6.752194458641326e-10,
+      "tile_id": "2_1926"
+    },
+    {
+      "best_iou_eligible": 0.7589485459961138,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1927_2_largest_to_below_492af41ba04f",
+      "selected_iou": 0.7589485459961138,
+      "tile_id": "2_1927"
+    },
+    {
+      "best_iou_eligible": 0.7031250011596679,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1931_2_smallest_to_right_of_d956435a989b",
+      "selected_iou": 0.7031250011596679,
+      "tile_id": "2_1931"
+    },
+    {
+      "best_iou_eligible": 0.7384259265314215,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1980_2_smallest_to_above_5330382f76ce",
+      "selected_iou": 0.7384259265314215,
+      "tile_id": "2_1980"
+    },
+    {
+      "best_iou_eligible": 3.9682539666792644e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1986_2_smallest_to_above_44472e12cf9c",
+      "selected_iou": 3.9682539666792644e-10,
+      "tile_id": "2_1986"
+    },
+    {
+      "best_iou_eligible": 0.8620345745139513,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1987_2_largest_to_below_9f22d3aed150",
+      "selected_iou": 0.8620345745139513,
+      "tile_id": "2_1987"
+    },
+    {
+      "best_iou_eligible": 0.9089780720277294,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_1989_2_largest_to_left_of_a2d275040863",
+      "selected_iou": 0.9089780720277294,
+      "tile_id": "2_1989"
+    },
+    {
+      "best_iou_eligible": 0.7837078654723204,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_1990_2_smallest_to_below_9f695e062224",
+      "selected_iou": 0.7837078654723204,
+      "tile_id": "2_1990"
+    },
+    {
+      "best_iou_eligible": 0.3952952032309524,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_201_2_smallest_to_below_d8200a1a7f86",
+      "selected_iou": 5.356186392417682e-10,
+      "tile_id": "2_201"
+    },
+    {
+      "best_iou_eligible": 1.237623760844525e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2055_2_smallest_to_above_fe3d198c66a3",
+      "selected_iou": 1.237623760844525e-09,
+      "tile_id": "2_2055"
+    },
+    {
+      "best_iou_eligible": 0.7876230662534296,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2058_2_largest_to_below_1eb8a39b98dd",
+      "selected_iou": 0.7876230662534296,
+      "tile_id": "2_2058"
+    },
+    {
+      "best_iou_eligible": 1.682368774952495e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2069_2_largest_to_right_of_7cd409f06529",
+      "selected_iou": 1.4852220404744954e-10,
+      "tile_id": "2_2069"
+    },
+    {
+      "best_iou_eligible": 1.835199118767627e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2104_2_smallest_to_above_a1f7cf86ce36",
+      "selected_iou": 1.835199118767627e-10,
+      "tile_id": "2_2104"
+    },
+    {
+      "best_iou_eligible": 0.8612512614221739,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2184_2_largest_to_below_75066438d406",
+      "selected_iou": 0.8612512614221739,
+      "tile_id": "2_2184"
+    },
+    {
+      "best_iou_eligible": 6.238303177642979e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2252_2_smallest_to_left_of_c1bfb24b8cdb",
+      "selected_iou": 6.238303177642979e-10,
+      "tile_id": "2_2252"
+    },
+    {
+      "best_iou_eligible": 2.423654870958881e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2331_2_smallest_to_below_33c6c53322d3",
+      "selected_iou": 2.423654870958881e-10,
+      "tile_id": "2_2331"
+    },
+    {
+      "best_iou_eligible": 0.8128078822344633,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2338_2_smallest_to_left_of_eb51f15d5639",
+      "selected_iou": 1.6339869254346618e-09,
+      "tile_id": "2_2338"
+    },
+    {
+      "best_iou_eligible": 0.8542159181031458,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2338_2_largest_to_right_of_da60ed9ad5b3",
+      "selected_iou": 0.8542159181031458,
+      "tile_id": "2_2338"
+    },
+    {
+      "best_iou_eligible": 0.7215189877334472,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2340_2_smallest_to_left_of_f426a42ab70e",
+      "selected_iou": 0.7215189877334472,
+      "tile_id": "2_2340"
+    },
+    {
+      "best_iou_eligible": 0.6105971407816676,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2343_2_smallest_to_above_684037d57d32",
+      "selected_iou": 0.6105971407816676,
+      "tile_id": "2_2343"
+    },
+    {
+      "best_iou_eligible": 0.3210305134915923,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2362_2_largest_to_below_0c88a97a3e86",
+      "selected_iou": 5.929088105897717e-11,
+      "tile_id": "2_2362"
+    },
+    {
+      "best_iou_eligible": 0.8298676749654268,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2377_2_largest_to_left_of_d0dde3900d95",
+      "selected_iou": 0.8298676749654268,
+      "tile_id": "2_2377"
+    },
+    {
+      "best_iou_eligible": 0.14033290675023485,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2378_2_smallest_to_right_of_ea97d19847e6",
+      "selected_iou": 5.991611739969075e-10,
+      "tile_id": "2_2378"
+    },
+    {
+      "best_iou_eligible": 0.7336814624886665,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2381_2_smallest_to_above_7ff30b7570f0",
+      "selected_iou": 0.7336814624886665,
+      "tile_id": "2_2381"
+    },
+    {
+      "best_iou_eligible": 0.8517915310250861,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2407_2_smallest_to_below_678f5899edde",
+      "selected_iou": 3.4387895448972526e-10,
+      "tile_id": "2_2407"
+    },
+    {
+      "best_iou_eligible": 0.9025621118390675,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2426_2_largest_to_above_2c16f2b70127",
+      "selected_iou": 0.2776720584716663,
+      "tile_id": "2_2426"
+    },
+    {
+      "best_iou_eligible": 7.067137804192835e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2437_2_smallest_to_below_fc9be8aaa539",
+      "selected_iou": 7.067137804192835e-10,
+      "tile_id": "2_2437"
+    },
+    {
+      "best_iou_eligible": 0.6070245198097916,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2438_2_largest_to_left_of_6eb75a733d4b",
+      "selected_iou": 3.167564142170553e-10,
+      "tile_id": "2_2438"
+    },
+    {
+      "best_iou_eligible": 0.6966863905684395,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_247_2_largest_to_right_of_04eb8aa67898",
+      "selected_iou": 0.6966863905684395,
+      "tile_id": "2_247"
+    },
+    {
+      "best_iou_eligible": 0.0,
+      "failure_category": "NO_ELIGIBLE_PROPOSALS",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2476_2_smallest_to_right_of_9c2587f53125",
+      "selected_iou": 0.0,
+      "tile_id": "2_2476"
+    },
+    {
+      "best_iou_eligible": 0.8667035398967348,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2477_2_smallest_to_left_of_91ea6d9c0c00",
+      "selected_iou": 3.3244680840011744e-10,
+      "tile_id": "2_2477"
+    },
+    {
+      "best_iou_eligible": 1.6638935105384535e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2492_2_largest_to_below_c94229ed5c06",
+      "selected_iou": 1.1340440007786295e-10,
+      "tile_id": "2_2492"
+    },
+    {
+      "best_iou_eligible": 0.6187653941180138,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2498_2_largest_to_right_of_986bace2abc0",
+      "selected_iou": 0.6187653941180138,
+      "tile_id": "2_2498"
+    },
+    {
+      "best_iou_eligible": 0.5133079850221921,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2512_2_largest_to_above_2f379a65832b",
+      "selected_iou": 2.4660912447679184e-10,
+      "tile_id": "2_2512"
+    },
+    {
+      "best_iou_eligible": 0.8280802297189678,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2519_2_smallest_to_above_ff07baf1b23c",
+      "selected_iou": 0.8280802297189678,
+      "tile_id": "2_2519"
+    },
+    {
+      "best_iou_eligible": 0.6437473142914709,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2556_2_smallest_to_left_of_6f419f496b6d",
+      "selected_iou": 0.00038328899946980105,
+      "tile_id": "2_2556"
+    },
+    {
+      "best_iou_eligible": 9.551098367190927e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2557_2_smallest_to_below_a1890cb9c6ca",
+      "selected_iou": 9.551098367190927e-10,
+      "tile_id": "2_2557"
+    },
+    {
+      "best_iou_eligible": 0.757029440992883,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2568_2_largest_to_left_of_f1d63e6ac172",
+      "selected_iou": 0.757029440992883,
+      "tile_id": "2_2568"
+    },
+    {
+      "best_iou_eligible": 2.853067046261607e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2574_2_largest_to_above_a853178786ed",
+      "selected_iou": 2.619172340854067e-10,
+      "tile_id": "2_2574"
+    },
+    {
+      "best_iou_eligible": 9.372071218957756e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2587_2_smallest_to_right_of_ec2307d47073",
+      "selected_iou": 9.372071218957756e-10,
+      "tile_id": "2_2587"
+    },
+    {
+      "best_iou_eligible": 0.0,
+      "failure_category": "NO_ELIGIBLE_PROPOSALS",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2595_2_smallest_to_right_of_037948ba3efa",
+      "selected_iou": 0.0,
+      "tile_id": "2_2595"
+    },
+    {
+      "best_iou_eligible": 0.6420986885433487,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2641_2_smallest_to_above_6f3189b25e75",
+      "selected_iou": 0.5168539329235576,
+      "tile_id": "2_2641"
+    },
+    {
+      "best_iou_eligible": 0.7757487218584743,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2650_2_smallest_to_below_337c5e8173d9",
+      "selected_iou": 0.7757487218584743,
+      "tile_id": "2_2650"
+    },
+    {
+      "best_iou_eligible": 0.7278947369853186,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2670_2_smallest_to_left_of_905aebc3ece7",
+      "selected_iou": 3.1575623608596265e-10,
+      "tile_id": "2_2670"
+    },
+    {
+      "best_iou_eligible": 0.8031164455882168,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2683_2_largest_to_left_of_2426532a5ed2",
+      "selected_iou": 0.8031164455882168,
+      "tile_id": "2_2683"
+    },
+    {
+      "best_iou_eligible": 0.7652866506458735,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2689_2_largest_to_left_of_c2fd8168d10d",
+      "selected_iou": 0.4700019833662236,
+      "tile_id": "2_2689"
+    },
+    {
+      "best_iou_eligible": 0.6927543550384362,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2695_2_largest_to_right_of_e925b8fec233",
+      "selected_iou": 1.3345789401662112e-10,
+      "tile_id": "2_2695"
+    },
+    {
+      "best_iou_eligible": 0.474230094185876,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2705_2_largest_to_left_of_221ac743eecc",
+      "selected_iou": 0.474230094185876,
+      "tile_id": "2_2705"
+    },
+    {
+      "best_iou_eligible": 0.7796208531676064,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2711_2_smallest_to_right_of_83fb53c6206d",
+      "selected_iou": 0.7796208531676064,
+      "tile_id": "2_2711"
+    },
+    {
+      "best_iou_eligible": 0.6701548766554396,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2714_2_largest_to_below_3e7ba20106dd",
+      "selected_iou": 2.354603248798068e-10,
+      "tile_id": "2_2714"
+    },
+    {
+      "best_iou_eligible": 2.1691973922577064e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2717_2_smallest_to_left_of_7db2d8f3fa56",
+      "selected_iou": 2.1691973922577064e-09,
+      "tile_id": "2_2717"
+    },
+    {
+      "best_iou_eligible": 0.8205409357381064,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2733_2_largest_to_below_6590fb81074a",
+      "selected_iou": 0.6094580234831408,
+      "tile_id": "2_2733"
+    },
+    {
+      "best_iou_eligible": 9.610764054818762e-11,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2754_2_largest_to_above_cba111aa6efa",
+      "selected_iou": 7.71010023070855e-11,
+      "tile_id": "2_2754"
+    },
+    {
+      "best_iou_eligible": 0.8530033202979163,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2765_2_largest_to_right_of_225c73cee200",
+      "selected_iou": 1.2802458070310783e-10,
+      "tile_id": "2_2765"
+    },
+    {
+      "best_iou_eligible": 0.2479500198172784,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2766_2_smallest_to_above_4ebf135698d8",
+      "selected_iou": 5.479452051792081e-10,
+      "tile_id": "2_2766"
+    },
+    {
+      "best_iou_eligible": 0.6899328860100896,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2782_2_largest_to_left_of_3bfe1f918c74",
+      "selected_iou": 0.6899328860100896,
+      "tile_id": "2_2782"
+    },
+    {
+      "best_iou_eligible": 6.146281495915008e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2789_2_smallest_to_below_07b187ee7b2b",
+      "selected_iou": 6.146281495915008e-10,
+      "tile_id": "2_2789"
+    },
+    {
+      "best_iou_eligible": 0.8681204569739769,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2799_2_smallest_to_left_of_8326d0c8490b",
+      "selected_iou": 0.7191422595611181,
+      "tile_id": "2_2799"
+    },
+    {
+      "best_iou_eligible": 0.8608837971299051,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2800_2_largest_to_above_c4bbac28904f",
+      "selected_iou": 0.8608837971299051,
+      "tile_id": "2_2800"
+    },
+    {
+      "best_iou_eligible": 0.6880825057533932,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2823_2_largest_to_right_of_ac7d0bc17857",
+      "selected_iou": 3.9721946373794555e-11,
+      "tile_id": "2_2823"
+    },
+    {
+      "best_iou_eligible": 0.5958574181506882,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2824_2_largest_to_right_of_604bdcbff65c",
+      "selected_iou": 5.099959200066301e-11,
+      "tile_id": "2_2824"
+    },
+    {
+      "best_iou_eligible": 0.7622632345991369,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2825_2_largest_to_left_of_e93ac62e675b",
+      "selected_iou": 0.7622632345991369,
+      "tile_id": "2_2825"
+    },
+    {
+      "best_iou_eligible": 0.2001815362807692,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2826_2_largest_to_right_of_8bdd30380a55",
+      "selected_iou": 3.026176425994063e-11,
+      "tile_id": "2_2826"
+    },
+    {
+      "best_iou_eligible": 1.543209874161713e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2838_2_smallest_to_right_of_20ecf8c17a50",
+      "selected_iou": 1.543209874161713e-09,
+      "tile_id": "2_2838"
+    },
+    {
+      "best_iou_eligible": 5.640157921240745e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2856_2_smallest_to_left_of_6d0c0e3d8679",
+      "selected_iou": 5.640157921240745e-10,
+      "tile_id": "2_2856"
+    },
+    {
+      "best_iou_eligible": 0.0,
+      "failure_category": "NO_ELIGIBLE_PROPOSALS",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2874_2_smallest_to_below_f8d567a8cd67",
+      "selected_iou": 0.0,
+      "tile_id": "2_2874"
+    },
+    {
+      "best_iou_eligible": 0.8704092340318969,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2875_2_largest_to_right_of_8bf309429882",
+      "selected_iou": 0.8704092340318969,
+      "tile_id": "2_2875"
+    },
+    {
+      "best_iou_eligible": 6.146281495915008e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2908_2_smallest_to_above_206805fa2a84",
+      "selected_iou": 6.146281495915008e-10,
+      "tile_id": "2_2908"
+    },
+    {
+      "best_iou_eligible": 0.0027155471807769537,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2912_2_smallest_to_right_of_14977beedd44",
+      "selected_iou": 0.0027155471807769537,
+      "tile_id": "2_2912"
+    },
+    {
+      "best_iou_eligible": 0.8196629214496276,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2932_2_largest_to_above_fe0f041f3115",
+      "selected_iou": 0.8196629214496276,
+      "tile_id": "2_2932"
+    },
+    {
+      "best_iou_eligible": 6.523157203833557e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2939_2_smallest_to_below_e53450892285",
+      "selected_iou": 6.523157203833557e-10,
+      "tile_id": "2_2939"
+    },
+    {
+      "best_iou_eligible": 0.0,
+      "failure_category": "NO_PROPOSALS",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2944_2_smallest_to_right_of_d066fb71913b",
+      "selected_iou": 0.0,
+      "tile_id": "2_2944"
+    },
+    {
+      "best_iou_eligible": 0.7331606219920892,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2963_2_smallest_to_above_aadc5fcfb567",
+      "selected_iou": 6.485084301890347e-10,
+      "tile_id": "2_2963"
+    },
+    {
+      "best_iou_eligible": 0.6503667484512088,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_2963_2_largest_to_below_6c47697d58f9",
+      "selected_iou": 4.5392646370679687e-10,
+      "tile_id": "2_2963"
+    },
+    {
+      "best_iou_eligible": 0.6869565220415879,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2968_2_smallest_to_right_of_27b3ea38c892",
+      "selected_iou": 0.6869565220415879,
+      "tile_id": "2_2968"
+    },
+    {
+      "best_iou_eligible": 0.7947761201687458,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_2987_2_smallest_to_below_35865e28ab50",
+      "selected_iou": 0.7947761201687458,
+      "tile_id": "2_2987"
+    },
+    {
+      "best_iou_eligible": 0.8301886794054822,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3008_2_largest_to_left_of_e90f8883ac5a",
+      "selected_iou": 0.6327060352805282,
+      "tile_id": "2_3008"
+    },
+    {
+      "best_iou_eligible": 8.467400500874343e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3013_2_smallest_to_below_340e53a5838f",
+      "selected_iou": 8.467400500874343e-10,
+      "tile_id": "2_3013"
+    },
+    {
+      "best_iou_eligible": 0.8472786353799524,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3032_2_smallest_to_left_of_68a580d63824",
+      "selected_iou": 0.8472786353799524,
+      "tile_id": "2_3032"
+    },
+    {
+      "best_iou_eligible": 0.860875466623388,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3045_2_largest_to_above_06d6ee8f0f3b",
+      "selected_iou": 0.860875466623388,
+      "tile_id": "2_3045"
+    },
+    {
+      "best_iou_eligible": 0.7916120578036618,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3051_2_smallest_to_right_of_78f0f84244a2",
+      "selected_iou": 0.7916120578036618,
+      "tile_id": "2_3051"
+    },
+    {
+      "best_iou_eligible": 0.7657303621772102,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3088_2_largest_to_below_68a039851c22",
+      "selected_iou": 0.7657303621772102,
+      "tile_id": "2_3088"
+    },
+    {
+      "best_iou_eligible": 3.3534540565548443e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3102_2_smallest_to_below_11fd6fdfd792",
+      "selected_iou": 3.3534540565548443e-10,
+      "tile_id": "2_3102"
+    },
+    {
+      "best_iou_eligible": 0.7917584146612902,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3105_2_largest_to_left_of_a9311262f1f8",
+      "selected_iou": 0.7917584146612902,
+      "tile_id": "2_3105"
+    },
+    {
+      "best_iou_eligible": 8.110300074525303e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3114_2_smallest_to_below_7ec27ebe1fe8",
+      "selected_iou": 8.110300074525303e-10,
+      "tile_id": "2_3114"
+    },
+    {
+      "best_iou_eligible": 7.639419398289213e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3119_2_smallest_to_right_of_b67363142f45",
+      "selected_iou": 7.639419398289213e-10,
+      "tile_id": "2_3119"
+    },
+    {
+      "best_iou_eligible": 0.6206896554696789,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3120_2_largest_to_left_of_40595aa83d16",
+      "selected_iou": 0.6206896554696789,
+      "tile_id": "2_3120"
+    },
+    {
+      "best_iou_eligible": 0.7175732223481732,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3122_2_smallest_to_below_cb68c49d9e98",
+      "selected_iou": 0.7175732223481732,
+      "tile_id": "2_3122"
+    },
+    {
+      "best_iou_eligible": 3.604902666328442e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3134_2_smallest_to_right_of_29311c19c210",
+      "selected_iou": 3.604902666328442e-10,
+      "tile_id": "2_3134"
+    },
+    {
+      "best_iou_eligible": 0.7947997190479271,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3136_2_largest_to_right_of_20a43142c07c",
+      "selected_iou": 0.623982637208908,
+      "tile_id": "2_3136"
+    },
+    {
+      "best_iou_eligible": 0.8890410959410773,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3142_2_largest_to_above_69d588f7e5af",
+      "selected_iou": 0.8890410959410773,
+      "tile_id": "2_3142"
+    },
+    {
+      "best_iou_eligible": 5.810575243573168e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3142_2_smallest_to_below_a625e7645742",
+      "selected_iou": 5.810575243573168e-10,
+      "tile_id": "2_3142"
+    },
+    {
+      "best_iou_eligible": 0.821552723162484,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3146_2_smallest_to_left_of_635419e56e88",
+      "selected_iou": 0.821552723162484,
+      "tile_id": "2_3146"
+    },
+    {
+      "best_iou_eligible": 0.6387478850426542,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3175_2_largest_to_above_c811c857718a",
+      "selected_iou": 0.6387478850426542,
+      "tile_id": "2_3175"
+    },
+    {
+      "best_iou_eligible": 0.7729272420396185,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3196_2_smallest_to_left_of_b15d3f51b984",
+      "selected_iou": 0.7729272420396185,
+      "tile_id": "2_3196"
+    },
+    {
+      "best_iou_eligible": 0.8976495091051325,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3208_2_largest_to_above_4d6c0fd98f33",
+      "selected_iou": 0.8976495091051325,
+      "tile_id": "2_3208"
+    },
+    {
+      "best_iou_eligible": 0.7317919075919677,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3235_2_largest_to_left_of_4fe3e36969eb",
+      "selected_iou": 0.7317919075919677,
+      "tile_id": "2_3235"
+    },
+    {
+      "best_iou_eligible": 0.8022944551425261,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3235_2_smallest_to_right_of_99a4e145071c",
+      "selected_iou": 0.6512088784577056,
+      "tile_id": "2_3235"
+    },
+    {
+      "best_iou_eligible": 0.7724113968824143,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3236_2_largest_to_left_of_14cbe520d6ad",
+      "selected_iou": 0.7724113968824143,
+      "tile_id": "2_3236"
+    },
+    {
+      "best_iou_eligible": 0.6706128135998517,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3240_2_largest_to_above_aba302ca252d",
+      "selected_iou": 0.6706128135998517,
+      "tile_id": "2_3240"
+    },
+    {
+      "best_iou_eligible": 0.755623722131264,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3240_2_smallest_to_below_1bce52ab8509",
+      "selected_iou": 0.755623722131264,
+      "tile_id": "2_3240"
+    },
+    {
+      "best_iou_eligible": 0.8007361963434679,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3290_2_largest_to_above_3ca8626fc036",
+      "selected_iou": 0.6525154106529613,
+      "tile_id": "2_3290"
+    },
+    {
+      "best_iou_eligible": 0.6858168766861457,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3312_2_smallest_to_above_d6ef17ac36ac",
+      "selected_iou": 0.6858168766861457,
+      "tile_id": "2_3312"
+    },
+    {
+      "best_iou_eligible": 0.8431975404740988,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3346_2_largest_to_left_of_20b1272cb73d",
+      "selected_iou": 0.8431975404740988,
+      "tile_id": "2_3346"
+    },
+    {
+      "best_iou_eligible": 0.8134448376283548,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3353_2_largest_to_below_23f016ee2056",
+      "selected_iou": 0.8134448376283548,
+      "tile_id": "2_3353"
+    },
+    {
+      "best_iou_eligible": 0.616751269278711,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3377_2_smallest_to_below_0ff8c270b491",
+      "selected_iou": 0.616751269278711,
+      "tile_id": "2_3377"
+    },
+    {
+      "best_iou_eligible": 4.058441556794464e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3385_2_smallest_to_right_of_19d479277187",
+      "selected_iou": 4.058441556794464e-10,
+      "tile_id": "2_3385"
+    },
+    {
+      "best_iou_eligible": 0.7341829769075181,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3387_2_largest_to_below_87d6757a6ec4",
+      "selected_iou": 2.5660764684203037e-10,
+      "tile_id": "2_3387"
+    },
+    {
+      "best_iou_eligible": 0.8346636261862445,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3451_2_smallest_to_left_of_99a44983e94b",
+      "selected_iou": 0.8346636261862445,
+      "tile_id": "2_3451"
+    },
+    {
+      "best_iou_eligible": 1.483679523021247e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3463_2_smallest_to_above_9bf7c2c34f9b",
+      "selected_iou": 1.483679523021247e-09,
+      "tile_id": "2_3463"
+    },
+    {
+      "best_iou_eligible": 0.7978756639181894,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3464_2_largest_to_right_of_0e88ace5e5e9",
+      "selected_iou": 0.7978756639181894,
+      "tile_id": "2_3464"
+    },
+    {
+      "best_iou_eligible": 0.8686131387151927,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3485_2_largest_to_above_d08ea5499244",
+      "selected_iou": 0.8686131387151927,
+      "tile_id": "2_3485"
+    },
+    {
+      "best_iou_eligible": 0.7127802691226949,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3489_2_largest_to_above_3835b051682b",
+      "selected_iou": 0.7127802691226949,
+      "tile_id": "2_3489"
+    },
+    {
+      "best_iou_eligible": 0.7634872680700285,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3504_2_largest_to_right_of_3fee01951587",
+      "selected_iou": 0.7634872680700285,
+      "tile_id": "2_3504"
+    },
+    {
+      "best_iou_eligible": 0.692982456308672,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3506_2_largest_to_below_7fe5ad641172",
+      "selected_iou": 0.692982456308672,
+      "tile_id": "2_3506"
+    },
+    {
+      "best_iou_eligible": 0.35446079923266427,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3510_2_largest_to_below_3eeef070cc56",
+      "selected_iou": 1.8545994061842358e-10,
+      "tile_id": "2_3510"
+    },
+    {
+      "best_iou_eligible": 0.7829902126955821,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3511_2_largest_to_above_c760fbd65853",
+      "selected_iou": 0.7829902126955821,
+      "tile_id": "2_3511"
+    },
+    {
+      "best_iou_eligible": 0.6674440300058564,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3516_2_largest_to_above_c4f52499aa91",
+      "selected_iou": 0.6674440300058564,
+      "tile_id": "2_3516"
+    },
+    {
+      "best_iou_eligible": 0.7244288225924679,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3530_2_smallest_to_above_466f68c97ca2",
+      "selected_iou": 2.681684096894158e-10,
+      "tile_id": "2_3530"
+    },
+    {
+      "best_iou_eligible": 0.8146922569062262,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3532_2_largest_to_right_of_a385a077748c",
+      "selected_iou": 0.8146922569062262,
+      "tile_id": "2_3532"
+    },
+    {
+      "best_iou_eligible": 0.8280701757402278,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3535_2_smallest_to_right_of_1b1d9bd6d42a",
+      "selected_iou": 0.8280701757402278,
+      "tile_id": "2_3535"
+    },
+    {
+      "best_iou_eligible": 1.788908762452757e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3553_2_smallest_to_right_of_21f6a55ebfaf",
+      "selected_iou": 1.788908762452757e-09,
+      "tile_id": "2_3553"
+    },
+    {
+      "best_iou_eligible": 0.5944309932270812,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3563_2_smallest_to_below_935d931099f0",
+      "selected_iou": 0.5944309932270812,
+      "tile_id": "2_3563"
+    },
+    {
+      "best_iou_eligible": 0.7624413147770503,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_3586_2_smallest_to_right_of_9ca3e3f352f6",
+      "selected_iou": 0.7624413147770503,
+      "tile_id": "2_3586"
+    },
+    {
+      "best_iou_eligible": 0.817973856268636,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_3587_2_largest_to_left_of_3dc6bced8159",
+      "selected_iou": 0.817973856268636,
+      "tile_id": "2_3587"
+    },
+    {
+      "best_iou_eligible": 0.6389413990932946,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_402_2_largest_to_above_29e773d38f4c",
+      "selected_iou": 0.6389413990932946,
+      "tile_id": "2_402"
+    },
+    {
+      "best_iou_eligible": 0.84830587508601,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_419_2_largest_to_left_of_8632a146bee9",
+      "selected_iou": 0.84830587508601,
+      "tile_id": "2_419"
+    },
+    {
+      "best_iou_eligible": 0.8486127865810538,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_467_2_smallest_to_above_2597c218bd5b",
+      "selected_iou": 0.8486127865810538,
+      "tile_id": "2_467"
+    },
+    {
+      "best_iou_eligible": 0.679365080382968,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_47_2_smallest_to_left_of_c5ce3a466fee",
+      "selected_iou": 0.679365080382968,
+      "tile_id": "2_47"
+    },
+    {
+      "best_iou_eligible": 1.1273957146252585e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_487_2_smallest_to_below_a7ae1ba82330",
+      "selected_iou": 1.1273957146252585e-09,
+      "tile_id": "2_487"
+    },
+    {
+      "best_iou_eligible": 0.6649514009920232,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_517_2_smallest_to_below_e03f632d6190",
+      "selected_iou": 7.462686561595009e-10,
+      "tile_id": "2_517"
+    },
+    {
+      "best_iou_eligible": 0.47406340076582737,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_532_2_largest_to_right_of_e4129132b445",
+      "selected_iou": 2.2346368710090193e-10,
+      "tile_id": "2_532"
+    },
+    {
+      "best_iou_eligible": 1.0384215980909434e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_536_2_smallest_to_right_of_324ea84c4bdd",
+      "selected_iou": 1.0384215980909434e-09,
+      "tile_id": "2_536"
+    },
+    {
+      "best_iou_eligible": 0.8801169591081444,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_538_2_largest_to_below_577009012221",
+      "selected_iou": 0.8801169591081444,
+      "tile_id": "2_538"
+    },
+    {
+      "best_iou_eligible": 0.8839022334842178,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_552_2_largest_to_below_f8fabc86da3d",
+      "selected_iou": 0.8839022334842178,
+      "tile_id": "2_552"
+    },
+    {
+      "best_iou_eligible": 0.7325842702638555,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_580_2_smallest_to_right_of_708c4496e784",
+      "selected_iou": 0.7325842702638555,
+      "tile_id": "2_580"
+    },
+    {
+      "best_iou_eligible": 4.1788549919854347e-10,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_597_2_smallest_to_above_531d8379af29",
+      "selected_iou": 4.1788549919854347e-10,
+      "tile_id": "2_597"
+    },
+    {
+      "best_iou_eligible": 0.8653471772013799,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_603_2_largest_to_below_b5e6db837f5d",
+      "selected_iou": 0.8653471772013799,
+      "tile_id": "2_603"
+    },
+    {
+      "best_iou_eligible": 0.6536548980821945,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_650_2_largest_to_right_of_86ec0be0b2ef",
+      "selected_iou": 0.6122344944994487,
+      "tile_id": "2_650"
+    },
+    {
+      "best_iou_eligible": 1.3333333315555555e-09,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_67_2_smallest_to_below_c5bdccdf8abc",
+      "selected_iou": 1.3333333315555555e-09,
+      "tile_id": "2_67"
+    },
+    {
+      "best_iou_eligible": 0.7172599060042925,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_698_2_largest_to_above_3c60c13a169a",
+      "selected_iou": 0.7172599060042925,
+      "tile_id": "2_698"
+    },
+    {
+      "best_iou_eligible": 0.0,
+      "failure_category": "NO_PROPOSALS",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_735_2_largest_to_right_of_425d1846c1a3",
+      "selected_iou": 0.0,
+      "tile_id": "2_735"
+    },
+    {
+      "best_iou_eligible": 0.0,
+      "failure_category": "NO_PROPOSALS",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_735_2_smallest_to_left_of_867d9561d758",
+      "selected_iou": 0.0,
+      "tile_id": "2_735"
+    },
+    {
+      "best_iou_eligible": 0.838541666726733,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_74_2_largest_to_below_ea3635027438",
+      "selected_iou": 1.8389113641340727e-10,
+      "tile_id": "2_74"
+    },
+    {
+      "best_iou_eligible": 0.43141884857063556,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_750_2_largest_to_below_a0bf9f55f841",
+      "selected_iou": 3.440919413548932e-11,
+      "tile_id": "2_750"
+    },
+    {
+      "best_iou_eligible": 0.8043478262802887,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_759_2_smallest_to_above_a62854e03aae",
+      "selected_iou": 0.8043478262802887,
+      "tile_id": "2_759"
+    },
+    {
+      "best_iou_eligible": 0.2408705276206436,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_807_2_largest_to_right_of_53bc9d6fe7c2",
+      "selected_iou": 1.158480074008517e-10,
+      "tile_id": "2_807"
+    },
+    {
+      "best_iou_eligible": 0.7293497368552728,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_812_2_smallest_to_below_e47b362601a0",
+      "selected_iou": 0.7293497368552728,
+      "tile_id": "2_812"
+    },
+    {
+      "best_iou_eligible": 0.7895626963542974,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_812_2_largest_to_left_of_32c2e8f01f83",
+      "selected_iou": 0.7895626963542974,
+      "tile_id": "2_812"
+    },
+    {
+      "best_iou_eligible": 0.8649706458189882,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_814_2_smallest_to_above_356e9b31c495",
+      "selected_iou": 1.839249585830559e-10,
+      "tile_id": "2_814"
+    },
+    {
+      "best_iou_eligible": 0.8069908815567423,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_815_2_smallest_to_above_5ed4ea9185d3",
+      "selected_iou": 3.906249998474121e-10,
+      "tile_id": "2_815"
+    },
+    {
+      "best_iou_eligible": 0.2830188687700249,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_827_2_smallest_to_above_a3681a9a7091",
+      "selected_iou": 1.3210039612668376e-09,
+      "tile_id": "2_827"
+    },
+    {
+      "best_iou_eligible": 0.8884593356402549,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_834_2_largest_to_above_00c5fa109cec",
+      "selected_iou": 0.8884593356402549,
+      "tile_id": "2_834"
+    },
+    {
+      "best_iou_eligible": 0.39447236188149404,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_835_2_largest_to_below_5aa5ba02e730",
+      "selected_iou": 8.246062504473813e-11,
+      "tile_id": "2_835"
+    },
+    {
+      "best_iou_eligible": 0.7568506369136047,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_881_2_smallest_to_right_of_648495b4659a",
+      "selected_iou": 3.6630036616619034e-10,
+      "tile_id": "2_881"
+    },
+    {
+      "best_iou_eligible": 0.20485240882745573,
+      "failure_category": "REFERENCE_NOT_COVERED_IOU50",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_902_2_largest_to_left_of_83b277334678",
+      "selected_iou": 0.20485240882745573,
+      "tile_id": "2_902"
+    },
+    {
+      "best_iou_eligible": 0.5453567588578858,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_905_2_largest_to_above_1df16ecfd8ec",
+      "selected_iou": 0.46901893302667275,
+      "tile_id": "2_905"
+    },
+    {
+      "best_iou_eligible": 0.763349326766236,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "largest",
+      "sample_id": "buildsr_val_2_913_2_largest_to_above_5bd5b5804d44",
+      "selected_iou": 0.763349326766236,
+      "tile_id": "2_913"
+    },
+    {
+      "best_iou_eligible": 0.6152777783121142,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_942_2_smallest_to_right_of_869f194bcc2f",
+      "selected_iou": 9.191176462140461e-10,
+      "tile_id": "2_942"
+    },
+    {
+      "best_iou_eligible": 0.8355437670144727,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_953_2_smallest_to_above_969dc4e6472a",
+      "selected_iou": 0.8355437670144727,
+      "tile_id": "2_953"
+    },
+    {
+      "best_iou_eligible": 0.8139269408516816,
+      "failure_category": "EXTREME_SELECTION_WRONG",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_959_2_smallest_to_right_of_02e0bd642007",
+      "selected_iou": 7.178750892190415e-10,
+      "tile_id": "2_959"
+    },
+    {
+      "best_iou_eligible": 0.8361522200463507,
+      "failure_category": "REFERENCE_OK",
+      "reference_family": "smallest",
+      "sample_id": "buildsr_val_2_999_2_smallest_to_right_of_cd9a5b60f587",
+      "selected_iou": 0.8361522200463507,
+      "tile_id": "2_999"
+    }
+  ],
+  "stage": "D-failure-attribution",
+  "task": "6Q",
+  "test_split_used": false
+}

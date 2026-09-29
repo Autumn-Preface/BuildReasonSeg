@@ -1,0 +1,449 @@
+{
+  "_doc": "Task 6Q section 10. PairedVal20 with the frozen-proposal resolver: for a pair sharing the image and the reference source exactly the same resolved proposal reference mask is reused and only the relation changes. A pair passes only if both members prefer their own GT target over the paired alternative by IoU.",
+  "comparison": {
+    "task6o_oracle_b3_margin": 0.39719566349802166,
+    "task6o_oracle_b3_paired_pass": 14,
+    "task6p_dense_predicted_margin": 0.0036186017082471683,
+    "task6p_dense_predicted_paired_pass": 0
+  },
+  "gate": {
+    "measured_margin": 0.27370032940000916,
+    "measured_paired_pass": 10,
+    "own_cross_margin_min": 0.2,
+    "paired_pass_min": 10
+  },
+  "mean_cross_iou": 0.00424534769465611,
+  "mean_own_iou": 0.2779456770946653,
+  "own_cross_margin": 0.27370032940000916,
+  "pairs": 20,
+  "pairs_with_reference_abstention": 0,
+  "pass_rate": 0.5,
+  "passed": 10,
+  "reference_source": "frozen_proposal_resolver",
+  "rows": [
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.4015748020956042,
+        "prefers_own": true,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1001_2_largest_to_above_97e1aa8e0db3"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.5567567537472607,
+        "prefers_own": true,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1001_2_largest_to_below_d4aa5cf37af2"
+      },
+      "passes": true,
+      "reference_source_feature_id": 25312,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1001"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.8907766984886063,
+        "prefers_own": true,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1002_2_largest_to_above_0fc35aa0f4dc"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.8607427044287232,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1002_2_largest_to_left_of_7b9b80fbae5d"
+      },
+      "passes": true,
+      "reference_source_feature_id": 25401,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1002"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.47336144098376337,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1007_2_largest_to_left_of_cac9d07b1fa2"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.22184732171157853,
+        "prefers_own": true,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_1007_2_largest_to_right_of_b21c0c60e328"
+      },
+      "passes": true,
+      "reference_source_feature_id": 24226,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1007"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.6333630681236725,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1014_2_largest_to_left_of_b4b4f276680e"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.49487179461801445,
+        "prefers_own": true,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_1014_2_largest_to_right_of_938019a8118e"
+      },
+      "passes": true,
+      "reference_source_feature_id": 24658,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1014"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.8652542369215025,
+        "prefers_own": true,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1020_2_largest_to_below_a2f91d991fd2"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.45019496616441157,
+        "prefers_own": true,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_1020_2_largest_to_right_of_a7af7e423527"
+      },
+      "passes": true,
+      "reference_source_feature_id": 24894,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1020"
+    },
+    {
+      "a": {
+        "cross_iou": 0.007575757574831896,
+        "own_iou": 0.006492005393826006,
+        "prefers_own": false,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1023_2_smallest_to_above_24df97ab03fc"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1023_2_smallest_to_left_of_b7d47b9c9bd5"
+      },
+      "passes": false,
+      "reference_source_feature_id": 24129,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1023"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1036_2_largest_to_below_b9472bf8277e"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.2990142386913981,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1036_2_largest_to_left_of_64ac0904911f"
+      },
+      "passes": false,
+      "reference_source_feature_id": 24611,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1036"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.4514492750351817,
+        "prefers_own": true,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1037_2_largest_to_below_5002561182b2"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.2165660051395054,
+        "prefers_own": true,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_1037_2_largest_to_right_of_2597efdad90d"
+      },
+      "passes": true,
+      "reference_source_feature_id": 24342,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1037"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1043_2_largest_to_above_c30d493ab241"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.005372217957526435,
+        "own_iou": 0.14907251262241608,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1043_2_largest_to_left_of_7b7514b760cc"
+      },
+      "passes": false,
+      "reference_source_feature_id": 24837,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1043"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1066_2_smallest_to_above_acd174ea374d"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1066_2_smallest_to_left_of_238fbb681f30"
+      },
+      "passes": false,
+      "reference_source_feature_id": 24391,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1066"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.12688172029367556,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_108_2_largest_to_left_of_3a3832d12c75"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.07027027017531044,
+        "own_iou": 0.28033088209528406,
+        "prefers_own": true,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_108_2_largest_to_right_of_85296b7d97c9"
+      },
+      "passes": true,
+      "reference_source_feature_id": 33123,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_108"
+    },
+    {
+      "a": {
+        "cross_iou": 0.08385914917894174,
+        "own_iou": 0.2283809126425545,
+        "prefers_own": true,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_109_2_largest_to_above_64a8807fd56e"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_109_2_largest_to_left_of_87f1a37bfeb4"
+      },
+      "passes": false,
+      "reference_source_feature_id": 33010,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_109"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.1555097836747306,
+        "prefers_own": true,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_111_2_largest_to_below_d81cade4b8ff"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.1452714850250732,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_111_2_largest_to_left_of_75827fecc225"
+      },
+      "passes": true,
+      "reference_source_feature_id": 32619,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_111"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.1720558882006579,
+        "prefers_own": true,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1133_2_smallest_to_above_bfdd687694e2"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1133_2_smallest_to_below_04584d934311"
+      },
+      "passes": false,
+      "reference_source_feature_id": 23327,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1133"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0027365128996338886,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1135_2_smallest_to_below_05059dc0ba2e"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1135_2_smallest_to_left_of_191c270642b6"
+      },
+      "passes": false,
+      "reference_source_feature_id": 23321,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1135"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1164_2_smallest_to_above_2b8628411581"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1164_2_smallest_to_below_595f677b1ba8"
+      },
+      "passes": false,
+      "reference_source_feature_id": 22370,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1164"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1171_2_smallest_to_above_afe7c1d6099d"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_1171_2_smallest_to_right_of_07bfc6270f6b"
+      },
+      "passes": false,
+      "reference_source_feature_id": 22429,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1171"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.6787878779651056,
+        "prefers_own": true,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1172_2_largest_to_below_52f3bc2db43a"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.6889352815495051,
+        "prefers_own": true,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1172_2_largest_to_left_of_2fcb1235c33b"
+      },
+      "passes": true,
+      "reference_source_feature_id": 22270,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1172"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "above",
+        "sample_id": "buildsr_val_2_1196_2_largest_to_above_c791c2aceed9"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.0,
+        "prefers_own": false,
+        "relation": "left_of",
+        "sample_id": "buildsr_val_2_1196_2_largest_to_left_of_2f772b5e7e62"
+      },
+      "passes": false,
+      "reference_source_feature_id": 22589,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1196"
+    },
+    {
+      "a": {
+        "cross_iou": 0.0,
+        "own_iou": 0.8659242757835527,
+        "prefers_own": true,
+        "relation": "below",
+        "sample_id": "buildsr_val_2_1201_2_largest_to_below_5dc97ba280d9"
+      },
+      "abstained": false,
+      "b": {
+        "cross_iou": 0.0,
+        "own_iou": 0.8044111523910066,
+        "prefers_own": true,
+        "relation": "right_of",
+        "sample_id": "buildsr_val_2_1201_2_largest_to_right_of_447fd4401df4"
+      },
+      "passes": true,
+      "reference_source_feature_id": 22674,
+      "same_resolved_reference_reused": true,
+      "tile_id": "2_1201"
+    }
+  ],
+  "same_resolved_reference_reused_for_pairs": true,
+  "stage": "E-paired",
+  "task": "6Q",
+  "test_split_used": false
+}

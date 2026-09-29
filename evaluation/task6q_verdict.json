@@ -1,0 +1,286 @@
+{
+  "_doc": "Task 6Q sections 11-14. Frozen-proposal reference resolver gates and the single verdict. Diagnostic/selection task only: no training, no threshold tuning, no test split. DSH reports measurements and claims no novelty for the resolver.",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "PROPOSAL_CHECKPOINT_UNAVAILABLE",
+    "REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT",
+    "DETERMINISTIC_REFERENCE_SELECTOR_INSUFFICIENT",
+    "REFERENCE_ERROR_PROPAGATION_SEVERE",
+    "PROPOSAL_REFERENCE_CHAIN_FEASIBLE"
+  ],
+  "checkpoint": {
+    "actual_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "expected_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "matches": true,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt"
+  },
+  "coverage": {
+    "overall": {
+      "all_proposals": {
+        "coverage@0.25": 0.7488584474885844,
+        "coverage@0.50": 0.6940639269406392,
+        "coverage@0.75": 0.4611872146118721
+      },
+      "eligible_proposals": {
+        "coverage@0.25": 0.7397260273972602,
+        "coverage@0.50": 0.6894977168949772,
+        "coverage@0.75": 0.45662100456621
+      }
+    },
+    "per_family": {
+      "largest": {
+        "all_proposals": {
+          "coverage@0.25": 0.9,
+          "coverage@0.50": 0.8363636363636363,
+          "coverage@0.75": 0.6090909090909091
+        },
+        "eligible_proposals": {
+          "coverage@0.25": 0.9,
+          "coverage@0.50": 0.8363636363636363,
+          "coverage@0.75": 0.6
+        },
+        "records": 110
+      },
+      "smallest": {
+        "all_proposals": {
+          "coverage@0.25": 0.5963302752293578,
+          "coverage@0.50": 0.5504587155963303,
+          "coverage@0.75": 0.3119266055045872
+        },
+        "eligible_proposals": {
+          "coverage@0.25": 0.5779816513761468,
+          "coverage@0.50": 0.5412844036697247,
+          "coverage@0.75": 0.3119266055045872
+        },
+        "records": 109
+      }
+    }
+  },
+  "criteria": {
+    "11_proposal_coverage": {
+      "eligible_coverage_at_0_50_min": 0.7,
+      "largest_eligible_coverage_at_0_50_min": 0.75,
+      "measured_largest": 0.8363636363636363,
+      "measured_overall": 0.6894977168949772,
+      "measured_smallest": 0.5412844036697247,
+      "passed": false,
+      "smallest_eligible_coverage_at_0_50_min": 0.6
+    },
+    "12_reference_resolver_adequacy": {
+      "abstention_rate_max": 0.1,
+      "measured_abstention_rate": 0.0273972602739726,
+      "measured_median_centroid": 0.015607255391622093,
+      "measured_miou": 0.41316427329710725,
+      "measured_p90_centroid": 0.3935169252798693,
+      "median_centroid_max": 0.05,
+      "miou_min": 0.35,
+      "p90_centroid_max": 0.12,
+      "passed": false
+    },
+    "13_downstream_chain_retention": {
+      "own_cross_margin": {
+        "measured": 0.27370032940000916,
+        "passed": true,
+        "required": 0.2
+      },
+      "paired_pass": {
+        "measured": 10,
+        "passed": true,
+        "required": 10
+      },
+      "passed": false,
+      "section_12_passed": {
+        "measured": false,
+        "passed": false,
+        "required": true
+      },
+      "target_miou": {
+        "measured": 0.3045812554881724,
+        "passed": true,
+        "required": 0.3009776246035379
+      }
+    }
+  },
+  "failure_categories": {
+    "EXTREME_SELECTION_WRONG": 39,
+    "NO_ELIGIBLE_PROPOSALS": 3,
+    "NO_PROPOSALS": 3,
+    "REFERENCE_NOT_COVERED_IOU50": 62,
+    "REFERENCE_OK": 111,
+    "SELECTED_MASK_GEOMETRY_POOR": 1
+  },
+  "failure_categories_by_family": {
+    "largest": {
+      "EXTREME_SELECTION_WRONG": 21,
+      "NO_PROPOSALS": 1,
+      "REFERENCE_NOT_COVERED_IOU50": 17,
+      "REFERENCE_OK": 70,
+      "SELECTED_MASK_GEOMETRY_POOR": 1
+    },
+    "smallest": {
+      "EXTREME_SELECTION_WRONG": 18,
+      "NO_ELIGIBLE_PROPOSALS": 3,
+      "NO_PROPOSALS": 2,
+      "REFERENCE_NOT_COVERED_IOU50": 45,
+      "REFERENCE_OK": 41
+    }
+  },
+  "no_architecture_decision_by_dsh": true,
+  "pack": {
+    "count": 219,
+    "name": "RefValUnique",
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_val_unique.json",
+    "sha256": "3896e11ba82b01aa1b46bcc91a02b2cf11824a5dcf32e92f7b541148253cb498"
+  },
+  "paired_chain": {
+    "comparison": {
+      "task6o_oracle_b3_margin": 0.39719566349802166,
+      "task6o_oracle_b3_paired_pass": 14,
+      "task6p_dense_predicted_margin": 0.0036186017082471683,
+      "task6p_dense_predicted_paired_pass": 0
+    },
+    "mean_cross_iou": 0.00424534769465611,
+    "mean_own_iou": 0.2779456770946653,
+    "own_cross_margin": 0.27370032940000916,
+    "pairs": 20,
+    "pairs_with_reference_abstention": 0,
+    "passed": 10
+  },
+  "priority_order_applied": [
+    "INVALID_EXPERIMENT",
+    "PROPOSAL_CHECKPOINT_UNAVAILABLE",
+    "REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT",
+    "DETERMINISTIC_REFERENCE_SELECTOR_INSUFFICIENT",
+    "REFERENCE_ERROR_PROPAGATION_SEVERE",
+    "PROPOSAL_REFERENCE_CHAIN_FEASIBLE"
+  ],
+  "proposal_cache": {
+    "abstained_family_tiles": 10,
+    "cache_entries": 414,
+    "cache_sha256": "6165abe046b842a28827a10373f76810cdb072371818228ec02996cdf9d61799",
+    "proposal_counts": {
+      "max": 51,
+      "mean": 8.716981132075471,
+      "min": 0,
+      "zero_proposal_tiles": 2
+    },
+    "tiles": 212
+  },
+  "proposal_config": {
+    "checkpoint": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "conf": 0.1,
+    "family": "YOLO26m-seg",
+    "imgsz": 640,
+    "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+    "max_det": 100,
+    "merge_bbox_extent_ratio_max": 0.2,
+    "nms": "default",
+    "threshold_sweep": false,
+    "tiling": false,
+    "tiny_component_area_px": 150,
+    "tta": false
+  },
+  "reason": "section 11 proposal coverage gates fail",
+  "runtime_seconds": 0.03,
+  "selected_reference_quality": {
+    "overall": {
+      "abstention_rate": 0.0273972602739726,
+      "abstentions": 6,
+      "median_area_ratio": 1.08130081300813,
+      "median_centroid_error": 0.015607255391622093,
+      "p90_centroid_error": 0.3935169252798693,
+      "precision_at_0_5": 0.5114155251141552,
+      "records": 219,
+      "reference_dice": 0.46999247347355294,
+      "reference_miou": 0.41316427329710725
+    },
+    "per_family": {
+      "largest": {
+        "abstention_rate": 0.00909090909090909,
+        "abstentions": 1,
+        "median_area_ratio": 1.0301090564248458,
+        "median_centroid_error": 0.007301660023818854,
+        "p90_centroid_error": 0.31742672005413636,
+        "precision_at_0_5": 0.6454545454545455,
+        "records": 110,
+        "reference_dice": 0.608308478677577,
+        "reference_miou": 0.5379099073288456
+      },
+      "smallest": {
+        "abstention_rate": 0.045871559633027525,
+        "abstentions": 5,
+        "median_area_ratio": 1.1623563218390804,
+        "median_centroid_error": 0.0659587584604342,
+        "p90_centroid_error": 0.4284577561312275,
+        "precision_at_0_5": 0.3761467889908257,
+        "records": 109,
+        "reference_dice": 0.33040751409334534,
+        "reference_miou": 0.28727418390727977
+      }
+    }
+  },
+  "target_chain": {
+    "abstention_rate": 0.025,
+    "abstentions": 6,
+    "comparison": {
+      "delta_vs_dense_predicted": 0.06361371254897435,
+      "delta_vs_oracle": -0.12538677965973893,
+      "task6o_oracle_b3_miou": 0.4299680351479113,
+      "task6p_dense_predicted_reference_miou": 0.24096754293919803
+    },
+    "overall": {
+      "border_target": {
+        "miou": 0.3049679789114234,
+        "records": 110
+      },
+      "dice": 0.3849449013633419,
+      "miou": 0.3045812554881724,
+      "precision_at_0_5": 0.6353272310731854,
+      "records": 234,
+      "tiny_target": {
+        "miou": 7.42794373054799e-08,
+        "records": 4
+      }
+    },
+    "per_reference_family": {
+      "largest": {
+        "dice": 0.4248938860179435,
+        "miou": 0.33500485383810036,
+        "records": 119
+      },
+      "smallest": {
+        "dice": 0.34360638680771055,
+        "miou": 0.27309944502172506,
+        "records": 115
+      }
+    },
+    "per_relation": {
+      "above": {
+        "dice": 0.4163323879157863,
+        "miou": 0.3291496641462853,
+        "records": 60
+      },
+      "below": {
+        "dice": 0.3727119268757813,
+        "miou": 0.303449837677536,
+        "records": 59
+      },
+      "left_of": {
+        "dice": 0.43272892782161804,
+        "miou": 0.33533324937920955,
+        "records": 59
+      },
+      "right_of": {
+        "dice": 0.31385987887371897,
+        "miou": 0.24705056784120055,
+        "records": 56
+      }
+    }
+  },
+  "task": "6Q",
+  "test_split_used": false,
+  "threshold_tuning": false,
+  "training_performed": false,
+  "verdict": "REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT"
+}
