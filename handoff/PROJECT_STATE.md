@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6M._
+_Last updated by DSH at the end of Task 6M.1._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -74,6 +74,39 @@ The block above is machine-checked against
 | 6K.1 | **Recover and validate the native WHU East-Asia vector ground truth (read-only)** | **done → `MIGRATE_WHU_TO_NATIVE_VECTOR_INSTANCES`** (`keep_whu_imagery: true`, `keep_historical_pseudo_baseline: true`; `EA.shp` = 34,085 manually delineated polygons, vector↔raster mean IoU 0.9505, tile mapping validated, VECTOR-vs-PSEUDO relation change 6.96 % weighted, 5.24 % of native buildings missing from the pseudo view, merges only 1.34 %) |
 | 6L | **Native-vector canonical dataset + scene-disjoint split + BuildSpatialReason v0.2** | **done → `VECTOR_DATASET_MIGRATION_PASS`** (all 17,388 tiles indexed; 41,186 clipped instances from 33,788 distinct `EA.shp` features; `scene_disjoint_v1` train1 10,044 / train2 3,618 / test 3,726 with zero tile, feature and RGB leakage; v0.2 = 28,108 samples with all 20 programs supported in val and test; v0.1.1↔v0.2 target change 5.70 % / 5.45 % weighted, reconciling with 6K.1's 6.96 %) |
 | 6M | **Native-vector proposal model (YOLO26m-seg) + J1-v2/J4-v2 structured evaluation + CMD Demo CLI** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT`** (export `EXPORT_VALID` at tile-union IoU 0.9988 with 0 malformed / 0 missing and all 1,235 tiny instances kept; parser `PARSER_READY` at 1.0000 accuracy on full v0.2 val after retraining the same 2B text-only head; Demo CLI gate passed on 12 real images without GT; proposal recall@0.50 **0.6333** with tiny recall **0.0023** → J1-v2 fixed120 mIoU 0.2801 / paired 4-20 and J4-v2 test fixed120 mIoU 0.2575 / paired 5-20 FAIL; M1 trained 18 of 80 epochs, wall-clock bound) |
+| 6M.1 | **Proposal convergence continuation + corrected Demo gates** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`** (Task 6M epoch-18 state hash-verified and snapshotted; the same configuration resumed safely at epoch 19 from a patched copy of `last.pt` and ran to a **normal early stop** at epoch 55 — 37 epochs / 2.42 h, best epoch 40, mask mAP50 0.6827→**0.7374**, mAP50-95 0.3544→**0.4048**; validation-only freeze at conf 0.10 / max_det 100; recall@0.50 0.6333→**0.6578**, empty-tile false-proposal rate 0.1264→**0.0303**; J1-v2 fixed120 mIoU 0.2801→**0.3506**, paired 4→**7/20**, abstentions 35→**27** — but all five validation gates still FAIL, so per §10 **no test run** and diagnosis `CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`; CLI domain gate now rejects OOD prompts with **exit 4 before parser/proposal inference**, vocabulary completed so **100 %** of frozen v0.2 templates are accepted in zh and en, and the corrected audit passes with **12/12** programs + **6/6** OOD rejections) |
+
+## Task 6M.1 measured results
+
+Narrow corrective continuation of Task 6M: preserve the 18-epoch evidence, continue the **same**
+YOLO26m-seg configuration to convergence, re-evaluate on validation, and fix the Demo CLI's
+unsupported-instruction handling. Full detail: `docs/task6m1_proposal_convergence_and_demo_fix.md`,
+`evaluation/task6m1_*.json`.
+
+| | Value |
+|---|---|
+| Evidence preservation | `SOURCE_CHECKPOINT_VERIFIED` — `best.pt` / `last.pt` hashes matched and snapshot copied; still unchanged after the run; frozen packs reused byte-for-byte |
+| Safe resume | `SAFE_RESUME_READY` — patched-copy resume at **epoch 19**, optimizer + EMA restored, Task 6M.1-local `save_dir`, frozen config unchanged |
+| Continuation | **early stop at epoch 55** (patience 15), 37 epochs, 2.42 h, 235.5 s/epoch, 11.2 GB peak, no NaN/Inf |
+| Combined best (epoch 40) | mask mAP50 **0.73742** / mAP50-95 **0.40475** (Task 6M ep 18: 0.68266 / 0.35437) |
+| Proposal val | recall@0.25/0.50/0.75 **0.7902 / 0.6578 / 0.3928**; mask mAP50 **0.7367**; 5.39 proposals/tile; empty-tile FP **0.0303**; tiny/border/dense 0.0068 / 0.5753 / 0.6590; small/medium/large 0.1621 / 0.5574 / 0.7505 |
+| Frozen config | conf 0.10 / max_det 100, validation-selected from the same declared grid, frozen before any test consideration |
+| J1-v2 (val) | fixed120 mIoU **0.3506**, paired **7/20**, abstentions **27**, full-val mIoU 0.3541 → all five gates FAIL |
+| Test (J4-v2) | **not run** (§10; no new test evidence, no re-tuning) |
+| Demo CLI | OOD prompts **exit 4 before parser/proposal models**; **100 %** of frozen v0.2 templates accepted in zh and en; audit **12/12** programs (4 L1 / 4 L2 / 4 L3, 12 distinct programs), 9 masks + overlays, 3 explicit abstentions, no GT, **6/6** OOD rejected |
+| Diagnosis | **`CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`** |
+| Verdict | **`PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`** |
+
+1. **The continuation was safe and normal**: the same configuration, resumed from a verified epoch-18
+   snapshot, ran to an early stop with no NaN/Inf and no Task 6M mutation.
+2. **Convergence helped every metric** (recall, mAP, structured mIoU, paired pass, abstentions,
+   empty-tile false-proposal rate) yet **all five validation gates still fail**, with the residual gap
+   concentrated in small/tiny buildings.
+3. **The Demo path is now correct**: unsupported instructions can no longer be silently mapped — they
+   exit 4 before any model runs — and the documented gate vocabulary covers every frozen v0.2
+   template in both languages.
+4. **Next task decides the small-object strategy** (resolution/tiling, another proposal family, or
+   re-scoping the graded target set). No such change was made here.
 
 ## Task 6M measured results
 
