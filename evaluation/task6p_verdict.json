@@ -1,0 +1,341 @@
+{
+  "_doc": "Task 6P sections 17-19. Predicted-reference substitution gates and the single verdict. DSH reports measurements only. Oracle-reference only in Tasks 6N/6O; here the reference mask is predicted by a frozen head and the error is propagated through the differentiable v0.2 field into the frozen B3 target decoder.",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "DIFFERENTIABLE_FIELD_INVALID",
+    "TASK6O_B3_REPRODUCTION_FAIL",
+    "REFERENCE_HEAD_NOT_LEARNABLE",
+    "REFERENCE_HEAD_INSUFFICIENT",
+    "REFERENCE_ERROR_PROPAGATION_SEVERE",
+    "PREDICTED_REFERENCE_CHAIN_FEASIBLE"
+  ],
+  "b3_reproduction": {
+    "comparisons": {
+      "dice": {
+        "abs_delta": 0.0,
+        "reproduced": 0.5401551056992948,
+        "stored_task6o": 0.5401551056992948,
+        "within_tolerance": true
+      },
+      "miou": {
+        "abs_delta": 0.0,
+        "reproduced": 0.4299680351479113,
+        "stored_task6o": 0.4299680351479113,
+        "within_tolerance": true
+      }
+    },
+    "verdict": "B3_REPRODUCED"
+  },
+  "chain": {
+    "miou_drop_vs_oracle": -0.1890004922087133,
+    "oracle_b3_reference": {
+      "miou": 0.4299680351479113,
+      "own_cross_margin": 0.39719566349802166,
+      "paired_pass": 14
+    },
+    "paired_drop_vs_oracle": -14,
+    "paired_mean_cross_iou": 0.06115501795104099,
+    "paired_mean_own_iou": 0.06477361965928816,
+    "paired_own_cross_margin": 0.0036186017082471683,
+    "paired_pairs": 20,
+    "paired_pass": 0,
+    "predicted_target": {
+      "border_target": {
+        "miou": 0.23187212625661657,
+        "records": 114
+      },
+      "dice": 0.31616399887603436,
+      "miou": 0.24096754293919803,
+      "precision_at_0_5": 0.5465478643605522,
+      "records": 240,
+      "tiny_target": {
+        "miou": 6.264184883378949e-08,
+        "records": 4
+      }
+    },
+    "predicted_target_per_family": {
+      "largest": {
+        "dice": 0.2949463503837595,
+        "miou": 0.2233306189456842,
+        "records": 120
+      },
+      "smallest": {
+        "dice": 0.33738164736830917,
+        "miou": 0.2586044669327119,
+        "records": 120
+      }
+    },
+    "predicted_target_per_relation": {
+      "above": {
+        "dice": 0.28185897186522524,
+        "miou": 0.211792297678433,
+        "records": 60
+      },
+      "below": {
+        "dice": 0.3275952367050268,
+        "miou": 0.257023720902472,
+        "records": 60
+      },
+      "left_of": {
+        "dice": 0.37223708812717143,
+        "miou": 0.2811948678411778,
+        "records": 60
+      },
+      "right_of": {
+        "dice": 0.2829646988067139,
+        "miou": 0.21385928533470935,
+        "records": 60
+      }
+    }
+  },
+  "criteria": {
+    "17": {
+      "centroid_median": {
+        "measured": 0.12406022878284037,
+        "passed": false,
+        "required": 0.05
+      },
+      "centroid_p90": {
+        "measured": 0.319617521088526,
+        "passed": false,
+        "required": 0.12
+      },
+      "miou": {
+        "measured": 0.22017559533688874,
+        "passed": false,
+        "required": 0.35
+      },
+      "name": "17 reference-head adequacy",
+      "passed": false
+    },
+    "18": {
+      "name": "18 predicted-reference chain retention",
+      "own_cross_margin": {
+        "measured": 0.0036186017082471683,
+        "passed": false,
+        "required": 0.2
+      },
+      "paired_pass": {
+        "measured": 0,
+        "passed": false,
+        "required": 10
+      },
+      "passed": false,
+      "predicted_target_miou": {
+        "measured": 0.24096754293919803,
+        "passed": false,
+        "required": 0.3009776246035379
+      },
+      "section_17_passed": {
+        "measured": false,
+        "passed": false,
+        "required": true
+      }
+    }
+  },
+  "end_to_end_inference": false,
+  "field_propagation": {
+    "centroid_error_normalized": {
+      "mean": 0.1499020947502468,
+      "median": 0.12269633831390968,
+      "p90": 0.31919078568032483
+    },
+    "mae": 0.12073047595986282,
+    "mean_pearson": 0.6534761203206683,
+    "records": 240,
+    "rmse": 0.274298157475035
+  },
+  "field_propagation_per_family": {
+    "largest": {
+      "centroid_error_normalized": {
+        "mean": 0.14741346049097154,
+        "median": 0.11899317188241083,
+        "p90": 0.2947722025656028
+      },
+      "mae": 0.12104140000446932,
+      "mean_pearson": 0.6469674081605946,
+      "records": 120,
+      "rmse": 0.27228706661844626
+    },
+    "smallest": {
+      "centroid_error_normalized": {
+        "mean": 0.15239072900952202,
+        "median": 0.12586311897681735,
+        "p90": 0.3422918849397646
+      },
+      "mae": 0.1204195519152563,
+      "mean_pearson": 0.659984832480742,
+      "records": 120,
+      "rmse": 0.2763092483316238
+    }
+  },
+  "field_propagation_per_relation": {
+    "above": {
+      "centroid_error_normalized": {
+        "mean": 0.15020544533938004,
+        "median": 0.13777926714201727,
+        "p90": 0.28013104763505303
+      },
+      "mae": 0.12196120746666565,
+      "mean_pearson": 0.6378742221980676,
+      "records": 60,
+      "rmse": 0.28089965192290645
+    },
+    "below": {
+      "centroid_error_normalized": {
+        "mean": 0.1526315905351986,
+        "median": 0.11865019879892896,
+        "p90": 0.3372388515551369
+      },
+      "mae": 0.1175226477032993,
+      "mean_pearson": 0.6545868098092142,
+      "records": 60,
+      "rmse": 0.26492581331791976
+    },
+    "left_of": {
+      "centroid_error_normalized": {
+        "mean": 0.1341231905257372,
+        "median": 0.10590561450017238,
+        "p90": 0.26117715813460274
+      },
+      "mae": 0.1110911769491698,
+      "mean_pearson": 0.6939837166817294,
+      "records": 60,
+      "rmse": 0.25568028959290434
+    },
+    "right_of": {
+      "centroid_error_normalized": {
+        "mean": 0.1626481526006713,
+        "median": 0.12586311897681735,
+        "p90": 0.3438417749857472
+      },
+      "mae": 0.1323468717203165,
+      "mean_pearson": 0.6274597325936621,
+      "records": 60,
+      "rmse": 0.2956868750664095
+    }
+  },
+  "field_v02": {
+    "gradient_min_l1": 11833.330078125,
+    "masks_equivalence": 64,
+    "masks_gradient": 8,
+    "max_abs_error_vs_v01": 0.0,
+    "mean_abs_error_vs_v01": 0.0,
+    "verdict": "FIELD_V02_VALID"
+  },
+  "gate_constants": {
+    "centroid_median_max": 0.05,
+    "centroid_p90_max": 0.12,
+    "own_cross_margin_min": 0.2,
+    "paired_pass_min": 10,
+    "predicted_target_miou_min": 0.3009776246035379,
+    "reference_head_miou_min": 0.35
+  },
+  "joint_training": false,
+  "mllm_hidden_state_fusion": false,
+  "no_architecture_decision_by_dsh": true,
+  "priority_order_applied": [
+    "INVALID_EXPERIMENT",
+    "DIFFERENTIABLE_FIELD_INVALID",
+    "TASK6O_B3_REPRODUCTION_FAIL",
+    "REFERENCE_HEAD_NOT_LEARNABLE",
+    "REFERENCE_HEAD_INSUFFICIENT",
+    "REFERENCE_ERROR_PROPAGATION_SEVERE",
+    "PREDICTED_REFERENCE_CHAIN_FEASIBLE"
+  ],
+  "reason": "section 17 reference-head adequacy gates fail",
+  "reference_head": {
+    "p1": {
+      "best_dice": 0.9843882806392303,
+      "best_miou": 0.9695040432203772,
+      "verdict": "P1_PASS"
+    },
+    "p2": {
+      "border_reference": {
+        "miou": null,
+        "records": 0
+      },
+      "centroid_error_normalized": {
+        "mean": 0.15076694817288533,
+        "median": 0.12406022878284037,
+        "p90": 0.319617521088526
+      },
+      "dice": 0.3027935649195627,
+      "median_area_ratio": 1.0197953736654803,
+      "miou": 0.22017559533688874,
+      "non_border_reference": {
+        "miou": 0.22017559533688874,
+        "records": 219
+      },
+      "parameters": {
+        "by_module": {
+          "family_embedding": 32,
+          "project": 33152,
+          "trunk": 240257
+        },
+        "fusion_channels": 144,
+        "inputs": [
+          "frozen_visual_feature_256x64x64",
+          "reference_family_id"
+        ],
+        "not_inputs": [
+          "target_relation_id",
+          "target_mask",
+          "relation_field",
+          "yolo_proposal",
+          "candidate_mask"
+        ],
+        "total_parameters": 273441,
+        "trainable_parameters": 273441
+      },
+      "peak_vram_gb": 0.65,
+      "per_family": {
+        "largest": {
+          "dice": 0.3769180523207752,
+          "miou": 0.2797140510772145,
+          "records": 110
+        },
+        "smallest": {
+          "dice": 0.22798903634953163,
+          "miou": 0.16009091523197289,
+          "records": 109
+        }
+      },
+      "precision_at_0_5": 0.35951424378530816,
+      "selected_epoch": 12,
+      "tiny_reference": {
+        "miou": null,
+        "records": 0
+      },
+      "wall_seconds": 47.8
+    }
+  },
+  "reference_packs": {
+    "counts": {
+      "dedup_ratio_train": 1.2121212121212122,
+      "mini_train_1000_records": 1000,
+      "mini_val_240_records": 240,
+      "ref_train_unique": 825,
+      "ref_val_unique": 219
+    },
+    "family_counts": {
+      "ref_train_unique": {
+        "largest": 491,
+        "smallest": 334
+      },
+      "ref_val_unique": {
+        "largest": 110,
+        "smallest": 109
+      },
+      "reference_overfit20": {
+        "largest": 10,
+        "smallest": 10
+      }
+    },
+    "unique_key": "(split, tile_id, reference_source_feature_id, reference_family)"
+  },
+  "runtime_seconds": 0.03,
+  "task": "6P",
+  "test_split_used": false,
+  "verdict": "REFERENCE_HEAD_INSUFFICIENT"
+}

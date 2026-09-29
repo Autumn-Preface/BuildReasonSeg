@@ -1,0 +1,44 @@
+{
+  "_doc": "Task 6P section 5. The frozen Task 6O B3 checkpoint, re-evaluated exactly once on MiniVal240 with the oracle reference processed by GeometricRelationField v0.2 instead of v0.1. B3 is never retrained; the tolerance is 1e-6 on mIoU and Dice.",
+  "b3_retrained": false,
+  "checkpoint": {
+    "actual_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "matches": true,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "present": true,
+    "retrained": false
+  },
+  "comparisons": {
+    "dice": {
+      "abs_delta": 0.0,
+      "reproduced": 0.5401551056992948,
+      "stored_task6o": 0.5401551056992948,
+      "within_tolerance": true
+    },
+    "miou": {
+      "abs_delta": 0.0,
+      "reproduced": 0.4299680351479113,
+      "stored_task6o": 0.4299680351479113,
+      "within_tolerance": true
+    }
+  },
+  "field_used": "geometric_relation_field_v02 (oracle reference mask)",
+  "reference_source": "oracle_native_gt",
+  "reproduced": {
+    "dice": 0.5401551056992948,
+    "miou": 0.4299680351479113,
+    "precision_at_0_5": 0.6924500163042,
+    "records": 240
+  },
+  "runtime_seconds": 4.6,
+  "stage": "C-b3-reproduction",
+  "stored_task6o": {
+    "dice": 0.5401551056992948,
+    "miou": 0.4299680351479113
+  },
+  "task": "6P",
+  "test_split_used": false,
+  "tolerance": 1e-06,
+  "verdict": "B3_REPRODUCED"
+}
