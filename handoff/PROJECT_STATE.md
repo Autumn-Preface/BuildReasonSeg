@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6R._
+_Last updated by DSH at the end of Task 6S._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -80,6 +80,44 @@ The block above is machine-checked against
 | 6P | **Differentiable field v0.2 + predicted-reference substitution** | **done → `REFERENCE_HEAD_INSUFFICIENT`** (v0.2 `geometric_relation_field_v02.py` is **bit-identical** to frozen v0.1 on 64 binary oracle masks — max/mean abs error **0.0** — while keeping autograd: min gradient L1 **11,833.33** on 8 non-binary soft masks, all four directions → `FIELD_V02_VALID`; frozen Task 6O B3 reproduced with **delta 0.0** on mIoU/Dice (`B3_REPRODUCED`); deduplicated reference packs 825 train / 219 val unique + Overfit20 10+10; `ReferenceMaskHead v0.1` (273,441 params, visual + family only) passes P1 (mIoU **0.969504** / Dice 0.984388) but generalizes to RefValUnique mIoU **0.220176**, Dice 0.302794, centroid error median **0.124060** / p90 **0.319618**; predicted-reference chain through v0.2 into frozen B3 gives target mIoU **0.240968** (−0.189000 vs oracle), paired **0/20** (margin +0.003619), field MAE 0.120730 / RMSE 0.274298 / Pearson 0.653476; section 17 fails → verdict) |
 | 6Q | **Frozen proposal reference resolver audit** | **done → `REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT`** (no training / no tuning / no test split: frozen Task 6M.1 YOLO26m-seg SHA256 `ef852b58…61f474` verified exactly with imgsz 640 / conf 0.10 / max_det 100; deterministic eligibility (no border, bbox extent ≤ 0.20, smallest also area ≥ 150) and largest/smallest area ranking with confidence→index tie-break, explicit abstention; on frozen RefValUnique 219 refs / 212 tiles eligible coverage@0.50 **0.6895** overall (0.8364 largest, 0.5413 smallest), selected-reference mIoU **0.413164**, Dice 0.469992, centroid median **0.015607** / p90 **0.393517**, abstention 0.027397; failure attribution OK **111** / NOT_COVERED 62 / EXTREME_WRONG 39 / NO_ELIGIBLE 3 / NO_PROPOSALS 3 / GEOMETRY_POOR 1; downstream through v0.2 + frozen B3: target mIoU **0.304581** (oracle 0.429968, dense 6P 0.240968), target abstention 0.025, PairedVal **10/20** margin **+0.273700** (oracle 14/20, dense 0/20); section 11 coverage gate fails → verdict) |
 | 6R | **Directional GRCL feasibility (relation-level consistency loss)** | **done → `GRCL_NO_MEANINGFUL_RELATION_GAIN`** (controlled loss ablation, oracle reference, test untouched: `grcl_directional.py` implements `L_GRCL = mean(relu(tau−signed) + relu(alpha·orth−signed))` with alpha 1.2 / tau 0.04 / eps 1e-6 / **lambda 0.5**, soft differentiable target centroid, no thresholding in the loss; audit `GRCL_VALID` (8 soft masks, all relations, hinge-active, gradient L1 min **0.026917**, directional sanity pass); frozen B3 (R0) reproduced with **delta 0.0** and hard relation accuracy **0.950000**; R1 Overfit20 gate **PASS** (mIoU 0.917843 / Dice 0.933565 / rel-acc 0.950000); MiniVal240 mIoU **R0 0.429968 / R1 0.411857 / R2 0.233787**, relation accuracy **0.950000 / 0.954167 / 0.541667**, axis violations **0.012987 / 0.000000 / 0.431034**; PairedVal20 **14 / 12 / 10** with margins +0.397196 / +0.364060 / +0.118147; criteria 1,2,6 pass, **3 (+0.004167 < 0.08), 4 (12 < 16), 5 (+0.364060 < 0.38) fail**; `strong_mask_gain false`; proposal transfer diagnostic R1-under-6Q mIoU 0.283782 vs 0.304581, paired 2/20 vs 10/20) |
+
+| 6S | **Directional natural-language end-to-end integration + hardening checkpoint** | **done → `DIRECTIONAL_PARSER_HARDENING_REQUIRED`** (first full chain, all modules frozen: instruction → frozen Qwen3-VL-2B ProgramHead → deterministic decomposition → frozen Task 6Q proposal resolver → predicted reference → field v0.2 → frozen SAM2 feature + relation embedding → frozen Task 6O B3 → target mask; **no GRCL / no oracle reference / no target-proposal selection**; asset audit `ASSETS_FROZEN` (parser SHA `eb50b021…d028a3` exact, text-only, 20 ids; proposal SHA `ef852b58…61f474` exact with imgsz 640 / conf 0.10 / max_det 100; B3 SHA exact; v0.2 unchanged); parser audit **en 1.0000 / zh 1.0000** with 0 unsupported; MiniVal240 strict all-240 mIoU **0.296967**, Dice 0.375321, answered-only mIoU **0.304581** (delta vs frozen 6Q **0.0**), Dice 0.384945, abstention **0.025**, border (n=110) 0.304968, tiny (n=4) ≈0; PairedVal **10/20** own 0.277946 / cross 0.004245 / margin **+0.273700** (identical to 6Q); CLI audit 24 fixed paraphrases **21/24** (3 short Chinese prompts confuse largest↔smallest), OOD 4/4 exit 4, out-of-scope 2/4 exit 5 (both "nearest" prompts are parsed as a supported program → exit 3), on-the-fly SAM2 proven (0.206 s on an uncached tile); attribution parser 0 / reference **117** / target 67 → dominant **`REFERENCE`**; gates 1-5,7,9,10 pass, **6 (21/24 < 22) and 8 (2/4) fail**) |
+
+## Task 6S measured results
+
+First natural-language directional end-to-end chain, integrating only frozen modules (no retraining, no
+threshold tuning, no test split). Full detail:
+`docs/task6s_directional_end_to_end_integration.md`, `evaluation/task6s_*.json`.
+
+| | Value |
+|---|---|
+| Primary chain | ProgramHead (frozen Qwen3-VL-2B) → decomposition → 6Q proposal reference resolver → field v0.2 → frozen SAM2 feature → frozen 6O B3; **no GRCL, no oracle reference** |
+| Frozen assets | parser SHA `eb50b021…d028a3` exact (text-only, 20 ids) · proposal SHA `ef852b58…61f474` exact (imgsz 640 / conf 0.10 / max_det 100) · B3 SHA exact · field v0.2 unchanged → `ASSETS_FROZEN` |
+| Parser audit | en **1.0000**, zh **1.0000**, 0 unsupported classifications (240/240 both) |
+| End-to-end MiniVal240 | strict all-240 mIoU **0.296967** / Dice 0.375321; answered-only (234) mIoU **0.304581** / Dice 0.384945 / Pr@0.5 0.299145; abstention **0.025** (6 records) |
+| Per direction / family | left 0.335333 · right 0.247051 · above 0.329150 · below 0.303450; largest 0.335005 · smallest 0.273099 |
+| Border / tiny | border (n=110) **0.304968**; tiny (n=4) **≈0** (7.43e-08) |
+| vs frozen Task 6Q | answered mIoU delta **0.0** (identical 234-record answered set), Dice 0.384945 vs 0.3849449 → no integration regression |
+| PairedVal20 | pass **10/20** (gate ≥9), own 0.277946 / cross 0.004245 / margin **+0.273700** (gate ≥0.22) — identical to 6Q; parser-correct members 40/40, 0 abstention pairs |
+| CLI 24 paraphrases | **21/24** (gate ≥22 ✗): 3 short Chinese prompts (`找出最大建筑{左/右/下}边的建筑物。`) parse as `smallest_to_*` |
+| CLI controls | OOD 4/4 **exit 4** ✓; out-of-scope 2/4 **exit 5** ✓ (`largest`, `leftmost`); both "nearest" prompts parse as `largest_to_right_of` → **exit 3** ✗ |
+| On-the-fly SAM2 | **proven**: uncached tile `2_0`, `sam2_feature = 0.206 s` (vs 0.002 s cached), exit 0, four visuals written |
+| Attribution | `PARSER_WRONG` **0** · `REFERENCE_NO_PROPOSALS` 3 · `REFERENCE_NO_ELIGIBLE` 3 · `REFERENCE_NOT_COVERED_IOU50` **68** · `REFERENCE_SELECTION_WRONG` **42** · `REFERENCE_GEOMETRY_POOR` 1 · `TARGET_FAIL_WITH_REFERENCE_OK` 67 · `TARGET_OK` 56 |
+| Dominant bottleneck | parser_fail 0 (0.0000) · reference_fail **117** · target_fail 67 → **`REFERENCE`** |
+| Gates | 1 ✓ 1.0000 · 2 ✓ 0.296967 · 3 ✓ 0.304581 · 4 ✓ 10/20 · 5 ✓ +0.273700 · **6 ✗ 21/24** · 7 ✓ · **8 ✗ 2/4** · 9 ✓ · 10 ✓ |
+| Verdict | **`DIRECTIONAL_PARSER_HARDENING_REQUIRED`** |
+
+1. **The integration itself is clean**: the whole chain reproduces the frozen Task 6Q answer set and
+   metrics exactly (answered mIoU delta 0.0, paired 10/20 and margin +0.273700 to the last digit), with
+   the CLI proven to need only an image, a prompt and the frozen checkpoints, and to run SAM2 on the fly.
+2. **Parsing is exact on the canonical data but not paraphrase-robust**: 1.0000 on all 240 MiniVal240
+   queries in both languages, yet 3 of 16 short Chinese paraphrases flip largest↔smallest.
+3. **Scope cannot reject semantics the vocabulary cannot express**: "nearest" prompts are classified as a
+   supported directional program and stop at the resolver (exit 3) rather than exiting 5.
+4. **The dominant bottleneck is `REFERENCE`** (117 of 240 records), not the parser (0) and not the target
+   decoder/field (67), with `REFERENCE_NOT_COVERED_IOU50` (68) and `REFERENCE_SELECTION_WRONG` (42)
+   dominating — consistent with Task 6Q's coverage finding.
+5. Next: 等待 ChatGPT 根据 Task 6S 的全链路审计与 dominant bottleneck（REFERENCE）决定 Task 6T 的 hardening 方向，不自行修复 parser、reference 或 target decoder。
 
 ## Task 6R measured results
 

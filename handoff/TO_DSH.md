@@ -1,103 +1,226 @@
-# TO_DSH — Task 6R: Directional Geometry-Relation Consistency Loss (GRCL) Feasibility
+# TO_DSH — Task 6S: Directional End-to-End Integration + Architecture Hardening Checkpoint
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `7c19bec577282029d0eb0eac7187940262c1a63a`
+> Base commit: `a3d59da8c8698f793357887762dbc95a08a254aa`
 >
-> Predecessor: Task 6Q → `REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT`
+> Predecessor: Task 6R → `GRCL_NO_MEANINGFUL_RELATION_GAIN`
 >
-> Research decision: ChatGPT accepts the Task 6Q proposal resolver as a **usable but imperfect support path** because its downstream target chain already reaches the predeclared target mIoU / paired / own-cross thresholds. Do not spend this task optimizing the resolver.
->
-> Task 6R returns to the project's core algorithm contribution and tests a precisely defined relation-level training regularizer. DSH is an executor; do not redesign the loss or architecture.
+> Research decision already made by ChatGPT:
+> 1. Keep **GeometricRelationField v0.2**.
+> 2. Use frozen **Task 6O B3** as the target decoder.
+> 3. Use frozen **Task 6Q proposal reference resolver** as current support infrastructure.
+> 4. **Do NOT use GRCL v0.1 in the primary chain.** Preserve Task 6R only as a negative ablation.
+> 5. Integrate the frozen Qwen3-VL-2B ProgramHead to obtain the first natural-language directional end-to-end chain.
+> 6. Task 6S is a mandatory architecture-hardening checkpoint. It does NOT start nearest/L3/full training.
 
-## 0. DSH role
+DSH is an executor. Do not redesign any module or choose the next research direction.
+
+---
+
+## 0. DSH role and STOP rule
 
 All user-facing DSH output must be Chinese.
 
 DSH MAY:
-- implement the exact GRCL formula below;
-- reproduce frozen Task 6O B3 relation metrics;
-- train exactly the specified R1/R2 variants;
-- evaluate on the frozen Task 6N validation packs;
-- run a diagnostic transfer evaluation with the frozen Task 6Q proposal reference resolver;
-- solve ordinary code/runtime bugs that do not alter the experiment.
+- integrate the exact frozen modules listed below;
+- implement glue code and a clean CMD inference entry point;
+- run the exact validation/CLI/failure-attribution audits below;
+- fix ordinary integration/runtime bugs that do not change algorithms or thresholds.
 
 DSH MUST NOT:
-- change GeometricRelationField v0.2;
-- change SAM2;
-- change B3 architecture;
-- tune lambda;
-- add another relation loss;
-- change alpha/tau;
-- add `[REF]`;
-- add nearest/L3;
-- add MLLM hidden-state fusion;
+- retrain ProgramHead;
 - retrain YOLO;
-- improve the proposal resolver;
+- retrain B3;
+- train R1/GRCL;
+- change GeometricRelationField v0.2;
+- modify proposal-reference eligibility/ranking;
+- change prompt/parser model family;
+- add `[REF]`;
+- add GRCL/SCL to the primary chain;
+- add nearest;
+- add L3;
+- add a new dataset;
 - use test split;
-- add a dataset;
-- choose Task 6S.
+- tune inference thresholds;
+- choose the hardening solution after attribution;
+- start Task 6T.
 
-If any such change is required, STOP and report.
+If an unexpected issue requires any prohibited change, STOP and report it.
 
-# PART A — Research question
+---
 
-## 1. Question
+# PART A — Freeze the architecture being integrated
 
-Tasks 6N/6O established that an explicit reference-conditioned GeometricRelationField improves dense target segmentation.
+## 1. Primary Task 6S chain
 
-Task 6R tests the second candidate algorithm contribution:
+The exact primary chain is:
 
-> Does **explicit supervision on the geometric relation between the predicted target mask and the reference mask** improve relation correctness and counterfactual target discrimination beyond field guidance alone, without materially degrading mask quality?
+```text
+natural-language instruction
+        ↓
+Task 6M/6J frozen Qwen3-VL-2B ProgramHead
+        ↓
+canonical program id
+        ↓
+program decomposition:
+reference_family ∈ {largest, smallest}
+relation ∈ {left_of, right_of, above, below}
+        ↓
+Task 6Q frozen YOLO26m-seg proposal reference resolver
+        ↓
+predicted reference mask
+        ↓
+GeometricRelationField v0.2
+        ↓
+P_rel
+        ↓
+frozen SAM2.1 Hiera Base+ visual feature
+        +
+P_rel
+        +
+relation embedding
+        ↓
+Task 6O frozen B3 target decoder
+        ↓
+target mask
+```
 
-This task handles only four directional relations:
-- left_of
-- right_of
-- above
-- below
+No GRCL in this chain.
 
-Only the same 8 directional L2 programs are in scope.
+No oracle reference mask in inference.
 
-No nearest, no L3.
+No deterministic final-target proposal selection.
 
-## 2. Literature-position note
+The proposal system is used **only to ground the reference building**. The final target is produced by the dense B3 visual decoder.
 
-Copy this fixed note into Task 6R docs; do not perform a new literature search:
+## 2. Why GRCL v0.1 is excluded
 
-- Recent RRSIS work already contains “consistency” losses/regularizers, including text–vision structural consistency and cross-modal alignment consistency.
-- Therefore the word “consistency” itself is not novel.
-- The candidate contribution tested here is narrower: **a mask-level reference–target geometric relation constraint whose variables are the predicted target mask centroid, the grounded reference mask centroid, and the instruction-specified spatial relation**.
-- Do not claim “first-ever” or final novelty from Task 6R alone.
+Record in the Task 6S design doc:
 
-# PART B — Frozen evidence and scope
+Task 6R found:
+- R0/B3 MiniVal mIoU = `0.4299680351479113`
+- R1/B3+GRCL mIoU = `0.4118569...` (use exact stored value)
+- R0 hard relation accuracy = `0.95`
+- R1 relation accuracy ≈ `0.954167`
+- PairedVal: R0 `14/20`, R1 `12/20`
+- proposal-reference transfer: frozen 6Q B3 chain mIoU `0.3045812554881724`, R1 transfer ≈ `0.283782`; paired `10/20 → 2/20`
 
-## 3. Freeze previous artifacts
+Therefore Task 6S uses B3, not R1.
 
-Read-only:
+Do not delete or modify Task 6R artifacts.
 
-- all Task 6N artifacts;
-- all Task 6O artifacts;
-- all Task 6P artifacts;
-- all Task 6Q artifacts;
-- `buildreasonseg_mvp/geometric_relation_field_v02.py`;
-- Task 6O B3 checkpoint;
-- frozen SAM2 feature cache;
-- Task 6N packs:
-  - Overfit20
-  - MiniTrain1000
-  - MiniVal240
-  - PairedVal20
+## 3. Task 6R gate erratum to record, not mutate
+
+Record in the Task 6S design doc:
+
+The predeclared Task 6R criterion
+`R1 relation_accuracy >= R0 relation_accuracy + 0.08`
+was ill-posed because the frozen baseline measured `R0 = 0.95`, leaving only 0.05 headroom before the metric ceiling 1.0.
+
+This was a **ChatGPT experiment-design error**, not a DSH implementation error.
+
+Do NOT edit frozen Task 6R artifacts or verdict.
+
+The independent measurements still support excluding GRCL v0.1 because:
+- relation gain was only about +0.0042;
+- mIoU decreased;
+- PairedVal decreased;
+- proposal-reference transfer degraded substantially.
+
+---
+
+# PART B — Frozen assets and integrity verification
+
+## 4. Read-only assets
+
+Treat as frozen/read-only:
+
+- all Task 6M / 6M.1 artifacts;
+- all Task 6N / 6O / 6P / 6Q / 6R artifacts;
 - BuildSpatialReason v0.2;
 - WHU native-vector v1.0;
-- Task 3B spatial relation config.
+- Task 3B relation config;
+- GeometricRelationField v0.2;
+- frozen SAM2 feature path/cache;
+- frozen Task 6Q resolver code/config;
+- frozen Task 6O B3 checkpoint;
+- frozen ProgramHead checkpoint.
 
 No test split.
 
-## 4. Exact program scope
+## 5. Frozen ProgramHead
 
-Only:
+Use the existing text-only Qwen3-VL-2B ProgramHead used by Task 6M structured CLI.
+
+Default local path:
+`artifacts/checkpoints/task6j/j2_best.pt`
+
+Expected historical SHA256:
+`eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3`
+
+Before any evaluation:
+
+1. require the checkpoint exists;
+2. recompute SHA256;
+3. require exact match;
+4. verify the image is NOT an input to ProgramHead;
+5. verify ProgramHead output vocabulary remains the frozen 20 canonical program ids;
+6. do not retrain.
+
+If checkpoint missing or hash mismatched:
+STOP with `PARSER_CHECKPOINT_UNAVAILABLE`.
+
+Write:
+`evaluation/task6s_frozen_asset_audit.json`
+
+## 6. Frozen proposal reference resolver
+
+Use exactly Task 6Q:
+
+- checkpoint SHA256:
+  `ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474`
+- YOLO26m-seg
+- imgsz = 640
+- conf = 0.10
+- max_det = 100
+- default NMS
+- no TTA
+- no tiling
+- largest/smallest eligibility/ranking rules unchanged.
+
+Do not tune.
+
+## 7. Frozen B3 target decoder
+
+Read B3 checkpoint path and SHA256 from the frozen Task 6O evaluation artifact.
+
+Require:
+- local checkpoint exists;
+- hash exact.
+
+Do not retrain.
+
+## 8. Frozen relation field
+
+Use:
+`buildreasonseg_mvp/geometric_relation_field_v02.py`
+
+Do not modify formula/constants:
+- alpha = 1.2
+- tau = 0.04
+- s_axis = 0.02
+- s_margin = 0.02
+
+---
+
+# PART C — Supported language scope
+
+## 9. Exactly eight supported programs
+
+Task 6S supports only:
 
 - `largest_to_left_of`
 - `largest_to_right_of`
@@ -108,566 +231,644 @@ Only:
 - `smallest_to_above`
 - `smallest_to_below`
 
-Reference source for the main causal training experiment:
-`oracle_native_gt`
+After ProgramHead classification:
 
-This is intentional to isolate the loss.
+- if program is one of these 8 → continue;
+- if ProgramHead returns another valid canonical program (L1, nearest, L3, etc.) → explicit:
+  - status = `unsupported_directional_program`
+  - exit code = `5`
+  - do not run proposal/SAM2/B3;
+- if the deterministic domain guard rejects the prompt → preserve Task 6M.1 behavior:
+  - status = `unsupported_instruction`
+  - exit code = `4`
+  - no parser/proposal/SAM2/B3.
 
-GT target remains mask label/evaluation only.
+Do NOT silently remap unsupported programs.
 
-# PART C — GRCL v0.1 exact mathematical definition
+## 10. Program decomposition
 
-## 5. Create loss module
+Exact mapping:
+
+```text
+largest_to_left_of   → family=largest, relation=left_of
+largest_to_right_of  → family=largest, relation=right_of
+largest_to_above     → family=largest, relation=above
+largest_to_below     → family=largest, relation=below
+
+smallest_to_left_of  → family=smallest, relation=left_of
+smallest_to_right_of → family=smallest, relation=right_of
+smallest_to_above    → family=smallest, relation=above
+smallest_to_below    → family=smallest, relation=below
+```
+
+No learned decomposition.
+
+---
+
+# PART D — Clean end-to-end CLI
+
+## 11. Create CLI
 
 Create:
 
-`buildreasonseg_mvp/grcl_directional.py`
+`predict_buildreasonseg_directional.py`
 
-Input:
-- target logits `Z_t`, shape `(B,1,H,W)` at any resolution;
-- oracle reference mask `M_ref`, shape compatible with batch;
-- relation id in `{left_of,right_of,above,below}`.
+Required example:
 
-Constants:
-- `alpha = 1.2`
-- `tau = 0.04`
-- `eps = 1e-6`
-- `lambda_grcl = 0.5`
-
-`alpha` and `tau` must match the frozen Task 3B relation semantics.
-
-No sweep.
-
-## 6. Soft target centroid
-
-```text
-P_t = sigmoid(Z_t)
-mass_t = sum(P_t) + eps
-
-cx_t = sum(P_t * x_grid) / mass_t
-cy_t = sum(P_t * y_grid) / mass_t
+```cmd
+python predict_buildreasonseg_directional.py ^
+  --image path\to\image.tif ^
+  --prompt "分割面积最大的建筑物右侧的建筑物" ^
+  --parser-checkpoint artifacts\checkpoints\task6j\j2_best.pt ^
+  --proposal-checkpoint artifacts\checkpoints\task6m1\runs\m1_yolo26m_seg_continued\weights\best.pt ^
+  --target-checkpoint <Task6O_B3_checkpoint> ^
+  --out-dir outputs\buildreasonseg_directional
 ```
 
-Use pixel-centre normalized coordinates `[0,1]`.
+The CLI must work from:
+- image;
+- natural-language prompt;
+- model checkpoints/configs.
 
-Reference centroid:
+It must NOT require:
+- GT masks;
+- annotation JSON;
+- BuildSpatialReason record;
+- source feature ids;
+- oracle reference;
+- target id.
 
-```text
-mass_r = sum(M_ref) + eps
-cx_r = sum(M_ref * x_grid) / mass_r
-cy_r = sum(M_ref * y_grid) / mass_r
-```
+## 12. CLI outputs
 
-Do not detach target logits.
-Do not threshold target probabilities inside the loss.
-Oracle reference can be treated as fixed.
-
-## 7. Signed primary displacement and orthogonal displacement
-
-For each relation:
-
-### left_of
-```text
-signed = cx_r - cx_t
-orth = abs(cy_t - cy_r)
-```
-
-### right_of
-```text
-signed = cx_t - cx_r
-orth = abs(cy_t - cy_r)
-```
-
-### above
-```text
-signed = cy_r - cy_t
-orth = abs(cx_t - cx_r)
-```
-
-### below
-```text
-signed = cy_t - cy_r
-orth = abs(cx_t - cx_r)
-```
-
-## 8. Loss terms
-
-Use exactly:
+For a successful supported prompt, write:
 
 ```text
-L_margin = relu(tau - signed)
-L_axis   = relu(alpha * orth - signed)
-
-L_GRCL = L_margin + L_axis
+result.json
+target_mask.png
+overlay.png
+reference_mask.png
+relation_field.png
 ```
 
-Batch reduction = mean.
+`result.json` must include at least:
 
-Total training loss for R1:
+- status
+- prompt
+- parsed_program
+- reference_family
+- relation
+- domain_gate result
+- parser checkpoint hash
+- proposal checkpoint hash
+- B3 checkpoint hash
+- proposal count
+- eligible reference proposal count
+- selected reference proposal index/confidence/area/bbox
+- explicit reference abstention status/reason
+- relation-field min/max/mean
+- target mask positive-pixel count
+- runtime breakdown:
+  - parser
+  - proposal/reference
+  - SAM2 feature
+  - field
+  - target decoder
+  - total
+- `ground_truth_used = false`
 
-```text
-L_total = L_BCE + L_Dice + 0.5 * L_GRCL
-```
+If reference resolver abstains:
+- status = `reference_abstention`
+- do not fabricate a target mask;
+- JSON must state reason.
 
-No normalization by tau.
-No softplus.
-No additional sign loss.
-No field loss.
-No contrastive loss.
-No pair loss.
+## 13. On-the-fly SAM2
 
-## 9. Gradient audit before training
+The CLI must be able to compute the frozen SAM2 image feature directly from the supplied image.
 
-Create a deterministic synthetic audit:
+It may use the existing cache during batch evaluation for speed, but the CLI audit must prove that a source image not addressed through a precomputed Task 6N record/cache key can execute through the normal frozen SAM2 encoder path.
 
-- at least 8 soft target-logit tensors;
-- all 4 relations represented;
-- non-symmetric reference masks;
-- backprop `L_GRCL`.
+Do not download a new SAM2 model.
 
-Require:
-- finite loss;
-- target-logit grad exists;
-- grad finite;
-- grad L1 > `1e-8`.
+---
 
-Also numerical directional sanity:
-- moving a synthetic target centroid farther into the correct relation must not increase GRCL;
-- moving it across the reference to the wrong side must increase GRCL.
+# PART E — Canonical validation integration audit
 
-Write:
-`evaluation/task6r_grcl_audit.json`
+## 14. Reuse exact frozen validation packs
 
-If fail:
-STOP with `GRCL_IMPLEMENTATION_INVALID`.
+Use byte-for-byte:
 
-# PART D — Frozen baseline B3 relation evaluation
+- Task 6N MiniVal240
+- Task 6N PairedVal20
 
-## 10. Reproduce frozen B3
+Do not regenerate.
 
-Use Task 6O B3 checkpoint, verify hash from Task 6O artifact.
+No test split.
 
-Reproduce MiniVal240:
-- mIoU
-- Dice
+Each MiniVal240 record already has:
+- natural-language query;
+- expected canonical program;
+- GT reference/target for evaluation only.
 
-Require absolute delta <= `1e-6`.
+The actual inference chain receives only:
+- image
+- natural-language query
+- frozen checkpoints/configs.
 
-Do not retrain B3.
+Expected program and GT are held outside the inference path.
 
-## 11. Define hard relation-correctness metric
+## 15. Parser audit on MiniVal240
 
-This is evaluation only.
-
-For each predicted target mask:
-1. threshold sigmoid target output at `0.5`;
-2. if mask is empty → relation incorrect;
-3. compute predicted-mask centroid;
-4. compute oracle-reference centroid;
-5. compute `signed` and `orth` using section 7;
-6. relation is correct iff BOTH:
-
-```text
-signed >= tau
-signed >= alpha * orth
-```
+Run ProgramHead on each record's actual natural-language query.
 
 Report:
-- relation accuracy overall;
+- exact program accuracy / 240
+- confusion matrix over 8 programs
+- reference-family accuracy
+- relation accuracy
+- number classified into unsupported canonical programs.
+
+Write:
+`evaluation/task6s_parser_val.json`
+
+## 16. End-to-end MiniVal240
+
+For every record:
+
+```text
+query
+→ ProgramHead
+→ program decomposition
+→ proposal reference resolver
+→ field v0.2
+→ B3
+→ target mask
+```
+
+If parser gives wrong/unsupported program or reference abstains, score target IoU as **0** in the strict end-to-end aggregate.
+
+Report BOTH:
+- strict all-240 mIoU/Dice;
+- answered-only mIoU/Dice;
+- Pr@0.5;
+- abstention rate;
+- per program;
 - per direction;
-- mean positive signed margin `signed - tau`;
-- axis violation rate.
+- largest/smallest family;
+- border target;
+- tiny target if present.
 
-Compute this for frozen B3 on MiniVal240 and PairedVal20.
+Compare to frozen Task 6Q proposal-reference+B3 baseline:
+- answered target mIoU = `0.3045812554881724`
+- paired = `10/20`
+- own-cross margin = `0.27370032940000916`
 
-Write:
-`evaluation/task6r_b3_relation_baseline.json`
-
-# PART E — Variants
-
-## 12. R0 = frozen B3 baseline
-
-R0 is not trained in Task 6R.
-
-Architecture:
-`visual + P_rel + relation embedding → target mask`
-
-Loss history:
-BCE + Dice only.
-
-Use frozen Task 6O B3 metrics/checkpoint.
-
-## 13. R1 = B3 + GRCL
-
-Architecture EXACTLY B3:
-- frozen SAM2 visual features;
-- GeometricRelationField v0.2 from oracle reference;
-- relation embedding;
-- B3 decoder.
-
-Only change:
-training loss includes GRCL v0.1.
-
-No direct reference-mask decoder channel.
-
-## 14. R2 = no-field + GRCL control
-
-Architecture EXACTLY Task 6N B0:
-- visual feature;
-- relation embedding;
-- no reference mask input;
-- no geometric relation field input.
-
-Training loss:
-BCE + Dice + 0.5 * GRCL.
-
-Important:
-- oracle reference mask may be used by GRCL during training and by relation evaluation;
-- it is NOT an R2 model input.
-
-Purpose:
-test whether GRCL alone can replace the explicit field.
-
-# PART F — Stage R1: Overfit20
-
-## 15. Train R1 and R2
-
-Use exact frozen Task 6N Overfit20.
-
-For both variants:
-
-- AdamW
-- lr `1e-3`
-- weight_decay `1e-4`
-- max steps `1200`
-- batch `4`
-- no scheduler
-- no augmentation
-- seed `20260929`
-- same bfloat16 AMP policy as Tasks 6N/6O
-- evaluate every 100 steps
-
-Record:
-- mIoU
-- Dice
-- hard relation accuracy
-- mean GRCL
-- paired own/cross on available pairs
-- peak VRAM
-- wall time.
-
-### R1 overfit gate
-
-R1 must reach:
-- mIoU >= `0.85`
-- Dice >= `0.90`
-- hard relation accuracy >= `0.95`
-
-If fail:
-STOP with `GRCL_OVERFIT_FAIL`.
-
-R2 has no stop gate.
-
-# PART G — Stage R2: MiniTrain1000 → MiniVal240
-
-## 16. Train from fresh initialization
-
-Only if R1 overfit gate passes.
-
-Train R1 and R2 separately from fresh initialization.
-
-Exact training schedule:
-
-- AdamW
-- lr `3e-4`
-- weight_decay `1e-4`
-- batch `8`
-- max epochs `25`
-- early stopping patience `5`
-- model selection metric = MiniVal240 mIoU
-- seed `20260929`
-- no scheduler
-- no augmentation
-- same AMP.
-
-Do not access test.
+Because Task 6Q used oracle program ids, Task 6S measures the incremental cost of natural-language parsing/integration.
 
 Write:
-`evaluation/task6r_training.json`
+`evaluation/task6s_end_to_end_val.json`
 
-# PART H — Main evaluation
+## 17. PairedVal20
 
-## 17. MiniVal240
-
-For R0 / R1 / R2 report:
-
-- mIoU
-- Dice
-- Pr@0.5
-- hard relation accuracy
-- per-relation mIoU
-- per-relation relation accuracy
-- largest/smallest family mIoU
-- mean GRCL
-- signed-margin statistics
-- axis violation rate
-- border-target mIoU
-- tiny-target mIoU if present
-- params
-- selected epoch
-- wall time
-- peak VRAM.
-
-Write:
-`evaluation/task6r_mini_val.json`
-
-## 18. PairedVal20
-
-For R0/R1/R2 use exact frozen PairedVal20.
+Use natural-language query separately for each pair member.
 
 Report:
+- parser-correct members / 40
 - pass / 20
 - mean own IoU
 - mean cross IoU
 - own-cross margin
-- hard relation accuracy of the 40 member predictions.
+- reference abstention pairs
+- parser-error pairs.
 
 Write:
-`evaluation/task6r_paired_val.json`
+`evaluation/task6s_end_to_end_paired_val.json`
 
-# PART I — Proposal-reference transfer diagnostic
+---
 
-## 19. R1 under frozen Task 6Q reference resolver
+# PART F — Fixed paraphrase/CLI prompt pack
 
-Diagnostic only; no training and no gate tuning.
+## 18. Exact 24-prompt supported pack
 
-Use frozen Task 6Q proposal resolver and exact frozen proposal configuration.
+Evaluate these exact prompts. Expected program is fixed.
 
-For MiniVal240:
-- resolve reference with Task 6Q;
-- create field v0.2;
-- run trained R1 target decoder;
-- abstain exactly when Task 6Q resolver abstains.
+### largest_to_left_of
+1. `分割面积最大的建筑物左侧的建筑物。`
+2. `找出最大建筑左边的建筑物。`
+3. `segment the building to the left of the largest building`
+
+### largest_to_right_of
+4. `分割面积最大的建筑物右侧的建筑物。`
+5. `找出最大建筑右边的建筑物。`
+6. `segment the building to the right of the largest building`
+
+### largest_to_above
+7. `分割面积最大的建筑物上方的建筑物。`
+8. `找出最大建筑上面的建筑物。`
+9. `segment the building above the largest building`
+
+### largest_to_below
+10. `分割面积最大的建筑物下方的建筑物。`
+11. `找出最大建筑下面的建筑物。`
+12. `segment the building below the largest building`
+
+### smallest_to_left_of
+13. `分割面积最小的建筑物左侧的建筑物。`
+14. `找出最小建筑左边的建筑物。`
+15. `segment the building to the left of the smallest building`
+
+### smallest_to_right_of
+16. `分割面积最小的建筑物右侧的建筑物。`
+17. `找出最小建筑右边的建筑物。`
+18. `segment the building to the right of the smallest building`
+
+### smallest_to_above
+19. `分割面积最小的建筑物上方的建筑物。`
+20. `找出最小建筑上面的建筑物。`
+21. `segment the building above the smallest building`
+
+### smallest_to_below
+22. `分割面积最小的建筑物下方的建筑物。`
+23. `找出最小建筑下面的建筑物。`
+24. `segment the building below the smallest building`
+
+Use validation images deterministically selected from the corresponding frozen MiniVal240 program groups.
+
+For each prompt:
+- expected program exact;
+- parser result;
+- supported/unsupported;
+- CLI reaches correct downstream branch;
+- GT unavailable to the CLI.
+
+No retraining if a paraphrase fails.
+
+## 19. Unsupported controls
+
+Run at least:
+
+OOD / domain-gate rejection:
+- `Write a poem about the sea.`
+- `今天天气怎么样？`
+- `检测道路。`
+- empty string
+
+In-domain but out-of-6S-scope canonical tasks:
+- `分割面积最大的建筑物。`
+- `分割最左侧的建筑物。`
+- `分割面积最大的建筑物右侧最近的建筑物。`
+- `segment the building nearest to the right of the largest building`
+
+Expected:
+- OOD → exit 4 before ProgramHead/downstream.
+- Valid but unsupported directional scope → parser may classify normally, then exit 5 before proposal/SAM2/B3.
+
+Write:
+`evaluation/task6s_cli_prompt_audit.json`
+
+---
+
+# PART G — Failure attribution: mandatory architecture hardening checkpoint
+
+## 20. One exclusive bucket per MiniVal240 record
+
+Assign in this exact priority order:
+
+1. `PARSER_WRONG`
+   - parsed canonical program != expected program, including parsed unsupported program.
+
+2. `REFERENCE_NO_PROPOSALS`
+   - parser correct, resolver reports no proposals.
+
+3. `REFERENCE_NO_ELIGIBLE`
+   - parser correct, proposals exist but no eligible reference proposal.
+
+4. `REFERENCE_NOT_COVERED_IOU50`
+   - parser correct; eligible proposals exist; best eligible proposal vs GT reference IoU < 0.50.
+
+5. `REFERENCE_SELECTION_WRONG`
+   - best eligible ref proposal IoU >= 0.50, but selected ref IoU < 0.50.
+
+6. `REFERENCE_GEOMETRY_POOR`
+   - selected ref IoU >= 0.50 but selected-reference normalized centroid error > 0.05.
+
+7. `TARGET_FAIL_WITH_REFERENCE_OK`
+   - selected reference passes:
+     - ref IoU >= 0.50
+     - centroid error <= 0.05
+   - but predicted target IoU < 0.50.
+
+8. `TARGET_OK`
+   - selected reference adequate and target IoU >= 0.50.
+
+GT is allowed ONLY in this offline attribution evaluator, never in inference.
 
 Report:
-- target mIoU
-- Dice
-- paired pass
-- own-cross margin
-- hard relation accuracy
-- abstentions.
-
-Compare against frozen Task 6Q B3 proposal-reference chain:
-- mIoU `0.3045812554881724`
-- paired `10/20`
-- own-cross margin `0.27370032940000916`
+- counts and percentages;
+- by largest/smallest;
+- by direction;
+- by border/non-border target;
+- tiny-target count if present.
 
 Write:
-`evaluation/task6r_proposal_reference_transfer.json`
+`evaluation/task6s_failure_attribution.json`
 
-Do NOT use this diagnostic to select lambda or retrain anything.
+## 21. Dominant-bottleneck label
 
-# PART J — Predeclared success criteria
+DSH must compute, not interpret beyond this fixed rule:
 
-## 20. Main GRCL feasibility criteria
+```text
+parser_fail =
+    PARSER_WRONG
 
-First compute frozen R0 hard relation accuracy using section 11.
+reference_fail =
+    REFERENCE_NO_PROPOSALS
+  + REFERENCE_NO_ELIGIBLE
+  + REFERENCE_NOT_COVERED_IOU50
+  + REFERENCE_SELECTION_WRONG
+  + REFERENCE_GEOMETRY_POOR
 
-R1 is considered a positive GRCL signal only if ALL:
+target_fail =
+    TARGET_FAIL_WITH_REFERENCE_OK
+```
 
-1. R1 overfit gate passes.
-2. MiniVal mask retention:
-   - `R1 mIoU >= R0 mIoU - 0.02`
-   - numerical threshold = `0.4099680351479113`
-3. Relation correctness gain:
-   - `R1 relation_accuracy >= R0 relation_accuracy + 0.08`
-4. Paired discrimination:
-   - R1 PairedVal >= `16/20`
-5. R1 own-cross margin >= `0.38`
-6. Field remains materially useful:
-   - `R1 mIoU - R2 mIoU >= 0.10`
+Dominant bottleneck:
+- if parser_fail / 240 > `0.05` → `PARSER`
+- else if reference_fail > target_fail → `REFERENCE`
+- else → `TARGET_DECODER_FIELD`
 
-Do not alter these criteria.
+Tie `reference_fail == target_fail` → `REFERENCE`
 
-## 21. Strong signal flag
+This label is for ChatGPT's next research decision only.
 
-In addition to the verdict, report:
+DSH MUST NOT choose how to repair the dominant bottleneck.
 
-`strong_mask_gain = true`
+---
 
-only if:
-- R1 mIoU >= R0 mIoU + `0.02`
+# PART H — Predeclared integration gates
 
-This flag is NOT required for feasibility.
+## 22. Directional full-chain gate
 
-# PART K — Verdict
+Pass only if ALL:
 
-## 22. Exactly one, priority order
+1. MiniVal240 parser exact-program accuracy >= `0.95`
+2. strict all-240 end-to-end mIoU >= `0.28`
+3. answered-only end-to-end mIoU >= `0.2893521927137638`
+   - 95% of frozen Task 6Q `0.3045812554881724`
+4. PairedVal >= `9/20`
+5. own-cross margin >= `0.22`
+6. supported 24-prompt paraphrase pack parser accuracy >= `22/24`
+7. all OOD controls follow exit-code-4 behavior
+8. all valid-but-out-of-scope controls exit 5 before proposal/SAM2/B3
+9. no GT/annotation dependency in CLI
+10. no test split.
+
+Do not change these thresholds.
+
+## 23. Regression sanity
+
+If parser accuracy on the canonical MiniVal240 is 1.0, then the downstream answered-only metrics should reproduce Task 6Q within numerical/integration tolerance except for records affected only by CLI execution mechanics.
+
+If:
+- same expected program,
+- same image,
+- same frozen resolver,
+- same B3,
+- same field,
+
+but target output differs materially from Task 6Q, classify as integration regression and investigate only implementation differences.
+
+Do not tune model thresholds.
+
+---
+
+# PART I — Verdict
+
+## 24. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-   - leakage, test access, frozen mutation, target-as-input or protocol violation.
+   - leakage, test access, frozen mutation, GT inference dependency, protocol violation.
 
-2. `GRCL_IMPLEMENTATION_INVALID`
+2. `PARSER_CHECKPOINT_UNAVAILABLE`
 
-3. `GRCL_OVERFIT_FAIL`
+3. `END_TO_END_INTEGRATION_REGRESSION`
+   - frozen modules receive semantically identical inputs but output differs materially from Task 6Q.
 
-4. `GRCL_MASK_RELATION_TRADEOFF`
-   - R1 relation accuracy improves by >= 0.08, but mask-retention criterion fails.
+4. `DIRECTIONAL_PARSER_HARDENING_REQUIRED`
+   - canonical parser accuracy < 0.95 OR paraphrase accuracy < 22/24.
 
-5. `GRCL_NO_MEANINGFUL_RELATION_GAIN`
-   - mask retention passes, but relation accuracy gain < 0.08 OR paired < 16/20.
+5. `DIRECTIONAL_CHAIN_BELOW_GATE`
+   - parser gates pass, but any numeric end-to-end/paired gate fails.
 
-6. `GRCL_FIELD_REDUNDANCY_RISK`
-   - preceding criteria pass but `R1-R2 mIoU < 0.10`.
-
-7. `GRCL_DIRECTIONAL_FEASIBLE`
-   - all section 20 criteria pass.
+6. `DIRECTIONAL_END_TO_END_CHAIN_READY_FOR_HARDENING`
+   - all section 22 gates pass.
 
 No other verdict.
 
-# PART L — Interpretation boundary
+`READY_FOR_HARDENING` does NOT mean final model/paper ready.
 
-DSH may report measured results only.
+---
 
-Do NOT:
-- claim final novelty;
-- change lambda;
-- design another relation loss;
-- start nearest/L3;
-- start MLLM integration;
-- redesign reference grounding.
+# PART J — Architecture-freeze decision artifact
 
-Final handoff recommendation exactly:
+## 25. Create hardening checkpoint summary
 
-`等待 ChatGPT 根据 Task 6R 的 GRCL 因果实验结果决定 Task 6S，不自行修改 loss、reference 架构或开始 MLLM/nearest/L3。`
+Write:
+`evaluation/task6s_hardening_checkpoint.json`
 
-# PART M — Required artifacts
-
-Create:
+Must include:
 
 ```text
-buildreasonseg_mvp/grcl_directional.py
+primary_chain:
+  parser: frozen Qwen3-VL-2B ProgramHead
+  reference: frozen Task6Q proposal resolver
+  relation_field: v0.2
+  target_decoder: frozen Task6O B3
+  grcl_primary: false
 
-evaluation/task6r_grcl_audit.json
-evaluation/task6r_b3_relation_baseline.json
-evaluation/task6r_overfit20.json
-evaluation/task6r_training.json
-evaluation/task6r_mini_val.json
-evaluation/task6r_paired_val.json
-evaluation/task6r_proposal_reference_transfer.json
-evaluation/task6r_verdict.json
+proven_positive_modules:
+  - GeometricRelationField v0.2 + dense visual target decoder
 
-docs/task6r_grcl_directional_feasibility.md
+negative_or_non-primary_evidence:
+  - Task6P dense ReferenceMaskHead
+  - Task6R GRCL v0.1
 
-scripts/task6r_grcl_audit.py
-scripts/task6r_train.py
-scripts/task6r_evaluate.py
-scripts/task6r_proposal_transfer.py
-scripts/task6r_report.py
+known_technical_debt:
+  - reference proposal coverage / extreme ranking, especially smallest
+  - tiny buildings
+  - directional-only current scope
+  - no nearest
+  - no L3 multi-hop
+  - no cross-dataset generalization
+
+dominant_bottleneck:
+  one of PARSER / REFERENCE / TARGET_DECODER_FIELD
+
+next_research_decision:
+  "WAIT_FOR_CHATGPT"
 ```
 
-Checkpoints:
-`artifacts/task6r/checkpoints/`
-gitignored.
+Do not prescribe the implementation solution.
 
-Reuse all frozen feature/proposal caches.
+---
+
+# PART K — Required files
+
+## 26. Required artifacts
+
+Create at minimum:
+
+```text
+predict_buildreasonseg_directional.py
+
+buildreasonseg_mvp/task6s_directional_pipeline.py
+
+evaluation/task6s_frozen_asset_audit.json
+evaluation/task6s_parser_val.json
+evaluation/task6s_end_to_end_val.json
+evaluation/task6s_end_to_end_paired_val.json
+evaluation/task6s_cli_prompt_audit.json
+evaluation/task6s_failure_attribution.json
+evaluation/task6s_hardening_checkpoint.json
+evaluation/task6s_verdict.json
+
+docs/task6s_directional_end_to_end_integration.md
+
+scripts/task6s_evaluate.py
+scripts/task6s_cli_audit.py
+scripts/task6s_failure_attribution.py
+scripts/task6s_report.py
+```
+
+Use gitignored:
+`artifacts/task6s/`
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-# PART N — Tests
+---
 
-## 23. Required tests
+# PART L — Tests
 
-At least:
+## 27. Required tests
 
-1. Task 6Q artifacts unchanged
-2. Task 6O B3 hash exact
-3. GeometricRelationField v0.2 unchanged
-4. alpha exactly 1.2
-5. tau exactly 0.04
-6. lambda_grcl exactly 0.5
-7. target centroid is differentiable
-8. target logits receive finite nonzero GRCL gradient
-9. no thresholding inside GRCL
-10. hard relation metric threshold = 0.5 only for evaluation
-11. left sign exact
-12. right sign exact
-13. above sign exact
-14. below sign exact
-15. axis term exact
-16. margin term exact
-17. R1 architecture equals B3
-18. R1 has field
-19. R1 no direct ref channel
-20. R2 architecture equals B0
-21. R2 has no field input
-22. R2 has no ref-mask model input
-23. oracle ref used by R2 only in loss/eval
-24. exact frozen packs reused
-25. same training settings R1/R2
+At minimum:
+
+1. Task 6R artifacts unchanged
+2. Task 6Q artifacts unchanged
+3. ProgramHead checkpoint SHA exact
+4. ProgramHead receives text only
+5. ProgramHead not retrained
+6. exactly 8 supported directional programs
+7. exact program→family/relation mapping
+8. OOD exit 4 before parser/downstream
+9. out-of-scope canonical program exit 5 before proposal/SAM2/B3
+10. proposal checkpoint SHA exact
+11. proposal conf 0.10
+12. proposal imgsz 640
+13. proposal max_det 100
+14. Task 6Q eligibility/ranking unchanged
+15. GeometricRelationField v0.2 unchanged
+16. B3 checkpoint SHA exact
+17. B3 not retrained
+18. primary chain does not instantiate/use GRCL
+19. R1 checkpoint not used
+20. no oracle reference in inference
+21. no GT target in inference
+22. no BuildSpatialReason record required by CLI
+23. SAM2 can run on source image on-the-fly
+24. MiniVal240 byte-for-byte reused
+25. PairedVal20 byte-for-byte reused
 26. no test split
-27. GT target never model input
-28. proposal transfer uses frozen Task 6Q resolver/config
-29. proposal transfer does not tune
-30. no YOLO retraining
-31. no `[REF]`
-32. no nearest/L3
-33. no MLLM hidden-state fusion
-34. no graph transformer
-35. no 4B
-36. no new dataset/download/install/GUI
-37. previous suite preserved
+27. strict errors score zero in all-240 aggregate
+28. same reference reuse in paired same-reference case
+29. exactly 24 fixed supported paraphrases audited
+30. exact 8 unsupported controls audited
+31. result JSON contains `ground_truth_used=false`
+32. successful CLI writes target mask
+33. successful CLI writes reference mask
+34. successful CLI writes relation field
+35. failure attribution bucket is exclusive
+36. dominant bottleneck rule exact
+37. no GRCL primary-chain training
+38. no nearest/L3
+39. no `[REF]`
+40. no 4B
+41. no new dataset/download/install/GUI
+42. previous suite preserved.
 
 Run:
+
 `python -m pytest tests/ -q`
 
-Task 6Q ended at **696 passed, 1 skipped**.
+Task 6R ended at:
+`733 passed, 1 skipped`
+
 Do not reduce previous passing tests.
 
-# PART O — Git/storage
+---
 
-Do not commit:
-- checkpoints
-- proposal caches
-- feature caches
-- SAM2/YOLO weights
-- source imagery/vector data
+# PART M — Git/storage
+
+## 28. Do not commit
+
+- parser checkpoint
+- proposal checkpoint
+- B3 checkpoint
+- SAM2 weights
+- proposal/feature caches
+- source imagery/vectors
 - `.conda`
+- generated masks/overlays
 - large caches
 
-Commit code/small JSON/docs/tests/handoff only.
+Commit:
+- integration code
+- small JSON evaluation artifacts
+- tests
+- docs
+- handoff.
 
-Recommended:
-1. `feat: add directional geometry-relation consistency loss`
-2. `eval: measure GRCL relation and mask effects`
-3. optional docs/handoff commit
+Recommended commits:
 
-# PART P — Model policy
+1. `feat: integrate directional BuildReasonSeg inference chain`
+2. `eval: audit directional end-to-end failure cascade`
+3. optional `docs:` handoff commit
+
+---
+
+# PART N — Model policy
 
 Default:
-- DeepSeek V4.1 Flash + High
+- **DeepSeek V4.1 Flash + High**
 
-Use Flash + Max only for genuine implementation/runtime bugs.
+Use:
+- **V4.1 Flash + Max**
+
+only for genuine cross-module/runtime integration bugs.
 
 Do not use V4 Pro by default.
 
-# PART Q — STOP
+---
 
-After Task 6R:
-- commit
-- push
-- handoff
-- STOP
+# PART O — STOP
 
-Do not start:
-- MLLM integration
-- nearest
-- L3
-- joint reference-target training
-- new reference architecture
-- full-dataset training
-- GUI
+After Task 6S:
 
-Wait for ChatGPT audit.
+- commit;
+- push;
+- update handoff;
+- STOP.
+
+Do NOT:
+- fix the dominant bottleneck;
+- retrain reference;
+- retrain parser;
+- add GRCL;
+- add nearest;
+- add L3;
+- start full-dataset training;
+- access test;
+- build GUI.
+
+Wait for ChatGPT to audit the first full directional chain and choose the hardening task.
