@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6O._
+_Last updated by DSH at the end of Task 6P._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -77,6 +77,37 @@ The block above is machine-checked against
 | 6M.1 | **Proposal convergence continuation + corrected Demo gates** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`** (Task 6M epoch-18 state hash-verified and snapshotted; the same configuration resumed safely at epoch 19 from a patched copy of `last.pt` and ran to a **normal early stop** at epoch 55 — 37 epochs / 2.42 h, best epoch 40, mask mAP50 0.6827→**0.7374**, mAP50-95 0.3544→**0.4048**; validation-only freeze at conf 0.10 / max_det 100; recall@0.50 0.6333→**0.6578**, empty-tile false-proposal rate 0.1264→**0.0303**; J1-v2 fixed120 mIoU 0.2801→**0.3506**, paired 4→**7/20**, abstentions 35→**27** — but all five validation gates still FAIL, so per §10 **no test run** and diagnosis `CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`; CLI domain gate now rejects OOD prompts with **exit 4 before parser/proposal inference**, vocabulary completed so **100 %** of frozen v0.2 templates are accepted in zh and en, and the corrected audit passes with **12/12** programs + **6/6** OOD rejections) |
 | 6N | **Oracle-reference Geometric Relation Field feasibility (B0/B1/B2 ablation)** | **done → `GEOMETRIC_RELATION_FIELD_FEASIBLE`** (oracle-reference only, val-only, test untouched: parameter-free `GeometricRelationField v0.1` (alpha 1.2 / tau 0.04 / softness tau/2, no learned parameters) ranks the true target **top-1 in 100 %** of MiniVal240 (mean target 0.8668 vs best true distractor 0.1003); one frozen decoder family with 144/145/146-channel first convs and exact params 273,473 / 274,625 / **275,777**; N1 Overfit20 gate **PASS** (B2 mIoU 0.9280, Dice 0.9520); N2 MiniVal240 mIoU **B0 0.2148 → B1 0.2413 → B2 0.4531** (B2−B0 **+0.2383**, B2−B1 **+0.2118**); PairedVal20 **16/20** with own−cross margin **+0.4412**; all five §17 criteria pass) |
 | 6O | **Geometric relation field causal decomposition (B3/B4)** | **done → `FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** (frozen B2 reproduced **bit-identically** — all deltas exactly 0.0, paired 16/20 exact — on byte-identical Task 6N packs; **N-B3** = visual + field + relation, no direct reference channel, 145-ch / 274,625 params, O1 gate **PASS** (0.918509 / 0.933920), MiniVal240 mIoU **0.429968**, Dice 0.540155, **paired 14/20**, own−cross **+0.397196**; **N-B4** = field + relation only, no visual, 144-ch / 240,833 params, MiniVal240 mIoU **0.046637**, paired **2/20**; deltas **B3−B2 −0.023159**, B3−B1 +0.188652, **B3−B4 +0.383331**; criteria **14.1 PASS, 14.2 PASS, 14.3 FAIL**) |
+| 6P | **Differentiable field v0.2 + predicted-reference substitution** | **done → `REFERENCE_HEAD_INSUFFICIENT`** (v0.2 `geometric_relation_field_v02.py` is **bit-identical** to frozen v0.1 on 64 binary oracle masks — max/mean abs error **0.0** — while keeping autograd: min gradient L1 **11,833.33** on 8 non-binary soft masks, all four directions → `FIELD_V02_VALID`; frozen Task 6O B3 reproduced with **delta 0.0** on mIoU/Dice (`B3_REPRODUCED`); deduplicated reference packs 825 train / 219 val unique + Overfit20 10+10; `ReferenceMaskHead v0.1` (273,441 params, visual + family only) passes P1 (mIoU **0.969504** / Dice 0.984388) but generalizes to RefValUnique mIoU **0.220176**, Dice 0.302794, centroid error median **0.124060** / p90 **0.319618**; predicted-reference chain through v0.2 into frozen B3 gives target mIoU **0.240968** (−0.189000 vs oracle), paired **0/20** (margin +0.003619), field MAE 0.120730 / RMSE 0.274298 / Pearson 0.653476; section 17 fails → verdict) |
+
+## Task 6P measured results
+
+Differentiable field v0.2 + predicted-reference substitution: can the oracle reference mask be replaced
+by a learned predicted reference mask while preserving the field-guided target-segmentation signal?
+Val-only, test untouched, no joint training, no MLLM hidden-state fusion. Full detail:
+`docs/task6p_differentiable_field_predicted_reference.md`, `evaluation/task6p_*.json`.
+
+| | Value |
+|---|---|
+| v0.1 limitation (recorded) | `.detach()` on tensor masks + Python-`float` centroid → **not** differentiable w.r.t. the reference mask; valid for the oracle 6N/6O, insufficient for predicted-reference training |
+| v0.2 field | `geometric_relation_field_v02.py`, same formula/constants, soft centroid with eps 1e-6, no detach / no Python float / no NumPy in forward |
+| v0.2 audit | equivalence **max 0.0 / mean 0.0** on 64 binary masks (16 per direction, tolerances 1e-6 / 1e-7); gradient L1 min **11,833.33** on 8 soft masks, four directions → **`FIELD_V02_VALID`** |
+| B3 reproduction | checkpoint SHA256 verified, not retrained, oracle field via v0.2 → mIoU **0.4299680351479113**, Dice **0.5401551056992948**, both **delta 0.0** → `B3_REPRODUCED` |
+| Reference packs | RefTrainUnique **825** (1.21× dedup), RefValUnique **219**, Overfit20 **10 largest + 10 smallest**; key `(split, tile, reference_source_feature_id, family)`; no target identity, no relation id |
+| ReferenceMaskHead | 144-ch fusion, **273,441 params**, input = frozen SAM2 feature + family id only |
+| P1 Overfit20 | **mIoU 0.969504 / Dice 0.984388** → gate PASS |
+| P2 RefValUnique | mIoU **0.220176**, Dice 0.302794, Pr@0.5 0.359514; largest 0.279714 / smallest **0.160091**; centroid mean 0.150767 / **median 0.124060** / **p90 0.319618**; median area ratio 1.019795; epoch 12; 47.8 s; 0.65 GB |
+| Chain (predicted ref → v0.2 → frozen B3) | target mIoU **0.240968**, Dice 0.316164, Pr@0.5 0.546548, border 0.231872; **paired 0/20** (own 0.064774 / cross 0.061155 / margin **+0.003619**) |
+| Propagation | mIoU **−0.189000**, paired **−14**, margin **−0.393577** vs oracle B3; field MAE 0.120730 / RMSE 0.274298 / Pearson 0.653476 |
+| Gates | section 17 **FAIL** (mIoU 0.220176 < 0.35; median 0.124060 > 0.05; p90 0.319618 > 0.12); section 18 **FAIL** |
+| Verdict | **`REFERENCE_HEAD_INSUFFICIENT`** |
+
+1. **The differentiable field is exactly right**: v0.2 reproduces frozen v0.1 bit-for-bit on binary masks
+   while carrying a strong gradient to a soft reference mask, and frozen B3 reproduces with delta 0.0.
+2. **The bottleneck is reference grounding, not the field**: the head fits 20 references (0.9695) but
+   reaches only 0.220176 on 219 unique validation references, with centroid error median 0.124060.
+3. **The error propagates**: with the predicted reference the target mIoU falls 0.429968 → 0.240968 and
+   PairedVal 14/20 → 0/20.
+4. Next: 等待 ChatGPT 根据 Task 6P 的 predicted-reference 误差传播结果决定 Task 6Q，不自行进行联合训练、MLLM 隐状态融合、nearest/L3 或 GRCL。
 
 ## Task 6O measured results
 
