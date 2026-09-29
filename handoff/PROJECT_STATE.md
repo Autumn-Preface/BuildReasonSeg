@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6M.1._
+_Last updated by DSH at the end of Task 6N._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -75,6 +75,37 @@ The block above is machine-checked against
 | 6L | **Native-vector canonical dataset + scene-disjoint split + BuildSpatialReason v0.2** | **done → `VECTOR_DATASET_MIGRATION_PASS`** (all 17,388 tiles indexed; 41,186 clipped instances from 33,788 distinct `EA.shp` features; `scene_disjoint_v1` train1 10,044 / train2 3,618 / test 3,726 with zero tile, feature and RGB leakage; v0.2 = 28,108 samples with all 20 programs supported in val and test; v0.1.1↔v0.2 target change 5.70 % / 5.45 % weighted, reconciling with 6K.1's 6.96 %) |
 | 6M | **Native-vector proposal model (YOLO26m-seg) + J1-v2/J4-v2 structured evaluation + CMD Demo CLI** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT`** (export `EXPORT_VALID` at tile-union IoU 0.9988 with 0 malformed / 0 missing and all 1,235 tiny instances kept; parser `PARSER_READY` at 1.0000 accuracy on full v0.2 val after retraining the same 2B text-only head; Demo CLI gate passed on 12 real images without GT; proposal recall@0.50 **0.6333** with tiny recall **0.0023** → J1-v2 fixed120 mIoU 0.2801 / paired 4-20 and J4-v2 test fixed120 mIoU 0.2575 / paired 5-20 FAIL; M1 trained 18 of 80 epochs, wall-clock bound) |
 | 6M.1 | **Proposal convergence continuation + corrected Demo gates** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`** (Task 6M epoch-18 state hash-verified and snapshotted; the same configuration resumed safely at epoch 19 from a patched copy of `last.pt` and ran to a **normal early stop** at epoch 55 — 37 epochs / 2.42 h, best epoch 40, mask mAP50 0.6827→**0.7374**, mAP50-95 0.3544→**0.4048**; validation-only freeze at conf 0.10 / max_det 100; recall@0.50 0.6333→**0.6578**, empty-tile false-proposal rate 0.1264→**0.0303**; J1-v2 fixed120 mIoU 0.2801→**0.3506**, paired 4→**7/20**, abstentions 35→**27** — but all five validation gates still FAIL, so per §10 **no test run** and diagnosis `CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`; CLI domain gate now rejects OOD prompts with **exit 4 before parser/proposal inference**, vocabulary completed so **100 %** of frozen v0.2 templates are accepted in zh and en, and the corrected audit passes with **12/12** programs + **6/6** OOD rejections) |
+| 6N | **Oracle-reference Geometric Relation Field feasibility (B0/B1/B2 ablation)** | **done → `GEOMETRIC_RELATION_FIELD_FEASIBLE`** (oracle-reference only, val-only, test untouched: parameter-free `GeometricRelationField v0.1` (alpha 1.2 / tau 0.04 / softness tau/2, no learned parameters) ranks the true target **top-1 in 100 %** of MiniVal240 (mean target 0.8668 vs best true distractor 0.1003); one frozen decoder family with 144/145/146-channel first convs and exact params 273,473 / 274,625 / **275,777**; N1 Overfit20 gate **PASS** (B2 mIoU 0.9280, Dice 0.9520); N2 MiniVal240 mIoU **B0 0.2148 → B1 0.2413 → B2 0.4531** (B2−B0 **+0.2383**, B2−B1 **+0.2118**); PairedVal20 **16/20** with own−cross margin **+0.4412**; all five §17 criteria pass) |
+
+## Task 6N measured results
+
+First task of the final innovation-architecture phase: an **oracle-reference** feasibility ablation of a
+differentiable, parameter-free, relation-conditioned geometric prior fused into a dense segmentation
+decoder. Val-only; the test split was never read; `reference_source = oracle_native_gt` everywhere.
+Full detail: `docs/task6n_oracle_reference_geometric_relation_field.md`, `evaluation/task6n_*.json`.
+
+| | Value |
+|---|---|
+| Scope | the 8 directional L2 programs only (`largest|smallest_to_{left_of,right_of,above,below}`) |
+| Frozen visual | SAM2.1 Hiera Base+ image embedding **256 × 64 × 64** (Task 6C.7 / 6I path), SHA256 recorded, never retrained |
+| Field | `GeometricRelationField v0.1`, **zero learned parameters**, alpha 1.2 / tau 0.04 / softness tau/2, `P_rel = sign·axis·margin ∈ [0,1]` |
+| N0 field sanity | top-1 **1.0000**, top-3 **1.0000**, mean target 0.8668 vs best true distractor 0.1003, margin **+0.7698** |
+| Packs (frozen pre-training) | Overfit20 (4 pairs), MiniTrain1000, MiniVal240 (30×8), PairedVal20; 1,395/1,008 in-scope records all eligible, no difficulty deletion |
+| Variants | B0 144-ch / 273,473 params · B1 145-ch / 274,625 · **B2 146-ch / 275,777** (no padding to equalise) |
+| N1 Overfit20 | B0 0.9431 · B1 0.9332 · **B2 0.9280 mIoU / 0.9520 Dice** → gate **PASS** |
+| N2 MiniVal240 | mIoU B0 0.2148 · B1 0.2413 · **B2 0.4531**; Dice 0.3043 / 0.3276 / **0.5768**; Pr@0.5 0.4191 / 0.4496 / **0.6640** |
+| Comparisons | **B2−B0 +0.2383**, **B2−B1 +0.2118**, B1−B0 +0.0265 |
+| Border / tiny targets | border mIoU 0.1935 / 0.2171 / **0.4253** (n=114); tiny mIoU ≈0 / ≈0 / **0.0216** (n=4) |
+| PairedVal20 | 9/20 · 7/20 · **16/20**; own−cross margin +0.1058 / +0.1365 / **+0.4412** |
+| Criteria | all five §17 criteria pass |
+| Verdict | **`GEOMETRIC_RELATION_FIELD_FEASIBLE`** |
+
+1. **The field alone is already a strong geometric prior**: with an oracle reference mask it ranks the
+   true target first among all non-reference buildings in 100 % of records, with no learned parameters.
+2. **The fused field is what moves dense segmentation**: B2 beats both equally controlled baselines by a
+   wide margin, and the paired test shows it selects its own target (own IoU 0.4433 vs cross 0.0022).
+3. **This is an oracle upper-bound feasibility result, not end-to-end inference**, and no novelty or
+   "first-ever" claim is made. Next: 等待 ChatGPT 根据 Task 6N 测量结果决定 Task 6O，不自行选择后续算法。
 
 ## Task 6M.1 measured results
 

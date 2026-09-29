@@ -1,462 +1,685 @@
-# TO_DSH — Task 6M.1: Complete Proposal Training + Correct Demo Gates
+# TO_DSH — Task 6N: Oracle-Reference Geometric Relation Field Feasibility
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `b9f49f8431f941b7f4e0196fca2a275d257816a8`
+> Base commit: `5e52d95c70d321a26b5d61ee96853d1123fcb26d`
 >
-> Predecessor verdict: Task 6M = `PROPOSAL_MODEL_NEEDS_IMPROVEMENT`
+> Predecessor: Task 6M.1 → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`
 >
-> This is a narrow corrective continuation. Do not redesign the architecture. Do not start Task 6N.
+> This task is the first execution task of the final innovation-architecture phase.
+>
+> Research direction, architecture, variables, losses, stages and gates in this file are already decided by ChatGPT. DSH is an executor. Do not redesign them.
 
-## 0. Execution role
-Follow this file literally. Do not make research-direction decisions. If an unexpected issue would require changing the model family, dataset, loss, image size, split, parser architecture, executor semantics, or success thresholds, STOP and report it instead of improvising.
+## 0. DSH role and STOP rule
 
 All user-facing DSH output must be Chinese.
 
-## 1. Why this task exists
-Task 6M is valid but incomplete:
+Follow this file literally.
 
-- YOLO26m-seg completed only **18 / 80** configured epochs because the DSH session wall-clock budget ended.
-- The curve was still improving.
-- validation proposal recall@0.50 = **0.6333**.
-- tiny recall@0.50 = **0.0023**.
-- J1-v2 fixed120 mIoU = **0.2801**, paired pass = **4/20**.
-- J4-v2 fixed120 mIoU = **0.2575**, paired pass = **5/20**.
-- Parser is already ready at **1.0000 val accuracy / macro-F1**.
-- CLI inference works without GT, but unsupported instruction handling is wrong: `"Write a poem about the sea."` was mapped to `leftmost` with exit code 0.
+DSH MAY:
+- implement the specified module;
+- reuse existing frozen feature caches and utilities;
+- solve ordinary code/runtime bugs without changing the experiment;
+- run the exact experiments and tests defined below.
 
-The purpose of 6M.1 is exactly:
+DSH MUST NOT autonomously:
+- change the research question;
+- select another architecture;
+- add a graph transformer;
+- change the visual backbone;
+- add `[REF]` tokens;
+- add GRCL/SCL;
+- add counterfactual loss;
+- add another dataset;
+- change the relation semantics;
+- introduce new hyperparameter sweeps;
+- switch to 4B;
+- optimize the YOLO proposal model;
+- start Task 6O.
 
-1. preserve Task 6M evidence;
-2. finish the same YOLO26m-seg configuration to its planned convergence horizon;
-3. re-evaluate on validation;
-4. run a new test evaluation only if the validation development gate passes;
-5. fix and re-audit unsupported-instruction rejection;
-6. produce the strongest honest structured Demo baseline before research Task 6N.
+If an unexpected issue requires any of those changes, STOP and report it.
 
-## 2. Frozen assets — MUST NOT change
-Do not modify:
+## 1. Research decision already frozen by ChatGPT
+
+The Challenge Cup project is:
+
+**“空间推理引导的建筑物结构 MLLM 相关推理分割方法”**
+
+For this project, “建筑物结构” currently means inter-building instance spatial structure in overhead imagery:
+- relative direction;
+- relative distance / proximity;
+- scale/extreme relations;
+- compositional reference → relation → target reasoning.
+
+It does NOT mean roof/window/wall/beam internal building parts.
+
+### 1.1 What is NOT claimed as novelty
+
+Do not claim novelty for:
+- MLLM + segmentation;
+- `[SEG]`;
+- `[REF]`;
+- generic reference-mask conditioning;
+- spatial program execution;
+- geometric fields by themselves;
+- relation-aware graph reasoning;
+- generic spatial attention supervision;
+- counterfactual reasoning by itself.
+
+### 1.2 Fixed novelty hypothesis to test
+
+The long-term method hypothesis is:
+
+> a predicted/grounded reference building mask should be converted into an explicit, differentiable, relation-conditioned geometric prior and fused into a dense visual segmentation decoder; later, relation-level geometry supervision will constrain the predicted target mask.
+
+Task 6N tests only:
+
+> With an oracle reference mask, does an explicit reference-conditioned geometric relation field improve dense target segmentation over equally controlled relation-aware baselines that do not receive that field?
+
+This task does NOT test the final end-to-end architecture.
+
+## 2. Literature-overlap statement — copy into the Task 6N design doc
+
+Record this fixed research note; do not perform a new literature search:
+
+1. SegLLM (ICLR 2025) already re-injects previous/reference masks and uses `[REF]`/`[SEG]` mask-aware decoding. Reference-mask conditioning or `[REF]` is not our novelty.
+2. R²S (ICCV 2025) already uses a two-stage relevant-element → reasoning-prior paradigm in 3D. Generic two-stage reasoning priors are not our novelty.
+3. Think2Seg-RS (ISPRS JPRS 2026) decouples LVLM reasoning from SAM geometry execution using structured geometric prompts. Semantic/geometry decoupling is not our novelty.
+4. SegEarth-R2 (CVPR 2026) uses spatial-attention supervision for remote-sensing language-guided segmentation. Generic spatial supervision is not our novelty.
+5. SRGFormer (Sensors 2026) decomposes target/relation/position semantics and performs relation-aware graph reasoning. Relation decomposition or graph reasoning alone is not our novelty.
+6. GeoSelect (TGRS 2026) executes typed spatial programs and uses continuous geometric fields plus discrete operators over candidate sets. “Geometric field + spatial program” alone is not our novelty.
+7. GeoRefer-Bench (2026) already provides executable geospatial relation queries and counterfactual pairs. Executable relation datasets/counterfactual evaluation alone are not our novelty.
+
+The possible novelty under investigation is narrower:
+**a differentiable reference-conditioned geometric relation field fused into a dense segmentation decoder and later supervised by explicit reference–target geometry consistency.**
+
+No “first-ever” claim is allowed in Task 6N.
+
+## 3. Frozen project assets
+
+Treat as read-only/frozen:
 
 - `datasets/whu_native_vector/v1.0/`
 - `datasets/build_spatial_reason/v0.2/`
 - `datasets/build_spatial_reason/v0.1.1/`
-- `evaluation/task6m_*.json`
-- Task 6J / 6K / 6K.1 / 6L artifacts
-- Task 3B relation semantics
-- 20 canonical programs
-- `scene_disjoint_v1`
-- Task 6M fixed eval packs
-- Task 6M parser checkpoint
-- Task 6M inference/test results
+- `configs/spatial_relations_v1.yaml`
+- Task 3B relation engine
+- Task 6J artifacts
+- Task 6M artifacts
+- Task 6M.1 artifacts
+- Task 6C.7 frozen visual-feature-cache evidence
+- Task 6I artifacts
+- YOLO checkpoints and proposal runs
 
-Task 6M remains historical evidence and must stay reproducible.
+Do not modify historical artifacts.
 
-## 3. No architecture changes
-Keep exactly:
+### 3.1 Task 6M.1 metric erratum
 
-- proposal family: `YOLO26m-seg`
-- package: existing Task 6M project-local proposal environment
-- pretrained lineage: Task 6M YOLO26m-seg run
-- imgsz: **640**
-- batch: **16**
-- workers: **4**
-- seed: **20260812**
-- AMP: enabled
-- deterministic: enabled
-- max total epoch horizon: **80**
-- patience: **15**
-- train = train1
-- val = train2
-- test = test
+Do not edit frozen Task 6M.1 JSON.
 
-Do NOT use YOLO26l/x, another framework, another imgsz, tiling/window inference, custom loss weights, a different augmentation policy, tiny-instance filtering, 4B, `[REF]`, SRE, GRCL/SCL, or GUI.
+Record an erratum in the Task 6N design doc:
 
-If this exact configuration is still inadequate after convergence, report that result. A later task will decide what to change.
+`evaluation/task6m1_verdict.json` has:
+`combined_best_mask_mAP50_95 = 0.44891`
 
-# PART A — Preserve the 18-epoch state
+That value is actually the **box mAP50-95 / Ultralytics fitness proxy**.
 
-## 4. Snapshot local Task 6M checkpoints before continuation
-Current Task 6M recorded:
+Authoritative Task 6M.1 values from the training summary:
+- best box mAP50-95 = **0.44891**
+- best mask mAP50-95 = **0.40475**
+- best mask mAP50 = **0.73742**
+- best epoch = **40**
 
-- best.pt SHA256:
-  `fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44`
-- last.pt SHA256:
-  `ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e`
+Future reporting must use the training-summary values.
 
-Before any training:
+## 4. Scope: directional L2 only
 
-1. recompute both hashes;
-2. require exact match;
-3. copy, never move, both files plus `results.csv` and minimum resume metadata into:
-   `artifacts/checkpoints/task6m1/source_epoch18_snapshot/`
-4. verify copied hashes;
-5. never overwrite this snapshot.
+Handle ONLY these 8 BuildSpatialReason v0.2 program ids:
 
-Write:
-`evaluation/task6m1_source_checkpoint_audit.json`
+- `largest_to_left_of`
+- `largest_to_right_of`
+- `largest_to_above`
+- `largest_to_below`
+- `smallest_to_left_of`
+- `smallest_to_right_of`
+- `smallest_to_above`
+- `smallest_to_below`
 
-If either original hash does not match, STOP with `SOURCE_CHECKPOINT_MISMATCH`.
+Do NOT include nearest, L1 extremes, L3 compositions, or new relations.
 
-## 5. Safe continuation rule
-Preferred source = Task 6M **last.pt**.
+Use train only for training, val only for development. **Do not use test split in Task 6N.**
 
-Use Ultralytics resume only if it can continue from the copied Task 6M.1 snapshot/run state without mutating original Task 6M evidence.
+## 5. Oracle-reference protocol
 
-Before long training, verify:
+For each sample:
 
-- next epoch is 19;
-- optimizer/scheduler state restored;
-- imgsz/batch/seed/split remain frozen;
-- output path is Task 6M.1-local;
-- original Task 6M best/last hashes remain unchanged.
+- `M_ref` = canonical native-vector GT mask of the reference building.
+- `M_target` = canonical native-vector GT target mask, used only as training label / evaluation GT.
+- relation id = canonical direction encoded by v0.2.
+- image = source RGB tile.
+- visual feature = frozen image feature from the existing project visual backbone/cache.
 
-If safe resume cannot satisfy these requirements, STOP with `SAFE_RESUME_UNAVAILABLE`.
+This is deliberately an **oracle-reference ablation**.
 
-Do NOT silently convert this into a fresh run or new fine-tuning schedule.
+Every artifact must say:
+`reference_source = oracle_native_gt`
 
-# PART B — Continue training
+Never describe Task 6N as end-to-end inference.
 
-## 6. Training horizon
-Continue from epoch 18 toward total cap 80.
+GT target must never be fed as an input.
 
-Stop only when:
-1. early stopping fires with patience 15; or
-2. epoch 80 completes; or
-3. NaN/Inf / unrecoverable OOM / source integrity problem occurs.
+## 6. Frozen visual representation
 
-Do not stop merely because an arbitrary DSH subtask duration has elapsed.
+Reuse the already established **frozen SAM2 image-embedding path/cache from Task 6C.7 / 6I**.
 
-If the orchestration environment itself imposes a hard job/session limit:
-- preserve the latest completed state;
-- record the latest completed epoch;
-- do not claim convergence;
-- return `CONTINUATION_INTERRUPTED`;
-- do not run downstream graded evaluation.
+Do not retrain SAM2, change SAM2 checkpoint, switch to YOLO feature maps, or use GT building-union masks as visual input.
+
+The new module receives frozen dense visual feature tensor `V`.
+
+If cached spatial size differs from 64×64, use its native cached `(h,w)` and adapt masks/fields to `(h,w)` deterministically.
+
+Record exact feature source/checkpoint, C×h×w, and cache provenance/hash where available.
+
+## 7. Exact geometric definitions
+
+Respect frozen Task 3B convention:
+
+`relation(subject, object)` means subject satisfies relation with respect to object.
+
+For target T relative to reference R:
+- left_of(T,R) → `cx_T < cx_R`
+- right_of(T,R) → `cx_T > cx_R`
+- above(T,R) → `cy_T < cy_R`
+- below(T,R) → `cy_T > cy_R`
+
+Use active config:
+- `alpha = 1.2`
+- `tau = 0.04`
+
+Image y increases downward.
+
+## 8. GeometricRelationField v0.1 — exact implementation
 
 Create:
-`evaluation/task6m1_training_summary.json`
+`buildreasonseg_mvp/geometric_relation_field.py`
 
-Required fields:
-- source checkpoint hashes;
-- start/end epoch;
-- stop reason;
-- best epoch in combined lineage;
-- best/final mask mAP50 and mAP50-95;
-- precision/recall;
-- losses;
-- wall time;
-- mean epoch time;
-- peak VRAM;
-- NaN/Inf;
-- final best/last paths and SHA256.
+Input:
+- binary/soft `M_ref` at image resolution;
+- relation id in `{left_of,right_of,above,below}`;
+- output size `(h,w)`.
 
-# PART C — Validation-only evaluation
+### 8.1 Reference geometry
 
-## 7. Proposal metrics
-Only after normal training completion/early-stop, use canonical native masks on full validation.
+From `M_ref`, compute centroid `cx_ref`, `cy_ref` normalized to `[0,1]`.
 
-Compute:
-- recall@0.25 / 0.50 / 0.75;
-- mask AP50 / AP50-95;
-- mean/median best GT→proposal IoU;
-- proposals/tile;
-- empty-tile false-proposal rate;
-- tiny recall@0.50;
-- border recall@0.50;
-- dense recall@0.50;
-- small / medium / large breakdown.
+For every output location `(x,y)` normalized to `[0,1]`:
 
-Write:
-`evaluation/task6m1_proposal_val.json`
+```text
+dx = x - cx_ref
+dy = y - cy_ref
+ax = abs(dx)
+ay = abs(dy)
+```
 
-## 8. Threshold sweep
-Use the SAME grid only:
+### 8.2 Smooth directional score
 
-- confidence ∈ `{0.05, 0.10, 0.25}`
-- max_det ∈ `{100, 300}`
+No sweep.
 
-Selection hierarchy:
-1. target recall@0.50;
-2. oracle-program structured performance;
-3. lower proposal burden when otherwise tied.
+```text
+s_axis   = 0.02
+s_margin = 0.02
+alpha    = 1.2
+tau      = 0.04
+```
 
-Freeze:
-`evaluation/task6m1_inference_config_frozen.json`
+`alpha`/`tau` come from `spatial_relations_v1.yaml`.
+Softness is fixed at `tau / 2`.
 
-No test metric may be read before this file exists.
+For horizontal relations:
 
-# PART D — J1-v2 validation
+```text
+axis_score = sigmoid((ax - alpha * ay) / s_axis)
+margin_score = sigmoid((ax - tau) / s_margin)
+```
 
-## 9. Run existing protocol
-Use oracle program + new predicted proposals + canonical native GT for scoring only + exact frozen Task 6M val fixed120/paired20 packs.
+For vertical relations:
 
-Write:
-`evaluation/task6m1_j1v2_val.json`
+```text
+axis_score = sigmoid((ay - alpha * ax) / s_axis)
+margin_score = sigmoid((ay - tau) / s_margin)
+```
 
-Development gate remains:
+Sign score:
 
-- overall proposal recall@0.50 >= **0.92**
-- tiny recall@0.50 >= **0.60**
-- fixed120 strict mIoU >= **0.50**
-- paired pass >= **14/20**
-- abstentions <= **20/120**
+```text
+left_of:  sign_score = sigmoid((-dx) / s_margin)
+right_of: sign_score = sigmoid(( dx) / s_margin)
+above:    sign_score = sigmoid((-dy) / s_margin)
+below:    sign_score = sigmoid(( dy) / s_margin)
+```
 
-Do NOT lower thresholds after seeing results.
+Final:
 
-## 10. Branch
-If all five gates pass: proceed to Part E.
+```text
+P_rel = sign_score * axis_score * margin_score
+```
 
-If any gate fails:
-- do NOT rerun J4/test;
-- do NOT change model/config;
-- write failure attribution;
-- final proposal verdict = `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`;
-- proceed only to CLI fix, tests, docs, commit, STOP.
+Clamp `[0,1]`.
 
-# PART E — Test only after val gate pass
+No learned parameters in field generation.
 
-## 11. Parser
-Reuse existing Task 6M v0.2 parser checkpoint:
+Resize `M_ref` to `(h,w)` as a soft mask and clamp `[0,1]`.
 
-`eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3`
+Do not add distance transform, bbox, candidate masks or extra geometry channels in 6N.
 
-Do not retrain. If file missing/hash mismatch, STOP.
+## 9. Frozen decoder architecture
 
-## 12. J4-v2 test
-Task 6M already inspected test once for the earlier 18-epoch proposal model. Therefore this is not a pristine unseen-test claim.
+One common decoder family.
 
-If validation passes, run exactly one Task 6M.1 test evaluation of the new converged model and label it:
+Let frozen visual feature channels = C.
 
-`second_checkpoint_test_evaluation_after_predeclared_val_gate`
+### 9.1 Visual projection
 
-No test-driven tuning afterward.
+```text
+Conv1x1(C → 128)
+GroupNorm(8,128)
+GELU
+```
 
-Write:
-`evaluation/task6m1_j4v2_test.json`
+### 9.2 Relation embedding
 
-Demo thresholds:
-- fixed120 mIoU >= **0.40**
-- paired pass >= **14/20**
+Trainable embedding:
+- 4 relations
+- dim = **16**
 
-Do not describe this as a paper-final untouched test.
+Broadcast over `(h,w)`.
 
-# PART F — Fix unsupported instructions
+### 9.3 Fusion trunk
 
-## 13. Deterministic domain gate
-Fix `predict_structured.py` so unsupported/out-of-domain prompts fail **before ProgramHead and YOLO inference**.
+Full B2 concatenates:
 
-A prompt must contain:
+```text
+visual_128
+M_ref_down       # 1
+P_rel            # 1
+relation_embed   # 16
+```
 
-### A. at least one building/object anchor
-Chinese:
-`建筑`, `建筑物`, `建筑区域`, `房屋`, `楼`
+146 channels.
 
-English:
-`building`, `buildings`, `structure`
+Then:
 
-AND
+```text
+Conv3x3(146 → 128, padding=1)
+GroupNorm(8,128)
+GELU
+Conv3x3(128 → 64, padding=1)
+GroupNorm(8,64)
+GELU
+Conv1x1(64 → 1)
+```
 
-### B. at least one supported relation/selection anchor
-Chinese:
-`最大`, `最小`, `最左`, `最右`, `最上`, `最下`,
-`最靠左`, `最靠右`, `最靠上`, `最靠下`,
-`最近`, `左侧`, `右侧`, `上方`, `下方`,
-`左边`, `右边`, `上面`, `下面`
+Upsample logits bilinearly to canonical target-mask resolution before loss/evaluation.
 
-English:
-`largest`, `smallest`, `leftmost`, `rightmost`, `topmost`, `bottommost`,
-`nearest`, `closest`, `left of`, `right of`, `above`, `below`
+No attention, transformer, graph block or extra MLP.
 
-If A or B is absent:
+## 10. Three controlled variants
 
-- do not call ProgramHead;
-- do not run YOLO;
-- write `result.json`;
-- status = `unsupported_instruction`;
-- abstention_reason = `out_of_domain_prompt`;
-- exit code = **4**.
+Train exactly:
 
-This is a closed-Demo grammar/domain guard, not open-domain OOD detection.
+### N-B0 — relation-aware visual baseline
+Inputs:
+- visual_128
+- relation_embed
 
-## 14. Required OOD checks
-MUST reject with exit 4:
+No reference mask, no field.
+First fusion conv input = 144.
 
-- `Write a poem about the sea.`
-- `今天天气怎么样？`
-- `请总结这张图片。`
-- `检测道路。`
-- `segment the airplane`
-- empty/whitespace prompt
+### N-B1 — reference-mask baseline
+Inputs:
+- visual_128
+- `M_ref_down`
+- relation_embed
 
-MUST enter ProgramHead path:
+No field.
+First fusion conv input = 145.
 
-- `分割面积最大的建筑物。`
-- `找出最左侧的建筑区域。`
-- `分割面积最大的建筑物右侧最近的建筑物。`
-- `segment the building nearest to the right of the largest building`
-- `找出最小建筑物上方的建筑。`
+### N-B2 — full GeometricRelationField
+Inputs:
+- visual_128
+- `M_ref_down`
+- `P_rel`
+- relation_embed
 
-If a required positive prompt is rejected, fix only this deterministic gate vocabulary/logic. Do not retrain parser.
+First fusion conv input = 146.
 
-# PART G — Representative CLI audit
+Do not pad missing channels merely to equalize parameters.
+Report exact parameter counts.
 
-## 15. Audit design
-Use validation images only. Annotation files must be unavailable to CLI.
+No other architectural difference.
 
-Audit at least 12 supported prompts:
+## 11. Loss
 
-- 4 L1
-- 4 L2
-- 4 L3
-- >= 8 distinct canonical program ids
-- include largest/smallest, directional, nearest, and compositional L3 examples
+Exactly:
 
-Take expected programs from already-frozen Task 6M validation packs.
+```text
+L = BCEWithLogitsLoss + DiceLoss
+```
 
-Also run all 6 OOD prompts.
+Reuse project canonical Dice implementation if available.
 
-Write:
-`evaluation/task6m1_demo_cli_audit.json`
+No GRCL, relation loss, counterfactual loss, auxiliary field loss, focal loss or class weighting.
 
-CLI correctness gate:
+## 12. Dataset construction
 
-- supported prompts reach parser path;
-- 12/12 expected program matches;
-- no GT used;
-- output/abstention explicit;
-- every OOD prompt exits 4 before parser/proposal inference;
-- no unsupported prompt silently maps to a program.
+Create deterministic Task 6N view from BuildSpatialReason v0.2.
 
-# PART H — Error attribution
+Eligible if:
+- program is one of the 8;
+- oracle reference and target source_feature_id resolve;
+- RGB exists;
+- frozen visual feature exists/can be generated through existing frozen cache path.
 
-## 16. If proposal gate fails
-Write:
-`evaluation/task6m1_error_attribution.json`
+No extra tiny/border/visibility filter.
+No difficulty deletion.
 
-Compare Task 6M epoch18 vs Task 6M.1:
+### 12.1 Fixed packs
 
-- overall recall@0.50 delta;
-- tiny/small/medium/large recall delta;
-- border/dense delta;
-- J1 fixed120 mIoU delta;
-- J1 paired delta;
-- abstention delta.
+Freeze before training.
 
-Allowed diagnosis only:
+#### Overfit20
+20 train records:
+- deterministic sorted selection;
+- all 4 directions;
+- both largest/smallest reference families;
+- at least 4 same-image counterfactual pairs if available.
 
-- `CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`
-- `CONVERGENCE_DID_NOT_HELP_MATERIALLY`
-- `CONVERGENCE_PASSES_GATE`
+#### MiniTrain1000
+First deterministic 1000 eligible train records after stable seeded stratification by direction and reference family.
+If fewer than 1000, use all and report.
 
-Do not choose a new architecture in this task.
+#### MiniVal240
+240 val records:
+- 30 per program id if available;
+- otherwise deterministic proportional fill;
+- all 8 ids represented.
 
-# PART I — Final verdict
+#### PairedVal20
+20 val same-image pairs:
+- same tile;
+- same reference instance/source_feature_id;
+- different direction;
+- different target instance/source_feature_id.
 
-## 17. Exactly one
+If fewer than 20 valid pairs, STOP before training:
+`PAIRED_SET_INSUFFICIENT`.
+
+Write record ids + SHA256 manifest.
+
+## 13. Stage N0 — field sanity
+
+No training.
+
+On MiniVal240, for each record:
+1. mean `P_rel` over target mask;
+2. mean over reference mask;
+3. mean over every other native building;
+4. target rank among non-reference native instances by mean field score.
+
+Report:
+- top-1 rate;
+- top-3 rate;
+- mean target score;
+- mean best distractor score;
+- per relation.
+
+Diagnostic only. No threshold tuning.
+
+## 14. Stage N1 — Overfit20
+
+Train B0/B1/B2 separately on exact same Overfit20.
+
+Use:
+- AdamW
+- lr `1e-3`
+- weight_decay `1e-4`
+- max steps **1200**
+- batch **4**
+- no scheduler
+- no augmentation
+- seed **20260929**
+- same AMP setting across variants
+
+Evaluate each 100 steps.
+
+Record best/final:
+- mIoU
+- Dice
+- per relation
+- paired own-vs-cross if available
+
+### N1 gate
+
+B2 must reach:
+- train mIoU >= **0.85**
+- train Dice >= **0.90**
+
+If B2 fails:
+- STOP
+- verdict `GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER`
+- no N2.
+
+## 15. Stage N2 — MiniTrain1000 → MiniVal240
+
+Only if N1 passes.
+
+Train each variant from fresh initialization:
+
+- AdamW
+- lr `3e-4`
+- weight_decay `1e-4`
+- batch **8**
+- max epochs **25**
+- early stopping patience **5** on val mIoU
+- seed **20260929**
+- no augmentation
+- no scheduler
+- same AMP setting across variants
+
+Model selection = highest MiniVal240 mIoU.
+
+Do not touch test.
+
+## 16. N2 metrics
+
+For B0/B1/B2 report:
+
+- val mIoU
+- val Dice
+- Pr@0.5
+- per relation mIoU
+- largest-ref vs smallest-ref
+- border-target mIoU
+- tiny-target mIoU if present
+- total/trainable params
+- peak VRAM
+- wall time
+
+### PairedVal20
+
+Run both relations for every pair with same image/reference.
+
+Report:
+- pass / 20;
+- mean own-target IoU;
+- mean cross-target IoU;
+- own-cross margin.
+
+Pair passes only if both members prefer their own GT target over the paired alternative by IoU.
+
+## 17. Causal success criteria
+
+Positive signal only if ALL:
+
+1. B2 passes N1.
+2. MiniVal:
+   - `B2 - B0 mIoU >= 0.05`
+   - `B2 - B1 mIoU >= 0.02`
+3. B2 PairedVal >= **14/20**.
+4. B2 mean own-target IoU exceeds mean cross-target IoU by >= **0.10**.
+5. no GT target enters model input.
+
+Do not alter gates.
+
+## 18. Exactly one verdict
+
 Allowed:
 
-- `STRUCTURED_DEMO_READY`
-- `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`
-- `CONTINUATION_INTERRUPTED`
-- `SOURCE_CHECKPOINT_MISMATCH`
-- `SAFE_RESUME_UNAVAILABLE`
+- `GEOMETRIC_RELATION_FIELD_FEASIBLE`
+  - all section-17 criteria pass.
+
+- `REFERENCE_MASK_HELPS_FIELD_DOES_NOT`
+  - B1-B0 >= 0.05, but B2-B1 < 0.02.
+
+- `RELATION_CONDITIONING_NOT_GENERALIZING`
+  - N1 passes but B2-B0 < 0.05 on MiniVal.
+
+- `GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER`
+  - B2 fails N1.
+
+- `PAIRED_SET_INSUFFICIENT`
+
 - `INVALID_EXPERIMENT`
 
-`STRUCTURED_DEMO_READY` requires:
+No other verdict.
 
-- normal training completion/early-stop;
-- all five validation J1 gates pass;
-- Task 6M.1 test fixed120 mIoU >= 0.40;
-- Task 6M.1 test paired >= 14/20;
-- corrected CLI gate passes.
+## 19. No research interpretation by DSH
 
-Write:
-`evaluation/task6m1_verdict.json`
+DSH may report measurements.
 
-# PART J — Tests
+Do NOT autonomously conclude that novelty is proven, SRE/GRCL should be abandoned, another architecture should replace it, or a new loss should be added.
 
-## 18. Focused tests
-At minimum:
+In `FROM_DSH.md`, final Recommended next step must be exactly:
 
-1. all Task 6M tracked artifacts unchanged;
-2. source checkpoint hashes match Task 6M;
-3. snapshot hashes match originals;
-4. source data unchanged;
-5. v0.2 unchanged;
-6. resume starts next epoch 19;
-7. frozen training config unchanged;
-8. no test read before 6M.1 config freeze;
-9. test skipped if val gate fails;
-10. old fixed packs reused byte-for-byte;
-11. no GT in inference;
-12. unsupported prompt exits 4;
-13. unsupported prompt does not call parser;
-14. unsupported prompt does not call proposal model;
-15. all 6 OOD prompts rejected;
-16. all 5 positive prompts enter parser path;
-17. CLI audit = 4 L1 / 4 L2 / 4 L3;
-18. >=8 program ids;
-19. no 4B;
-20. no model-family/imgsz/loss change;
-21. no GUI;
-22. no new dataset/download.
+`等待 ChatGPT 根据 Task 6N 测量结果决定 Task 6O，不自行选择后续算法。`
 
-Run:
-`python -m pytest tests/ -q`
+## 20. Required artifacts
 
-Task 6M ended at 547 passed, 1 skipped. Do not reduce passing tests.
+Create at minimum:
 
-# PART K — Required artifacts
+```text
+configs/task6n_oracle_relation_field.yaml
 
-Always:
-- `evaluation/task6m1_source_checkpoint_audit.json`
-- `evaluation/task6m1_training_summary.json`
-- `evaluation/task6m1_proposal_val.json` if normal training completion
-- `evaluation/task6m1_inference_config_frozen.json` if normal training completion
-- `evaluation/task6m1_j1v2_val.json` if normal training completion
-- `evaluation/task6m1_demo_cli_audit.json`
-- `evaluation/task6m1_error_attribution.json` if proposal evaluation runs
-- `evaluation/task6m1_verdict.json`
-- `docs/task6m1_proposal_convergence_and_demo_fix.md`
+evaluation/task6n_pack_manifest.json
+evaluation/task6n_field_sanity.json
+evaluation/task6n_overfit20.json
+evaluation/task6n_mini_val.json
+evaluation/task6n_paired_val.json
+evaluation/task6n_ablation_summary.json
+evaluation/task6n_verdict.json
 
-Only if validation gate passes:
-- `evaluation/task6m1_j4v2_test.json`
+docs/task6n_oracle_reference_geometric_relation_field.md
+
+buildreasonseg_mvp/geometric_relation_field.py
+buildreasonseg_mvp/task6n_relation_decoder.py
+
+scripts/task6n_freeze_packs.py
+scripts/task6n_field_sanity.py
+scripts/task6n_train.py
+scripts/task6n_evaluate.py
+scripts/task6n_report.py
+```
+
+Checkpoints/caches under `artifacts/task6n/`, gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-# PART L — Git/storage
-Do not commit checkpoints, `.conda`, run dirs, source imagery/vector files, derived export, caches.
+## 21. Required tests
 
-Commit only code/tests/small JSON/docs/handoff.
+At least:
 
-Recommended commits:
-1. `fix: reject unsupported structured demo prompts`
-2. `eval: complete native-vector proposal convergence audit`
-3. optional docs handoff commit
+1. Task 6M.1 artifacts unchanged;
+2. v0.2 unchanged;
+3. spatial config unchanged;
+4. no test access;
+5. only 8 allowed programs;
+6. target never input;
+7. oracle reference explicitly marked;
+8. direction signs correct;
+9. y-axis convention correct;
+10. alpha=1.2;
+11. tau=0.04;
+12. softness=tau/2;
+13. field bounded [0,1];
+14. left/right mirror sanity;
+15. above/below mirror sanity;
+16. B0 no ref/field;
+17. B1 ref/no field;
+18. B2 ref+field;
+19. same visual backbone/cache;
+20. same packs;
+21. same N1 optimizer/steps;
+22. same N2 optimizer/epochs;
+23. deterministic pack hashes;
+24. PairedVal same tile/ref and different target;
+25. no `[REF]` token;
+26. no GRCL/SCL;
+27. no graph transformer;
+28. no proposal training;
+29. no 4B;
+30. no GUI/download/install.
 
-# PART M — Model policy
+Run:
+`python -m pytest tests/ -q`
+
+Task 6M.1 ended at **569 passed, 1 skipped**. Do not reduce previous passing tests.
+
+## 22. Storage / Git
+
+Do not commit:
+- SAM2 weights
+- model checkpoints
+- feature caches
+- `.conda`
+- source imagery/vectors
+- large caches
+
+Commit code/config/small JSON/docs/tests/handoff only.
+
+Recommended:
+1. `feat: add oracle-reference geometric relation field`
+2. `eval: measure relation-field ablations`
+3. optional docs/handoff commit
+
+## 23. DSH model policy
+
 Default:
 - DeepSeek V4.1 Flash + High
 
-Only use Flash + Max for a genuine implementation/runtime bug.
+Use Flash + Max only for genuine implementation/runtime bugs.
 
 Do not use V4 Pro by default.
 
-# PART N — STOP
-After Task 6M.1 STOP.
+## 24. STOP
 
-Do not:
-- start Task 6N;
-- choose a small-object strategy;
-- change imgsz;
-- train another backbone;
-- add `[REF]`;
-- add SRE;
-- add GRCL/SCL;
-- build GUI.
+After Task 6N:
+- commit
+- push
+- update handoff
+- STOP
 
-Wait for ChatGPT audit and research decision.
+Do not start:
+- predicted-reference integration
+- nearest
+- L3
+- GRCL
+- counterfactual loss
+- full-dataset training
+- proposal optimization
+- GUI
+
+Wait for ChatGPT audit.

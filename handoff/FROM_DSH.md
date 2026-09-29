@@ -17,186 +17,162 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6M.1 Report: Proposal Convergence + Correct Demo Gates
+# FROM_DSH — Task 6N Report: Oracle-Reference Geometric Relation Field Feasibility
 
-_This file holds the Task 6M.1 report. The Task 6M report is preserved in git history at commit
-`b9f49f8` and in `docs/task6m_native_vector_proposal_demo.md`; every Task 6M artifact in
-`evaluation/task6m_*.json` is byte-identical after this task._
+_This file holds the Task 6N report. The Task 6M.1 report is preserved in git history at commit
+`5e52d95`; the Task 6M report at `b9f49f8`._
 
-Full design notes: `docs/task6m1_proposal_convergence_and_demo_fix.md`.
+Full design notes, the fixed literature-overlap statement and the Task 6M.1 metric erratum:
+`docs/task6n_oracle_reference_geometric_relation_field.md`.
 
 ## 1. Verdict
 
-**`PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`** — failed gates
-`validation_j1_gate_passed`, `test_fixed120_miou_ge_0_40`, `test_paired_pass_ge_14`. Passing gates:
-source-checkpoint verified, safe resume, **normal training completion (early stop)**, validation
-evaluation ran, corrected Demo-CLI gate.
+**`GEOMETRIC_RELATION_FIELD_FEASIBLE`** — all five Task 6N section-17 criteria pass:
 
-Convergence **did** help every metric, but not enough to clear the validation development gate, so per
-section 10 no test evaluation was run, no model/config was changed and no threshold was lowered.
-
-## 2. Preserved Task 6M evidence (Part A)
-
-`evaluation/task6m1_source_checkpoint_audit.json` = **`SOURCE_CHECKPOINT_VERIFIED`**: `best.pt`
-`fd407db634a8a7ef…dbf4ea44` and `last.pt` `ea998bda37dd2dcb…5513f860e` were recomputed and matched
-exactly, then **copied** (never moved) with `results.csv` and run metadata into
-`artifacts/checkpoints/task6m1/source_epoch18_snapshot/` and re-verified; the snapshot is never
-overwritten. After the whole continuation the live hashes were checked again — **still unchanged**. The
-four frozen Task 6M eval packs and the parser checkpoint were reused byte-for-byte (SHA256 compared
-against `task6m_eval_pack_manifest.json`).
-
-## 3. Safe continuation (Part A/B)
-
-`evaluation/task6m1_resume_preflight.json` = **`SAFE_RESUME_READY` → `SAFE_RESUME_COMPLETED`**. Because
-Ultralytics `resume=True` restores the checkpoint's stored `train_args` (whose `project`/`name`/
-`save_dir` point at the Task 6M directory), the continuation resumed from a patched copy
-`last_resume.pt` whose stored args point at
-`artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/`, with `save_dir` also passed as an
-explicit resume override — so no Task 6M evidence can be written. Verified before training: source
-hashes unchanged, snapshot matches, stored epoch 17 (0-based) → **next epoch 19**, optimizer and EMA
-state present, `save_dir` Task 6M.1-local, frozen config unchanged (imgsz 640, batch 16, workers 4,
-seed 20260812, epochs 80, patience 15, AMP, deterministic, derived native-vector export). The log
-confirms `Resuming training …last_resume.pt` and the first resumed epoch is **19/80**.
-
-## 4. Continuation training (Part B)
-
-`evaluation/task6m1_training_summary.json` — combined Task 6M + 6M.1 lineage.
-
-* **stop = `early_stopping_fired`** (patience 15) → normal completion; epochs **19 → 55** (37 epochs);
-* **2.42 h** wall clock, **235.5 s** mean epoch, peak VRAM **11.2 GB**, **no NaN/Inf**;
-* combined **best epoch 40**: mask mAP50 **0.73742**, mask mAP50-95 **0.40475** (Ultralytics fitness
-  proxy / `best.pt` box mAP50-95 0.44891); Task 6M epoch 18 was 0.68266 / 0.35437 (+8.0 % / +14.2 %);
-* final epoch 55: mask mAP50 0.72415 / mAP50-95 0.39172; final `best.pt`/`last.pt` SHA256 recorded;
-* no configuration change of any kind (same family, imgsz, batch, seed, split, loss, augmentation).
-
-## 5. Validation proposal metrics (Part C)
-
-`evaluation/task6m1_proposal_val.json` (full validation, canonical native masks, test untouched):
-
-| Metric | Task 6M (ep 18) | Task 6M.1 (converged) |
+| Criterion | Required | Measured |
 |---|---|---|
-| recall @ 0.25 / 0.50 / 0.75 | 0.7772 / 0.6333 / 0.3404 | **0.7902 / 0.6578 / 0.3928** |
-| mask mAP50 / mAP50-95 | 0.6819 / 0.3637 | **0.7367 / 0.4025** |
-| proposals / tile | 6.38 | **5.39** |
-| empty-tile false-proposal rate | 0.1264 | **0.0303** |
-| tiny / border / dense recall@0.50 | 0.0023 / 0.5461 / 0.6322 | **0.0068 / 0.5753 / 0.6590** |
-| small / medium / large recall@0.50 | 0.1252 / 0.5299 / 0.7269 | **0.1621 / 0.5574 / 0.7505** |
+| B2 passes N1 (Overfit20) | mIoU ≥ 0.85, Dice ≥ 0.90 | 0.9280 / 0.9520 |
+| MiniVal `B2 − B0` mIoU | ≥ 0.05 | **+0.2383** |
+| MiniVal `B2 − B1` mIoU | ≥ 0.02 | **+0.2118** |
+| B2 PairedVal | ≥ 14/20 | **16/20** |
+| B2 own − cross IoU | ≥ 0.10 | **+0.4412** |
+| no GT target in input | required | satisfied by construction (tested) |
 
-Sweep used the **same** declared grid (conf ∈ {0.05, 0.10, 0.25} × max_det ∈ {100, 300}); frozen
-config **conf 0.10, max_det 100** in `evaluation/task6m1_inference_config_frozen.json` with
-`frozen_before_test: true` and `test_metrics_inspected_before_freezing: false`. No test metric was read
-before that file existed.
+Every measurement below is an **oracle-reference** measurement
+(`reference_source = oracle_native_gt`); nothing in Task 6N is end-to-end inference and the test split
+was never read.
 
-## 6. J1-v2 validation (Part D)
+## 2. Scope and protocol
 
-`evaluation/task6m1_j1v2_val.json` — oracle program + converged predicted proposals + the frozen Task
-6M val fixed120/paired20 packs, GT for scoring only:
+The 8 directional L2 programs only (`largest|smallest_to_{left_of,right_of,above,below}`): `nearest`,
+L1 extremes, L3 compositions and new relations are out of scope. For each sample `M_ref` is the
+canonical native-vector GT mask of the reference building and `M_target` the canonical GT target used
+**only** as label/evaluation GT; the relation id is the v0.2 canonical direction; the visual feature is
+the frozen SAM2 image embedding. The GT target is never an input.
 
-| Gate | Threshold | Task 6M | Task 6M.1 | Result |
+## 3. Frozen visual representation
+
+The Task 6C.7 / 6I frozen path: `Sam2Encoder` over frozen **SAM2.1 Hiera Base+**
+(`local_cache/models/sam2.1_hiera_base_plus.pt`, SHA256
+`a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5`, config
+`configs/sam2.1/sam2.1_hiera_b+.yaml`), giving **C × h × w = 256 × 64 × 64**. SAM2 was not retrained, its
+checkpoint was not changed, no YOLO feature map is used and no GT building-union mask is an input. A
+derived float32 feature memo lives in the gitignored `artifacts/task6n/features/` so all three variants
+consume bit-identical inputs.
+
+## 4. GeometricRelationField v0.1
+
+Parameter-free and differentiable: `s_axis = s_margin = 0.02`, `alpha = 1.2`, `tau = 0.04`, softness
+`= tau/2 = 0.02`, `P_rel = clamp(sign_score * axis_score * margin_score, 0, 1)` with the frozen Task 3B
+sign convention (`left_of`: `cx_T < cx_R`; `right_of`: `cx_T > cx_R`; `above`: `cy_T < cy_R`; `below`:
+`cy_T > cy_R`; image `y` increases downward). No distance transform, bounding box, candidate mask or
+extra geometry channel was added, and no learned parameter exists in field generation.
+
+## 5. Decoder and controlled variants
+
+One common decoder family (1×1 → 128 + GroupNorm + GELU; 4 × 16 relation embedding; 3×3 → 128; 3×3 →
+64; 1×1 → 1; bilinear upsample to 512 × 512 for loss/evaluation). No attention, transformer, graph
+block or extra MLP. Loss exactly `BCEWithLogitsLoss + DiceLoss`.
+
+| Variant | Inputs | First conv in-ch | Params | MiniVal240 mIoU | Dice | Pr@0.5 |
+|---|---|---|---|---|---|---|
+| N-B0 | visual + relation | 144 | 273,473 | 0.2148 | 0.3043 | 0.4191 |
+| N-B1 | + `M_ref_down` | 145 | 274,625 | 0.2413 | 0.3276 | 0.4496 |
+| **N-B2** | + `M_ref_down` + `P_rel` | **146** | **275,777** | **0.4531** | **0.5768** | **0.6640** |
+
+Channels were **not** padded to equalise parameters; the counts above are exact.
+
+## 6. Frozen packs
+
+`evaluation/task6n_pack_manifest.json`, frozen before training, test untouched: **Overfit20** (20 train,
+4 directions × both families, 4 same-image counterfactual pairs), **MiniTrain1000** (seeded
+stratification over direction × family), **MiniVal240** (30 per program, all 8 programs),
+**PairedVal20** (20 val pairs: same tile, same reference, different direction, different target). All
+1,395 in-scope train and 1,008 in-scope val records were eligible — no tiny/border/visibility filter and
+no difficulty deletion.
+
+## 7. Stage N0 — field sanity (no training, diagnostic only)
+
+`evaluation/task6n_field_sanity.json` on MiniVal240: **top-1 rate 1.0000**, **top-3 rate 1.0000**, mean
+target score **0.8668**, mean other-building score 0.3520, mean best **true** distractor score
+**0.1003**, mean margin **+0.7698**, mean 6.97 native instances per tile. The parameter-free field ranks
+the true target first among all non-reference buildings in every one of the 240 records. No threshold
+was tuned.
+
+## 8. Stage N1 — Overfit20
+
+`evaluation/task6n_overfit20.json`, AdamW / lr 1e-3 / wd 1e-4 / 1200 steps / batch 4 / no scheduler / no
+augmentation / seed 20260929 / evaluation every 100 steps, identical for all variants:
+
+| Variant | best mIoU | best Dice |
+|---|---|---|
+| N-B0 | 0.9431 | 0.9643 |
+| N-B1 | 0.9332 | 0.9576 |
+| **N-B2** | **0.9280** | **0.9520** |
+
+**N1 gate PASS** → the task proceeded to N2. On 20 samples the field variant fits marginally behind the
+baselines; that is reported as measured, without interpretation.
+
+## 9. Stage N2 — MiniTrain1000 → MiniVal240
+
+`evaluation/task6n_mini_val.json`, `evaluation/task6n_ablation_summary.json`: AdamW / lr 3e-4 / wd 1e-4
+/ batch 8 / ≤ 25 epochs / early stopping patience 5 on val mIoU / seed 20260929 / fresh initialisation /
+model selection = best MiniVal240 mIoU.
+
+* per relation mIoU (left / right / above / below): B0 0.186 / 0.209 / 0.220 / 0.244 · B1 0.228 / 0.210
+  / 0.266 / 0.262 · **B2 0.454 / 0.458 / 0.468 / 0.433**;
+* largest-ref vs smallest-ref mIoU: B0 0.174 / 0.256 · B1 0.206 / 0.276 · **B2 0.440 / 0.467**;
+* border-target mIoU (n = 114): B0 0.1935 · B1 0.2171 · **B2 0.4253**;
+* tiny-target mIoU (n = 4): B0 ≈ 0 · B1 ≈ 0 · **B2 0.0216**;
+* peak VRAM: 0.894 / 0.674 / 0.674 GB; wall time 174.8 / 50.9 / 44.8 s (B0 includes building the frozen
+  feature cache); selected epoch 10 / 11 / **9** (epochs run 15 / 16 / 14).
+
+## 10. PairedVal20
+
+`evaluation/task6n_paired_val.json` — both relations of a pair run with the same image and the same
+oracle reference; a pair passes only if **both** members prefer their own GT target over the paired
+alternative by IoU:
+
+| Variant | pass | mean own IoU | mean cross IoU | own − cross |
 |---|---|---|---|---|
-| overall recall@0.50 | ≥ 0.92 | 0.6333 | **0.6578** | FAIL |
-| tiny recall@0.50 | ≥ 0.60 | 0.0023 | **0.0068** | FAIL |
-| fixed120 strict mIoU | ≥ 0.50 | 0.2801 | **0.3506** | FAIL |
-| paired pass | ≥ 14/20 | 4/20 | **7/20** | FAIL |
-| fixed120 abstentions | ≤ 20/120 | 35 | **27** | FAIL |
+| N-B0 | 9/20 | 0.1456 | 0.0398 | +0.1058 |
+| N-B1 | 7/20 | 0.1871 | 0.0506 | +0.1365 |
+| **N-B2** | **16/20** | **0.4433** | **0.0022** | **+0.4412** |
 
-Full validation mIoU **0.3541** (+0.0569), abstention rate 0.2579, by level L1 0.3805 / L2 0.2669 /
-L3 0.3322; paired own IoU 0.3144 vs cross 0.0367 (8.6× margin — the executor discriminates, the
-proposal is the limit). Thresholds were not lowered.
+## 11. Frozen assets, tests, storage
 
-## 7. Test evaluation (Part E)
+Task 6M.1 artifacts, `datasets/whu_native_vector/v1.0/`, `datasets/build_spatial_reason/v0.2/` and
+`configs/spatial_relations_v1.yaml` are unchanged; Task 6N added only new files. `python -m pytest
+tests/ -q` → **597 passed, 1 skipped** (Task 6M.1 ended at 569 passed / 1 skipped; no previously
+passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check
+that needs the proposal env). `tests/test_task6n_oracle_relation_field.py` covers the 30
+section-21 checks: Task 6M.1 artifacts unchanged, v0.2 unchanged, spatial config unchanged, no test
+access, only the 8 allowed programs, target never an input, oracle reference explicitly marked,
+direction signs, y-axis convention, `alpha = 1.2`, `tau = 0.04`, softness `= tau/2`, field bounded in
+[0, 1], left/right and above/below mirror sanity, B0 has neither reference nor field, B1 has the
+reference but not the field, B2 has both, same visual backbone/cache, same packs, same N1/N2 optimiser
+and budgets, deterministic pack hashes, PairedVal same tile/reference with different targets, no `[REF]`
+token, no GRCL/SCL, no graph transformer, no proposal training, no 4B, no GUI/download/install.
 
-**Not run** — section 10 forbids it when a validation gate fails, and forbids model/config changes or
-retuning. Task 6M's single earlier test inspection (`evaluation/task6m_j4v2_test.json`) remains the only
-test evidence for this lineage; there is no `task6m1_j4v2_test.json`. No pristine-unseen-test claim is
-made anywhere.
+Not committed: SAM2 weights, model checkpoints, feature caches, `.conda`, source imagery/vectors, large
+caches. Committed: code, config, small JSON artifacts, docs, tests, handoff.
 
-## 8. Corrected Demo CLI (Part F)
+Watt was **not needed** in Task 6N: this task downloaded nothing (no new weights, packages or datasets)
+and installed nothing — the frozen SAM2 checkpoint was already present in `local_cache/models/`. The
+pre-existing Watt instance is transport-only, is not owned by this project, and was left running, per
+the ownership rule; no proxy, host, certificate or TLS setting was read or modified.
 
-`predict_structured.py` now evaluates a deterministic closed-Demo domain gate **before ProgramHead and
-before the proposal model**: a prompt must contain a building/object anchor (`建筑`, `建筑物`,
-`建筑区域`, `房屋`, `楼`, `building`, `buildings`, `structure`) **and** a supported relation/selection
-anchor, otherwise the CLI writes `result.json` with `status = unsupported_instruction`,
-`abstention_reason = out_of_domain_prompt`, `parsed_program = null`, `proposal_count = null` and
-**exits 4** — with no parser construction, no Ultralytics import and no inference.
+## 12. What is **not** claimed
 
-`evaluation/task6m1_domain_gate_check.json` = **PASS**: all six required prompts rejected with exit 4
-(`Write a poem about the sea.`, `今天天气怎么样？`, `请总结这张图片。`, `检测道路。`,
-`segment the airplane`, empty/whitespace) and all five required positive prompts enter the parser path.
-This is a closed-Demo guard, not open-domain OOD detection.
-
-**Measured vocabulary repair.** The first audit run found a real defect: the v0.2 templates phrase
-`topmost`/`bottommost` as **位置最高 / 位置最低** and English `leftmost`/`rightmost`/`largest` as
-*furthest left/right*, *furthest to the left/right*, *greatest*, *highest/lowest*, which were missing
-from the section-13 anchor list — **899 of 9,111 validation records (9.9 %)** and 9 of 20 program
-templates were falsely rejected. Section 13 permits exactly this repair, so the relation vocabulary was
-completed with those concept-equivalent anchors; object anchors were not widened and no free-form
-acceptance was added, so all six required out-of-domain prompts are still rejected.
-`evaluation/task6m1_domain_gate_coverage.json`: every distinct v0.2 template in train/val/test is now
-accepted in both languages — val **9,111/9,111 zh (100 %)** and **9,111/9,111 en (100 %)**, **0 falsely
-rejected templates**, all 20 programs reachable.
-
-## 9. Representative CLI audit (Part G)
-
-`evaluation/task6m1_demo_cli_audit.json` = **gate PASS** (checkpoint
-`task6m1_continuation_best`, frozen conf 0.10 / max_det 100, annotation files unavailable to the CLI):
-
-* **12 supported prompts** — 4 L1 / 4 L2 / 4 L3, **12 distinct canonical programs**, **12/12 expected
-  program matches**, 9 answered with a selected mask + overlay, 3 explicit abstentions, **no ground
-  truth used**;
-* **all 6 out-of-domain prompts** exit 4 before parser/proposal inference; no unsupported prompt is
-  silently mapped to a program;
-* families covered include `smallest`, `leftmost`, `rightmost`, `topmost` (gate-completed vocabulary),
-  `smallest_to_right_of`, `smallest_to_nearest`, `largest_to_right_of`, `smallest_to_below` and the
-  compositional L3 set `largest_to_{above,right_of,left_of,below}_to_nearest`.
-
-## 10. Error attribution (Part H)
-
-`evaluation/task6m1_error_attribution.json` — diagnosis
-**`CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`** (the declared rule fires because fixed120 mIoU improved
-by +0.0705 ≥ 0.05). Deltas, Task 6M epoch 18 → Task 6M.1: overall recall@0.50 **+0.0246**;
-recall@0.25/0.75 +0.0130/+0.0524; tiny/small/medium/large +0.0045/+0.0369/+0.0275/+0.0236; border
-+0.0292; dense +0.0268; mask mAP50/mAP50-95 +0.0548/+0.0388; empty-tile false-proposal rate **−0.0962**;
-J1 fixed120 mIoU **+0.0705**; J1 paired **+3**; J1 fixed120 abstentions **−8**; J1 full-val mIoU
-+0.0569.
-
-**Residual gap.** Recall is 0.7505 for buildings ≥ 1000 px but 0.1621 for 50–200 px and 0.0068 for
-< 50 px (tiny recall 88× below its gate). No architecture change and no small-object strategy was
-chosen in this task; that is a research decision for the next one.
-
-## 11. Tests
-
-`python -m pytest tests/ -q` → **569 passed, 1 skipped** (Task 6M ended at 547 passed / 1 skipped; no
-previously passing test was reduced or removed, and the one skip is the Ultralytics-only eval-mode
-determinism check that needs the proposal env). `tests/test_task6m1_convergence_demo_fix.py` covers the
-22 section-18 checks: Task 6M artifacts unchanged, source hashes match, snapshot matches, source data
-and v0.2 unchanged, resume starts at epoch 19, frozen training config unchanged, no test read before
-the 6M.1 freeze, test skipped when the val gate fails, fixed packs reused byte-for-byte, no GT in
-inference, unsupported prompt exits 4, no parser call, no proposal-model call, all 6 OOD prompts
-rejected, all 5 positive prompts accepted, v0.2 template coverage 100 % in both languages, CLI audit
-4/4/4, ≥ 8 programs, no 4B, no model-family/imgsz/loss change, no GUI, no new dataset/download.
-
-## 12. Git / storage
-
-Commits: `fix: reject unsupported structured demo prompts`, then
-`eval: complete native-vector proposal convergence audit`, then a docs handoff commit. Not committed:
-checkpoints, run directories, `.conda`, the derived image export, caches, source imagery/vector data.
-
-Watt was **not needed** in Task 6M.1: this task downloaded nothing (no new weights, packages or
-datasets) and installed nothing, so no network transport tool was involved. The pre-existing Watt
-instance is transport-only, is not owned by this project, and was left running, per the ownership
-rule; no proxy, host, certificate or TLS setting was read or modified.
+No "first-ever" claim and no novelty claim for any of the seven listed overlap areas; no end-to-end
+claim (the reference mask is an oracle throughout, so this is an upper-bound feasibility measurement);
+no research interpretation by DSH.
 
 ## 13. Recommended next step
 
-The same configuration has now been trained to a normal early stop and still misses the proposal gate,
-with the gap concentrated almost entirely in **small and tiny buildings**. The next task should decide
-between: (a) an explicit small-object strategy for the same family (higher input resolution and/or
-tiled inference — explicitly *not* chosen here), (b) a different proposal family or a small-object-
-oriented architecture, or (c) re-scoping the structured task so tiny instances are out of the graded
-target set. No such decision is taken in this task.
+等待 ChatGPT 根据 Task 6N 测量结果决定 Task 6O，不自行选择后续算法。
 
 ## 14. STOP
 
-Task 6M.1 stops here: no Task 6N, no small-object strategy selection, no imgsz change, no other
-backbone, no `[REF]`, no SRE, no GRCL/SCL, no GUI. Waiting for the ChatGPT audit and research decision.
+Task 6N stops here: no predicted-reference integration, no `nearest`, no L3, no GRCL, no counterfactual
+loss, no full-dataset training, no proposal optimisation, no GUI. Waiting for the ChatGPT audit.
