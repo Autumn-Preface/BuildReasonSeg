@@ -1,0 +1,200 @@
+# Task 6N — Oracle-Reference Geometric Relation Field Feasibility
+#
+# Every value below is fixed by `handoff/TO_DSH.md` (Task 6N). DSH is an executor for this task and
+# must not redesign the architecture, losses, stages or gates. Nothing here is swept.
+#
+# The registered long-term novelty hypothesis is narrow:
+#   a predicted/grounded reference building mask is converted into an explicit, differentiable,
+#   relation-conditioned geometric prior and fused into a dense segmentation decoder, later
+#   supervised by explicit reference-target geometry consistency.
+# Task 6N tests only the oracle-reference feasibility question, never end-to-end inference.
+
+task: 6N
+seed: 20260929
+base_commit: 5e52d95c70d321a26b5d61ee96853d1123fcb26d
+reference_source: oracle_native_gt
+
+scope:
+  dataset: BuildSpatialReason v0.2
+  split_view: scene_disjoint_v1
+  split_used_for_training: train
+  split_used_for_development: val
+  test_split_used: false
+  programs:
+    - largest_to_left_of
+    - largest_to_right_of
+    - largest_to_above
+    - largest_to_below
+    - smallest_to_left_of
+    - smallest_to_right_of
+    - smallest_to_above
+    - smallest_to_below
+  excluded: [nearest, level_1_extremes, level_3_compositions]
+
+# Section 7 — frozen Task 3B convention: relation(subject, object) means the subject satisfies the
+# relation with respect to the object. Image y increases downward.
+geometry:
+  config: configs/spatial_relations_v1.yaml
+  relation_config_version: spatial_relations_v1
+  alpha: 1.2
+  tau: 0.04
+  sign_convention:
+    left_of: "cx_T < cx_R"
+    right_of: "cx_T > cx_R"
+    above: "cy_T < cy_R"
+    below: "cy_T > cy_R"
+  y_axis: image_rows_increase_downward
+
+# Section 8 — GeometricRelationField v0.1 (no learned parameters, no sweep)
+field:
+  name: GeometricRelationField v0.1
+  s_axis: 0.02
+  s_margin: 0.02
+  alpha: 1.2
+  tau: 0.04
+  softness: tau / 2
+  score: "P_rel = sign_score * axis_score * margin_score, clamped to [0, 1]"
+  reference_downsample: "coverage-fraction (average) pooling, clamped to [0, 1]"
+  extras: none
+
+# Section 6 — frozen visual representation (Task 6C.7 / 6I SAM2 path)
+visual:
+  encoder: frozen SAM2.1 Hiera Base+ image embedding
+  checkpoint: local_cache/models/sam2.1_hiera_base_plus.pt
+  config_name: configs/sam2.1/sam2.1_hiera_b+.yaml
+  repo_id: facebook/sam2.1-hiera-base-plus
+  source_revision_expected: 2b90b9f5ceec907a1c18123530e92e794ad901a4
+  channels: 256
+  spatial_size: [64, 64]
+  trainable: false
+  cache: artifacts/task6n/features
+  cache_dtype: float32
+
+# Section 9 — one common decoder family
+decoder:
+  width: 128
+  mid: 64
+  norm: GroupNorm
+  norm_groups: 8
+  activation: GELU
+  relation_embedding:
+    relations: [left_of, right_of, above, below]
+    dim: 16
+  projection: "Conv1x1(C->128), GroupNorm(8,128), GELU"
+  trunk:
+    - "Conv3x3(in->128, padding=1), GroupNorm(8,128), GELU"
+    - "Conv3x3(128->64, padding=1), GroupNorm(8,64), GELU"
+    - "Conv1x1(64->1)"
+  logit_size: [64, 64]
+  upsample: "bilinear to canonical target-mask resolution before loss/evaluation"
+  forbidden: [attention, transformer, graph_block, extra_mlp]
+
+variants:
+  B0:
+    label: N-B0
+    inputs: [visual_128, relation_embed]
+    first_conv_in_channels: 144
+    uses_reference_mask: false
+    uses_relation_field: false
+    role: relation-aware visual baseline
+  B1:
+    label: N-B1
+    inputs: [visual_128, M_ref_down, relation_embed]
+    first_conv_in_channels: 145
+    uses_reference_mask: true
+    uses_relation_field: false
+    role: reference-mask baseline
+  B2:
+    label: N-B2
+    inputs: [visual_128, M_ref_down, P_rel, relation_embed]
+    first_conv_in_channels: 146
+    uses_reference_mask: true
+    uses_relation_field: true
+    role: full GeometricRelationField
+  parameter_padding: forbidden
+
+# Section 11 — loss
+loss:
+  components: [BCEWithLogitsLoss, DiceLoss]
+  dice_implementation: buildreasonseg_mvp.losses.mask_soft_dice
+  forbidden: [GRCL, relation_loss, counterfactual_loss, auxiliary_field_loss, focal_loss, class_weighting]
+
+# Section 12 — fixed packs (frozen before training)
+packs:
+  overfit20:
+    split: train
+    size: 20
+    selection: deterministic sorted selection
+    required: "all 4 directions, both largest/smallest families, >= 4 same-image counterfactual pairs if available"
+  mini_train_1000:
+    split: train
+    size: 1000
+    selection: stable seeded stratification by direction x reference family
+  mini_val_240:
+    split: val
+    size: 240
+    per_program: 30
+    fallback: deterministic proportional fill
+  paired_val_20:
+    split: val
+    size: 20
+    constraints: same tile, same reference instance, different direction, different target instance
+    insufficient_verdict: PAIRED_SET_INSUFFICIENT
+
+# Section 14 — Stage N1 (Overfit20)
+n1:
+  variants: [B0, B1, B2]
+  optimizer: AdamW
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  max_steps: 1200
+  batch_size: 4
+  scheduler: none
+  augmentation: none
+  seed: 20260929
+  amp: same_across_variants
+  evaluate_every_steps: 100
+  gate:
+    train_miou_min: 0.85
+    train_dice_min: 0.90
+  fail_verdict: GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER
+
+# Section 15 — Stage N2 (MiniTrain1000 -> MiniVal240)
+n2:
+  train_pack: mini_train_1000
+  val_pack: mini_val_240
+  variants: [B0, B1, B2]
+  fresh_initialisation: true
+  optimizer: AdamW
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  batch_size: 8
+  max_epochs: 25
+  early_stopping_patience: 5
+  early_stopping_monitor: val_miou
+  seed: 20260929
+  scheduler: none
+  augmentation: none
+  amp: same_across_variants
+  model_selection: highest MiniVal240 mIoU
+
+# Section 16-17 — metrics and causal success criteria (not to be altered)
+evaluation:
+  metrics: [miou, dice, precision_at_0_5]
+  breakdowns: [per_relation, largest_ref_vs_smallest_ref, border_target, tiny_target]
+  paired_report: [pass_count, mean_own_iou, mean_cross_iou, own_cross_margin]
+  pair_pass_rule: both members prefer their own GT target over the paired alternative by IoU
+
+criteria:
+  b2_passes_n1: true
+  mini_val_b2_minus_b0_miou_min: 0.05
+  mini_val_b2_minus_b1_miou_min: 0.02
+  paired_val_pass_min: 14
+  paired_val_own_minus_cross_iou_min: 0.10
+  no_gt_target_in_input: true
+
+paths:
+  features: artifacts/task6n/features
+  checkpoints: artifacts/task6n/checkpoints
+  packs: artifacts/task6n/packs
+  evaluation: evaluation
