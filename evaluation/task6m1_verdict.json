@@ -1,0 +1,63 @@
+{
+  "_doc": "Task 6M.1 section 17. Exactly one verdict from the allowed set with every gate measured. An interrupted continuation preserves state, does not claim convergence and does not run the downstream graded evaluation.",
+  "allowed_verdicts": [
+    "STRUCTURED_DEMO_READY",
+    "PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE",
+    "CONTINUATION_INTERRUPTED",
+    "SOURCE_CHECKPOINT_MISMATCH",
+    "SAFE_RESUME_UNAVAILABLE",
+    "INVALID_EXPERIMENT"
+  ],
+  "attribution_diagnosis": "CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS",
+  "failed_gates": [
+    "validation_j1_gate_passed",
+    "test_fixed120_miou_ge_0_40",
+    "test_paired_pass_ge_14"
+  ],
+  "gates": {
+    "demo_cli_gate_passed": true,
+    "normal_training_completion": true,
+    "safe_resume_verified": true,
+    "source_checkpoint_verified": true,
+    "test_fixed120_miou_ge_0_40": false,
+    "test_paired_pass_ge_14": false,
+    "validation_evaluation_ran": true,
+    "validation_j1_gate_passed": false
+  },
+  "keep_flags": {
+    "keep_frozen_packs_and_parser": true,
+    "keep_task6m_artifacts_frozen": true,
+    "no_architecture_change": true,
+    "no_gui": true,
+    "no_imgsz_change": true,
+    "no_new_dataset": true
+  },
+  "measured": {
+    "combined_best_epoch": 40,
+    "combined_best_mask_mAP50_95": 0.44891,
+    "demo_ood_rejected": true,
+    "demo_supported_runs": 12,
+    "end_epoch": 55,
+    "frozen_conf": 0.1,
+    "frozen_max_det": 100,
+    "j1_abstentions": 27,
+    "j1_fixed120_miou": 0.35059468967538987,
+    "j1_paired_pass": 7,
+    "j4_fixed120_miou": null,
+    "j4_paired_pass": null,
+    "proposal_recall_at_0_50": 0.6578410105907873,
+    "proposal_tiny_recall_at_0_50": 0.006802721088435374,
+    "start_epoch": 19,
+    "training_stop_reason": "early_stopping_fired"
+  },
+  "task": "6M.1",
+  "task6m_evidence_preserved": {
+    "recorded_hashes": {
+      "best.pt": "fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44",
+      "last.pt": "ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e"
+    },
+    "snapshot_dir": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\source_epoch18_snapshot",
+    "source_audit": "SOURCE_CHECKPOINT_VERIFIED"
+  },
+  "verdict": "PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE"
+}

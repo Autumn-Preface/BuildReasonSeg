@@ -1,0 +1,336 @@
+{
+  "_doc": "Task 6M section 12. Native J1-v2 on the validation split: oracle program + PREDICTED YOLO26m-seg proposals. GT is used for scoring only; no GT enters the executor.",
+  "checkpoint": {
+    "path": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+  },
+  "fixed120": {
+    "abstention_reasons": {
+      "extreme_relation_invalid": 4,
+      "filter_multi_candidate": 5,
+      "nearest_relation_invalid": 10,
+      "no_eligible_candidates": 8
+    },
+    "abstentions": 27,
+    "answered": 93,
+    "border_target_miou": 0.3278296640217062,
+    "by_level": {
+      "1": {
+        "miou": 0.38812068074286765,
+        "records": 48
+      },
+      "2": {
+        "miou": 0.29734806982656836,
+        "records": 48
+      },
+      "3": {
+        "miou": 0.38203594723807727,
+        "records": 24
+      }
+    },
+    "by_program": {
+      "bottommost": {
+        "miou": 0.5211017404926326,
+        "records": 8
+      },
+      "largest": {
+        "miou": 0.4007275845408253,
+        "records": 15
+      },
+      "largest_to_above": {
+        "miou": 0.20918367346938777,
+        "records": 4
+      },
+      "largest_to_above_to_nearest": {
+        "miou": 0.24252265238848017,
+        "records": 10
+      },
+      "largest_to_below": {
+        "miou": 0.7469635627530364,
+        "records": 1
+      },
+      "largest_to_below_to_nearest": {
+        "miou": 0.3586831320623703,
+        "records": 6
+      },
+      "largest_to_left_of": {
+        "miou": 0.19534665833853843,
+        "records": 4
+      },
+      "largest_to_left_of_to_nearest": {
+        "miou": 0.5403785902753352,
+        "records": 3
+      },
+      "largest_to_nearest": {
+        "miou": 0.2363281366185684,
+        "records": 19
+      },
+      "largest_to_right_of": {
+        "miou": 0.20720081135902638,
+        "records": 4
+      },
+      "largest_to_right_of_to_nearest": {
+        "miou": 0.5940803293257652,
+        "records": 5
+      },
+      "leftmost": {
+        "miou": 0.4097223501407223,
+        "records": 6
+      },
+      "rightmost": {
+        "miou": 0.28404020966755866,
+        "records": 5
+      },
+      "smallest": {
+        "miou": 0.3260466956965167,
+        "records": 9
+      },
+      "smallest_to_above": {
+        "miou": 0.39053440882062007,
+        "records": 4
+      },
+      "smallest_to_below": {
+        "miou": 0.3711852377572747,
+        "records": 2
+      },
+      "smallest_to_left_of": {
+        "miou": 0.7492269272289948,
+        "records": 3
+      },
+      "smallest_to_nearest": {
+        "miou": 0.2883921304264585,
+        "records": 5
+      },
+      "smallest_to_right_of": {
+        "miou": 0.2972175379426644,
+        "records": 2
+      },
+      "topmost": {
+        "miou": 0.3274219146306853,
+        "records": 5
+      }
+    },
+    "iou_summary": {
+      "count": 120,
+      "max": 0.92039240913477,
+      "mean": 0.35059468967538987,
+      "median": 0.0,
+      "min": 0.0,
+      "p1": 0.0,
+      "p5": 0.0,
+      "p90": 0.8454410723726697
+    },
+    "mdice": 0.39774117557851435,
+    "miou": 0.35059468967538987,
+    "miou_among_answered": 0.4523802447424385,
+    "program_accuracy": 1.0,
+    "records": 120,
+    "skipped": 0,
+    "tiny_target_miou": 0.0
+  },
+  "full_val": {
+    "abstention_rate": 0.2579299747557897,
+    "abstention_reasons": {
+      "extreme_relation_invalid": 1177,
+      "filter_multi_candidate": 308,
+      "nearest_relation_invalid": 433,
+      "no_eligible_candidates": 314,
+      "no_proposals": 118
+    },
+    "abstentions": 2350,
+    "answered": 6761,
+    "border_target": {
+      "miou": 0.2982058630553253,
+      "records": 3905
+    },
+    "by_level": {
+      "1": {
+        "abstentions": 1280,
+        "miou": 0.38047155562680146,
+        "records": 6460
+      },
+      "2": {
+        "abstentions": 814,
+        "miou": 0.2669154920053428,
+        "records": 1715
+      },
+      "3": {
+        "abstentions": 256,
+        "miou": 0.3322096893070813,
+        "records": 936
+      }
+    },
+    "by_program": {
+      "bottommost": {
+        "abstentions": 316,
+        "miou": 0.3901578616885208,
+        "records": 1324
+      },
+      "largest": {
+        "abstentions": 18,
+        "miou": 0.5286152903966554,
+        "records": 745
+      },
+      "largest_to_above": {
+        "abstentions": 102,
+        "miou": 0.245812035253786,
+        "records": 164
+      },
+      "largest_to_above_to_nearest": {
+        "abstentions": 73,
+        "miou": 0.2849055678178375,
+        "records": 224
+      },
+      "largest_to_below": {
+        "abstentions": 75,
+        "miou": 0.3034182894208365,
+        "records": 139
+      },
+      "largest_to_below_to_nearest": {
+        "abstentions": 60,
+        "miou": 0.33831192733291443,
+        "records": 213
+      },
+      "largest_to_left_of": {
+        "abstentions": 109,
+        "miou": 0.2963047168826313,
+        "records": 192
+      },
+      "largest_to_left_of_to_nearest": {
+        "abstentions": 65,
+        "miou": 0.34107026245261773,
+        "records": 250
+      },
+      "largest_to_nearest": {
+        "abstentions": 152,
+        "miou": 0.26477233411863677,
+        "records": 458
+      },
+      "largest_to_right_of": {
+        "abstentions": 118,
+        "miou": 0.19984101676171043,
+        "records": 173
+      },
+      "largest_to_right_of_to_nearest": {
+        "abstentions": 58,
+        "miou": 0.3606482564866156,
+        "records": 249
+      },
+      "leftmost": {
+        "abstentions": 288,
+        "miou": 0.38913090994511695,
+        "records": 1342
+      },
+      "rightmost": {
+        "abstentions": 318,
+        "miou": 0.3504996341945943,
+        "records": 1352
+      },
+      "smallest": {
+        "abstentions": 11,
+        "miou": 0.2977374294646648,
+        "records": 350
+      },
+      "smallest_to_above": {
+        "abstentions": 54,
+        "miou": 0.2587503893291611,
+        "records": 88
+      },
+      "smallest_to_below": {
+        "abstentions": 57,
+        "miou": 0.20210047837020878,
+        "records": 78
+      },
+      "smallest_to_left_of": {
+        "abstentions": 51,
+        "miou": 0.26773070308015234,
+        "records": 86
+      },
+      "smallest_to_nearest": {
+        "abstentions": 43,
+        "miou": 0.30697993079825653,
+        "records": 249
+      },
+      "smallest_to_right_of": {
+        "abstentions": 53,
+        "miou": 0.27893531139735894,
+        "records": 88
+      },
+      "topmost": {
+        "abstentions": 329,
+        "miou": 0.3319684946087278,
+        "records": 1347
+      }
+    },
+    "dense_tile": {
+      "miou": 0.2970485639060094,
+      "records": 2933
+    },
+    "iou_summary": {
+      "count": 9111,
+      "max": 0.9673375123721544,
+      "mean": 0.3541383588332486,
+      "median": 0.0,
+      "min": 0.0,
+      "p1": 0.0,
+      "p5": 0.0,
+      "p90": 0.857660626029654
+    },
+    "mdice": 0.40289462334263587,
+    "miou": 0.3541383588332486,
+    "miou_among_answered": 0.47723037824726044,
+    "program_accuracy": 1.0,
+    "program_source": "oracle_program",
+    "records": 9111,
+    "split": "val",
+    "tiny_target": {
+      "miou": 0.012565991634125334,
+      "records": 420
+    }
+  },
+  "gate": {
+    "checks": {
+      "abstentions": false,
+      "fixed120_miou": false,
+      "overall_recall_at_0_50": false,
+      "paired_pass": false,
+      "tiny_recall_at_0_50": false
+    },
+    "passed": false,
+    "thresholds": {
+      "abstentions_max": 20,
+      "fixed120_miou_min": 0.5,
+      "overall_recall_at_0_50_min": 0.92,
+      "paired_pass_min": 14,
+      "tiny_recall_at_0_50_min": 0.6
+    }
+  },
+  "inference_config": {
+    "conf": 0.1,
+    "frozen_before_test": true,
+    "imgsz": 640,
+    "max_det": 100
+  },
+  "paired20": {
+    "mean_cross_iou": 0.036748320659160526,
+    "mean_own_iou": 0.3144490577879127,
+    "pairs": 20,
+    "pass_rate": 0.35,
+    "passed": 7
+  },
+  "proposal_recall": {
+    "border_instances": 6072,
+    "border_recall_at_0_50": 0.5752635046113307,
+    "gt_instances": 15674,
+    "mean_best_iou": 0.5593659135492787,
+    "recall_at_0_25": 0.790225851728978,
+    "recall_at_0_50": 0.6578410105907873,
+    "recall_at_0_75": 0.39275232869720555,
+    "tiny_instances": 441,
+    "tiny_recall_at_0_50": 0.006802721088435374
+  },
+  "runtime_seconds": 170.83,
+  "split": "val",
+  "task": "6M",
+  "verdict": "J1V2_GATE_FAIL"
+}

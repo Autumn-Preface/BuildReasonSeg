@@ -49,6 +49,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--split", default="test", choices=("val", "test"),
                         help="the graded J4-v2 run uses test; val exists only for dry-runs")
     parser.add_argument("--out", type=Path, default=OUT)
+    parser.add_argument("--config", type=Path, default=None,
+                        help="frozen inference config to use (Task 6M.1 passes its own freeze)")
+    parser.add_argument("--parser-report", type=Path, default=EVAL / "task6m_parser_v02.json",
+                        help="parser artifact whose checkpoint is used (Task 6M.1 reuses the 6M parser)")
     parser.add_argument("--device", default="0")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args(argv)
@@ -61,9 +65,9 @@ def main(argv: list[str] | None = None) -> int:
     import torch
     from ultralytics import YOLO
 
-    frozen = load_frozen_config()
+    frozen = load_frozen_config(args.config) if args.config else load_frozen_config()
     checkpoint = Path(frozen["checkpoint"]["path"])
-    parser_report = json.loads((EVAL / "task6m_parser_v02.json").read_text(encoding="utf-8"))
+    parser_report = json.loads(Path(args.parser_report).read_text(encoding="utf-8"))
     parser_checkpoint_path = Path(parser_report["checkpoint"]["path"])
     config = relation_config()
 

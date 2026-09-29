@@ -1,0 +1,103 @@
+{
+  "_doc": "Task 6M section 11: FROZEN inference configuration. Selected on the validation split only and frozen BEFORE the single test run (section 14).",
+  "checkpoint": {
+    "path": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+  },
+  "conf": 0.1,
+  "freeze_label": "Task 6M.1 converged continuation, best epoch 40 of the combined lineage",
+  "frozen": true,
+  "frozen_before_test": true,
+  "imgsz": 640,
+  "max_det": 100,
+  "nms_mode": "default (e2e mode not enabled)",
+  "runtime_seconds": 761.01,
+  "selection": {
+    "rows": [
+      {
+        "conf": 0.1,
+        "empty_tile_false_proposal_rate": 0.030253916801728797,
+        "max_det": 100,
+        "mean_best_iou": 0.5593659135492787,
+        "proposals_per_tile": 5.393034825870647,
+        "recall_at_0_25": 0.790225851728978,
+        "recall_at_0_50": 0.6578410105907873,
+        "tiny_recall_at_0_50": 0.006802721088435374
+      },
+      {
+        "conf": 0.1,
+        "empty_tile_false_proposal_rate": 0.030253916801728797,
+        "max_det": 300,
+        "mean_best_iou": 0.5593659135492787,
+        "proposals_per_tile": 5.393034825870647,
+        "recall_at_0_25": 0.790225851728978,
+        "recall_at_0_50": 0.6578410105907873,
+        "tiny_recall_at_0_50": 0.006802721088435374
+      },
+      {
+        "conf": 0.05,
+        "empty_tile_false_proposal_rate": 0.050243111831442464,
+        "max_det": 100,
+        "mean_best_iou": 0.5564194439195331,
+        "proposals_per_tile": 7.193477059148701,
+        "recall_at_0_25": 0.8184892178129386,
+        "recall_at_0_50": 0.6363404363914763,
+        "tiny_recall_at_0_50": 0.018140589569160998
+      },
+      {
+        "conf": 0.05,
+        "empty_tile_false_proposal_rate": 0.050243111831442464,
+        "max_det": 300,
+        "mean_best_iou": 0.5564194439195331,
+        "proposals_per_tile": 7.193477059148701,
+        "recall_at_0_25": 0.8184892178129386,
+        "recall_at_0_50": 0.6363404363914763,
+        "tiny_recall_at_0_50": 0.018140589569160998
+      },
+      {
+        "conf": 0.25,
+        "empty_tile_false_proposal_rate": 0.015126958400864398,
+        "max_det": 100,
+        "mean_best_iou": 0.5206345648373986,
+        "proposals_per_tile": 3.572139303482587,
+        "recall_at_0_25": 0.6989919612096466,
+        "recall_at_0_50": 0.627791246650504,
+        "tiny_recall_at_0_50": 0.0
+      },
+      {
+        "conf": 0.25,
+        "empty_tile_false_proposal_rate": 0.015126958400864398,
+        "max_det": 300,
+        "mean_best_iou": 0.5206345648373986,
+        "proposals_per_tile": 3.572139303482587,
+        "recall_at_0_25": 0.6989919612096466,
+        "recall_at_0_50": 0.627791246650504,
+        "tiny_recall_at_0_50": 0.0
+      }
+    ],
+    "selected_by": "recall@0.50 primary, proposal burden tiebreak",
+    "sweep_grid": {
+      "conf": [
+        0.05,
+        0.1,
+        0.25
+      ],
+      "max_det": [
+        100,
+        300
+      ]
+    }
+  },
+  "task": "6M",
+  "test_metrics_inspected_before_freezing": false,
+  "val_metrics_at_selected": {
+    "mean_best_iou": 0.5593659135492787,
+    "proposals_per_tile": 5.393034825870647,
+    "recall_at": {
+      "0.25": 0.790225851728978,
+      "0.5": 0.6578410105907873,
+      "0.75": 0.39275232869720555
+    },
+    "tiny_recall_at_0_50": 0.006802721088435374
+  }
+}

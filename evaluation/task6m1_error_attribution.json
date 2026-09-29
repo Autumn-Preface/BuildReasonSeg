@@ -1,0 +1,79 @@
+{
+  "_doc": "Task 6M.1 section 16. Task 6M (epoch 18) vs Task 6M.1 (converged) comparison on the validation split: every required recall / structured-IoU / abstention delta.",
+  "deltas": {
+    "border_recall_at_0_50": 0.02915,
+    "dense_recall_at_0_50": 0.026838,
+    "empty_tile_false_proposal_rate": -0.096164,
+    "j1_abstentions": -8.0,
+    "j1_fixed120_miou": 0.070505,
+    "j1_full_val_miou": 0.056886,
+    "j1_paired_pass": 3.0,
+    "large_recall_at_0_50": 0.023589,
+    "mask_map50": 0.054752,
+    "mask_map50_95": 0.03876,
+    "medium_recall_at_0_50": 0.027502,
+    "overall_recall_at_0_50": 0.024563,
+    "recall_at_0_25": 0.013015,
+    "recall_at_0_75": 0.05238,
+    "small_recall_at_0_50": 0.036918,
+    "tiny_recall_at_0_50": 0.004535
+  },
+  "diagnosis": "CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS",
+  "diagnosis_rule": {
+    "helpful_miou_delta": 0.05,
+    "helpful_recall_delta": 0.05,
+    "note": "convergence is called helpful when overall recall@0.50 or J1 fixed120 mIoU improved by at least the declared delta; the architecture was NOT changed and no new strategy is chosen in this task"
+  },
+  "epochs": {
+    "combined_best_epoch": 40,
+    "task6m1_last_epoch": 55,
+    "task6m_last_epoch": 18
+  },
+  "status": "COMPARED",
+  "task": "6M.1",
+  "task6m1_result": {
+    "j1_abstentions": 27,
+    "j1_fixed120_miou": 0.35059468967538987,
+    "j1_gate": {
+      "abstentions": false,
+      "fixed120_miou": false,
+      "overall_recall_at_0_50": false,
+      "paired_pass": false,
+      "tiny_recall_at_0_50": false
+    },
+    "j1_paired_pass": 7,
+    "mask_map50": 0.7366898408235734,
+    "mask_map50_95": 0.4024747585166846,
+    "recall_at": {
+      "0.25": 0.790225851728978,
+      "0.5": 0.6578410105907873,
+      "0.75": 0.39275232869720555
+    },
+    "size_breakdown": {
+      "large(>=1000)": 0.7505382383225686,
+      "medium(200-1000)": 0.5574229691876751,
+      "small(50-200)": 0.16211878009630817,
+      "tiny(<50px)": 0.006802721088435374
+    },
+    "tiny_recall_at_0_50": 0.006802721088435374
+  },
+  "task6m_baseline": {
+    "j1_abstentions": 35,
+    "j1_fixed120_miou": 0.2800895280652553,
+    "j1_paired_pass": 4,
+    "mask_map50": 0.6819382414761168,
+    "mask_map50_95": 0.36371498515540457,
+    "recall_at": {
+      "0.25": 0.7772106673471992,
+      "0.5": 0.6332780400663519,
+      "0.75": 0.3403725915528901
+    },
+    "size_breakdown": {
+      "large(>=1000)": 0.7269493587943462,
+      "medium(200-1000)": 0.5299210593328241,
+      "small(50-200)": 0.12520064205457465,
+      "tiny(<50px)": 0.0022675736961451248
+    },
+    "tiny_recall_at_0_50": 0.0022675736961451248
+  }
+}

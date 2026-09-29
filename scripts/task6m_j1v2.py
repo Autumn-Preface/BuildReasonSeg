@@ -103,6 +103,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--skip-full", action="store_true")
+    parser.add_argument("--out", type=Path, default=OUT,
+                        help="metrics artifact path (Task 6M.1 passes evaluation/task6m1_j1v2_val.json)")
+    parser.add_argument("--config", type=Path, default=None,
+                        help="frozen inference config to use (Task 6M.1 passes its own freeze)")
     parser.add_argument("--device", default="0")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args(argv)
@@ -110,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     started = time.time()
     from ultralytics import YOLO
 
-    frozen = load_frozen_config()
+    frozen = load_frozen_config(args.config) if args.config else load_frozen_config()
     checkpoint = Path(frozen["checkpoint"]["path"])
     if not checkpoint.is_file():
         print(f"error: checkpoint missing: {checkpoint}", file=sys.stderr)
@@ -165,7 +169,7 @@ def main(argv: list[str] | None = None) -> int:
         "verdict": "J1V2_GATE_PASS" if all(checks.values()) else "J1V2_GATE_FAIL",
         "runtime_seconds": round(time.time() - started, 2),
     }
-    write_json(OUT, report)
+    write_json(Path(args.out), report)
     print(
         f"[6m.j1v2] recall@0.50 {recall['recall_at_0_50']:.4f} (tiny {recall['tiny_recall_at_0_50']}); "
         f"fixed120 mIoU {fixed['miou']:.4f}; paired {paired['passed']}/{paired['pairs']}; "

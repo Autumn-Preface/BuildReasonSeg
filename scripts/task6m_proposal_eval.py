@@ -199,6 +199,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--sweep", action="store_true")
     parser.add_argument("--top-configs", type=int, default=3)
+    parser.add_argument("--out", type=Path, default=OUT_VAL,
+                        help="metrics artifact path (Task 6M.1 passes evaluation/task6m1_proposal_val.json)")
+    parser.add_argument("--frozen-out", type=Path, default=OUT_FROZEN,
+                        help="frozen inference config path (Task 6M.1 passes its own file)")
+    parser.add_argument("--frozen-label", default=None,
+                        help="optional note recorded inside the frozen config (e.g. the Task 6M.1 tag)")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args(argv)
 
@@ -292,7 +298,7 @@ def main(argv: list[str] | None = None) -> int:
         "metrics": selected_metrics,
         "runtime_seconds": round(time.time() - started, 2),
     }
-    write_json(OUT_VAL, report)
+    write_json(Path(args.out), report)
 
     frozen = {
         "_doc": (
@@ -319,9 +325,10 @@ def main(argv: list[str] | None = None) -> int:
             "tiny_recall_at_0_50": selected_metrics["tiny_recall_at_0_50"],
         },
         "test_metrics_inspected_before_freezing": False,
+        "freeze_label": args.frozen_label,
         "runtime_seconds": round(time.time() - started, 2),
     }
-    write_json(OUT_FROZEN, frozen)
+    write_json(Path(args.frozen_out), frozen)
     print(f"[6m.prop] selected conf={selected['conf']} max_det={selected['max_det']}; "
           f"recall@0.5 {selected['recall_at_0_50']:.4f}; frozen config written", flush=True)
     return 0

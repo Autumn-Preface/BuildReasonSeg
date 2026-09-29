@@ -1,0 +1,81 @@
+{
+  "_doc": "Task 6M.1 section 4. Verification that the Task 6M 18-epoch checkpoint state is exactly what Task 6M recorded, plus a Task 6M.1-local copy that is never overwritten.",
+  "all_source_hashes_match_recorded": true,
+  "checkpoints": {
+    "best.pt": {
+      "actual_sha256": "fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44",
+      "bytes": 162481487,
+      "expected_sha256": "fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44",
+      "matches": true,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg\\weights\\best.pt"
+    },
+    "last.pt": {
+      "actual_sha256": "ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e",
+      "bytes": 162482447,
+      "expected_sha256": "ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e",
+      "matches": true,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg\\weights\\last.pt"
+    }
+  },
+  "original_files_untouched": true,
+  "recorded_task6m_epochs": 18,
+  "resume_metadata": {
+    "best_fitness": 0.76268,
+    "ema_state_present": true,
+    "epoch_stored": 17,
+    "hasattr_scheduler": false,
+    "next_epoch": 19,
+    "optimizer_state_present": true,
+    "train_args_subset": {
+      "amp": true,
+      "batch": 16,
+      "data": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6m_yolo_native\\data.yaml",
+      "deterministic": true,
+      "device": "0",
+      "epochs": 80,
+      "imgsz": 640,
+      "name": "m1_yolo26m_seg",
+      "patience": 15,
+      "project": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs",
+      "save_dir": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg",
+      "seed": 20260812,
+      "workers": 4
+    }
+  },
+  "runtime_seconds": 2.08,
+  "snapshot": {
+    "args.yaml": {
+      "bytes": 2098,
+      "matches_original": true,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\source_epoch18_snapshot\\args.yaml",
+      "sha256": "6e0c7e696daf60accec38a4d2efb37afc15bfa1a42419902c8bf86a3fb036c0c",
+      "status": "already_present_verified"
+    },
+    "best.pt": {
+      "bytes": 162481487,
+      "matches_original": true,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\source_epoch18_snapshot\\weights\\best.pt",
+      "sha256": "fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44",
+      "status": "copied"
+    },
+    "last.pt": {
+      "bytes": 162482447,
+      "matches_original": true,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\source_epoch18_snapshot\\weights\\last.pt",
+      "sha256": "ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e",
+      "status": "copied"
+    },
+    "results.csv": {
+      "bytes": 4520,
+      "matches_original": true,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\source_epoch18_snapshot\\results.csv",
+      "sha256": "96a09376787a96770778ec7d4babeede9aa342c7918c10614447183c8f8b7869",
+      "status": "already_present_verified"
+    }
+  },
+  "snapshot_dir": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\source_epoch18_snapshot",
+  "snapshot_matches_originals": true,
+  "source_run_dir": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m\\runs\\m1_yolo26m_seg",
+  "task": "6M.1",
+  "verdict": "SOURCE_CHECKPOINT_VERIFIED"
+}

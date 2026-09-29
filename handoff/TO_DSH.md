@@ -1,482 +1,462 @@
-# TO_DSH — Task 6M: Native-Vector Proposal Model + Structured Demo Gate
+# TO_DSH — Task 6M.1: Complete Proposal Training + Correct Demo Gates
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Predecessor: Task 6L → `VECTOR_DATASET_MIGRATION_PASS`
+> Base commit: `b9f49f8431f941b7f4e0196fca2a275d257816a8`
 >
-> Goal: train a modern instance-segmentation proposal model on `WHU-EA-NativeVector v1.0`, evaluate the native-vector version of the Task 6J structured grounding chain under the primary `scene_disjoint_v1` split, and produce a CMD-runnable structured Demo path.
+> Predecessor verdict: Task 6M = `PROPOSAL_MODEL_NEEDS_IMPROVEMENT`
 >
-> This task is about **proposal quality + end-to-end structured inference**. It is NOT the final `[REF]` / SRE / SCL paper architecture.
+> This is a narrow corrective continuation. Do not redesign the architecture. Do not start Task 6N.
 
-## 0. User-facing language
-All DSH narrative/UI output must be Chinese. Code/model names/metric keys/program ids may remain English.
+## 0. Execution role
+Follow this file literally. Do not make research-direction decisions. If an unexpected issue would require changing the model family, dataset, loss, image size, split, parser architecture, executor semantics, or success thresholds, STOP and report it instead of improvising.
 
-## 1. Frozen inputs
-Treat these as frozen:
-- `WHU-EA-NativeVector v1.0`
-- `BuildSpatialReason v0.2`
-- `scene_disjoint_v1`
-- frozen Task 3B relation semantics
+All user-facing DSH output must be Chinese.
+
+## 1. Why this task exists
+Task 6M is valid but incomplete:
+
+- YOLO26m-seg completed only **18 / 80** configured epochs because the DSH session wall-clock budget ended.
+- The curve was still improving.
+- validation proposal recall@0.50 = **0.6333**.
+- tiny recall@0.50 = **0.0023**.
+- J1-v2 fixed120 mIoU = **0.2801**, paired pass = **4/20**.
+- J4-v2 fixed120 mIoU = **0.2575**, paired pass = **5/20**.
+- Parser is already ready at **1.0000 val accuracy / macro-F1**.
+- CLI inference works without GT, but unsupported instruction handling is wrong: `"Write a poem about the sea."` was mapped to `leftmost` with exit code 0.
+
+The purpose of 6M.1 is exactly:
+
+1. preserve Task 6M evidence;
+2. finish the same YOLO26m-seg configuration to its planned convergence horizon;
+3. re-evaluate on validation;
+4. run a new test evaluation only if the validation development gate passes;
+5. fix and re-audit unsupported-instruction rejection;
+6. produce the strongest honest structured Demo baseline before research Task 6N.
+
+## 2. Frozen assets — MUST NOT change
+Do not modify:
+
+- `datasets/whu_native_vector/v1.0/`
+- `datasets/build_spatial_reason/v0.2/`
+- `datasets/build_spatial_reason/v0.1.1/`
+- `evaluation/task6m_*.json`
+- Task 6J / 6K / 6K.1 / 6L artifacts
+- Task 3B relation semantics
 - 20 canonical programs
-- Task 6J J0/J2/J3 historical artifacts
-- Task 6K/6K.1/6L audit artifacts
-- historical YOLOv8m-seg baseline and pseudo-instance artifacts
+- `scene_disjoint_v1`
+- Task 6M fixed eval packs
+- Task 6M parser checkpoint
+- Task 6M inference/test results
 
-Do NOT rewrite v0.1.1 or v0.2.
+Task 6M remains historical evidence and must stay reproducible.
 
-Task 6L measured:
-- 17,388 canonical tiles;
-- 41,186 clipped native instances;
-- train/val/test tiles = 10,044 / 3,618 / 3,726;
-- v0.2 samples = 12,778 / 9,111 / 6,219;
-- all 20 programs supported in every split;
-- 1,235 native instances <50 px retained;
-- 35.4% instances touch tile border.
+## 3. No architecture changes
+Keep exactly:
 
-## 2. Fix the Task 6L paired-evaluation gap first
-Task 6L currently reports `paired_counterfactual_availability: null`.
-
-Before training, freeze deterministic native-vector evaluation packs.
-
-Validation:
-- 120 records
-- 20 same-image paired counterfactual pairs
-- stratified over L1/L2/L3 and program families
-- each pair: same tile, different native target instances/masks
-
-Test:
-- 120 records
-- 20 same-image paired counterfactual pairs
-- same construction policy
-- freeze before tuning
-- do not inspect test results until model + inference thresholds are frozen on validation
-
-Write:
-- `evaluation/task6m_val_fixed120.json`
-- `evaluation/task6m_val_paired20.json`
-- `evaluation/task6m_test_fixed120.json`
-- `evaluation/task6m_test_paired20.json`
-- `evaluation/task6m_eval_pack_manifest.json`
-
-# PART A — Proposal framework
-
-## 3. Primary model: YOLO26m-seg
-Use **Ultralytics YOLO26m-seg** as the primary proposal model.
-
-Rationale already checked by ChatGPT against current official Ultralytics docs:
-- YOLO26 is the current released family recommended for new projects;
-- instance segmentation is officially supported;
-- official COCO segmentation table reports YOLO26m-seg at 23.6M fused params and 44.1 mask mAP50-95;
-- YOLO26 training includes Small-Target-Aware Label Assignment (STAL), relevant to retained small buildings;
-- RTX 5080 Laptop 16GB should be sufficient for a controlled `m` experiment, but local VRAM must be measured.
-
-This is a Demo engineering choice, not paper novelty and not proof of global optimality.
-
-Do not run a broad framework bake-off in Task 6M.
-
-## 4. License/provenance
-Current official Ultralytics guidance places the open-source stack/models under AGPL-3.0, with enterprise licensing for proprietary/commercial use.
-
-Record:
-- exact Ultralytics package version;
-- package source;
-- pretrained weight source;
-- pretrained weight SHA256;
-- license note in Task 6M docs.
-
-Do NOT change the repository license automatically.
-Do NOT make commercial-licensing claims.
-
-# PART B — Environment
-
-## 5. New project-local environment
-Do not use the historical editable `yolo_sam_env` for new training.
-
-Create if needed:
-`.conda/buildreasonseg-proposal`
-
-Rules:
-- Conda mandatory;
-- no modification to base/jupyter/yolo_sam_env;
-- `.conda/` remains gitignored;
-- official released packages only;
-- pin exact versions;
-- do not clone/edit Ultralytics source.
-
-It is acceptable to clone the working Task 6A project env and add official Ultralytics.
-
-## 6. Download authorization
-No dataset downloads.
-
-Authorized for Task 6M only:
-- official released `ultralytics` package/dependencies if missing;
-- official `yolo26m-seg.pt`;
-- optionally `yolo26s-seg.pt` only for smoke testing.
-
-Use verified HTTPS and established Watt ownership rules.
-Record source, size, SHA256.
-
-No other downloads.
-
-# PART C — Native-vector training export
-
-## 7. Derived Ultralytics export
-Create gitignored:
-`artifacts/task6m_yolo_native/`
-
-Use `scene_disjoint_v1`:
+- proposal family: `YOLO26m-seg`
+- package: existing Task 6M project-local proposal environment
+- pretrained lineage: Task 6M YOLO26m-seg run
+- imgsz: **640**
+- batch: **16**
+- workers: **4**
+- seed: **20260812**
+- AMP: enabled
+- deterministic: enabled
+- max total epoch horizon: **80**
+- patience: **15**
 - train = train1
 - val = train2
 - test = test
 
-Requirements:
-- retain all empty tiles with valid empty labels;
-- retain all native instances including tiny;
-- no `<50` filter;
-- no connected-component conversion;
-- source images hardlinked if safe/possible; otherwise documented non-destructive fallback;
-- never modify/move source images.
+Do NOT use YOLO26l/x, another framework, another imgsz, tiling/window inference, custom loss weights, a different augmentation policy, tiny-instance filtering, 4B, `[REF]`, SRE, GRCL/SCL, or GUI.
 
-Ultralytics polygon TXT cannot preserve holes. For derived training export only:
-- use required exterior polygon form;
-- record affected hole instances;
-- canonical GT stays unchanged;
-- all evaluation uses canonical exact native masks.
+If this exact configuration is still inadequate after convergence, report that result. A later task will decide what to change.
 
-Quantify export fidelity:
-- mean/median/p1 IoU vs canonical masks;
-- tiny-instance fidelity;
-- hole-instance fidelity;
-- malformed/degenerate count.
+# PART A — Preserve the 18-epoch state
 
-Gate:
-- mean IoU >= 0.995
-- no non-hole instance silently missing
-- 0 malformed labels
+## 4. Snapshot local Task 6M checkpoints before continuation
+Current Task 6M recorded:
 
-Otherwise verdict `TRAINING_EXPORT_INVALID` and STOP.
+- best.pt SHA256:
+  `fd407db634a8a7ef83f09f8096686e73407095105f1b45c70c623d18dbf4ea44`
+- last.pt SHA256:
+  `ea998bda37dd2dcb2cc7bb5e19f6d15b7a205a137c9cc2866c508a45513f860e`
 
-# PART D — Smoke
+Before any training:
 
-## 8. M0 smoke
-Before full training:
-1. load official YOLO26 segmentation checkpoint;
-2. 2-image train forward/backward;
-3. deterministic 500–1000 tile subset, ~2 epochs;
-4. validate mask decoding with canonical evaluator;
-5. verify empty-image handling;
-6. verify tiny labels enter training.
+1. recompute both hashes;
+2. require exact match;
+3. copy, never move, both files plus `results.csv` and minimum resume metadata into:
+   `artifacts/checkpoints/task6m1/source_epoch18_snapshot/`
+4. verify copied hashes;
+5. never overwrite this snapshot.
 
-`yolo26s-seg` may be used for smoke only if materially faster.
+Write:
+`evaluation/task6m1_source_checkpoint_audit.json`
 
-No architecture conclusions from M0.
+If either original hash does not match, STOP with `SOURCE_CHECKPOINT_MISMATCH`.
 
-# PART E — Full training
+## 5. Safe continuation rule
+Preferred source = Task 6M **last.pt**.
 
-## 9. M1 YOLO26m-seg
-Train on `scene_disjoint_v1`.
+Use Ultralytics resume only if it can continue from the copied Task 6M.1 snapshot/run state without mutating original Task 6M evidence.
 
-Initial config:
-- COCO pretrained checkpoint
-- imgsz 640
-- max epochs 80
-- patience 15
-- fixed seed
-- AMP if stable
-- device RTX 5080 Laptop
-- conservative Windows-safe workers
-- best + last checkpoints
-- deterministic settings where supported
-- no test usage during training/tuning
+Before long training, verify:
 
-Batch:
-- short memory probe first
-- choose largest stable fixed batch
+- next epoch is 19;
+- optimizer/scheduler state restored;
+- imgsz/batch/seed/split remain frozen;
+- output path is Task 6M.1-local;
+- original Task 6M best/last hashes remain unchanged.
 
-If OOM:
-1. reduce batch
-2. gradient accumulation if supported
-3. do NOT silently reduce imgsz before reporting
+If safe resume cannot satisfy these requirements, STOP with `SAFE_RESUME_UNAVAILABLE`.
 
-Record:
-- wall time
-- max VRAM
-- losses
-- box/mask metrics
-- best epoch
-- early stop
-- NaN/Inf
-- checkpoint SHA256
+Do NOT silently convert this into a fresh run or new fine-tuning schedule.
 
-# PART F — Proposal evaluation
+# PART B — Continue training
 
-## 10. Native-vector metrics
-GT = canonical native masks, not training TXT.
+## 6. Training horizon
+Continue from epoch 18 toward total cap 80.
 
-On full val compute:
-- recall @ IoU 0.25 / 0.50 / 0.75
-- mask precision/recall
-- mask AP50 / AP50-95 where available
-- mean/median best GT→proposal IoU
-- proposals/tile
-- empty-tile false-proposal rate
-- tiny-instance recall
-- border-truncated recall
-- dense-tile recall
-- size breakdown
+Stop only when:
+1. early stopping fires with patience 15; or
+2. epoch 80 completes; or
+3. NaN/Inf / unrecoverable OOM / source integrity problem occurs.
 
-Matching is diagnostic only; GT must never repair proposals.
+Do not stop merely because an arbitrary DSH subtask duration has elapsed.
 
-## 11. Validation-only threshold tuning
-Sweep only a small declared set of:
-- confidence
-- max_det
-- NMS/e2e mode if safely supported
+If the orchestration environment itself imposes a hard job/session limit:
+- preserve the latest completed state;
+- record the latest completed epoch;
+- do not claim convergence;
+- return `CONTINUATION_INTERRUPTED`;
+- do not run downstream graded evaluation.
+
+Create:
+`evaluation/task6m1_training_summary.json`
+
+Required fields:
+- source checkpoint hashes;
+- start/end epoch;
+- stop reason;
+- best epoch in combined lineage;
+- best/final mask mAP50 and mAP50-95;
+- precision/recall;
+- losses;
+- wall time;
+- mean epoch time;
+- peak VRAM;
+- NaN/Inf;
+- final best/last paths and SHA256.
+
+# PART C — Validation-only evaluation
+
+## 7. Proposal metrics
+Only after normal training completion/early-stop, use canonical native masks on full validation.
+
+Compute:
+- recall@0.25 / 0.50 / 0.75;
+- mask AP50 / AP50-95;
+- mean/median best GT→proposal IoU;
+- proposals/tile;
+- empty-tile false-proposal rate;
+- tiny recall@0.50;
+- border recall@0.50;
+- dense recall@0.50;
+- small / medium / large breakdown.
+
+Write:
+`evaluation/task6m1_proposal_val.json`
+
+## 8. Threshold sweep
+Use the SAME grid only:
+
+- confidence ∈ `{0.05, 0.10, 0.25}`
+- max_det ∈ `{100, 300}`
 
 Selection hierarchy:
-1. target recall @0.50
-2. oracle-program structured selected-mask performance
-3. reasonable proposal burden
+1. target recall@0.50;
+2. oracle-program structured performance;
+3. lower proposal burden when otherwise tied.
 
-Freeze before test:
-`evaluation/task6m_inference_config_frozen.json`
+Freeze:
+`evaluation/task6m1_inference_config_frozen.json`
 
-# PART G — Structured chain
+No test metric may be read before this file exists.
 
-## 12. Native J1-v2
-Oracle program + predicted proposals.
+# PART D — J1-v2 validation
 
-Run on:
-- full val
-- fixed val120
-- val paired20
+## 9. Run existing protocol
+Use oracle program + new predicted proposals + canonical native GT for scoring only + exact frozen Task 6M val fixed120/paired20 packs.
 
-Report:
-- strict selected-mask mIoU
-- Dice
-- abstentions/reasons
-- target selection success
-- paired own-vs-cross mask performance
-- proposal recall
+Write:
+`evaluation/task6m1_j1v2_val.json`
 
-Development gate:
-- overall recall@0.50 >= 0.92
-- tiny recall@0.50 >= 0.60
-- fixed120 mIoU >= 0.50
-- paired pass >= 14/20
-- abstentions <= 20/120
+Development gate remains:
 
-If fail, do failure attribution; do not auto-train l/x or switch framework.
+- overall proposal recall@0.50 >= **0.92**
+- tiny recall@0.50 >= **0.60**
+- fixed120 strict mIoU >= **0.50**
+- paired pass >= **14/20**
+- abstentions <= **20/120**
 
-## 13. Program parser on v0.2
-First evaluate frozen Task 6J Qwen3-VL-2B ProgramHead on v0.2 val:
-- accuracy
-- macro F1
-- fixed120
-- full val
+Do NOT lower thresholds after seeing results.
 
-Instruction text only.
+## 10. Branch
+If all five gates pass: proceed to Part E.
 
-If checkpoint missing or val accuracy <0.95:
-- retrain same 2B text-only ProgramHead on v0.2 train only
-- no image tokens
-- no query_type leakage
-- freeze before test
+If any gate fails:
+- do NOT rerun J4/test;
+- do NOT change model/config;
+- write failure attribution;
+- final proposal verdict = `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`;
+- proceed only to CLI fix, tests, docs, commit, STOP.
 
-Do not upgrade to 4B.
+# PART E — Test only after val gate pass
 
-## 14. Native J4-v2
-After proposal config + parser freeze, run ONCE on:
-- full test
-- fixed test120
-- test paired20
+## 11. Parser
+Reuse existing Task 6M v0.2 parser checkpoint:
 
-No GT in inference.
+`eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3`
 
-Chain:
-instruction → Qwen2B ProgramHead → canonical program
+Do not retrain. If file missing/hash mismatch, STOP.
 
-image → YOLO26m-seg proposals → mask/bbox/centroid/area
+## 12. J4-v2 test
+Task 6M already inspected test once for the earlier 18-epoch proposal model. Therefore this is not a pristine unseen-test claim.
 
-program + proposal geometry → deterministic relation executor → selected proposal mask
+If validation passes, run exactly one Task 6M.1 test evaluation of the new converged model and label it:
 
-GT only for evaluation.
+`second_checkpoint_test_evaluation_after_predeclared_val_gate`
 
-Report:
-- parser accuracy
-- proposal recall
-- strict selected-mask mIoU/Dice
-- abstention
-- paired pass
-- L1/L2/L3
-- per program
-- tiny/border/dense breakdown
+No test-driven tuning afterward.
 
-# PART H — Demo CLI
+Write:
+`evaluation/task6m1_j4v2_test.json`
 
-## 15. CMD-runnable inference
-Create:
+Demo thresholds:
+- fixed120 mIoU >= **0.40**
+- paired pass >= **14/20**
 
-```text
-python predict_structured.py ^
-  --image path\to\image.tif ^
-  --prompt "分割面积最大的建筑物右侧最近的建筑物" ^
-  --proposal-checkpoint checkpoints\proposal\best.pt ^
-  --parser-checkpoint checkpoints\program_parser\best.pt ^
-  --out-dir outputs\demo
-```
+Do not describe this as a paper-final untouched test.
 
-Outputs:
-- parsed canonical program
-- compact reasoning/program trace
-- proposal count
-- selected proposal
-- selected mask PNG
-- overlay PNG
-- JSON result
-- explicit abstention reason
+# PART F — Fix unsupported instructions
 
-Must not require GT or annotation files.
+## 13. Deterministic domain gate
+Fix `predict_structured.py` so unsupported/out-of-domain prompts fail **before ProgramHead and YOLO inference**.
 
-Unsupported instruction/program:
-- explicit failure
-- do not map to unrelated program
+A prompt must contain:
 
-# PART I — Verdict
+### A. at least one building/object anchor
+Chinese:
+`建筑`, `建筑物`, `建筑区域`, `房屋`, `楼`
 
-## 16. Exactly one
-`STRUCTURED_DEMO_READY` if:
-- export/training valid
-- val development gate passes
-- parser ready
-- test fixed120 J4 mIoU >= 0.40
-- test paired pass >= 14/20
-- CLI works without GT on >=10 audited images
+English:
+`building`, `buildings`, `structure`
 
-`PROPOSAL_MODEL_NEEDS_IMPROVEMENT`
-`PROGRAM_PARSER_NEEDS_IMPROVEMENT`
-`TRAINING_EXPORT_INVALID`
-`INVALID_EXPERIMENT`
+AND
 
-# PART J — Required artifacts
+### B. at least one supported relation/selection anchor
+Chinese:
+`最大`, `最小`, `最左`, `最右`, `最上`, `最下`,
+`最靠左`, `最靠右`, `最靠上`, `最靠下`,
+`最近`, `左侧`, `右侧`, `上方`, `下方`,
+`左边`, `右边`, `上面`, `下面`
 
-Create:
-- `evaluation/task6m_eval_pack_manifest.json`
-- `evaluation/task6m_val_fixed120.json`
-- `evaluation/task6m_val_paired20.json`
-- `evaluation/task6m_test_fixed120.json`
-- `evaluation/task6m_test_paired20.json`
-- `evaluation/task6m_training_export_audit.json`
-- `evaluation/task6m_environment_manifest.json`
-- `evaluation/task6m_training_summary.json`
-- `evaluation/task6m_proposal_val.json`
-- `evaluation/task6m_inference_config_frozen.json`
-- `evaluation/task6m_j1v2_val.json`
-- `evaluation/task6m_parser_v02.json`
-- `evaluation/task6m_j4v2_test.json`
-- `evaluation/task6m_error_attribution.json`
-- `evaluation/task6m_demo_cli_audit.json`
-- `evaluation/task6m_verdict.json`
-- `docs/task6m_native_vector_proposal_demo.md`
+English:
+`largest`, `smallest`, `leftmost`, `rightmost`, `topmost`, `bottommost`,
+`nearest`, `closest`, `left of`, `right of`, `above`, `below`
 
-Add scripts/config/tests.
+If A or B is absent:
 
-Checkpoints and large exports stay gitignored. Record local paths + SHA256 in small manifests.
+- do not call ProgramHead;
+- do not run YOLO;
+- write `result.json`;
+- status = `unsupported_instruction`;
+- abstention_reason = `out_of_domain_prompt`;
+- exit code = **4**.
 
-# PART K — Tests
+This is a closed-Demo grammar/domain guard, not open-domain OOD detection.
 
-At least:
-1. canonical native dataset unchanged
-2. v0.2 unchanged
-3. v0.1.1 unchanged
-4. no source mutation
-5. export preserves all non-hole instances
-6. empty labels valid
-7. no `<50` filter
-8. hole loss only recorded in derived export
-9. correct scene_disjoint split
-10. zero feature leakage
-11. test pack frozen before tuning
-12. no test metrics before frozen inference config
-13. GT never repairs proposals
-14. parser text-only
-15. no query_type in parser input
-16. no GT in J4
-17. executor gets predicted geometry only
-18. pairs same-image/different-native-target
-19. all intended programs represented
-20. CLI works without annotations
-21. eval-mode determinism
-22. unsupported program explicit failure
-23. model hashes recorded
-24. no large weights staged
-25. no old editable Ultralytics fork used
-26. no 4B
-27. no `[REF]`, SRE, SCL
-28. no GUI
+## 14. Required OOD checks
+MUST reject with exit 4:
+
+- `Write a poem about the sea.`
+- `今天天气怎么样？`
+- `请总结这张图片。`
+- `检测道路。`
+- `segment the airplane`
+- empty/whitespace prompt
+
+MUST enter ProgramHead path:
+
+- `分割面积最大的建筑物。`
+- `找出最左侧的建筑区域。`
+- `分割面积最大的建筑物右侧最近的建筑物。`
+- `segment the building nearest to the right of the largest building`
+- `找出最小建筑物上方的建筑。`
+
+If a required positive prompt is rejected, fix only this deterministic gate vocabulary/logic. Do not retrain parser.
+
+# PART G — Representative CLI audit
+
+## 15. Audit design
+Use validation images only. Annotation files must be unavailable to CLI.
+
+Audit at least 12 supported prompts:
+
+- 4 L1
+- 4 L2
+- 4 L3
+- >= 8 distinct canonical program ids
+- include largest/smallest, directional, nearest, and compositional L3 examples
+
+Take expected programs from already-frozen Task 6M validation packs.
+
+Also run all 6 OOD prompts.
+
+Write:
+`evaluation/task6m1_demo_cli_audit.json`
+
+CLI correctness gate:
+
+- supported prompts reach parser path;
+- 12/12 expected program matches;
+- no GT used;
+- output/abstention explicit;
+- every OOD prompt exits 4 before parser/proposal inference;
+- no unsupported prompt silently maps to a program.
+
+# PART H — Error attribution
+
+## 16. If proposal gate fails
+Write:
+`evaluation/task6m1_error_attribution.json`
+
+Compare Task 6M epoch18 vs Task 6M.1:
+
+- overall recall@0.50 delta;
+- tiny/small/medium/large recall delta;
+- border/dense delta;
+- J1 fixed120 mIoU delta;
+- J1 paired delta;
+- abstention delta.
+
+Allowed diagnosis only:
+
+- `CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`
+- `CONVERGENCE_DID_NOT_HELP_MATERIALLY`
+- `CONVERGENCE_PASSES_GATE`
+
+Do not choose a new architecture in this task.
+
+# PART I — Final verdict
+
+## 17. Exactly one
+Allowed:
+
+- `STRUCTURED_DEMO_READY`
+- `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`
+- `CONTINUATION_INTERRUPTED`
+- `SOURCE_CHECKPOINT_MISMATCH`
+- `SAFE_RESUME_UNAVAILABLE`
+- `INVALID_EXPERIMENT`
+
+`STRUCTURED_DEMO_READY` requires:
+
+- normal training completion/early-stop;
+- all five validation J1 gates pass;
+- Task 6M.1 test fixed120 mIoU >= 0.40;
+- Task 6M.1 test paired >= 14/20;
+- corrected CLI gate passes.
+
+Write:
+`evaluation/task6m1_verdict.json`
+
+# PART J — Tests
+
+## 18. Focused tests
+At minimum:
+
+1. all Task 6M tracked artifacts unchanged;
+2. source checkpoint hashes match Task 6M;
+3. snapshot hashes match originals;
+4. source data unchanged;
+5. v0.2 unchanged;
+6. resume starts next epoch 19;
+7. frozen training config unchanged;
+8. no test read before 6M.1 config freeze;
+9. test skipped if val gate fails;
+10. old fixed packs reused byte-for-byte;
+11. no GT in inference;
+12. unsupported prompt exits 4;
+13. unsupported prompt does not call parser;
+14. unsupported prompt does not call proposal model;
+15. all 6 OOD prompts rejected;
+16. all 5 positive prompts enter parser path;
+17. CLI audit = 4 L1 / 4 L2 / 4 L3;
+18. >=8 program ids;
+19. no 4B;
+20. no model-family/imgsz/loss change;
+21. no GUI;
+22. no new dataset/download.
 
 Run:
 `python -m pytest tests/ -q`
 
-# PART L — Git / Watt
-Commit code/config/tests/small eval/docs/handoff only.
+Task 6M ended at 547 passed, 1 skipped. Do not reduce passing tests.
 
-Do not commit:
-- `.conda`
-- pretrained/trained weights
-- derived image export
-- caches
-- source imagery/vector data
+# PART K — Required artifacts
 
-Recommended commit:
-`feat: train native-vector proposal model for structured demo`
+Always:
+- `evaluation/task6m1_source_checkpoint_audit.json`
+- `evaluation/task6m1_training_summary.json`
+- `evaluation/task6m1_proposal_val.json` if normal training completion
+- `evaluation/task6m1_inference_config_frozen.json` if normal training completion
+- `evaluation/task6m1_j1v2_val.json` if normal training completion
+- `evaluation/task6m1_demo_cli_audit.json`
+- `evaluation/task6m1_error_attribution.json` if proposal evaluation runs
+- `evaluation/task6m1_verdict.json`
+- `docs/task6m1_proposal_convergence_and_demo_fix.md`
 
-Use Watt ownership rules. If DSH starts Watt, close it after network work; if pre-existing, leave it.
+Only if validation gate passes:
+- `evaluation/task6m1_j4v2_test.json`
 
-# PART M — DSH model
+Update:
+- `handoff/FROM_DSH.md`
+- `handoff/PROJECT_STATE.md`
+
+# PART L — Git/storage
+Do not commit checkpoints, `.conda`, run dirs, source imagery/vector files, derived export, caches.
+
+Commit only code/tests/small JSON/docs/handoff.
+
+Recommended commits:
+1. `fix: reject unsupported structured demo prompts`
+2. `eval: complete native-vector proposal convergence audit`
+3. optional docs handoff commit
+
+# PART M — Model policy
 Default:
 - DeepSeek V4.1 Flash + High
 
-Escalate to:
-- V4.1 Flash + Max only for a genuine difficult runtime/causal bug
+Only use Flash + Max for a genuine implementation/runtime bug.
 
 Do not use V4 Pro by default.
 
-# PART N — Handoff
-Update `handoff/FROM_DSH.md` and `handoff/PROJECT_STATE.md`.
+# PART N — STOP
+After Task 6M.1 STOP.
 
-Include:
-1. Verdict
-2. Fixed Eval Packs
-3. YOLO26 Provenance
-4. Export Audit
-5. Environment
-6. Smoke
-7. Full Training
-8. Proposal Metrics
-9. Frozen Inference Config
-10. J1-v2
-11. Program Parser
-12. J4-v2 Test
-13. Failure Attribution
-14. Demo CLI
-15. License Note
-16. Tests
-17. Git/Watt
-18. Recommended Next Step
+Do not:
+- start Task 6N;
+- choose a small-object strategy;
+- change imgsz;
+- train another backbone;
+- add `[REF]`;
+- add SRE;
+- add GRCL/SCL;
+- build GUI.
 
-# 17. STOP
-After Task 6M STOP.
-
-Do not automatically:
-- train YOLO26l/x
-- switch frameworks
-- upgrade Qwen to 4B
-- add `[REF]`, SRE or SCL
-- download another dataset
-- start formal final-model training
-- build GUI
-
-Wait for ChatGPT review.
+Wait for ChatGPT audit and research decision.
