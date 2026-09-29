@@ -17,162 +17,165 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6N Report: Oracle-Reference Geometric Relation Field Feasibility
+# FROM_DSH — Task 6O Report: Geometric Relation Field Causal Decomposition
 
-_This file holds the Task 6N report. The Task 6M.1 report is preserved in git history at commit
-`5e52d95`; the Task 6M report at `b9f49f8`._
+_This file holds the Task 6O report. The Task 6N report is preserved in git history at commit
+`90f3735`; the Task 6M.1 report at `5e52d95`; the Task 6M report at `b9f49f8`._
 
-Full design notes, the fixed literature-overlap statement and the Task 6M.1 metric erratum:
-`docs/task6n_oracle_reference_geometric_relation_field.md`.
+Full design notes: `docs/task6o_field_causal_decomposition.md`.
 
 ## 1. Verdict
 
-**`GEOMETRIC_RELATION_FIELD_FEASIBLE`** — all five Task 6N section-17 criteria pass:
+**`FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** — section 15 priority order applied literally:
 
-| Criterion | Required | Measured |
-|---|---|---|
-| B2 passes N1 (Overfit20) | mIoU ≥ 0.85, Dice ≥ 0.90 | 0.9280 / 0.9520 |
-| MiniVal `B2 − B0` mIoU | ≥ 0.05 | **+0.2383** |
-| MiniVal `B2 − B1` mIoU | ≥ 0.02 | **+0.2118** |
-| B2 PairedVal | ≥ 14/20 | **16/20** |
-| B2 own − cross IoU | ≥ 0.10 | **+0.4412** |
-| no GT target in input | required | satisfied by construction (tested) |
+1. `INVALID_EXPERIMENT` — not applicable: no leakage, no frozen-artifact mutation, no target-input
+   leakage, no test access, no protocol violation, and the frozen B2 baseline reproduced bit-identically.
+2. `FIELD_WITHOUT_DIRECT_REFERENCE_NOT_LEARNABLE` — not applicable: **B3 passed O1** (mIoU 0.918509 ≥
+   0.85, Dice 0.933920 ≥ 0.90).
+3. `GEOMETRY_ONLY_BENCHMARK_CONFOUND` — not applicable: **section 14.3 fails**.
+4. `DIRECT_REFERENCE_CHANNEL_MATTERS` — not applicable: `B3 − B2 = −0.023159`, which is not below
+   `−0.05`.
+5. **`FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** — B3 O1 passes, **14.1 passes**, **14.2 passes**,
+   **14.3 does not pass**.
 
-Every measurement below is an **oracle-reference** measurement
-(`reference_source = oracle_native_gt`); nothing in Task 6N is end-to-end inference and the test split
-was never read.
+## 2. What Task 6O answers
 
-## 2. Scope and protocol
+1. **Does the direct `M_ref_down` channel still matter once `P_rel` is supplied?** Measured: removing
+   it costs **0.023159 mIoU** (0.453127 → 0.429968), **0.036689 Dice**, **2 paired passes** (16/20 →
+   14/20) and **0.043993** own−cross margin. That is inside the predeclared 0.03 slack, so the direct
+   reference channel is **not required** for this directional decoder (14.1 passes).
+2. **Is the gain field-guided visual segmentation?** Measured: the geometry-only control loses
+   **0.383331 mIoU** (0.429968 → 0.046637), **0.465169 Dice**, **12 paired passes** (14/20 → 2/20) and
+   **0.348241** own−cross margin, and it cannot even fit 20 samples (O1 mIoU 0.109511). So the
+   handcrafted field alone does **not** solve the benchmark (14.3 fails, 14.2 passes).
 
-The 8 directional L2 programs only (`largest|smallest_to_{left_of,right_of,above,below}`): `nearest`,
-L1 extremes, L3 compositions and new relations are out of scope. For each sample `M_ref` is the
-canonical native-vector GT mask of the reference building and `M_target` the canonical GT target used
-**only** as label/evaluation GT; the relation id is the v0.2 canonical direction; the visual feature is
-the frozen SAM2 image embedding. The GT target is never an input.
+## 3. Frozen-asset verification (before anything ran)
 
-## 3. Frozen visual representation
+`evaluation/task6o_b2_reproduction.json`: all four Task 6N packs (`overfit20`, `mini_train_1000`,
+`mini_val_240`, `paired_val_20`) match `evaluation/task6n_pack_manifest.json` **byte-for-byte**, and the
+frozen Task 6N B2 checkpoint matches its recorded SHA256 exactly. No pack was regenerated.
+`buildreasonseg_mvp/geometric_relation_field.py` and `configs/spatial_relations_v1.yaml` are unchanged
+relative to the Task 6O base commit. `evaluation/task6n_*.json` and the Task 6N B0/B1/B2 checkpoints are
+untouched. Scope stayed at the same 8 directional L2 programs; the test split was never read.
 
-The Task 6C.7 / 6I frozen path: `Sam2Encoder` over frozen **SAM2.1 Hiera Base+**
-(`local_cache/models/sam2.1_hiera_base_plus.pt`, SHA256
-`a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5`, config
-`configs/sam2.1/sam2.1_hiera_b+.yaml`), giving **C × h × w = 256 × 64 × 64**. SAM2 was not retrained, its
-checkpoint was not changed, no YOLO feature map is used and no GT building-union mask is an input. A
-derived float32 feature memo lives in the gitignored `artifacts/task6n/features/` so all three variants
-consume bit-identical inputs.
+## 4. Part A — B2 re-evaluated exactly once
 
-## 4. GeometricRelationField v0.1
+Frozen Task 6N evaluator, frozen B2 checkpoint, **no retraining**:
 
-Parameter-free and differentiable: `s_axis = s_margin = 0.02`, `alpha = 1.2`, `tau = 0.04`, softness
-`= tau/2 = 0.02`, `P_rel = clamp(sign_score * axis_score * margin_score, 0, 1)` with the frozen Task 3B
-sign convention (`left_of`: `cx_T < cx_R`; `right_of`: `cx_T > cx_R`; `above`: `cy_T < cy_R`; `below`:
-`cy_T > cy_R`; image `y` increases downward). No distance transform, bounding box, candidate mask or
-extra geometry channel was added, and no learned parameter exists in field generation.
+| Comparison | Stored Task 6N | Reproduced | Absolute delta |
+|---|---|---|---|
+| MiniVal240 mIoU | 0.4531265609993713 | 0.4531265609993713 | **0.0** |
+| MiniVal240 Dice | 0.5768438150123932 | 0.5768438150123932 | **0.0** |
+| PairedVal20 pass | 16 | 16 | exact |
+| paired mean own IoU | 0.44334608244093643 | 0.44334608244093643 | **0.0** |
+| paired mean cross IoU | 0.002157857978561074 | 0.002157857978561074 | **0.0** |
 
-## 5. Decoder and controlled variants
+Verdict **`B2_REPRODUCED`** (tolerance 1e-6; every delta is exactly 0.0). This also proves that adding
+B3/B4 changed nothing about the frozen B0/B1/B2 behaviour.
 
-One common decoder family (1×1 → 128 + GroupNorm + GELU; 4 × 16 relation embedding; 3×3 → 128; 3×3 →
-64; 1×1 → 1; bilinear upsample to 512 × 512 for loss/evaluation). No attention, transformer, graph
-block or extra MLP. Loss exactly `BCEWithLogitsLoss + DiceLoss`.
+## 5. The two new variants
 
-| Variant | Inputs | First conv in-ch | Params | MiniVal240 mIoU | Dice | Pr@0.5 |
-|---|---|---|---|---|---|---|
-| N-B0 | visual + relation | 144 | 273,473 | 0.2148 | 0.3043 | 0.4191 |
-| N-B1 | + `M_ref_down` | 145 | 274,625 | 0.2413 | 0.3276 | 0.4496 |
-| **N-B2** | + `M_ref_down` + `P_rel` | **146** | **275,777** | **0.4531** | **0.5768** | **0.6640** |
+| Variant | Fusion input | First conv in-ch | Parameters |
+|---|---|---|---|
+| **N-B3** | `visual_128` + `P_rel` + relation_embed | 145 | 274,625 |
+| **N-B4** | `Conv1x1(1→128)+GN+GELU` on `P_rel`, then + relation_embed | 144 | 240,833 |
 
-Channels were **not** padded to equalise parameters; the counts above are exact.
+B3 never receives the direct reference mask and B4 receives neither the visual feature nor the
+reference mask (both "not used" properties are asserted by tests). The field, relation embedding
+(4 × 16), trunk, loss (`BCEWithLogitsLoss + DiceLoss`) and 512 × 512 bilinear evaluation are identical
+to Task 6N; `P_rel` is still generated outside the decoder by the unchanged
+`GeometricRelationField v0.1` (alpha 1.2, tau 0.04, `s_axis = s_margin = 0.02`, softness `tau/2`).
 
-## 6. Frozen packs
+## 6. Stage O1 — Overfit20 (exact Task 6N N1 settings)
 
-`evaluation/task6n_pack_manifest.json`, frozen before training, test untouched: **Overfit20** (20 train,
-4 directions × both families, 4 same-image counterfactual pairs), **MiniTrain1000** (seeded
-stratification over direction × family), **MiniVal240** (30 per program, all 8 programs),
-**PairedVal20** (20 val pairs: same tile, same reference, different direction, different target). All
-1,395 in-scope train and 1,008 in-scope val records were eligible — no tiny/border/visibility filter and
-no difficulty deletion.
-
-## 7. Stage N0 — field sanity (no training, diagnostic only)
-
-`evaluation/task6n_field_sanity.json` on MiniVal240: **top-1 rate 1.0000**, **top-3 rate 1.0000**, mean
-target score **0.8668**, mean other-building score 0.3520, mean best **true** distractor score
-**0.1003**, mean margin **+0.7698**, mean 6.97 native instances per tile. The parameter-free field ranks
-the true target first among all non-reference buildings in every one of the 240 records. No threshold
-was tuned.
-
-## 8. Stage N1 — Overfit20
-
-`evaluation/task6n_overfit20.json`, AdamW / lr 1e-3 / wd 1e-4 / 1200 steps / batch 4 / no scheduler / no
-augmentation / seed 20260929 / evaluation every 100 steps, identical for all variants:
+AdamW / lr 1e-3 / wd 1e-4 / 1200 steps / batch 4 / no scheduler / no augmentation / seed 20260929 /
+evaluate every 100 steps:
 
 | Variant | best mIoU | best Dice |
 |---|---|---|
-| N-B0 | 0.9431 | 0.9643 |
-| N-B1 | 0.9332 | 0.9576 |
-| **N-B2** | **0.9280** | **0.9520** |
+| **N-B3** | **0.918509** | **0.933920** |
+| N-B4 | 0.109511 | 0.162109 |
 
-**N1 gate PASS** → the task proceeded to N2. On 20 samples the field variant fits marginally behind the
-baselines; that is reported as measured, without interpretation.
+**O1 gate PASS** (B3 only; B4 has no gate). B4 could not fit 20 samples within the same budget.
 
-## 9. Stage N2 — MiniTrain1000 → MiniVal240
+## 7. Stage O2 — MiniTrain1000 → MiniVal240 (exact Task 6N N2 settings)
 
-`evaluation/task6n_mini_val.json`, `evaluation/task6n_ablation_summary.json`: AdamW / lr 3e-4 / wd 1e-4
-/ batch 8 / ≤ 25 epochs / early stopping patience 5 on val mIoU / seed 20260929 / fresh initialisation /
-model selection = best MiniVal240 mIoU.
+AdamW / lr 3e-4 / wd 1e-4 / batch 8 / ≤ 25 epochs / early stopping patience 5 on val mIoU / seed
+20260929 / fresh initialisation / model selection = best MiniVal240 mIoU.
 
-* per relation mIoU (left / right / above / below): B0 0.186 / 0.209 / 0.220 / 0.244 · B1 0.228 / 0.210
-  / 0.266 / 0.262 · **B2 0.454 / 0.458 / 0.468 / 0.433**;
-* largest-ref vs smallest-ref mIoU: B0 0.174 / 0.256 · B1 0.206 / 0.276 · **B2 0.440 / 0.467**;
-* border-target mIoU (n = 114): B0 0.1935 · B1 0.2171 · **B2 0.4253**;
-* tiny-target mIoU (n = 4): B0 ≈ 0 · B1 ≈ 0 · **B2 0.0216**;
-* peak VRAM: 0.894 / 0.674 / 0.674 GB; wall time 174.8 / 50.9 / 44.8 s (B0 includes building the frozen
-  feature cache); selected epoch 10 / 11 / **9** (epochs run 15 / 16 / 14).
+| Metric | B1 (frozen 6N) | **B2 (reproduced)** | **B3** | **B4** |
+|---|---|---|---|---|
+| MiniVal240 mIoU | 0.241316 | **0.453127** | **0.429968** | **0.046637** |
+| MiniVal240 Dice | — | 0.576844 | 0.540155 | 0.074986 |
+| Precision@0.5 | — | — | 0.692450 | 0.708565 |
+| per relation mIoU (left/right/above/below) | — | — | 0.4219 / 0.3905 / 0.4581 / 0.4493 | 0.0464 / 0.0508 / 0.0455 / 0.0438 |
+| largest-ref / smallest-ref | — | — | 0.4101 / 0.4498 | 0.0420 / 0.0512 |
+| border-target (n=114) | — | — | 0.4132 | 0.0753 |
+| tiny-target (n=4) | — | — | ≈0 | 0.00023 |
+| parameters | 274,625 | 275,777 | 274,625 | 240,833 |
+| peak VRAM / wall time | — | — | 0.642 GB / 116.2 s | 0.626 GB / 45.0 s |
+| selected epoch (epochs run) | 11 (16) | 9 (14) | 14 (19) | 3 (8) |
 
-## 10. PairedVal20
+B4's precision@0.5 of 0.708565 together with a near-zero mIoU follows from predicting almost no
+positive pixels; reported as measured, without interpretation.
 
-`evaluation/task6n_paired_val.json` — both relations of a pair run with the same image and the same
-oracle reference; a pair passes only if **both** members prefer their own GT target over the paired
-alternative by IoU:
+## 8. PairedVal20 (exact frozen Task 6N pack)
 
 | Variant | pass | mean own IoU | mean cross IoU | own − cross |
 |---|---|---|---|---|
-| N-B0 | 9/20 | 0.1456 | 0.0398 | +0.1058 |
-| N-B1 | 7/20 | 0.1871 | 0.0506 | +0.1365 |
-| **N-B2** | **16/20** | **0.4433** | **0.0022** | **+0.4412** |
+| **B2 (reproduced)** | **16/20** | 0.443346 | 0.002158 | **+0.441188** |
+| **B3** | **14/20** | 0.398969 | 0.001773 | **+0.397196** |
+| **B4** | 2/20 | 0.048955 | 0.000000 | +0.048955 |
 
-## 11. Frozen assets, tests, storage
+## 9. Predeclared comparisons and criteria (section 14)
 
-Task 6M.1 artifacts, `datasets/whu_native_vector/v1.0/`, `datasets/build_spatial_reason/v0.2/` and
-`configs/spatial_relations_v1.yaml` are unchanged; Task 6N added only new files. `python -m pytest
-tests/ -q` → **597 passed, 1 skipped** (Task 6M.1 ended at 569 passed / 1 skipped; no previously
-passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check
-that needs the proposal env). `tests/test_task6n_oracle_relation_field.py` covers the 30
-section-21 checks: Task 6M.1 artifacts unchanged, v0.2 unchanged, spatial config unchanged, no test
-access, only the 8 allowed programs, target never an input, oracle reference explicitly marked,
-direction signs, y-axis convention, `alpha = 1.2`, `tau = 0.04`, softness `= tau/2`, field bounded in
-[0, 1], left/right and above/below mirror sanity, B0 has neither reference nor field, B1 has the
-reference but not the field, B2 has both, same visual backbone/cache, same packs, same N1/N2 optimiser
-and budgets, deterministic pack hashes, PairedVal same tile/reference with different targets, no `[REF]`
-token, no GRCL/SCL, no graph transformer, no proposal training, no 4B, no GUI/download/install.
+```text
+delta_B3_B2 = -0.023159   (Dice -0.036689, paired -2, margin -0.043993)
+delta_B3_B1 = +0.188652
+delta_B3_B4 = +0.383331   (Dice +0.465169, paired +12, margin +0.348241)
+```
 
-Not committed: SAM2 weights, model checkpoints, feature caches, `.conda`, source imagery/vectors, large
-caches. Committed: code, config, small JSON artifacts, docs, tests, handoff.
+* **14.1 direct reference-channel retention — PASS**: `0.429968 >= 0.423127` (B2 − 0.03) and
+  `14/20 >= 14` and `+0.397196 >= 0.10`.
+* **14.2 visual contribution — PASS**: `+0.383331 >= 0.10`.
+* **14.3 geometry-only confound — FAIL**: `0.046637 < 0.379968` (B3 − 0.05) and `2 < 12`.
 
-Watt was **not needed** in Task 6N: this task downloaded nothing (no new weights, packages or datasets)
-and installed nothing — the frozen SAM2 checkpoint was already present in `local_cache/models/`. The
-pre-existing Watt instance is transport-only, is not owned by this project, and was left running, per
-the ownership rule; no proxy, host, certificate or TLS setting was read or modified.
+No threshold, gate or comparison was altered.
 
-## 12. What is **not** claimed
+## 10. Tests, storage, git
 
-No "first-ever" claim and no novelty claim for any of the seven listed overlap areas; no end-to-end
-claim (the reference mask is an oracle throughout, so this is an upper-bound feasibility measurement);
-no research interpretation by DSH.
+`python -m pytest tests/ -q` → **627 passed, 1 skipped** (Task 6N ended at 597 passed / 1 skipped; no
+prior passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism
+check that needs the proposal env). `tests/test_task6o_field_causal_decomposition.py` covers the 30
+section-17 checks: Task 6N artifacts unchanged, pack hashes exact, B2 checkpoint hash matches,
+reproduction within tolerance, no test access, only the 8 programs, target never an input, B3 receives
+visual + field + relation only, B3 never receives the reference mask, B4 receives field + relation only,
+B4 never receives the visual feature or the reference mask, B4's projection is 1 → 128 and its trunk
+input is 144, the field is unchanged, alpha/tau/softness unchanged, the frozen SAM2 path is unchanged,
+the same packs are used across B2/B3/B4, O1 settings equal Task 6N N1, O2 settings equal Task 6N N2,
+the seed is exactly 20260929, no new relation, no nearest/L3, no `[REF]`, no GRCL/SCL, no graph
+transformer, no proposal training, no 4B, no download/install, no GUI, and the previous suite is
+preserved.
 
-## 13. Recommended next step
+Not committed: checkpoints, the frozen feature cache, SAM2 weights, source imagery/vector data,
+`.conda`, large caches. Committed: code, small JSON artifacts, docs, tests, handoff.
 
-等待 ChatGPT 根据 Task 6N 测量结果决定 Task 6O，不自行选择后续算法。
+Watt was **not needed** in Task 6O: this task downloaded nothing (no new weights, packages or datasets)
+and installed nothing. The pre-existing Watt instance is transport-only, is not owned by this project,
+and was left running, per the ownership rule; no proxy, host, certificate or TLS setting was read or
+modified.
 
-## 14. STOP
+## 11. Interpretation boundary (section 16)
 
-Task 6N stops here: no predicted-reference integration, no `nearest`, no L3, no GRCL, no counterfactual
-loss, no full-dataset training, no proposal optimisation, no GUI. Waiting for the ChatGPT audit.
+DSH reports measurements only and decides none of: whether this is paper novelty; whether
+predicted-reference grounding should be implemented; whether the field formula should change; whether
+GRCL should be added. No architecture decision is taken in this task.
+
+## 12. Recommended next step
+
+等待 ChatGPT 根据 Task 6O 因果分解结果决定后续架构，不自行开始 predicted-reference、nearest、L3 或 GRCL。
+
+## 13. STOP
+
+Task 6O stops here: no predicted-reference grounding, no nearest, no L3, no GRCL, no full-dataset
+training, no proposal optimisation, no GUI. Waiting for the ChatGPT audit.

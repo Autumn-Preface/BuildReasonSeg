@@ -1,142 +1,104 @@
-# TO_DSH — Task 6N: Oracle-Reference Geometric Relation Field Feasibility
+# TO_DSH — Task 6O: Geometric Relation Field Causal Decomposition
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `5e52d95c70d321a26b5d61ee96853d1123fcb26d`
+> Base commit: `90f3735cf57115cd67e15b1b3457752e1fb049a6`
 >
-> Predecessor: Task 6M.1 → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`
+> Predecessor: Task 6N → `GEOMETRIC_RELATION_FIELD_FEASIBLE`
 >
-> This task is the first execution task of the final innovation-architecture phase.
->
-> Research direction, architecture, variables, losses, stages and gates in this file are already decided by ChatGPT. DSH is an executor. Do not redesign them.
+> This task is a narrow causal-decomposition experiment. Research questions, variants, metrics and verdict logic are already decided by ChatGPT. DSH is an executor.
 
-## 0. DSH role and STOP rule
+## 0. DSH role
 
 All user-facing DSH output must be Chinese.
 
-Follow this file literally.
+Follow this task literally.
 
 DSH MAY:
-- implement the specified module;
-- reuse existing frozen feature caches and utilities;
-- solve ordinary code/runtime bugs without changing the experiment;
-- run the exact experiments and tests defined below.
+- implement the two specified ablation variants;
+- reuse exact Task 6N packs, feature cache, field implementation and evaluator;
+- solve ordinary implementation/runtime bugs without changing the experiment.
 
-DSH MUST NOT autonomously:
-- change the research question;
-- select another architecture;
-- add a graph transformer;
-- change the visual backbone;
-- add `[REF]` tokens;
+DSH MUST NOT:
+- choose another architecture;
+- change SAM2;
+- change the GeometricRelationField formula;
+- change relation semantics;
+- add `[REF]`;
 - add GRCL/SCL;
-- add counterfactual loss;
-- add another dataset;
-- change the relation semantics;
-- introduce new hyperparameter sweeps;
-- switch to 4B;
-- optimize the YOLO proposal model;
-- start Task 6O.
+- add nearest/L3;
+- add a graph transformer;
+- add a new dataset;
+- touch the test split;
+- optimize YOLO;
+- start predicted-reference integration;
+- perform a literature search;
+- invent new gates or sweeps.
 
-If an unexpected issue requires any of those changes, STOP and report it.
+If any change outside this task is required, STOP and report.
 
-## 1. Research decision already frozen by ChatGPT
+## 1. Why Task 6O exists
 
-The Challenge Cup project is:
+Task 6N produced:
 
-**“空间推理引导的建筑物结构 MLLM 相关推理分割方法”**
+- B0 MiniVal240 mIoU = **0.214786**
+- B1 MiniVal240 mIoU = **0.241316**
+- B2 MiniVal240 mIoU = **0.453127**
+- B2 − B0 = **+0.238340**
+- B2 − B1 = **+0.211811**
+- B2 PairedVal20 = **16/20**
+- B2 mean own − cross IoU = **+0.441188**
+- N0 parameter-free field target top-1 among non-reference native instances = **1.000**
 
-For this project, “建筑物结构” currently means inter-building instance spatial structure in overhead imagery:
-- relative direction;
-- relative distance / proximity;
-- scale/extreme relations;
-- compositional reference → relation → target reasoning.
+Task 6N therefore established feasibility, but leaves two causal questions unresolved:
 
-It does NOT mean roof/window/wall/beam internal building parts.
+1. Does the direct `M_ref_down` channel still matter after `P_rel` is supplied?
+2. Is the gain really field-guided visual segmentation, or does the handcrafted geometric field alone solve most of the directional benchmark?
 
-### 1.1 What is NOT claimed as novelty
+Task 6O answers only these two questions.
 
-Do not claim novelty for:
-- MLLM + segmentation;
-- `[SEG]`;
-- `[REF]`;
-- generic reference-mask conditioning;
-- spatial program execution;
-- geometric fields by themselves;
-- relation-aware graph reasoning;
-- generic spatial attention supervision;
-- counterfactual reasoning by itself.
+## 2. Task 6N N0 clarification
 
-### 1.2 Fixed novelty hypothesis to test
+Do not treat this as a bug:
 
-The long-term method hypothesis is:
+- `mean_other_building_score` includes the GT target because section 13 asked for every non-reference building.
+- `mean_best_distractor_score` excludes both reference and GT target.
 
-> a predicted/grounded reference building mask should be converted into an explicit, differentiable, relation-conditioned geometric prior and fused into a dense visual segmentation decoder; later, relation-level geometry supervision will constrain the predicted target mask.
+Do not rewrite Task 6N artifacts.
 
-Task 6N tests only:
+## 3. Frozen assets
 
-> With an oracle reference mask, does an explicit reference-conditioned geometric relation field improve dense target segmentation over equally controlled relation-aware baselines that do not receive that field?
+Read-only/frozen:
 
-This task does NOT test the final end-to-end architecture.
+- all Task 6N tracked artifacts;
+- Task 6N B0/B1/B2 checkpoints;
+- exact Task 6N packs;
+- `buildreasonseg_mvp/geometric_relation_field.py`;
+- `configs/spatial_relations_v1.yaml`;
+- WHU native-vector v1.0;
+- BuildSpatialReason v0.2;
+- Task 6M.1 and earlier artifacts;
+- frozen SAM2.1 Hiera Base+ feature path/cache.
 
-## 2. Literature-overlap statement — copy into the Task 6N design doc
+Do not regenerate Task 6N packs.
 
-Record this fixed research note; do not perform a new literature search:
+### 3.1 Exact packs to reuse byte-for-byte
 
-1. SegLLM (ICLR 2025) already re-injects previous/reference masks and uses `[REF]`/`[SEG]` mask-aware decoding. Reference-mask conditioning or `[REF]` is not our novelty.
-2. R²S (ICCV 2025) already uses a two-stage relevant-element → reasoning-prior paradigm in 3D. Generic two-stage reasoning priors are not our novelty.
-3. Think2Seg-RS (ISPRS JPRS 2026) decouples LVLM reasoning from SAM geometry execution using structured geometric prompts. Semantic/geometry decoupling is not our novelty.
-4. SegEarth-R2 (CVPR 2026) uses spatial-attention supervision for remote-sensing language-guided segmentation. Generic spatial supervision is not our novelty.
-5. SRGFormer (Sensors 2026) decomposes target/relation/position semantics and performs relation-aware graph reasoning. Relation decomposition or graph reasoning alone is not our novelty.
-6. GeoSelect (TGRS 2026) executes typed spatial programs and uses continuous geometric fields plus discrete operators over candidate sets. “Geometric field + spatial program” alone is not our novelty.
-7. GeoRefer-Bench (2026) already provides executable geospatial relation queries and counterfactual pairs. Executable relation datasets/counterfactual evaluation alone are not our novelty.
+Read hashes from `evaluation/task6n_pack_manifest.json` and verify:
 
-The possible novelty under investigation is narrower:
-**a differentiable reference-conditioned geometric relation field fused into a dense segmentation decoder and later supervised by explicit reference–target geometry consistency.**
+- `artifacts/task6n/packs/overfit20.json`
+- `artifacts/task6n/packs/mini_train_1000.json`
+- `artifacts/task6n/packs/mini_val_240.json`
+- `artifacts/task6n/packs/paired_val_20.json`
 
-No “first-ever” claim is allowed in Task 6N.
+If any hash mismatches, STOP:
+`TASK6N_PACK_MISMATCH`.
 
-## 3. Frozen project assets
+## 4. Scope
 
-Treat as read-only/frozen:
-
-- `datasets/whu_native_vector/v1.0/`
-- `datasets/build_spatial_reason/v0.2/`
-- `datasets/build_spatial_reason/v0.1.1/`
-- `configs/spatial_relations_v1.yaml`
-- Task 3B relation engine
-- Task 6J artifacts
-- Task 6M artifacts
-- Task 6M.1 artifacts
-- Task 6C.7 frozen visual-feature-cache evidence
-- Task 6I artifacts
-- YOLO checkpoints and proposal runs
-
-Do not modify historical artifacts.
-
-### 3.1 Task 6M.1 metric erratum
-
-Do not edit frozen Task 6M.1 JSON.
-
-Record an erratum in the Task 6N design doc:
-
-`evaluation/task6m1_verdict.json` has:
-`combined_best_mask_mAP50_95 = 0.44891`
-
-That value is actually the **box mAP50-95 / Ultralytics fitness proxy**.
-
-Authoritative Task 6M.1 values from the training summary:
-- best box mAP50-95 = **0.44891**
-- best mask mAP50-95 = **0.40475**
-- best mask mAP50 = **0.73742**
-- best epoch = **40**
-
-Future reporting must use the training-summary values.
-
-## 4. Scope: directional L2 only
-
-Handle ONLY these 8 BuildSpatialReason v0.2 program ids:
+Same Task 6N scope only:
 
 - `largest_to_left_of`
 - `largest_to_right_of`
@@ -147,172 +109,94 @@ Handle ONLY these 8 BuildSpatialReason v0.2 program ids:
 - `smallest_to_above`
 - `smallest_to_below`
 
-Do NOT include nearest, L1 extremes, L3 compositions, or new relations.
+No nearest, L1, L3, new relation, test split, predicted reference, GRCL or new data.
 
-Use train only for training, val only for development. **Do not use test split in Task 6N.**
+Reference source remains:
+`oracle_native_gt`
 
-## 5. Oracle-reference protocol
+GT target remains label/evaluation only.
 
-For each sample:
+## 5. Frozen common definitions
 
-- `M_ref` = canonical native-vector GT mask of the reference building.
-- `M_target` = canonical native-vector GT target mask, used only as training label / evaluation GT.
-- relation id = canonical direction encoded by v0.2.
-- image = source RGB tile.
-- visual feature = frozen image feature from the existing project visual backbone/cache.
+Use exactly Task 6N:
 
-This is deliberately an **oracle-reference ablation**.
+- frozen SAM2 feature tensor `V`, 256×64×64;
+- relation embedding dim 16;
+- 4 direction ids;
+- GeometricRelationField v0.1 unchanged;
+- alpha=1.2, tau=0.04, s_axis=s_margin=0.02;
+- BCEWithLogitsLoss + DiceLoss;
+- bilinear upsample to 512×512 for evaluation.
 
-Every artifact must say:
-`reference_source = oracle_native_gt`
+No threshold tuning.
 
-Never describe Task 6N as end-to-end inference.
+# PART A — Verify Task 6N B2 baseline
 
-GT target must never be fed as an input.
+## 6. Verify local B2 checkpoint
 
-## 6. Frozen visual representation
+Read B2 checkpoint path and SHA256 from:
+`evaluation/task6n_mini_val.json`
 
-Reuse the already established **frozen SAM2 image-embedding path/cache from Task 6C.7 / 6I**.
+Require:
+- local file exists;
+- SHA256 matches exactly.
 
-Do not retrain SAM2, change SAM2 checkpoint, switch to YOLO feature maps, or use GT building-union masks as visual input.
+If missing/mismatched:
+STOP with `TASK6N_B2_CHECKPOINT_UNAVAILABLE`.
 
-The new module receives frozen dense visual feature tensor `V`.
+Do not retrain B2.
 
-If cached spatial size differs from 64×64, use its native cached `(h,w)` and adapt masks/fields to `(h,w)` deterministically.
+## 7. Re-evaluate B2 exactly once
 
-Record exact feature source/checkpoint, C×h×w, and cache provenance/hash where available.
+Run frozen Task 6N evaluator on:
 
-## 7. Exact geometric definitions
+- MiniVal240
+- PairedVal20
 
-Respect frozen Task 3B convention:
+using frozen B2 checkpoint.
 
-`relation(subject, object)` means subject satisfies relation with respect to object.
+Reproduced values must match stored Task 6N values within:
 
-For target T relative to reference R:
-- left_of(T,R) → `cx_T < cx_R`
-- right_of(T,R) → `cx_T > cx_R`
-- above(T,R) → `cy_T < cy_R`
-- below(T,R) → `cy_T > cy_R`
+- mIoU absolute tolerance `1e-6`
+- Dice absolute tolerance `1e-6`
+- pair pass count exact
+- own/cross means tolerance `1e-6`
 
-Use active config:
-- `alpha = 1.2`
-- `tau = 0.04`
+Write:
+`evaluation/task6o_b2_reproduction.json`
 
-Image y increases downward.
+If outside tolerance:
+STOP with `TASK6N_B2_REPRODUCTION_FAIL`.
 
-## 8. GeometricRelationField v0.1 — exact implementation
+# PART B — New variant B3
 
-Create:
-`buildreasonseg_mvp/geometric_relation_field.py`
+## 8. N-B3: field-guided visual model, no direct reference channel
 
-Input:
-- binary/soft `M_ref` at image resolution;
-- relation id in `{left_of,right_of,above,below}`;
-- output size `(h,w)`.
+Purpose:
+test whether `P_rel` carries useful reference-conditioned geometry without separately concatenating `M_ref_down`.
 
-### 8.1 Reference geometry
-
-From `M_ref`, compute centroid `cx_ref`, `cy_ref` normalized to `[0,1]`.
-
-For every output location `(x,y)` normalized to `[0,1]`:
-
-```text
-dx = x - cx_ref
-dy = y - cy_ref
-ax = abs(dx)
-ay = abs(dy)
-```
-
-### 8.2 Smooth directional score
-
-No sweep.
-
-```text
-s_axis   = 0.02
-s_margin = 0.02
-alpha    = 1.2
-tau      = 0.04
-```
-
-`alpha`/`tau` come from `spatial_relations_v1.yaml`.
-Softness is fixed at `tau / 2`.
-
-For horizontal relations:
-
-```text
-axis_score = sigmoid((ax - alpha * ay) / s_axis)
-margin_score = sigmoid((ax - tau) / s_margin)
-```
-
-For vertical relations:
-
-```text
-axis_score = sigmoid((ay - alpha * ax) / s_axis)
-margin_score = sigmoid((ay - tau) / s_margin)
-```
-
-Sign score:
-
-```text
-left_of:  sign_score = sigmoid((-dx) / s_margin)
-right_of: sign_score = sigmoid(( dx) / s_margin)
-above:    sign_score = sigmoid((-dy) / s_margin)
-below:    sign_score = sigmoid(( dy) / s_margin)
-```
-
-Final:
-
-```text
-P_rel = sign_score * axis_score * margin_score
-```
-
-Clamp `[0,1]`.
-
-No learned parameters in field generation.
-
-Resize `M_ref` to `(h,w)` as a soft mask and clamp `[0,1]`.
-
-Do not add distance transform, bbox, candidate masks or extra geometry channels in 6N.
-
-## 9. Frozen decoder architecture
-
-One common decoder family.
-
-Let frozen visual feature channels = C.
-
-### 9.1 Visual projection
-
-```text
-Conv1x1(C → 128)
-GroupNorm(8,128)
-GELU
-```
-
-### 9.2 Relation embedding
-
-Trainable embedding:
-- 4 relations
-- dim = **16**
-
-Broadcast over `(h,w)`.
-
-### 9.3 Fusion trunk
-
-Full B2 concatenates:
+Inputs:
 
 ```text
 visual_128
-M_ref_down       # 1
-P_rel            # 1
-relation_embed   # 16
+P_rel            # 1 channel
+relation_embed   # 16 channels
 ```
 
-146 channels.
+NO `M_ref_down` input to decoder.
 
-Then:
+Fusion input = **145 channels**.
+
+Use Task 6N visual projection and trunk:
 
 ```text
-Conv3x3(146 → 128, padding=1)
+visual:
+Conv1x1(256 → 128)
+GroupNorm(8,128)
+GELU
+
+fusion:
+Conv3x3(145 → 128, padding=1)
 GroupNorm(8,128)
 GELU
 Conv3x3(128 → 64, padding=1)
@@ -321,183 +205,131 @@ GELU
 Conv1x1(64 → 1)
 ```
 
-Upsample logits bilinearly to canonical target-mask resolution before loss/evaluation.
+Relation embedding remains 4×16.
 
-No attention, transformer, graph block or extra MLP.
+`P_rel` is generated from the oracle reference mask outside the decoder.
 
-## 10. Three controlled variants
+Do not pass oracle reference mask itself into B3.
 
-Train exactly:
+# PART C — New variant B4
 
-### N-B0 — relation-aware visual baseline
+## 9. N-B4: geometry-only capacity control
+
+Purpose:
+measure how much is solved by the handcrafted field without RGB-derived visual evidence.
+
 Inputs:
-- visual_128
-- relation_embed
-
-No reference mask, no field.
-First fusion conv input = 144.
-
-### N-B1 — reference-mask baseline
-Inputs:
-- visual_128
-- `M_ref_down`
-- relation_embed
-
-No field.
-First fusion conv input = 145.
-
-### N-B2 — full GeometricRelationField
-Inputs:
-- visual_128
-- `M_ref_down`
-- `P_rel`
-- relation_embed
-
-First fusion conv input = 146.
-
-Do not pad missing channels merely to equalize parameters.
-Report exact parameter counts.
-
-No other architectural difference.
-
-## 11. Loss
-
-Exactly:
 
 ```text
-L = BCEWithLogitsLoss + DiceLoss
+P_rel
+relation_embed
 ```
 
-Reuse project canonical Dice implementation if available.
+NO visual feature.
+NO direct reference mask.
 
-No GRCL, relation loss, counterfactual loss, auxiliary field loss, focal loss or class weighting.
+Use a 128-channel field projection:
 
-## 12. Dataset construction
+```text
+Conv1x1(1 → 128)
+GroupNorm(8,128)
+GELU
+```
 
-Create deterministic Task 6N view from BuildSpatialReason v0.2.
+Then broadcast relation embedding and concatenate:
 
-Eligible if:
-- program is one of the 8;
-- oracle reference and target source_feature_id resolve;
-- RGB exists;
-- frozen visual feature exists/can be generated through existing frozen cache path.
+```text
+field_128
+relation_embed_16
+```
 
-No extra tiny/border/visibility filter.
-No difficulty deletion.
+Fusion input = **144 channels**.
 
-### 12.1 Fixed packs
+Then the same trunk:
 
-Freeze before training.
+```text
+Conv3x3(144 → 128, padding=1)
+GroupNorm(8,128)
+GELU
+Conv3x3(128 → 64, padding=1)
+GroupNorm(8,64)
+GELU
+Conv1x1(64 → 1)
+```
 
-#### Overfit20
-20 train records:
-- deterministic sorted selection;
-- all 4 directions;
-- both largest/smallest reference families;
-- at least 4 same-image counterfactual pairs if available.
+Do not provide RGB, SAM2 features, M_ref_down, candidate masks or target geometry.
 
-#### MiniTrain1000
-First deterministic 1000 eligible train records after stable seeded stratification by direction and reference family.
-If fewer than 1000, use all and report.
+Report exact params.
 
-#### MiniVal240
-240 val records:
-- 30 per program id if available;
-- otherwise deterministic proportional fill;
-- all 8 ids represented.
+# PART D — Training protocol
 
-#### PairedVal20
-20 val same-image pairs:
-- same tile;
-- same reference instance/source_feature_id;
-- different direction;
-- different target instance/source_feature_id.
+## 10. Stage O1: Overfit20
 
-If fewer than 20 valid pairs, STOP before training:
-`PAIRED_SET_INSUFFICIENT`.
+Train B3 and B4 separately on exact Task 6N Overfit20.
 
-Write record ids + SHA256 manifest.
+Use EXACT Task 6N N1 settings:
 
-## 13. Stage N0 — field sanity
-
-No training.
-
-On MiniVal240, for each record:
-1. mean `P_rel` over target mask;
-2. mean over reference mask;
-3. mean over every other native building;
-4. target rank among non-reference native instances by mean field score.
-
-Report:
-- top-1 rate;
-- top-3 rate;
-- mean target score;
-- mean best distractor score;
-- per relation.
-
-Diagnostic only. No threshold tuning.
-
-## 14. Stage N1 — Overfit20
-
-Train B0/B1/B2 separately on exact same Overfit20.
-
-Use:
 - AdamW
 - lr `1e-3`
 - weight_decay `1e-4`
-- max steps **1200**
-- batch **4**
+- max steps `1200`
+- batch `4`
 - no scheduler
 - no augmentation
-- seed **20260929**
-- same AMP setting across variants
+- seed `20260929`
+- same AMP behavior as Task 6N
+- evaluate every 100 steps
 
-Evaluate each 100 steps.
-
-Record best/final:
-- mIoU
-- Dice
+Record:
+- best/final mIoU
+- best/final Dice
 - per relation
-- paired own-vs-cross if available
+- paired own/cross on Overfit20 pairs
+- parameter count
+- wall time
+- peak VRAM
 
-### N1 gate
+### O1 B3 gate
 
-B2 must reach:
-- train mIoU >= **0.85**
-- train Dice >= **0.90**
+B3 must reach:
+- mIoU >= **0.85**
+- Dice >= **0.90**
 
-If B2 fails:
-- STOP
-- verdict `GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER`
-- no N2.
+If B3 fails:
+STOP with `FIELD_WITHOUT_DIRECT_REFERENCE_NOT_LEARNABLE`.
 
-## 15. Stage N2 — MiniTrain1000 → MiniVal240
+B4 has no stop gate.
 
-Only if N1 passes.
+## 11. Stage O2: MiniTrain1000 → MiniVal240
 
-Train each variant from fresh initialization:
+Only if B3 O1 passes.
+
+Train B3 and B4 from fresh initialization.
+
+Use EXACT Task 6N N2 settings:
 
 - AdamW
 - lr `3e-4`
 - weight_decay `1e-4`
-- batch **8**
-- max epochs **25**
-- early stopping patience **5** on val mIoU
-- seed **20260929**
-- no augmentation
+- batch `8`
+- max epochs `25`
+- early stopping patience `5` on val mIoU
+- seed `20260929`
 - no scheduler
-- same AMP setting across variants
+- no augmentation
+- same AMP setting
+- model selection = highest MiniVal240 mIoU
 
-Model selection = highest MiniVal240 mIoU.
+No test access.
 
-Do not touch test.
+# PART E — Evaluation
 
-## 16. N2 metrics
+## 12. MiniVal metrics
 
-For B0/B1/B2 report:
+For B3 and B4 report:
 
-- val mIoU
-- val Dice
+- mIoU
+- Dice
 - Pr@0.5
 - per relation mIoU
 - largest-ref vs smallest-ref
@@ -506,178 +338,215 @@ For B0/B1/B2 report:
 - total/trainable params
 - peak VRAM
 - wall time
+- best epoch
 
-### PairedVal20
+Write:
+`evaluation/task6o_mini_val.json`
 
-Run both relations for every pair with same image/reference.
+## 13. PairedVal20
+
+Run exact frozen Task 6N PairedVal20.
 
 Report:
-- pass / 20;
-- mean own-target IoU;
-- mean cross-target IoU;
-- own-cross margin.
+- pass / 20
+- mean own IoU
+- mean cross IoU
+- own-cross margin
 
-Pair passes only if both members prefer their own GT target over the paired alternative by IoU.
+Write:
+`evaluation/task6o_paired_val.json`
 
-## 17. Causal success criteria
+# PART F — Predeclared causal comparisons
 
-Positive signal only if ALL:
+## 14. Comparisons
 
-1. B2 passes N1.
-2. MiniVal:
-   - `B2 - B0 mIoU >= 0.05`
-   - `B2 - B1 mIoU >= 0.02`
-3. B2 PairedVal >= **14/20**.
-4. B2 mean own-target IoU exceeds mean cross-target IoU by >= **0.10**.
-5. no GT target enters model input.
+Use reproduced B2 as baseline.
 
-Do not alter gates.
+Define:
 
-## 18. Exactly one verdict
+```text
+delta_B3_B2 = B3_mIoU - B2_mIoU
+delta_B3_B1 = B3_mIoU - frozen_Task6N_B1_mIoU
+delta_B3_B4 = B3_mIoU - B4_mIoU
+```
 
-Allowed:
+Also report Dice and paired deltas.
 
-- `GEOMETRIC_RELATION_FIELD_FEASIBLE`
-  - all section-17 criteria pass.
+### 14.1 Direct reference-channel retention
 
-- `REFERENCE_MASK_HELPS_FIELD_DOES_NOT`
-  - B1-B0 >= 0.05, but B2-B1 < 0.02.
+Direct `M_ref_down` is considered unnecessary for this directional decoder if:
 
-- `RELATION_CONDITIONING_NOT_GENERALIZING`
-  - N1 passes but B2-B0 < 0.05 on MiniVal.
+- `B3_mIoU >= B2_mIoU - 0.03`
+- B3 paired pass >= **14/20**
+- B3 own-cross margin >= **0.10**
 
-- `GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER`
-  - B2 fails N1.
+### 14.2 Visual contribution
 
-- `PAIRED_SET_INSUFFICIENT`
+Visual evidence is materially necessary if:
 
-- `INVALID_EXPERIMENT`
+- `B3_mIoU - B4_mIoU >= 0.10`
+
+### 14.3 Geometry-only confound
+
+The benchmark is considered too solvable by the handcrafted field alone if BOTH:
+
+- `B4_mIoU >= B3_mIoU - 0.05`
+- B4 paired pass >= **12/20**
+
+Do not change thresholds.
+
+# PART G — Verdict
+
+## 15. Exactly one verdict, priority order
+
+1. `INVALID_EXPERIMENT`
+   - leakage, frozen-artifact mutation, target-input leakage, test access or protocol violation.
+
+2. `FIELD_WITHOUT_DIRECT_REFERENCE_NOT_LEARNABLE`
+   - B3 fails O1.
+
+3. `GEOMETRY_ONLY_BENCHMARK_CONFOUND`
+   - O1 passes and section 14.3 passes.
+
+4. `DIRECT_REFERENCE_CHANNEL_MATTERS`
+   - O1 passes; geometry-only confound does not pass; and:
+   `B3_mIoU < B2_mIoU - 0.05`
+
+5. `FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`
+   - B3 O1 passes;
+   - section 14.1 passes;
+   - section 14.2 passes;
+   - section 14.3 does not pass.
+
+6. `FIELD_CAUSAL_SIGNAL_PARTIAL`
+   - any remaining valid outcome.
 
 No other verdict.
 
-## 19. No research interpretation by DSH
+## 16. Interpretation boundary
 
-DSH may report measurements.
+DSH may report measurements only.
 
-Do NOT autonomously conclude that novelty is proven, SRE/GRCL should be abandoned, another architecture should replace it, or a new loss should be added.
+Do not decide:
+- whether this is paper novelty;
+- whether predicted-reference should be implemented;
+- whether field formula should change;
+- whether GRCL should be added.
 
-In `FROM_DSH.md`, final Recommended next step must be exactly:
+Final handoff recommendation must be exactly:
 
-`等待 ChatGPT 根据 Task 6N 测量结果决定 Task 6O，不自行选择后续算法。`
+`等待 ChatGPT 根据 Task 6O 因果分解结果决定后续架构，不自行开始 predicted-reference、nearest、L3 或 GRCL。`
 
-## 20. Required artifacts
+# PART H — Required artifacts
 
-Create at minimum:
+Create:
 
 ```text
-configs/task6n_oracle_relation_field.yaml
+evaluation/task6o_b2_reproduction.json
+evaluation/task6o_overfit20.json
+evaluation/task6o_mini_val.json
+evaluation/task6o_paired_val.json
+evaluation/task6o_causal_summary.json
+evaluation/task6o_verdict.json
 
-evaluation/task6n_pack_manifest.json
-evaluation/task6n_field_sanity.json
-evaluation/task6n_overfit20.json
-evaluation/task6n_mini_val.json
-evaluation/task6n_paired_val.json
-evaluation/task6n_ablation_summary.json
-evaluation/task6n_verdict.json
+docs/task6o_field_causal_decomposition.md
 
-docs/task6n_oracle_reference_geometric_relation_field.md
-
-buildreasonseg_mvp/geometric_relation_field.py
-buildreasonseg_mvp/task6n_relation_decoder.py
-
-scripts/task6n_freeze_packs.py
-scripts/task6n_field_sanity.py
-scripts/task6n_train.py
-scripts/task6n_evaluate.py
-scripts/task6n_report.py
+scripts/task6o_train.py
+scripts/task6o_evaluate.py
+scripts/task6o_report.py
 ```
 
-Checkpoints/caches under `artifacts/task6n/`, gitignored.
+Modify/add model code only as needed for B3/B4 without changing frozen B0/B1/B2 behavior.
+
+Checkpoints:
+`artifacts/task6o/checkpoints/`
+gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-## 21. Required tests
+# PART I — Tests
+
+## 17. Required tests
 
 At least:
 
-1. Task 6M.1 artifacts unchanged;
-2. v0.2 unchanged;
-3. spatial config unchanged;
-4. no test access;
-5. only 8 allowed programs;
-6. target never input;
-7. oracle reference explicitly marked;
-8. direction signs correct;
-9. y-axis convention correct;
-10. alpha=1.2;
-11. tau=0.04;
-12. softness=tau/2;
-13. field bounded [0,1];
-14. left/right mirror sanity;
-15. above/below mirror sanity;
-16. B0 no ref/field;
-17. B1 ref/no field;
-18. B2 ref+field;
-19. same visual backbone/cache;
-20. same packs;
-21. same N1 optimizer/steps;
-22. same N2 optimizer/epochs;
-23. deterministic pack hashes;
-24. PairedVal same tile/ref and different target;
-25. no `[REF]` token;
-26. no GRCL/SCL;
-27. no graph transformer;
-28. no proposal training;
-29. no 4B;
-30. no GUI/download/install.
+1. Task 6N artifacts unchanged
+2. Task 6N pack hashes exact
+3. Task 6N B2 checkpoint hash matches
+4. B2 reproduction within tolerance
+5. no test split access
+6. only 8 directional L2 programs
+7. target never model input
+8. B3 receives visual + field + relation only
+9. B3 does not receive direct ref mask
+10. B4 receives field + relation only
+11. B4 does not receive visual
+12. B4 does not receive direct ref mask
+13. B4 field projection is 1→128
+14. GeometricRelationField unchanged
+15. alpha/tau/softness unchanged
+16. frozen SAM2 path unchanged
+17. same packs across B2/B3/B4
+18. O1 settings identical to Task 6N N1
+19. O2 settings identical to Task 6N N2
+20. deterministic seed exact
+21. no new relation
+22. no nearest/L3
+23. no `[REF]`
+24. no GRCL/SCL
+25. no graph transformer
+26. no proposal training
+27. no 4B
+28. no download/install
+29. no GUI
+30. previous suite preserved
 
 Run:
 `python -m pytest tests/ -q`
 
-Task 6M.1 ended at **569 passed, 1 skipped**. Do not reduce previous passing tests.
+Task 6N ended at **597 passed, 1 skipped**. Do not reduce prior passing tests.
 
-## 22. Storage / Git
+# PART J — Git/storage
 
 Do not commit:
+- checkpoints
+- frozen feature cache
 - SAM2 weights
-- model checkpoints
-- feature caches
+- source imagery/vector data
 - `.conda`
-- source imagery/vectors
 - large caches
 
-Commit code/config/small JSON/docs/tests/handoff only.
+Commit code/small JSON/docs/tests/handoff only.
 
 Recommended:
-1. `feat: add oracle-reference geometric relation field`
-2. `eval: measure relation-field ablations`
-3. optional docs/handoff commit
+1. `feat: add geometric-field causal ablations`
+2. `eval: decompose visual and reference-channel contributions`
+3. optional docs commit
 
-## 23. DSH model policy
+# PART K — Model policy
 
 Default:
 - DeepSeek V4.1 Flash + High
 
-Use Flash + Max only for genuine implementation/runtime bugs.
+Only use Flash + Max for a genuine implementation/runtime bug.
 
 Do not use V4 Pro by default.
 
-## 24. STOP
+# PART L — STOP
 
-After Task 6N:
+After Task 6O:
 - commit
 - push
-- update handoff
+- handoff
 - STOP
 
 Do not start:
-- predicted-reference integration
+- predicted-reference grounding
 - nearest
 - L3
 - GRCL
-- counterfactual loss
 - full-dataset training
 - proposal optimization
 - GUI

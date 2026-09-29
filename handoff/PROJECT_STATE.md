@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6N._
+_Last updated by DSH at the end of Task 6O._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -76,6 +76,36 @@ The block above is machine-checked against
 | 6M | **Native-vector proposal model (YOLO26m-seg) + J1-v2/J4-v2 structured evaluation + CMD Demo CLI** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT`** (export `EXPORT_VALID` at tile-union IoU 0.9988 with 0 malformed / 0 missing and all 1,235 tiny instances kept; parser `PARSER_READY` at 1.0000 accuracy on full v0.2 val after retraining the same 2B text-only head; Demo CLI gate passed on 12 real images without GT; proposal recall@0.50 **0.6333** with tiny recall **0.0023** → J1-v2 fixed120 mIoU 0.2801 / paired 4-20 and J4-v2 test fixed120 mIoU 0.2575 / paired 5-20 FAIL; M1 trained 18 of 80 epochs, wall-clock bound) |
 | 6M.1 | **Proposal convergence continuation + corrected Demo gates** | **done → `PROPOSAL_MODEL_NEEDS_IMPROVEMENT_AFTER_CONVERGENCE`** (Task 6M epoch-18 state hash-verified and snapshotted; the same configuration resumed safely at epoch 19 from a patched copy of `last.pt` and ran to a **normal early stop** at epoch 55 — 37 epochs / 2.42 h, best epoch 40, mask mAP50 0.6827→**0.7374**, mAP50-95 0.3544→**0.4048**; validation-only freeze at conf 0.10 / max_det 100; recall@0.50 0.6333→**0.6578**, empty-tile false-proposal rate 0.1264→**0.0303**; J1-v2 fixed120 mIoU 0.2801→**0.3506**, paired 4→**7/20**, abstentions 35→**27** — but all five validation gates still FAIL, so per §10 **no test run** and diagnosis `CONVERGENCE_HELPED_BUT_GATE_STILL_FAILS`; CLI domain gate now rejects OOD prompts with **exit 4 before parser/proposal inference**, vocabulary completed so **100 %** of frozen v0.2 templates are accepted in zh and en, and the corrected audit passes with **12/12** programs + **6/6** OOD rejections) |
 | 6N | **Oracle-reference Geometric Relation Field feasibility (B0/B1/B2 ablation)** | **done → `GEOMETRIC_RELATION_FIELD_FEASIBLE`** (oracle-reference only, val-only, test untouched: parameter-free `GeometricRelationField v0.1` (alpha 1.2 / tau 0.04 / softness tau/2, no learned parameters) ranks the true target **top-1 in 100 %** of MiniVal240 (mean target 0.8668 vs best true distractor 0.1003); one frozen decoder family with 144/145/146-channel first convs and exact params 273,473 / 274,625 / **275,777**; N1 Overfit20 gate **PASS** (B2 mIoU 0.9280, Dice 0.9520); N2 MiniVal240 mIoU **B0 0.2148 → B1 0.2413 → B2 0.4531** (B2−B0 **+0.2383**, B2−B1 **+0.2118**); PairedVal20 **16/20** with own−cross margin **+0.4412**; all five §17 criteria pass) |
+| 6O | **Geometric relation field causal decomposition (B3/B4)** | **done → `FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** (frozen B2 reproduced **bit-identically** — all deltas exactly 0.0, paired 16/20 exact — on byte-identical Task 6N packs; **N-B3** = visual + field + relation, no direct reference channel, 145-ch / 274,625 params, O1 gate **PASS** (0.918509 / 0.933920), MiniVal240 mIoU **0.429968**, Dice 0.540155, **paired 14/20**, own−cross **+0.397196**; **N-B4** = field + relation only, no visual, 144-ch / 240,833 params, MiniVal240 mIoU **0.046637**, paired **2/20**; deltas **B3−B2 −0.023159**, B3−B1 +0.188652, **B3−B4 +0.383331**; criteria **14.1 PASS, 14.2 PASS, 14.3 FAIL**) |
+
+## Task 6O measured results
+
+Narrow causal decomposition of the Task 6N result, oracle-reference only, val-only, test untouched,
+frozen Task 6N packs reused byte-for-byte. Full detail:
+`docs/task6o_field_causal_decomposition.md`, `evaluation/task6o_*.json`.
+
+| | Value |
+|---|---|
+| B2 reproduction | **bit-identical** — mIoU 0.4531265609993713, Dice 0.5768438150123932, paired 16/20, own 0.44334608244093643, cross 0.002157857978561074; every delta exactly **0.0** (tolerance 1e-6) |
+| N-B3 | visual + `P_rel` + relation, **no direct reference channel**, 145-ch, 274,625 params |
+| N-B4 | `Conv1x1(1→128)` on `P_rel` + relation, **no visual, no reference**, 144-ch, 240,833 params |
+| O1 Overfit20 | **B3 0.918509 / 0.933920 (gate PASS)** · B4 0.109511 / 0.162109 (no gate; cannot fit 20 samples) |
+| MiniVal240 mIoU | B1 0.241316 (frozen) · **B2 0.453127** · **B3 0.429968** · **B4 0.046637** |
+| MiniVal240 Dice | B2 0.576844 · B3 0.540155 · B4 0.074986 |
+| B3 breakdowns | per relation 0.4219 / 0.3905 / 0.4581 / 0.4493; largest 0.4101 / smallest 0.4498; border 0.4132 (n=114); tiny ≈0 (n=4); Pr@0.5 0.692450; epoch 14; 0.642 GB; 116.2 s |
+| PairedVal20 | B2 16/20 (margin +0.441188) · **B3 14/20 (margin +0.397196)** · B4 2/20 (+0.048955) |
+| Deltas | **B3−B2 −0.023159** (Dice −0.036689, paired −2) · B3−B1 **+0.188652** · **B3−B4 +0.383331** (Dice +0.465169, paired +12) |
+| Criteria | **14.1 PASS** (reference channel not required: within 0.03 slack, 14/20, margin ≥ 0.10) · **14.2 PASS** (+0.383331 ≥ 0.10) · **14.3 FAIL** |
+| Verdict | **`FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** |
+
+1. **The frozen baseline is exactly reproducible**: B2 re-evaluated once from a hash-verified checkpoint
+   on byte-identical packs gave bit-identical metrics, and adding B3/B4 changed nothing for B0/B1/B2.
+2. **The direct reference channel is not required** for this directional decoder once the field is
+   present (measured cost −0.023159 mIoU, inside the predeclared 0.03 slack).
+3. **The gain is field-guided visual segmentation**: the geometry-only control loses 0.383331 mIoU and
+   12 paired passes and cannot even overfit 20 samples, so the handcrafted field alone does not solve
+   the benchmark.
+4. Next: 等待 ChatGPT 根据 Task 6O 因果分解结果决定后续架构，不自行开始 predicted-reference、nearest、L3 或 GRCL。
 
 ## Task 6N measured results
 
