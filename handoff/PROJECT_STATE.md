@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6P._
+_Last updated by DSH at the end of Task 6Q._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -78,6 +78,38 @@ The block above is machine-checked against
 | 6N | **Oracle-reference Geometric Relation Field feasibility (B0/B1/B2 ablation)** | **done → `GEOMETRIC_RELATION_FIELD_FEASIBLE`** (oracle-reference only, val-only, test untouched: parameter-free `GeometricRelationField v0.1` (alpha 1.2 / tau 0.04 / softness tau/2, no learned parameters) ranks the true target **top-1 in 100 %** of MiniVal240 (mean target 0.8668 vs best true distractor 0.1003); one frozen decoder family with 144/145/146-channel first convs and exact params 273,473 / 274,625 / **275,777**; N1 Overfit20 gate **PASS** (B2 mIoU 0.9280, Dice 0.9520); N2 MiniVal240 mIoU **B0 0.2148 → B1 0.2413 → B2 0.4531** (B2−B0 **+0.2383**, B2−B1 **+0.2118**); PairedVal20 **16/20** with own−cross margin **+0.4412**; all five §17 criteria pass) |
 | 6O | **Geometric relation field causal decomposition (B3/B4)** | **done → `FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** (frozen B2 reproduced **bit-identically** — all deltas exactly 0.0, paired 16/20 exact — on byte-identical Task 6N packs; **N-B3** = visual + field + relation, no direct reference channel, 145-ch / 274,625 params, O1 gate **PASS** (0.918509 / 0.933920), MiniVal240 mIoU **0.429968**, Dice 0.540155, **paired 14/20**, own−cross **+0.397196**; **N-B4** = field + relation only, no visual, 144-ch / 240,833 params, MiniVal240 mIoU **0.046637**, paired **2/20**; deltas **B3−B2 −0.023159**, B3−B1 +0.188652, **B3−B4 +0.383331**; criteria **14.1 PASS, 14.2 PASS, 14.3 FAIL**) |
 | 6P | **Differentiable field v0.2 + predicted-reference substitution** | **done → `REFERENCE_HEAD_INSUFFICIENT`** (v0.2 `geometric_relation_field_v02.py` is **bit-identical** to frozen v0.1 on 64 binary oracle masks — max/mean abs error **0.0** — while keeping autograd: min gradient L1 **11,833.33** on 8 non-binary soft masks, all four directions → `FIELD_V02_VALID`; frozen Task 6O B3 reproduced with **delta 0.0** on mIoU/Dice (`B3_REPRODUCED`); deduplicated reference packs 825 train / 219 val unique + Overfit20 10+10; `ReferenceMaskHead v0.1` (273,441 params, visual + family only) passes P1 (mIoU **0.969504** / Dice 0.984388) but generalizes to RefValUnique mIoU **0.220176**, Dice 0.302794, centroid error median **0.124060** / p90 **0.319618**; predicted-reference chain through v0.2 into frozen B3 gives target mIoU **0.240968** (−0.189000 vs oracle), paired **0/20** (margin +0.003619), field MAE 0.120730 / RMSE 0.274298 / Pearson 0.653476; section 17 fails → verdict) |
+
+| 6Q | **Frozen proposal reference resolver audit** | **done → `REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT`** (no training / no tuning / no test split: frozen Task 6M.1 YOLO26m-seg SHA256 `ef852b58…61f474` verified exactly with imgsz 640 / conf 0.10 / max_det 100; deterministic eligibility (no border, bbox extent ≤ 0.20, smallest also area ≥ 150) and largest/smallest area ranking with confidence→index tie-break, explicit abstention; on frozen RefValUnique 219 refs / 212 tiles eligible coverage@0.50 **0.6895** overall (0.8364 largest, 0.5413 smallest), selected-reference mIoU **0.413164**, Dice 0.469992, centroid median **0.015607** / p90 **0.393517**, abstention 0.027397; failure attribution OK **111** / NOT_COVERED 62 / EXTREME_WRONG 39 / NO_ELIGIBLE 3 / NO_PROPOSALS 3 / GEOMETRY_POOR 1; downstream through v0.2 + frozen B3: target mIoU **0.304581** (oracle 0.429968, dense 6P 0.240968), target abstention 0.025, PairedVal **10/20** margin **+0.273700** (oracle 14/20, dense 0/20); section 11 coverage gate fails → verdict) |
+
+## Task 6Q measured results
+
+Diagnostic/selection task on the frozen Task 6M.1 proposal model: can the oracle reference mask be
+replaced by a deterministic *proposal-based* reference (eligibility + largest/smallest ranking) and still
+drive the field-guided B3 target decoder? Nothing was trained or tuned; the test split was never read.
+Full detail: `docs/task6q_frozen_proposal_reference_resolver.md`, `evaluation/task6q_*.json`.
+
+| | Value |
+|---|---|
+| Frozen proposal config | YOLO26m-seg `best.pt` SHA256 verified exactly; imgsz 640 / conf 0.10 / max_det 100 / default NMS / no TTA / no tiling / no sweep |
+| Resolver rules | `largest`: no border + bbox extent ≤ 0.20 → max area · `smallest`: same + area ≥ 150 → min area · tie: higher confidence then lower index · explicit abstention |
+| Eligible coverage@0.50 | overall **0.6895** · largest **0.8364** · smallest **0.5413** (all-proposal: 0.6941) |
+| Selected-reference quality | mIoU **0.413164**, Dice 0.469992, Pr@0.5 0.511415, centroid median **0.015607**, p90 **0.393517**, area ratio 1.081301, abstentions 6/219 (0.027397) |
+| Failure attribution | `REFERENCE_OK` **111** · `REFERENCE_NOT_COVERED_IOU50` 62 · `EXTREME_SELECTION_WRONG` 39 · `NO_ELIGIBLE_PROPOSALS` 3 · `NO_PROPOSALS` 3 · `SELECTED_MASK_GEOMETRY_POOR` 1 |
+| Downstream target (MiniVal240) | mIoU **0.304581**, Dice 0.384945, Pr@0.5 0.635327, abstention 6/240 (0.025000); per relation 0.3353 / 0.2471 / 0.3291 / 0.3034; per family 0.3350 / 0.2731; border 0.304968 |
+| Comparison | vs oracle B3 0.429968 (**−0.125387**) · vs Task 6P dense predicted 0.240968 (**+0.063614**) |
+| PairedVal20 | **10/20** (own 0.277946 / cross 0.004245 / margin **+0.273700**); oracle 14/20 · dense 0/20 |
+| Gates | section 11 **FAIL** (0.6895 < 0.70 overall; 0.5413 < 0.60 smallest) · section 12 **FAIL** (p90 0.393517 > 0.12) · section 13 fails only through section 12 |
+| Verdict | **`REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT`** |
+
+1. **The proposal resolver is a strong support module where it covers**: overall eligible coverage@0.50
+   0.6895, largest 0.8364, selected-reference mIoU 0.413164 with a median centroid error of only
+   0.015607 — far better centred than the Task 6P dense head (median 0.124060).
+2. **It is coverage-limited, not selection-limited**: `REFERENCE_NOT_COVERED_IOU50` dominates the
+   smallest family (45 of 109) and the selected-reference p90 tail (0.393517) comes from the cases where
+   the reference simply is not among the eligible proposals.
+3. **It still propagates better than the dense head**: target mIoU 0.304581 vs 0.240968 and PairedVal
+   10/20 vs 0/20, against the oracle-reference 0.429968 / 14-20.
+4. Next: 等待 ChatGPT 根据 Task 6Q 的 frozen-proposal reference resolver 结果决定 Task 6R，不自行修改 reference 架构或开始 MLLM/GRCL/nearest/L3。
 
 ## Task 6P measured results
 

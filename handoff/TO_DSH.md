@@ -1,605 +1,466 @@
-# TO_DSH — Task 6P: Differentiable Relation Field + Predicted-Reference Substitution
+# TO_DSH — Task 6Q: Frozen Proposal Reference Resolver Audit
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `595e7bb4867a6a91dd6f3cd8e0671e7862b4c6b8`
+> Base commit: `b80f3cc04d237a12dbeef537280a371d217d52e3`
 >
-> Predecessor: Task 6O → `FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`
+> Predecessor: Task 6P → `REFERENCE_HEAD_INSUFFICIENT`
 >
-> This task is a tightly specified execution task. ChatGPT has already decided the research question, architecture, data, gates and verdicts. DSH must not redesign them.
+> This is a diagnostic/selection task. ChatGPT has already chosen the research question and the exact resolver. DSH is an executor. Do not redesign the reference module.
 
-## 0. Execution role
+## 0. DSH role
 
 All user-facing DSH output must be Chinese.
 
 DSH MAY:
-- implement the exact v0.2 differentiable field specified here;
-- implement the exact reference-mask head specified here;
-- train/evaluate using the exact frozen packs and protocols;
-- solve ordinary implementation/runtime bugs that do not change the experiment.
+- load the frozen Task 6M.1 YOLO26m-seg proposal checkpoint;
+- implement the deterministic reference resolver specified here;
+- run the exact validation-only audits;
+- propagate the selected reference mask through frozen GeometricRelationField v0.2 + frozen B3;
+- write tests, artifacts, docs and commits.
 
 DSH MUST NOT:
-- change the visual backbone;
-- alter Task 6N/6O artifacts;
-- alter GeometricRelationField v0.1;
-- introduce a new field formula;
+- retrain YOLO;
+- tune confidence/NMS/max_det;
+- retrain the Task 6P dense ReferenceMaskHead;
+- train a new reference network;
+- change GeometricRelationField v0.2;
+- retrain B3;
 - add `[REF]`;
 - add GRCL/SCL;
 - add nearest/L3;
 - add graph reasoning;
-- add a dataset;
 - access test split;
-- optimize YOLO;
-- jointly train reference and target heads;
-- retrain B3;
-- add MLLM hidden-state conditioning;
-- choose Task 6Q.
+- add another dataset;
+- choose Task 6R.
 
-If any such change is needed, STOP and report.
+If an unexpected issue requires any of those changes, STOP and report.
 
-# PART A — Research question
+# PART A — Research decision already made
 
-## 1. What Task 6P must answer
+## 1. Why Task 6Q exists
 
-Task 6O established:
+Task 6P established:
 
-- frozen B2 MiniVal240 mIoU = `0.4531265609993713`
-- B3 (visual + field + relation, no direct reference channel) mIoU = `0.4299680351479113`
-- B3 PairedVal20 = `14/20`
-- B3 own-cross margin = `0.39719566349802166`
-- geometry-only B4 mIoU = `0.046637104127446545`
+- GeometricRelationField v0.2 is valid and autograd-safe.
+- Frozen B3 reproduces exactly.
+- The simple dense reference head can overfit 20 examples:
+  - mIoU `0.969504`
+  - Dice `0.984388`
+- But it generalizes poorly:
+  - RefValUnique mIoU `0.220176`
+  - centroid median `0.124060`
+  - centroid p90 `0.319618`
+- Predicted-reference target chain:
+  - target mIoU `0.240968`
+  - PairedVal `0/20`
+  - own-cross margin `0.003619`
 
-Therefore the preferred directional target decoder is B3.
+The likely structural issue is that `largest` / `smallest` are **instance-set ranking operations**. A dense local decoder conditioned only on a family embedding is not naturally suited to compare all building instances in the scene.
 
-Task 6P tests:
+Before designing another trainable reference architecture, Task 6Q tests a cheaper and more interpretable resolver:
 
-> Can the oracle reference mask be replaced by a learned predicted reference mask while preserving enough of the field-guided target-segmentation signal?
+> frozen building instance proposals → semantic-policy eligibility → deterministic largest/smallest selection → reference mask → differentiable relation field → frozen B3 target decoder.
 
-Task 6P is NOT yet language-to-mask end-to-end, joint reference-target training, or a final MLLM architecture.
+This proposal-based reference resolver is supporting infrastructure, not a claimed algorithmic novelty.
 
-The reference family id (`largest` or `smallest`) is taken from the canonical program record to isolate reference grounding.
+## 2. Literature-position note for docs
 
-# PART B — Critical implementation correction
+Copy this note into the Task 6Q design document; do not perform a new literature search:
 
-## 2. GeometricRelationField v0.1 must remain frozen
+- Current RRSIS work already uses explicit object/relation/position decomposition and candidate/graph reasoning, e.g. SRGFormer.
+- Current reasoning-segmentation work also commonly decouples semantic reasoning from grounding/segmentation through foundation-model proposals/prompts, e.g. Think2Seg-RS.
+- Therefore proposal-based reference grounding is treated here only as a reliable support module.
+- The project’s candidate method contribution remains the reference-conditioned geometric relation field guiding dense visual target segmentation, later combined with explicit relation-level supervision.
 
-Do not modify:
-`buildreasonseg_mvp/geometric_relation_field.py`
+No “first-ever” claim.
 
-Task 6N/6O remain valid oracle-reference experiments.
+# PART B — Frozen assets
 
-Record in Task 6P documentation:
-
-- v0.1 calls `.detach()` on tensor masks;
-- v0.1 converts the centroid to Python `float`;
-- therefore v0.1 is numerically smooth as a spatial function but is NOT differentiable with respect to the input reference mask.
-
-This did not invalidate Task 6N/6O because the reference mask was oracle/frozen and no gradient to the reference source was required.
-
-Future joint predicted-reference training requires a gradient-preserving implementation.
-
-## 3. Implement GeometricRelationField v0.2
-
-Create:
-`buildreasonseg_mvp/geometric_relation_field_v02.py`
-
-It must be numerically equivalent to v0.1 for the same binary mask/relation/size while preserving autograd from `P_rel` to soft `M_ref`.
-
-### 3.1 Input
-
-Accept:
-- `mask_ref`: torch tensor, shape `(H,W)`, `(B,1,H,W)` or `(B,H,W)`;
-- relation id(s): left/right/above/below;
-- output size `(h,w)`.
-
-Do not detach.
-Do not convert centroid tensors to Python float.
-Do not call NumPy inside the forward path.
-
-### 3.2 Soft centroid
-
-For each batch element:
-
-```text
-mass = sum(mask_ref) + eps
-cx = sum(mask_ref * x_grid) / mass
-cy = sum(mask_ref * y_grid) / mass
-```
-
-Use `eps = 1e-6`.
-
-Pixel-center normalized coordinates:
-- x = `(col + 0.5) / W`
-- y = `(row + 0.5) / H`
-
-### 3.3 Field formula
-
-Exactly v0.1:
-
-```text
-alpha = 1.2
-tau = 0.04
-s_axis = 0.02
-s_margin = 0.02
-
-dx = x - cx
-dy = y - cy
-ax = abs(dx)
-ay = abs(dy)
-```
-
-Horizontal:
-```text
-axis_score = sigmoid((ax - alpha*ay)/s_axis)
-margin_score = sigmoid((ax - tau)/s_margin)
-```
-
-Vertical:
-```text
-axis_score = sigmoid((ay - alpha*ax)/s_axis)
-margin_score = sigmoid((ay - tau)/s_margin)
-```
-
-Sign:
-```text
-left_of  = sigmoid((-dx)/s_margin)
-right_of = sigmoid(( dx)/s_margin)
-above    = sigmoid((-dy)/s_margin)
-below    = sigmoid(( dy)/s_margin)
-```
-
-```text
-P_rel = clamp(sign_score * axis_score * margin_score, 0, 1)
-```
-
-No learned parameter.
-
-### 3.4 v0.2 gates
-
-Before training:
-
-1. Deterministically select 64 binary oracle reference masks from frozen Task 6N MiniVal240, balanced over 4 directions.
-2. Compare v0.1 vs v0.2 at 64×64.
-3. Require:
-   - max abs error <= `1e-6`
-   - mean abs error <= `1e-7`
-
-Gradient check:
-- at least 8 deterministic non-binary soft masks with `requires_grad=True`;
-- all four directions represented;
-- fixed nonuniform spatial weighting tensor `W`;
-- `scalar = sum(P_rel * W)`;
-- backprop;
-- gradient must exist, be finite, and have L1 norm > `1e-8`.
-
-Write:
-`evaluation/task6p_field_v02_audit.json`
-
-If any gate fails:
-STOP with `DIFFERENTIABLE_FIELD_INVALID`.
-
-# PART C — Frozen assets
-
-## 4. Freeze previous evidence
+## 3. Freeze all previous evidence
 
 Read-only:
-- all Task 6N tracked artifacts;
-- all Task 6O tracked artifacts;
+- all Task 6M.1 artifacts;
+- all Task 6N/6O/6P artifacts;
+- GeometricRelationField v0.1 and v0.2;
 - Task 6O B3 checkpoint;
-- Task 6N exact packs;
-- v0.1 field file;
-- `configs/spatial_relations_v1.yaml`;
-- WHU native-vector v1.0;
+- Task 6P reference packs;
+- Task 6N MiniVal240 / PairedVal20 packs;
 - BuildSpatialReason v0.2;
-- frozen SAM2.1 Hiera Base+ checkpoint/cache;
-- all Task 6M.1 and earlier evidence.
+- WHU native-vector v1.0;
+- frozen SAM2 feature cache;
+- spatial relation configuration.
 
 No test split.
 
-## 5. Verify B3
+## 4. Frozen proposal configuration
 
-Read B3 checkpoint path/hash from Task 6O evaluation artifact.
-Require local checkpoint exists and hash matches.
+Use exactly Task 6M.1 frozen configuration:
 
-Reproduce B3 once on MiniVal240 using oracle field v0.2.
+Checkpoint:
+`artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/weights/best.pt`
 
-Require mIoU/Dice abs delta <= `1e-6` vs frozen Task 6O B3.
+Required SHA256:
+`ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474`
 
-Write:
-`evaluation/task6p_b3_reproduction.json`
+Inference:
+- model family: YOLO26m-seg
+- imgsz = `640`
+- conf = `0.10`
+- max_det = `100`
+- default NMS
+- no TTA
+- no tiling
+- no threshold sweep
 
-If fail:
-STOP `TASK6O_B3_REPRODUCTION_FAIL`.
+Verify checkpoint hash before inference.
 
-# PART D — Reference-head dataset
+If unavailable/mismatch:
+STOP with `PROPOSAL_CHECKPOINT_UNAVAILABLE`.
 
-## 6. Scope
+# PART C — Exact deterministic reference resolver
 
-Use only the same 8 directional L2 program ids from Task 6N/6O.
+## 5. Proposal mask normalization
 
-Reference family:
-- `largest_to_*` → `largest`
-- `smallest_to_*` → `smallest`
+For every source 512×512 tile:
 
-The target building must never enter reference-head input.
+1. run the frozen proposal model exactly once;
+2. convert each predicted instance mask to source-image 512×512 coordinates;
+3. binarize using the same canonical segmentation-mask threshold used by Task 6M evaluation; do not invent a new threshold;
+4. compute:
+   - `area_px`
+   - `bbox`
+   - `bbox_extent_ratio = bbox_area / (512*512)`
+   - `touches_border`
 
-## 7. Deduplicate reference examples
+`touches_border = true` if any positive mask pixel touches row 0, row 511, col 0 or col 511.
 
-Build unique references from the full eligible Task 6N scope.
+## 6. Predicted eligibility
 
-Unique key:
+Use frozen semantic-policy concepts on predicted masks only.
 
-```text
-(split, tile_id, reference_source_feature_id, reference_family)
-```
+Constants:
+- suspected large merge bbox extent ratio threshold = `0.20`
+- tiny component area threshold = `150 px`
 
-If several relations share the same reference, keep only one reference-training record.
+### Largest candidates
 
-Create:
-- `RefTrainUnique`: all unique train references
-- `RefValUnique`: all unique val references
+Eligible if:
+- NOT `touches_border`
+- `bbox_extent_ratio <= 0.20`
 
-No test.
+Do not reject by tiny threshold.
 
-Write hashes/counts:
-`evaluation/task6p_reference_pack_manifest.json`
+Select eligible proposal with maximum predicted `area_px`.
 
-## 8. Reference Overfit20
+### Smallest candidates
 
-Deterministically select 20 unique train references:
-- 10 largest if available
-- 10 smallest if available
-- distinct `(tile, source_feature_id)`
-- no duplicate reference mask
+Eligible if:
+- NOT `touches_border`
+- `bbox_extent_ratio <= 0.20`
+- `area_px >= 150`
 
-If one family has fewer than 10, fill from the other and report.
+Select eligible proposal with minimum predicted `area_px`.
 
-# PART E — ReferenceMaskHead v0.1
+### Ties
 
-## 9. Architecture
+If equal area:
+1. higher YOLO confidence;
+2. lower original proposal index.
 
-Create:
-`buildreasonseg_mvp/task6p_reference_head.py`
+### Abstention
 
-Input:
-- frozen SAM2 feature `V`: 256×64×64
-- reference family id: `{largest, smallest}`
+If zero proposals or zero eligible proposals for the requested family, return explicit abstention.
 
-No target relation id.
-No target mask.
-No relation field.
-No YOLO proposal.
-No candidate mask.
+No GT may affect eligibility, ranking or tie-breaks.
 
-Visual projection:
+# PART D — Reference-level audit
 
-```text
-Conv1x1(256 → 128)
-GroupNorm(8,128)
-GELU
-```
+## 7. Use exact Task 6P RefValUnique
 
-Family embedding:
-- 2 embeddings
-- dim 16
+Use frozen Task 6P `RefValUnique` only.
+Do not regenerate it.
 
-Broadcast over 64×64.
+For each unique reference record:
 
-Fusion input = 144:
+### Proposal coverage diagnostics
 
-```text
-Conv3x3(144 → 128, padding=1)
-GroupNorm(8,128)
-GELU
-Conv3x3(128 → 64, padding=1)
-GroupNorm(8,64)
-GELU
-Conv1x1(64 → 1)
-```
+Compute against GT reference for evaluation only:
+- best IoU among ALL proposals
+- best IoU among ELIGIBLE proposals for that family
 
-Upsample reference logits bilinearly to 512×512.
+Aggregate:
+- coverage@0.25 / 0.50 / 0.75
+- eligible coverage@0.25 / 0.50 / 0.75
+- by largest/smallest
 
-Loss exactly:
-`BCEWithLogitsLoss + DiceLoss`
+### Deterministic selected-reference quality
 
-No other modules.
+For selected proposal:
+- mask IoU vs GT reference
+- Dice
+- centroid error normalized by image diagonal
+- selected area / GT area
+- abstention
 
-# PART F — Reference-head training
-
-## 10. Stage P1 — Overfit20
-
-Use:
-- AdamW
-- lr `1e-3`
-- weight_decay `1e-4`
-- max steps `1200`
-- batch `4`
-- no scheduler
-- no augmentation
-- seed `20260929`
-- same AMP policy as 6N/6O
-- evaluate every 100 steps
-
-P1 gate:
-- train mIoU >= `0.85`
-- train Dice >= `0.90`
-
-If fail:
-STOP with `REFERENCE_HEAD_NOT_LEARNABLE`.
-
-## 11. Stage P2 — RefTrainUnique → RefValUnique
-
-Only if P1 passes.
-
-Fresh initialization.
-
-Use:
-- AdamW
-- lr `3e-4`
-- weight_decay `1e-4`
-- batch `8`
-- max epochs `30`
-- early stopping patience `6` on RefValUnique mIoU
-- seed `20260929`
-- no augmentation
-- no scheduler
-- same AMP
-
-Model selection:
-highest RefValUnique mIoU.
-
-Write:
-`evaluation/task6p_reference_val.json`
-
-Required:
-- mIoU
+Aggregate:
+- reference mIoU
 - Dice
 - Pr@0.5
-- largest mIoU/Dice
-- smallest mIoU/Dice
-- soft-mask centroid error normalized by image diagonal:
-  - mean
-  - median
-  - p90
-- median `pred_area / gt_area`
-- border/non-border mIoU
-- tiny-reference mIoU if present
-- parameter count
-- best epoch
-- wall time
-- peak VRAM
-
-Use sigmoid probability map for predicted centroid.
-
-# PART G — Predicted-reference substitution
-
-## 12. Freeze ReferenceMaskHead
-
-After P2, freeze all reference-head params.
-Do not jointly train it with B3.
-
-## 13. Predicted field generation
-
-For each frozen MiniVal240 record:
-
-1. get frozen SAM2 feature;
-2. use largest/smallest family id to predict soft reference map:
-   `M_ref_pred = sigmoid(reference_logits_up512)`;
-3. generate `P_rel_pred` with GeometricRelationField v0.2;
-4. feed frozen B3:
-   - frozen visual feature
-   - `P_rel_pred`
-   - direction embedding
-5. predict target mask.
-
-No oracle reference mask may enter the predicted-reference path.
-
-GT reference is only for reference-head metrics.
-GT target is only for target scoring.
+- median centroid error
+- p90 centroid error
+- median area ratio
+- abstention count/rate
+- largest family
+- smallest family
 
 Write:
-`evaluation/task6p_predicted_reference_target_val.json`
+`evaluation/task6q_reference_resolver_val.json`
 
-## 14. Oracle-vs-predicted field diagnostics
+## 8. Failure attribution
 
-On MiniVal240 compare predicted-reference field vs oracle-reference v0.2 field:
+Assign every record exactly one category, priority order:
 
-- MAE
-- RMSE
-- per-record Pearson correlation then mean
-- predicted-vs-oracle reference centroid error
-- per family
-- per relation
+1. `NO_PROPOSALS`
+2. `NO_ELIGIBLE_PROPOSALS`
+3. `REFERENCE_NOT_COVERED_IOU50`
+   - eligible proposal exists, best eligible IoU < 0.50
+4. `EXTREME_SELECTION_WRONG`
+   - best eligible IoU >= 0.50, selected proposal IoU < 0.50
+5. `SELECTED_MASK_GEOMETRY_POOR`
+   - selected IoU >= 0.50 but centroid error > 0.05
+6. `REFERENCE_OK`
+
+Report counts overall and by largest/smallest.
 
 Write:
-`evaluation/task6p_field_propagation_diagnostics.json`
+`evaluation/task6q_reference_failure_attribution.json`
 
-No threshold tuning.
+# PART E — Downstream target propagation
 
-# PART H — Downstream metrics
+## 9. Frozen target chain
 
-## 15. MiniVal240
+For each frozen Task 6N MiniVal240 record:
 
-Report predicted-reference B3:
+1. run/get cached frozen YOLO proposals;
+2. derive family from program (`largest` or `smallest`);
+3. resolve reference mask with section 6;
+4. if abstain, target prediction is explicit abstention;
+5. otherwise generate `P_rel` using GeometricRelationField v0.2;
+6. feed frozen Task 6O B3:
+   - frozen SAM2 visual feature
+   - predicted `P_rel`
+   - direction relation id
+7. predict target mask.
+
+Do not provide:
+- oracle reference mask
+- target GT
+- candidate target masks
+- target instance id
+
+GT target is scoring only.
+
+Write:
+`evaluation/task6q_target_val.json`
+
+Report:
 - target mIoU
 - Dice
 - Pr@0.5
+- target abstention count/rate
 - per relation
-- largest-reference family
-- smallest-reference family
+- per reference family
 - border target
 - tiny target if present
 
-Frozen oracle B3 reference:
-- mIoU `0.4299680351479113`
-- PairedVal20 `14/20`
-- own-cross margin `0.39719566349802166`
+Compare against:
+- Task 6O oracle B3 mIoU = `0.4299680351479113`
+- Task 6P dense predicted-reference mIoU = `0.24096754293919803`
 
-## 16. PairedVal20
+## 10. PairedVal20
 
 Use exact frozen Task 6N PairedVal20.
 
-For a pair with same image and same reference source, reuse the same predicted reference mask.
+For pairs sharing same image/reference:
+- reuse exactly the same resolved proposal reference mask;
+- only relation changes.
 
 Report:
 - pass / 20
 - mean own IoU
 - mean cross IoU
 - own-cross margin
+- pairs with reference abstention
 
 Write:
-`evaluation/task6p_predicted_reference_paired_val.json`
+`evaluation/task6q_target_paired_val.json`
 
-# PART I — Gates
+Compare against:
+- oracle B3: 14/20, margin `0.39719566349802166`
+- Task 6P dense predicted reference: 0/20, margin `0.0036186017082471683`
 
-## 17. Reference-head adequacy
+# PART F — Gates
+
+## 11. Proposal coverage gate
+
+Pass only if:
+- eligible reference coverage@0.50 >= `0.70` overall
+- largest eligible coverage@0.50 >= `0.75`
+- smallest eligible coverage@0.50 >= `0.60`
+
+## 12. Reference resolver adequacy
 
 Pass only if all:
-
-- RefValUnique mIoU >= `0.35`
+- selected-reference mIoU >= `0.35`
 - median normalized centroid error <= `0.05`
 - p90 normalized centroid error <= `0.12`
+- abstention rate <= `0.10`
 
-These are propagation gates, not final segmentation-quality claims.
-
-## 18. Predicted-reference chain retention
+## 13. Downstream chain retention
 
 Pass only if all:
-
-- section 17 passes
-- predicted-reference target mIoU >= `0.3009776246035379`
-  (= 70% of oracle B3)
+- section 12 passes
+- target mIoU >= `0.3009776246035379`
 - PairedVal >= `10/20`
 - own-cross margin >= `0.20`
 
 Do not alter gates.
 
-# PART J — Verdict
+# PART G — Verdict
 
-## 19. Exactly one, priority order
+## 14. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-2. `DIFFERENTIABLE_FIELD_INVALID`
-3. `TASK6O_B3_REPRODUCTION_FAIL`
-4. `REFERENCE_HEAD_NOT_LEARNABLE`
-5. `REFERENCE_HEAD_INSUFFICIENT`
-6. `REFERENCE_ERROR_PROPAGATION_SEVERE`
-7. `PREDICTED_REFERENCE_CHAIN_FEASIBLE`
+2. `PROPOSAL_CHECKPOINT_UNAVAILABLE`
+3. `REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT`
+   - section 11 fails
+4. `DETERMINISTIC_REFERENCE_SELECTOR_INSUFFICIENT`
+   - section 11 passes but section 12 fails
+5. `REFERENCE_ERROR_PROPAGATION_SEVERE`
+   - section 12 passes but section 13 fails
+6. `PROPOSAL_REFERENCE_CHAIN_FEASIBLE`
+   - sections 11, 12 and 13 pass
 
 No other verdict.
 
-# PART K — Interpretation boundary
+# PART H — Interpretation boundary
 
-DSH reports measurements only.
-
-Do NOT claim final novelty or choose joint training, `[REF]`, GRCL, nearest/L3, a new reference architecture or a different field.
+DSH must not:
+- claim proposal reference resolver is novel;
+- decide to keep proposals permanently;
+- decide a new learned reference architecture;
+- start MLLM integration;
+- start GRCL;
+- start nearest/L3.
 
 Final handoff recommendation exactly:
 
-`等待 ChatGPT 根据 Task 6P 的 predicted-reference 误差传播结果决定 Task 6Q，不自行进行联合训练、MLLM 隐状态融合、nearest/L3 或 GRCL。`
+`等待 ChatGPT 根据 Task 6Q 的 frozen-proposal reference resolver 结果决定 Task 6R，不自行修改 reference 架构或开始 MLLM/GRCL/nearest/L3。`
 
-# PART L — Required artifacts
+# PART I — Required artifacts
 
 Create:
 
 ```text
-buildreasonseg_mvp/geometric_relation_field_v02.py
-buildreasonseg_mvp/task6p_reference_head.py
+evaluation/task6q_reference_resolver_val.json
+evaluation/task6q_reference_failure_attribution.json
+evaluation/task6q_target_val.json
+evaluation/task6q_target_paired_val.json
+evaluation/task6q_verdict.json
 
-evaluation/task6p_field_v02_audit.json
-evaluation/task6p_b3_reproduction.json
-evaluation/task6p_reference_pack_manifest.json
-evaluation/task6p_reference_overfit20.json
-evaluation/task6p_reference_val.json
-evaluation/task6p_predicted_reference_target_val.json
-evaluation/task6p_predicted_reference_paired_val.json
-evaluation/task6p_field_propagation_diagnostics.json
-evaluation/task6p_verdict.json
+docs/task6q_frozen_proposal_reference_resolver.md
 
-docs/task6p_differentiable_field_predicted_reference.md
+buildreasonseg_mvp/task6q_reference_resolver.py
 
-scripts/task6p_freeze_reference_packs.py
-scripts/task6p_field_v02_audit.py
-scripts/task6p_train_reference.py
-scripts/task6p_evaluate_chain.py
-scripts/task6p_report.py
+scripts/task6q_reference_audit.py
+scripts/task6q_target_propagation.py
+scripts/task6q_report.py
 ```
 
-Checkpoints:
-`artifacts/task6p/checkpoints/`
-gitignored.
+Optional:
+`evaluation/task6q_proposal_cache_manifest.json`
 
-Reuse frozen Task 6N/6O feature cache.
+Proposal caches:
+`artifacts/task6q/proposals/`
+gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-# PART M — Tests
+# PART J — Tests
 
-## 20. Required tests
+## 15. Required tests
 
-At least:
+At minimum:
 
-1. Task 6N artifacts unchanged
-2. Task 6O artifacts unchanged
-3. v0.1 field file unchanged
-4. v0.2 binary numerical equivalence
-5. v0.2 finite nonzero gradient to soft M_ref
-6. v0.2 no detach in field forward path
-7. v0.2 no Python-float centroid in field forward path
-8. no test split access
-9. only 8 directional L2 programs
-10. reference packs deduplicated by exact key
-11. target source id never reference-head input
-12. relation id never reference-head input
-13. reference head input = visual + family only
-14. family vocab exactly largest/smallest
-15. frozen SAM2 unchanged
-16. B3 checkpoint hash verified
-17. B3 oracle reproduction tolerance
-18. B3 not retrained
-19. predicted chain uses v0.2
-20. predicted chain does not use oracle M_ref
-21. GT reference only for reference evaluation
-22. GT target only for target scoring
-23. same predicted ref reused for same image/reference in paired eval
-24. no `[REF]`
-25. no GRCL/SCL
-26. no nearest/L3
-27. no graph transformer
-28. no proposal training
-29. no 4B
-30. no download/install/GUI
-31. previous suite preserved
+1. Task 6P artifacts unchanged
+2. Task 6M.1 inference config unchanged
+3. proposal checkpoint SHA exact
+4. conf exactly 0.10
+5. imgsz exactly 640
+6. max_det exactly 100
+7. no threshold sweep
+8. masks restored to 512×512
+9. border predicate exact
+10. merge threshold exact 0.20
+11. tiny threshold exact 150
+12. largest eligibility exact
+13. smallest eligibility exact
+14. deterministic largest selection
+15. deterministic smallest selection
+16. tie-break exact
+17. no GT in reference selection
+18. no target id in reference selection
+19. RefValUnique reused
+20. MiniVal240 reused
+21. PairedVal20 reused
+22. no test split
+23. v0.2 field unchanged
+24. frozen B3 checkpoint unchanged
+25. B3 not retrained
+26. no oracle reference in downstream chain
+27. GT reference only evaluation
+28. GT target only evaluation
+29. same reference reused in paired same-reference case
+30. no YOLO training
+31. no dense reference-head retraining
+32. no `[REF]`
+33. no GRCL/SCL
+34. no nearest/L3
+35. no graph transformer
+36. no 4B
+37. no new dataset/download/install/GUI
+38. previous suite preserved
 
 Run:
 `python -m pytest tests/ -q`
 
-Task 6O ended at **627 passed, 1 skipped**.
+Task 6P ended at **658 passed, 1 skipped**.
 Do not reduce prior passing tests.
 
-# PART N — Git/storage
+# PART K — Git/storage
 
 Do not commit:
-- checkpoints
-- SAM2 weights
+- YOLO checkpoint
+- proposal cache
+- SAM2 checkpoint
 - feature cache
-- source imagery/vector files
+- source images/vectors
 - `.conda`
 - large caches
 
 Commit code/small JSON/docs/tests/handoff only.
 
 Recommended:
-1. `fix: add autograd-safe geometric relation field v02`
-2. `feat: add predicted-reference grounding head`
-3. `eval: measure predicted-reference error propagation`
-4. optional docs/handoff commit
+1. `feat: add frozen-proposal reference resolver`
+2. `eval: audit reference proposal selection and propagation`
+3. optional docs/handoff commit
 
-# PART O — Model policy
+# PART L — Model policy
 
 Default:
 - DeepSeek V4.1 Flash + High
@@ -607,22 +468,22 @@ Default:
 Use Flash + Max only for genuine implementation/runtime bugs.
 Do not use V4 Pro by default.
 
-# PART P — STOP
+# PART M — STOP
 
-After Task 6P:
+After Task 6Q:
 - commit
 - push
-- handoff
+- update handoff
 - STOP
 
 Do not start:
-- joint reference-target training
-- ProgramHead/MLLM hidden-state fusion
+- another reference architecture
+- MLLM hidden-state fusion
+- joint training
+- GRCL
 - nearest
 - L3
-- GRCL
 - full-dataset training
-- proposal optimization
 - GUI
 
 Wait for ChatGPT audit.
