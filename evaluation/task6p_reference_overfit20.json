@@ -1,0 +1,188 @@
+{
+  "_doc": "Task 6P section 10. Stage P1: ReferenceMaskHead trained on 20 unique train references (10 per family) with the fixed P1 optimiser/step budget. The head never sees the target building, the target relation id or the relation field.",
+  "best": {
+    "dice": 0.9843882806392303,
+    "miou": 0.9695040432203772,
+    "step": 1200
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\checkpoints\\p1_reference_head.pt",
+    "sha256": "0a4a3dd6855255f5f690b4f83056ebaafa1321928c8b7583fe993a57cd0b3f13"
+  },
+  "config": {
+    "amp": "bfloat16 autocast (same policy as 6N/6O)",
+    "augmentation": "none",
+    "batch_size": 4,
+    "evaluate_every_steps": 100,
+    "gate": {
+      "train_dice_min": 0.9,
+      "train_miou_min": 0.85
+    },
+    "lr": 0.001,
+    "max_steps": 1200,
+    "optimizer": "AdamW",
+    "pack": "reference_overfit20",
+    "scheduler": "none",
+    "seed": 20260929,
+    "stage": "P1",
+    "weight_decay": 0.0001
+  },
+  "final": {
+    "dice": 0.9843882806392303,
+    "miou": 0.9695040432203772,
+    "precision_at_0_5": 0.9852068519098438,
+    "records": 20
+  },
+  "final_detail": {
+    "border_reference": {
+      "miou": null,
+      "records": 0
+    },
+    "centroid_error_normalized": {
+      "mean": 0.0003658418662470847,
+      "median": 0.00022271984912408912,
+      "p90": 0.0005841636133392954
+    },
+    "dice": 0.9843882806392303,
+    "median_area_ratio": 0.9973148571138521,
+    "miou": 0.9695040432203772,
+    "non_border_reference": {
+      "miou": 0.9695040432203772,
+      "records": 20
+    },
+    "per_family": {
+      "largest": {
+        "dice": 0.9854784199315793,
+        "miou": 0.9715910682028674,
+        "records": 10
+      },
+      "smallest": {
+        "dice": 0.9832981413468813,
+        "miou": 0.9674170182378867,
+        "records": 10
+      }
+    },
+    "precision_at_0_5": 0.9852068519098438,
+    "records": 20,
+    "tiny_reference": {
+      "miou": null,
+      "records": 0
+    }
+  },
+  "gate": {
+    "best_dice": 0.9843882806392303,
+    "best_miou": 0.9695040432203772,
+    "dice_min": 0.9,
+    "final_dice": 0.9843882806392303,
+    "final_miou": 0.9695040432203772,
+    "miou_min": 0.85,
+    "passed": true
+  },
+  "history": [
+    {
+      "dice": 0.4946550765334112,
+      "loss": 0.6057862639427185,
+      "miou": 0.4030776628136402,
+      "step": 100
+    },
+    {
+      "dice": 0.8026614238381233,
+      "loss": 0.14616788923740387,
+      "miou": 0.7273257620331968,
+      "step": 200
+    },
+    {
+      "dice": 0.8460019648148659,
+      "loss": 0.08911923319101334,
+      "miou": 0.7993473950044233,
+      "step": 300
+    },
+    {
+      "dice": 0.9138942522467852,
+      "loss": 0.06985195726156235,
+      "miou": 0.8647645780773088,
+      "step": 400
+    },
+    {
+      "dice": 0.9676590375536179,
+      "loss": 0.03984864428639412,
+      "miou": 0.9381109986743912,
+      "step": 500
+    },
+    {
+      "dice": 0.9779545866859107,
+      "loss": 0.03773089498281479,
+      "miou": 0.9572177377552287,
+      "step": 600
+    },
+    {
+      "dice": 0.9748810057430275,
+      "loss": 0.03476240113377571,
+      "miou": 0.9513715743336613,
+      "step": 700
+    },
+    {
+      "dice": 0.9800420059022615,
+      "loss": 0.024245137348771095,
+      "miou": 0.9611157977703673,
+      "step": 800
+    },
+    {
+      "dice": 0.9798907643254366,
+      "loss": 0.025722431018948555,
+      "miou": 0.9607385489037041,
+      "step": 900
+    },
+    {
+      "dice": 0.9788965140878683,
+      "loss": 0.021376030519604683,
+      "miou": 0.9589237060609925,
+      "step": 1000
+    },
+    {
+      "dice": 0.9785818643137478,
+      "loss": 0.02909397892653942,
+      "miou": 0.9584153966879922,
+      "step": 1100
+    },
+    {
+      "dice": 0.9843882806392303,
+      "loss": 0.019993774592876434,
+      "miou": 0.9695040432203772,
+      "step": 1200
+    }
+  ],
+  "pack": {
+    "count": 20,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\reference_overfit20.json",
+    "sha256": "9199f09da1ea53be793e86f3b58f47c6dcbab682dd78bc1362fe1ea3e9a38ff0"
+  },
+  "parameters": {
+    "by_module": {
+      "family_embedding": 32,
+      "project": 33152,
+      "trunk": 240257
+    },
+    "fusion_channels": 144,
+    "inputs": [
+      "frozen_visual_feature_256x64x64",
+      "reference_family_id"
+    ],
+    "not_inputs": [
+      "target_relation_id",
+      "target_mask",
+      "relation_field",
+      "yolo_proposal",
+      "candidate_mask"
+    ],
+    "total_parameters": 273441,
+    "trainable_parameters": 273441
+  },
+  "peak_vram_gb": 0.548,
+  "reference_source": "oracle_native_gt",
+  "stage": "P1",
+  "task": "6P",
+  "test_split_used": false,
+  "verdict": "P1_PASS",
+  "wall_seconds": 23.9
+}

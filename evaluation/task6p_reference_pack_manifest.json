@@ -1,0 +1,78 @@
+{
+  "_doc": "Task 6P sections 6-8. Deduplicated reference packs for the ReferenceMaskHead. Unique key = (split, tile_id, reference_source_feature_id, reference_family); relations sharing a reference contribute one record. Reference-only: no target identity, no relation id. The test split is never read.",
+  "counts": {
+    "dedup_ratio_train": 1.2121212121212122,
+    "mini_train_1000_records": 1000,
+    "mini_val_240_records": 240,
+    "ref_train_unique": 825,
+    "ref_val_unique": 219
+  },
+  "family_counts": {
+    "ref_train_unique": {
+      "largest": 491,
+      "smallest": 334
+    },
+    "ref_val_unique": {
+      "largest": 110,
+      "smallest": 109
+    },
+    "reference_overfit20": {
+      "largest": 10,
+      "smallest": 10
+    }
+  },
+  "packs": {
+    "ref_train_unique": {
+      "count": 825,
+      "detail": null,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_train_unique.json",
+      "sha256": "f137d2e8721fdd23e6059e377c72057132525c347277ad59a86817f8808d75ae"
+    },
+    "ref_val_unique": {
+      "count": 219,
+      "detail": null,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_val_unique.json",
+      "sha256": "3896e11ba82b01aa1b46bcc91a02b2cf11824a5dcf32e92f7b541148253cb498"
+    },
+    "reference_overfit20": {
+      "count": 20,
+      "detail": {
+        "distinct_masks": 20,
+        "distinct_tile_feature_keys": 20,
+        "per_family_available": {
+          "largest": 491,
+          "smallest": 334
+        },
+        "per_family_requested": 10,
+        "per_family_selected": {
+          "largest": 10,
+          "smallest": 10
+        },
+        "requested": 20,
+        "shortfall_filled_from_other_family": false,
+        "target_included": false
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\reference_overfit20.json",
+      "sha256": "9199f09da1ea53be793e86f3b58f47c6dcbab682dd78bc1362fe1ea3e9a38ff0"
+    }
+  },
+  "reference_source": "oracle_native_gt",
+  "relation_id_stored_in_reference_packs": false,
+  "runtime_seconds": 0.11,
+  "scope_programs": [
+    "largest_to_above",
+    "largest_to_below",
+    "largest_to_left_of",
+    "largest_to_right_of",
+    "smallest_to_above",
+    "smallest_to_below",
+    "smallest_to_left_of",
+    "smallest_to_right_of"
+  ],
+  "seed": 20260929,
+  "stage": "D-reference-packs",
+  "target_included_in_reference_packs": false,
+  "task": "6P",
+  "test_split_used": false,
+  "unique_key": "(split, tile_id, reference_source_feature_id, reference_family)"
+}

@@ -1,0 +1,268 @@
+{
+  "_doc": "Task 6P section 11. Stage P2: ReferenceMaskHead trained from fresh initialisation on RefTrainUnique and selected on RefValUnique mIoU. All head parameters are frozen after this stage; it is never jointly trained with the target decoder B3.",
+  "best_epoch": 12,
+  "best_selection_detail": {
+    "border_reference": {
+      "miou": null,
+      "records": 0
+    },
+    "centroid_error_normalized": {
+      "mean": 0.15076694817288533,
+      "median": 0.12406022878284037,
+      "p90": 0.319617521088526
+    },
+    "dice": 0.3027935649195627,
+    "median_area_ratio": 1.0197953736654803,
+    "miou": 0.22017559533688874,
+    "non_border_reference": {
+      "miou": 0.22017559533688874,
+      "records": 219
+    },
+    "per_family": {
+      "largest": {
+        "dice": 0.3769180523207752,
+        "miou": 0.2797140510772145,
+        "records": 110
+      },
+      "smallest": {
+        "dice": 0.22798903634953163,
+        "miou": 0.16009091523197289,
+        "records": 109
+      }
+    },
+    "precision_at_0_5": 0.35951424378530816,
+    "records": 219,
+    "tiny_reference": {
+      "miou": null,
+      "records": 0
+    }
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\checkpoints\\p2_reference_head.pt",
+    "sha256": "c84f8fb64f1af13ebf54a4f7fcf34d5aef9fae34009ea275b10e172a6b2bc6d5"
+  },
+  "config": {
+    "amp": "bfloat16 autocast (same policy as 6N/6O)",
+    "augmentation": "none",
+    "batch_size": 8,
+    "early_stopping_monitor": "ref_val_unique_miou",
+    "early_stopping_patience": 6,
+    "fresh_initialisation": true,
+    "lr": 0.0003,
+    "max_epochs": 30,
+    "model_selection": "highest RefValUnique mIoU",
+    "optimizer": "AdamW",
+    "scheduler": "none",
+    "seed": 20260929,
+    "stage": "P2",
+    "train_pack": "ref_train_unique",
+    "val_pack": "ref_val_unique",
+    "weight_decay": 0.0001
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 1.0304065633278627,
+      "val_centroid_median": 0.20827463465947924,
+      "val_dice": 0.2562725196593384,
+      "val_miou": 0.16838143404248473
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.8760400729683729,
+      "val_centroid_median": 0.1836213397974385,
+      "val_dice": 0.255186545427632,
+      "val_miou": 0.17080610682890507
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.7750059285989175,
+      "val_centroid_median": 0.1672530236443253,
+      "val_dice": 0.25736685110578633,
+      "val_miou": 0.17763609338447603
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.7168825939297676,
+      "val_centroid_median": 0.1545746477848066,
+      "val_dice": 0.23190014037328852,
+      "val_miou": 0.164599263722544
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.6836312140982884,
+      "val_centroid_median": 0.14318545423365928,
+      "val_dice": 0.2788742344718311,
+      "val_miou": 0.1965820290080581
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.6457057503553537,
+      "val_centroid_median": 0.13905841638893135,
+      "val_dice": 0.3032562460839858,
+      "val_miou": 0.20581283716593127
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.620482040139345,
+      "val_centroid_median": 0.13137508967213943,
+      "val_dice": 0.2816037851410047,
+      "val_miou": 0.19959303201157835
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.5882970535984406,
+      "val_centroid_median": 0.1242342434902091,
+      "val_dice": 0.3095381151671238,
+      "val_miou": 0.217862329505787
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.5646509026678709,
+      "val_centroid_median": 0.12307685918783547,
+      "val_dice": 0.30915799063240323,
+      "val_miou": 0.21552568046013493
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.5341249432128209,
+      "val_centroid_median": 0.1262486602933995,
+      "val_dice": 0.2923208154012382,
+      "val_miou": 0.20192637901726349
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.5119874156438388,
+      "val_centroid_median": 0.1212874614371909,
+      "val_dice": 0.2969845539073811,
+      "val_miou": 0.20868907919707766
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.4937962147478874,
+      "val_centroid_median": 0.12406022878284037,
+      "val_dice": 0.3027935649195627,
+      "val_miou": 0.22017559533688874
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.4737259178207471,
+      "val_centroid_median": 0.11870951450265986,
+      "val_dice": 0.270552908412756,
+      "val_miou": 0.19735688587713462
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.458523074308267,
+      "val_centroid_median": 0.12033608318419187,
+      "val_dice": 0.26594572357584,
+      "val_miou": 0.19599209979865811
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.43953291183480847,
+      "val_centroid_median": 0.11431517994841929,
+      "val_dice": 0.29601756132234675,
+      "val_miou": 0.21180681382669334
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.41951408237218857,
+      "val_centroid_median": 0.12642960269582135,
+      "val_dice": 0.251093360435207,
+      "val_miou": 0.18608136753361845
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.4134857855164088,
+      "val_centroid_median": 0.11917381157856051,
+      "val_dice": 0.24821100507662552,
+      "val_miou": 0.18300315011087068
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.38516482739494395,
+      "val_centroid_median": 0.12800426341935106,
+      "val_dice": 0.2803587037055748,
+      "val_miou": 0.20294027996080466
+    }
+  ],
+  "epochs_run": 18,
+  "frozen_after_training": true,
+  "joint_training_with_b3": false,
+  "packs": {
+    "train": {
+      "count": 825,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_train_unique.json",
+      "sha256": "f137d2e8721fdd23e6059e377c72057132525c347277ad59a86817f8808d75ae"
+    },
+    "val": {
+      "count": 219,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_val_unique.json",
+      "sha256": "3896e11ba82b01aa1b46bcc91a02b2cf11824a5dcf32e92f7b541148253cb498"
+    }
+  },
+  "parameters": {
+    "by_module": {
+      "family_embedding": 32,
+      "project": 33152,
+      "trunk": 240257
+    },
+    "fusion_channels": 144,
+    "inputs": [
+      "frozen_visual_feature_256x64x64",
+      "reference_family_id"
+    ],
+    "not_inputs": [
+      "target_relation_id",
+      "target_mask",
+      "relation_field",
+      "yolo_proposal",
+      "candidate_mask"
+    ],
+    "total_parameters": 273441,
+    "trainable_parameters": 273441
+  },
+  "peak_vram_gb": 0.65,
+  "reference_source": "oracle_native_gt",
+  "selected_model": {
+    "border_reference": {
+      "miou": null,
+      "records": 0
+    },
+    "centroid_error_normalized": {
+      "mean": 0.15076694817288533,
+      "median": 0.12406022878284037,
+      "p90": 0.319617521088526
+    },
+    "dice": 0.3027935649195627,
+    "median_area_ratio": 1.0197953736654803,
+    "miou": 0.22017559533688874,
+    "non_border_reference": {
+      "miou": 0.22017559533688874,
+      "records": 219
+    },
+    "per_family": {
+      "largest": {
+        "dice": 0.3769180523207752,
+        "miou": 0.2797140510772145,
+        "records": 110
+      },
+      "smallest": {
+        "dice": 0.22798903634953163,
+        "miou": 0.16009091523197289,
+        "records": 109
+      }
+    },
+    "precision_at_0_5": 0.35951424378530816,
+    "records": 219,
+    "tiny_reference": {
+      "miou": null,
+      "records": 0
+    }
+  },
+  "stage": "P2",
+  "task": "6P",
+  "test_split_used": false,
+  "wall_seconds": 47.8
+}
