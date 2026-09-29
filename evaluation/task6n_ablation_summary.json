@@ -1,0 +1,576 @@
+{
+  "_doc": "Task 6N sections 16-17. Complete ablation summary for the three controlled variants on the oracle-reference geometric relation field. reference_source = oracle_native_gt; the test split was never used; this is not end-to-end inference.",
+  "base_commit": "5e52d95c70d321a26b5d61ee96853d1123fcb26d",
+  "comparisons": {
+    "b1_minus_b0_miou": 0.026529662616033706,
+    "b2_minus_b0_miou": 0.2383404211645101,
+    "b2_minus_b1_miou": 0.2118107585484764
+  },
+  "criteria": {
+    "1_b2_passes_n1": {
+      "evidence": {
+        "b2_best_dice": 0.9519661939287747,
+        "b2_best_miou": 0.9280256472037026,
+        "b2_final_dice": 0.9519661939287747,
+        "b2_final_miou": 0.9280256472037026,
+        "passed": true,
+        "train_dice_min": 0.9,
+        "train_miou_min": 0.85
+      },
+      "measured": true,
+      "passed": true,
+      "required": true
+    },
+    "2_b2_minus_b0_miou_ge_0_05": {
+      "measured": 0.2383404211645101,
+      "passed": true,
+      "required": 0.05
+    },
+    "2b_b2_minus_b1_miou_ge_0_02": {
+      "measured": 0.2118107585484764,
+      "passed": true,
+      "required": 0.02
+    },
+    "3_b2_paired_val_ge_14_of_20": {
+      "measured": 16,
+      "passed": true,
+      "required": 14
+    },
+    "4_b2_own_minus_cross_iou_ge_0_10": {
+      "measured": 0.4411882244623754,
+      "passed": true,
+      "required": 0.1
+    },
+    "5_no_gt_target_in_input": {
+      "evidence": "the model forward signature receives only the frozen visual feature, the downsampled oracle reference mask, the parameter-free field and the relation index; the GT target is used as the loss label and as the evaluation reference only",
+      "measured": true,
+      "passed": true,
+      "required": true
+    }
+  },
+  "field": {
+    "alpha": 1.2,
+    "learned_parameters": 0,
+    "name": "GeometricRelationField v0.1",
+    "s_axis": 0.02,
+    "s_margin": 0.02,
+    "softness": 0.02,
+    "tau": 0.04
+  },
+  "field_sanity": {
+    "overall": {
+      "mean_best_distractor_score": 0.10029570086445781,
+      "mean_native_instances": 6.970833333333333,
+      "mean_other_building_score": 0.3520307230467426,
+      "mean_reference_score": 0.0960794558438162,
+      "mean_target_area_px": 2104.4166666666665,
+      "mean_target_minus_best_distractor": 0.7697526511374294,
+      "mean_target_rank": 1.0,
+      "mean_target_score": 0.8668487795939048,
+      "records": 240,
+      "top_1_rate": 1.0,
+      "top_3_rate": 1.0
+    },
+    "per_reference_family": {
+      "largest": {
+        "mean_best_distractor_score": 0.08805214787214408,
+        "mean_native_instances": 8.683333333333334,
+        "mean_other_building_score": 0.2924297603880376,
+        "mean_reference_score": 0.129432171707352,
+        "mean_target_area_px": 1549.7,
+        "mean_target_minus_best_distractor": 0.8035237380822132,
+        "mean_target_rank": 1.0,
+        "mean_target_score": 0.8872295995553334,
+        "records": 120,
+        "top_1_rate": 1.0,
+        "top_3_rate": 1.0
+      },
+      "smallest": {
+        "mean_best_distractor_score": 0.11426932112742458,
+        "mean_native_instances": 5.258333333333334,
+        "mean_other_building_score": 0.4116316857054476,
+        "mean_reference_score": 0.0627267399802804,
+        "mean_target_area_px": 2659.133333333333,
+        "mean_target_minus_best_distractor": 0.7312095627765349,
+        "mean_target_rank": 1.0,
+        "mean_target_score": 0.8464679596324761,
+        "records": 120,
+        "top_1_rate": 1.0,
+        "top_3_rate": 1.0
+      }
+    },
+    "per_relation": {
+      "above": {
+        "mean_best_distractor_score": 0.0777889326062817,
+        "mean_native_instances": 6.633333333333334,
+        "mean_other_building_score": 0.3264490296087828,
+        "mean_reference_score": 0.0866325682029128,
+        "mean_target_area_px": 2378.15,
+        "mean_target_minus_best_distractor": 0.7793114618203258,
+        "mean_target_rank": 1.0,
+        "mean_target_score": 0.8576684465010961,
+        "records": 60,
+        "top_1_rate": 1.0,
+        "top_3_rate": 1.0
+      },
+      "below": {
+        "mean_best_distractor_score": 0.1074607241525333,
+        "mean_native_instances": 6.35,
+        "mean_other_building_score": 0.35083063203097636,
+        "mean_reference_score": 0.09025830219810207,
+        "mean_target_area_px": 1923.15,
+        "mean_target_minus_best_distractor": 0.7630591669246252,
+        "mean_target_rank": 1.0,
+        "mean_target_score": 0.8691715101401011,
+        "records": 60,
+        "top_1_rate": 1.0,
+        "top_3_rate": 1.0
+      },
+      "left_of": {
+        "mean_best_distractor_score": 0.12137526975836697,
+        "mean_native_instances": 6.55,
+        "mean_other_building_score": 0.3823735188365086,
+        "mean_reference_score": 0.09685202244048317,
+        "mean_target_area_px": 2025.45,
+        "mean_target_minus_best_distractor": 0.7523742744647827,
+        "mean_target_rank": 1.0,
+        "mean_target_score": 0.8663489719231924,
+        "records": 60,
+        "top_1_rate": 1.0,
+        "top_3_rate": 1.0
+      },
+      "right_of": {
+        "mean_best_distractor_score": 0.095906715826573,
+        "mean_native_instances": 8.35,
+        "mean_other_building_score": 0.3484697117107027,
+        "mean_reference_score": 0.11057493053376674,
+        "mean_target_area_px": 2090.9166666666665,
+        "mean_target_minus_best_distractor": 0.7835208850534855,
+        "mean_target_rank": 1.0,
+        "mean_target_score": 0.8742061898112297,
+        "records": 60,
+        "top_1_rate": 1.0,
+        "top_3_rate": 1.0
+      }
+    }
+  },
+  "packs": {
+    "mini_train_1000": {
+      "count": 1000,
+      "detail": {
+        "available": 1395,
+        "requested": 1000,
+        "selected_per_stratum": {
+          "above|largest": 148,
+          "above|smallest": 98,
+          "below|largest": 148,
+          "below|smallest": 106,
+          "left_of|largest": 148,
+          "left_of|smallest": 98,
+          "right_of|largest": 147,
+          "right_of|smallest": 107
+        },
+        "strata": {
+          "above|largest": 246,
+          "above|smallest": 98,
+          "below|largest": 232,
+          "below|smallest": 106,
+          "left_of|largest": 260,
+          "left_of|smallest": 98,
+          "right_of|largest": 248,
+          "right_of|smallest": 107
+        }
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_train_1000.json",
+      "sha256": "02de6440da36fb10360b93b815bb43d75ebd87a4398c333361c4c5cfc41eba50"
+    },
+    "mini_val_240": {
+      "count": 240,
+      "detail": {
+        "all_eight_programs": true,
+        "available_per_program": {
+          "largest_to_above": 164,
+          "largest_to_below": 139,
+          "largest_to_left_of": 192,
+          "largest_to_right_of": 173,
+          "smallest_to_above": 88,
+          "smallest_to_below": 78,
+          "smallest_to_left_of": 86,
+          "smallest_to_right_of": 88
+        },
+        "per_program_requested": 30,
+        "selected_per_program": {
+          "largest_to_above": 30,
+          "largest_to_below": 30,
+          "largest_to_left_of": 30,
+          "largest_to_right_of": 30,
+          "smallest_to_above": 30,
+          "smallest_to_below": 30,
+          "smallest_to_left_of": 30,
+          "smallest_to_right_of": 30
+        }
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+      "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+    },
+    "overfit20": {
+      "count": 20,
+      "detail": {
+        "counterfactual_pairs": [
+          {
+            "a": {
+              "relation": "left_of",
+              "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+              "target_source_feature_id": 30651
+            },
+            "b": {
+              "relation": "right_of",
+              "sample_id": "buildsr_train_1_1029_2_largest_to_right_of_84d92b7ee14e",
+              "target_source_feature_id": 30482
+            },
+            "reference_source_feature_id": 30629,
+            "tile_id": "1_1029"
+          },
+          {
+            "a": {
+              "relation": "above",
+              "sample_id": "buildsr_train_1_1064_2_largest_to_above_359c7cbf35fa",
+              "target_source_feature_id": 30725
+            },
+            "b": {
+              "relation": "right_of",
+              "sample_id": "buildsr_train_1_1064_2_largest_to_right_of_426d643553d7",
+              "target_source_feature_id": 30186
+            },
+            "reference_source_feature_id": 30245,
+            "tile_id": "1_1064"
+          },
+          {
+            "a": {
+              "relation": "below",
+              "sample_id": "buildsr_train_1_1152_2_smallest_to_below_41eaf2ffd86f",
+              "target_source_feature_id": 29865
+            },
+            "b": {
+              "relation": "left_of",
+              "sample_id": "buildsr_train_1_1152_2_smallest_to_left_of_389991e228bf",
+              "target_source_feature_id": 29997
+            },
+            "reference_source_feature_id": 30066,
+            "tile_id": "1_1152"
+          },
+          {
+            "a": {
+              "relation": "below",
+              "sample_id": "buildsr_train_1_1156_2_smallest_to_below_ac892ce11028",
+              "target_source_feature_id": 29782
+            },
+            "b": {
+              "relation": "left_of",
+              "sample_id": "buildsr_train_1_1156_2_smallest_to_left_of_8c4ce300a02d",
+              "target_source_feature_id": 30011
+            },
+            "reference_source_feature_id": 30001,
+            "tile_id": "1_1156"
+          }
+        ],
+        "directions": [
+          "above",
+          "below",
+          "left_of",
+          "right_of"
+        ],
+        "distinct_tiles": 13,
+        "families": [
+          "largest",
+          "smallest"
+        ],
+        "pair_count": 4,
+        "programs": [
+          "largest_to_above",
+          "largest_to_below",
+          "largest_to_left_of",
+          "largest_to_right_of",
+          "smallest_to_above",
+          "smallest_to_below",
+          "smallest_to_left_of",
+          "smallest_to_right_of"
+        ]
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\overfit20.json",
+      "sha256": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a"
+    },
+    "paired_val_20": {
+      "count": 20,
+      "detail": {
+        "available_pairs": 297,
+        "constraints": {
+          "different_direction": true,
+          "different_target": true,
+          "same_reference": true,
+          "same_tile": true
+        },
+        "selected_pairs": 20,
+        "verified": true
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json",
+      "sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3"
+    }
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 0.01,
+  "scope": {
+    "excluded": [
+      "nearest",
+      "level_1_extremes",
+      "level_3_compositions",
+      "new_relations"
+    ],
+    "programs": [
+      "largest_to_left_of",
+      "largest_to_right_of",
+      "largest_to_above",
+      "largest_to_below",
+      "smallest_to_left_of",
+      "smallest_to_right_of",
+      "smallest_to_above",
+      "smallest_to_below"
+    ],
+    "test_split_used": false
+  },
+  "task": "6N",
+  "variants": {
+    "B0": {
+      "architecture": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 240257
+        },
+        "first_conv_in_channels": 144,
+        "total_parameters": 273473,
+        "trainable_parameters": 273473,
+        "uses_reference_mask": false,
+        "uses_relation_field": false
+      },
+      "border_target": {
+        "miou": 0.19348492033327575,
+        "records": 114
+      },
+      "label": "N-B0",
+      "mini_val_240": {
+        "dice": 0.3043378935919466,
+        "miou": 0.21478613983486122,
+        "precision_at_0_5": 0.41911639809869694,
+        "records": 240
+      },
+      "overfit20": {
+        "best_dice": 0.9643190228751335,
+        "best_miou": 0.9430561948654359,
+        "final_dice": 0.9631355216289338,
+        "final_miou": 0.9407533339022427,
+        "paired_own_cross": {
+          "available": true,
+          "mean_cross_iou": 0.0,
+          "mean_own_iou": 0.8975439848512106,
+          "own_cross_margin": 0.8975439848512106,
+          "pairs": 4,
+          "passed": 4
+        }
+      },
+      "paired_val_20": {
+        "mean_cross_iou": 0.03979025173743874,
+        "mean_own_iou": 0.14563290510867474,
+        "own_cross_margin": 0.105842653371236,
+        "pair_pass_rule": "both members prefer their own GT target over the paired alternative by IoU",
+        "pairs": 20,
+        "pass_rate": 0.45,
+        "passed": 9
+      },
+      "per_reference_family_miou": {
+        "largest": 0.17404314630243253,
+        "smallest": 0.25552913336728994
+      },
+      "per_relation_miou": {
+        "above": 0.21990860631412665,
+        "below": 0.24360998490565863,
+        "left_of": 0.1862135381779055,
+        "right_of": 0.20941242994175416
+      },
+      "tiny_target": {
+        "miou": 1.3872902443135088e-09,
+        "records": 4
+      },
+      "training": {
+        "checkpoint": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B0.pt",
+          "sha256": "85923069d92d54654875f6ccb05c673e5d6c3931cc6af6c54ba857e1f1fd7847"
+        },
+        "epochs_run": 15,
+        "peak_vram_gb": 0.894,
+        "selected_epoch": 10,
+        "wall_seconds": 174.8
+      }
+    },
+    "B1": {
+      "architecture": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 241409
+        },
+        "first_conv_in_channels": 145,
+        "total_parameters": 274625,
+        "trainable_parameters": 274625,
+        "uses_reference_mask": true,
+        "uses_relation_field": false
+      },
+      "border_target": {
+        "miou": 0.2170843831633868,
+        "records": 114
+      },
+      "label": "N-B1",
+      "mini_val_240": {
+        "dice": 0.3276384127654494,
+        "miou": 0.24131580245089493,
+        "precision_at_0_5": 0.44962246369127856,
+        "records": 240
+      },
+      "overfit20": {
+        "best_dice": 0.9575793893375367,
+        "best_miou": 0.933153742159654,
+        "final_dice": 0.9575793893375367,
+        "final_miou": 0.933153742159654,
+        "paired_own_cross": {
+          "available": true,
+          "mean_cross_iou": 0.0,
+          "mean_own_iou": 0.8857528967652107,
+          "own_cross_margin": 0.8857528967652107,
+          "pairs": 4,
+          "passed": 4
+        }
+      },
+      "paired_val_20": {
+        "mean_cross_iou": 0.05064105805356557,
+        "mean_own_iou": 0.18713859356414142,
+        "own_cross_margin": 0.13649753551057586,
+        "pair_pass_rule": "both members prefer their own GT target over the paired alternative by IoU",
+        "pairs": 20,
+        "pass_rate": 0.35,
+        "passed": 7
+      },
+      "per_reference_family_miou": {
+        "largest": 0.20641391058822267,
+        "smallest": 0.27621769431356724
+      },
+      "per_relation_miou": {
+        "above": 0.26574072901258405,
+        "below": 0.2620720760481589,
+        "left_of": 0.2276194079148006,
+        "right_of": 0.20983099682803633
+      },
+      "tiny_target": {
+        "miou": 6.929158616995458e-08,
+        "records": 4
+      },
+      "training": {
+        "checkpoint": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B1.pt",
+          "sha256": "1cb4c6d7529efe919fbfd9b0d8d77259aefabc4bf33414ed6a1bd271660e903b"
+        },
+        "epochs_run": 16,
+        "peak_vram_gb": 0.674,
+        "selected_epoch": 11,
+        "wall_seconds": 50.9
+      }
+    },
+    "B2": {
+      "architecture": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 242561
+        },
+        "first_conv_in_channels": 146,
+        "total_parameters": 275777,
+        "trainable_parameters": 275777,
+        "uses_reference_mask": true,
+        "uses_relation_field": true
+      },
+      "border_target": {
+        "miou": 0.4253217369479183,
+        "records": 114
+      },
+      "label": "N-B2",
+      "mini_val_240": {
+        "dice": 0.5768438150123932,
+        "miou": 0.4531265609993713,
+        "precision_at_0_5": 0.6640413290137366,
+        "records": 240
+      },
+      "overfit20": {
+        "best_dice": 0.9519661939287747,
+        "best_miou": 0.9280256472037026,
+        "final_dice": 0.9519661939287747,
+        "final_miou": 0.9280256472037026,
+        "paired_own_cross": {
+          "available": true,
+          "mean_cross_iou": 0.0011691348402182386,
+          "mean_own_iou": 0.8691522816006616,
+          "own_cross_margin": 0.8679831467604434,
+          "pairs": 4,
+          "passed": 4
+        }
+      },
+      "paired_val_20": {
+        "mean_cross_iou": 0.002157857978561074,
+        "mean_own_iou": 0.44334608244093643,
+        "own_cross_margin": 0.4411882244623754,
+        "pair_pass_rule": "both members prefer their own GT target over the paired alternative by IoU",
+        "pairs": 20,
+        "pass_rate": 0.8,
+        "passed": 16
+      },
+      "per_reference_family_miou": {
+        "largest": 0.43949676530761356,
+        "smallest": 0.4667563566911291
+      },
+      "per_relation_miou": {
+        "above": 0.46797337338737216,
+        "below": 0.43258313259939,
+        "left_of": 0.4542531739281527,
+        "right_of": 0.45769656408257037
+      },
+      "tiny_target": {
+        "miou": 0.021551813001801246,
+        "records": 4
+      },
+      "training": {
+        "checkpoint": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B2.pt",
+          "sha256": "7cb03c9913a7d3d939413b38aea03c557bce75507cfb46e707224b4dadf01f08"
+        },
+        "epochs_run": 14,
+        "peak_vram_gb": 0.674,
+        "selected_epoch": 9,
+        "wall_seconds": 44.8
+      }
+    }
+  },
+  "verdict": "GEOMETRIC_RELATION_FIELD_FEASIBLE",
+  "verdict_reason": "all five section-17 criteria pass",
+  "visual": {
+    "cache_dtype": "float32",
+    "cache_format": "npy (C, h, w)",
+    "cache_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\features",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "checkpoint_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "config_name": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "encoder": "frozen SAM2.1 Hiera Base+ image embedding (Sam2Encoder.encode)",
+    "hits": 55576,
+    "misses": 944,
+    "repo_id": "facebook/sam2.1-hiera-base-plus",
+    "reused_from": "Task 6C.7 / Task 6I frozen visual path",
+    "source_revision_expected": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  }
+}

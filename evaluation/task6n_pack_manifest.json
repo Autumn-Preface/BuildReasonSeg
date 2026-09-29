@@ -1,0 +1,196 @@
+{
+  "_doc": "Task 6N section 12. Frozen deterministic packs for the oracle-reference geometric relation field ablation. Built before any training; the test split is never read. reference_source = oracle_native_gt for every record.",
+  "eligibility": {
+    "criteria": [
+      "program is one of the 8 directional L2 ids",
+      "oracle reference and target source_feature_id resolve to canonical native instances",
+      "RGB source tile exists",
+      "frozen SAM2 feature exists or is generated through the frozen cache path"
+    ],
+    "filters_not_applied": [
+      "tiny filter",
+      "border filter",
+      "visibility filter",
+      "difficulty deletion"
+    ],
+    "train": {
+      "eligible": 1395,
+      "in_scope": 1395,
+      "skipped_program_out_of_scope": 11383
+    },
+    "val": {
+      "eligible": 1008,
+      "in_scope": 1008,
+      "skipped_program_out_of_scope": 8103
+    }
+  },
+  "packs": {
+    "mini_train_1000": {
+      "count": 1000,
+      "detail": {
+        "available": 1395,
+        "requested": 1000,
+        "selected_per_stratum": {
+          "above|largest": 148,
+          "above|smallest": 98,
+          "below|largest": 148,
+          "below|smallest": 106,
+          "left_of|largest": 148,
+          "left_of|smallest": 98,
+          "right_of|largest": 147,
+          "right_of|smallest": 107
+        },
+        "strata": {
+          "above|largest": 246,
+          "above|smallest": 98,
+          "below|largest": 232,
+          "below|smallest": 106,
+          "left_of|largest": 260,
+          "left_of|smallest": 98,
+          "right_of|largest": 248,
+          "right_of|smallest": 107
+        }
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_train_1000.json",
+      "sha256": "02de6440da36fb10360b93b815bb43d75ebd87a4398c333361c4c5cfc41eba50"
+    },
+    "mini_val_240": {
+      "count": 240,
+      "detail": {
+        "all_eight_programs": true,
+        "available_per_program": {
+          "largest_to_above": 164,
+          "largest_to_below": 139,
+          "largest_to_left_of": 192,
+          "largest_to_right_of": 173,
+          "smallest_to_above": 88,
+          "smallest_to_below": 78,
+          "smallest_to_left_of": 86,
+          "smallest_to_right_of": 88
+        },
+        "per_program_requested": 30,
+        "selected_per_program": {
+          "largest_to_above": 30,
+          "largest_to_below": 30,
+          "largest_to_left_of": 30,
+          "largest_to_right_of": 30,
+          "smallest_to_above": 30,
+          "smallest_to_below": 30,
+          "smallest_to_left_of": 30,
+          "smallest_to_right_of": 30
+        }
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+      "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+    },
+    "overfit20": {
+      "count": 20,
+      "detail": {
+        "counterfactual_pairs": [
+          {
+            "a": {
+              "relation": "left_of",
+              "sample_id": "buildsr_train_1_1029_2_largest_to_left_of_0f761951516c",
+              "target_source_feature_id": 30651
+            },
+            "b": {
+              "relation": "right_of",
+              "sample_id": "buildsr_train_1_1029_2_largest_to_right_of_84d92b7ee14e",
+              "target_source_feature_id": 30482
+            },
+            "reference_source_feature_id": 30629,
+            "tile_id": "1_1029"
+          },
+          {
+            "a": {
+              "relation": "above",
+              "sample_id": "buildsr_train_1_1064_2_largest_to_above_359c7cbf35fa",
+              "target_source_feature_id": 30725
+            },
+            "b": {
+              "relation": "right_of",
+              "sample_id": "buildsr_train_1_1064_2_largest_to_right_of_426d643553d7",
+              "target_source_feature_id": 30186
+            },
+            "reference_source_feature_id": 30245,
+            "tile_id": "1_1064"
+          },
+          {
+            "a": {
+              "relation": "below",
+              "sample_id": "buildsr_train_1_1152_2_smallest_to_below_41eaf2ffd86f",
+              "target_source_feature_id": 29865
+            },
+            "b": {
+              "relation": "left_of",
+              "sample_id": "buildsr_train_1_1152_2_smallest_to_left_of_389991e228bf",
+              "target_source_feature_id": 29997
+            },
+            "reference_source_feature_id": 30066,
+            "tile_id": "1_1152"
+          },
+          {
+            "a": {
+              "relation": "below",
+              "sample_id": "buildsr_train_1_1156_2_smallest_to_below_ac892ce11028",
+              "target_source_feature_id": 29782
+            },
+            "b": {
+              "relation": "left_of",
+              "sample_id": "buildsr_train_1_1156_2_smallest_to_left_of_8c4ce300a02d",
+              "target_source_feature_id": 30011
+            },
+            "reference_source_feature_id": 30001,
+            "tile_id": "1_1156"
+          }
+        ],
+        "directions": [
+          "above",
+          "below",
+          "left_of",
+          "right_of"
+        ],
+        "distinct_tiles": 13,
+        "families": [
+          "largest",
+          "smallest"
+        ],
+        "pair_count": 4,
+        "programs": [
+          "largest_to_above",
+          "largest_to_below",
+          "largest_to_left_of",
+          "largest_to_right_of",
+          "smallest_to_above",
+          "smallest_to_below",
+          "smallest_to_left_of",
+          "smallest_to_right_of"
+        ]
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\overfit20.json",
+      "sha256": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a"
+    },
+    "paired_val_20": {
+      "count": 20,
+      "detail": {
+        "available_pairs": 297,
+        "constraints": {
+          "different_direction": true,
+          "different_target": true,
+          "same_reference": true,
+          "same_tile": true
+        },
+        "selected_pairs": 20,
+        "verified": true
+      },
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json",
+      "sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3"
+    }
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 6.23,
+  "seed": 20260929,
+  "task": "6N",
+  "test_split_used": false,
+  "verdict": "PACKS_FROZEN"
+}

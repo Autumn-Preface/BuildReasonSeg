@@ -1,0 +1,880 @@
+{
+  "_doc": "Task 6N sections 15-16. Stage N2: the three controlled variants trained from fresh initialisation on MiniTrain1000 and selected on MiniVal240 mIoU. Oracle reference masks are inputs; the GT target is the label only.",
+  "comparisons": {
+    "b1_minus_b0_miou": 0.026529662616033706,
+    "b2_minus_b0_miou": 0.2383404211645101,
+    "b2_minus_b1_miou": 0.2118107585484764
+  },
+  "config": {
+    "amp": "bfloat16 autocast, identical across variants",
+    "augmentation": "none",
+    "batch_size": 8,
+    "early_stopping_monitor": "val_miou",
+    "early_stopping_patience": 5,
+    "fresh_initialisation": true,
+    "lr": 0.0003,
+    "max_epochs": 25,
+    "model_selection": "highest MiniVal240 mIoU",
+    "optimizer": "AdamW",
+    "scheduler": "none",
+    "seed": 20260929,
+    "train_pack": "mini_train_1000",
+    "val_pack": "mini_val_240",
+    "weight_decay": 0.0001
+  },
+  "packs": {
+    "train": {
+      "count": 1000,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_train_1000.json",
+      "sha256": "02de6440da36fb10360b93b815bb43d75ebd87a4398c333361c4c5cfc41eba50"
+    },
+    "val": {
+      "count": 240,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+      "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+    }
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 274.7,
+  "sam2_load_report": {
+    "backbone_stride": 16,
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "config_file": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "directly_add_no_mem_embed": true,
+    "image_embedding_size": [
+      64,
+      64
+    ],
+    "image_encoder_params": 69106816,
+    "image_size": 1024,
+    "loaded": true,
+    "mask_decoder_params": 4215109,
+    "mask_input_size": [
+      256,
+      256
+    ],
+    "memory_attention_params": 5922304,
+    "memory_encoder_params": 1384608,
+    "prompt_embed_dim": 256,
+    "prompt_encoder_params": 6220,
+    "source_revision": "",
+    "total_params": 80850178,
+    "use_high_res_features_in_sam": true
+  },
+  "stage": "N2",
+  "task": "6N",
+  "variants": {
+    "B0": {
+      "best": {
+        "dice": 0.3043378935919466,
+        "epoch": 10,
+        "miou": 0.21478613983486122,
+        "per_program": {
+          "largest_to_above": {
+            "miou": 0.1913193364011598,
+            "records": 30
+          },
+          "largest_to_below": {
+            "miou": 0.1786952220777233,
+            "records": 30
+          },
+          "largest_to_left_of": {
+            "miou": 0.1692110444722039,
+            "records": 30
+          },
+          "largest_to_right_of": {
+            "miou": 0.1569469822586432,
+            "records": 30
+          },
+          "smallest_to_above": {
+            "miou": 0.24849787622709354,
+            "records": 30
+          },
+          "smallest_to_below": {
+            "miou": 0.30852474773359406,
+            "records": 30
+          },
+          "smallest_to_left_of": {
+            "miou": 0.20321603188360715,
+            "records": 30
+          },
+          "smallest_to_right_of": {
+            "miou": 0.2618778776248651,
+            "records": 30
+          }
+        },
+        "per_relation": {
+          "above": {
+            "dice": 0.3173863679416905,
+            "miou": 0.21990860631412665,
+            "records": 60
+          },
+          "below": {
+            "dice": 0.3333605491679477,
+            "miou": 0.24360998490565863,
+            "records": 60
+          },
+          "left_of": {
+            "dice": 0.27518148443219315,
+            "miou": 0.1862135381779055,
+            "records": 60
+          },
+          "right_of": {
+            "dice": 0.29142317282595503,
+            "miou": 0.20941242994175416,
+            "records": 60
+          }
+        }
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B0.pt",
+        "sha256": "85923069d92d54654875f6ccb05c673e5d6c3931cc6af6c54ba857e1f1fd7847"
+      },
+      "epochs": [
+        {
+          "epoch": 1,
+          "train_loss": 1.013928990840912,
+          "val_dice": 0.22929427432857336,
+          "val_miou": 0.15053649120407886,
+          "val_precision_at_0_5": 0.20910415249555908
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.8895790066719055,
+          "val_dice": 0.24629420152711778,
+          "val_miou": 0.1598796933943477,
+          "val_precision_at_0_5": 0.2036513249334039
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.8241528325080871,
+          "val_dice": 0.24417439726271878,
+          "val_miou": 0.1613831943355815,
+          "val_precision_at_0_5": 0.22434287034327247
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.7908951187133789,
+          "val_dice": 0.24512419214501918,
+          "val_miou": 0.1609325581181004,
+          "val_precision_at_0_5": 0.21443132421500893
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.7698346037864685,
+          "val_dice": 0.1884700739592401,
+          "val_miou": 0.1283014475164939,
+          "val_precision_at_0_5": 0.33949407312355934
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.7323649833202363,
+          "val_dice": 0.24322238977914595,
+          "val_miou": 0.1679426582615354,
+          "val_precision_at_0_5": 0.33807622644627056
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.675451096534729,
+          "val_dice": 0.2822816076319725,
+          "val_miou": 0.19048265293553143,
+          "val_precision_at_0_5": 0.28722587675732003
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.6206961197853088,
+          "val_dice": 0.28884738744174215,
+          "val_miou": 0.200315202280362,
+          "val_precision_at_0_5": 0.4148962154929704
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.5837483859062195,
+          "val_dice": 0.2890849415531375,
+          "val_miou": 0.20033370698718375,
+          "val_precision_at_0_5": 0.3515649033753906
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.5531408939361572,
+          "val_dice": 0.3043378935919466,
+          "val_miou": 0.21478613983486122,
+          "val_precision_at_0_5": 0.41911639809869694
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.5250287442207336,
+          "val_dice": 0.286957042323683,
+          "val_miou": 0.20072230781021977,
+          "val_precision_at_0_5": 0.45419770343809274
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.49828033840656283,
+          "val_dice": 0.2655420817389424,
+          "val_miou": 0.18848291503315892,
+          "val_precision_at_0_5": 0.5010537603978535
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.4841996960639954,
+          "val_dice": 0.25970832645164565,
+          "val_miou": 0.18345058087229588,
+          "val_precision_at_0_5": 0.4746595727059655
+        },
+        {
+          "epoch": 14,
+          "train_loss": 0.4673666813373566,
+          "val_dice": 0.26860279151566946,
+          "val_miou": 0.19029044556210206,
+          "val_precision_at_0_5": 0.45247537136003235
+        },
+        {
+          "epoch": 15,
+          "train_loss": 0.44570183062553403,
+          "val_dice": 0.27661645972799553,
+          "val_miou": 0.19306767873853706,
+          "val_precision_at_0_5": 0.4776064643837839
+        }
+      ],
+      "epochs_run": 15,
+      "label": "N-B0",
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 240257
+        },
+        "first_conv_in_channels": 144,
+        "label": "N-B0",
+        "total_parameters": 273473,
+        "trainable_parameters": 273473,
+        "uses_reference_mask": false,
+        "uses_relation_field": false,
+        "variant": "B0"
+      },
+      "peak_vram_gb": 0.894,
+      "selected_model": {
+        "dice": 0.3043378935919466,
+        "miou": 0.21478613983486122,
+        "per_program": {
+          "largest_to_above": {
+            "miou": 0.1913193364011598,
+            "records": 30
+          },
+          "largest_to_below": {
+            "miou": 0.1786952220777233,
+            "records": 30
+          },
+          "largest_to_left_of": {
+            "miou": 0.1692110444722039,
+            "records": 30
+          },
+          "largest_to_right_of": {
+            "miou": 0.1569469822586432,
+            "records": 30
+          },
+          "smallest_to_above": {
+            "miou": 0.24849787622709354,
+            "records": 30
+          },
+          "smallest_to_below": {
+            "miou": 0.30852474773359406,
+            "records": 30
+          },
+          "smallest_to_left_of": {
+            "miou": 0.20321603188360715,
+            "records": 30
+          },
+          "smallest_to_right_of": {
+            "miou": 0.2618778776248651,
+            "records": 30
+          }
+        },
+        "per_reference_family": {
+          "largest": {
+            "dice": 0.2514491095664164,
+            "miou": 0.17404314630243253,
+            "records": 120
+          },
+          "smallest": {
+            "dice": 0.3572266776174768,
+            "miou": 0.25552913336728994,
+            "records": 120
+          }
+        },
+        "per_relation": {
+          "above": {
+            "dice": 0.3173863679416905,
+            "miou": 0.21990860631412665,
+            "records": 60
+          },
+          "below": {
+            "dice": 0.3333605491679477,
+            "miou": 0.24360998490565863,
+            "records": 60
+          },
+          "left_of": {
+            "dice": 0.27518148443219315,
+            "miou": 0.1862135381779055,
+            "records": 60
+          },
+          "right_of": {
+            "dice": 0.29142317282595503,
+            "miou": 0.20941242994175416,
+            "records": 60
+          }
+        },
+        "precision_at_0_5": 0.41911639809869694,
+        "records": 240
+      },
+      "wall_seconds": 174.8
+    },
+    "B1": {
+      "best": {
+        "dice": 0.3276384127654494,
+        "epoch": 11,
+        "miou": 0.24131580245089493,
+        "per_program": {
+          "largest_to_above": {
+            "miou": 0.2642205453672767,
+            "records": 30
+          },
+          "largest_to_below": {
+            "miou": 0.2176567973504073,
+            "records": 30
+          },
+          "largest_to_left_of": {
+            "miou": 0.19686703613030598,
+            "records": 30
+          },
+          "largest_to_right_of": {
+            "miou": 0.14691126350490083,
+            "records": 30
+          },
+          "smallest_to_above": {
+            "miou": 0.2672609126578915,
+            "records": 30
+          },
+          "smallest_to_below": {
+            "miou": 0.3064873547459105,
+            "records": 30
+          },
+          "smallest_to_left_of": {
+            "miou": 0.25837177969929537,
+            "records": 30
+          },
+          "smallest_to_right_of": {
+            "miou": 0.2727507301511718,
+            "records": 30
+          }
+        },
+        "per_relation": {
+          "above": {
+            "dice": 0.3665243879156105,
+            "miou": 0.26574072901258405,
+            "records": 60
+          },
+          "below": {
+            "dice": 0.3515889979174487,
+            "miou": 0.2620720760481589,
+            "records": 60
+          },
+          "left_of": {
+            "dice": 0.313925245620445,
+            "miou": 0.2276194079148006,
+            "records": 60
+          },
+          "right_of": {
+            "dice": 0.2785150196082938,
+            "miou": 0.20983099682803633,
+            "records": 60
+          }
+        }
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B1.pt",
+        "sha256": "1cb4c6d7529efe919fbfd9b0d8d77259aefabc4bf33414ed6a1bd271660e903b"
+      },
+      "epochs": [
+        {
+          "epoch": 1,
+          "train_loss": 1.0452354125976562,
+          "val_dice": 0.24219958448517329,
+          "val_miou": 0.16440239975878554,
+          "val_precision_at_0_5": 0.2506428739355957
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.8982711534500122,
+          "val_dice": 0.28040875575973323,
+          "val_miou": 0.19926806794166818,
+          "val_precision_at_0_5": 0.3006418818140439
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.7908023724555969,
+          "val_dice": 0.2870903231281824,
+          "val_miou": 0.2046167765310857,
+          "val_precision_at_0_5": 0.30174442547411456
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.7325402088165284,
+          "val_dice": 0.2964014689724678,
+          "val_miou": 0.20846047393042222,
+          "val_precision_at_0_5": 0.26436674989997194
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.6949882271289826,
+          "val_dice": 0.24565281831621505,
+          "val_miou": 0.17465972194683402,
+          "val_precision_at_0_5": 0.33340924431449537
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.6726659994125366,
+          "val_dice": 0.26685336676437527,
+          "val_miou": 0.19073271928048843,
+          "val_precision_at_0_5": 0.3184054998480097
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.641392884016037,
+          "val_dice": 0.30361418832417186,
+          "val_miou": 0.2198370009897586,
+          "val_precision_at_0_5": 0.30452716585099865
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.6130408766269684,
+          "val_dice": 0.2751114543721763,
+          "val_miou": 0.1976757389307421,
+          "val_precision_at_0_5": 0.43550896449521764
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.574478884935379,
+          "val_dice": 0.3334706480832331,
+          "val_miou": 0.241081348170092,
+          "val_precision_at_0_5": 0.35573290131680857
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.528093845129013,
+          "val_dice": 0.3155309024172902,
+          "val_miou": 0.23087091035530463,
+          "val_precision_at_0_5": 0.4790527995483423
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.5044710915088654,
+          "val_dice": 0.3276384127654494,
+          "val_miou": 0.24131580245089493,
+          "val_precision_at_0_5": 0.44962246369127856
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.47959264612197877,
+          "val_dice": 0.3211955047824807,
+          "val_miou": 0.2348156202750067,
+          "val_precision_at_0_5": 0.428803504232298
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.4544466853141785,
+          "val_dice": 0.30045103093057707,
+          "val_miou": 0.2187033157055726,
+          "val_precision_at_0_5": 0.49159176201885274
+        },
+        {
+          "epoch": 14,
+          "train_loss": 0.4413032780885696,
+          "val_dice": 0.3050312749976899,
+          "val_miou": 0.22263335274193385,
+          "val_precision_at_0_5": 0.4970825204909074
+        },
+        {
+          "epoch": 15,
+          "train_loss": 0.4161221485137939,
+          "val_dice": 0.30813144136554876,
+          "val_miou": 0.22479157615136108,
+          "val_precision_at_0_5": 0.4835937978428289
+        },
+        {
+          "epoch": 16,
+          "train_loss": 0.3972437850236893,
+          "val_dice": 0.2928300473164931,
+          "val_miou": 0.21361263894815904,
+          "val_precision_at_0_5": 0.4824631149656062
+        }
+      ],
+      "epochs_run": 16,
+      "label": "N-B1",
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 241409
+        },
+        "first_conv_in_channels": 145,
+        "label": "N-B1",
+        "total_parameters": 274625,
+        "trainable_parameters": 274625,
+        "uses_reference_mask": true,
+        "uses_relation_field": false,
+        "variant": "B1"
+      },
+      "peak_vram_gb": 0.674,
+      "selected_model": {
+        "dice": 0.3276384127654494,
+        "miou": 0.24131580245089493,
+        "per_program": {
+          "largest_to_above": {
+            "miou": 0.2642205453672767,
+            "records": 30
+          },
+          "largest_to_below": {
+            "miou": 0.2176567973504073,
+            "records": 30
+          },
+          "largest_to_left_of": {
+            "miou": 0.19686703613030598,
+            "records": 30
+          },
+          "largest_to_right_of": {
+            "miou": 0.14691126350490083,
+            "records": 30
+          },
+          "smallest_to_above": {
+            "miou": 0.2672609126578915,
+            "records": 30
+          },
+          "smallest_to_below": {
+            "miou": 0.3064873547459105,
+            "records": 30
+          },
+          "smallest_to_left_of": {
+            "miou": 0.25837177969929537,
+            "records": 30
+          },
+          "smallest_to_right_of": {
+            "miou": 0.2727507301511718,
+            "records": 30
+          }
+        },
+        "per_reference_family": {
+          "largest": {
+            "dice": 0.2786629944576864,
+            "miou": 0.20641391058822267,
+            "records": 120
+          },
+          "smallest": {
+            "dice": 0.37661383107321245,
+            "miou": 0.27621769431356724,
+            "records": 120
+          }
+        },
+        "per_relation": {
+          "above": {
+            "dice": 0.3665243879156105,
+            "miou": 0.26574072901258405,
+            "records": 60
+          },
+          "below": {
+            "dice": 0.3515889979174487,
+            "miou": 0.2620720760481589,
+            "records": 60
+          },
+          "left_of": {
+            "dice": 0.313925245620445,
+            "miou": 0.2276194079148006,
+            "records": 60
+          },
+          "right_of": {
+            "dice": 0.2785150196082938,
+            "miou": 0.20983099682803633,
+            "records": 60
+          }
+        },
+        "precision_at_0_5": 0.44962246369127856,
+        "records": 240
+      },
+      "wall_seconds": 50.9
+    },
+    "B2": {
+      "best": {
+        "dice": 0.5768438150123932,
+        "epoch": 9,
+        "miou": 0.4531265609993713,
+        "per_program": {
+          "largest_to_above": {
+            "miou": 0.486096037635464,
+            "records": 30
+          },
+          "largest_to_below": {
+            "miou": 0.40954562090425917,
+            "records": 30
+          },
+          "largest_to_left_of": {
+            "miou": 0.4395140068656239,
+            "records": 30
+          },
+          "largest_to_right_of": {
+            "miou": 0.4228313958251073,
+            "records": 30
+          },
+          "smallest_to_above": {
+            "miou": 0.4498507091392803,
+            "records": 30
+          },
+          "smallest_to_below": {
+            "miou": 0.45562064429452054,
+            "records": 30
+          },
+          "smallest_to_left_of": {
+            "miou": 0.46899234099068166,
+            "records": 30
+          },
+          "smallest_to_right_of": {
+            "miou": 0.49256173234003353,
+            "records": 30
+          }
+        },
+        "per_relation": {
+          "above": {
+            "dice": 0.5907065230051484,
+            "miou": 0.46797337338737216,
+            "records": 60
+          },
+          "below": {
+            "dice": 0.5489004526896676,
+            "miou": 0.43258313259939,
+            "records": 60
+          },
+          "left_of": {
+            "dice": 0.586540970087157,
+            "miou": 0.4542531739281527,
+            "records": 60
+          },
+          "right_of": {
+            "dice": 0.5812273142675992,
+            "miou": 0.45769656408257037,
+            "records": 60
+          }
+        }
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B2.pt",
+        "sha256": "7cb03c9913a7d3d939413b38aea03c557bce75507cfb46e707224b4dadf01f08"
+      },
+      "epochs": [
+        {
+          "epoch": 1,
+          "train_loss": 0.9714568228721618,
+          "val_dice": 0.4492135748360417,
+          "val_miou": 0.33958241003472467,
+          "val_precision_at_0_5": 0.6842055501657035
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.6774016025066376,
+          "val_dice": 0.5453739235538083,
+          "val_miou": 0.4127911974764987,
+          "val_precision_at_0_5": 0.5440307857905052
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.49690610289573667,
+          "val_dice": 0.5495437194934137,
+          "val_miou": 0.4289940497844956,
+          "val_precision_at_0_5": 0.6739373989605991
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.42161139273643494,
+          "val_dice": 0.555838122327044,
+          "val_miou": 0.4329355487430678,
+          "val_precision_at_0_5": 0.6399608037900639
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.3774504421949387,
+          "val_dice": 0.47532694681037113,
+          "val_miou": 0.372857129084043,
+          "val_precision_at_0_5": 0.7649431932632066
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.3504475120306015,
+          "val_dice": 0.49354199411293853,
+          "val_miou": 0.3872211439932535,
+          "val_precision_at_0_5": 0.7532369389309015
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.3284890694618225,
+          "val_dice": 0.5087571662698714,
+          "val_miou": 0.4021595707549832,
+          "val_precision_at_0_5": 0.7455479621918987
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.31038836407661435,
+          "val_dice": 0.471337231964451,
+          "val_miou": 0.3690617716569087,
+          "val_precision_at_0_5": 0.8043874079717394
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.2930556468963623,
+          "val_dice": 0.5768438150123932,
+          "val_miou": 0.4531265609993713,
+          "val_precision_at_0_5": 0.6640413290137366
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.2890655187368393,
+          "val_dice": 0.5373670538747614,
+          "val_miou": 0.42666443819084987,
+          "val_precision_at_0_5": 0.7465112176376452
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.2660649030208588,
+          "val_dice": 0.5361645772633168,
+          "val_miou": 0.425421931233305,
+          "val_precision_at_0_5": 0.7464577738782373
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.25572956490516663,
+          "val_dice": 0.4549255791720353,
+          "val_miou": 0.35758322785008,
+          "val_precision_at_0_5": 0.8369987485691843
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.24269541996717453,
+          "val_dice": 0.5226120457942882,
+          "val_miou": 0.4154555830568667,
+          "val_precision_at_0_5": 0.7375730339283472
+        },
+        {
+          "epoch": 14,
+          "train_loss": 0.23330960667133332,
+          "val_dice": 0.5076114525659979,
+          "val_miou": 0.40329615178946376,
+          "val_precision_at_0_5": 0.7569885394047814
+        }
+      ],
+      "epochs_run": 14,
+      "label": "N-B2",
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 242561
+        },
+        "first_conv_in_channels": 146,
+        "label": "N-B2",
+        "total_parameters": 275777,
+        "trainable_parameters": 275777,
+        "uses_reference_mask": true,
+        "uses_relation_field": true,
+        "variant": "B2"
+      },
+      "peak_vram_gb": 0.674,
+      "selected_model": {
+        "dice": 0.5768438150123932,
+        "miou": 0.4531265609993713,
+        "per_program": {
+          "largest_to_above": {
+            "miou": 0.486096037635464,
+            "records": 30
+          },
+          "largest_to_below": {
+            "miou": 0.40954562090425917,
+            "records": 30
+          },
+          "largest_to_left_of": {
+            "miou": 0.4395140068656239,
+            "records": 30
+          },
+          "largest_to_right_of": {
+            "miou": 0.4228313958251073,
+            "records": 30
+          },
+          "smallest_to_above": {
+            "miou": 0.4498507091392803,
+            "records": 30
+          },
+          "smallest_to_below": {
+            "miou": 0.45562064429452054,
+            "records": 30
+          },
+          "smallest_to_left_of": {
+            "miou": 0.46899234099068166,
+            "records": 30
+          },
+          "smallest_to_right_of": {
+            "miou": 0.49256173234003353,
+            "records": 30
+          }
+        },
+        "per_reference_family": {
+          "largest": {
+            "dice": 0.5619532827087467,
+            "miou": 0.43949676530761356,
+            "records": 120
+          },
+          "smallest": {
+            "dice": 0.5917343473160398,
+            "miou": 0.4667563566911291,
+            "records": 120
+          }
+        },
+        "per_relation": {
+          "above": {
+            "dice": 0.5907065230051484,
+            "miou": 0.46797337338737216,
+            "records": 60
+          },
+          "below": {
+            "dice": 0.5489004526896676,
+            "miou": 0.43258313259939,
+            "records": 60
+          },
+          "left_of": {
+            "dice": 0.586540970087157,
+            "miou": 0.4542531739281527,
+            "records": 60
+          },
+          "right_of": {
+            "dice": 0.5812273142675992,
+            "miou": 0.45769656408257037,
+            "records": 60
+          }
+        },
+        "precision_at_0_5": 0.6640413290137366,
+        "records": 240
+      },
+      "wall_seconds": 44.8
+    }
+  },
+  "visual": {
+    "cache_dtype": "float32",
+    "cache_format": "npy (C, h, w)",
+    "cache_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\features",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "checkpoint_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "config_name": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "encoder": "frozen SAM2.1 Hiera Base+ image embedding (Sam2Encoder.encode)",
+    "hits": 55576,
+    "misses": 944,
+    "repo_id": "facebook/sam2.1-hiera-base-plus",
+    "reused_from": "Task 6C.7 / Task 6I frozen visual path",
+    "source_revision_expected": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  }
+}

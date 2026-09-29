@@ -1,0 +1,67 @@
+{
+  "_doc": "Task 6N section 18. Exactly one verdict from the allowed set, with every section-17 criterion measured. DSH reports measurements only and draws no research conclusion.",
+  "all_criteria_passed": true,
+  "allowed_verdicts": [
+    "GEOMETRIC_RELATION_FIELD_FEASIBLE",
+    "REFERENCE_MASK_HELPS_FIELD_DOES_NOT",
+    "RELATION_CONDITIONING_NOT_GENERALIZING",
+    "GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER",
+    "PAIRED_SET_INSUFFICIENT",
+    "INVALID_EXPERIMENT"
+  ],
+  "criteria": {
+    "1_b2_passes_n1": {
+      "evidence": {
+        "b2_best_dice": 0.9519661939287747,
+        "b2_best_miou": 0.9280256472037026,
+        "b2_final_dice": 0.9519661939287747,
+        "b2_final_miou": 0.9280256472037026,
+        "passed": true,
+        "train_dice_min": 0.9,
+        "train_miou_min": 0.85
+      },
+      "measured": true,
+      "passed": true,
+      "required": true
+    },
+    "2_b2_minus_b0_miou_ge_0_05": {
+      "measured": 0.2383404211645101,
+      "passed": true,
+      "required": 0.05
+    },
+    "2b_b2_minus_b1_miou_ge_0_02": {
+      "measured": 0.2118107585484764,
+      "passed": true,
+      "required": 0.02
+    },
+    "3_b2_paired_val_ge_14_of_20": {
+      "measured": 16,
+      "passed": true,
+      "required": 14
+    },
+    "4_b2_own_minus_cross_iou_ge_0_10": {
+      "measured": 0.4411882244623754,
+      "passed": true,
+      "required": 0.1
+    },
+    "5_no_gt_target_in_input": {
+      "evidence": "the model forward signature receives only the frozen visual feature, the downsampled oracle reference mask, the parameter-free field and the relation index; the GT target is used as the loss label and as the evaluation reference only",
+      "measured": true,
+      "passed": true,
+      "required": true
+    }
+  },
+  "end_to_end_inference": false,
+  "mini_val_240_miou": {
+    "B0": 0.21478613983486122,
+    "B1": 0.24131580245089493,
+    "B2": 0.4531265609993713
+  },
+  "no_research_interpretation_by_dsh": true,
+  "pair_count": 20,
+  "reason": "all five section-17 criteria pass",
+  "reference_source": "oracle_native_gt",
+  "task": "6N",
+  "test_split_used": false,
+  "verdict": "GEOMETRIC_RELATION_FIELD_FEASIBLE"
+}

@@ -1,0 +1,644 @@
+{
+  "_doc": "Task 6N section 14. Stage N1: the three variants trained separately on the exact same Overfit20 pack with the frozen N1 optimiser/step budget. The N1 gate asks whether B2 can fit 20 samples; failure stops the task with GEOMETRIC_RELATION_FIELD_NOT_LEARNABLE_IN_CURRENT_DECODER.",
+  "config": {
+    "amp": "bfloat16 autocast, identical across variants",
+    "augmentation": "none",
+    "batch_size": 4,
+    "evaluate_every_steps": 100,
+    "gate": {
+      "train_dice_min": 0.9,
+      "train_miou_min": 0.85
+    },
+    "lr": 0.001,
+    "max_steps": 1200,
+    "optimizer": "AdamW",
+    "scheduler": "none",
+    "seed": 20260929,
+    "variant": "all",
+    "weight_decay": 0.0001
+  },
+  "gate": {
+    "b2_best_dice": 0.9519661939287747,
+    "b2_best_miou": 0.9280256472037026,
+    "b2_final_dice": 0.9519661939287747,
+    "b2_final_miou": 0.9280256472037026,
+    "passed": true,
+    "train_dice_min": 0.9,
+    "train_miou_min": 0.85
+  },
+  "pack": {
+    "count": 20,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\overfit20.json",
+    "sha256": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a"
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 53.3,
+  "sam2_load_report": {
+    "backbone_stride": 16,
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "config_file": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "directly_add_no_mem_embed": true,
+    "image_embedding_size": [
+      64,
+      64
+    ],
+    "image_encoder_params": 69106816,
+    "image_size": 1024,
+    "loaded": true,
+    "mask_decoder_params": 4215109,
+    "mask_input_size": [
+      256,
+      256
+    ],
+    "memory_attention_params": 5922304,
+    "memory_encoder_params": 1384608,
+    "prompt_embed_dim": 256,
+    "prompt_encoder_params": 6220,
+    "source_revision": "",
+    "total_params": 80850178,
+    "use_high_res_features_in_sam": true
+  },
+  "stage": "N1",
+  "task": "6N",
+  "variants": {
+    "B0": {
+      "best": {
+        "dice": 0.9643190228751335,
+        "miou": 0.9430561948654359,
+        "step": 1100
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n1_B0.pt",
+        "sha256": "f0f99ccbfd6b57b9c9dbbf1051c9ff8fb339c6a1cfb6e13a0f5cb9d2171b1d81"
+      },
+      "final": {
+        "dice": 0.9631355216289338,
+        "miou": 0.9407533339022427,
+        "precision_at_0_5": 0.9611367249671148,
+        "records": 20
+      },
+      "final_per_relation": {
+        "above": {
+          "dice": 0.8779474381200125,
+          "miou": 0.8260247004606052,
+          "records": 4
+        },
+        "below": {
+          "dice": 0.9846727680666658,
+          "miou": 0.9698574496692848,
+          "records": 7
+        },
+        "left_of": {
+          "dice": 0.9843867699631146,
+          "miou": 0.9694456547384036,
+          "records": 5
+        },
+        "right_of": {
+          "dice": 0.984069363454097,
+          "miou": 0.9686843637063551,
+          "records": 4
+        }
+      },
+      "history": [
+        {
+          "dice": 0.6313537101340965,
+          "loss": 0.6341696977615356,
+          "miou": 0.5142090236663341,
+          "step": 100
+        },
+        {
+          "dice": 0.6931949937848294,
+          "loss": 0.3682532012462616,
+          "miou": 0.5841051262335932,
+          "step": 200
+        },
+        {
+          "dice": 0.8514050356555278,
+          "loss": 0.15233486890792847,
+          "miou": 0.7847342575300899,
+          "step": 300
+        },
+        {
+          "dice": 0.9178103131698944,
+          "loss": 0.05576544627547264,
+          "miou": 0.8879547893516943,
+          "step": 400
+        },
+        {
+          "dice": 0.923725812376315,
+          "loss": 0.03311583772301674,
+          "miou": 0.8990855178595559,
+          "step": 500
+        },
+        {
+          "dice": 0.925626537690764,
+          "loss": 0.03137372434139252,
+          "miou": 0.9028079961408956,
+          "step": 600
+        },
+        {
+          "dice": 0.9326436286122908,
+          "loss": 0.019238164648413658,
+          "miou": 0.9160766810302613,
+          "step": 700
+        },
+        {
+          "dice": 0.9574626360639371,
+          "loss": 0.024997271597385406,
+          "miou": 0.9337418616153977,
+          "step": 800
+        },
+        {
+          "dice": 0.9569814220148644,
+          "loss": 0.14973898231983185,
+          "miou": 0.932033880086838,
+          "step": 900
+        },
+        {
+          "dice": 0.9471294855222585,
+          "loss": 0.03380430117249489,
+          "miou": 0.9154328419838874,
+          "step": 1000
+        },
+        {
+          "dice": 0.9643190228751335,
+          "loss": 0.019631585106253624,
+          "miou": 0.9430561948654359,
+          "step": 1100
+        },
+        {
+          "dice": 0.9631355216289338,
+          "loss": 0.1478370577096939,
+          "miou": 0.9407533339022427,
+          "step": 1200
+        }
+      ],
+      "label": "N-B0",
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0,
+        "mean_own_iou": 0.8975439848512106,
+        "own_cross_margin": 0.8975439848512106,
+        "pairs": 4,
+        "passed": 4,
+        "rows": [
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9618563254926892,
+              0.9773123909249564
+            ],
+            "passes": true,
+            "tile_id": "1_1029"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.3793103198801028,
+              0.965705378020265
+            ],
+            "passes": true,
+            "tile_id": "1_1064"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9700833742030407,
+              0.9658886894075404
+            ],
+            "passes": true,
+            "tile_id": "1_1152"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9702517162471396,
+              0.9899436846339501
+            ],
+            "passes": true,
+            "tile_id": "1_1156"
+          }
+        ]
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 240257
+        },
+        "first_conv_in_channels": 144,
+        "label": "N-B0",
+        "total_parameters": 273473,
+        "trainable_parameters": 273473,
+        "uses_reference_mask": false,
+        "uses_relation_field": false,
+        "variant": "B0"
+      },
+      "peak_vram_gb": 0.544,
+      "wall_seconds": 26.5
+    },
+    "B1": {
+      "best": {
+        "dice": 0.9575793893375367,
+        "miou": 0.933153742159654,
+        "step": 1200
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n1_B1.pt",
+        "sha256": "61721bdfa9ddba3f819c14687c25ea1484f33b371cae2f09ed5df4520d46df9e"
+      },
+      "final": {
+        "dice": 0.9575793893375367,
+        "miou": 0.933153742159654,
+        "precision_at_0_5": 0.9476460982077602,
+        "records": 20
+      },
+      "final_per_relation": {
+        "above": {
+          "dice": 0.8605678438026404,
+          "miou": 0.807781615741053,
+          "records": 4
+        },
+        "below": {
+          "dice": 0.9828117808320516,
+          "miou": 0.9663140944866855,
+          "records": 7
+        },
+        "left_of": {
+          "dice": 0.9814570342350877,
+          "miou": 0.9639382972392584,
+          "records": 5
+        },
+        "right_of": {
+          "dice": 0.9805871936350936,
+          "miou": 0.9620145581564448,
+          "records": 4
+        }
+      },
+      "history": [
+        {
+          "dice": 0.6332086135741999,
+          "loss": 0.5355529189109802,
+          "miou": 0.5057204350507425,
+          "step": 100
+        },
+        {
+          "dice": 0.7791932508766906,
+          "loss": 0.3480953574180603,
+          "miou": 0.6854633045436762,
+          "step": 200
+        },
+        {
+          "dice": 0.8373090831978935,
+          "loss": 0.2067612260580063,
+          "miou": 0.7666941364818884,
+          "step": 300
+        },
+        {
+          "dice": 0.894193983820443,
+          "loss": 0.08742734044790268,
+          "miou": 0.8469348477601292,
+          "step": 400
+        },
+        {
+          "dice": 0.9135044418949307,
+          "loss": 0.04410500079393387,
+          "miou": 0.8800825535820584,
+          "step": 500
+        },
+        {
+          "dice": 0.9289230180109401,
+          "loss": 0.02870367281138897,
+          "miou": 0.9089848903361961,
+          "step": 600
+        },
+        {
+          "dice": 0.9222820789656424,
+          "loss": 0.028654206544160843,
+          "miou": 0.8964907781396747,
+          "step": 700
+        },
+        {
+          "dice": 0.9283249810922536,
+          "loss": 0.027541888877749443,
+          "miou": 0.9078118634199679,
+          "step": 800
+        },
+        {
+          "dice": 0.934966163160305,
+          "loss": 0.26311156153678894,
+          "miou": 0.920526464546762,
+          "step": 900
+        },
+        {
+          "dice": 0.9142942283129756,
+          "loss": 0.04569059982895851,
+          "miou": 0.8817863292109174,
+          "step": 1000
+        },
+        {
+          "dice": 0.9425935795281968,
+          "loss": 0.027402786538004875,
+          "miou": 0.9186316913964685,
+          "step": 1100
+        },
+        {
+          "dice": 0.9575793893375367,
+          "loss": 0.16326382756233215,
+          "miou": 0.933153742159654,
+          "step": 1200
+        }
+      ],
+      "label": "N-B1",
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0,
+        "mean_own_iou": 0.8857528967652107,
+        "own_cross_margin": 0.8857528967652107,
+        "pairs": 4,
+        "passed": 4,
+        "rows": [
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9700561447286338,
+              0.9757085020242915
+            ],
+            "passes": true,
+            "tile_id": "1_1029"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.32432432432432434,
+              0.9501169134840218
+            ],
+            "passes": true,
+            "tile_id": "1_1064"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9515122419587134,
+              0.9562389118864577
+            ],
+            "passes": true,
+            "tile_id": "1_1152"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9701240135287486,
+              0.9879421221864951
+            ],
+            "passes": true,
+            "tile_id": "1_1156"
+          }
+        ]
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 241409
+        },
+        "first_conv_in_channels": 145,
+        "label": "N-B1",
+        "total_parameters": 274625,
+        "trainable_parameters": 274625,
+        "uses_reference_mask": true,
+        "uses_relation_field": false,
+        "variant": "B1"
+      },
+      "peak_vram_gb": 0.544,
+      "wall_seconds": 12.0
+    },
+    "B2": {
+      "best": {
+        "dice": 0.9519661939287747,
+        "miou": 0.9280256472037026,
+        "step": 1200
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n1_B2.pt",
+        "sha256": "d43e6ca2fcc5809f410ac1536fdb3fad67f5a39c3227116e1ee2ffcbe87065c6"
+      },
+      "final": {
+        "dice": 0.9519661939287747,
+        "miou": 0.9280256472037026,
+        "precision_at_0_5": 0.9522983711248768,
+        "records": 20
+      },
+      "final_per_relation": {
+        "above": {
+          "dice": 0.8363171372152076,
+          "miou": 0.7894537384942928,
+          "records": 4
+        },
+        "below": {
+          "dice": 0.9855278673099417,
+          "miou": 0.9715253880103601,
+          "records": 7
+        },
+        "left_of": {
+          "dice": 0.9798840906679006,
+          "miou": 0.9608134029852614,
+          "records": 5
+        },
+        "right_of": {
+          "dice": 0.9739849513013921,
+          "miou": 0.9494883147745137,
+          "records": 4
+        }
+      },
+      "history": [
+        {
+          "dice": 0.7214956907105836,
+          "loss": 0.4509826600551605,
+          "miou": 0.6032692254657497,
+          "step": 100
+        },
+        {
+          "dice": 0.8616979183635916,
+          "loss": 0.11776252090930939,
+          "miou": 0.7920811958773912,
+          "step": 200
+        },
+        {
+          "dice": 0.907132649783698,
+          "loss": 0.04836670681834221,
+          "miou": 0.8685125334621482,
+          "step": 300
+        },
+        {
+          "dice": 0.9170423773970093,
+          "loss": 0.047296032309532166,
+          "miou": 0.8867358063670421,
+          "step": 400
+        },
+        {
+          "dice": 0.9245413153709825,
+          "loss": 0.029705746099352837,
+          "miou": 0.9008454855929637,
+          "step": 500
+        },
+        {
+          "dice": 0.9219146551147682,
+          "loss": 0.030969172716140747,
+          "miou": 0.8957217419094532,
+          "step": 600
+        },
+        {
+          "dice": 0.9281551024791519,
+          "loss": 0.018907155841588974,
+          "miou": 0.9075750394398027,
+          "step": 700
+        },
+        {
+          "dice": 0.9319328674098195,
+          "loss": 0.024465424939990044,
+          "miou": 0.9147267889138764,
+          "step": 800
+        },
+        {
+          "dice": 0.9186984965545122,
+          "loss": 0.27152737975120544,
+          "miou": 0.889827108645927,
+          "step": 900
+        },
+        {
+          "dice": 0.9328204825718427,
+          "loss": 0.02662452682852745,
+          "miou": 0.9164895760477625,
+          "step": 1000
+        },
+        {
+          "dice": 0.9368177122291058,
+          "loss": 0.019921813160181046,
+          "miou": 0.9241016692479723,
+          "step": 1100
+        },
+        {
+          "dice": 0.9519661939287747,
+          "loss": 0.2448197603225708,
+          "miou": 0.9280256472037026,
+          "step": 1200
+        }
+      ],
+      "label": "N-B2",
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0011691348402182386,
+        "mean_own_iou": 0.8691522816006616,
+        "own_cross_margin": 0.8679831467604434,
+        "pairs": 4,
+        "passed": 4,
+        "rows": [
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.956687898089172,
+              0.9681344148319815
+            ],
+            "passes": true,
+            "tile_id": "1_1029"
+          },
+          {
+            "cross": [
+              0.0,
+              0.009353078721745909
+            ],
+            "own": [
+              0.24,
+              0.9229607250755287
+            ],
+            "passes": true,
+            "tile_id": "1_1064"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9671246319921492,
+              0.9526123936816525
+            ],
+            "passes": true,
+            "tile_id": "1_1152"
+          },
+          {
+            "cross": [
+              0.0,
+              0.0
+            ],
+            "own": [
+              0.9674285714285714,
+              0.9782696177062374
+            ],
+            "passes": true,
+            "tile_id": "1_1156"
+          }
+        ]
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 242561
+        },
+        "first_conv_in_channels": 146,
+        "label": "N-B2",
+        "total_parameters": 275777,
+        "trainable_parameters": 275777,
+        "uses_reference_mask": true,
+        "uses_relation_field": true,
+        "variant": "B2"
+      },
+      "peak_vram_gb": 0.544,
+      "wall_seconds": 12.4
+    }
+  },
+  "verdict": "N1_PASS",
+  "visual": {
+    "cache_dtype": "float32",
+    "cache_format": "npy (C, h, w)",
+    "cache_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\features",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "checkpoint_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "config_name": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "encoder": "frozen SAM2.1 Hiera Base+ image embedding (Sam2Encoder.encode)",
+    "hits": 15204,
+    "misses": 0,
+    "repo_id": "facebook/sam2.1-hiera-base-plus",
+    "reused_from": "Task 6C.7 / Task 6I frozen visual path",
+    "source_revision_expected": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  }
+}
