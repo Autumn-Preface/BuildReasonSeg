@@ -1,0 +1,32 @@
+{
+  "_doc": "Task 6Q Part I (optional). Manifest of the gitignored frozen-proposal resolver cache: the deterministically selected reference mask per (tile, family) plus the per-tile proposal counts, so the downstream stage never runs the proposal model twice.",
+  "abstained_family_tiles": 10,
+  "cache_entries": 414,
+  "cache_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6q\\resolved_references.npz",
+  "cache_sha256": "6165abe046b842a28827a10373f76810cdb072371818228ec02996cdf9d61799",
+  "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+  "proposal_config": {
+    "checkpoint": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "conf": 0.1,
+    "family": "YOLO26m-seg",
+    "imgsz": 640,
+    "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+    "max_det": 100,
+    "merge_bbox_extent_ratio_max": 0.2,
+    "nms": "default",
+    "threshold_sweep": false,
+    "tiling": false,
+    "tiny_component_area_px": 150,
+    "tta": false
+  },
+  "proposal_counts": {
+    "max": 51,
+    "mean": 8.716981132075471,
+    "min": 0,
+    "zero_proposal_tiles": 2
+  },
+  "task": "6Q",
+  "test_split_used": false,
+  "tiles": 212
+}
