@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6T._
+_Last updated by DSH at the end of Task 6U._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -90,6 +90,46 @@ The block above is machine-checked against
 | 6S | **Directional natural-language end-to-end integration + hardening checkpoint** | **done → `DIRECTIONAL_PARSER_HARDENING_REQUIRED`** (first full chain, all modules frozen: instruction → frozen Qwen3-VL-2B ProgramHead → deterministic decomposition → frozen Task 6Q proposal resolver → predicted reference → field v0.2 → frozen SAM2 feature + relation embedding → frozen Task 6O B3 → target mask; **no GRCL / no oracle reference / no target-proposal selection**; asset audit `ASSETS_FROZEN` (parser SHA `eb50b021…d028a3` exact, text-only, 20 ids; proposal SHA `ef852b58…61f474` exact with imgsz 640 / conf 0.10 / max_det 100; B3 SHA exact; v0.2 unchanged); parser audit **en 1.0000 / zh 1.0000** with 0 unsupported; MiniVal240 strict all-240 mIoU **0.296967**, Dice 0.375321, answered-only mIoU **0.304581** (delta vs frozen 6Q **0.0**), Dice 0.384945, abstention **0.025**, border (n=110) 0.304968, tiny (n=4) ≈0; PairedVal **10/20** own 0.277946 / cross 0.004245 / margin **+0.273700** (identical to 6Q); CLI audit 24 fixed paraphrases **21/24** (3 short Chinese prompts confuse largest↔smallest), OOD 4/4 exit 4, out-of-scope 2/4 exit 5 (both "nearest" prompts are parsed as a supported program → exit 3), on-the-fly SAM2 proven (0.206 s on an uncached tile); attribution parser 0 / reference **117** / target 67 → dominant **`REFERENCE`**; gates 1-5,7,9,10 pass, **6 (21/24 < 22) and 8 (2/4) fail**) |
 
 | 6T | **ProgramHead semantic hardening + scope-safety regression** | **done → `PARSER_SEMANTIC_CONTRAST_FAIL`** (only the parser checkpoint/data and parser-eval code changed; frozen non-parser paths verified unchanged: authoritative Task 6S checkpoint SHA `eb50b021…d028a3` verified, same Qwen3-VL-2B text-only 20-class head, Task 6M LoRA+head policy, **17,479,700 / 2,144,466,964** trainable/total params; no-leakage hardening data = 24,161 v0.2-**train** examples (1,395 train/val duplicate strings removed) + **1,800** deterministic paraphrases = **25,961** prompts with **exact 0 / normalized 0** leakage; frozen minimal-pair pack (76) + stress v1 (160, all 20 classes, 4 zh + 4 en each) created **before** training; C1 (6M recipe) epoch 1 → internal-holdout macro F1 **1.0000**, sweep terminated at the selection ceiling, checkpoint `4cbba36b…44a5e` (local only, 321 s, 0.67 GB); full v0.2 val **1.0000** (en 1.0000 / zh 1.0000), MiniVal240 **240/240**, PairedVal **40/40**, fixed24 **21/24 → 24/24** with all three previously failing Chinese prompts fixed, minimal pairs 0.9474 → **0.9868**, stress 0.9375 → **0.99375**; **gates 9 (minimal < 1.0), 12 (`largest_to_nearest` recall 0.875 < 0.90), 14 (2/4 nearest controls still parse `largest_to_right_of` and exit 3)** fail while e2e regression reproduces Task 6S **exactly** (answered mIoU Δ 0.0, paired 10/20, abstentions 6) → verdict; main bottleneck `REFERENCE` deliberately untouched) |
+
+| 6U | **Reference candidate coverage + ProposalSetRanker** | **done → `REFERENCE_RANKER_NOT_HELPFUL`** (reference-side hardening only; YOLO26m-seg SHA `ef852b58…61f474` verified and **not retrained**, Task 6Q eligibility/field v0.2/SAM2/B3 frozen: train-only split from RefTrainUnique by unique key = **U-Calib200** 200 (100+100) + **U-RankerTrain** 625 (391+234), zero overlap with each other and with RefValUnique; four declared configs on U-Calib200 → smallest eligible@0.50 U-C0 0.9100 / **U-C1 0.9400** / U-C2 0.8800 / U-C3 0.9000, overall 0.9450/0.9600/0.9200/0.9300 → section-10 priority ranking `U-C1 > U-C0 > U-C3 > U-C2` → **U-C1 frozen** (imgsz 640 / conf 0.05 / max_det 300, no TTA/tiling); RefValUnique coverage overall 0.6895 → **0.7534** (+0.0639) and smallest 0.5413 → **0.6330** (+0.0917) → `candidate_coverage_improved=true`, oracle ceiling 0.6203; ProposalSetRanker v0.1 (14-d features, 14→32→16→1, 1,025 params; 598 trainable / 27 `untrainable_not_covered`; holdout top-1 0.45) **degrades** selection: RefVal mIoU U-S0 0.4248 / U-S1 **0.4289** / U-S2 0.3107, `SELECTION_WRONG` 39 → 53 → **88**; downstream MiniVal240 answered U-S0 0.3046 / U-S1 **0.3141** / U-S2 0.2466, reference-fail 117 → 115 → **158**, PairedVal 10 → **11** → 11, margin +0.2737 → **+0.3209** → +0.3332 (U-S0 reproduces Task 6S exactly); §24 U-S2 gates **3/10 pass** → verdict) |
+
+## Task 6U measured results
+
+Reference-side hardening that isolates the dominant Task 6S bottleneck (`REFERENCE` 117 vs target 67) into
+candidate **coverage** and extreme-instance **selection**. The detector, the Task 6Q eligibility rules,
+field v0.2, SAM2 and B3 are frozen; only a new support-infrastructure ranker was trained. Full detail:
+`docs/task6u_reference_hardening.md`, `evaluation/task6u_*.json`.
+
+| | Value |
+|---|---|
+| Frozen assets | YOLO26m-seg SHA `ef852b58…61f474` exact (not retrained) · Task 6O B3 SHA exact · field v0.2 / SAM2 / eligibility unchanged |
+| Train-only split | **U-Calib200** 200 (100 largest + 100 smallest) · **U-RankerTrain** 625 (391 + 234) · zero key overlap; RefValUnique 219 untouched |
+| Four declared configs (U-Calib200) | smallest eligible@0.50 **U-C0 0.9100 · U-C1 0.9400 · U-C2 0.8800 · U-C3 0.9000**; overall 0.9450 / 0.9600 / 0.9200 / 0.9300; largest 0.9800 / 0.9800 / 0.9600 / 0.9600 |
+| Frozen selection | ranking `U-C1 > U-C0 > U-C3 > U-C2` → **U-C1** (640 / 0.05 / 300, default NMS, no TTA, no tiling); higher input resolution *hurt* |
+| RefValUnique coverage | overall 0.6895 → **0.7534** (**+0.0639**) · largest 0.8364 → 0.8727 · smallest 0.5413 → **0.6330** (**+0.0917**) → `candidate_coverage_improved` **true** |
+| Oracle ceiling (U-C1) | mIoU **0.6203**, Dice 0.7092, Pr@0.5 0.7674, centroid median 0.0046 / p90 0.108 (diagnostic only) |
+| ProposalSetRanker v0.1 | 14-d features · 14→32→16→1 MLP · **1,025 params** · 598 trainable / **27 `untrainable_not_covered`** · internal holdout top-1 **0.45**, mean IoU 0.4510 · epoch 2, 28.6 s |
+| RefValUnique selectors | mIoU **0.4248 / 0.4289 / 0.3107** · Pr@0.5 0.5258 / 0.5209 / 0.3581 · centroid median 0.0156 / 0.0159 / 0.0890 · abstain 0.0274 / 0.0183 / 0.0183 (U-S0 / U-S1 / U-S2) |
+| RefValUnique buckets | `NOT_COVERED` 62 → **50** → 50 · `SELECTION_WRONG` 39 → 53 → **88** · `REFERENCE_OK` 111 → **112** → 77 |
+| Downstream MiniVal240 | strict **0.2970 / 0.3089 / 0.2425** · answered **0.3046 / 0.3141 / 0.2466** · abstain 6 / **4** / 4 · reference-fail 117 / **115** / **158** · border 0.2943 / 0.2896 / 0.2666 · tiny ≈0 |
+| PairedVal20 | pass **10 / 11 / 11** · own 0.277946 / 0.324870 / 0.336264 · cross 0.004245 / 0.003988 / 0.003089 · margin +0.2737 / **+0.3209** / +0.3332 |
+| Final integration (Part J) | Task 6T parser + U-S2 + frozen field/B3: parser **240/240**, strict 0.2425, answered 0.2466, abstain 4 |
+| Flags | `candidate_coverage_improved` **true** · `ranker_improved_selection` **false** (Δ mIoU −0.118, `SELECTION_WRONG` ratio 1.66 vs required ≤0.70) |
+| §24 gates (U-S2) | **3/10** (margin ✓, no test ✓, no GT ✓); RefVal mIoU / centroid median / p90, MiniVal answered / strict, paired 11 < 12, reference-fail 158 > 93 all fail |
+| Verdict | **`REFERENCE_RANKER_NOT_HELPFUL`** |
+
+1. **Candidate hardening works**: lowering conf to 0.05 and raising max_det to 300 (at the same 640
+   resolution) adds eligible candidates and improves RefValUnique coverage by +0.064 overall / +0.092
+   smallest, cutting `REFERENCE_NOT_COVERED_IOU50` from 62 to 50 and abstentions from 6 to 4, and it lifts
+   the downstream chain (strict 0.2970 → 0.3089, answered 0.3046 → 0.3141, paired 10 → 11, margin
+   +0.2737 → +0.3209).
+2. **Higher resolution did not help** (U-C2/U-C3 rank below U-C0/U-C1 on the calibration split).
+3. **The learned ranker with the mandated 14-d feature set is harmful**: it selects the small target's
+   reference poorly (smallest mIoU 0.3353 → 0.0411), raising `SELECTION_WRONG` 53 → 88 and downstream
+   reference-fail 115 → 158, because the feature set deliberately excludes centroid/location and the
+   oracle ceiling (0.6203) shows the information needed to pick well is not in it.
+4. U-S0 reproduced Task 6S exactly, validating the causal isolation.
+5. Next: 等待 ChatGPT 根据 Task 6U 的 candidate coverage、ranker 与 downstream 因果结果决定下一步，不自行修改 detector、reference 语义或 target 架构。
 
 ## Task 6T measured results
 
