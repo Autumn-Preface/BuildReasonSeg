@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6Q._
+_Last updated by DSH at the end of Task 6R._
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -78,8 +78,41 @@ The block above is machine-checked against
 | 6N | **Oracle-reference Geometric Relation Field feasibility (B0/B1/B2 ablation)** | **done → `GEOMETRIC_RELATION_FIELD_FEASIBLE`** (oracle-reference only, val-only, test untouched: parameter-free `GeometricRelationField v0.1` (alpha 1.2 / tau 0.04 / softness tau/2, no learned parameters) ranks the true target **top-1 in 100 %** of MiniVal240 (mean target 0.8668 vs best true distractor 0.1003); one frozen decoder family with 144/145/146-channel first convs and exact params 273,473 / 274,625 / **275,777**; N1 Overfit20 gate **PASS** (B2 mIoU 0.9280, Dice 0.9520); N2 MiniVal240 mIoU **B0 0.2148 → B1 0.2413 → B2 0.4531** (B2−B0 **+0.2383**, B2−B1 **+0.2118**); PairedVal20 **16/20** with own−cross margin **+0.4412**; all five §17 criteria pass) |
 | 6O | **Geometric relation field causal decomposition (B3/B4)** | **done → `FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED`** (frozen B2 reproduced **bit-identically** — all deltas exactly 0.0, paired 16/20 exact — on byte-identical Task 6N packs; **N-B3** = visual + field + relation, no direct reference channel, 145-ch / 274,625 params, O1 gate **PASS** (0.918509 / 0.933920), MiniVal240 mIoU **0.429968**, Dice 0.540155, **paired 14/20**, own−cross **+0.397196**; **N-B4** = field + relation only, no visual, 144-ch / 240,833 params, MiniVal240 mIoU **0.046637**, paired **2/20**; deltas **B3−B2 −0.023159**, B3−B1 +0.188652, **B3−B4 +0.383331**; criteria **14.1 PASS, 14.2 PASS, 14.3 FAIL**) |
 | 6P | **Differentiable field v0.2 + predicted-reference substitution** | **done → `REFERENCE_HEAD_INSUFFICIENT`** (v0.2 `geometric_relation_field_v02.py` is **bit-identical** to frozen v0.1 on 64 binary oracle masks — max/mean abs error **0.0** — while keeping autograd: min gradient L1 **11,833.33** on 8 non-binary soft masks, all four directions → `FIELD_V02_VALID`; frozen Task 6O B3 reproduced with **delta 0.0** on mIoU/Dice (`B3_REPRODUCED`); deduplicated reference packs 825 train / 219 val unique + Overfit20 10+10; `ReferenceMaskHead v0.1` (273,441 params, visual + family only) passes P1 (mIoU **0.969504** / Dice 0.984388) but generalizes to RefValUnique mIoU **0.220176**, Dice 0.302794, centroid error median **0.124060** / p90 **0.319618**; predicted-reference chain through v0.2 into frozen B3 gives target mIoU **0.240968** (−0.189000 vs oracle), paired **0/20** (margin +0.003619), field MAE 0.120730 / RMSE 0.274298 / Pearson 0.653476; section 17 fails → verdict) |
-
 | 6Q | **Frozen proposal reference resolver audit** | **done → `REFERENCE_PROPOSAL_COVERAGE_INSUFFICIENT`** (no training / no tuning / no test split: frozen Task 6M.1 YOLO26m-seg SHA256 `ef852b58…61f474` verified exactly with imgsz 640 / conf 0.10 / max_det 100; deterministic eligibility (no border, bbox extent ≤ 0.20, smallest also area ≥ 150) and largest/smallest area ranking with confidence→index tie-break, explicit abstention; on frozen RefValUnique 219 refs / 212 tiles eligible coverage@0.50 **0.6895** overall (0.8364 largest, 0.5413 smallest), selected-reference mIoU **0.413164**, Dice 0.469992, centroid median **0.015607** / p90 **0.393517**, abstention 0.027397; failure attribution OK **111** / NOT_COVERED 62 / EXTREME_WRONG 39 / NO_ELIGIBLE 3 / NO_PROPOSALS 3 / GEOMETRY_POOR 1; downstream through v0.2 + frozen B3: target mIoU **0.304581** (oracle 0.429968, dense 6P 0.240968), target abstention 0.025, PairedVal **10/20** margin **+0.273700** (oracle 14/20, dense 0/20); section 11 coverage gate fails → verdict) |
+| 6R | **Directional GRCL feasibility (relation-level consistency loss)** | **done → `GRCL_NO_MEANINGFUL_RELATION_GAIN`** (controlled loss ablation, oracle reference, test untouched: `grcl_directional.py` implements `L_GRCL = mean(relu(tau−signed) + relu(alpha·orth−signed))` with alpha 1.2 / tau 0.04 / eps 1e-6 / **lambda 0.5**, soft differentiable target centroid, no thresholding in the loss; audit `GRCL_VALID` (8 soft masks, all relations, hinge-active, gradient L1 min **0.026917**, directional sanity pass); frozen B3 (R0) reproduced with **delta 0.0** and hard relation accuracy **0.950000**; R1 Overfit20 gate **PASS** (mIoU 0.917843 / Dice 0.933565 / rel-acc 0.950000); MiniVal240 mIoU **R0 0.429968 / R1 0.411857 / R2 0.233787**, relation accuracy **0.950000 / 0.954167 / 0.541667**, axis violations **0.012987 / 0.000000 / 0.431034**; PairedVal20 **14 / 12 / 10** with margins +0.397196 / +0.364060 / +0.118147; criteria 1,2,6 pass, **3 (+0.004167 < 0.08), 4 (12 < 16), 5 (+0.364060 < 0.38) fail**; `strong_mask_gain false`; proposal transfer diagnostic R1-under-6Q mIoU 0.283782 vs 0.304581, paired 2/20 vs 10/20) |
+
+## Task 6R measured results
+
+Controlled loss ablation for the second candidate algorithm contribution: does explicit supervision on
+the geometric relation between the predicted target mask and the reference mask improve relation
+correctness beyond field guidance alone, without degrading mask quality? Oracle reference throughout,
+four directional relations only, GT target a label/score only, test split never read. Full detail:
+`docs/task6r_grcl_directional_feasibility.md`, `evaluation/task6r_*.json`.
+
+| | Value |
+|---|---|
+| GRCL v0.1 | `alpha 1.2`, `tau 0.04`, `eps 1e-6`, `lambda_grcl 0.5`; soft differentiable target centroid; `L_total = BCE + Dice + 0.5·GRCL`; no thresholding inside the loss |
+| Audit | **`GRCL_VALID`** — 8 soft masks, all four relations, non-symmetric references, hinge-active, gradient L1 min **0.026917**, directional sanity pass (correct side 0, wrong side 0.5395) |
+| R0 (frozen B3) | reproduction **delta 0.0**; MiniVal240 mIoU 0.429968, Dice 0.540155, Pr@0.5 0.692450, relation accuracy **0.950000**, margin 0.230544, axis violation 0.012987; PairedVal 14/20, margin +0.397196 |
+| R1 Overfit20 | mIoU **0.917843**, Dice **0.933565**, rel-acc **0.950000** → gate **PASS** |
+| R2 Overfit20 | mIoU 0.932792, Dice 0.957379, rel-acc 1.000000 (no gate) |
+| MiniVal240 | mIoU **0.429968 / 0.411857 / 0.233787**; Dice 0.540155 / 0.536478 / 0.329888; Pr@0.5 0.692450 / 0.626946 / 0.417037; rel-acc **0.950000 / 0.954167 / 0.541667**; margin 0.230544 / 0.238583 / 0.179077; axis violation 0.012987 / **0.000000** / 0.431034; mean GRCL 0.018724 / 0.047917 / 0.098439 |
+| R1 per relation mIoU / accuracy | left 0.3741 / 0.9333 · right 0.3985 / 0.9333 · above 0.4307 / 1.0000 · below 0.4441 / 0.9500 |
+| R1 resources | 274,625 params · epoch 3 · 57.3 s · 0.65 GB (R2: 273,473 · epoch 9 · 51.7 s · 0.65 GB) |
+| PairedVal20 | pass **14 / 12 / 10**; own 0.398969 / 0.365532 / 0.157666; cross 0.001773 / 0.001471 / 0.039519; margin **+0.397196 / +0.364060 / +0.118147**; member rel-acc 0.950000 / 0.925000 / 0.400000 |
+| Criteria | 1 ✓ overfit · 2 ✓ retention (0.411857 ≥ 0.409968) · 3 ✗ gain **+0.004167** < 0.08 · 4 ✗ paired **12** < 16 · 5 ✗ margin **+0.364060** < 0.38 · 6 ✓ field useful **+0.178069** |
+| Strong flag | `strong_mask_gain = false` (R1 is 0.018111 mIoU below R0) |
+| Proposal transfer | R1 under the frozen 6Q resolver: mIoU **0.283782** (6Q B3 0.304581), paired **2/20** (10/20), margin +0.079561, rel-acc 0.8291, abstentions 6 — diagnostic only |
+| Verdict | **`GRCL_NO_MEANINGFUL_RELATION_GAIN`** |
+
+1. **GRCL is correctly implemented and harmless to mask quality**: the audit passes, retention holds
+   (−0.018111 mIoU, inside the 0.02 allowance), and axis violations drop to exactly zero.
+2. **It does not deliver the predeclared relation gain**: relation accuracy moves 0.950000 → 0.954167
+   (`+0.004167` against a required `+0.08`), and PairedVal falls 14/20 → 12/20 with margin
+   0.397196 → 0.364060.
+3. **The field remains materially useful**: `R1 − R2 = +0.178069` mIoU, while the no-field control's
+   relation accuracy (0.541667) and axis-violation rate (0.431034) show GRCL alone cannot replace it.
+4. Next: 等待 ChatGPT 根据 Task 6R 的 GRCL 因果实验结果决定 Task 6S，不自行修改 loss、reference 架构或开始 MLLM/nearest/L3。
 
 ## Task 6Q measured results
 
