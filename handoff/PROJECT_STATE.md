@@ -1,6 +1,11 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6S._
+_Last updated by DSH at the end of Task 6T._
+
+**Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
+below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
+evidence and must not be edited. The **active canonical reasoning dataset** for all Task 6L+ work is
+**BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0** (see the Identity/current-state section).
 
 <!-- ARTIFACT-FACTS:BEGIN -->
 dataset_version: v0.1.1
@@ -32,7 +37,8 @@ The block above is machine-checked against
 | Project codename | **BuildReasonSeg** |
 | Repository | `Autumn-Preface/BuildReasonSeg` (branch `main`) |
 | Legacy evidence (read-only) | `../WHU_Building_Segment/` |
-| Reasoning dataset | **BuildSpatialReason v0.1.1** (frozen, audited, PASS) |
+| Reasoning dataset (active canonical) | **BuildSpatialReason v0.2** over **WHU-EA-NativeVector v1.0** — the active canonical dataset for all Task 6L+ work (28,108 samples; `scene_disjoint_v1` train1/train2/test splits) |
+| Legacy reasoning dataset (historical, frozen) | **BuildSpatialReason v0.1.1** — superseded by the Task 6L native-vector migration; its machine-checked ARTIFACT-FACTS block above is legacy artifact-consistency evidence only and is kept read-only |
 | Legacy dataset version | **v0.1** (frozen, superseded — never use for training) |
 | MVP environment | **`.conda/buildreasonseg-mvp`** (conda `--prefix`, Python 3.11.16, PyTorch 2.13.0+cu132) |
 | MVP stack (measured) | **Qwen3-VL-2B-Instruct + SAM2.1 Hiera Base+ + `[SEG]`** (ADR-013) |
@@ -82,6 +88,45 @@ The block above is machine-checked against
 | 6R | **Directional GRCL feasibility (relation-level consistency loss)** | **done → `GRCL_NO_MEANINGFUL_RELATION_GAIN`** (controlled loss ablation, oracle reference, test untouched: `grcl_directional.py` implements `L_GRCL = mean(relu(tau−signed) + relu(alpha·orth−signed))` with alpha 1.2 / tau 0.04 / eps 1e-6 / **lambda 0.5**, soft differentiable target centroid, no thresholding in the loss; audit `GRCL_VALID` (8 soft masks, all relations, hinge-active, gradient L1 min **0.026917**, directional sanity pass); frozen B3 (R0) reproduced with **delta 0.0** and hard relation accuracy **0.950000**; R1 Overfit20 gate **PASS** (mIoU 0.917843 / Dice 0.933565 / rel-acc 0.950000); MiniVal240 mIoU **R0 0.429968 / R1 0.411857 / R2 0.233787**, relation accuracy **0.950000 / 0.954167 / 0.541667**, axis violations **0.012987 / 0.000000 / 0.431034**; PairedVal20 **14 / 12 / 10** with margins +0.397196 / +0.364060 / +0.118147; criteria 1,2,6 pass, **3 (+0.004167 < 0.08), 4 (12 < 16), 5 (+0.364060 < 0.38) fail**; `strong_mask_gain false`; proposal transfer diagnostic R1-under-6Q mIoU 0.283782 vs 0.304581, paired 2/20 vs 10/20) |
 
 | 6S | **Directional natural-language end-to-end integration + hardening checkpoint** | **done → `DIRECTIONAL_PARSER_HARDENING_REQUIRED`** (first full chain, all modules frozen: instruction → frozen Qwen3-VL-2B ProgramHead → deterministic decomposition → frozen Task 6Q proposal resolver → predicted reference → field v0.2 → frozen SAM2 feature + relation embedding → frozen Task 6O B3 → target mask; **no GRCL / no oracle reference / no target-proposal selection**; asset audit `ASSETS_FROZEN` (parser SHA `eb50b021…d028a3` exact, text-only, 20 ids; proposal SHA `ef852b58…61f474` exact with imgsz 640 / conf 0.10 / max_det 100; B3 SHA exact; v0.2 unchanged); parser audit **en 1.0000 / zh 1.0000** with 0 unsupported; MiniVal240 strict all-240 mIoU **0.296967**, Dice 0.375321, answered-only mIoU **0.304581** (delta vs frozen 6Q **0.0**), Dice 0.384945, abstention **0.025**, border (n=110) 0.304968, tiny (n=4) ≈0; PairedVal **10/20** own 0.277946 / cross 0.004245 / margin **+0.273700** (identical to 6Q); CLI audit 24 fixed paraphrases **21/24** (3 short Chinese prompts confuse largest↔smallest), OOD 4/4 exit 4, out-of-scope 2/4 exit 5 (both "nearest" prompts are parsed as a supported program → exit 3), on-the-fly SAM2 proven (0.206 s on an uncached tile); attribution parser 0 / reference **117** / target 67 → dominant **`REFERENCE`**; gates 1-5,7,9,10 pass, **6 (21/24 < 22) and 8 (2/4) fail**) |
+
+| 6T | **ProgramHead semantic hardening + scope-safety regression** | **done → `PARSER_SEMANTIC_CONTRAST_FAIL`** (only the parser checkpoint/data and parser-eval code changed; frozen non-parser paths verified unchanged: authoritative Task 6S checkpoint SHA `eb50b021…d028a3` verified, same Qwen3-VL-2B text-only 20-class head, Task 6M LoRA+head policy, **17,479,700 / 2,144,466,964** trainable/total params; no-leakage hardening data = 24,161 v0.2-**train** examples (1,395 train/val duplicate strings removed) + **1,800** deterministic paraphrases = **25,961** prompts with **exact 0 / normalized 0** leakage; frozen minimal-pair pack (76) + stress v1 (160, all 20 classes, 4 zh + 4 en each) created **before** training; C1 (6M recipe) epoch 1 → internal-holdout macro F1 **1.0000**, sweep terminated at the selection ceiling, checkpoint `4cbba36b…44a5e` (local only, 321 s, 0.67 GB); full v0.2 val **1.0000** (en 1.0000 / zh 1.0000), MiniVal240 **240/240**, PairedVal **40/40**, fixed24 **21/24 → 24/24** with all three previously failing Chinese prompts fixed, minimal pairs 0.9474 → **0.9868**, stress 0.9375 → **0.99375**; **gates 9 (minimal < 1.0), 12 (`largest_to_nearest` recall 0.875 < 0.90), 14 (2/4 nearest controls still parse `largest_to_right_of` and exit 3)** fail while e2e regression reproduces Task 6S **exactly** (answered mIoU Δ 0.0, paired 10/20, abstentions 6) → verdict; main bottleneck `REFERENCE` deliberately untouched) |
+
+## Task 6T measured results
+
+Small parser/scope-safety hardening step that closes part of the Task 6S interface gate. **Only the
+ProgramHead checkpoint/training data and parser-evaluation code changed** — the proposal model, Task 6Q
+resolver, field v0.2, SAM2, B3, MiniVal240/PairedVal20, dataset/splits and the test split are untouched
+(git-verified). The main scientific bottleneck (`REFERENCE`) is explicitly out of scope. Full detail:
+`docs/task6t_programhead_semantic_hardening.md`, `evaluation/task6t_*.json`.
+
+**Mandatory Task 6S erratum (recorded, Task 6S artifacts not mutated):** the claim that the frozen
+20-program vocabulary has no `nearest` program is **false** — `EXPECTED_QUERY_TYPES` contains six nearest
+classes. The Task 6S nearest controls failed because the frozen ProgramHead misclassified them as
+direction-only programs.
+
+| | Value |
+|---|---|
+| Baseline parser | `task6m/program_parser_v02_best.pt` SHA `eb50b021…d028a3` verified exactly before training |
+| Architecture | same Qwen3-VL-2B text-only 20-class head; Task 6M trainable policy (LoRA + head); 17,479,700 / 2,144,466,964 trainable/total |
+| Hardening data | 24,161 v0.2-**train** examples + 1,800 paraphrases = **25,961**; leakage **exact 0 / normalized 0** |
+| Frozen packs (pre-training) | minimal pairs **76** (groups A 16 / B 16 / C 32 / D 12) · stress v1 **160** (20 classes × 4 zh + 4 en) |
+| Training | declared C1/C2/C3, ran **C1** (holdout macro F1 **1.0000** at epoch 1, sweep stopped at the ceiling); checkpoint `4cbba36b…44a5e` (local only), 321.1 s, 0.67 GB |
+| Canonical (baseline → hardened) | full v0.2 val 1.0000 → **1.0000** (en 1.0000 / zh 1.0000); MiniVal240 240/240 → **240/240**; PairedVal 40/40 → **40/40** |
+| Paraphrase/contrast (baseline → hardened) | fixed24 21/24 → **24/24** (all 3 previously failing fixed); minimal pairs 0.9474 → **0.9868**; stress v1 0.9375 → **0.99375** (macro F1 0.99375; en 1.0000, zh 0.9875) |
+| Residual failures | 1 minimal-pair + 1 stress prompt, both Chinese `largest_to_nearest` with the "边界距离最小的" phrasing (class recall 0.875); the two compact nearest scope controls still parse `largest_to_right_of` |
+| Scope safety | OOD **4/4 exit 4** ✓; `largest` / `leftmost` controls **exit 5** ✓; 2 nearest controls **exit 3** ✗; CLI fixed24 **24/24** |
+| End-to-end regression | parser 1.0; answered mIoU **Δ 0.0**, strict **Δ 0.0**, paired **10/20**, margin Δ 0.0, abstentions **6** → `END_TO_END_REG_REPRODUCED` |
+| Gates | 1-8 ✓ · **9 ✗ 0.9868** · 10 ✓ 0.99375 · 11 ✓ 0.99375 · **12 ✗ 0.875** · 13 ✓ · **14 ✗ 2/4** · 15-19 ✓ |
+| Verdict | **`PARSER_SEMANTIC_CONTRAST_FAIL`** |
+
+1. **Canonical behaviour is bit-identical** (full val 1.0000, MiniVal240 240/240, PairedVal 40/40, e2e Δ 0.0)
+   while paraphrase robustness improved substantially (fixed24 21 → 24/24, minimal 0.947 → 0.987, stress
+   0.938 → 0.994) — the hardening did not trade canonical accuracy for paraphrase robustness.
+2. **Three predeclared semantic/scope gates still fail**, all traced to the Chinese/compact L2-nearest
+   phrasing: the augmentation grammar taught the split nearest pattern but never the compact
+   "[X]右侧最近的[Y]" pattern.
+3. The main bottleneck remains **`REFERENCE`**; Task 6T did not touch it.
+4. Next: 等待 ChatGPT 根据 Task 6T 的 parser hardening 结果决定是否继续 parser/scope 修复或转向 reference-hardening，不自行修复或扩展范围。
 
 ## Task 6S measured results
 
