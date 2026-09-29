@@ -1,0 +1,86 @@
+{
+  "_doc": "Task 6O section 15. Exactly one verdict in the fixed priority order, with every predeclared criterion measured. DSH reports measurements only and takes no architecture decision.",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "FIELD_WITHOUT_DIRECT_REFERENCE_NOT_LEARNABLE",
+    "GEOMETRY_ONLY_BENCHMARK_CONFOUND",
+    "DIRECT_REFERENCE_CHANNEL_MATTERS",
+    "FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED",
+    "FIELD_CAUSAL_SIGNAL_PARTIAL"
+  ],
+  "comparisons": {
+    "delta_B3_B1_miou": 0.1886522326970164,
+    "delta_B3_B2_dice": -0.03668870931309842,
+    "delta_B3_B2_miou": -0.02315852585146,
+    "delta_B3_B2_own_cross_margin": -0.04399256096435372,
+    "delta_B3_B2_paired_pass": -2,
+    "delta_B3_B4_dice": 0.465168818451815,
+    "delta_B3_B4_miou": 0.3833309310204648,
+    "delta_B3_B4_own_cross_margin": 0.3482405939313299,
+    "delta_B3_B4_paired_pass": 12
+  },
+  "criteria": {
+    "14.1": {
+      "condition": "B3_mIoU >= B2_mIoU - 0.03 AND B3 paired >= 14/20 AND B3 own-cross >= 0.10",
+      "margin_ok": true,
+      "measured": {
+        "b2_miou": 0.4531265609993713,
+        "b2_miou_minus_slack": 0.4231265609993713,
+        "b3_miou": 0.4299680351479113,
+        "b3_own_cross_margin": 0.39719566349802166,
+        "b3_paired": 14
+      },
+      "miou_ok": true,
+      "name": "14.1 direct reference-channel retention",
+      "paired_ok": true,
+      "passed": true
+    },
+    "14.2": {
+      "condition": "B3_mIoU - B4_mIoU >= 0.10",
+      "measured": {
+        "delta_B3_B4_miou": 0.3833309310204648
+      },
+      "name": "14.2 visual contribution",
+      "passed": true,
+      "required": 0.1
+    },
+    "14.3": {
+      "condition": "B4_mIoU >= B3_mIoU - 0.05 AND B4 paired >= 12/20",
+      "measured": {
+        "b3_miou_minus_slack": 0.37996803514791133,
+        "b4_miou": 0.046637104127446545,
+        "b4_paired": 2
+      },
+      "miou_ok": false,
+      "name": "14.3 geometry-only confound",
+      "paired_ok": false,
+      "passed": false
+    }
+  },
+  "end_to_end_inference": false,
+  "mini_val_miou": {
+    "B1_frozen": 0.24131580245089493,
+    "B2_reproduced": 0.4531265609993713,
+    "B3": 0.4299680351479113,
+    "B4": 0.046637104127446545
+  },
+  "no_architecture_decision_by_dsh": true,
+  "paired_pass": {
+    "B2_reproduced": 16,
+    "B3": 14,
+    "B4": 2
+  },
+  "priority_order_applied": [
+    "INVALID_EXPERIMENT",
+    "FIELD_WITHOUT_DIRECT_REFERENCE_NOT_LEARNABLE",
+    "GEOMETRY_ONLY_BENCHMARK_CONFOUND",
+    "DIRECT_REFERENCE_CHANNEL_MATTERS",
+    "FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED",
+    "FIELD_CAUSAL_SIGNAL_PARTIAL"
+  ],
+  "reason": "sections 14.1 and 14.2 pass and 14.3 does not",
+  "reference_source": "oracle_native_gt",
+  "task": "6O",
+  "test_split_used": false,
+  "verdict": "FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED"
+}

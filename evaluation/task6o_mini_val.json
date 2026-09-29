@@ -1,0 +1,180 @@
+{
+  "_doc": "Task 6O section 12. MiniVal240 metrics for the two causal-decomposition variants, using the byte-identical frozen Task 6N pack and the frozen evaluation protocol.",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+    "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 19.6,
+  "stage": "O2-evaluation",
+  "task": "6O",
+  "test_split_used": false,
+  "variants": {
+    "B3": {
+      "label": "N-B3",
+      "overall": {
+        "border_target": {
+          "miou": 0.41322830028853264,
+          "records": 114
+        },
+        "dice": 0.5401551056992948,
+        "miou": 0.4299680351479113,
+        "precision_at_0_5": 0.6924500163042,
+        "records": 240,
+        "tiny_target": {
+          "miou": 8.037011759893473e-08,
+          "records": 4
+        }
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 241409
+        },
+        "first_conv_in_channels": 145,
+        "label": "N-B3",
+        "total_parameters": 274625,
+        "trainable_parameters": 274625,
+        "uses_reference_mask": false,
+        "uses_relation_field": true,
+        "uses_visual": true,
+        "variant": "B3"
+      },
+      "per_reference_family": {
+        "largest": {
+          "dice": 0.5184472411297587,
+          "miou": 0.4101387998147855,
+          "records": 120
+        },
+        "smallest": {
+          "dice": 0.5618629702688308,
+          "miou": 0.4497972704810371,
+          "records": 120
+        }
+      },
+      "per_relation": {
+        "above": {
+          "dice": 0.573027527986298,
+          "miou": 0.45807900656808603,
+          "records": 60
+        },
+        "below": {
+          "dice": 0.5514086101964931,
+          "miou": 0.4493233175714225,
+          "records": 60
+        },
+        "left_of": {
+          "dice": 0.5419279327122454,
+          "miou": 0.4219304423512666,
+          "records": 60
+        },
+        "right_of": {
+          "dice": 0.4942563519021424,
+          "miou": 0.39053937410087036,
+          "records": 60
+        }
+      },
+      "training": {
+        "checkpoint": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+          "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+        },
+        "epochs_run": 19,
+        "peak_vram_gb": 0.642,
+        "selected_epoch": 14,
+        "wall_seconds": 116.2
+      }
+    },
+    "B4": {
+      "label": "N-B4",
+      "overall": {
+        "border_target": {
+          "miou": 0.07531982538483192,
+          "records": 114
+        },
+        "dice": 0.07498628724747979,
+        "miou": 0.046637104127446545,
+        "precision_at_0_5": 0.7085650081765441,
+        "records": 240,
+        "tiny_target": {
+          "miou": 0.0002327331631711849,
+          "records": 4
+        }
+      },
+      "parameters": {
+        "by_module": {
+          "field_project": 512,
+          "relation_embedding": 64,
+          "trunk": 240257
+        },
+        "first_conv_in_channels": 144,
+        "label": "N-B4",
+        "total_parameters": 240833,
+        "trainable_parameters": 240833,
+        "uses_reference_mask": false,
+        "uses_relation_field": false,
+        "uses_visual": false,
+        "variant": "B4"
+      },
+      "per_reference_family": {
+        "largest": {
+          "dice": 0.07066453294439409,
+          "miou": 0.04203554108574982,
+          "records": 120
+        },
+        "smallest": {
+          "dice": 0.07930804155056545,
+          "miou": 0.051238667169143264,
+          "records": 120
+        }
+      },
+      "per_relation": {
+        "above": {
+          "dice": 0.07293542269501652,
+          "miou": 0.045525179891242086,
+          "records": 60
+        },
+        "below": {
+          "dice": 0.07229013458855328,
+          "miou": 0.04383832712794535,
+          "records": 60
+        },
+        "left_of": {
+          "dice": 0.07522162293174928,
+          "miou": 0.046382317186929804,
+          "records": 60
+        },
+        "right_of": {
+          "dice": 0.07949796877460003,
+          "miou": 0.05080259230366892,
+          "records": 60
+        }
+      },
+      "training": {
+        "checkpoint": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B4.pt",
+          "sha256": "902be26c4e10acfd02dee485681ed65b3a98999206d90e6efd9659b3bbe69883"
+        },
+        "epochs_run": 8,
+        "peak_vram_gb": 0.626,
+        "selected_epoch": 3,
+        "wall_seconds": 45.0
+      }
+    }
+  },
+  "visual": {
+    "cache_dtype": "float32",
+    "cache_format": "npy (C, h, w)",
+    "cache_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\features",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "checkpoint_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "config_name": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "encoder": "frozen SAM2.1 Hiera Base+ image embedding (Sam2Encoder.encode)",
+    "hits": 0,
+    "misses": 0,
+    "repo_id": "facebook/sam2.1-hiera-base-plus",
+    "reused_from": "Task 6C.7 / Task 6I frozen visual path",
+    "source_revision_expected": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  }
+}

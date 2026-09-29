@@ -1,0 +1,236 @@
+{
+  "_doc": "Task 6O sections 14-15. Causal decomposition of the Task 6N result: is the direct reference channel still needed with the field present (B3), and is the gain really field-guided visual segmentation or does the handcrafted field alone solve the benchmark (B4)? Oracle-reference only; test split never used.",
+  "b2_reproduction": {
+    "comparisons": {
+      "mini_val_dice": {
+        "abs_delta": 0.0,
+        "reproduced": 0.5768438150123932,
+        "stored_task6n": 0.5768438150123932,
+        "within_tolerance": true
+      },
+      "mini_val_miou": {
+        "abs_delta": 0.0,
+        "reproduced": 0.4531265609993713,
+        "stored_task6n": 0.4531265609993713,
+        "within_tolerance": true
+      },
+      "paired_mean_cross_iou": {
+        "abs_delta": 0.0,
+        "reproduced": 0.002157857978561074,
+        "stored_task6n": 0.002157857978561074,
+        "within_tolerance": true
+      },
+      "paired_mean_own_iou": {
+        "abs_delta": 0.0,
+        "reproduced": 0.44334608244093643,
+        "stored_task6n": 0.44334608244093643,
+        "within_tolerance": true
+      },
+      "paired_pass": {
+        "exact": true,
+        "reproduced": 16,
+        "stored_task6n": 16
+      }
+    },
+    "tolerance": 1e-06,
+    "verdict": "B2_REPRODUCED"
+  },
+  "base_commit": "90f3735cf57115cd67e15b1b3457752e1fb049a6",
+  "comparisons": {
+    "delta_B3_B1_miou": 0.1886522326970164,
+    "delta_B3_B2_dice": -0.03668870931309842,
+    "delta_B3_B2_miou": -0.02315852585146,
+    "delta_B3_B2_own_cross_margin": -0.04399256096435372,
+    "delta_B3_B2_paired_pass": -2,
+    "delta_B3_B4_dice": 0.465168818451815,
+    "delta_B3_B4_miou": 0.3833309310204648,
+    "delta_B3_B4_own_cross_margin": 0.3482405939313299,
+    "delta_B3_B4_paired_pass": 12
+  },
+  "criteria": {
+    "14.1": {
+      "condition": "B3_mIoU >= B2_mIoU - 0.03 AND B3 paired >= 14/20 AND B3 own-cross >= 0.10",
+      "margin_ok": true,
+      "measured": {
+        "b2_miou": 0.4531265609993713,
+        "b2_miou_minus_slack": 0.4231265609993713,
+        "b3_miou": 0.4299680351479113,
+        "b3_own_cross_margin": 0.39719566349802166,
+        "b3_paired": 14
+      },
+      "miou_ok": true,
+      "name": "14.1 direct reference-channel retention",
+      "paired_ok": true,
+      "passed": true
+    },
+    "14.2": {
+      "condition": "B3_mIoU - B4_mIoU >= 0.10",
+      "measured": {
+        "delta_B3_B4_miou": 0.3833309310204648
+      },
+      "name": "14.2 visual contribution",
+      "passed": true,
+      "required": 0.1
+    },
+    "14.3": {
+      "condition": "B4_mIoU >= B3_mIoU - 0.05 AND B4 paired >= 12/20",
+      "measured": {
+        "b3_miou_minus_slack": 0.37996803514791133,
+        "b4_miou": 0.046637104127446545,
+        "b4_paired": 2
+      },
+      "miou_ok": false,
+      "name": "14.3 geometry-only confound",
+      "paired_ok": false,
+      "passed": false
+    }
+  },
+  "criteria_constants": {
+    "direct_reference_channel_matters_drop": 0.05,
+    "direct_reference_retention_margin_min": 0.1,
+    "direct_reference_retention_miou_slack": 0.03,
+    "direct_reference_retention_paired_min": 14,
+    "geometry_only_miou_slack": 0.05,
+    "geometry_only_paired_min": 12,
+    "visual_contribution_min": 0.1
+  },
+  "o1": {
+    "b3_best": {
+      "dice": 0.9339197251276392,
+      "miou": 0.9185093409666374,
+      "step": 1200
+    },
+    "b4_best": {
+      "dice": 0.16210878645706686,
+      "miou": 0.10951069481795798,
+      "step": 1200
+    },
+    "gate": {
+      "applies_to": "B3",
+      "b3_best_dice": 0.9339197251276392,
+      "b3_best_miou": 0.9185093409666374,
+      "b3_final_dice": 0.9339197251276392,
+      "b3_final_miou": 0.9185093409666374,
+      "b4_best_dice": 0.16210878645706686,
+      "b4_best_miou": 0.10951069481795798,
+      "b4_has_no_gate": true,
+      "dice_min": 0.9,
+      "miou_min": 0.85,
+      "passed": true
+    },
+    "verdict": "O1_PASS"
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 0.02,
+  "task": "6O",
+  "test_split_used": false,
+  "variants": {
+    "B1_frozen_task6n": {
+      "mini_val_miou": 0.24131580245089493,
+      "parameters": 274625,
+      "role": "reference-mask baseline (no field)"
+    },
+    "B2_reproduced": {
+      "first_conv_in_channels": 146,
+      "mini_val_dice": 0.5768438150123932,
+      "mini_val_miou": 0.4531265609993713,
+      "own_cross_margin": 0.4411882244623754,
+      "paired_pairs": 20,
+      "paired_pass": 16,
+      "parameters": 275777,
+      "role": "task 6N full model (visual + M_ref_down + field + relation), reproduced here"
+    },
+    "B3": {
+      "best_epoch": 14,
+      "border_target": {
+        "miou": 0.41322830028853264,
+        "records": 114
+      },
+      "first_conv_in_channels": 145,
+      "mean_cross_iou": 0.0017734807908101294,
+      "mean_own_iou": 0.3989691442888318,
+      "mini_val_dice": 0.5401551056992948,
+      "mini_val_miou": 0.4299680351479113,
+      "o1_best_dice": 0.9339197251276392,
+      "o1_best_miou": 0.9185093409666374,
+      "o1_paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.001880443388756928,
+        "mean_own_iou": 0.8442209758838637,
+        "own_cross_margin": 0.8423405324951068,
+        "pairs": 4,
+        "passed": 3
+      },
+      "own_cross_margin": 0.39719566349802166,
+      "paired_pairs": 20,
+      "paired_pass": 14,
+      "parameters": 274625,
+      "peak_vram_gb": 0.642,
+      "per_reference_family_miou": {
+        "largest": 0.4101387998147855,
+        "smallest": 0.4497972704810371
+      },
+      "per_relation_miou": {
+        "above": 0.45807900656808603,
+        "below": 0.4493233175714225,
+        "left_of": 0.4219304423512666,
+        "right_of": 0.39053937410087036
+      },
+      "precision_at_0_5": 0.6924500163042,
+      "role": "task 6O: visual + field + relation, NO direct reference channel",
+      "tiny_target": {
+        "miou": 8.037011759893473e-08,
+        "records": 4
+      },
+      "trainable_parameters": 274625,
+      "wall_seconds": 116.2
+    },
+    "B4": {
+      "best_epoch": 3,
+      "border_target": {
+        "miou": 0.07531982538483192,
+        "records": 114
+      },
+      "first_conv_in_channels": 144,
+      "mean_cross_iou": 0.0,
+      "mean_own_iou": 0.04895506956669179,
+      "mini_val_dice": 0.07498628724747979,
+      "mini_val_miou": 0.046637104127446545,
+      "o1_best_dice": 0.16210878645706686,
+      "o1_best_miou": 0.10951069481795798,
+      "o1_paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0,
+        "mean_own_iou": 0.04624364798989218,
+        "own_cross_margin": 0.04624364798989218,
+        "pairs": 4,
+        "passed": 0
+      },
+      "own_cross_margin": 0.04895506956669179,
+      "paired_pairs": 20,
+      "paired_pass": 2,
+      "parameters": 240833,
+      "peak_vram_gb": 0.626,
+      "per_reference_family_miou": {
+        "largest": 0.04203554108574982,
+        "smallest": 0.051238667169143264
+      },
+      "per_relation_miou": {
+        "above": 0.045525179891242086,
+        "below": 0.04383832712794535,
+        "left_of": 0.046382317186929804,
+        "right_of": 0.05080259230366892
+      },
+      "precision_at_0_5": 0.7085650081765441,
+      "role": "task 6O geometry-only control: field + relation, NO visual, NO direct reference",
+      "tiny_target": {
+        "miou": 0.0002327331631711849,
+        "records": 4
+      },
+      "trainable_parameters": 240833,
+      "wall_seconds": 45.0
+    }
+  },
+  "verdict": "FIELD_GUIDED_VISUAL_SEGMENTATION_SUPPORTED",
+  "verdict_reason": "sections 14.1 and 14.2 pass and 14.3 does not"
+}

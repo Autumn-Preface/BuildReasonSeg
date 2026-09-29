@@ -1,0 +1,110 @@
+{
+  "_doc": "Task 6O sections 6-7. The frozen Task 6N B2 checkpoint is re-evaluated exactly once with the frozen Task 6N evaluator on MiniVal240 and PairedVal20; the stored Task 6N values must be reproduced within 1e-6 and the pair-pass count exactly.",
+  "b2_retrained": false,
+  "checkpoint": {
+    "actual_sha256": "7cb03c9913a7d3d939413b38aea03c557bce75507cfb46e707224b4dadf01f08",
+    "expected_sha256": "7cb03c9913a7d3d939413b38aea03c557bce75507cfb46e707224b4dadf01f08",
+    "matches": true,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\checkpoints\\n2_B2.pt",
+    "present": true
+  },
+  "comparisons": {
+    "mini_val_dice": {
+      "abs_delta": 0.0,
+      "reproduced": 0.5768438150123932,
+      "stored_task6n": 0.5768438150123932,
+      "within_tolerance": true
+    },
+    "mini_val_miou": {
+      "abs_delta": 0.0,
+      "reproduced": 0.4531265609993713,
+      "stored_task6n": 0.4531265609993713,
+      "within_tolerance": true
+    },
+    "paired_mean_cross_iou": {
+      "abs_delta": 0.0,
+      "reproduced": 0.002157857978561074,
+      "stored_task6n": 0.002157857978561074,
+      "within_tolerance": true
+    },
+    "paired_mean_own_iou": {
+      "abs_delta": 0.0,
+      "reproduced": 0.44334608244093643,
+      "stored_task6n": 0.44334608244093643,
+      "within_tolerance": true
+    },
+    "paired_pass": {
+      "exact": true,
+      "reproduced": 16,
+      "stored_task6n": 16
+    }
+  },
+  "pack_verification": {
+    "manifest": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6n_pack_manifest.json",
+    "packs": {
+      "mini_train_1000": {
+        "actual": "02de6440da36fb10360b93b815bb43d75ebd87a4398c333361c4c5cfc41eba50",
+        "expected": "02de6440da36fb10360b93b815bb43d75ebd87a4398c333361c4c5cfc41eba50",
+        "matches": true,
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_train_1000.json"
+      },
+      "mini_val_240": {
+        "actual": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36",
+        "expected": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36",
+        "matches": true,
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json"
+      },
+      "overfit20": {
+        "actual": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a",
+        "expected": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a",
+        "matches": true,
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\overfit20.json"
+      },
+      "paired_val_20": {
+        "actual": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3",
+        "expected": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3",
+        "matches": true,
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json"
+      }
+    }
+  },
+  "reference_source": "oracle_native_gt",
+  "reproduced": {
+    "mini_val": {
+      "dice": 0.5768438150123932,
+      "miou": 0.4531265609993713,
+      "precision_at_0_5": 0.6640413290137366,
+      "records": 240
+    },
+    "paired_val": {
+      "mean_cross_iou": 0.002157857978561074,
+      "mean_own_iou": 0.44334608244093643,
+      "own_cross_margin": 0.4411882244623754,
+      "pair_pass_rule": "both members prefer their own GT target over the paired alternative by IoU",
+      "pairs": 20,
+      "pass_rate": 0.8,
+      "passed": 16
+    }
+  },
+  "runtime_seconds": 18.5,
+  "stage": "A-b2-reproduction",
+  "stored_task6n": {
+    "mini_val": {
+      "dice": 0.5768438150123932,
+      "miou": 0.4531265609993713
+    },
+    "paired_val": {
+      "mean_cross_iou": 0.002157857978561074,
+      "mean_own_iou": 0.44334608244093643,
+      "own_cross_margin": 0.4411882244623754,
+      "pair_pass_rule": "both members prefer their own GT target over the paired alternative by IoU",
+      "pairs": 20,
+      "pass_rate": 0.8,
+      "passed": 16
+    }
+  },
+  "task": "6O",
+  "test_split_used": false,
+  "tolerance": 1e-06,
+  "verdict": "B2_REPRODUCED"
+}

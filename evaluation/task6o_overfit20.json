@@ -1,0 +1,344 @@
+{
+  "_doc": "Task 6O section 10. Stage O1: B3 (visual + field + relation, no direct reference channel) and B4 (field + relation only, no visual) trained separately on the byte-identical frozen Task 6N Overfit20 with the exact Task 6N N1 settings. The gate applies to B3 only.",
+  "config": {
+    "amp": "bfloat16 autocast, identical to Task 6N",
+    "augmentation": "none",
+    "batch_size": 4,
+    "evaluate_every_steps": 100,
+    "gate": {
+      "applies_to": "B3",
+      "train_dice_min": 0.9,
+      "train_miou_min": 0.85
+    },
+    "identical_to": "Task 6N N1 (section 14)",
+    "lr": 0.001,
+    "max_steps": 1200,
+    "optimizer": "AdamW",
+    "scheduler": "none",
+    "seed": 20260929,
+    "stage": "O1",
+    "variants": [
+      "B3",
+      "B4"
+    ],
+    "weight_decay": 0.0001
+  },
+  "gate": {
+    "applies_to": "B3",
+    "b3_best_dice": 0.9339197251276392,
+    "b3_best_miou": 0.9185093409666374,
+    "b3_final_dice": 0.9339197251276392,
+    "b3_final_miou": 0.9185093409666374,
+    "b4_best_dice": 0.16210878645706686,
+    "b4_best_miou": 0.10951069481795798,
+    "b4_has_no_gate": true,
+    "dice_min": 0.9,
+    "miou_min": 0.85,
+    "passed": true
+  },
+  "pack": {
+    "count": 20,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\overfit20.json",
+    "sha256": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a"
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 50.0,
+  "stage": "O1",
+  "task": "6O",
+  "test_split_used": false,
+  "variants": {
+    "B3": {
+      "best": {
+        "dice": 0.9339197251276392,
+        "miou": 0.9185093409666374,
+        "step": 1200
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o1_B3.pt",
+        "sha256": "098dbd609a0c1bc66b71c9e7dcf4c6ac55ff9f54dde53b8cfb33a8a44918a453"
+      },
+      "final": {
+        "dice": 0.9339197251276392,
+        "miou": 0.9185093409666374,
+        "precision_at_0_5": 0.9394508134337652,
+        "records": 20
+      },
+      "final_per_relation": {
+        "above": {
+          "dice": 0.7402967647618551,
+          "miou": 0.7308547685861836,
+          "records": 4
+        },
+        "below": {
+          "dice": 0.9824806811725749,
+          "miou": 0.9656813876433498,
+          "records": 7
+        },
+        "left_of": {
+          "dice": 0.9820751364066573,
+          "miou": 0.9650528703697081,
+          "records": 5
+        },
+        "right_of": {
+          "dice": 0.982366748316013,
+          "miou": 0.9654334199090066,
+          "records": 4
+        }
+      },
+      "history": [
+        {
+          "dice": 0.6674798115407464,
+          "loss": 0.6523529291152954,
+          "miou": 0.5506582586963985,
+          "step": 100
+        },
+        {
+          "dice": 0.8796070493134378,
+          "loss": 0.09821313619613647,
+          "miou": 0.8201861902049787,
+          "step": 200
+        },
+        {
+          "dice": 0.8939340835230485,
+          "loss": 0.06218579784035683,
+          "miou": 0.8448836302148152,
+          "step": 300
+        },
+        {
+          "dice": 0.9158667682275906,
+          "loss": 0.05117206275463104,
+          "miou": 0.8843503015658666,
+          "step": 400
+        },
+        {
+          "dice": 0.9147306319672699,
+          "loss": 0.033661458641290665,
+          "miou": 0.8828236516158592,
+          "step": 500
+        },
+        {
+          "dice": 0.9260490514938386,
+          "loss": 0.026874419301748276,
+          "miou": 0.9036458467208502,
+          "step": 600
+        },
+        {
+          "dice": 0.9113405505220655,
+          "loss": 0.03378460556268692,
+          "miou": 0.8762284890498883,
+          "step": 700
+        },
+        {
+          "dice": 0.9265987901452359,
+          "loss": 0.03086855635046959,
+          "miou": 0.9045953097063734,
+          "step": 800
+        },
+        {
+          "dice": 0.9328197951349214,
+          "loss": 0.2639425992965698,
+          "miou": 0.9164382538743532,
+          "step": 900
+        },
+        {
+          "dice": 0.9284533760831408,
+          "loss": 0.026870857924222946,
+          "miou": 0.9080833030331279,
+          "step": 1000
+        },
+        {
+          "dice": 0.9324381936875069,
+          "loss": 0.02532794326543808,
+          "miou": 0.9157264369250484,
+          "step": 1100
+        },
+        {
+          "dice": 0.9339197251276392,
+          "loss": 0.2739649713039398,
+          "miou": 0.9185093409666374,
+          "step": 1200
+        }
+      ],
+      "label": "N-B3",
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.001880443388756928,
+        "mean_own_iou": 0.8442209758838637,
+        "own_cross_margin": 0.8423405324951068,
+        "pairs": 4,
+        "passed": 3
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 241409
+        },
+        "first_conv_in_channels": 145,
+        "label": "N-B3",
+        "total_parameters": 274625,
+        "trainable_parameters": 274625,
+        "uses_reference_mask": false,
+        "uses_relation_field": true,
+        "uses_visual": true,
+        "variant": "B3"
+      },
+      "peak_vram_gb": 0.544,
+      "wall_seconds": 23.5
+    },
+    "B4": {
+      "best": {
+        "dice": 0.16210878645706686,
+        "miou": 0.10951069481795798,
+        "step": 1200
+      },
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o1_B4.pt",
+        "sha256": "d377414e9fc849e1621216af11bdda3deccf9779cbe07e24025484f7eee6f798"
+      },
+      "final": {
+        "dice": 0.16210878645706686,
+        "miou": 0.10951069481795798,
+        "precision_at_0_5": 0.6264078428557932,
+        "records": 20
+      },
+      "final_per_relation": {
+        "above": {
+          "dice": 0.2057737536657915,
+          "miou": 0.13785144501018173,
+          "records": 4
+        },
+        "below": {
+          "dice": 0.08628792355612679,
+          "miou": 0.05915874295582168,
+          "records": 7
+        },
+        "left_of": {
+          "dice": 0.11866919987355658,
+          "miou": 0.08316698442243156,
+          "records": 5
+        },
+        "right_of": {
+          "dice": 0.305429812554375,
+          "miou": 0.2022154983788807,
+          "records": 4
+        }
+      },
+      "history": [
+        {
+          "dice": 0.0419075021261643,
+          "loss": 1.0147311687469482,
+          "miou": 0.02489878208871436,
+          "step": 100
+        },
+        {
+          "dice": 0.05917918990426794,
+          "loss": 1.0097229480743408,
+          "miou": 0.034251918944412915,
+          "step": 200
+        },
+        {
+          "dice": 0.06838712462198354,
+          "loss": 0.9945284724235535,
+          "miou": 0.0406529994150256,
+          "step": 300
+        },
+        {
+          "dice": 0.11166531534327433,
+          "loss": 1.0255695581436157,
+          "miou": 0.06650220642005614,
+          "step": 400
+        },
+        {
+          "dice": 0.08519376291379614,
+          "loss": 0.8933201432228088,
+          "miou": 0.05055073847284538,
+          "step": 500
+        },
+        {
+          "dice": 0.1064890480629539,
+          "loss": 0.8511111736297607,
+          "miou": 0.06450856405528299,
+          "step": 600
+        },
+        {
+          "dice": 0.08330175960404419,
+          "loss": 0.7564462423324585,
+          "miou": 0.051145532159263964,
+          "step": 700
+        },
+        {
+          "dice": 0.11118676810911696,
+          "loss": 0.9629929065704346,
+          "miou": 0.06845318104302958,
+          "step": 800
+        },
+        {
+          "dice": 0.12811304448813413,
+          "loss": 0.9057902693748474,
+          "miou": 0.08006218331223328,
+          "step": 900
+        },
+        {
+          "dice": 0.1505579973845927,
+          "loss": 0.866856575012207,
+          "miou": 0.09460546029520057,
+          "step": 1000
+        },
+        {
+          "dice": 0.1534513795717017,
+          "loss": 0.9265706539154053,
+          "miou": 0.09651325066485364,
+          "step": 1100
+        },
+        {
+          "dice": 0.16210878645706686,
+          "loss": 1.0190197229385376,
+          "miou": 0.10951069481795798,
+          "step": 1200
+        }
+      ],
+      "label": "N-B4",
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0,
+        "mean_own_iou": 0.04624364798989218,
+        "own_cross_margin": 0.04624364798989218,
+        "pairs": 4,
+        "passed": 0
+      },
+      "parameters": {
+        "by_module": {
+          "field_project": 512,
+          "relation_embedding": 64,
+          "trunk": 240257
+        },
+        "first_conv_in_channels": 144,
+        "label": "N-B4",
+        "total_parameters": 240833,
+        "trainable_parameters": 240833,
+        "uses_reference_mask": false,
+        "uses_relation_field": false,
+        "uses_visual": false,
+        "variant": "B4"
+      },
+      "peak_vram_gb": 0.536,
+      "wall_seconds": 18.7
+    }
+  },
+  "verdict": "O1_PASS",
+  "visual": {
+    "cache_dtype": "float32",
+    "cache_format": "npy (C, h, w)",
+    "cache_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\features",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "checkpoint_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "config_name": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "encoder": "frozen SAM2.1 Hiera Base+ image embedding (Sam2Encoder.encode)",
+    "hits": 10136,
+    "misses": 0,
+    "repo_id": "facebook/sam2.1-hiera-base-plus",
+    "reused_from": "Task 6C.7 / Task 6I frozen visual path",
+    "source_revision_expected": "2b90b9f5ceec907a1c18123530e92e794ad901a4"
+  }
+}
