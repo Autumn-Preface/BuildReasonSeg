@@ -1,0 +1,103 @@
+{
+  "_doc": "Task 6R sections 10-11. Frozen Task 6O B3 (R0) reproduced on MiniVal240 within 1e-6, plus the hard relation-correctness metric (threshold 0.5, evaluation only) on MiniVal240 and PairedVal20. R0 is not trained in Task 6R.",
+  "checkpoint": {
+    "actual_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "matches": true,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "present": true,
+    "retrained": false
+  },
+  "hard_relation_metric": {
+    "alpha": 1.2,
+    "definition": "signed >= tau AND signed >= alpha * orth, threshold 0.5, empty mask incorrect",
+    "tau": 0.04,
+    "threshold": 0.5
+  },
+  "mini_val_240": {
+    "axis_violation_rate": 0.012987012987012988,
+    "dice": 0.5401551056992948,
+    "empty_predictions": 9,
+    "mean_grcl": 0.018723862059414387,
+    "mean_positive_signed_margin": 0.23054375051161943,
+    "miou": 0.4299680351479113,
+    "precision_at_0_5": 0.6924500163042,
+    "records": 240,
+    "relation_accuracy": 0.95,
+    "relation_per_direction": {
+      "above": {
+        "mean_signed_margin": 0.22861301507485116,
+        "records": 60,
+        "relation_accuracy": 0.9833333333333333
+      },
+      "below": {
+        "mean_signed_margin": 0.22248129723435742,
+        "records": 60,
+        "relation_accuracy": 0.9666666666666667
+      },
+      "left_of": {
+        "mean_signed_margin": 0.2469368667194718,
+        "records": 60,
+        "relation_accuracy": 0.9333333333333333
+      },
+      "right_of": {
+        "mean_signed_margin": 0.22438643819519452,
+        "records": 60,
+        "relation_accuracy": 0.9166666666666666
+      }
+    }
+  },
+  "paired_val_20": {
+    "axis_violation_rate": 0.0,
+    "empty_predictions": 2,
+    "mean_positive_signed_margin": 0.2649019809537812,
+    "member_predictions": 40,
+    "per_relation": {
+      "above": {
+        "mean_signed_margin": 0.34790874769290286,
+        "records": 10,
+        "relation_accuracy": 0.9
+      },
+      "below": {
+        "mean_signed_margin": 0.1658467948436737,
+        "records": 10,
+        "relation_accuracy": 0.9
+      },
+      "left_of": {
+        "mean_signed_margin": 0.2677799268410756,
+        "records": 13,
+        "relation_accuracy": 1.0
+      },
+      "right_of": {
+        "mean_signed_margin": 0.2801909063543592,
+        "records": 7,
+        "relation_accuracy": 1.0
+      }
+    },
+    "relation_accuracy": 0.95
+  },
+  "reference_source": "oracle_native_gt",
+  "reproduction": {
+    "comparisons": {
+      "dice": {
+        "abs_delta": 0.0,
+        "reproduced": 0.5401551056992948,
+        "stored_task6o": 0.5401551056992948,
+        "within_tolerance": true
+      },
+      "miou": {
+        "abs_delta": 0.0,
+        "reproduced": 0.4299680351479113,
+        "stored_task6o": 0.4299680351479113,
+        "within_tolerance": true
+      }
+    },
+    "reproduced": true,
+    "verdict": "B3_REPRODUCED"
+  },
+  "runtime_seconds": 12.1,
+  "stage": "D-b3-relation-baseline",
+  "task": "6R",
+  "test_split_used": false,
+  "tolerance": 1e-06
+}

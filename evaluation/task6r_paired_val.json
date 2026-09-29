@@ -1,0 +1,44 @@
+{
+  "_doc": "Task 6R section 18. PairedVal20 for R0/R1/R2 on the exact frozen Task 6N pack with the oracle reference: a pair passes only if both members prefer their own GT target over the paired alternative by IoU.",
+  "pack": {
+    "pairs": 20,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json",
+    "sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3"
+  },
+  "reference_source": "oracle_native_gt",
+  "stage": "H-paired-val",
+  "task": "6R",
+  "test_split_used": false,
+  "variants": {
+    "R0": {
+      "empty_predictions": 2,
+      "mean_cross_iou": 0.0017734807908101294,
+      "mean_own_iou": 0.3989691442888318,
+      "member_predictions": 40,
+      "own_cross_margin": 0.39719566349802166,
+      "pairs": 20,
+      "passed": 14,
+      "relation_accuracy_members": 0.95
+    },
+    "R1": {
+      "empty_predictions": 3,
+      "mean_cross_iou": 0.001471302376012987,
+      "mean_own_iou": 0.36553163212992856,
+      "member_predictions": 40,
+      "own_cross_margin": 0.36406032975391556,
+      "pairs": 20,
+      "passed": 12,
+      "relation_accuracy_members": 0.925
+    },
+    "R2": {
+      "empty_predictions": 0,
+      "mean_cross_iou": 0.039519263754688096,
+      "mean_own_iou": 0.1576658525474147,
+      "member_predictions": 40,
+      "own_cross_margin": 0.1181465887927266,
+      "pairs": 20,
+      "passed": 10,
+      "relation_accuracy_members": 0.4
+    }
+  }
+}

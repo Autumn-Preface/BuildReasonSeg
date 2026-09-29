@@ -1,0 +1,231 @@
+{
+  "_doc": "Task 6R Part H. MiniVal240 metrics for R0 (frozen B3), R1 (B3 + GRCL) and R2 (no-field + GRCL): mask quality, hard relation correctness, GRCL value, signed-margin statistics, axis violations, per-relation and per-family breakdowns and resources.",
+  "pack": {
+    "count": 240,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+    "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+  },
+  "predeclared_criteria": {
+    "1_r1_overfit_gate": {
+      "measured": true,
+      "passed": true
+    },
+    "2_mask_retention": {
+      "numerical_threshold": 0.4099680351479113,
+      "passed": true,
+      "r0_miou": 0.4299680351479113,
+      "r1_miou": 0.41185668634454997,
+      "requirement": "R1 mIoU >= R0 mIoU - 0.02"
+    },
+    "3_relation_gain": {
+      "gain": 0.004166666666666763,
+      "passed": false,
+      "r0_relation_accuracy": 0.95,
+      "r1_relation_accuracy": 0.9541666666666667,
+      "requirement": "R1 relation_accuracy >= R0 relation_accuracy + 0.08"
+    },
+    "4_paired_discrimination": {
+      "measured": 12,
+      "passed": false,
+      "requirement": "R1 PairedVal >= 16/20"
+    },
+    "5_own_cross_margin": {
+      "measured": 0.36406032975391556,
+      "passed": false,
+      "requirement": "R1 own-cross margin >= 0.38"
+    },
+    "6_field_remains_useful": {
+      "delta": 0.17806934780377684,
+      "passed": true,
+      "r1_miou": 0.41185668634454997,
+      "r2_miou": 0.23378733854077313,
+      "requirement": "R1 mIoU - R2 mIoU >= 0.10"
+    }
+  },
+  "r0_reference": {
+    "miou": 0.4299680351479113,
+    "relation_accuracy": 0.95,
+    "source": "evaluation/task6r_b3_relation_baseline.json"
+  },
+  "reference_source": "oracle_native_gt",
+  "stage": "H-mini-val",
+  "strong_mask_gain": false,
+  "task": "6R",
+  "test_split_used": false,
+  "variants": {
+    "R0": {
+      "axis_violation_rate": 0.012987012987012988,
+      "border_target": {
+        "miou": 0.4299680351479113,
+        "records": 240
+      },
+      "decoder": "B3",
+      "dice": 0.5401551056992948,
+      "empty_predictions": 9,
+      "label": "R0 frozen B3 (BCE+Dice only)",
+      "loss": "BCE + Dice",
+      "mean_grcl": 0.018723862059414387,
+      "mean_positive_signed_margin": 0.23054375051161943,
+      "miou": 0.4299680351479113,
+      "parameters": 274625,
+      "peak_vram_gb": null,
+      "per_reference_family_miou": {
+        "largest": 0.4101387998147855,
+        "smallest": 0.4497972704810371
+      },
+      "per_relation_miou": {
+        "above": 0.45807900656808603,
+        "below": 0.4493233175714225,
+        "left_of": 0.4219304423512666,
+        "right_of": 0.39053937410087036
+      },
+      "precision_at_0_5": 0.6924500163042,
+      "relation_accuracy": 0.95,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.22861301507485116,
+          "records": 60,
+          "relation_accuracy": 0.9833333333333333
+        },
+        "below": {
+          "mean_signed_margin": 0.22248129723435742,
+          "records": 60,
+          "relation_accuracy": 0.9666666666666667
+        },
+        "left_of": {
+          "mean_signed_margin": 0.2469368667194718,
+          "records": 60,
+          "relation_accuracy": 0.9333333333333333
+        },
+        "right_of": {
+          "mean_signed_margin": 0.22438643819519452,
+          "records": 60,
+          "relation_accuracy": 0.9166666666666666
+        }
+      },
+      "selected_epoch": 14,
+      "tiny_target": {
+        "miou": null,
+        "records": 0
+      },
+      "uses_field": true,
+      "wall_seconds": null
+    },
+    "R1": {
+      "axis_violation_rate": 0.0,
+      "border_target": {
+        "miou": 0.41185668634454997,
+        "records": 240
+      },
+      "decoder": "B3",
+      "dice": 0.536478027245096,
+      "empty_predictions": 11,
+      "label": "R1 (B3 + GRCL (field-guided target decoder))",
+      "loss": "BCE + Dice + 0.5 * GRCL",
+      "mean_grcl": 0.04791660166035096,
+      "mean_positive_signed_margin": 0.23858340746645845,
+      "miou": 0.41185668634454997,
+      "parameters": 274625,
+      "peak_vram_gb": 0.65,
+      "per_reference_family_miou": {
+        "largest": 0.36939043882324946,
+        "smallest": 0.4543229338658505
+      },
+      "per_relation_miou": {
+        "above": 0.43069261335873504,
+        "below": 0.44406519834149094,
+        "left_of": 0.3741215837030866,
+        "right_of": 0.3985473499748873
+      },
+      "precision_at_0_5": 0.6269456794825208,
+      "relation_accuracy": 0.9541666666666667,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.2672781338294347,
+          "records": 60,
+          "relation_accuracy": 1.0
+        },
+        "below": {
+          "mean_signed_margin": 0.20810385741162718,
+          "records": 60,
+          "relation_accuracy": 0.95
+        },
+        "left_of": {
+          "mean_signed_margin": 0.2414623347909323,
+          "records": 60,
+          "relation_accuracy": 0.9333333333333333
+        },
+        "right_of": {
+          "mean_signed_margin": 0.23598395820174897,
+          "records": 60,
+          "relation_accuracy": 0.9333333333333333
+        }
+      },
+      "selected_epoch": 3,
+      "tiny_target": {
+        "miou": null,
+        "records": 0
+      },
+      "uses_field": true,
+      "wall_seconds": 57.3
+    },
+    "R2": {
+      "axis_violation_rate": 0.43103448275862066,
+      "border_target": {
+        "miou": 0.23378733854077313,
+        "records": 240
+      },
+      "decoder": "B0",
+      "dice": 0.3298876317028812,
+      "empty_predictions": 8,
+      "label": "R2 (no-field + GRCL (B0 control))",
+      "loss": "BCE + Dice + 0.5 * GRCL",
+      "mean_grcl": 0.09843892799690365,
+      "mean_positive_signed_margin": 0.17907683734364552,
+      "miou": 0.23378733854077313,
+      "parameters": 273473,
+      "peak_vram_gb": 0.65,
+      "per_reference_family_miou": {
+        "largest": 0.20224359604304726,
+        "smallest": 0.265331081038499
+      },
+      "per_relation_miou": {
+        "above": 0.23721789553513328,
+        "below": 0.2566609196725108,
+        "left_of": 0.21672162031607226,
+        "right_of": 0.22454891863937623
+      },
+      "precision_at_0_5": 0.4170365687175776,
+      "relation_accuracy": 0.5416666666666666,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.22900474861521145,
+          "records": 60,
+          "relation_accuracy": 0.6166666666666667
+        },
+        "below": {
+          "mean_signed_margin": 0.1206959186742703,
+          "records": 60,
+          "relation_accuracy": 0.4666666666666667
+        },
+        "left_of": {
+          "mean_signed_margin": 0.17953323353348033,
+          "records": 60,
+          "relation_accuracy": 0.5333333333333333
+        },
+        "right_of": {
+          "mean_signed_margin": 0.18910232147779957,
+          "records": 60,
+          "relation_accuracy": 0.55
+        }
+      },
+      "selected_epoch": 9,
+      "tiny_target": {
+        "miou": null,
+        "records": 0
+      },
+      "uses_field": false,
+      "wall_seconds": 51.7
+    }
+  }
+}

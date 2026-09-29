@@ -1,0 +1,87 @@
+{
+  "_doc": "Task 6R section 19. Diagnostic transfer of the trained R1 decoder onto the frozen Task 6Q proposal reference resolver (exact frozen proposal configuration): resolve reference -> field v0.2 -> R1 target decoder, abstaining exactly when the resolver abstains. No training and no gate tuning; this diagnostic never selects lambda.",
+  "comparison_task6q_b3_chain": {
+    "delta_miou": -0.02079926714703878,
+    "delta_own_cross_margin": -0.1941391938780971,
+    "delta_paired": -8,
+    "miou": 0.3045812554881724,
+    "own_cross_margin": 0.27370032940000916,
+    "paired": 10
+  },
+  "diagnostic_only": true,
+  "lambda_tuning": false,
+  "paired": {
+    "mean_cross_iou": 0.007038108538100936,
+    "mean_own_iou": 0.08659924406001299,
+    "own_cross_margin": 0.07956113552191205,
+    "pairs": 20,
+    "pairs_with_reference_abstention": 12,
+    "pass_rate": 0.1,
+    "passed": 2,
+    "same_resolved_reference_reused_for_pairs": true
+  },
+  "proposal_checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+  "proposal_config": {
+    "checkpoint": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "conf": 0.1,
+    "family": "YOLO26m-seg",
+    "imgsz": 640,
+    "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+    "max_det": 100,
+    "merge_bbox_extent_ratio_max": 0.2,
+    "nms": "default",
+    "threshold_sweep": false,
+    "tiling": false,
+    "tiny_component_area_px": 150,
+    "tta": false
+  },
+  "r1_checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6r\\checkpoints\\mini_R1.pt",
+    "retrained_here": false,
+    "sha256": "4ad7dc1f28bafbaa581e0a6285b28da3aaac1aba6a14a5ecbd6ab8bbb1179c42"
+  },
+  "reference_source": "frozen_task6q_proposal_resolver",
+  "resolver_cache": {
+    "entries": 414,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6q\\resolved_references.npz",
+    "sha256": "6165abe046b842a28827a10373f76810cdb072371818228ec02996cdf9d61799"
+  },
+  "runtime_seconds": 10.2,
+  "stage": "I-proposal-reference-transfer",
+  "target": {
+    "abstention_rate": 0.025,
+    "abstentions": 6,
+    "answered": 234,
+    "axis_violation_rate": 0.01507537688442211,
+    "dice": 0.37308887700581644,
+    "miou": 0.2837819883411336,
+    "per_relation_relation_accuracy": {
+      "above": {
+        "mean_signed_margin": 0.288285538339271,
+        "records": 60,
+        "relation_accuracy": 0.85
+      },
+      "below": {
+        "mean_signed_margin": 0.23872007588122754,
+        "records": 59,
+        "relation_accuracy": 0.7966101694915254
+      },
+      "left_of": {
+        "mean_signed_margin": 0.2521572079585523,
+        "records": 59,
+        "relation_accuracy": 0.8135593220338984
+      },
+      "right_of": {
+        "mean_signed_margin": 0.24848391407845066,
+        "records": 56,
+        "relation_accuracy": 0.8571428571428571
+      }
+    },
+    "records": 240,
+    "relation_accuracy": 0.8290598290598291
+  },
+  "task": "6R",
+  "test_split_used": false,
+  "training_performed": false
+}

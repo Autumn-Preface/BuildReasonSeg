@@ -1,0 +1,429 @@
+{
+  "_doc": "Task 6R Part F. Stage R1: R1 (B3 + GRCL) and R2 (no-field + GRCL) trained separately on the byte-identical frozen Task 6N Overfit20 with the fixed optimiser/step budget. The gate applies to R1 only; R2 has no gate. Oracle reference: input to R1's field, and used by GRCL/evaluation only for R2.",
+  "config": {
+    "alpha": 1.2,
+    "amp": "bfloat16 autocast (same policy as 6N/6O)",
+    "augmentation": "none",
+    "batch_size": 4,
+    "evaluate_every_steps": 100,
+    "gate": {
+      "applies_to": "R1",
+      "dice_min": 0.9,
+      "miou_min": 0.85,
+      "relation_accuracy_min": 0.95
+    },
+    "lambda_grcl": 0.5,
+    "loss": "BCE + Dice + 0.5 * GRCL",
+    "lr": 0.001,
+    "max_steps": 1200,
+    "optimizer": "AdamW",
+    "scheduler": "none",
+    "seed": 20260929,
+    "stage": "overfit20",
+    "tau": 0.04,
+    "variants": [
+      "R1",
+      "R2"
+    ],
+    "weight_decay": 0.0001
+  },
+  "gate": {
+    "applies_to": "R1",
+    "dice_min": 0.9,
+    "miou_min": 0.85,
+    "passed": true,
+    "r1_dice": 0.9335654608139683,
+    "r1_miou": 0.9178429276598467,
+    "r1_relation_accuracy": 0.95,
+    "relation_accuracy_min": 0.95
+  },
+  "pack": {
+    "count": 20,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\overfit20.json",
+    "sha256": "e0d9f2ff27cef9ec5c4e4e39d7ee39d17f838cf5f556a904c8ecb32d15d50c0a"
+  },
+  "reference_source": "oracle_native_gt",
+  "runtime_seconds": 52.7,
+  "stage": "R1-overfit20",
+  "task": "6R",
+  "test_split_used": false,
+  "variants": {
+    "R1": {
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6r\\checkpoints\\overfit_R1.pt",
+        "sha256": "f1f326ce555ad7bf1a95cf95ea23574cc80a2308bab10e2afddc8404b83fdc22"
+      },
+      "decoder": "B3",
+      "description": "B3 + GRCL (field-guided target decoder)",
+      "final": {
+        "axis_violation_rate": 0.0,
+        "dice": 0.9335654608139683,
+        "mean_grcl": 0.0,
+        "mean_positive_signed_margin": 0.19115516543388367,
+        "miou": 0.9178429276598467,
+        "precision_at_0_5": 0.9906890391008163,
+        "records": 20,
+        "relation_accuracy": 0.95
+      },
+      "history": [
+        {
+          "bce": 0.00611446937546134,
+          "dice": 0.7368902313841493,
+          "dice_loss": 0.5009283423423767,
+          "grcl": 0.0,
+          "loss": 0.5070428252220154,
+          "miou": 0.6226606291386438,
+          "relation_accuracy": 0.95,
+          "step": 100
+        },
+        {
+          "bce": 0.00340778985992074,
+          "dice": 0.8348655158939128,
+          "dice_loss": 0.20468926429748535,
+          "grcl": 0.0,
+          "loss": 0.20809705555438995,
+          "miou": 0.74797846000073,
+          "relation_accuracy": 0.95,
+          "step": 200
+        },
+        {
+          "bce": 0.0032770433463156223,
+          "dice": 0.8847572989492789,
+          "dice_loss": 0.09269630908966064,
+          "grcl": 0.0009101219475269318,
+          "loss": 0.09642840921878815,
+          "miou": 0.8291273256815603,
+          "relation_accuracy": 0.9,
+          "step": 300
+        },
+        {
+          "bce": 0.0011999852722510695,
+          "dice": 0.9185923606089744,
+          "dice_loss": 0.054150938987731934,
+          "grcl": 0.0003464631736278534,
+          "loss": 0.055524155497550964,
+          "miou": 0.8894479335576427,
+          "relation_accuracy": 0.95,
+          "step": 400
+        },
+        {
+          "bce": 0.0012008119374513626,
+          "dice": 0.9186399120620834,
+          "dice_loss": 0.04151809215545654,
+          "grcl": 0.0,
+          "loss": 0.042718902230262756,
+          "miou": 0.8896863848325495,
+          "relation_accuracy": 0.95,
+          "step": 500
+        },
+        {
+          "bce": 0.0008456442155875266,
+          "dice": 0.9215803224184936,
+          "dice_loss": 0.028330445289611816,
+          "grcl": 0.0,
+          "loss": 0.02917608991265297,
+          "miou": 0.8953869540312265,
+          "relation_accuracy": 0.95,
+          "step": 600
+        },
+        {
+          "bce": 0.0008440292440354824,
+          "dice": 0.9211454308121725,
+          "dice_loss": 0.024371862411499023,
+          "grcl": 0.0,
+          "loss": 0.025215892121195793,
+          "miou": 0.8943267823693123,
+          "relation_accuracy": 0.95,
+          "step": 700
+        },
+        {
+          "bce": 0.0010985282715409994,
+          "dice": 0.9251221746746368,
+          "dice_loss": 0.030879497528076172,
+          "grcl": 0.0,
+          "loss": 0.031978026032447815,
+          "miou": 0.9018957246890068,
+          "relation_accuracy": 0.95,
+          "step": 800
+        },
+        {
+          "bce": 0.0007019334007054567,
+          "dice": 0.9218842153043967,
+          "dice_loss": 0.26511532068252563,
+          "grcl": 0.0,
+          "loss": 0.265817254781723,
+          "miou": 0.8957242840908846,
+          "relation_accuracy": 1.0,
+          "step": 900
+        },
+        {
+          "bce": 0.0005737387109547853,
+          "dice": 0.9328778915414697,
+          "dice_loss": 0.024885714054107666,
+          "grcl": 0.0,
+          "loss": 0.025459453463554382,
+          "miou": 0.9165509053530503,
+          "relation_accuracy": 0.95,
+          "step": 1000
+        },
+        {
+          "bce": 0.0007515999604947865,
+          "dice": 0.9252267120347751,
+          "dice_loss": 0.02989596128463745,
+          "grcl": 0.0,
+          "loss": 0.030647560954093933,
+          "miou": 0.9019071141969055,
+          "relation_accuracy": 0.95,
+          "step": 1100
+        },
+        {
+          "bce": 0.0005827764980494976,
+          "dice": 0.9335654608139683,
+          "dice_loss": 0.27554190158843994,
+          "grcl": 0.0,
+          "loss": 0.2761246860027313,
+          "miou": 0.9178429276598467,
+          "relation_accuracy": 0.95,
+          "step": 1200
+        }
+      ],
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0,
+        "mean_own_iou": 0.8476074507464715,
+        "own_cross_margin": 0.8476074507464715,
+        "pairs": 4,
+        "passed": 3
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 241409
+        },
+        "first_conv_in_channels": 145,
+        "label": "N-B3",
+        "total_parameters": 274625,
+        "trainable_parameters": 274625,
+        "uses_reference_mask": false,
+        "uses_relation_field": true,
+        "uses_visual": true,
+        "variant": "B3"
+      },
+      "peak_vram_gb": 0.548,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.17028372238079706,
+          "records": 4,
+          "relation_accuracy": 0.75
+        },
+        "below": {
+          "mean_signed_margin": 0.19174531421491078,
+          "records": 7,
+          "relation_accuracy": 1.0
+        },
+        "left_of": {
+          "mean_signed_margin": 0.20934678316116334,
+          "records": 5,
+          "relation_accuracy": 1.0
+        },
+        "right_of": {
+          "mean_signed_margin": 0.1830364651978016,
+          "records": 4,
+          "relation_accuracy": 1.0
+        }
+      },
+      "uses_field": true,
+      "wall_seconds": 32.9
+    },
+    "R2": {
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6r\\checkpoints\\overfit_R2.pt",
+        "sha256": "a9b9ff4bad35385b80ff27983446b271f4ad02e3a4ee11770d97eea2769b0178"
+      },
+      "decoder": "B0",
+      "description": "no-field + GRCL (B0 control)",
+      "final": {
+        "axis_violation_rate": 0.0,
+        "dice": 0.9573786951490844,
+        "mean_grcl": 0.0,
+        "mean_positive_signed_margin": 0.21814601495862007,
+        "miou": 0.9327923184073421,
+        "precision_at_0_5": 0.9571964056940189,
+        "records": 20,
+        "relation_accuracy": 1.0
+      },
+      "history": [
+        {
+          "bce": 0.021280162036418915,
+          "dice": 0.58519925512722,
+          "dice_loss": 0.6414134502410889,
+          "grcl": 0.031871646642684937,
+          "loss": 0.678629457950592,
+          "miou": 0.4539668876906594,
+          "relation_accuracy": 0.65,
+          "step": 100
+        },
+        {
+          "bce": 0.024213101714849472,
+          "dice": 0.6932153588283663,
+          "dice_loss": 0.38418179750442505,
+          "grcl": 0.24291697144508362,
+          "loss": 0.5298534035682678,
+          "miou": 0.5920160312865176,
+          "relation_accuracy": 0.7,
+          "step": 200
+        },
+        {
+          "bce": 0.01134781539440155,
+          "dice": 0.7549758680348899,
+          "dice_loss": 0.21969568729400635,
+          "grcl": 0.02593182772397995,
+          "loss": 0.24400942027568817,
+          "miou": 0.6569139683809813,
+          "relation_accuracy": 0.8,
+          "step": 300
+        },
+        {
+          "bce": 0.00118226557970047,
+          "dice": 0.9131001560533013,
+          "dice_loss": 0.062083661556243896,
+          "grcl": 0.0012376755475997925,
+          "loss": 0.06388476490974426,
+          "miou": 0.8791946354294904,
+          "relation_accuracy": 0.95,
+          "step": 400
+        },
+        {
+          "bce": 0.0008922241977415979,
+          "dice": 0.9208914524447538,
+          "dice_loss": 0.03763073682785034,
+          "grcl": 0.0,
+          "loss": 0.03852296248078346,
+          "miou": 0.8939503432501239,
+          "relation_accuracy": 0.95,
+          "step": 500
+        },
+        {
+          "bce": 0.0011129151098430157,
+          "dice": 0.9237930357749942,
+          "dice_loss": 0.0371781587600708,
+          "grcl": 0.0,
+          "loss": 0.038291074335575104,
+          "miou": 0.8992229330703104,
+          "relation_accuracy": 0.95,
+          "step": 600
+        },
+        {
+          "bce": 0.0009754619677551091,
+          "dice": 0.9541372192137911,
+          "dice_loss": 0.02533745765686035,
+          "grcl": 0.0,
+          "loss": 0.026312919333577156,
+          "miou": 0.9270621803057646,
+          "relation_accuracy": 1.0,
+          "step": 700
+        },
+        {
+          "bce": 0.000691140303388238,
+          "dice": 0.9505560057369473,
+          "dice_loss": 0.024375557899475098,
+          "grcl": 0.0,
+          "loss": 0.025066697970032692,
+          "miou": 0.9230707795571942,
+          "relation_accuracy": 1.0,
+          "step": 800
+        },
+        {
+          "bce": 0.0005399205256253481,
+          "dice": 0.9549321824810185,
+          "dice_loss": 0.14572769403457642,
+          "grcl": 0.0,
+          "loss": 0.1462676078081131,
+          "miou": 0.9263634884128547,
+          "relation_accuracy": 1.0,
+          "step": 900
+        },
+        {
+          "bce": 0.0005474493373185396,
+          "dice": 0.9452409540271656,
+          "dice_loss": 0.025751113891601562,
+          "grcl": 0.0,
+          "loss": 0.026298563927412033,
+          "miou": 0.919436711494899,
+          "relation_accuracy": 1.0,
+          "step": 1000
+        },
+        {
+          "bce": 0.000466560828499496,
+          "dice": 0.9579601249128036,
+          "dice_loss": 0.021387159824371338,
+          "grcl": 0.0,
+          "loss": 0.021853720769286156,
+          "miou": 0.9358173600738005,
+          "relation_accuracy": 1.0,
+          "step": 1100
+        },
+        {
+          "bce": 0.0006288380827754736,
+          "dice": 0.9573786951490844,
+          "dice_loss": 0.15497612953186035,
+          "grcl": 0.0,
+          "loss": 0.15560497343540192,
+          "miou": 0.9327923184073421,
+          "relation_accuracy": 1.0,
+          "step": 1200
+        }
+      ],
+      "paired_own_cross": {
+        "available": true,
+        "mean_cross_iou": 0.0009146341463414635,
+        "mean_own_iou": 0.8807307749991702,
+        "own_cross_margin": 0.8798161408528288,
+        "pairs": 4,
+        "passed": 4
+      },
+      "parameters": {
+        "by_module": {
+          "project": 33152,
+          "relation_embedding": 64,
+          "trunk": 240257
+        },
+        "first_conv_in_channels": 144,
+        "label": "N-B0",
+        "total_parameters": 273473,
+        "trainable_parameters": 273473,
+        "uses_reference_mask": false,
+        "uses_relation_field": false,
+        "uses_visual": true,
+        "variant": "B0"
+      },
+      "peak_vram_gb": 0.548,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.3152503501623869,
+          "records": 4,
+          "relation_accuracy": 1.0
+        },
+        "below": {
+          "mean_signed_margin": 0.19157984746353968,
+          "records": 7,
+          "relation_accuracy": 1.0
+        },
+        "left_of": {
+          "mean_signed_margin": 0.20927366912364959,
+          "records": 5,
+          "relation_accuracy": 1.0
+        },
+        "right_of": {
+          "mean_signed_margin": 0.17862290516495705,
+          "records": 4,
+          "relation_accuracy": 1.0
+        }
+      },
+      "uses_field": false,
+      "wall_seconds": 17.7
+    }
+  },
+  "verdict": "R1_OVERFIT_PASS"
+}

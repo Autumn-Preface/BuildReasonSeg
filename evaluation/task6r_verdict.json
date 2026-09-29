@@ -1,0 +1,374 @@
+{
+  "_doc": "Task 6R sections 20-22. Predeclared GRCL feasibility criteria, the strong-signal flag and the single verdict. DSH reports measurements only and does not change lambda or design another loss. Oracle reference for training/evaluation; GT target is a label/score only; test split never used.",
+  "all_criteria_passed": false,
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "GRCL_IMPLEMENTATION_INVALID",
+    "GRCL_OVERFIT_FAIL",
+    "GRCL_MASK_RELATION_TRADEOFF",
+    "GRCL_NO_MEANINGFUL_RELATION_GAIN",
+    "GRCL_FIELD_REDUNDANCY_RISK",
+    "GRCL_DIRECTIONAL_FEASIBLE"
+  ],
+  "b3_baseline": {
+    "mini_val_240": {
+      "axis_violation_rate": 0.012987012987012988,
+      "dice": 0.5401551056992948,
+      "empty_predictions": 9,
+      "mean_grcl": 0.018723862059414387,
+      "mean_positive_signed_margin": 0.23054375051161943,
+      "miou": 0.4299680351479113,
+      "precision_at_0_5": 0.6924500163042,
+      "records": 240,
+      "relation_accuracy": 0.95,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.22861301507485116,
+          "records": 60,
+          "relation_accuracy": 0.9833333333333333
+        },
+        "below": {
+          "mean_signed_margin": 0.22248129723435742,
+          "records": 60,
+          "relation_accuracy": 0.9666666666666667
+        },
+        "left_of": {
+          "mean_signed_margin": 0.2469368667194718,
+          "records": 60,
+          "relation_accuracy": 0.9333333333333333
+        },
+        "right_of": {
+          "mean_signed_margin": 0.22438643819519452,
+          "records": 60,
+          "relation_accuracy": 0.9166666666666666
+        }
+      }
+    },
+    "paired_val_20": {
+      "axis_violation_rate": 0.0,
+      "empty_predictions": 2,
+      "mean_positive_signed_margin": 0.2649019809537812,
+      "member_predictions": 40,
+      "per_relation": {
+        "above": {
+          "mean_signed_margin": 0.34790874769290286,
+          "records": 10,
+          "relation_accuracy": 0.9
+        },
+        "below": {
+          "mean_signed_margin": 0.1658467948436737,
+          "records": 10,
+          "relation_accuracy": 0.9
+        },
+        "left_of": {
+          "mean_signed_margin": 0.2677799268410756,
+          "records": 13,
+          "relation_accuracy": 1.0
+        },
+        "right_of": {
+          "mean_signed_margin": 0.2801909063543592,
+          "records": 7,
+          "relation_accuracy": 1.0
+        }
+      },
+      "relation_accuracy": 0.95
+    },
+    "reproduction": {
+      "comparisons": {
+        "dice": {
+          "abs_delta": 0.0,
+          "reproduced": 0.5401551056992948,
+          "stored_task6o": 0.5401551056992948,
+          "within_tolerance": true
+        },
+        "miou": {
+          "abs_delta": 0.0,
+          "reproduced": 0.4299680351479113,
+          "stored_task6o": 0.4299680351479113,
+          "within_tolerance": true
+        }
+      },
+      "reproduced": true,
+      "verdict": "B3_REPRODUCED"
+    }
+  },
+  "criteria": {
+    "1_r1_overfit_gate": {
+      "measured": true,
+      "passed": true
+    },
+    "2_mask_retention": {
+      "numerical_threshold": 0.4099680351479113,
+      "passed": true,
+      "r0_miou": 0.4299680351479113,
+      "r1_miou": 0.41185668634454997,
+      "requirement": "R1 mIoU >= R0 mIoU - 0.02"
+    },
+    "3_relation_gain": {
+      "gain": 0.004166666666666763,
+      "passed": false,
+      "r0_relation_accuracy": 0.95,
+      "r1_relation_accuracy": 0.9541666666666667,
+      "requirement": "R1 relation_accuracy >= R0 relation_accuracy + 0.08"
+    },
+    "4_paired_discrimination": {
+      "measured": 12,
+      "passed": false,
+      "requirement": "R1 PairedVal >= 16/20"
+    },
+    "5_own_cross_margin": {
+      "measured": 0.36406032975391556,
+      "passed": false,
+      "requirement": "R1 own-cross margin >= 0.38"
+    },
+    "6_field_remains_useful": {
+      "delta": 0.17806934780377684,
+      "passed": true,
+      "r1_miou": 0.41185668634454997,
+      "r2_miou": 0.23378733854077313,
+      "requirement": "R1 mIoU - R2 mIoU >= 0.10"
+    }
+  },
+  "criteria_constants": {
+    "field_usefulness_min": 0.1,
+    "mask_retention_numerical_threshold": 0.4099680351479113,
+    "own_cross_margin_min": 0.38,
+    "paired_pass_min": 16,
+    "relation_gain_min": 0.08,
+    "strong_mask_gain_min": 0.02
+  },
+  "grcl_audit": {
+    "constants": {
+      "alpha": 1.2,
+      "eps": 1e-06,
+      "lambda_grcl": 0.5,
+      "tau": 0.04
+    },
+    "directional_sanity_passed": true,
+    "gradient_l1_min": 0.026917068287730217,
+    "verdict": "GRCL_VALID"
+  },
+  "no_loss_or_gate_change_by_dsh": true,
+  "overfit20": {
+    "gate": {
+      "applies_to": "R1",
+      "dice_min": 0.9,
+      "miou_min": 0.85,
+      "passed": true,
+      "r1_dice": 0.9335654608139683,
+      "r1_miou": 0.9178429276598467,
+      "r1_relation_accuracy": 0.95,
+      "relation_accuracy_min": 0.95
+    },
+    "r1_final": {
+      "axis_violation_rate": 0.0,
+      "dice": 0.9335654608139683,
+      "mean_grcl": 0.0,
+      "mean_positive_signed_margin": 0.19115516543388367,
+      "miou": 0.9178429276598467,
+      "precision_at_0_5": 0.9906890391008163,
+      "records": 20,
+      "relation_accuracy": 0.95
+    },
+    "r2_final": {
+      "axis_violation_rate": 0.0,
+      "dice": 0.9573786951490844,
+      "mean_grcl": 0.0,
+      "mean_positive_signed_margin": 0.21814601495862007,
+      "miou": 0.9327923184073421,
+      "precision_at_0_5": 0.9571964056940189,
+      "records": 20,
+      "relation_accuracy": 1.0
+    }
+  },
+  "proposal_reference_transfer": {
+    "comparison_task6q_b3_chain": {
+      "delta_miou": -0.02079926714703878,
+      "delta_own_cross_margin": -0.1941391938780971,
+      "delta_paired": -8,
+      "miou": 0.3045812554881724,
+      "own_cross_margin": 0.27370032940000916,
+      "paired": 10
+    },
+    "diagnostic_only": true,
+    "lambda_tuning": false,
+    "paired": {
+      "mean_cross_iou": 0.007038108538100936,
+      "mean_own_iou": 0.08659924406001299,
+      "own_cross_margin": 0.07956113552191205,
+      "pairs": 20,
+      "pairs_with_reference_abstention": 12,
+      "pass_rate": 0.1,
+      "passed": 2,
+      "same_resolved_reference_reused_for_pairs": true
+    },
+    "target": {
+      "abstention_rate": 0.025,
+      "abstentions": 6,
+      "answered": 234,
+      "axis_violation_rate": 0.01507537688442211,
+      "dice": 0.37308887700581644,
+      "miou": 0.2837819883411336,
+      "per_relation_relation_accuracy": {
+        "above": {
+          "mean_signed_margin": 0.288285538339271,
+          "records": 60,
+          "relation_accuracy": 0.85
+        },
+        "below": {
+          "mean_signed_margin": 0.23872007588122754,
+          "records": 59,
+          "relation_accuracy": 0.7966101694915254
+        },
+        "left_of": {
+          "mean_signed_margin": 0.2521572079585523,
+          "records": 59,
+          "relation_accuracy": 0.8135593220338984
+        },
+        "right_of": {
+          "mean_signed_margin": 0.24848391407845066,
+          "records": 56,
+          "relation_accuracy": 0.8571428571428571
+        }
+      },
+      "records": 240,
+      "relation_accuracy": 0.8290598290598291
+    },
+    "training_performed": false
+  },
+  "protocol": {
+    "b3_retrained": false,
+    "changed_paths": "",
+    "clean": true,
+    "frozen_artifacts_unchanged": true,
+    "target_as_input": false,
+    "test_split_used": false
+  },
+  "reason": "mask retention passes but the relation-accuracy gain is below 0.08 or PairedVal is below 16/20 (gain +0.0042, paired 12/20)",
+  "runtime_seconds": 0.05,
+  "strong_mask_gain": false,
+  "task": "6R",
+  "test_split_used": false,
+  "training": {
+    "config": {
+      "alpha": 1.2,
+      "amp": "bfloat16 autocast (same policy as 6N/6O)",
+      "augmentation": "none",
+      "batch_size": 8,
+      "early_stopping_monitor": "mini_val_240_miou",
+      "early_stopping_patience": 5,
+      "fresh_initialisation": true,
+      "lambda_grcl": 0.5,
+      "loss": "BCE + Dice + 0.5 * GRCL",
+      "lr": 0.0003,
+      "max_epochs": 25,
+      "model_selection": "highest MiniVal240 mIoU",
+      "optimizer": "AdamW",
+      "scheduler": "none",
+      "seed": 20260929,
+      "stage": "mini",
+      "tau": 0.04,
+      "train_pack": "mini_train_1000",
+      "val_pack": "mini_val_240",
+      "variants": [
+        "R1",
+        "R2"
+      ],
+      "weight_decay": 0.0001
+    },
+    "variant": {
+      "R1": {
+        "best_epoch": 3,
+        "epochs_run": 8
+      },
+      "R2": {
+        "best_epoch": 9,
+        "epochs_run": 14
+      }
+    }
+  },
+  "variants": {
+    "R0": {
+      "miou": 0.4299680351479113,
+      "own_cross_margin": 0.39719566349802166,
+      "paired": 14,
+      "relation_accuracy": 0.95,
+      "role": "frozen Task 6O B3 (BCE + Dice only)"
+    },
+    "R1": {
+      "axis_violation_rate": 0.0,
+      "dice": 0.536478027245096,
+      "mean_grcl": 0.04791660166035096,
+      "mean_positive_signed_margin": 0.23858340746645845,
+      "miou": 0.41185668634454997,
+      "own_cross_margin": 0.36406032975391556,
+      "paired": 12,
+      "parameters": 274625,
+      "peak_vram_gb": 0.65,
+      "per_reference_family_miou": {
+        "largest": 0.36939043882324946,
+        "smallest": 0.4543229338658505
+      },
+      "per_relation_miou": {
+        "above": 0.43069261335873504,
+        "below": 0.44406519834149094,
+        "left_of": 0.3741215837030866,
+        "right_of": 0.3985473499748873
+      },
+      "precision_at_0_5": 0.6269456794825208,
+      "relation_accuracy": 0.9541666666666667,
+      "relation_per_direction": {
+        "above": {
+          "mean_signed_margin": 0.2672781338294347,
+          "records": 60,
+          "relation_accuracy": 1.0
+        },
+        "below": {
+          "mean_signed_margin": 0.20810385741162718,
+          "records": 60,
+          "relation_accuracy": 0.95
+        },
+        "left_of": {
+          "mean_signed_margin": 0.2414623347909323,
+          "records": 60,
+          "relation_accuracy": 0.9333333333333333
+        },
+        "right_of": {
+          "mean_signed_margin": 0.23598395820174897,
+          "records": 60,
+          "relation_accuracy": 0.9333333333333333
+        }
+      },
+      "role": "B3 + GRCL",
+      "selected_epoch": 3,
+      "wall_seconds": 57.3
+    },
+    "R2": {
+      "axis_violation_rate": 0.43103448275862066,
+      "dice": 0.3298876317028812,
+      "mean_grcl": 0.09843892799690365,
+      "mean_positive_signed_margin": 0.17907683734364552,
+      "miou": 0.23378733854077313,
+      "own_cross_margin": 0.1181465887927266,
+      "paired": 10,
+      "parameters": 273473,
+      "peak_vram_gb": 0.65,
+      "per_reference_family_miou": {
+        "largest": 0.20224359604304726,
+        "smallest": 0.265331081038499
+      },
+      "per_relation_miou": {
+        "above": 0.23721789553513328,
+        "below": 0.2566609196725108,
+        "left_of": 0.21672162031607226,
+        "right_of": 0.22454891863937623
+      },
+      "precision_at_0_5": 0.4170365687175776,
+      "relation_accuracy": 0.5416666666666666,
+      "role": "no-field + GRCL (B0 control)",
+      "selected_epoch": 9,
+      "wall_seconds": 51.7
+    }
+  },
+  "verdict": "GRCL_NO_MEANINGFUL_RELATION_GAIN"
+}
