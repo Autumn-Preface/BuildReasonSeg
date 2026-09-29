@@ -1,0 +1,984 @@
+{
+  "_doc": "Task 6T section 6.3. Frozen held-out stress pack, created BEFORE training; never extended after observing model failures. Every canonical class is represented by 4 Chinese and 4 English prompts using held-out template/lexical forms, including a minority of held-out synonyms (占地面积最大/占地面积最小/楼房区域; most extensive/least extensive/structure).",
+  "task": "6T",
+  "stage": "frozen-stress-v1",
+  "frozen_before_training": true,
+  "generator": "scripts/task6t_build_parser_data.py::build_stress",
+  "prompt_count": 160,
+  "languages": {
+    "zh": 80,
+    "en": 80
+  },
+  "programs_covered": 20,
+  "minimum_per_class": 8,
+  "minimum_per_class_per_language": 4,
+  "all_classes_represented": true,
+  "validation": {
+    "prompts": 160,
+    "unique_prompts": 160,
+    "ambiguous_prompts": 0,
+    "direction_prompts_without_direction": 0
+  },
+  "prompts": [
+    {
+      "prompt": "请圈出最左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "leftmost",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注最左边的建筑区域。",
+      "language": "zh",
+      "expected_program": "leftmost",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出最左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "leftmost",
+      "length": "short"
+    },
+    {
+      "prompt": "标注最左边的楼房区域。",
+      "language": "zh",
+      "expected_program": "leftmost",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the furthest left building region.",
+      "language": "en",
+      "expected_program": "leftmost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the furthest left building region.",
+      "language": "en",
+      "expected_program": "leftmost",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the furthest left building region.",
+      "language": "en",
+      "expected_program": "leftmost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the furthest left structure.",
+      "language": "en",
+      "expected_program": "leftmost",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出最右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "rightmost",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注最右边的建筑区域。",
+      "language": "zh",
+      "expected_program": "rightmost",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出最右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "rightmost",
+      "length": "short"
+    },
+    {
+      "prompt": "标注最右边的楼房区域。",
+      "language": "zh",
+      "expected_program": "rightmost",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the furthest right building region.",
+      "language": "en",
+      "expected_program": "rightmost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the furthest right building region.",
+      "language": "en",
+      "expected_program": "rightmost",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the furthest right building region.",
+      "language": "en",
+      "expected_program": "rightmost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the furthest right structure.",
+      "language": "en",
+      "expected_program": "rightmost",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出最上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "topmost",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注最上面的建筑区域。",
+      "language": "zh",
+      "expected_program": "topmost",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出最上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "topmost",
+      "length": "short"
+    },
+    {
+      "prompt": "标注最上面的楼房区域。",
+      "language": "zh",
+      "expected_program": "topmost",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the highest building region.",
+      "language": "en",
+      "expected_program": "topmost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the highest building region.",
+      "language": "en",
+      "expected_program": "topmost",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the highest building region.",
+      "language": "en",
+      "expected_program": "topmost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the highest structure.",
+      "language": "en",
+      "expected_program": "topmost",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出最下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "bottommost",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注最下面的建筑区域。",
+      "language": "zh",
+      "expected_program": "bottommost",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出最下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "bottommost",
+      "length": "short"
+    },
+    {
+      "prompt": "标注最下面的楼房区域。",
+      "language": "zh",
+      "expected_program": "bottommost",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the lowest building region.",
+      "language": "en",
+      "expected_program": "bottommost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the lowest building region.",
+      "language": "en",
+      "expected_program": "bottommost",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the lowest building region.",
+      "language": "en",
+      "expected_program": "bottommost",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the lowest structure.",
+      "language": "en",
+      "expected_program": "bottommost",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "length": "short"
+    },
+    {
+      "prompt": "标注面积最大的的楼房区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the largest structure.",
+      "language": "en",
+      "expected_program": "largest",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "length": "short"
+    },
+    {
+      "prompt": "标注面积最小的的楼房区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the smallest structure.",
+      "language": "en",
+      "expected_program": "smallest",
+      "length": "long"
+    },
+    {
+      "prompt": "以面积最大的的建筑区域为参照，请圈出最近的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "以面积最大的的建筑区域为参照，请标注距离最近的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "以面积最大的的建筑区域为参照，请勾勒出最靠近的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "以面积最大的的楼房区域为参照，标注边界距离最小的另一楼房区域。",
+      "language": "zh",
+      "expected_program": "largest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "Using the largest building region as reference, please delineate the other building region nearest.",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "Using the largest building region as reference, please demarcate the other building region closest.",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "Using the largest building region as reference, delineate the other building region with the shortest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "Using the largest structure as reference, please delineate the other structure with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "以面积最小的的建筑区域为参照，请圈出最近的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "以面积最小的的建筑区域为参照，请标注距离最近的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "以面积最小的的建筑区域为参照，请勾勒出最靠近的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "以面积最小的的楼房区域为参照，标注边界距离最小的另一楼房区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "Using the smallest building region as reference, please delineate the other building region nearest.",
+      "language": "en",
+      "expected_program": "smallest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "Using the smallest building region as reference, please demarcate the other building region closest.",
+      "language": "en",
+      "expected_program": "smallest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "Using the smallest building region as reference, delineate the other building region with the shortest boundary distance.",
+      "language": "en",
+      "expected_program": "smallest_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "Using the smallest structure as reference, please delineate the other structure with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "smallest_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域上面的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最大的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最大的的楼房区域上面的楼房区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying above the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the upper side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated above the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies over the largest structure.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域下面的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最大的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最大的的楼房区域下面的楼房区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying below the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the lower side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated below the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies under the largest structure.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域左边的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最大的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最大的的楼房区域左边的楼房区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying to the left of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the left side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated to the left of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies left of the largest structure.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域右边的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最大的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最大的的楼房区域右边的楼房区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying to the right of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the right side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated to the right of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies right of the largest structure.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最小的的建筑区域上面的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最小的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最小的的楼房区域上面的楼房区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying above the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the upper side of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated above the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_above",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies over the smallest structure.",
+      "language": "en",
+      "expected_program": "smallest_to_above",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最小的的建筑区域下面的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最小的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最小的的楼房区域下面的楼房区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying below the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the lower side of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated below the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_below",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies under the smallest structure.",
+      "language": "en",
+      "expected_program": "smallest_to_below",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最小的的建筑区域左边的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最小的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最小的的楼房区域左边的楼房区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying to the left of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the left side of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated to the left of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_left_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies left of the smallest structure.",
+      "language": "en",
+      "expected_program": "smallest_to_left_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "请标注面积最小的的建筑区域右边的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "请勾勒出处于面积最小的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "标注坐落在面积最小的的楼房区域右边的楼房区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Please delineate the building region lying to the right of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please demarcate the building region on the right side of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "Delineate the building region situated to the right of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_right_of",
+      "length": "short"
+    },
+    {
+      "prompt": "Please delineate the structure that lies right of the smallest structure.",
+      "language": "en",
+      "expected_program": "smallest_to_right_of",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它上方的建筑区域中选出最近的一个并圈出。",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它上面的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它上方的建筑区域中选出最靠近的一个并勾勒出。",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的楼房区域，再从它上面的楼房区域中选出边界距离最小的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region above it select and delineate the one nearest.",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region over it select and demarcate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region above it select and delineate the one with the shortest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest structure, then from the structure over it select and delineate the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它下方的建筑区域中选出最近的一个并圈出。",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它下面的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它下方的建筑区域中选出最靠近的一个并勾勒出。",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的楼房区域，再从它下面的楼房区域中选出边界距离最小的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region below it select and delineate the one nearest.",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region under it select and demarcate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region below it select and delineate the one with the shortest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest structure, then from the structure under it select and delineate the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它左侧的建筑区域中选出最近的一个并圈出。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它左边的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它左侧的建筑区域中选出最靠近的一个并勾勒出。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的楼房区域，再从它左边的楼房区域中选出边界距离最小的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region to the left of it select and delineate the one nearest.",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region left of it select and demarcate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region to the left of it select and delineate the one with the shortest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest structure, then from the structure left of it select and delineate the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它右侧的建筑区域中选出最近的一个并圈出。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它右边的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它右侧的建筑区域中选出最靠近的一个并勾勒出。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "先确定面积最大的的楼房区域，再从它右边的楼房区域中选出边界距离最小的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region to the right of it select and delineate the one nearest.",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region right of it select and demarcate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "long"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region to the right of it select and delineate the one with the shortest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "short"
+    },
+    {
+      "prompt": "First locate the largest structure, then from the structure right of it select and delineate the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "length": "long"
+    }
+  ]
+}

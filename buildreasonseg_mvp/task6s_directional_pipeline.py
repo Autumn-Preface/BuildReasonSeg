@@ -71,6 +71,8 @@ DEFAULT_PROGRAM_HEAD_CANDIDATES = (
     Path("artifacts") / "checkpoints" / "task6m" / "program_parser_v02_best.pt",
     Path("artifacts") / "checkpoints" / "task6j" / "j2_best.pt",
 )
+#: Task 6T hardened ProgramHead (semantic hardening); preferred by the CLI when present.
+HARDENED_PROGRAM_HEAD = Path("artifacts") / "checkpoints" / "task6t" / "program_parser_hardened_v1.pt"
 
 
 def sha256_file(path: Path) -> str:
@@ -84,20 +86,48 @@ def sha256_file(path: Path) -> str:
 
 
 def resolve_program_head_checkpoint(explicit: Path | None = None) -> tuple[Path | None, list[dict]]:
-    """Prefer the checkpoint whose SHA256 matches the Task 6S expected frozen hash."""
+    """Resolve the frozen ProgramHead.
 
-    candidates = ([explicit] if explicit is not None else []) + [
-        REPO_ROOT / candidate for candidate in DEFAULT_PROGRAM_HEAD_CANDIDATES
-    ]
+    With an explicit path (added by Task 6T for the hardened checkpoint) that file is used as-is and its
+    hash is reported. Without an explicit path the Task 6S baseline preference is preserved unchanged: the
+    candidate whose SHA256 matches the Task 6S expected frozen hash.
+    """
+
+    if explicit is not None:
+        candidate = Path(explicit)
+        present = candidate.is_file()
+        digest = sha256_file(candidate) if present else None
+        report = [{"path": str(candidate), "present": present, "sha256": digest,
+                   "matches_expected": digest == PROGRAM_HEAD_CHECKPOINT_SHA256,
+                   "role": "explicit"}]
+        return (candidate if present else None), report
+
+    candidates = [REPO_ROOT / candidate for candidate in DEFAULT_PROGRAM_HEAD_CANDIDATES]
     report = []
     for candidate in candidates:
         present = candidate.is_file()
         digest = sha256_file(candidate) if present else None
         report.append({"path": str(candidate), "present": present, "sha256": digest,
-                       "matches_expected": digest == PROGRAM_HEAD_CHECKPOINT_SHA256})
+                       "matches_expected": digest == PROGRAM_HEAD_CHECKPOINT_SHA256,
+                       "role": "task6s_baseline_candidate"})
         if present and digest == PROGRAM_HEAD_CHECKPOINT_SHA256:
             return candidate, report
     return None, report
+
+
+def default_program_head_checkpoint() -> tuple[Path | None, list[dict]]:
+    """Task 6T section 9: the hardened ProgramHead when present, else the Task 6S baseline."""
+
+    hardened = REPO_ROOT / HARDENED_PROGRAM_HEAD
+    if hardened.is_file():
+        digest = sha256_file(hardened)
+        return hardened, [{
+            "path": str(hardened), "present": True, "sha256": digest,
+            "matches_expected": digest == PROGRAM_HEAD_CHECKPOINT_SHA256,
+            "role": "task6t_hardened_default",
+            "note": "Task 6T hardened ProgramHead used as the directional CLI default",
+        }]
+    return resolve_program_head_checkpoint()
 
 
 def decompose_program(program_id: str) -> tuple[str, str] | None:
@@ -307,6 +337,7 @@ __all__ = [
     "EXIT_UNSUPPORTED_DIRECTIONAL",
     "EXIT_UNSUPPORTED_INSTRUCTION",
     "FIELD_SIZE",
+    "HARDENED_PROGRAM_HEAD",
     "PROGRAM_DECOMPOSITION",
     "PROGRAM_HEAD_CHECKPOINT_SHA256",
     "STATUS_OK",
@@ -316,6 +347,7 @@ __all__ = [
     "SUPPORTED_PROGRAMS",
     "TARGET_SIZE",
     "decompose_program",
+    "default_program_head_checkpoint",
     "parse_instruction",
     "resolve_program_head_checkpoint",
     "run_directional_chain",

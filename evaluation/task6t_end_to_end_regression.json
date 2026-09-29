@@ -1,0 +1,66 @@
+{
+  "_doc": "Task 6T section 10. Directional end-to-end regression: only the ProgramHead changed, so MiniVal240 rerun through the frozen Task 6S chain must reproduce Task 6S. Tolerance: mIoU absolute delta <= 1e-6, paired count exact, abstention count exact. The frozen Task 6S artifacts are untouched; the chain output is written under artifacts/task6t/.",
+  "task": "6T",
+  "stage": "end-to-end-regression",
+  "parser_checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e"
+  },
+  "parser_exact_accuracy": 1.0,
+  "parsed_program_distribution": {
+    "largest_to_above": 30,
+    "largest_to_below": 30,
+    "largest_to_left_of": 30,
+    "largest_to_right_of": 30,
+    "smallest_to_above": 30,
+    "smallest_to_below": 30,
+    "smallest_to_left_of": 30,
+    "smallest_to_right_of": 30
+  },
+  "task6s_expected": {
+    "answered_records": 234,
+    "answered_only_miou": 0.3045812554881724,
+    "strict_all_240_miou": 0.2969667241009681,
+    "paired": 10,
+    "own_cross_margin": 0.27370032940000916,
+    "abstentions": 6,
+    "parser_exact_accuracy": 1.0,
+    "expected_parsed_programs": {
+      "分割面积最大的建筑物。": "largest",
+      "分割最左侧的建筑物。": "leftmost",
+      "分割面积最大的建筑物右侧最近的建筑物。": "largest_to_right_of_to_nearest",
+      "segment the building nearest to the right of the largest building": "largest_to_right_of_to_nearest"
+    }
+  },
+  "measured": {
+    "answered_records": 234,
+    "answered_only_miou": 0.3045812554881724,
+    "answered_only_dice": 0.38494490136334186,
+    "strict_all_240_miou": 0.2969667241009681,
+    "strict_all_240_dice": 0.3753212788292584,
+    "paired": 10,
+    "own_cross_margin": 0.27370032940000916,
+    "abstentions": 6,
+    "reference_abstention_pairs": 0
+  },
+  "deltas": {
+    "answered_only_miou": 0.0,
+    "strict_all_240_miou": 0.0,
+    "paired": 0,
+    "own_cross_margin": 0.0,
+    "answered_records": 0
+  },
+  "within_tolerance": {
+    "answered_only_miou": true,
+    "strict_all_240_miou": true,
+    "paired": true,
+    "own_cross_margin": true,
+    "abstentions": true
+  },
+  "tolerance": 1e-06,
+  "frozen_modules_unchanged": true,
+  "all_within_tolerance": true,
+  "verdict": "END_TO_END_REG_REPRODUCED",
+  "test_split_used": false,
+  "runtime_seconds": 0.1
+}

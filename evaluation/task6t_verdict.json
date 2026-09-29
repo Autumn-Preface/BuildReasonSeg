@@ -1,0 +1,199 @@
+{
+  "_doc": "Task 6T sections 12-13. Predeclared PASS gates and the single verdict. The Task 6T scope is limited to ProgramHead training data/checkpoint and parser-evaluation code; the REFERENCE bottleneck is explicitly out of scope and was not touched.",
+  "task": "6T",
+  "verdict": "PARSER_SEMANTIC_CONTRAST_FAIL",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "BASELINE_PARSER_UNAVAILABLE",
+    "PARSER_TRAINING_FAILED",
+    "PARSER_CANONICAL_REGRESSION",
+    "PARSER_SEMANTIC_CONTRAST_FAIL",
+    "END_TO_END_REGRESSION",
+    "PARSER_HARDENING_PASS"
+  ],
+  "reason": "semantic contrast / scope-safety gates failed: ['9_minimal_pairs', '12_stress_class_recall', '14_scope_exit_5']",
+  "protocol": {
+    "frozen_non_parser_unchanged": true,
+    "changed_paths": "",
+    "leakage_exact": 0,
+    "leakage_normalized": 0,
+    "test_split_used": false,
+    "keyword_or_regex_override_findings": [],
+    "vocabulary_size": 20,
+    "nearest_classes_present": true,
+    "baseline_sha_verified": true,
+    "baseline_sha256": "eb50b02163ec5e8f3305321ee47a6d52a799235b68730b67f539d962a6d028a3",
+    "clean": true
+  },
+  "gates": {
+    "1_baseline_hash_verified": {
+      "measured": true,
+      "passed": true
+    },
+    "2_zero_leakage": {
+      "measured": {
+        "exact": 0,
+        "normalized": 0
+      },
+      "passed": true
+    },
+    "3_same_architecture": {
+      "measured": {
+        "model": "Qwen/Qwen3-VL-2B-Instruct",
+        "text_only": true,
+        "classes": 20
+      },
+      "passed": true,
+      "trainable_parameters": 17479700,
+      "total_parameters": 2144466964
+    },
+    "4_full_val_accuracy": {
+      "required": 0.995,
+      "measured": 1.0,
+      "passed": true
+    },
+    "5_minival240": {
+      "required": "240/240",
+      "measured": true,
+      "passed": true
+    },
+    "6_pairedval_members": {
+      "required": "40/40",
+      "measured": 40,
+      "passed": true
+    },
+    "7_fixed24": {
+      "required": ">= 23/24",
+      "measured": 24,
+      "passed": true
+    },
+    "8_previously_failing_prompts": {
+      "measured": {
+        "找出最大建筑左边的建筑物。": true,
+        "找出最大建筑右边的建筑物。": true,
+        "找出最大建筑下面的建筑物。": true
+      },
+      "passed": true
+    },
+    "9_minimal_pairs": {
+      "required": 1.0,
+      "measured": 0.9868421052631579,
+      "passed": false
+    },
+    "10_stress_accuracy": {
+      "required": 0.95,
+      "measured": 0.99375,
+      "passed": true
+    },
+    "11_stress_macro_f1": {
+      "required": 0.95,
+      "measured": 0.99375,
+      "passed": true
+    },
+    "12_stress_class_recall": {
+      "required": 0.9,
+      "measured": 0.875,
+      "passed": false
+    },
+    "13_ood_exit_4": {
+      "measured": true,
+      "passed": true
+    },
+    "14_scope_exit_5": {
+      "measured": {
+        "exit_5": false,
+        "semantic": false,
+        "no_downstream": false
+      },
+      "passed": false
+    },
+    "15_e2e_miou": {
+      "required": 1e-06,
+      "measured": 0.0,
+      "passed": true
+    },
+    "16_paired_exact": {
+      "required": 10,
+      "measured": 10,
+      "passed": true
+    },
+    "17_no_test_split": {
+      "measured": true,
+      "passed": true
+    },
+    "18_no_downstream_changes": {
+      "measured": true,
+      "passed": true
+    },
+    "19_no_keyword_override": {
+      "measured": [],
+      "passed": true
+    }
+  },
+  "all_gates_passed": false,
+  "headline_metrics": {
+    "baseline": {
+      "minival240_en": 1.0,
+      "fixed24": "21/24",
+      "minimal_pairs_accuracy": 0.9473684210526315,
+      "stress_accuracy": 0.9375,
+      "stress_macro_f1": 0.9375,
+      "previously_failing_predictions": {
+        "找出最大建筑左边的建筑物。": "smallest_to_left_of",
+        "找出最大建筑右边的建筑物。": "smallest_to_right_of",
+        "找出最大建筑下面的建筑物。": "smallest_to_below"
+      }
+    },
+    "hardened": {
+      "full_val_accuracy": 1.0,
+      "full_val_english": 1.0,
+      "full_val_chinese": 1.0,
+      "minival240_en": 1.0,
+      "pairedval20_members": 40,
+      "fixed24": "24/24",
+      "minimal_pairs_accuracy": 0.9868421052631579,
+      "stress_accuracy": 0.99375,
+      "stress_macro_f1": 0.99375,
+      "stress_min_class_recall": 0.875,
+      "previously_failing_predictions": {
+        "找出最大建筑左边的建筑物。": "largest_to_left_of",
+        "找出最大建筑右边的建筑物。": "largest_to_right_of",
+        "找出最大建筑下面的建筑物。": "largest_to_below"
+      },
+      "scope_out_of_scope_programs": {
+        "分割面积最大的建筑物右侧最近的建筑物。": "largest_to_right_of",
+        "segment the building nearest to the right of the largest building": "largest_to_right_of"
+      },
+      "e2e_answered_miou": 0.3045812554881724,
+      "e2e_paired": 10,
+      "e2e_abstentions": 6
+    },
+    "training": {
+      "selected_config": "C1",
+      "holdout_macro_f1": 1.0,
+      "checkpoint_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+      "trainable_parameters": 17479700,
+      "total_parameters": 2144466964,
+      "wall_seconds": {
+        "C1": 321.1
+      }
+    }
+  },
+  "erratum_recorded": {
+    "task6s_claim": "the frozen 20-program vocabulary has no nearest program",
+    "actual": "the vocabulary contains 6 nearest classes",
+    "nearest_classes": [
+      "largest_to_nearest",
+      "smallest_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest",
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest"
+    ],
+    "cause_of_task6s_scope_failures": "the frozen ProgramHead misclassified nearest-containing instructions as direction-only programs, so the Task 6S scope check could not reject them",
+    "task6s_artifacts_mutated": false
+  },
+  "out_of_scope_bottleneck": "REFERENCE (deliberately untouched by Task 6T)",
+  "test_split_used": false,
+  "runtime_seconds": 0.03
+}

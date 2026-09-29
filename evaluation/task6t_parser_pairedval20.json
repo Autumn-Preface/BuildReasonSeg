@@ -1,0 +1,952 @@
+{
+  "_doc": "Task 6T section 8.3. PairedVal20 parser regression (40 members, both languages).",
+  "task": "6T",
+  "stage": "final-pairedval20",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "authoritative_baseline": false
+  },
+  "parser": {
+    "model": "Qwen/Qwen3-VL-2B-Instruct",
+    "text_only": true,
+    "image_tokens": false,
+    "program_ids": [
+      "leftmost",
+      "rightmost",
+      "topmost",
+      "bottommost",
+      "largest",
+      "smallest",
+      "largest_to_nearest",
+      "smallest_to_nearest",
+      "largest_to_above",
+      "largest_to_below",
+      "largest_to_left_of",
+      "largest_to_right_of",
+      "smallest_to_above",
+      "smallest_to_below",
+      "smallest_to_left_of",
+      "smallest_to_right_of",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest",
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest"
+    ]
+  },
+  "test_split_used": false,
+  "pack_sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3",
+  "english": {
+    "count": 80,
+    "exact_correct": 80,
+    "exact_accuracy": 1.0,
+    "macro_f1": 1.0,
+    "per_class_recall": {
+      "leftmost": null,
+      "rightmost": null,
+      "topmost": null,
+      "bottommost": null,
+      "largest": null,
+      "smallest": null,
+      "largest_to_nearest": null,
+      "smallest_to_nearest": null,
+      "largest_to_above": 1.0,
+      "largest_to_below": 1.0,
+      "largest_to_left_of": 1.0,
+      "largest_to_right_of": 1.0,
+      "smallest_to_above": 1.0,
+      "smallest_to_below": 1.0,
+      "smallest_to_left_of": 1.0,
+      "smallest_to_right_of": 1.0,
+      "largest_to_above_to_nearest": null,
+      "largest_to_below_to_nearest": null,
+      "largest_to_left_of_to_nearest": null,
+      "largest_to_right_of_to_nearest": null
+    },
+    "min_class_recall": 1.0,
+    "confusion_matrix": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        14,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        12,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        6,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "class_order": [
+      "leftmost",
+      "rightmost",
+      "topmost",
+      "bottommost",
+      "largest",
+      "smallest",
+      "largest_to_nearest",
+      "smallest_to_nearest",
+      "largest_to_above",
+      "largest_to_below",
+      "largest_to_left_of",
+      "largest_to_right_of",
+      "smallest_to_above",
+      "smallest_to_below",
+      "smallest_to_left_of",
+      "smallest_to_right_of",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest",
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest"
+    ],
+    "per_language": {
+      "en": {
+        "records": 40,
+        "exact_accuracy": 1.0
+      },
+      "zh": {
+        "records": 40,
+        "exact_accuracy": 1.0
+      }
+    }
+  },
+  "members_correct_english": 40,
+  "members_total_english": 40,
+  "per_pair": {
+    "buildsr_val_2_1001_2_largest_to_above_97e1aa8e0db3": {
+      "prompts": [
+        "Locate and segment the single building region above the largest building region.",
+        "找出面积最大的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1001_2_largest_to_below_d4aa5cf37af2": {
+      "prompts": [
+        "Locate and segment the single building region below the largest building region.",
+        "找出面积最大的建筑区域下方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1002_2_largest_to_above_0fc35aa0f4dc": {
+      "prompts": [
+        "Locate and segment the single building region above the largest building region.",
+        "找出面积最大的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1002_2_largest_to_left_of_7b9b80fbae5d": {
+      "prompts": [
+        "Please outline the building region on the left side of the largest building region.",
+        "请标出面积最大的建筑区域左侧的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1007_2_largest_to_left_of_cac9d07b1fa2": {
+      "prompts": [
+        "Please outline the building region on the left side of the largest building region.",
+        "请标出面积最大的建筑区域左侧的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1007_2_largest_to_right_of_b21c0c60e328": {
+      "prompts": [
+        "Locate and segment the single building region to the right of the largest building region.",
+        "找出面积最大的建筑区域右边唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1014_2_largest_to_left_of_b4b4f276680e": {
+      "prompts": [
+        "Segment the building region to the left of the largest building region.",
+        "分割位于面积最大的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1014_2_largest_to_right_of_938019a8118e": {
+      "prompts": [
+        "Locate and segment the single building region to the right of the largest building region.",
+        "找出面积最大的建筑区域右边唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1020_2_largest_to_below_a2f91d991fd2": {
+      "prompts": [
+        "Segment the building region below the largest building region.",
+        "分割位于面积最大的建筑区域下方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1020_2_largest_to_right_of_a7af7e423527": {
+      "prompts": [
+        "Please outline the building region on the right side of the largest building region.",
+        "请标出面积最大的建筑区域右侧的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1023_2_smallest_to_above_24df97ab03fc": {
+      "prompts": [
+        "Locate and segment the single building region above the smallest building region.",
+        "找出面积最小的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1023_2_smallest_to_left_of_b7d47b9c9bd5": {
+      "prompts": [
+        "Please outline the building region on the left side of the smallest building region.",
+        "请标出面积最小的建筑区域左侧的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1036_2_largest_to_below_b9472bf8277e": {
+      "prompts": [
+        "Please outline the building region on the lower side of the largest building region.",
+        "请标出面积最大的建筑区域下方的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1036_2_largest_to_left_of_64ac0904911f": {
+      "prompts": [
+        "Segment the building region to the left of the largest building region.",
+        "分割位于面积最大的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1037_2_largest_to_below_5002561182b2": {
+      "prompts": [
+        "Locate and segment the single building region below the largest building region.",
+        "找出面积最大的建筑区域下方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1037_2_largest_to_right_of_2597efdad90d": {
+      "prompts": [
+        "Segment the building region to the right of the largest building region.",
+        "分割位于面积最大的建筑区域右侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1043_2_largest_to_above_c30d493ab241": {
+      "prompts": [
+        "Please outline the building region on the upper side of the largest building region.",
+        "请标出面积最大的建筑区域上方的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1043_2_largest_to_left_of_7b7514b760cc": {
+      "prompts": [
+        "Segment the building region to the left of the largest building region.",
+        "分割位于面积最大的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1066_2_smallest_to_above_acd174ea374d": {
+      "prompts": [
+        "Segment the building region above the smallest building region.",
+        "分割位于面积最小的建筑区域上方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1066_2_smallest_to_left_of_238fbb681f30": {
+      "prompts": [
+        "Segment the building region to the left of the smallest building region.",
+        "分割位于面积最小的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_108_2_largest_to_left_of_3a3832d12c75": {
+      "prompts": [
+        "Please outline the building region on the left side of the largest building region.",
+        "请标出面积最大的建筑区域左侧的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_108_2_largest_to_right_of_85296b7d97c9": {
+      "prompts": [
+        "Locate and segment the single building region to the right of the largest building region.",
+        "找出面积最大的建筑区域右边唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_109_2_largest_to_above_64a8807fd56e": {
+      "prompts": [
+        "Locate and segment the single building region above the largest building region.",
+        "找出面积最大的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_109_2_largest_to_left_of_87f1a37bfeb4": {
+      "prompts": [
+        "Please outline the building region on the left side of the largest building region.",
+        "请标出面积最大的建筑区域左侧的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_111_2_largest_to_below_d81cade4b8ff": {
+      "prompts": [
+        "Segment the building region below the largest building region.",
+        "分割位于面积最大的建筑区域下方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_111_2_largest_to_left_of_75827fecc225": {
+      "prompts": [
+        "Segment the building region to the left of the largest building region.",
+        "分割位于面积最大的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1133_2_smallest_to_above_bfdd687694e2": {
+      "prompts": [
+        "Locate and segment the single building region above the smallest building region.",
+        "找出面积最小的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1133_2_smallest_to_below_04584d934311": {
+      "prompts": [
+        "Segment the building region below the smallest building region.",
+        "分割位于面积最小的建筑区域下方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1135_2_smallest_to_below_05059dc0ba2e": {
+      "prompts": [
+        "Locate and segment the single building region below the smallest building region.",
+        "找出面积最小的建筑区域下方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1135_2_smallest_to_left_of_191c270642b6": {
+      "prompts": [
+        "Segment the building region to the left of the smallest building region.",
+        "分割位于面积最小的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1164_2_smallest_to_above_2b8628411581": {
+      "prompts": [
+        "Locate and segment the single building region above the smallest building region.",
+        "找出面积最小的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1164_2_smallest_to_below_595f677b1ba8": {
+      "prompts": [
+        "Segment the building region below the smallest building region.",
+        "分割位于面积最小的建筑区域下方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1171_2_smallest_to_above_afe7c1d6099d": {
+      "prompts": [
+        "Segment the building region above the smallest building region.",
+        "分割位于面积最小的建筑区域上方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1171_2_smallest_to_right_of_07bfc6270f6b": {
+      "prompts": [
+        "Segment the building region to the right of the smallest building region.",
+        "分割位于面积最小的建筑区域右侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1172_2_largest_to_below_52f3bc2db43a": {
+      "prompts": [
+        "Please outline the building region on the lower side of the largest building region.",
+        "请标出面积最大的建筑区域下方的那栋建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1172_2_largest_to_left_of_2fcb1235c33b": {
+      "prompts": [
+        "Locate and segment the single building region to the left of the largest building region.",
+        "找出面积最大的建筑区域左边唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1196_2_largest_to_above_c791c2aceed9": {
+      "prompts": [
+        "Locate and segment the single building region above the largest building region.",
+        "找出面积最大的建筑区域上方唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1196_2_largest_to_left_of_2f772b5e7e62": {
+      "prompts": [
+        "Segment the building region to the left of the largest building region.",
+        "分割位于面积最大的建筑区域左侧的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1201_2_largest_to_below_5dc97ba280d9": {
+      "prompts": [
+        "Segment the building region below the largest building region.",
+        "分割位于面积最大的建筑区域下方的建筑区域。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    },
+    "buildsr_val_2_1201_2_largest_to_right_of_447fd4401df4": {
+      "prompts": [
+        "Locate and segment the single building region to the right of the largest building region.",
+        "找出面积最大的建筑区域右边唯一的建筑区域并分割。"
+      ],
+      "correct": [
+        true,
+        true
+      ]
+    }
+  },
+  "failed_prompts": [],
+  "gate": {
+    "required_members": 40,
+    "measured_members_english": 40,
+    "passed": true
+  }
+}

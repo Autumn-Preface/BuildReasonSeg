@@ -166,8 +166,13 @@ def gt_mask(tile_id: str, source_feature_id: int) -> np.ndarray:
     raise KeyError(f"{tile_id}:{source_feature_id}")
 
 
-def load_models(device: str):
-    checkpoint, candidates = resolve_program_head_checkpoint()
+def load_models(device: str, parser_checkpoint_path: Path | None = None):
+    """Load the frozen chain. `parser_checkpoint_path` lets Task 6T audit the hardened ProgramHead."""
+
+    if parser_checkpoint_path is not None:
+        checkpoint, candidates = resolve_program_head_checkpoint(parser_checkpoint_path)
+    else:
+        checkpoint, candidates = resolve_program_head_checkpoint()
     if checkpoint is None:
         return None, {"program_head_candidates": candidates}
     from buildreasonseg_mvp.program_parser import build_program_parser, load_parser_checkpoint

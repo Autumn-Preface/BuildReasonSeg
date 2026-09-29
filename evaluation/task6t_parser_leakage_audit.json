@@ -1,0 +1,50 @@
+{
+  "_doc": "Task 6T section 5.3. Exact UTF-8 and normalized-string leakage audit of every training prompt against MiniVal240 queries, PairedVal20 queries, the exact Task 6S fixed-24 paraphrase list and the Task 6T frozen minimal-pair and stress packs. Zero overlap is required; the audit runs on the final combined training set that is actually trained on.",
+  "task": "6T",
+  "stage": "leakage-audit",
+  "training_prompts": 25961,
+  "training_sources": {
+    "build_spatial_reason_v02_train": 24161,
+    "augmented": 1800
+  },
+  "evaluation_groups": {
+    "task6s_fixed24": 24,
+    "task6t_minimal_pairs": 76,
+    "task6t_stress_v1": 160,
+    "minival240_queries": 240,
+    "pairedval20_queries": 40
+  },
+  "normalization": "strip whitespace, lowercase ASCII, normalise CJK/ASCII punctuation, trim trailing sentence punctuation",
+  "per_group": {
+    "task6s_fixed24": {
+      "prompts": 24,
+      "exact_overlaps": 0,
+      "normalized_overlaps": 0
+    },
+    "task6t_minimal_pairs": {
+      "prompts": 76,
+      "exact_overlaps": 0,
+      "normalized_overlaps": 0
+    },
+    "task6t_stress_v1": {
+      "prompts": 160,
+      "exact_overlaps": 0,
+      "normalized_overlaps": 0
+    },
+    "minival240_queries": {
+      "prompts": 240,
+      "exact_overlaps": 0,
+      "normalized_overlaps": 0
+    },
+    "pairedval20_queries": {
+      "prompts": 40,
+      "exact_overlaps": 0,
+      "normalized_overlaps": 0
+    }
+  },
+  "exact_overlap_count": 0,
+  "normalized_overlap_count": 0,
+  "exact_overlaps": [],
+  "normalized_overlaps": [],
+  "verdict": "NO_LEAKAGE"
+}

@@ -1,0 +1,577 @@
+{
+  "_doc": "Task 6T section 6.2. Frozen semantic minimal-pair pack, created BEFORE training and using held-out template/lexical forms that the training augmentation grammar never generates. Contrast groups: A largest vs smallest per direction, B direction-only vs direction+nearest, C L1 vs L2, D simple-nearest vs direction-nearest.",
+  "task": "6T",
+  "stage": "frozen-minimal-pairs",
+  "frozen_before_training": true,
+  "generator": "scripts/task6t_build_parser_data.py::build_minimal_pairs",
+  "prompt_count": 76,
+  "languages": {
+    "zh": 38,
+    "en": 38
+  },
+  "programs_covered": 16,
+  "contrast_groups": {
+    "A_largest_vs_smallest": 16,
+    "B_direction_vs_direction_nearest": 16,
+    "C_L1_vs_L2": 32,
+    "D_nearest_vs_direction_nearest": 12
+  },
+  "prompts_per_program": {
+    "largest": 8,
+    "largest_to_above": 6,
+    "largest_to_above_to_nearest": 4,
+    "largest_to_below": 6,
+    "largest_to_below_to_nearest": 4,
+    "largest_to_left_of": 6,
+    "largest_to_left_of_to_nearest": 4,
+    "largest_to_nearest": 2,
+    "largest_to_right_of": 6,
+    "largest_to_right_of_to_nearest": 4,
+    "smallest": 8,
+    "smallest_to_above": 4,
+    "smallest_to_below": 4,
+    "smallest_to_left_of": 4,
+    "smallest_to_nearest": 2,
+    "smallest_to_right_of": 4
+  },
+  "validation": {
+    "prompts": 76,
+    "unique_prompts": 64,
+    "ambiguous_prompts": 0,
+    "direction_prompts_without_direction": 0
+  },
+  "prompts": [
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_left_of vs smallest_to_left_of"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_left_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_left_of vs smallest_to_left_of"
+    },
+    {
+      "prompt": "Please demarcate the building region to the left of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_left_of vs smallest_to_left_of"
+    },
+    {
+      "prompt": "Please demarcate the building region to the left of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_left_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_left_of vs smallest_to_left_of"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_right_of vs smallest_to_right_of"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_right_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_right_of vs smallest_to_right_of"
+    },
+    {
+      "prompt": "Please demarcate the building region to the right of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_right_of vs smallest_to_right_of"
+    },
+    {
+      "prompt": "Please demarcate the building region to the right of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_right_of",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_right_of vs smallest_to_right_of"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_above vs smallest_to_above"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_above",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_above vs smallest_to_above"
+    },
+    {
+      "prompt": "Please demarcate the building region above the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_above vs smallest_to_above"
+    },
+    {
+      "prompt": "Please demarcate the building region above the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_above",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_above vs smallest_to_above"
+    },
+    {
+      "prompt": "请圈出位于面积最大的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_below vs smallest_to_below"
+    },
+    {
+      "prompt": "请圈出位于面积最小的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_below",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_below vs smallest_to_below"
+    },
+    {
+      "prompt": "Please demarcate the building region below the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_below vs smallest_to_below"
+    },
+    {
+      "prompt": "Please demarcate the building region below the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_below",
+      "contrast_group": "A_largest_vs_smallest",
+      "contrast_note": "largest_to_below vs smallest_to_below"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域左边的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_left_of vs largest_to_left_of_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它左边的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_left_of vs largest_to_left_of_to_nearest"
+    },
+    {
+      "prompt": "Delineate the building region on the left side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_left_of vs largest_to_left_of_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region left of it select and delineate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_left_of vs largest_to_left_of_to_nearest"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域右边的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_right_of vs largest_to_right_of_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它右边的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_right_of vs largest_to_right_of_to_nearest"
+    },
+    {
+      "prompt": "Delineate the building region on the right side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_right_of vs largest_to_right_of_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region right of it select and delineate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_right_of vs largest_to_right_of_to_nearest"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域上面的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_above vs largest_to_above_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它上面的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_above vs largest_to_above_to_nearest"
+    },
+    {
+      "prompt": "Delineate the building region on the upper side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_above vs largest_to_above_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region over it select and delineate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_above vs largest_to_above_to_nearest"
+    },
+    {
+      "prompt": "请标注面积最大的的建筑区域下面的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_below vs largest_to_below_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它下面的建筑区域中选出距离最近的一个并标注。",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_below vs largest_to_below_to_nearest"
+    },
+    {
+      "prompt": "Delineate the building region on the lower side of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_below vs largest_to_below_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region under it select and delineate the one closest.",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "contrast_group": "B_direction_vs_direction_nearest",
+      "contrast_note": "largest_to_below vs largest_to_below_to_nearest"
+    },
+    {
+      "prompt": "请勾勒面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_left_of"
+    },
+    {
+      "prompt": "请勾勒处于面积最大的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_left_of"
+    },
+    {
+      "prompt": "请勾勒面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_left_of"
+    },
+    {
+      "prompt": "请勾勒处于面积最小的的建筑区域左侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_left_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_left_of"
+    },
+    {
+      "prompt": "Please delineate and mark the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_left_of"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying to the left of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_left_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_left_of"
+    },
+    {
+      "prompt": "Please delineate and mark the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_left_of"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying to the left of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_left_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_left_of"
+    },
+    {
+      "prompt": "请勾勒面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_right_of"
+    },
+    {
+      "prompt": "请勾勒处于面积最大的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_right_of"
+    },
+    {
+      "prompt": "请勾勒面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_right_of"
+    },
+    {
+      "prompt": "请勾勒处于面积最小的的建筑区域右侧的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_right_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_right_of"
+    },
+    {
+      "prompt": "Please delineate and mark the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_right_of"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying to the right of the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_right_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_right_of"
+    },
+    {
+      "prompt": "Please delineate and mark the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_right_of"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying to the right of the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_right_of",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_right_of"
+    },
+    {
+      "prompt": "请勾勒面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_above"
+    },
+    {
+      "prompt": "请勾勒处于面积最大的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_above",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_above"
+    },
+    {
+      "prompt": "请勾勒面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_above"
+    },
+    {
+      "prompt": "请勾勒处于面积最小的的建筑区域上方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_above",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_above"
+    },
+    {
+      "prompt": "Please delineate and mark the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_above"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying above the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_above",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_above"
+    },
+    {
+      "prompt": "Please delineate and mark the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_above"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying above the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_above",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_above"
+    },
+    {
+      "prompt": "请勾勒面积最大的的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_below"
+    },
+    {
+      "prompt": "请勾勒处于面积最大的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_below",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_below"
+    },
+    {
+      "prompt": "请勾勒面积最小的的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_below"
+    },
+    {
+      "prompt": "请勾勒处于面积最小的的建筑区域下方的建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_below",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_below"
+    },
+    {
+      "prompt": "Please delineate and mark the largest building region.",
+      "language": "en",
+      "expected_program": "largest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_below"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying below the largest building region.",
+      "language": "en",
+      "expected_program": "largest_to_below",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "largest vs largest_to_below"
+    },
+    {
+      "prompt": "Please delineate and mark the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_below"
+    },
+    {
+      "prompt": "Please delineate and mark the building region lying below the smallest building region.",
+      "language": "en",
+      "expected_program": "smallest_to_below",
+      "contrast_group": "C_L1_vs_L2",
+      "contrast_note": "smallest vs smallest_to_below"
+    },
+    {
+      "prompt": "以面积最大的的建筑区域为参照，标出边界距离最小的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "largest_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "以面积最小的的建筑区域为参照，标出边界距离最小的另一建筑区域。",
+      "language": "zh",
+      "expected_program": "smallest_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "smallest_to_nearest vs smallest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它左边的建筑区域中选出边界距离最小的一个并标出。",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它右边的建筑区域中选出边界距离最小的一个并标出。",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它上面的建筑区域中选出边界距离最小的一个并标出。",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "先确定面积最大的的建筑区域，再从它下面的建筑区域中选出边界距离最小的一个并标出。",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "Using the largest building region as reference, delineate and mark the other building region with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "Using the smallest building region as reference, delineate and mark the other building region with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "smallest_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "smallest_to_nearest vs smallest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region left of it select and delineate and mark the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region right of it select and delineate and mark the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region over it select and delineate and mark the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    },
+    {
+      "prompt": "First locate the largest building region, then from the building region under it select and delineate and mark the one with the smallest boundary distance.",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "contrast_group": "D_nearest_vs_direction_nearest",
+      "contrast_note": "largest_to_nearest vs largest_to_<dir>_to_nearest"
+    }
+  ]
+}

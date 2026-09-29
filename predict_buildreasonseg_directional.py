@@ -41,6 +41,7 @@ from buildreasonseg_mvp.task6s_directional_pipeline import (  # noqa: E402
     STATUS_OK,
     SUPPORTED_PROGRAMS,
     ChainModels,
+    default_program_head_checkpoint,
     resolve_program_head_checkpoint,
     run_directional_chain,
     sha256_file,
@@ -56,7 +57,11 @@ def load_models(args) -> tuple[ChainModels | None, dict]:
     """Load the frozen ProgramHead, proposal model, SAM2 encoder/store and B3 decoder."""
 
     provenance: dict = {}
-    parser_checkpoint, parser_candidates = resolve_program_head_checkpoint(args.parser_checkpoint)
+    if args.parser_checkpoint is not None:
+        parser_checkpoint, parser_candidates = resolve_program_head_checkpoint(args.parser_checkpoint)
+    else:
+        # Task 6T section 9: default to the hardened ProgramHead when it is present locally.
+        parser_checkpoint, parser_candidates = default_program_head_checkpoint()
     provenance["program_head_candidates"] = parser_candidates
     if parser_checkpoint is None:
         return None, provenance
