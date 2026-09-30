@@ -1,0 +1,617 @@
+{
+  "_doc": "Task 7D section 23. Stage D1 Overfit20: D-B1/D-B2/D-B3/D-B4 trained from fresh initialization on the exact frozen Z-Overfit20 pack with the section-23 protocol. D-B2 gate: mIoU >= 0.85 and Dice >= 0.90.",
+  "task": "7D",
+  "stage": "J-overfit20",
+  "seed": 20261001,
+  "packs": {
+    "z_overfit20": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_overfit20.json",
+      "sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+      "expected_sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+      "matches": true
+    },
+    "z_mini_train_1200": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_train_1200.json",
+      "sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+      "expected_sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+      "matches": true
+    },
+    "z_mini_val_240": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+      "sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+      "expected_sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+      "matches": true
+    },
+    "z_paired_val20": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_paired_val20.json",
+      "sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+      "expected_sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+      "matches": true
+    }
+  },
+  "pack": {
+    "name": "z_overfit20",
+    "records": 20
+  },
+  "training": {
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "batch": 4,
+    "max_steps": 1200,
+    "eval_every": 100,
+    "gate_miou": 0.85,
+    "gate_dice": 0.9
+  },
+  "results": {
+    "D-B1": {
+      "variant": "D-B1",
+      "params": 278081,
+      "history": [
+        {
+          "step": 100,
+          "epoch": 20,
+          "miou": 0.589116675369308,
+          "dice": 0.7144432275324795,
+          "loss": 0.6019092202186584
+        },
+        {
+          "step": 200,
+          "epoch": 40,
+          "miou": 0.7832015623358937,
+          "dice": 0.8568111580383189,
+          "loss": 0.3293025493621826
+        },
+        {
+          "step": 300,
+          "epoch": 60,
+          "miou": 0.8439649189922787,
+          "dice": 0.8934417062203639,
+          "loss": 0.3026169240474701
+        },
+        {
+          "step": 400,
+          "epoch": 80,
+          "miou": 0.904755499135347,
+          "dice": 0.949390272230658,
+          "loss": 0.05758238211274147
+        },
+        {
+          "step": 500,
+          "epoch": 100,
+          "miou": 0.9271377600859327,
+          "dice": 0.9619604531994351,
+          "loss": 0.05353584140539169
+        },
+        {
+          "step": 600,
+          "epoch": 120,
+          "miou": 0.9194549718082273,
+          "dice": 0.9576151157623706,
+          "loss": 0.04417557641863823
+        },
+        {
+          "step": 700,
+          "epoch": 140,
+          "miou": 0.9393203445752478,
+          "dice": 0.968523122078787,
+          "loss": 0.050999145954847336
+        },
+        {
+          "step": 800,
+          "epoch": 160,
+          "miou": 0.9283859814870346,
+          "dice": 0.9625742580141777,
+          "loss": 0.03808622807264328
+        },
+        {
+          "step": 900,
+          "epoch": 180,
+          "miou": 0.9298663240326416,
+          "dice": 0.9634242381953222,
+          "loss": 0.04116577282547951
+        },
+        {
+          "step": 1000,
+          "epoch": 200,
+          "miou": 0.9453870288733601,
+          "dice": 0.971803509082935,
+          "loss": 0.03624499589204788
+        },
+        {
+          "step": 1100,
+          "epoch": 220,
+          "miou": 0.9622933572178447,
+          "dice": 0.980658079667539,
+          "loss": 0.030862389132380486
+        },
+        {
+          "step": 1200,
+          "epoch": 240,
+          "miou": 0.961796435239313,
+          "dice": 0.9803941079781907,
+          "loss": 0.02343282848596573
+        }
+      ],
+      "best": {
+        "miou": 0.9622933572178447,
+        "dice": 0.980658079667539,
+        "step": 1100,
+        "epoch": 220
+      },
+      "final": {
+        "records": 20,
+        "miou": 0.9622933572178447,
+        "dice": 0.980658079667539,
+        "precision_at_0_5": 0.9782026636925633,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 20,
+            "miou": 0.9622933572178447,
+            "dice": 0.980658079667539
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 5,
+            "miou": 0.9541503451737213
+          },
+          "largest_to_below_to_nearest": {
+            "records": 5,
+            "miou": 0.9689642122850035
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9774869015440159
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9485719698686385
+          }
+        }
+      },
+      "steps": 1200,
+      "epochs": 240,
+      "wall_seconds": 18.1,
+      "peak_vram_gb": 0.577,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_overfit20.pt",
+        "sha256": "3fc6c36553f2a7bd98dec1300d8a358d67608ed0705679940cbd15f48d8c20c6",
+        "bytes": 1118580,
+        "committed": false
+      }
+    },
+    "D-B2": {
+      "variant": "D-B2",
+      "params": 362434,
+      "history": [
+        {
+          "step": 100,
+          "epoch": 20,
+          "miou": 0.5692345137658426,
+          "dice": 0.6935197551195879,
+          "loss": 0.6088466644287109
+        },
+        {
+          "step": 200,
+          "epoch": 40,
+          "miou": 0.7684218807615055,
+          "dice": 0.8478140058820175,
+          "loss": 0.33787068724632263
+        },
+        {
+          "step": 300,
+          "epoch": 60,
+          "miou": 0.8822887949000183,
+          "dice": 0.9370327516869583,
+          "loss": 0.09648043662309647
+        },
+        {
+          "step": 400,
+          "epoch": 80,
+          "miou": 0.9179100048146415,
+          "dice": 0.9569807092893641,
+          "loss": 0.04780668392777443
+        },
+        {
+          "step": 500,
+          "epoch": 100,
+          "miou": 0.9250981650678256,
+          "dice": 0.9607210804433416,
+          "loss": 0.04511203616857529
+        },
+        {
+          "step": 600,
+          "epoch": 120,
+          "miou": 0.9388384402443588,
+          "dice": 0.9681988337927663,
+          "loss": 0.035496290773153305
+        },
+        {
+          "step": 700,
+          "epoch": 140,
+          "miou": 0.9511031662431206,
+          "dice": 0.9748138592394344,
+          "loss": 0.037190597504377365
+        },
+        {
+          "step": 800,
+          "epoch": 160,
+          "miou": 0.9435227065656611,
+          "dice": 0.9707476028233846,
+          "loss": 0.032102108001708984
+        },
+        {
+          "step": 900,
+          "epoch": 180,
+          "miou": 0.9533184593305263,
+          "dice": 0.9759297300784097,
+          "loss": 0.03049398586153984
+        },
+        {
+          "step": 1000,
+          "epoch": 200,
+          "miou": 0.9582369388053099,
+          "dice": 0.9785415178674143,
+          "loss": 0.03418184071779251
+        },
+        {
+          "step": 1100,
+          "epoch": 220,
+          "miou": 0.9677839416872439,
+          "dice": 0.9834978691869795,
+          "loss": 0.026461927220225334
+        },
+        {
+          "step": 1200,
+          "epoch": 240,
+          "miou": 0.9671282614152718,
+          "dice": 0.9832222901618024,
+          "loss": 0.02160372957587242
+        }
+      ],
+      "best": {
+        "miou": 0.9677839416872439,
+        "dice": 0.9834978691869795,
+        "step": 1100,
+        "epoch": 220
+      },
+      "final": {
+        "records": 20,
+        "miou": 0.9677839416872439,
+        "dice": 0.9834978691869795,
+        "precision_at_0_5": 0.9855739380647371,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 20,
+            "miou": 0.9677839416872439,
+            "dice": 0.9834978691869795
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 5,
+            "miou": 0.9593371822107324
+          },
+          "largest_to_below_to_nearest": {
+            "records": 5,
+            "miou": 0.9762557523292736
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 5,
+            "miou": 0.982919958290792
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9526228739181771
+          }
+        }
+      },
+      "steps": 1200,
+      "epochs": 240,
+      "wall_seconds": 14.7,
+      "peak_vram_gb": 0.578,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db2_overfit20.pt",
+        "sha256": "8752265617b832f9f1f1ef46baa7268d27d0a761fe3577bedb2ff832f04bd0ea",
+        "bytes": 1457798,
+        "committed": false
+      }
+    },
+    "D-B3": {
+      "variant": "D-B3",
+      "params": 358978,
+      "history": [
+        {
+          "step": 100,
+          "epoch": 20,
+          "miou": 0.5273623904319145,
+          "dice": 0.664199546572329,
+          "loss": 0.5281065702438354
+        },
+        {
+          "step": 200,
+          "epoch": 40,
+          "miou": 0.7874189125000116,
+          "dice": 0.8601151306389415,
+          "loss": 0.3325856924057007
+        },
+        {
+          "step": 300,
+          "epoch": 60,
+          "miou": 0.8679980938058393,
+          "dice": 0.9068943850963027,
+          "loss": 0.2932710349559784
+        },
+        {
+          "step": 400,
+          "epoch": 80,
+          "miou": 0.9262223214751722,
+          "dice": 0.9614825600130749,
+          "loss": 0.04581442102789879
+        },
+        {
+          "step": 500,
+          "epoch": 100,
+          "miou": 0.9416243647106148,
+          "dice": 0.9696972415299966,
+          "loss": 0.042440637946128845
+        },
+        {
+          "step": 600,
+          "epoch": 120,
+          "miou": 0.9260825694283401,
+          "dice": 0.9613236719839943,
+          "loss": 0.04154461249709129
+        },
+        {
+          "step": 700,
+          "epoch": 140,
+          "miou": 0.9471574537994757,
+          "dice": 0.9727167222387159,
+          "loss": 0.03557584062218666
+        },
+        {
+          "step": 800,
+          "epoch": 160,
+          "miou": 0.9576064904366485,
+          "dice": 0.9782355046978937,
+          "loss": 0.02990259788930416
+        },
+        {
+          "step": 900,
+          "epoch": 180,
+          "miou": 0.9495689705341771,
+          "dice": 0.9739345101557626,
+          "loss": 0.03337061405181885
+        },
+        {
+          "step": 1000,
+          "epoch": 200,
+          "miou": 0.9535116492114926,
+          "dice": 0.9760722100616158,
+          "loss": 0.035843346267938614
+        },
+        {
+          "step": 1100,
+          "epoch": 220,
+          "miou": 0.9590586776624276,
+          "dice": 0.9789931725409293,
+          "loss": 0.028783198446035385
+        },
+        {
+          "step": 1200,
+          "epoch": 240,
+          "miou": 0.9537641687280495,
+          "dice": 0.9762349165499324,
+          "loss": 0.022458739578723907
+        }
+      ],
+      "best": {
+        "miou": 0.9590586776624276,
+        "dice": 0.9789931725409293,
+        "step": 1100,
+        "epoch": 220
+      },
+      "final": {
+        "records": 20,
+        "miou": 0.9590586776624276,
+        "dice": 0.9789931725409293,
+        "precision_at_0_5": 0.9896171589085109,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 20,
+            "miou": 0.9590586776624276,
+            "dice": 0.9789931725409293
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 5,
+            "miou": 0.9533669867320509
+          },
+          "largest_to_below_to_nearest": {
+            "records": 5,
+            "miou": 0.9654080873932649
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9673737845827148
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9500858519416795
+          }
+        }
+      },
+      "steps": 1200,
+      "epochs": 240,
+      "wall_seconds": 14.0,
+      "peak_vram_gb": 0.578,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db3_overfit20.pt",
+        "sha256": "6b69771b0918fd0273da144b1bb39700396a71f9d0fc8bfe1485b7bf268413c8",
+        "bytes": 1443974,
+        "committed": false
+      }
+    },
+    "D-B4": {
+      "variant": "D-B4",
+      "params": 361282,
+      "history": [
+        {
+          "step": 100,
+          "epoch": 20,
+          "miou": 0.5320769421295768,
+          "dice": 0.6477048353031988,
+          "loss": 0.8347140550613403
+        },
+        {
+          "step": 200,
+          "epoch": 40,
+          "miou": 0.79059684581956,
+          "dice": 0.8614901666111792,
+          "loss": 0.3268844485282898
+        },
+        {
+          "step": 300,
+          "epoch": 60,
+          "miou": 0.843060890504687,
+          "dice": 0.8928867967870333,
+          "loss": 0.30362796783447266
+        },
+        {
+          "step": 400,
+          "epoch": 80,
+          "miou": 0.90972311936102,
+          "dice": 0.9523925045777908,
+          "loss": 0.05229811742901802
+        },
+        {
+          "step": 500,
+          "epoch": 100,
+          "miou": 0.917711399375311,
+          "dice": 0.9566543050189209,
+          "loss": 0.04986843094229698
+        },
+        {
+          "step": 600,
+          "epoch": 120,
+          "miou": 0.931597601278828,
+          "dice": 0.9642957033277236,
+          "loss": 0.03394981473684311
+        },
+        {
+          "step": 700,
+          "epoch": 140,
+          "miou": 0.953870293625843,
+          "dice": 0.9761951511019898,
+          "loss": 0.03532181680202484
+        },
+        {
+          "step": 800,
+          "epoch": 160,
+          "miou": 0.9503082764973296,
+          "dice": 0.9744025562532517,
+          "loss": 0.03662591800093651
+        },
+        {
+          "step": 900,
+          "epoch": 180,
+          "miou": 0.9508397845955996,
+          "dice": 0.9746161836862534,
+          "loss": 0.03121315687894821
+        },
+        {
+          "step": 1000,
+          "epoch": 200,
+          "miou": 0.9591233620368028,
+          "dice": 0.9790240273058025,
+          "loss": 0.029443122446537018
+        },
+        {
+          "step": 1100,
+          "epoch": 220,
+          "miou": 0.9666744806069802,
+          "dice": 0.9829138895894065,
+          "loss": 0.025577574968338013
+        },
+        {
+          "step": 1200,
+          "epoch": 240,
+          "miou": 0.9678879387202993,
+          "dice": 0.9836055446885066,
+          "loss": 0.021462853997945786
+        }
+      ],
+      "best": {
+        "miou": 0.9678879387202993,
+        "dice": 0.9836055446885066,
+        "step": 1200,
+        "epoch": 240
+      },
+      "final": {
+        "records": 20,
+        "miou": 0.9678879387202993,
+        "dice": 0.9836055446885066,
+        "precision_at_0_5": 0.982399986411712,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 20,
+            "miou": 0.9678879387202993,
+            "dice": 0.9836055446885066
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 5,
+            "miou": 0.9622352293678984
+          },
+          "largest_to_below_to_nearest": {
+            "records": 5,
+            "miou": 0.9728897735620127
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9807090579962792
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 5,
+            "miou": 0.9557176939550072
+          }
+        }
+      },
+      "steps": 1200,
+      "epochs": 240,
+      "wall_seconds": 13.1,
+      "peak_vram_gb": 0.578,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db4_overfit20.pt",
+        "sha256": "d936e588eabc5b2db0909ab54895791017ae7a5ebe477edbf30f417197f04143",
+        "bytes": 1453190,
+        "committed": false
+      }
+    }
+  },
+  "gate": {
+    "miou_min": 0.85,
+    "dice_min": 0.9,
+    "measured_miou": 0.9677839416872439,
+    "measured_dice": 0.9834978691869795,
+    "applies_to": "D-B2",
+    "passed": true
+  },
+  "d_b2_overfit_passed": true,
+  "verdict": "GLOBAL_COMPETITION_OVERFIT_PASS",
+  "constants": {
+    "competition_temperature": 1.0,
+    "spatial_tokens": 4096
+  },
+  "encoder": "Sam2LoadReport(config_file='configs/sam2.1/sam2.1_hiera_b+.yaml', checkpoint='C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\local_cache\\\\models\\\\sam2.1_hiera_base_plus.pt', source_revision='', image_size=1024, backbone_stride=16, prompt_embed_dim=256, image_embedding_size=(64, 64), mask_input_size=(256, 256), use_high_res_features_in_sam=True, directly_add_no_mem_embed=True, total_params=80850178, mask_decoder_params=4215109, image_encoder_params=69106816, prompt_encoder_params=6220, memory_attention_params=5922304, memory_encoder_params=1384608, loaded=True)",
+  "training_performed": true,
+  "test_split_used": false,
+  "runtime_seconds": 69.1
+}

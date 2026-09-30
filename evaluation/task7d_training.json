@@ -1,0 +1,623 @@
+{
+  "_doc": "Task 7D section 25. Stage D2 MiniTrain1200 -> MiniVal240: D-B1/D-B2/D-B3/D-B4 trained from fresh initialization with checkpoint selection by MiniVal240 mIoU and patience 5.",
+  "task": "7D",
+  "stage": "K-minitrain1200",
+  "seed": 20261001,
+  "packs": {
+    "z_overfit20": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_overfit20.json",
+      "sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+      "expected_sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+      "matches": true
+    },
+    "z_mini_train_1200": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_train_1200.json",
+      "sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+      "expected_sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+      "matches": true
+    },
+    "z_mini_val_240": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+      "sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+      "expected_sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+      "matches": true
+    },
+    "z_paired_val20": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_paired_val20.json",
+      "sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+      "expected_sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+      "matches": true
+    }
+  },
+  "packs_used": {
+    "train": {
+      "name": "z_mini_train_1200",
+      "records": 1200
+    },
+    "selection": {
+      "name": "z_mini_val_240",
+      "records": 240
+    }
+  },
+  "training": {
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "batch": 8,
+    "max_epochs": 25,
+    "patience": 5
+  },
+  "results": {
+    "D-B1": {
+      "variant": "D-B1",
+      "params": 278081,
+      "history": [
+        {
+          "step": 150,
+          "epoch": 1,
+          "miou": 0.2816973950728127,
+          "dice": 0.41505558242728924,
+          "loss": null
+        },
+        {
+          "step": 300,
+          "epoch": 2,
+          "miou": 0.3471959475982392,
+          "dice": 0.4793536220597441,
+          "loss": null
+        },
+        {
+          "step": 450,
+          "epoch": 3,
+          "miou": 0.3504721759469957,
+          "dice": 0.4680878759321194,
+          "loss": null
+        },
+        {
+          "step": 600,
+          "epoch": 4,
+          "miou": 0.38399191343404887,
+          "dice": 0.5148445539265458,
+          "loss": null
+        },
+        {
+          "step": 750,
+          "epoch": 5,
+          "miou": 0.39381778335017703,
+          "dice": 0.5269276970194651,
+          "loss": null
+        },
+        {
+          "step": 900,
+          "epoch": 6,
+          "miou": 0.3457078018622423,
+          "dice": 0.4553491104987476,
+          "loss": null
+        },
+        {
+          "step": 1050,
+          "epoch": 7,
+          "miou": 0.3978996298363562,
+          "dice": 0.5272592647111778,
+          "loss": null
+        },
+        {
+          "step": 1200,
+          "epoch": 8,
+          "miou": 0.3890510098594266,
+          "dice": 0.5136737665242999,
+          "loss": null
+        },
+        {
+          "step": 1350,
+          "epoch": 9,
+          "miou": 0.3756188270772818,
+          "dice": 0.49434240660052675,
+          "loss": null
+        },
+        {
+          "step": 1500,
+          "epoch": 10,
+          "miou": 0.394436724948011,
+          "dice": 0.5201743380178113,
+          "loss": null
+        },
+        {
+          "step": 1650,
+          "epoch": 11,
+          "miou": 0.3694463956107488,
+          "dice": 0.4815959697570064,
+          "loss": null
+        },
+        {
+          "step": 1800,
+          "epoch": 12,
+          "miou": 0.3735300848188391,
+          "dice": 0.4888915074647065,
+          "loss": null
+        }
+      ],
+      "best": {
+        "miou": 0.3978996298363562,
+        "dice": 0.5272592647111778,
+        "step": 1050,
+        "epoch": 7
+      },
+      "final": {
+        "records": 240,
+        "miou": 0.3978996298363562,
+        "dice": 0.5272592647111778,
+        "precision_at_0_5": 0.561976809693139,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 240,
+            "miou": 0.3978996298363562,
+            "dice": 0.5272592647111778
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 60,
+            "miou": 0.3749929037339562
+          },
+          "largest_to_below_to_nearest": {
+            "records": 60,
+            "miou": 0.3845155897703503
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 60,
+            "miou": 0.4145697844617314
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 60,
+            "miou": 0.41752024137938715
+          }
+        }
+      },
+      "steps": 1800,
+      "epochs": 12,
+      "wall_seconds": 96.8,
+      "peak_vram_gb": 0.667,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_minitrain1200.pt",
+        "sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+        "bytes": 1118664,
+        "committed": false
+      }
+    },
+    "D-B2": {
+      "variant": "D-B2",
+      "params": 362434,
+      "history": [
+        {
+          "step": 150,
+          "epoch": 1,
+          "miou": 0.24903934062354813,
+          "dice": 0.3665986326985388,
+          "loss": null
+        },
+        {
+          "step": 300,
+          "epoch": 2,
+          "miou": 0.2821444710818056,
+          "dice": 0.3932748752212075,
+          "loss": null
+        },
+        {
+          "step": 450,
+          "epoch": 3,
+          "miou": 0.31236418455778325,
+          "dice": 0.42627740805832154,
+          "loss": null
+        },
+        {
+          "step": 600,
+          "epoch": 4,
+          "miou": 0.31419944372091874,
+          "dice": 0.42813613418337415,
+          "loss": null
+        },
+        {
+          "step": 750,
+          "epoch": 5,
+          "miou": 0.3262960471450491,
+          "dice": 0.44170241531303983,
+          "loss": null
+        },
+        {
+          "step": 900,
+          "epoch": 6,
+          "miou": 0.2922389997827563,
+          "dice": 0.39571228631785255,
+          "loss": null
+        },
+        {
+          "step": 1050,
+          "epoch": 7,
+          "miou": 0.29549541439643956,
+          "dice": 0.39654924966930166,
+          "loss": null
+        },
+        {
+          "step": 1200,
+          "epoch": 8,
+          "miou": 0.2819060078692516,
+          "dice": 0.3756423329756482,
+          "loss": null
+        },
+        {
+          "step": 1350,
+          "epoch": 9,
+          "miou": 0.2902487874013893,
+          "dice": 0.38500149812525836,
+          "loss": null
+        },
+        {
+          "step": 1500,
+          "epoch": 10,
+          "miou": 0.3264764207334784,
+          "dice": 0.4372995061915569,
+          "loss": null
+        },
+        {
+          "step": 1650,
+          "epoch": 11,
+          "miou": 0.2835230994219446,
+          "dice": 0.3776414514422175,
+          "loss": null
+        },
+        {
+          "step": 1800,
+          "epoch": 12,
+          "miou": 0.24941094709258554,
+          "dice": 0.33637870241550494,
+          "loss": null
+        },
+        {
+          "step": 1950,
+          "epoch": 13,
+          "miou": 0.2765757298417227,
+          "dice": 0.3749717334001134,
+          "loss": null
+        },
+        {
+          "step": 2100,
+          "epoch": 14,
+          "miou": 0.25438518471843957,
+          "dice": 0.3380663147017244,
+          "loss": null
+        },
+        {
+          "step": 2250,
+          "epoch": 15,
+          "miou": 0.32208832894430806,
+          "dice": 0.43392709888297154,
+          "loss": null
+        }
+      ],
+      "best": {
+        "miou": 0.3264764207334784,
+        "dice": 0.4372995061915569,
+        "step": 1500,
+        "epoch": 10
+      },
+      "final": {
+        "records": 240,
+        "miou": 0.3264764207334784,
+        "dice": 0.4372995061915569,
+        "precision_at_0_5": 0.5454457977558677,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 240,
+            "miou": 0.3264764207334784,
+            "dice": 0.4372995061915569
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 60,
+            "miou": 0.2713921221981667
+          },
+          "largest_to_below_to_nearest": {
+            "records": 60,
+            "miou": 0.30849879507881195
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 60,
+            "miou": 0.36331215574497944
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 60,
+            "miou": 0.3627026099119551
+          }
+        }
+      },
+      "steps": 2250,
+      "epochs": 15,
+      "wall_seconds": 48.6,
+      "peak_vram_gb": 0.698,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db2_minitrain1200.pt",
+        "sha256": "91f8a4557f1339264b3b3fbdac97e9a11d8c0a0efa646eda02ac1a8912f009ce",
+        "bytes": 1457906,
+        "committed": false
+      }
+    },
+    "D-B3": {
+      "variant": "D-B3",
+      "params": 358978,
+      "history": [
+        {
+          "step": 150,
+          "epoch": 1,
+          "miou": 0.11295181022783099,
+          "dice": 0.1794892839089851,
+          "loss": null
+        },
+        {
+          "step": 300,
+          "epoch": 2,
+          "miou": 0.12268763795751246,
+          "dice": 0.19664426750209424,
+          "loss": null
+        },
+        {
+          "step": 450,
+          "epoch": 3,
+          "miou": 0.13038717667115218,
+          "dice": 0.1998128193659014,
+          "loss": null
+        },
+        {
+          "step": 600,
+          "epoch": 4,
+          "miou": 0.1568556349884087,
+          "dice": 0.24106008928927045,
+          "loss": null
+        },
+        {
+          "step": 750,
+          "epoch": 5,
+          "miou": 0.1539496781015132,
+          "dice": 0.22190024978780004,
+          "loss": null
+        },
+        {
+          "step": 900,
+          "epoch": 6,
+          "miou": 0.14268997665476876,
+          "dice": 0.20877648011933392,
+          "loss": null
+        },
+        {
+          "step": 1050,
+          "epoch": 7,
+          "miou": 0.15952594817806567,
+          "dice": 0.2310875350514649,
+          "loss": null
+        },
+        {
+          "step": 1200,
+          "epoch": 8,
+          "miou": 0.1477138410587879,
+          "dice": 0.2113949325613796,
+          "loss": null
+        },
+        {
+          "step": 1350,
+          "epoch": 9,
+          "miou": 0.12467688361379246,
+          "dice": 0.17467621521207072,
+          "loss": null
+        },
+        {
+          "step": 1500,
+          "epoch": 10,
+          "miou": 0.14892438239759542,
+          "dice": 0.20910405020971448,
+          "loss": null
+        },
+        {
+          "step": 1650,
+          "epoch": 11,
+          "miou": 0.13727746993010584,
+          "dice": 0.19555537968570372,
+          "loss": null
+        },
+        {
+          "step": 1800,
+          "epoch": 12,
+          "miou": 0.13792390873519264,
+          "dice": 0.19168675924010994,
+          "loss": null
+        }
+      ],
+      "best": {
+        "miou": 0.15952594817806567,
+        "dice": 0.2310875350514649,
+        "step": 1050,
+        "epoch": 7
+      },
+      "final": {
+        "records": 240,
+        "miou": 0.15952594817806567,
+        "dice": 0.2310875350514649,
+        "precision_at_0_5": 0.27595579466706516,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 240,
+            "miou": 0.15952594817806567,
+            "dice": 0.2310875350514649
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 60,
+            "miou": 0.14391559033436396
+          },
+          "largest_to_below_to_nearest": {
+            "records": 60,
+            "miou": 0.15531725909449773
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 60,
+            "miou": 0.1637718612548056
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 60,
+            "miou": 0.17509908202859537
+          }
+        }
+      },
+      "steps": 1800,
+      "epochs": 12,
+      "wall_seconds": 36.7,
+      "peak_vram_gb": 0.698,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db3_minitrain1200.pt",
+        "sha256": "b78ff98c1e81e146a0a922a2198a5e646f7953d5f3d72c33f833a4380352010a",
+        "bytes": 1444082,
+        "committed": false
+      }
+    },
+    "D-B4": {
+      "variant": "D-B4",
+      "params": 361282,
+      "history": [
+        {
+          "step": 150,
+          "epoch": 1,
+          "miou": 0.2758036343045894,
+          "dice": 0.39007416296344355,
+          "loss": null
+        },
+        {
+          "step": 300,
+          "epoch": 2,
+          "miou": 0.2827485837957948,
+          "dice": 0.39413377573664593,
+          "loss": null
+        },
+        {
+          "step": 450,
+          "epoch": 3,
+          "miou": 0.3159292942120266,
+          "dice": 0.43814920409056307,
+          "loss": null
+        },
+        {
+          "step": 600,
+          "epoch": 4,
+          "miou": 0.3143710612609,
+          "dice": 0.43082894230851176,
+          "loss": null
+        },
+        {
+          "step": 750,
+          "epoch": 5,
+          "miou": 0.32489689035382685,
+          "dice": 0.43944203241211277,
+          "loss": null
+        },
+        {
+          "step": 900,
+          "epoch": 6,
+          "miou": 0.3291152229856072,
+          "dice": 0.44878403931906935,
+          "loss": null
+        },
+        {
+          "step": 1050,
+          "epoch": 7,
+          "miou": 0.3208520563997952,
+          "dice": 0.4293781947531431,
+          "loss": null
+        },
+        {
+          "step": 1200,
+          "epoch": 8,
+          "miou": 0.25314770555106997,
+          "dice": 0.33739220702764855,
+          "loss": null
+        },
+        {
+          "step": 1350,
+          "epoch": 9,
+          "miou": 0.2926383825696005,
+          "dice": 0.3905414540798438,
+          "loss": null
+        },
+        {
+          "step": 1500,
+          "epoch": 10,
+          "miou": 0.3126185925580466,
+          "dice": 0.4200870095595863,
+          "loss": null
+        },
+        {
+          "step": 1650,
+          "epoch": 11,
+          "miou": 0.2724387599300457,
+          "dice": 0.36328483857059884,
+          "loss": null
+        }
+      ],
+      "best": {
+        "miou": 0.3291152229856072,
+        "dice": 0.44878403931906935,
+        "step": 900,
+        "epoch": 6
+      },
+      "final": {
+        "records": 240,
+        "miou": 0.3291152229856072,
+        "dice": 0.44878403931906935,
+        "precision_at_0_5": 0.4617798815595628,
+        "per_relation": {},
+        "per_reference_family": {
+          "largest": {
+            "records": 240,
+            "miou": 0.3291152229856072,
+            "dice": 0.44878403931906935
+          }
+        },
+        "per_program": {
+          "largest_to_above_to_nearest": {
+            "records": 60,
+            "miou": 0.2952231137003202
+          },
+          "largest_to_below_to_nearest": {
+            "records": 60,
+            "miou": 0.3108434843384847
+          },
+          "largest_to_left_of_to_nearest": {
+            "records": 60,
+            "miou": 0.37841514558824957
+          },
+          "largest_to_right_of_to_nearest": {
+            "records": 60,
+            "miou": 0.33197914831537434
+          }
+        }
+      },
+      "steps": 1650,
+      "epochs": 11,
+      "wall_seconds": 32.1,
+      "peak_vram_gb": 0.681,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db4_minitrain1200.pt",
+        "sha256": "188f42152fd59584ddb9e034028bcf823a6e394f80159166def79ce1c3c4f947",
+        "bytes": 1453298,
+        "committed": false
+      }
+    }
+  },
+  "selection_metric": "MiniVal240 mIoU",
+  "encoder": "Sam2LoadReport(config_file='configs/sam2.1/sam2.1_hiera_b+.yaml', checkpoint='C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\local_cache\\\\models\\\\sam2.1_hiera_base_plus.pt', source_revision='', image_size=1024, backbone_stride=16, prompt_embed_dim=256, image_embedding_size=(64, 64), mask_input_size=(256, 256), use_high_res_features_in_sam=True, directly_add_no_mem_embed=True, total_params=80850178, mask_decoder_params=4215109, image_encoder_params=69106816, prompt_encoder_params=6220, memory_attention_params=5922304, memory_encoder_params=1384608, loaded=True)",
+  "training_performed": true,
+  "test_split_used": false,
+  "verdict": "GLOBAL_COMPETITION_TRAINING_COMPLETE",
+  "runtime_seconds": 216.5
+}

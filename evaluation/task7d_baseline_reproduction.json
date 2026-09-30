@@ -1,0 +1,36 @@
+{
+  "_doc": "Task 7D section 16. D-B0: frozen Task 6Z Z-B3 baseline reproduction through the frozen Task 6Z evaluation path (same model, batching, pack order and oracle reference).",
+  "task": "7D",
+  "stage": "G-baseline-reproduction",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+    "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "variant": "Z-B3",
+    "retrained": false
+  },
+  "recomputed": {
+    "miou": 0.3242128982543474,
+    "dice": 0.4389840055529761,
+    "paired_passed": 15,
+    "pairs": 20,
+    "own_cross_margin": 0.30035408969722216
+  },
+  "frozen_task6z": {
+    "miou": 0.3242128982543474,
+    "dice": 0.4389840055529761,
+    "paired_passed": 15,
+    "own_cross_margin": 0.30035408969722216
+  },
+  "deltas": {
+    "miou": 0.0,
+    "dice": 0.0,
+    "margin": 0.0
+  },
+  "tolerance": 1e-06,
+  "reproduction_passed": true,
+  "verdict": "TASK6Z_BASELINE_REPRODUCTION_PASS",
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 22.7
+}
