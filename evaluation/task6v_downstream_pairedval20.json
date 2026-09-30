@@ -1,0 +1,23 @@
+{
+  "_doc": "Task 6V section 11. PairedVal20 through the frozen family-conditioned resolver with canonical program ids.",
+  "task": "6V",
+  "stage": "F-downstream-pairedval20",
+  "policy": {
+    "largest": "V-P2",
+    "smallest": "V-P0"
+  },
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json",
+    "pairs": 20,
+    "sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3"
+  },
+  "passed": 10,
+  "pairs": 20,
+  "mean_own_iou": 0.2911060240255382,
+  "mean_cross_iou": 0.003250845414798381,
+  "own_cross_margin": 0.28785517861073984,
+  "reference_abstention_pairs": 0,
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 19.0
+}

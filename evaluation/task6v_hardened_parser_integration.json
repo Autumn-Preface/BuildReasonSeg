@@ -1,0 +1,43 @@
+{
+  "_doc": "Task 6V section 12. Natural-language integration regression: the exact Task 6T hardened ProgramHead over MiniVal240 queries -> frozen family-conditioned resolver -> field v0.2 -> SAM2 -> B3. No nearest/L3 execution. Used as an integration check only.",
+  "task": "6V",
+  "stage": "G-hardened-parser-integration",
+  "policy": {
+    "largest": "V-P2",
+    "smallest": "V-P0"
+  },
+  "parser_checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e"
+  },
+  "target_decoder": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+  },
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+    "records": 240
+  },
+  "parser": {
+    "exact_correct": 240,
+    "records": 240,
+    "exact_accuracy": 1.0
+  },
+  "strict_all_miou": 0.300510718033478,
+  "answered_only_miou": 0.3069045630980201,
+  "answered_records": 235,
+  "abstentions": 5,
+  "reference_fail_count": 116,
+  "paired": {
+    "passed": 10,
+    "pairs": 20,
+    "own_cross_margin": 0.28785517861073984,
+    "mean_own_iou": 0.2911060240255382,
+    "mean_cross_iou": 0.003250845414798381
+  },
+  "nearest_or_l3_execution_evaluated": false,
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 69.8
+}

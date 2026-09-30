@@ -1,0 +1,308 @@
+{
+  "_doc": "Task 6V section 9. The frozen family-conditioned resolver (largest and smallest policies selected on the train-only U-Calib200 split) evaluated on the untouched Task 6P RefValUnique, with the six Task 6Q failure buckets and comparisons against the frozen Task 6U U-S0/U-S1/U-S2 and the U-C1 oracle-selection ceiling (diagnostic only). The policy is not modified here.",
+  "task": "6V",
+  "stage": "E-refval-family-policy",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6p\\reference_packs\\ref_val_unique.json",
+    "records": 219,
+    "sha256": "3896e11ba82b01aa1b46bcc91a02b2cf11824a5dcf32e92f7b541148253cb498"
+  },
+  "policy": {
+    "largest": "V-P2",
+    "smallest": "V-P0"
+  },
+  "policy_source": {
+    "frozen": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6v_frozen_family_policy.json",
+    "calibration": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6v_calibration_family_policy.json",
+    "train_only_calibration": true
+  },
+  "option_usage": {
+    "largest": "V-P2",
+    "smallest": "V-P0"
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+  },
+  "overall": {
+    "records": 219,
+    "answered": 214,
+    "selected_reference_miou": 0.4383028335658095,
+    "selected_reference_dice": 0.4995002698095976,
+    "precision_at_0_5": 0.5327102803738317,
+    "centroid_error_mean": 0.11323561355256456,
+    "centroid_error_median": 0.0106879293928725,
+    "centroid_error_p90": 0.3845417157482273,
+    "area_ratio_median": 1.0757061761126032,
+    "abstention_rate": 0.0228310502283105,
+    "buckets": {
+      "NO_PROPOSALS": 2,
+      "NO_ELIGIBLE_PROPOSALS": 3,
+      "REFERENCE_NOT_COVERED_IOU50": 59,
+      "REFERENCE_SELECTION_WRONG": 41,
+      "SELECTED_MASK_GEOMETRY_POOR": 0,
+      "REFERENCE_OK": 114
+    }
+  },
+  "largest": {
+    "records": 110,
+    "answered": 110,
+    "selected_reference_miou": 0.5680356394289978,
+    "selected_reference_dice": 0.6443512609370841,
+    "precision_at_0_5": 0.6636363636363637,
+    "centroid_error_mean": 0.07809164031046624,
+    "centroid_error_median": 0.006441763920763952,
+    "centroid_error_p90": 0.2947413794616817,
+    "area_ratio_median": 1.0280745651246508,
+    "abstention_rate": 0.0,
+    "buckets": {
+      "NO_PROPOSALS": 0,
+      "NO_ELIGIBLE_PROPOSALS": 0,
+      "REFERENCE_NOT_COVERED_IOU50": 14,
+      "REFERENCE_SELECTION_WRONG": 23,
+      "SELECTED_MASK_GEOMETRY_POOR": 0,
+      "REFERENCE_OK": 73
+    }
+  },
+  "smallest": {
+    "records": 109,
+    "answered": 104,
+    "selected_reference_miou": 0.30108544274897586,
+    "selected_reference_dice": 0.3462924907324485,
+    "precision_at_0_5": 0.3942307692307692,
+    "centroid_error_mean": 0.15040712371247625,
+    "centroid_error_median": 0.0659587584604342,
+    "centroid_error_p90": 0.4284577561312275,
+    "area_ratio_median": 1.1623563218390804,
+    "abstention_rate": 0.045871559633027525,
+    "buckets": {
+      "NO_PROPOSALS": 2,
+      "NO_ELIGIBLE_PROPOSALS": 3,
+      "REFERENCE_NOT_COVERED_IOU50": 45,
+      "REFERENCE_SELECTION_WRONG": 18,
+      "SELECTED_MASK_GEOMETRY_POOR": 0,
+      "REFERENCE_OK": 41
+    }
+  },
+  "buckets": {
+    "NO_PROPOSALS": 2,
+    "NO_ELIGIBLE_PROPOSALS": 3,
+    "REFERENCE_NOT_COVERED_IOU50": 59,
+    "REFERENCE_SELECTION_WRONG": 41,
+    "SELECTED_MASK_GEOMETRY_POOR": 0,
+    "REFERENCE_OK": 114
+  },
+  "bucket_order": [
+    "NO_PROPOSALS",
+    "NO_ELIGIBLE_PROPOSALS",
+    "REFERENCE_NOT_COVERED_IOU50",
+    "REFERENCE_SELECTION_WRONG",
+    "SELECTED_MASK_GEOMETRY_POOR",
+    "REFERENCE_OK"
+  ],
+  "comparison_task6u": {
+    "U-S0": {
+      "records": 219,
+      "answered": 213,
+      "selected_reference_miou": 0.4248027035308286,
+      "selected_reference_dice": 0.4832316980784417,
+      "precision_at_0_5": 0.5258215962441315,
+      "centroid_error_mean": 0.11948601176622001,
+      "centroid_error_median": 0.015607255391622093,
+      "centroid_error_p90": 0.3935169252798693,
+      "area_ratio_median": 1.08130081300813,
+      "abstention_rate": 0.0273972602739726,
+      "buckets": {
+        "NO_PROPOSALS": 3,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 62,
+        "REFERENCE_SELECTION_WRONG": 39,
+        "SELECTED_MASK_GEOMETRY_POOR": 1,
+        "REFERENCE_OK": 111
+      }
+    },
+    "U-S1": {
+      "records": 219,
+      "answered": 215,
+      "selected_reference_miou": 0.42893545615409556,
+      "selected_reference_dice": 0.49326397211017764,
+      "precision_at_0_5": 0.5209302325581395,
+      "centroid_error_mean": 0.11491002363011948,
+      "centroid_error_median": 0.015940559841680503,
+      "centroid_error_p90": 0.38033070555175097,
+      "area_ratio_median": 1.0718562874251496,
+      "abstention_rate": 0.0182648401826484,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 50,
+        "REFERENCE_SELECTION_WRONG": 53,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 112
+      }
+    },
+    "U-S2": {
+      "records": 219,
+      "answered": 215,
+      "selected_reference_miou": 0.31067091056985136,
+      "selected_reference_dice": 0.35641870148901933,
+      "precision_at_0_5": 0.3581395348837209,
+      "centroid_error_mean": 0.1504816601047506,
+      "centroid_error_median": 0.08901497043021954,
+      "centroid_error_p90": 0.3771431909157986,
+      "area_ratio_median": 1.4694719471947195,
+      "abstention_rate": 0.0182648401826484,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 50,
+        "REFERENCE_SELECTION_WRONG": 88,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 77
+      }
+    },
+    "U-S0_largest": {
+      "records": 110,
+      "answered": 109,
+      "selected_reference_miou": 0.5428448606070918,
+      "selected_reference_dice": 0.6138892904085639,
+      "precision_at_0_5": 0.6513761467889908,
+      "centroid_error_mean": 0.08998329945052598,
+      "centroid_error_median": 0.007301660023818854,
+      "centroid_error_p90": 0.31742672005413636,
+      "area_ratio_median": 1.0301090564248458,
+      "abstention_rate": 0.00909090909090909,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 17,
+        "REFERENCE_SELECTION_WRONG": 21,
+        "SELECTED_MASK_GEOMETRY_POOR": 1,
+        "REFERENCE_OK": 70
+      }
+    },
+    "U-S1_largest": {
+      "records": 110,
+      "answered": 110,
+      "selected_reference_miou": 0.5182954120206107,
+      "selected_reference_dice": 0.5940054659496649,
+      "precision_at_0_5": 0.6,
+      "centroid_error_mean": 0.08575763576330277,
+      "centroid_error_median": 0.009358035913929204,
+      "centroid_error_p90": 0.291118664260867,
+      "area_ratio_median": 1.061771147097884,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 14,
+        "REFERENCE_SELECTION_WRONG": 30,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 66
+      }
+    },
+    "U-S2_largest": {
+      "records": 110,
+      "answered": 110,
+      "selected_reference_miou": 0.5680356394289978,
+      "selected_reference_dice": 0.6443512609370841,
+      "precision_at_0_5": 0.6636363636363637,
+      "centroid_error_mean": 0.07809164031046624,
+      "centroid_error_median": 0.006441763920763952,
+      "centroid_error_p90": 0.2947413794616817,
+      "area_ratio_median": 1.0280745651246508,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 14,
+        "REFERENCE_SELECTION_WRONG": 23,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 73
+      }
+    },
+    "U-S0_smallest": {
+      "records": 109,
+      "answered": 104,
+      "selected_reference_miou": 0.30108544274897586,
+      "selected_reference_dice": 0.3462924907324485,
+      "precision_at_0_5": 0.3942307692307692,
+      "centroid_error_mean": 0.15040712371247625,
+      "centroid_error_median": 0.0659587584604342,
+      "centroid_error_p90": 0.4284577561312275,
+      "area_ratio_median": 1.1623563218390804,
+      "abstention_rate": 0.045871559633027525,
+      "buckets": {
+        "NO_PROPOSALS": 2,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 45,
+        "REFERENCE_SELECTION_WRONG": 18,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 41
+      }
+    },
+    "U-S1_smallest": {
+      "records": 109,
+      "answered": 105,
+      "selected_reference_miou": 0.33532026429393696,
+      "selected_reference_dice": 0.38772526427833387,
+      "precision_at_0_5": 0.4380952380952381,
+      "centroid_error_mean": 0.1454506204429751,
+      "centroid_error_median": 0.04687407593942115,
+      "centroid_error_p90": 0.4789135826940743,
+      "area_ratio_median": 1.109271523178808,
+      "abstention_rate": 0.03669724770642202,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 36,
+        "REFERENCE_SELECTION_WRONG": 23,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 46
+      }
+    },
+    "U-S2_smallest": {
+      "records": 109,
+      "answered": 105,
+      "selected_reference_miou": 0.0410507184316981,
+      "selected_reference_dice": 0.0547750677815232,
+      "precision_at_0_5": 0.0380952380952381,
+      "centroid_error_mean": 0.22631882369876277,
+      "centroid_error_median": 0.20547953626428195,
+      "centroid_error_p90": 0.4359226586072107,
+      "area_ratio_median": 3.9677637511271415,
+      "abstention_rate": 0.03669724770642202,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 36,
+        "REFERENCE_SELECTION_WRONG": 65,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 4
+      }
+    },
+    "U-C1_oracle_selection_ceiling": {
+      "records": 215,
+      "selected_reference_miou": 0.6202994712525458,
+      "dice": 0.7091789625568412,
+      "precision_at_0_5": 0.7674418604651163,
+      "centroid_error_median": 0.004642266288301866,
+      "centroid_error_p90": 0.1080499331154414
+    }
+  },
+  "improvement_flag_inputs": {
+    "miou_required": 0.4439354561540956,
+    "miou_measured": 0.4383028335658095,
+    "reference_ok_required": 117,
+    "reference_ok_measured": 114,
+    "selection_wrong_required": 48,
+    "selection_wrong_measured": 41,
+    "abstention_rate_max": 0.05,
+    "abstention_rate_measured": 0.0228310502283105
+  },
+  "family_policy_improved": false,
+  "policy_changed_after_refval": false,
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 9.9
+}

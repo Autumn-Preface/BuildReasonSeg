@@ -1,0 +1,287 @@
+{
+  "_doc": "Task 6V sections 13-15. Predeclared family-policy improvement flag, the ten directional reference-hardening conditions and the single verdict. No model was trained in Task 6V; the per-family policy was frozen on train-only U-Calib200 before any RefValUnique evaluation. Family routing is support infrastructure, not a claimed novelty.",
+  "task": "6V",
+  "verdict": "FAMILY_POLICY_NOT_BETTER",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "FROZEN_RESOLVER_ASSET_UNAVAILABLE",
+    "FAMILY_POLICY_NOT_BETTER",
+    "FAMILY_POLICY_PARTIAL",
+    "FAMILY_CONDITIONED_REFERENCE_HARDENING_PASS"
+  ],
+  "reason": "the section 13 improvement flag fails (mIoU delta +0.0094 < +0.015; REFERENCE_OK 114 < 117) and the section 14 hardening gate fails on 7 of 10 conditions",
+  "protocol": {
+    "frozen_non_task6v_unchanged": true,
+    "changed_paths": "",
+    "training_performed": false,
+    "ranker_retrained": false,
+    "yolo_retrained": false,
+    "parser_retrained": false,
+    "b3_retrained": false,
+    "test_split_used": false,
+    "gt_in_inference": false,
+    "policy_changed_after_refval": false,
+    "policy_frozen_before_refval": true,
+    "options_compared": 3,
+    "fourth_option_added": false,
+    "selected_policy": {
+      "largest": "V-P2",
+      "smallest": "V-P0"
+    },
+    "clean": true
+  },
+  "improvement_flag": {
+    "family_policy_improved": false,
+    "criteria": {
+      "miou": {
+        "required": 0.4439354561540956,
+        "measured": 0.4383028335658095,
+        "passed": false
+      },
+      "reference_ok": {
+        "required": 117,
+        "measured": 114,
+        "passed": false
+      },
+      "selection_wrong": {
+        "required": 48,
+        "measured": 41,
+        "passed": true
+      },
+      "abstention_rate": {
+        "required": 0.05,
+        "measured": 0.0228310502283105,
+        "passed": true
+      }
+    },
+    "reference_baseline": "Task 6U U-S1",
+    "u_s1_reference": {
+      "selected_reference_miou": 0.42893545615409556,
+      "precision_at_0_5": 0.5209302325581395,
+      "abstention_rate": 0.0182648401826484
+    },
+    "u_s1_buckets": {
+      "NO_PROPOSALS": 1,
+      "NO_ELIGIBLE_PROPOSALS": 3,
+      "REFERENCE_NOT_COVERED_IOU50": 50,
+      "REFERENCE_SELECTION_WRONG": 53,
+      "SELECTED_MASK_GEOMETRY_POOR": 0,
+      "REFERENCE_OK": 112
+    }
+  },
+  "gates": {
+    "1_refval_miou": {
+      "required": 0.45,
+      "measured": 0.4383028335658095,
+      "passed": false
+    },
+    "2_refval_centroid_median": {
+      "required": 0.03,
+      "measured": 0.0106879293928725,
+      "passed": true
+    },
+    "3_refval_centroid_p90": {
+      "required": 0.32,
+      "measured": 0.3845417157482273,
+      "passed": false
+    },
+    "4_minival_answered_miou": {
+      "required": 0.325,
+      "measured": 0.3069045630980201,
+      "passed": false
+    },
+    "5_minival_strict_miou": {
+      "required": 0.305,
+      "measured": 0.300510718033478,
+      "passed": false
+    },
+    "6_paired": {
+      "required": 12,
+      "measured": 10,
+      "passed": false
+    },
+    "7_own_cross_margin": {
+      "required": 0.3,
+      "measured": 0.28785517861073984,
+      "passed": false
+    },
+    "8_reference_fail_count": {
+      "required": 105,
+      "measured": 116,
+      "passed": false
+    },
+    "9_parser_integration_240": {
+      "required": "240/240",
+      "measured": 240,
+      "passed": true
+    },
+    "10_no_test_no_gt": {
+      "measured": {
+        "no_test_split": true,
+        "no_gt_in_inference": true
+      },
+      "passed": true
+    }
+  },
+  "all_gates_passed": false,
+  "gate_constants": {
+    "1_refval_miou_min": 0.45,
+    "2_refval_centroid_median_max": 0.03,
+    "3_refval_centroid_p90_max": 0.32,
+    "4_minival_answered_miou_min": 0.325,
+    "5_minival_strict_miou_min": 0.305,
+    "6_paired_min": 12,
+    "7_own_cross_margin_min": 0.3,
+    "8_reference_fail_max": 105
+  },
+  "headline": {
+    "frozen_policy": {
+      "largest": "V-P2",
+      "smallest": "V-P0"
+    },
+    "calibration_ranking": {
+      "largest": [
+        "V-P2",
+        "V-P0",
+        "V-P1"
+      ],
+      "smallest": [
+        "V-P0",
+        "V-P1",
+        "V-P2"
+      ]
+    },
+    "calibration_selected_metrics": {
+      "largest": {
+        "selected_reference_miou": 0.6650318073089668,
+        "precision_at_0_5": 0.8,
+        "centroid_median": 0.0043676920843468015,
+        "abstention_rate": 0.0,
+        "REFERENCE_SELECTION_WRONG": 18,
+        "REFERENCE_OK": 80
+      },
+      "smallest": {
+        "selected_reference_miou": 0.4153739682230623,
+        "precision_at_0_5": 0.53,
+        "centroid_median": 0.004371625012645202,
+        "abstention_rate": 0.0,
+        "REFERENCE_SELECTION_WRONG": 38,
+        "REFERENCE_OK": 53
+      }
+    },
+    "refval": {
+      "overall": {
+        "selected_reference_miou": 0.4383028335658095,
+        "selected_reference_dice": 0.4995002698095976,
+        "precision_at_0_5": 0.5327102803738317,
+        "centroid_error_mean": 0.11323561355256456,
+        "centroid_error_median": 0.0106879293928725,
+        "centroid_error_p90": 0.3845417157482273,
+        "area_ratio_median": 1.0757061761126032,
+        "abstention_rate": 0.0228310502283105
+      },
+      "largest": {
+        "selected_reference_miou": 0.5680356394289978,
+        "precision_at_0_5": 0.6636363636363637
+      },
+      "smallest": {
+        "selected_reference_miou": 0.30108544274897586,
+        "precision_at_0_5": 0.3942307692307692
+      },
+      "buckets": {
+        "NO_PROPOSALS": 2,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 59,
+        "REFERENCE_SELECTION_WRONG": 41,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 114
+      },
+      "option_usage": {
+        "largest": "V-P2",
+        "smallest": "V-P0"
+      }
+    },
+    "comparison_task6u": {
+      "U-S0_miou": 0.4248027035308286,
+      "U-S1_miou": 0.42893545615409556,
+      "U-S2_miou": 0.31067091056985136,
+      "U-S0_buckets": {
+        "NO_PROPOSALS": 3,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 62,
+        "REFERENCE_SELECTION_WRONG": 39,
+        "SELECTED_MASK_GEOMETRY_POOR": 1,
+        "REFERENCE_OK": 111
+      },
+      "U-S1_buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 50,
+        "REFERENCE_SELECTION_WRONG": 53,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 112
+      },
+      "U-S2_buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "REFERENCE_NOT_COVERED_IOU50": 50,
+        "REFERENCE_SELECTION_WRONG": 88,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 77
+      },
+      "oracle_ceiling_miou": 0.6202994712525458
+    },
+    "downstream": {
+      "strict_all_miou": 0.300510718033478,
+      "answered_only_miou": 0.3069045630980201,
+      "abstentions": 5,
+      "reference_fail_count": 116,
+      "target_fail_with_reference_ok_count": 68,
+      "largest_miou": 0.33930113458780287,
+      "smallest_miou": 0.26172030147915315,
+      "per_direction": {
+        "left_of": 0.31890555396090503,
+        "right_of": 0.2365175509874754,
+        "above": 0.3441062317563666,
+        "below": 0.30251353542916504
+      },
+      "border_target": {
+        "records": 114,
+        "miou": 0.29846005202631776
+      },
+      "tiny_target": {
+        "records": 4,
+        "miou": 7.42794373054799e-08
+      }
+    },
+    "paired": {
+      "passed": 10,
+      "mean_own_iou": 0.2911060240255382,
+      "mean_cross_iou": 0.003250845414798381,
+      "own_cross_margin": 0.28785517861073984,
+      "reference_abstention_pairs": 0
+    },
+    "parser_integration": {
+      "exact": "240/240",
+      "strict_all_miou": 0.300510718033478,
+      "answered_only_miou": 0.3069045630980201,
+      "abstentions": 5,
+      "reference_fail_count": 116
+    }
+  },
+  "interpretation_boundary": {
+    "family_routing_claimed_as_novelty": false,
+    "ranker_redesigned": false,
+    "smallest_only_ranker_trained": false,
+    "proposal_quality_classifier_trained": false,
+    "candidate_config_changed": false,
+    "confidence_threshold_added": false,
+    "tta_or_tiling_added": false,
+    "yolo_retrained": false,
+    "nearest_or_l3_started": false,
+    "task6w_chosen": false
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 0.24
+}
