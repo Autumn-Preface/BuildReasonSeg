@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6V._
+_Last updated by DSH at the end of Task 6W._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -94,6 +94,41 @@ The block above is machine-checked against
 | 6U | **Reference candidate coverage + ProposalSetRanker** | **done → `REFERENCE_RANKER_NOT_HELPFUL`** (reference-side hardening only; YOLO26m-seg SHA `ef852b58…61f474` verified and **not retrained**, Task 6Q eligibility/field v0.2/SAM2/B3 frozen: train-only split from RefTrainUnique by unique key = **U-Calib200** 200 (100+100) + **U-RankerTrain** 625 (391+234), zero overlap with each other and with RefValUnique; four declared configs on U-Calib200 → smallest eligible@0.50 U-C0 0.9100 / **U-C1 0.9400** / U-C2 0.8800 / U-C3 0.9000, overall 0.9450/0.9600/0.9200/0.9300 → section-10 priority ranking `U-C1 > U-C0 > U-C3 > U-C2` → **U-C1 frozen** (imgsz 640 / conf 0.05 / max_det 300, no TTA/tiling); RefValUnique coverage overall 0.6895 → **0.7534** (+0.0639) and smallest 0.5413 → **0.6330** (+0.0917) → `candidate_coverage_improved=true`, oracle ceiling 0.6203; ProposalSetRanker v0.1 (14-d features, 14→32→16→1, 1,025 params; 598 trainable / 27 `untrainable_not_covered`; holdout top-1 0.45) **degrades** selection: RefVal mIoU U-S0 0.4248 / U-S1 **0.4289** / U-S2 0.3107, `SELECTION_WRONG` 39 → 53 → **88**; downstream MiniVal240 answered U-S0 0.3046 / U-S1 **0.3141** / U-S2 0.2466, reference-fail 117 → 115 → **158**, PairedVal 10 → **11** → 11, margin +0.2737 → **+0.3209** → +0.3332 (U-S0 reproduces Task 6S exactly); §24 U-S2 gates **3/10 pass** → verdict) |
 
 | 6V | **Family-conditioned reference resolver policy** | **done → `FAMILY_POLICY_NOT_BETTER`** (**no model trained**: only frozen options recombined; YOLO26m-seg `ef852b58…61f474`, ranker `c738fcf7…1a46c0`, hardened parser `4cbba36b…d44a5e`, B3 `7556e4a4…c7d6ab` all hash-verified and untouched; three declared options V-P0 (U-C0+deterministic) / V-P1 (U-C1+deterministic) / V-P2 (U-C1+ranker, no fourth); train-only U-Calib200 per-family selection → **largest V-P2** (Pr@0.5 0.8000 / mIoU 0.6650 / SELECTION_WRONG 18) and **smallest V-P0** (0.5300 / 0.4154 / 38) frozen as `{largest: V-P2, smallest: V-P0}` before RefVal and never revised (calibration prefers U-C0 for smallest, inverting Task 6U's RefVal reading); RefValUnique frozen-policy mIoU **0.4383** / Dice 0.4995 / Pr@0.5 **0.5327** / centroid median **0.0107** / p90 0.3845 / abstain **0.0228**, buckets OK **114** / SELECTION_WRONG **41** / NOT_COVERED 59 (vs U-S0 0.4248/111/39/62, U-S1 0.4289/112/53/50, U-S2 0.3107/77/88/50; oracle ceiling 0.6203); downstream MiniVal240 strict **0.3005** / answered **0.3069** / abstain 5 / ref-fail **116** / target-fail 68 (U-S1 0.3089/0.3141/4/115), PairedVal **10/20** margin **+0.2879**, parser integration **240/240**; §13 flag **false** (mIoU Δ +0.0094 < +0.015, REFERENCE_OK 114 < 117) and §14 gate **3/10** → verdict) |
+
+| 6W | **Proposal-quality filtering + semantic extreme selection** | **done → `QUALITY_FILTER_NOT_HELPFUL`** (support-infrastructure hypothesis test; U-C1 `ef852b58…61f474` / hardened parser / field v0.2 / SAM2 / B3 all frozen and hash-verified; **W0 oracle gate PASSED** on train-only U-Calib200 — oracle `q_gt≥0.50` filter + deterministic area rule: overall mIoU 0.4789 → **0.6575** (+0.1786 ≥ +0.08), smallest 0.3545 → **0.6707** (+0.3162 ≥ +0.10), `SELECTION_WRONG` 76 → **23** (≤45), abstain 0 ✓ → estimator training permitted; dataset from U-RankerTrain tiles only, deduplicated by tile, **36 calib-overlapping and 0 refval tiles excluded** → 548 tiles / **5,246 proposals** (3,337 pos / 1,909 neg), 93 `feature_invalid_small`, tile-disjoint 420/128 split, overlaps 0; `ProposalQualityEstimator v0.1` = 8 geometry scalars + frozen SAM2 256×64×64 inside/ring means (512) → `Linear(512→64)+LN+GELU` ‖ `Linear(8→16)+GELU` → `Linear(80→32→1)`, **35,729 params**, BCE `pos_weight 0.5666` train-only, frozen threshold 0.50, epoch 19 → holdout **AUROC 0.8438 / F1 0.8251** (adequacy ✓); RefValUnique mIoU W-S0 0.4289 → **W-SQ 0.3793** (oracle ceiling **0.5209**), `REFERENCE_OK` 112 → 97 (oracle 144), `SELECTION_WRONG` 53 → **65** (oracle 20), rejected-all 5; downstream MiniVal240 answered 0.3141 → **0.2746**, abstain 4 → 10, ref-fail 115 → **132**, PairedVal 11/20 → **9/20** (margin +0.3209 → +0.2482); parser integration 240/240; §23 gates **4/12** → verdict) |
+
+## Task 6W measured results
+
+Tests the hypothesis that fragmented/merged/incomplete proposals corrupt the literal largest/smallest rule
+and that filtering low-quality proposals first would restore reliable extreme selection. Support
+infrastructure only; no new algorithmic novelty claim and no change to the detector, field or B3. Full
+detail: `docs/task6w_proposal_quality_filter.md`, `evaluation/task6w_*.json`.
+
+| | Value |
+|---|---|
+| Frozen assets | U-C1 (640 / 0.05 / 300, no TTA/tiling) · YOLO SHA `ef852b58…61f474` exact · field v0.2 / SAM2 / B3 / parser unchanged |
+| W0 oracle gate (U-Calib200) | overall mIoU 0.4789 → **0.6575** (**+0.1786** ≥ +0.08 ✓) · smallest 0.3545 → **0.6707** (**+0.3162** ≥ +0.10 ✓) · `SELECTION_WRONG` 76 → **23** (≤45 ✓) · abstain 0 ✓ · `REFERENCE_OK` 116 → 169 |
+| Quality dataset | U-RankerTrain only, deduplicated by tile; 36 calib-overlapping + 0 refval tiles **excluded** → **548** tiles · **5,246** proposals (**3,337 pos / 1,909 neg**) · 93 `feature_invalid_small`, 0 empty rings · train/holdout **420 / 128** tiles, overlap 0 |
+| Estimator | 8 geometry scalars + SAM2 256×64×64 inside-mean ‖ one-cell-ring-mean = 512 visual · `Linear(512→64)+LayerNorm+GELU` ‖ `Linear(8→16)+GELU` → `Linear(80→32)+GELU+Linear(32→1)` · **35,729 params** · BCE `pos_weight 0.5666` (train-only) · AdamW 5e-4 / wd 1e-4 / batch 256 / patience 5 · epoch **19** → holdout **AUROC 0.8438**, AUPRC 0.8952, **F1 0.8251** (adequacy ✓) |
+| RefValUnique | mIoU **0.4289 / 0.3793 / 0.5209** (W-S0 / W-SQ / W-ORACLE) · Pr@0.5 0.5209 / 0.4619 / **0.6872** · centroid median 0.0159 / 0.0490 / **0.0065** · p90 0.3803 / 0.3963 / 0.3251 · abstain 0.0183 / 0.0411 / 0.0365 |
+| RefVal buckets | `REFERENCE_OK` 112 → 97 (oracle **144**) · `SELECTION_WRONG` 53 → **65** (oracle 20) · `NOT_COVERED` 50 → 48 · `QUALITY_FILTER_ALL_REJECTED` 0 → **5** · largest/smallest mIoU (oracle) **0.6043 / 0.4366** |
+| Downstream MiniVal240 | strict 0.3089 → 0.2631 · answered **0.3141 → 0.2746** · abstain 4 → 10 · ref-fail 115 → **132** · target-fail 69 → 60 · largest/smallest 0.3241/0.2937 → 0.2888/0.2375 · border 0.2896 → 0.2536 · tiny ≈0 |
+| PairedVal20 | **11/20 → 9/20** · own 0.3249 → 0.2576 · cross 0.0040 → 0.0095 · margin **+0.3209 → +0.2482** · abstention pairs 0 → 1 |
+| Parser integration (Part J) | hardened ProgramHead → W-SQ: parser **240/240**, strict 0.2631, answered 0.2746, abstain 10, ref-fail 132 |
+| Flags | W0 ✓ · adequacy ✓ · `quality_reference_improved` **false** (mIoU < W-S0 + 0.04, `REFERENCE_OK` 97 < 120, `SELECTION_WRONG` 65 > 39) |
+| §23 gates | **4/12** (W0 ✓, adequacy ✓, parser ✓, no test/GT ✓); ✗ RefVal mIoU < 0.48, centroid median > 0.03, p90 > 0.28, answered < 0.33, strict < 0.31, paired < 12, margin < 0.30, ref-fail > 100 |
+| Verdict | **`QUALITY_FILTER_NOT_HELPFUL`** |
+
+1. **The mechanism is sound; the estimator is the bottleneck**: with oracle quality knowledge the same
+   deterministic largest/smallest rule jumps to mIoU 0.6575 / smallest 0.6707 on U-Calib200 and to 0.5209
+   with `REFERENCE_OK` 144 on RefValUnique, while the learned filter (holdout AUROC 0.844) *reduces* every
+   reference and downstream metric.
+2. **The learned filter rejects good candidates**: it empties 5 RefVal reference sets, pushes
+   `SELECTION_WRONG` 53 → 65 and abstentions 4 → 10 downstream, hurting the smallest family most
+   (0.3353 → 0.2982).
+3. W-S0 reproduced Task 6U U-S1 exactly (strict 0.3089 / answered 0.3141 / paired 11/20 / margin +0.3209),
+   validating the causal isolation; the parser integration stayed 240/240.
+4. Next: 等待 ChatGPT 根据 Task 6W 的 oracle-quality ceiling、learned quality filter 与 downstream 结果决定 reference 是否继续硬化，不自行增加 ranker、size estimator 或 detector 改动。
 
 ## Task 6V measured results
 

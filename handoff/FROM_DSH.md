@@ -17,169 +17,177 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6V Report: Family-Conditioned Reference Resolver Policy
+# FROM_DSH — Task 6W Report: Proposal-Quality Filtering + Semantic Extreme Selection
 
-_This file holds the Task 6V report. The Task 6U report is preserved in git history at commit `b8b5224`;
-Task 6T at `e63f8c4`; Task 6S at `dc8544f`; Task 6R at `a3d59da`; Task 6Q at `7c19bec`._
+_This file holds the Task 6W report. The Task 6V report is preserved in git history at commit `3e185fb`;
+Task 6U at `b8b5224`; Task 6T at `e63f8c4`; Task 6S at `dc8544f`; Task 6R at `a3d59da`._
 
 **Note on the legacy block above:** those `ARTIFACT-FACTS` numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task6v_family_conditioned_reference_resolver.md`.
+Full design notes: `docs/task6w_proposal_quality_filter.md`.
 
 ## 1. Verdict
 
-**`FAMILY_POLICY_NOT_BETTER`** — section 15 priority order applied literally:
+**`QUALITY_FILTER_NOT_HELPFUL`** — section 24 priority order applied literally:
 
-1. `INVALID_EXPERIMENT` — no: no test use, no GT in inference, no post-RefVal policy change, no frozen
-   module mutation, no fourth option, no training.
-2. `FROZEN_RESOLVER_ASSET_UNAVAILABLE` — no: YOLO26m-seg, ranker, hardened ProgramHead and B3 hashes all
-   verified exactly.
-3. **`FAMILY_POLICY_NOT_BETTER`** — the section 13 improvement flag fails (RefVal mIoU Δ **+0.0094** <
-   +0.015; `REFERENCE_OK` 114 < 117) **and** the section 14 hardening gate fails on 7 of 10 conditions.
-   ← **verdict**
-4. `FAMILY_POLICY_PARTIAL` — not applicable (the improvement flag does not hold).
-5. `FAMILY_CONDITIONED_REFERENCE_HARDENING_PASS` — no.
+1. `INVALID_EXPERIMENT` — no: protocol clean (frozen modules unchanged, no test use, no GT in inference,
+   no threshold change, no post-hoc gate change).
+2. `FROZEN_ASSET_UNAVAILABLE` — no: YOLO26m-seg SHA256 verified exact, U-C1 config unchanged.
+3. `QUALITY_FILTER_MECHANISM_INSUFFICIENT` — **no: the W0 oracle gate PASSED all four conditions.**
+4. `QUALITY_ESTIMATOR_NOT_LEARNABLE` — **no: adequacy PASSED** (holdout AUROC 0.8438 ≥ 0.80, F1 0.8251 ≥
+   0.65, no tile overlap).
+5. **`QUALITY_FILTER_NOT_HELPFUL`** — estimator adequacy passes but `quality_reference_improved = false`
+   and the section-23 downstream hardening gate fails on 8 of 12 conditions. ← **verdict**
+6. `QUALITY_REFERENCE_HARDENING_PARTIAL` — not applicable (no improvement).
+7. `PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS` — no.
 
-**Frozen policy: `{"largest": "V-P2", "smallest": "V-P0"}`. No model was trained in Task 6V.**
+No threshold was altered after seeing results; the quality threshold stayed frozen at 0.50.
 
-## 2. Recorded Task 6U findings (Task 6U artifacts not mutated)
+## 2. Recorded Task 6V result (Task 6V artifacts not mutated)
 
-Candidate coverage, U-C1 vs U-C0 on untouched RefValUnique: overall eligible@0.50 0.68950 → 0.75342,
-largest 0.83636 → 0.87273, smallest 0.54128 → 0.63303 (candidate recall improved). Selector behaviour on
-RefValUnique — largest: U-S0 0.54284/0.65138, U-S1 0.51830/0.60000, U-S2 0.56804/0.66364 (mIoU/Pr@0.5);
-smallest: U-S0 0.30109/0.39423, U-S1 0.33532/0.43810, U-S2 0.04105/0.03810. The shared v0.1 ranker is not
-accepted globally; family-specific usefulness must be chosen on train-only calibration, not RefVal.
+`FAMILY_POLICY_NOT_BETTER`; frozen policy `largest → V-P2` (U-C1 + ranker), `smallest → V-P0` (U-C0 +
+deterministic). RefValUnique mIoU 0.4383028 vs U-S1 0.4289355 (Δ +0.0093674 < +0.015),
+`REFERENCE_OK` 114 < 117, `REFERENCE_SELECTION_WRONG` 41, `NOT_COVERED` 59; downstream answered mIoU
+0.3069046, strict 0.3005107, paired 10/20, margin +0.287855, reference-fail 116. Family routing slightly
+improves some reference metrics but does not solve the dominant bottleneck; U-C1 stays valuable for
+candidate coverage; ProposalSetRanker is not accepted as a global selector.
 
-## 3. Frozen assets and exactly three options
+## 3. W0 oracle mechanism diagnostic (U-Calib200 only)
 
-Verified exactly: YOLO26m-seg `ef852b5801…61f474` (not retrained), ProposalSetRanker v0.1
-`c738fcf77419626f…1a46c0` (not retrained), Task 6T hardened ProgramHead `4cbba36b1364b0a8…d44a5e` (not
-retrained), Task 6O B3 `7556e4a4862b75d4…c7d6ab` (not retrained), frozen pack hashes byte-identical. Only
-three options exist:
+`evaluation/task6w_oracle_quality_filter_calib.json` — `q_gt = max IoU(proposal, every native GT building
+instance on the tile)`, oracle keeps `q_gt >= 0.50`, then deterministic largest/smallest with the Task 6Q
+tie-break. GT is diagnostic metadata only.
 
-* **V-P0** = U-C0 + deterministic Task 6Q area selector;
-* **V-P1** = U-C1 + deterministic Task 6Q area selector;
-* **V-P2** = U-C1 + frozen ProposalSetRanker v0.1.
-
-## 4. Train-only policy selection on U-Calib200 (Parts C-D)
-
-| family | option | Pr@0.5 | mIoU | SELECTION_WRONG | REFERENCE_OK | NOT_COVERED | centroid med | centroid p90 |
-|---|---|---|---|---|---|---|---|---|
-| largest | V-P0 | 0.7600 | 0.6338 | 22 | 76 | 2 | 0.0047 | 0.2508 |
-| largest | V-P1 | 0.7100 | 0.6034 | 27 | 71 | 2 | 0.0059 | 0.2806 |
-| **largest** | **V-P2** | **0.8000** | **0.6650** | **18** | **80** | 2 | 0.0044 | 0.1929 |
-| **smallest** | **V-P0** | **0.5300** | **0.4154** | **38** | **53** | 9 | 0.0044 | 0.3146 |
-| smallest | V-P1 | 0.4500 | 0.3545 | 49 | 45 | 6 | 0.0506 | 0.3033 |
-| smallest | V-P2 | 0.0300 | 0.0546 | 91 | 3 | 6 | 0.1599 | 0.3801 |
-
-Section 7 priority → `largest: [V-P2, V-P0, V-P1]`, `smallest: [V-P0, V-P1, V-P2]` →
-`task6v_frozen_family_policy.json` = **`{"largest": "V-P2", "smallest": "V-P0"}`**, frozen before any
-RefValUnique evaluation and never revisited.
-
-**Recorded inversion:** the train-only calibration prefers **U-C0** for `smallest`, while Task 6U's
-RefValUnique evaluation preferred U-C1 (0.33532 vs 0.30109). The predeclared rule selects on calibration
-only, so the frozen policy uses U-C0 for `smallest` and gives back the C1 coverage gain on that family.
-
-## 5. RefValUnique evaluation (Part E)
-
-| Metric | Frozen family policy | U-S0 | U-S1 | U-S2 | U-C1 oracle ceiling |
-|---|---|---|---|---|---|
-| selected-reference mIoU | **0.4383** | 0.4248 | 0.4289 | 0.3107 | 0.6203 |
-| Dice | 0.4995 | 0.4832 | 0.4933 | 0.3564 | 0.7092 |
-| Pr@0.5 | **0.5327** | 0.5258 | 0.5209 | 0.3581 | 0.7674 |
-| centroid mean / median / p90 | 0.1132 / **0.0107** / 0.3845 | — / 0.0156 / 0.3935 | — / 0.0159 / 0.3803 | — / 0.0890 / 0.3771 | — / 0.0046 / 0.108 |
-| area-ratio median | 1.0757 | 1.0813 | 1.0719 | 1.4695 | — |
-| abstention rate | **0.0228** | 0.0274 | 0.0183 | 0.0183 | — |
-| largest mIoU / Pr@0.5 | **0.5680 / 0.6636** | 0.5428 / 0.6514 | 0.5183 / 0.6000 | 0.5680 / 0.6636 | — |
-| smallest mIoU / Pr@0.5 | 0.3011 / 0.3942 | 0.3011 / 0.3942 | **0.3353 / 0.4381** | 0.0411 / 0.0381 | — |
-
-| Bucket | Frozen policy | U-S0 | U-S1 | U-S2 |
-|---|---|---|---|---|
-| `NO_PROPOSALS` | 2 | 3 | 1 | 1 |
-| `NO_ELIGIBLE_PROPOSALS` | 3 | 3 | 3 | 3 |
-| `REFERENCE_NOT_COVERED_IOU50` | 59 | 62 | **50** | **50** |
-| `REFERENCE_SELECTION_WRONG` | **41** | 39 | 53 | 88 |
-| `SELECTED_MASK_GEOMETRY_POOR` | 0 | 1 | 0 | 0 |
-| `REFERENCE_OK` | 114 | 111 | **112** | 77 |
-
-Routing works as intended (largest gets the ranker's better mIoU, smallest keeps the deterministic
-selector's competence instead of the ranker's collapse) but the C0 choice for `smallest` costs coverage
-(`NOT_COVERED` 50 → 59).
-
-## 6. Downstream causal evaluation and integration (Parts F-G)
-
-MiniVal240 with canonical program ids (no parser):
-
-| Metric | Frozen family policy | U-S0 | U-S1 | U-S2 |
-|---|---|---|---|---|
-| strict all-240 mIoU | 0.3005 | 0.2970 | **0.3089** | 0.2425 |
-| answered-only mIoU | 0.3069 | 0.3046 | **0.3141** | 0.2466 |
-| abstentions | 5 | 6 | **4** | 4 |
-| reference-fail count | 116 | 117 | **115** | 158 |
-| target-fail-with-reference-ok | 68 | 67 | — | — |
-| largest / smallest target mIoU | 0.3393 / 0.2617 | — | — | — |
-| per direction (left/right/above/below) | 0.3189 / 0.2365 / 0.3441 / 0.3025 | — | — | — |
-| border target (n=114) | 0.2985 | 0.2943 | 0.2896 | 0.2666 |
-| tiny target (n=4) | ≈0 | ≈0 | ≈0 | ≈0 |
-
-PairedVal20: pass **10/20**, own 0.291106, cross 0.003251, margin **+0.2879**, 0 abstention pairs
-(U-S0 10/20 +0.2737; U-S1 11/20 +0.3209; U-S2 11/20 +0.3332).
-
-`task6v_hardened_parser_integration.json` — Task 6T hardened ProgramHead → family-conditioned resolver →
-field v0.2 → SAM2 → B3: parser **240/240**, strict 0.3005, answered-only 0.3069, abstentions 5,
-reference-fail 116 (identical to the causal run). No nearest/L3 execution was evaluated.
-
-## 7. Predeclared flags and gates
-
-Section 13 `family_policy_improved` = **false** (versus frozen U-S1):
-
-| Criterion | Required | Measured | Pass |
+| Metric (overall) | U-C1 deterministic baseline | Oracle quality filter | Gate |
 |---|---|---|---|
-| RefVal mIoU | ≥ U-S1 + 0.015 = 0.4439 | 0.4383 (Δ **+0.0094**) | ✗ |
-| RefVal `REFERENCE_OK` | ≥ U-S1 + 5 = 117 | 114 | ✗ |
-| RefVal `REFERENCE_SELECTION_WRONG` | ≤ U-S1 − 5 = 48 | **41** | ✓ |
-| abstention rate | ≤ 0.05 | 0.0228 | ✓ |
+| selected-reference mIoU | 0.4789 | **0.6575** (Δ **+0.1786**) | ≥ +0.08 ✓ |
+| smallest mIoU | 0.3545 | **0.6707** (Δ **+0.3162**) | ≥ +0.10 ✓ |
+| `REFERENCE_SELECTION_WRONG` | 76 | **23** | ≤ 45 ✓ |
+| abstention rate | 0.0000 | 0.0000 | ≤ 0.10 ✓ |
+| `REFERENCE_OK` | 116 | **169** | — |
 
-Section 14 `DIRECTIONAL_REFERENCE_HARDENING_PASS`: **3 of 10** pass — centroid median 0.0107 ≤ 0.03 ✓,
-parser 240/240 ✓, no test/no GT ✓; failing: RefVal mIoU 0.4383 < 0.45, centroid p90 0.3845 > 0.32,
-MiniVal answered 0.3069 < 0.325, strict 0.3005 < 0.305, paired 10 < 12, margin 0.2879 < 0.30,
-reference-fail 116 > 105.
+**W0 gate PASSED → estimator training permitted.**
 
-No threshold was altered after seeing results.
+## 4. Quality dataset and estimator
+
+`evaluation/task6w_quality_dataset_manifest.json`, `evaluation/task6w_quality_training.json`.
+
+* source U-RankerTrain only, **deduplicated by tile id**; **no U-Calib200 and no RefValUnique tile** — the
+  Task 6U split is reference-key based, so **36 tiles held both a U-Calib200 and a U-RankerTrain
+  reference; those tiles were explicitly excluded** (plus 0 RefVal tiles) → **548** training tiles, both
+  overlaps **0**;
+* common structural eligibility only (no border touch, `bbox_extent_ratio ≤ 0.20`; the smallest
+  `area ≥ 150` floor deliberately not applied);
+* **5,246** proposals → **3,337 positive / 1,909 negative** at `q_gt ≥ 0.50`; 93 `feature_invalid_small`
+  excluded, 0 empty rings; tile-disjoint split **420 train / 128 holdout** tiles (4,153 / 1,093 proposals,
+  overlap 0);
+* features: exactly 8 geometry/confidence scalars + frozen SAM2 `V ∈ R^(256×64×64)` pooled as inside-mean
+  and one-cell-ring-mean (`Ring = clamp(max_pool2d(M64,3,1,1) − M64, 0, 1)`) → 512 visual dims; no family,
+  no relation, no area rank, no x/y location;
+* network `Linear(512→64) → LayerNorm(64) → GELU` ‖ `Linear(8→16) → GELU` → `Linear(80→32) → GELU →
+  Linear(32→1)`, **35,729 parameters**, no attention/CNN/Transformer/GNN;
+* `BCEWithLogitsLoss(pos_weight = N_neg/max(1,N_pos))` with **train-only** `pos_weight = 0.5666`; AdamW
+  lr 5e-4 / wd 1e-4 / batch 256 / ≤40 epochs / patience 5 / seed 20260930 / AMP; selection by holdout
+  AUROC → F1@0.50 → lower BCE; no sweep;
+* selected epoch **19**: holdout **AUROC 0.8438**, AUPRC 0.8952, accuracy 0.7630, precision 0.7686,
+  recall 0.8907, **F1 0.8251**, confusion `[[223, 184], [75, 611]]`;
+* checkpoint `artifacts/checkpoints/task6w/proposal_quality_v01.pt` (local/gitignored).
+
+## 5. RefValUnique diagnostics
+
+| Metric | W-S0 (U-C1 + deterministic) | **W-SQ (learned filter)** | W-ORACLE (ceiling) |
+|---|---|---|---|
+| selected-reference mIoU | 0.4289 | **0.3793** | **0.5209** |
+| Dice | 0.4933 | 0.4311 | 0.5901 |
+| Pr@0.5 | 0.5209 | 0.4619 | **0.6872** |
+| centroid mean / median / p90 | 0.1149 / 0.0159 / 0.3803 | 0.1301 / 0.0490 / 0.3963 | 0.0864 / **0.0065** / 0.3251 |
+| area-ratio median | 1.0719 | 1.1062 | 1.1086 |
+| abstention rate | 0.0183 | 0.0411 | 0.0365 |
+| largest / smallest mIoU | 0.5183 / 0.3353 | 0.4574 / 0.2982 | **0.6043 / 0.4366** |
+
+| Bucket | W-S0 | W-SQ | W-ORACLE |
+|---|---|---|---|
+| `NO_PROPOSALS` | 1 | 1 | 1 |
+| `NO_ELIGIBLE_PROPOSALS` | 3 | 3 | 3 |
+| `QUALITY_FILTER_ALL_REJECTED` | 0 | **5** | 4 |
+| `REFERENCE_NOT_COVERED_IOU50` | 50 | 48 | 46 |
+| `REFERENCE_SELECTION_WRONG` | 53 | **65** | **20** |
+| `SELECTED_MASK_GEOMETRY_POOR` | 0 | 0 | 0 |
+| `REFERENCE_OK` | 112 | 97 | **144** |
+
+`quality_reference_improved = false`: mIoU 0.3793 < W-S0 + 0.04; `REFERENCE_OK` 97 < W-S0 + 8;
+`SELECTION_WRONG` 65 > 0.75 × 53 = 39; abstention rate 0.0411 ≤ 0.10 ✓.
+
+## 6. Downstream causal evaluation and integration
+
+| Metric | W-S0 | W-SQ |
+|---|---|---|
+| strict all-240 mIoU | **0.3089** | 0.2631 |
+| answered-only mIoU | **0.3141** | 0.2746 |
+| abstentions | **4** | 10 |
+| reference-fail count | **115** | 132 |
+| target-fail-with-reference-ok | 69 | 60 |
+| largest / smallest target mIoU | **0.3241 / 0.2937** | 0.2888 / 0.2375 |
+| per direction (left/right/above/below) | **0.3583 / 0.2514 / 0.3307 / 0.2952** | 0.3146 / 0.2234 / 0.2619 / 0.2527 |
+| border target (n=114) | **0.2896** | 0.2536 |
+| tiny target (n=4) | ≈0 | ≈0 |
+| PairedVal pass | **11/20** | 9/20 |
+| own / cross / margin | 0.3249 / 0.0040 / **+0.3209** | 0.2576 / 0.0095 / +0.2482 |
+| reference-abstention pairs | 0 | 1 |
+
+W-S0 reproduces Task 6U U-S1 exactly (strict 0.3089 / answered 0.3141 / abstentions 4 / ref_fail 115 /
+paired 11/20 / margin +0.3209), validating the causal isolation.
+
+`evaluation/task6w_hardened_parser_integration.json` — Task 6T ProgramHead → W-SQ → field v0.2 → SAM2 →
+B3: parser **240/240**, strict 0.2631, answered-only 0.2746, abstentions 10, reference-fail 132 (identical
+to causal W-SQ). No nearest/L3 execution.
+
+## 7. Gates and verdict
+
+Section 21 estimator adequacy: **PASSED** (AUROC 0.8438 ≥ 0.80, F1 0.8251 ≥ 0.65, no tile overlap).
+Section 22 `quality_reference_improved`: **false**.
+Section 23 `PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS`: **4 of 12 pass** (W0 gate ✓, adequacy ✓, parser
+240/240 ✓, no test/no GT ✓); failing: RefVal mIoU 0.3793 < 0.48, centroid median 0.0490 > 0.03, centroid
+p90 0.3963 > 0.28, MiniVal answered 0.2746 < 0.33, strict 0.2631 < 0.31, paired 9 < 12, margin 0.2482 <
+0.30, reference-fail 132 > 100.
+
+Section 24 → **`QUALITY_FILTER_NOT_HELPFUL`**.
+
+Measured context (reported, not interpreted as a remedy): the W0 oracle gate proves **the mechanism itself
+is sound** (RefVal oracle ceiling mIoU 0.5209 with `REFERENCE_OK` 144 and only 20 selection errors), but
+the learned estimator does not transfer well enough: with holdout AUROC 0.844 it rejects 5 RefVal records
+outright, pushes `REFERENCE_SELECTION_WRONG` from 53 to 65 and raises abstentions from 4 to 10 downstream.
 
 ## 8. Tests, storage, git
 
-`python -m pytest tests/ -q` → **881 passed, 1 skipped** (Task 6U ended at 851 passed / 1 skipped; no prior
+`python -m pytest tests/ -q` → **929 passed, 1 skipped** (Task 6V ended at 881 passed / 1 skipped; no prior
 passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check that
-needs the proposal env). `tests/test_task6v_family_reference_resolver.py` adds the 30 section-L checks.
+needs the proposal env). `tests/test_task6w_proposal_quality.py` adds the 48 section-O checks.
 
-Not committed: ranker/parser/YOLO/SAM2/B3 checkpoints, proposal caches (`artifacts/task6u/proposals/`),
-feature caches, source imagery/vectors, `.conda`. Committed: family resolver code, small JSON artifacts,
-scripts, tests, docs, handoff. **No new checkpoint was created in Task 6V.**
+Not committed: the quality checkpoint, YOLO/SAM2/B3/parser/ranker weights, proposal/feature caches, the
+generated quality rows (`artifacts/task6w/quality_dataset/`), source imagery/vectors, `.conda`. Committed:
+quality model/resolver code, dataset manifest, small JSON eval artifacts, scripts, tests, docs, handoff.
 
-Task 6V downloaded nothing and installed nothing; every frozen asset was loaded from local disk. Watt was
-**not needed** in Task 6V: the pre-existing Watt instance is transport-only, is not owned by this project
+Task 6W downloaded nothing and installed nothing; every frozen asset was loaded from local disk. Watt was
+**not needed** in Task 6W: the pre-existing Watt instance is transport-only, is not owned by this project
 and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
 modified.
 
 ## 9. Interpretation boundary
 
-DSH reports measurements only. Family routing is **not** claimed as a project novelty; the ranker was not
-redesigned; no smallest-only ranker, proposal-quality classifier, candidate-config change, additional
-confidence threshold, TTA/tiling, YOLO retraining, nearest/L3 work or Task 6W selection was performed.
+DSH reports measurements only. The ProposalQualityEstimator is **not** claimed as a novelty; threshold 0.50
+was not altered; no family-specific quality network, no ranker after filtering, no size estimator, no YOLO
+retraining, no TTA/tiling, no U-C1 change, no field/B3 change and no nearest/L3 work was performed; Task 6X
+was not chosen.
 
 ## 10. Recommended next step
 
-等待 ChatGPT 根据 Task 6V 的 family-conditioned resolver 结果决定是否需要新的 proposal-quality / selection 机制，不自行继续修改 reference 架构。
+等待 ChatGPT 根据 Task 6W 的 oracle-quality ceiling、learned quality filter 与 downstream 结果决定 reference 是否继续硬化，不自行增加 ranker、size estimator 或 detector 改动。
 
 ## 11. STOP
 
-Task 6V stops here: no new reference models, no proposal threshold/config changes, no YOLO/ranker/parser/B3
-retraining, no proposal-quality model, no GRCL, no nearest/L3, no test access, no GUI. Waiting for the
-ChatGPT audit.
-
----
-
-_The Task 6U report is preserved below in git history at commit `b8b5224`._
+Task 6W stops here: no further reference model, no ranker after quality filtering, no size correction, no
+detector/config/threshold change, no YOLO retraining, no field/B3/SAM2 change, no GRCL revisit, no
+nearest/L3, no test access, no GUI. Waiting for the ChatGPT audit.

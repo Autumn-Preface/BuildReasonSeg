@@ -1,108 +1,96 @@
-# TO_DSH — Task 6V: Family-Conditioned Reference Resolver Policy
+# TO_DSH — Task 6W: Proposal-Quality Filtering + Semantic Extreme Selection
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `b8b5224ec88d32af7d086e337016f6e7d2ada1a2`
+> Base commit: `3e185fbc5764dcc74d34d70f085e4a139a93bf37`
 >
-> Predecessor: Task 6U → `REFERENCE_RANKER_NOT_HELPFUL`
+> Predecessor: Task 6V → `FAMILY_POLICY_NOT_BETTER`
 >
 > Research decision already made by ChatGPT:
 >
-> 1. Accept Task 6U's **U-C1** proposal configuration as a useful candidate-recall improvement:
->    - imgsz 640
->    - conf 0.05
->    - max_det 300
->    - no TTA / no tiling
-> 2. Do **not** use ProposalSetRanker v0.1 globally: it catastrophically fails on `smallest`.
-> 3. Task 6U revealed a strong family asymmetry:
->    - ranker helps `largest`;
->    - deterministic area selection is much better for `smallest`.
-> 4. Before designing another reference model, Task 6V tests whether a **family-conditioned policy over already-frozen resolver options** can recover the useful part of Task 6U at essentially zero new model cost.
-> 5. No new training is permitted in Task 6V.
+> 1. Keep the core BuildReasonSeg method frozen:
+>    `ProgramHead → Reference → GeometricRelationField v0.2 → frozen SAM2 visual feature → B3 target decoder`.
+> 2. Keep Task 6U **U-C1** as the current high-recall proposal configuration:
+>    `imgsz=640, conf=0.05, max_det=300`.
+> 3. Do not use Task 6U ProposalSetRanker v0.1 in the primary resolver.
+> 4. Do not use the Task 6V family-conditioned policy as the primary resolver; it did not beat U-S1 enough and sacrificed smallest-family coverage.
+> 5. Task 6W tests a different hypothesis:
+>
+>    **Many selection errors are caused by fragmented / merged / incomplete proposals whose predicted area corrupts the literal largest/smallest rule. If low-quality proposals can be filtered first, deterministic largest/smallest semantics may become reliable again.**
+>
+> 6. This proposal-quality module is support infrastructure, NOT a claimed algorithmic novelty.
+> 7. DSH is an executor. Do not redesign the mechanism.
 
-DSH is an executor. Do not redesign the policy search.
+All user-facing DSH output must be Chinese.
 
 ---
 
 # 0. DSH role
 
-All user-facing DSH output must be Chinese.
-
 DSH MAY:
-- load existing frozen Task 6U proposal caches/checkpoints;
-- evaluate the three predeclared resolver options on the train-only U-Calib200 set;
-- freeze exactly one resolver option for `largest` and one for `smallest`;
-- evaluate the frozen family-conditioned resolver on RefValUnique, MiniVal240 and PairedVal20;
-- integrate the already-frozen Task 6T hardened ProgramHead for one final directional-chain check;
-- solve ordinary runtime/integration bugs without changing the experiment.
+- reuse frozen U-C1 proposal caches or regenerate them with the exact frozen configuration;
+- run the predeclared oracle-quality-filter diagnostic;
+- build train-only proposal-quality labels;
+- implement and train the exact ProposalQualityEstimator v0.1 below;
+- evaluate the exact resolver and downstream chain;
+- solve ordinary runtime bugs without changing the protocol.
 
 DSH MUST NOT:
-- train or fine-tune any model;
-- retrain the ProposalSetRanker;
 - retrain YOLO;
-- change YOLO weights;
-- introduce a fourth resolver option;
-- change U-C0/U-C1 configuration;
-- change Task 6Q eligibility thresholds;
-- change the hardened ProgramHead;
+- change YOLO weights/config beyond frozen U-C1;
+- use U-C0/U-C2/U-C3 as alternatives;
+- retrain ProgramHead;
+- retrain ProposalSetRanker;
+- use ProposalSetRanker in the primary Task 6W resolver;
+- retrain SAM2/B3;
 - change GeometricRelationField v0.2;
-- change SAM2;
-- retrain B3;
-- add GRCL;
+- change Task 6Q family eligibility rules;
+- tune the quality threshold;
+- add TTA/tiling/super-resolution;
 - add nearest/L3 execution;
-- access test split;
-- choose Task 6W.
+- use test split;
+- invent another quality architecture;
+- choose Task 6X.
 
-If a prohibited change is required, STOP and report.
+If a prohibited change is needed, STOP and report.
 
 ---
 
-# PART A — Frozen evidence and Task 6U interpretation
+# PART A — Task 6V audit record
 
-## 1. Record the Task 6U findings
+## 1. Record the frozen Task 6V result
 
-Copy into `docs/task6v_family_conditioned_reference_resolver.md`:
+Copy into `docs/task6w_proposal_quality_filter.md`:
 
-Task 6U established:
+Task 6V verdict:
+`FAMILY_POLICY_NOT_BETTER`
 
-### Candidate coverage
-U-C1 vs U-C0 on untouched RefValUnique:
-- overall eligible coverage@0.50:
-  - 0.68950 → 0.75342
-- largest:
-  - 0.83636 → 0.87273
-- smallest:
-  - 0.54128 → 0.63303
-
-Therefore candidate recall improved.
-
-### Selector behavior by family
-
-U-S0 = U-C0 + deterministic area selector
-
-U-S1 = U-C1 + deterministic area selector
-
-U-S2 = U-C1 + ProposalSetRanker v0.1
+Frozen family policy:
+- largest → V-P2 (U-C1 + frozen ranker)
+- smallest → V-P0 (U-C0 + deterministic)
 
 RefValUnique:
+- family-policy mIoU = 0.4383028
+- U-S1 mIoU = 0.4289355
+- delta = +0.0093674 < +0.015 gate
+- REFERENCE_OK = 114 < 117 gate
+- REFERENCE_SELECTION_WRONG = 41
+- NOT_COVERED = 59
+- downstream answered mIoU = 0.3069046
+- strict mIoU = 0.3005107
+- paired = 10/20
+- margin = +0.287855
+- reference-fail = 116
 
-Largest:
-- U-S0 mIoU 0.54284 / Pr@0.5 0.65138
-- U-S1 mIoU 0.51830 / Pr@0.5 0.60000
-- U-S2 mIoU 0.56804 / Pr@0.5 0.66364
+Important interpretation:
+- family routing slightly improves some reference metrics;
+- it does not solve the dominant reference bottleneck;
+- U-C1 remains valuable because Task 6U demonstrated better candidate coverage;
+- ProposalSetRanker is not accepted as a global selector.
 
-Smallest:
-- U-S0 mIoU 0.30109 / Pr@0.5 0.39423
-- U-S1 mIoU 0.33532 / Pr@0.5 0.43810
-- U-S2 mIoU 0.04105 / Pr@0.5 0.03810
-
-Interpretation boundary:
-- the shared v0.1 ranker is not accepted globally;
-- its family-specific usefulness must be selected using **train-only calibration**, not RefVal.
-
-Do not modify Task 6U artifacts or verdict.
+Do not modify Task 6V artifacts.
 
 ---
 
@@ -112,468 +100,734 @@ Do not modify Task 6U artifacts or verdict.
 
 Freeze:
 
-- all Task 6U artifacts;
-- U-C0 proposal cache/config;
-- U-C1 proposal cache/config;
-- ProposalSetRanker v0.1 checkpoint:
-  `artifacts/checkpoints/task6u/reference_ranker_v01.pt`
+- all Task 6U and 6V artifacts;
+- U-C1 proposal configuration and caches;
+- Task 6M.1 YOLO checkpoint;
 - Task 6T hardened ProgramHead checkpoint;
-- Task 6Q deterministic selector rules;
+- Task 6Q deterministic family eligibility;
 - Task 6O B3 checkpoint;
 - GeometricRelationField v0.2;
-- SAM2 feature path/cache;
-- U-Calib200;
-- RefValUnique;
-- MiniVal240;
-- PairedVal20.
+- frozen SAM2.1 Hiera Base+ feature cache/path;
+- Task 6U U-Calib200;
+- Task 6U U-RankerTrain;
+- Task 6P RefValUnique;
+- Task 6N MiniVal240;
+- Task 6N PairedVal20;
+- WHU-EA-NativeVector v1.0;
+- BuildSpatialReason v0.2.
 
 No test split.
 
-## 3. Verify hashes
+## 3. Frozen U-C1
 
-Require exact hashes recorded in previous artifacts for:
+Use only:
 
-- YOLO26m-seg Task 6M.1 checkpoint;
-- ProposalSetRanker v0.1 checkpoint;
-- Task 6T hardened ProgramHead checkpoint;
-- Task 6O B3 checkpoint where recorded;
-- frozen pack hashes.
+```text
+YOLO26m-seg checkpoint:
+ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
 
-If ranker checkpoint is missing/mismatched:
-STOP with `FROZEN_RESOLVER_ASSET_UNAVAILABLE`.
+imgsz = 640
+conf = 0.05
+max_det = 300
+default NMS
+TTA = false
+tiling = false
+source image = original 512×512
+```
 
----
-
-# PART C — Exactly three family-policy options
-
-## 4. Resolver options
-
-For each family independently, compare EXACTLY:
-
-### V-P0
-`U-C0 + deterministic Task 6Q area selector`
-
-### V-P1
-`U-C1 + deterministic Task 6Q area selector`
-
-### V-P2
-`U-C1 + frozen ProposalSetRanker v0.1`
-
-No new option.
-
-Do not retrain or recalibrate the ranker.
+Masks restored to exact 512×512 source coordinates.
 
 ---
 
-# PART D — Train-only policy selection
+# PART C — W0 Oracle quality-filter mechanism diagnostic
 
-## 5. Use exact U-Calib200 only
+## 4. Purpose
 
-Use the frozen Task 6U U-Calib200:
-- 100 largest
-- 100 smallest
+Before training a quality estimator, test whether **perfect knowledge of proposal quality** would make the quality-filter + deterministic-area mechanism useful.
 
-This is the **only** set used to choose the family policies.
+Use **U-Calib200 only**.
 
-RefValUnique / MiniVal240 / PairedVal20 must not influence selection.
+Do not use RefVal for this feasibility gate.
 
-## 6. Per-family metrics on U-Calib200
+## 5. Ground-truth proposal quality
 
-For each family and each V-P0/P1/P2 report:
+For every U-C1 proposal on a U-Calib200 tile:
 
+```text
+q_gt = max IoU(proposal_mask, every native GT building instance on that tile)
+```
+
+This is diagnostic/training metadata only.
+
+No GT is allowed in inference.
+
+## 6. Oracle quality filter
+
+For a reference query:
+
+1. apply the exact Task 6Q family eligibility rules first;
+2. keep only proposals with `q_gt >= 0.50`;
+3. if none remain → abstain;
+4. largest → select maximum proposal area;
+5. smallest → select minimum proposal area;
+6. tie-break:
+   - higher YOLO confidence;
+   - lower original proposal index.
+
+Compare with U-C1 deterministic baseline on the same U-Calib200.
+
+Report overall/largest/smallest:
 - selected-reference mIoU;
 - Dice;
 - Pr@0.5;
-- centroid median;
-- centroid p90;
-- abstention rate;
-- `REFERENCE_NOT_COVERED_IOU50`;
-- `REFERENCE_SELECTION_WRONG`;
-- `REFERENCE_OK`.
+- centroid median/p90;
+- abstention;
+- NOT_COVERED;
+- SELECTION_WRONG;
+- REFERENCE_OK.
 
 Write:
-`evaluation/task6v_calibration_family_policy.json`
+`evaluation/task6w_oracle_quality_filter_calib.json`
 
-## 7. Freeze one option per family
+## 7. W0 mechanism gate
 
-For `largest` and `smallest` independently, rank options by this exact priority:
+Continue to training only if ALL:
 
-1. higher `Pr@0.5`
-2. higher selected-reference mIoU
-3. lower `REFERENCE_SELECTION_WRONG`
-4. lower centroid median
-5. lower abstention rate
-6. simpler option priority:
-   - V-P0
-   - V-P1
-   - V-P2
+- oracle-quality-filter overall selected-reference mIoU >= U-C1 deterministic + `0.08`;
+- oracle-quality-filter smallest mIoU >= U-C1 deterministic smallest + `0.10`;
+- oracle-quality-filter `REFERENCE_SELECTION_WRONG` <= `0.60 * baseline`;
+- oracle-quality-filter abstention rate <= `0.10`.
 
-The simplicity tie-break means a learned ranker is used only when calibration evidence is actually better.
+If any fails:
+STOP with:
+`QUALITY_FILTER_MECHANISM_INSUFFICIENT`
 
-Write:
-
-`evaluation/task6v_frozen_family_policy.json`
-
-Example schema:
-
-```json
-{
-  "largest": "V-P2",
-  "smallest": "V-P1"
-}
-```
-
-Do not change it after any RefVal result is observed.
+Do not train a quality estimator.
 
 ---
 
-# PART E — Untouched RefValUnique evaluation
+# PART D — Proposal-quality training dataset
 
-## 8. Family-conditioned resolver
+## 8. Training tiles
+
+Use only U-RankerTrain from Task 6U.
+
+Deduplicate by tile id:
+- run/read U-C1 proposals once per unique train tile;
+- never duplicate a proposal because several reference records share the same tile.
+
+No U-Calib200 tile.
+No RefVal tile.
+No MiniVal/PairedVal-specific evaluation record for optimization.
+No test.
+
+## 9. Candidate population
+
+For proposal-quality training, use the union/common structural eligibility:
+
+- proposal does NOT touch source-image border;
+- bbox extent ratio <= 0.20.
+
+Do NOT apply the smallest `area >= 150` condition to quality training.
+
+Reason:
+proposal quality is family-independent; family-specific eligibility remains a later resolver rule.
+
+## 10. Binary label
+
+For each training proposal:
+
+```text
+q_gt = max IoU(proposal_mask, any native GT building instance on the tile)
+y_quality = 1 if q_gt >= 0.50 else 0
+```
+
+Store q_gt for analysis, but train on the binary label.
+
+GT is never a model input.
+
+Write local/generated dataset under:
+`artifacts/task6w/quality_dataset/`
+
+Write tracked manifest:
+`evaluation/task6w_quality_dataset_manifest.json`
+
+Must include:
+- unique tiles;
+- proposal count;
+- positive/negative count;
+- q_gt histogram;
+- split hashes;
+- no-overlap checks.
+
+---
+
+# PART E — Fixed ProposalQualityEstimator v0.1
+
+## 11. Input feature design
 
 Create:
 
-`buildreasonseg_mvp/task6v_family_reference_resolver.py`
+`buildreasonseg_mvp/task6w_proposal_quality.py`
 
-It only dispatches:
+For each proposal, use exactly:
+
+### 11.1 Eight geometry/confidence scalars
+
+1. `confidence`
+2. `log_area = log1p(area_px) / log1p(512*512)`
+3. `area_ratio = area_px / (512*512)`
+4. `bbox_extent_ratio`
+5. `width_ratio = bbox_width / 512`
+6. `height_ratio = bbox_height / 512`
+7. `fill_ratio = area_px / max(1,bbox_area)`
+8. `abs_log_aspect = abs(log((bbox_width+1)/(bbox_height+1)))`
+
+No family.
+No relation.
+No area rank.
+No image x/y coordinate.
+
+### 11.2 Frozen SAM2 proposal appearance/context
+
+Use the already-frozen SAM2 feature tensor:
+`V ∈ R^(256×64×64)`
+
+Downsample proposal mask to 64×64 using nearest-neighbor:
+`M64`
+
+Require at least one positive M64 cell. If none:
+- mark proposal `feature_invalid_small`;
+- quality estimator output is forced to 0 at inference;
+- exclude it from quality-model training;
+- count it explicitly.
+
+Create one-cell ring:
 
 ```text
-if family == largest:
-    use frozen selected largest policy
-elif family == smallest:
-    use frozen selected smallest policy
+D = max_pool2d(M64, kernel=3, stride=1, padding=1)
+Ring = clamp(D - M64, 0, 1)
 ```
 
-No additional learned logic.
+Compute:
+- `inside_mean`: channel-wise masked mean of V over M64 → 256 dims
+- `ring_mean`: channel-wise masked mean of V over Ring → 256 dims
 
-No GT at inference.
+If Ring is empty:
+- use zeros for `ring_mean`;
+- record count.
 
-## 9. RefValUnique metrics
+Do not use GT visual features.
 
-Evaluate frozen family policy on exact RefValUnique.
+Final raw input:
+- visual = 512 dims
+- geometry = 8 dims
 
-Report:
+## 12. Exact network
 
-- overall selected-reference mIoU;
-- Dice;
-- Pr@0.5;
-- centroid mean/median/p90;
-- area ratio median;
-- abstention rate;
-- largest metrics;
-- smallest metrics.
+### Visual branch
 
-Failure buckets exactly:
+```text
+Linear(512 → 64)
+LayerNorm(64)
+GELU
+```
 
-1. `NO_PROPOSALS`
-2. `NO_ELIGIBLE_PROPOSALS`
-3. `REFERENCE_NOT_COVERED_IOU50`
-4. `REFERENCE_SELECTION_WRONG`
-5. `SELECTED_MASK_GEOMETRY_POOR`
-6. `REFERENCE_OK`
+### Geometry branch
 
-Compare against:
-- Task 6U U-S0
-- Task 6U U-S1
-- Task 6U U-S2
-- Task 6U U-C1 oracle-selection ceiling (diagnostic only)
+```text
+Linear(8 → 16)
+GELU
+```
 
-Write:
-`evaluation/task6v_refval_family_policy.json`
+Concatenate:
+`64 + 16 = 80`
+
+Head:
+
+```text
+Linear(80 → 32)
+GELU
+Linear(32 → 1)
+```
+
+Output raw quality logit.
+
+No attention.
+No CNN.
+No Transformer/GNN.
+No other feature.
+
+## 13. Loss
+
+Binary label from section 10.
+
+Use:
+`BCEWithLogitsLoss(pos_weight = N_negative / max(1,N_positive))`
+
+Compute pos_weight only from the training split.
+
+No regression loss.
+No IoU loss.
+No ranking loss.
+
+At inference:
+
+```text
+quality_prob = sigmoid(logit)
+keep iff quality_prob >= 0.50
+```
+
+Threshold **0.50 is frozen**.
+
+No threshold sweep/calibration.
 
 ---
 
-# PART F — Downstream causal evaluation
+# PART F — Training protocol
 
-## 10. Canonical-program MiniVal240
+## 14. Train/holdout split
 
-Use exact frozen MiniVal240.
+Split by unique tile id before proposal rows are assigned.
 
-Use canonical program ids, not natural-language parsing, for the main causal comparison.
+Deterministic:
+- seed `20260930`
+- 80% train tiles
+- 20% internal holdout tiles
+- hash-based split.
+
+No tile may occur in both.
+
+## 15. Optimization
+
+Use:
+
+- AdamW
+- lr = `5e-4`
+- weight_decay = `1e-4`
+- batch = `256 proposals`
+- max epochs = `40`
+- early stopping patience = `5`
+- seed = `20260930`
+- AMP allowed
+- no augmentation
+- no scheduler
+
+Checkpoint selection:
+1. highest internal-holdout AUROC;
+2. tie-break highest internal-holdout F1 at threshold 0.50;
+3. tie-break lower BCE.
+
+No hyperparameter sweep.
+
+Checkpoint:
+`artifacts/checkpoints/task6w/proposal_quality_v01.pt`
+gitignored.
+
+Report:
+- train/holdout tiles;
+- proposal class counts;
+- parameter count;
+- AUROC;
+- AUPRC;
+- accuracy;
+- precision/recall/F1 at 0.50;
+- confusion matrix;
+- BCE;
+- selected epoch;
+- peak VRAM;
+- wall time;
+- checkpoint SHA256.
+
+Write:
+`evaluation/task6w_quality_training.json`
+
+---
+
+# PART G — Resolver v0.1
+
+## 16. Quality-filtered deterministic resolver
+
+Create:
+
+`buildreasonseg_mvp/task6w_quality_reference_resolver.py`
+
+Inference:
+
+```text
+U-C1 proposals
+→ Task 6Q family eligibility
+→ ProposalQualityEstimator
+→ keep quality_prob >= 0.50
+→ largest: max area
+   smallest: min area
+→ Task 6Q confidence/index tie-break
+```
+
+If all family-eligible proposals are filtered:
+- explicit abstention
+- reason = `no_quality_eligible_proposals`
+
+No fallback to an unfiltered proposal.
+
+No ProposalSetRanker.
+
+---
+
+# PART H — Untouched RefValUnique evaluation
+
+## 17. Compare exactly three diagnostics
+
+On RefValUnique:
+
+### W-S0
+Task 6U U-S1:
+`U-C1 + deterministic selector`
+
+### W-SQ
+`U-C1 + learned quality filter + deterministic selector`
+
+### W-ORACLE
+`U-C1 + oracle q_gt>=0.50 filter + deterministic selector`
+
+W-ORACLE is evaluation ceiling only; never inference.
+
+Report for each:
+- selected-reference mIoU
+- Dice
+- Pr@0.5
+- centroid mean/median/p90
+- area-ratio median
+- abstention rate
+- largest/smallest metrics
+- failure buckets:
+  - NO_PROPOSALS
+  - NO_ELIGIBLE_PROPOSALS
+  - QUALITY_FILTER_ALL_REJECTED
+  - REFERENCE_NOT_COVERED_IOU50
+  - REFERENCE_SELECTION_WRONG
+  - SELECTED_MASK_GEOMETRY_POOR
+  - REFERENCE_OK
+
+Write:
+`evaluation/task6w_refval_quality_filter.json`
+
+---
+
+# PART I — Downstream causal evaluation
+
+## 18. MiniVal240
+
+Use canonical program ids; no parser in the main comparison.
+
+Compare:
+- W-S0
+- W-SQ
 
 Pipeline:
 
 ```text
 canonical program
-→ family + direction
-→ frozen family-conditioned reference resolver
+→ family/relation
+→ reference resolver
 → GeometricRelationField v0.2
-→ frozen SAM2 visual feature
+→ frozen SAM2 feature
 → frozen B3
 → target mask
 ```
 
-GT reference/target are evaluation only.
-
 Report:
-
-- strict all-240 mIoU;
-- answered-only mIoU;
-- Dice;
-- Pr@0.5;
-- abstentions;
-- reference-fail count;
-- target-fail-with-reference-ok count;
-- largest/smallest target mIoU;
-- per direction;
-- border target;
-- tiny target if present.
+- strict all-240 mIoU/Dice
+- answered-only mIoU/Dice
+- Pr@0.5
+- abstentions
+- reference-fail count
+- target-fail-with-reference-ok
+- largest/smallest
+- per direction
+- border/tiny targets.
 
 Write:
-`evaluation/task6v_downstream_minival240.json`
+`evaluation/task6w_downstream_minival240.json`
 
-## 11. PairedVal20
+## 19. PairedVal20
 
-Use exact PairedVal20.
-
-Report:
-- pass /20;
-- mean own IoU;
-- mean cross IoU;
-- own-cross margin;
+Report W-S0 and W-SQ:
+- pass /20
+- own IoU
+- cross IoU
+- margin
 - reference-abstention pairs.
 
 Write:
-`evaluation/task6v_downstream_pairedval20.json`
+`evaluation/task6w_downstream_pairedval20.json`
 
 ---
 
-# PART G — Natural-language integration regression
+# PART J — Hardened natural-language integration
 
-## 12. Hardened ProgramHead integration
+## 20. One regression/integration run
 
-Run exact MiniVal240 natural-language queries through:
+Use:
+Task 6T hardened ProgramHead → W-SQ → field v0.2 → SAM2 → B3
 
-```text
-Task 6T hardened ProgramHead
-→ family-conditioned resolver
-→ field v0.2
-→ SAM2
-→ B3
-```
+On exact MiniVal240 queries.
 
 Require parser:
-- 240/240 exact.
+- 240/240.
 
 Report:
-- strict mIoU;
-- answered-only mIoU;
-- abstentions;
-- paired pass;
-- own-cross margin.
+- strict mIoU
+- answered-only mIoU
+- paired
+- margin
+- abstentions.
 
-Do not run nearest/L3 execution.
+Do not run nearest/L3.
 
 Write:
-`evaluation/task6v_hardened_parser_integration.json`
+`evaluation/task6w_hardened_parser_integration.json`
 
 ---
 
-# PART H — Predeclared gates
+# PART K — Predeclared gates
 
-## 13. Family-policy improvement
+## 21. Quality-estimator adequacy
 
-Compared with Task 6U U-S1, require all for `family_policy_improved=true`:
+Pass if:
+- internal-holdout AUROC >= `0.80`
+- internal-holdout F1@0.50 >= `0.65`
+- no train/holdout tile overlap.
 
-- overall RefVal selected-reference mIoU >= U-S1 + `0.015`
-- RefVal `REFERENCE_OK` >= U-S1 + `5`
-- RefVal `REFERENCE_SELECTION_WRONG` <= U-S1 - `5`
-- abstention rate <= `0.05`
+This is diagnostic; downstream gates remain decisive.
 
-Use exact U-S1 values from Task 6U.
+## 22. Reference hardening
 
-## 14. Directional downstream hardening
+`quality_reference_improved=true` iff W-SQ vs W-S0 satisfies ALL:
 
-`DIRECTIONAL_REFERENCE_HARDENING_PASS` requires ALL:
+- RefVal mIoU >= W-S0 + `0.04`
+- `REFERENCE_SELECTION_WRONG` <= `0.75 * W-S0`
+- `REFERENCE_OK` >= W-S0 + `8`
+- abstention rate <= `0.10`
 
-1. RefVal selected-reference mIoU >= `0.45`
-2. RefVal centroid median <= `0.03`
-3. RefVal centroid p90 <= `0.32`
-4. MiniVal answered-only target mIoU >= `0.325`
-5. MiniVal strict target mIoU >= `0.305`
-6. PairedVal >= `12/20`
-7. own-cross margin >= `0.30`
-8. MiniVal reference-fail count <= `105`
-9. parser integration remains 240/240
-10. no test split / no GT inference.
+## 23. Downstream hardening
 
-These are development hardening gates, not final paper/test gates.
+`PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS` requires ALL:
 
-Do not alter thresholds.
+1. W0 oracle mechanism gate passed
+2. quality-estimator adequacy passed
+3. RefVal W-SQ mIoU >= `0.48`
+4. RefVal centroid median <= `0.03`
+5. RefVal centroid p90 <= `0.28`
+6. MiniVal answered-only target mIoU >= `0.33`
+7. MiniVal strict target mIoU >= `0.31`
+8. PairedVal >= `12/20`
+9. own-cross margin >= `0.30`
+10. MiniVal reference-fail count <= `100`
+11. parser integration 240/240
+12. no test / no GT inference.
+
+No threshold changes after results.
 
 ---
 
-# PART I — Verdict
+# PART L — Verdict
 
-## 15. Exactly one, priority order
+## 24. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-   - test use, GT inference, post-RefVal policy change, frozen-module mutation, protocol violation.
-
-2. `FROZEN_RESOLVER_ASSET_UNAVAILABLE`
-
-3. `FAMILY_POLICY_NOT_BETTER`
-   - section 13 improvement flag fails and section 14 hardening gate fails.
-
-4. `FAMILY_POLICY_PARTIAL`
-   - measurable improvement, but one or more section 14 gates fail.
-
-5. `FAMILY_CONDITIONED_REFERENCE_HARDENING_PASS`
-   - all section 14 gates pass.
+2. `FROZEN_ASSET_UNAVAILABLE`
+3. `QUALITY_FILTER_MECHANISM_INSUFFICIENT`
+   - W0 oracle-quality gate fails; no estimator training.
+4. `QUALITY_ESTIMATOR_NOT_LEARNABLE`
+   - W0 passes, but section 21 adequacy fails.
+5. `QUALITY_FILTER_NOT_HELPFUL`
+   - estimator adequacy passes but `quality_reference_improved=false` and downstream hardening fails.
+6. `QUALITY_REFERENCE_HARDENING_PARTIAL`
+   - measurable reference/downstream improvement but one or more section-23 gates fail.
+7. `PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS`
+   - all section-23 gates pass.
 
 No other verdict.
 
 ---
 
-# PART J — Interpretation boundary
+# PART M — Interpretation boundary
 
-DSH reports measurements only.
+DSH may report measurements only.
 
 Do NOT:
-- claim family routing as novelty;
-- redesign the ranker;
-- train a smallest-only ranker;
-- train a proposal-quality classifier;
-- change candidate config;
-- add confidence thresholds;
-- add TTA/tiling;
+- claim ProposalQualityEstimator as novelty;
+- alter threshold 0.50;
+- add family-specific quality networks;
+- add ranker after quality filtering;
+- train a size estimator;
 - retrain YOLO;
-- start nearest/L3;
-- choose Task 6W.
+- add TTA/tiling;
+- change U-C1;
+- change field/B3;
+- start nearest/L3.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 6V 的 family-conditioned resolver 结果决定是否需要新的 proposal-quality / selection 机制，不自行继续修改 reference 架构。`
+`等待 ChatGPT 根据 Task 6W 的 oracle-quality ceiling、learned quality filter 与 downstream 结果决定 reference 是否继续硬化，不自行增加 ranker、size estimator 或 detector 改动。`
 
 ---
 
-# PART K — Required artifacts
+# PART N — Required artifacts
 
 Create at minimum:
 
 ```text
-buildreasonseg_mvp/task6v_family_reference_resolver.py
+buildreasonseg_mvp/task6w_proposal_quality.py
+buildreasonseg_mvp/task6w_quality_reference_resolver.py
 
-evaluation/task6v_calibration_family_policy.json
-evaluation/task6v_frozen_family_policy.json
-evaluation/task6v_refval_family_policy.json
-evaluation/task6v_downstream_minival240.json
-evaluation/task6v_downstream_pairedval20.json
-evaluation/task6v_hardened_parser_integration.json
-evaluation/task6v_verdict.json
+evaluation/task6w_oracle_quality_filter_calib.json
+evaluation/task6w_quality_dataset_manifest.json
+evaluation/task6w_quality_training.json
+evaluation/task6w_refval_quality_filter.json
+evaluation/task6w_downstream_minival240.json
+evaluation/task6w_downstream_pairedval20.json
+evaluation/task6w_hardened_parser_integration.json
+evaluation/task6w_verdict.json
 
-docs/task6v_family_conditioned_reference_resolver.md
+docs/task6w_proposal_quality_filter.md
 
-scripts/task6v_select_family_policy.py
-scripts/task6v_evaluate_reference.py
-scripts/task6v_evaluate_downstream.py
-scripts/task6v_report.py
+scripts/task6w_oracle_quality_diagnostic.py
+scripts/task6w_build_quality_dataset.py
+scripts/task6w_train_quality.py
+scripts/task6w_evaluate_reference.py
+scripts/task6w_evaluate_downstream.py
+scripts/task6w_report.py
 ```
+
+If W0 stops the experiment:
+- create W0 artifact, verdict, docs/handoff/tests applicable to the stopped path;
+- do not fabricate downstream/training files.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-No new checkpoint.
-
 ---
 
-# PART L — Tests
+# PART O — Tests
 
-Task 6U ended at:
-`851 passed, 1 skipped`
+Task 6V ended at:
+`881 passed, 1 skipped`
 
 Add tests for at least:
 
-1. Task 6U artifacts unchanged
-2. U-Calib200 exact reuse
-3. RefValUnique exact reuse
-4. MiniVal240 exact reuse
-5. PairedVal20 exact reuse
-6. exactly three policy options
-7. V-P0 exact
-8. V-P1 exact
-9. V-P2 exact
-10. ranker not retrained
-11. YOLO not retrained
-12. no fourth option
-13. per-family selection uses U-Calib200 only
-14. no RefVal in policy selection
-15. priority rule exact
-16. policy frozen before RefVal eval
-17. resolver dispatch is family-only
-18. no relation input to resolver policy
-19. no GT in resolver inference
-20. canonical-program causal evaluation has no parser
-21. natural-language integration uses hardened ProgramHead
-22. parser remains 240/240
-23. field v0.2 unchanged
-24. B3 unchanged
-25. SAM2 unchanged
-26. no GRCL
-27. no nearest/L3 execution
-28. no test split
-29. no new dataset/download/install/GUI
-30. previous test suite preserved.
+1. Task 6V artifacts unchanged
+2. U-C1 exact config
+3. YOLO checkpoint hash exact
+4. no U-C0/C2/C3 alternative in primary resolver
+5. W0 uses U-Calib200 only
+6. q_gt definition exact max IoU
+7. W0 threshold exact 0.50
+8. W0 gate exact
+9. U-RankerTrain only for quality dataset
+10. proposal dataset deduplicated by tile
+11. no U-Calib tile in quality training
+12. no RefVal tile in quality training
+13. train/holdout split by tile
+14. common eligibility exact
+15. quality label threshold exact 0.50
+16. geometry feature dimension exactly 8
+17. no family feature
+18. no relation feature
+19. no proposal rank feature
+20. no x/y location feature
+21. SAM2 feature 256×64×64
+22. proposal mask nearest-downsample
+23. ring construction exact 3×3 dilation-minus-mask
+24. inside pooled feature 256
+25. ring pooled feature 256
+26. quality architecture exact
+27. BCE pos_weight computed train-only
+28. inference quality threshold fixed 0.50
+29. no threshold sweep
+30. no ranker in W-SQ
+31. family eligibility before quality filter
+32. deterministic area semantics after filter
+33. explicit abstention if all rejected
+34. RefVal untouched by training
+35. MiniVal240 exact reuse
+36. PairedVal20 exact reuse
+37. canonical-program causal comparison has no parser
+38. final integration uses hardened ProgramHead
+39. parser stays 240/240
+40. field v0.2 unchanged
+41. B3 unchanged
+42. no YOLO retraining
+43. no TTA/tiling
+44. no GRCL
+45. no nearest/L3
+46. no test
+47. no new dataset/download/install/GUI
+48. previous suite preserved.
 
 Run:
 
 `python -m pytest tests/ -q`
 
-Do not reduce prior passing tests.
+Do not reduce previous passing tests.
 
 ---
 
-# PART M — Git/storage
+# PART P — Git/storage
 
 Do not commit:
-- existing ranker/parser/YOLO/SAM2/B3 checkpoints;
-- proposal caches;
-- feature caches;
+- quality checkpoint;
+- YOLO/SAM2/B3/parser/ranker weights;
+- proposal/feature caches;
+- generated proposal-quality row data if large;
 - source imagery/vectors;
 - `.conda`.
 
 Commit:
-- family resolver code;
-- small JSON;
+- quality model/resolver code;
+- dataset manifest;
+- small JSON eval artifacts;
 - scripts;
 - tests;
 - docs;
 - handoff.
 
 Suggested commits:
-
-1. `feat: add family-conditioned reference resolver`
-2. `eval: measure family-specific resolver policy`
-3. optional docs commit
+1. `feat: add proposal-quality reference filter`
+2. `eval: isolate proposal quality and extreme selection`
+3. optional docs commit.
 
 ---
 
-# PART N — DSH model policy
+# PART Q — DSH model policy
 
 Default:
 - **DeepSeek V4.1 Flash + High**
 
-Use Max only for a genuine integration/runtime bug.
+Use Max only for a genuine runtime/data-pipeline bug.
 
 No downloads or installs.
 
 ---
 
-# PART O — STOP
+# PART R — STOP
 
-After Task 6V:
+After Task 6W:
 - commit;
 - push;
-- update handoff;
+- handoff;
 - STOP.
 
 Do NOT:
-- train new reference models;
-- change proposal thresholds/configs;
-- retrain YOLO/ranker/parser/B3;
-- add proposal-quality model;
-- add GRCL;
+- train another reference model;
+- add a ranker after quality filtering;
+- add size correction;
+- change detector/config/thresholds;
+- retrain YOLO;
+- change field/B3/SAM2;
+- revisit GRCL;
 - add nearest/L3;
 - access test;
 - build GUI.
