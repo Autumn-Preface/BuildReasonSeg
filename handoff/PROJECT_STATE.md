@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6Z._
+_Last updated by DSH at the end of Task 7A._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -102,6 +102,42 @@ The block above is machine-checked against
 | 6Y | **Oracle-reference NearestBoundaryField v0.1** | **done → `NEAREST_FIELD_NO_MEANINGFUL_GAIN`** (oracle-reference causal audit of the **nearest** family; frozen reference resolver `U-C1 + Task 6Q deterministic`, SAM2/field v0.2/history untouched; field `P_near_512 = exp(−(EDT(~M_ref)/diag)/0.05)` with `P_near=0` inside the reference, bilinear 512→64, no learned params, no sigma tuning; **field sanity perfect**: top-1 **1.0000**, top-3 **1.0000**, mean Spearman **1.0000**, target 0.4622 vs best distractor 0.1678, 4.40 eligible candidates; frozen packs Y-Overfit20 20 (10+10, 20 tiles), Y-MiniTrain1000 **650+350**, Y-MiniVal240 **120+120**, Y-PairedVal **N_pair 20**; variants Y-B0 visual / Y-B1 visual+M_ref / **Y-B2 visual+P_near** / Y-B3 geometry-only → Overfit20 B2 **0.9663/0.9827** gate ✓ (B0 0.9724, B1 0.9705, B3 0.1457); MiniVal240 mIoU **B0 0.1837 / B1 0.2640 / B2 0.2864 / B3 0.0468** (Pr@0.5 B2 0.4812), deltas **B2−B0 +0.1027**, **B2−B1 +0.0224**, **B2−B3 +0.2396**; boundary-distance quartiles 0.4094/0.3477/0.2356/0.1531; PairedVal B2 **6/20** margin **+0.1828** (B1 8/20, B3 6/20); border/tiny targets absent (nearest eligibility excludes them); §25 criteria **6/9** → verdict) |
 
 | 6Z | **Oracle-reference L3 direction×nearest composition** | **done → `L3_COMPOSITION_NO_MEANINGFUL_GAIN`** (oracle-reference causal audit of the four canonical `largest_to_<direction>_to_nearest` programs; frozen reference subsystem / directional field v0.2 / nearest field v0.1 / SAM2 untouched; `P_prod = clamp(P_dir × P_near)` exact, no renormalization/temperature/power; **composition sanity passed** — direction-valid subset top-1 **1.0000**, top-3 **1.0000**, Spearman **0.9983** (canonical-list diagnostic 0.9958 / 0.9988), all-candidates top-1 0.9042; packs Z-Overfit20 **5/5/5/5**, Z-MiniTrain1200 **300×4**, Z-MiniVal240 **60×4**, Z-PairedVal **N_pair 20** (same tile, same largest reference, different directions/targets); six variants → Overfit20 Z-B3 **0.9619/0.9804** gate ✓; MiniVal240 mIoU **B0 0.1510 / B1 0.3011 / B2 0.1724 / B3 0.3242 / B4 0.2788 / B5 0.0888** (Pr@0.5 B3 0.5331), deltas B3−B0 **+0.1732**, B3−B1 **+0.0231**, B3−B2 +0.1519, B3−B4 **+0.0454**, B3−B5 +0.2355; PairedVal B3 **15/20** margin **+0.3004**, B1 16/20, B4 12/20, B5 6/20; §28 B3 criteria **5/7**, §29 `deterministic_product_pass` **false**, §30 `learned_not_worse` true / `product_materially_stronger` false → verdict) |
+
+| 7A | **L3 predicted-reference + natural-language integration audit** | **done → `L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** (**no model trained**; integration/attribution only; Z-B3 `74f308e1…9fc0f0bc` and hardened ProgramHead `4cbba36b…d44a5e` hash-verified; **A0 oracle reproduction exact** — mIoU Δ **0.0**, Dice Δ **0.0**, paired **15/20**, margin Δ **0.0** vs frozen 6Z; A1 U-C1 deterministic largest resolver → predicted reference: abstain **0.0125**, ref mIoU **0.4700** / Pr@0.5 **0.5527**, buckets OK **131** / SELECTION_WRONG **75** / NOT_COVERED **31** / NONE 3, strict target mIoU **0.2170**, answered **0.2198**, **retention 0.6693**, ref-OK subset **0.3434** vs ref-fail **0.0651**, paired **8/20** margin **+0.1995**; A2 natural-language: parser **240/240** on canonical queries, strict **0.2170** (identical to A1), paired 8/20 margin +0.1995, parser-correct members 40/40; fixed-24 paraphrase audit frozen before the run: **3/24** exact (zh 3/12, en 0/12), compact **0/8** → `l3_paraphrase_ready=false`, 19/21 failures drop the terminal `to_nearest`; CLI `predict_buildreasonseg_l3.py` audit all-checks-passed (exit 0 + 6 outputs, out-of-scope exit **5**, GT args refused); failure attribution parser **0** / reference_fail **109** / target_fail **90** / TARGET_OK **41** → dominant bottleneck **REFERENCE**; §20 gate fails 4/6 → verdict) |
+
+## Task 7A measured results
+
+Integration/attribution audit with **no training**: how much oracle-reference Z-B3 L3 capability survives
+when the oracle largest reference is replaced by the frozen practical U-C1 deterministic resolver and the
+hardened ProgramHead supplies the natural-language program. Exactly four L3 programs
+(`largest_to_{left_of,right_of,above,below}_to_nearest` → `family=largest` + direction + `terminal=nearest`,
+no learned decomposition). Full detail: `docs/task7a_l3_predicted_reference_integration.md`,
+`evaluation/task7a_*.json`.
+
+| | Value |
+|---|---|
+| A0 oracle reproduction | mIoU **0.3242128982543474** (Δ **0.0**), Dice **0.4389840055529761** (Δ **0.0**), paired **15/20**, margin **+0.30035408969722216** (Δ **0.0**), tolerance 1e-6 → `TASK6Z_REPRODUCTION_PASS` |
+| A1 predicted reference | 19.35 proposals / 14.25 eligible per tile; abstentions **3** (**0.0125**); mIoU **0.4700**, Dice 0.5430, Pr@0.5 **0.5527**; centroid mean/median/p90 0.1056/**0.0234**/0.3240; best eligible coverage@0.50 **0.8583** |
+| A1 buckets | `NO_PROPOSALS` 1 · `NO_ELIGIBLE_PROPOSALS` 2 · `REFERENCE_NOT_COVERED_IOU50` **31** · `REFERENCE_SELECTION_WRONG` **75** · `REFERENCE_GEOMETRY_POOR` 0 · `REFERENCE_OK` **131** |
+| A1 targets | strict mIoU **0.2170**, Dice 0.2931, Pr@0.5 0.4252, answered-only **0.2198**, abstentions 3, **retention 0.6693**; ref-OK subset **0.3434** vs ref-fail **0.0651**; per direction above 0.1913 / below 0.2356 / left 0.2518 / right 0.1893; paired **8/20**, own 0.2248 / cross 0.0253 / margin **+0.1995**, 0 abstention pairs |
+| A2 natural language | parser on canonical queries **240/240 (1.0000)**, per-class recall 1.0, out-of-scope 0; strict mIoU **0.2170** (identical to A1), answered **0.2198**, abstentions 3; paired **8/20** margin **+0.1995**, parser-correct members **40/40**, 0 parser-error pairs |
+| Paraphrase audit (fixed 24) | frozen before the run (6 per program: 3 zh + 3 en, all 8 required compact forms); result **3/24** (zh 3/12, en **0/12**), compact **0/8** → `l3_paraphrase_ready = false` |
+| Paraphrase failure modes | **19/21 failures drop the terminal `to_nearest`** → return the L2 program `largest_to_<direction>`; 2 collapse to `smallest_to_<direction>` |
+| CLI audit | `all_checks_passed = true`: success exit 0 + all six outputs + every required `result.json` key (`ground_truth_used=false`); out-of-scope program exit **5** with only `result.json`; 3/3 GT arguments refused |
+| Failure attribution | `PARSER_WRONG` **0** · `REFERENCE_NO_PROPOSALS` 1 · `REFERENCE_NO_ELIGIBLE` 2 · `NOT_COVERED` **31** · `SELECTION_WRONG` **75** · `GEOMETRY_POOR` 0 · `TARGET_FAIL_WITH_REFERENCE_OK` **90** · `TARGET_OK` **41** → reference_fail **109** > target_fail 90 → **`REFERENCE`** |
+| §20 / §21 gates | reference gate fails 4/6 (strict < 0.22, answered < 0.24, retention < 0.68, paired < 10/20; margin + abstention pass); language gate fails 2/5 (answered 0.2198 < 0.23, paired 8/20 < 9/20) |
+| Verdict | **`L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** |
+
+1. **The L3 decoder is not the practical limiter** — the reference stage is. With a predicted largest
+   reference the chain keeps 66.93 % of the oracle Z-B3 mIoU, and the reference-OK subset reaches 0.3434
+   while the reference-fail subset collapses to 0.0651.
+2. **106 of 240 records (44.2 %)** land in the two "wrong or uncovered reference" buckets
+   (`SELECTION_WRONG` 75 + `NOT_COVERED` 31), which is why the predeclared strict/answered/retention/paired
+   bars are all missed by small margins (0.2170 vs 0.22, 0.2198 vs 0.24, 0.6693 vs 0.68, 8/20 vs 10/20).
+3. **On the dataset's own queries the parser contributes nothing to the loss** (240/240, A2 identical to
+   A1), but on unseen paraphrases it fails 21/24, mostly by dropping the terminal `to_nearest`; the
+   paraphrase flag is false.
+4. Next: 等待 ChatGPT 根据 Task 7A 的 L3 predicted-reference、ProgramHead 与 failure attribution 结果决定下一步，不自行进行 parser 再训练、reference 再硬化、attention/global competition 或正式全量训练。
 
 ## Task 6Z measured results
 

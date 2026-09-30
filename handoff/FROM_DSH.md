@@ -17,146 +17,139 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6Z Report: Oracle-Reference L3 Direction × Nearest Composition Feasibility
+# FROM_DSH — Task 7A Report: L3 Predicted-Reference + Natural-Language Integration Audit
 
-_This file holds the Task 6Z report. The Task 6Y report is preserved in git history at commit `24be954`;
-Task 6X at `9318890`; Task 6W at `3de2142`; Task 6V at `3e185fb`._
+_This file holds the Task 7A report. The Task 6Z report is preserved in git history at commit `7006d7d`;
+Task 6Y at `24be954`; Task 6X at `9318890`; Task 6W at `3de2142`._
 
 **Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task6z_oracle_l3_composition.md`.
+Full design notes: `docs/task7a_l3_predicted_reference_integration.md`. **No model was trained in Task 7A.**
 
 ## 1. Verdict
 
-**`L3_COMPOSITION_NO_MEANINGFUL_GAIN`** — section 31 priority order applied literally:
+**`L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** — section 23 priority order applied literally:
 
-1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, exactly four L3 programs, six variants, no L1/L2/test
-   record, no predicted reference, constants untuned.
-2. `L3_PAIRED_SET_INSUFFICIENT` — no: **N_pair = 20** (≥ 12).
-3. `L3_COMPOSITION_FIELD_SEMANTIC_MISMATCH` — **no: the composition sanity gate passed** (direction-valid
-   top-1 1.0000, top-3 1.0000, mean Spearman 0.9983).
-4. `L3_LEARNED_COMPOSITION_NOT_LEARNABLE` — no: Z-B3 Overfit20 mIoU **0.9619** / Dice **0.9804**.
-5. `L3_GEOMETRY_ONLY_CONFOUND` — no: B3−B5 = **+0.2355** ≥ 0.10 while B5's paired pass rate is 0.30 < 0.60.
-6. `L3_DETERMINISTIC_COMPOSITION_ONLY` — no: the deterministic product comparator Z-B4 does **not** pass
-   its section-29 criteria (B4 mIoU 0.2788 < 0.35, B4−B1 +0.0231 < 0.05, paired 0.60 < 0.70).
-7. **`L3_COMPOSITION_NO_MEANINGFUL_GAIN`** — Z-B3 mask criteria 1-5 fail (B3 mIoU **0.3242 < 0.35** and
-   B3−B1 **+0.0231 < +0.05**) and B4 does not pass. ← **verdict**
-8. `L3_COMPOSITION_COUNTERFACTUAL_WEAK` — not reached (mask criteria already fail).
-9. `L3_LEARNED_COMPOSITION_FEASIBLE` — no (5 of 7 section-28 criteria pass).
+1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, no test use, no training, both checkpoint hashes exact.
+2. `L3_CHECKPOINT_UNAVAILABLE` — no: Z-B3 SHA256 `74f308e1…9fc0f0bc` recomputed and matching, variant `Z-B3`.
+3. `PARSER_CHECKPOINT_UNAVAILABLE` — no: hardened ProgramHead `4cbba36b…d44a5e` matching.
+4. `TASK6Z_REPRODUCTION_FAIL` — **no: reproduction is exact** (mIoU Δ 0.0, Dice Δ 0.0, paired 15/20,
+   margin Δ 0.0).
+5. **`L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** — the canonical predicted-reference section-20 gate fails
+   on four of six conditions (strict mIoU 0.2170 < 0.22; answered-only 0.2198 < 0.24; retention 0.6693 <
+   0.68; paired 8/20 < 10/20; margin +0.1995 ✓; abstention 0.0125 ✓). ← **verdict**
+6. `L3_LANGUAGE_HARDENING_REQUIRED` — not reached (the reference gate already fails).
+7. `L3_END_TO_END_DEVELOPMENT_CHAIN_READY` — no.
 
-## 2. Recorded Task 6Y result (Task 6Y artifacts not mutated)
+No threshold was changed after seeing results.
 
-`NEAREST_FIELD_NO_MEANINGFUL_GAIN`: nearest-field sanity top-1 1.0000 / top-3 1.0000 / Spearman 1.0000;
-Y-B2 Overfit20 0.9663 / 0.9827; MiniVal240 B0 0.1837, B1 0.2640, B2 0.2864, B3 0.0468 with deltas
-B2−B0 +0.1027, B2−B1 +0.0224, B2−B3 +0.2396; paired B0 0/20, B1 8/20, B2 6/20, B3 6/20 and B2 margin
-+0.1828. Carried forward: the nearest field carries valid spatial information, standalone nearest target
-segmentation is not sufficiently strong, and Task 6Z asks whether directional gating reduces the ambiguity
-enough for L3 composition.
+## 2. Recorded Task 6Z result (Task 6Z artifacts not mutated)
 
-## 3. Frozen scope, semantics and the composed field
+`L3_COMPOSITION_NO_MEANINGFUL_GAIN`: composition sanity direction-valid top-1 1.0000 / top-3 1.0000 /
+Spearman 0.9983; Z-B3 Overfit20 0.9619 / 0.9804; MiniVal240 Z-B0 0.1510, Z-B1 0.3011, Z-B2 0.1724,
+**Z-B3 0.3242**, Z-B4 0.2788, Z-B5 0.0888 with Z-B3 deltas vs B0 +0.1732, vs B1 +0.0231, vs B2 +0.1519,
+vs B4 +0.0454, vs B5 +0.2355; paired Z-B3 **15/20**, margin **+0.300354**; tests `1062 passed, 1 skipped`.
+Z-B3 stays the current best L3 research decoder; Task 7A does **not** convert the 6Z verdict into a success
+claim and only measures practical reference/parser error propagation.
 
-Only `largest_to_{left_of,right_of,above,below}_to_nearest` (v0.2 availability reproduced exactly: train
-338/336/323/347, val 224/213/250/249). Canonical order preserved and not regenerated:
-`argmax_area` → `filter_relation` (frozen directional predicate, `alpha 1.2`, `tau 0.04`) →
-`argmin_boundary_distance` (frozen nearest eligibility/margin: `boundary_distance`, `margin_px_floor 2.0`,
-`margin_diag_fraction 0.005`). The composed field is the exact clamped product with **no** renormalization,
-learned scalar, temperature, exponent or threshold:
+## 3. A0 oracle reproduction (exact)
 
-```text
-P_prod_512 = clamp(P_dir_512 * P_near_512, 0, 1)      P_dir from frozen v0.2, P_near from frozen 6Y
-P_prod_64  = clamp(P_dir_64  * P_near_64,  0, 1)      (sigma_diag 0.05, both untouched)
-```
+`evaluation/task7a_oracle_reproduction.json` — the frozen 6Z inference path re-run on the exact
+Z-MiniVal240 / Z-PairedVal20 packs:
 
-## 4. Parameter-free composition sanity (Part D)
+| Quantity | Recomputed | Frozen 6Z | |Δ| | Tolerance |
+|---|---|---|---|---|
+| MiniVal mIoU | 0.3242128982543474 | 0.3242128982543474 | **0.0** | 1e-6 |
+| MiniVal Dice | 0.4389840055529761 | 0.4389840055529761 | **0.0** | 1e-6 |
+| Paired | **15/20** | 15/20 | 0 | exact |
+| own−cross margin | +0.30035408969722216 | +0.30035408969722216 | **0.0** | 1e-6 |
 
-`evaluation/task6z_composition_sanity.json` on the frozen Z-MiniVal240:
+`TASK6Z_REPRODUCTION_PASS` (own mean 0.30316, cross mean 0.00280).
 
-| Candidate set | Records | top-1 | top-3 | mean target | mean best distractor | Δ | mean candidates | mean Spearman |
-|---|---|---|---|---|---|---|---|---|
-| all eligible non-reference (diagnostic) | 240 | 0.9042 | 1.0000 | 0.2985 | 0.1051 | +0.2070 | 7.21 | — |
-| **exact direction-valid subset (gate)** | 240 | **1.0000** | **1.0000** | 0.2985 | 0.1058 | +0.2155 | 2.97 | **0.9983** |
-| canonical step-2 list (diagnostic) | 240 | 0.9958 | 1.0000 | 0.2985 | 0.1006 | +0.2207 | 4.18 | 0.9988 |
+## 4. A1 canonical predicted-reference chain
 
-Gate passed (≥ 0.95 / ≥ 0.99 / ≥ 0.90), `constants_tuned = false`. The direction-valid subset comes from the
-frozen `relations.evaluate_direction`; that recomputation is a strict **subset** of the record's canonical
-step-2 list in 125/240 records and identical in 115/240 (never a superset), so the gate is measured on the
-stricter set and the generator-consistent canonical-list numbers are reported alongside.
+Reference diagnostics (240 records; mean 19.35 proposals / 14.25 eligible): abstentions **3** (rate
+**0.0125**), selected-reference mIoU **0.4700**, Dice 0.5430, Pr@0.5 **0.5527**, centroid error mean/median/
+p90 0.1056/**0.0234**/0.3240, best eligible coverage@0.50 **0.8583**; buckets `NO_PROPOSALS` 1 ·
+`NO_ELIGIBLE_PROPOSALS` 2 · `REFERENCE_NOT_COVERED_IOU50` **31** · `REFERENCE_SELECTION_WRONG` **75** ·
+`REFERENCE_GEOMETRY_POOR` 0 · `REFERENCE_OK` **131**.
 
-## 5. Frozen packs (seed 20260930)
+Target metrics: strict mIoU **0.2170**, Dice 0.2931, Pr@0.5 0.4252, answered-only **0.2198**, abstentions 3,
+**retention 0.6693** (oracle Z-B3 0.3242), reference-OK subset **0.3434** vs reference-fail subset
+**0.0651**, per direction above 0.1913 / below 0.2356 / left 0.2518 / right 0.1893. Paired: **8/20**,
+own 0.2248 / cross 0.0253 / margin **+0.1995**, 0 reference-abstention pairs (the predicted reference is
+computed once per tile and reused for both member programs).
 
-`evaluation/task6z_pack_manifest.json`: Z-Overfit20 **20** (5 above / 5 below / 5 left / 5 right, 20 tiles),
-Z-MiniTrain1200 **1200** (300 each, 826 tiles), Z-MiniVal240 **240** (60 each, 219 tiles), Z-PairedVal20
-**N_pair 20** (same tile, same largest reference id, two different directions, two different targets).
-Only the four L3 programs appear; no L1/L2/test record and no smallest-L3 program.
+## 5. A2 hardened ProgramHead integration
 
-## 6. Six variants and training
+Canonical-query parser audit: **240/240 exact (1.0000)**, per-class recall 1.0 for all four L3 classes,
+**0** out-of-scope predictions. Natural-language end-to-end: strict mIoU **0.2170**, Dice 0.2931,
+answered-only **0.2198**, abstentions 3, out-of-scope 0, per direction identical to A1 — i.e. **the language
+stage adds no measurable loss on the dataset's own queries**. Paired: parser-correct members **40/40**,
+**8/20** pairs, margin **+0.1995**, 0 parser-error pairs, 0 reference-abstention pairs.
 
-| Variant | Inputs | Fusion | Params | Overfit20 | MiniVal mIoU | Dice | Pr@0.5 | Paired |
-|---|---|---|---|---|---|---|---|---|
-| Z-B0 | visual_128 + dir_embed16 | 144 | 273,473 | 0.9572/0.9780 | 0.1510 | 0.2338 | 0.1984 | 9/20 (+0.0879) |
-| Z-B1 | + P_dir_64 | 145 | 274,625 | 0.9629/0.9810 | 0.3011 | 0.4067 | 0.4785 | **16/20** (+0.2630) |
-| Z-B2 | + P_near_64 | 145 | 274,625 | 0.9670/0.9832 | 0.1724 | 0.2461 | 0.3127 | 9/20 (+0.1583) |
-| **Z-B3** | + P_dir_64 + P_near_64 (learned) | 146 | **275,777** | **0.9619/0.9804** | **0.3242** | **0.4390** | **0.5331** | **15/20 (+0.3004)** |
-| Z-B4 | + P_prod_64 (deterministic) | 145 | 274,625 | 0.9631/0.9811 | 0.2788 | 0.3845 | 0.4604 | 12/20 (+0.2702) |
-| Z-B5 | field_128 (P_prod 1→128), no visual | 144 | 240,833 | 0.2860/0.3686 | 0.0888 | 0.1429 | 0.1123 | 6/20 (+0.0654) |
+## 6. Fixed 24-prompt paraphrase audit
 
-Per-direction MiniVal mIoU — B3 above 0.2806 / below 0.3061 / left 0.3777 / right 0.3325; B1 0.2870 /
-0.2562 / 0.3452 / 0.3161; B4 0.2500 / 0.2630 / 0.2493 / 0.3530; B5 0.0955 / 0.0889 / 0.0673 / 0.1033.
-Deltas: **B1−B0 +0.1501**, B2−B0 +0.0214, **B3−B0 +0.1732**, **B3−B1 +0.0231**, **B3−B2 +0.1519**,
-**B3−B4 +0.0454**, **B3−B5 +0.2355**, B4−B5 +0.1901. Z1 lr 1e-3 / batch 4 / 1200 steps / eval every 100;
-Z2 lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / selection by MiniVal240 mIoU; seed 20260930;
-bfloat16 AMP; wall 47.7–124.5 s and peak VRAM 0.666–0.894 GB per variant. Loss exactly
-`BCEWithLogitsLoss + DiceLoss`; no attention/Transformer/GNN, no GRCL, no auxiliary loss.
+The pack (`evaluation/task7a_l3_paraphrase_pack.json`) was frozen **before** any parser run: 24 prompts, 6 per
+L3 program (3 Chinese + 3 English), all eight required compact/contrast forms present. Result:
+**3/24 exact (0.125)**; LEFT 1/6, RIGHT 0/6, ABOVE 1/6, BELOW 1/6; Chinese 3/12, English **0/12**;
+compact **0/8** → `l3_paraphrase_ready = false`.
 
-Border-target and tiny-target mIoU are **not applicable** (0 records): the L3 pipeline's nearest eligibility
-excludes border-truncated and tiny targets. B3 target-area quartiles (edges 1010.5 / 1449.5 / 2380.5 px):
-0.3600 / 0.3725 / 0.3704 / 0.1940; boundary-distance quartiles (edges 20.91 / 51.15 / 99.87 px):
-0.3392 / 0.2743 / 0.3177 / 0.3656.
+Failure modes: **19 of 21 failures drop the terminal `to_nearest`** and return the L2 program
+`largest_to_<direction>` (e.g. `分割面积最大的建筑物右侧最近的建筑物。` → `largest_to_right_of`,
+`find the closest building to the left of the largest building` → `largest_to_left_of`), plus 2 collapses to
+`smallest_to_<direction>`. No parser retraining was performed.
 
-## 7. Criteria
+## 7. CMD entry point
 
-Section 28 (Z-B3): mIoU 0.3242 < 0.35 ✗ · B3−B0 +0.1732 ≥ 0.10 ✓ · B3−B1 **+0.0231 < 0.05 ✗** ·
-B3−B2 +0.1519 ≥ 0.05 ✓ · B3−B5 +0.2355 ≥ 0.10 ✓ · paired 0.75 ≥ 0.70 ✓ · margin +0.3004 ≥ 0.15 ✓ →
-**5 of 7**.
+`predict_buildreasonseg_l3.py` (no GT/annotation argument; three such arguments refused). CLI audit
+`all_checks_passed = true`: success exit 0 with all six outputs and every required `result.json` key
+(`ground_truth_used = false`); out-of-scope canonical program exit **5** with only `result.json` and
+`stopped_before = [proposals, reference, fields, sam2, z_b3]`.
 
-Section 29 (Z-B4): `deterministic_product_pass = false` (four of seven conditions pass).
-Section 30: `delta_learned_vs_product = +0.0454` → `learned_not_worse = true`,
-`product_materially_stronger = **false**`.
+## 8. Failure attribution
 
-Measured reading (reported, not prescribed): composition clearly helps over the visual baseline (+0.1732),
-the nearest-only variant (+0.1519) and geometry-only (+0.2355); the learned two-field composition is the
-best variant overall (mIoU 0.3242, paired 15/20, margin +0.3004) and beats the deterministic product
-comparator by +0.0454 without ever being worse. The two predeclared bars that fail are the absolute-quality
-bar (0.35) and the incremental-value bar for nearest *given* the directional field (+0.0231 < +0.05) — once
-the directional field is present, the nearest field adds little on this split.
+| Bucket | Count | Share |
+|---|---|---|
+| `PARSER_WRONG` | **0** | 0.0000 |
+| `REFERENCE_NO_PROPOSALS` | 1 | 0.0042 |
+| `REFERENCE_NO_ELIGIBLE` | 2 | 0.0083 |
+| `REFERENCE_NOT_COVERED_IOU50` | 31 | 0.1292 |
+| `REFERENCE_SELECTION_WRONG` | **75** | **0.3125** |
+| `REFERENCE_GEOMETRY_POOR` | 0 | 0.0000 |
+| `TARGET_FAIL_WITH_REFERENCE_OK` | 90 | 0.3750 |
+| `TARGET_OK` | 41 | 0.1708 |
 
-## 8. Tests, storage, git
+parser_fail 0 ≤ 0.05 → not PARSER; reference_fail **109** > target_fail **90** →
+**dominant bottleneck `REFERENCE`**. DSH proposes no repair.
 
-`python -m pytest tests/ -q` → **1062 passed, 1 skipped** (Task 6Y ended at 1011 passed / 1 skipped; no prior
+## 9. Tests, storage, git
+
+`python -m pytest tests/ -q` → **1107 passed, 1 skipped** (Task 6Z ended at 1062 passed / 1 skipped; no prior
 passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check that
-needs the proposal env). `tests/test_task6z_l3_composition.py` adds the 51 section-O checks.
+needs the proposal env). `tests/test_task7a_l3_integration.py` adds the 45 section-N checks.
 
-Not committed: L3 pack JSONs, the twelve checkpoints, feature caches, source imagery/vectors, `.conda`.
-Committed: composition/decoder code, small manifests and evaluation JSON, scripts, tests, docs, handoff.
+Not committed: parser/YOLO/SAM2/Z-B3 weights, feature/proposal caches, generated CLI masks and overlays
+(`artifacts/task7a/`), source imagery/vectors, `.conda`. Committed: integration code, small evaluation JSON,
+scripts, tests, docs, handoff. **No new model checkpoint.**
 
-Task 6Z downloaded nothing and installed nothing. Watt was **not needed** in Task 6Z: the pre-existing Watt
+Task 7A downloaded nothing and installed nothing. Watt was **not needed** in Task 7A: the pre-existing Watt
 instance is transport-only, is not owned by this project and was left running per the ownership rule; no
 proxy, host, certificate or TLS setting was read or modified.
 
-## 9. Interpretation boundary
+## 10. Interpretation boundary
 
-DSH reports measurements only. No global novelty claim; no final L3 end-to-end capability claim; the
-reference subsystem was not modified; field constants not tuned; no attention/global competition; no
-predicted reference; ProgramHead not retrained; target loss unchanged; DSH does not decide whether learned
-or deterministic composition enters the final model.
+DSH reports measurements only. Task 6Z is not turned into a success claim; the parser was not retrained;
+reference hardening was not reopened; no global attention; Z-B3 and the fields are unchanged; no full
+training and no test evaluation; no repair proposed.
 
-## 10. Recommended next step (exact wording required by Part M)
+## 11. Recommended next step (exact wording required by Part L)
 
-等待 ChatGPT 根据 Task 6Z 的 L3 direction×nearest composition 因果结果决定下一步，不自行进行 predicted-reference L3 集成、attention/global competition 改造或正式全量训练。
+等待 ChatGPT 根据 Task 7A 的 L3 predicted-reference、ProgramHead 与 failure attribution 结果决定下一步，不自行进行 parser 再训练、reference 再硬化、attention/global competition 或正式全量训练。
 
-## 11. STOP
+## 12. STOP
 
-Task 6Z stops here: no predicted-reference integration, no attention/global context, no field-formula
-change, no full-dataset training, no test access, no GUI. Waiting for the ChatGPT audit.
+Task 7A stops here: no parser retraining, no reference re-hardening, no attention/global competition, no
+field/decoder change, no formal full training, no test access, no GUI. Waiting for the ChatGPT audit.
