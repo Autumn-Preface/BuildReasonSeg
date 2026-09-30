@@ -1,0 +1,65 @@
+{
+  "_doc": "Task 6V section 7. The frozen single resolver option per reference family, chosen on the train-only U-Calib200 split by the exact section 7 priority and immutable after creation. RefValUnique/MiniVal240/PairedVal20 results are never used to change it.",
+  "task": "6V",
+  "stage": "D-frozen-family-policy",
+  "policy": {
+    "largest": "V-P2",
+    "smallest": "V-P0"
+  },
+  "policy_description": {
+    "largest": "U-C1 + frozen ProposalSetRanker v0.1",
+    "smallest": "U-C0 + deterministic Task 6Q area selector"
+  },
+  "options": {
+    "V-P0": "U-C0 + deterministic Task 6Q area selector",
+    "V-P1": "U-C1 + deterministic Task 6Q area selector",
+    "V-P2": "U-C1 + frozen ProposalSetRanker v0.1"
+  },
+  "priority_rule": [
+    "higher Pr@0.5",
+    "higher selected-reference mIoU",
+    "lower REFERENCE_SELECTION_WRONG",
+    "lower centroid median",
+    "lower abstention rate",
+    "simpler option (V-P0 -> V-P1 -> V-P2)"
+  ],
+  "ranking": {
+    "largest": [
+      "V-P2",
+      "V-P0",
+      "V-P1"
+    ],
+    "smallest": [
+      "V-P0",
+      "V-P1",
+      "V-P2"
+    ]
+  },
+  "selected_metrics": {
+    "largest": {
+      "selected_reference_miou": 0.6650318073089668,
+      "precision_at_0_5": 0.8,
+      "centroid_median": 0.0043676920843468015,
+      "abstention_rate": 0.0,
+      "REFERENCE_SELECTION_WRONG": 18,
+      "REFERENCE_OK": 80
+    },
+    "smallest": {
+      "selected_reference_miou": 0.4153739682230623,
+      "precision_at_0_5": 0.53,
+      "centroid_median": 0.004371625012645202,
+      "abstention_rate": 0.0,
+      "REFERENCE_SELECTION_WRONG": 38,
+      "REFERENCE_OK": 53
+    }
+  },
+  "evidence": {
+    "calibration": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6v_calibration_family_policy.json"
+  },
+  "frozen": true,
+  "immutable_after_creation": true,
+  "chosen_without_refval": true,
+  "fourth_option": null,
+  "training_performed": false,
+  "test_split_used": false
+}

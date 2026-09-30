@@ -1,0 +1,248 @@
+{
+  "_doc": "Task 6V sections 4-7. Train-only per-family resolver policy selection on the frozen Task 6U U-Calib200 split (100 largest + 100 smallest): exactly the three predeclared frozen options V-P0/V-P1/V-P2 are compared per family with the unchanged Task 6Q eligibility. GT reference masks score the result only; no model is trained in Task 6V.",
+  "task": "6V",
+  "stage": "C-D-calibration-family-policy",
+  "frozen_assets": {
+    "yolo_checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "retrained": false
+    },
+    "ranker_checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6u\\reference_ranker_v01.pt",
+      "sha256": "c738fcf77419626f5f9bde21ff8cd477547418c095537b4bf50f1d6c1b1a46c0",
+      "expected": "c738fcf77419626f5f9bde21ff8cd477547418c095537b4bf50f1d6c1b1a46c0",
+      "retrained": false
+    },
+    "configs": {
+      "U-C0": {
+        "imgsz": 640,
+        "conf": 0.1,
+        "max_det": 100,
+        "nms": "default",
+        "tta": false,
+        "tiling": false
+      },
+      "U-C1": {
+        "imgsz": 640,
+        "conf": 0.05,
+        "max_det": 300,
+        "nms": "default",
+        "tta": false,
+        "tiling": false
+      }
+    }
+  },
+  "options": {
+    "V-P0": "U-C0 + deterministic Task 6Q area selector",
+    "V-P1": "U-C1 + deterministic Task 6Q area selector",
+    "V-P2": "U-C1 + frozen ProposalSetRanker v0.1"
+  },
+  "options_compared": 3,
+  "calibration_split": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6u_reference_train_split.json",
+    "records": 200,
+    "by_family": {
+      "largest": 100,
+      "smallest": 100
+    },
+    "train_only": true
+  },
+  "per_family": {
+    "largest": {
+      "V-P0": {
+        "option": "V-P0",
+        "family": "largest",
+        "description": "U-C0 + deterministic Task 6Q area selector",
+        "config": "U-C0",
+        "selector": "deterministic",
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.6338203099535162,
+        "selected_reference_dice": 0.7138232582133125,
+        "precision_at_0_5": 0.76,
+        "centroid_median": 0.00469234610127758,
+        "centroid_p90": 0.25079607648189484,
+        "abstention_rate": 0.0,
+        "REFERENCE_NOT_COVERED_IOU50": 2,
+        "REFERENCE_SELECTION_WRONG": 22,
+        "REFERENCE_OK": 76,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 2,
+          "REFERENCE_SELECTION_WRONG": 22,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 76
+        }
+      },
+      "V-P1": {
+        "option": "V-P1",
+        "family": "largest",
+        "description": "U-C1 + deterministic Task 6Q area selector",
+        "config": "U-C1",
+        "selector": "deterministic",
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.6033834132806426,
+        "selected_reference_dice": 0.6837626600041007,
+        "precision_at_0_5": 0.71,
+        "centroid_median": 0.0058523205935597025,
+        "centroid_p90": 0.28061269949033446,
+        "abstention_rate": 0.0,
+        "REFERENCE_NOT_COVERED_IOU50": 2,
+        "REFERENCE_SELECTION_WRONG": 27,
+        "REFERENCE_OK": 71,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 2,
+          "REFERENCE_SELECTION_WRONG": 27,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 71
+        }
+      },
+      "V-P2": {
+        "option": "V-P2",
+        "family": "largest",
+        "description": "U-C1 + frozen ProposalSetRanker v0.1",
+        "config": "U-C1",
+        "selector": "ranker",
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.6650318073089668,
+        "selected_reference_dice": 0.7479551233459867,
+        "precision_at_0_5": 0.8,
+        "centroid_median": 0.0043676920843468015,
+        "centroid_p90": 0.19291486967831678,
+        "abstention_rate": 0.0,
+        "REFERENCE_NOT_COVERED_IOU50": 2,
+        "REFERENCE_SELECTION_WRONG": 18,
+        "REFERENCE_OK": 80,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 2,
+          "REFERENCE_SELECTION_WRONG": 18,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 80
+        }
+      }
+    },
+    "smallest": {
+      "V-P0": {
+        "option": "V-P0",
+        "family": "smallest",
+        "description": "U-C0 + deterministic Task 6Q area selector",
+        "config": "U-C0",
+        "selector": "deterministic",
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.4153739682230623,
+        "selected_reference_dice": 0.4662482087459871,
+        "precision_at_0_5": 0.53,
+        "centroid_median": 0.004371625012645202,
+        "centroid_p90": 0.31462231714314937,
+        "abstention_rate": 0.0,
+        "REFERENCE_NOT_COVERED_IOU50": 9,
+        "REFERENCE_SELECTION_WRONG": 38,
+        "REFERENCE_OK": 53,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 9,
+          "REFERENCE_SELECTION_WRONG": 38,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 53
+        }
+      },
+      "V-P1": {
+        "option": "V-P1",
+        "family": "smallest",
+        "description": "U-C1 + deterministic Task 6Q area selector",
+        "config": "U-C1",
+        "selector": "deterministic",
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.35447175059246944,
+        "selected_reference_dice": 0.40028096084857795,
+        "precision_at_0_5": 0.45,
+        "centroid_median": 0.05057028592506145,
+        "centroid_p90": 0.3032957347276929,
+        "abstention_rate": 0.0,
+        "REFERENCE_NOT_COVERED_IOU50": 6,
+        "REFERENCE_SELECTION_WRONG": 49,
+        "REFERENCE_OK": 45,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 6,
+          "REFERENCE_SELECTION_WRONG": 49,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 45
+        }
+      },
+      "V-P2": {
+        "option": "V-P2",
+        "family": "smallest",
+        "description": "U-C1 + frozen ProposalSetRanker v0.1",
+        "config": "U-C1",
+        "selector": "ranker",
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.05463834797247283,
+        "selected_reference_dice": 0.076751970765465,
+        "precision_at_0_5": 0.03,
+        "centroid_median": 0.15990127624316164,
+        "centroid_p90": 0.3800874022507117,
+        "abstention_rate": 0.0,
+        "REFERENCE_NOT_COVERED_IOU50": 6,
+        "REFERENCE_SELECTION_WRONG": 91,
+        "REFERENCE_OK": 3,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 6,
+          "REFERENCE_SELECTION_WRONG": 91,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 3
+        }
+      }
+    }
+  },
+  "priority_rule": [
+    "higher Pr@0.5",
+    "higher selected-reference mIoU",
+    "lower REFERENCE_SELECTION_WRONG",
+    "lower centroid median",
+    "lower abstention rate",
+    "simpler option (V-P0 -> V-P1 -> V-P2)"
+  ],
+  "ranking": {
+    "largest": [
+      "V-P2",
+      "V-P0",
+      "V-P1"
+    ],
+    "smallest": [
+      "V-P0",
+      "V-P1",
+      "V-P2"
+    ]
+  },
+  "selected_policy": {
+    "largest": "V-P2",
+    "smallest": "V-P0"
+  },
+  "selection_inputs": {
+    "u_calib200": true,
+    "refval_unique": false,
+    "minival240": false,
+    "pairedval20": false,
+    "test_split": false
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 9.5
+}
