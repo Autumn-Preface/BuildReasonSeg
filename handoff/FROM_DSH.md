@@ -17,139 +17,134 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 7A Report: L3 Predicted-Reference + Natural-Language Integration Audit
+# FROM_DSH — Task 7B Report: L3 ProgramHead Compositional-Semantic Hardening
 
-_This file holds the Task 7A report. The Task 6Z report is preserved in git history at commit `7006d7d`;
-Task 6Y at `24be954`; Task 6X at `9318890`; Task 6W at `3de2142`._
+_This file holds the Task 7B report. The Task 7A report is preserved in git history at commit `6ee3d0d`;
+Task 6Z at `7006d7d`; Task 6Y at `24be954`._
 
 **Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task7a_l3_predicted_reference_integration.md`. **No model was trained in Task 7A.**
+Full design notes: `docs/task7b_l3_programhead_hardening.md`.
 
 ## 1. Verdict
 
-**`L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** — section 23 priority order applied literally:
+**`L3_PARSER_CANONICAL_REGRESSION`** — section 24 priority order applied literally:
 
-1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, no test use, no training, both checkpoint hashes exact.
-2. `L3_CHECKPOINT_UNAVAILABLE` — no: Z-B3 SHA256 `74f308e1…9fc0f0bc` recomputed and matching, variant `Z-B3`.
-3. `PARSER_CHECKPOINT_UNAVAILABLE` — no: hardened ProgramHead `4cbba36b…d44a5e` matching.
-4. `TASK6Z_REPRODUCTION_FAIL` — **no: reproduction is exact** (mIoU Δ 0.0, Dice Δ 0.0, paired 15/20,
-   margin Δ 0.0).
-5. **`L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** — the canonical predicted-reference section-20 gate fails
-   on four of six conditions (strict mIoU 0.2170 < 0.22; answered-only 0.2198 < 0.24; retention 0.6693 <
-   0.68; paired 8/20 < 10/20; margin +0.1995 ✓; abstention 0.0125 ✓). ← **verdict**
-6. `L3_LANGUAGE_HARDENING_REQUIRED` — not reached (the reference gate already fails).
-7. `L3_END_TO_END_DEVELOPMENT_CHAIN_READY` — no.
+1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, leakage zero, no keyword/regex override, no sweep,
+   no test use.
+2. `BASELINE_PARSER_UNAVAILABLE` — no: Task 6T baseline SHA256 `4cbba36b…d44a5e` exact.
+3. `PARSER_TRAINING_FAILED` — no: a valid checkpoint was produced (`2a285e4a…cf48eb4`).
+4. **`L3_PARSER_CANONICAL_REGRESSION`** — the canonical evaluation regressed: full v0.2 val accuracy
+   **0.7129 < 0.995**, macro F1 **0.7939 < 0.995**, minimum class recall **0.0000 < 0.98**
+   (`leftmost` collapsed to 0.0000), while Z-MiniVal240 **240/240** and Z-PairedVal **40/40** stayed
+   perfect. ← **verdict**
+5. `L3_PARSER_COMPOSITIONAL_ROBUSTNESS_FAIL` — not reached (canonical gates already fail) although the
+   compositional gates also fail: fixed24 21/24 (compact 7/8), minimal pairs 73/96, stress 0.8281.
+6. `END_TO_END_REGRESSION` — no: the frozen downstream reproduces Task 7A exactly.
+7. `L3_PROGRAMHEAD_HARDENING_PASS` — no.
 
 No threshold was changed after seeing results.
 
-## 2. Recorded Task 6Z result (Task 6Z artifacts not mutated)
+## 2. Recorded Task 7A findings (Task 7A artifacts not mutated)
 
-`L3_COMPOSITION_NO_MEANINGFUL_GAIN`: composition sanity direction-valid top-1 1.0000 / top-3 1.0000 /
-Spearman 0.9983; Z-B3 Overfit20 0.9619 / 0.9804; MiniVal240 Z-B0 0.1510, Z-B1 0.3011, Z-B2 0.1724,
-**Z-B3 0.3242**, Z-B4 0.2788, Z-B5 0.0888 with Z-B3 deltas vs B0 +0.1732, vs B1 +0.0231, vs B2 +0.1519,
-vs B4 +0.0454, vs B5 +0.2355; paired Z-B3 **15/20**, margin **+0.300354**; tests `1062 passed, 1 skipped`.
-Z-B3 stays the current best L3 research decoder; Task 7A does **not** convert the 6Z verdict into a success
-claim and only measures practical reference/parser error propagation.
+`L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`; A0 oracle Z-B3 mIoU 0.3242128982543474 / Dice
+0.4389840055529761 / Paired 15/20 / margin 0.30035408969722216; A1 strict 0.21700369907681483, answered
+0.21975058134361, retention 0.6693246944992726, Paired 8/20, margin 0.19949275176250805, reference
+abstention 3/240, dominant bottleneck `REFERENCE`; language: canonical 240/240, paired members 40/40,
+fixed paraphrase 3/24, compact 0/8, dominant failure = terminal `to_nearest` dropped to L2. Task 7B does not
+reinterpret Task 7A as a success.
 
-## 3. A0 oracle reproduction (exact)
+## 3. Frozen baseline, architecture and evaluation packs
 
-`evaluation/task7a_oracle_reproduction.json` — the frozen 6Z inference path re-run on the exact
-Z-MiniVal240 / Z-PairedVal20 packs:
+Baseline = Task 6T hardened parser, SHA256 `4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e`
+exact. Architecture preserved: Qwen3-VL-2B, text-only (no image input), same tokenizer/prompt formatting,
+same Task 6M trainable policy (LoRA + ProgramHead, backbone frozen; 17,434,624 trainable /
+2,144,421,888 total), exactly 20 classes, no `unsupported` class, no keyword/regex remap.
 
-| Quantity | Recomputed | Frozen 6Z | |Δ| | Tolerance |
-|---|---|---|---|---|
-| MiniVal mIoU | 0.3242128982543474 | 0.3242128982543474 | **0.0** | 1e-6 |
-| MiniVal Dice | 0.4389840055529761 | 0.4389840055529761 | **0.0** | 1e-6 |
-| Paired | **15/20** | 15/20 | 0 | exact |
-| own−cross margin | +0.30035408969722216 | +0.30035408969722216 | **0.0** | 1e-6 |
+Frozen **before** training (`task7b_eval_prompt_manifest.json`): full v0.2 val (9,111 records → 18,222
+bilingual prompts), Z-MiniVal240 (240), Z-PairedVal20 members (40), Task 7A fixed24 (24), Task 7B minimal
+pairs (**96**: M1 48 / M2 16 / M3 16 / M4 16; 48 zh + 48 en) and Task 7B stress v1 (**192**: L3 4×24 = 96
+with 12 zh + 12 en each, L2 direction 4×12 = 48, `largest_to_nearest` 16, `smallest_to_nearest` 8,
+`largest` 8, `smallest` 8, extremes 8; 96 zh + 96 en). No Task 7A fixed24 string is reused; the minimal-pair
+and stress lexical pools are reserved from the training grammar.
 
-`TASK6Z_REPRODUCTION_PASS` (own mean 0.30316, cross mean 0.00280).
+## 4. Training data and leakage audit
 
-## 4. A1 canonical predicted-reference chain
+**All 12,778 original v0.2 train records were removed** by the section-8 rule: BuildSpatialReason v0.2
+emits the same 120 instruction templates in train and val (120 distinct normalized texts each, **100 %
+intersection**), so every train prompt overlaps the evaluation set exactly. Cleaned train rows = **0**.
 
-Reference diagnostics (240 records; mean 19.35 proposals / 14.25 eligible): abstentions **3** (rate
-**0.0125**), selected-reference mIoU **0.4700**, Dice 0.5430, Pr@0.5 **0.5527**, centroid error mean/median/
-p90 0.1056/**0.0234**/0.3240, best eligible coverage@0.50 **0.8583**; buckets `NO_PROPOSALS` 1 ·
-`NO_ELIGIBLE_PROPOSALS` 2 · `REFERENCE_NOT_COVERED_IOU50` **31** · `REFERENCE_SELECTION_WRONG` **75** ·
-`REFERENCE_GEOMETRY_POOR` 0 · `REFERENCE_OK` **131**.
+Exactly **4,800** deterministic augmentations were generated with the section-9 allocation — L3 600 each
+(300 zh + 300 en), `largest_to_<direction>` 300 each, `largest_to_nearest` 400, `smallest_to_nearest` 200,
+`smallest_to_<direction>` 150 each — using only the section-10 TRAIN lexical pools. Leakage audit:
+augmentation ↔ evaluation **exact 0**, **normalized 0**, cleaned-train 0/0 → **`LEAKAGE_FREE`**.
 
-Target metrics: strict mIoU **0.2170**, Dice 0.2931, Pr@0.5 0.4252, answered-only **0.2198**, abstentions 3,
-**retention 0.6693** (oracle Z-B3 0.3242), reference-OK subset **0.3434** vs reference-fail subset
-**0.0651**, per direction above 0.1913 / below 0.2356 / left 0.2518 / right 0.1893. Paired: **8/20**,
-own 0.2248 / cross 0.0253 / margin **+0.1995**, 0 reference-abstention pairs (the predicted reference is
-computed once per tile and reused for both member programs).
+## 5. Training
 
-## 5. A2 hardened ProgramHead integration
+Internal group-disjoint, class-stratified split (seed 20261001): 4,399 train / 401 holdout, normalized
+overlap **0**. Frozen protocol: AdamW lr 2e-4, weight decay 1e-4, effective batch 32 (microbatch 16 ×
+accumulation 2), seed 20261001, max 8 epochs, patience 2, bfloat16 AMP, no sweep. Selected epoch **1**
+(holdout accuracy 1.0000, L3 macro recall 1.0000, macro F1 0.7000 — only 14 of 20 classes have any support).
+Wall **417.9 s**, peak VRAM **6.922 GB**, checkpoint `artifacts/checkpoints/task7b/program_parser_l3_hardened_v1.pt`,
+SHA256 `2a285e4ac91051cb2cfcea370d384fb50f29927832ad30d3baf09c672cf48eb4` (gitignored).
 
-Canonical-query parser audit: **240/240 exact (1.0000)**, per-class recall 1.0 for all four L3 classes,
-**0** out-of-scope predictions. Natural-language end-to-end: strict mIoU **0.2170**, Dice 0.2931,
-answered-only **0.2198**, abstentions 3, out-of-scope 0, per direction identical to A1 — i.e. **the language
-stage adds no measurable loss on the dataset's own queries**. Paired: parser-correct members **40/40**,
-**8/20** pairs, margin **+0.1995**, 0 parser-error pairs, 0 reference-abstention pairs.
+## 6. Evaluation
 
-## 6. Fixed 24-prompt paraphrase audit
+| Set | Result | Gate | Pass |
+|---|---|---|---|
+| Full v0.2 val | **0.7129** accuracy · macro F1 **0.7939** · min class recall **0.0000** | ≥0.995 / ≥0.995 / ≥0.98 | ✗ |
+| Z-MiniVal240 | **240/240** | 240/240 | ✓ |
+| Z-PairedVal members | **40/40** | 40/40 | ✓ |
+| Task 7A fixed24 | **21/24** · compact **7/8** · per class 5/4/6/6 | ≥22/24 · 8/8 · ≥5/6 | ✗ |
+| Minimal pairs | **73/96** (M1 29/48, M2 16/16, M3 12/16, M4 16/16) | 96/96 | ✗ |
+| Stress v1 | **0.8281** · macro F1 **0.6030** · min recall **0.0000** · L3 macro **0.8333** | ≥0.97 / ≥0.97 / ≥0.90 / ≥0.95 | ✗ |
 
-The pack (`evaluation/task7a_l3_paraphrase_pack.json`) was frozen **before** any parser run: 24 prompts, 6 per
-L3 program (3 Chinese + 3 English), all eight required compact/contrast forms present. Result:
-**3/24 exact (0.125)**; LEFT 1/6, RIGHT 0/6, ABOVE 1/6, BELOW 1/6; Chinese 3/12, English **0/12**;
-compact **0/8** → `l3_paraphrase_ready = false`.
+Full-val per-class recall: the six classes with **zero** Task 7B training rows collapsed — `leftmost`
+**0.0000**, `rightmost` 0.5000, `topmost` 0.8248, `bottommost` 0.8304, `smallest` 0.8514,
+`largest_to_nearest` 0.8144 — while the 14 trained classes are 1.0000. Stress is language-balanced
+(zh 83/96, en 76/96).
 
-Failure modes: **19 of 21 failures drop the terminal `to_nearest`** and return the L2 program
-`largest_to_<direction>` (e.g. `分割面积最大的建筑物右侧最近的建筑物。` → `largest_to_right_of`,
-`find the closest building to the left of the largest building` → `largest_to_left_of`), plus 2 collapses to
-`smallest_to_<direction>`. No parser retraining was performed.
+## 7. Scope safety and frozen end-to-end regression
 
-## 7. CMD entry point
+All four section-21 out-of-scope controls parse to the listed canonical program (`largest_to_right_of`,
+`largest_to_left_of`, `largest_to_nearest`, `largest_to_nearest`), exit **5** before
+`proposals/reference/fields/sam2/z_b3`, and write only `result.json`; OOD controls keep their guard
+behaviour; `keyword_or_regex_override = false`.
 
-`predict_buildreasonseg_l3.py` (no GT/annotation argument; three such arguments refused). CLI audit
-`all_checks_passed = true`: success exit 0 with all six outputs and every required `result.json` key
-(`ground_truth_used = false`); out-of-scope canonical program exit **5** with only `result.json` and
-`stopped_before = [proposals, reference, fields, sam2, z_b3]`.
+The frozen downstream reproduces Task 7A **exactly** with the Task 7B parser: parser 240/240, strict
+`0.21700369907681483` (Δ 0.0), answered `0.21975058134361` (Δ 0.0), abstentions **3**, Paired **8/20**,
+margin `0.19949275176250805` (Δ 0.0). Because the canonical gates failed, section 20 forbids moving the CLI
+default: `default_l3_parser_checkpoint()` still returns the Task 6T parser, and the Task 7A helper is
+untouched.
 
-## 8. Failure attribution
+## 8. Tests, storage, git
 
-| Bucket | Count | Share |
-|---|---|---|
-| `PARSER_WRONG` | **0** | 0.0000 |
-| `REFERENCE_NO_PROPOSALS` | 1 | 0.0042 |
-| `REFERENCE_NO_ELIGIBLE` | 2 | 0.0083 |
-| `REFERENCE_NOT_COVERED_IOU50` | 31 | 0.1292 |
-| `REFERENCE_SELECTION_WRONG` | **75** | **0.3125** |
-| `REFERENCE_GEOMETRY_POOR` | 0 | 0.0000 |
-| `TARGET_FAIL_WITH_REFERENCE_OK` | 90 | 0.3750 |
-| `TARGET_OK` | 41 | 0.1708 |
-
-parser_fail 0 ≤ 0.05 → not PARSER; reference_fail **109** > target_fail **90** →
-**dominant bottleneck `REFERENCE`**. DSH proposes no repair.
-
-## 9. Tests, storage, git
-
-`python -m pytest tests/ -q` → **1107 passed, 1 skipped** (Task 6Z ended at 1062 passed / 1 skipped; no prior
+`python -m pytest tests/ -q` → **1148 passed, 1 skipped** (Task 7A ended at 1107 passed / 1 skipped; no prior
 passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check that
-needs the proposal env). `tests/test_task7a_l3_integration.py` adds the 45 section-N checks.
+needs the proposal env). `tests/test_task7b_parser_hardening.py` adds the 41 section-L checks.
 
-Not committed: parser/YOLO/SAM2/Z-B3 weights, feature/proposal caches, generated CLI masks and overlays
-(`artifacts/task7a/`), source imagery/vectors, `.conda`. Committed: integration code, small evaluation JSON,
-scripts, tests, docs, handoff. **No new model checkpoint.**
+Not committed: the Task 7B parser checkpoint, the generated training JSONL
+(`artifacts/task7b/parser_train_augmented/`), model/tokenizer caches, YOLO/SAM2/Z-B3 weights, source
+imagery/vectors, `.conda`. Committed: small packs/spec/manifests/evaluation JSON, parser scripts, tests,
+docs, handoff.
 
-Task 7A downloaded nothing and installed nothing. Watt was **not needed** in Task 7A: the pre-existing Watt
+Task 7B downloaded nothing and installed nothing. Watt was **not needed** in Task 7B: the pre-existing Watt
 instance is transport-only, is not owned by this project and was left running per the ownership rule; no
 proxy, host, certificate or TLS setting was read or modified.
 
-## 10. Interpretation boundary
+## 9. Interpretation boundary
 
-DSH reports measurements only. Task 6Z is not turned into a success claim; the parser was not retrained;
-reference hardening was not reopened; no global attention; Z-B3 and the fields are unchanged; no full
-training and no test evaluation; no repair proposed.
+DSH reports measurements only. The parser is not claimed as a project novelty; the downstream architecture
+was not changed; reference hardening was not reopened; no attention/global competition was added; no full
+training or test evaluation was started; Task 7C was not chosen; no repair is proposed.
 
-## 11. Recommended next step (exact wording required by Part L)
+## 10. Recommended next step (exact wording required by Part J)
 
-等待 ChatGPT 根据 Task 7A 的 L3 predicted-reference、ProgramHead 与 failure attribution 结果决定下一步，不自行进行 parser 再训练、reference 再硬化、attention/global competition 或正式全量训练。
+等待 ChatGPT 根据 Task 7B 的 L3 ProgramHead 组合语义泛化结果决定下一步，不自行重新开启 reference hardening、修改 Z-B3 或进行 attention/global competition 改造。
 
-## 12. STOP
+## 11. STOP
 
-Task 7A stops here: no parser retraining, no reference re-hardening, no attention/global competition, no
-field/decoder change, no formal full training, no test access, no GUI. Waiting for the ChatGPT audit.
+Task 7B stops here: no downstream retraining, no reference re-hardening, no attention/global competition, no
+full training, no test access, no GUI. Waiting for the ChatGPT audit.

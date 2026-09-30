@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7A._
+_Last updated by DSH at the end of Task 7B._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -104,6 +104,44 @@ The block above is machine-checked against
 | 6Z | **Oracle-reference L3 direction×nearest composition** | **done → `L3_COMPOSITION_NO_MEANINGFUL_GAIN`** (oracle-reference causal audit of the four canonical `largest_to_<direction>_to_nearest` programs; frozen reference subsystem / directional field v0.2 / nearest field v0.1 / SAM2 untouched; `P_prod = clamp(P_dir × P_near)` exact, no renormalization/temperature/power; **composition sanity passed** — direction-valid subset top-1 **1.0000**, top-3 **1.0000**, Spearman **0.9983** (canonical-list diagnostic 0.9958 / 0.9988), all-candidates top-1 0.9042; packs Z-Overfit20 **5/5/5/5**, Z-MiniTrain1200 **300×4**, Z-MiniVal240 **60×4**, Z-PairedVal **N_pair 20** (same tile, same largest reference, different directions/targets); six variants → Overfit20 Z-B3 **0.9619/0.9804** gate ✓; MiniVal240 mIoU **B0 0.1510 / B1 0.3011 / B2 0.1724 / B3 0.3242 / B4 0.2788 / B5 0.0888** (Pr@0.5 B3 0.5331), deltas B3−B0 **+0.1732**, B3−B1 **+0.0231**, B3−B2 +0.1519, B3−B4 **+0.0454**, B3−B5 +0.2355; PairedVal B3 **15/20** margin **+0.3004**, B1 16/20, B4 12/20, B5 6/20; §28 B3 criteria **5/7**, §29 `deterministic_product_pass` **false**, §30 `learned_not_worse` true / `product_materially_stronger` false → verdict) |
 
 | 7A | **L3 predicted-reference + natural-language integration audit** | **done → `L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** (**no model trained**; integration/attribution only; Z-B3 `74f308e1…9fc0f0bc` and hardened ProgramHead `4cbba36b…d44a5e` hash-verified; **A0 oracle reproduction exact** — mIoU Δ **0.0**, Dice Δ **0.0**, paired **15/20**, margin Δ **0.0** vs frozen 6Z; A1 U-C1 deterministic largest resolver → predicted reference: abstain **0.0125**, ref mIoU **0.4700** / Pr@0.5 **0.5527**, buckets OK **131** / SELECTION_WRONG **75** / NOT_COVERED **31** / NONE 3, strict target mIoU **0.2170**, answered **0.2198**, **retention 0.6693**, ref-OK subset **0.3434** vs ref-fail **0.0651**, paired **8/20** margin **+0.1995**; A2 natural-language: parser **240/240** on canonical queries, strict **0.2170** (identical to A1), paired 8/20 margin +0.1995, parser-correct members 40/40; fixed-24 paraphrase audit frozen before the run: **3/24** exact (zh 3/12, en 0/12), compact **0/8** → `l3_paraphrase_ready=false`, 19/21 failures drop the terminal `to_nearest`; CLI `predict_buildreasonseg_l3.py` audit all-checks-passed (exit 0 + 6 outputs, out-of-scope exit **5**, GT args refused); failure attribution parser **0** / reference_fail **109** / target_fail **90** / TARGET_OK **41** → dominant bottleneck **REFERENCE**; §20 gate fails 4/6 → verdict) |
+
+| 7B | **L3 ProgramHead compositional-semantic hardening** | **done → `L3_PARSER_CANONICAL_REGRESSION`** (parser-only fine-tune of the same Qwen3-VL-2B text-only 20-class ProgramHead from the exact Task 6T checkpoint `4cbba36b…d44a5e`; frozen packs pre-training: **96** minimal pairs (M1 48 / M2 16 / M3 16 / M4 16, 48 zh + 48 en) + **192** stress v1 (L3 4×24 = 96 with 12 zh + 12 en each, L2 4×12, `largest_to_nearest` 16, `smallest_to_nearest` 8, `largest` 8, `smallest` 8, extremes 8) + Task 7A fixed24 + Z-MiniVal240 + Z-PairedVal; **all 12,778 original v0.2 train rows removed** because train and val share all 120 instruction templates (100 % normalized overlap) → training used only **4,800** augmentations (L3 600 each, `largest_to_*` 300, `largest_to_nearest` 400, `smallest_to_nearest` 200, `smallest_to_*` 150), leakage **exact 0 / normalized 0** → `LEAKAGE_FREE`; internal group-disjoint split 4,399/401 (overlap 0), AdamW lr 2e-4 / wd 1e-4 / eff. batch 32 / ≤8 epochs / patience 2 / seed 20261001 → selected epoch **1**, checkpoint `2a285e4a…cf48eb4`, 417.9 s, 6.922 GB; **full v0.2 val 0.7129 accuracy / macro F1 0.7939 / min class recall 0.0000** (`leftmost` 0.0, `rightmost` 0.5, `topmost` 0.825, `bottommost` 0.830, `smallest` 0.851, `largest_to_nearest` 0.814 — the six never-trained classes), Z-MiniVal240 **240/240** ✓, Z-Paired **40/40** ✓, fixed24 **21/24** (compact 7/8), minimal pairs **73/96**, stress **0.8281** / macro F1 0.6030 / L3 macro 0.8333; scope controls all correct with exit **5**, frozen downstream reproduces Task 7A **exactly** (strict 0.21700369907681483 Δ0.0, paired 8/20, margin Δ0.0), CLI default **not** moved → verdict) |
+
+## Task 7B measured results
+
+Parser-only hardening of the same Qwen3-VL-2B text-only 20-class ProgramHead for compositional L2/L3
+semantic contrast (Task 7A exposed 3/24 on fixed paraphrases and 0/8 on the compact `direction + nearest`
+prompts). Frozen: Task 7A L3 pipeline, U-C1 resolver, fields, SAM2, Z-B3. No keyword/regex remapping.
+Full detail: `docs/task7b_l3_programhead_hardening.md`, `evaluation/task7b_*.json`.
+
+| | Value |
+|---|---|
+| Baseline / architecture | Task 6T `4cbba36b…d44a5e` exact · Qwen3-VL-2B · text-only · LoRA + ProgramHead (17,434,624 trainable / 2,144,421,888) · 20 classes, no `unsupported` |
+| Frozen evaluation packs (pre-training) | full v0.2 val 9,111 records (18,222 prompts) · Z-MiniVal240 240 · Z-PairedVal 40 · fixed24 24 · **minimal pairs 96** (M1 48 / M2 16 / M3 16 / M4 16; 48 zh + 48 en) · **stress v1 192** (L3 96 with 12 zh + 12 en each, L2 48, `largest_to_nearest` 16, `smallest_to_nearest` 8, `largest` 8, `smallest` 8, extremes 8) |
+| Training data | **12,778 original v0.2 train records removed** (train/val share all 120 templates → 100 % normalized overlap) → cleaned train 0 · **4,800 augmentations** with the exact section-9 allocation · leakage **exact 0 / normalized 0** → `LEAKAGE_FREE` |
+| Training | internal group-disjoint stratified split 4,399 / 401 (overlap 0) · AdamW lr 2e-4, wd 1e-4, effective batch 32 (16×2), ≤8 epochs, patience 2, seed 20261001, bf16 · selected epoch **1** · checkpoint `2a285e4a…cf48eb4` · 417.9 s · 6.922 GB |
+| Full v0.2 val | **0.7129** accuracy · macro F1 **0.7939** · min class recall **0.0000** → gate ✗ (≥0.995/≥0.995/≥0.98) |
+| Collapsed classes | `leftmost` **0.0000** · `rightmost` 0.5000 · `topmost` 0.8248 · `bottommost` 0.8304 · `smallest` 0.8514 · `largest_to_nearest` 0.8144 (exactly the six classes with **zero** Task 7B training rows); the 14 trained classes are 1.0000 |
+| Z-MiniVal240 / Z-Paired | **240/240** ✓ · **40/40** ✓ |
+| Task 7A fixed24 | **21/24** · compact **7/8** · per L3 class 5/4/6/6 → gate ✗ |
+| Minimal pairs | **73/96** (M1 29/48 · M2 16/16 · M3 12/16 · M4 16/16) → gate ✗ |
+| Stress v1 | **0.8281** · macro F1 **0.6030** · min recall **0.0000** · L3 macro **0.8333** (zh 83/96, en 76/96) → gate ✗ |
+| Scope safety | four out-of-scope controls parse to `largest_to_right_of` / `largest_to_left_of` / `largest_to_nearest` / `largest_to_nearest`, exit **5** before proposals/reference/fields/SAM2/Z-B3, only `result.json`; OOD guard intact; no keyword gate ✓ |
+| Frozen E2E regression | parser 240/240 · strict `0.21700369907681483` (Δ **0.0**) · answered `0.21975058134361` (Δ **0.0**) · abstentions **3** · paired **8/20** · margin `0.19949275176250805` (Δ **0.0**) ✓ |
+| Verdict | **`L3_PARSER_CANONICAL_REGRESSION`** (§23 20 criteria: canonical gate items 4-6 fail) |
+
+1. **The section-8 overlap rule emptied the original training split**: BuildSpatialReason v0.2 shares all
+   120 instruction templates between train and val, so the fine-tune saw only the 4,800 augmentations
+   covering 14 of 20 classes.
+2. **Catastrophic forgetting followed**: the six never-trained canonical classes collapsed (`leftmost`
+   recall 0.0), which is why the canonical full-val gate fails and the verdict is
+   `L3_PARSER_CANONICAL_REGRESSION` rather than the compositional-robustness item.
+3. **The L3 contrast is still not learned generally**: minimal pairs 73/96 (M1 29/48 — the L2-vs-L3 family
+   itself), stress L3 macro recall 0.8333, fixed24 21/24 with compact 7/8, although Z-MiniVal240 and
+   Z-PairedVal stayed 240/240 and 40/40.
+4. **Nothing downstream regressed**: the frozen Task 7A chain reproduces its numbers to 1e-6, scope controls
+   still exit 5 before any downstream work, and the CLI default deliberately stayed on the Task 6T parser.
+5. Next: 等待 ChatGPT 根据 Task 7B 的 L3 ProgramHead 组合语义泛化结果决定下一步，不自行重新开启 reference hardening、修改 Z-B3 或进行 attention/global competition 改造。
 
 ## Task 7A measured results
 
