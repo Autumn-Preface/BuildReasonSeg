@@ -1,0 +1,150 @@
+{
+  "_doc": "Task 6Z sections 9-13. Frozen L3 direction x nearest packs built deterministically (seed 20260930) from the v0.2 train/val splits, restricted to the four canonical largest_to_<direction>_to_nearest programs with the frozen directional (alpha 1.2, tau 0.04) and nearest (boundary_distance, margin 2.0 px / 0.005 diag) semantics. No L1/L2, no test, and no smallest-L3 program (it does not exist in the frozen vocabulary).",
+  "task": "6Z",
+  "stage": "E-freeze-packs",
+  "seed": 20260930,
+  "source": {
+    "train_jsonl": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\train.jsonl",
+    "val_jsonl": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\val.jsonl",
+    "train_sha256": "a1b36a0de99d33d47136572f7d546976b3cca8b5a4e991c0ea587212928a5237",
+    "val_sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f",
+    "dataset_version": "v0.2"
+  },
+  "availability": {
+    "train": {
+      "above": 338,
+      "below": 336,
+      "left": 323,
+      "right": 347
+    },
+    "val": {
+      "above": 224,
+      "below": 213,
+      "left": 250,
+      "right": 249
+    }
+  },
+  "programs": [
+    "largest_to_left_of_to_nearest",
+    "largest_to_right_of_to_nearest",
+    "largest_to_above_to_nearest",
+    "largest_to_below_to_nearest"
+  ],
+  "directions": [
+    "above",
+    "below",
+    "left",
+    "right"
+  ],
+  "pack_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs",
+  "gitignored": true,
+  "packs": {
+    "z_overfit20": {
+      "name": "z_overfit20",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_overfit20.json",
+      "records": 20,
+      "by_direction": {
+        "above": 5,
+        "below": 5,
+        "left": 5,
+        "right": 5
+      },
+      "unique_tiles": 20,
+      "unique_sample_ids": 20,
+      "sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+      "bytes": 25727
+    },
+    "z_mini_train_1200": {
+      "name": "z_mini_train_1200",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_train_1200.json",
+      "records": 1200,
+      "by_direction": {
+        "above": 300,
+        "below": 300,
+        "left": 300,
+        "right": 300
+      },
+      "unique_tiles": 826,
+      "unique_sample_ids": 1200,
+      "sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+      "bytes": 1511962
+    },
+    "z_mini_val_240": {
+      "name": "z_mini_val_240",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+      "records": 240,
+      "by_direction": {
+        "above": 60,
+        "below": 60,
+        "left": 60,
+        "right": 60
+      },
+      "unique_tiles": 219,
+      "unique_sample_ids": 240,
+      "sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+      "bytes": 303564
+    },
+    "z_paired_val20": {
+      "name": "z_paired_val20",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_paired_val20.json",
+      "records": 40,
+      "by_direction": {
+        "above": 13,
+        "below": 7,
+        "left": 10,
+        "right": 10
+      },
+      "unique_tiles": 20,
+      "unique_sample_ids": 40,
+      "sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+      "bytes": 51248
+    }
+  },
+  "paired": {
+    "n_pair": 20,
+    "target": 20,
+    "minimum": 12,
+    "requirements": [
+      "same tile",
+      "same largest reference source feature id",
+      "two different L3 direction programs",
+      "two different target source feature ids",
+      "both canonical valid records"
+    ],
+    "one_pair_per_record": true
+  },
+  "integrity": {
+    "programs_present": [
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest",
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest"
+    ],
+    "only_l3_programs": true,
+    "l1_records": 0,
+    "l2_records": 0,
+    "test_records": 0,
+    "smallest_l3_programs": 0,
+    "unique_ids_per_pack": {
+      "z_overfit20": 20,
+      "z_mini_train_1200": 1200,
+      "z_mini_val_240": 240,
+      "z_paired_val20": 40
+    }
+  },
+  "canonical_semantics": {
+    "operation_order": [
+      "argmax_area",
+      "filter_relation",
+      "argmin_boundary_distance"
+    ],
+    "directional_alpha": 1.2,
+    "directional_tau": 0.04,
+    "distance_metric": "boundary_distance",
+    "nearest_margin_px_floor": 2.0,
+    "nearest_margin_diag_fraction": 0.005,
+    "labels_regenerated": false
+  },
+  "verdict": "PACKS_FROZEN",
+  "runtime_seconds": 0.5
+}

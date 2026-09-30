@@ -1,0 +1,181 @@
+{
+  "_doc": "Task 6Z sections 7-8. Parameter-free semantic sanity of the deterministic L3 product field P_prod = clamp(P_dir * P_near) on the frozen Z-MiniVal240: candidate score is the maximum product-field value inside the candidate mask. The gate applies to the exact direction-valid subset produced by the frozen Task 3B predicate; the all-candidate metrics are diagnostic.",
+  "task": "6Z",
+  "stage": "D-composition-sanity",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+    "records": 240,
+    "by_direction": {
+      "above": 60,
+      "below": 60,
+      "left": 60,
+      "right": 60
+    }
+  },
+  "fields": {
+    "programs": [
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest"
+    ],
+    "program_count": 4,
+    "program_to_relation": {
+      "largest_to_left_of_to_nearest": "left_of",
+      "largest_to_right_of_to_nearest": "right_of",
+      "largest_to_above_to_nearest": "above",
+      "largest_to_below_to_nearest": "below"
+    },
+    "direction_ids": [
+      "left_of",
+      "right_of",
+      "above",
+      "below"
+    ],
+    "canonical_operation_order": [
+      "argmax_area (largest eligible reference)",
+      "filter_relation",
+      "argmin_boundary_distance"
+    ],
+    "directional_field": {
+      "module": "buildreasonseg_mvp/geometric_relation_field_v02.py",
+      "alpha": 1.2,
+      "tau": 0.04,
+      "modified": false
+    },
+    "nearest_field": {
+      "module": "buildreasonseg_mvp/nearest_boundary_field.py",
+      "sigma_diag": 0.05,
+      "modified": false
+    },
+    "product_field": {
+      "source": "clamp(P_dir_512 * P_near_512, 0, 1)",
+      "decoder": "clamp(P_dir_64 * P_near_64, 0, 1)",
+      "renormalization": false,
+      "learned_scalar": false,
+      "temperature": false,
+      "exponent": false,
+      "threshold": false
+    },
+    "source_size": 512,
+    "decoder_field_size": 64,
+    "labels_regenerated": false,
+    "test_split_used": false
+  },
+  "sigma_diag": 0.05,
+  "all_candidates": {
+    "records": 240,
+    "top1_rate": 0.9041666666666667,
+    "top3_rate": 1.0,
+    "mean_target_score": 0.29854552317150745,
+    "mean_best_distractor_score": 0.1051384385754529,
+    "mean_target_minus_distractor": 0.2070351694196949,
+    "mean_eligible_candidates": 7.208333333333333,
+    "mean_spearman": null,
+    "records_with_spearman": 0
+  },
+  "direction_valid_subset": {
+    "records": 240,
+    "top1_rate": 1.0,
+    "top3_rate": 1.0,
+    "mean_target_score": 0.29854552317150745,
+    "mean_best_distractor_score": 0.10575833644580257,
+    "mean_target_minus_distractor": 0.21552718812169758,
+    "mean_eligible_candidates": 2.966666666666667,
+    "mean_spearman": 0.9982825912960878,
+    "records_with_spearman": 128
+  },
+  "canonical_direction_valid_subset": {
+    "records": 240,
+    "top1_rate": 0.9958333333333333,
+    "top3_rate": 1.0,
+    "mean_target_score": 0.29854552317150745,
+    "mean_best_distractor_score": 0.10060924646344063,
+    "mean_target_minus_distractor": 0.22066599111208518,
+    "mean_eligible_candidates": 4.175,
+    "mean_spearman": 0.9988090732367049,
+    "records_with_spearman": 160
+  },
+  "direction_valid_by_direction": {
+    "above": {
+      "records": 60,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.30042809386892866,
+      "mean_best_distractor_score": 0.12036462112064328,
+      "mean_target_minus_distractor": 0.21860173603727162,
+      "mean_eligible_candidates": 3.0166666666666666,
+      "mean_spearman": 0.9998065015479876,
+      "records_with_spearman": 32
+    },
+    "below": {
+      "records": 60,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.2137846815527458,
+      "mean_best_distractor_score": 0.06602085925223947,
+      "mean_target_minus_distractor": 0.13221994227709122,
+      "mean_eligible_candidates": 2.7,
+      "mean_spearman": 0.9992063492063491,
+      "records_with_spearman": 30
+    },
+    "left": {
+      "records": 60,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.32079228282066957,
+      "mean_best_distractor_score": 0.0849965973594226,
+      "mean_target_minus_distractor": 0.25851094037061556,
+      "mean_eligible_candidates": 1.9833333333333334,
+      "mean_spearman": 1.0,
+      "records_with_spearman": 25
+    },
+    "right": {
+      "records": 60,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.35917703444368576,
+      "mean_best_distractor_score": 0.13609410921096085,
+      "mean_target_minus_distractor": 0.24787445728796273,
+      "mean_eligible_candidates": 4.166666666666667,
+      "mean_spearman": 0.9953700770773942,
+      "records_with_spearman": 41
+    }
+  },
+  "dynamic_relation_engine": {
+    "module": "spatial_reasoning/relations.py::evaluate_direction",
+    "frozen": true,
+    "canonical_step2_agreement_records": 115,
+    "canonical_step2_disagreement_records": 125,
+    "engine_superset_records": 0,
+    "engine_subset_records": 125,
+    "note": "the gate uses the frozen engine recomputation; the canonical step-2 list of the frozen record is reported alongside as a generator-consistent diagnostic"
+  },
+  "gate_constants": {
+    "top1_min": 0.95,
+    "top3_min": 0.99,
+    "spearman_min": 0.9
+  },
+  "gate": {
+    "top1": {
+      "required": 0.95,
+      "measured": 1.0,
+      "passed": true
+    },
+    "top3": {
+      "required": 0.99,
+      "measured": 1.0,
+      "passed": true
+    },
+    "spearman": {
+      "required": 0.9,
+      "measured": 0.9982825912960878,
+      "passed": true
+    }
+  },
+  "sanity_passed": true,
+  "verdict": "L3_COMPOSITION_SANITY_PASS",
+  "constants_tuned": false,
+  "test_split_used": false,
+  "runtime_seconds": 8.3
+}
