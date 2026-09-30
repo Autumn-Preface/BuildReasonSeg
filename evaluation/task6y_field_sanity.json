@@ -1,0 +1,79 @@
+{
+  "_doc": "Task 6Y section 7. Parameter-free semantic sanity of the oracle-reference NearestBoundaryField v0.1 on the frozen Y-MiniVal240: candidate score is the maximum field value inside the candidate mask, compared against the canonical frozen boundary_distance ordering. sigma_diag is fixed at 0.05 and was not tuned.",
+  "task": "6Y",
+  "stage": "D-field-sanity",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6y\\packs\\y_mini_val_240.json",
+    "records": 240
+  },
+  "field": {
+    "sigma_diag": 0.05,
+    "reference": "oracle_native_gt",
+    "candidate_score": "max(P_near_512 inside candidate)",
+    "distance_metric": "boundary_distance",
+    "eligibility": "frozen nearest rule (configs/spatial_relations_v1.yaml)",
+    "component_map_used_for_distance_only": true
+  },
+  "overall": {
+    "records": 240,
+    "top1_rate": 1.0,
+    "top3_rate": 1.0,
+    "mean_target_score": 0.4622206143241783,
+    "mean_best_distractor_score": 0.16780465289593047,
+    "mean_target_minus_distractor": 0.36408962671954376,
+    "mean_eligible_candidates": 4.404166666666667,
+    "mean_spearman": 1.0,
+    "records_with_spearman": 170
+  },
+  "by_family": {
+    "largest": {
+      "records": 120,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.40446047212305225,
+      "mean_best_distractor_score": 0.1676867076389399,
+      "mean_target_minus_distractor": 0.2730724542531769,
+      "mean_eligible_candidates": 5.008333333333334,
+      "mean_spearman": 1.0,
+      "records_with_spearman": 91
+    },
+    "smallest": {
+      "records": 120,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.5199807565253044,
+      "mean_best_distractor_score": 0.16794051388816011,
+      "mean_target_minus_distractor": 0.468932192471941,
+      "mean_eligible_candidates": 3.8,
+      "mean_spearman": 1.0,
+      "records_with_spearman": 79
+    }
+  },
+  "gate_constants": {
+    "top1_min": 0.85,
+    "top3_min": 0.97,
+    "spearman_min": 0.9
+  },
+  "gate": {
+    "top1": {
+      "required": 0.85,
+      "measured": 1.0,
+      "passed": true
+    },
+    "top3": {
+      "required": 0.97,
+      "measured": 1.0,
+      "passed": true
+    },
+    "spearman": {
+      "required": 0.9,
+      "measured": 1.0,
+      "passed": true
+    }
+  },
+  "sanity_passed": true,
+  "verdict": "NEAREST_BOUNDARY_FIELD_SANITY_PASS",
+  "sigma_tuned": false,
+  "test_split_used": false,
+  "runtime_seconds": 5.6
+}

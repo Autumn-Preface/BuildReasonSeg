@@ -1,0 +1,122 @@
+{
+  "_doc": "Task 6Y sections 8-12. Frozen nearest-only packs built deterministically (seed 20260930) from the BuildSpatialReason v0.2 train/val splits, restricted to largest_to_nearest and smallest_to_nearest with the frozen boundary_distance semantics. No directional or L3 record and no test record is included.",
+  "task": "6Y",
+  "stage": "E-freeze-packs",
+  "seed": 20260930,
+  "source": {
+    "train_jsonl": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\train.jsonl",
+    "val_jsonl": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\val.jsonl",
+    "train_sha256": "a1b36a0de99d33d47136572f7d546976b3cca8b5a4e991c0ea587212928a5237",
+    "val_sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f",
+    "dataset_version": "v0.2"
+  },
+  "availability": {
+    "train": {
+      "largest_to_nearest": 672,
+      "smallest_to_nearest": 358
+    },
+    "val": {
+      "largest_to_nearest": 458,
+      "smallest_to_nearest": 249
+    }
+  },
+  "programs": [
+    "largest_to_nearest",
+    "smallest_to_nearest"
+  ],
+  "pack_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6y\\packs",
+  "gitignored": true,
+  "packs": {
+    "y_overfit20": {
+      "name": "y_overfit20",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6y\\packs\\y_overfit20.json",
+      "records": 20,
+      "by_program": {
+        "largest_to_nearest": 10,
+        "smallest_to_nearest": 10
+      },
+      "unique_tiles": 20,
+      "unique_sample_ids": 20,
+      "sha256": "cca1630a3b90bd5337343f5aedebb0479dbbb91bfd478eb44d521c03f90a4ab0",
+      "bytes": 22307
+    },
+    "y_mini_train_1000": {
+      "name": "y_mini_train_1000",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6y\\packs\\y_mini_train_1000.json",
+      "records": 1000,
+      "by_program": {
+        "largest_to_nearest": 650,
+        "smallest_to_nearest": 350
+      },
+      "unique_tiles": 786,
+      "unique_sample_ids": 1000,
+      "sha256": "4916d534c6658872e0b66cf3605d2a36f6ac5bdc27cac7f11eaf6e66d3704e10",
+      "bytes": 1094989
+    },
+    "y_mini_val_240": {
+      "name": "y_mini_val_240",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6y\\packs\\y_mini_val_240.json",
+      "records": 240,
+      "by_program": {
+        "largest_to_nearest": 120,
+        "smallest_to_nearest": 120
+      },
+      "unique_tiles": 221,
+      "unique_sample_ids": 240,
+      "sha256": "5fd7a9f1c270353cfb31f09663724677353ee2e45b0a94577ec7ebd7dd1a7c3e",
+      "bytes": 263315
+    },
+    "y_paired_val": {
+      "name": "y_paired_val",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6y\\packs\\y_paired_val.json",
+      "records": 40,
+      "by_program": {
+        "largest_to_nearest": 20,
+        "smallest_to_nearest": 20
+      },
+      "unique_tiles": 20,
+      "unique_sample_ids": 40,
+      "sha256": "39a674c99f9af6028509ea9f8f80d5d1e1c11a889b294a9bce342afa97413cd0",
+      "bytes": 43499
+    }
+  },
+  "paired": {
+    "n_pair": 20,
+    "target": 20,
+    "minimum": 12,
+    "rule": "first 20 by stable hash if >= 20, else all if >= 12, else STOP",
+    "pair_requirements": [
+      "same tile has both nearest programs",
+      "different reference source feature ids",
+      "different target source feature ids",
+      "both canonical valid records"
+    ]
+  },
+  "integrity": {
+    "programs_present": [
+      "largest_to_nearest",
+      "smallest_to_nearest"
+    ],
+    "only_nearest_programs": true,
+    "directional_records": 0,
+    "l3_records": 0,
+    "test_records": 0,
+    "unique_ids_per_pack": {
+      "y_overfit20": 20,
+      "y_mini_train_1000": 1000,
+      "y_mini_val_240": 240,
+      "y_paired_val": 40
+    }
+  },
+  "overfit20_tiles": 20,
+  "nearest_semantics": {
+    "distance_metric": "boundary_distance",
+    "margin_px_floor": 2.0,
+    "margin_diag_fraction": 0.005,
+    "margin_mode": "normalized_with_absolute_floor",
+    "config": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\configs\\spatial_relations_v1.yaml",
+    "labels_regenerated": false
+  },
+  "verdict": "PACKS_FROZEN",
+  "runtime_seconds": 0.4
+}
