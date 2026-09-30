@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7C._
+_Last updated by DSH at the end of Task 7D._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -108,6 +108,42 @@ The block above is machine-checked against
 | 7B | **L3 ProgramHead compositional-semantic hardening** | **done → `L3_PARSER_CANONICAL_REGRESSION`** (parser-only fine-tune of the same Qwen3-VL-2B text-only 20-class ProgramHead from the exact Task 6T checkpoint `4cbba36b…d44a5e`; frozen packs pre-training: **96** minimal pairs (M1 48 / M2 16 / M3 16 / M4 16, 48 zh + 48 en) + **192** stress v1 (L3 4×24 = 96 with 12 zh + 12 en each, L2 4×12, `largest_to_nearest` 16, `smallest_to_nearest` 8, `largest` 8, `smallest` 8, extremes 8) + Task 7A fixed24 + Z-MiniVal240 + Z-PairedVal; **all 12,778 original v0.2 train rows removed** because train and val share all 120 instruction templates (100 % normalized overlap) → training used only **4,800** augmentations (L3 600 each, `largest_to_*` 300, `largest_to_nearest` 400, `smallest_to_nearest` 200, `smallest_to_*` 150), leakage **exact 0 / normalized 0** → `LEAKAGE_FREE`; internal group-disjoint split 4,399/401 (overlap 0), AdamW lr 2e-4 / wd 1e-4 / eff. batch 32 / ≤8 epochs / patience 2 / seed 20261001 → selected epoch **1**, checkpoint `2a285e4a…cf48eb4`, 417.9 s, 6.922 GB; **full v0.2 val 0.7129 accuracy / macro F1 0.7939 / min class recall 0.0000** (`leftmost` 0.0, `rightmost` 0.5, `topmost` 0.825, `bottommost` 0.830, `smallest` 0.851, `largest_to_nearest` 0.814 — the six never-trained classes), Z-MiniVal240 **240/240** ✓, Z-Paired **40/40** ✓, fixed24 **21/24** (compact 7/8), minimal pairs **73/96**, stress **0.8281** / macro F1 0.6030 / L3 macro 0.8333; scope controls all correct with exit **5**, frozen downstream reproduces Task 7A **exactly** (strict 0.21700369907681483 Δ0.0, paired 8/20, margin Δ0.0), CLI default **not** moved → verdict) |
 
 | 7C | **20-class rehearsal + L3 ProgramHead hardening** | **done → `L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`** (final parser-hardening attempt; restarted **only** from Task 6T `4cbba36b…d44a5e`, never from the failed Task 7B checkpoint; **8,000-prompt all-20-class rehearsal** — L3 4×800 (400 zh + 400 en), other 16 classes ×300 (150 + 150) — 8,000 unique normalized, exact overlap **0**, normalized overlap **0**, duplicates **0**, per-class/zh-en counts exact → `REHEARSAL_CLEAN`; internal group-disjoint split with holdout **80/class (L3)** and **30/class (other 16)**, overlap 0; AdamW ProgramHead lr **1e-4** / LoRA lr **2e-5** / wd 1e-4 / eff. batch 32 / ≤5 epochs / patience 2 / bf16 → selected epoch **2**, checkpoint `c1505736…d58d9a`, 419.3 s, 7.41 GB; **full v0.2 val 18,222/18,222 = 1.0000 accuracy, macro F1 1.0000, every class recall 1.0000** ✓ (forgetting fully cured), Z-MiniVal240 **240/240** ✓, Z-Paired **40/40** ✓; but fixed24 **5/24** (compact 0/8, per class 1/0/2/2), minimal96 **60/96**, stress **0.6667** / macro F1 0.5924 / min recall 0.4167 / L3 0.4479 ✗; scope controls pass; frozen E2E reproduces Task 7A exactly; canonical gates pass → L3 CLI default moved to Task 7C → verdict) |
+
+| 7D | **Oracle-reference relation-guided global competition decoder** | **done → `GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`** (parser/reference/fields/SAM2 frozen; **D-B0 = frozen Z-B3 reproduced exactly** — mIoU 0.3242128983 Δ0.0, Dice 0.4389840056 Δ0.0, paired 15/20, margin +0.3003540897 Δ0.0; four trainable variants on the byte-identical Task 6Z packs, all four pack SHA256 verified; commons `F=Conv1x1(256→128)+GN+GELU`, direction embed vocab 4/dim 16, temperature 1.0, A = global softmax over 4096 tokens (spatial sum exactly 1.000000), `q = Σ A_i F_i` no stop-grad, plain cosine C, trunk → bilinear 64→512, loss exactly BCE+Dice, competition never supervised; D1 Overfit20 lr 1e-3/1200 steps → **D-B2 0.9678/0.9835 gate ✓**; D2 MiniTrain1200→MiniVal240 lr 3e-4/patience 5 → MiniVal mIoU **D-B0 0.3242 · D-B1 0.3979 · D-B2 0.3265 · D-B3 0.1595 · D-B4 0.3291**, paired **D-B1 19/20 (+0.3888) · D-B2 17/20 (+0.2956) · D-B4 19/20 (+0.3056)**, deltas D-B2−D-B0 **+0.0023**, D-B2−D-B1 **−0.0714**, D-B2−D-B3 +0.1670 (flags: mask_gain false, prototype_gain false, field_guidance_gain true, localizes_target false), diagnostics D-B2 target mass 0.0067 / argmax-in-target 0.0000 / entropy 0.8848 vs D-B1 0.0675 / 0.0083 / 0.6933; §28 criteria **4/11** → verdict) |
+
+## Task 7D measured results
+
+Tests one architecture-class pivot: **relation-guided global competition over dense frozen SAM2 tokens,
+followed by a dynamically selected target visual prototype used for mask decoding**. Oracle reference +
+canonical L3 program ids keep parser/reference errors out of the question; parser and reference subsystem
+frozen; no attention/Transformer/GNN, no target proposals, no competition supervision, no GRCL. Full detail:
+`docs/task7d_relation_guided_global_competition.md`, `evaluation/task7d_*.json`.
+
+| | Value |
+|---|---|
+| Frozen setting | four L3 programs (canonical ids) · oracle `oracle_native_gt` reference · byte-identical Task 6Z packs (all 4 SHA256 verified) · fields v0.2/nearest v0.1 · frozen SAM2 `V ∈ R^(256×64×64)` |
+| D-B0 reproduction | mIoU **0.3242128983** (Δ **0.0**) · Dice **0.4389840056** (Δ **0.0**) · paired **15/20** · margin **+0.3003540897** (Δ **0.0**) → `TASK6Z_BASELINE_REPRODUCTION_PASS` |
+| Primitives | `A = softmax(S.flatten(2)/1.0, dim=−1)` over **4096** tokens (spatial sum **1.000000**, never detached) · D-B1 `A_fixed = clamp(P_dir*P_near)/(Σ+eps)` with `INVALID_FIELD_MASS` on zero mass · `q = Σ A_i F_i` (no stop-gradient) · plain cosine `C` (no learned scale/sigmoid/threshold) · trunk `Conv3x3→GN→GELU` ×2 → `Conv1x1` → bilinear 64→512 · loss exactly `BCE + Dice` |
+| Variants | D-B0 frozen Z-B3 (275,777 params) · D-B1 deterministic field competition, decoder 148 (278,081) · **D-B2 primary**, score 146 / decoder 148 (362,434) · D-B3 visual-only, 144/146 (358,978) · D-B4 no prototype, 146/147 (361,282) |
+| Overfit20 | D-B1 0.9623/0.9807 · **D-B2 0.9678/0.9835 (gate ✓)** · D-B3 0.9591/0.9790 · D-B4 0.9679/0.9836 → `GLOBAL_COMPETITION_OVERFIT_PASS` |
+| MiniVal240 | mIoU **0.3242 / 0.3979 / 0.3265 / 0.1595 / 0.3291** (B0/B1/B2/B3/B4) · Dice 0.4390/0.5273/0.4373/0.2311/0.4488 · Pr@0.5 0.5331/**0.5620**/0.5454/0.2760/0.4618 |
+| PairedVal20 | D-B0 15/20 (+0.3004) · **D-B1 19/20 (+0.3888)** · D-B2 17/20 (+0.2956) · D-B3 8/20 (+0.1629) · D-B4 19/20 (+0.3056) |
+| Deltas | **D-B1−D-B0 +0.0737** · **D-B2−D-B0 +0.0023** · **D-B2−D-B1 −0.0714** · D-B2−D-B3 +0.1670 · D-B2−D-B4 −0.0026 · D-B3−D-B0 −0.1647 · D-B4−D-B0 +0.0049 |
+| Diagnostics (target mass / argmax-in-target / entropy / top-64) | D-B1 0.0675 / 0.0083 / **0.6933** / **0.4751** · D-B2 0.0067 / 0.0000 / 0.8848 / 0.2202 · D-B3 0.0189 / 0.0208 / 0.8844 / 0.2164 · D-B4 0.0051 / 0.0000 / 0.8495 / 0.2800 (attention sums exactly 1.0) |
+| Flags | `global_competition_mask_gain` **false** · `prototype_gain` **false** · `field_guidance_gain` **true** · `competition_localizes_target` **false** |
+| §28 criteria | **4/11** (overfit ✓, D-B2−D-B3 ✓, paired 17/20 ✓, no GT input ✓; fail: mIoU < 0.38, vs B0/B1/B4, margin < 0.30, target mass < 0.10, argmax-in-target < 0.45) |
+| Verdict | **`GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`** |
+
+1. **The learned global-competition hypothesis is not supported** by this oracle-reference experiment: D-B2
+   is statistically indistinguishable from the frozen Z-B3 baseline (+0.0023 mIoU) and *worse* than both the
+   deterministic D-B1 (−0.0714) and the prototype-free D-B4 (−0.0026).
+2. **The competition maps do not localize the target**: D-B2 stays near-uniform (normalized entropy 0.8848,
+   target mass 0.0067, argmax-in-target 0.0000), whereas the deterministic field competition D-B1 is far more
+   concentrated (entropy 0.6933, top-64 mass 0.4751) — yet still below the predeclared target-mass bar.
+3. **The only clear gain comes from the deterministic field prototype**: D-B1 beats the baseline by +0.0737
+   mIoU with 19/20 paired and margin +0.3888, i.e. the field-weighted prototype (no learned score head) is the
+   useful component, not the learned competition.
+4. Next: 等待 ChatGPT 根据 Task 7D 的 oracle-reference global competition 因果结果决定是否替换 Z-B3，不自行加入 attention/graph、predicted reference 或正式全量训练。
 
 ## Task 7C measured results
 

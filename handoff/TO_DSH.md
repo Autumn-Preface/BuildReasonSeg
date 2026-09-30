@@ -1,21 +1,28 @@
-# TO_DSH — Task 7C: 20-Class Rehearsal + L3 ProgramHead Hardening
+# TO_DSH — Task 7D: Oracle-Reference L3 Relation-Guided Global Competition Decoder
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `b325585c18ddef1ee80cf05d4fc971c5c19b477a`
+> Base commit: `632c9c02a373ba8eea7153aafad69281946bae26`
 >
-> Predecessor: Task 7B → `L3_PARSER_CANONICAL_REGRESSION`
+> Predecessor: Task 7C → `L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`
 >
 > Research decision already made by ChatGPT:
 >
-> 1. Task 7B is accepted as a valid negative diagnostic: it improved L3 paraphrase robustness but catastrophically regressed canonical 20-class behaviour because only 14/20 classes were represented in training.
-> 2. Task 7C MUST restart from the stable Task 6T checkpoint, not the failed Task 7B checkpoint.
-> 3. Task 7C uses all-20-class synthetic rehearsal while preserving L3 compositional emphasis.
-> 4. The Task 7A/7B downstream chain remains frozen.
-> 5. No keyword/regex correction is allowed.
-> 6. Task 7C is the final parser-hardening attempt before ChatGPT freezes parser status.
+> 1. **Parser hardening stops here.** Task 7C is the final parser-specific experiment.
+> 2. Keep Task 7C as the current development parser for canonical 20-class operation because it restores full canonical behaviour.
+> 3. Record free-form L3 paraphrase robustness as an unresolved limitation.
+> 4. Do NOT run another parser repair in Task 7D.
+> 5. Reference hardening remains frozen. Do NOT reopen Tasks 6P–6X.
+> 6. Task 6Z/7A show that the current shallow Z-B3 decoder is now a meaningful core bottleneck.
+> 7. Task 7D tests one architecture-class pivot:
+>
+>    **Relation-guided global competition over dense frozen SAM2 tokens, followed by a dynamically selected
+>    target visual prototype used for mask decoding.**
+>
+> 8. This task uses oracle reference and canonical L3 program ids so parser/reference errors do not contaminate the decoder question.
+> 9. DSH is an executor. Do not alter architecture, formulas, losses, packs, thresholds, or next task.
 
 All user-facing DSH output must be Chinese.
 
@@ -24,550 +31,593 @@ All user-facing DSH output must be Chinese.
 # 0. DSH role
 
 DSH MAY:
-- reuse the already-frozen Task 7A/7B evaluation packs;
-- generate the exact 8,000-prompt rehearsal set below;
-- train the same Qwen3-VL-2B text-only LoRA + ProgramHead from Task 6T;
-- run the fixed final evaluation once;
-- update the L3 CLI default parser only after canonical gates pass;
-- fix ordinary runtime bugs without altering the experiment.
+- reuse exact Task 6Z packs and frozen SAM2 features;
+- implement the exact global-competition decoder below;
+- train/evaluate only the fixed variants D-B0 ... D-B4;
+- compute the specified competition-map diagnostics;
+- solve ordinary code/runtime bugs without changing the experiment.
 
 DSH MUST NOT:
-- initialize from Task 7B;
-- change model family/size;
-- add image input or a second classifier;
-- change the 20 classes;
-- use original v0.2 train instruction strings for optimization;
-- use any val/test/eval prompt for optimization;
-- use Task 7A fixed24 / Task 7B minimal96 / stress192 strings in training;
-- add keyword/regex semantic remapping;
-- modify YOLO/reference/SAM2/fields/Z-B3;
-- use test split;
-- run a hyperparameter sweep;
-- choose Task 7D.
+- retrain or modify ProgramHead;
+- use natural-language parsing in the main Task 7D experiment;
+- use predicted/proposal reference;
+- modify GeometricRelationField v0.2;
+- modify NearestBoundaryField v0.1;
+- modify SAM2;
+- introduce graph reasoning;
+- introduce Transformer/self-attention/cross-attention modules;
+- introduce target proposals/candidate masks as model inputs;
+- add auxiliary attention/center/ranking loss;
+- add GRCL;
+- change BCE+Dice;
+- tune softmax temperature;
+- access test split;
+- choose Task 7E.
 
 If a prohibited change is required, STOP and report.
 
 ---
 
-# PART A — Preserve Task 7B evidence and record the design correction
+# PART A — Record Task 7C outcome and freeze parser status
 
-## 1. Record Task 7B result
+## 1. Task 7C result
 
-Copy into `docs/task7c_20class_rehearsal_l3_hardening.md`:
+Copy into `docs/task7d_relation_guided_global_competition.md`:
 
-- verdict: `L3_PARSER_CANONICAL_REGRESSION`
-- full v0.2 val accuracy `0.7129`
-- full-val macro F1 `0.7939`
-- minimum class recall `0.0000`
-- Z-MiniVal240 `240/240`
-- Z-Paired members `40/40`
-- Task 7A fixed24 `21/24`
-- compact `7/8`
-- minimal pairs `73/96`
-- stress `0.8281`
+Task 7C verdict:
+`L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`
 
-Task 7B training used 4,800 synthetic rows but only 14/20 classes. The six zero-support classes were:
+Canonical behaviour:
+- full v0.2 val: 18,222/18,222 = 1.0000
+- macro F1 = 1.0000
+- every class recall = 1.0000
+- Z-MiniVal240 = 240/240
+- Z-Paired members = 40/40
 
-- `leftmost`
-- `rightmost`
-- `topmost`
-- `bottommost`
-- `largest`
-- `smallest`
+Held-out natural-language robustness:
+- Task 7A fixed24 = 5/24
+- compact = 0/8
+- minimal96 = 60/96
+- stress accuracy = 0.6667
+- stress macro F1 = 0.5924
+- stress L3 macro recall = 0.4479
 
-The internal Task 7B holdout also lacked those six classes, so 1.0 holdout accuracy could not detect forgetting.
+Task 7C checkpoint:
+`artifacts/checkpoints/task7c/program_parser_l3_rehearsal_v1.pt`
 
-This is a **ChatGPT protocol-design error**, not a DSH implementation error.
+SHA256:
+`c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a`
 
-Do not mutate Task 7B artifacts or verdict.
+Task 7D does not use this parser for the causal experiment and does not retrain it.
+
+## 2. Parser status after Task 7C
+
+Record:
+- canonical/program-template parser status: **frozen usable for development**
+- free-form L3 paraphrase robustness: **known limitation / not solved**
+- no further parser hardening task is authorized here.
+
+Do not modify Task 7B/7C frozen results.
 
 ---
 
-# PART B — Baseline and architecture freeze
+# PART B — Literature-position boundary
 
-## 2. Initialization checkpoint
+## 3. Fixed note for documentation
 
-Start ONLY from:
+Copy this note into the Task 7D design document. DSH must not perform an independent literature search.
 
-`artifacts/checkpoints/task6t/program_parser_hardened_v1.pt`
+Current 2026 RRSIS literature already includes semantic-role decomposition, relation-aware graph reasoning, long-range/global dependency modeling and progressive mask refinement. SRGFormer (2026) uses semantic-role-guided graph reasoning and a global sink node to improve same-class instance discrimination.
 
-Expected SHA256:
+Therefore Task 7D MUST NOT claim:
+- global reasoning itself is novel;
+- relation-aware attention itself is novel;
+- long-range dependency modeling itself is novel.
 
-`4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e`
+The narrower experimental hypothesis is:
 
-Do not initialize from Task 7B.
+> **Explicit geometric relation fields can parameterize a differentiable global competition distribution over dense frozen visual tokens; the winning distribution can synthesize a target visual prototype, which then guides pixel-level mask decoding without target proposals or graph construction.**
 
-If missing/hash mismatch:
-`BASELINE_PARSER_UNAVAILABLE`
+This is an architecture hypothesis, not a novelty claim.
 
-## 3. Parser architecture
+---
 
-Preserve exactly:
-- Qwen3-VL-2B;
-- text-only;
-- same tokenizer/prompt format;
-- existing Task 6M/6T LoRA parameters;
-- same ProgramHead;
-- exactly 20 canonical classes;
-- base backbone frozen outside existing LoRA trainables.
+# PART C — Frozen Task 6Z causal setting
 
-No image tokens. No new class. No new head.
+## 4. Exact program scope
 
-## 4. Downstream freeze
+Use only:
+- `largest_to_left_of_to_nearest`
+- `largest_to_right_of_to_nearest`
+- `largest_to_above_to_nearest`
+- `largest_to_below_to_nearest`
+
+Use canonical program ids directly.
+No parser.
+
+## 5. Exact reference source
+
+Use:
+`oracle_native_gt`
+
+Reference:
+- canonical largest reference from each frozen Task 6Z record.
+
+No predicted reference.
+No YOLO proposal input.
+
+## 6. Reuse exact frozen packs
+
+Byte-for-byte reuse:
+- Task 6Z Z-Overfit20
+- Task 6Z Z-MiniTrain1200
+- Task 6Z Z-MiniVal240
+- Task 6Z Z-PairedVal20
+
+Verify hashes against:
+`evaluation/task6z_pack_manifest.json`
+
+If mismatch:
+STOP `TASK6Z_PACK_MISMATCH`.
+
+## 7. Frozen fields
 
 Read-only:
-- Task 7A U-C1 reference resolver;
-- YOLO checkpoint/config;
-- GeometricRelationField v0.2;
-- NearestBoundaryField v0.1;
-- frozen SAM2 visual path;
-- Task 6Z Z-B3 checkpoint.
+- `buildreasonseg_mvp/geometric_relation_field_v02.py`
+- `buildreasonseg_mvp/nearest_boundary_field.py`
 
-No downstream training.
+Constants unchanged:
+- direction alpha = 1.2
+- direction tau = 0.04
+- direction s_axis = 0.02
+- direction s_margin = 0.02
+- nearest sigma_diag = 0.05
+
+Generate:
+- `P_dir_64`
+- `P_near_64`
+
+## 8. Frozen visual representation
+
+Use exactly:
+- SAM2.1 Hiera Base+
+- frozen `V ∈ R^(256×64×64)`
+- same checkpoint/config/cache as Task 6Z
+- no backbone training.
 
 ---
 
-# PART C — Reuse frozen evaluation packs
+# PART D — Common feature definitions
 
-## 5. Exact reuse
+## 9. Visual projection
 
-Do NOT regenerate/edit/extend:
-- full BuildSpatialReason v0.2 val parser set;
-- Task 6Z Z-MiniVal240;
-- Task 6Z Z-PairedVal20 member queries;
-- Task 7A fixed24 paraphrases;
-- Task 7B `task7b_compositional_minimal_pairs.json` (96);
-- Task 7B `task7b_l3_stress_v1.json` (192);
-- Task 7B scope controls.
+For trainable D-B1 ... D-B4:
+
+```text
+F =
+Conv1x1(256 → 128)
+GroupNorm(8,128)
+GELU
+```
+
+## 10. Direction embedding
+
+Trainable:
+- vocab size 4
+- dim 16
+- ids left_of/right_of/above/below
+
+Broadcast over 64×64.
+
+No nearest embedding.
+
+## 11. Numerical constants
+
+Freeze:
+- `competition_temperature = 1.0`
+- `eps = 1e-6`
+- spatial tokens = 4096
+
+No sweep.
+
+---
+
+# PART E — Global competition primitives
+
+## 12. Learned score head
+
+For learned-competition variants:
+
+```text
+Conv3x3(in_channels → 64, padding=1)
+GroupNorm(8,64)
+GELU
+Conv1x1(64 → 1)
+```
+
+Output `S`.
+
+Global competition:
+
+```text
+A_flat = softmax(S.flatten(2) / 1.0, dim=-1)
+A = A_flat.reshape(B,1,64,64)
+A_vis = A * 4096
+```
+
+Require finite values and spatial sum `1 ± 1e-6`.
+
+Do not detach A.
+
+## 13. Target visual prototype
+
+Flatten `F → B×128×4096`.
+
+```text
+q = sum_i A_i * F_i
+```
+
+No stop-gradient.
+
+## 14. Prototype similarity
+
+```text
+F_norm_i = F_i / (||F_i||_2 + eps)
+q_norm   = q   / (||q||_2 + eps)
+C_i = dot(F_norm_i, q_norm)
+```
+
+Reshape C to `B×1×64×64`.
+
+No learned scale.
+No sigmoid.
+No threshold.
+
+---
+
+# PART F — Deterministic field-weighted prototype
+
+## 15. D-B1 fixed competition
+
+```text
+W = clamp(P_dir_64 * P_near_64, 0, 1)
+A_fixed = W / (sum_spatial(W) + eps)
+A_fixed_vis = A_fixed * 4096
+```
+
+If field mass <= eps:
+record `INVALID_FIELD_MASS` and STOP.
+
+Use A_fixed to compute q and C exactly as sections 13–14.
+
+No learned score head.
+
+---
+
+# PART G — Exact variants
+
+## 16. D-B0 — frozen Z-B3 baseline
+
+Do NOT retrain.
+
+Reproduce frozen Task 6Z selected Z-B3.
+
+Require:
+- MiniVal mIoU delta <= 1e-6
+- Dice delta <= 1e-6
+- Paired exactly 15/20
+- own-cross margin delta <= 1e-6.
+
+Write:
+`evaluation/task7d_baseline_reproduction.json`
+
+If fail:
+STOP `TASK6Z_BASELINE_REPRODUCTION_FAIL`.
+
+## 17. D-B1 — deterministic field-weighted visual prototype
+
+Decoder inputs:
+
+```text
+F_128
+P_dir
+P_near
+direction_embed_16
+A_fixed_vis
+C_fixed
+```
+
+Total 148 channels.
+
+## 18. D-B2 — learned relation-guided global competition + prototype
+
+PRIMARY.
+
+Score-head inputs:
+
+```text
+F_128
+P_dir
+P_near
+direction_embed_16
+```
+
+146 channels.
+
+Decoder inputs:
+
+```text
+F_128
+P_dir
+P_near
+direction_embed_16
+A_vis
+C
+```
+
+148 channels.
+
+## 19. D-B3 — learned visual-only global competition
+
+Score-head inputs:
+```text
+F_128
+direction_embed_16
+```
+144 channels.
+
+Decoder inputs:
+```text
+F_128
+direction_embed_16
+A_vis
+C
+```
+146 channels.
+
+No relation fields anywhere.
+
+## 20. D-B4 — relation-guided competition map, no prototype
+
+Score-head inputs same as D-B2.
+
+Compute A and A_vis.
+
+Do NOT compute/use q or C.
+
+Decoder inputs:
+```text
+F_128
+P_dir
+P_near
+direction_embed_16
+A_vis
+```
+147 channels.
+
+No other trainable variant.
+
+---
+
+# PART H — Common mask decoder
+
+## 21. Decoder trunk
+
+D-B1/D-B2/D-B3/D-B4:
+
+```text
+Conv3x3(in_channels → 128, padding=1)
+GroupNorm(8,128)
+GELU
+Conv3x3(128 → 64, padding=1)
+GroupNorm(8,64)
+GELU
+Conv1x1(64 → 1)
+```
+
+Upsample logits:
+- bilinear
+- 64→512
+- align_corners=False.
+
+Loss exactly:
+
+`BCEWithLogitsLoss + DiceLoss`
+
+No competition supervision.
+No center/attention/ranking loss.
+No contrastive loss.
+No GRCL.
+No auxiliary decoder.
+
+Report exact parameter counts.
+
+---
+
+# PART I — Competition diagnostics
+
+## 22. Offline evaluation only
+
+For D-B1/D-B2/D-B3/D-B4, GT target is evaluation-only.
+
+At 64×64, downsample GT target with area interpolation, then threshold `>0.5`.
+
+Report:
+
+1. argmax(A) inside target rate
+2. target mass = sum A over target cells
+3. reference mass = sum A over reference cells
+4. normalized entropy:
+   `-sum(A log(A+eps))/log(4096)`
+5. top-1, top-16, top-64 spatial mass
+
+Write:
+`evaluation/task7d_competition_diagnostics.json`
+
+Do not tune from these metrics.
+
+---
+
+# PART J — Stage D1: Overfit20
+
+## 23. Training
+
+Train D-B1/D-B2/D-B3/D-B4 separately, fresh initialization, exact Z-Overfit20.
+
+- AdamW
+- lr 1e-3
+- weight_decay 1e-4
+- batch 4
+- max steps 1200
+- no scheduler
+- no augmentation
+- seed 20261001
+- same bfloat16 AMP as Task 6Z
+- eval every 100.
+
+Record:
+- mIoU
+- Dice
+- Pr@0.5
+- competition diagnostics
+- params
+- wall time
+- peak VRAM.
+
+Write:
+`evaluation/task7d_overfit20.json`
+
+## 24. D-B2 learnability gate
+
+Require:
+- mIoU >= 0.85
+- Dice >= 0.90
+
+If fail:
+STOP `GLOBAL_COMPETITION_NOT_LEARNABLE`.
+
+---
+
+# PART K — Stage D2: MiniTrain1200 → MiniVal240
+
+## 25. Training
+
+Only if D-B2 overfit passes.
+
+Train D-B1/D-B2/D-B3/D-B4 from fresh initialization on exact Z-MiniTrain1200.
+
+- AdamW
+- lr 3e-4
+- weight_decay 1e-4
+- batch 8
+- max epochs 25
+- early stopping patience 5
+- checkpoint selection = MiniVal240 mIoU
+- seed 20261001
+- no scheduler
+- no augmentation
+- same AMP.
 
 No test.
 
-Write SHA256 reuse manifest:
-`evaluation/task7c_reused_eval_manifest.json`
+Write:
+`evaluation/task7d_training.json`
 
 ---
 
-# PART D — No original template training
+# PART L — Evaluation
 
-## 6. Original v0.2 train text
+## 26. MiniVal240
 
-Do NOT use original BuildSpatialReason v0.2 train instruction strings for optimization.
+Report D-B0...D-B4:
+- mIoU
+- Dice
+- Pr@0.5
+- per direction mIoU
+- target area quartiles
+- target boundary-distance quartiles
+- params
+- best epoch
+- wall time
+- peak VRAM.
 
-Reason: the generator uses the same finite instruction-template vocabulary across train and val, so original train text would leak into full-val parser evaluation.
+Also include competition diagnostics for D-B1...D-B4.
 
-Original train may be read only to verify class ids/schema.
+Write:
+`evaluation/task7d_mini_val.json`
+
+## 27. PairedVal20
+
+Use exact Z-PairedVal20.
+
+Report:
+- pass /20
+- mean own IoU
+- mean cross IoU
+- own-cross margin.
+
+Write:
+`evaluation/task7d_paired_val.json`
 
 ---
 
-# PART E — Exact 8,000-prompt all-class rehearsal
+# PART M — Predeclared criteria
 
-## 7. Canonical classes
+## 28. Primary D-B2 feasibility
 
-Exactly these 20:
+Require ALL:
 
-```text
-leftmost
-rightmost
-topmost
-bottommost
-largest
-smallest
-largest_to_nearest
-smallest_to_nearest
-largest_to_above
-largest_to_below
-largest_to_left_of
-largest_to_right_of
-smallest_to_above
-smallest_to_below
-smallest_to_left_of
-smallest_to_right_of
-largest_to_above_to_nearest
-largest_to_below_to_nearest
-largest_to_left_of_to_nearest
-largest_to_right_of_to_nearest
-```
+1. D-B2 Overfit passes
+2. D-B2 MiniVal mIoU >= 0.38
+3. D-B2 - D-B0 >= +0.05
+4. D-B2 - D-B1 >= +0.03
+5. D-B2 - D-B3 >= +0.08
+6. D-B2 - D-B4 >= +0.03
+7. D-B2 Paired >= 16/20
+8. D-B2 own-cross margin >= 0.30
+9. D-B2 mean target competition mass >= 0.10
+10. D-B2 argmax-in-target rate >= 0.45
+11. no target GT input.
 
-## 8. Exact allocation
+## 29. Diagnostic flags
 
-Generate exactly **8,000** unique normalized prompts.
+Always report:
 
-### Four L3 classes
-Each L3 class:
-- 800 total
-- 400 Chinese
-- 400 English
+`global_competition_mask_gain = true`
+iff D-B2 >= D-B0 + 0.03
 
-Total = 3,200.
+`prototype_gain = true`
+iff D-B2 >= D-B4 + 0.02
 
-### Remaining 16 classes
-Each:
-- 300 total
-- 150 Chinese
-- 150 English
+`field_guidance_gain = true`
+iff D-B2 >= D-B3 + 0.05
 
-Total = 4,800.
-
-Grand total = 8,000.
-
-## 9. Semantic contrast construction
-
-Training must explicitly cover:
-- L1 extreme contrasts;
-- largest vs smallest;
-- nearest-only;
-- largest L2 direction;
-- smallest L2 direction;
-- L3 direction+nearest.
-
-L2 and L3 templates must share some structural stems so the classifier must learn the terminal nearest relation rather than a style cue.
-
----
-
-# PART F — Train lexical pools
-
-## 10. Chinese TRAIN vocabulary
-
-Use combinations from pools such as:
-
-Extremes:
-- `最靠左的`
-- `最靠右的`
-- `位置最高的`
-- `位置最低的`
-- `占地面积最大的`
-- `占地面积最小的`
-
-Reference family:
-- `面积最大的建筑`
-- `占地最大的建筑`
-- `面积最小的建筑`
-- `占地最小的建筑`
-
-Direction:
-- `位于其左侧的` / `处在其左方的`
-- `位于其右侧的` / `处在其右方的`
-- `位于其上方的` / `处在其上侧的`
-- `位于其下方的` / `处在其下侧的`
-
-Nearest:
-- `其中距离最近的`
-- `其中与参考建筑间距最小的`
-- `其中最接近参考建筑的`
-- nearest-only: `与其距离最近的` / `与其间距最小的`
-
-## 11. English TRAIN vocabulary
-
-Extremes:
-- `the farthest-left building`
-- `the farthest-right building`
-- `the uppermost building`
-- `the lowermost building`
-- `the building with the greatest footprint`
-- `the building with the least footprint`
-
-Reference:
-- `the building with the largest footprint`
-- `the greatest-area building`
-- `the building with the smallest footprint`
-- `the least-area building`
-
-Direction:
-- `located on its left side` / `situated to its left`
-- `located on its right side` / `situated to its right`
-- `located above it` / `situated on its upper side`
-- `located below it` / `situated on its lower side`
-
-Nearest:
-- `the one with the minimum separation`
-- `the one nearest to the reference`
-- `the closest one among them`
-- nearest-only: `the building with the minimum separation from it`
-
-Do NOT reproduce any exact/normalized evaluation prompt.
-
----
-
-# PART G — Leakage audit
-
-## 12. Zero-overlap requirement
-
-Before training compare all 8,000 prompts against the union of section-5 evaluation prompts.
-
-Normalization:
-- Unicode strip;
-- lowercase English;
-- collapse whitespace;
-- normalize common punctuation;
-- strip terminal punctuation only for normalized comparison.
-
-Require:
-- exact train/eval overlap = 0;
-- normalized train/eval overlap = 0;
-- normalized duplicates inside training = 0;
-- exact per-class counts;
-- exact zh/en counts.
-
-Write:
-`evaluation/task7c_training_data_audit.json`
-
-If fail:
-`INVALID_EXPERIMENT`
-
-Store large rows locally under:
-`artifacts/task7c/parser_rehearsal/`
-
-Tracked generation spec:
-`evaluation/task7c_rehearsal_spec.json`
-
----
-
-# PART H — Internal holdout must contain all 20 classes
-
-## 13. Split
-
-Seed `20261001`.
-
-For EACH class independently:
-- 90% train
-- 10% internal holdout
-
-Split by normalized prompt hash.
-
-Expected holdout support:
-- L3: 80/class
-- non-L3: 30/class
-
-Every class MUST have support >0.
-
-Require train↔holdout normalized overlap = 0.
-
----
-
-# PART I — Reduced-adaptation optimization
-
-## 14. Parameter groups
-
-Same trainable LoRA + ProgramHead as Task 6T, but fixed differential LR:
-
-ProgramHead:
-`lr = 1e-4`
-
-Existing LoRA parameters:
-`lr = 2e-5`
-
-Other settings:
-- AdamW
-- weight_decay `1e-4`
-- effective batch `32`
-- seed `20261001`
-- max epochs `5`
-- early stopping patience `2`
-- bfloat16 AMP
-- grad clip `1.0`
-- no scheduler
-- no sweep.
-
-Do not unfreeze base backbone.
-
-## 15. Checkpoint selection
-
-Internal holdout only.
-
-Compute across ALL 20 classes:
-- `macro_f1_20`
-- accuracy
-- minimum class recall
-- `l3_macro_recall`
-
-Define:
-`selection_primary = min(macro_f1_20, l3_macro_recall)`
-
-Select by:
-1. highest selection_primary
-2. higher min class recall
-3. higher macro F1
-4. higher accuracy
-5. earlier epoch.
-
-External val/fixed24/stress may NOT influence checkpoint selection.
-
-Checkpoint:
-`artifacts/checkpoints/task7c/program_parser_l3_rehearsal_v1.pt`
-
-Write:
-`evaluation/task7c_training_summary.json`
-
-If no finite checkpoint:
-`PARSER_TRAINING_FAILED`
-
----
-
-# PART J — Final evaluation once
-
-After checkpoint selection, freeze SHA256 and run each external set once.
-
-## 16. Full v0.2 val
-
-Require:
-- accuracy >= `0.995`
-- macro F1 >= `0.995`
-- every class recall >= `0.98`
-
-Write:
-`evaluation/task7c_full_val.json`
-
-## 17. Z-MiniVal240
-
-Require `240/240`.
-
-Write:
-`evaluation/task7c_z_minival240.json`
-
-## 18. Z-Paired member queries
-
-Require `40/40`.
-
-Write:
-`evaluation/task7c_z_paired_parser.json`
-
-## 19. Exact Task 7A fixed24
-
-Require:
-- >= `22/24`
-- all 8 compact prompts correct
-- each L3 class >= `5/6`
-
-Write:
-`evaluation/task7c_task7a_fixed24.json`
-
-## 20. Reused Task 7B minimal96
-
-Require `96/96`.
-
-Write:
-`evaluation/task7c_minimal_pairs_result.json`
-
-## 21. Reused Task 7B stress192
-
-Require:
-- accuracy >= `0.97`
-- macro F1 >= `0.97`
-- every represented class recall >= `0.90`
-- L3-four-class macro recall >= `0.95`
-
-Write:
-`evaluation/task7c_stress_result.json`
-
----
-
-# PART K — Scope safety
-
-## 22. Reuse Task 7B controls
-
-Require:
-- L2 directional controls parse as L2 and exit 5 before proposal;
-- nearest-only controls parse as nearest-only and exit 5 before proposal;
-- OOD controls retain existing exit 4 behaviour;
-- no keyword/regex gate.
-
-Write:
-`evaluation/task7c_scope_safety.json`
-
----
-
-# PART L — Frozen end-to-end regression
-
-## 23. Regression
-
-Run exact Task 7A Z-MiniVal240 natural-language queries:
-
-```text
-Task 7C parser
-→ frozen U-C1 reference resolver
-→ frozen P_dir + P_near
-→ frozen Z-B3
-```
-
-If parser remains 240/240, require exact Task 7A reproduction:
-
-- strict mIoU `0.21700369907681483`
-- answered mIoU `0.21975058134361`
-- abstentions `3`
-- Paired `8/20`
-- margin `0.19949275176250805`
-
-Tolerance:
-- floating metrics abs delta <= `1e-6`
-- counts exact.
-
-Write:
-`evaluation/task7c_end_to_end_regression.json`
-
----
-
-# PART M — CLI default update
-
-## 24. Parser default
-
-Only if these canonical gates pass:
-- full-val accuracy/F1/min recall;
-- Z-MiniVal240;
-- Z-Paired.
-
-Then update L3 CLI default parser path to Task 7C.
-
-If canonical gates fail:
-- keep Task 6T as default.
-
-No other CLI change.
+`competition_localizes_target = true`
+iff target mass >=0.08 AND argmax-in-target >=0.35
 
 ---
 
 # PART N — Verdict
 
-## 25. PASS criteria
-
-`L3_20CLASS_REHEARSAL_PASS` requires ALL:
-
-1. Task 6T baseline hash exact
-2. initialized from Task 6T, not Task 7B
-3. same Qwen3-VL-2B text-only 20-class architecture
-4. exactly 8,000 rows
-5. all 20 classes represented
-6. exact zh/en allocation
-7. exact overlap zero
-8. normalized overlap zero
-9. internal holdout all 20 classes
-10. full-val accuracy >=0.995
-11. full-val macro F1 >=0.995
-12. every full-val class recall >=0.98
-13. Z-MiniVal 240/240
-14. Z-Paired 40/40
-15. fixed24 >=22/24
-16. compact 8/8
-17. every L3 fixed24 class >=5/6
-18. minimal96 = 96/96
-19. stress accuracy >=0.97
-20. stress macro F1 >=0.97
-21. stress every class recall >=0.90
-22. stress L3 macro recall >=0.95
-23. scope safety passes
-24. no keyword/regex override
-25. downstream reproduction exact
-26. no test.
-
-## 26. Exactly one verdict
+## 30. Exactly one
 
 Priority:
 
 1. `INVALID_EXPERIMENT`
-2. `BASELINE_PARSER_UNAVAILABLE`
-3. `PARSER_TRAINING_FAILED`
-4. `L3_20CLASS_CANONICAL_REGRESSION`
-5. `L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`
-6. `END_TO_END_REGRESSION`
-7. `L3_20CLASS_REHEARSAL_PASS`
+2. `TASK6Z_PACK_MISMATCH`
+3. `TASK6Z_BASELINE_REPRODUCTION_FAIL`
+4. `GLOBAL_COMPETITION_NOT_LEARNABLE`
+5. `GLOBAL_COMPETITION_VISUAL_ONLY`
+   - D-B2-D-B3 <0.08 and D-B3 >= D-B0+0.05
+6. `GLOBAL_COMPETITION_PROTOTYPE_NOT_HELPFUL`
+   - D-B2-D-B4 <0.03 and D-B4 >= D-B0+0.05
+7. `GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`
+   - D-B2 mIoU <0.38 OR D-B2-D-B0 <0.05 OR D-B2-D-B1 <0.03,
+     and verdict 5/6 does not apply
+8. `GLOBAL_COMPETITION_COUNTERFACTUAL_WEAK`
+   - mask/ablation criteria pass but paired/margin fail
+9. `RELATION_GUIDED_GLOBAL_COMPETITION_FEASIBLE`
+   - all section-28 criteria pass
 
 No other verdict.
 
@@ -575,20 +625,21 @@ No other verdict.
 
 # PART O — Interpretation boundary
 
-DSH reports measurements only.
+DSH may report measurements only.
 
 Do NOT:
-- make parser a novelty claim;
-- automatically run another parser repair;
-- reopen reference hardening;
-- modify Z-B3/fields/reference subsystem;
-- add attention/global competition;
-- start formal full training/test;
-- choose Task 7D.
+- claim global competition as novelty;
+- claim final architecture;
+- integrate predicted reference;
+- change parser/reference;
+- add graph/attention;
+- add supervision to A;
+- start formal full-data training;
+- access test.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 7C 的 20-class rehearsal 与 L3 组合语义结果决定 parser 是否正式冻结，不自行继续 parser 调参、reference hardening 或下游架构改造。`
+`等待 ChatGPT 根据 Task 7D 的 oracle-reference global competition 因果结果决定是否替换 Z-B3，不自行加入 attention/graph、predicted reference 或正式全量训练。`
 
 ---
 
@@ -597,88 +648,90 @@ Final recommendation exactly:
 Create:
 
 ```text
-evaluation/task7c_reused_eval_manifest.json
-evaluation/task7c_rehearsal_spec.json
-evaluation/task7c_training_data_audit.json
-evaluation/task7c_training_summary.json
-evaluation/task7c_full_val.json
-evaluation/task7c_z_minival240.json
-evaluation/task7c_z_paired_parser.json
-evaluation/task7c_task7a_fixed24.json
-evaluation/task7c_minimal_pairs_result.json
-evaluation/task7c_stress_result.json
-evaluation/task7c_scope_safety.json
-evaluation/task7c_end_to_end_regression.json
-evaluation/task7c_verdict.json
+buildreasonseg_mvp/task7d_global_competition_decoder.py
 
-docs/task7c_20class_rehearsal_l3_hardening.md
+evaluation/task7d_baseline_reproduction.json
+evaluation/task7d_overfit20.json
+evaluation/task7d_training.json
+evaluation/task7d_mini_val.json
+evaluation/task7d_paired_val.json
+evaluation/task7d_competition_diagnostics.json
+evaluation/task7d_verdict.json
 
-scripts/task7c_build_rehearsal.py
-scripts/task7c_train_parser.py
-scripts/task7c_eval_parser.py
-scripts/task7c_scope_audit.py
-scripts/task7c_report.py
+docs/task7d_relation_guided_global_competition.md
+
+scripts/task7d_train.py
+scripts/task7d_evaluate.py
+scripts/task7d_competition_diagnostics.py
+scripts/task7d_report.py
 ```
 
-Update only if section 24 permits:
-- L3 parser default checkpoint path.
+Checkpoints/caches:
+`artifacts/checkpoints/task7d/`
+`artifacts/task7d/`
+gitignored.
 
-Always update:
+Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-No downstream checkpoint changes.
+No parser/reference checkpoint change.
 
 ---
 
 # PART Q — Tests
 
-Task 7B ended at:
-`1148 passed, 1 skipped`
+Task 7C ended at:
+`1189 passed, 1 skipped`
 
 Add tests for at least:
 
-1. Task 7B artifacts unchanged
-2. Task 7B checkpoint not used as initialization
-3. Task 6T baseline hash exact
-4. same Qwen3-VL-2B
-5. text-only
-6. 20 classes exact
-7. no original v0.2 template row used in optimization
-8. exactly 8000 rehearsal prompts
-9. all 20 classes represented
-10. L3 800/class
-11. non-L3 300/class
-12. exact Chinese/English balance
-13. no normalized training duplicate
-14. exact reused eval hashes
-15. train/eval exact overlap zero
-16. train/eval normalized overlap zero
-17. internal holdout all 20 classes
-18. train/holdout normalized-disjoint
-19. LoRA lr `2e-5`
-20. ProgramHead lr `1e-4`
-21. no base-backbone unfreeze
-22. no hyperparameter sweep
-23. external eval not used for selection
-24. full val all 20 classes evaluated
-25. Z-MiniVal exact reuse
-26. Z-Paired exact reuse
-27. fixed24 exact reuse
-28. minimal96 exact reuse
-29. stress192 exact reuse
-30. scope controls exact reuse
-31. no keyword/regex correction
-32. U-C1 unchanged
-33. field modules unchanged
-34. Z-B3 unchanged
-35. no YOLO/downstream training
-36. no GRCL
-37. no attention/GNN/Transformer downstream change
-38. no test
-39. no new dataset/download/install/GUI
-40. end-to-end tolerance exact
-41. previous suite preserved.
+1. Task 7C artifacts unchanged
+2. parser not trained in Task 7D
+3. exactly four L3 programs
+4. exact Task 6Z packs reused
+5. pack hashes verified
+6. no test split
+7. oracle reference explicitly recorded
+8. no predicted/proposal reference
+9. directional field v0.2 unchanged
+10. nearest field v0.1 unchanged
+11. SAM2 feature path unchanged
+12. visual projection exact 256→128
+13. direction embedding vocab 4
+14. embedding dim 16
+15. competition temperature exactly 1.0
+16. softmax global over 4096
+17. competition sum = 1
+18. A_vis = A*4096
+19. prototype weighted sum exact
+20. prototype not detached
+21. cosine similarity exact
+22. no learned similarity scale
+23. D-B0 frozen reproduction
+24. D-B1 product competition exact
+25. D-B1 no learned score head
+26. D-B2 exact score inputs
+27. D-B2 exact decoder inputs
+28. D-B3 has no relation fields
+29. D-B4 has no prototype/similarity
+30. exactly four trainable variants
+31. no attention/Transformer/GNN
+32. no target proposal/candidate-mask input
+33. common decoder trunk exact
+34. BCE+Dice only
+35. no GRCL
+36. no competition auxiliary loss
+37. GT target only label/evaluation
+38. competition diagnostics GT offline only
+39. same schedule across trainable variants
+40. Overfit gate exact
+41. MiniVal gates exact
+42. PairedVal exact reuse
+43. no ProgramHead change
+44. no reference resolver change
+45. no new dataset/download/install/GUI
+46. previous suite preserved.
 
 Run:
 `python -m pytest tests/ -q`
@@ -690,23 +743,23 @@ Do not reduce previous passing tests.
 # PART R — Git/storage
 
 Do not commit:
-- Task 7C parser checkpoint;
-- model/tokenizer caches;
-- large generated rehearsal rows;
-- YOLO/SAM2/Z-B3 weights;
+- Task 7D checkpoints;
+- parser/YOLO/SAM2/Z-B3 weights;
+- feature caches;
 - source imagery/vectors;
 - `.conda`.
 
 Commit:
-- small specs/audits/evaluations;
+- decoder code;
+- small JSON evaluations;
 - scripts;
 - tests;
 - docs;
 - handoff.
 
 Suggested commits:
-1. `feat: add 20-class parser rehearsal hardening`
-2. `eval: audit L3 semantics without canonical forgetting`
+1. `feat: add relation-guided global competition decoder`
+2. `eval: test global target competition causally`
 3. optional docs/handoff commit
 
 ---
@@ -716,7 +769,7 @@ Suggested commits:
 Default:
 - **DeepSeek V4.1 Flash + High**
 
-Use Max only for genuine training/runtime bugs.
+Use Max only for genuine runtime/cross-file/CUDA bugs.
 
 No installs or downloads.
 
@@ -724,7 +777,7 @@ No installs or downloads.
 
 # PART T — STOP
 
-After Task 7C:
+After Task 7D:
 - commit;
 - push;
 - update handoff;
@@ -733,9 +786,10 @@ After Task 7C:
 Do NOT:
 - run another parser experiment;
 - reopen reference hardening;
-- change downstream architecture;
-- add attention/global competition;
-- start formal full training/test;
+- add attention/graph modules;
+- integrate predicted reference;
+- start formal full training;
+- use test;
 - build GUI.
 
 Wait for ChatGPT audit.
