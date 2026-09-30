@@ -1,0 +1,528 @@
+{
+  "_doc": "Task 7D section 26. MiniVal240 evaluation of D-B0 (frozen Task 6Z Z-B3) and the four trainable global-competition variants. The oracle largest reference, the frozen fields and the frozen SAM2 features are the only inputs; GT is an evaluation label.",
+  "task": "7D",
+  "stage": "L-mini-val-240",
+  "pack": {
+    "name": "z_mini_val_240",
+    "records": 240,
+    "by_direction": {
+      "above": 60,
+      "below": 60,
+      "left": 60,
+      "right": 60
+    }
+  },
+  "variants": {
+    "variants": {
+      "D-B1": {
+        "variant": "D-B1",
+        "label": "deterministic field-weighted visual prototype",
+        "uses_relation_fields": true,
+        "uses_learned_score_head": false,
+        "uses_prototype": true,
+        "score_input_channels": null,
+        "decoder_input_channels": 148,
+        "total_parameters": 278081
+      },
+      "D-B2": {
+        "variant": "D-B2",
+        "label": "learned relation-guided global competition + prototype (primary)",
+        "uses_relation_fields": true,
+        "uses_learned_score_head": true,
+        "uses_prototype": true,
+        "score_input_channels": 146,
+        "decoder_input_channels": 148,
+        "total_parameters": 362434
+      },
+      "D-B3": {
+        "variant": "D-B3",
+        "label": "learned visual-only global competition",
+        "uses_relation_fields": false,
+        "uses_learned_score_head": true,
+        "uses_prototype": true,
+        "score_input_channels": 144,
+        "decoder_input_channels": 146,
+        "total_parameters": 358978
+      },
+      "D-B4": {
+        "variant": "D-B4",
+        "label": "relation-guided competition map, no prototype",
+        "uses_relation_fields": true,
+        "uses_learned_score_head": true,
+        "uses_prototype": false,
+        "score_input_channels": 146,
+        "decoder_input_channels": 147,
+        "total_parameters": 361282
+      }
+    },
+    "trainable_variants": [
+      "D-B1",
+      "D-B2",
+      "D-B3",
+      "D-B4"
+    ],
+    "baseline_variant": "D-B0",
+    "primary_variant": "D-B2",
+    "variant_count": 4,
+    "visual_projection": [
+      "Conv1x1(256,128)",
+      "GroupNorm(8,128)",
+      "GELU"
+    ],
+    "direction_embedding": {
+      "vocab_size": 4,
+      "ids": [
+        "left_of",
+        "right_of",
+        "above",
+        "below"
+      ],
+      "dim": 16
+    },
+    "nearest_embedding": false,
+    "competition": {
+      "temperature": 1.0,
+      "spatial_tokens": 4096,
+      "eps": 1e-06,
+      "global_softmax": true,
+      "detached": false,
+      "attention_vis_scale": 4096
+    },
+    "prototype": {
+      "weighted_sum": true,
+      "stop_gradient": false,
+      "cosine_similarity": true,
+      "learned_scale": false,
+      "sigmoid": false,
+      "threshold": false
+    },
+    "decoder_trunk": [
+      "Conv3x3(in,128)",
+      "GroupNorm(8,128)",
+      "GELU",
+      "Conv3x3(128,64)",
+      "GroupNorm(8,64)",
+      "GELU",
+      "Conv1x1(64,1)"
+    ],
+    "upsample": {
+      "mode": "bilinear",
+      "from": 64,
+      "to": 512,
+      "align_corners": false
+    },
+    "loss": "BCEWithLogitsLoss + DiceLoss",
+    "extra_losses": [],
+    "grcl": false,
+    "attention_modules": false,
+    "transformer": false,
+    "gnn": false,
+    "target_proposals": false,
+    "graph_construction": false
+  },
+  "results": {
+    "D-B0": {
+      "overall": {
+        "records": 240,
+        "miou": 0.3242128982543474,
+        "dice": 0.4389840055529761,
+        "precision_at_0_5": 0.5331188918325193
+      },
+      "source": "frozen Task 6Z Z-B3 evaluation artifact",
+      "params": 275777,
+      "reproduction": true
+    },
+    "D-B1": {
+      "overall": {
+        "records": 240,
+        "miou": 0.3978996298363562,
+        "dice": 0.5272592647111778,
+        "precision_at_0_5": 0.561976809693139
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.3749929037339562,
+          "dice": 0.49451547419308406,
+          "precision_at_0_5": 0.6118814110541901
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.3845155897703503,
+          "dice": 0.5218551615135452,
+          "precision_at_0_5": 0.5203388060674772
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.4145697844617314,
+          "dice": 0.5389837823505048,
+          "precision_at_0_5": 0.5700787500574288
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.41752024137938715,
+          "dice": 0.5536826407875775,
+          "precision_at_0_5": 0.5456082715934597
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.3779032507870904
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.4366465575967788
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.47038415289261215
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.30666455806894366
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.39937738385050986
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.3580956202156362
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.44025506145398013
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.3938704538252988
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 278081,
+      "best_epoch": 7,
+      "best_step": 1050,
+      "variant_wall_seconds": 96.8,
+      "evaluation_seconds": 14.0,
+      "peak_vram_gb": 0.667,
+      "checkpoint_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0"
+    },
+    "D-B2": {
+      "overall": {
+        "records": 240,
+        "miou": 0.3264764207334784,
+        "dice": 0.4372995061915569,
+        "precision_at_0_5": 0.5454457977558677
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.2713921221981667,
+          "dice": 0.3719067311921142,
+          "precision_at_0_5": 0.563383399752987
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.30849879507881195,
+          "dice": 0.4126292260755633,
+          "precision_at_0_5": 0.5027891417344799
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.36331215574497944,
+          "dice": 0.47794272107889585,
+          "precision_at_0_5": 0.5617037197012855
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.3627026099119551,
+          "dice": 0.4867193464196544,
+          "precision_at_0_5": 0.553906929834718
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.3378921035692322
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.37774093275059534
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.3857744260252955
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.20449822058879025
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.35711090005097385
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.2693403932620263
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.351485090191287
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.3279692994296261
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 362434,
+      "best_epoch": 10,
+      "best_step": 1500,
+      "variant_wall_seconds": 48.6,
+      "evaluation_seconds": 0.4,
+      "peak_vram_gb": 0.698,
+      "checkpoint_sha256": "91f8a4557f1339264b3b3fbdac97e9a11d8c0a0efa646eda02ac1a8912f009ce"
+    },
+    "D-B3": {
+      "overall": {
+        "records": 240,
+        "miou": 0.15952594817806567,
+        "dice": 0.2310875350514649,
+        "precision_at_0_5": 0.27595579466706516
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.14391559033436396,
+          "dice": 0.2021085470700432,
+          "precision_at_0_5": 0.322193680827698
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.15531725909449773,
+          "dice": 0.23376468355270347,
+          "precision_at_0_5": 0.21489126947436332
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.1637718612548056,
+          "dice": 0.23383535539929165,
+          "precision_at_0_5": 0.3257061590306939
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.17509908202859537,
+          "dice": 0.2546415541838213,
+          "precision_at_0_5": 0.24103206933550553
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.19264282729031168
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.1939850226188036
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.1777907836226421
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.07368515918050532
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.15460647883504625
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.12879937335341787
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.16247921866372614
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.19221872186007244
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 358978,
+      "best_epoch": 7,
+      "best_step": 1050,
+      "variant_wall_seconds": 36.7,
+      "evaluation_seconds": 0.4,
+      "peak_vram_gb": 0.698,
+      "checkpoint_sha256": "b78ff98c1e81e146a0a922a2198a5e646f7953d5f3d72c33f833a4380352010a"
+    },
+    "D-B4": {
+      "overall": {
+        "records": 240,
+        "miou": 0.3291152229856072,
+        "dice": 0.44878403931906935,
+        "precision_at_0_5": 0.4617798815595628
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.2952231137003202,
+          "dice": 0.4019126575890085,
+          "precision_at_0_5": 0.45297941995368635
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.3108434843384847,
+          "dice": 0.42879764309514395,
+          "precision_at_0_5": 0.4663058234103147
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.37841514558824957,
+          "dice": 0.5045200976100565,
+          "precision_at_0_5": 0.48617733346400943
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.33197914831537434,
+          "dice": 0.45990575898206837,
+          "precision_at_0_5": 0.44165694941024064
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.34553328336984546
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.3793466908572717
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.375942298295285
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.21563861942002654
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.3409212296475339
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.24779770217809158
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.3621747178723922
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.365567242244411
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 361282,
+      "best_epoch": 6,
+      "best_step": 900,
+      "variant_wall_seconds": 32.1,
+      "evaluation_seconds": 0.3,
+      "peak_vram_gb": 0.681,
+      "checkpoint_sha256": "188f42152fd59584ddb9e034028bcf823a6e394f80159166def79ce1c3c4f947"
+    }
+  },
+  "best_trainable_variant": "D-B1",
+  "training_performed": true,
+  "test_split_used": false,
+  "runtime_seconds": 23.1
+}

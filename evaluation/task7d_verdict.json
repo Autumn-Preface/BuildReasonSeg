@@ -1,0 +1,918 @@
+{
+  "_doc": "Task 7D sections 28-30. Oracle-reference relation-guided global competition: D-B0 is the frozen Task 6Z Z-B3 baseline (reproduced exactly) and D-B1/D-B2/D-B3/D-B4 are trained from fresh initialization on the exact frozen Task 6Z packs. The competition map is never supervised; the verdict follows the fixed section-30 priority order.",
+  "task": "7D",
+  "verdict": "GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN",
+  "reason": "D-B2 mIoU 0.3265 and its gains over D-B0 (+0.0023) / D-B1 (-0.0714) miss the section-28 bars",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "TASK6Z_PACK_MISMATCH",
+    "TASK6Z_BASELINE_REPRODUCTION_FAIL",
+    "GLOBAL_COMPETITION_NOT_LEARNABLE",
+    "GLOBAL_COMPETITION_VISUAL_ONLY",
+    "GLOBAL_COMPETITION_PROTOTYPE_NOT_HELPFUL",
+    "GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN",
+    "GLOBAL_COMPETITION_COUNTERFACTUAL_WEAK",
+    "RELATION_GUIDED_GLOBAL_COMPETITION_FEASIBLE"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "packs": {
+      "z_overfit20": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_overfit20.json",
+        "sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+        "expected_sha256": "ede7f0b16c3e770dccbccc9eaaa86dea2d05d603c72a0156521b5879e558fbf0",
+        "matches": true
+      },
+      "z_mini_train_1200": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_train_1200.json",
+        "sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+        "expected_sha256": "fff9f01103537cb4b9fda52dfd585eaf3a69389641d7abd5dbf1d148738a0a40",
+        "matches": true
+      },
+      "z_mini_val_240": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+        "sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+        "expected_sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+        "matches": true
+      },
+      "z_paired_val20": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_paired_val20.json",
+        "sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+        "expected_sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc",
+        "matches": true
+      }
+    },
+    "packs_match": true,
+    "l3_programs": [
+      "above",
+      "below",
+      "left",
+      "right"
+    ],
+    "variants": [
+      "D-B1",
+      "D-B2",
+      "D-B3",
+      "D-B4"
+    ],
+    "variant_count": 4,
+    "primary_variant": "D-B2",
+    "oracle_reference": "oracle_native_gt",
+    "predicted_reference_used": false,
+    "parser_used": false,
+    "target_gt_used_as_input": false,
+    "competition_supervised": false,
+    "attention_or_transformer_or_gnn": false,
+    "grcl": false,
+    "target_proposals": false,
+    "training_performed": true,
+    "test_split_used": false,
+    "clean": true
+  },
+  "variants": {
+    "variants": {
+      "D-B1": {
+        "variant": "D-B1",
+        "label": "deterministic field-weighted visual prototype",
+        "uses_relation_fields": true,
+        "uses_learned_score_head": false,
+        "uses_prototype": true,
+        "score_input_channels": null,
+        "decoder_input_channels": 148,
+        "total_parameters": 278081
+      },
+      "D-B2": {
+        "variant": "D-B2",
+        "label": "learned relation-guided global competition + prototype (primary)",
+        "uses_relation_fields": true,
+        "uses_learned_score_head": true,
+        "uses_prototype": true,
+        "score_input_channels": 146,
+        "decoder_input_channels": 148,
+        "total_parameters": 362434
+      },
+      "D-B3": {
+        "variant": "D-B3",
+        "label": "learned visual-only global competition",
+        "uses_relation_fields": false,
+        "uses_learned_score_head": true,
+        "uses_prototype": true,
+        "score_input_channels": 144,
+        "decoder_input_channels": 146,
+        "total_parameters": 358978
+      },
+      "D-B4": {
+        "variant": "D-B4",
+        "label": "relation-guided competition map, no prototype",
+        "uses_relation_fields": true,
+        "uses_learned_score_head": true,
+        "uses_prototype": false,
+        "score_input_channels": 146,
+        "decoder_input_channels": 147,
+        "total_parameters": 361282
+      }
+    },
+    "trainable_variants": [
+      "D-B1",
+      "D-B2",
+      "D-B3",
+      "D-B4"
+    ],
+    "baseline_variant": "D-B0",
+    "primary_variant": "D-B2",
+    "variant_count": 4,
+    "visual_projection": [
+      "Conv1x1(256,128)",
+      "GroupNorm(8,128)",
+      "GELU"
+    ],
+    "direction_embedding": {
+      "vocab_size": 4,
+      "ids": [
+        "left_of",
+        "right_of",
+        "above",
+        "below"
+      ],
+      "dim": 16
+    },
+    "nearest_embedding": false,
+    "competition": {
+      "temperature": 1.0,
+      "spatial_tokens": 4096,
+      "eps": 1e-06,
+      "global_softmax": true,
+      "detached": false,
+      "attention_vis_scale": 4096
+    },
+    "prototype": {
+      "weighted_sum": true,
+      "stop_gradient": false,
+      "cosine_similarity": true,
+      "learned_scale": false,
+      "sigmoid": false,
+      "threshold": false
+    },
+    "decoder_trunk": [
+      "Conv3x3(in,128)",
+      "GroupNorm(8,128)",
+      "GELU",
+      "Conv3x3(128,64)",
+      "GroupNorm(8,64)",
+      "GELU",
+      "Conv1x1(64,1)"
+    ],
+    "upsample": {
+      "mode": "bilinear",
+      "from": 64,
+      "to": 512,
+      "align_corners": false
+    },
+    "loss": "BCEWithLogitsLoss + DiceLoss",
+    "extra_losses": [],
+    "grcl": false,
+    "attention_modules": false,
+    "transformer": false,
+    "gnn": false,
+    "target_proposals": false,
+    "graph_construction": false
+  },
+  "baseline_reproduction": {
+    "_doc": "Task 7D section 16. D-B0: frozen Task 6Z Z-B3 baseline reproduction through the frozen Task 6Z evaluation path (same model, batching, pack order and oracle reference).",
+    "task": "7D",
+    "stage": "G-baseline-reproduction",
+    "checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "variant": "Z-B3",
+      "retrained": false
+    },
+    "recomputed": {
+      "miou": 0.3242128982543474,
+      "dice": 0.4389840055529761,
+      "paired_passed": 15,
+      "pairs": 20,
+      "own_cross_margin": 0.30035408969722216
+    },
+    "frozen_task6z": {
+      "miou": 0.3242128982543474,
+      "dice": 0.4389840055529761,
+      "paired_passed": 15,
+      "own_cross_margin": 0.30035408969722216
+    },
+    "deltas": {
+      "miou": 0.0,
+      "dice": 0.0,
+      "margin": 0.0
+    },
+    "tolerance": 1e-06,
+    "reproduction_passed": true,
+    "verdict": "TASK6Z_BASELINE_REPRODUCTION_PASS",
+    "training_performed": false,
+    "test_split_used": false,
+    "runtime_seconds": 22.7
+  },
+  "overfit20": {
+    "gate_passed": true,
+    "gate": {
+      "miou_min": 0.85,
+      "dice_min": 0.9,
+      "measured_miou": 0.9677839416872439,
+      "measured_dice": 0.9834978691869795,
+      "applies_to": "D-B2",
+      "passed": true
+    },
+    "results": {
+      "D-B1": {
+        "best_miou": 0.9622933572178447,
+        "best_dice": 0.980658079667539,
+        "params": 278081
+      },
+      "D-B2": {
+        "best_miou": 0.9677839416872439,
+        "best_dice": 0.9834978691869795,
+        "params": 362434
+      },
+      "D-B3": {
+        "best_miou": 0.9590586776624276,
+        "best_dice": 0.9789931725409293,
+        "params": 358978
+      },
+      "D-B4": {
+        "best_miou": 0.9678879387202993,
+        "best_dice": 0.9836055446885066,
+        "params": 361282
+      }
+    }
+  },
+  "training": {
+    "results": {
+      "D-B1": {
+        "best_miou": 0.3978996298363562,
+        "best_dice": 0.5272592647111778,
+        "best_epoch": 7,
+        "params": 278081,
+        "wall_seconds": 96.8,
+        "peak_vram_gb": 0.667
+      },
+      "D-B2": {
+        "best_miou": 0.3264764207334784,
+        "best_dice": 0.4372995061915569,
+        "best_epoch": 10,
+        "params": 362434,
+        "wall_seconds": 48.6,
+        "peak_vram_gb": 0.698
+      },
+      "D-B3": {
+        "best_miou": 0.15952594817806567,
+        "best_dice": 0.2310875350514649,
+        "best_epoch": 7,
+        "params": 358978,
+        "wall_seconds": 36.7,
+        "peak_vram_gb": 0.698
+      },
+      "D-B4": {
+        "best_miou": 0.3291152229856072,
+        "best_dice": 0.44878403931906935,
+        "best_epoch": 6,
+        "params": 361282,
+        "wall_seconds": 32.1,
+        "peak_vram_gb": 0.681
+      }
+    }
+  },
+  "mini_val_240": {
+    "miou": {
+      "D-B0": 0.3242128982543474,
+      "D-B1": 0.3978996298363562,
+      "D-B2": 0.3264764207334784,
+      "D-B3": 0.15952594817806567,
+      "D-B4": 0.3291152229856072
+    },
+    "dice": {
+      "D-B0": 0.4389840055529761,
+      "D-B1": 0.5272592647111778,
+      "D-B2": 0.4372995061915569,
+      "D-B3": 0.2310875350514649,
+      "D-B4": 0.44878403931906935
+    },
+    "results": {
+      "D-B0": {
+        "overall": {
+          "records": 240,
+          "miou": 0.3242128982543474,
+          "dice": 0.4389840055529761,
+          "precision_at_0_5": 0.5331188918325193
+        },
+        "source": "frozen Task 6Z Z-B3 evaluation artifact",
+        "params": 275777,
+        "reproduction": true
+      },
+      "D-B1": {
+        "overall": {
+          "records": 240,
+          "miou": 0.3978996298363562,
+          "dice": 0.5272592647111778,
+          "precision_at_0_5": 0.561976809693139
+        },
+        "per_direction": {
+          "above": {
+            "records": 60,
+            "miou": 0.3749929037339562,
+            "dice": 0.49451547419308406,
+            "precision_at_0_5": 0.6118814110541901
+          },
+          "below": {
+            "records": 60,
+            "miou": 0.3845155897703503,
+            "dice": 0.5218551615135452,
+            "precision_at_0_5": 0.5203388060674772
+          },
+          "left": {
+            "records": 60,
+            "miou": 0.4145697844617314,
+            "dice": 0.5389837823505048,
+            "precision_at_0_5": 0.5700787500574288
+          },
+          "right": {
+            "records": 60,
+            "miou": 0.41752024137938715,
+            "dice": 0.5536826407875775,
+            "precision_at_0_5": 0.5456082715934597
+          }
+        },
+        "target_area_quartiles": {
+          "edges": [
+            1010.5,
+            1449.5,
+            2380.5
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.3779032507870904
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.4366465575967788
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.47038415289261215
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.30666455806894366
+            }
+          }
+        },
+        "boundary_distance_quartiles": {
+          "edges": [
+            20.908326913195985,
+            51.148523824274825,
+            99.86995372397331
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.39937738385050986
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.3580956202156362
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.44025506145398013
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.3938704538252988
+            }
+          }
+        },
+        "border_target": {
+          "records": 0
+        },
+        "tiny_target": {
+          "records": 0
+        },
+        "params": 278081,
+        "best_epoch": 7,
+        "best_step": 1050,
+        "variant_wall_seconds": 96.8,
+        "evaluation_seconds": 14.0,
+        "peak_vram_gb": 0.667,
+        "checkpoint_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0"
+      },
+      "D-B2": {
+        "overall": {
+          "records": 240,
+          "miou": 0.3264764207334784,
+          "dice": 0.4372995061915569,
+          "precision_at_0_5": 0.5454457977558677
+        },
+        "per_direction": {
+          "above": {
+            "records": 60,
+            "miou": 0.2713921221981667,
+            "dice": 0.3719067311921142,
+            "precision_at_0_5": 0.563383399752987
+          },
+          "below": {
+            "records": 60,
+            "miou": 0.30849879507881195,
+            "dice": 0.4126292260755633,
+            "precision_at_0_5": 0.5027891417344799
+          },
+          "left": {
+            "records": 60,
+            "miou": 0.36331215574497944,
+            "dice": 0.47794272107889585,
+            "precision_at_0_5": 0.5617037197012855
+          },
+          "right": {
+            "records": 60,
+            "miou": 0.3627026099119551,
+            "dice": 0.4867193464196544,
+            "precision_at_0_5": 0.553906929834718
+          }
+        },
+        "target_area_quartiles": {
+          "edges": [
+            1010.5,
+            1449.5,
+            2380.5
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.3378921035692322
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.37774093275059534
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.3857744260252955
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.20449822058879025
+            }
+          }
+        },
+        "boundary_distance_quartiles": {
+          "edges": [
+            20.908326913195985,
+            51.148523824274825,
+            99.86995372397331
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.35711090005097385
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.2693403932620263
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.351485090191287
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.3279692994296261
+            }
+          }
+        },
+        "border_target": {
+          "records": 0
+        },
+        "tiny_target": {
+          "records": 0
+        },
+        "params": 362434,
+        "best_epoch": 10,
+        "best_step": 1500,
+        "variant_wall_seconds": 48.6,
+        "evaluation_seconds": 0.4,
+        "peak_vram_gb": 0.698,
+        "checkpoint_sha256": "91f8a4557f1339264b3b3fbdac97e9a11d8c0a0efa646eda02ac1a8912f009ce"
+      },
+      "D-B3": {
+        "overall": {
+          "records": 240,
+          "miou": 0.15952594817806567,
+          "dice": 0.2310875350514649,
+          "precision_at_0_5": 0.27595579466706516
+        },
+        "per_direction": {
+          "above": {
+            "records": 60,
+            "miou": 0.14391559033436396,
+            "dice": 0.2021085470700432,
+            "precision_at_0_5": 0.322193680827698
+          },
+          "below": {
+            "records": 60,
+            "miou": 0.15531725909449773,
+            "dice": 0.23376468355270347,
+            "precision_at_0_5": 0.21489126947436332
+          },
+          "left": {
+            "records": 60,
+            "miou": 0.1637718612548056,
+            "dice": 0.23383535539929165,
+            "precision_at_0_5": 0.3257061590306939
+          },
+          "right": {
+            "records": 60,
+            "miou": 0.17509908202859537,
+            "dice": 0.2546415541838213,
+            "precision_at_0_5": 0.24103206933550553
+          }
+        },
+        "target_area_quartiles": {
+          "edges": [
+            1010.5,
+            1449.5,
+            2380.5
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.19264282729031168
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.1939850226188036
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.1777907836226421
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.07368515918050532
+            }
+          }
+        },
+        "boundary_distance_quartiles": {
+          "edges": [
+            20.908326913195985,
+            51.148523824274825,
+            99.86995372397331
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.15460647883504625
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.12879937335341787
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.16247921866372614
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.19221872186007244
+            }
+          }
+        },
+        "border_target": {
+          "records": 0
+        },
+        "tiny_target": {
+          "records": 0
+        },
+        "params": 358978,
+        "best_epoch": 7,
+        "best_step": 1050,
+        "variant_wall_seconds": 36.7,
+        "evaluation_seconds": 0.4,
+        "peak_vram_gb": 0.698,
+        "checkpoint_sha256": "b78ff98c1e81e146a0a922a2198a5e646f7953d5f3d72c33f833a4380352010a"
+      },
+      "D-B4": {
+        "overall": {
+          "records": 240,
+          "miou": 0.3291152229856072,
+          "dice": 0.44878403931906935,
+          "precision_at_0_5": 0.4617798815595628
+        },
+        "per_direction": {
+          "above": {
+            "records": 60,
+            "miou": 0.2952231137003202,
+            "dice": 0.4019126575890085,
+            "precision_at_0_5": 0.45297941995368635
+          },
+          "below": {
+            "records": 60,
+            "miou": 0.3108434843384847,
+            "dice": 0.42879764309514395,
+            "precision_at_0_5": 0.4663058234103147
+          },
+          "left": {
+            "records": 60,
+            "miou": 0.37841514558824957,
+            "dice": 0.5045200976100565,
+            "precision_at_0_5": 0.48617733346400943
+          },
+          "right": {
+            "records": 60,
+            "miou": 0.33197914831537434,
+            "dice": 0.45990575898206837,
+            "precision_at_0_5": 0.44165694941024064
+          }
+        },
+        "target_area_quartiles": {
+          "edges": [
+            1010.5,
+            1449.5,
+            2380.5
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.34553328336984546
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.3793466908572717
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.375942298295285
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.21563861942002654
+            }
+          }
+        },
+        "boundary_distance_quartiles": {
+          "edges": [
+            20.908326913195985,
+            51.148523824274825,
+            99.86995372397331
+          ],
+          "buckets": {
+            "q1": {
+              "records": 60,
+              "miou": 0.3409212296475339
+            },
+            "q2": {
+              "records": 60,
+              "miou": 0.24779770217809158
+            },
+            "q3": {
+              "records": 60,
+              "miou": 0.3621747178723922
+            },
+            "q4": {
+              "records": 60,
+              "miou": 0.365567242244411
+            }
+          }
+        },
+        "border_target": {
+          "records": 0
+        },
+        "tiny_target": {
+          "records": 0
+        },
+        "params": 361282,
+        "best_epoch": 6,
+        "best_step": 900,
+        "variant_wall_seconds": 32.1,
+        "evaluation_seconds": 0.3,
+        "peak_vram_gb": 0.681,
+        "checkpoint_sha256": "188f42152fd59584ddb9e034028bcf823a6e394f80159166def79ce1c3c4f947"
+      }
+    }
+  },
+  "paired_val20": {
+    "D-B0": {
+      "passed": 15,
+      "pairs": 20,
+      "pass_rate": 0.75,
+      "mean_own_iou": 0.303156315945526,
+      "mean_cross_iou": 0.0028022262483038502,
+      "own_cross_margin": 0.30035408969722216,
+      "source": "frozen Task 6Z artifact"
+    },
+    "D-B1": {
+      "passed": 19,
+      "pairs": 20,
+      "pass_rate": 0.95,
+      "mean_own_iou": 0.39134577083984523,
+      "mean_cross_iou": 0.0025828313245232436,
+      "own_cross_margin": 0.388762939515322
+    },
+    "D-B2": {
+      "passed": 17,
+      "pairs": 20,
+      "pass_rate": 0.85,
+      "mean_own_iou": 0.29666247077064656,
+      "mean_cross_iou": 0.001090364879962838,
+      "own_cross_margin": 0.2955721058906837
+    },
+    "D-B3": {
+      "passed": 8,
+      "pairs": 20,
+      "pass_rate": 0.4,
+      "mean_own_iou": 0.18504894398822896,
+      "mean_cross_iou": 0.022179014008801227,
+      "own_cross_margin": 0.16286992997942773
+    },
+    "D-B4": {
+      "passed": 19,
+      "pairs": 20,
+      "pass_rate": 0.95,
+      "mean_own_iou": 0.3077584197204076,
+      "mean_cross_iou": 0.0021517996865298905,
+      "own_cross_margin": 0.30560662003387773
+    }
+  },
+  "competition_diagnostics": {
+    "D-B1": {
+      "records": 240,
+      "argmax_in_target_rate": 0.008333333333333333,
+      "target_mass": 0.06745949276708056,
+      "reference_mass": 0.0023600100592082876,
+      "normalized_entropy": 0.6933258768171072,
+      "top1_mass": 0.012227987763859952,
+      "top16_mass": 0.16700107899184027,
+      "top64_mass": 0.47508895533780254,
+      "attention_sum": 0.9999999980131785
+    },
+    "D-B2": {
+      "records": 240,
+      "argmax_in_target_rate": 0.0,
+      "target_mass": 0.006657983674752662,
+      "reference_mass": 0.08615929330893171,
+      "normalized_entropy": 0.8847798511385918,
+      "top1_mass": 0.010540475428570062,
+      "top16_mass": 0.09229084099642933,
+      "top64_mass": 0.22023876613626878,
+      "attention_sum": 0.9999999925494194
+    },
+    "D-B3": {
+      "records": 240,
+      "argmax_in_target_rate": 0.020833333333333332,
+      "target_mass": 0.018882641081048254,
+      "reference_mass": 0.09676706563914195,
+      "normalized_entropy": 0.8843686987956365,
+      "top1_mass": 0.009058394271414727,
+      "top16_mass": 0.08760929778994371,
+      "top64_mass": 0.21642577620223163,
+      "attention_sum": 0.9999999880790711
+    },
+    "D-B4": {
+      "records": 240,
+      "argmax_in_target_rate": 0.0,
+      "target_mass": 0.005115840381586167,
+      "reference_mass": 0.1039738328079693,
+      "normalized_entropy": 0.84953337063392,
+      "top1_mass": 0.014589695975882933,
+      "top16_mass": 0.1224396170116961,
+      "top64_mass": 0.27998701731363934,
+      "attention_sum": 0.9999999937911829
+    }
+  },
+  "deltas": {
+    "d_b2_minus_b0": 0.002263522479130975,
+    "d_b2_minus_b1": -0.0714232091028778,
+    "d_b2_minus_b3": 0.1669504725554127,
+    "d_b2_minus_b4": -0.0026388022521288135,
+    "d_b1_minus_b0": 0.07368673158200878,
+    "d_b3_minus_b0": -0.16468695007628173,
+    "d_b4_minus_b0": 0.004902324731259788
+  },
+  "criteria": {
+    "1_overfit_passed": {
+      "passed": true,
+      "measured": {
+        "miou_min": 0.85,
+        "dice_min": 0.9,
+        "measured_miou": 0.9677839416872439,
+        "measured_dice": 0.9834978691869795,
+        "applies_to": "D-B2",
+        "passed": true
+      }
+    },
+    "2_d_b2_miou": {
+      "required": 0.38,
+      "measured": 0.3264764207334784,
+      "passed": false
+    },
+    "3_d_b2_minus_b0": {
+      "required": 0.05,
+      "measured": 0.002263522479130975,
+      "passed": false
+    },
+    "4_d_b2_minus_b1": {
+      "required": 0.03,
+      "measured": -0.0714232091028778,
+      "passed": false
+    },
+    "5_d_b2_minus_b3": {
+      "required": 0.08,
+      "measured": 0.1669504725554127,
+      "passed": true
+    },
+    "6_d_b2_minus_b4": {
+      "required": 0.03,
+      "measured": -0.0026388022521288135,
+      "passed": false
+    },
+    "7_paired": {
+      "required": ">= 16/20",
+      "measured": 17,
+      "passed": true
+    },
+    "8_margin": {
+      "required": 0.3,
+      "measured": 0.2955721058906837,
+      "passed": false
+    },
+    "9_target_mass": {
+      "required": 0.1,
+      "measured": 0.006657983674752662,
+      "passed": false
+    },
+    "10_argmax_in_target": {
+      "required": 0.45,
+      "measured": 0.0,
+      "passed": false
+    },
+    "11_no_target_gt_input": {
+      "passed": true
+    }
+  },
+  "criteria_passed": false,
+  "diagnostic_flags": {
+    "global_competition_mask_gain": false,
+    "prototype_gain": false,
+    "field_guidance_gain": true,
+    "competition_localizes_target": false
+  },
+  "visual_only_check": {
+    "d_b2_minus_d_b3": 0.1669504725554127,
+    "d_b3_minus_d_b0": -0.16468695007628173,
+    "applies": false
+  },
+  "prototype_check": {
+    "d_b2_minus_d_b4": -0.0026388022521288135,
+    "d_b4_minus_d_b0": 0.004902324731259788,
+    "applies": false
+  },
+  "no_gain_check": {
+    "d_b2_miou": 0.3264764207334784,
+    "d_b2_minus_d_b0": 0.002263522479130975,
+    "d_b2_minus_d_b1": -0.0714232091028778,
+    "applies": true
+  },
+  "gate_constants": {
+    "d_b2_miou_min": 0.38,
+    "vs_b0_min": 0.05,
+    "vs_b1_min": 0.03,
+    "vs_b3_min": 0.08,
+    "vs_b4_min": 0.03,
+    "paired_min": 16,
+    "margin_min": 0.3,
+    "target_mass_min": 0.1,
+    "argmax_in_target_min": 0.45,
+    "mask_gain_flag": 0.03,
+    "prototype_gain_flag": 0.02,
+    "field_guidance_flag": 0.05,
+    "localize_mass_flag": 0.08,
+    "localize_argmax_flag": 0.35,
+    "visual_only_vs_b3": 0.08,
+    "visual_only_b3_gain": 0.05,
+    "prototype_vs_b4": 0.03,
+    "prototype_b4_gain": 0.05
+  },
+  "interpretation_boundary": {
+    "global_competition_claimed_as_novelty": false,
+    "final_architecture_claimed": false,
+    "predicted_reference_integrated": false,
+    "parser_or_reference_changed": false,
+    "graph_or_attention_added": false,
+    "supervision_added_to_competition": false,
+    "formal_full_data_training_started": false,
+    "test_accessed": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7D 的 oracle-reference global competition 因果结果决定是否替换 Z-B3，不自行加入 attention/graph、predicted reference 或正式全量训练。",
+  "runtime_seconds": 0.05
+}

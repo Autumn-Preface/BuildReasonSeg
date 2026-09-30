@@ -1,0 +1,55 @@
+{
+  "_doc": "Task 7D section 27. PairedVal20 evaluation on the exact frozen Z-PairedVal20 pack for D-B0 (frozen task 6Z Z-B3) and the four trainable variants.",
+  "task": "7D",
+  "stage": "L-paired-val20",
+  "pack": {
+    "name": "z_paired_val20",
+    "pairs": 20
+  },
+  "results": {
+    "D-B0": {
+      "passed": 15,
+      "pairs": 20,
+      "pass_rate": 0.75,
+      "mean_own_iou": 0.303156315945526,
+      "mean_cross_iou": 0.0028022262483038502,
+      "own_cross_margin": 0.30035408969722216,
+      "source": "frozen Task 6Z artifact"
+    },
+    "D-B1": {
+      "passed": 19,
+      "pairs": 20,
+      "pass_rate": 0.95,
+      "mean_own_iou": 0.39134577083984523,
+      "mean_cross_iou": 0.0025828313245232436,
+      "own_cross_margin": 0.388762939515322
+    },
+    "D-B2": {
+      "passed": 17,
+      "pairs": 20,
+      "pass_rate": 0.85,
+      "mean_own_iou": 0.29666247077064656,
+      "mean_cross_iou": 0.001090364879962838,
+      "own_cross_margin": 0.2955721058906837
+    },
+    "D-B3": {
+      "passed": 8,
+      "pairs": 20,
+      "pass_rate": 0.4,
+      "mean_own_iou": 0.18504894398822896,
+      "mean_cross_iou": 0.022179014008801227,
+      "own_cross_margin": 0.16286992997942773
+    },
+    "D-B4": {
+      "passed": 19,
+      "pairs": 20,
+      "pass_rate": 0.95,
+      "mean_own_iou": 0.3077584197204076,
+      "mean_cross_iou": 0.0021517996865298905,
+      "own_cross_margin": 0.30560662003387773
+    }
+  },
+  "training_performed": true,
+  "test_split_used": false,
+  "runtime_seconds": 24.2
+}
