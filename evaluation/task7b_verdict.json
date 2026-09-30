@@ -1,0 +1,446 @@
+{
+  "_doc": "Task 7B sections 23-24. L3 compositional-semantic hardening of the same Qwen3-VL-2B text-only 20-class ProgramHead: frozen evaluation packs, exact/normalized leakage audit, the frozen training protocol, six evaluation sets, scope safety and the frozen end-to-end regression. The verdict follows the fixed section-24 priority order.",
+  "task": "7B",
+  "verdict": "L3_PARSER_CANONICAL_REGRESSION",
+  "reason": "canonical gates fail on ['4_full_val_accuracy', '5_full_val_macro_f1', '6_full_val_class_recall']",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "BASELINE_PARSER_UNAVAILABLE",
+    "PARSER_TRAINING_FAILED",
+    "L3_PARSER_CANONICAL_REGRESSION",
+    "L3_PARSER_COMPOSITIONAL_ROBUSTNESS_FAIL",
+    "END_TO_END_REGRESSION",
+    "L3_PROGRAMHEAD_HARDENING_PASS"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "baseline_parser_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "expected_baseline_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "baseline_matches": true,
+    "architecture": "Qwen3-VL-2B",
+    "text_only": true,
+    "image_input": false,
+    "classes": 20,
+    "trainable_policy": "Task 6M policy: LoRA adapters + ProgramHead (backbone frozen)",
+    "leakage_verdict": "LEAKAGE_FREE",
+    "exact_overlap": 0,
+    "normalized_overlap": 0,
+    "leakage_zero": true,
+    "augmentations": 4800,
+    "keyword_or_regex_override": false,
+    "hyperparameter_sweep": false,
+    "training_performed": true,
+    "test_split_used": false,
+    "clean": true
+  },
+  "canonical_gates": {
+    "1_baseline_parser_hash": {
+      "passed": true,
+      "measured": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+      "required": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e"
+    },
+    "2_architecture": {
+      "passed": true
+    },
+    "3_leakage_zero": {
+      "passed": true,
+      "measured": {
+        "exact": 0,
+        "normalized": 0
+      }
+    },
+    "4_full_val_accuracy": {
+      "required": 0.995,
+      "measured": 0.7129294259686094,
+      "passed": false
+    },
+    "5_full_val_macro_f1": {
+      "required": 0.995,
+      "measured": 0.7938605203581365,
+      "passed": false
+    },
+    "6_full_val_class_recall": {
+      "required": 0.98,
+      "measured": 0.0,
+      "passed": false
+    },
+    "7_z_minival240": {
+      "required": "240/240",
+      "measured": 240,
+      "passed": true
+    },
+    "8_z_paired_members": {
+      "required": "40/40",
+      "measured": 40,
+      "passed": true
+    }
+  },
+  "canonical_gates_passed": false,
+  "compositional_gates": {
+    "9_fixed24_total": {
+      "required": ">= 22/24",
+      "measured": 21,
+      "passed": false
+    },
+    "10_fixed24_compact": {
+      "required": "8/8",
+      "measured": 7,
+      "passed": false
+    },
+    "11_fixed24_every_class": {
+      "required": ">= 5/6",
+      "measured": {
+        "largest_to_left_of_to_nearest": {
+          "correct": 5,
+          "total": 6
+        },
+        "largest_to_right_of_to_nearest": {
+          "correct": 4,
+          "total": 6
+        },
+        "largest_to_above_to_nearest": {
+          "correct": 6,
+          "total": 6
+        },
+        "largest_to_below_to_nearest": {
+          "correct": 6,
+          "total": 6
+        }
+      },
+      "passed": false
+    },
+    "12_minimal_pairs": {
+      "required": "96/96",
+      "measured": 73,
+      "passed": false
+    },
+    "13_stress_accuracy": {
+      "required": 0.97,
+      "measured": 0.828125,
+      "passed": false
+    },
+    "14_stress_macro_f1": {
+      "required": 0.97,
+      "measured": 0.6029982573018821,
+      "passed": false
+    },
+    "15_stress_class_recall": {
+      "required": 0.9,
+      "measured": 0.0,
+      "passed": false
+    },
+    "16_stress_l3_recall": {
+      "required": 0.95,
+      "measured": 0.8333333333333333,
+      "passed": false
+    }
+  },
+  "compositional_gates_passed": false,
+  "safety_gates": {
+    "17_scope_controls": {
+      "passed": true
+    },
+    "18_no_keyword_override": {
+      "passed": true
+    },
+    "19_end_to_end_regression": {
+      "passed": true
+    },
+    "20_no_test_split": {
+      "passed": true
+    }
+  },
+  "all_criteria_passed": false,
+  "gates": {
+    "full_val_accuracy": 0.995,
+    "full_val_macro_f1": 0.995,
+    "full_val_class_recall": 0.98,
+    "z_minival": 240,
+    "z_paired": 40,
+    "fixed24_total": 22,
+    "fixed24_compact": 8,
+    "fixed24_class": 5,
+    "minimal_pairs": 96,
+    "stress_accuracy": 0.97,
+    "stress_macro_f1": 0.97,
+    "stress_class_recall": 0.9,
+    "stress_l3_recall": 0.95
+  },
+  "data": {
+    "cleaned_v02_train_rows": 0,
+    "dropped_v02_train_records": 12778,
+    "augmentations": 4800,
+    "allocation": {
+      "largest_to_left_of_to_nearest": 600,
+      "largest_to_right_of_to_nearest": 600,
+      "largest_to_above_to_nearest": 600,
+      "largest_to_below_to_nearest": 600,
+      "largest_to_left_of": 300,
+      "largest_to_right_of": 300,
+      "largest_to_above": 300,
+      "largest_to_below": 300,
+      "largest_to_nearest": 400,
+      "smallest_to_nearest": 200,
+      "smallest_to_left_of": 150,
+      "smallest_to_right_of": 150,
+      "smallest_to_above": 150,
+      "smallest_to_below": 150
+    },
+    "class_counts": {
+      "leftmost": 0,
+      "rightmost": 0,
+      "topmost": 0,
+      "bottommost": 0,
+      "largest": 0,
+      "smallest": 0,
+      "largest_to_nearest": 400,
+      "smallest_to_nearest": 200,
+      "largest_to_above": 300,
+      "largest_to_below": 300,
+      "largest_to_left_of": 300,
+      "largest_to_right_of": 300,
+      "smallest_to_above": 150,
+      "smallest_to_below": 150,
+      "smallest_to_left_of": 150,
+      "smallest_to_right_of": 150,
+      "largest_to_above_to_nearest": 600,
+      "largest_to_below_to_nearest": 600,
+      "largest_to_left_of_to_nearest": 600,
+      "largest_to_right_of_to_nearest": 600
+    },
+    "internal_split": {
+      "train_rows": 4399,
+      "holdout_rows": 401,
+      "normalized_overlap": 0
+    }
+  },
+  "training": {
+    "selected_epoch": 1,
+    "selection_metrics": {
+      "holdout_macro_f1": 0.7,
+      "holdout_accuracy": 1.0,
+      "holdout_l3_macro_recall": 1.0
+    },
+    "protocol": {
+      "optimizer": "AdamW",
+      "learning_rate": 0.0002,
+      "weight_decay": 0.0001,
+      "effective_batch_size": 32,
+      "max_epochs": 8,
+      "early_stopping_patience": 2,
+      "amp": "bfloat16",
+      "sweep": false,
+      "seed": 20261001,
+      "microbatch": 16,
+      "accumulation": 2,
+      "actual_effective_batch": 32,
+      "grad_clip_norm": 1.0,
+      "selection": [
+        "internal-holdout macro F1",
+        "exact accuracy",
+        "L3-four-class macro recall"
+      ]
+    },
+    "checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7b\\program_parser_l3_hardened_v1.pt",
+      "exists": true,
+      "sha256": "2a285e4ac91051cb2cfcea370d384fb50f29927832ad30d3baf09c672cf48eb4",
+      "bytes": 70090243,
+      "committed": false
+    },
+    "wall_seconds": 417.9,
+    "peak_vram_gb": 6.922
+  },
+  "evaluation": {
+    "full_val": {
+      "accuracy": 0.7129294259686094,
+      "macro_f1": 0.7938605203581365,
+      "min_class_recall": 0.0,
+      "correct": 12991,
+      "count": 18222,
+      "zero_recall_classes": [
+        "leftmost"
+      ]
+    },
+    "z_minival240": {
+      "correct": 240,
+      "count": 240
+    },
+    "z_paired_members": {
+      "correct": 40,
+      "count": 40
+    },
+    "fixed24": {
+      "correct": 21,
+      "compact": {
+        "correct": 7,
+        "total": 8
+      },
+      "per_program": {
+        "largest_to_left_of_to_nearest": {
+          "correct": 5,
+          "total": 6
+        },
+        "largest_to_right_of_to_nearest": {
+          "correct": 4,
+          "total": 6
+        },
+        "largest_to_above_to_nearest": {
+          "correct": 6,
+          "total": 6
+        },
+        "largest_to_below_to_nearest": {
+          "correct": 6,
+          "total": 6
+        }
+      }
+    },
+    "minimal_pairs": {
+      "correct": 73,
+      "total": 96,
+      "by_contrast_group": {
+        "M1": {
+          "correct": 29,
+          "total": 48
+        },
+        "M2": {
+          "correct": 16,
+          "total": 16
+        },
+        "M3": {
+          "correct": 12,
+          "total": 16
+        },
+        "M4": {
+          "correct": 16,
+          "total": 16
+        }
+      }
+    },
+    "stress": {
+      "accuracy": 0.828125,
+      "macro_f1": 0.6029982573018821,
+      "l3_macro_recall": 0.8333333333333333,
+      "min_class_recall": 0.0,
+      "correct": 159,
+      "count": 192,
+      "per_class_recall": {
+        "leftmost": 0.0,
+        "rightmost": 0.5,
+        "topmost": 0.5,
+        "bottommost": 1.0,
+        "largest": 0.875,
+        "smallest": 0.375,
+        "largest_to_nearest": 0.625,
+        "smallest_to_nearest": 1.0,
+        "largest_to_above": 1.0,
+        "largest_to_below": 1.0,
+        "largest_to_left_of": 0.9166666666666666,
+        "largest_to_right_of": 1.0,
+        "smallest_to_above": null,
+        "smallest_to_below": null,
+        "smallest_to_left_of": null,
+        "smallest_to_right_of": null,
+        "largest_to_above_to_nearest": 0.7916666666666666,
+        "largest_to_below_to_nearest": 0.9166666666666666,
+        "largest_to_left_of_to_nearest": 0.875,
+        "largest_to_right_of_to_nearest": 0.75
+      }
+    }
+  },
+  "scope_safety": {
+    "out_of_scope_controls_ok": true,
+    "ood_ok": true,
+    "cli": {
+      "task6t_helper_checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+      "default_parser_checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+      "default_parser_checkpoint_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+      "updated_to_task7b": false,
+      "cli_source_uses_l3_helper": true,
+      "supported_l3_programs": [
+        "largest_to_left_of_to_nearest",
+        "largest_to_right_of_to_nearest",
+        "largest_to_above_to_nearest",
+        "largest_to_below_to_nearest"
+      ],
+      "domain_guard_changed": false,
+      "u_c1_resolver_changed": false,
+      "fields_changed": false,
+      "z_b3_changed": false,
+      "keyword_or_regex_override": false,
+      "canonical_gates_passed": false
+    },
+    "controls": [
+      {
+        "prompt": "分割面积最大的建筑物右侧的建筑物。",
+        "expected_program": "largest_to_right_of",
+        "parsed_program": "largest_to_right_of",
+        "exit_code": 5,
+        "semantically_correct_before_exit": true
+      },
+      {
+        "prompt": "segment the building to the left of the largest building",
+        "expected_program": "largest_to_left_of",
+        "parsed_program": "largest_to_left_of",
+        "exit_code": 5,
+        "semantically_correct_before_exit": true
+      },
+      {
+        "prompt": "分割距离面积最大的建筑物最近的建筑物。",
+        "expected_program": "largest_to_nearest",
+        "parsed_program": "largest_to_nearest",
+        "exit_code": 5,
+        "semantically_correct_before_exit": true
+      },
+      {
+        "prompt": "segment the nearest building to the largest building",
+        "expected_program": "largest_to_nearest",
+        "parsed_program": "largest_to_nearest",
+        "exit_code": 5,
+        "semantically_correct_before_exit": true
+      }
+    ]
+  },
+  "end_to_end": {
+    "passed": true,
+    "measured": {
+      "strict_all_miou": 0.21700369907681483,
+      "strict_all_dice": 0.29305023470480596,
+      "answered_only_miou": 0.21975058134361,
+      "abstentions": 3,
+      "paired_passed": 8,
+      "paired_pairs": 20,
+      "own_cross_margin": 0.19949275176250805,
+      "parser_correct": 240
+    },
+    "task7a_reference": {
+      "strict_all_miou": 0.21700369907681483,
+      "answered_only_miou": 0.21975058134361,
+      "abstentions": 3,
+      "paired_passed": 8,
+      "own_cross_margin": 0.19949275176250805
+    },
+    "deltas": {
+      "strict_all_miou": 0.0,
+      "answered_only_miou": 0.0,
+      "own_cross_margin": 0.0
+    },
+    "tolerance": 1e-06
+  },
+  "cli_default_parser": {
+    "updated": false,
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt"
+  },
+  "interpretation_boundary": {
+    "parser_claimed_as_novelty": false,
+    "downstream_architecture_changed": false,
+    "reference_hardening_reopened": false,
+    "attention_or_global_competition_added": false,
+    "full_training_or_test_started": false,
+    "task7c_decided": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7B 的 L3 ProgramHead 组合语义泛化结果决定下一步，不自行重新开启 reference hardening、修改 Z-B3 或进行 attention/global competition 改造。",
+  "runtime_seconds": 0.35
+}
