@@ -1,0 +1,356 @@
+{
+  "_doc": "Task 6W sections 14-15. ProposalQualityEstimator v0.1 training: tile-disjoint 80/20 train/internal-holdout split, BCEWithLogits with train-only pos_weight, checkpoint selected by internal-holdout AUROC (tie-break F1@0.50, then lower BCE). Threshold 0.50 is frozen; no sweep, no augmentation, no scheduler.",
+  "task": "6W",
+  "stage": "F-quality-training",
+  "data": {
+    "dataset": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6w\\quality_dataset\\quality_rows.npz",
+    "manifest": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6w_quality_dataset_manifest.json",
+    "tiles": {
+      "unique": 548,
+      "train": 420,
+      "holdout": 128,
+      "overlap": 0
+    },
+    "proposals": {
+      "total": 5246,
+      "train": 4153,
+      "holdout": 1093
+    },
+    "class_counts": {
+      "train": {
+        "positives": 2651,
+        "negatives": 1502
+      },
+      "holdout": {
+        "positives": 686,
+        "negatives": 407
+      }
+    },
+    "pos_weight_train_only": 0.5665786495662014,
+    "split_by": "tile id hash, seed 20260930, 80/20"
+  },
+  "architecture": {
+    "visual_branch": [
+      "Linear(512,64)",
+      "LayerNorm(64)",
+      "GELU"
+    ],
+    "geometry_branch": [
+      "Linear(8,16)",
+      "GELU"
+    ],
+    "concat_dim": 80,
+    "head": [
+      "Linear(80,32)",
+      "GELU",
+      "Linear(32,1)"
+    ],
+    "attention": false,
+    "cnn": false,
+    "transformer": false,
+    "gnn": false,
+    "geometry_feature_names": [
+      "confidence",
+      "log_area",
+      "area_ratio",
+      "bbox_extent_ratio",
+      "width_ratio",
+      "height_ratio",
+      "fill_ratio",
+      "abs_log_aspect"
+    ],
+    "visual_dim": 512,
+    "geometry_dim": 8,
+    "total_parameters": 35729
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "lr": 0.0005,
+    "weight_decay": 0.0001,
+    "batch_proposals": 256,
+    "max_epochs": 40,
+    "early_stopping_patience": 5,
+    "seed": 20260930,
+    "amp": true,
+    "augmentation": false,
+    "scheduler": "none",
+    "sweep": false,
+    "loss": "BCEWithLogitsLoss(pos_weight = N_negative / max(1, N_positive))",
+    "selection": [
+      "internal-holdout AUROC",
+      "tie-break F1@0.50",
+      "tie-break lower BCE"
+    ]
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_bce": 0.4843395527671365,
+      "holdout_auroc": 0.6663777480104011,
+      "holdout_auprc": 0.7728188728043701,
+      "holdout_f1": 0.6655948553054662,
+      "holdout_accuracy": 0.6193961573650503
+    },
+    {
+      "epoch": 2,
+      "train_bce": 0.4508506655693054,
+      "holdout_auroc": 0.7197118931812809,
+      "holdout_auprc": 0.8227397263969546,
+      "holdout_f1": 0.7064439140811455,
+      "holdout_accuracy": 0.6623970722781336
+    },
+    {
+      "epoch": 3,
+      "train_bce": 0.41774672269821167,
+      "holdout_auroc": 0.7582323908854521,
+      "holdout_auprc": 0.8493494341296469,
+      "holdout_f1": 0.6989966555183947,
+      "holdout_accuracy": 0.6706312900274474
+    },
+    {
+      "epoch": 4,
+      "train_bce": 0.3938309585346895,
+      "holdout_auroc": 0.7893281566750955,
+      "holdout_auprc": 0.8692714517847666,
+      "holdout_f1": 0.7644305772230888,
+      "holdout_accuracy": 0.7236962488563586
+    },
+    {
+      "epoch": 5,
+      "train_bce": 0.38286701545995827,
+      "holdout_auroc": 0.8000336673806061,
+      "holdout_auprc": 0.8739648063180662,
+      "holdout_f1": 0.757312252964427,
+      "holdout_accuracy": 0.7191216834400732
+    },
+    {
+      "epoch": 6,
+      "train_bce": 0.37966781854629517,
+      "holdout_auroc": 0.8061009591621836,
+      "holdout_auprc": 0.8786711770023381,
+      "holdout_f1": 0.7733952049497294,
+      "holdout_accuracy": 0.7319304666056725
+    },
+    {
+      "epoch": 7,
+      "train_bce": 0.35639957119436827,
+      "holdout_auroc": 0.8164303980630512,
+      "holdout_auprc": 0.8857239134918801,
+      "holdout_f1": 0.7764705882352942,
+      "holdout_accuracy": 0.7392497712717292
+    },
+    {
+      "epoch": 8,
+      "train_bce": 0.34582237110418435,
+      "holdout_auroc": 0.8172505927607968,
+      "holdout_auprc": 0.8822007533974755,
+      "holdout_f1": 0.7632620744259699,
+      "holdout_accuracy": 0.7264409881061299
+    },
+    {
+      "epoch": 9,
+      "train_bce": 0.33583100753671985,
+      "holdout_auroc": 0.8251588455670088,
+      "holdout_auprc": 0.8897693312436401,
+      "holdout_f1": 0.7899543378995434,
+      "holdout_accuracy": 0.747483989021043
+    },
+    {
+      "epoch": 10,
+      "train_bce": 0.3237711296362035,
+      "holdout_auroc": 0.8312977700732803,
+      "holdout_auprc": 0.8925452277503135,
+      "holdout_f1": 0.7752184273232725,
+      "holdout_accuracy": 0.7410795974382434
+    },
+    {
+      "epoch": 11,
+      "train_bce": 0.3111062838750727,
+      "holdout_auroc": 0.8339804156130687,
+      "holdout_auprc": 0.8925244215330428,
+      "holdout_f1": 0.8115942028985509,
+      "holdout_accuracy": 0.7621225983531564
+    },
+    {
+      "epoch": 12,
+      "train_bce": 0.300659121835933,
+      "holdout_auroc": 0.8300406157549015,
+      "holdout_auprc": 0.8893761410708351,
+      "holdout_f1": 0.8079763663220089,
+      "holdout_accuracy": 0.7621225983531564
+    },
+    {
+      "epoch": 13,
+      "train_bce": 0.28558406584403095,
+      "holdout_auroc": 0.8274869091195621,
+      "holdout_auprc": 0.8877277540956979,
+      "holdout_f1": 0.8160112359550562,
+      "holdout_accuracy": 0.7602927721866423
+    },
+    {
+      "epoch": 14,
+      "train_bce": 0.2787456643932006,
+      "holdout_auroc": 0.8371107656821942,
+      "holdout_auprc": 0.8937641108463219,
+      "holdout_f1": 0.7851500789889416,
+      "holdout_accuracy": 0.7511436413540714
+    },
+    {
+      "epoch": 15,
+      "train_bce": 0.26715031441520243,
+      "holdout_auroc": 0.8392955637853597,
+      "holdout_auprc": 0.8960136888082825,
+      "holdout_f1": 0.8139880952380952,
+      "holdout_accuracy": 0.7712717291857274
+    },
+    {
+      "epoch": 16,
+      "train_bce": 0.2554150854839998,
+      "holdout_auroc": 0.821996260771771,
+      "holdout_auprc": 0.8828947184236732,
+      "holdout_f1": 0.8039631988676574,
+      "holdout_accuracy": 0.7465690759377859
+    },
+    {
+      "epoch": 17,
+      "train_bce": 0.2502196492517696,
+      "holdout_auroc": 0.8371340463177198,
+      "holdout_auprc": 0.8923956844112471,
+      "holdout_f1": 0.8012139605462821,
+      "holdout_accuracy": 0.7602927721866423
+    },
+    {
+      "epoch": 18,
+      "train_bce": 0.2367482378202326,
+      "holdout_auroc": 0.835481121195407,
+      "holdout_auprc": 0.8918009005861941,
+      "holdout_f1": 0.8068350668647845,
+      "holdout_accuracy": 0.7621225983531564
+    },
+    {
+      "epoch": 19,
+      "train_bce": 0.22821474513586829,
+      "holdout_auroc": 0.8438012621686091,
+      "holdout_auprc": 0.8951996373851656,
+      "holdout_f1": 0.8251181634031061,
+      "holdout_accuracy": 0.7630375114364135
+    },
+    {
+      "epoch": 20,
+      "train_bce": 0.22759108771296108,
+      "holdout_auroc": 0.8376515927536335,
+      "holdout_auprc": 0.8918517613624035,
+      "holdout_f1": 0.7968992248062016,
+      "holdout_accuracy": 0.7602927721866423
+    },
+    {
+      "epoch": 21,
+      "train_bce": 0.21335635641041925,
+      "holdout_auroc": 0.841741821333658,
+      "holdout_auprc": 0.8939691128229486,
+      "holdout_f1": 0.8161764705882353,
+      "holdout_accuracy": 0.7712717291857274
+    },
+    {
+      "epoch": 22,
+      "train_bce": 0.2035647955010919,
+      "holdout_auroc": 0.8405634630124426,
+      "holdout_auprc": 0.8934494450156659,
+      "holdout_f1": 0.8254887762490949,
+      "holdout_accuracy": 0.7795059469350412
+    },
+    {
+      "epoch": 23,
+      "train_bce": 0.18490753191358902,
+      "holdout_auroc": 0.8373041740388679,
+      "holdout_auprc": 0.8912848877085733,
+      "holdout_f1": 0.8114630467571643,
+      "holdout_accuracy": 0.7712717291857274
+    },
+    {
+      "epoch": 24,
+      "train_bce": 0.17962832485928254,
+      "holdout_auroc": 0.8350728146646514,
+      "holdout_auprc": 0.8893086679859428,
+      "holdout_f1": 0.7662337662337663,
+      "holdout_accuracy": 0.7365050320219579
+    }
+  ],
+  "selected_epoch": 19,
+  "internal_holdout": {
+    "proposals": 1093,
+    "positives": 686,
+    "negatives": 407,
+    "auroc": 0.8438012621686091,
+    "auprc": 0.8951996373851656,
+    "threshold": 0.5,
+    "accuracy": 0.7630375114364135,
+    "precision": 0.7685534591194969,
+    "recall": 0.89067055393586,
+    "f1": 0.8251181634031061,
+    "tp": 611,
+    "fp": 184,
+    "fn": 75,
+    "tn": 223,
+    "confusion_matrix": [
+      [
+        223,
+        184
+      ],
+      [
+        75,
+        611
+      ]
+    ],
+    "probabilities_mean": 0.6958635449409485
+  },
+  "internal_train_final": {
+    "proposals": 4153,
+    "positives": 2651,
+    "negatives": 1502,
+    "auroc": 0.9517616646935232,
+    "auprc": 0.9736854685092411,
+    "threshold": 0.5,
+    "accuracy": 0.8702143029135565,
+    "precision": 0.8626373626373627,
+    "recall": 0.947566955865711,
+    "f1": 0.9031098328240158,
+    "tp": 2512,
+    "fp": 400,
+    "fn": 139,
+    "tn": 1102,
+    "confusion_matrix": [
+      [
+        1102,
+        400
+      ],
+      [
+        139,
+        2512
+      ]
+    ],
+    "probabilities_mean": 0.6838595867156982
+  },
+  "gates": {
+    "auroc_min": 0.8,
+    "f1_min": 0.65,
+    "measured_auroc": 0.8438012621686091,
+    "measured_f1": 0.8251181634031061,
+    "no_tile_overlap": true,
+    "passed": true
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6w\\proposal_quality_v01.pt",
+    "exists": true,
+    "sha256": "ebf9e6bddb1bdb2eb7d76d8db3bdbc0cb738fcb5eb1b7cbb87c98892b52834d9",
+    "committed": false
+  },
+  "peak_vram_gb": 0.073,
+  "wall_seconds": 8.8,
+  "training_performed": true,
+  "refval_used_for_training": false,
+  "calib_used_for_training": false,
+  "test_split_used": false,
+  "dataset_manifest_hash": 512,
+  "verdict": "QUALITY_ESTIMATOR_ADEQUATE"
+}

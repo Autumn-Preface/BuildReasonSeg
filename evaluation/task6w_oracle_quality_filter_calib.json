@@ -1,0 +1,175 @@
+{
+  "_doc": "Task 6W section 7. W0 oracle proposal-quality-filter mechanism diagnostic on the train-only U-Calib200 split: does perfect knowledge of proposal quality (q_gt = max IoU with any native GT building instance on the tile) make the quality-filter + deterministic-area mechanism useful? GT is diagnostic metadata only and never enters inference. No estimator is trained unless every W0 condition passes.",
+  "task": "6W",
+  "stage": "C-W0-oracle-quality-diagnostic",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "retrained": false
+  },
+  "config": {
+    "id": "U-C1",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false
+  },
+  "calibration_split": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6u_reference_train_split.json",
+    "records": 200,
+    "tiles": 195,
+    "by_family": {
+      "largest": 100,
+      "smallest": 100
+    },
+    "train_only": true
+  },
+  "quality_definition": "q_gt = max IoU(proposal_mask, every native GT building instance on tile)",
+  "quality_threshold": 0.5,
+  "q_gt_histogram": {
+    "0.0": 371,
+    "0.1": 49,
+    "0.2": 72,
+    "0.3": 95,
+    "0.4": 120,
+    "0.5": 161,
+    "0.6": 192,
+    "0.7": 315,
+    "0.8": 448,
+    "0.9": 62
+  },
+  "baseline_u_c1_deterministic": {
+    "overall": {
+      "records": 200,
+      "answered": 200,
+      "selected_reference_miou": 0.47892758193655594,
+      "selected_reference_dice": 0.5420218104263393,
+      "precision_at_0_5": 0.58,
+      "centroid_median": 0.007844220675224107,
+      "centroid_p90": 0.28483532082325147,
+      "abstention_rate": 0.0,
+      "REFERENCE_NOT_COVERED_IOU50": 8,
+      "REFERENCE_SELECTION_WRONG": 76,
+      "QUALITY_FILTER_ALL_REJECTED": 0,
+      "REFERENCE_OK": 116
+    },
+    "largest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.6033834132806426,
+      "selected_reference_dice": 0.6837626600041007,
+      "precision_at_0_5": 0.71,
+      "centroid_median": 0.0058523205935597025,
+      "centroid_p90": 0.28061269949033446,
+      "abstention_rate": 0.0,
+      "REFERENCE_NOT_COVERED_IOU50": 2,
+      "REFERENCE_SELECTION_WRONG": 27,
+      "QUALITY_FILTER_ALL_REJECTED": 0,
+      "REFERENCE_OK": 71
+    },
+    "smallest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.35447175059246944,
+      "selected_reference_dice": 0.40028096084857795,
+      "precision_at_0_5": 0.45,
+      "centroid_median": 0.05057028592506145,
+      "centroid_p90": 0.3032957347276929,
+      "abstention_rate": 0.0,
+      "REFERENCE_NOT_COVERED_IOU50": 6,
+      "REFERENCE_SELECTION_WRONG": 49,
+      "QUALITY_FILTER_ALL_REJECTED": 0,
+      "REFERENCE_OK": 45
+    }
+  },
+  "oracle_quality_filter": {
+    "overall": {
+      "records": 200,
+      "answered": 200,
+      "selected_reference_miou": 0.6575339416895107,
+      "selected_reference_dice": 0.7374271515692201,
+      "precision_at_0_5": 0.845,
+      "centroid_median": 0.003405603790761067,
+      "centroid_p90": 0.14768753527592382,
+      "abstention_rate": 0.0,
+      "REFERENCE_NOT_COVERED_IOU50": 8,
+      "REFERENCE_SELECTION_WRONG": 23,
+      "QUALITY_FILTER_ALL_REJECTED": 0,
+      "REFERENCE_OK": 169
+    },
+    "largest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.6443505202498683,
+      "selected_reference_dice": 0.7198747041338166,
+      "precision_at_0_5": 0.82,
+      "centroid_median": 0.004552477725451257,
+      "centroid_p90": 0.22104350293909128,
+      "abstention_rate": 0.0,
+      "REFERENCE_NOT_COVERED_IOU50": 2,
+      "REFERENCE_SELECTION_WRONG": 16,
+      "QUALITY_FILTER_ALL_REJECTED": 0,
+      "REFERENCE_OK": 82
+    },
+    "smallest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.6707173631291533,
+      "selected_reference_dice": 0.7549795990046235,
+      "precision_at_0_5": 0.87,
+      "centroid_median": 0.0028644204440861827,
+      "centroid_p90": 0.07873884165171402,
+      "abstention_rate": 0.0,
+      "REFERENCE_NOT_COVERED_IOU50": 6,
+      "REFERENCE_SELECTION_WRONG": 7,
+      "QUALITY_FILTER_ALL_REJECTED": 0,
+      "REFERENCE_OK": 87
+    }
+  },
+  "gate_constants": {
+    "overall_miou_delta_min": 0.08,
+    "smallest_miou_delta_min": 0.1,
+    "selection_wrong_ratio_max": 0.6,
+    "abstention_rate_max": 0.1
+  },
+  "gate": {
+    "1_overall_miou": {
+      "requirement": "oracle overall mIoU >= baseline + 0.08",
+      "threshold": 0.5589275819365559,
+      "baseline": 0.47892758193655594,
+      "measured": 0.6575339416895107,
+      "delta": 0.1786063597529548,
+      "passed": true
+    },
+    "2_smallest_miou": {
+      "requirement": "oracle smallest mIoU >= baseline smallest + 0.1",
+      "threshold": 0.45447175059246947,
+      "baseline": 0.35447175059246944,
+      "measured": 0.6707173631291533,
+      "delta": 0.3162456125366839,
+      "passed": true
+    },
+    "3_selection_wrong": {
+      "requirement": "oracle SELECTION_WRONG <= 0.6 * baseline",
+      "threshold": 45,
+      "baseline": 76,
+      "measured": 23,
+      "passed": true
+    },
+    "4_abstention": {
+      "requirement": "oracle abstention rate <= 0.1",
+      "threshold": 0.1,
+      "measured": 0.0,
+      "passed": true
+    }
+  },
+  "mechanism_gate_passed": true,
+  "training_allowed": true,
+  "estimator_trained": false,
+  "test_split_used": false,
+  "runtime_seconds": 7.4,
+  "verdict": "MECHANISM_FEASIBLE"
+}

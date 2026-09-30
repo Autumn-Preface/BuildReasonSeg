@@ -1,0 +1,121 @@
+{
+  "_doc": "Task 6W sections 8-10 and 14. Proposal-quality training dataset built from U-C1 proposals on the train-only U-RankerTrain tiles (deduplicated by tile id), using the common structural eligibility (no border touch, bbox extent <= 0.20; no smallest area floor). Labels are y_quality = 1 iff q_gt = max IoU with any native GT building instance on the tile >= 0.50; GT is training metadata only and never a model input. The 80/20 train/internal-holdout split is by tile-id hash with seed 20260930.",
+  "task": "6W",
+  "stage": "D-quality-dataset",
+  "seed": 20260930,
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "retrained": false
+  },
+  "config": {
+    "id": "U-C1",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false
+  },
+  "universe": {
+    "source_split": "U-RankerTrain (Task 6U)",
+    "references": 625,
+    "unique_tiles": 548,
+    "calib_tile_overlap": 0,
+    "refval_tile_overlap": 0,
+    "excluded_calib_overlapping_tiles": 36,
+    "excluded_refval_overlapping_tiles": 0,
+    "excluded_calib_tile_ids_sample": [
+      "1_1526",
+      "1_1566",
+      "1_1747",
+      "1_1929",
+      "1_2046"
+    ],
+    "no_calib_tile": true,
+    "no_refval_tile": true,
+    "test_split_used": false
+  },
+  "eligibility": {
+    "no_border_touch": true,
+    "bbox_extent_ratio_max": 0.2,
+    "smallest_area_floor_applied": false,
+    "rationale": "proposal quality is family-independent; family eligibility remains a later resolver rule"
+  },
+  "labels": {
+    "quality_threshold": 0.5,
+    "definition": "q_gt = max IoU(proposal_mask, any native GT building instance on the tile)",
+    "binary": "y_quality = 1 if q_gt >= 0.50 else 0",
+    "proposals": 5246,
+    "positives": 3337,
+    "negatives": 1909,
+    "positive_rate": 0.6361036980556615,
+    "q_gt_histogram": {
+      "0.0": 990,
+      "0.1": 144,
+      "0.2": 200,
+      "0.3": 244,
+      "0.4": 331,
+      "0.5": 443,
+      "0.6": 569,
+      "0.7": 919,
+      "0.8": 1244,
+      "0.9": 162
+    },
+    "q_gt_mean": 0.5382837057113647
+  },
+  "features": {
+    "geometry_dim": 8,
+    "geometry_names": [
+      "confidence",
+      "log_area",
+      "area_ratio",
+      "bbox_extent_ratio",
+      "width_ratio",
+      "height_ratio",
+      "fill_ratio",
+      "abs_log_aspect"
+    ],
+    "visual_dim": 512,
+    "visual_source": "frozen SAM2 256x64x64 inside-mean + one-cell-ring-mean",
+    "invalid_small_excluded": 93,
+    "ring_empty_using_zeros": 0
+  },
+  "split": {
+    "method": "tile-id hash, seed 20260930, 80/20",
+    "train_tiles": 420,
+    "holdout_tiles": 128,
+    "train_proposals": 4153,
+    "holdout_proposals": 1093,
+    "train_positives": 2651,
+    "train_negatives": 1502,
+    "holdout_positives": 686,
+    "holdout_negatives": 407,
+    "tile_overlap": 0,
+    "no_overlap": true,
+    "train_tile_hash": "d0c540acb185d9762916f0957388fe6671c69c9bb54a07bb0a992f6c27ad1b18",
+    "holdout_tile_hash": "fe45550ea819b813bb4d6b62df6e101821edb94f03793fcc7f1af1ff258688c4"
+  },
+  "dataset": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6w\\quality_dataset\\quality_rows.npz",
+    "bytes": 10093648,
+    "gitignored": true,
+    "arrays": {
+      "geometry": [
+        5246,
+        8
+      ],
+      "visual": [
+        5246,
+        512
+      ],
+      "labels": [
+        5246
+      ]
+    }
+  },
+  "per_tile_proposals_mean": 9.572992700729927,
+  "verdict": "QUALITY_DATASET_READY",
+  "runtime_seconds": 54.5
+}
