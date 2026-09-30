@@ -1,0 +1,136 @@
+{
+  "_doc": "Task 6X sections 11-13. Frozen-asset audit, the train-only U-Calib200 comparison of exactly the four predeclared refinement options, the frozen option and the single verdict. Support infrastructure, not a claimed novelty; no model was trained. On the STOP path (X-C0 wins) no RefVal/MiniVal/Paired evaluation file is produced.",
+  "task": "6X",
+  "verdict": "SAM2_REFINEMENT_NOT_HELPFUL",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "FROZEN_ASSET_UNAVAILABLE",
+    "SAM2_REFINEMENT_NOT_HELPFUL",
+    "SAM2_REFINEMENT_PARTIAL",
+    "SAM2_REFINEMENT_USEFUL"
+  ],
+  "reason": "X-C0 (no refinement) wins the train-only U-Calib200 ranking ['X-C0', 'X-C1', 'X-C2', 'X-C3']; the best refinement option X-C1 reaches mIoU 0.4744 vs baseline 0.4789 -> task stops, no RefVal/MiniVal/Paired evaluation is run",
+  "protocol": {
+    "frozen_non_task6x_unchanged": true,
+    "changed_paths": "",
+    "asset_audit_verdict": "FROZEN_ASSETS_VERIFIED",
+    "sam2_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "sam2_sha256_matches": true,
+    "sam2_probe_masks": [
+      3,
+      512,
+      512
+    ],
+    "proposal_sha256_matches": true,
+    "config_is_u_c1": true,
+    "training_performed": false,
+    "ranker_used": false,
+    "quality_estimator_used": false,
+    "sam_quality_threshold": null,
+    "point_or_mask_prompt": false,
+    "tta_or_tiling": false,
+    "test_split_used": false,
+    "options_evaluated": 4,
+    "fourth_option_added": false,
+    "clean": true
+  },
+  "stop_rule": {
+    "triggered": true,
+    "rule": "if X-C0 (no refinement) wins the U-Calib200 ranking the task ends with SAM2_REFINEMENT_NOT_HELPFUL",
+    "refval_minival_paired_evaluated": false,
+    "forbidden_files_present": [],
+    "forbidden_files_absent": true
+  },
+  "headline": {
+    "frozen_option": "X-C0",
+    "ranking": [
+      "X-C0",
+      "X-C1",
+      "X-C2",
+      "X-C3"
+    ],
+    "baseline": {
+      "overall_miou": 0.47892758193655594,
+      "smallest_miou": 0.3544717505924694,
+      "largest_miou": 0.6033834132806426,
+      "abstention_rate": 0.0
+    },
+    "options": {
+      "X-C0": {
+        "overall_miou": 0.47892758193655594,
+        "smallest_miou": 0.3544717505924694,
+        "largest_miou": 0.6033834132806426,
+        "precision_at_0_5": 0.58,
+        "centroid_median": 0.007844220675224107,
+        "abstention_rate": 0.0,
+        "mean_sam2_calls_per_tile": 0.0,
+        "mean_wall_time_per_tile": 3.938461677768292e-07,
+        "empty_refined_masks": 0
+      },
+      "X-C1": {
+        "overall_miou": 0.4744167193292019,
+        "smallest_miou": 0.3501927205669637,
+        "largest_miou": 0.59864071809144,
+        "precision_at_0_5": 0.57,
+        "centroid_median": 0.006100804935043596,
+        "abstention_rate": 0.0,
+        "mean_sam2_calls_per_tile": 9.666666666666666,
+        "mean_wall_time_per_tile": 0.171776090769214,
+        "empty_refined_masks": 0
+      },
+      "X-C2": {
+        "overall_miou": 0.42839045000032044,
+        "smallest_miou": 0.32766615205678895,
+        "largest_miou": 0.5291147479438518,
+        "precision_at_0_5": 0.525,
+        "centroid_median": 0.007504878084372895,
+        "abstention_rate": 0.0,
+        "mean_sam2_calls_per_tile": 9.666666666666666,
+        "mean_wall_time_per_tile": 0.12590153897437678,
+        "empty_refined_masks": 0
+      },
+      "X-C3": {
+        "overall_miou": 0.3740769178946014,
+        "smallest_miou": 0.3007812764634642,
+        "largest_miou": 0.44811291934019454,
+        "precision_at_0_5": 0.45226130653266333,
+        "centroid_median": 0.009809140274082206,
+        "abstention_rate": 0.005,
+        "mean_sam2_calls_per_tile": 9.666666666666666,
+        "mean_wall_time_per_tile": 0.13417810666668606,
+        "empty_refined_masks": 0
+      }
+    },
+    "deltas_vs_baseline": {
+      "overall_miou": 0.0,
+      "smallest_miou": 0.0,
+      "largest_miou": 0.0,
+      "abstention_rate": 0.0
+    },
+    "best_refinement_option": "X-C1",
+    "best_refinement_overall_miou": 0.4744167193292019,
+    "baseline_buckets": {
+      "NO_PROPOSALS": 0,
+      "NO_ELIGIBLE_PROPOSALS": 0,
+      "REFINEMENT_EMPTY": 0,
+      "REFERENCE_NOT_COVERED_IOU50": 0,
+      "REFERENCE_SELECTION_WRONG": 84,
+      "SELECTED_MASK_GEOMETRY_POOR": 0,
+      "REFERENCE_OK": 116
+    }
+  },
+  "interpretation_boundary": {
+    "refinement_claimed_as_novelty": false,
+    "sam_quality_threshold_used": false,
+    "point_or_mask_prompt_used": false,
+    "box_expansion_beyond_predeclared": false,
+    "tta_or_tiling_added": false,
+    "u_c1_changed": false,
+    "yolo_or_sam2_retrained": false,
+    "ranker_or_quality_estimator_used": false,
+    "nearest_or_l3_started": false,
+    "task6y_chosen": false
+  },
+  "test_split_used": false,
+  "runtime_seconds": 0.05
+}

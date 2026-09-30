@@ -1,0 +1,340 @@
+{
+  "_doc": "Task 6X sections 4-12. Train-only U-Calib200 calibration of exactly the four predeclared refinement options (X-C0 no refinement, X-C1 exact box single-mask, X-C2 exact box multimask, X-C3 10%-expanded box multimask) over frozen U-C1 proposals and the frozen SAM2.1 image predictor, with the unchanged Task 6Q family eligibility and the literal largest/smallest rule. GT reference masks score the result only.",
+  "task": "6X",
+  "stage": "D-E-calibration-refinement",
+  "calibration_split": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6u_reference_train_split.json",
+    "records": 200,
+    "tiles": 195,
+    "train_only": true,
+    "by_family": {
+      "largest": 100,
+      "smallest": 100
+    }
+  },
+  "options": {
+    "options": {
+      "X-C0": "no refinement (U-C1 baseline)",
+      "X-C1": "exact box, single-mask SAM2",
+      "X-C2": "exact box, multimask SAM2 (max predicted quality)",
+      "X-C3": "10% expanded box, multimask SAM2 (max predicted quality)"
+    },
+    "option_count": 4,
+    "box_expansion_fraction": 0.1,
+    "sam_quality_threshold": null,
+    "sam_quality_score_used_as": "selection tie-break only (recorded, never thresholded)",
+    "point_prompt": false,
+    "mask_input": false,
+    "tta": false,
+    "tiling": false,
+    "returns_logits": false,
+    "training_performed": false
+  },
+  "results": {
+    "X-C0": {
+      "option": "X-C0",
+      "description": "no refinement (U-C1 baseline)",
+      "refinement": false,
+      "overall": {
+        "records": 200,
+        "answered": 200,
+        "selected_reference_miou": 0.47892758193655594,
+        "selected_reference_dice": 0.5420218104263393,
+        "precision_at_0_5": 0.58,
+        "centroid_error_mean": 0.07973731997611061,
+        "centroid_error_median": 0.007844220675224107,
+        "centroid_error_p90": 0.28483532082325147,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 84,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 116
+        }
+      },
+      "largest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.6033834132806426,
+        "selected_reference_dice": 0.6837626600041008,
+        "precision_at_0_5": 0.71,
+        "centroid_error_mean": 0.06742771904734371,
+        "centroid_error_median": 0.0058523205935597025,
+        "centroid_error_p90": 0.28061269949033446,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 29,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 71
+        }
+      },
+      "smallest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.3544717505924694,
+        "selected_reference_dice": 0.40028096084857795,
+        "precision_at_0_5": 0.45,
+        "centroid_error_mean": 0.0920469209048775,
+        "centroid_error_median": 0.05057028592506145,
+        "centroid_error_p90": 0.3032957347276929,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 55,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 45
+        }
+      },
+      "mean_sam2_score": null,
+      "empty_refined_masks": 0,
+      "mean_sam2_calls_per_tile": 0.0,
+      "mean_wall_time_per_tile": 3.938461677768292e-07,
+      "peak_vram_gb": 0.487
+    },
+    "X-C1": {
+      "option": "X-C1",
+      "description": "exact box, single-mask SAM2",
+      "refinement": true,
+      "overall": {
+        "records": 200,
+        "answered": 200,
+        "selected_reference_miou": 0.4744167193292019,
+        "selected_reference_dice": 0.5492290587446277,
+        "precision_at_0_5": 0.57,
+        "centroid_error_mean": 0.07216318228472844,
+        "centroid_error_median": 0.006100804935043596,
+        "centroid_error_p90": 0.2819806613535144,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 86,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 114
+        }
+      },
+      "largest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.59864071809144,
+        "selected_reference_dice": 0.6934454455957261,
+        "precision_at_0_5": 0.69,
+        "centroid_error_mean": 0.0517862721321474,
+        "centroid_error_median": 0.005486899386972379,
+        "centroid_error_p90": 0.24051441584179642,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 31,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 69
+        }
+      },
+      "smallest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.3501927205669637,
+        "selected_reference_dice": 0.4050126718935292,
+        "precision_at_0_5": 0.45,
+        "centroid_error_mean": 0.09254009243730947,
+        "centroid_error_median": 0.04011244162592163,
+        "centroid_error_p90": 0.306960648547625,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 55,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 45
+        }
+      },
+      "mean_sam2_score": 0.8722654980421066,
+      "empty_refined_masks": 0,
+      "mean_sam2_calls_per_tile": 9.666666666666666,
+      "mean_wall_time_per_tile": 0.171776090769214,
+      "peak_vram_gb": 0.811
+    },
+    "X-C2": {
+      "option": "X-C2",
+      "description": "exact box, multimask SAM2 (max predicted quality)",
+      "refinement": true,
+      "overall": {
+        "records": 200,
+        "answered": 200,
+        "selected_reference_miou": 0.42839045000032044,
+        "selected_reference_dice": 0.5101982758921708,
+        "precision_at_0_5": 0.525,
+        "centroid_error_mean": 0.0792547393450293,
+        "centroid_error_median": 0.007504878084372895,
+        "centroid_error_p90": 0.28289856641165745,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 95,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 105
+        }
+      },
+      "largest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.5291147479438518,
+        "selected_reference_dice": 0.6331570145423596,
+        "precision_at_0_5": 0.62,
+        "centroid_error_mean": 0.06508908221492823,
+        "centroid_error_median": 0.006723772453169409,
+        "centroid_error_p90": 0.2779672924817433,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 38,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 62
+        }
+      },
+      "smallest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.32766615205678895,
+        "selected_reference_dice": 0.387239537241982,
+        "precision_at_0_5": 0.43,
+        "centroid_error_mean": 0.09342039647513037,
+        "centroid_error_median": 0.04630069995594314,
+        "centroid_error_p90": 0.3054677841534471,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 57,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 43
+        }
+      },
+      "mean_sam2_score": 0.8791236513853073,
+      "empty_refined_masks": 0,
+      "mean_sam2_calls_per_tile": 9.666666666666666,
+      "mean_wall_time_per_tile": 0.12590153897437678,
+      "peak_vram_gb": 0.811
+    },
+    "X-C3": {
+      "option": "X-C3",
+      "description": "10% expanded box, multimask SAM2 (max predicted quality)",
+      "refinement": true,
+      "overall": {
+        "records": 200,
+        "answered": 199,
+        "selected_reference_miou": 0.3740769178946014,
+        "selected_reference_dice": 0.46579939112505775,
+        "precision_at_0_5": 0.45226130653266333,
+        "centroid_error_mean": 0.0872689370446477,
+        "centroid_error_median": 0.009809140274082206,
+        "centroid_error_p90": 0.30442004517662175,
+        "abstention_rate": 0.005,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 1,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 109,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 90
+        }
+      },
+      "largest": {
+        "records": 100,
+        "answered": 99,
+        "selected_reference_miou": 0.44811291934019454,
+        "selected_reference_dice": 0.5608475477759582,
+        "precision_at_0_5": 0.5252525252525253,
+        "centroid_error_mean": 0.07999409704141039,
+        "centroid_error_median": 0.009455397294824279,
+        "centroid_error_p90": 0.28189359768207634,
+        "abstention_rate": 0.01,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 1,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 47,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 52
+        }
+      },
+      "smallest": {
+        "records": 100,
+        "answered": 100,
+        "selected_reference_miou": 0.3007812764634642,
+        "selected_reference_dice": 0.37170171604066615,
+        "precision_at_0_5": 0.38,
+        "centroid_error_mean": 0.09447102864785263,
+        "centroid_error_median": 0.03927916136701953,
+        "centroid_error_p90": 0.30371483104935226,
+        "abstention_rate": 0.0,
+        "buckets": {
+          "NO_PROPOSALS": 0,
+          "NO_ELIGIBLE_PROPOSALS": 0,
+          "REFINEMENT_EMPTY": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 0,
+          "REFERENCE_SELECTION_WRONG": 62,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "REFERENCE_OK": 38
+        }
+      },
+      "mean_sam2_score": 0.8763872465895648,
+      "empty_refined_masks": 0,
+      "mean_sam2_calls_per_tile": 9.666666666666666,
+      "mean_wall_time_per_tile": 0.13417810666668606,
+      "peak_vram_gb": 0.811
+    }
+  },
+  "ranking": [
+    "X-C0",
+    "X-C1",
+    "X-C2",
+    "X-C3"
+  ],
+  "priority_rule": [
+    "highest overall selected-reference mIoU",
+    "then highest smallest-family mIoU",
+    "then highest largest-family mIoU",
+    "then lowest abstention rate",
+    "then lower mean SAM2 calls per tile",
+    "then lower mean wall time per tile",
+    "then simpler option (X-C0 -> X-C1 -> X-C2 -> X-C3)"
+  ],
+  "selection_inputs": {
+    "u_calib200": true,
+    "refval_unique": false,
+    "minival240": false,
+    "pairedval20": false,
+    "test_split": false
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 92.9
+}

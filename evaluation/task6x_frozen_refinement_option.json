@@ -1,0 +1,166 @@
+{
+  "_doc": "Task 6X section 12. The single frozen refinement option, chosen on the train-only U-Calib200 split by the exact section 12 priority order and immutable afterwards. If X-C0 wins, the Task 6X audit stops with SAM2_REFINEMENT_NOT_HELPFUL and no RefVal/MiniVal/Paired evaluation runs.",
+  "task": "6X",
+  "stage": "E-frozen-refinement-option",
+  "selected_option": "X-C0",
+  "selected_description": "no refinement (U-C1 baseline)",
+  "baseline_is_selected": true,
+  "refinement_is_selected": false,
+  "priority_rule": [
+    "highest overall selected-reference mIoU",
+    "then highest smallest-family mIoU",
+    "then highest largest-family mIoU",
+    "then lowest abstention rate",
+    "then lower mean SAM2 calls per tile",
+    "then lower mean wall time per tile",
+    "then simpler option (X-C0 -> X-C1 -> X-C2 -> X-C3)"
+  ],
+  "ranking": [
+    "X-C0",
+    "X-C1",
+    "X-C2",
+    "X-C3"
+  ],
+  "selected_metrics": {
+    "overall": {
+      "records": 200,
+      "answered": 200,
+      "selected_reference_miou": 0.47892758193655594,
+      "selected_reference_dice": 0.5420218104263393,
+      "precision_at_0_5": 0.58,
+      "centroid_error_mean": 0.07973731997611061,
+      "centroid_error_median": 0.007844220675224107,
+      "centroid_error_p90": 0.28483532082325147,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFINEMENT_EMPTY": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 0,
+        "REFERENCE_SELECTION_WRONG": 84,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 116
+      }
+    },
+    "largest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.6033834132806426,
+      "selected_reference_dice": 0.6837626600041008,
+      "precision_at_0_5": 0.71,
+      "centroid_error_mean": 0.06742771904734371,
+      "centroid_error_median": 0.0058523205935597025,
+      "centroid_error_p90": 0.28061269949033446,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFINEMENT_EMPTY": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 0,
+        "REFERENCE_SELECTION_WRONG": 29,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 71
+      }
+    },
+    "smallest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.3544717505924694,
+      "selected_reference_dice": 0.40028096084857795,
+      "precision_at_0_5": 0.45,
+      "centroid_error_mean": 0.0920469209048775,
+      "centroid_error_median": 0.05057028592506145,
+      "centroid_error_p90": 0.3032957347276929,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFINEMENT_EMPTY": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 0,
+        "REFERENCE_SELECTION_WRONG": 55,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 45
+      }
+    },
+    "mean_sam2_calls_per_tile": 0.0,
+    "mean_wall_time_per_tile": 3.938461677768292e-07
+  },
+  "baseline_metrics": {
+    "overall": {
+      "records": 200,
+      "answered": 200,
+      "selected_reference_miou": 0.47892758193655594,
+      "selected_reference_dice": 0.5420218104263393,
+      "precision_at_0_5": 0.58,
+      "centroid_error_mean": 0.07973731997611061,
+      "centroid_error_median": 0.007844220675224107,
+      "centroid_error_p90": 0.28483532082325147,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFINEMENT_EMPTY": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 0,
+        "REFERENCE_SELECTION_WRONG": 84,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 116
+      }
+    },
+    "largest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.6033834132806426,
+      "selected_reference_dice": 0.6837626600041008,
+      "precision_at_0_5": 0.71,
+      "centroid_error_mean": 0.06742771904734371,
+      "centroid_error_median": 0.0058523205935597025,
+      "centroid_error_p90": 0.28061269949033446,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFINEMENT_EMPTY": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 0,
+        "REFERENCE_SELECTION_WRONG": 29,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 71
+      }
+    },
+    "smallest": {
+      "records": 100,
+      "answered": 100,
+      "selected_reference_miou": 0.3544717505924694,
+      "selected_reference_dice": 0.40028096084857795,
+      "precision_at_0_5": 0.45,
+      "centroid_error_mean": 0.0920469209048775,
+      "centroid_error_median": 0.05057028592506145,
+      "centroid_error_p90": 0.3032957347276929,
+      "abstention_rate": 0.0,
+      "buckets": {
+        "NO_PROPOSALS": 0,
+        "NO_ELIGIBLE_PROPOSALS": 0,
+        "REFINEMENT_EMPTY": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 0,
+        "REFERENCE_SELECTION_WRONG": 55,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 45
+      }
+    }
+  },
+  "options": {
+    "X-C0": "no refinement (U-C1 baseline)",
+    "X-C1": "exact box, single-mask SAM2",
+    "X-C2": "exact box, multimask SAM2 (max predicted quality)",
+    "X-C3": "10% expanded box, multimask SAM2 (max predicted quality)"
+  },
+  "fourth_option": null,
+  "evidence": {
+    "calibration": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6x_calibration_refinement.json",
+    "asset_audit": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6x_frozen_asset_audit.json"
+  },
+  "frozen": true,
+  "immutable_after_creation": true,
+  "chosen_without_refval": true,
+  "training_performed": false,
+  "test_split_used": false
+}
