@@ -1,491 +1,606 @@
-# TO_DSH — Task 6Y: Oracle-Reference Nearest Boundary Field Feasibility
+# TO_DSH — Task 6Z: Oracle-Reference L3 Direction × Nearest Composition Feasibility
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `93188905df246c2669c730ad1251a651ec22f106`
+> Base commit: `24be95494a36e1a21d1f3566590c06ef118c7f28`
 >
-> Predecessor: Task 6X → `SAM2_REFINEMENT_NOT_HELPFUL`
+> Predecessor: Task 6Y → `NEAREST_FIELD_NO_MEANINGFUL_GAIN`
 >
 > Research decision already made by ChatGPT:
-> 1. Stop reference hardening here. Tasks 6P/6Q/6U/6V/6W/6X have characterized the support-module bottleneck sufficiently.
-> 2. Freeze the current practical reference resolver for later end-to-end work as **U-C1 proposals + Task 6Q deterministic largest/smallest selector** (`YOLO26m-seg, imgsz=640, conf=0.05, max_det=300, no TTA, no tiling`).
-> 3. Do NOT use ProposalSetRanker, ProposalQualityEstimator, family routing, or SAM2 proposal refinement in the primary reference resolver.
-> 4. Task 6Y returns to the core spatial-reasoning method and tests the next relation family: **nearest**, whose canonical dataset semantics are based on `boundary_distance`.
-> 5. Task 6Y is an **oracle-reference causal experiment**. It intentionally uses GT reference masks so reference errors do not contaminate nearest-field feasibility.
-> 6. No nearest end-to-end claim is allowed after Task 6Y alone.
 >
-> DSH is an executor. Do not redesign the field, decoder, packs, loss, gates, or next task.
+> 1. Accept Task 6Y as a valid negative/partial causal result: the nearest boundary field is semantically exact and adds clear signal over visual-only and geometry-only baselines, but nearest-only dense segmentation did not meet the predeclared absolute/paired gates.
+> 2. Do NOT claim standalone nearest capability from Task 6Y.
+> 3. Do NOT tune `sigma_diag`, change the nearest field, or redesign the decoder in Task 6Z.
+> 4. Task 6Z tests the project-relevant next question directly: **Can the already-validated directional field and the partial nearest boundary field be composed to solve the canonical L3 program `largest → direction → nearest`?**
+> 5. This is an **oracle-reference causal experiment**. It uses the canonical GT largest reference so reference proposal errors do not contaminate the composition question.
+> 6. No predicted-reference L3/end-to-end claim is allowed after Task 6Z alone.
+> 7. DSH is an executor. Do not redesign fields, packs, architecture, loss, gates, or the next task.
 
 All user-facing DSH output must be Chinese.
 
 ---
 
-## 0. DSH role
+# 0. DSH role
 
 DSH MAY:
-- implement the exact `NearestBoundaryField v0.1` below;
-- reuse frozen SAM2 image features;
-- freeze the exact nearest-only train/validation packs;
-- train/evaluate Y-B0/Y-B1/Y-B2/Y-B3;
-- solve ordinary implementation/runtime bugs without altering the experiment.
+- reuse the frozen GeometricRelationField v0.2;
+- reuse the frozen NearestBoundaryField v0.1;
+- freeze the exact L3 train/validation packs specified here;
+- implement the exact six ablations Z-B0 ... Z-B5;
+- train/evaluate those variants;
+- solve ordinary implementation/runtime bugs without changing the experiment.
 
 DSH MUST NOT:
-- modify GeometricRelationField v0.2;
-- modify Task 3B nearest semantics;
-- use centroid distance instead of boundary distance;
-- change `sigma_diag`;
-- tune field parameters;
-- change SAM2 or decoder architecture;
-- use proposal/predicted references in the main experiment;
-- add nearest proposal execution, L3, GRCL, ProgramHead training, test access, or Task 6Z.
+- alter directional field formulas/constants;
+- alter nearest field formulas/constants;
+- tune `sigma_diag`;
+- change the Task 3B relation semantics;
+- use predicted/proposal references in the main experiment;
+- retrain ProgramHead;
+- change SAM2;
+- introduce attention/Transformer/GNN;
+- add a new loss;
+- add GRCL;
+- use candidate masks as model inputs;
+- use test split;
+- start predicted-reference L3 integration;
+- choose the next task.
 
 If a prohibited change is required, STOP and report.
 
 ---
 
-# PART A — Freeze reference subsystem status
+# PART A — Record Task 6Y findings exactly
 
-## 1. Record the reference-hardening conclusion
+## 1. Task 6Y status
 
-Copy into `docs/task6y_oracle_nearest_boundary_field.md`:
+Copy into `docs/task6z_oracle_l3_composition.md`:
 
-Task 6X verdict: `SAM2_REFINEMENT_NOT_HELPFUL`.
+Task 6Y verdict: `NEAREST_FIELD_NO_MEANINGFUL_GAIN`
 
-On train-only U-Calib200:
-- X-C0 U-C1 baseline mIoU = `0.4789276`
-- X-C1 exact-box SAM2 single-mask = `0.4744`
-- X-C2 exact-box multimask = `0.4284`
-- X-C3 expanded-box multimask = `0.3741`
+Key measurements:
+- nearest-field semantic sanity: target top-1 = 1.0000, target top-3 = 1.0000, mean Spearman vs `-boundary_distance` = 1.0000;
+- Y-B2 Overfit20: mIoU = 0.9663, Dice = 0.9827;
+- MiniVal240: B0 visual = 0.1837, B1 visual + direct reference mask = 0.2640, B2 visual + nearest field = 0.2864, B3 nearest field only = 0.0468;
+- deltas: B2-B0 = +0.1027, B2-B1 = +0.0224, B2-B3 = +0.2396;
+- paired: B0 0/20, B1 8/20, B2 6/20, B3 6/20; B2 own-cross margin = +0.1828.
 
-X-C0 won calibration, so 6X correctly stopped before RefVal/MiniVal/Paired evaluation.
+Interpretation boundary:
+- nearest field carries valid spatial information;
+- standalone nearest target segmentation is not demonstrated as sufficiently strong;
+- Task 6Z asks whether **directional gating reduces the ambiguity enough for L3 composition**.
 
-Frozen practical reference resolver for future integration:
-`U-C1 + deterministic Task 6Q area semantics`.
-
-Known development metrics from Task 6U:
-- RefVal reference mIoU ≈ `0.4289355`
-- MiniVal answered target mIoU ≈ `0.3141364`
-- strict target mIoU ≈ `0.3089008`
-- PairedVal `11/20`
-- own-cross margin ≈ `0.3209`
-
-Known limitations remain: proposal coverage/extreme selection, especially smallest; tiny buildings; scene-disjoint support-module generalization.
-
-Do not modify old artifacts.
+Do not modify Task 6Y artifacts.
 
 ---
 
-# PART B — Canonical nearest semantics
+# PART B — Exact L3 scope
 
-## 2. Exact query scope
+## 2. Exactly four canonical L3 programs
 
-Task 6Y handles exactly:
-- `largest_to_nearest`
-- `smallest_to_nearest`
+Task 6Z handles only:
+- `largest_to_left_of_to_nearest`
+- `largest_to_right_of_to_nearest`
+- `largest_to_above_to_nearest`
+- `largest_to_below_to_nearest`
 
-No directional programs in the main nearest experiment. No L3.
+No L1. No L2. No `smallest_to_*_to_nearest` because those programs are not part of the frozen v0.2 vocabulary. No test.
 
-BuildSpatialReason v0.2 counts:
-- train: largest_to_nearest 672; smallest_to_nearest 358
-- val: largest_to_nearest 458; smallest_to_nearest 249
+BuildSpatialReason v0.2 availability:
 
-No test.
+Train:
+- above = 338
+- below = 336
+- left = 323
+- right = 347
 
-## 3. Frozen nearest definition
+Val:
+- above = 224
+- below = 213
+- left = 250
+- right = 249
 
-Read-only: `configs/spatial_relations_v1.yaml`.
+## 3. Canonical program semantics
 
-Nearest semantics MUST remain:
-- metric = `boundary_distance`
-- NOT centroid distance
-- `margin_px_floor = 2.0`
-- `margin_diag_fraction = 0.005`
-- `margin_mode = normalized_with_absolute_floor`
-- nearest anchor and target eligibility unchanged: reject border-truncated, suspected-large-merge, tiny; require at least two valid components.
+For every L3 record:
 
-Canonical labels are frozen. Do not regenerate them.
+```text
+Step 1:
+largest eligible building → oracle reference
+
+Step 2:
+filter all buildings by one frozen directional relation
+with respect to the reference
+
+Step 3:
+among the direction-filtered candidates,
+select the one with minimum canonical boundary_distance
+subject to the frozen nearest eligibility/margin policy
+```
+
+Do not regenerate labels.
+
+Use the frozen:
+- directional `alpha = 1.2`
+- directional `tau = 0.04`
+- nearest metric = `boundary_distance`
+- nearest margin config from `configs/spatial_relations_v1.yaml`.
 
 ---
 
-# PART C — NearestBoundaryField v0.1
+# PART C — Frozen field modules
 
-## 4. Purpose
+## 4. Direction field
 
-The field means: pixels closer to the grounded reference-building boundary receive larger prior value.
-It must not directly choose a building candidate.
-
-Create: `buildreasonseg_mvp/nearest_boundary_field.py`.
-
-Constants:
-```text
-sigma_diag = 0.05
-eps = 1e-6
-source_size = 512x512
-decoder_field_size = 64x64
-```
-
-No learned parameters. No sweep.
-
-## 5. Exact source-resolution field
-
-Input: binary oracle reference mask `M_ref`, 512×512, non-empty.
-
-Use `scipy.ndimage.distance_transform_edt`.
-If SciPy is unavailable in the existing environment, STOP with `NEAREST_FIELD_DEPENDENCY_UNAVAILABLE`; do not install.
-
-```text
-R = M_ref > 0
-D_px = distance_transform_edt(~R)
-diag_px = sqrt(H^2 + W^2)
-D_norm = D_px / diag_px
-P_near_512 = exp(-D_norm / sigma_diag)
-P_near_512[R] = 0
-P_near_512 = clamp(P_near_512, 0, 1)
-```
-
-Do NOT use reference centroid, reference bbox distance, target mask/centroid, candidate proposals, or GT candidate ids.
-
-## 6. Decoder-resolution field
-
-```text
-P_near_64 = interpolate(
-  P_near_512[None,None], size=(64,64), mode="bilinear", align_corners=False
-)
-```
-Clamp `[0,1]`.
-
-For Y-B1 only:
-```text
-M_ref_64 = interpolate(M_ref_float[None,None], size=(64,64), mode="area")
-```
-Clamp `[0,1]`.
-
----
-
-# PART D — Field semantic sanity
-
-## 7. Parameter-free nearest ranking diagnostic
-
-Before training, on frozen Y-MiniVal240:
+Read-only: `buildreasonseg_mvp/geometric_relation_field_v02.py`
 
 For each record:
-1. compute `P_near_512` from oracle reference;
-2. consider every canonical native building other than the reference that satisfies frozen nearest target eligibility;
-3. candidate score:
-   `field_score(C) = max(P_near_512[p] for p in C)`.
+- oracle largest reference mask;
+- canonical direction relation.
+
+Generate `P_dir_512` and `P_dir_64` using the existing v0.2 implementation. Do not copy/rewrite the formula.
+
+## 5. Nearest field
+
+Read-only: `buildreasonseg_mvp/nearest_boundary_field.py`
+
+Use exactly:
+- `sigma_diag = 0.05`
+- EDT boundary-proximity semantics
+- zero inside reference
+- bilinear 512→64.
+
+Generate `P_near_512` and `P_near_64`.
+
+## 6. Deterministic composed field
+
+At source resolution:
+
+```text
+P_prod_512 = clamp(P_dir_512 * P_near_512, 0, 1)
+```
+
+At decoder resolution:
+
+```text
+P_prod_64 = clamp(P_dir_64 * P_near_64, 0, 1)
+```
+
+No renormalization. No learned scalar. No temperature. No exponent. No threshold.
+
+---
+
+# PART D — Parameter-free composition sanity
+
+## 7. Candidate sets
+
+Before training, run on frozen Z-MiniVal240.
+
+For every record:
+
+### 7.1 All eligible non-reference candidates
+
+Candidate building must:
+- be a canonical native instance;
+- not be the reference;
+- satisfy frozen nearest target eligibility.
+
+Score:
+
+```text
+score_all(C) = max(P_prod_512[p] for p in C)
+```
+
+Report target top-1, target top-3, mean target score, mean best distractor score, and target-minus-distractor.
+
+### 7.2 Exact direction-valid subset
+
+Use the frozen Task 3B directional predicate with the record's direction. Keep only candidates that are direction-valid with respect to the oracle reference.
+
+Score with the same `P_prod_512`.
 
 Report:
-- target top-1 / top-3 rate
-- mean target score
-- mean best non-target distractor score
-- mean target-minus-distractor score
-- by largest/smallest reference family
-- mean eligible candidate count
-- per-record Spearman correlation between `field_score(C)` and `-canonical boundary_distance(reference,C)`, then mean.
+- target top-1
+- target top-3
+- mean Spearman between product-field score and `-boundary_distance` inside the direction-valid set.
 
-Write: `evaluation/task6y_field_sanity.json`.
+Write `evaluation/task6z_composition_sanity.json`.
 
-Sanity gate:
-- top-1 >= `0.85`
-- top-3 >= `0.97`
+## 8. Sanity gate
+
+Require on the exact direction-valid subset:
+- target top-1 >= `0.95`
+- target top-3 >= `0.99`
 - mean Spearman >= `0.90`
 
-If any fail: STOP `NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH`.
-Do not tune sigma.
+If any fails, STOP with `L3_COMPOSITION_FIELD_SEMANTIC_MISMATCH`.
+
+The all-candidate metrics are diagnostic only and do not stop the task.
 
 ---
 
-# PART E — Freeze nearest packs
+# PART E — Freeze L3 packs
 
-## 8. Common rules
+## 9. General
 
-Create deterministic packs from v0.2 train/val only. Seed `20260930`.
-Write `evaluation/task6y_pack_manifest.json` with record ids and SHA256.
-Local packs: `artifacts/task6y/packs/` (gitignored).
+Seed `20260930`.
 
-## 9. Y-Overfit20
+Source: BuildSpatialReason v0.2 train/val only.
 
-Train only:
-- 10 largest_to_nearest
-- 10 smallest_to_nearest
-- unique record ids
-- at least 15 unique tiles if possible.
+Write `evaluation/task6z_pack_manifest.json`.
 
-## 10. Y-MiniTrain1000
+Local packs: `artifacts/task6z/packs/` (gitignored). Record SHA256 for every pack.
 
-Train only, exactly:
-- 650 largest_to_nearest
-- 350 smallest_to_nearest
+## 10. Z-Overfit20
 
-Deterministic stable record-id hash selection after eligibility checks.
+Train split. Exactly:
+- 5 above
+- 5 below
+- 5 left
+- 5 right
 
-## 11. Y-MiniVal240
+Requirements:
+- unique record ids;
+- at least 15 unique tiles if possible;
+- canonical oracle reference/target available.
 
-Val only, exactly:
-- 120 largest_to_nearest
-- 120 smallest_to_nearest
+## 11. Z-MiniTrain1200
 
-## 12. Y-PairedVal
+Train split. Exactly:
+- 300 above
+- 300 below
+- 300 left
+- 300 right
 
-Pair requirements:
-- same tile has both largest_to_nearest and smallest_to_nearest;
-- different reference source feature ids;
-- different target source feature ids;
+Stable-hash deterministic selection.
+
+## 12. Z-MiniVal240
+
+Val split. Exactly:
+- 60 above
+- 60 below
+- 60 left
+- 60 right
+
+## 13. Z-PairedVal20
+
+Build same-reference directional counterfactual pairs.
+
+Each pair must satisfy:
+- same tile;
+- same largest reference source feature id;
+- two different L3 direction programs;
+- two different target source feature ids;
 - both canonical valid records.
 
-Sort by stable hash.
-Use first 20 if >=20 exist; otherwise all if >=12.
-If fewer than 12: STOP `NEAREST_PAIRED_SET_INSUFFICIENT`.
-Record `N_pair`.
+Sort deterministically by stable hash.
 
-No test.
+Use first 20 if >=20 exist. If fewer than 20 but >=12, use all. If fewer than 12, STOP with `L3_PAIRED_SET_INSUFFICIENT`.
+
+Record actual `N_pair`. No test.
 
 ---
 
-# PART F — Frozen visual representation and decoder
+# PART F — Frozen visual representation
 
-## 13. Frozen SAM2 feature
+## 14. Visual features
 
-Reuse exact Task 6N/6O path:
-- SAM2.1 Hiera Base+
-- image embedding V = 256×64×64
-- frozen checkpoint/config
-- no GT visual input
-- no retraining.
+Reuse exactly:
+- frozen SAM2.1 Hiera Base+;
+- `V = 256×64×64`;
+- no image-backbone training;
+- no GT visual input.
 
-## 14. Common visual projection
+Reuse existing cache where possible.
 
-For Y-B0/Y-B1/Y-B2:
+Common visual projection for Z-B0...Z-B4:
+
 ```text
-Conv1x1(256→128)
+Conv1x1(256 → 128)
 GroupNorm(8,128)
 GELU
 ```
 
-## 15. Nearest embedding
+## 15. Direction embedding
 
-One trainable embedding:
-- vocab size 1
-- dim 16
-- semantic id `nearest`
+Trainable:
+- vocabulary size = 4
+- ids exactly: left_of, right_of, above, below
+- embedding dim = 16
 
 Broadcast 64×64.
+
+No separate trainable `nearest` embedding because nearest is constant for every Task 6Z program.
 
 ## 16. Common target trunk
 
 ```text
-Conv3x3(in→128,padding=1)
+Conv3x3(in_channels → 128, padding=1)
 GroupNorm(8,128)
 GELU
-Conv3x3(128→64,padding=1)
+Conv3x3(128 → 64, padding=1)
 GroupNorm(8,64)
 GELU
-Conv1x1(64→1)
+Conv1x1(64 → 1)
 ```
 
 Upsample logits bilinearly to 512×512.
-Loss exactly `BCEWithLogitsLoss + DiceLoss`.
-No GRCL, ranking loss, auxiliary field loss, or candidate loss.
+
+Loss EXACTLY: `BCEWithLogitsLoss + DiceLoss`
+
+No auxiliary loss. No ranking loss. No GRCL. No field supervision.
 
 ---
 
-# PART G — Four variants
+# PART G — Six exact variants
 
-## 17. Y-B0 — visual baseline
+## 17. Z-B0 — semantic/visual baseline
 
-Input:
-`visual_128 + nearest_embed_16`
-Fusion channels 144.
-No ref mask, no field.
-
-## 18. Y-B1 — direct reference-mask control
-
-Input:
-`visual_128 + M_ref_64 + nearest_embed_16`
-Fusion channels 145.
-No nearest field.
-
-## 19. Y-B2 — nearest-boundary-field model
-
-Primary hypothesis.
-Input:
-`visual_128 + P_near_64 + nearest_embed_16`
-Fusion channels 145.
-No direct reference-mask channel.
-
-## 20. Y-B3 — geometry-only control
-
-No SAM2 visual feature.
-
+Inputs:
 ```text
-field projection:
-Conv1x1(1→128)
+visual_128
+direction_embed_16
+```
+Fusion = 144. No field.
+
+## 18. Z-B1 — directional field only
+
+Inputs:
+```text
+visual_128
+P_dir_64
+direction_embed_16
+```
+Fusion = 145.
+
+## 19. Z-B2 — nearest field only
+
+Inputs:
+```text
+visual_128
+P_near_64
+direction_embed_16
+```
+Fusion = 145.
+
+Direction embedding remains present because the program differs by direction, but there is no explicit directional field.
+
+## 20. Z-B3 — two-field learnable composition
+
+PRIMARY HYPOTHESIS.
+
+Inputs:
+```text
+visual_128
+P_dir_64
+P_near_64
+direction_embed_16
+```
+Fusion = 146.
+
+There is no deterministic multiplication before the decoder. The common convolutional target trunk must learn how to combine the two explicit fields.
+
+## 21. Z-B4 — deterministic product-field comparator
+
+Inputs:
+```text
+visual_128
+P_prod_64
+direction_embed_16
+```
+Fusion = 145.
+
+## 22. Z-B5 — deterministic composition, geometry-only control
+
+No SAM2 visual input.
+
+Project `P_prod_64`:
+```text
+Conv1x1(1 → 128)
 GroupNorm(8,128)
 GELU
 ```
 
 Then:
-`field_128 + nearest_embed_16`
-Fusion channels 144 → common trunk.
+```text
+field_128
+direction_embed_16
+```
+Fusion = 144.
 
-Report exact params. No extra parameter padding.
+Purpose: test whether the composed field itself solves the target mask rather than guides visual segmentation.
+
+Report exact parameter counts. No seventh variant.
 
 ---
 
-# PART H — Stage Y1: Overfit20
+# PART H — Stage Z1: Overfit20
 
-## 21. Training
+## 23. Training
 
-Train all four variants separately from fresh init, same pack.
+Train all six variants separately from fresh initialization.
 
+Exact settings:
 - AdamW
-- lr `1e-3`
-- weight_decay `1e-4`
-- batch `4`
-- max steps `1200`
+- lr = `1e-3`
+- weight_decay = `1e-4`
+- batch = `4`
+- max steps = `1200`
 - no scheduler
 - no augmentation
-- seed `20260930`
-- same AMP/bfloat16 policy as 6N/6O
+- seed = `20260930`
+- same bfloat16 AMP policy as Tasks 6N/6Y
 - evaluate every 100 steps.
 
-Write `evaluation/task6y_overfit20.json`.
+Record best/final mIoU, Dice, Pr@0.5, by direction, params, wall time, peak VRAM.
 
-B2 gate:
+Write `evaluation/task6z_overfit20.json`.
+
+## 24. Primary learnability gate
+
+Z-B3 must reach:
 - mIoU >= `0.85`
 - Dice >= `0.90`
 
-If fail: STOP `NEAREST_FIELD_NOT_LEARNABLE`.
+If Z-B3 fails, STOP with `L3_LEARNED_COMPOSITION_NOT_LEARNABLE`.
+
+Z-B4/B5 have no stop gate.
 
 ---
 
-# PART I — Stage Y2: MiniTrain1000 → MiniVal240
+# PART I — Stage Z2: MiniTrain1200 → MiniVal240
 
-## 22. Training
+## 25. Training
 
-Only if B2 overfit passes.
-Fresh initialization for all four.
+Only if Z-B3 overfit passes.
 
+Train all six from fresh initialization.
+
+Exact settings:
 - AdamW
-- lr `3e-4`
-- weight_decay `1e-4`
-- batch `8`
-- max epochs `25`
-- early stopping patience `5`
-- selection metric = MiniVal240 mIoU
-- seed `20260930`
+- lr = `3e-4`
+- weight_decay = `1e-4`
+- batch = `8`
+- max epochs = `25`
+- early stopping patience = `5`
+- model selection = MiniVal240 mIoU
+- seed = `20260930`
 - no scheduler
 - no augmentation
 - same AMP.
 
 No test.
-Write `evaluation/task6y_training.json`.
+
+Write `evaluation/task6z_training.json`.
 
 ---
 
 # PART J — Evaluation
 
-## 23. MiniVal240
+## 26. MiniVal240
 
-For all variants report:
+For Z-B0...Z-B5 report:
 - mIoU
 - Dice
 - Pr@0.5
-- largest-reference mIoU
-- smallest-reference mIoU
-- border-target mIoU
-- tiny-target mIoU if present
-- target-area quartiles
+- per-direction mIoU
+- target area quartiles
 - canonical target boundary-distance quartiles
-- params
+- parameter count
 - best epoch
 - wall time
 - peak VRAM.
 
-Write `evaluation/task6y_mini_val.json`.
+Write `evaluation/task6z_mini_val.json`.
 
-## 24. PairedVal
+## 27. PairedVal
 
-For each pair, run largest-reference and smallest-reference query independently.
-Pair passes iff both predictions have higher IoU with their own target than with the other pair target.
+For every pair:
+- run both direction programs independently;
+- pair passes iff both predictions prefer their own GT target over the other member's target.
 
-Report:
+For every variant report:
 - pass / N_pair
 - pass rate
 - mean own IoU
 - mean cross IoU
 - own-cross margin.
 
-Write `evaluation/task6y_paired_val.json`.
+Write `evaluation/task6z_paired_val.json`.
 
 ---
 
-# PART K — Causal criteria
+# PART K — Predeclared causal criteria
 
-## 25. Feasibility criteria
+## 28. Learned two-field composition criteria
 
-`NEAREST_BOUNDARY_FIELD_FEASIBLE` requires ALL:
+Z-B3 mask criteria pass only if ALL:
+1. MiniVal B3 mIoU >= `0.35`
+2. B3-B0 >= `+0.10`
+3. B3-B1 >= `+0.05` — nearest information adds value beyond the directional field
+4. B3-B2 >= `+0.05` — directional information adds value beyond the nearest field
+5. B3-B5 >= `+0.10` — visual evidence remains materially necessary
 
-1. field semantic sanity passes;
-2. B2 overfit passes;
-3. B2-B0 MiniVal mIoU >= `+0.08`;
-4. B2-B1 MiniVal mIoU >= `+0.05`;
-5. B2-B3 MiniVal mIoU >= `+0.10`;
-6. B2 MiniVal mIoU >= `0.35`;
-7. B2 paired pass rate >= `0.70`;
-8. B2 own-cross margin >= `0.15`;
-9. no target GT model input.
+Counterfactual criteria:
+6. B3 paired pass rate >= `0.70`
+7. B3 own-cross margin >= `0.15`
 
-Interpretation:
-- B0→B1 = value of raw reference localization;
-- B1→B2 = value of explicit boundary-proximity geometry;
-- B3 vs B2 = whether visual evidence is materially necessary.
+## 29. Deterministic product comparator criteria
 
-Do not invent another interpretation.
+For Z-B4 define the analogous pass:
+- B4 mIoU >= `0.35`
+- B4-B0 >= `+0.10`
+- B4-B1 >= `+0.05`
+- B4-B2 >= `+0.05`
+- B4-B5 >= `+0.10`
+- B4 paired pass rate >= `0.70`
+- B4 own-cross margin >= `0.15`
+
+Report `deterministic_product_pass = true/false`.
+
+## 30. Learned-vs-product comparison
+
+Report:
+```text
+delta_learned_vs_product = B3_mIoU - B4_mIoU
+```
+
+Interpretation labels only:
+- `learned_not_worse` iff B3 >= B4 - 0.03
+- `product_materially_stronger` iff B4 >= B3 + 0.05
+
+These labels do not independently change the scientific validity of the experiment.
 
 ---
 
 # PART L — Verdict
 
-## 26. Exactly one, priority order
+## 31. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-2. `NEAREST_FIELD_DEPENDENCY_UNAVAILABLE`
-3. `NEAREST_PAIRED_SET_INSUFFICIENT`
-4. `NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH`
-5. `NEAREST_FIELD_NOT_LEARNABLE`
-6. `NEAREST_FIELD_GEOMETRY_ONLY_CONFOUND`
-   - B2 learns/generalizes, but B2-B3 <0.10 and B3 paired pass rate >=0.60.
-7. `NEAREST_FIELD_NO_MEANINGFUL_GAIN`
-   - learnability passes but B2-B0 <0.08 OR B2-B1 <0.05 OR B2 mIoU <0.35.
-8. `NEAREST_FIELD_COUNTERFACTUAL_WEAK`
-   - mask gains pass but paired rate <0.70 OR margin <0.15.
-9. `NEAREST_BOUNDARY_FIELD_FEASIBLE`
-   - all section-25 criteria pass.
+2. `L3_PAIRED_SET_INSUFFICIENT`
+3. `L3_COMPOSITION_FIELD_SEMANTIC_MISMATCH`
+4. `L3_LEARNED_COMPOSITION_NOT_LEARNABLE`
+5. `L3_GEOMETRY_ONLY_CONFOUND`
+   - B3-B5 < 0.10 AND B5 paired pass rate >= 0.60.
+6. `L3_DETERMINISTIC_COMPOSITION_ONLY`
+   - learned B3 section-28 criteria fail,
+   - but deterministic product B4 section-29 criteria all pass.
+7. `L3_COMPOSITION_NO_MEANINGFUL_GAIN`
+   - B3 mask criteria 1-5 fail,
+   - and B4 section-29 does not pass.
+8. `L3_COMPOSITION_COUNTERFACTUAL_WEAK`
+   - B3 mask criteria 1-5 pass,
+   - but B3 paired criterion 6 or 7 fails.
+9. `L3_LEARNED_COMPOSITION_FEASIBLE`
+   - all B3 section-28 criteria pass.
 
 No other verdict.
+
+If B3 passes but deterministic product is materially stronger, verdict remains `L3_LEARNED_COMPOSITION_FEASIBLE` and `product_materially_stronger` must be reported for ChatGPT.
 
 ---
 
 # PART M — Interpretation boundary
 
-DSH reports measurements only.
+DSH may report measurements only.
 
 Do NOT:
 - claim global novelty;
-- claim end-to-end nearest capability;
-- change sigma;
-- add learned distance transform;
+- claim final L3 end-to-end capability;
+- modify the reference subsystem;
+- tune field constants;
+- add attention/global competition;
 - add predicted reference;
-- combine directional and nearest fields;
-- start L3;
-- change reference resolver.
+- retrain ProgramHead;
+- change target loss;
+- choose whether learned or deterministic composition enters the final model.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 6Y 的 nearest boundary field 因果结果决定下一步，不自行进行 predicted-reference nearest 集成、direction+nearest 场组合或 L3 训练。`
+`等待 ChatGPT 根据 Task 6Z 的 L3 direction×nearest composition 因果结果决定下一步，不自行进行 predicted-reference L3 集成、attention/global competition 改造或正式全量训练。`
 
 ---
 
@@ -494,29 +609,34 @@ Final recommendation exactly:
 Create at minimum:
 
 ```text
-buildreasonseg_mvp/nearest_boundary_field.py
-buildreasonseg_mvp/task6y_nearest_decoder.py
+buildreasonseg_mvp/task6z_l3_decoder.py
+buildreasonseg_mvp/task6z_field_composition.py
 
-evaluation/task6y_pack_manifest.json
-evaluation/task6y_field_sanity.json
-evaluation/task6y_overfit20.json
-evaluation/task6y_training.json
-evaluation/task6y_mini_val.json
-evaluation/task6y_paired_val.json
-evaluation/task6y_verdict.json
+evaluation/task6z_pack_manifest.json
+evaluation/task6z_composition_sanity.json
+evaluation/task6z_overfit20.json
+evaluation/task6z_training.json
+evaluation/task6z_mini_val.json
+evaluation/task6z_paired_val.json
+evaluation/task6z_verdict.json
 
-docs/task6y_oracle_nearest_boundary_field.md
+docs/task6z_oracle_l3_composition.md
 
-scripts/task6y_freeze_packs.py
-scripts/task6y_field_sanity.py
-scripts/task6y_train.py
-scripts/task6y_evaluate.py
-scripts/task6y_report.py
+scripts/task6z_freeze_packs.py
+scripts/task6z_composition_sanity.py
+scripts/task6z_train.py
+scripts/task6z_evaluate.py
+scripts/task6z_report.py
 ```
 
-If a STOP gate fires, create only applicable completed artifacts + verdict/docs/handoff.
+If a STOP gate fires, create only applicable completed artifacts plus verdict/docs/handoff.
 
-Caches/checkpoints under `artifacts/task6y/` and `artifacts/checkpoints/task6y/`, gitignored.
+Caches/checkpoints:
+```text
+artifacts/task6z/
+artifacts/checkpoints/task6z/
+```
+gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
@@ -526,92 +646,112 @@ Update:
 
 # PART O — Required tests
 
-Task 6X ended at `965 passed, 1 skipped`.
+Task 6Y ended at `1011 passed, 1 skipped`.
 
-Add tests covering at least:
+Add tests for at least:
+1. Task 6Y artifacts unchanged
+2. exactly four L3 program ids
+3. no L1/L2/test record in Task 6Z packs
+4. no nonexistent smallest-L3 program introduced
+5. canonical L3 operation order remains extreme → direction filter → nearest
+6. direction alpha/tau unchanged
+7. nearest boundary-distance semantics unchanged
+8. nearest sigma unchanged
+9. GeometricRelationField v0.2 unchanged
+10. NearestBoundaryField v0.1 unchanged
+11. P_prod source formula exact multiplication
+12. P_prod decoder formula exact multiplication
+13. no renormalization/temperature/power
+14. composition sanity score is max field in candidate mask
+15. sanity exact direction-valid subset uses frozen relation engine
+16. Overfit20 exact 5/5/5/5
+17. MiniTrain1200 exact 300/300/300/300
+18. MiniVal240 exact 60/60/60/60
+19. PairedVal same tile
+20. PairedVal same reference id
+21. PairedVal different direction
+22. PairedVal different target id
+23. pack hashes recorded
+24. no test split
+25. frozen SAM2 visual path unchanged
+26. Z-B0 exact inputs
+27. Z-B1 exact inputs
+28. Z-B2 exact inputs
+29. Z-B3 exact inputs
+30. Z-B4 exact inputs
+31. Z-B5 no visual input
+32. Z-B5 projection exactly 1→128
+33. exactly six variants
+34. direction embedding vocab exactly 4
+35. direction embedding dim 16
+36. no separate learned nearest embedding
+37. common target trunk exact
+38. BCE+Dice only
+39. no GRCL
+40. no auxiliary/ranking loss
+41. same schedule across variants
+42. oracle reference explicitly recorded
+43. GT target only label/evaluation
+44. no candidate mask model input
+45. no predicted/proposal reference in main experiment
+46. no ProgramHead training
+47. no attention/Transformer/GNN
+48. no new dataset/download/install/GUI
+49. previous passing suite preserved.
 
-1. Task 6X artifacts unchanged
-2. reference subsystem status freezes U-C1 deterministic
-3. exactly two nearest program ids
-4. no directional/L3 records in packs
-5. no test split
-6. nearest metric remains boundary_distance
-7. nearest margin config unchanged
-8. nearest eligibility unchanged
-9. sigma_diag exactly 0.05
-10. scipy EDT uses inverse binary reference mask
-11. field zero inside reference
-12. field in [0,1]
-13. synthetic monotonic decay with distance
-14. no reference centroid
-15. no bbox distance
-16. no target input to field
-17. bilinear field 512→64
-18. direct ref area resize exact
-19. field-sanity candidate score = max field inside candidate
-20. field sanity only nearest-eligible non-reference candidates
-21. Overfit20 exact family counts
-22. MiniTrain1000 exact 650/350
-23. MiniVal240 exact 120/120
-24. paired same tile/different refs/different targets
-25. pack hashes recorded
-26. frozen SAM2 path unchanged
-27. Y-B0 inputs exact
-28. Y-B1 inputs exact
-29. Y-B2 inputs exact
-30. Y-B3 has no visual
-31. B3 field projection exact 1→128
-32. nearest embedding vocab1/dim16
-33. common trunk exact
-34. BCE+Dice only
-35. no GRCL
-36. no ranking/aux loss
-37. same training schedule across variants
-38. GT target only label/eval
-39. oracle reference explicitly recorded
-40. no proposal/predicted reference in main experiment
-41. no ProgramHead training
-42. no deterministic nearest executor replacing dense target segmentation
-43. no L3
-44. no new dataset/download/install/GUI
-45. previous suite preserved.
-
-Run:
-`python -m pytest tests/ -q`
-
+Run `python -m pytest tests/ -q`.
 Do not reduce previous passing tests.
 
 ---
 
 # PART P — Git/storage
 
-Do not commit model weights/checkpoints, feature caches, source imagery/vectors, large local packs, or `.conda`.
+Do not commit:
+- model checkpoints;
+- SAM2/YOLO/parser/B3 weights;
+- feature caches;
+- source imagery/vectors;
+- large local pack JSONs;
+- `.conda`.
 
-Commit nearest field/decoder code, small manifests/evaluation JSON, scripts, tests, docs and handoff.
+Commit:
+- L3 composition/decoder code;
+- small manifests/evaluation JSON;
+- scripts;
+- tests;
+- docs;
+- handoff.
 
 Suggested commits:
-1. `feat: add nearest boundary relation field`
-2. `eval: test nearest field causal segmentation gains`
+1. `feat: add L3 direction-nearest field composition`
+2. `eval: test multi-hop field composition causally`
 3. optional docs/handoff commit
 
 ---
 
 # PART Q — DSH model policy
 
-Default: **DeepSeek V4.1 Flash + High**.
-Use Max only for a genuine data/runtime/cross-module bug.
+Default: **DeepSeek V4.1 Flash + High**
+
+Use Max only for a genuine runtime/data/cross-module bug.
 No installs or downloads.
 
 ---
 
 # PART R — STOP
 
-After Task 6Y:
-- commit
-- push
-- handoff
-- STOP
+After Task 6Z:
+- commit;
+- push;
+- handoff;
+- STOP.
 
-Do NOT alter the frozen reference resolver, add predicted-reference nearest integration, combine directional+nearest fields, start L3, add GRCL, access test, or build GUI.
+Do NOT:
+- integrate predicted reference;
+- add attention/global context;
+- change field formulas;
+- start full-dataset training;
+- access test;
+- build GUI.
 
 Wait for ChatGPT audit.

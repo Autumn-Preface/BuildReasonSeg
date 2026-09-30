@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6Y._
+_Last updated by DSH at the end of Task 6Z._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -100,6 +100,44 @@ The block above is machine-checked against
 | 6X | **Frozen SAM2.1 proposal-refinement audit** | **done → `SAM2_REFINEMENT_NOT_HELPFUL`** (**no model trained**; last predeclared reference-hardening audit; SAM2.1 Hiera Base+ `a2345aed…c004c5` + official `SAM2ImagePredictor` (0 trainable params, box-only probe → masks (3,512,512) scores 0.887/0.456/0.863), U-C1 `ef852b58…61f474`, ProgramHead/B3/field v0.2 all frozen and verified → `FROZEN_ASSETS_VERIFIED`; exactly four options X-C0 no-refinement / X-C1 exact box single-mask / X-C2 exact box multimask / X-C3 10%-expanded box multimask, SAM score used only as a tie-break and never thresholded; train-only U-Calib200: **X-C0 mIoU 0.4789 / smallest 0.3545 / largest 0.6034 / Pr@0.5 0.5800** vs X-C1 0.4744/0.3502/0.5986/0.5700 (centroid median better 0.0061 vs 0.0078), X-C2 0.4284, X-C3 0.3741 (+1 abstention) → ranking `['X-C0','X-C1','X-C2','X-C3']` → **frozen option X-C0** (`baseline_is_selected = true`, RefVal never consulted); **STOP rule triggered**: RefValUnique/MiniVal240/PairedVal20 deliberately **not evaluated** and their artifacts absent by design) |
 
 | 6Y | **Oracle-reference NearestBoundaryField v0.1** | **done → `NEAREST_FIELD_NO_MEANINGFUL_GAIN`** (oracle-reference causal audit of the **nearest** family; frozen reference resolver `U-C1 + Task 6Q deterministic`, SAM2/field v0.2/history untouched; field `P_near_512 = exp(−(EDT(~M_ref)/diag)/0.05)` with `P_near=0` inside the reference, bilinear 512→64, no learned params, no sigma tuning; **field sanity perfect**: top-1 **1.0000**, top-3 **1.0000**, mean Spearman **1.0000**, target 0.4622 vs best distractor 0.1678, 4.40 eligible candidates; frozen packs Y-Overfit20 20 (10+10, 20 tiles), Y-MiniTrain1000 **650+350**, Y-MiniVal240 **120+120**, Y-PairedVal **N_pair 20**; variants Y-B0 visual / Y-B1 visual+M_ref / **Y-B2 visual+P_near** / Y-B3 geometry-only → Overfit20 B2 **0.9663/0.9827** gate ✓ (B0 0.9724, B1 0.9705, B3 0.1457); MiniVal240 mIoU **B0 0.1837 / B1 0.2640 / B2 0.2864 / B3 0.0468** (Pr@0.5 B2 0.4812), deltas **B2−B0 +0.1027**, **B2−B1 +0.0224**, **B2−B3 +0.2396**; boundary-distance quartiles 0.4094/0.3477/0.2356/0.1531; PairedVal B2 **6/20** margin **+0.1828** (B1 8/20, B3 6/20); border/tiny targets absent (nearest eligibility excludes them); §25 criteria **6/9** → verdict) |
+
+| 6Z | **Oracle-reference L3 direction×nearest composition** | **done → `L3_COMPOSITION_NO_MEANINGFUL_GAIN`** (oracle-reference causal audit of the four canonical `largest_to_<direction>_to_nearest` programs; frozen reference subsystem / directional field v0.2 / nearest field v0.1 / SAM2 untouched; `P_prod = clamp(P_dir × P_near)` exact, no renormalization/temperature/power; **composition sanity passed** — direction-valid subset top-1 **1.0000**, top-3 **1.0000**, Spearman **0.9983** (canonical-list diagnostic 0.9958 / 0.9988), all-candidates top-1 0.9042; packs Z-Overfit20 **5/5/5/5**, Z-MiniTrain1200 **300×4**, Z-MiniVal240 **60×4**, Z-PairedVal **N_pair 20** (same tile, same largest reference, different directions/targets); six variants → Overfit20 Z-B3 **0.9619/0.9804** gate ✓; MiniVal240 mIoU **B0 0.1510 / B1 0.3011 / B2 0.1724 / B3 0.3242 / B4 0.2788 / B5 0.0888** (Pr@0.5 B3 0.5331), deltas B3−B0 **+0.1732**, B3−B1 **+0.0231**, B3−B2 +0.1519, B3−B4 **+0.0454**, B3−B5 +0.2355; PairedVal B3 **15/20** margin **+0.3004**, B1 16/20, B4 12/20, B5 6/20; §28 B3 criteria **5/7**, §29 `deterministic_product_pass` **false**, §30 `learned_not_worse` true / `product_materially_stronger` false → verdict) |
+
+## Task 6Z measured results
+
+Tests whether the already-validated directional field and the partial nearest boundary field can be
+**composed** to solve the canonical L3 program `largest → direction → nearest`. Oracle-reference causal
+experiment (the canonical GT largest reference is used), so no predicted-reference L3 or end-to-end claim is
+made; field constants, both frozen field modules, SAM2, the reference subsystem and all historical artifacts
+are untouched. Full detail: `docs/task6z_oracle_l3_composition.md`, `evaluation/task6z_*.json`.
+
+| | Value |
+|---|---|
+| Scope | exactly `largest_to_{left_of,right_of,above,below}_to_nearest` · no L1/L2/`smallest_to_*_to_nearest`/test · canonical order `argmax_area → filter_relation → argmin_boundary_distance` (not regenerated) |
+| Frozen constants | directional `alpha 1.2` / `tau 0.04`; nearest `boundary_distance`, `margin_px_floor 2.0`, `margin_diag_fraction 0.005`; `sigma_diag 0.05` — all unchanged |
+| Composed field | `P_prod_512 = clamp(P_dir_512 * P_near_512, 0, 1)`, `P_prod_64 = clamp(P_dir_64 * P_near_64, 0, 1)`; no renormalization / learned scalar / temperature / exponent / threshold |
+| Composition sanity (Z-MiniVal240) | direction-valid subset top-1 **1.0000**, top-3 **1.0000**, mean Spearman **0.9983** (gate ≥0.95/≥0.99/≥0.90 ✓), 2.97 candidates; canonical step-2 list 0.9958 / 1.0000 / 0.9988, 4.18 candidates; all-candidates (diagnostic) 0.9042 / 1.0000, 7.21 candidates |
+| Packs (seed 20260930) | Z-Overfit20 **20 = 5 above + 5 below + 5 left + 5 right** (20 tiles) · Z-MiniTrain1200 **1200 = 300 each** (826 tiles) · Z-MiniVal240 **240 = 60 each** (219 tiles) · Z-PairedVal **N_pair 20** |
+| Variants | Z-B0 visual+dir-embed (144 ch, 273,473) · Z-B1 +P_dir (145, 274,625) · Z-B2 +P_near (145, 274,625) · **Z-B3 +P_dir+P_near learned (146, 275,777)** · Z-B4 +P_prod (145, 274,625) · Z-B5 P_prod projected, no visual (144, 240,833) |
+| Overfit20 | B0 0.9572/0.9780 · B1 0.9629/0.9810 · B2 0.9670/0.9832 · **B3 0.9619/0.9804 (gate ✓)** · B4 0.9631/0.9811 · B5 0.2860/0.3686 |
+| MiniVal240 | mIoU **0.1510 / 0.3011 / 0.1724 / 0.3242 / 0.2788 / 0.0888**; Dice 0.2338/0.4067/0.2461/**0.4390**/0.3845/0.1429; Pr@0.5 0.1984/0.4785/0.3127/**0.5331**/0.4604/0.1123 |
+| Per direction (B3) | above 0.2806 · below 0.3061 · left 0.3777 · right 0.3325 (B1 0.2870/0.2562/0.3452/0.3161; B4 0.2500/0.2630/0.2493/0.3530) |
+| Deltas | B1−B0 **+0.1501** · B2−B0 +0.0214 · B3−B0 **+0.1732** · **B3−B1 +0.0231** · B3−B2 +0.1519 · **B3−B4 +0.0454** · B3−B5 **+0.2355** · B4−B5 +0.1901 |
+| PairedVal (N=20) | B0 9/20 (+0.0879) · B1 **16/20** (+0.2630) · B2 9/20 (+0.1583) · **B3 15/20 (+0.3004)** · B4 12/20 (+0.2702) · B5 6/20 (+0.0654) |
+| §28 Z-B3 criteria | mIoU 0.3242 < 0.35 ✗ · B3−B0 +0.1732 ✓ · **B3−B1 +0.0231 < 0.05 ✗** · B3−B2 +0.1519 ✓ · B3−B5 +0.2355 ✓ · paired 0.75 ✓ · margin +0.3004 ✓ → **5/7** |
+| §29/§30 | `deterministic_product_pass` **false**; `delta_learned_vs_product` **+0.0454**, `learned_not_worse` true, `product_materially_stronger` false |
+| Verdict | **`L3_COMPOSITION_NO_MEANINGFUL_GAIN`** |
+
+1. **Composition helps**: Z-B3 beats the visual baseline (+0.1732), the nearest-only variant (+0.1519) and
+   geometry-only (+0.2355), and is the best variant overall with the best paired pass rate (15/20) and
+   margin (+0.3004).
+2. **But the predeclared bars fail**: absolute MiniVal quality 0.3242 < 0.35 and the incremental value of
+   nearest *given* the directional field is only +0.0231 < +0.05 — once the directional field is present,
+   the nearest field adds little on this split.
+3. **Learned vs deterministic**: learned two-field composition (B3 0.3242) beats the deterministic product
+   comparator (B4 0.2788) by **+0.0454** and is never worse; B4 fails its own criteria (mIoU < 0.35,
+   B4−B1 +0.0231 < 0.05, paired 0.60 < 0.70), and geometry-only B5 collapses to 0.0888 (paired 6/20).
+4. Next: 等待 ChatGPT 根据 Task 6Z 的 L3 direction×nearest composition 因果结果决定下一步，不自行进行 predicted-reference L3 集成、attention/global competition 改造或正式全量训练。
 
 ## Task 6Y measured results
 

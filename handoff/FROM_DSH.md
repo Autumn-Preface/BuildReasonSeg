@@ -17,143 +17,146 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6Y Report: Oracle-Reference Nearest Boundary Field Feasibility
+# FROM_DSH — Task 6Z Report: Oracle-Reference L3 Direction × Nearest Composition Feasibility
 
-_This file holds the Task 6Y report. The Task 6X report is preserved in git history at commit `9318890`;
-Task 6W at `3de2142`; Task 6V at `3e185fb`; Task 6U at `b8b5224`._
+_This file holds the Task 6Z report. The Task 6Y report is preserved in git history at commit `24be954`;
+Task 6X at `9318890`; Task 6W at `3de2142`; Task 6V at `3e185fb`._
 
 **Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task6y_oracle_nearest_boundary_field.md`.
+Full design notes: `docs/task6z_oracle_l3_composition.md`.
 
 ## 1. Verdict
 
-**`NEAREST_FIELD_NO_MEANINGFUL_GAIN`** — section 26 priority order applied literally:
+**`L3_COMPOSITION_NO_MEANINGFUL_GAIN`** — section 31 priority order applied literally:
 
-1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, no test use, exactly two nearest programs, four
-   predeclared variants, no predicted reference, `sigma_diag` untouched and labels not regenerated.
-2. `NEAREST_FIELD_DEPENDENCY_UNAVAILABLE` — no: SciPy 1.17.1 provides `distance_transform_edt`.
-3. `NEAREST_PAIRED_SET_INSUFFICIENT` — no: **N_pair = 20** (≥ 12).
-4. `NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH` — **no: the sanity gate passed perfectly** (top-1 1.0000,
-   top-3 1.0000, mean Spearman 1.0000).
-5. `NEAREST_FIELD_NOT_LEARNABLE` — no: B2 Overfit20 mIoU **0.9663** / Dice **0.9827** (≥ 0.85 / 0.90).
-6. `NEAREST_FIELD_GEOMETRY_ONLY_CONFOUND` — no: B2−B3 = **+0.2396** ≥ 0.10 while B3's paired pass rate is
-   0.30 < 0.60.
-7. **`NEAREST_FIELD_NO_MEANINGFUL_GAIN`** — learnability passes but **B2−B1 = +0.0224 < +0.05** and
-   **B2 MiniVal mIoU 0.2864 < 0.35**. ← **verdict**
-8. `NEAREST_FIELD_COUNTERFACTUAL_WEAK` — not reached (a mask-gain condition already fails).
-9. `NEAREST_BOUNDARY_FIELD_FEASIBLE` — no (6 of 9 section-25 criteria pass).
+1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, exactly four L3 programs, six variants, no L1/L2/test
+   record, no predicted reference, constants untuned.
+2. `L3_PAIRED_SET_INSUFFICIENT` — no: **N_pair = 20** (≥ 12).
+3. `L3_COMPOSITION_FIELD_SEMANTIC_MISMATCH` — **no: the composition sanity gate passed** (direction-valid
+   top-1 1.0000, top-3 1.0000, mean Spearman 0.9983).
+4. `L3_LEARNED_COMPOSITION_NOT_LEARNABLE` — no: Z-B3 Overfit20 mIoU **0.9619** / Dice **0.9804**.
+5. `L3_GEOMETRY_ONLY_CONFOUND` — no: B3−B5 = **+0.2355** ≥ 0.10 while B5's paired pass rate is 0.30 < 0.60.
+6. `L3_DETERMINISTIC_COMPOSITION_ONLY` — no: the deterministic product comparator Z-B4 does **not** pass
+   its section-29 criteria (B4 mIoU 0.2788 < 0.35, B4−B1 +0.0231 < 0.05, paired 0.60 < 0.70).
+7. **`L3_COMPOSITION_NO_MEANINGFUL_GAIN`** — Z-B3 mask criteria 1-5 fail (B3 mIoU **0.3242 < 0.35** and
+   B3−B1 **+0.0231 < +0.05**) and B4 does not pass. ← **verdict**
+8. `L3_COMPOSITION_COUNTERFACTUAL_WEAK` — not reached (mask criteria already fail).
+9. `L3_LEARNED_COMPOSITION_FEASIBLE` — no (5 of 7 section-28 criteria pass).
 
-## 2. Recorded Task 6X result (reference hardening stops here)
+## 2. Recorded Task 6Y result (Task 6Y artifacts not mutated)
 
-`SAM2_REFINEMENT_NOT_HELPFUL`: train-only U-Calib200 X-C0 U-C1 baseline mIoU `0.4789276` vs X-C1 `0.4744`,
-X-C2 `0.4284`, X-C3 `0.3741` → X-C0 won and Task 6X stopped before RefVal/MiniVal/Paired. **Frozen
-practical reference resolver: `U-C1 + deterministic Task 6Q area semantics`** (Task 6U development
-metrics: RefVal reference mIoU ≈ 0.4289355, MiniVal answered ≈ 0.3141364, strict ≈ 0.3089008, PairedVal
-11/20, margin ≈ +0.3209). Known limitations: proposal coverage / extreme selection (especially smallest),
-tiny buildings, scene-disjoint support-module generalization.
+`NEAREST_FIELD_NO_MEANINGFUL_GAIN`: nearest-field sanity top-1 1.0000 / top-3 1.0000 / Spearman 1.0000;
+Y-B2 Overfit20 0.9663 / 0.9827; MiniVal240 B0 0.1837, B1 0.2640, B2 0.2864, B3 0.0468 with deltas
+B2−B0 +0.1027, B2−B1 +0.0224, B2−B3 +0.2396; paired B0 0/20, B1 8/20, B2 6/20, B3 6/20 and B2 margin
++0.1828. Carried forward: the nearest field carries valid spatial information, standalone nearest target
+segmentation is not sufficiently strong, and Task 6Z asks whether directional gating reduces the ambiguity
+enough for L3 composition.
 
-## 3. Field semantic sanity (parameter-free, section 7)
+## 3. Frozen scope, semantics and the composed field
 
-`evaluation/task6y_field_sanity.json` — Y-MiniVal240, `sigma_diag = 0.05`, no tuning:
+Only `largest_to_{left_of,right_of,above,below}_to_nearest` (v0.2 availability reproduced exactly: train
+338/336/323/347, val 224/213/250/249). Canonical order preserved and not regenerated:
+`argmax_area` → `filter_relation` (frozen directional predicate, `alpha 1.2`, `tau 0.04`) →
+`argmin_boundary_distance` (frozen nearest eligibility/margin: `boundary_distance`, `margin_px_floor 2.0`,
+`margin_diag_fraction 0.005`). The composed field is the exact clamped product with **no** renormalization,
+learned scalar, temperature, exponent or threshold:
 
-| Metric | Measured | Gate |
-|---|---|---|
-| target top-1 | **1.0000** | ≥ 0.85 ✓ |
-| target top-3 | **1.0000** | ≥ 0.97 ✓ |
-| mean Spearman vs −boundary_distance | **1.0000** | ≥ 0.90 ✓ |
-| mean target / best distractor score | 0.4622 / 0.1678 | — |
-| mean target − distractor | **+0.3641** | — |
-| mean eligible candidates | 4.40 | — |
+```text
+P_prod_512 = clamp(P_dir_512 * P_near_512, 0, 1)      P_dir from frozen v0.2, P_near from frozen 6Y
+P_prod_64  = clamp(P_dir_64  * P_near_64,  0, 1)      (sigma_diag 0.05, both untouched)
+```
 
-By family: largest 1.0 / 1.0 / 1.0 with 5.01 candidates; smallest 1.0 / 1.0 / 1.0 with 3.80 candidates.
+## 4. Parameter-free composition sanity (Part D)
 
-## 4. Frozen nearest packs (seed 20260930)
+`evaluation/task6z_composition_sanity.json` on the frozen Z-MiniVal240:
 
-`evaluation/task6y_pack_manifest.json` (train/val v0.2 only, stable-hash selection):
+| Candidate set | Records | top-1 | top-3 | mean target | mean best distractor | Δ | mean candidates | mean Spearman |
+|---|---|---|---|---|---|---|---|---|
+| all eligible non-reference (diagnostic) | 240 | 0.9042 | 1.0000 | 0.2985 | 0.1051 | +0.2070 | 7.21 | — |
+| **exact direction-valid subset (gate)** | 240 | **1.0000** | **1.0000** | 0.2985 | 0.1058 | +0.2155 | 2.97 | **0.9983** |
+| canonical step-2 list (diagnostic) | 240 | 0.9958 | 1.0000 | 0.2985 | 0.1006 | +0.2207 | 4.18 | 0.9988 |
 
-| Pack | Records | Split | Unique tiles |
-|---|---|---|---|
-| Y-Overfit20 | 20 (10 + 10) | train | **20** |
-| Y-MiniTrain1000 | 1000 (**650** largest + **350** smallest) | train | 786 |
-| Y-MiniVal240 | 240 (**120 + 120**) | val | 221 |
-| Y-PairedVal | **N_pair 20** (same tile, different reference ids, different target ids) | val | 20 |
+Gate passed (≥ 0.95 / ≥ 0.99 / ≥ 0.90), `constants_tuned = false`. The direction-valid subset comes from the
+frozen `relations.evaluate_direction`; that recomputation is a strict **subset** of the record's canonical
+step-2 list in 125/240 records and identical in 115/240 (never a superset), so the gate is measured on the
+stricter set and the generator-consistent canonical-list numbers are reported alongside.
 
-Every pack contains only `largest_to_nearest` / `smallest_to_nearest`; no directional, L3 or test record.
-Nearest semantics frozen: `boundary_distance`, `margin_px_floor 2.0`, `margin_diag_fraction 0.005`,
-`margin_mode normalized_with_absolute_floor`; canonical labels were not regenerated.
+## 5. Frozen packs (seed 20260930)
 
-## 5. Variants, training and evaluation
+`evaluation/task6z_pack_manifest.json`: Z-Overfit20 **20** (5 above / 5 below / 5 left / 5 right, 20 tiles),
+Z-MiniTrain1200 **1200** (300 each, 826 tiles), Z-MiniVal240 **240** (60 each, 219 tiles), Z-PairedVal20
+**N_pair 20** (same tile, same largest reference id, two different directions, two different targets).
+Only the four L3 programs appear; no L1/L2/test record and no smallest-L3 program.
 
-| Variant | Inputs | Fusion | Params | Overfit20 mIoU/Dice | MiniVal240 mIoU | Dice | Pr@0.5 | largest | smallest | epoch |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Y-B0 | visual_128 + embed16 | 144 | 273,425 | 0.9724 / 0.9860 | 0.1837 | 0.2735 | 0.2625 | 0.1374 | 0.2301 | 4 |
-| Y-B1 | visual_128 + M_ref_64 + embed16 | 145 | 274,577 | 0.9705 / 0.9849 | 0.2640 | 0.3643 | 0.3525 | 0.2273 | 0.3008 | 6 |
-| **Y-B2** | visual_128 + P_near_64 + embed16 | 145 | 274,577 | **0.9663 / 0.9827** | **0.2864** | **0.3863** | **0.4812** | **0.2336** | **0.3393** | 9 |
-| Y-B3 | field_128 + embed16 (no visual) | 144 | 240,785 | 0.1457 / 0.2066 | 0.0468 | 0.0822 | 0.0713 | 0.0235 | 0.0701 | 8 |
+## 6. Six variants and training
 
-Deltas: **B2−B0 = +0.1027**, **B2−B1 = +0.0224**, **B2−B3 = +0.2396**, B1−B0 = +0.0803. Loss exactly
-`BCEWithLogitsLoss + DiceLoss`; Y1 lr 1e-3 / batch 4 / 1200 steps / eval every 100; Y2 lr 3e-4 / wd 1e-4 /
-batch 8 / ≤25 epochs / patience 5 / selection by MiniVal240 mIoU; seed 20260930; bfloat16 AMP; wall time
-30–135 s and peak VRAM 0.67–0.90 GB per variant.
+| Variant | Inputs | Fusion | Params | Overfit20 | MiniVal mIoU | Dice | Pr@0.5 | Paired |
+|---|---|---|---|---|---|---|---|---|
+| Z-B0 | visual_128 + dir_embed16 | 144 | 273,473 | 0.9572/0.9780 | 0.1510 | 0.2338 | 0.1984 | 9/20 (+0.0879) |
+| Z-B1 | + P_dir_64 | 145 | 274,625 | 0.9629/0.9810 | 0.3011 | 0.4067 | 0.4785 | **16/20** (+0.2630) |
+| Z-B2 | + P_near_64 | 145 | 274,625 | 0.9670/0.9832 | 0.1724 | 0.2461 | 0.3127 | 9/20 (+0.1583) |
+| **Z-B3** | + P_dir_64 + P_near_64 (learned) | 146 | **275,777** | **0.9619/0.9804** | **0.3242** | **0.4390** | **0.5331** | **15/20 (+0.3004)** |
+| Z-B4 | + P_prod_64 (deterministic) | 145 | 274,625 | 0.9631/0.9811 | 0.2788 | 0.3845 | 0.4604 | 12/20 (+0.2702) |
+| Z-B5 | field_128 (P_prod 1→128), no visual | 144 | 240,833 | 0.2860/0.3686 | 0.0888 | 0.1429 | 0.1123 | 6/20 (+0.0654) |
 
-Border-target and tiny-target mIoU are **not applicable** (0 records): the frozen nearest eligibility
-rejects border-truncated and tiny components, so no nearest pack contains such a target.
+Per-direction MiniVal mIoU — B3 above 0.2806 / below 0.3061 / left 0.3777 / right 0.3325; B1 0.2870 /
+0.2562 / 0.3452 / 0.3161; B4 0.2500 / 0.2630 / 0.2493 / 0.3530; B5 0.0955 / 0.0889 / 0.0673 / 0.1033.
+Deltas: **B1−B0 +0.1501**, B2−B0 +0.0214, **B3−B0 +0.1732**, **B3−B1 +0.0231**, **B3−B2 +0.1519**,
+**B3−B4 +0.0454**, **B3−B5 +0.2355**, B4−B5 +0.1901. Z1 lr 1e-3 / batch 4 / 1200 steps / eval every 100;
+Z2 lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / selection by MiniVal240 mIoU; seed 20260930;
+bfloat16 AMP; wall 47.7–124.5 s and peak VRAM 0.666–0.894 GB per variant. Loss exactly
+`BCEWithLogitsLoss + DiceLoss`; no attention/Transformer/GNN, no GRCL, no auxiliary loss.
 
-B2 quartiles — target area (edges 1038.0 / 1636.5 / 2316.75 px): 0.2497 / 0.3904 / 0.2859 / 0.2198;
-canonical target boundary distance (edges 8.35 / 25.66 / 82.06 px): **0.4094 / 0.3477 / 0.2356 / 0.1531** —
-the field's advantage concentrates at small boundary distances, exactly as designed.
+Border-target and tiny-target mIoU are **not applicable** (0 records): the L3 pipeline's nearest eligibility
+excludes border-truncated and tiny targets. B3 target-area quartiles (edges 1010.5 / 1449.5 / 2380.5 px):
+0.3600 / 0.3725 / 0.3704 / 0.1940; boundary-distance quartiles (edges 20.91 / 51.15 / 99.87 px):
+0.3392 / 0.2743 / 0.3177 / 0.3656.
 
-PairedVal (N_pair 20): Y-B0 **0/20** (+0.0000), Y-B1 **8/20** (+0.1840), **Y-B2 6/20** (**+0.1828**),
-Y-B3 6/20 (+0.0363).
+## 7. Criteria
 
-## 6. Criteria
+Section 28 (Z-B3): mIoU 0.3242 < 0.35 ✗ · B3−B0 +0.1732 ≥ 0.10 ✓ · B3−B1 **+0.0231 < 0.05 ✗** ·
+B3−B2 +0.1519 ≥ 0.05 ✓ · B3−B5 +0.2355 ≥ 0.10 ✓ · paired 0.75 ≥ 0.70 ✓ · margin +0.3004 ≥ 0.15 ✓ →
+**5 of 7**.
 
-| # | Criterion | Required | Measured | Pass |
-|---|---|---|---|---|
-| 1 | field semantic sanity | 0.85 / 0.97 / 0.90 | 1.0000 / 1.0000 / 1.0000 | ✓ |
-| 2 | B2 overfit | mIoU ≥ 0.85, Dice ≥ 0.90 | 0.9663 / 0.9827 | ✓ |
-| 3 | B2 − B0 mIoU | ≥ +0.08 | **+0.1027** | ✓ |
-| 4 | B2 − B1 mIoU | ≥ +0.05 | **+0.0224** | ✗ |
-| 5 | B2 − B3 mIoU | ≥ +0.10 | **+0.2396** | ✓ |
-| 6 | B2 mIoU | ≥ 0.35 | **0.2864** | ✗ |
-| 7 | B2 paired pass rate | ≥ 0.70 | **0.30** (6/20) | ✗ |
-| 8 | B2 own-cross margin | ≥ 0.15 | **+0.1828** | ✓ |
-| 9 | no target GT model input | — | GT target = label/eval only | ✓ |
+Section 29 (Z-B4): `deterministic_product_pass = false` (four of seven conditions pass).
+Section 30: `delta_learned_vs_product = +0.0454` → `learned_not_worse = true`,
+`product_materially_stronger = **false**`.
 
-Measured reading (reported, not prescribed): the oracle-reference field is **semantically exact** and adds
-clear signal over the visual baseline (+0.1027) and over geometry alone (+0.2396), with its advantage
-concentrated at small boundary distances; but it does not beat the raw reference-mask control by the
-required +0.05, absolute MiniVal quality stays below 0.35, and only 6/20 paired counterfactuals pass — so
-the nearest relation is not demonstrated as a feasible dense-segmentation target from this causal setup.
+Measured reading (reported, not prescribed): composition clearly helps over the visual baseline (+0.1732),
+the nearest-only variant (+0.1519) and geometry-only (+0.2355); the learned two-field composition is the
+best variant overall (mIoU 0.3242, paired 15/20, margin +0.3004) and beats the deterministic product
+comparator by +0.0454 without ever being worse. The two predeclared bars that fail are the absolute-quality
+bar (0.35) and the incremental-value bar for nearest *given* the directional field (+0.0231 < +0.05) — once
+the directional field is present, the nearest field adds little on this split.
 
-## 7. Tests, storage, git
+## 8. Tests, storage, git
 
-`python -m pytest tests/ -q` → **1011 passed, 1 skipped** (Task 6X ended at 965 passed / 1 skipped; no prior
+`python -m pytest tests/ -q` → **1062 passed, 1 skipped** (Task 6Y ended at 1011 passed / 1 skipped; no prior
 passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check that
-needs the proposal env). `tests/test_task6y_nearest_boundary_field.py` adds the 46 section-O checks.
+needs the proposal env). `tests/test_task6z_l3_composition.py` adds the 51 section-O checks.
 
-Not committed: nearest pack JSONs, the four checkpoints, feature caches, source imagery/vectors, `.conda`.
-Committed: field/decoder code, small manifests and evaluation JSON, scripts, tests, docs, handoff.
+Not committed: L3 pack JSONs, the twelve checkpoints, feature caches, source imagery/vectors, `.conda`.
+Committed: composition/decoder code, small manifests and evaluation JSON, scripts, tests, docs, handoff.
 
-Task 6Y downloaded nothing and installed nothing (SciPy was already present in both environments). Watt was
-**not needed** in Task 6Y: the pre-existing Watt instance is transport-only, is not owned by this project
-and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
-modified.
+Task 6Z downloaded nothing and installed nothing. Watt was **not needed** in Task 6Z: the pre-existing Watt
+instance is transport-only, is not owned by this project and was left running per the ownership rule; no
+proxy, host, certificate or TLS setting was read or modified.
 
-## 8. Interpretation boundary
+## 9. Interpretation boundary
 
-DSH reports measurements only. No global novelty claim and no end-to-end nearest capability claim;
-`sigma_diag` unchanged; no learned distance transform; no predicted reference; no combination of directional
-and nearest fields; no L3; the reference resolver was not changed.
+DSH reports measurements only. No global novelty claim; no final L3 end-to-end capability claim; the
+reference subsystem was not modified; field constants not tuned; no attention/global competition; no
+predicted reference; ProgramHead not retrained; target loss unchanged; DSH does not decide whether learned
+or deterministic composition enters the final model.
 
-## 9. Recommended next step (exact wording required by Part M)
+## 10. Recommended next step (exact wording required by Part M)
 
-等待 ChatGPT 根据 Task 6Y 的 nearest boundary field 因果结果决定下一步，不自行进行 predicted-reference nearest 集成、direction+nearest 场组合或 L3 训练。
+等待 ChatGPT 根据 Task 6Z 的 L3 direction×nearest composition 因果结果决定下一步，不自行进行 predicted-reference L3 集成、attention/global competition 改造或正式全量训练。
 
-## 10. STOP
+## 11. STOP
 
-Task 6Y stops here: the frozen reference resolver is untouched, no predicted-reference nearest integration,
-no directional+nearest combination, no L3, no GRCL, no test access, no GUI. Waiting for the ChatGPT audit.
+Task 6Z stops here: no predicted-reference integration, no attention/global context, no field-formula
+change, no full-dataset training, no test access, no GUI. Waiting for the ChatGPT audit.
