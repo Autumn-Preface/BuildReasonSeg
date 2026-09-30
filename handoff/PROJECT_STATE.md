@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7B._
+_Last updated by DSH at the end of Task 7C._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -106,6 +106,43 @@ The block above is machine-checked against
 | 7A | **L3 predicted-reference + natural-language integration audit** | **done → `L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE`** (**no model trained**; integration/attribution only; Z-B3 `74f308e1…9fc0f0bc` and hardened ProgramHead `4cbba36b…d44a5e` hash-verified; **A0 oracle reproduction exact** — mIoU Δ **0.0**, Dice Δ **0.0**, paired **15/20**, margin Δ **0.0** vs frozen 6Z; A1 U-C1 deterministic largest resolver → predicted reference: abstain **0.0125**, ref mIoU **0.4700** / Pr@0.5 **0.5527**, buckets OK **131** / SELECTION_WRONG **75** / NOT_COVERED **31** / NONE 3, strict target mIoU **0.2170**, answered **0.2198**, **retention 0.6693**, ref-OK subset **0.3434** vs ref-fail **0.0651**, paired **8/20** margin **+0.1995**; A2 natural-language: parser **240/240** on canonical queries, strict **0.2170** (identical to A1), paired 8/20 margin +0.1995, parser-correct members 40/40; fixed-24 paraphrase audit frozen before the run: **3/24** exact (zh 3/12, en 0/12), compact **0/8** → `l3_paraphrase_ready=false`, 19/21 failures drop the terminal `to_nearest`; CLI `predict_buildreasonseg_l3.py` audit all-checks-passed (exit 0 + 6 outputs, out-of-scope exit **5**, GT args refused); failure attribution parser **0** / reference_fail **109** / target_fail **90** / TARGET_OK **41** → dominant bottleneck **REFERENCE**; §20 gate fails 4/6 → verdict) |
 
 | 7B | **L3 ProgramHead compositional-semantic hardening** | **done → `L3_PARSER_CANONICAL_REGRESSION`** (parser-only fine-tune of the same Qwen3-VL-2B text-only 20-class ProgramHead from the exact Task 6T checkpoint `4cbba36b…d44a5e`; frozen packs pre-training: **96** minimal pairs (M1 48 / M2 16 / M3 16 / M4 16, 48 zh + 48 en) + **192** stress v1 (L3 4×24 = 96 with 12 zh + 12 en each, L2 4×12, `largest_to_nearest` 16, `smallest_to_nearest` 8, `largest` 8, `smallest` 8, extremes 8) + Task 7A fixed24 + Z-MiniVal240 + Z-PairedVal; **all 12,778 original v0.2 train rows removed** because train and val share all 120 instruction templates (100 % normalized overlap) → training used only **4,800** augmentations (L3 600 each, `largest_to_*` 300, `largest_to_nearest` 400, `smallest_to_nearest` 200, `smallest_to_*` 150), leakage **exact 0 / normalized 0** → `LEAKAGE_FREE`; internal group-disjoint split 4,399/401 (overlap 0), AdamW lr 2e-4 / wd 1e-4 / eff. batch 32 / ≤8 epochs / patience 2 / seed 20261001 → selected epoch **1**, checkpoint `2a285e4a…cf48eb4`, 417.9 s, 6.922 GB; **full v0.2 val 0.7129 accuracy / macro F1 0.7939 / min class recall 0.0000** (`leftmost` 0.0, `rightmost` 0.5, `topmost` 0.825, `bottommost` 0.830, `smallest` 0.851, `largest_to_nearest` 0.814 — the six never-trained classes), Z-MiniVal240 **240/240** ✓, Z-Paired **40/40** ✓, fixed24 **21/24** (compact 7/8), minimal pairs **73/96**, stress **0.8281** / macro F1 0.6030 / L3 macro 0.8333; scope controls all correct with exit **5**, frozen downstream reproduces Task 7A **exactly** (strict 0.21700369907681483 Δ0.0, paired 8/20, margin Δ0.0), CLI default **not** moved → verdict) |
+
+| 7C | **20-class rehearsal + L3 ProgramHead hardening** | **done → `L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`** (final parser-hardening attempt; restarted **only** from Task 6T `4cbba36b…d44a5e`, never from the failed Task 7B checkpoint; **8,000-prompt all-20-class rehearsal** — L3 4×800 (400 zh + 400 en), other 16 classes ×300 (150 + 150) — 8,000 unique normalized, exact overlap **0**, normalized overlap **0**, duplicates **0**, per-class/zh-en counts exact → `REHEARSAL_CLEAN`; internal group-disjoint split with holdout **80/class (L3)** and **30/class (other 16)**, overlap 0; AdamW ProgramHead lr **1e-4** / LoRA lr **2e-5** / wd 1e-4 / eff. batch 32 / ≤5 epochs / patience 2 / bf16 → selected epoch **2**, checkpoint `c1505736…d58d9a`, 419.3 s, 7.41 GB; **full v0.2 val 18,222/18,222 = 1.0000 accuracy, macro F1 1.0000, every class recall 1.0000** ✓ (forgetting fully cured), Z-MiniVal240 **240/240** ✓, Z-Paired **40/40** ✓; but fixed24 **5/24** (compact 0/8, per class 1/0/2/2), minimal96 **60/96**, stress **0.6667** / macro F1 0.5924 / min recall 0.4167 / L3 0.4479 ✗; scope controls pass; frozen E2E reproduces Task 7A exactly; canonical gates pass → L3 CLI default moved to Task 7C → verdict) |
+
+## Task 7C measured results
+
+Final parser-hardening attempt: restart from the stable Task 6T checkpoint (never the failed Task 7B one),
+train once on an all-20-class rehearsal set with fixed differential learning rates, evaluate once on the
+reused frozen Task 7A/7B sets. Downstream (YOLO, U-C1 resolver, fields, SAM2, Z-B3) frozen; no keyword/regex
+remapping. Full detail: `docs/task7c_20class_rehearsal_l3_hardening.md`, `evaluation/task7c_*.json`.
+
+| | Value |
+|---|---|
+| Initialization | Task 6T `4cbba36b…d44a5e` exact · `initialized_from_task7b = false` · new checkpoint differs from Task 7B · Qwen3-VL-2B text-only, 20 classes, LoRA + ProgramHead (17,434,624 / 2,144,421,888), backbone frozen |
+| Rehearsal set | **8,000** rows — L3 4×800 (400 zh + 400 en) = 3,200 · other 16 ×300 (150 + 150) = 4,800 · 8,000 unique normalized · exact overlap **0** · normalized overlap **0** · duplicates **0** · counts exact → `REHEARSAL_CLEAN` |
+| Internal split | per class 90/10 by normalized hash (seed 20261001) · holdout **80/class (L3)**, **30/class (other 16)** · every class supported · overlap **0** |
+| Protocol | AdamW · ProgramHead lr **1e-4** · LoRA lr **2e-5** · wd 1e-4 · eff. batch 32 (16×2) · ≤5 epochs · patience 2 · bf16 · clip 1.0 · no scheduler/sweep · selection `min(macro_f1_20, l3_macro_recall)` → min recall → macro F1 → accuracy → earlier epoch (internal holdout only) |
+| Training outcome | selected epoch **2**: holdout primary 1.0000, macro F1 1.0000, L3 macro 1.0000, min recall 1.0000, acc 1.0000 · checkpoint `c1505736…d58d9a` · 419.3 s · 7.41 GB |
+| Full v0.2 val | **18,222/18,222 = 1.0000** accuracy · macro F1 **1.0000** · every class recall **1.0000** ✓ (Task 7B's 0.7129 / 0.7939 / 0.0000 fully cured) |
+| Z-MiniVal240 / Z-Paired | **240/240** ✓ · **40/40** ✓ |
+| Task 7A fixed24 | **5/24** · compact **0/8** · per L3 class 1/0/2/2 → ✗ |
+| Task 7B minimal96 | **60/96** → ✗ |
+| Task 7B stress192 | **0.6667** · macro F1 **0.5924** · min class recall **0.4167** · L3 macro **0.4479** → ✗ |
+| Scope safety | reused Task 7B controls pass (L2 → `largest_to_left_of`/`largest_to_right_of`, nearest-only → `largest_to_nearest`, all exit 5 before proposals/reference/fields/SAM2/Z-B3; OOD guard intact; no keyword gate) |
+| Frozen E2E regression | parser 240/240 · strict `0.21700369907681483` (Δ 0.0) · answered `0.21975058134361` (Δ 0.0) · abstentions **3** · paired **8/20** · margin `0.19949275176250805` (Δ 0.0) ✓ |
+| CLI default | canonical gates pass → L3 default moved to the Task 7C checkpoint; Task 7A helper and frozen 7A/7B artifacts untouched |
+| Verdict | **`L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`** (canonical 14/14 ✓, compositional 0/8 ✗) |
+
+1. **The rehearsal protocol cured the failure it targeted**: full-val accuracy went 0.7129 → **1.0000** with
+   every class recall 1.0000, so no canonical forgetting remains; Z-MiniVal240/Z-Paired stayed perfect and
+   the frozen downstream still reproduces Task 7A to 1e-6.
+2. **But the L3 paraphrase robustness did not transfer**: fixed24 5/24 (compact 0/8), minimal96 60/96,
+   stress 0.6667 — all *below* Task 7B's 21/24, 73/96, 0.8281 — because the rehearsal deliberately reserves
+   the evaluation lexical forms, so the model learned the rehearsal L3 phrasings rather than the held-out
+   ones.
+3. Both parser attempts are now measured: 7B (14/20 classes) destroyed canonical behaviour while helping
+   paraphrases; 7C (20/20 classes) restored canonical behaviour but lost paraphrase gain.
+4. Next: 等待 ChatGPT 根据 Task 7C 的 20-class rehearsal 与 L3 组合语义结果决定 parser 是否正式冻结，不自行继续 parser 调参、reference hardening 或下游架构改造。
 
 ## Task 7B measured results
 
