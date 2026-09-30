@@ -1,24 +1,28 @@
-# TO_DSH — Task 6U: Reference Candidate Coverage + Proposal-Set Ranker Hardening
+# TO_DSH — Task 6V: Family-Conditioned Reference Resolver Policy
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `e63f8c40761637040ac6169ad603b6f7c7001274`
+> Base commit: `b8b5224ec88d32af7d086e337016f6e7d2ada1a2`
 >
-> Predecessor: Task 6T → `PARSER_SEMANTIC_CONTRAST_FAIL`
+> Predecessor: Task 6U → `REFERENCE_RANKER_NOT_HELPFUL`
 >
 > Research decision already made by ChatGPT:
 >
-> 1. Accept the Task 6T hardened ProgramHead as the **current directional-chain parser** because it preserves 240/240 MiniVal, 40/40 paired members, improves fixed24 from 21/24 to 24/24, and improves the held-out stress pack to 0.99375 accuracy/macro-F1.
-> 2. Do **not** claim Task 6T fully solves nearest semantics. Compact `direction + nearest` phrasing remains technical debt and must be revisited before enabling nearest/L3 execution.
-> 3. The dominant scientific bottleneck from Task 6S remains **REFERENCE**: 117 reference-side failures vs 67 target-decoder failures.
-> 4. Task 6U therefore isolates and hardens two reference subproblems:
->    - candidate proposal **coverage**;
->    - extreme-instance **selection/ranking**.
-> 5. Do not change the core GeometricRelationField/B3 method.
+> 1. Accept Task 6U's **U-C1** proposal configuration as a useful candidate-recall improvement:
+>    - imgsz 640
+>    - conf 0.05
+>    - max_det 300
+>    - no TTA / no tiling
+> 2. Do **not** use ProposalSetRanker v0.1 globally: it catastrophically fails on `smallest`.
+> 3. Task 6U revealed a strong family asymmetry:
+>    - ranker helps `largest`;
+>    - deterministic area selection is much better for `smallest`.
+> 4. Before designing another reference model, Task 6V tests whether a **family-conditioned policy over already-frozen resolver options** can recover the useful part of Task 6U at essentially zero new model cost.
+> 5. No new training is permitted in Task 6V.
 
-DSH is an executor. Do not redesign the experiment.
+DSH is an executor. Do not redesign the policy search.
 
 ---
 
@@ -27,430 +31,239 @@ DSH is an executor. Do not redesign the experiment.
 All user-facing DSH output must be Chinese.
 
 DSH MAY:
-- run the exact frozen YOLO26m-seg checkpoint under the four declared inference configurations;
-- build the exact train-side calibration split defined here;
-- implement the exact ProposalSetRanker v0.1 specified here;
-- train only that small ranker;
-- evaluate reference and downstream target chains;
-- solve ordinary implementation/runtime bugs without changing the experiment.
+- load existing frozen Task 6U proposal caches/checkpoints;
+- evaluate the three predeclared resolver options on the train-only U-Calib200 set;
+- freeze exactly one resolver option for `largest` and one for `smallest`;
+- evaluate the frozen family-conditioned resolver on RefValUnique, MiniVal240 and PairedVal20;
+- integrate the already-frozen Task 6T hardened ProgramHead for one final directional-chain check;
+- solve ordinary runtime/integration bugs without changing the experiment.
 
 DSH MUST NOT:
+- train or fine-tune any model;
+- retrain the ProposalSetRanker;
 - retrain YOLO;
 - change YOLO weights;
-- use another detector/segmenter;
-- change the native dataset/splits;
-- alter the hardened ProgramHead;
-- retrain ProgramHead;
-- change SAM2;
+- introduce a fourth resolver option;
+- change U-C0/U-C1 configuration;
+- change Task 6Q eligibility thresholds;
+- change the hardened ProgramHead;
 - change GeometricRelationField v0.2;
+- change SAM2;
 - retrain B3;
 - add GRCL;
-- add nearest/L3 target execution;
-- use test split;
-- use oracle target/reference at inference;
-- invent an additional inference configuration;
-- choose Task 6V.
+- add nearest/L3 execution;
+- access test split;
+- choose Task 6W.
 
-If an unexpected issue requires a prohibited change, STOP and report.
+If a prohibited change is required, STOP and report.
 
 ---
 
-# PART A — Record Task 6T audit notes
+# PART A — Frozen evidence and Task 6U interpretation
 
-## 1. Parser status
+## 1. Record the Task 6U findings
 
-Record in `docs/task6u_reference_hardening.md`:
+Copy into `docs/task6v_family_conditioned_reference_resolver.md`:
 
-The Task 6T hardened parser is accepted for the current eight-program directional chain, but Task 6T's formal verdict remains `PARSER_SEMANTIC_CONTRAST_FAIL`.
+Task 6U established:
 
-Measured hardened parser:
-- full v0.2 val = 1.0000;
-- MiniVal240 = 240/240;
-- PairedVal members = 40/40;
-- fixed24 = 24/24;
-- stress v1 accuracy/macro-F1 = 0.99375/0.99375;
-- residual failure: one `largest_to_nearest` stress/minimal-pair case and the two compact direction+nearest controls.
+### Candidate coverage
+U-C1 vs U-C0 on untouched RefValUnique:
+- overall eligible coverage@0.50:
+  - 0.68950 → 0.75342
+- largest:
+  - 0.83636 → 0.87273
+- smallest:
+  - 0.54128 → 0.63303
 
-Do not modify Task 6T verdict/artifacts.
+Therefore candidate recall improved.
 
-## 2. Task 6T reporting erratum
+### Selector behavior by family
 
-Record without mutating Task 6T artifacts:
+U-S0 = U-C0 + deterministic area selector
 
-`handoff/FROM_DSH.md` states Task 6T peak VRAM as `0.67 GB`, while the authoritative `evaluation/task6t_training_summary.json` records C1 peak VRAM as **7.29 GB**.
+U-S1 = U-C1 + deterministic area selector
 
-For future reporting use the training-summary value.
+U-S2 = U-C1 + ProposalSetRanker v0.1
 
-This has no effect on parser metrics.
+RefValUnique:
+
+Largest:
+- U-S0 mIoU 0.54284 / Pr@0.5 0.65138
+- U-S1 mIoU 0.51830 / Pr@0.5 0.60000
+- U-S2 mIoU 0.56804 / Pr@0.5 0.66364
+
+Smallest:
+- U-S0 mIoU 0.30109 / Pr@0.5 0.39423
+- U-S1 mIoU 0.33532 / Pr@0.5 0.43810
+- U-S2 mIoU 0.04105 / Pr@0.5 0.03810
+
+Interpretation boundary:
+- the shared v0.1 ranker is not accepted globally;
+- its family-specific usefulness must be selected using **train-only calibration**, not RefVal.
+
+Do not modify Task 6U artifacts or verdict.
 
 ---
 
 # PART B — Frozen assets
 
-## 3. Freeze all prior evidence
+## 2. Read-only
 
-Read-only:
-- all Task 6S artifacts;
-- all Task 6T artifacts;
-- hardened ProgramHead checkpoint;
-- Task 6M.1 YOLO26m-seg checkpoint;
-- Task 6Q resolver implementation;
+Freeze:
+
+- all Task 6U artifacts;
+- U-C0 proposal cache/config;
+- U-C1 proposal cache/config;
+- ProposalSetRanker v0.1 checkpoint:
+  `artifacts/checkpoints/task6u/reference_ranker_v01.pt`
+- Task 6T hardened ProgramHead checkpoint;
+- Task 6Q deterministic selector rules;
 - Task 6O B3 checkpoint;
 - GeometricRelationField v0.2;
-- frozen SAM2 feature cache/path;
-- WHU-EA-NativeVector v1.0;
-- BuildSpatialReason v0.2;
-- Task 3B spatial config.
+- SAM2 feature path/cache;
+- U-Calib200;
+- RefValUnique;
+- MiniVal240;
+- PairedVal20.
 
 No test split.
 
-## 4. Proposal checkpoint
+## 3. Verify hashes
 
-Use exactly:
+Require exact hashes recorded in previous artifacts for:
 
-`artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/weights/best.pt`
+- YOLO26m-seg Task 6M.1 checkpoint;
+- ProposalSetRanker v0.1 checkpoint;
+- Task 6T hardened ProgramHead checkpoint;
+- Task 6O B3 checkpoint where recorded;
+- frozen pack hashes.
 
-SHA256:
-`ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474`
-
-No retraining.
-
-## 5. Main evaluation packs
-
-Main reference evaluation:
-- exact Task 6P `RefValUnique` (219 references).
-
-Main downstream evaluation:
-- exact Task 6N MiniVal240;
-- exact Task 6N PairedVal20.
-
-Do not regenerate.
+If ranker checkpoint is missing/mismatched:
+STOP with `FROZEN_RESOLVER_ASSET_UNAVAILABLE`.
 
 ---
 
-# PART C — Train-side calibration split
+# PART C — Exactly three family-policy options
 
-## 6. Use RefTrainUnique only
+## 4. Resolver options
 
-Start from the frozen Task 6P `RefTrainUnique`.
+For each family independently, compare EXACTLY:
 
-Create two disjoint groups by unique reference key:
+### V-P0
+`U-C0 + deterministic Task 6Q area selector`
 
-```text
-(split, tile_id, reference_source_feature_id, reference_family)
-```
+### V-P1
+`U-C1 + deterministic Task 6Q area selector`
 
-Deterministic seed:
-`20260930`
+### V-P2
+`U-C1 + frozen ProposalSetRanker v0.1`
 
-### U-Calib200
-Exactly 200 references if available:
-- 100 largest;
-- 100 smallest;
-- unique tile/reference key;
-- selected deterministically by SHA256 of `seed:key`.
+No new option.
 
-If one family has <100, use all of that family and fill from the other.
-
-### U-RankerTrain
-All remaining RefTrainUnique references not in U-Calib200.
-
-No RefValUnique record may enter calibration or ranker training.
-
-Write:
-`evaluation/task6u_reference_train_split.json`
-
-Require:
-- zero key overlap U-Calib200 ↔ U-RankerTrain;
-- zero tile/reference key overlap with RefValUnique;
-- no test split.
+Do not retrain or recalibrate the ranker.
 
 ---
 
-# PART D — Fixed proposal inference configurations
+# PART D — Train-only policy selection
 
-## 7. Exactly four configurations
+## 5. Use exact U-Calib200 only
 
-Use the same frozen YOLO weights.
+Use the frozen Task 6U U-Calib200:
+- 100 largest
+- 100 smallest
 
-Do not add any others.
+This is the **only** set used to choose the family policies.
 
-### U-C0 — frozen baseline
-- imgsz = 640
-- conf = 0.10
-- max_det = 100
-- default NMS
-- no TTA
-- no tiling
+RefValUnique / MiniVal240 / PairedVal20 must not influence selection.
 
-### U-C1 — lower confidence / larger candidate cap
-- imgsz = 640
-- conf = 0.05
-- max_det = 300
-- default NMS
-- no TTA
-- no tiling
+## 6. Per-family metrics on U-Calib200
 
-### U-C2 — higher network input resolution
-- imgsz = 1024
-- conf = 0.10
-- max_det = 300
-- default NMS
-- no TTA
-- no tiling
-
-### U-C3 — higher resolution + recall-oriented threshold
-- imgsz = 1024
-- conf = 0.05
-- max_det = 300
-- default NMS
-- no TTA
-- no tiling
-
-Important:
-- source image remains the original 512×512 tile;
-- Ultralytics performs its normal input resize/letterbox;
-- predicted masks must be restored to exact source 512×512 coordinates before reference logic;
-- no artificial source-image super-resolution;
-- no TTA;
-- no sliding-window/tiling.
-
-## 8. Eligibility policy
-
-For every config, use exactly the Task 6Q family eligibility rules:
-
-Largest:
-- not border-touching;
-- bbox extent ratio <= 0.20.
-
-Smallest:
-- not border-touching;
-- bbox extent ratio <= 0.20;
-- area >= 150 px.
-
-Do not change thresholds.
-
----
-
-# PART E — U0 candidate-coverage selection
-
-## 9. Run U-Calib200 under all four configs
-
-For each config report:
-
-- all-proposal coverage@0.25 / 0.50 / 0.75;
-- eligible coverage@0.25 / 0.50 / 0.75;
-- overall;
-- largest;
-- smallest;
-- proposals/tile mean/median/p90;
-- eligible proposals/tile;
-- no-proposal count;
-- no-eligible count;
-- inference wall time/tile;
-- peak VRAM.
-
-GT reference is evaluation only.
-
-Write:
-`evaluation/task6u_calibration_candidate_coverage.json`
-
-## 10. Freeze one selected proposal configuration
-
-Selection rule, in this exact priority order:
-
-1. highest `smallest eligible coverage@0.50`;
-2. then highest `overall eligible coverage@0.50`;
-3. then highest `largest eligible coverage@0.50`;
-4. then lower mean eligible proposals/tile;
-5. then lower imgsz;
-6. then higher conf;
-7. then lower config id.
-
-Do not use RefValUnique or MiniVal240 to choose config.
-
-Freeze:
-`evaluation/task6u_selected_proposal_config.json`
-
-After this file exists, the selected config may not change.
-
----
-
-# PART F — Reference candidate audit on untouched RefValUnique
-
-## 11. Compare baseline and selected config
-
-Run:
-- U-C0 baseline;
-- selected U-C* config.
-
-On exact RefValUnique report:
-
-- eligible coverage@0.25 / 0.50 / 0.75;
-- overall/largest/smallest;
-- proposals/tile;
-- eligible proposals/tile;
-- no proposal;
-- no eligible.
-
-Also compute **oracle-selection ceiling**:
-if GT were allowed only to choose the best eligible proposal, report:
-- oracle selected-reference mIoU;
-- Dice;
-- centroid median/p90;
-- Pr@0.5.
-
-This ceiling is diagnostic only and never enters inference.
-
-Write:
-`evaluation/task6u_refval_candidate_audit.json`
-
----
-
-# PART G — ProposalSetRanker v0.1
-
-## 12. Purpose
-
-Task 6S showed:
-- `REFERENCE_NOT_COVERED_IOU50 = 68`;
-- `REFERENCE_SELECTION_WRONG = 42`.
-
-The ranker addresses only the second category.
-
-It cannot create missing proposals.
-
-It is support infrastructure, NOT a claimed project novelty.
-
-## 13. Training examples
-
-Generate proposals for U-RankerTrain using the **selected frozen config**.
-
-For each reference record:
-- keep only eligible proposals for its family;
-- find best eligible proposal IoU vs GT reference;
-- if best eligible IoU < 0.50: exclude record from ranker-loss training and count it as `untrainable_not_covered`;
-- otherwise target class = proposal index with highest IoU to GT reference;
-- ties in GT IoU → higher YOLO confidence → lower original proposal index.
-
-GT is used only to make training labels.
-
-At inference, ranker receives no GT.
-
-## 14. Exact proposal feature vector
-
-For each eligible proposal compute exactly these 12 scalar features:
-
-1. `log_area = log1p(area_px) / log1p(512*512)`
-2. `area_ratio = area_px / (512*512)`
-3. `area_over_set_max = area_px / max(area_px_in_set)`
-4. `set_min_over_area = min(area_px_in_set) / area_px`
-5. `area_rank_desc = rank by descending area / max(1,N-1)` where largest rank=0
-6. `area_rank_asc = rank by ascending area / max(1,N-1)` where smallest rank=0
-7. `confidence`
-8. `bbox_extent_ratio`
-9. `width_ratio = bbox_width / 512`
-10. `height_ratio = bbox_height / 512`
-11. `fill_ratio = area_px / max(1,bbox_area)`
-12. `proposal_count_norm = min(N,300)/300`
-
-Append a 2-d one-hot family indicator:
-- largest = `[1,0]`
-- smallest = `[0,1]`
-
-Final per-proposal vector = 14 dims.
-
-Do NOT use:
-- GT-derived features;
-- target relation;
-- centroid x/y;
-- image location;
-- SAM2 features;
-- target mask;
-- source feature id.
-
-## 15. Exact ranker architecture
-
-Create:
-`buildreasonseg_mvp/task6u_reference_ranker.py`
-
-Shared per-proposal MLP:
-
-```text
-Linear(14 → 32)
-GELU
-Linear(32 → 16)
-GELU
-Linear(16 → 1)
-```
-
-For each candidate set:
-- score all eligible proposals;
-- softmax over proposal scores;
-- cross-entropy against the labelled positive proposal.
-
-No attention/Transformer/GNN.
-
-## 16. Training
-
-Create deterministic 90/10 internal split of ranker-trainable U-RankerTrain records:
-- seed `20260930`;
-- stratify by family;
-- split by reference key hash.
-
-Train:
-- AdamW
-- lr = `1e-3`
-- weight_decay = `1e-4`
-- batch = 64 reference sets, using padded/masked candidate tensors as needed
-- max epochs = 50
-- early stopping patience = 6
-- selection metric:
-  1. internal holdout top-1 reference selection accuracy;
-  2. tie-break mean selected-reference IoU
-- seed `20260930`
-- no hyperparameter sweep.
-
-Checkpoint:
-`artifacts/checkpoints/task6u/reference_ranker_v01.pt`
-local/gitignored.
-
-Write:
-`evaluation/task6u_ranker_training.json`
-
----
-
-# PART H — Three selectors on untouched RefValUnique
-
-## 17. Compare exactly three systems
-
-### U-S0 Baseline
-- U-C0 proposals
-- frozen Task 6Q deterministic area selector
-
-### U-S1 Candidate-hardening only
-- selected U-C* proposals
-- same Task 6Q deterministic area selector
-
-### U-S2 Candidate-hardening + learned ranker
-- selected U-C* proposals
-- ProposalSetRanker v0.1
-
-No fourth selector.
-
-## 18. Reference metrics
-
-For U-S0/U-S1/U-S2 report on exact RefValUnique:
+For each family and each V-P0/P1/P2 report:
 
 - selected-reference mIoU;
 - Dice;
 - Pr@0.5;
-- centroid error mean/median/p90;
-- area-ratio median;
+- centroid median;
+- centroid p90;
 - abstention rate;
-- largest mIoU / Pr@0.5;
-- smallest mIoU / Pr@0.5.
+- `REFERENCE_NOT_COVERED_IOU50`;
+- `REFERENCE_SELECTION_WRONG`;
+- `REFERENCE_OK`.
 
-Failure attribution exactly:
+Write:
+`evaluation/task6v_calibration_family_policy.json`
+
+## 7. Freeze one option per family
+
+For `largest` and `smallest` independently, rank options by this exact priority:
+
+1. higher `Pr@0.5`
+2. higher selected-reference mIoU
+3. lower `REFERENCE_SELECTION_WRONG`
+4. lower centroid median
+5. lower abstention rate
+6. simpler option priority:
+   - V-P0
+   - V-P1
+   - V-P2
+
+The simplicity tie-break means a learned ranker is used only when calibration evidence is actually better.
+
+Write:
+
+`evaluation/task6v_frozen_family_policy.json`
+
+Example schema:
+
+```json
+{
+  "largest": "V-P2",
+  "smallest": "V-P1"
+}
+```
+
+Do not change it after any RefVal result is observed.
+
+---
+
+# PART E — Untouched RefValUnique evaluation
+
+## 8. Family-conditioned resolver
+
+Create:
+
+`buildreasonseg_mvp/task6v_family_reference_resolver.py`
+
+It only dispatches:
+
+```text
+if family == largest:
+    use frozen selected largest policy
+elif family == smallest:
+    use frozen selected smallest policy
+```
+
+No additional learned logic.
+
+No GT at inference.
+
+## 9. RefValUnique metrics
+
+Evaluate frozen family policy on exact RefValUnique.
+
+Report:
+
+- overall selected-reference mIoU;
+- Dice;
+- Pr@0.5;
+- centroid mean/median/p90;
+- area ratio median;
+- abstention rate;
+- largest metrics;
+- smallest metrics.
+
+Failure buckets exactly:
 
 1. `NO_PROPOSALS`
 2. `NO_ELIGIBLE_PROPOSALS`
@@ -459,76 +272,85 @@ Failure attribution exactly:
 5. `SELECTED_MASK_GEOMETRY_POOR`
 6. `REFERENCE_OK`
 
-Use the same definitions as Task 6Q.
+Compare against:
+- Task 6U U-S0
+- Task 6U U-S1
+- Task 6U U-S2
+- Task 6U U-C1 oracle-selection ceiling (diagnostic only)
 
 Write:
-`evaluation/task6u_refval_selector_comparison.json`
+`evaluation/task6v_refval_family_policy.json`
 
 ---
 
-# PART I — Downstream causal evaluation
+# PART F — Downstream causal evaluation
 
-## 19. Isolate reference module
+## 10. Canonical-program MiniVal240
 
-Use canonical/oracle program IDs from the frozen records.
+Use exact frozen MiniVal240.
 
-Do NOT use natural-language parser in the main U-S0/U-S1/U-S2 comparison.
+Use canonical program ids, not natural-language parsing, for the main causal comparison.
 
-This keeps Task 6U causal:
-proposal/reference change only.
-
-For MiniVal240:
+Pipeline:
 
 ```text
-canonical program id
-→ family/relation
-→ U-S0/U-S1/U-S2 reference resolver
+canonical program
+→ family + direction
+→ frozen family-conditioned reference resolver
 → GeometricRelationField v0.2
 → frozen SAM2 visual feature
 → frozen B3
 → target mask
 ```
 
-GT target/reference only for evaluation.
+GT reference/target are evaluation only.
 
-Report for U-S0/U-S1/U-S2:
+Report:
 
-- strict all-240 target mIoU/Dice;
-- answered-only mIoU/Dice;
+- strict all-240 mIoU;
+- answered-only mIoU;
+- Dice;
 - Pr@0.5;
 - abstentions;
-- largest/smallest;
+- reference-fail count;
+- target-fail-with-reference-ok count;
+- largest/smallest target mIoU;
 - per direction;
-- tiny target if present;
-- border target.
-
-Failure attribution using Task 6S categories except parser bucket must be zero/not applicable.
+- border target;
+- tiny target if present.
 
 Write:
-`evaluation/task6u_downstream_minival240.json`
+`evaluation/task6v_downstream_minival240.json`
 
-## 20. PairedVal20
+## 11. PairedVal20
 
-For all three systems:
+Use exact PairedVal20.
 
-- pass / 20;
+Report:
+- pass /20;
 - mean own IoU;
 - mean cross IoU;
 - own-cross margin;
 - reference-abstention pairs.
 
 Write:
-`evaluation/task6u_downstream_pairedval20.json`
+`evaluation/task6v_downstream_pairedval20.json`
 
 ---
 
-# PART J — Full natural-language regression with hardened parser
+# PART G — Natural-language integration regression
 
-## 21. One final integration check
+## 12. Hardened ProgramHead integration
 
-If U-S2 exists normally, run the current Task 6T hardened ProgramHead + U-S2 reference path + frozen field/B3 on MiniVal240.
+Run exact MiniVal240 natural-language queries through:
 
-This is not used to train or choose U-S2.
+```text
+Task 6T hardened ProgramHead
+→ family-conditioned resolver
+→ field v0.2
+→ SAM2
+→ B3
+```
 
 Require parser:
 - 240/240 exact.
@@ -536,201 +358,163 @@ Require parser:
 Report:
 - strict mIoU;
 - answered-only mIoU;
-- PairedVal;
-- margin;
-- abstentions.
+- abstentions;
+- paired pass;
+- own-cross margin.
+
+Do not run nearest/L3 execution.
 
 Write:
-`evaluation/task6u_hardened_parser_integration.json`
-
-Do not evaluate nearest/L3 execution.
+`evaluation/task6v_hardened_parser_integration.json`
 
 ---
 
-# PART K — Predeclared success criteria
+# PART H — Predeclared gates
 
-## 22. Candidate-coverage improvement flag
+## 13. Family-policy improvement
 
-`candidate_coverage_improved = true` iff selected config on RefValUnique satisfies BOTH:
+Compared with Task 6U U-S1, require all for `family_policy_improved=true`:
 
-- overall eligible coverage@0.50 >= baseline + `0.04`;
-- smallest eligible coverage@0.50 >= baseline + `0.06`.
+- overall RefVal selected-reference mIoU >= U-S1 + `0.015`
+- RefVal `REFERENCE_OK` >= U-S1 + `5`
+- RefVal `REFERENCE_SELECTION_WRONG` <= U-S1 - `5`
+- abstention rate <= `0.05`
 
-Baseline Task 6Q values for context:
-- overall ≈ 0.6895;
-- largest ≈ 0.8364;
-- smallest ≈ 0.5413.
+Use exact U-S1 values from Task 6U.
 
-Use exact recomputed U-S0 values in the comparison.
+## 14. Directional downstream hardening
 
-## 23. Ranker improvement flag
+`DIRECTIONAL_REFERENCE_HARDENING_PASS` requires ALL:
 
-`ranker_improved_selection = true` iff on RefValUnique:
-
-- U-S2 selected-reference mIoU >= U-S1 + `0.05`;
-- U-S2 `REFERENCE_SELECTION_WRONG` count <= `0.70 * U-S1` count;
-- U-S2 abstention rate <= `0.10`.
-
-## 24. Downstream hardening gate
-
-Task 6U is considered a useful reference hardening only if U-S2 satisfies ALL:
-
-1. RefVal selected-reference mIoU >= `0.48`
+1. RefVal selected-reference mIoU >= `0.45`
 2. RefVal centroid median <= `0.03`
-3. RefVal centroid p90 <= `0.25`
-4. MiniVal240 answered-only target mIoU >= `0.33`
-5. MiniVal240 strict target mIoU >= `0.31`
+3. RefVal centroid p90 <= `0.32`
+4. MiniVal answered-only target mIoU >= `0.325`
+5. MiniVal strict target mIoU >= `0.305`
 6. PairedVal >= `12/20`
 7. own-cross margin >= `0.30`
-8. MiniVal240 reference-fail count <= `93`
-   - at least 20% reduction from Task 6S `117`
-9. no test split
-10. no GT in inference.
+8. MiniVal reference-fail count <= `105`
+9. parser integration remains 240/240
+10. no test split / no GT inference.
 
-Do not alter thresholds after results.
+These are development hardening gates, not final paper/test gates.
+
+Do not alter thresholds.
 
 ---
 
-# PART L — Verdict
+# PART I — Verdict
 
-## 25. Exactly one, priority order
+## 15. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-   - leakage/test/frozen-module mutation/GT inference/protocol violation.
+   - test use, GT inference, post-RefVal policy change, frozen-module mutation, protocol violation.
 
-2. `PROPOSAL_CHECKPOINT_UNAVAILABLE`
+2. `FROZEN_RESOLVER_ASSET_UNAVAILABLE`
 
-3. `REFERENCE_CANDIDATE_COVERAGE_STILL_LIMITING`
-   - selected config does not improve candidate coverage and U-S2 fails downstream hardening.
+3. `FAMILY_POLICY_NOT_BETTER`
+   - section 13 improvement flag fails and section 14 hardening gate fails.
 
-4. `REFERENCE_RANKER_NOT_HELPFUL`
-   - coverage improves or is usable, but `ranker_improved_selection=false` and U-S2 fails downstream hardening.
+4. `FAMILY_POLICY_PARTIAL`
+   - measurable improvement, but one or more section 14 gates fail.
 
-5. `REFERENCE_HARDENING_PARTIAL`
-   - U-S2 improves reference/downstream metrics materially but misses one or more section-24 gates.
-
-6. `REFERENCE_HARDENING_FEASIBLE`
-   - all section-24 gates pass.
+5. `FAMILY_CONDITIONED_REFERENCE_HARDENING_PASS`
+   - all section 14 gates pass.
 
 No other verdict.
 
 ---
 
-# PART M — Interpretation boundary
+# PART J — Interpretation boundary
 
-DSH may report measurements only.
+DSH reports measurements only.
 
 Do NOT:
-- claim ProposalSetRanker is a project novelty;
-- choose to retrain YOLO;
-- choose a different detector;
-- decide to keep 1024 permanently beyond the frozen selected config;
-- add tiling/TTA;
-- alter smallest threshold;
+- claim family routing as novelty;
+- redesign the ranker;
+- train a smallest-only ranker;
+- train a proposal-quality classifier;
+- change candidate config;
+- add confidence thresholds;
+- add TTA/tiling;
+- retrain YOLO;
 - start nearest/L3;
-- retrain B3;
-- add GRCL;
-- choose the next architecture.
+- choose Task 6W.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 6U 的 candidate coverage、ranker 与 downstream 因果结果决定下一步，不自行修改 detector、reference 语义或 target 架构。`
+`等待 ChatGPT 根据 Task 6V 的 family-conditioned resolver 结果决定是否需要新的 proposal-quality / selection 机制，不自行继续修改 reference 架构。`
 
 ---
 
-# PART N — Required artifacts
+# PART K — Required artifacts
 
 Create at minimum:
 
 ```text
-buildreasonseg_mvp/task6u_reference_ranker.py
+buildreasonseg_mvp/task6v_family_reference_resolver.py
 
-evaluation/task6u_reference_train_split.json
-evaluation/task6u_calibration_candidate_coverage.json
-evaluation/task6u_selected_proposal_config.json
-evaluation/task6u_refval_candidate_audit.json
-evaluation/task6u_ranker_training.json
-evaluation/task6u_refval_selector_comparison.json
-evaluation/task6u_downstream_minival240.json
-evaluation/task6u_downstream_pairedval20.json
-evaluation/task6u_hardened_parser_integration.json
-evaluation/task6u_verdict.json
+evaluation/task6v_calibration_family_policy.json
+evaluation/task6v_frozen_family_policy.json
+evaluation/task6v_refval_family_policy.json
+evaluation/task6v_downstream_minival240.json
+evaluation/task6v_downstream_pairedval20.json
+evaluation/task6v_hardened_parser_integration.json
+evaluation/task6v_verdict.json
 
-docs/task6u_reference_hardening.md
+docs/task6v_family_conditioned_reference_resolver.md
 
-scripts/task6u_freeze_reference_split.py
-scripts/task6u_candidate_coverage.py
-scripts/task6u_train_ranker.py
-scripts/task6u_evaluate_reference.py
-scripts/task6u_evaluate_downstream.py
-scripts/task6u_report.py
+scripts/task6v_select_family_policy.py
+scripts/task6v_evaluate_reference.py
+scripts/task6v_evaluate_downstream.py
+scripts/task6v_report.py
 ```
-
-Proposal caches:
-`artifacts/task6u/proposals/<config>/`
-gitignored.
-
-Ranker checkpoint:
-`artifacts/checkpoints/task6u/reference_ranker_v01.pt`
-gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
+No new checkpoint.
+
 ---
 
-# PART O — Required tests
+# PART L — Tests
 
-Task 6T ended at:
-`807 passed, 1 skipped`
+Task 6U ended at:
+`851 passed, 1 skipped`
 
-Add tests covering at least:
+Add tests for at least:
 
-1. Task 6T artifacts unchanged
-2. hardened parser checkpoint not retrained
-3. YOLO checkpoint SHA exact
-4. exactly four candidate configs
-5. C0 exact baseline
-6. C1 exact values
-7. C2 exact values
-8. C3 exact values
-9. no TTA
-10. no tiling
-11. source masks restored to 512×512
-12. Task 6Q eligibility unchanged
-13. U-Calib200 train-only
-14. U-RankerTrain train-only
-15. U-Calib/U-RankerTrain disjoint
-16. RefVal untouched by config selection
-17. selected-config priority rule exact
-18. ranker feature dimension exactly 14
-19. no centroid/location feature in ranker
-20. no GT feature in ranker
-21. no relation input to ranker
-22. ranker architecture 14→32→16→1
-23. family one-hot exact
-24. ranker train labels use GT only offline
-25. uncovered refs excluded from ranker loss and counted
-26. U-S0 exact Task 6Q behavior
-27. U-S1 deterministic area selector
-28. U-S2 learned ranker
-29. only three selectors
-30. MiniVal240 exact reuse
-31. PairedVal20 exact reuse
-32. main comparison uses canonical program ids
-33. final integration uses hardened ProgramHead
-34. no oracle reference in inference
-35. no GT target in inference
-36. field v0.2 unchanged
-37. B3 unchanged
-38. no YOLO training
-39. no parser training
-40. no GRCL
-41. no nearest/L3 execution
-42. no test split
-43. no new dataset/download/install/GUI
-44. previous passing suite preserved.
+1. Task 6U artifacts unchanged
+2. U-Calib200 exact reuse
+3. RefValUnique exact reuse
+4. MiniVal240 exact reuse
+5. PairedVal20 exact reuse
+6. exactly three policy options
+7. V-P0 exact
+8. V-P1 exact
+9. V-P2 exact
+10. ranker not retrained
+11. YOLO not retrained
+12. no fourth option
+13. per-family selection uses U-Calib200 only
+14. no RefVal in policy selection
+15. priority rule exact
+16. policy frozen before RefVal eval
+17. resolver dispatch is family-only
+18. no relation input to resolver policy
+19. no GT in resolver inference
+20. canonical-program causal evaluation has no parser
+21. natural-language integration uses hardened ProgramHead
+22. parser remains 240/240
+23. field v0.2 unchanged
+24. B3 unchanged
+25. SAM2 unchanged
+26. no GRCL
+27. no nearest/L3 execution
+28. no test split
+29. no new dataset/download/install/GUI
+30. previous test suite preserved.
 
 Run:
 
@@ -740,61 +524,57 @@ Do not reduce prior passing tests.
 
 ---
 
-# PART P — Git/storage
+# PART M — Git/storage
 
 Do not commit:
-- YOLO/SAM2/B3/parser/ranker weights;
+- existing ranker/parser/YOLO/SAM2/B3 checkpoints;
 - proposal caches;
 - feature caches;
 - source imagery/vectors;
-- `.conda`;
-- large generated local data.
+- `.conda`.
 
 Commit:
-- ranker code;
-- small JSON artifacts;
+- family resolver code;
+- small JSON;
 - scripts;
 - tests;
 - docs;
 - handoff.
 
 Suggested commits:
-1. `feat: add proposal-set reference ranker`
-2. `eval: isolate reference coverage and ranking gains`
-3. optional `docs: record Task 6U reference hardening`
+
+1. `feat: add family-conditioned reference resolver`
+2. `eval: measure family-specific resolver policy`
+3. optional docs commit
 
 ---
 
-# PART Q — DSH model policy
+# PART N — DSH model policy
 
 Default:
 - **DeepSeek V4.1 Flash + High**
 
-Use Flash + Max only for genuine CUDA/runtime/cross-file implementation bugs.
+Use Max only for a genuine integration/runtime bug.
 
-Do not use V4 Pro by default.
-
-No installs/downloads. The required model/assets already exist locally.
+No downloads or installs.
 
 ---
 
-# PART R — STOP
+# PART O — STOP
 
-After Task 6U:
+After Task 6V:
 - commit;
 - push;
-- handoff;
+- update handoff;
 - STOP.
 
 Do NOT:
-- retrain YOLO;
-- add tiling/TTA;
-- change thresholds outside the four declared configs;
-- change the ranker;
-- train another reference model;
-- change B3/field/SAM2;
-- revisit GRCL;
-- add nearest/L3 target execution;
+- train new reference models;
+- change proposal thresholds/configs;
+- retrain YOLO/ranker/parser/B3;
+- add proposal-quality model;
+- add GRCL;
+- add nearest/L3;
 - access test;
 - build GUI.
 

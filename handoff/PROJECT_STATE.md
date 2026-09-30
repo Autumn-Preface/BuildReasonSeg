@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6U._
+_Last updated by DSH at the end of Task 6V._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -92,6 +92,44 @@ The block above is machine-checked against
 | 6T | **ProgramHead semantic hardening + scope-safety regression** | **done → `PARSER_SEMANTIC_CONTRAST_FAIL`** (only the parser checkpoint/data and parser-eval code changed; frozen non-parser paths verified unchanged: authoritative Task 6S checkpoint SHA `eb50b021…d028a3` verified, same Qwen3-VL-2B text-only 20-class head, Task 6M LoRA+head policy, **17,479,700 / 2,144,466,964** trainable/total params; no-leakage hardening data = 24,161 v0.2-**train** examples (1,395 train/val duplicate strings removed) + **1,800** deterministic paraphrases = **25,961** prompts with **exact 0 / normalized 0** leakage; frozen minimal-pair pack (76) + stress v1 (160, all 20 classes, 4 zh + 4 en each) created **before** training; C1 (6M recipe) epoch 1 → internal-holdout macro F1 **1.0000**, sweep terminated at the selection ceiling, checkpoint `4cbba36b…44a5e` (local only, 321 s, 0.67 GB); full v0.2 val **1.0000** (en 1.0000 / zh 1.0000), MiniVal240 **240/240**, PairedVal **40/40**, fixed24 **21/24 → 24/24** with all three previously failing Chinese prompts fixed, minimal pairs 0.9474 → **0.9868**, stress 0.9375 → **0.99375**; **gates 9 (minimal < 1.0), 12 (`largest_to_nearest` recall 0.875 < 0.90), 14 (2/4 nearest controls still parse `largest_to_right_of` and exit 3)** fail while e2e regression reproduces Task 6S **exactly** (answered mIoU Δ 0.0, paired 10/20, abstentions 6) → verdict; main bottleneck `REFERENCE` deliberately untouched) |
 
 | 6U | **Reference candidate coverage + ProposalSetRanker** | **done → `REFERENCE_RANKER_NOT_HELPFUL`** (reference-side hardening only; YOLO26m-seg SHA `ef852b58…61f474` verified and **not retrained**, Task 6Q eligibility/field v0.2/SAM2/B3 frozen: train-only split from RefTrainUnique by unique key = **U-Calib200** 200 (100+100) + **U-RankerTrain** 625 (391+234), zero overlap with each other and with RefValUnique; four declared configs on U-Calib200 → smallest eligible@0.50 U-C0 0.9100 / **U-C1 0.9400** / U-C2 0.8800 / U-C3 0.9000, overall 0.9450/0.9600/0.9200/0.9300 → section-10 priority ranking `U-C1 > U-C0 > U-C3 > U-C2` → **U-C1 frozen** (imgsz 640 / conf 0.05 / max_det 300, no TTA/tiling); RefValUnique coverage overall 0.6895 → **0.7534** (+0.0639) and smallest 0.5413 → **0.6330** (+0.0917) → `candidate_coverage_improved=true`, oracle ceiling 0.6203; ProposalSetRanker v0.1 (14-d features, 14→32→16→1, 1,025 params; 598 trainable / 27 `untrainable_not_covered`; holdout top-1 0.45) **degrades** selection: RefVal mIoU U-S0 0.4248 / U-S1 **0.4289** / U-S2 0.3107, `SELECTION_WRONG` 39 → 53 → **88**; downstream MiniVal240 answered U-S0 0.3046 / U-S1 **0.3141** / U-S2 0.2466, reference-fail 117 → 115 → **158**, PairedVal 10 → **11** → 11, margin +0.2737 → **+0.3209** → +0.3332 (U-S0 reproduces Task 6S exactly); §24 U-S2 gates **3/10 pass** → verdict) |
+
+| 6V | **Family-conditioned reference resolver policy** | **done → `FAMILY_POLICY_NOT_BETTER`** (**no model trained**: only frozen options recombined; YOLO26m-seg `ef852b58…61f474`, ranker `c738fcf7…1a46c0`, hardened parser `4cbba36b…d44a5e`, B3 `7556e4a4…c7d6ab` all hash-verified and untouched; three declared options V-P0 (U-C0+deterministic) / V-P1 (U-C1+deterministic) / V-P2 (U-C1+ranker, no fourth); train-only U-Calib200 per-family selection → **largest V-P2** (Pr@0.5 0.8000 / mIoU 0.6650 / SELECTION_WRONG 18) and **smallest V-P0** (0.5300 / 0.4154 / 38) frozen as `{largest: V-P2, smallest: V-P0}` before RefVal and never revised (calibration prefers U-C0 for smallest, inverting Task 6U's RefVal reading); RefValUnique frozen-policy mIoU **0.4383** / Dice 0.4995 / Pr@0.5 **0.5327** / centroid median **0.0107** / p90 0.3845 / abstain **0.0228**, buckets OK **114** / SELECTION_WRONG **41** / NOT_COVERED 59 (vs U-S0 0.4248/111/39/62, U-S1 0.4289/112/53/50, U-S2 0.3107/77/88/50; oracle ceiling 0.6203); downstream MiniVal240 strict **0.3005** / answered **0.3069** / abstain 5 / ref-fail **116** / target-fail 68 (U-S1 0.3089/0.3141/4/115), PairedVal **10/20** margin **+0.2879**, parser integration **240/240**; §13 flag **false** (mIoU Δ +0.0094 < +0.015, REFERENCE_OK 114 < 117) and §14 gate **3/10** → verdict) |
+
+## Task 6V measured results
+
+Tests whether a **family-conditioned policy over already-frozen resolver options** recovers the useful part
+of Task 6U at zero new model cost. **No model was trained**; the detector configs, Task 6Q deterministic
+selector, ProposalSetRanker v0.1, hardened ProgramHead, field v0.2, SAM2 and B3 are frozen. Full detail:
+`docs/task6v_family_conditioned_reference_resolver.md`, `evaluation/task6v_*.json`.
+
+| | Value |
+|---|---|
+| Frozen assets (all verified exact) | YOLO26m-seg `ef852b58…61f474` · ranker `c738fcf7…1a46c0` · hardened parser `4cbba36b…d44a5e` · B3 `7556e4a4…c7d6ab` — none retrained |
+| Options | V-P0 = U-C0 + deterministic · V-P1 = U-C1 + deterministic · V-P2 = U-C1 + ranker (exactly three, no fourth) |
+| U-Calib200 largest | V-P0 0.7600 / 0.6338 / 22 · V-P1 0.7100 / 0.6034 / 27 · **V-P2 0.8000 / 0.6650 / 18** (Pr@0.5 / mIoU / SELECTION_WRONG) |
+| U-Calib200 smallest | **V-P0 0.5300 / 0.4154 / 38** · V-P1 0.4500 / 0.3545 / 49 · V-P2 0.0300 / 0.0546 / 91 |
+| Frozen policy | **`{largest: V-P2, smallest: V-P0}`** (priority: Pr@0.5 → mIoU → fewer SELECTION_WRONG → centroid median → abstention → simpler) |
+| RefValUnique (frozen policy) | mIoU **0.4383** · Dice 0.4995 · Pr@0.5 **0.5327** · centroid med **0.0107** / p90 0.3845 · area-ratio 1.0757 · abstain **0.0228** |
+| RefVal buckets vs 6U | OK **114** (U-S0 111 / U-S1 112 / U-S2 77) · SELECTION_WRONG **41** (39 / 53 / 88) · NOT_COVERED 59 (62 / 50 / 50) · oracle ceiling 0.6203 |
+| RefVal per family | largest mIoU **0.5680** Pr **0.6636** (ranker) · smallest 0.3011 / 0.3942 (deterministic U-C0) |
+| Downstream MiniVal240 | strict **0.3005** · answered **0.3069** · abstain **5** · ref-fail **116** · target-fail 68 · largest/smallest 0.3393/0.2617 · border (114) 0.2985 · tiny ≈0 |
+| PairedVal20 | **10/20** · own 0.291106 · cross 0.003251 · margin **+0.2879** · 0 abstention pairs |
+| Parser integration | **240/240** exact; strict 0.3005, answered 0.3069, abstain 5, ref-fail 116 |
+| §13 improvement flag | **false** — mIoU Δ **+0.0094** (needs ≥ +0.015), REFERENCE_OK 114 < 117; SELECTION_WRONG 41 ≤ 48 ✓, abstention 0.0228 ≤ 0.05 ✓ |
+| §14 hardening gate | **3/10** ✓ centroid median, parser 240/240, no test/GT; ✗ RefVal mIoU < 0.45, p90 > 0.32, answered < 0.325, strict < 0.305, paired < 12, margin < 0.30, ref-fail > 105 |
+| Verdict | **`FAMILY_POLICY_NOT_BETTER`** |
+
+1. **The routing works as designed**: `largest` gets V-P2 (ranker mIoU 0.5680 / Pr 0.6636) and `smallest`
+   keeps the deterministic selector (0.3011) instead of the ranker's collapse (0.0411), so the frozen
+   policy beats U-S2 and U-S0 on RefVal mIoU/Pr and cuts `SELECTION_WRONG` 53 → 41 versus U-S1.
+2. **But the train-only calibration chose U-C0 for `smallest`**, giving back the U-C1 coverage gain on that
+   family (`NOT_COVERED` 50 → 59) and holding the overall mIoU gain to +0.0094, below the predeclared
+   +0.015 margin; `REFERENCE_OK` also stays below U-S1 + 5.
+3. **Recorded calibration/RefVal inversion**: U-Calib200 prefers C0 for smallest while RefValUnique
+   preferred C1; the frozen selection rule uses calibration only and was not revised.
+4. Downstream the policy sits between U-S0 and U-S1 (strict 0.3005 vs 0.2970/0.3089) and fails 7 of the 10
+   §14 hardening conditions.
+5. Next: 等待 ChatGPT 根据 Task 6V 的 family-conditioned resolver 结果决定是否需要新的 proposal-quality / selection 机制，不自行继续修改 reference 架构。
 
 ## Task 6U measured results
 
