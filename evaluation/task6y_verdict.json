@@ -1,0 +1,685 @@
+{
+  "_doc": "Task 6Y sections 25-26. Oracle-reference NearestBoundaryField v0.1 causal audit: the field is built from the GT reference mask only, the four variants are trained on the frozen nearest packs, and the single verdict follows the fixed section 26 priority order. Support infrastructure for the nearest relation family, not a novelty claim.",
+  "task": "6Y",
+  "verdict": "NEAREST_FIELD_NO_MEANINGFUL_GAIN",
+  "reason": "learnability passes but B2-B1 = +0.0224 < +0.05 and/or B2-B0 = +0.1027 < +0.08 and/or B2 mIoU 0.2864 < 0.35",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "NEAREST_FIELD_DEPENDENCY_UNAVAILABLE",
+    "NEAREST_PAIRED_SET_INSUFFICIENT",
+    "NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH",
+    "NEAREST_FIELD_NOT_LEARNABLE",
+    "NEAREST_FIELD_GEOMETRY_ONLY_CONFOUND",
+    "NEAREST_FIELD_NO_MEANINGFUL_GAIN",
+    "NEAREST_FIELD_COUNTERFACTUAL_WEAK",
+    "NEAREST_BOUNDARY_FIELD_FEASIBLE"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "sigma_diag": 0.05,
+    "scipy_available": true,
+    "distance_metric": "boundary_distance",
+    "margin_px_floor": 2.0,
+    "margin_diag_fraction": 0.005,
+    "margin_mode": "normalized_with_absolute_floor",
+    "labels_regenerated": false,
+    "programs_in_packs": [
+      "largest_to_nearest",
+      "smallest_to_nearest"
+    ],
+    "only_nearest_programs": true,
+    "test_split_used": false,
+    "reference_source": "oracle_native_gt",
+    "predicted_reference_used": false,
+    "target_gt_as_input": false,
+    "variants": [
+      "Y-B0",
+      "Y-B1",
+      "Y-B2",
+      "Y-B3"
+    ],
+    "variant_inputs": {
+      "Y-B0": {
+        "visual": true,
+        "reference_mask": false,
+        "nearest_field": false
+      },
+      "Y-B1": {
+        "visual": true,
+        "reference_mask": true,
+        "nearest_field": false
+      },
+      "Y-B2": {
+        "visual": true,
+        "reference_mask": false,
+        "nearest_field": true
+      },
+      "Y-B3": {
+        "visual": false,
+        "reference_mask": false,
+        "nearest_field": true
+      }
+    },
+    "sigma_tuned": false,
+    "clean": true
+  },
+  "packs": {
+    "overfit20": {
+      "records": 20,
+      "tiles": 20,
+      "sha256": "cca1630a3b90bd5337343f5aedebb0479dbbb91bfd478eb44d521c03f90a4ab0"
+    },
+    "mini_train_1000": {
+      "records": 1000,
+      "by_program": {
+        "largest_to_nearest": 650,
+        "smallest_to_nearest": 350
+      },
+      "sha256": "4916d534c6658872e0b66cf3605d2a36f6ac5bdc27cac7f11eaf6e66d3704e10"
+    },
+    "mini_val_240": {
+      "records": 240,
+      "by_program": {
+        "largest_to_nearest": 120,
+        "smallest_to_nearest": 120
+      },
+      "sha256": "5fd7a9f1c270353cfb31f09663724677353ee2e45b0a94577ec7ebd7dd1a7c3e"
+    },
+    "n_pair": 20
+  },
+  "field_sanity": {
+    "passed": true,
+    "overall": {
+      "records": 240,
+      "top1_rate": 1.0,
+      "top3_rate": 1.0,
+      "mean_target_score": 0.4622206143241783,
+      "mean_best_distractor_score": 0.16780465289593047,
+      "mean_target_minus_distractor": 0.36408962671954376,
+      "mean_eligible_candidates": 4.404166666666667,
+      "mean_spearman": 1.0,
+      "records_with_spearman": 170
+    },
+    "by_family": {
+      "largest": {
+        "records": 120,
+        "top1_rate": 1.0,
+        "top3_rate": 1.0,
+        "mean_target_score": 0.40446047212305225,
+        "mean_best_distractor_score": 0.1676867076389399,
+        "mean_target_minus_distractor": 0.2730724542531769,
+        "mean_eligible_candidates": 5.008333333333334,
+        "mean_spearman": 1.0,
+        "records_with_spearman": 91
+      },
+      "smallest": {
+        "records": 120,
+        "top1_rate": 1.0,
+        "top3_rate": 1.0,
+        "mean_target_score": 0.5199807565253044,
+        "mean_best_distractor_score": 0.16794051388816011,
+        "mean_target_minus_distractor": 0.468932192471941,
+        "mean_eligible_candidates": 3.8,
+        "mean_spearman": 1.0,
+        "records_with_spearman": 79
+      }
+    },
+    "gate": {
+      "top1": {
+        "required": 0.85,
+        "measured": 1.0,
+        "passed": true
+      },
+      "top3": {
+        "required": 0.97,
+        "measured": 1.0,
+        "passed": true
+      },
+      "spearman": {
+        "required": 0.9,
+        "measured": 1.0,
+        "passed": true
+      }
+    },
+    "sigma_diag": 0.05
+  },
+  "overfit20": {
+    "gate_passed": true,
+    "gate": {
+      "miou_min": 0.85,
+      "dice_min": 0.9,
+      "measured_miou": 0.966252104306658,
+      "measured_dice": 0.9827183595949236,
+      "passed": true
+    },
+    "results": {
+      "Y-B0": {
+        "best_miou": 0.9724473612979574,
+        "best_dice": 0.9859769808325952,
+        "params": 273425
+      },
+      "Y-B1": {
+        "best_miou": 0.9704805482877397,
+        "best_dice": 0.9849478704077594,
+        "params": 274577
+      },
+      "Y-B2": {
+        "best_miou": 0.966252104306658,
+        "best_dice": 0.9827183595949236,
+        "params": 274577
+      },
+      "Y-B3": {
+        "best_miou": 0.1456873845275714,
+        "best_dice": 0.20657004807689283,
+        "params": 240785
+      }
+    }
+  },
+  "training": {
+    "selection_metric": "MiniVal240 mIoU",
+    "results": {
+      "Y-B0": {
+        "best_miou": 0.1837400816830985,
+        "best_dice": 0.2735154601445215,
+        "best_epoch": 4,
+        "params": 273425,
+        "wall_seconds": 135.2,
+        "peak_vram_gb": 0.902
+      },
+      "Y-B1": {
+        "best_miou": 0.2640314429892648,
+        "best_dice": 0.3642846180398146,
+        "best_epoch": 6,
+        "params": 274577,
+        "wall_seconds": 30.4,
+        "peak_vram_gb": 0.69
+      },
+      "Y-B2": {
+        "best_miou": 0.2864489333095185,
+        "best_dice": 0.3863298479071712,
+        "best_epoch": 9,
+        "params": 274577,
+        "wall_seconds": 38.6,
+        "peak_vram_gb": 0.69
+      },
+      "Y-B3": {
+        "best_miou": 0.046808744882836574,
+        "best_dice": 0.08220490521140773,
+        "best_epoch": 8,
+        "params": 240785,
+        "wall_seconds": 35.6,
+        "peak_vram_gb": 0.674
+      }
+    }
+  },
+  "mini_val_240": {
+    "Y-B0": {
+      "overall": {
+        "records": 240,
+        "miou": 0.1837400816830985,
+        "dice": 0.2735154601445215,
+        "precision_at_0_5": 0.2625034184567036
+      },
+      "largest_reference": {
+        "records": 120,
+        "miou": 0.13742495518768102,
+        "dice": 0.21244732330953572,
+        "precision_at_0_5": 0.1901143269773565
+      },
+      "smallest_reference": {
+        "records": 120,
+        "miou": 0.23005520817851602,
+        "dice": 0.33458359697950724,
+        "precision_at_0_5": 0.33489250993605074
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1038.0,
+          1636.5,
+          2316.75
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.11895117238462297
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.23011690281782968
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.24874371151292848
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.137148540017013
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          8.351192712878643,
+          25.655191019820684,
+          82.05866412970795
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.16786254240120269
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.14302233933822053
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.16291400474745832
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.2611614402455125
+          }
+        }
+      },
+      "params": 273425,
+      "best_epoch": 4,
+      "best_step": 500,
+      "best_selection_miou": 0.1837400816830985,
+      "variant_wall_seconds": 135.2,
+      "evaluation_seconds": 7.1,
+      "training_peak_vram_gb": 0.902,
+      "checkpoint_sha256": "4d915aa9fa8ea3f24bfd84a309cf8e5438396422859126cff0b0f55269afd375"
+    },
+    "Y-B1": {
+      "overall": {
+        "records": 240,
+        "miou": 0.2640314429892648,
+        "dice": 0.3642846180398146,
+        "precision_at_0_5": 0.3525198127088348
+      },
+      "largest_reference": {
+        "records": 120,
+        "miou": 0.22725940546142448,
+        "dice": 0.3181392307929642,
+        "precision_at_0_5": 0.29532402935002033
+      },
+      "smallest_reference": {
+        "records": 120,
+        "miou": 0.30080348051710515,
+        "dice": 0.41043000528666507,
+        "precision_at_0_5": 0.40971559606764935
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1038.0,
+          1636.5,
+          2316.75
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.18709429391853566
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.29454020577638484
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.35765283640665657
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.21683843585548196
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          8.351192712878643,
+          25.655191019820684,
+          82.05866412970795
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.1986965074392373
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.20743373956460198
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.257681056129698
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.39231446882352183
+          }
+        }
+      },
+      "params": 274577,
+      "best_epoch": 6,
+      "best_step": 750,
+      "best_selection_miou": 0.2640314429892648,
+      "variant_wall_seconds": 30.4,
+      "evaluation_seconds": 0.4,
+      "training_peak_vram_gb": 0.69,
+      "checkpoint_sha256": "7bc0b5cd1fd8b94187c457f245e448fd7260d65b4fad08ec23ac778fe9a0166b"
+    },
+    "Y-B2": {
+      "overall": {
+        "records": 240,
+        "miou": 0.2864489333095185,
+        "dice": 0.3863298479071712,
+        "precision_at_0_5": 0.48116031742281284
+      },
+      "largest_reference": {
+        "records": 120,
+        "miou": 0.23362556101856408,
+        "dice": 0.32919640588009746,
+        "precision_at_0_5": 0.39919044321325753
+      },
+      "smallest_reference": {
+        "records": 120,
+        "miou": 0.33927230560047283,
+        "dice": 0.4434632899342449,
+        "precision_at_0_5": 0.5631301916323681
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1038.0,
+          1636.5,
+          2316.75
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.24973369314116828
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.3903583300511748
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.28589305447305047
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.2198106555726803
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          8.351192712878643,
+          25.655191019820684,
+          82.05866412970795
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.4094265006088164
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.3476721040129206
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.23558832782411518
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.1531088007922217
+          }
+        }
+      },
+      "params": 274577,
+      "best_epoch": 9,
+      "best_step": 1125,
+      "best_selection_miou": 0.2864489333095185,
+      "variant_wall_seconds": 38.6,
+      "evaluation_seconds": 0.3,
+      "training_peak_vram_gb": 0.69,
+      "checkpoint_sha256": "8c9f672aee64aec32de621c1babab478ba1545ee6b87dc7345296a212a077c68"
+    },
+    "Y-B3": {
+      "overall": {
+        "records": 240,
+        "miou": 0.046808744882836574,
+        "dice": 0.08220490521140773,
+        "precision_at_0_5": 0.07131658255626631
+      },
+      "largest_reference": {
+        "records": 120,
+        "miou": 0.02353072159413374,
+        "dice": 0.04302025856655075,
+        "precision_at_0_5": 0.04837678991593484
+      },
+      "smallest_reference": {
+        "records": 120,
+        "miou": 0.0700867681715394,
+        "dice": 0.1213895518562647,
+        "precision_at_0_5": 0.09425637519659778
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1038.0,
+          1636.5,
+          2316.75
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.027969815136715162
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.05720824404174307
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.0416948070023735
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.06036211335051453
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          8.351192712878643,
+          25.655191019820684,
+          82.05866412970795
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.10863720318611357
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.07456417305387693
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.0040336031438037625
+          },
+          "q4": {
+            "records": 60,
+            "miou": 1.4755201832758618e-10
+          }
+        }
+      },
+      "params": 240785,
+      "best_epoch": 8,
+      "best_step": 1000,
+      "best_selection_miou": 0.046808744882836574,
+      "variant_wall_seconds": 35.6,
+      "evaluation_seconds": 0.3,
+      "training_peak_vram_gb": 0.674,
+      "checkpoint_sha256": "efb443424cab4ebbc4dab0dc834c4d628bfa3f97c600b05e7dbf001894bf19d0"
+    }
+  },
+  "paired_val": {
+    "systems": {
+      "Y-B0": {
+        "passed": 0,
+        "pairs": 20,
+        "pass_rate": 0.0,
+        "mean_own_iou": 0.18848779873374477,
+        "mean_cross_iou": 0.18848779873374477,
+        "own_cross_margin": 0.0
+      },
+      "Y-B1": {
+        "passed": 8,
+        "pairs": 20,
+        "pass_rate": 0.4,
+        "mean_own_iou": 0.27756376894867085,
+        "mean_cross_iou": 0.09352834927474112,
+        "own_cross_margin": 0.18403541967392972
+      },
+      "Y-B2": {
+        "passed": 6,
+        "pairs": 20,
+        "pass_rate": 0.3,
+        "mean_own_iou": 0.23284186169904028,
+        "mean_cross_iou": 0.05000916311616801,
+        "own_cross_margin": 0.18283269858287227
+      },
+      "Y-B3": {
+        "passed": 6,
+        "pairs": 20,
+        "pass_rate": 0.3,
+        "mean_own_iou": 0.03629521780584431,
+        "mean_cross_iou": 0.0,
+        "own_cross_margin": 0.03629521780584431
+      }
+    },
+    "pairs": 20
+  },
+  "deltas": {
+    "b2_minus_b0": 0.10270885162641999,
+    "b2_minus_b1": 0.022417490320253697,
+    "b2_minus_b3": 0.23964018842668192,
+    "b1_minus_b0": 0.08029136130616629
+  },
+  "criteria": {
+    "1_field_sanity": {
+      "passed": true,
+      "measured": {
+        "top1": 1.0,
+        "top3": 1.0,
+        "spearman": 1.0
+      }
+    },
+    "2_b2_overfit": {
+      "passed": true,
+      "measured": {
+        "miou": 0.966252104306658,
+        "dice": 0.9827183595949236
+      },
+      "required": {
+        "miou": 0.85,
+        "dice": 0.9
+      }
+    },
+    "3_b2_minus_b0_miou": {
+      "required": 0.08,
+      "measured": 0.10270885162641999,
+      "passed": true
+    },
+    "4_b2_minus_b1_miou": {
+      "required": 0.05,
+      "measured": 0.022417490320253697,
+      "passed": false
+    },
+    "5_b2_minus_b3_miou": {
+      "required": 0.1,
+      "measured": 0.23964018842668192,
+      "passed": true
+    },
+    "6_b2_miou": {
+      "required": 0.35,
+      "measured": 0.2864489333095185,
+      "passed": false
+    },
+    "7_b2_paired_rate": {
+      "required": 0.7,
+      "measured": 0.3,
+      "passed": false
+    },
+    "8_b2_margin": {
+      "required": 0.15,
+      "measured": 0.18283269858287227,
+      "passed": true
+    },
+    "9_no_target_gt_input": {
+      "passed": true,
+      "measured": "GT target used as label/eval only"
+    }
+  },
+  "all_criteria_passed": false,
+  "confound_check": {
+    "b2_minus_b3_below_confound": false,
+    "b3_paired_rate_at_least": false,
+    "applies": false
+  },
+  "no_gain_check": {
+    "b2_minus_b0": 0.10270885162641999,
+    "b2_minus_b1": 0.022417490320253697,
+    "applies": true
+  },
+  "counterfactual_weak_check": {
+    "applies": true
+  },
+  "interpretation": {
+    "b0_to_b1": "value of raw reference localization",
+    "b1_to_b2": "value of explicit boundary-proximity geometry",
+    "b3_vs_b2": "whether visual evidence is materially necessary"
+  },
+  "interpretation_boundary": {
+    "global_novelty_claimed": false,
+    "end_to_end_nearest_capability_claimed": false,
+    "sigma_changed": false,
+    "learned_distance_transform_added": false,
+    "predicted_reference_used": false,
+    "directional_and_nearest_fields_combined": false,
+    "l3_started": false,
+    "reference_resolver_changed": false,
+    "target_gt_used_as_input": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 6Y 的 nearest boundary field 因果结果决定下一步，不自行进行 predicted-reference nearest 集成、direction+nearest 场组合或 L3 训练。",
+  "runtime_seconds": 0.62
+}
