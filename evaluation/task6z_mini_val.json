@@ -1,0 +1,722 @@
+{
+  "_doc": "Task 6Z section 26. MiniVal240 evaluation of the six predeclared L3 variants trained on Z-MiniTrain1200 with the oracle largest reference, the frozen directional field v0.2, the frozen nearest field v0.1 and the exact deterministic product field. GT masks are evaluation labels only; the test split is never read.",
+  "task": "6Z",
+  "stage": "J-mini-val-240",
+  "pack": {
+    "name": "z_mini_val_240",
+    "records": 240,
+    "by_direction": {
+      "above": 60,
+      "below": 60,
+      "left": 60,
+      "right": 60
+    }
+  },
+  "variants": {
+    "variants": {
+      "Z-B0": {
+        "variant": "Z-B0",
+        "label": "semantic/visual baseline",
+        "inputs": "visual_128 + direction_embed_16",
+        "uses_visual": true,
+        "uses_directional_field": false,
+        "uses_nearest_field": false,
+        "uses_product_field": false,
+        "fusion_channels": 144,
+        "total_parameters": 273473
+      },
+      "Z-B1": {
+        "variant": "Z-B1",
+        "label": "directional field only",
+        "inputs": "visual_128 + P_dir_64 + direction_embed_16",
+        "uses_visual": true,
+        "uses_directional_field": true,
+        "uses_nearest_field": false,
+        "uses_product_field": false,
+        "fusion_channels": 145,
+        "total_parameters": 274625
+      },
+      "Z-B2": {
+        "variant": "Z-B2",
+        "label": "nearest field only",
+        "inputs": "visual_128 + P_near_64 + direction_embed_16",
+        "uses_visual": true,
+        "uses_directional_field": false,
+        "uses_nearest_field": true,
+        "uses_product_field": false,
+        "fusion_channels": 145,
+        "total_parameters": 274625
+      },
+      "Z-B3": {
+        "variant": "Z-B3",
+        "label": "two-field learnable composition (primary hypothesis)",
+        "inputs": "visual_128 + P_dir_64 + P_near_64 + direction_embed_16",
+        "uses_visual": true,
+        "uses_directional_field": true,
+        "uses_nearest_field": true,
+        "uses_product_field": false,
+        "fusion_channels": 146,
+        "total_parameters": 275777
+      },
+      "Z-B4": {
+        "variant": "Z-B4",
+        "label": "deterministic product-field comparator",
+        "inputs": "visual_128 + P_prod_64 + direction_embed_16",
+        "uses_visual": true,
+        "uses_directional_field": false,
+        "uses_nearest_field": false,
+        "uses_product_field": true,
+        "fusion_channels": 145,
+        "total_parameters": 274625
+      },
+      "Z-B5": {
+        "variant": "Z-B5",
+        "label": "deterministic composition, geometry-only control",
+        "inputs": "field_128 + direction_embed_16",
+        "uses_visual": false,
+        "uses_directional_field": false,
+        "uses_nearest_field": false,
+        "uses_product_field": true,
+        "fusion_channels": 144,
+        "total_parameters": 240833
+      }
+    },
+    "variant_order": [
+      "Z-B0",
+      "Z-B1",
+      "Z-B2",
+      "Z-B3",
+      "Z-B4",
+      "Z-B5"
+    ],
+    "variant_count": 6,
+    "visual_representation": "frozen SAM2.1 Hiera Base+ 256x64x64 (no retraining, no GT visual)",
+    "visual_projection": [
+      "Conv1x1(256,128)",
+      "GroupNorm(8,128)",
+      "GELU"
+    ],
+    "field_projection_z_b5": [
+      "Conv1x1(1,128)",
+      "GroupNorm(8,128)",
+      "GELU"
+    ],
+    "direction_embedding": {
+      "vocab_size": 4,
+      "ids": [
+        "left_of",
+        "right_of",
+        "above",
+        "below"
+      ],
+      "dim": 16
+    },
+    "separate_nearest_embedding": false,
+    "target_trunk": [
+      "Conv3x3(in,128)",
+      "GroupNorm(8,128)",
+      "GELU",
+      "Conv3x3(128,64)",
+      "GroupNorm(8,64)",
+      "GELU",
+      "Conv1x1(64,1)"
+    ],
+    "logit_resolution": 64,
+    "output_resolution": 512,
+    "loss": "BCEWithLogitsLoss + DiceLoss",
+    "extra_losses": [],
+    "grcl": false,
+    "attention": false,
+    "transformer": false,
+    "gnn": false,
+    "deterministic_multiplication_before_decoder_z_b3": false
+  },
+  "selection_metric": "MiniVal240 mIoU",
+  "results": {
+    "Z-B0": {
+      "overall": {
+        "records": 240,
+        "miou": 0.1510027782643421,
+        "dice": 0.23375390215340008,
+        "precision_at_0_5": 0.19838435194925647
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.1502070651299624,
+          "dice": 0.22980201154788968,
+          "precision_at_0_5": 0.2113634349796077
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.13113523105049035,
+          "dice": 0.21002865034361948,
+          "precision_at_0_5": 0.17714900192992236
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.15874633107680627,
+          "dice": 0.24415729903196134,
+          "precision_at_0_5": 0.20308315076146333
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.16392248580010954,
+          "dice": 0.2510276476901298,
+          "precision_at_0_5": 0.2019418201260326
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.1538006920126071
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.18013744511224417
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.16448729472649093
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.10558568120602643
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.1214046325638447
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.12585151083662682
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.16927861004107628
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.18747635961582076
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 273473,
+      "best_epoch": 4,
+      "best_step": 600,
+      "variant_wall_seconds": 124.5,
+      "evaluation_seconds": 16.2,
+      "peak_vram_gb": 0.894,
+      "checkpoint_sha256": "1830503d8ed2f286dfdd335e5107133c7ba7a47193c2c20a67ce4ec379a5d5ce"
+    },
+    "Z-B1": {
+      "overall": {
+        "records": 240,
+        "miou": 0.30112208185034034,
+        "dice": 0.40673231739765237,
+        "precision_at_0_5": 0.47854949619128984
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.286985702616127,
+          "dice": 0.3916859648100463,
+          "precision_at_0_5": 0.49317107068944355
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.25621783031541784,
+          "dice": 0.348407739007622,
+          "precision_at_0_5": 0.5077717176018786
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.34520928633123177,
+          "dice": 0.4561421482921459,
+          "precision_at_0_5": 0.47575606792661773
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.31607550813858454,
+          "dice": 0.43069341748079526,
+          "precision_at_0_5": 0.4374991285472195
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.30068691087235627
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.36896174468383597
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.3424846108147662
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.1923550610304029
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.2601378764436391
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.2266088170467015
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.36039083254330956
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.35735080136771114
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 274625,
+      "best_epoch": 10,
+      "best_step": 1500,
+      "variant_wall_seconds": 52.0,
+      "evaluation_seconds": 0.5,
+      "peak_vram_gb": 0.681,
+      "checkpoint_sha256": "7e675ba734f07be9e8372283864620b897565ed96a5d426f2fd754319395cc5b"
+    },
+    "Z-B2": {
+      "overall": {
+        "records": 240,
+        "miou": 0.17235583151791403,
+        "dice": 0.2461224930171545,
+        "precision_at_0_5": 0.31269486035958327
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.1373699488936278,
+          "dice": 0.19386966771414452,
+          "precision_at_0_5": 0.33690916113509206
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.1476937948839113,
+          "dice": 0.2183438659224772,
+          "precision_at_0_5": 0.26275606408549235
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.20101045924302668,
+          "dice": 0.2891753564294229,
+          "precision_at_0_5": 0.3608427754750406
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.20334912305109024,
+          "dice": 0.2831010820025735,
+          "precision_at_0_5": 0.2902714407427081
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.2235783405303991
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.2212943645060563
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.16310099516870227
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.08144962586649841
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.2090175234310904
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.1410436858822692
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.1604120264635832
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.1789500902947133
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 274625,
+      "best_epoch": 7,
+      "best_step": 1050,
+      "variant_wall_seconds": 47.7,
+      "evaluation_seconds": 0.4,
+      "peak_vram_gb": 0.681,
+      "checkpoint_sha256": "79dd465095fa819ff9f5e9445df6f79dcfd5016808e8b999986308ee382e3580"
+    },
+    "Z-B3": {
+      "overall": {
+        "records": 240,
+        "miou": 0.3242128982543474,
+        "dice": 0.4389840055529761,
+        "precision_at_0_5": 0.5331188918325193
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.28062634864354763,
+          "dice": 0.3868338560205894,
+          "precision_at_0_5": 0.5694517104664663
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.306065961410247,
+          "dice": 0.4148317170045938,
+          "precision_at_0_5": 0.48891322425414524
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.3776561482755526,
+          "dice": 0.4935148535134672,
+          "precision_at_0_5": 0.5500381336071193
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.33250313468804243,
+          "dice": 0.460755595673254,
+          "precision_at_0_5": 0.5240724990023463
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.35997207782132695
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.3725379456799644
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.3703706340822809
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.1939709354338174
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.33919079842133615
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.27429088431870313
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.31774467451072613
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.36562523576662426
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 275777,
+      "best_epoch": 12,
+      "best_step": 1800,
+      "variant_wall_seconds": 66.6,
+      "evaluation_seconds": 0.4,
+      "peak_vram_gb": 0.682,
+      "checkpoint_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc"
+    },
+    "Z-B4": {
+      "overall": {
+        "records": 240,
+        "miou": 0.2788326786768219,
+        "dice": 0.3845260026835387,
+        "precision_at_0_5": 0.46039319685908553
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.25000752832236145,
+          "dice": 0.34665190072402935,
+          "precision_at_0_5": 0.4399005839031783
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.2630122643473642,
+          "dice": 0.36784655019237866,
+          "precision_at_0_5": 0.43682775097478077
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.24928595078227594,
+          "dice": 0.3435040714956086,
+          "precision_at_0_5": 0.4672886524634476
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.35302497125528554,
+          "dice": 0.48010148832213834,
+          "precision_at_0_5": 0.4975558000949355
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.2882467165603517
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.28294791111196754
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.3143366729302612
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.2297994141047069
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.38924975813339224
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.35029939746776073
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.2601469170078573
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.11563464209827694
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 274625,
+      "best_epoch": 9,
+      "best_step": 1350,
+      "variant_wall_seconds": 53.7,
+      "evaluation_seconds": 0.5,
+      "peak_vram_gb": 0.681,
+      "checkpoint_sha256": "574dfa5219c88cbaec565c292ad6157200414e3734e8325547f345caf2f5cef1"
+    },
+    "Z-B5": {
+      "overall": {
+        "records": 240,
+        "miou": 0.08875248056337007,
+        "dice": 0.14289324848206478,
+        "precision_at_0_5": 0.11234690869934513
+      },
+      "per_direction": {
+        "above": {
+          "records": 60,
+          "miou": 0.09550291566656287,
+          "dice": 0.15533074638138872,
+          "precision_at_0_5": 0.13216867308175756
+        },
+        "below": {
+          "records": 60,
+          "miou": 0.08894242581128534,
+          "dice": 0.13557319757608724,
+          "precision_at_0_5": 0.1091447440684538
+        },
+        "left": {
+          "records": 60,
+          "miou": 0.06729469267109515,
+          "dice": 0.11294905795612269,
+          "precision_at_0_5": 0.07420078793910577
+        },
+        "right": {
+          "records": 60,
+          "miou": 0.10326988810453686,
+          "dice": 0.16771999201466042,
+          "precision_at_0_5": 0.1338734297080634
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1010.5,
+          1449.5,
+          2380.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.04273302223965639
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.06870762323663274
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.10098779732614818
+          },
+          "q4": {
+            "records": 60,
+            "miou": 0.1425814794510429
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          20.908326913195985,
+          51.148523824274825,
+          99.86995372397331
+        ],
+        "buckets": {
+          "q1": {
+            "records": 60,
+            "miou": 0.16711242071445434
+          },
+          "q2": {
+            "records": 60,
+            "miou": 0.1747890615382641
+          },
+          "q3": {
+            "records": 60,
+            "miou": 0.0131084398161407
+          },
+          "q4": {
+            "records": 60,
+            "miou": 1.846210724893277e-10
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 240833,
+      "best_epoch": 10,
+      "best_step": 1500,
+      "variant_wall_seconds": 58.1,
+      "evaluation_seconds": 0.4,
+      "peak_vram_gb": 0.666,
+      "checkpoint_sha256": "0c90bc797fc0e842dbfd506b7b90c6cb44a1cd9f4121c7334e69fd77a22c101b"
+    }
+  },
+  "best_variant": "Z-B3",
+  "test_split_used": false,
+  "runtime_seconds": 31.9
+}

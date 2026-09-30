@@ -1,0 +1,60 @@
+{
+  "_doc": "Task 6Z section 27. Same-reference directional PairedVal: for each pair both direction programs are executed independently and the pair passes iff both predictions prefer their own GT target over the other member's target.",
+  "task": "6Z",
+  "stage": "J-paired-val",
+  "pack": {
+    "name": "z_paired_val20",
+    "pairs": 20
+  },
+  "systems": {
+    "Z-B0": {
+      "passed": 9,
+      "pairs": 20,
+      "pass_rate": 0.45,
+      "mean_own_iou": 0.14634551209715996,
+      "mean_cross_iou": 0.0584190852720035,
+      "own_cross_margin": 0.08792642682515646
+    },
+    "Z-B1": {
+      "passed": 16,
+      "pairs": 20,
+      "pass_rate": 0.8,
+      "mean_own_iou": 0.26310654629228625,
+      "mean_cross_iou": 8.618566853332045e-05,
+      "own_cross_margin": 0.26302036062375295
+    },
+    "Z-B2": {
+      "passed": 9,
+      "pairs": 20,
+      "pass_rate": 0.45,
+      "mean_own_iou": 0.18417728618918128,
+      "mean_cross_iou": 0.025910891255131165,
+      "own_cross_margin": 0.15826639493405012
+    },
+    "Z-B3": {
+      "passed": 15,
+      "pairs": 20,
+      "pass_rate": 0.75,
+      "mean_own_iou": 0.303156315945526,
+      "mean_cross_iou": 0.0028022262483038502,
+      "own_cross_margin": 0.30035408969722216
+    },
+    "Z-B4": {
+      "passed": 12,
+      "pairs": 20,
+      "pass_rate": 0.6,
+      "mean_own_iou": 0.28015229989831913,
+      "mean_cross_iou": 0.009942770414416383,
+      "own_cross_margin": 0.27020952948390276
+    },
+    "Z-B5": {
+      "passed": 6,
+      "pairs": 20,
+      "pass_rate": 0.3,
+      "mean_own_iou": 0.0655571137860856,
+      "mean_cross_iou": 0.00011481056255292592,
+      "own_cross_margin": 0.06544230322353267
+    }
+  },
+  "test_split_used": false
+}
