@@ -463,9 +463,15 @@ def test_cli_default_not_moved_below_gate():
 
     verdict = _artifact("task7b_verdict.json")
     scope = _artifact("task7b_scope_safety.json")
-    if not verdict["canonical_gates_passed"]:
-        assert default_l3_parser_checkpoint() == default_parser_checkpoint()
-        assert scope["cli"]["updated_to_task7b"] is False
+    assert verdict["canonical_gates_passed"] is False
+    assert scope["cli"]["updated_to_task7b"] is False
+    # the invariant: the Task 7B checkpoint becomes the L3 default only if no later hardening verdict with
+    # passing canonical gates exists; otherwise the Task 6T parser stays (or the newer checkpoint wins)
+    default = default_l3_parser_checkpoint()
+    if default != default_parser_checkpoint():
+        assert default.name == "program_parser_l3_rehearsal_v1.pt"
+        task7c = _artifact("task7c_verdict.json")
+        assert task7c is not None and task7c["canonical_gates_passed"] is True
     assert verdict["verdict"] in verdict["allowed_verdicts"]
     assert verdict["recommendation"].startswith("等待 ChatGPT 根据 Task 7B")
 

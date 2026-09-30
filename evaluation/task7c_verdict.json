@@ -1,0 +1,535 @@
+{
+  "_doc": "Task 7C sections 23-26. 20-class rehearsal hardening of the same Qwen3-VL-2B text-only 20-class ProgramHead, restarted from the stable Task 6T checkpoint with fixed differential learning rates, evaluated once on the reused frozen sets, with scope safety and the frozen end-to-end regression. The verdict follows the fixed section-26 priority order.",
+  "task": "7C",
+  "verdict": "L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL",
+  "reason": "canonical gates pass but the compositional robustness gates fail on ['15_fixed24_total', '16_fixed24_compact', '17_fixed24_every_class', '18_minimal96', '19_stress_accuracy', '20_stress_macro_f1', '21_stress_class_recall', '22_stress_l3_recall']",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "BASELINE_PARSER_UNAVAILABLE",
+    "PARSER_TRAINING_FAILED",
+    "L3_20CLASS_CANONICAL_REGRESSION",
+    "L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL",
+    "END_TO_END_REGRESSION",
+    "L3_20CLASS_REHEARSAL_PASS"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "baseline_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "expected_baseline_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "baseline_matches": true,
+    "initialized_from_task6t": true,
+    "initialized_from_task7b": false,
+    "task7b_checkpoint_sha256": "2a285e4ac91051cb2cfcea370d384fb50f29927832ad30d3baf09c672cf48eb4",
+    "new_checkpoint_sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+    "checkpoint_differs_from_task7b": true,
+    "architecture": "Qwen3-VL-2B",
+    "text_only": true,
+    "image_input": false,
+    "classes": 20,
+    "backbone_unfrozen": false,
+    "rehearsal_rows": 8000,
+    "all_classes_represented": true,
+    "exact_overlap": 0,
+    "normalized_overlap": 0,
+    "normalized_duplicates": 0,
+    "per_class_counts_exact": true,
+    "holdout_classes_without_support": [],
+    "holdout_normalized_overlap": 0,
+    "external_eval_used_for_selection": false,
+    "original_v02_train_text_used": false,
+    "lora_lr": 2e-05,
+    "program_head_lr": 0.0001,
+    "sweep": false,
+    "keyword_or_regex_override": false,
+    "test_split_used": false,
+    "clean": true
+  },
+  "canonical_gates": {
+    "1_baseline_parser_hash": {
+      "passed": true,
+      "measured": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+      "required": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e"
+    },
+    "2_initialized_from_task6t": {
+      "passed": true
+    },
+    "3_architecture": {
+      "passed": true
+    },
+    "4_rehearsal_rows": {
+      "required": 8000,
+      "measured": 8000,
+      "passed": true
+    },
+    "5_all_classes_represented": {
+      "passed": true,
+      "measured": {
+        "leftmost": 300,
+        "rightmost": 300,
+        "topmost": 300,
+        "bottommost": 300,
+        "largest": 300,
+        "smallest": 300,
+        "largest_to_nearest": 300,
+        "smallest_to_nearest": 300,
+        "largest_to_left_of": 300,
+        "largest_to_right_of": 300,
+        "largest_to_above": 300,
+        "largest_to_below": 300,
+        "smallest_to_left_of": 300,
+        "smallest_to_right_of": 300,
+        "smallest_to_above": 300,
+        "smallest_to_below": 300,
+        "largest_to_left_of_to_nearest": 800,
+        "largest_to_right_of_to_nearest": 800,
+        "largest_to_above_to_nearest": 800,
+        "largest_to_below_to_nearest": 800
+      }
+    },
+    "6_exact_zh_en_allocation": {
+      "passed": true
+    },
+    "7_exact_overlap_zero": {
+      "passed": true
+    },
+    "8_normalized_overlap_zero": {
+      "passed": true
+    },
+    "9_holdout_all_classes": {
+      "passed": true
+    },
+    "10_full_val_accuracy": {
+      "required": 0.995,
+      "measured": 1.0,
+      "passed": true
+    },
+    "11_full_val_macro_f1": {
+      "required": 0.995,
+      "measured": 1.0,
+      "passed": true
+    },
+    "12_full_val_class_recall": {
+      "required": 0.98,
+      "measured": 1.0,
+      "passed": true
+    },
+    "13_z_minival240": {
+      "required": "240/240",
+      "measured": 240,
+      "passed": true
+    },
+    "14_z_paired_members": {
+      "required": "40/40",
+      "measured": 40,
+      "passed": true
+    }
+  },
+  "canonical_gates_passed": true,
+  "compositional_gates": {
+    "15_fixed24_total": {
+      "required": ">= 22/24",
+      "measured": 5,
+      "passed": false
+    },
+    "16_fixed24_compact": {
+      "required": "8/8",
+      "measured": 0,
+      "passed": false
+    },
+    "17_fixed24_every_class": {
+      "required": ">= 5/6",
+      "measured": {
+        "largest_to_left_of_to_nearest": {
+          "correct": 1,
+          "total": 6
+        },
+        "largest_to_right_of_to_nearest": {
+          "correct": 0,
+          "total": 6
+        },
+        "largest_to_above_to_nearest": {
+          "correct": 2,
+          "total": 6
+        },
+        "largest_to_below_to_nearest": {
+          "correct": 2,
+          "total": 6
+        }
+      },
+      "passed": false
+    },
+    "18_minimal96": {
+      "required": "96/96",
+      "measured": 60,
+      "passed": false
+    },
+    "19_stress_accuracy": {
+      "required": 0.97,
+      "measured": 0.6666666666666666,
+      "passed": false
+    },
+    "20_stress_macro_f1": {
+      "required": 0.97,
+      "measured": 0.5924464770230274,
+      "passed": false
+    },
+    "21_stress_class_recall": {
+      "required": 0.9,
+      "measured": 0.4166666666666667,
+      "passed": false
+    },
+    "22_stress_l3_recall": {
+      "required": 0.95,
+      "measured": 0.44791666666666663,
+      "passed": false
+    }
+  },
+  "compositional_gates_passed": false,
+  "safety_gates": {
+    "23_scope_safety": {
+      "passed": true
+    },
+    "24_no_keyword_override": {
+      "passed": true
+    },
+    "25_downstream_reproduction": {
+      "passed": true
+    },
+    "26_no_test": {
+      "passed": true
+    }
+  },
+  "all_criteria_passed": false,
+  "gates": {
+    "full_val_accuracy": 0.995,
+    "full_val_macro_f1": 0.995,
+    "full_val_class_recall": 0.98,
+    "z_minival": 240,
+    "z_paired": 40,
+    "fixed24_total": 22,
+    "fixed24_compact": 8,
+    "fixed24_class": 5,
+    "minimal_pairs": 96,
+    "stress_accuracy": 0.97,
+    "stress_macro_f1": 0.97,
+    "stress_class_recall": 0.9,
+    "stress_l3_recall": 0.95,
+    "rehearsal_rows": 8000
+  },
+  "rehearsal": {
+    "rows": 8000,
+    "allocation": {
+      "largest_to_left_of_to_nearest": 800,
+      "largest_to_right_of_to_nearest": 800,
+      "largest_to_above_to_nearest": 800,
+      "largest_to_below_to_nearest": 800,
+      "leftmost": 300,
+      "rightmost": 300,
+      "topmost": 300,
+      "bottommost": 300,
+      "largest": 300,
+      "smallest": 300,
+      "largest_to_nearest": 300,
+      "smallest_to_nearest": 300,
+      "largest_to_left_of": 300,
+      "largest_to_right_of": 300,
+      "largest_to_above": 300,
+      "largest_to_below": 300,
+      "smallest_to_left_of": 300,
+      "smallest_to_right_of": 300,
+      "smallest_to_above": 300,
+      "smallest_to_below": 300
+    },
+    "by_class": {
+      "leftmost": 300,
+      "rightmost": 300,
+      "topmost": 300,
+      "bottommost": 300,
+      "largest": 300,
+      "smallest": 300,
+      "largest_to_nearest": 300,
+      "smallest_to_nearest": 300,
+      "largest_to_left_of": 300,
+      "largest_to_right_of": 300,
+      "largest_to_above": 300,
+      "largest_to_below": 300,
+      "smallest_to_left_of": 300,
+      "smallest_to_right_of": 300,
+      "smallest_to_above": 300,
+      "smallest_to_below": 300,
+      "largest_to_left_of_to_nearest": 800,
+      "largest_to_right_of_to_nearest": 800,
+      "largest_to_above_to_nearest": 800,
+      "largest_to_below_to_nearest": 800
+    },
+    "by_class_language": {
+      "leftmost|zh": 150,
+      "leftmost|en": 150,
+      "rightmost|zh": 150,
+      "rightmost|en": 150,
+      "topmost|zh": 150,
+      "topmost|en": 150,
+      "bottommost|zh": 150,
+      "bottommost|en": 150,
+      "largest|zh": 150,
+      "largest|en": 150,
+      "smallest|zh": 150,
+      "smallest|en": 150,
+      "largest_to_nearest|zh": 150,
+      "largest_to_nearest|en": 150,
+      "smallest_to_nearest|zh": 150,
+      "smallest_to_nearest|en": 150,
+      "largest_to_left_of|zh": 150,
+      "largest_to_left_of|en": 150,
+      "largest_to_right_of|zh": 150,
+      "largest_to_right_of|en": 150,
+      "largest_to_above|zh": 150,
+      "largest_to_above|en": 150,
+      "largest_to_below|zh": 150,
+      "largest_to_below|en": 150,
+      "smallest_to_left_of|zh": 150,
+      "smallest_to_left_of|en": 150,
+      "smallest_to_right_of|zh": 150,
+      "smallest_to_right_of|en": 150,
+      "smallest_to_above|zh": 150,
+      "smallest_to_above|en": 150,
+      "smallest_to_below|zh": 150,
+      "smallest_to_below|en": 150,
+      "largest_to_left_of_to_nearest|zh": 400,
+      "largest_to_left_of_to_nearest|en": 400,
+      "largest_to_right_of_to_nearest|zh": 400,
+      "largest_to_right_of_to_nearest|en": 400,
+      "largest_to_above_to_nearest|zh": 400,
+      "largest_to_above_to_nearest|en": 400,
+      "largest_to_below_to_nearest|zh": 400,
+      "largest_to_below_to_nearest|en": 400
+    },
+    "unique_normalized": 8000,
+    "normalized_duplicates": 0,
+    "exact_overlap": 0,
+    "normalized_overlap": 0,
+    "original_v02_train_text_used": false
+  },
+  "training": {
+    "selected_epoch": 2,
+    "selection_metrics": {
+      "selection_primary": 1.0,
+      "min_class_recall": 1.0,
+      "macro_f1_20": 1.0,
+      "accuracy": 1.0
+    },
+    "protocol": {
+      "optimizer": "AdamW",
+      "program_head_lr": 0.0001,
+      "lora_lr": 2e-05,
+      "weight_decay": 0.0001,
+      "effective_batch_size": 32,
+      "max_epochs": 5,
+      "early_stopping_patience": 2,
+      "amp": "bfloat16",
+      "grad_clip_norm": 1.0,
+      "scheduler": "none",
+      "sweep": false,
+      "seed": 20261001,
+      "microbatch": 16,
+      "accumulation": 2,
+      "actual_effective_batch": 32,
+      "selection": [
+        "min(macro_f1_20, l3_macro_recall)",
+        "minimum class recall",
+        "macro F1",
+        "accuracy",
+        "earlier epoch"
+      ]
+    },
+    "checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+      "exists": true,
+      "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+      "bytes": 70090713,
+      "committed": false
+    },
+    "wall_seconds": 419.3,
+    "peak_vram_gb": 7.41,
+    "internal_split": {
+      "train_rows": 7200,
+      "holdout_rows": 800,
+      "normalized_overlap": 0,
+      "holdout_support": {
+        "leftmost": 30,
+        "rightmost": 30,
+        "topmost": 30,
+        "bottommost": 30,
+        "largest": 30,
+        "smallest": 30,
+        "largest_to_nearest": 30,
+        "smallest_to_nearest": 30,
+        "largest_to_above": 30,
+        "largest_to_below": 30,
+        "largest_to_left_of": 30,
+        "largest_to_right_of": 30,
+        "smallest_to_above": 30,
+        "smallest_to_below": 30,
+        "smallest_to_left_of": 30,
+        "smallest_to_right_of": 30,
+        "largest_to_above_to_nearest": 80,
+        "largest_to_below_to_nearest": 80,
+        "largest_to_left_of_to_nearest": 80,
+        "largest_to_right_of_to_nearest": 80
+      }
+    }
+  },
+  "evaluation": {
+    "full_val": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "min_class_recall": 1.0,
+      "correct": 18222,
+      "count": 18222,
+      "per_class_recall": {
+        "leftmost": 1.0,
+        "rightmost": 1.0,
+        "topmost": 1.0,
+        "bottommost": 1.0,
+        "largest": 1.0,
+        "smallest": 1.0,
+        "largest_to_nearest": 1.0,
+        "smallest_to_nearest": 1.0,
+        "largest_to_above": 1.0,
+        "largest_to_below": 1.0,
+        "largest_to_left_of": 1.0,
+        "largest_to_right_of": 1.0,
+        "smallest_to_above": 1.0,
+        "smallest_to_below": 1.0,
+        "smallest_to_left_of": 1.0,
+        "smallest_to_right_of": 1.0,
+        "largest_to_above_to_nearest": 1.0,
+        "largest_to_below_to_nearest": 1.0,
+        "largest_to_left_of_to_nearest": 1.0,
+        "largest_to_right_of_to_nearest": 1.0
+      }
+    },
+    "z_minival240": {
+      "correct": 240,
+      "count": 240
+    },
+    "z_paired_members": {
+      "correct": 40,
+      "count": 40
+    },
+    "fixed24": {
+      "correct": 5,
+      "compact": {
+        "correct": 0,
+        "total": 8
+      },
+      "per_program": {
+        "largest_to_left_of_to_nearest": {
+          "correct": 1,
+          "total": 6
+        },
+        "largest_to_right_of_to_nearest": {
+          "correct": 0,
+          "total": 6
+        },
+        "largest_to_above_to_nearest": {
+          "correct": 2,
+          "total": 6
+        },
+        "largest_to_below_to_nearest": {
+          "correct": 2,
+          "total": 6
+        }
+      }
+    },
+    "minimal96": {
+      "correct": 60,
+      "total": 96,
+      "by_contrast_group": {
+        "M1": {
+          "correct": 24,
+          "total": 48
+        },
+        "M2": {
+          "correct": 16,
+          "total": 16
+        },
+        "M3": {
+          "correct": 4,
+          "total": 16
+        },
+        "M4": {
+          "correct": 16,
+          "total": 16
+        }
+      }
+    },
+    "stress192": {
+      "accuracy": 0.6666666666666666,
+      "macro_f1": 0.5924464770230274,
+      "l3_macro_recall": 0.44791666666666663,
+      "min_class_recall": 0.4166666666666667,
+      "correct": 128,
+      "count": 192,
+      "per_language": {
+        "zh": {
+          "correct": 68,
+          "total": 96
+        },
+        "en": {
+          "correct": 60,
+          "total": 96
+        }
+      }
+    }
+  },
+  "scope_safety": {
+    "passed": true,
+    "l2_controls_ok": true,
+    "nearest_only_controls_ok": true,
+    "ood_ok": true
+  },
+  "end_to_end": {
+    "passed": true,
+    "measured": {
+      "strict_all_miou": 0.21700369907681483,
+      "strict_all_dice": 0.29305023470480596,
+      "answered_only_miou": 0.21975058134361,
+      "abstentions": 3,
+      "paired_passed": 8,
+      "paired_pairs": 20,
+      "own_cross_margin": 0.19949275176250805,
+      "parser_correct": 240
+    },
+    "task7a_reference": {
+      "strict_all_miou": 0.21700369907681483,
+      "answered_only_miou": 0.21975058134361,
+      "abstentions": 3,
+      "paired_passed": 8,
+      "own_cross_margin": 0.19949275176250805
+    },
+    "deltas": {
+      "strict_all_miou": 0.0,
+      "answered_only_miou": 0.0,
+      "own_cross_margin": 0.0
+    }
+  },
+  "cli_default": {
+    "canonical_gates_passed": true,
+    "updated_to_task7c": true,
+    "note": "section 24: the L3 default parser moves to the Task 7C checkpoint only when the canonical gates pass, otherwise Task 6T stays the default"
+  },
+  "interpretation_boundary": {
+    "parser_claimed_as_novelty": false,
+    "another_parser_repair_run": false,
+    "reference_hardening_reopened": false,
+    "downstream_modified": false,
+    "attention_or_global_competition_added": false,
+    "formal_full_training_or_test_started": false,
+    "task7d_decided": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7C 的 20-class rehearsal 与 L3 组合语义结果决定 parser 是否正式冻结，不自行继续 parser 调参、reference hardening 或下游架构改造。",
+  "runtime_seconds": 0.18
+}

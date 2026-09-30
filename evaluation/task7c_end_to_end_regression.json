@@ -1,0 +1,45 @@
+{
+  "_doc": "Task 7C section 22. End-to-end frozen regression: the Task 7C parser drives the frozen Task 7A U-C1 reference resolver, the frozen P_dir/P_near fields and the frozen Z-B3 decoder on the exact Z-MiniVal240/Z-PairedVal20 natural-language queries. Reproduction is required only because the parser stays 240/240; tolerance 1e-6 with exact counts.",
+  "task": "7C",
+  "stage": "L-end-to-end-regression",
+  "checkpoints": {
+    "parser": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+      "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a"
+    },
+    "target": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc"
+    },
+    "target_expected_sha256": null,
+    "downstream_unchanged": true
+  },
+  "measured": {
+    "strict_all_miou": 0.21700369907681483,
+    "strict_all_dice": 0.29305023470480596,
+    "answered_only_miou": 0.21975058134361,
+    "abstentions": 3,
+    "paired_passed": 8,
+    "paired_pairs": 20,
+    "own_cross_margin": 0.19949275176250805,
+    "parser_correct": 240
+  },
+  "task7a_reference": {
+    "strict_all_miou": 0.21700369907681483,
+    "answered_only_miou": 0.21975058134361,
+    "abstentions": 3,
+    "paired_passed": 8,
+    "own_cross_margin": 0.19949275176250805
+  },
+  "deltas": {
+    "strict_all_miou": 0.0,
+    "answered_only_miou": 0.0,
+    "own_cross_margin": 0.0
+  },
+  "tolerance": 1e-06,
+  "reproduction_required": true,
+  "passed": true,
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 83.1
+}

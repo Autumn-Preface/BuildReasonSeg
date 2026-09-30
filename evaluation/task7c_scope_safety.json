@@ -1,0 +1,140 @@
+{
+  "_doc": "Task 7C section 22. Reused Task 7B scope controls evaluated with the Task 7C parser: L2 directional controls must parse as L2 and exit 5 before any downstream work, nearest-only controls must parse as largest_to_nearest and exit 5, OOD prompts keep the existing guard behaviour, and no keyword/regex gate may exist.",
+  "task": "7C",
+  "stage": "K-scope-safety",
+  "controls_source": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7b_scope_safety.json",
+    "sha256": "7b13b5fd431cd56a40d0a6f75e18ca5e1f9bfcb131f052f7bca7832d82755cb9",
+    "reused": true
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+    "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+    "initialized_from": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e"
+  },
+  "cli": {
+    "task6t_helper_checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "task7c_checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+    "default_parser_checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "updated_to_task7c": false,
+    "canonical_gates_passed": true,
+    "supported_l3_programs": [
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest"
+    ],
+    "keyword_or_regex_override": false,
+    "domain_guard_changed": false,
+    "u_c1_resolver_changed": false,
+    "fields_changed": false,
+    "z_b3_changed": false
+  },
+  "out_of_scope_controls": [
+    {
+      "prompt": "分割面积最大的建筑物右侧的建筑物。",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "semantically_correct_before_exit": true,
+      "exit_code": 5,
+      "expected_exit_code": 5,
+      "stopped_before": [
+        "proposals",
+        "reference",
+        "fields",
+        "sam2",
+        "z_b3"
+      ],
+      "files_written": [
+        "result.json"
+      ],
+      "only_result_json": true,
+      "ground_truth_used": false
+    },
+    {
+      "prompt": "segment the building to the left of the largest building",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "semantically_correct_before_exit": true,
+      "exit_code": 5,
+      "expected_exit_code": 5,
+      "stopped_before": [
+        "proposals",
+        "reference",
+        "fields",
+        "sam2",
+        "z_b3"
+      ],
+      "files_written": [
+        "result.json"
+      ],
+      "only_result_json": true,
+      "ground_truth_used": false
+    },
+    {
+      "prompt": "分割距离面积最大的建筑物最近的建筑物。",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "largest_to_nearest",
+      "semantically_correct_before_exit": true,
+      "exit_code": 5,
+      "expected_exit_code": 5,
+      "stopped_before": [
+        "proposals",
+        "reference",
+        "fields",
+        "sam2",
+        "z_b3"
+      ],
+      "files_written": [
+        "result.json"
+      ],
+      "only_result_json": true,
+      "ground_truth_used": false
+    },
+    {
+      "prompt": "segment the nearest building to the largest building",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "largest_to_nearest",
+      "semantically_correct_before_exit": true,
+      "exit_code": 5,
+      "expected_exit_code": 5,
+      "stopped_before": [
+        "proposals",
+        "reference",
+        "fields",
+        "sam2",
+        "z_b3"
+      ],
+      "files_written": [
+        "result.json"
+      ],
+      "only_result_json": true,
+      "ground_truth_used": false
+    }
+  ],
+  "l2_controls_ok": true,
+  "nearest_only_controls_ok": true,
+  "ood_controls": [
+    {
+      "prompt": "what is the weather in this city tomorrow",
+      "exit_code": 5,
+      "status": "unsupported_l3_program"
+    },
+    {
+      "prompt": "请把这张图压缩成 PDF 文件",
+      "exit_code": 5,
+      "status": "unsupported_l3_program"
+    }
+  ],
+  "ood_ok": true,
+  "stopped_before_required": [
+    "proposals",
+    "reference",
+    "fields",
+    "sam2",
+    "z_b3"
+  ],
+  "passed": true,
+  "test_split_used": false,
+  "runtime_seconds": 60.1
+}

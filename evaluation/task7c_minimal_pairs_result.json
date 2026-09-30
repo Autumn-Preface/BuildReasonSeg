@@ -1,0 +1,1193 @@
+{
+  "_doc": "Task 7C section 20. Task 7B compositional minimal-pair pack (96 prompts) reused byte-for-byte.",
+  "task": "7C",
+  "stage": "J-minimal96",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+    "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+    "selected_epoch": 2,
+    "initialized_from": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "architecture": "Qwen3-VL-2B",
+    "text_only": true,
+    "classes": 20
+  },
+  "correct": 60,
+  "total": 96,
+  "accuracy": 0.625,
+  "by_contrast_group": {
+    "M1": {
+      "correct": 24,
+      "total": 48
+    },
+    "M2": {
+      "correct": 16,
+      "total": 16
+    },
+    "M3": {
+      "correct": 4,
+      "total": 16
+    },
+    "M4": {
+      "correct": 16,
+      "total": 16
+    }
+  },
+  "passed": false,
+  "failures": [
+    {
+      "id": "M002",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "请分割最大建筑左侧最近的建筑。"
+    },
+    {
+      "id": "M004",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "标出最大建筑左侧最近的楼房。"
+    },
+    {
+      "id": "M006",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "请圈定最大建筑左侧最近的建筑区域。"
+    },
+    {
+      "id": "M008",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "Delineate the structure nearest left the largest building"
+    },
+    {
+      "id": "M010",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "Outline the plot on the left side of the largest building nearest"
+    },
+    {
+      "id": "M012",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "Mark the region lying left the largest building nearest"
+    },
+    {
+      "id": "M014",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "请分割最大建筑右侧最近的建筑。"
+    },
+    {
+      "id": "M016",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "标出最大建筑右侧最近的楼房。"
+    },
+    {
+      "id": "M018",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "请圈定最大建筑右侧最近的建筑区域。"
+    },
+    {
+      "id": "M020",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "Delineate the structure nearest right the largest building"
+    },
+    {
+      "id": "M022",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "Outline the plot on the right side of the largest building nearest"
+    },
+    {
+      "id": "M024",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "Mark the region lying right the largest building nearest"
+    },
+    {
+      "id": "M026",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "请分割最大建筑上面最近的建筑。"
+    },
+    {
+      "id": "M028",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "标出最大建筑上面最近的楼房。"
+    },
+    {
+      "id": "M030",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "请圈定最大建筑上面最近的建筑区域。"
+    },
+    {
+      "id": "M032",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "Delineate the structure nearest above the largest building"
+    },
+    {
+      "id": "M034",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "Outline the plot on the above side of the largest building nearest"
+    },
+    {
+      "id": "M036",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "Mark the region lying above the largest building nearest"
+    },
+    {
+      "id": "M038",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "请分割最大建筑下面最近的建筑。"
+    },
+    {
+      "id": "M040",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "标出最大建筑下面最近的楼房。"
+    },
+    {
+      "id": "M042",
+      "contrast_group": "M1",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "请圈定最大建筑下面最近的建筑区域。"
+    },
+    {
+      "id": "M044",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "Delineate the structure nearest below the largest building"
+    },
+    {
+      "id": "M046",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "Outline the plot on the below side of the largest building nearest"
+    },
+    {
+      "id": "M048",
+      "contrast_group": "M1",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "Mark the region lying below the largest building nearest"
+    },
+    {
+      "id": "M066",
+      "contrast_group": "M3",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "请分割最大建筑左侧最近的建筑。"
+    },
+    {
+      "id": "M067",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "prompt": "Delineate the structure nearest to the largest building."
+    },
+    {
+      "id": "M068",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "Delineate the structure nearest to the left of the largest building."
+    },
+    {
+      "id": "M070",
+      "contrast_group": "M3",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "请分割最大建筑右侧最近的建筑。"
+    },
+    {
+      "id": "M071",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "prompt": "Delineate the structure nearest to the largest building."
+    },
+    {
+      "id": "M072",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "Delineate the structure nearest to the right of the largest building."
+    },
+    {
+      "id": "M074",
+      "contrast_group": "M3",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "请分割最大建筑上面最近的建筑。"
+    },
+    {
+      "id": "M075",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "prompt": "Delineate the structure nearest to the largest building."
+    },
+    {
+      "id": "M076",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "Delineate the structure nearest to the above of the largest building."
+    },
+    {
+      "id": "M078",
+      "contrast_group": "M3",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "请分割最大建筑下面最近的建筑。"
+    },
+    {
+      "id": "M079",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "prompt": "Delineate the structure nearest to the largest building."
+    },
+    {
+      "id": "M080",
+      "contrast_group": "M3",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "Delineate the structure nearest to the below of the largest building."
+    }
+  ],
+  "rows": [
+    {
+      "id": "M001",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑左侧的建筑。",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M002",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑左侧最近的建筑。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M003",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑左侧的楼房。",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M004",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑左侧最近的楼房。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M005",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑左侧的建筑区域。",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M006",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑左侧最近的建筑区域。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M007",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure left the largest building",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M008",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure nearest left the largest building",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M009",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the left side of the largest building",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M010",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the left side of the largest building nearest",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M011",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying left the largest building",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M012",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying left the largest building nearest",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M013",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑右侧的建筑。",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M014",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑右侧最近的建筑。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M015",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑右侧的楼房。",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M016",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑右侧最近的楼房。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M017",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑右侧的建筑区域。",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M018",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑右侧最近的建筑区域。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M019",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure right the largest building",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M020",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure nearest right the largest building",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M021",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the right side of the largest building",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M022",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the right side of the largest building nearest",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M023",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying right the largest building",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M024",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying right the largest building nearest",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M025",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑上面的建筑。",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M026",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑上面最近的建筑。",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M027",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑上面的楼房。",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M028",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑上面最近的楼房。",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M029",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑上面的建筑区域。",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M030",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑上面最近的建筑区域。",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M031",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure above the largest building",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M032",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure nearest above the largest building",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M033",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the above side of the largest building",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M034",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the above side of the largest building nearest",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M035",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying above the largest building",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M036",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying above the largest building nearest",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M037",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑下面的建筑。",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M038",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请分割最大建筑下面最近的建筑。",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M039",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑下面的楼房。",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M040",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "标出最大建筑下面最近的楼房。",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M041",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑下面的建筑区域。",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M042",
+      "contrast_group": "M1",
+      "language": "zh",
+      "prompt": "请圈定最大建筑下面最近的建筑区域。",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M043",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure below the largest building",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M044",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Delineate the structure nearest below the largest building",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M045",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the below side of the largest building",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M046",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Outline the plot on the below side of the largest building nearest",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M047",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying below the largest building",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M048",
+      "contrast_group": "M1",
+      "language": "en",
+      "prompt": "Mark the region lying below the largest building nearest",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M049",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑。",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M050",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑左侧的建筑。",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M051",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the largest building.",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M052",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the structure left the largest building.",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M053",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑。",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M054",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑右侧的建筑。",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M055",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the largest building.",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M056",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the structure right the largest building.",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M057",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑。",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M058",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑上面的建筑。",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M059",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the largest building.",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M060",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the structure above the largest building.",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M061",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑。",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M062",
+      "contrast_group": "M2",
+      "language": "zh",
+      "prompt": "请分割最大建筑下面的建筑。",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M063",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the largest building.",
+      "expected_program": "largest",
+      "parsed_program": "largest",
+      "correct": true
+    },
+    {
+      "id": "M064",
+      "contrast_group": "M2",
+      "language": "en",
+      "prompt": "Delineate the structure below the largest building.",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M065",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割距离最大建筑最近的建筑。",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "largest_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "M066",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割最大建筑左侧最近的建筑。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M067",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the largest building.",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "correct": false
+    },
+    {
+      "id": "M068",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the left of the largest building.",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "M069",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割距离最大建筑最近的建筑。",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "largest_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "M070",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割最大建筑右侧最近的建筑。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M071",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the largest building.",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "correct": false
+    },
+    {
+      "id": "M072",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the right of the largest building.",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "M073",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割距离最大建筑最近的建筑。",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "largest_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "M074",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割最大建筑上面最近的建筑。",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M075",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the largest building.",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "correct": false
+    },
+    {
+      "id": "M076",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the above of the largest building.",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "M077",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割距离最大建筑最近的建筑。",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "largest_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "M078",
+      "contrast_group": "M3",
+      "language": "zh",
+      "prompt": "请分割最大建筑下面最近的建筑。",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M079",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the largest building.",
+      "expected_program": "largest_to_nearest",
+      "parsed_program": "smallest_to_nearest",
+      "correct": false
+    },
+    {
+      "id": "M080",
+      "contrast_group": "M3",
+      "language": "en",
+      "prompt": "Delineate the structure nearest to the below of the largest building.",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "M081",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最大建筑左侧的建筑。",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M082",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最小建筑左侧的建筑。",
+      "expected_program": "smallest_to_left_of",
+      "parsed_program": "smallest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M083",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure left the largest building.",
+      "expected_program": "largest_to_left_of",
+      "parsed_program": "largest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M084",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure left the smallest building.",
+      "expected_program": "smallest_to_left_of",
+      "parsed_program": "smallest_to_left_of",
+      "correct": true
+    },
+    {
+      "id": "M085",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最大建筑右侧的建筑。",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M086",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最小建筑右侧的建筑。",
+      "expected_program": "smallest_to_right_of",
+      "parsed_program": "smallest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M087",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure right the largest building.",
+      "expected_program": "largest_to_right_of",
+      "parsed_program": "largest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M088",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure right the smallest building.",
+      "expected_program": "smallest_to_right_of",
+      "parsed_program": "smallest_to_right_of",
+      "correct": true
+    },
+    {
+      "id": "M089",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最大建筑上面的建筑。",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M090",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最小建筑上面的建筑。",
+      "expected_program": "smallest_to_above",
+      "parsed_program": "smallest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M091",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure above the largest building.",
+      "expected_program": "largest_to_above",
+      "parsed_program": "largest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M092",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure above the smallest building.",
+      "expected_program": "smallest_to_above",
+      "parsed_program": "smallest_to_above",
+      "correct": true
+    },
+    {
+      "id": "M093",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最大建筑下面的建筑。",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M094",
+      "contrast_group": "M4",
+      "language": "zh",
+      "prompt": "请分割最小建筑下面的建筑。",
+      "expected_program": "smallest_to_below",
+      "parsed_program": "smallest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M095",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure below the largest building.",
+      "expected_program": "largest_to_below",
+      "parsed_program": "largest_to_below",
+      "correct": true
+    },
+    {
+      "id": "M096",
+      "contrast_group": "M4",
+      "language": "en",
+      "prompt": "Delineate the structure below the smallest building.",
+      "expected_program": "smallest_to_below",
+      "parsed_program": "smallest_to_below",
+      "correct": true
+    }
+  ],
+  "test_split_used": false
+}

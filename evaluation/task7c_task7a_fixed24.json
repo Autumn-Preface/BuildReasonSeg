@@ -1,0 +1,443 @@
+{
+  "_doc": "Task 7C section 19. Exact Task 7A fixed 24 L3 paraphrases, reused byte-for-byte (the pack was frozen before Task 7A and is unchanged).",
+  "task": "7C",
+  "stage": "J-task7a-fixed24",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+    "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+    "selected_epoch": 2,
+    "initialized_from": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "architecture": "Qwen3-VL-2B",
+    "text_only": true,
+    "classes": 20
+  },
+  "correct": 5,
+  "total": 24,
+  "accuracy": 0.20833333333333334,
+  "per_program": {
+    "largest_to_left_of_to_nearest": {
+      "correct": 1,
+      "total": 6
+    },
+    "largest_to_right_of_to_nearest": {
+      "correct": 0,
+      "total": 6
+    },
+    "largest_to_above_to_nearest": {
+      "correct": 2,
+      "total": 6
+    },
+    "largest_to_below_to_nearest": {
+      "correct": 2,
+      "total": 6
+    }
+  },
+  "compact": {
+    "correct": 0,
+    "total": 8
+  },
+  "gate_constants": {
+    "full_val_accuracy": 0.995,
+    "full_val_macro_f1": 0.995,
+    "class_recall": 0.98,
+    "z_minival": 240,
+    "z_paired": 40,
+    "fixed24_total": 22,
+    "fixed24_compact": 8,
+    "fixed24_class": 5,
+    "minimal_pairs": 96,
+    "stress_accuracy": 0.97,
+    "stress_macro_f1": 0.97,
+    "stress_class_recall": 0.9,
+    "stress_l3_recall": 0.95
+  },
+  "gate": {
+    "total": {
+      "required": ">= 22/24",
+      "measured": 5,
+      "passed": false
+    },
+    "all_compact_correct": {
+      "required": "8/8",
+      "measured": 0,
+      "passed": false
+    },
+    "every_l3_class": {
+      "required": ">= 5/6",
+      "measured": {
+        "largest_to_left_of_to_nearest": {
+          "correct": 1,
+          "total": 6
+        },
+        "largest_to_right_of_to_nearest": {
+          "correct": 0,
+          "total": 6
+        },
+        "largest_to_above_to_nearest": {
+          "correct": 2,
+          "total": 6
+        },
+        "largest_to_below_to_nearest": {
+          "correct": 2,
+          "total": 6
+        }
+      },
+      "passed": false
+    }
+  },
+  "all_gates_passed": false,
+  "failures": [
+    {
+      "id": "p01",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "分割面积最大的建筑物右侧最近的建筑物。"
+    },
+    {
+      "id": "p02",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "segment the building nearest to the right of the largest building"
+    },
+    {
+      "id": "p03",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "找出最大建筑左边最近的建筑。"
+    },
+    {
+      "id": "p04",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "find the closest building to the left of the largest building"
+    },
+    {
+      "id": "p05",
+      "language": "zh",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "找出最大建筑上方最近的建筑。"
+    },
+    {
+      "id": "p06",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "find the nearest building above the largest building"
+    },
+    {
+      "id": "p07",
+      "language": "zh",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "找出最大建筑下方最近的建筑。"
+    },
+    {
+      "id": "p08",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "find the closest building below the largest building"
+    },
+    {
+      "id": "p09",
+      "language": "zh",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "请分割位于最大建筑左侧、且与它最近的那栋建筑。"
+    },
+    {
+      "id": "p11",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "please segment the building on the left side of the largest building that is closest to it"
+    },
+    {
+      "id": "p12",
+      "language": "en",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of",
+      "prompt": "segment the nearest building on the left-hand side of the largest building"
+    },
+    {
+      "id": "p13",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "请分割位于最大建筑右侧、且与它最近的那栋建筑。"
+    },
+    {
+      "id": "p14",
+      "language": "zh",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "在最大建筑的右侧找距离最近的一栋建筑并分割出来。"
+    },
+    {
+      "id": "p15",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "please segment the building on the right side of the largest building that is closest to it"
+    },
+    {
+      "id": "p16",
+      "language": "en",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of",
+      "prompt": "segment the nearest building on the right-hand side of the largest building"
+    },
+    {
+      "id": "p19",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "please segment the building above the largest building that is closest to it"
+    },
+    {
+      "id": "p20",
+      "language": "en",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above",
+      "prompt": "segment the nearest building located above the largest building"
+    },
+    {
+      "id": "p23",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "please segment the building below the largest building that is closest to it"
+    },
+    {
+      "id": "p24",
+      "language": "en",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below",
+      "prompt": "segment the nearest building located below the largest building"
+    }
+  ],
+  "rows": [
+    {
+      "id": "p01",
+      "language": "zh",
+      "prompt": "分割面积最大的建筑物右侧最近的建筑物。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "p02",
+      "language": "en",
+      "prompt": "segment the building nearest to the right of the largest building",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "p03",
+      "language": "zh",
+      "prompt": "找出最大建筑左边最近的建筑。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "p04",
+      "language": "en",
+      "prompt": "find the closest building to the left of the largest building",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "p05",
+      "language": "zh",
+      "prompt": "找出最大建筑上方最近的建筑。",
+      "expected_program": "largest_to_above_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "p06",
+      "language": "en",
+      "prompt": "find the nearest building above the largest building",
+      "expected_program": "largest_to_above_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "p07",
+      "language": "zh",
+      "prompt": "找出最大建筑下方最近的建筑。",
+      "expected_program": "largest_to_below_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "p08",
+      "language": "en",
+      "prompt": "find the closest building below the largest building",
+      "expected_program": "largest_to_below_to_nearest",
+      "required_compact": true,
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "p09",
+      "language": "zh",
+      "prompt": "请分割位于最大建筑左侧、且与它最近的那栋建筑。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "p10",
+      "language": "zh",
+      "prompt": "在最大建筑的左侧找距离最近的一栋建筑并分割出来。",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "p11",
+      "language": "en",
+      "prompt": "please segment the building on the left side of the largest building that is closest to it",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "p12",
+      "language": "en",
+      "prompt": "segment the nearest building on the left-hand side of the largest building",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_left_of",
+      "correct": false
+    },
+    {
+      "id": "p13",
+      "language": "zh",
+      "prompt": "请分割位于最大建筑右侧、且与它最近的那栋建筑。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "p14",
+      "language": "zh",
+      "prompt": "在最大建筑的右侧找距离最近的一栋建筑并分割出来。",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "p15",
+      "language": "en",
+      "prompt": "please segment the building on the right side of the largest building that is closest to it",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "p16",
+      "language": "en",
+      "prompt": "segment the nearest building on the right-hand side of the largest building",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_right_of",
+      "correct": false
+    },
+    {
+      "id": "p17",
+      "language": "zh",
+      "prompt": "请分割位于最大建筑上方、且与它最近的那栋建筑。",
+      "expected_program": "largest_to_above_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "p18",
+      "language": "zh",
+      "prompt": "在最大建筑的上方找距离最近的一栋建筑并分割出来。",
+      "expected_program": "largest_to_above_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "p19",
+      "language": "en",
+      "prompt": "please segment the building above the largest building that is closest to it",
+      "expected_program": "largest_to_above_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "p20",
+      "language": "en",
+      "prompt": "segment the nearest building located above the largest building",
+      "expected_program": "largest_to_above_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_above",
+      "correct": false
+    },
+    {
+      "id": "p21",
+      "language": "zh",
+      "prompt": "请分割位于最大建筑下方、且与它最近的那栋建筑。",
+      "expected_program": "largest_to_below_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "p22",
+      "language": "zh",
+      "prompt": "在最大建筑的下方找距离最近的一栋建筑并分割出来。",
+      "expected_program": "largest_to_below_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true
+    },
+    {
+      "id": "p23",
+      "language": "en",
+      "prompt": "please segment the building below the largest building that is closest to it",
+      "expected_program": "largest_to_below_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_below",
+      "correct": false
+    },
+    {
+      "id": "p24",
+      "language": "en",
+      "prompt": "segment the nearest building located below the largest building",
+      "expected_program": "largest_to_below_to_nearest",
+      "required_compact": false,
+      "parsed_program": "largest_to_below",
+      "correct": false
+    }
+  ],
+  "test_split_used": false
+}

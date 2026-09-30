@@ -264,31 +264,34 @@ def task7b_parser_checkpoint() -> Path:
     return REPO_ROOT / "artifacts" / "checkpoints" / "task7b" / "program_parser_l3_hardened_v1.pt"
 
 
-def default_l3_parser_checkpoint() -> Path:
-    """The L3 CLI's default parser: the Task 7B checkpoint only after a passing Task 7B verdict.
+def task7c_parser_checkpoint() -> Path:
+    """Task 7C 20-class rehearsal ProgramHead (if it exists)."""
 
-    Task 7A's `default_parser_checkpoint()` is deliberately left untouched so the frozen Task 7A
-    integration artifacts keep referring to the Task 6T checkpoint they were measured with. Section 20 of
-    Task 7B allows the CLI default to move to the Task 7B checkpoint **only if the canonical gates pass**,
-    so this helper consults the frozen Task 7B verdict.
+    return REPO_ROOT / "artifacts" / "checkpoints" / "task7c" / "program_parser_l3_rehearsal_v1.pt"
+
+
+def default_l3_parser_checkpoint() -> Path:
+    """The L3 CLI's default parser: the latest hardening checkpoint whose canonical gates passed.
+
+    Task 7A's `default_parser_checkpoint()` is deliberately left untouched so the frozen Task 7A/7B
+    integration artifacts keep referring to the Task 6T checkpoint they were measured with. Task 7B
+    section 20 and Task 7C section 24 both allow the CLI default to move to a hardened checkpoint **only
+    if that task's canonical gates pass**, so this helper consults the frozen verdicts newest-first.
     """
 
-    candidate = task7b_parser_checkpoint()
-    if not candidate.is_file():
-        return default_parser_checkpoint()
-    verdict_path = REPO_ROOT / "evaluation" / "task7b_verdict.json"
-    if verdict_path.is_file():
+    for verdict_name, candidate in (("task7c_verdict.json", task7c_parser_checkpoint()),
+                                    ("task7b_verdict.json", task7b_parser_checkpoint())):
+        if not candidate.is_file():
+            continue
+        verdict_path = REPO_ROOT / "evaluation" / verdict_name
+        if not verdict_path.is_file():
+            continue
         try:
             verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
         except (OSError, ValueError):  # pragma: no cover - defensive
-            return default_parser_checkpoint()
-        if verdict.get("verdict") in ("L3_PROGRAMHEAD_HARDENING_PASS",
-                                      "L3_PARSER_COMPOSITIONAL_ROBUSTNESS_FAIL",
-                                      "END_TO_END_REGRESSION"):
-            if verdict.get("canonical_gates_passed"):
-                return candidate
-            return default_parser_checkpoint()
-        return default_parser_checkpoint()
+            continue
+        if verdict.get("canonical_gates_passed"):
+            return candidate
     return default_parser_checkpoint()
 
 
