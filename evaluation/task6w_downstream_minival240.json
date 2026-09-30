@@ -1,0 +1,115 @@
+{
+  "_doc": "Task 6W section 18. Downstream causal evaluation on MiniVal240 with canonical program ids (no parser) for W-S0 (U-C1 + deterministic) and W-SQ (U-C1 + learned quality filter quality>=0.50 + deterministic), through frozen field v0.2, SAM2 and B3.",
+  "task": "6W",
+  "stage": "I-downstream-minival240",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\mini_val_240.json",
+    "records": 240,
+    "sha256": "001c776b833dd60fb680f3d8ae85a22c1bf4dec816fb9bd9afd249722ae1af36"
+  },
+  "config": "U-C1",
+  "quality_threshold": 0.5,
+  "quality_checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6w\\proposal_quality_v01.pt",
+    "sha256": "ebf9e6bddb1bdb2eb7d76d8db3bdbc0cb738fcb5eb1b7cbb87c98892b52834d9"
+  },
+  "target_decoder": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+    "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab"
+  },
+  "systems": {
+    "W-S0": {
+      "records": 240,
+      "strict_all_miou": 0.3089007548027875,
+      "strict_all_dice": 0.3895799147410453,
+      "answered_records": 236,
+      "answered_only_miou": 0.31413636081639407,
+      "answered_only_dice": 0.396182964143436,
+      "precision_at_0_5": 0.3125,
+      "abstentions": 4,
+      "reference_fail_count": 115,
+      "target_fail_with_reference_ok_count": 69,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "QUALITY_FILTER_ALL_REJECTED": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 54,
+        "REFERENCE_SELECTION_WRONG": 57,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "TARGET_FAIL_WITH_REFERENCE_OK": 69,
+        "TARGET_OK": 56
+      },
+      "largest": {
+        "records": 120,
+        "miou": 0.32413485375787326
+      },
+      "smallest": {
+        "records": 120,
+        "miou": 0.29366665584770174
+      },
+      "per_direction": {
+        "left_of": 0.3582755568000863,
+        "right_of": 0.25139096797490074,
+        "above": 0.33072395744328403,
+        "below": 0.29521253699287886
+      },
+      "border_target": {
+        "records": 114,
+        "miou": 0.2895708330732922
+      },
+      "tiny_target": {
+        "records": 4,
+        "miou": 7.42794373054799e-08
+      }
+    },
+    "W-SQ": {
+      "records": 240,
+      "strict_all_miou": 0.2631176629064914,
+      "strict_all_dice": 0.3338106871510173,
+      "answered_records": 230,
+      "answered_only_miou": 0.27455756129373016,
+      "answered_only_dice": 0.34832419528801806,
+      "precision_at_0_5": 0.25833333333333336,
+      "abstentions": 10,
+      "reference_fail_count": 132,
+      "target_fail_with_reference_ok_count": 60,
+      "buckets": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "QUALITY_FILTER_ALL_REJECTED": 6,
+        "REFERENCE_NOT_COVERED_IOU50": 52,
+        "REFERENCE_SELECTION_WRONG": 70,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "TARGET_FAIL_WITH_REFERENCE_OK": 60,
+        "TARGET_OK": 48
+      },
+      "largest": {
+        "records": 120,
+        "miou": 0.28875917978562055
+      },
+      "smallest": {
+        "records": 120,
+        "miou": 0.2374761460273623
+      },
+      "per_direction": {
+        "left_of": 0.3145568250380102,
+        "right_of": 0.2233527627543806,
+        "above": 0.26187605813539716,
+        "below": 0.2526850056981778
+      },
+      "border_target": {
+        "records": 114,
+        "miou": 0.25363391623809817
+      },
+      "tiny_target": {
+        "records": 4,
+        "miou": 7.42794373054799e-08
+      }
+    }
+  },
+  "parser_used": false,
+  "parser_fail_count": 0,
+  "test_split_used": false,
+  "runtime_seconds": 26.2
+}

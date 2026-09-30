@@ -1,0 +1,452 @@
+{
+  "_doc": "Task 6W sections 21-24. W0 oracle mechanism gate, quality-estimator adequacy, the quality_reference_improved flag, the twelve PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS conditions and the single verdict. The ProposalQualityEstimator is support infrastructure, not a claimed novelty; the core field/B3 method is untouched.",
+  "task": "6W",
+  "verdict": "QUALITY_FILTER_NOT_HELPFUL",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "FROZEN_ASSET_UNAVAILABLE",
+    "QUALITY_FILTER_MECHANISM_INSUFFICIENT",
+    "QUALITY_ESTIMATOR_NOT_LEARNABLE",
+    "QUALITY_FILTER_NOT_HELPFUL",
+    "QUALITY_REFERENCE_HARDENING_PARTIAL",
+    "PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS"
+  ],
+  "reason": "estimator adequacy passed (AUROC 0.8438, F1 0.8251) but quality_reference_improved=false (mIoU 0.3793 vs W-S0 0.4289) and the downstream hardening gate fails on 8 of 12 conditions",
+  "protocol": {
+    "frozen_non_task6w_unchanged": true,
+    "changed_paths": "",
+    "yolo_checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "yolo_checkpoint_matches": true,
+    "config_is_u_c1": true,
+    "test_split_used": false,
+    "gt_in_inference": false,
+    "ranker_used_in_resolver": false,
+    "threshold": 0.5,
+    "threshold_sweep": false,
+    "estimator_retrained": true,
+    "calib_used_for_training": false,
+    "refval_used_for_training": false,
+    "clean": true
+  },
+  "w0_oracle": {
+    "passed": true,
+    "baseline": {
+      "selected_reference_miou": 0.47892758193655594,
+      "precision_at_0_5": 0.58,
+      "REFERENCE_SELECTION_WRONG": 76,
+      "REFERENCE_OK": 116,
+      "abstention_rate": 0.0
+    },
+    "oracle": {
+      "selected_reference_miou": 0.6575339416895107,
+      "precision_at_0_5": 0.845,
+      "REFERENCE_SELECTION_WRONG": 23,
+      "REFERENCE_OK": 169,
+      "abstention_rate": 0.0
+    },
+    "smallest_baseline_miou": 0.35447175059246944,
+    "smallest_oracle_miou": 0.6707173631291533,
+    "gate": {
+      "1_overall_miou": {
+        "requirement": "oracle overall mIoU >= baseline + 0.08",
+        "threshold": 0.5589275819365559,
+        "baseline": 0.47892758193655594,
+        "measured": 0.6575339416895107,
+        "delta": 0.1786063597529548,
+        "passed": true
+      },
+      "2_smallest_miou": {
+        "requirement": "oracle smallest mIoU >= baseline smallest + 0.1",
+        "threshold": 0.45447175059246947,
+        "baseline": 0.35447175059246944,
+        "measured": 0.6707173631291533,
+        "delta": 0.3162456125366839,
+        "passed": true
+      },
+      "3_selection_wrong": {
+        "requirement": "oracle SELECTION_WRONG <= 0.6 * baseline",
+        "threshold": 45,
+        "baseline": 76,
+        "measured": 23,
+        "passed": true
+      },
+      "4_abstention": {
+        "requirement": "oracle abstention rate <= 0.1",
+        "threshold": 0.1,
+        "measured": 0.0,
+        "passed": true
+      }
+    }
+  },
+  "estimator_adequacy": {
+    "auroc": 0.8438012621686091,
+    "f1": 0.8251181634031061,
+    "auroc_min": 0.8,
+    "f1_min": 0.65,
+    "no_tile_overlap": true,
+    "passed": true
+  },
+  "dataset": {
+    "proposals": 5246,
+    "positives": 3337,
+    "negatives": 1909,
+    "unique_tiles": 548,
+    "calib_tile_overlap": 0,
+    "refval_tile_overlap": 0,
+    "invalid_small_excluded": 93,
+    "ring_empty": 0,
+    "split": {
+      "method": "tile-id hash, seed 20260930, 80/20",
+      "train_tiles": 420,
+      "holdout_tiles": 128,
+      "train_proposals": 4153,
+      "holdout_proposals": 1093,
+      "train_positives": 2651,
+      "train_negatives": 1502,
+      "holdout_positives": 686,
+      "holdout_negatives": 407,
+      "tile_overlap": 0,
+      "no_overlap": true,
+      "train_tile_hash": "d0c540acb185d9762916f0957388fe6671c69c9bb54a07bb0a992f6c27ad1b18",
+      "holdout_tile_hash": "fe45550ea819b813bb4d6b62df6e101821edb94f03793fcc7f1af1ff258688c4"
+    }
+  },
+  "training": {
+    "selected_epoch": 19,
+    "parameters": 35729,
+    "pos_weight": 0.5665786495662014,
+    "holdout": {
+      "proposals": 1093,
+      "positives": 686,
+      "negatives": 407,
+      "auroc": 0.8438012621686091,
+      "auprc": 0.8951996373851656,
+      "threshold": 0.5,
+      "accuracy": 0.7630375114364135,
+      "precision": 0.7685534591194969,
+      "recall": 0.89067055393586,
+      "f1": 0.8251181634031061,
+      "tp": 611,
+      "fp": 184,
+      "fn": 75,
+      "tn": 223,
+      "confusion_matrix": [
+        [
+          223,
+          184
+        ],
+        [
+          75,
+          611
+        ]
+      ],
+      "probabilities_mean": 0.6958635449409485
+    },
+    "peak_vram_gb": 0.073,
+    "wall_seconds": 8.8,
+    "checkpoint_sha256": "ebf9e6bddb1bdb2eb7d76d8db3bdbc0cb738fcb5eb1b7cbb87c98892b52834d9"
+  },
+  "improvement_flag": {
+    "quality_reference_improved": false,
+    "criteria": {
+      "miou": {
+        "required": 0.46893545615409554,
+        "measured": 0.3793126521159234,
+        "passed": false
+      },
+      "selection_wrong": {
+        "required": 39,
+        "measured": 65,
+        "passed": false
+      },
+      "reference_ok": {
+        "required": 120,
+        "measured": 97,
+        "passed": false
+      },
+      "abstention_rate": {
+        "required": 0.1,
+        "measured": 0.0410958904109589,
+        "passed": true
+      }
+    },
+    "baseline": "W-S0 (Task 6U U-S1)"
+  },
+  "gates": {
+    "1_w0_oracle_gate": {
+      "measured": true,
+      "passed": true
+    },
+    "2_estimator_adequacy": {
+      "measured": true,
+      "passed": true,
+      "auroc": 0.8438012621686091,
+      "f1": 0.8251181634031061
+    },
+    "3_refval_miou": {
+      "required": 0.48,
+      "measured": 0.3793126521159234,
+      "passed": false
+    },
+    "4_refval_centroid_median": {
+      "required": 0.03,
+      "measured": 0.048950222045957933,
+      "passed": false
+    },
+    "5_refval_centroid_p90": {
+      "required": 0.28,
+      "measured": 0.396327633919779,
+      "passed": false
+    },
+    "6_minival_answered_miou": {
+      "required": 0.33,
+      "measured": 0.27455756129373016,
+      "passed": false
+    },
+    "7_minival_strict_miou": {
+      "required": 0.31,
+      "measured": 0.2631176629064914,
+      "passed": false
+    },
+    "8_paired": {
+      "required": 12,
+      "measured": 9,
+      "passed": false
+    },
+    "9_own_cross_margin": {
+      "required": 0.3,
+      "measured": 0.24816861615137667,
+      "passed": false
+    },
+    "10_reference_fail": {
+      "required": 100,
+      "measured": 132,
+      "passed": false
+    },
+    "11_parser_integration_240": {
+      "required": "240/240",
+      "measured": 240,
+      "passed": true
+    },
+    "12_no_test_no_gt": {
+      "measured": {
+        "no_test": true,
+        "no_gt": true
+      },
+      "passed": true
+    }
+  },
+  "all_gates_passed": false,
+  "gate_constants": {
+    "3_refval_miou_min": 0.48,
+    "4_refval_centroid_median_max": 0.03,
+    "5_refval_centroid_p90_max": 0.28,
+    "6_minival_answered_miou_min": 0.33,
+    "7_minival_strict_miou_min": 0.31,
+    "8_paired_min": 12,
+    "9_own_cross_margin_min": 0.3,
+    "10_reference_fail_max": 100
+  },
+  "headline": {
+    "reference_systems": {
+      "W-S0": {
+        "selected_reference_miou": 0.42893545615409556,
+        "selected_reference_dice": 0.49326397211017764,
+        "precision_at_0_5": 0.5209302325581395,
+        "centroid_error_mean": 0.11491002363011948,
+        "centroid_error_median": 0.015940559841680503,
+        "centroid_error_p90": 0.38033070555175097,
+        "area_ratio_median": 1.0718562874251496,
+        "abstention_rate": 0.0182648401826484
+      },
+      "W-SQ": {
+        "selected_reference_miou": 0.3793126521159234,
+        "selected_reference_dice": 0.43111836624563216,
+        "precision_at_0_5": 0.46190476190476193,
+        "centroid_error_mean": 0.13005398555317677,
+        "centroid_error_median": 0.048950222045957933,
+        "centroid_error_p90": 0.396327633919779,
+        "area_ratio_median": 1.1061816219100988,
+        "abstention_rate": 0.0410958904109589
+      },
+      "W-ORACLE": {
+        "selected_reference_miou": 0.5208564097889038,
+        "selected_reference_dice": 0.5901266329726186,
+        "precision_at_0_5": 0.6872037914691943,
+        "centroid_error_mean": 0.08643248025328851,
+        "centroid_error_median": 0.006501818838023627,
+        "centroid_error_p90": 0.32512420021142535,
+        "area_ratio_median": 1.1085910652920963,
+        "abstention_rate": 0.0365296803652968
+      }
+    },
+    "reference_buckets": {
+      "W-S0": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "QUALITY_FILTER_ALL_REJECTED": 0,
+        "REFERENCE_NOT_COVERED_IOU50": 50,
+        "REFERENCE_SELECTION_WRONG": 53,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 112
+      },
+      "W-SQ": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "QUALITY_FILTER_ALL_REJECTED": 5,
+        "REFERENCE_NOT_COVERED_IOU50": 48,
+        "REFERENCE_SELECTION_WRONG": 65,
+        "SELECTED_MASK_GEOMETRY_POOR": 0,
+        "REFERENCE_OK": 97
+      },
+      "W-ORACLE": {
+        "NO_PROPOSALS": 1,
+        "NO_ELIGIBLE_PROPOSALS": 3,
+        "QUALITY_FILTER_ALL_REJECTED": 4,
+        "REFERENCE_NOT_COVERED_IOU50": 46,
+        "REFERENCE_SELECTION_WRONG": 20,
+        "SELECTED_MASK_GEOMETRY_POOR": 1,
+        "REFERENCE_OK": 144
+      }
+    },
+    "reference_largest": {
+      "W-S0": 0.5182954120206107,
+      "W-SQ": 0.45737921431940265,
+      "W-ORACLE": 0.6043138959699292
+    },
+    "reference_smallest": {
+      "W-S0": 0.33532026429393696,
+      "W-SQ": 0.298214378758911,
+      "W-ORACLE": 0.4366040904061543
+    },
+    "downstream_minival240": {
+      "W-S0": {
+        "records": 240,
+        "strict_all_miou": 0.3089007548027875,
+        "strict_all_dice": 0.3895799147410453,
+        "answered_records": 236,
+        "answered_only_miou": 0.31413636081639407,
+        "answered_only_dice": 0.396182964143436,
+        "precision_at_0_5": 0.3125,
+        "abstentions": 4,
+        "reference_fail_count": 115,
+        "target_fail_with_reference_ok_count": 69,
+        "buckets": {
+          "NO_PROPOSALS": 1,
+          "NO_ELIGIBLE_PROPOSALS": 3,
+          "QUALITY_FILTER_ALL_REJECTED": 0,
+          "REFERENCE_NOT_COVERED_IOU50": 54,
+          "REFERENCE_SELECTION_WRONG": 57,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "TARGET_FAIL_WITH_REFERENCE_OK": 69,
+          "TARGET_OK": 56
+        },
+        "largest": {
+          "records": 120,
+          "miou": 0.32413485375787326
+        },
+        "smallest": {
+          "records": 120,
+          "miou": 0.29366665584770174
+        },
+        "per_direction": {
+          "left_of": 0.3582755568000863,
+          "right_of": 0.25139096797490074,
+          "above": 0.33072395744328403,
+          "below": 0.29521253699287886
+        },
+        "border_target": {
+          "records": 114,
+          "miou": 0.2895708330732922
+        },
+        "tiny_target": {
+          "records": 4,
+          "miou": 7.42794373054799e-08
+        }
+      },
+      "W-SQ": {
+        "records": 240,
+        "strict_all_miou": 0.2631176629064914,
+        "strict_all_dice": 0.3338106871510173,
+        "answered_records": 230,
+        "answered_only_miou": 0.27455756129373016,
+        "answered_only_dice": 0.34832419528801806,
+        "precision_at_0_5": 0.25833333333333336,
+        "abstentions": 10,
+        "reference_fail_count": 132,
+        "target_fail_with_reference_ok_count": 60,
+        "buckets": {
+          "NO_PROPOSALS": 1,
+          "NO_ELIGIBLE_PROPOSALS": 3,
+          "QUALITY_FILTER_ALL_REJECTED": 6,
+          "REFERENCE_NOT_COVERED_IOU50": 52,
+          "REFERENCE_SELECTION_WRONG": 70,
+          "SELECTED_MASK_GEOMETRY_POOR": 0,
+          "TARGET_FAIL_WITH_REFERENCE_OK": 60,
+          "TARGET_OK": 48
+        },
+        "largest": {
+          "records": 120,
+          "miou": 0.28875917978562055
+        },
+        "smallest": {
+          "records": 120,
+          "miou": 0.2374761460273623
+        },
+        "per_direction": {
+          "left_of": 0.3145568250380102,
+          "right_of": 0.2233527627543806,
+          "above": 0.26187605813539716,
+          "below": 0.2526850056981778
+        },
+        "border_target": {
+          "records": 114,
+          "miou": 0.25363391623809817
+        },
+        "tiny_target": {
+          "records": 4,
+          "miou": 7.42794373054799e-08
+        }
+      }
+    },
+    "downstream_pairedval20": {
+      "W-S0": {
+        "passed": 11,
+        "pairs": 20,
+        "mean_own_iou": 0.32486974166141314,
+        "mean_cross_iou": 0.003987540932794465,
+        "own_cross_margin": 0.32088220072861867,
+        "reference_abstention_pairs": 0
+      },
+      "W-SQ": {
+        "passed": 9,
+        "pairs": 20,
+        "mean_own_iou": 0.2576466932366245,
+        "mean_cross_iou": 0.009478077085247819,
+        "own_cross_margin": 0.24816861615137667,
+        "reference_abstention_pairs": 1
+      }
+    },
+    "parser_integration": {
+      "exact": "240/240",
+      "strict_all_miou": 0.2631176629064914,
+      "answered_only_miou": 0.27455756129373016,
+      "abstentions": 10,
+      "reference_fail_count": 132
+    }
+  },
+  "interpretation_boundary": {
+    "quality_estimator_claimed_as_novelty": false,
+    "threshold_altered": false,
+    "family_specific_quality_networks": false,
+    "ranker_after_quality_filter": false,
+    "size_estimator_trained": false,
+    "yolo_retrained": false,
+    "tta_or_tiling_added": false,
+    "u_c1_changed": false,
+    "field_or_b3_changed": false,
+    "nearest_or_l3_started": false
+  },
+  "test_split_used": false,
+  "runtime_seconds": 0.05
+}

@@ -1,0 +1,29 @@
+{
+  "_doc": "Task 6W section 19. PairedVal20 for W-S0 and W-SQ with canonical program ids.",
+  "task": "6W",
+  "stage": "I-downstream-pairedval20",
+  "pack": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6n\\packs\\paired_val_20.json",
+    "pairs": 20,
+    "sha256": "b4e4c7f65e0c0fc7149f9505c4f0df4b0a20071c77b4177bb31bc45cf50fb2c3"
+  },
+  "systems": {
+    "W-S0": {
+      "passed": 11,
+      "pairs": 20,
+      "mean_own_iou": 0.32486974166141314,
+      "mean_cross_iou": 0.003987540932794465,
+      "own_cross_margin": 0.32088220072861867,
+      "reference_abstention_pairs": 0
+    },
+    "W-SQ": {
+      "passed": 9,
+      "pairs": 20,
+      "mean_own_iou": 0.2576466932366245,
+      "mean_cross_iou": 0.009478077085247819,
+      "own_cross_margin": 0.24816861615137667,
+      "reference_abstention_pairs": 1
+    }
+  },
+  "test_split_used": false
+}
