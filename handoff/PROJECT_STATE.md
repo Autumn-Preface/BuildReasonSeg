@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6X._
+_Last updated by DSH at the end of Task 6Y._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -98,6 +98,39 @@ The block above is machine-checked against
 | 6W | **Proposal-quality filtering + semantic extreme selection** | **done → `QUALITY_FILTER_NOT_HELPFUL`** (support-infrastructure hypothesis test; U-C1 `ef852b58…61f474` / hardened parser / field v0.2 / SAM2 / B3 all frozen and hash-verified; **W0 oracle gate PASSED** on train-only U-Calib200 — oracle `q_gt≥0.50` filter + deterministic area rule: overall mIoU 0.4789 → **0.6575** (+0.1786 ≥ +0.08), smallest 0.3545 → **0.6707** (+0.3162 ≥ +0.10), `SELECTION_WRONG` 76 → **23** (≤45), abstain 0 ✓ → estimator training permitted; dataset from U-RankerTrain tiles only, deduplicated by tile, **36 calib-overlapping and 0 refval tiles excluded** → 548 tiles / **5,246 proposals** (3,337 pos / 1,909 neg), 93 `feature_invalid_small`, tile-disjoint 420/128 split, overlaps 0; `ProposalQualityEstimator v0.1` = 8 geometry scalars + frozen SAM2 256×64×64 inside/ring means (512) → `Linear(512→64)+LN+GELU` ‖ `Linear(8→16)+GELU` → `Linear(80→32→1)`, **35,729 params**, BCE `pos_weight 0.5666` train-only, frozen threshold 0.50, epoch 19 → holdout **AUROC 0.8438 / F1 0.8251** (adequacy ✓); RefValUnique mIoU W-S0 0.4289 → **W-SQ 0.3793** (oracle ceiling **0.5209**), `REFERENCE_OK` 112 → 97 (oracle 144), `SELECTION_WRONG` 53 → **65** (oracle 20), rejected-all 5; downstream MiniVal240 answered 0.3141 → **0.2746**, abstain 4 → 10, ref-fail 115 → **132**, PairedVal 11/20 → **9/20** (margin +0.3209 → +0.2482); parser integration 240/240; §23 gates **4/12** → verdict) |
 
 | 6X | **Frozen SAM2.1 proposal-refinement audit** | **done → `SAM2_REFINEMENT_NOT_HELPFUL`** (**no model trained**; last predeclared reference-hardening audit; SAM2.1 Hiera Base+ `a2345aed…c004c5` + official `SAM2ImagePredictor` (0 trainable params, box-only probe → masks (3,512,512) scores 0.887/0.456/0.863), U-C1 `ef852b58…61f474`, ProgramHead/B3/field v0.2 all frozen and verified → `FROZEN_ASSETS_VERIFIED`; exactly four options X-C0 no-refinement / X-C1 exact box single-mask / X-C2 exact box multimask / X-C3 10%-expanded box multimask, SAM score used only as a tie-break and never thresholded; train-only U-Calib200: **X-C0 mIoU 0.4789 / smallest 0.3545 / largest 0.6034 / Pr@0.5 0.5800** vs X-C1 0.4744/0.3502/0.5986/0.5700 (centroid median better 0.0061 vs 0.0078), X-C2 0.4284, X-C3 0.3741 (+1 abstention) → ranking `['X-C0','X-C1','X-C2','X-C3']` → **frozen option X-C0** (`baseline_is_selected = true`, RefVal never consulted); **STOP rule triggered**: RefValUnique/MiniVal240/PairedVal20 deliberately **not evaluated** and their artifacts absent by design) |
+
+| 6Y | **Oracle-reference NearestBoundaryField v0.1** | **done → `NEAREST_FIELD_NO_MEANINGFUL_GAIN`** (oracle-reference causal audit of the **nearest** family; frozen reference resolver `U-C1 + Task 6Q deterministic`, SAM2/field v0.2/history untouched; field `P_near_512 = exp(−(EDT(~M_ref)/diag)/0.05)` with `P_near=0` inside the reference, bilinear 512→64, no learned params, no sigma tuning; **field sanity perfect**: top-1 **1.0000**, top-3 **1.0000**, mean Spearman **1.0000**, target 0.4622 vs best distractor 0.1678, 4.40 eligible candidates; frozen packs Y-Overfit20 20 (10+10, 20 tiles), Y-MiniTrain1000 **650+350**, Y-MiniVal240 **120+120**, Y-PairedVal **N_pair 20**; variants Y-B0 visual / Y-B1 visual+M_ref / **Y-B2 visual+P_near** / Y-B3 geometry-only → Overfit20 B2 **0.9663/0.9827** gate ✓ (B0 0.9724, B1 0.9705, B3 0.1457); MiniVal240 mIoU **B0 0.1837 / B1 0.2640 / B2 0.2864 / B3 0.0468** (Pr@0.5 B2 0.4812), deltas **B2−B0 +0.1027**, **B2−B1 +0.0224**, **B2−B3 +0.2396**; boundary-distance quartiles 0.4094/0.3477/0.2356/0.1531; PairedVal B2 **6/20** margin **+0.1828** (B1 8/20, B3 6/20); border/tiny targets absent (nearest eligibility excludes them); §25 criteria **6/9** → verdict) |
+
+## Task 6Y measured results
+
+Returns to the core spatial-reasoning method for the **nearest** relation family (canonical
+`boundary_distance` semantics) as an **oracle-reference causal experiment**: the GT reference mask isolates
+nearest-field feasibility from reference errors, and no end-to-end nearest claim is made. The frozen
+reference resolver, SAM2, GeometricRelationField v0.2 and all historical artifacts are untouched. Full
+detail: `docs/task6y_oracle_nearest_boundary_field.md`, `evaluation/task6y_*.json`.
+
+| | Value |
+|---|---|
+| Field | `sigma_diag 0.05`, `eps 1e-6`, 512→64 bilinear; `D_px = distance_transform_edt(~R)`, `D_norm = D_px/diag`, `P = exp(−D_norm/sigma)`, zero inside `R`, clamped; no learned parameters, no sweep, no centroid/bbox/target/candidate input |
+| Field sanity (Y-MiniVal240) | top-1 **1.0000** (≥0.85) · top-3 **1.0000** (≥0.97) · mean Spearman **1.0000** (≥0.90) · target 0.4622 vs distractor 0.1678 (Δ +0.3641) · 4.40 eligible candidates · largest/smallest both 1.0/1.0/1.0 |
+| Packs (seed 20260930) | Y-Overfit20 20 (10 largest_to_nearest + 10 smallest_to_nearest, 20 tiles) · Y-MiniTrain1000 **650 + 350** (786 tiles) · Y-MiniVal240 **120 + 120** (221 tiles) · Y-PairedVal **N_pair 20** (same tile, different refs/targets); only the two nearest programs, no directional/L3/test record |
+| Variants | Y-B0 visual_128+embed16 (144 ch, 273,425 params) · Y-B1 +M_ref_64 (145 ch, 274,577) · **Y-B2 +P_near_64 (145 ch, 274,577)** · Y-B3 field_128+embed16, no visual (144 ch, 240,785) |
+| Overfit20 (Y1) | B0 **0.9724/0.9860** · B1 0.9705/0.9849 · **B2 0.9663/0.9827** (gate ≥0.85/0.90 ✓) · B3 0.1457/0.2066 |
+| MiniVal240 (Y2) | mIoU **B0 0.1837 · B1 0.2640 · B2 0.2864 · B3 0.0468**; Dice 0.2735/0.3643/0.3863/0.0822; Pr@0.5 0.2625/0.3525/**0.4812**/0.0713; largest 0.1374/0.2273/0.2336/0.0235; smallest 0.2301/0.3008/0.3393/0.0701 |
+| Deltas | **B2−B0 +0.1027** (≥+0.08 ✓) · **B2−B1 +0.0224** (<+0.05 ✗) · **B2−B3 +0.2396** (≥+0.10 ✓) · B1−B0 +0.0803 |
+| B2 boundary-distance quartiles | **0.4094 / 0.3477 / 0.2356 / 0.1531** (edges 8.35 / 25.66 / 82.06 px) — advantage concentrates at small distances |
+| PairedVal (N=20) | B0 **0/20** (+0.0000) · B1 **8/20** (+0.1840) · **B2 6/20 (+0.1828)** · B3 6/20 (+0.0363) |
+| Border / tiny targets | **0 records** — the frozen nearest eligibility rejects border-truncated and tiny components |
+| Verdict | **`NEAREST_FIELD_NO_MEANINGFUL_GAIN`** (§25 criteria 6/9) |
+
+1. **The field is semantically exact** (top-1/top-3/Spearman all 1.0000) and materially better than the
+   visual baseline (+0.1027) and geometry-only (+0.2396) controls, with the gain concentrated at small
+   boundary distances.
+2. **But it does not clear the predeclared bar**: B2−B1 = +0.0224 < +0.05, absolute MiniVal mIoU 0.2864 <
+   0.35, and the paired counterfactual pass rate is 6/20 (0.30 < 0.70); the margin +0.1828 does pass.
+3. Learnability is not the bottleneck (B2 overfit 0.9663/0.9827); the gap is generalization to the
+   scene-disjoint MiniVal240 split, where even the strongest variant stays below a third of the target area.
+4. Next: 等待 ChatGPT 根据 Task 6Y 的 nearest boundary field 因果结果决定下一步，不自行进行 predicted-reference nearest 集成、direction+nearest 场组合或 L3 训练。
 
 ## Task 6X measured results
 

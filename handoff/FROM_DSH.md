@@ -17,124 +17,143 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6X Report: Frozen SAM2.1 Proposal Refinement Audit
+# FROM_DSH — Task 6Y Report: Oracle-Reference Nearest Boundary Field Feasibility
 
-_This file holds the Task 6X report. The Task 6W report is preserved in git history at commit `3de2142`;
-Task 6V at `3e185fb`; Task 6U at `b8b5224`; Task 6T at `e63f8c4`; Task 6S at `dc8544f`._
+_This file holds the Task 6Y report. The Task 6X report is preserved in git history at commit `9318890`;
+Task 6W at `3de2142`; Task 6V at `3e185fb`; Task 6U at `b8b5224`._
 
-**Note on the legacy block above:** those `ARTIFACT-FACTS` numbers describe the superseded
+**Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task6x_sam2_proposal_refinement.md`.
+Full design notes: `docs/task6y_oracle_nearest_boundary_field.md`.
 
 ## 1. Verdict
 
-**`SAM2_REFINEMENT_NOT_HELPFUL`** — section 13 applied literally, and the **STOP rule triggered**:
+**`NEAREST_FIELD_NO_MEANINGFUL_GAIN`** — section 26 priority order applied literally:
 
-1. `INVALID_EXPERIMENT` — no: frozen modules unchanged, exactly four options, no fifth option, no test use,
-   no banned model (ranker / quality estimator), no threshold.
-2. `FROZEN_ASSET_UNAVAILABLE` — no: SAM2.1 and U-C1 hashes verified exact.
-3. **`SAM2_REFINEMENT_NOT_HELPFUL`** — **X-C0 (no refinement) wins the train-only U-Calib200 ranking**
-   `['X-C0', 'X-C1', 'X-C2', 'X-C3']`; the best refinement option X-C1 reaches overall mIoU 0.4744 vs
-   baseline 0.4789 (−0.0045), X-C2 −0.0505 and X-C3 −0.1048. ← **verdict**, and the task **stops here**.
-4. `SAM2_REFINEMENT_PARTIAL` / `SAM2_REFINEMENT_USEFUL` — not applicable.
+1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, no test use, exactly two nearest programs, four
+   predeclared variants, no predicted reference, `sigma_diag` untouched and labels not regenerated.
+2. `NEAREST_FIELD_DEPENDENCY_UNAVAILABLE` — no: SciPy 1.17.1 provides `distance_transform_edt`.
+3. `NEAREST_PAIRED_SET_INSUFFICIENT` — no: **N_pair = 20** (≥ 12).
+4. `NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH` — **no: the sanity gate passed perfectly** (top-1 1.0000,
+   top-3 1.0000, mean Spearman 1.0000).
+5. `NEAREST_FIELD_NOT_LEARNABLE` — no: B2 Overfit20 mIoU **0.9663** / Dice **0.9827** (≥ 0.85 / 0.90).
+6. `NEAREST_FIELD_GEOMETRY_ONLY_CONFOUND` — no: B2−B3 = **+0.2396** ≥ 0.10 while B3's paired pass rate is
+   0.30 < 0.60.
+7. **`NEAREST_FIELD_NO_MEANINGFUL_GAIN`** — learnability passes but **B2−B1 = +0.0224 < +0.05** and
+   **B2 MiniVal mIoU 0.2864 < 0.35**. ← **verdict**
+8. `NEAREST_FIELD_COUNTERFACTUAL_WEAK` — not reached (a mask-gain condition already fails).
+9. `NEAREST_BOUNDARY_FIELD_FEASIBLE` — no (6 of 9 section-25 criteria pass).
 
-**No model was trained. Because the baseline won, RefValUnique, MiniVal240 and PairedVal20 were never
-evaluated and the corresponding Task 6X artifacts were intentionally not produced.**
+## 2. Recorded Task 6X result (reference hardening stops here)
 
-## 2. Recorded Task 6W findings (Task 6W artifacts not mutated)
+`SAM2_REFINEMENT_NOT_HELPFUL`: train-only U-Calib200 X-C0 U-C1 baseline mIoU `0.4789276` vs X-C1 `0.4744`,
+X-C2 `0.4284`, X-C3 `0.3741` → X-C0 won and Task 6X stopped before RefVal/MiniVal/Paired. **Frozen
+practical reference resolver: `U-C1 + deterministic Task 6Q area semantics`** (Task 6U development
+metrics: RefVal reference mIoU ≈ 0.4289355, MiniVal answered ≈ 0.3141364, strict ≈ 0.3089008, PairedVal
+11/20, margin ≈ +0.3209). Known limitations: proposal coverage / extreme selection (especially smallest),
+tiny buildings, scene-disjoint support-module generalization.
 
-Verdict `QUALITY_FILTER_NOT_HELPFUL`. W0 oracle-quality mechanism on train-only U-Calib200: deterministic
-U-C1 reference mIoU `0.4789276` → oracle `q ≥ 0.50` filter mIoU `0.6575339`; smallest
-`0.3544718 → 0.6707174`; selection wrong `76 → 23`; abstention `0` — so *"remove invalid proposals before
-extreme-area selection"* is a valid mechanism. The learned estimator reached holdout AUROC `0.8438013` and
-F1@0.50 `0.8251182`, but RefVal reference mIoU `0.3793127` (below W-S0 `0.4289355`), selection wrong `65`
-(worse than W-S0 `53`) and downstream answered mIoU `0.2745576` (below W-S0 `0.3141364`); it is therefore
-not part of the primary resolver.
+## 3. Field semantic sanity (parameter-free, section 7)
 
-## 3. Frozen assets and the four predeclared options
+`evaluation/task6y_field_sanity.json` — Y-MiniVal240, `sigma_diag = 0.05`, no tuning:
 
-`evaluation/task6x_frozen_asset_audit.json` = **`FROZEN_ASSETS_VERIFIED`**:
+| Metric | Measured | Gate |
+|---|---|---|
+| target top-1 | **1.0000** | ≥ 0.85 ✓ |
+| target top-3 | **1.0000** | ≥ 0.97 ✓ |
+| mean Spearman vs −boundary_distance | **1.0000** | ≥ 0.90 ✓ |
+| mean target / best distractor score | 0.4622 / 0.1678 | — |
+| mean target − distractor | **+0.3641** | — |
+| mean eligible candidates | 4.40 | — |
 
-* SAM2.1 Hiera Base+ `local_cache/models/sam2.1_hiera_base_plus.pt`, SHA256
-  `a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5` **exact**, official
-  `sam2.sam2_image_predictor.SAM2ImagePredictor`, `trainable_parameters = 0`, not retrained; a box-only
-  probe `[10,10,200,200]` returns masks `(3, 512, 512)` with scores `[0.8870, 0.4559, 0.8629]` and
-  `point_coords = point_labels = mask_input = None`, `return_logits = False`;
-* U-C1 proposals `imgsz 640 / conf 0.05 / max_det 300 / default NMS / no TTA / no tiling`, YOLO SHA256
-  `ef852b58…61f474` exact, not retrained;
-* Task 6T hardened ProgramHead, Task 6O B3 and GeometricRelationField v0.2 hashes recorded and unchanged;
-  ProposalSetRanker v0.1 and ProposalQualityEstimator v0.1 are explicitly excluded from this resolver.
+By family: largest 1.0 / 1.0 / 1.0 with 5.01 candidates; smallest 1.0 / 1.0 / 1.0 with 3.80 candidates.
 
-Exactly four options: **X-C0** no refinement (U-C1 baseline), **X-C1** exact box + single-mask SAM2,
-**X-C2** exact box + multimask (max predicted quality), **X-C3** 10 %-expanded box (clipped to [0,511]) +
-multimask. The SAM2 predicted quality score is recorded and used **only** as a selection tie-break; it is
-never thresholded.
+## 4. Frozen nearest packs (seed 20260930)
 
-## 4. U-Calib200 calibration (Parts D-E)
+`evaluation/task6y_pack_manifest.json` (train/val v0.2 only, stable-hash selection):
 
-`evaluation/task6x_calibration_refinement.json` — 200 references over 195 tiles, train-only:
+| Pack | Records | Split | Unique tiles |
+|---|---|---|---|
+| Y-Overfit20 | 20 (10 + 10) | train | **20** |
+| Y-MiniTrain1000 | 1000 (**650** largest + **350** smallest) | train | 786 |
+| Y-MiniVal240 | 240 (**120 + 120**) | val | 221 |
+| Y-PairedVal | **N_pair 20** (same tile, different reference ids, different target ids) | val | 20 |
 
-| Option | overall mIoU | smallest mIoU | largest mIoU | Pr@0.5 | centroid median | abstain | SAM2 calls/tile | wall time/tile |
-|---|---|---|---|---|---|---|---|---|
-| **X-C0** | **0.4789** | **0.3545** | **0.6034** | **0.5800** | 0.0078 | 0.0000 | 0.00 | ~0 s |
-| X-C1 | 0.4744 | 0.3502 | 0.5986 | 0.5700 | **0.0061** | 0.0000 | 9.67 | 0.172 s |
-| X-C2 | 0.4284 | 0.3277 | 0.5291 | 0.5250 | 0.0075 | 0.0000 | 9.67 | 0.126 s |
-| X-C3 | 0.3741 | 0.3008 | 0.4481 | 0.4523 | 0.0098 | 0.0050 | 9.67 | 0.134 s |
+Every pack contains only `largest_to_nearest` / `smallest_to_nearest`; no directional, L3 or test record.
+Nearest semantics frozen: `boundary_distance`, `margin_px_floor 2.0`, `margin_diag_fraction 0.005`,
+`margin_mode normalized_with_absolute_floor`; canonical labels were not regenerated.
 
-No empty refined masks anywhere; X-C1/X-C2 abstain never, X-C3 once. Baseline buckets
-`REFERENCE_SELECTION_WRONG` 84 / `REFERENCE_OK` 116 (the train-side split has no coverage failures).
+## 5. Variants, training and evaluation
 
-Section 12 priority → ranking **`['X-C0', 'X-C1', 'X-C2', 'X-C3']`** →
-`evaluation/task6x_frozen_refinement_option.json` freezes **X-C0** with `baseline_is_selected = true`,
-`refinement_is_selected = false`, `fourth_option = null`, `immutable_after_creation = true` and
-`chosen_without_refval = true`. Selection inputs: U-Calib200 only; RefValUnique / MiniVal240 / PairedVal20 /
-test all `false`.
+| Variant | Inputs | Fusion | Params | Overfit20 mIoU/Dice | MiniVal240 mIoU | Dice | Pr@0.5 | largest | smallest | epoch |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Y-B0 | visual_128 + embed16 | 144 | 273,425 | 0.9724 / 0.9860 | 0.1837 | 0.2735 | 0.2625 | 0.1374 | 0.2301 | 4 |
+| Y-B1 | visual_128 + M_ref_64 + embed16 | 145 | 274,577 | 0.9705 / 0.9849 | 0.2640 | 0.3643 | 0.3525 | 0.2273 | 0.3008 | 6 |
+| **Y-B2** | visual_128 + P_near_64 + embed16 | 145 | 274,577 | **0.9663 / 0.9827** | **0.2864** | **0.3863** | **0.4812** | **0.2336** | **0.3393** | 9 |
+| Y-B3 | field_128 + embed16 (no visual) | 144 | 240,785 | 0.1457 / 0.2066 | 0.0468 | 0.0822 | 0.0713 | 0.0235 | 0.0701 | 8 |
 
-## 5. STOP rule — no downstream evaluation
+Deltas: **B2−B0 = +0.1027**, **B2−B1 = +0.0224**, **B2−B3 = +0.2396**, B1−B0 = +0.0803. Loss exactly
+`BCEWithLogitsLoss + DiceLoss`; Y1 lr 1e-3 / batch 4 / 1200 steps / eval every 100; Y2 lr 3e-4 / wd 1e-4 /
+batch 8 / ≤25 epochs / patience 5 / selection by MiniVal240 mIoU; seed 20260930; bfloat16 AMP; wall time
+30–135 s and peak VRAM 0.67–0.90 GB per variant.
 
-`evaluation/task6x_verdict.json` records `stop_rule.triggered = true`,
-`stop_rule.refval_minival_paired_evaluated = false` and `stop_rule.forbidden_files_absent = true`. The four
-files that a non-stop path would have produced (`task6x_refval_refinement.json`,
-`task6x_downstream_minival240.json`, `task6x_downstream_pairedval20.json`,
-`task6x_hardened_parser_integration.json`) **do not exist**, exactly as section 13.1 requires.
+Border-target and tiny-target mIoU are **not applicable** (0 records): the frozen nearest eligibility
+rejects border-truncated and tiny components, so no nearest pack contains such a target.
 
-Measured context (reported, not interpreted as a remedy): box-prompt refinement slightly improves the
-*median centroid error* (X-C1 0.0078 → 0.0061, i.e. marginally better-centred masks) yet loses overall IoU,
-because the refined **areas** shift the literal largest/smallest selection; multi-mask selection (X-C2) and
-box expansion (X-C3) lose substantially more, consistent with SAM2 preferring object-like regions that are
-not the literal area extremes.
+B2 quartiles — target area (edges 1038.0 / 1636.5 / 2316.75 px): 0.2497 / 0.3904 / 0.2859 / 0.2198;
+canonical target boundary distance (edges 8.35 / 25.66 / 82.06 px): **0.4094 / 0.3477 / 0.2356 / 0.1531** —
+the field's advantage concentrates at small boundary distances, exactly as designed.
 
-## 6. Tests, storage, git
+PairedVal (N_pair 20): Y-B0 **0/20** (+0.0000), Y-B1 **8/20** (+0.1840), **Y-B2 6/20** (**+0.1828**),
+Y-B3 6/20 (+0.0363).
 
-`python -m pytest tests/ -q` → **965 passed, 1 skipped** (Task 6W ended at 929 passed / 1 skipped; no prior
+## 6. Criteria
+
+| # | Criterion | Required | Measured | Pass |
+|---|---|---|---|---|
+| 1 | field semantic sanity | 0.85 / 0.97 / 0.90 | 1.0000 / 1.0000 / 1.0000 | ✓ |
+| 2 | B2 overfit | mIoU ≥ 0.85, Dice ≥ 0.90 | 0.9663 / 0.9827 | ✓ |
+| 3 | B2 − B0 mIoU | ≥ +0.08 | **+0.1027** | ✓ |
+| 4 | B2 − B1 mIoU | ≥ +0.05 | **+0.0224** | ✗ |
+| 5 | B2 − B3 mIoU | ≥ +0.10 | **+0.2396** | ✓ |
+| 6 | B2 mIoU | ≥ 0.35 | **0.2864** | ✗ |
+| 7 | B2 paired pass rate | ≥ 0.70 | **0.30** (6/20) | ✗ |
+| 8 | B2 own-cross margin | ≥ 0.15 | **+0.1828** | ✓ |
+| 9 | no target GT model input | — | GT target = label/eval only | ✓ |
+
+Measured reading (reported, not prescribed): the oracle-reference field is **semantically exact** and adds
+clear signal over the visual baseline (+0.1027) and over geometry alone (+0.2396), with its advantage
+concentrated at small boundary distances; but it does not beat the raw reference-mask control by the
+required +0.05, absolute MiniVal quality stays below 0.35, and only 6/20 paired counterfactuals pass — so
+the nearest relation is not demonstrated as a feasible dense-segmentation target from this causal setup.
+
+## 7. Tests, storage, git
+
+`python -m pytest tests/ -q` → **1011 passed, 1 skipped** (Task 6X ended at 965 passed / 1 skipped; no prior
 passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check that
-needs the proposal env). `tests/test_task6x_sam2_refinement.py` adds the 36 section-M checks, including the
-STOP-path invariants (no downstream files, no scoring threshold, no training, four options only).
+needs the proposal env). `tests/test_task6y_nearest_boundary_field.py` adds the 46 section-O checks.
 
-Not committed: SAM2/YOLO/B3/parser/ranker/quality checkpoints, proposal/feature caches, source
-imagery/vectors, `.conda`. Committed: refiner code, small JSON artifacts, scripts, tests, docs, handoff.
-**No new checkpoint or refinement cache file was created in Task 6X.**
+Not committed: nearest pack JSONs, the four checkpoints, feature caches, source imagery/vectors, `.conda`.
+Committed: field/decoder code, small manifests and evaluation JSON, scripts, tests, docs, handoff.
 
-Task 6X downloaded nothing and installed nothing; the frozen SAM2.1 checkpoint was loaded from local disk.
-Watt was **not needed** in Task 6X: the pre-existing Watt instance is transport-only, is not owned by this
-project and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
+Task 6Y downloaded nothing and installed nothing (SciPy was already present in both environments). Watt was
+**not needed** in Task 6Y: the pre-existing Watt instance is transport-only, is not owned by this project
+and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
 modified.
 
-## 7. Interpretation boundary
+## 8. Interpretation boundary
 
-DSH reports measurements only. The refiner is support infrastructure, **not** a claimed novelty; no SAM
-quality threshold, no point or mask prompt, no box-expansion change, no TTA/tiling/super-resolution, no
-U-C1 change, no YOLO/SAM2/ProgramHead/B3 retraining, no ranker or quality estimator in the resolver, no
-nearest/L3 execution and no Task 6Y selection.
+DSH reports measurements only. No global novelty claim and no end-to-end nearest capability claim;
+`sigma_diag` unchanged; no learned distance transform; no predicted reference; no combination of directional
+and nearest fields; no L3; the reference resolver was not changed.
 
-## 8. Recommended next step
+## 9. Recommended next step (exact wording required by Part M)
 
-等待 ChatGPT 根据 Task 6X 的 U-Calib200 refinement 结果决定 reference 子系统是否冻结并转向 nearest/L3，不自行启动 nearest/L3 或新增 reference 模块。
+等待 ChatGPT 根据 Task 6Y 的 nearest boundary field 因果结果决定下一步，不自行进行 predicted-reference nearest 集成、direction+nearest 场组合或 L3 训练。
 
-## 9. STOP
+## 10. STOP
 
-Task 6X stops here: no more reference modules, no SAM quality-score tuning, no SAM2/YOLO retraining, no U-C1
-change, no field/B3 change, no GRCL revisit, no nearest/L3 without the ChatGPT audit, no test access, no
-GUI. Waiting for the ChatGPT audit.
+Task 6Y stops here: the frozen reference resolver is untouched, no predicted-reference nearest integration,
+no directional+nearest combination, no L3, no GRCL, no test access, no GUI. Waiting for the ChatGPT audit.

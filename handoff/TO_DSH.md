@@ -1,723 +1,617 @@
-# TO_DSH — Task 6X: Frozen SAM2 Proposal Refinement Audit
+# TO_DSH — Task 6Y: Oracle-Reference Nearest Boundary Field Feasibility
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `3de2142010e335f3a9d9b1c5244fdd6271f88c4e`
+> Base commit: `93188905df246c2669c730ad1251a651ec22f106`
 >
-> Predecessor: Task 6W → `QUALITY_FILTER_NOT_HELPFUL`
+> Predecessor: Task 6X → `SAM2_REFINEMENT_NOT_HELPFUL`
 >
 > Research decision already made by ChatGPT:
+> 1. Stop reference hardening here. Tasks 6P/6Q/6U/6V/6W/6X have characterized the support-module bottleneck sufficiently.
+> 2. Freeze the current practical reference resolver for later end-to-end work as **U-C1 proposals + Task 6Q deterministic largest/smallest selector** (`YOLO26m-seg, imgsz=640, conf=0.05, max_det=300, no TTA, no tiling`).
+> 3. Do NOT use ProposalSetRanker, ProposalQualityEstimator, family routing, or SAM2 proposal refinement in the primary reference resolver.
+> 4. Task 6Y returns to the core spatial-reasoning method and tests the next relation family: **nearest**, whose canonical dataset semantics are based on `boundary_distance`.
+> 5. Task 6Y is an **oracle-reference causal experiment**. It intentionally uses GT reference masks so reference errors do not contaminate nearest-field feasibility.
+> 6. No nearest end-to-end claim is allowed after Task 6Y alone.
 >
-> 1. Keep the core BuildReasonSeg method frozen:
->    `ProgramHead → Reference → GeometricRelationField v0.2 → frozen SAM2 visual feature → B3 target decoder`.
-> 2. Keep **U-C1** as the current proposal generator:
->    `YOLO26m-seg, imgsz=640, conf=0.05, max_det=300, no TTA, no tiling`.
-> 3. Do NOT use ProposalSetRanker v0.1 or ProposalQualityEstimator v0.1 in the Task 6X primary resolver.
-> 4. Task 6W proved:
->    - oracle proposal-quality filtering is highly useful;
->    - the learned quality classifier is not reliable enough across the scene-disjoint validation split.
-> 5. Before ending reference hardening, Task 6X tests one **training-free**, foundation-model-based alternative:
->
->    **Use the frozen official SAM2.1 image predictor to refine each eligible YOLO proposal mask from its
->    geometric box prompt, then execute the literal largest/smallest rule on the refined instance masks.**
->
-> 6. This is support infrastructure, not a claimed research novelty.
-> 7. This is the **last predeclared reference-hardening audit before ChatGPT decides whether to freeze the
->    reference subsystem and move on to nearest/L3.**
->
-> DSH is an executor. Do not redesign this experiment.
+> DSH is an executor. Do not redesign the field, decoder, packs, loss, gates, or next task.
 
 All user-facing DSH output must be Chinese.
 
 ---
 
-# 0. DSH role
+## 0. DSH role
 
 DSH MAY:
-- load the frozen SAM2.1 Hiera Base+ checkpoint already used by the project;
-- use the official `SAM2ImagePredictor`;
-- reuse/generate exact U-C1 proposals;
-- evaluate exactly the four predeclared refinement options;
-- freeze one option using train-only U-Calib200;
-- evaluate it on untouched RefValUnique, MiniVal240 and PairedVal20;
-- solve ordinary runtime/integration bugs without changing the experiment.
+- implement the exact `NearestBoundaryField v0.1` below;
+- reuse frozen SAM2 image features;
+- freeze the exact nearest-only train/validation packs;
+- train/evaluate Y-B0/Y-B1/Y-B2/Y-B3;
+- solve ordinary implementation/runtime bugs without altering the experiment.
 
 DSH MUST NOT:
-- train or fine-tune any model;
-- retrain YOLO;
-- retrain SAM2;
-- retrain ProgramHead/B3/ranker/quality estimator;
-- use the ProposalSetRanker or ProposalQualityEstimator in the primary Task 6X resolver;
-- change U-C1;
-- add a SAM-score threshold/filter;
-- tune SAM2 quality-score thresholds;
-- add TTA/tiling/super-resolution;
-- change Task 6Q eligibility thresholds;
-- add nearest/L3 execution;
-- access test split;
-- choose Task 6Y.
+- modify GeometricRelationField v0.2;
+- modify Task 3B nearest semantics;
+- use centroid distance instead of boundary distance;
+- change `sigma_diag`;
+- tune field parameters;
+- change SAM2 or decoder architecture;
+- use proposal/predicted references in the main experiment;
+- add nearest proposal execution, L3, GRCL, ProgramHead training, test access, or Task 6Z.
 
-If any prohibited change is needed, STOP and report.
+If a prohibited change is required, STOP and report.
 
 ---
 
-# PART A — Record Task 6W findings
+# PART A — Freeze reference subsystem status
 
-## 1. Task 6W result
+## 1. Record the reference-hardening conclusion
 
-Record in `docs/task6x_sam2_proposal_refinement.md`:
+Copy into `docs/task6y_oracle_nearest_boundary_field.md`:
 
-Task 6W verdict:
-`QUALITY_FILTER_NOT_HELPFUL`
+Task 6X verdict: `SAM2_REFINEMENT_NOT_HELPFUL`.
 
-Important measurements:
-
-### W0 oracle-quality mechanism
 On train-only U-Calib200:
+- X-C0 U-C1 baseline mIoU = `0.4789276`
+- X-C1 exact-box SAM2 single-mask = `0.4744`
+- X-C2 exact-box multimask = `0.4284`
+- X-C3 expanded-box multimask = `0.3741`
 
-- deterministic U-C1 reference mIoU = `0.4789276`
-- oracle q>=0.50 filter mIoU = `0.6575339`
-- smallest mIoU = `0.3544718 → 0.6707174`
-- selection wrong = `76 → 23`
-- abstention = 0
+X-C0 won calibration, so 6X correctly stopped before RefVal/MiniVal/Paired evaluation.
 
-Therefore the abstract mechanism “remove invalid proposals before extreme-area selection” is valid.
+Frozen practical reference resolver for future integration:
+`U-C1 + deterministic Task 6Q area semantics`.
 
-### Learned quality estimator
-- holdout AUROC = `0.8438013`
-- F1@0.50 = `0.8251182`
-- but RefVal reference mIoU = `0.3793127`, below W-S0 `0.4289355`
-- selection wrong = `65`, worse than W-S0 `53`
-- downstream answered mIoU = `0.2745576`, below W-S0 `0.3141364`
+Known development metrics from Task 6U:
+- RefVal reference mIoU ≈ `0.4289355`
+- MiniVal answered target mIoU ≈ `0.3141364`
+- strict target mIoU ≈ `0.3089008`
+- PairedVal `11/20`
+- own-cross margin ≈ `0.3209`
 
-Therefore ProposalQualityEstimator v0.1 is not part of the primary resolver.
+Known limitations remain: proposal coverage/extreme selection, especially smallest; tiny buildings; scene-disjoint support-module generalization.
 
-Do not modify Task 6W artifacts.
-
----
-
-# PART B — Frozen assets
-
-## 2. Read-only assets
-
-Freeze:
-
-- all Task 6U/6V/6W artifacts;
-- U-C1 proposal configuration/cache;
-- Task 6M.1 YOLO checkpoint;
-- Task 6T hardened ProgramHead checkpoint;
-- Task 6Q eligibility and deterministic extreme selector semantics;
-- Task 6O B3 checkpoint;
-- GeometricRelationField v0.2;
-- WHU-EA-NativeVector v1.0;
-- BuildSpatialReason v0.2;
-- U-Calib200;
-- RefValUnique;
-- MiniVal240;
-- PairedVal20.
-
-No test split.
-
-## 3. Frozen SAM2.1
-
-Use exactly the project's existing frozen SAM2.1 Hiera Base+:
-
-Checkpoint:
-`local_cache/models/sam2.1_hiera_base_plus.pt`
-
-Expected SHA256:
-`a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5`
-
-Config:
-`configs/sam2.1/sam2.1_hiera_b+.yaml`
-
-Use official package path already installed locally:
-`sam2.sam2_image_predictor.SAM2ImagePredictor`
-
-No new checkpoint/download/install.
-
-Before evaluation:
-- verify checkpoint SHA256;
-- verify predictor loads;
-- verify `predict(...)` returns masks + predicted mask-quality scores.
-
-If unavailable/mismatch:
-STOP with `SAM2_PREDICTOR_UNAVAILABLE`.
+Do not modify old artifacts.
 
 ---
 
-# PART C — Fixed U-C1 proposal source
+# PART B — Canonical nearest semantics
 
-## 4. Proposal generation
+## 2. Exact query scope
 
-Use exactly:
+Task 6Y handles exactly:
+- `largest_to_nearest`
+- `smallest_to_nearest`
 
+No directional programs in the main nearest experiment. No L3.
+
+BuildSpatialReason v0.2 counts:
+- train: largest_to_nearest 672; smallest_to_nearest 358
+- val: largest_to_nearest 458; smallest_to_nearest 249
+
+No test.
+
+## 3. Frozen nearest definition
+
+Read-only: `configs/spatial_relations_v1.yaml`.
+
+Nearest semantics MUST remain:
+- metric = `boundary_distance`
+- NOT centroid distance
+- `margin_px_floor = 2.0`
+- `margin_diag_fraction = 0.005`
+- `margin_mode = normalized_with_absolute_floor`
+- nearest anchor and target eligibility unchanged: reject border-truncated, suspected-large-merge, tiny; require at least two valid components.
+
+Canonical labels are frozen. Do not regenerate them.
+
+---
+
+# PART C — NearestBoundaryField v0.1
+
+## 4. Purpose
+
+The field means: pixels closer to the grounded reference-building boundary receive larger prior value.
+It must not directly choose a building candidate.
+
+Create: `buildreasonseg_mvp/nearest_boundary_field.py`.
+
+Constants:
 ```text
-YOLO26m-seg
-checkpoint SHA256 =
-ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
-
-imgsz = 640
-conf = 0.05
-max_det = 300
-default NMS
-no TTA
-no tiling
-source tile = 512×512
+sigma_diag = 0.05
+eps = 1e-6
+source_size = 512x512
+decoder_field_size = 64x64
 ```
 
-Masks and boxes must be in exact source 512×512 coordinates.
+No learned parameters. No sweep.
 
-Reuse Task 6U/6W U-C1 caches where possible.
+## 5. Exact source-resolution field
+
+Input: binary oracle reference mask `M_ref`, 512×512, non-empty.
+
+Use `scipy.ndimage.distance_transform_edt`.
+If SciPy is unavailable in the existing environment, STOP with `NEAREST_FIELD_DEPENDENCY_UNAVAILABLE`; do not install.
+
+```text
+R = M_ref > 0
+D_px = distance_transform_edt(~R)
+diag_px = sqrt(H^2 + W^2)
+D_norm = D_px / diag_px
+P_near_512 = exp(-D_norm / sigma_diag)
+P_near_512[R] = 0
+P_near_512 = clamp(P_near_512, 0, 1)
+```
+
+Do NOT use reference centroid, reference bbox distance, target mask/centroid, candidate proposals, or GT candidate ids.
+
+## 6. Decoder-resolution field
+
+```text
+P_near_64 = interpolate(
+  P_near_512[None,None], size=(64,64), mode="bilinear", align_corners=False
+)
+```
+Clamp `[0,1]`.
+
+For Y-B1 only:
+```text
+M_ref_64 = interpolate(M_ref_float[None,None], size=(64,64), mode="area")
+```
+Clamp `[0,1]`.
 
 ---
 
-# PART D — Four predeclared refinement options
+# PART D — Field semantic sanity
 
-## 5. Common pre-filter
+## 7. Parameter-free nearest ranking diagnostic
 
-For every family query, begin with the exact Task 6Q eligibility rules **on the original U-C1 YOLO proposal**.
+Before training, on frozen Y-MiniVal240:
 
-Largest:
-- not border-touching;
-- bbox extent ratio <= 0.20.
+For each record:
+1. compute `P_near_512` from oracle reference;
+2. consider every canonical native building other than the reference that satisfies frozen nearest target eligibility;
+3. candidate score:
+   `field_score(C) = max(P_near_512[p] for p in C)`.
 
-Smallest:
-- not border-touching;
-- bbox extent ratio <= 0.20;
-- area >= 150 px.
+Report:
+- target top-1 / top-3 rate
+- mean target score
+- mean best non-target distractor score
+- mean target-minus-distractor score
+- by largest/smallest reference family
+- mean eligible candidate count
+- per-record Spearman correlation between `field_score(C)` and `-canonical boundary_distance(reference,C)`, then mean.
 
-Only original family-eligible YOLO proposals are sent to SAM2 refinement.
+Write: `evaluation/task6y_field_sanity.json`.
 
-No GT is used here.
+Sanity gate:
+- top-1 >= `0.85`
+- top-3 >= `0.97`
+- mean Spearman >= `0.90`
 
-## 6. X-C0 baseline
-
-No SAM2 refinement.
-
-Use:
-- original U-C1 YOLO proposal masks;
-- exact deterministic largest/smallest selection.
-
-This must reproduce Task 6U U-S1.
-
-## 7. X-C1 — exact box, single-mask SAM2
-
-For each eligible YOLO proposal:
-
-- prompt box = exact YOLO proposal bbox in XYXY source pixels;
-- `point_coords=None`
-- `point_labels=None`
-- `mask_input=None`
-- `multimask_output=False`
-- `return_logits=False`
-
-SAM2 output mask becomes the refined candidate.
-
-Record returned SAM2 predicted quality score but do not threshold it.
-
-## 8. X-C2 — exact box, multimask SAM2
-
-For each eligible YOLO proposal:
-
-- prompt box = exact YOLO bbox;
-- no points;
-- no mask input;
-- `multimask_output=True`;
-- `return_logits=False`.
-
-SAM2 returns multiple masks plus predicted quality scores.
-
-Choose exactly the mask with maximum SAM2 predicted quality score.
-
-No score threshold.
-
-## 9. X-C3 — 10% expanded box, multimask SAM2
-
-For each eligible YOLO proposal:
-
-Original box:
-`(x1,y1,x2,y2)`
-
-Let:
-```text
-w = x2 - x1
-h = y2 - y1
-```
-
-Expanded box:
-```text
-x1' = x1 - 0.10*w
-y1' = y1 - 0.10*h
-x2' = x2 + 0.10*w
-y2' = y2 + 0.10*h
-```
-
-Clip to:
-`[0,511]`
-
-Use:
-- expanded box only;
-- no points;
-- no mask input;
-- `multimask_output=True`;
-- choose maximum SAM2 predicted quality score.
-
-No other expansion factor.
-
-## 10. Refined candidate normalization
-
-For X-C1/X-C2/X-C3:
-
-- convert SAM2 output to 512×512 boolean mask;
-- compute refined:
-  - area_px
-  - bbox
-  - bbox_area
-  - bbox_extent_ratio
-  - border touch.
-
-Then apply the exact Task 6Q family eligibility **again on the refined mask**.
-
-If refinement produces an empty mask:
-- candidate is invalid and removed.
-
-No duplicate-mask suppression.
-No IoU-based deduplication.
-No SAM quality threshold.
-
-After refined eligibility:
-- largest = max refined area
-- smallest = min refined area
-- tie-break:
-  1. higher SAM2 predicted quality score;
-  2. higher original YOLO confidence;
-  3. lower original YOLO proposal index.
-
-For X-C0 preserve Task 6Q original tie-break exactly.
+If any fail: STOP `NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH`.
+Do not tune sigma.
 
 ---
 
-# PART E — Train-only calibration and option freeze
+# PART E — Freeze nearest packs
 
-## 11. Use exact U-Calib200 only
+## 8. Common rules
 
-Evaluate X-C0/X-C1/X-C2/X-C3 on frozen U-Calib200.
+Create deterministic packs from v0.2 train/val only. Seed `20260930`.
+Write `evaluation/task6y_pack_manifest.json` with record ids and SHA256.
+Local packs: `artifacts/task6y/packs/` (gitignored).
 
-RefValUnique, MiniVal240 and PairedVal20 may NOT affect option selection.
+## 9. Y-Overfit20
 
-Report for every option:
+Train only:
+- 10 largest_to_nearest
+- 10 smallest_to_nearest
+- unique record ids
+- at least 15 unique tiles if possible.
 
-- selected-reference mIoU
+## 10. Y-MiniTrain1000
+
+Train only, exactly:
+- 650 largest_to_nearest
+- 350 smallest_to_nearest
+
+Deterministic stable record-id hash selection after eligibility checks.
+
+## 11. Y-MiniVal240
+
+Val only, exactly:
+- 120 largest_to_nearest
+- 120 smallest_to_nearest
+
+## 12. Y-PairedVal
+
+Pair requirements:
+- same tile has both largest_to_nearest and smallest_to_nearest;
+- different reference source feature ids;
+- different target source feature ids;
+- both canonical valid records.
+
+Sort by stable hash.
+Use first 20 if >=20 exist; otherwise all if >=12.
+If fewer than 12: STOP `NEAREST_PAIRED_SET_INSUFFICIENT`.
+Record `N_pair`.
+
+No test.
+
+---
+
+# PART F — Frozen visual representation and decoder
+
+## 13. Frozen SAM2 feature
+
+Reuse exact Task 6N/6O path:
+- SAM2.1 Hiera Base+
+- image embedding V = 256×64×64
+- frozen checkpoint/config
+- no GT visual input
+- no retraining.
+
+## 14. Common visual projection
+
+For Y-B0/Y-B1/Y-B2:
+```text
+Conv1x1(256→128)
+GroupNorm(8,128)
+GELU
+```
+
+## 15. Nearest embedding
+
+One trainable embedding:
+- vocab size 1
+- dim 16
+- semantic id `nearest`
+
+Broadcast 64×64.
+
+## 16. Common target trunk
+
+```text
+Conv3x3(in→128,padding=1)
+GroupNorm(8,128)
+GELU
+Conv3x3(128→64,padding=1)
+GroupNorm(8,64)
+GELU
+Conv1x1(64→1)
+```
+
+Upsample logits bilinearly to 512×512.
+Loss exactly `BCEWithLogitsLoss + DiceLoss`.
+No GRCL, ranking loss, auxiliary field loss, or candidate loss.
+
+---
+
+# PART G — Four variants
+
+## 17. Y-B0 — visual baseline
+
+Input:
+`visual_128 + nearest_embed_16`
+Fusion channels 144.
+No ref mask, no field.
+
+## 18. Y-B1 — direct reference-mask control
+
+Input:
+`visual_128 + M_ref_64 + nearest_embed_16`
+Fusion channels 145.
+No nearest field.
+
+## 19. Y-B2 — nearest-boundary-field model
+
+Primary hypothesis.
+Input:
+`visual_128 + P_near_64 + nearest_embed_16`
+Fusion channels 145.
+No direct reference-mask channel.
+
+## 20. Y-B3 — geometry-only control
+
+No SAM2 visual feature.
+
+```text
+field projection:
+Conv1x1(1→128)
+GroupNorm(8,128)
+GELU
+```
+
+Then:
+`field_128 + nearest_embed_16`
+Fusion channels 144 → common trunk.
+
+Report exact params. No extra parameter padding.
+
+---
+
+# PART H — Stage Y1: Overfit20
+
+## 21. Training
+
+Train all four variants separately from fresh init, same pack.
+
+- AdamW
+- lr `1e-3`
+- weight_decay `1e-4`
+- batch `4`
+- max steps `1200`
+- no scheduler
+- no augmentation
+- seed `20260930`
+- same AMP/bfloat16 policy as 6N/6O
+- evaluate every 100 steps.
+
+Write `evaluation/task6y_overfit20.json`.
+
+B2 gate:
+- mIoU >= `0.85`
+- Dice >= `0.90`
+
+If fail: STOP `NEAREST_FIELD_NOT_LEARNABLE`.
+
+---
+
+# PART I — Stage Y2: MiniTrain1000 → MiniVal240
+
+## 22. Training
+
+Only if B2 overfit passes.
+Fresh initialization for all four.
+
+- AdamW
+- lr `3e-4`
+- weight_decay `1e-4`
+- batch `8`
+- max epochs `25`
+- early stopping patience `5`
+- selection metric = MiniVal240 mIoU
+- seed `20260930`
+- no scheduler
+- no augmentation
+- same AMP.
+
+No test.
+Write `evaluation/task6y_training.json`.
+
+---
+
+# PART J — Evaluation
+
+## 23. MiniVal240
+
+For all variants report:
+- mIoU
 - Dice
 - Pr@0.5
-- centroid mean/median/p90
-- abstention rate
-- largest mIoU / Pr@0.5
-- smallest mIoU / Pr@0.5
-- NO_PROPOSALS
-- NO_ELIGIBLE_PROPOSALS
-- REFINEMENT_EMPTY
-- REFERENCE_NOT_COVERED_IOU50
-- REFERENCE_SELECTION_WRONG
-- SELECTED_MASK_GEOMETRY_POOR
-- REFERENCE_OK
-- mean SAM2 mask-quality score
-- mean SAM2 decoder calls per tile
-- mean wall time/tile
+- largest-reference mIoU
+- smallest-reference mIoU
+- border-target mIoU
+- tiny-target mIoU if present
+- target-area quartiles
+- canonical target boundary-distance quartiles
+- params
+- best epoch
+- wall time
 - peak VRAM.
 
-GT is evaluation only.
+Write `evaluation/task6y_mini_val.json`.
 
-Write:
-`evaluation/task6x_calibration_refinement.json`
+## 24. PairedVal
 
-## 12. Freeze exactly one option
-
-Select using this exact priority order:
-
-1. highest selected-reference mIoU
-2. highest Pr@0.5
-3. lowest `REFERENCE_SELECTION_WRONG`
-4. highest `REFERENCE_OK`
-5. lowest abstention rate
-6. lower mean wall time/tile
-7. simpler option:
-   - X-C0
-   - X-C1
-   - X-C2
-   - X-C3
-
-Write:
-`evaluation/task6x_frozen_refinement_option.json`
-
-After this file exists, do not change the option.
-
-### 12.1 Calibration stop condition
-
-If X-C0 is selected:
-- verdict path becomes `SAM2_REFINEMENT_NOT_HELPFUL`;
-- still create docs/verdict/tests;
-- do NOT run RefVal/MiniVal/Paired as a new primary system because calibration already rejects the mechanism.
-
-If X-C1/X-C2/X-C3 is selected:
-continue.
-
----
-
-# PART F — Untouched RefValUnique evaluation
-
-## 13. Compare baseline and frozen refinement
-
-If a SAM refinement option was selected, evaluate on exact RefValUnique:
-
-### X-S0
-X-C0 baseline
-
-### X-SR
-Frozen selected SAM2 refinement option
+For each pair, run largest-reference and smallest-reference query independently.
+Pair passes iff both predictions have higher IoU with their own target than with the other pair target.
 
 Report:
-- selected-reference mIoU
-- Dice
-- Pr@0.5
-- centroid mean/median/p90
-- area ratio median
-- abstention rate
-- largest/smallest metrics
-- all failure buckets from section 11.
-
-Also report:
-- delta SR - S0
-- fraction where SAM refinement increases GT-reference IoU
-- fraction where it decreases GT-reference IoU
-- mean IoU change among answered records
-- SAM predicted quality score vs actual refined-mask q_gt Pearson/Spearman correlation
-  - diagnostic only;
-  - no threshold tuning.
-
-Write:
-`evaluation/task6x_refval_refinement.json`
-
----
-
-# PART G — Downstream causal evaluation
-
-## 14. MiniVal240
-
-Use canonical program ids; no parser in the main causal comparison.
-
-Compare:
-- X-S0
-- X-SR
-
-Pipeline:
-
-```text
-canonical program
-→ family/relation
-→ reference resolver
-→ GeometricRelationField v0.2
-→ frozen SAM2 visual feature
-→ frozen B3
-→ target mask
-```
-
-Important:
-The SAM2 used to refine proposal references is the same frozen checkpoint, but the target B3 visual path remains unchanged.
-
-Report:
-- strict all-240 mIoU/Dice
-- answered-only mIoU/Dice
-- Pr@0.5
-- abstentions
-- reference-fail count
-- target-fail-with-reference-ok
-- largest/smallest
-- per direction
-- border/tiny targets
-- total runtime/tile.
-
-Write:
-`evaluation/task6x_downstream_minival240.json`
-
-## 15. PairedVal20
-
-Report:
-- pass /20
+- pass / N_pair
+- pass rate
 - mean own IoU
 - mean cross IoU
-- own-cross margin
-- reference abstention pairs.
+- own-cross margin.
 
-Write:
-`evaluation/task6x_downstream_pairedval20.json`
+Write `evaluation/task6y_paired_val.json`.
 
 ---
 
-# PART H — Natural-language integration
+# PART K — Causal criteria
 
-## 16. Hardened ProgramHead integration
+## 25. Feasibility criteria
 
-Run:
+`NEAREST_BOUNDARY_FIELD_FEASIBLE` requires ALL:
 
-```text
-Task 6T hardened ProgramHead
-→ frozen selected Task 6X resolver
-→ GeometricRelationField v0.2
-→ frozen SAM2 visual feature
-→ B3
-```
+1. field semantic sanity passes;
+2. B2 overfit passes;
+3. B2-B0 MiniVal mIoU >= `+0.08`;
+4. B2-B1 MiniVal mIoU >= `+0.05`;
+5. B2-B3 MiniVal mIoU >= `+0.10`;
+6. B2 MiniVal mIoU >= `0.35`;
+7. B2 paired pass rate >= `0.70`;
+8. B2 own-cross margin >= `0.15`;
+9. no target GT model input.
 
-On exact MiniVal240 natural-language queries.
+Interpretation:
+- B0→B1 = value of raw reference localization;
+- B1→B2 = value of explicit boundary-proximity geometry;
+- B3 vs B2 = whether visual evidence is materially necessary.
 
-Require parser:
-- 240/240.
-
-Report:
-- strict mIoU
-- answered-only mIoU
-- PairedVal
-- margin
-- abstentions.
-
-Do not execute nearest/L3.
-
-Write:
-`evaluation/task6x_hardened_parser_integration.json`
+Do not invent another interpretation.
 
 ---
 
-# PART I — Predeclared gates
+# PART L — Verdict
 
-## 17. Reference refinement improvement
-
-If a SAM option was selected, define:
-
-`sam_refinement_improved = true`
-
-iff ALL:
-
-- RefVal selected-reference mIoU >= X-S0 + `0.03`
-- RefVal `REFERENCE_SELECTION_WRONG` <= X-S0 - `8`
-- RefVal `REFERENCE_OK` >= X-S0 + `8`
-- RefVal abstention rate <= `0.08`
-
-## 18. Directional hardening gate
-
-`SAM2_REFERENCE_REFINEMENT_PASS` requires ALL:
-
-1. SAM refinement selected over X-C0 on U-Calib200
-2. `sam_refinement_improved=true`
-3. RefVal selected-reference mIoU >= `0.46`
-4. RefVal centroid median <= `0.03`
-5. RefVal centroid p90 <= `0.32`
-6. MiniVal answered-only target mIoU >= `0.325`
-7. MiniVal strict target mIoU >= `0.305`
-8. PairedVal >= `12/20`
-9. own-cross margin >= `0.30`
-10. MiniVal reference-fail count <= `105`
-11. parser integration 240/240
-12. no test / no GT inference.
-
-Do not change gates.
-
----
-
-# PART J — Verdict
-
-## 19. Exactly one, priority order
+## 26. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-   - test use, GT inference, post-calibration option change, frozen-module mutation, protocol violation.
-
-2. `SAM2_PREDICTOR_UNAVAILABLE`
-
-3. `SAM2_REFINEMENT_NOT_HELPFUL`
-   - calibration selects X-C0.
-
-4. `SAM2_REFINEMENT_GENERALIZATION_FAIL`
-   - a SAM option wins calibration but `sam_refinement_improved=false` on RefVal.
-
-5. `SAM2_REFERENCE_REFINEMENT_PARTIAL`
-   - RefVal improves, but one or more section-18 gates fail.
-
-6. `SAM2_REFERENCE_REFINEMENT_PASS`
-   - all section-18 gates pass.
+2. `NEAREST_FIELD_DEPENDENCY_UNAVAILABLE`
+3. `NEAREST_PAIRED_SET_INSUFFICIENT`
+4. `NEAREST_BOUNDARY_FIELD_SEMANTIC_MISMATCH`
+5. `NEAREST_FIELD_NOT_LEARNABLE`
+6. `NEAREST_FIELD_GEOMETRY_ONLY_CONFOUND`
+   - B2 learns/generalizes, but B2-B3 <0.10 and B3 paired pass rate >=0.60.
+7. `NEAREST_FIELD_NO_MEANINGFUL_GAIN`
+   - learnability passes but B2-B0 <0.08 OR B2-B1 <0.05 OR B2 mIoU <0.35.
+8. `NEAREST_FIELD_COUNTERFACTUAL_WEAK`
+   - mask gains pass but paired rate <0.70 OR margin <0.15.
+9. `NEAREST_BOUNDARY_FIELD_FEASIBLE`
+   - all section-25 criteria pass.
 
 No other verdict.
 
 ---
 
-# PART K — Interpretation boundary
+# PART M — Interpretation boundary
 
-DSH may report measurements only.
+DSH reports measurements only.
 
 Do NOT:
-- claim SAM2 refinement as project novelty;
-- tune a SAM quality-score threshold;
-- add points/mask prompts beyond the fixed options;
-- add another box expansion;
-- combine SAM score with YOLO score in a learned or hand-tuned formula;
-- retrain SAM2/YOLO;
-- revisit ProposalSetRanker/ProposalQualityEstimator;
-- change field/B3;
-- start nearest/L3.
+- claim global novelty;
+- claim end-to-end nearest capability;
+- change sigma;
+- add learned distance transform;
+- add predicted reference;
+- combine directional and nearest fields;
+- start L3;
+- change reference resolver.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 6X 的 SAM2 refinement 结果决定是否冻结 reference subsystem 并进入 nearest/L3；不自行继续增加 reference 模块。`
+`等待 ChatGPT 根据 Task 6Y 的 nearest boundary field 因果结果决定下一步，不自行进行 predicted-reference nearest 集成、direction+nearest 场组合或 L3 训练。`
 
 ---
 
-# PART L — Required artifacts
+# PART N — Required artifacts
 
 Create at minimum:
 
 ```text
-buildreasonseg_mvp/task6x_sam2_reference_refiner.py
+buildreasonseg_mvp/nearest_boundary_field.py
+buildreasonseg_mvp/task6y_nearest_decoder.py
 
-evaluation/task6x_frozen_asset_audit.json
-evaluation/task6x_calibration_refinement.json
-evaluation/task6x_frozen_refinement_option.json
+evaluation/task6y_pack_manifest.json
+evaluation/task6y_field_sanity.json
+evaluation/task6y_overfit20.json
+evaluation/task6y_training.json
+evaluation/task6y_mini_val.json
+evaluation/task6y_paired_val.json
+evaluation/task6y_verdict.json
 
-# Only if X-C1/C2/C3 wins calibration:
-evaluation/task6x_refval_refinement.json
-evaluation/task6x_downstream_minival240.json
-evaluation/task6x_downstream_pairedval20.json
-evaluation/task6x_hardened_parser_integration.json
+docs/task6y_oracle_nearest_boundary_field.md
 
-evaluation/task6x_verdict.json
-
-docs/task6x_sam2_proposal_refinement.md
-
-scripts/task6x_calibrate_refinement.py
-scripts/task6x_evaluate_reference.py
-scripts/task6x_evaluate_downstream.py
-scripts/task6x_report.py
+scripts/task6y_freeze_packs.py
+scripts/task6y_field_sanity.py
+scripts/task6y_train.py
+scripts/task6y_evaluate.py
+scripts/task6y_report.py
 ```
+
+If a STOP gate fires, create only applicable completed artifacts + verdict/docs/handoff.
+
+Caches/checkpoints under `artifacts/task6y/` and `artifacts/checkpoints/task6y/`, gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-No new model checkpoint.
-
 ---
 
-# PART M — Tests
+# PART O — Required tests
 
-Task 6W ended at:
-`929 passed, 1 skipped`
+Task 6X ended at `965 passed, 1 skipped`.
 
-Add tests for at least:
+Add tests covering at least:
 
-1. Task 6W artifacts unchanged
-2. SAM2 checkpoint SHA exact
-3. official SAM2ImagePredictor path used
-4. no SAM2 training
-5. U-C1 exact
-6. exactly four options X-C0..X-C3
-7. no quality threshold
-8. X-C1 exact box
-9. X-C1 multimask false
-10. X-C2 exact box
-11. X-C2 multimask true
-12. X-C2 max SAM quality mask
-13. X-C3 expansion exactly 10%
-14. X-C3 clipped to source image
-15. no point prompt
-16. no mask input
-17. original Task 6Q family eligibility before refinement
-18. refined family eligibility after refinement
-19. refined mask 512×512
-20. no duplicate suppression
-21. largest chooses max refined area
-22. smallest chooses min refined area
-23. tie-break exact
-24. calibration uses only U-Calib200
-25. RefVal not used to choose option
-26. option frozen before RefVal
-27. X-C0 calibration stop path works
-28. no ProposalSetRanker in X-SR
-29. no ProposalQualityEstimator in X-SR
-30. no GT in inference
-31. canonical-program downstream comparison has no parser
-32. final integration uses hardened ProgramHead
-33. parser remains 240/240
-34. field v0.2 unchanged
-35. B3 unchanged
-36. no YOLO retraining
-37. no SAM2 score threshold/tuning
-38. no TTA/tiling
-39. no GRCL
-40. no nearest/L3
-41. no test split
-42. no new dataset/download/install/GUI
-43. previous suite preserved.
+1. Task 6X artifacts unchanged
+2. reference subsystem status freezes U-C1 deterministic
+3. exactly two nearest program ids
+4. no directional/L3 records in packs
+5. no test split
+6. nearest metric remains boundary_distance
+7. nearest margin config unchanged
+8. nearest eligibility unchanged
+9. sigma_diag exactly 0.05
+10. scipy EDT uses inverse binary reference mask
+11. field zero inside reference
+12. field in [0,1]
+13. synthetic monotonic decay with distance
+14. no reference centroid
+15. no bbox distance
+16. no target input to field
+17. bilinear field 512→64
+18. direct ref area resize exact
+19. field-sanity candidate score = max field inside candidate
+20. field sanity only nearest-eligible non-reference candidates
+21. Overfit20 exact family counts
+22. MiniTrain1000 exact 650/350
+23. MiniVal240 exact 120/120
+24. paired same tile/different refs/different targets
+25. pack hashes recorded
+26. frozen SAM2 path unchanged
+27. Y-B0 inputs exact
+28. Y-B1 inputs exact
+29. Y-B2 inputs exact
+30. Y-B3 has no visual
+31. B3 field projection exact 1→128
+32. nearest embedding vocab1/dim16
+33. common trunk exact
+34. BCE+Dice only
+35. no GRCL
+36. no ranking/aux loss
+37. same training schedule across variants
+38. GT target only label/eval
+39. oracle reference explicitly recorded
+40. no proposal/predicted reference in main experiment
+41. no ProgramHead training
+42. no deterministic nearest executor replacing dense target segmentation
+43. no L3
+44. no new dataset/download/install/GUI
+45. previous suite preserved.
 
 Run:
-
 `python -m pytest tests/ -q`
 
 Do not reduce previous passing tests.
 
 ---
 
-# PART N — Git/storage
+# PART P — Git/storage
 
-Do not commit:
-- existing YOLO/SAM2/B3/parser/ranker/quality checkpoints;
-- proposal/refinement caches;
-- source imagery/vectors;
-- `.conda`.
+Do not commit model weights/checkpoints, feature caches, source imagery/vectors, large local packs, or `.conda`.
 
-Commit:
-- refiner code;
-- small JSON artifacts;
-- scripts;
-- tests;
-- docs;
-- handoff.
+Commit nearest field/decoder code, small manifests/evaluation JSON, scripts, tests, docs and handoff.
 
 Suggested commits:
-
-1. `feat: add frozen SAM2 proposal refinement`
-2. `eval: audit SAM2-refined reference selection`
-3. optional docs commit
-
----
-
-# PART O — DSH model policy
-
-Default:
-- **DeepSeek V4.1 Flash + High**
-
-Use Max only for a genuine SAM2/runtime/integration bug.
-
-No downloads or installs.
+1. `feat: add nearest boundary relation field`
+2. `eval: test nearest field causal segmentation gains`
+3. optional docs/handoff commit
 
 ---
 
-# PART P — STOP
+# PART Q — DSH model policy
 
-After Task 6X:
-- commit;
-- push;
-- handoff;
-- STOP.
+Default: **DeepSeek V4.1 Flash + High**.
+Use Max only for a genuine data/runtime/cross-module bug.
+No installs or downloads.
 
-Do NOT:
-- add more reference modules;
-- tune SAM quality scores;
-- retrain SAM2/YOLO;
-- change U-C1;
-- modify field/B3;
-- revisit GRCL;
-- start nearest/L3 without ChatGPT audit;
-- access test;
-- build GUI.
+---
+
+# PART R — STOP
+
+After Task 6Y:
+- commit
+- push
+- handoff
+- STOP
+
+Do NOT alter the frozen reference resolver, add predicted-reference nearest integration, combine directional+nearest fields, start L3, add GRCL, access test, or build GUI.
 
 Wait for ChatGPT audit.
