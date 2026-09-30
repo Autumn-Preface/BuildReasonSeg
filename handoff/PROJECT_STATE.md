@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 6W._
+_Last updated by DSH at the end of Task 6X._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -96,6 +96,37 @@ The block above is machine-checked against
 | 6V | **Family-conditioned reference resolver policy** | **done → `FAMILY_POLICY_NOT_BETTER`** (**no model trained**: only frozen options recombined; YOLO26m-seg `ef852b58…61f474`, ranker `c738fcf7…1a46c0`, hardened parser `4cbba36b…d44a5e`, B3 `7556e4a4…c7d6ab` all hash-verified and untouched; three declared options V-P0 (U-C0+deterministic) / V-P1 (U-C1+deterministic) / V-P2 (U-C1+ranker, no fourth); train-only U-Calib200 per-family selection → **largest V-P2** (Pr@0.5 0.8000 / mIoU 0.6650 / SELECTION_WRONG 18) and **smallest V-P0** (0.5300 / 0.4154 / 38) frozen as `{largest: V-P2, smallest: V-P0}` before RefVal and never revised (calibration prefers U-C0 for smallest, inverting Task 6U's RefVal reading); RefValUnique frozen-policy mIoU **0.4383** / Dice 0.4995 / Pr@0.5 **0.5327** / centroid median **0.0107** / p90 0.3845 / abstain **0.0228**, buckets OK **114** / SELECTION_WRONG **41** / NOT_COVERED 59 (vs U-S0 0.4248/111/39/62, U-S1 0.4289/112/53/50, U-S2 0.3107/77/88/50; oracle ceiling 0.6203); downstream MiniVal240 strict **0.3005** / answered **0.3069** / abstain 5 / ref-fail **116** / target-fail 68 (U-S1 0.3089/0.3141/4/115), PairedVal **10/20** margin **+0.2879**, parser integration **240/240**; §13 flag **false** (mIoU Δ +0.0094 < +0.015, REFERENCE_OK 114 < 117) and §14 gate **3/10** → verdict) |
 
 | 6W | **Proposal-quality filtering + semantic extreme selection** | **done → `QUALITY_FILTER_NOT_HELPFUL`** (support-infrastructure hypothesis test; U-C1 `ef852b58…61f474` / hardened parser / field v0.2 / SAM2 / B3 all frozen and hash-verified; **W0 oracle gate PASSED** on train-only U-Calib200 — oracle `q_gt≥0.50` filter + deterministic area rule: overall mIoU 0.4789 → **0.6575** (+0.1786 ≥ +0.08), smallest 0.3545 → **0.6707** (+0.3162 ≥ +0.10), `SELECTION_WRONG` 76 → **23** (≤45), abstain 0 ✓ → estimator training permitted; dataset from U-RankerTrain tiles only, deduplicated by tile, **36 calib-overlapping and 0 refval tiles excluded** → 548 tiles / **5,246 proposals** (3,337 pos / 1,909 neg), 93 `feature_invalid_small`, tile-disjoint 420/128 split, overlaps 0; `ProposalQualityEstimator v0.1` = 8 geometry scalars + frozen SAM2 256×64×64 inside/ring means (512) → `Linear(512→64)+LN+GELU` ‖ `Linear(8→16)+GELU` → `Linear(80→32→1)`, **35,729 params**, BCE `pos_weight 0.5666` train-only, frozen threshold 0.50, epoch 19 → holdout **AUROC 0.8438 / F1 0.8251** (adequacy ✓); RefValUnique mIoU W-S0 0.4289 → **W-SQ 0.3793** (oracle ceiling **0.5209**), `REFERENCE_OK` 112 → 97 (oracle 144), `SELECTION_WRONG` 53 → **65** (oracle 20), rejected-all 5; downstream MiniVal240 answered 0.3141 → **0.2746**, abstain 4 → 10, ref-fail 115 → **132**, PairedVal 11/20 → **9/20** (margin +0.3209 → +0.2482); parser integration 240/240; §23 gates **4/12** → verdict) |
+
+| 6X | **Frozen SAM2.1 proposal-refinement audit** | **done → `SAM2_REFINEMENT_NOT_HELPFUL`** (**no model trained**; last predeclared reference-hardening audit; SAM2.1 Hiera Base+ `a2345aed…c004c5` + official `SAM2ImagePredictor` (0 trainable params, box-only probe → masks (3,512,512) scores 0.887/0.456/0.863), U-C1 `ef852b58…61f474`, ProgramHead/B3/field v0.2 all frozen and verified → `FROZEN_ASSETS_VERIFIED`; exactly four options X-C0 no-refinement / X-C1 exact box single-mask / X-C2 exact box multimask / X-C3 10%-expanded box multimask, SAM score used only as a tie-break and never thresholded; train-only U-Calib200: **X-C0 mIoU 0.4789 / smallest 0.3545 / largest 0.6034 / Pr@0.5 0.5800** vs X-C1 0.4744/0.3502/0.5986/0.5700 (centroid median better 0.0061 vs 0.0078), X-C2 0.4284, X-C3 0.3741 (+1 abstention) → ranking `['X-C0','X-C1','X-C2','X-C3']` → **frozen option X-C0** (`baseline_is_selected = true`, RefVal never consulted); **STOP rule triggered**: RefValUnique/MiniVal240/PairedVal20 deliberately **not evaluated** and their artifacts absent by design) |
+
+## Task 6X measured results
+
+The last predeclared reference-hardening audit: a **training-free**, foundation-model alternative to Task
+6W's learned quality classifier — refine each eligible U-C1 YOLO proposal mask from its geometric box prompt
+with the frozen official SAM2.1 image predictor, then run the literal largest/smallest rule on the refined
+instance masks. Support infrastructure only. Full detail: `docs/task6x_sam2_proposal_refinement.md`,
+`evaluation/task6x_*.json`.
+
+| | Value |
+|---|---|
+| Frozen assets | SAM2.1 Hiera Base+ SHA `a2345aed…c004c5` exact · official `SAM2ImagePredictor`, 0 trainable params · box-only probe masks `(3,512,512)`, scores `0.8870/0.4559/0.8629` · U-C1 (640 / 0.05 / 300, no TTA/tiling) SHA `ef852b58…61f474` exact · ProgramHead / B3 / field v0.2 unchanged · ranker + quality estimator excluded |
+| Four options | **X-C0** no refinement · **X-C1** exact box + single-mask · **X-C2** exact box + multimask (max predicted quality) · **X-C3** 10 %-expanded box (clip [0,511]) + multimask · SAM score = selection tie-break only, never thresholded |
+| U-Calib200 (train-only) | **X-C0 mIoU 0.4789** / smallest 0.3545 / largest 0.6034 / Pr@0.5 0.5800 / centroid med 0.0078 / abstain 0 · X-C1 0.4744 / 0.3502 / 0.5986 / 0.5700 / **0.0061** / 0 · X-C2 0.4284 / 0.3277 / 0.5291 / 0.5250 / 0.0075 / 0 · X-C3 0.3741 / 0.3008 / 0.4481 / 0.4523 / 0.0098 / 0.0050 |
+| Cost per option | X-C0 0 SAM2 calls/tile · X-C1/X-C2/X-C3 9.67 calls/tile, 0.172 / 0.126 / 0.134 s per tile, 0 empty refined masks |
+| Ranking and freeze | `['X-C0', 'X-C1', 'X-C2', 'X-C3']` → **frozen option X-C0**, `baseline_is_selected = true`, `fourth_option = null`, `chosen_without_refval = true`, immutable |
+| STOP rule | **triggered** — `refval_minival_paired_evaluated = false`; `task6x_refval_refinement.json` / `task6x_downstream_minival240.json` / `task6x_downstream_pairedval20.json` / `task6x_hardened_parser_integration.json` intentionally absent |
+| Verdict | **`SAM2_REFINEMENT_NOT_HELPFUL`** |
+
+1. **Box-prompt SAM2 refinement does not beat the raw U-C1 masks** under the literal largest/smallest rule:
+   the best refinement option (X-C1, single-mask) is 0.0045 mIoU below baseline, multimask loses 0.0505 and
+   the expanded box loses 0.1048 (plus its first abstention) — while costing 9.67 SAM2 calls per tile.
+2. **Centroid quality improves slightly, area semantics do not**: X-C1 has the best median centroid error
+   (0.0061 vs 0.0078), so the refined masks are marginally better centred, but their areas shift the
+   extreme selection enough to lose overall IoU — consistent with SAM2 preferring object-like regions that
+   are not the literal area extremes.
+3. Because the baseline won, the **stop rule of section 13.1** ended the audit before any
+   RefVal/MiniVal/Paired evaluation, so no untouched-split claim is made for refinement.
+4. Next: 等待 ChatGPT 根据 Task 6X 的 U-Calib200 refinement 结果决定 reference 子系统是否冻结并转向 nearest/L3，不自行启动 nearest/L3 或新增 reference 模块。
 
 ## Task 6W measured results
 

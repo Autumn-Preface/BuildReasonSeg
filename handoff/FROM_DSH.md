@@ -17,177 +17,124 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 6W Report: Proposal-Quality Filtering + Semantic Extreme Selection
+# FROM_DSH — Task 6X Report: Frozen SAM2.1 Proposal Refinement Audit
 
-_This file holds the Task 6W report. The Task 6V report is preserved in git history at commit `3e185fb`;
-Task 6U at `b8b5224`; Task 6T at `e63f8c4`; Task 6S at `dc8544f`; Task 6R at `a3d59da`._
+_This file holds the Task 6X report. The Task 6W report is preserved in git history at commit `3de2142`;
+Task 6V at `3e185fb`; Task 6U at `b8b5224`; Task 6T at `e63f8c4`; Task 6S at `dc8544f`._
 
 **Note on the legacy block above:** those `ARTIFACT-FACTS` numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task6w_proposal_quality_filter.md`.
+Full design notes: `docs/task6x_sam2_proposal_refinement.md`.
 
 ## 1. Verdict
 
-**`QUALITY_FILTER_NOT_HELPFUL`** — section 24 priority order applied literally:
+**`SAM2_REFINEMENT_NOT_HELPFUL`** — section 13 applied literally, and the **STOP rule triggered**:
 
-1. `INVALID_EXPERIMENT` — no: protocol clean (frozen modules unchanged, no test use, no GT in inference,
-   no threshold change, no post-hoc gate change).
-2. `FROZEN_ASSET_UNAVAILABLE` — no: YOLO26m-seg SHA256 verified exact, U-C1 config unchanged.
-3. `QUALITY_FILTER_MECHANISM_INSUFFICIENT` — **no: the W0 oracle gate PASSED all four conditions.**
-4. `QUALITY_ESTIMATOR_NOT_LEARNABLE` — **no: adequacy PASSED** (holdout AUROC 0.8438 ≥ 0.80, F1 0.8251 ≥
-   0.65, no tile overlap).
-5. **`QUALITY_FILTER_NOT_HELPFUL`** — estimator adequacy passes but `quality_reference_improved = false`
-   and the section-23 downstream hardening gate fails on 8 of 12 conditions. ← **verdict**
-6. `QUALITY_REFERENCE_HARDENING_PARTIAL` — not applicable (no improvement).
-7. `PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS` — no.
+1. `INVALID_EXPERIMENT` — no: frozen modules unchanged, exactly four options, no fifth option, no test use,
+   no banned model (ranker / quality estimator), no threshold.
+2. `FROZEN_ASSET_UNAVAILABLE` — no: SAM2.1 and U-C1 hashes verified exact.
+3. **`SAM2_REFINEMENT_NOT_HELPFUL`** — **X-C0 (no refinement) wins the train-only U-Calib200 ranking**
+   `['X-C0', 'X-C1', 'X-C2', 'X-C3']`; the best refinement option X-C1 reaches overall mIoU 0.4744 vs
+   baseline 0.4789 (−0.0045), X-C2 −0.0505 and X-C3 −0.1048. ← **verdict**, and the task **stops here**.
+4. `SAM2_REFINEMENT_PARTIAL` / `SAM2_REFINEMENT_USEFUL` — not applicable.
 
-No threshold was altered after seeing results; the quality threshold stayed frozen at 0.50.
+**No model was trained. Because the baseline won, RefValUnique, MiniVal240 and PairedVal20 were never
+evaluated and the corresponding Task 6X artifacts were intentionally not produced.**
 
-## 2. Recorded Task 6V result (Task 6V artifacts not mutated)
+## 2. Recorded Task 6W findings (Task 6W artifacts not mutated)
 
-`FAMILY_POLICY_NOT_BETTER`; frozen policy `largest → V-P2` (U-C1 + ranker), `smallest → V-P0` (U-C0 +
-deterministic). RefValUnique mIoU 0.4383028 vs U-S1 0.4289355 (Δ +0.0093674 < +0.015),
-`REFERENCE_OK` 114 < 117, `REFERENCE_SELECTION_WRONG` 41, `NOT_COVERED` 59; downstream answered mIoU
-0.3069046, strict 0.3005107, paired 10/20, margin +0.287855, reference-fail 116. Family routing slightly
-improves some reference metrics but does not solve the dominant bottleneck; U-C1 stays valuable for
-candidate coverage; ProposalSetRanker is not accepted as a global selector.
+Verdict `QUALITY_FILTER_NOT_HELPFUL`. W0 oracle-quality mechanism on train-only U-Calib200: deterministic
+U-C1 reference mIoU `0.4789276` → oracle `q ≥ 0.50` filter mIoU `0.6575339`; smallest
+`0.3544718 → 0.6707174`; selection wrong `76 → 23`; abstention `0` — so *"remove invalid proposals before
+extreme-area selection"* is a valid mechanism. The learned estimator reached holdout AUROC `0.8438013` and
+F1@0.50 `0.8251182`, but RefVal reference mIoU `0.3793127` (below W-S0 `0.4289355`), selection wrong `65`
+(worse than W-S0 `53`) and downstream answered mIoU `0.2745576` (below W-S0 `0.3141364`); it is therefore
+not part of the primary resolver.
 
-## 3. W0 oracle mechanism diagnostic (U-Calib200 only)
+## 3. Frozen assets and the four predeclared options
 
-`evaluation/task6w_oracle_quality_filter_calib.json` — `q_gt = max IoU(proposal, every native GT building
-instance on the tile)`, oracle keeps `q_gt >= 0.50`, then deterministic largest/smallest with the Task 6Q
-tie-break. GT is diagnostic metadata only.
+`evaluation/task6x_frozen_asset_audit.json` = **`FROZEN_ASSETS_VERIFIED`**:
 
-| Metric (overall) | U-C1 deterministic baseline | Oracle quality filter | Gate |
-|---|---|---|---|
-| selected-reference mIoU | 0.4789 | **0.6575** (Δ **+0.1786**) | ≥ +0.08 ✓ |
-| smallest mIoU | 0.3545 | **0.6707** (Δ **+0.3162**) | ≥ +0.10 ✓ |
-| `REFERENCE_SELECTION_WRONG` | 76 | **23** | ≤ 45 ✓ |
-| abstention rate | 0.0000 | 0.0000 | ≤ 0.10 ✓ |
-| `REFERENCE_OK` | 116 | **169** | — |
+* SAM2.1 Hiera Base+ `local_cache/models/sam2.1_hiera_base_plus.pt`, SHA256
+  `a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5` **exact**, official
+  `sam2.sam2_image_predictor.SAM2ImagePredictor`, `trainable_parameters = 0`, not retrained; a box-only
+  probe `[10,10,200,200]` returns masks `(3, 512, 512)` with scores `[0.8870, 0.4559, 0.8629]` and
+  `point_coords = point_labels = mask_input = None`, `return_logits = False`;
+* U-C1 proposals `imgsz 640 / conf 0.05 / max_det 300 / default NMS / no TTA / no tiling`, YOLO SHA256
+  `ef852b58…61f474` exact, not retrained;
+* Task 6T hardened ProgramHead, Task 6O B3 and GeometricRelationField v0.2 hashes recorded and unchanged;
+  ProposalSetRanker v0.1 and ProposalQualityEstimator v0.1 are explicitly excluded from this resolver.
 
-**W0 gate PASSED → estimator training permitted.**
+Exactly four options: **X-C0** no refinement (U-C1 baseline), **X-C1** exact box + single-mask SAM2,
+**X-C2** exact box + multimask (max predicted quality), **X-C3** 10 %-expanded box (clipped to [0,511]) +
+multimask. The SAM2 predicted quality score is recorded and used **only** as a selection tie-break; it is
+never thresholded.
 
-## 4. Quality dataset and estimator
+## 4. U-Calib200 calibration (Parts D-E)
 
-`evaluation/task6w_quality_dataset_manifest.json`, `evaluation/task6w_quality_training.json`.
+`evaluation/task6x_calibration_refinement.json` — 200 references over 195 tiles, train-only:
 
-* source U-RankerTrain only, **deduplicated by tile id**; **no U-Calib200 and no RefValUnique tile** — the
-  Task 6U split is reference-key based, so **36 tiles held both a U-Calib200 and a U-RankerTrain
-  reference; those tiles were explicitly excluded** (plus 0 RefVal tiles) → **548** training tiles, both
-  overlaps **0**;
-* common structural eligibility only (no border touch, `bbox_extent_ratio ≤ 0.20`; the smallest
-  `area ≥ 150` floor deliberately not applied);
-* **5,246** proposals → **3,337 positive / 1,909 negative** at `q_gt ≥ 0.50`; 93 `feature_invalid_small`
-  excluded, 0 empty rings; tile-disjoint split **420 train / 128 holdout** tiles (4,153 / 1,093 proposals,
-  overlap 0);
-* features: exactly 8 geometry/confidence scalars + frozen SAM2 `V ∈ R^(256×64×64)` pooled as inside-mean
-  and one-cell-ring-mean (`Ring = clamp(max_pool2d(M64,3,1,1) − M64, 0, 1)`) → 512 visual dims; no family,
-  no relation, no area rank, no x/y location;
-* network `Linear(512→64) → LayerNorm(64) → GELU` ‖ `Linear(8→16) → GELU` → `Linear(80→32) → GELU →
-  Linear(32→1)`, **35,729 parameters**, no attention/CNN/Transformer/GNN;
-* `BCEWithLogitsLoss(pos_weight = N_neg/max(1,N_pos))` with **train-only** `pos_weight = 0.5666`; AdamW
-  lr 5e-4 / wd 1e-4 / batch 256 / ≤40 epochs / patience 5 / seed 20260930 / AMP; selection by holdout
-  AUROC → F1@0.50 → lower BCE; no sweep;
-* selected epoch **19**: holdout **AUROC 0.8438**, AUPRC 0.8952, accuracy 0.7630, precision 0.7686,
-  recall 0.8907, **F1 0.8251**, confusion `[[223, 184], [75, 611]]`;
-* checkpoint `artifacts/checkpoints/task6w/proposal_quality_v01.pt` (local/gitignored).
+| Option | overall mIoU | smallest mIoU | largest mIoU | Pr@0.5 | centroid median | abstain | SAM2 calls/tile | wall time/tile |
+|---|---|---|---|---|---|---|---|---|
+| **X-C0** | **0.4789** | **0.3545** | **0.6034** | **0.5800** | 0.0078 | 0.0000 | 0.00 | ~0 s |
+| X-C1 | 0.4744 | 0.3502 | 0.5986 | 0.5700 | **0.0061** | 0.0000 | 9.67 | 0.172 s |
+| X-C2 | 0.4284 | 0.3277 | 0.5291 | 0.5250 | 0.0075 | 0.0000 | 9.67 | 0.126 s |
+| X-C3 | 0.3741 | 0.3008 | 0.4481 | 0.4523 | 0.0098 | 0.0050 | 9.67 | 0.134 s |
 
-## 5. RefValUnique diagnostics
+No empty refined masks anywhere; X-C1/X-C2 abstain never, X-C3 once. Baseline buckets
+`REFERENCE_SELECTION_WRONG` 84 / `REFERENCE_OK` 116 (the train-side split has no coverage failures).
 
-| Metric | W-S0 (U-C1 + deterministic) | **W-SQ (learned filter)** | W-ORACLE (ceiling) |
-|---|---|---|---|
-| selected-reference mIoU | 0.4289 | **0.3793** | **0.5209** |
-| Dice | 0.4933 | 0.4311 | 0.5901 |
-| Pr@0.5 | 0.5209 | 0.4619 | **0.6872** |
-| centroid mean / median / p90 | 0.1149 / 0.0159 / 0.3803 | 0.1301 / 0.0490 / 0.3963 | 0.0864 / **0.0065** / 0.3251 |
-| area-ratio median | 1.0719 | 1.1062 | 1.1086 |
-| abstention rate | 0.0183 | 0.0411 | 0.0365 |
-| largest / smallest mIoU | 0.5183 / 0.3353 | 0.4574 / 0.2982 | **0.6043 / 0.4366** |
+Section 12 priority → ranking **`['X-C0', 'X-C1', 'X-C2', 'X-C3']`** →
+`evaluation/task6x_frozen_refinement_option.json` freezes **X-C0** with `baseline_is_selected = true`,
+`refinement_is_selected = false`, `fourth_option = null`, `immutable_after_creation = true` and
+`chosen_without_refval = true`. Selection inputs: U-Calib200 only; RefValUnique / MiniVal240 / PairedVal20 /
+test all `false`.
 
-| Bucket | W-S0 | W-SQ | W-ORACLE |
-|---|---|---|---|
-| `NO_PROPOSALS` | 1 | 1 | 1 |
-| `NO_ELIGIBLE_PROPOSALS` | 3 | 3 | 3 |
-| `QUALITY_FILTER_ALL_REJECTED` | 0 | **5** | 4 |
-| `REFERENCE_NOT_COVERED_IOU50` | 50 | 48 | 46 |
-| `REFERENCE_SELECTION_WRONG` | 53 | **65** | **20** |
-| `SELECTED_MASK_GEOMETRY_POOR` | 0 | 0 | 0 |
-| `REFERENCE_OK` | 112 | 97 | **144** |
+## 5. STOP rule — no downstream evaluation
 
-`quality_reference_improved = false`: mIoU 0.3793 < W-S0 + 0.04; `REFERENCE_OK` 97 < W-S0 + 8;
-`SELECTION_WRONG` 65 > 0.75 × 53 = 39; abstention rate 0.0411 ≤ 0.10 ✓.
+`evaluation/task6x_verdict.json` records `stop_rule.triggered = true`,
+`stop_rule.refval_minival_paired_evaluated = false` and `stop_rule.forbidden_files_absent = true`. The four
+files that a non-stop path would have produced (`task6x_refval_refinement.json`,
+`task6x_downstream_minival240.json`, `task6x_downstream_pairedval20.json`,
+`task6x_hardened_parser_integration.json`) **do not exist**, exactly as section 13.1 requires.
 
-## 6. Downstream causal evaluation and integration
+Measured context (reported, not interpreted as a remedy): box-prompt refinement slightly improves the
+*median centroid error* (X-C1 0.0078 → 0.0061, i.e. marginally better-centred masks) yet loses overall IoU,
+because the refined **areas** shift the literal largest/smallest selection; multi-mask selection (X-C2) and
+box expansion (X-C3) lose substantially more, consistent with SAM2 preferring object-like regions that are
+not the literal area extremes.
 
-| Metric | W-S0 | W-SQ |
-|---|---|---|
-| strict all-240 mIoU | **0.3089** | 0.2631 |
-| answered-only mIoU | **0.3141** | 0.2746 |
-| abstentions | **4** | 10 |
-| reference-fail count | **115** | 132 |
-| target-fail-with-reference-ok | 69 | 60 |
-| largest / smallest target mIoU | **0.3241 / 0.2937** | 0.2888 / 0.2375 |
-| per direction (left/right/above/below) | **0.3583 / 0.2514 / 0.3307 / 0.2952** | 0.3146 / 0.2234 / 0.2619 / 0.2527 |
-| border target (n=114) | **0.2896** | 0.2536 |
-| tiny target (n=4) | ≈0 | ≈0 |
-| PairedVal pass | **11/20** | 9/20 |
-| own / cross / margin | 0.3249 / 0.0040 / **+0.3209** | 0.2576 / 0.0095 / +0.2482 |
-| reference-abstention pairs | 0 | 1 |
+## 6. Tests, storage, git
 
-W-S0 reproduces Task 6U U-S1 exactly (strict 0.3089 / answered 0.3141 / abstentions 4 / ref_fail 115 /
-paired 11/20 / margin +0.3209), validating the causal isolation.
-
-`evaluation/task6w_hardened_parser_integration.json` — Task 6T ProgramHead → W-SQ → field v0.2 → SAM2 →
-B3: parser **240/240**, strict 0.2631, answered-only 0.2746, abstentions 10, reference-fail 132 (identical
-to causal W-SQ). No nearest/L3 execution.
-
-## 7. Gates and verdict
-
-Section 21 estimator adequacy: **PASSED** (AUROC 0.8438 ≥ 0.80, F1 0.8251 ≥ 0.65, no tile overlap).
-Section 22 `quality_reference_improved`: **false**.
-Section 23 `PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS`: **4 of 12 pass** (W0 gate ✓, adequacy ✓, parser
-240/240 ✓, no test/no GT ✓); failing: RefVal mIoU 0.3793 < 0.48, centroid median 0.0490 > 0.03, centroid
-p90 0.3963 > 0.28, MiniVal answered 0.2746 < 0.33, strict 0.2631 < 0.31, paired 9 < 12, margin 0.2482 <
-0.30, reference-fail 132 > 100.
-
-Section 24 → **`QUALITY_FILTER_NOT_HELPFUL`**.
-
-Measured context (reported, not interpreted as a remedy): the W0 oracle gate proves **the mechanism itself
-is sound** (RefVal oracle ceiling mIoU 0.5209 with `REFERENCE_OK` 144 and only 20 selection errors), but
-the learned estimator does not transfer well enough: with holdout AUROC 0.844 it rejects 5 RefVal records
-outright, pushes `REFERENCE_SELECTION_WRONG` from 53 to 65 and raises abstentions from 4 to 10 downstream.
-
-## 8. Tests, storage, git
-
-`python -m pytest tests/ -q` → **929 passed, 1 skipped** (Task 6V ended at 881 passed / 1 skipped; no prior
+`python -m pytest tests/ -q` → **965 passed, 1 skipped** (Task 6W ended at 929 passed / 1 skipped; no prior
 passing test was reduced — the single skip is still the Ultralytics-only eval-mode determinism check that
-needs the proposal env). `tests/test_task6w_proposal_quality.py` adds the 48 section-O checks.
+needs the proposal env). `tests/test_task6x_sam2_refinement.py` adds the 36 section-M checks, including the
+STOP-path invariants (no downstream files, no scoring threshold, no training, four options only).
 
-Not committed: the quality checkpoint, YOLO/SAM2/B3/parser/ranker weights, proposal/feature caches, the
-generated quality rows (`artifacts/task6w/quality_dataset/`), source imagery/vectors, `.conda`. Committed:
-quality model/resolver code, dataset manifest, small JSON eval artifacts, scripts, tests, docs, handoff.
+Not committed: SAM2/YOLO/B3/parser/ranker/quality checkpoints, proposal/feature caches, source
+imagery/vectors, `.conda`. Committed: refiner code, small JSON artifacts, scripts, tests, docs, handoff.
+**No new checkpoint or refinement cache file was created in Task 6X.**
 
-Task 6W downloaded nothing and installed nothing; every frozen asset was loaded from local disk. Watt was
-**not needed** in Task 6W: the pre-existing Watt instance is transport-only, is not owned by this project
-and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
+Task 6X downloaded nothing and installed nothing; the frozen SAM2.1 checkpoint was loaded from local disk.
+Watt was **not needed** in Task 6X: the pre-existing Watt instance is transport-only, is not owned by this
+project and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
 modified.
 
-## 9. Interpretation boundary
+## 7. Interpretation boundary
 
-DSH reports measurements only. The ProposalQualityEstimator is **not** claimed as a novelty; threshold 0.50
-was not altered; no family-specific quality network, no ranker after filtering, no size estimator, no YOLO
-retraining, no TTA/tiling, no U-C1 change, no field/B3 change and no nearest/L3 work was performed; Task 6X
-was not chosen.
+DSH reports measurements only. The refiner is support infrastructure, **not** a claimed novelty; no SAM
+quality threshold, no point or mask prompt, no box-expansion change, no TTA/tiling/super-resolution, no
+U-C1 change, no YOLO/SAM2/ProgramHead/B3 retraining, no ranker or quality estimator in the resolver, no
+nearest/L3 execution and no Task 6Y selection.
 
-## 10. Recommended next step
+## 8. Recommended next step
 
-等待 ChatGPT 根据 Task 6W 的 oracle-quality ceiling、learned quality filter 与 downstream 结果决定 reference 是否继续硬化，不自行增加 ranker、size estimator 或 detector 改动。
+等待 ChatGPT 根据 Task 6X 的 U-Calib200 refinement 结果决定 reference 子系统是否冻结并转向 nearest/L3，不自行启动 nearest/L3 或新增 reference 模块。
 
-## 11. STOP
+## 9. STOP
 
-Task 6W stops here: no further reference model, no ranker after quality filtering, no size correction, no
-detector/config/threshold change, no YOLO retraining, no field/B3/SAM2 change, no GRCL revisit, no
-nearest/L3, no test access, no GUI. Waiting for the ChatGPT audit.
+Task 6X stops here: no more reference modules, no SAM quality-score tuning, no SAM2/YOLO retraining, no U-C1
+change, no field/B3 change, no GRCL revisit, no nearest/L3 without the ChatGPT audit, no test access, no
+GUI. Waiting for the ChatGPT audit.

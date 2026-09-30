@@ -1,27 +1,33 @@
-# TO_DSH — Task 6W: Proposal-Quality Filtering + Semantic Extreme Selection
+# TO_DSH — Task 6X: Frozen SAM2 Proposal Refinement Audit
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `3e185fbc5764dcc74d34d70f085e4a139a93bf37`
+> Base commit: `3de2142010e335f3a9d9b1c5244fdd6271f88c4e`
 >
-> Predecessor: Task 6V → `FAMILY_POLICY_NOT_BETTER`
+> Predecessor: Task 6W → `QUALITY_FILTER_NOT_HELPFUL`
 >
 > Research decision already made by ChatGPT:
 >
 > 1. Keep the core BuildReasonSeg method frozen:
 >    `ProgramHead → Reference → GeometricRelationField v0.2 → frozen SAM2 visual feature → B3 target decoder`.
-> 2. Keep Task 6U **U-C1** as the current high-recall proposal configuration:
->    `imgsz=640, conf=0.05, max_det=300`.
-> 3. Do not use Task 6U ProposalSetRanker v0.1 in the primary resolver.
-> 4. Do not use the Task 6V family-conditioned policy as the primary resolver; it did not beat U-S1 enough and sacrificed smallest-family coverage.
-> 5. Task 6W tests a different hypothesis:
+> 2. Keep **U-C1** as the current proposal generator:
+>    `YOLO26m-seg, imgsz=640, conf=0.05, max_det=300, no TTA, no tiling`.
+> 3. Do NOT use ProposalSetRanker v0.1 or ProposalQualityEstimator v0.1 in the Task 6X primary resolver.
+> 4. Task 6W proved:
+>    - oracle proposal-quality filtering is highly useful;
+>    - the learned quality classifier is not reliable enough across the scene-disjoint validation split.
+> 5. Before ending reference hardening, Task 6X tests one **training-free**, foundation-model-based alternative:
 >
->    **Many selection errors are caused by fragmented / merged / incomplete proposals whose predicted area corrupts the literal largest/smallest rule. If low-quality proposals can be filtered first, deterministic largest/smallest semantics may become reliable again.**
+>    **Use the frozen official SAM2.1 image predictor to refine each eligible YOLO proposal mask from its
+>    geometric box prompt, then execute the literal largest/smallest rule on the refined instance masks.**
 >
-> 6. This proposal-quality module is support infrastructure, NOT a claimed algorithmic novelty.
-> 7. DSH is an executor. Do not redesign the mechanism.
+> 6. This is support infrastructure, not a claimed research novelty.
+> 7. This is the **last predeclared reference-hardening audit before ChatGPT decides whether to freeze the
+>    reference subsystem and move on to nearest/L3.**
+>
+> DSH is an executor. Do not redesign this experiment.
 
 All user-facing DSH output must be Chinese.
 
@@ -30,499 +36,382 @@ All user-facing DSH output must be Chinese.
 # 0. DSH role
 
 DSH MAY:
-- reuse frozen U-C1 proposal caches or regenerate them with the exact frozen configuration;
-- run the predeclared oracle-quality-filter diagnostic;
-- build train-only proposal-quality labels;
-- implement and train the exact ProposalQualityEstimator v0.1 below;
-- evaluate the exact resolver and downstream chain;
-- solve ordinary runtime bugs without changing the protocol.
+- load the frozen SAM2.1 Hiera Base+ checkpoint already used by the project;
+- use the official `SAM2ImagePredictor`;
+- reuse/generate exact U-C1 proposals;
+- evaluate exactly the four predeclared refinement options;
+- freeze one option using train-only U-Calib200;
+- evaluate it on untouched RefValUnique, MiniVal240 and PairedVal20;
+- solve ordinary runtime/integration bugs without changing the experiment.
 
 DSH MUST NOT:
+- train or fine-tune any model;
 - retrain YOLO;
-- change YOLO weights/config beyond frozen U-C1;
-- use U-C0/U-C2/U-C3 as alternatives;
-- retrain ProgramHead;
-- retrain ProposalSetRanker;
-- use ProposalSetRanker in the primary Task 6W resolver;
-- retrain SAM2/B3;
-- change GeometricRelationField v0.2;
-- change Task 6Q family eligibility rules;
-- tune the quality threshold;
+- retrain SAM2;
+- retrain ProgramHead/B3/ranker/quality estimator;
+- use the ProposalSetRanker or ProposalQualityEstimator in the primary Task 6X resolver;
+- change U-C1;
+- add a SAM-score threshold/filter;
+- tune SAM2 quality-score thresholds;
 - add TTA/tiling/super-resolution;
+- change Task 6Q eligibility thresholds;
 - add nearest/L3 execution;
-- use test split;
-- invent another quality architecture;
-- choose Task 6X.
+- access test split;
+- choose Task 6Y.
 
-If a prohibited change is needed, STOP and report.
+If any prohibited change is needed, STOP and report.
 
 ---
 
-# PART A — Task 6V audit record
+# PART A — Record Task 6W findings
 
-## 1. Record the frozen Task 6V result
+## 1. Task 6W result
 
-Copy into `docs/task6w_proposal_quality_filter.md`:
+Record in `docs/task6x_sam2_proposal_refinement.md`:
 
-Task 6V verdict:
-`FAMILY_POLICY_NOT_BETTER`
+Task 6W verdict:
+`QUALITY_FILTER_NOT_HELPFUL`
 
-Frozen family policy:
-- largest → V-P2 (U-C1 + frozen ranker)
-- smallest → V-P0 (U-C0 + deterministic)
+Important measurements:
 
-RefValUnique:
-- family-policy mIoU = 0.4383028
-- U-S1 mIoU = 0.4289355
-- delta = +0.0093674 < +0.015 gate
-- REFERENCE_OK = 114 < 117 gate
-- REFERENCE_SELECTION_WRONG = 41
-- NOT_COVERED = 59
-- downstream answered mIoU = 0.3069046
-- strict mIoU = 0.3005107
-- paired = 10/20
-- margin = +0.287855
-- reference-fail = 116
+### W0 oracle-quality mechanism
+On train-only U-Calib200:
 
-Important interpretation:
-- family routing slightly improves some reference metrics;
-- it does not solve the dominant reference bottleneck;
-- U-C1 remains valuable because Task 6U demonstrated better candidate coverage;
-- ProposalSetRanker is not accepted as a global selector.
+- deterministic U-C1 reference mIoU = `0.4789276`
+- oracle q>=0.50 filter mIoU = `0.6575339`
+- smallest mIoU = `0.3544718 → 0.6707174`
+- selection wrong = `76 → 23`
+- abstention = 0
 
-Do not modify Task 6V artifacts.
+Therefore the abstract mechanism “remove invalid proposals before extreme-area selection” is valid.
+
+### Learned quality estimator
+- holdout AUROC = `0.8438013`
+- F1@0.50 = `0.8251182`
+- but RefVal reference mIoU = `0.3793127`, below W-S0 `0.4289355`
+- selection wrong = `65`, worse than W-S0 `53`
+- downstream answered mIoU = `0.2745576`, below W-S0 `0.3141364`
+
+Therefore ProposalQualityEstimator v0.1 is not part of the primary resolver.
+
+Do not modify Task 6W artifacts.
 
 ---
 
 # PART B — Frozen assets
 
-## 2. Read-only
+## 2. Read-only assets
 
 Freeze:
 
-- all Task 6U and 6V artifacts;
-- U-C1 proposal configuration and caches;
+- all Task 6U/6V/6W artifacts;
+- U-C1 proposal configuration/cache;
 - Task 6M.1 YOLO checkpoint;
 - Task 6T hardened ProgramHead checkpoint;
-- Task 6Q deterministic family eligibility;
+- Task 6Q eligibility and deterministic extreme selector semantics;
 - Task 6O B3 checkpoint;
 - GeometricRelationField v0.2;
-- frozen SAM2.1 Hiera Base+ feature cache/path;
-- Task 6U U-Calib200;
-- Task 6U U-RankerTrain;
-- Task 6P RefValUnique;
-- Task 6N MiniVal240;
-- Task 6N PairedVal20;
 - WHU-EA-NativeVector v1.0;
-- BuildSpatialReason v0.2.
+- BuildSpatialReason v0.2;
+- U-Calib200;
+- RefValUnique;
+- MiniVal240;
+- PairedVal20.
 
 No test split.
 
-## 3. Frozen U-C1
+## 3. Frozen SAM2.1
 
-Use only:
+Use exactly the project's existing frozen SAM2.1 Hiera Base+:
+
+Checkpoint:
+`local_cache/models/sam2.1_hiera_base_plus.pt`
+
+Expected SHA256:
+`a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5`
+
+Config:
+`configs/sam2.1/sam2.1_hiera_b+.yaml`
+
+Use official package path already installed locally:
+`sam2.sam2_image_predictor.SAM2ImagePredictor`
+
+No new checkpoint/download/install.
+
+Before evaluation:
+- verify checkpoint SHA256;
+- verify predictor loads;
+- verify `predict(...)` returns masks + predicted mask-quality scores.
+
+If unavailable/mismatch:
+STOP with `SAM2_PREDICTOR_UNAVAILABLE`.
+
+---
+
+# PART C — Fixed U-C1 proposal source
+
+## 4. Proposal generation
+
+Use exactly:
 
 ```text
-YOLO26m-seg checkpoint:
+YOLO26m-seg
+checkpoint SHA256 =
 ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
 
 imgsz = 640
 conf = 0.05
 max_det = 300
 default NMS
-TTA = false
-tiling = false
-source image = original 512×512
+no TTA
+no tiling
+source tile = 512×512
 ```
 
-Masks restored to exact 512×512 source coordinates.
+Masks and boxes must be in exact source 512×512 coordinates.
+
+Reuse Task 6U/6W U-C1 caches where possible.
 
 ---
 
-# PART C — W0 Oracle quality-filter mechanism diagnostic
+# PART D — Four predeclared refinement options
 
-## 4. Purpose
+## 5. Common pre-filter
 
-Before training a quality estimator, test whether **perfect knowledge of proposal quality** would make the quality-filter + deterministic-area mechanism useful.
+For every family query, begin with the exact Task 6Q eligibility rules **on the original U-C1 YOLO proposal**.
 
-Use **U-Calib200 only**.
-
-Do not use RefVal for this feasibility gate.
-
-## 5. Ground-truth proposal quality
-
-For every U-C1 proposal on a U-Calib200 tile:
-
-```text
-q_gt = max IoU(proposal_mask, every native GT building instance on that tile)
-```
-
-This is diagnostic/training metadata only.
-
-No GT is allowed in inference.
-
-## 6. Oracle quality filter
-
-For a reference query:
-
-1. apply the exact Task 6Q family eligibility rules first;
-2. keep only proposals with `q_gt >= 0.50`;
-3. if none remain → abstain;
-4. largest → select maximum proposal area;
-5. smallest → select minimum proposal area;
-6. tie-break:
-   - higher YOLO confidence;
-   - lower original proposal index.
-
-Compare with U-C1 deterministic baseline on the same U-Calib200.
-
-Report overall/largest/smallest:
-- selected-reference mIoU;
-- Dice;
-- Pr@0.5;
-- centroid median/p90;
-- abstention;
-- NOT_COVERED;
-- SELECTION_WRONG;
-- REFERENCE_OK.
-
-Write:
-`evaluation/task6w_oracle_quality_filter_calib.json`
-
-## 7. W0 mechanism gate
-
-Continue to training only if ALL:
-
-- oracle-quality-filter overall selected-reference mIoU >= U-C1 deterministic + `0.08`;
-- oracle-quality-filter smallest mIoU >= U-C1 deterministic smallest + `0.10`;
-- oracle-quality-filter `REFERENCE_SELECTION_WRONG` <= `0.60 * baseline`;
-- oracle-quality-filter abstention rate <= `0.10`.
-
-If any fails:
-STOP with:
-`QUALITY_FILTER_MECHANISM_INSUFFICIENT`
-
-Do not train a quality estimator.
-
----
-
-# PART D — Proposal-quality training dataset
-
-## 8. Training tiles
-
-Use only U-RankerTrain from Task 6U.
-
-Deduplicate by tile id:
-- run/read U-C1 proposals once per unique train tile;
-- never duplicate a proposal because several reference records share the same tile.
-
-No U-Calib200 tile.
-No RefVal tile.
-No MiniVal/PairedVal-specific evaluation record for optimization.
-No test.
-
-## 9. Candidate population
-
-For proposal-quality training, use the union/common structural eligibility:
-
-- proposal does NOT touch source-image border;
+Largest:
+- not border-touching;
 - bbox extent ratio <= 0.20.
 
-Do NOT apply the smallest `area >= 150` condition to quality training.
+Smallest:
+- not border-touching;
+- bbox extent ratio <= 0.20;
+- area >= 150 px.
 
-Reason:
-proposal quality is family-independent; family-specific eligibility remains a later resolver rule.
+Only original family-eligible YOLO proposals are sent to SAM2 refinement.
 
-## 10. Binary label
+No GT is used here.
 
-For each training proposal:
+## 6. X-C0 baseline
 
-```text
-q_gt = max IoU(proposal_mask, any native GT building instance on the tile)
-y_quality = 1 if q_gt >= 0.50 else 0
-```
-
-Store q_gt for analysis, but train on the binary label.
-
-GT is never a model input.
-
-Write local/generated dataset under:
-`artifacts/task6w/quality_dataset/`
-
-Write tracked manifest:
-`evaluation/task6w_quality_dataset_manifest.json`
-
-Must include:
-- unique tiles;
-- proposal count;
-- positive/negative count;
-- q_gt histogram;
-- split hashes;
-- no-overlap checks.
-
----
-
-# PART E — Fixed ProposalQualityEstimator v0.1
-
-## 11. Input feature design
-
-Create:
-
-`buildreasonseg_mvp/task6w_proposal_quality.py`
-
-For each proposal, use exactly:
-
-### 11.1 Eight geometry/confidence scalars
-
-1. `confidence`
-2. `log_area = log1p(area_px) / log1p(512*512)`
-3. `area_ratio = area_px / (512*512)`
-4. `bbox_extent_ratio`
-5. `width_ratio = bbox_width / 512`
-6. `height_ratio = bbox_height / 512`
-7. `fill_ratio = area_px / max(1,bbox_area)`
-8. `abs_log_aspect = abs(log((bbox_width+1)/(bbox_height+1)))`
-
-No family.
-No relation.
-No area rank.
-No image x/y coordinate.
-
-### 11.2 Frozen SAM2 proposal appearance/context
-
-Use the already-frozen SAM2 feature tensor:
-`V ∈ R^(256×64×64)`
-
-Downsample proposal mask to 64×64 using nearest-neighbor:
-`M64`
-
-Require at least one positive M64 cell. If none:
-- mark proposal `feature_invalid_small`;
-- quality estimator output is forced to 0 at inference;
-- exclude it from quality-model training;
-- count it explicitly.
-
-Create one-cell ring:
-
-```text
-D = max_pool2d(M64, kernel=3, stride=1, padding=1)
-Ring = clamp(D - M64, 0, 1)
-```
-
-Compute:
-- `inside_mean`: channel-wise masked mean of V over M64 → 256 dims
-- `ring_mean`: channel-wise masked mean of V over Ring → 256 dims
-
-If Ring is empty:
-- use zeros for `ring_mean`;
-- record count.
-
-Do not use GT visual features.
-
-Final raw input:
-- visual = 512 dims
-- geometry = 8 dims
-
-## 12. Exact network
-
-### Visual branch
-
-```text
-Linear(512 → 64)
-LayerNorm(64)
-GELU
-```
-
-### Geometry branch
-
-```text
-Linear(8 → 16)
-GELU
-```
-
-Concatenate:
-`64 + 16 = 80`
-
-Head:
-
-```text
-Linear(80 → 32)
-GELU
-Linear(32 → 1)
-```
-
-Output raw quality logit.
-
-No attention.
-No CNN.
-No Transformer/GNN.
-No other feature.
-
-## 13. Loss
-
-Binary label from section 10.
+No SAM2 refinement.
 
 Use:
-`BCEWithLogitsLoss(pos_weight = N_negative / max(1,N_positive))`
+- original U-C1 YOLO proposal masks;
+- exact deterministic largest/smallest selection.
 
-Compute pos_weight only from the training split.
+This must reproduce Task 6U U-S1.
 
-No regression loss.
-No IoU loss.
-No ranking loss.
+## 7. X-C1 — exact box, single-mask SAM2
 
-At inference:
+For each eligible YOLO proposal:
 
+- prompt box = exact YOLO proposal bbox in XYXY source pixels;
+- `point_coords=None`
+- `point_labels=None`
+- `mask_input=None`
+- `multimask_output=False`
+- `return_logits=False`
+
+SAM2 output mask becomes the refined candidate.
+
+Record returned SAM2 predicted quality score but do not threshold it.
+
+## 8. X-C2 — exact box, multimask SAM2
+
+For each eligible YOLO proposal:
+
+- prompt box = exact YOLO bbox;
+- no points;
+- no mask input;
+- `multimask_output=True`;
+- `return_logits=False`.
+
+SAM2 returns multiple masks plus predicted quality scores.
+
+Choose exactly the mask with maximum SAM2 predicted quality score.
+
+No score threshold.
+
+## 9. X-C3 — 10% expanded box, multimask SAM2
+
+For each eligible YOLO proposal:
+
+Original box:
+`(x1,y1,x2,y2)`
+
+Let:
 ```text
-quality_prob = sigmoid(logit)
-keep iff quality_prob >= 0.50
+w = x2 - x1
+h = y2 - y1
 ```
 
-Threshold **0.50 is frozen**.
+Expanded box:
+```text
+x1' = x1 - 0.10*w
+y1' = y1 - 0.10*h
+x2' = x2 + 0.10*w
+y2' = y2 + 0.10*h
+```
 
-No threshold sweep/calibration.
-
----
-
-# PART F — Training protocol
-
-## 14. Train/holdout split
-
-Split by unique tile id before proposal rows are assigned.
-
-Deterministic:
-- seed `20260930`
-- 80% train tiles
-- 20% internal holdout tiles
-- hash-based split.
-
-No tile may occur in both.
-
-## 15. Optimization
+Clip to:
+`[0,511]`
 
 Use:
+- expanded box only;
+- no points;
+- no mask input;
+- `multimask_output=True`;
+- choose maximum SAM2 predicted quality score.
 
-- AdamW
-- lr = `5e-4`
-- weight_decay = `1e-4`
-- batch = `256 proposals`
-- max epochs = `40`
-- early stopping patience = `5`
-- seed = `20260930`
-- AMP allowed
-- no augmentation
-- no scheduler
+No other expansion factor.
 
-Checkpoint selection:
-1. highest internal-holdout AUROC;
-2. tie-break highest internal-holdout F1 at threshold 0.50;
-3. tie-break lower BCE.
+## 10. Refined candidate normalization
 
-No hyperparameter sweep.
+For X-C1/X-C2/X-C3:
 
-Checkpoint:
-`artifacts/checkpoints/task6w/proposal_quality_v01.pt`
-gitignored.
+- convert SAM2 output to 512×512 boolean mask;
+- compute refined:
+  - area_px
+  - bbox
+  - bbox_area
+  - bbox_extent_ratio
+  - border touch.
 
-Report:
-- train/holdout tiles;
-- proposal class counts;
-- parameter count;
-- AUROC;
-- AUPRC;
-- accuracy;
-- precision/recall/F1 at 0.50;
-- confusion matrix;
-- BCE;
-- selected epoch;
-- peak VRAM;
-- wall time;
-- checkpoint SHA256.
+Then apply the exact Task 6Q family eligibility **again on the refined mask**.
 
-Write:
-`evaluation/task6w_quality_training.json`
+If refinement produces an empty mask:
+- candidate is invalid and removed.
+
+No duplicate-mask suppression.
+No IoU-based deduplication.
+No SAM quality threshold.
+
+After refined eligibility:
+- largest = max refined area
+- smallest = min refined area
+- tie-break:
+  1. higher SAM2 predicted quality score;
+  2. higher original YOLO confidence;
+  3. lower original YOLO proposal index.
+
+For X-C0 preserve Task 6Q original tie-break exactly.
 
 ---
 
-# PART G — Resolver v0.1
+# PART E — Train-only calibration and option freeze
 
-## 16. Quality-filtered deterministic resolver
+## 11. Use exact U-Calib200 only
 
-Create:
+Evaluate X-C0/X-C1/X-C2/X-C3 on frozen U-Calib200.
 
-`buildreasonseg_mvp/task6w_quality_reference_resolver.py`
+RefValUnique, MiniVal240 and PairedVal20 may NOT affect option selection.
 
-Inference:
+Report for every option:
 
-```text
-U-C1 proposals
-→ Task 6Q family eligibility
-→ ProposalQualityEstimator
-→ keep quality_prob >= 0.50
-→ largest: max area
-   smallest: min area
-→ Task 6Q confidence/index tie-break
-```
-
-If all family-eligible proposals are filtered:
-- explicit abstention
-- reason = `no_quality_eligible_proposals`
-
-No fallback to an unfiltered proposal.
-
-No ProposalSetRanker.
-
----
-
-# PART H — Untouched RefValUnique evaluation
-
-## 17. Compare exactly three diagnostics
-
-On RefValUnique:
-
-### W-S0
-Task 6U U-S1:
-`U-C1 + deterministic selector`
-
-### W-SQ
-`U-C1 + learned quality filter + deterministic selector`
-
-### W-ORACLE
-`U-C1 + oracle q_gt>=0.50 filter + deterministic selector`
-
-W-ORACLE is evaluation ceiling only; never inference.
-
-Report for each:
 - selected-reference mIoU
 - Dice
 - Pr@0.5
 - centroid mean/median/p90
-- area-ratio median
 - abstention rate
-- largest/smallest metrics
-- failure buckets:
-  - NO_PROPOSALS
-  - NO_ELIGIBLE_PROPOSALS
-  - QUALITY_FILTER_ALL_REJECTED
-  - REFERENCE_NOT_COVERED_IOU50
-  - REFERENCE_SELECTION_WRONG
-  - SELECTED_MASK_GEOMETRY_POOR
-  - REFERENCE_OK
+- largest mIoU / Pr@0.5
+- smallest mIoU / Pr@0.5
+- NO_PROPOSALS
+- NO_ELIGIBLE_PROPOSALS
+- REFINEMENT_EMPTY
+- REFERENCE_NOT_COVERED_IOU50
+- REFERENCE_SELECTION_WRONG
+- SELECTED_MASK_GEOMETRY_POOR
+- REFERENCE_OK
+- mean SAM2 mask-quality score
+- mean SAM2 decoder calls per tile
+- mean wall time/tile
+- peak VRAM.
+
+GT is evaluation only.
 
 Write:
-`evaluation/task6w_refval_quality_filter.json`
+`evaluation/task6x_calibration_refinement.json`
+
+## 12. Freeze exactly one option
+
+Select using this exact priority order:
+
+1. highest selected-reference mIoU
+2. highest Pr@0.5
+3. lowest `REFERENCE_SELECTION_WRONG`
+4. highest `REFERENCE_OK`
+5. lowest abstention rate
+6. lower mean wall time/tile
+7. simpler option:
+   - X-C0
+   - X-C1
+   - X-C2
+   - X-C3
+
+Write:
+`evaluation/task6x_frozen_refinement_option.json`
+
+After this file exists, do not change the option.
+
+### 12.1 Calibration stop condition
+
+If X-C0 is selected:
+- verdict path becomes `SAM2_REFINEMENT_NOT_HELPFUL`;
+- still create docs/verdict/tests;
+- do NOT run RefVal/MiniVal/Paired as a new primary system because calibration already rejects the mechanism.
+
+If X-C1/X-C2/X-C3 is selected:
+continue.
 
 ---
 
-# PART I — Downstream causal evaluation
+# PART F — Untouched RefValUnique evaluation
 
-## 18. MiniVal240
+## 13. Compare baseline and frozen refinement
 
-Use canonical program ids; no parser in the main comparison.
+If a SAM refinement option was selected, evaluate on exact RefValUnique:
+
+### X-S0
+X-C0 baseline
+
+### X-SR
+Frozen selected SAM2 refinement option
+
+Report:
+- selected-reference mIoU
+- Dice
+- Pr@0.5
+- centroid mean/median/p90
+- area ratio median
+- abstention rate
+- largest/smallest metrics
+- all failure buckets from section 11.
+
+Also report:
+- delta SR - S0
+- fraction where SAM refinement increases GT-reference IoU
+- fraction where it decreases GT-reference IoU
+- mean IoU change among answered records
+- SAM predicted quality score vs actual refined-mask q_gt Pearson/Spearman correlation
+  - diagnostic only;
+  - no threshold tuning.
+
+Write:
+`evaluation/task6x_refval_refinement.json`
+
+---
+
+# PART G — Downstream causal evaluation
+
+## 14. MiniVal240
+
+Use canonical program ids; no parser in the main causal comparison.
 
 Compare:
-- W-S0
-- W-SQ
+- X-S0
+- X-SR
 
 Pipeline:
 
@@ -531,10 +420,13 @@ canonical program
 → family/relation
 → reference resolver
 → GeometricRelationField v0.2
-→ frozen SAM2 feature
+→ frozen SAM2 visual feature
 → frozen B3
 → target mask
 ```
+
+Important:
+The SAM2 used to refine proposal references is the same frozen checkpoint, but the target B3 visual path remains unchanged.
 
 Report:
 - strict all-240 mIoU/Dice
@@ -545,33 +437,41 @@ Report:
 - target-fail-with-reference-ok
 - largest/smallest
 - per direction
-- border/tiny targets.
+- border/tiny targets
+- total runtime/tile.
 
 Write:
-`evaluation/task6w_downstream_minival240.json`
+`evaluation/task6x_downstream_minival240.json`
 
-## 19. PairedVal20
+## 15. PairedVal20
 
-Report W-S0 and W-SQ:
+Report:
 - pass /20
-- own IoU
-- cross IoU
-- margin
-- reference-abstention pairs.
+- mean own IoU
+- mean cross IoU
+- own-cross margin
+- reference abstention pairs.
 
 Write:
-`evaluation/task6w_downstream_pairedval20.json`
+`evaluation/task6x_downstream_pairedval20.json`
 
 ---
 
-# PART J — Hardened natural-language integration
+# PART H — Natural-language integration
 
-## 20. One regression/integration run
+## 16. Hardened ProgramHead integration
 
-Use:
-Task 6T hardened ProgramHead → W-SQ → field v0.2 → SAM2 → B3
+Run:
 
-On exact MiniVal240 queries.
+```text
+Task 6T hardened ProgramHead
+→ frozen selected Task 6X resolver
+→ GeometricRelationField v0.2
+→ frozen SAM2 visual feature
+→ B3
+```
+
+On exact MiniVal240 natural-language queries.
 
 Require parser:
 - 240/240.
@@ -579,193 +479,184 @@ Require parser:
 Report:
 - strict mIoU
 - answered-only mIoU
-- paired
+- PairedVal
 - margin
 - abstentions.
 
-Do not run nearest/L3.
+Do not execute nearest/L3.
 
 Write:
-`evaluation/task6w_hardened_parser_integration.json`
+`evaluation/task6x_hardened_parser_integration.json`
 
 ---
 
-# PART K — Predeclared gates
+# PART I — Predeclared gates
 
-## 21. Quality-estimator adequacy
+## 17. Reference refinement improvement
 
-Pass if:
-- internal-holdout AUROC >= `0.80`
-- internal-holdout F1@0.50 >= `0.65`
-- no train/holdout tile overlap.
+If a SAM option was selected, define:
 
-This is diagnostic; downstream gates remain decisive.
+`sam_refinement_improved = true`
 
-## 22. Reference hardening
+iff ALL:
 
-`quality_reference_improved=true` iff W-SQ vs W-S0 satisfies ALL:
+- RefVal selected-reference mIoU >= X-S0 + `0.03`
+- RefVal `REFERENCE_SELECTION_WRONG` <= X-S0 - `8`
+- RefVal `REFERENCE_OK` >= X-S0 + `8`
+- RefVal abstention rate <= `0.08`
 
-- RefVal mIoU >= W-S0 + `0.04`
-- `REFERENCE_SELECTION_WRONG` <= `0.75 * W-S0`
-- `REFERENCE_OK` >= W-S0 + `8`
-- abstention rate <= `0.10`
+## 18. Directional hardening gate
 
-## 23. Downstream hardening
+`SAM2_REFERENCE_REFINEMENT_PASS` requires ALL:
 
-`PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS` requires ALL:
-
-1. W0 oracle mechanism gate passed
-2. quality-estimator adequacy passed
-3. RefVal W-SQ mIoU >= `0.48`
+1. SAM refinement selected over X-C0 on U-Calib200
+2. `sam_refinement_improved=true`
+3. RefVal selected-reference mIoU >= `0.46`
 4. RefVal centroid median <= `0.03`
-5. RefVal centroid p90 <= `0.28`
-6. MiniVal answered-only target mIoU >= `0.33`
-7. MiniVal strict target mIoU >= `0.31`
+5. RefVal centroid p90 <= `0.32`
+6. MiniVal answered-only target mIoU >= `0.325`
+7. MiniVal strict target mIoU >= `0.305`
 8. PairedVal >= `12/20`
 9. own-cross margin >= `0.30`
-10. MiniVal reference-fail count <= `100`
+10. MiniVal reference-fail count <= `105`
 11. parser integration 240/240
 12. no test / no GT inference.
 
-No threshold changes after results.
+Do not change gates.
 
 ---
 
-# PART L — Verdict
+# PART J — Verdict
 
-## 24. Exactly one, priority order
+## 19. Exactly one, priority order
 
 1. `INVALID_EXPERIMENT`
-2. `FROZEN_ASSET_UNAVAILABLE`
-3. `QUALITY_FILTER_MECHANISM_INSUFFICIENT`
-   - W0 oracle-quality gate fails; no estimator training.
-4. `QUALITY_ESTIMATOR_NOT_LEARNABLE`
-   - W0 passes, but section 21 adequacy fails.
-5. `QUALITY_FILTER_NOT_HELPFUL`
-   - estimator adequacy passes but `quality_reference_improved=false` and downstream hardening fails.
-6. `QUALITY_REFERENCE_HARDENING_PARTIAL`
-   - measurable reference/downstream improvement but one or more section-23 gates fail.
-7. `PROPOSAL_QUALITY_REFERENCE_HARDENING_PASS`
-   - all section-23 gates pass.
+   - test use, GT inference, post-calibration option change, frozen-module mutation, protocol violation.
+
+2. `SAM2_PREDICTOR_UNAVAILABLE`
+
+3. `SAM2_REFINEMENT_NOT_HELPFUL`
+   - calibration selects X-C0.
+
+4. `SAM2_REFINEMENT_GENERALIZATION_FAIL`
+   - a SAM option wins calibration but `sam_refinement_improved=false` on RefVal.
+
+5. `SAM2_REFERENCE_REFINEMENT_PARTIAL`
+   - RefVal improves, but one or more section-18 gates fail.
+
+6. `SAM2_REFERENCE_REFINEMENT_PASS`
+   - all section-18 gates pass.
 
 No other verdict.
 
 ---
 
-# PART M — Interpretation boundary
+# PART K — Interpretation boundary
 
 DSH may report measurements only.
 
 Do NOT:
-- claim ProposalQualityEstimator as novelty;
-- alter threshold 0.50;
-- add family-specific quality networks;
-- add ranker after quality filtering;
-- train a size estimator;
-- retrain YOLO;
-- add TTA/tiling;
-- change U-C1;
+- claim SAM2 refinement as project novelty;
+- tune a SAM quality-score threshold;
+- add points/mask prompts beyond the fixed options;
+- add another box expansion;
+- combine SAM score with YOLO score in a learned or hand-tuned formula;
+- retrain SAM2/YOLO;
+- revisit ProposalSetRanker/ProposalQualityEstimator;
 - change field/B3;
 - start nearest/L3.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 6W 的 oracle-quality ceiling、learned quality filter 与 downstream 结果决定 reference 是否继续硬化，不自行增加 ranker、size estimator 或 detector 改动。`
+`等待 ChatGPT 根据 Task 6X 的 SAM2 refinement 结果决定是否冻结 reference subsystem 并进入 nearest/L3；不自行继续增加 reference 模块。`
 
 ---
 
-# PART N — Required artifacts
+# PART L — Required artifacts
 
 Create at minimum:
 
 ```text
-buildreasonseg_mvp/task6w_proposal_quality.py
-buildreasonseg_mvp/task6w_quality_reference_resolver.py
+buildreasonseg_mvp/task6x_sam2_reference_refiner.py
 
-evaluation/task6w_oracle_quality_filter_calib.json
-evaluation/task6w_quality_dataset_manifest.json
-evaluation/task6w_quality_training.json
-evaluation/task6w_refval_quality_filter.json
-evaluation/task6w_downstream_minival240.json
-evaluation/task6w_downstream_pairedval20.json
-evaluation/task6w_hardened_parser_integration.json
-evaluation/task6w_verdict.json
+evaluation/task6x_frozen_asset_audit.json
+evaluation/task6x_calibration_refinement.json
+evaluation/task6x_frozen_refinement_option.json
 
-docs/task6w_proposal_quality_filter.md
+# Only if X-C1/C2/C3 wins calibration:
+evaluation/task6x_refval_refinement.json
+evaluation/task6x_downstream_minival240.json
+evaluation/task6x_downstream_pairedval20.json
+evaluation/task6x_hardened_parser_integration.json
 
-scripts/task6w_oracle_quality_diagnostic.py
-scripts/task6w_build_quality_dataset.py
-scripts/task6w_train_quality.py
-scripts/task6w_evaluate_reference.py
-scripts/task6w_evaluate_downstream.py
-scripts/task6w_report.py
+evaluation/task6x_verdict.json
+
+docs/task6x_sam2_proposal_refinement.md
+
+scripts/task6x_calibrate_refinement.py
+scripts/task6x_evaluate_reference.py
+scripts/task6x_evaluate_downstream.py
+scripts/task6x_report.py
 ```
-
-If W0 stops the experiment:
-- create W0 artifact, verdict, docs/handoff/tests applicable to the stopped path;
-- do not fabricate downstream/training files.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
+No new model checkpoint.
+
 ---
 
-# PART O — Tests
+# PART M — Tests
 
-Task 6V ended at:
-`881 passed, 1 skipped`
+Task 6W ended at:
+`929 passed, 1 skipped`
 
 Add tests for at least:
 
-1. Task 6V artifacts unchanged
-2. U-C1 exact config
-3. YOLO checkpoint hash exact
-4. no U-C0/C2/C3 alternative in primary resolver
-5. W0 uses U-Calib200 only
-6. q_gt definition exact max IoU
-7. W0 threshold exact 0.50
-8. W0 gate exact
-9. U-RankerTrain only for quality dataset
-10. proposal dataset deduplicated by tile
-11. no U-Calib tile in quality training
-12. no RefVal tile in quality training
-13. train/holdout split by tile
-14. common eligibility exact
-15. quality label threshold exact 0.50
-16. geometry feature dimension exactly 8
-17. no family feature
-18. no relation feature
-19. no proposal rank feature
-20. no x/y location feature
-21. SAM2 feature 256×64×64
-22. proposal mask nearest-downsample
-23. ring construction exact 3×3 dilation-minus-mask
-24. inside pooled feature 256
-25. ring pooled feature 256
-26. quality architecture exact
-27. BCE pos_weight computed train-only
-28. inference quality threshold fixed 0.50
-29. no threshold sweep
-30. no ranker in W-SQ
-31. family eligibility before quality filter
-32. deterministic area semantics after filter
-33. explicit abstention if all rejected
-34. RefVal untouched by training
-35. MiniVal240 exact reuse
-36. PairedVal20 exact reuse
-37. canonical-program causal comparison has no parser
-38. final integration uses hardened ProgramHead
-39. parser stays 240/240
-40. field v0.2 unchanged
-41. B3 unchanged
-42. no YOLO retraining
-43. no TTA/tiling
-44. no GRCL
-45. no nearest/L3
-46. no test
-47. no new dataset/download/install/GUI
-48. previous suite preserved.
+1. Task 6W artifacts unchanged
+2. SAM2 checkpoint SHA exact
+3. official SAM2ImagePredictor path used
+4. no SAM2 training
+5. U-C1 exact
+6. exactly four options X-C0..X-C3
+7. no quality threshold
+8. X-C1 exact box
+9. X-C1 multimask false
+10. X-C2 exact box
+11. X-C2 multimask true
+12. X-C2 max SAM quality mask
+13. X-C3 expansion exactly 10%
+14. X-C3 clipped to source image
+15. no point prompt
+16. no mask input
+17. original Task 6Q family eligibility before refinement
+18. refined family eligibility after refinement
+19. refined mask 512×512
+20. no duplicate suppression
+21. largest chooses max refined area
+22. smallest chooses min refined area
+23. tie-break exact
+24. calibration uses only U-Calib200
+25. RefVal not used to choose option
+26. option frozen before RefVal
+27. X-C0 calibration stop path works
+28. no ProposalSetRanker in X-SR
+29. no ProposalQualityEstimator in X-SR
+30. no GT in inference
+31. canonical-program downstream comparison has no parser
+32. final integration uses hardened ProgramHead
+33. parser remains 240/240
+34. field v0.2 unchanged
+35. B3 unchanged
+36. no YOLO retraining
+37. no SAM2 score threshold/tuning
+38. no TTA/tiling
+39. no GRCL
+40. no nearest/L3
+41. no test split
+42. no new dataset/download/install/GUI
+43. previous suite preserved.
 
 Run:
 
@@ -775,60 +666,57 @@ Do not reduce previous passing tests.
 
 ---
 
-# PART P — Git/storage
+# PART N — Git/storage
 
 Do not commit:
-- quality checkpoint;
-- YOLO/SAM2/B3/parser/ranker weights;
-- proposal/feature caches;
-- generated proposal-quality row data if large;
+- existing YOLO/SAM2/B3/parser/ranker/quality checkpoints;
+- proposal/refinement caches;
 - source imagery/vectors;
 - `.conda`.
 
 Commit:
-- quality model/resolver code;
-- dataset manifest;
-- small JSON eval artifacts;
+- refiner code;
+- small JSON artifacts;
 - scripts;
 - tests;
 - docs;
 - handoff.
 
 Suggested commits:
-1. `feat: add proposal-quality reference filter`
-2. `eval: isolate proposal quality and extreme selection`
-3. optional docs commit.
+
+1. `feat: add frozen SAM2 proposal refinement`
+2. `eval: audit SAM2-refined reference selection`
+3. optional docs commit
 
 ---
 
-# PART Q — DSH model policy
+# PART O — DSH model policy
 
 Default:
 - **DeepSeek V4.1 Flash + High**
 
-Use Max only for a genuine runtime/data-pipeline bug.
+Use Max only for a genuine SAM2/runtime/integration bug.
 
 No downloads or installs.
 
 ---
 
-# PART R — STOP
+# PART P — STOP
 
-After Task 6W:
+After Task 6X:
 - commit;
 - push;
 - handoff;
 - STOP.
 
 Do NOT:
-- train another reference model;
-- add a ranker after quality filtering;
-- add size correction;
-- change detector/config/thresholds;
-- retrain YOLO;
-- change field/B3/SAM2;
+- add more reference modules;
+- tune SAM quality scores;
+- retrain SAM2/YOLO;
+- change U-C1;
+- modify field/B3;
 - revisit GRCL;
-- add nearest/L3;
+- start nearest/L3 without ChatGPT audit;
 - access test;
 - build GUI.
 
