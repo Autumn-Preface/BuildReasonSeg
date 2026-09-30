@@ -1,0 +1,101 @@
+{
+  "_doc": "Task 6X section 3. Frozen-asset audit: the official SAM2.1 Hiera Base+ image predictor over the project's frozen checkpoint, plus the frozen U-C1 proposal configuration, the Task 6T hardened ProgramHead, the Task 6O B3 decoder and GeometricRelationField v0.2.",
+  "task": "6X",
+  "stage": "B-frozen-asset-audit",
+  "sam2": {
+    "config": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache\\models\\sam2.1_hiera_base_plus.pt",
+    "checkpoint_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "expected_sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "predictor_class": "sam2.sam2_image_predictor.SAM2ImagePredictor",
+    "trainable_parameters": 0,
+    "sha256_matches": true,
+    "predictor_loaded": true,
+    "probe": {
+      "box": [
+        [
+          10.0,
+          10.0,
+          200.0,
+          200.0
+        ]
+      ],
+      "masks_shape": [
+        3,
+        512,
+        512
+      ],
+      "scores": [
+        0.8869832754135132,
+        0.45594844222068787,
+        0.8628915548324585
+      ],
+      "boxes_returned": true,
+      "mask_is_512x512": true,
+      "point_coords": null,
+      "point_labels": null,
+      "mask_input": null,
+      "return_logits": false,
+      "frozen": true,
+      "retrained": false
+    }
+  },
+  "proposal": {
+    "config": {
+      "id": "U-C1",
+      "imgsz": 640,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false
+    },
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "expected_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "matches": true,
+    "retrained": false
+  },
+  "program_head": {
+    "sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "retrained": false,
+    "role": "frozen; not used by the refinement calibration"
+  },
+  "b3": {
+    "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+    "retrained": false,
+    "architecture": "Task 6O B3"
+  },
+  "field": {
+    "module": "buildreasonseg_mvp/geometric_relation_field_v02.py",
+    "modified": false
+  },
+  "excluded_from_primary_resolver": {
+    "proposal_set_ranker": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6u\\reference_ranker_v01.pt",
+    "ranker_used": false,
+    "quality_estimator": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6w\\proposal_quality_v01.pt",
+    "quality_estimator_used": false
+  },
+  "options": {
+    "options": {
+      "X-C0": "no refinement (U-C1 baseline)",
+      "X-C1": "exact box, single-mask SAM2",
+      "X-C2": "exact box, multimask SAM2 (max predicted quality)",
+      "X-C3": "10% expanded box, multimask SAM2 (max predicted quality)"
+    },
+    "option_count": 4,
+    "box_expansion_fraction": 0.1,
+    "sam_quality_threshold": null,
+    "sam_quality_score_used_as": "selection tie-break only (recorded, never thresholded)",
+    "point_prompt": false,
+    "mask_input": false,
+    "tta": false,
+    "tiling": false,
+    "returns_logits": false,
+    "training_performed": false
+  },
+  "verdict": "FROZEN_ASSETS_VERIFIED",
+  "test_split_used": false,
+  "runtime_seconds": 3.4
+}
