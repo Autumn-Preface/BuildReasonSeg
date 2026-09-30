@@ -1,0 +1,72 @@
+{
+  "_doc": "Task 7A section 17-18. CMD inference entry-point audit: the required command form, the six successful outputs, the required result.json fields, the out-of-scope exit code 5 path and the refusal of ground-truth arguments. No GT argument exists by design.",
+  "task": "7A",
+  "stage": "H-cli-audit",
+  "prompt_zh": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+  "tile_id": "2_2446",
+  "checkpoints": {
+    "parser_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "target_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc"
+  },
+  "success_path": {
+    "command": "python predict_buildreasonseg_l3.py --image <tile> --prompt <zh> --parser-checkpoint <6T> --proposal-checkpoint <6M.1> --target-checkpoint <6Z Z-B3> --out-dir <dir>",
+    "exit_code": 0,
+    "stdout_tail": [
+      "[7a.cli] largest_to_right_of_to_nearest: status ok, target pixels 2621 -> C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7a\\cli\\success"
+    ],
+    "stderr_tail": [
+      "Loading weights:  60%|█████▉    | 372/625 [00:01<00:00, 341.76it/s]",
+      "Loading weights:  65%|██████▌   | 407/625 [00:01<00:00, 286.25it/s]",
+      "Loading weights: 100%|██████████| 625/625 [00:01<00:00, 357.81it/s]"
+    ],
+    "files_written": [
+      "direction_field.png",
+      "nearest_field.png",
+      "overlay.png",
+      "reference_mask.png",
+      "result.json",
+      "target_mask.png"
+    ],
+    "required_files_present": true,
+    "result_keys_present": true,
+    "missing_keys": [],
+    "status": "ok",
+    "parsed_program": "largest_to_right_of_to_nearest",
+    "ground_truth_used": false
+  },
+  "unsupported_program_path": {
+    "exit_code": 5,
+    "expected_exit_code": 5,
+    "files_written": [
+      "result.json"
+    ],
+    "parsed_program": "largest_to_left_of",
+    "stopped_before": [
+      "proposals",
+      "reference",
+      "fields",
+      "sam2",
+      "z_b3"
+    ],
+    "ground_truth_used": false,
+    "only_result_json": true
+  },
+  "ground_truth_arguments_refused": {
+    "--gt": {
+      "exit_code": 1,
+      "rejected": true
+    },
+    "--reference-mask": {
+      "exit_code": 1,
+      "rejected": true
+    },
+    "--target-mask": {
+      "exit_code": 1,
+      "rejected": true
+    }
+  },
+  "all_checks_passed": true,
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 30.4
+}

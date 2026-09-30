@@ -1,0 +1,516 @@
+{
+  "_doc": "Task 7A sections 20-23. Integration/attribution audit with no training: A0 oracle reproduction, A1 canonical predicted-reference chain, A2 natural-language integration, the fixed 24-prompt paraphrase audit, the CMD entry-point audit and exclusive failure attribution. The verdict follows the fixed section-23 priority order; READY would mean development-chain ready only.",
+  "task": "7A",
+  "verdict": "L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE",
+  "reason": "the canonical predicted-reference gate fails on ['strict_miou', 'answered_only_miou', 'retention', 'paired']",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "L3_CHECKPOINT_UNAVAILABLE",
+    "PARSER_CHECKPOINT_UNAVAILABLE",
+    "TASK6Z_REPRODUCTION_FAIL",
+    "L3_PREDICTED_REFERENCE_CHAIN_BELOW_GATE",
+    "L3_LANGUAGE_HARDENING_REQUIRED",
+    "L3_END_TO_END_DEVELOPMENT_CHAIN_READY"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "target_checkpoint_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "expected_target_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "target_checkpoint_matches": true,
+    "parser_checkpoint_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "expected_parser_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "parser_checkpoint_matches": true,
+    "supported_programs": [
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest"
+    ],
+    "program_count": 4,
+    "training_performed": false,
+    "test_split_used": false,
+    "ground_truth_used_in_inference": false,
+    "ranker_or_quality_or_refinement_used": false,
+    "attention_or_transformer_or_gnn": false,
+    "grcl": false,
+    "thresholds_tuned_after_results": false,
+    "clean": true
+  },
+  "pipeline": {
+    "task": "7A",
+    "supported_programs": [
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest"
+    ],
+    "program_decomposition": {
+      "largest_to_left_of_to_nearest": {
+        "family": "largest",
+        "direction": "left_of",
+        "terminal": "nearest"
+      },
+      "largest_to_right_of_to_nearest": {
+        "family": "largest",
+        "direction": "right_of",
+        "terminal": "nearest"
+      },
+      "largest_to_above_to_nearest": {
+        "family": "largest",
+        "direction": "above",
+        "terminal": "nearest"
+      },
+      "largest_to_below_to_nearest": {
+        "family": "largest",
+        "direction": "below",
+        "terminal": "nearest"
+      }
+    },
+    "reference_family": "largest",
+    "u_c1_config": {
+      "id": "U-C1",
+      "imgsz": 640,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false
+    },
+    "fields": {
+      "programs": [
+        "largest_to_left_of_to_nearest",
+        "largest_to_right_of_to_nearest",
+        "largest_to_above_to_nearest",
+        "largest_to_below_to_nearest"
+      ],
+      "program_count": 4,
+      "program_to_relation": {
+        "largest_to_left_of_to_nearest": "left_of",
+        "largest_to_right_of_to_nearest": "right_of",
+        "largest_to_above_to_nearest": "above",
+        "largest_to_below_to_nearest": "below"
+      },
+      "direction_ids": [
+        "left_of",
+        "right_of",
+        "above",
+        "below"
+      ],
+      "canonical_operation_order": [
+        "argmax_area (largest eligible reference)",
+        "filter_relation",
+        "argmin_boundary_distance"
+      ],
+      "directional_field": {
+        "module": "buildreasonseg_mvp/geometric_relation_field_v02.py",
+        "alpha": 1.2,
+        "tau": 0.04,
+        "modified": false
+      },
+      "nearest_field": {
+        "module": "buildreasonseg_mvp/nearest_boundary_field.py",
+        "sigma_diag": 0.05,
+        "modified": false
+      },
+      "product_field": {
+        "source": "clamp(P_dir_512 * P_near_512, 0, 1)",
+        "decoder": "clamp(P_dir_64 * P_near_64, 0, 1)",
+        "renormalization": false,
+        "learned_scalar": false,
+        "temperature": false,
+        "exponent": false,
+        "threshold": false
+      },
+      "source_size": 512,
+      "decoder_field_size": 64,
+      "labels_regenerated": false,
+      "test_split_used": false
+    },
+    "training_performed": false,
+    "ground_truth_used_in_inference": false,
+    "ranker_or_quality_or_refinement_used": false,
+    "attention_or_transformer_or_gnn": false,
+    "grcl": false
+  },
+  "a0_oracle_reproduction": {
+    "_doc": "Task 7A section 7. A0 oracle reproduction: the frozen Task 6Z Z-B3 decoder re-run on the exact Z-MiniVal240 and Z-PairedVal20 packs with the oracle largest reference. Every tolerance is absolute and predeclared (1e-6); no threshold was tuned.",
+    "task": "7A",
+    "stage": "A0-oracle-reproduction",
+    "checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "variant": "Z-B3",
+      "matches": true
+    },
+    "pack": {
+      "mini_val_240": 240,
+      "paired_val20_pairs": 20
+    },
+    "recomputed": {
+      "miou": 0.3242128982543474,
+      "dice": 0.4389840055529761,
+      "paired_passed": 15,
+      "paired_pairs": 20,
+      "own_cross_margin": 0.30035408969722216,
+      "own_mean": 0.303156315945526,
+      "cross_mean": 0.0028022262483038502
+    },
+    "frozen_task6z": {
+      "miou": 0.3242128982543474,
+      "dice": 0.4389840055529761,
+      "paired_passed": 15,
+      "own_cross_margin": 0.30035408969722216
+    },
+    "deltas": {
+      "miou": 0.0,
+      "dice": 0.0,
+      "margin": 0.0
+    },
+    "tolerance": 1e-06,
+    "reproduction_passed": true,
+    "verdict": "TASK6Z_REPRODUCTION_PASS",
+    "training_performed": false,
+    "test_split_used": false,
+    "runtime_seconds": 11.0
+  },
+  "reference_quality": {
+    "records": 240,
+    "proposal_count_mean": 19.354166666666668,
+    "eligible_count_mean": 14.254166666666666,
+    "reference_abstentions": 3,
+    "reference_abstention_rate": 0.0125,
+    "selected_reference_miou": 0.47002167841479503,
+    "selected_reference_dice": 0.5429715869996513,
+    "precision_at_0_5": 0.5527426160337553,
+    "centroid_error_mean": 0.1056475692136727,
+    "centroid_error_median": 0.023370761266790687,
+    "centroid_error_p90": 0.32401945257720927,
+    "best_eligible_coverage_at_0_5": 0.8583333333333333,
+    "buckets": {
+      "NO_PROPOSALS": 1,
+      "NO_ELIGIBLE_PROPOSALS": 2,
+      "REFERENCE_NOT_COVERED_IOU50": 31,
+      "REFERENCE_SELECTION_WRONG": 75,
+      "REFERENCE_GEOMETRY_POOR": 0,
+      "REFERENCE_OK": 131
+    }
+  },
+  "reference_gate": {
+    "strict_miou": {
+      "required": 0.22,
+      "measured": 0.21700369907681483,
+      "passed": false
+    },
+    "answered_only_miou": {
+      "required": 0.24,
+      "measured": 0.21975058134361,
+      "passed": false
+    },
+    "retention": {
+      "required": 0.68,
+      "measured": 0.6693246944992726,
+      "passed": false
+    },
+    "paired": {
+      "required": ">= 10/20",
+      "measured": "8/20",
+      "passed": false
+    },
+    "margin": {
+      "required": 0.15,
+      "measured": 0.19949275176250805,
+      "passed": true
+    },
+    "abstention_rate": {
+      "required": "<= 0.1",
+      "measured": 0.0125,
+      "passed": true
+    }
+  },
+  "reference_gate_passed": false,
+  "language_gate": {
+    "parser_accuracy": {
+      "required": 0.98,
+      "measured": 1.0,
+      "passed": true
+    },
+    "strict_miou": {
+      "required": 0.21,
+      "measured": 0.21700369907681483,
+      "passed": true
+    },
+    "answered_only_miou": {
+      "required": 0.23,
+      "measured": 0.21975058134361,
+      "passed": false
+    },
+    "paired": {
+      "required": ">= 9/20",
+      "measured": "8/20",
+      "passed": false
+    },
+    "margin": {
+      "required": 0.14,
+      "measured": 0.19949275176250805,
+      "passed": true
+    }
+  },
+  "language_gate_passed": false,
+  "paraphrase": {
+    "total_correct": 3,
+    "total": 24,
+    "accuracy": 0.125,
+    "per_program": {
+      "largest_to_left_of_to_nearest": {
+        "correct": 1,
+        "total": 6
+      },
+      "largest_to_right_of_to_nearest": {
+        "correct": 0,
+        "total": 6
+      },
+      "largest_to_above_to_nearest": {
+        "correct": 1,
+        "total": 6
+      },
+      "largest_to_below_to_nearest": {
+        "correct": 1,
+        "total": 6
+      }
+    },
+    "per_language": {
+      "zh": {
+        "correct": 3,
+        "total": 12
+      },
+      "en": {
+        "correct": 0,
+        "total": 12
+      }
+    },
+    "required_compact": {
+      "correct": 0,
+      "total": 8,
+      "all_correct": false,
+      "failures": [
+        {
+          "id": "p01",
+          "program": "largest_to_right_of_to_nearest",
+          "language": "zh",
+          "text": "分割面积最大的建筑物右侧最近的建筑物。",
+          "required_compact": true,
+          "parsed_program": "largest_to_right_of",
+          "correct": false
+        },
+        {
+          "id": "p02",
+          "program": "largest_to_right_of_to_nearest",
+          "language": "en",
+          "text": "segment the building nearest to the right of the largest building",
+          "required_compact": true,
+          "parsed_program": "largest_to_right_of",
+          "correct": false
+        },
+        {
+          "id": "p03",
+          "program": "largest_to_left_of_to_nearest",
+          "language": "zh",
+          "text": "找出最大建筑左边最近的建筑。",
+          "required_compact": true,
+          "parsed_program": "largest_to_left_of",
+          "correct": false
+        },
+        {
+          "id": "p04",
+          "program": "largest_to_left_of_to_nearest",
+          "language": "en",
+          "text": "find the closest building to the left of the largest building",
+          "required_compact": true,
+          "parsed_program": "largest_to_left_of",
+          "correct": false
+        },
+        {
+          "id": "p05",
+          "program": "largest_to_above_to_nearest",
+          "language": "zh",
+          "text": "找出最大建筑上方最近的建筑。",
+          "required_compact": true,
+          "parsed_program": "largest_to_above",
+          "correct": false
+        },
+        {
+          "id": "p06",
+          "program": "largest_to_above_to_nearest",
+          "language": "en",
+          "text": "find the nearest building above the largest building",
+          "required_compact": true,
+          "parsed_program": "largest_to_above",
+          "correct": false
+        },
+        {
+          "id": "p07",
+          "program": "largest_to_below_to_nearest",
+          "language": "zh",
+          "text": "找出最大建筑下方最近的建筑。",
+          "required_compact": true,
+          "parsed_program": "largest_to_below",
+          "correct": false
+        },
+        {
+          "id": "p08",
+          "program": "largest_to_below_to_nearest",
+          "language": "en",
+          "text": "find the closest building below the largest building",
+          "required_compact": true,
+          "parsed_program": "largest_to_below",
+          "correct": false
+        }
+      ]
+    },
+    "failure_modes": {
+      "terminal_to_nearest_dropped": 18,
+      "direction_confused": 1,
+      "family_confused": 2,
+      "other": 0,
+      "terminal_dropped_prompt_ids": [
+        "p01",
+        "p02",
+        "p03",
+        "p04",
+        "p05",
+        "p06",
+        "p07",
+        "p08",
+        "p09",
+        "p11",
+        "p12",
+        "p13",
+        "p15",
+        "p16",
+        "p19",
+        "p20",
+        "p23",
+        "p24"
+      ]
+    },
+    "l3_paraphrase_ready": false
+  },
+  "a1_canonical_predicted_reference": {
+    "strict_miou": 0.21700369907681483,
+    "strict_dice": 0.29305023470480596,
+    "answered_only_miou": 0.21975058134361,
+    "precision_at_0_5": 0.4251920296278139,
+    "abstentions": 3,
+    "retention": 0.6693246944992726,
+    "oracle_task6z_miou": 0.3242128982543474,
+    "reference_ok_subset_miou": 0.34343329253152016,
+    "reference_fail_subset_miou": 0.065056206025747,
+    "per_direction": {
+      "above": 0.19127713696167906,
+      "below": 0.23562896609103032,
+      "left": 0.2518188757582942,
+      "right": 0.18928981749625567
+    },
+    "paired": 8,
+    "paired_margin": 0.19949275176250805,
+    "reference_abstention_pairs": 0
+  },
+  "a2_natural_language": {
+    "parser_accuracy": 1.0,
+    "parser_correct": 240,
+    "per_class_recall": {
+      "largest_to_left_of_to_nearest": 1.0,
+      "largest_to_right_of_to_nearest": 1.0,
+      "largest_to_above_to_nearest": 1.0,
+      "largest_to_below_to_nearest": 1.0
+    },
+    "out_of_scope_predictions": 0,
+    "strict_miou": 0.21700369907681483,
+    "strict_dice": 0.29305023470480596,
+    "answered_only_miou": 0.21975058134361,
+    "abstentions": 3,
+    "paired": 8,
+    "paired_margin": 0.19949275176250805,
+    "parser_correct_members": 40,
+    "per_direction": {
+      "above": 0.19127713696167906,
+      "below": 0.23562896609103032,
+      "left": 0.2518188757582942,
+      "right": 0.18928981749625567
+    }
+  },
+  "failure_attribution": {
+    "counts": {
+      "PARSER_WRONG": 0,
+      "REFERENCE_NO_PROPOSALS": 1,
+      "REFERENCE_NO_ELIGIBLE": 2,
+      "REFERENCE_NOT_COVERED_IOU50": 31,
+      "REFERENCE_SELECTION_WRONG": 75,
+      "REFERENCE_GEOMETRY_POOR": 0,
+      "TARGET_FAIL_WITH_REFERENCE_OK": 90,
+      "TARGET_OK": 41
+    },
+    "percentages": {
+      "PARSER_WRONG": 0.0,
+      "REFERENCE_NO_PROPOSALS": 0.004166666666666667,
+      "REFERENCE_NO_ELIGIBLE": 0.008333333333333333,
+      "REFERENCE_NOT_COVERED_IOU50": 0.12916666666666668,
+      "REFERENCE_SELECTION_WRONG": 0.3125,
+      "REFERENCE_GEOMETRY_POOR": 0.0,
+      "TARGET_FAIL_WITH_REFERENCE_OK": 0.375,
+      "TARGET_OK": 0.17083333333333334
+    },
+    "summary": {
+      "parser_fail": 0,
+      "reference_fail": 109,
+      "target_fail": 90,
+      "parser_fail_rate": 0.0,
+      "target_ok": 41
+    },
+    "dominant_bottleneck": "REFERENCE"
+  },
+  "cli_audit": {
+    "all_checks_passed": true,
+    "success_exit_code": 0,
+    "required_files_present": true,
+    "ground_truth_used": false,
+    "unsupported_exit_code": 5
+  },
+  "gate_constants": {
+    "reference": {
+      "strict_miou_min": 0.22,
+      "answered_miou_min": 0.24,
+      "retention_min": 0.68,
+      "paired_min": 10,
+      "margin_min": 0.15,
+      "abstention_max": 0.1
+    },
+    "language": {
+      "parser_accuracy_min": 0.98,
+      "strict_miou_min": 0.21,
+      "answered_miou_min": 0.23,
+      "paired_min": 9,
+      "margin_min": 0.14
+    },
+    "paraphrase": {
+      "accuracy_min": 22,
+      "total": 24
+    }
+  },
+  "interpretation_boundary": {
+    "task6z_turned_into_success_claim": false,
+    "parser_retrained": false,
+    "reference_hardening_reopened": false,
+    "global_attention_added": false,
+    "z_b3_changed": false,
+    "fields_changed": false,
+    "full_training_started": false,
+    "test_evaluated": false,
+    "repair_proposed": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7A 的 L3 predicted-reference、ProgramHead 与 failure attribution 结果决定下一步，不自行进行 parser 再训练、reference 再硬化、attention/global competition 或正式全量训练。",
+  "runtime_seconds": 0.14
+}

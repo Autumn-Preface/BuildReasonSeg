@@ -1,0 +1,2213 @@
+{
+  "_doc": "Task 7A section 12. Frozen Task 6T hardened ProgramHead run on the actual natural-language queries (`instruction_en`) of the exact Z-MiniVal240 records, joined by sample_id against the frozen v0.2 val split. Text-only parser; no parser training in Task 7A.",
+  "task": "7A",
+  "stage": "F-parser-l3-val",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6t\\program_parser_hardened_v1.pt",
+    "sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "expected_sha256": "4cbba36b1364b0a85dce7272b967ede1e9b4a3138d330def1a8aab0ec9d44a5e",
+    "matches": true
+  },
+  "parser": {
+    "text_only": true,
+    "vocabulary_size": 20,
+    "selected_config": "C1",
+    "holdout_accuracy": 1.0,
+    "holdout_macro_f1": 1.0
+  },
+  "pack": {
+    "name": "z_mini_val_240",
+    "records": 240,
+    "joined_records": 240,
+    "missing_instruction": 0
+  },
+  "exact_accuracy": 1.0,
+  "exact_correct": 240,
+  "per_class_recall": {
+    "largest_to_left_of_to_nearest": 1.0,
+    "largest_to_right_of_to_nearest": 1.0,
+    "largest_to_above_to_nearest": 1.0,
+    "largest_to_below_to_nearest": 1.0
+  },
+  "confusion_matrix": {
+    "largest_to_left_of_to_nearest": {
+      "largest_to_left_of_to_nearest": 60
+    },
+    "largest_to_right_of_to_nearest": {
+      "largest_to_right_of_to_nearest": 60
+    },
+    "largest_to_above_to_nearest": {
+      "largest_to_above_to_nearest": 60
+    },
+    "largest_to_below_to_nearest": {
+      "largest_to_below_to_nearest": 60
+    }
+  },
+  "predicted_out_of_scope_count": 0,
+  "predicted_out_of_scope_examples": [],
+  "rows": [
+    {
+      "sample_id": "buildsr_val_2_2574_3_largest_to_above_to_nearest_d256e0d3bd86",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1924_3_largest_to_above_to_nearest_da6a4154bf29",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3357_3_largest_to_above_to_nearest_af93f87070d6",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_964_3_largest_to_above_to_nearest_65919958d013",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3136_3_largest_to_above_to_nearest_8b310c960f68",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_226_3_largest_to_above_to_nearest_1cc9e20e3aab",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2266_3_largest_to_above_to_nearest_e7131196cd8a",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1537_3_largest_to_above_to_nearest_2bfb45cfe302",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2193_3_largest_to_above_to_nearest_7c1f5431ff6e",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2362_3_largest_to_above_to_nearest_8b6dc860806e",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2000_3_largest_to_above_to_nearest_ddbdd9a51894",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1144_3_largest_to_above_to_nearest_f78da061e290",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_833_3_largest_to_above_to_nearest_96df3f3fcb57",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3493_3_largest_to_above_to_nearest_e7bdd04c9d62",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2870_3_largest_to_above_to_nearest_7659a069c8af",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1094_3_largest_to_above_to_nearest_9bd160a82486",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1101_3_largest_to_above_to_nearest_22aba661181f",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2439_3_largest_to_above_to_nearest_bc2b324850cd",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_598_3_largest_to_above_to_nearest_0aae2334fa04",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3516_3_largest_to_above_to_nearest_1421372a51f0",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1923_3_largest_to_above_to_nearest_d98751859a3d",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1305_3_largest_to_above_to_nearest_db8d9ac80aad",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2789_3_largest_to_above_to_nearest_3c447c498978",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3454_3_largest_to_above_to_nearest_6d6b11fba4b5",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_34_3_largest_to_above_to_nearest_4e8d35b9947e",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_877_3_largest_to_above_to_nearest_9666b164574e",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_110_3_largest_to_above_to_nearest_1e5accffa9fc",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1297_3_largest_to_above_to_nearest_70f9f986626b",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3240_3_largest_to_above_to_nearest_9f3fdf63b777",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1234_3_largest_to_above_to_nearest_6ad650d413a1",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_174_3_largest_to_above_to_nearest_cf20307074e7",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_597_3_largest_to_above_to_nearest_a63e256930a0",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3380_3_largest_to_above_to_nearest_5ff13f708ee9",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_703_3_largest_to_above_to_nearest_9fece0cb9e88",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_552_3_largest_to_above_to_nearest_82cab1be01bd",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_746_3_largest_to_above_to_nearest_eb15ea26c52f",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_895_3_largest_to_above_to_nearest_cd851f73a104",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_672_3_largest_to_above_to_nearest_6ca89a9e90e7",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_22_3_largest_to_above_to_nearest_fbe99d74a4e3",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1243_3_largest_to_above_to_nearest_5f70b4afd75a",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3298_3_largest_to_above_to_nearest_483d0762e86a",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3350_3_largest_to_above_to_nearest_9a37bdaa7493",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3366_3_largest_to_above_to_nearest_18cdb8903ae1",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3078_3_largest_to_above_to_nearest_41496b87641c",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1559_3_largest_to_above_to_nearest_e15cd73dff99",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3090_3_largest_to_above_to_nearest_fd56b1937534",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3151_3_largest_to_above_to_nearest_d16ee7b3fc53",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2957_3_largest_to_above_to_nearest_791a65ed16aa",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1294_3_largest_to_above_to_nearest_efaeb6a3bc3c",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2579_3_largest_to_above_to_nearest_6b6fd6567b43",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3228_3_largest_to_above_to_nearest_7a3e10e8e6a4",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3077_3_largest_to_above_to_nearest_fec3b5ae31dc",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_172_3_largest_to_above_to_nearest_7348f7fdbd63",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2240_3_largest_to_above_to_nearest_0214807152c7",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3032_3_largest_to_above_to_nearest_f3b830aa897d",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_890_3_largest_to_above_to_nearest_65d9531bb196",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1091_3_largest_to_above_to_nearest_3fb9a57fba65",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3027_3_largest_to_above_to_nearest_b66a3a0f2071",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First locate the largest building region. Among the building regions above it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它上方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2884_3_largest_to_above_to_nearest_6e465e017d97",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "First determine the largest building region, then from the building regions above it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其上方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2737_3_largest_to_above_to_nearest_cea02b91fa26",
+      "expected_program": "largest_to_above_to_nearest",
+      "parsed_program": "largest_to_above_to_nearest",
+      "correct": true,
+      "direction": "above",
+      "query_en": "Using the largest building region as reference, among all building regions above it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它上方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1138_3_largest_to_below_to_nearest_dbd2fd97f0c1",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_808_3_largest_to_below_to_nearest_7d4cff82770b",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3443_3_largest_to_below_to_nearest_320a042022d9",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1995_3_largest_to_below_to_nearest_5046e58f3dcd",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_40_3_largest_to_below_to_nearest_14b0c3a561e8",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2774_3_largest_to_below_to_nearest_79f420c22fc1",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1992_3_largest_to_below_to_nearest_0d0b6362f30c",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2626_3_largest_to_below_to_nearest_e7ad219a7230",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_470_3_largest_to_below_to_nearest_9a932716d56a",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1789_3_largest_to_below_to_nearest_2ac4fe9febfa",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_34_3_largest_to_below_to_nearest_87642251ced5",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3511_3_largest_to_below_to_nearest_b0e1949751a5",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_828_3_largest_to_below_to_nearest_c1b8db658d3c",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_485_3_largest_to_below_to_nearest_20e4065ac3ad",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2389_3_largest_to_below_to_nearest_ab2cceb1b4cc",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2888_3_largest_to_below_to_nearest_5756d7992d8f",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1306_3_largest_to_below_to_nearest_1785249f5cc8",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2256_3_largest_to_below_to_nearest_3be0fe1e3786",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3228_3_largest_to_below_to_nearest_117971c2dd89",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_836_3_largest_to_below_to_nearest_6f20ff8cef6d",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2815_3_largest_to_below_to_nearest_aa527685eb95",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2764_3_largest_to_below_to_nearest_053efcf26aee",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2439_3_largest_to_below_to_nearest_d127187ecd0d",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_48_3_largest_to_below_to_nearest_807ca5d58f96",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2502_3_largest_to_below_to_nearest_401d7570503b",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2860_3_largest_to_below_to_nearest_dc2dd1433ceb",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2530_3_largest_to_below_to_nearest_fc52babde661",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_897_3_largest_to_below_to_nearest_bdc938e1e3e2",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2194_3_largest_to_below_to_nearest_a829ba412358",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3153_3_largest_to_below_to_nearest_7836bb74fd47",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2233_3_largest_to_below_to_nearest_133dcb57e31b",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3312_3_largest_to_below_to_nearest_d6cc904bf073",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1625_3_largest_to_below_to_nearest_5d03422e0676",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2072_3_largest_to_below_to_nearest_70569978540a",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3433_3_largest_to_below_to_nearest_5913ef51a8aa",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3172_3_largest_to_below_to_nearest_3a12711859b1",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3562_3_largest_to_below_to_nearest_340a132ac7d7",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1335_3_largest_to_below_to_nearest_ef914cb91390",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1393_3_largest_to_below_to_nearest_5ed2c86889cc",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1131_3_largest_to_below_to_nearest_4f9aa57d2e11",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_225_3_largest_to_below_to_nearest_a1a20686983d",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3114_3_largest_to_below_to_nearest_1020724f9718",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3507_3_largest_to_below_to_nearest_6a9d13c9ae3a",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1020_3_largest_to_below_to_nearest_f0238d3a27db",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3213_3_largest_to_below_to_nearest_360ab2da9a16",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1433_3_largest_to_below_to_nearest_8e96f6448bf3",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3045_3_largest_to_below_to_nearest_03e35fd825be",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3364_3_largest_to_below_to_nearest_0ffde3f03610",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2880_3_largest_to_below_to_nearest_0779fb0b4e66",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3038_3_largest_to_below_to_nearest_9c0742842a9f",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2495_3_largest_to_below_to_nearest_80e24565013c",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1929_3_largest_to_below_to_nearest_2d5c401f2617",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2647_3_largest_to_below_to_nearest_8406fb5e5bf8",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3355_3_largest_to_below_to_nearest_7fcb5337b673",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First locate the largest building region. Among the building regions below it, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它下方的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1372_3_largest_to_below_to_nearest_b6c934f10efa",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_158_3_largest_to_below_to_nearest_f85e5ec63551",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2765_3_largest_to_below_to_nearest_6de4643f3427",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "Using the largest building region as reference, among all building regions below it, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它下方的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2714_3_largest_to_below_to_nearest_fe4c84bd5aa6",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_138_3_largest_to_below_to_nearest_6cf3ef1634f3",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_938_3_largest_to_below_to_nearest_802ccb5bcfa1",
+      "expected_program": "largest_to_below_to_nearest",
+      "parsed_program": "largest_to_below_to_nearest",
+      "correct": true,
+      "direction": "below",
+      "query_en": "First determine the largest building region, then from the building regions below it select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其下方的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1460_3_largest_to_left_of_to_nearest_d8b93eaca0c4",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1087_3_largest_to_left_of_to_nearest_b3a6ddf5a33a",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3120_3_largest_to_left_of_to_nearest_985394135dc8",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2318_3_largest_to_left_of_to_nearest_8e417d8b81f7",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1130_3_largest_to_left_of_to_nearest_ba12f3c3f5cf",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1260_3_largest_to_left_of_to_nearest_9c3fded5660b",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2731_3_largest_to_left_of_to_nearest_e97d694eef8b",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2854_3_largest_to_left_of_to_nearest_a4bb3310addf",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1385_3_largest_to_left_of_to_nearest_08e5d56177d2",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2683_3_largest_to_left_of_to_nearest_0a5dad2b93b5",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3304_3_largest_to_left_of_to_nearest_d1f828074b56",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_174_3_largest_to_left_of_to_nearest_f96c3dc39809",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3261_3_largest_to_left_of_to_nearest_8a151070928c",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_948_3_largest_to_left_of_to_nearest_1080332cc428",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1464_3_largest_to_left_of_to_nearest_77554d10aa7d",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2888_3_largest_to_left_of_to_nearest_24e0277047e7",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2464_3_largest_to_left_of_to_nearest_f94c469b5b7f",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2848_3_largest_to_left_of_to_nearest_24c25074b516",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_812_3_largest_to_left_of_to_nearest_cd70a4bb60e2",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3226_3_largest_to_left_of_to_nearest_5b3cb22f2299",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2372_3_largest_to_left_of_to_nearest_743faa022d41",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3292_3_largest_to_left_of_to_nearest_47089d88895c",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3187_3_largest_to_left_of_to_nearest_979249e17c94",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1261_3_largest_to_left_of_to_nearest_1bb86ddfd455",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_268_3_largest_to_left_of_to_nearest_4ea4460372bc",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_26_3_largest_to_left_of_to_nearest_d9fcb07c633e",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1328_3_largest_to_left_of_to_nearest_e7c70fa2a311",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2898_3_largest_to_left_of_to_nearest_d7069e560f99",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2829_3_largest_to_left_of_to_nearest_2b05f21abf41",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_248_3_largest_to_left_of_to_nearest_be5a9db55de4",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3586_3_largest_to_left_of_to_nearest_fb157ea95d41",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2204_3_largest_to_left_of_to_nearest_5ab8856b52b8",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1027_3_largest_to_left_of_to_nearest_43cfb5035f6d",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1365_3_largest_to_left_of_to_nearest_0014bc5c4392",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1339_3_largest_to_left_of_to_nearest_e096bc6dfe01",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2121_3_largest_to_left_of_to_nearest_45dfddb091a6",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2987_3_largest_to_left_of_to_nearest_34441581512c",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2498_3_largest_to_left_of_to_nearest_ec33800233a3",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3295_3_largest_to_left_of_to_nearest_8d64bf0fb0cf",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1268_3_largest_to_left_of_to_nearest_8e0deb447fb7",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3045_3_largest_to_left_of_to_nearest_504ba4f45ac8",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_358_3_largest_to_left_of_to_nearest_7218007127a1",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1005_3_largest_to_left_of_to_nearest_2a9d76b06182",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1172_3_largest_to_left_of_to_nearest_320d71038893",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3328_3_largest_to_left_of_to_nearest_535e3c899810",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2784_3_largest_to_left_of_to_nearest_9e3dcdd86a30",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2651_3_largest_to_left_of_to_nearest_2911d228c63b",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1792_3_largest_to_left_of_to_nearest_1d67f1720b69",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2336_3_largest_to_left_of_to_nearest_0d57db596330",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1346_3_largest_to_left_of_to_nearest_74a6b718cf2f",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_247_3_largest_to_left_of_to_nearest_c86313b590eb",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_671_3_largest_to_left_of_to_nearest_38c5e09e1539",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3313_3_largest_to_left_of_to_nearest_b7b701cdd95b",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1240_3_largest_to_left_of_to_nearest_8f83c09d5b2f",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1037_3_largest_to_left_of_to_nearest_d40b425ff7f0",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3051_3_largest_to_left_of_to_nearest_6e1d89238516",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3530_3_largest_to_left_of_to_nearest_ab46d90643e3",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_109_3_largest_to_left_of_to_nearest_c82b10c9383d",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First determine the largest building region, then from the building regions on its left side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其左侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1601_3_largest_to_left_of_to_nearest_4ad63dce5be9",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "Using the largest building region as reference, among all building regions on its left side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它左侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_760_3_largest_to_left_of_to_nearest_1f566b4514f9",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "parsed_program": "largest_to_left_of_to_nearest",
+      "correct": true,
+      "direction": "left",
+      "query_en": "First locate the largest building region. Among the building regions on its left side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它左侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2446_3_largest_to_right_of_to_nearest_9e9bc757e6c0",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3451_3_largest_to_right_of_to_nearest_434ad98e3cf7",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3141_3_largest_to_right_of_to_nearest_2e4502e4bec8",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1161_3_largest_to_right_of_to_nearest_3a041faa889e",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_896_3_largest_to_right_of_to_nearest_36475771df4b",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_175_3_largest_to_right_of_to_nearest_8e28cd5f393c",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3562_3_largest_to_right_of_to_nearest_fa5a5156f4b7",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3115_3_largest_to_right_of_to_nearest_13a41a5f26f5",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1258_3_largest_to_right_of_to_nearest_695d5d1505a5",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3372_3_largest_to_right_of_to_nearest_2a5c9ecc7dbc",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1043_3_largest_to_right_of_to_nearest_ea4cee33a2e4",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3013_3_largest_to_right_of_to_nearest_1e048cf7d03c",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2957_3_largest_to_right_of_to_nearest_4555b2b24a02",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3321_3_largest_to_right_of_to_nearest_824836833c84",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2762_3_largest_to_right_of_to_nearest_315e318e12c0",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1273_3_largest_to_right_of_to_nearest_69a758b224ca",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3032_3_largest_to_right_of_to_nearest_aba7a816a898",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1001_3_largest_to_right_of_to_nearest_feffa8e34363",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2771_3_largest_to_right_of_to_nearest_ab03bfd99f3f",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1_3_largest_to_right_of_to_nearest_2eba50d1ccc8",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2786_3_largest_to_right_of_to_nearest_57275aa60a15",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3042_3_largest_to_right_of_to_nearest_6c5b4279ccbe",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1285_3_largest_to_right_of_to_nearest_0f6cc18cace5",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3512_3_largest_to_right_of_to_nearest_de373f427aff",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3014_3_largest_to_right_of_to_nearest_9406fd5e8153",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1087_3_largest_to_right_of_to_nearest_22d7c147c294",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3222_3_largest_to_right_of_to_nearest_5d60313f944b",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2979_3_largest_to_right_of_to_nearest_956df3fdd00e",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_38_3_largest_to_right_of_to_nearest_e2206f10240f",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2373_3_largest_to_right_of_to_nearest_ddbab9f42643",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1363_3_largest_to_right_of_to_nearest_d8346d334e86",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_877_3_largest_to_right_of_to_nearest_0c87a9044ac6",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_91_3_largest_to_right_of_to_nearest_c713d89c3418",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1402_3_largest_to_right_of_to_nearest_3893ed743bda",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1264_3_largest_to_right_of_to_nearest_499c1c51b0eb",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1559_3_largest_to_right_of_to_nearest_f215ef15ed08",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_686_3_largest_to_right_of_to_nearest_b88dcc8c77b1",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3297_3_largest_to_right_of_to_nearest_6727a2e6f659",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1138_3_largest_to_right_of_to_nearest_8f1992afa9f2",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_766_3_largest_to_right_of_to_nearest_15b61934299e",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_889_3_largest_to_right_of_to_nearest_e31f8b6fd8b8",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1346_3_largest_to_right_of_to_nearest_037707d45f31",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1106_3_largest_to_right_of_to_nearest_986ccfaf98fa",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1929_3_largest_to_right_of_to_nearest_9d06c33b2fe0",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3062_3_largest_to_right_of_to_nearest_06038399865c",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2793_3_largest_to_right_of_to_nearest_1d900e7b1532",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_74_3_largest_to_right_of_to_nearest_153a7677145e",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2504_3_largest_to_right_of_to_nearest_e62fc4590dc4",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_3350_3_largest_to_right_of_to_nearest_1443dacedd9a",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1427_3_largest_to_right_of_to_nearest_5b6c9b449635",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_70_3_largest_to_right_of_to_nearest_a2fe8decd12e",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2891_3_largest_to_right_of_to_nearest_639768817353",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_895_3_largest_to_right_of_to_nearest_3f5229a11488",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_828_3_largest_to_right_of_to_nearest_03ccdc2aea6f",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2919_3_largest_to_right_of_to_nearest_6b4d595fb9eb",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1471_3_largest_to_right_of_to_nearest_0bfc12c31efa",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "Using the largest building region as reference, among all building regions on its right side, segment the one with the smallest boundary distance to it.",
+      "query_zh": "以面积最大的建筑区域为参照，在它右侧的所有建筑区域里，分割与它边界距离最小的那个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_1216_3_largest_to_right_of_to_nearest_c25d661a0a60",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    },
+    {
+      "sample_id": "buildsr_val_2_672_3_largest_to_right_of_to_nearest_557031e0583b",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_358_3_largest_to_right_of_to_nearest_4d110678bc55",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First determine the largest building region, then from the building regions on its right side select and segment the closest one.",
+      "query_zh": "先确定面积最大的建筑区域，再从其右侧的建筑区域中选出与它最近的一个并分割。"
+    },
+    {
+      "sample_id": "buildsr_val_2_2815_3_largest_to_right_of_to_nearest_94d8183afc44",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "parsed_program": "largest_to_right_of_to_nearest",
+      "correct": true,
+      "direction": "right",
+      "query_en": "First locate the largest building region. Among the building regions on its right side, segment the one nearest to it.",
+      "query_zh": "先找到面积最大的建筑区域，在位于它右侧的建筑区域中，分割距离它最近的一个。"
+    }
+  ],
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 50.1
+}

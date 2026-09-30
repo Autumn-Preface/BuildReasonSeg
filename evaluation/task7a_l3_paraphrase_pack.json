@@ -1,0 +1,201 @@
+{
+  "_doc": "Task 7A section 15. Fixed 24-prompt L3 paraphrase audit pack, frozen before any parser run in Task 7A: 6 prompts per L3 program (3 Chinese, 3 English), including the eight exact compact/contrast forms required by the task file. No prompt was used for training.",
+  "task": "7A",
+  "stage": "G-paraphrase-pack",
+  "programs": [
+    "largest_to_left_of_to_nearest",
+    "largest_to_right_of_to_nearest",
+    "largest_to_above_to_nearest",
+    "largest_to_below_to_nearest"
+  ],
+  "prompt_count": 24,
+  "per_program": {
+    "largest_to_left_of_to_nearest": 6,
+    "largest_to_right_of_to_nearest": 6,
+    "largest_to_above_to_nearest": 6,
+    "largest_to_below_to_nearest": 6
+  },
+  "per_program_language": {
+    "largest_to_left_of_to_nearest|zh": 3,
+    "largest_to_left_of_to_nearest|en": 3,
+    "largest_to_right_of_to_nearest|zh": 3,
+    "largest_to_right_of_to_nearest|en": 3,
+    "largest_to_above_to_nearest|zh": 3,
+    "largest_to_above_to_nearest|en": 3,
+    "largest_to_below_to_nearest|zh": 3,
+    "largest_to_below_to_nearest|en": 3
+  },
+  "required_compact_present": true,
+  "required_compact_count": 8,
+  "training_use": false,
+  "prompts": [
+    {
+      "id": "p01",
+      "program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "text": "分割面积最大的建筑物右侧最近的建筑物。",
+      "required_compact": true
+    },
+    {
+      "id": "p02",
+      "program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "text": "segment the building nearest to the right of the largest building",
+      "required_compact": true
+    },
+    {
+      "id": "p03",
+      "program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "text": "找出最大建筑左边最近的建筑。",
+      "required_compact": true
+    },
+    {
+      "id": "p04",
+      "program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "text": "find the closest building to the left of the largest building",
+      "required_compact": true
+    },
+    {
+      "id": "p05",
+      "program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "text": "找出最大建筑上方最近的建筑。",
+      "required_compact": true
+    },
+    {
+      "id": "p06",
+      "program": "largest_to_above_to_nearest",
+      "language": "en",
+      "text": "find the nearest building above the largest building",
+      "required_compact": true
+    },
+    {
+      "id": "p07",
+      "program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "text": "找出最大建筑下方最近的建筑。",
+      "required_compact": true
+    },
+    {
+      "id": "p08",
+      "program": "largest_to_below_to_nearest",
+      "language": "en",
+      "text": "find the closest building below the largest building",
+      "required_compact": true
+    },
+    {
+      "id": "p09",
+      "program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "text": "请分割位于最大建筑左侧、且与它最近的那栋建筑。",
+      "required_compact": false
+    },
+    {
+      "id": "p10",
+      "program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "text": "在最大建筑的左侧找距离最近的一栋建筑并分割出来。",
+      "required_compact": false
+    },
+    {
+      "id": "p11",
+      "program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "text": "please segment the building on the left side of the largest building that is closest to it",
+      "required_compact": false
+    },
+    {
+      "id": "p12",
+      "program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "text": "segment the nearest building on the left-hand side of the largest building",
+      "required_compact": false
+    },
+    {
+      "id": "p13",
+      "program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "text": "请分割位于最大建筑右侧、且与它最近的那栋建筑。",
+      "required_compact": false
+    },
+    {
+      "id": "p14",
+      "program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "text": "在最大建筑的右侧找距离最近的一栋建筑并分割出来。",
+      "required_compact": false
+    },
+    {
+      "id": "p15",
+      "program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "text": "please segment the building on the right side of the largest building that is closest to it",
+      "required_compact": false
+    },
+    {
+      "id": "p16",
+      "program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "text": "segment the nearest building on the right-hand side of the largest building",
+      "required_compact": false
+    },
+    {
+      "id": "p17",
+      "program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "text": "请分割位于最大建筑上方、且与它最近的那栋建筑。",
+      "required_compact": false
+    },
+    {
+      "id": "p18",
+      "program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "text": "在最大建筑的上方找距离最近的一栋建筑并分割出来。",
+      "required_compact": false
+    },
+    {
+      "id": "p19",
+      "program": "largest_to_above_to_nearest",
+      "language": "en",
+      "text": "please segment the building above the largest building that is closest to it",
+      "required_compact": false
+    },
+    {
+      "id": "p20",
+      "program": "largest_to_above_to_nearest",
+      "language": "en",
+      "text": "segment the nearest building located above the largest building",
+      "required_compact": false
+    },
+    {
+      "id": "p21",
+      "program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "text": "请分割位于最大建筑下方、且与它最近的那栋建筑。",
+      "required_compact": false
+    },
+    {
+      "id": "p22",
+      "program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "text": "在最大建筑的下方找距离最近的一栋建筑并分割出来。",
+      "required_compact": false
+    },
+    {
+      "id": "p23",
+      "program": "largest_to_below_to_nearest",
+      "language": "en",
+      "text": "please segment the building below the largest building that is closest to it",
+      "required_compact": false
+    },
+    {
+      "id": "p24",
+      "program": "largest_to_below_to_nearest",
+      "language": "en",
+      "text": "segment the nearest building located below the largest building",
+      "required_compact": false
+    }
+  ]
+}
