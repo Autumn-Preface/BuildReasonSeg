@@ -1,0 +1,42 @@
+{
+  "_doc": "Task 7A section 7. A0 oracle reproduction: the frozen Task 6Z Z-B3 decoder re-run on the exact Z-MiniVal240 and Z-PairedVal20 packs with the oracle largest reference. Every tolerance is absolute and predeclared (1e-6); no threshold was tuned.",
+  "task": "7A",
+  "stage": "A0-oracle-reproduction",
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+    "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "variant": "Z-B3",
+    "matches": true
+  },
+  "pack": {
+    "mini_val_240": 240,
+    "paired_val20_pairs": 20
+  },
+  "recomputed": {
+    "miou": 0.3242128982543474,
+    "dice": 0.4389840055529761,
+    "paired_passed": 15,
+    "paired_pairs": 20,
+    "own_cross_margin": 0.30035408969722216,
+    "own_mean": 0.303156315945526,
+    "cross_mean": 0.0028022262483038502
+  },
+  "frozen_task6z": {
+    "miou": 0.3242128982543474,
+    "dice": 0.4389840055529761,
+    "paired_passed": 15,
+    "own_cross_margin": 0.30035408969722216
+  },
+  "deltas": {
+    "miou": 0.0,
+    "dice": 0.0,
+    "margin": 0.0
+  },
+  "tolerance": 1e-06,
+  "reproduction_passed": true,
+  "verdict": "TASK6Z_REPRODUCTION_PASS",
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 11.0
+}

@@ -1,0 +1,90 @@
+{
+  "_doc": "Task 7A section 10. A1 canonical-program predicted-reference chain on Z-MiniVal240: the canonical program id plus the source image are the only inputs; the oracle reference, GT target, source feature ids and GT candidate ids are never provided.",
+  "task": "7A",
+  "stage": "A1-canonical-predicted-reference-val",
+  "pack": {
+    "name": "z_mini_val_240",
+    "records": 240
+  },
+  "strict": {
+    "records": 240,
+    "miou": 0.21700369907681483,
+    "dice": 0.29305023470480596,
+    "precision_at_0_5": 0.4251920296278139,
+    "answered": 237,
+    "answered_only_miou": 0.21975058134361,
+    "answered_only_dice": 0.29675973134663897
+  },
+  "by_direction": {
+    "above": {
+      "records": 60,
+      "miou": 0.19127713696167906,
+      "dice": 0.2587669594675188,
+      "precision_at_0_5": 0.45722648505150343,
+      "answered": 59,
+      "answered_only_miou": 0.1945191223339109,
+      "answered_only_dice": 0.26315284013645984
+    },
+    "below": {
+      "records": 60,
+      "miou": 0.23562896609103032,
+      "dice": 0.31403257586197203,
+      "precision_at_0_5": 0.41171955455962017,
+      "answered": 59,
+      "answered_only_miou": 0.23962267738070883,
+      "answered_only_dice": 0.31935516189353086
+    },
+    "left": {
+      "records": 60,
+      "miou": 0.2518188757582942,
+      "dice": 0.3298301436320481,
+      "precision_at_0_5": 0.41550421798237863,
+      "answered": 59,
+      "answered_only_miou": 0.25608699229657034,
+      "answered_only_dice": 0.3354204850495405
+    },
+    "right": {
+      "records": 60,
+      "miou": 0.18928981749625567,
+      "dice": 0.26957125985768476,
+      "precision_at_0_5": 0.41631786091775325,
+      "answered": 60,
+      "answered_only_miou": 0.18928981749625567,
+      "answered_only_dice": 0.26957125985768476
+    }
+  },
+  "reference_ok_subset": {
+    "records": 131,
+    "miou": 0.34343329253152016,
+    "dice": 0.4564248502579924,
+    "precision_at_0_5": 0.5613785020799712,
+    "answered": 131,
+    "answered_only_miou": 0.34343329253152016,
+    "answered_only_dice": 0.4564248502579924
+  },
+  "reference_fail_subset": {
+    "records": 109,
+    "miou": 0.065056206025747,
+    "dice": 0.0967009261041874,
+    "precision_at_0_5": 0.2615183792495331,
+    "answered": 106,
+    "answered_only_miou": 0.06689741940383416,
+    "answered_only_dice": 0.09943774476751345
+  },
+  "answered_only": {
+    "records": 237,
+    "miou": 0.21975058134361,
+    "dice": 0.29675973134663897,
+    "precision_at_0_5": 0.43057420721803935,
+    "answered": 237,
+    "answered_only_miou": 0.21975058134361,
+    "answered_only_dice": 0.29675973134663897
+  },
+  "abstentions": 3,
+  "abstention_rate": 0.0125,
+  "oracle_task6z_miou": 0.3242128982543474,
+  "retention": 0.6693246944992726,
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 23.7
+}

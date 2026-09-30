@@ -1,0 +1,281 @@
+{
+  "_doc": "Task 7A section 11. A1 same-reference paired counterfactual on Z-PairedVal20: the predicted largest reference is computed once per tile and reused for both member programs, so only the direction changes.",
+  "task": "7A",
+  "stage": "A1-canonical-predicted-reference-paired",
+  "pack": {
+    "name": "z_paired_val20",
+    "pairs": 20
+  },
+  "passed": 8,
+  "pairs": 20,
+  "pass_rate": 0.4,
+  "mean_own_iou": 0.2044765566888791,
+  "mean_cross_iou": 0.004983804926371055,
+  "own_cross_margin": 0.19949275176250805,
+  "reference_abstention_pairs": 0,
+  "reference_reused_within_pair": true,
+  "rows": [
+    {
+      "tile_id": "2_2436",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_109",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.030820491449054358
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_2695",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_1227",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.5105594662798965
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_1427",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_1005",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.33183111946588445
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_3153",
+      "abstained": false,
+      "own": [
+        0.2863096477836404,
+        0.018126888203831654
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_2652",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.16853170560578784,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_3422",
+      "abstained": false,
+      "own": [
+        0.7827938664541789,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_3357",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_3507",
+      "abstained": false,
+      "own": [
+        0.17308735752222265,
+        0.15562913903320705
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_1144",
+      "abstained": false,
+      "own": [
+        0.6127618116839934,
+        0.48738812002653525
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_3115",
+      "abstained": false,
+      "own": [
+        0.15037593978681038,
+        0.6063291131565455
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_1306",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.17111163555083508
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_960",
+      "abstained": false,
+      "own": [
+        0.6936936935578351,
+        0.01644562333926691
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_3045",
+      "abstained": false,
+      "own": [
+        0.7213438732326705,
+        0.6813858693337684
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_3078",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.0
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    },
+    {
+      "tile_id": "2_536",
+      "abstained": false,
+      "own": [
+        0.06632414756360386,
+        0.1988130560848471
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_2800",
+      "abstained": false,
+      "own": [
+        0.7575322806617415,
+        0.7260273960170763
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": true
+    },
+    {
+      "tile_id": "2_1037",
+      "abstained": false,
+      "own": [
+        0.0,
+        0.031192222816771503
+      ],
+      "cross": [
+        0.0,
+        0.0
+      ],
+      "passes": false
+    }
+  ],
+  "training_performed": false,
+  "test_split_used": false
+}
