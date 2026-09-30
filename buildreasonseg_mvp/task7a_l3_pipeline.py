@@ -253,7 +253,43 @@ def default_target_checkpoint() -> Path:
 
 
 def default_parser_checkpoint() -> Path:
+    """Frozen Task 6T hardened ProgramHead (Task 7A integration checkpoint)."""
+
     return REPO_ROOT / "artifacts" / "checkpoints" / "task6t" / "program_parser_hardened_v1.pt"
+
+
+def task7b_parser_checkpoint() -> Path:
+    """Task 7B L3 compositional-semantic hardened ProgramHead (if it exists)."""
+
+    return REPO_ROOT / "artifacts" / "checkpoints" / "task7b" / "program_parser_l3_hardened_v1.pt"
+
+
+def default_l3_parser_checkpoint() -> Path:
+    """The L3 CLI's default parser: the Task 7B checkpoint only after a passing Task 7B verdict.
+
+    Task 7A's `default_parser_checkpoint()` is deliberately left untouched so the frozen Task 7A
+    integration artifacts keep referring to the Task 6T checkpoint they were measured with. Section 20 of
+    Task 7B allows the CLI default to move to the Task 7B checkpoint **only if the canonical gates pass**,
+    so this helper consults the frozen Task 7B verdict.
+    """
+
+    candidate = task7b_parser_checkpoint()
+    if not candidate.is_file():
+        return default_parser_checkpoint()
+    verdict_path = REPO_ROOT / "evaluation" / "task7b_verdict.json"
+    if verdict_path.is_file():
+        try:
+            verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):  # pragma: no cover - defensive
+            return default_parser_checkpoint()
+        if verdict.get("verdict") in ("L3_PROGRAMHEAD_HARDENING_PASS",
+                                      "L3_PARSER_COMPOSITIONAL_ROBUSTNESS_FAIL",
+                                      "END_TO_END_REGRESSION"):
+            if verdict.get("canonical_gates_passed"):
+                return candidate
+            return default_parser_checkpoint()
+        return default_parser_checkpoint()
+    return default_parser_checkpoint()
 
 
 def pipeline_report() -> dict:

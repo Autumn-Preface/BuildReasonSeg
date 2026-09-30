@@ -1,0 +1,121 @@
+{
+  "_doc": "Task 7B section 11. Pre-training leakage audit: exact and normalized overlap between the training text (cleaned v0.2 train plus every Task 7B augmentation) and every evaluation source must both be zero.",
+  "task": "7B",
+  "stage": "D-leakage-audit",
+  "normalization": "unicode strip, lowercase English, collapse whitespace, normalize common punctuation, strip terminal punctuation",
+  "evaluation_sources": {
+    "v02_val_records": 9111,
+    "z_minival240": 240,
+    "z_paired_val20_members": 40,
+    "task7a_fixed24": 24,
+    "task7b_minimal_pairs": 96,
+    "task7b_stress_v1": 192
+  },
+  "exclusion_prompts": {
+    "exact": 640,
+    "normalized": 636
+  },
+  "cleaned_train": {
+    "rows": 0,
+    "dropped_records": 12778,
+    "dropped": [
+      {
+        "sample_id": "buildsr_train_1_0_1_leftmost_274a8750ef95",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_0_1_rightmost_88d92d8b7679",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_0_1_topmost_7492e81d3058",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_0_1_bottommost_979bd303d0ec",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_0_1_largest_f2b0be01754c",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_0_2_largest_to_left_of_af77315b7d8d",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_0_3_largest_to_left_of_to_nearest_a2ffb2df8006",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1_1_leftmost_838ac475c396",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1_1_rightmost_f035ba022a6f",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1_1_topmost_3283f572ada2",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1_1_bottommost_21d59d9779df",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1000_1_leftmost_e3daeef8e696",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1000_1_rightmost_0326073362ac",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1000_1_topmost_8eb3bbb005f2",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1000_1_bottommost_6b43566d2595",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_1000_1_largest_2f69981d5105",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_1_leftmost_258ebeb77378",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_1_rightmost_a2603a9f9385",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_1_topmost_e00256cd302b",
+        "reason": "exact_or_normalized_eval_overlap"
+      },
+      {
+        "sample_id": "buildsr_train_1_10026_1_bottommost_ab882ebe9c1a",
+        "reason": "exact_or_normalized_eval_overlap"
+      }
+    ],
+    "dropped_total": 12778
+  },
+  "augmentation": {
+    "rows": 4800,
+    "exact_overlap": 0,
+    "normalized_overlap": 0,
+    "exact_overlap_examples": [],
+    "normalized_overlap_examples": []
+  },
+  "cleaned_train_overlap": {
+    "exact": 0,
+    "normalized": 0,
+    "examples": []
+  },
+  "task7a_fixed24_in_training": [],
+  "verdict": "LEAKAGE_FREE",
+  "test_split_used": false,
+  "runtime_seconds": 176.8
+}

@@ -1,0 +1,149 @@
+{
+  "_doc": "Task 7B sections 7-10. Training-data specification: BuildSpatialReason v0.2 train instruction text plus exactly 4,800 deterministic train-only compositional prompts with the section-9 allocation. The training grammar uses only the section-10 TRAIN lexical pools; the evaluation lexical forms (Task 7A fixed24 phrases and the Task 7B minimal pair/stress pools) are reserved and never emitted.",
+  "task": "7B",
+  "stage": "D-training-data",
+  "seed": 20261001,
+  "sources": [
+    "v02_train",
+    "task7b_augmentation"
+  ],
+  "allocation": {
+    "largest_to_left_of_to_nearest": 600,
+    "largest_to_right_of_to_nearest": 600,
+    "largest_to_above_to_nearest": 600,
+    "largest_to_below_to_nearest": 600,
+    "largest_to_left_of": 300,
+    "largest_to_right_of": 300,
+    "largest_to_above": 300,
+    "largest_to_below": 300,
+    "largest_to_nearest": 400,
+    "smallest_to_nearest": 200,
+    "smallest_to_left_of": 150,
+    "smallest_to_right_of": 150,
+    "smallest_to_above": 150,
+    "smallest_to_below": 150
+  },
+  "augmentation_total": 4800,
+  "cleaned_train_rows": 0,
+  "dropped_train_records": 12778,
+  "combined_rows": 4800,
+  "combined_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7b\\parser_train_augmented\\parser_train_combined.jsonl",
+  "gitignored": true,
+  "train_lexical_pool": {
+    "zh_largest": [
+      "面积最大的",
+      "规模最大的",
+      "占地最大的"
+    ],
+    "zh_smallest": [
+      "面积最小的",
+      "规模最小的",
+      "占地最小的"
+    ],
+    "zh_direction": {
+      "left": [
+        "左侧",
+        "位于左侧"
+      ],
+      "right": [
+        "右侧",
+        "位于右侧"
+      ],
+      "above": [
+        "上方",
+        "位于上方"
+      ],
+      "below": [
+        "下方",
+        "位于下方"
+      ]
+    },
+    "zh_nearest": [
+      "距离最近的",
+      "与其距离最近的",
+      "最靠近该方向区域的"
+    ],
+    "zh_noun": [
+      "建筑物",
+      "建筑体",
+      "地块"
+    ],
+    "en_largest": [
+      "the largest",
+      "the greatest-area",
+      "the building with the greatest footprint"
+    ],
+    "en_smallest": [
+      "the smallest",
+      "the least-area",
+      "the building with the smallest footprint"
+    ],
+    "en_direction": {
+      "left": [
+        "to the left of"
+      ],
+      "right": [
+        "to the right of"
+      ],
+      "above": [
+        "above"
+      ],
+      "below": [
+        "below"
+      ]
+    },
+    "en_nearest": [
+      "the nearest",
+      "the closest",
+      "with the minimum distance"
+    ],
+    "en_noun": [
+      "building",
+      "structure",
+      "parcel"
+    ]
+  },
+  "reserved_for_evaluation": {
+    "zh": [
+      "最大建筑左边最近",
+      "最大建筑右边最近",
+      "最大建筑上方最近",
+      "最大建筑下方最近"
+    ],
+    "en": [
+      "closest building to the left",
+      "closest building to the right",
+      "nearest building above",
+      "closest building below"
+    ],
+    "eval_zh_reference": "最大建筑",
+    "eval_en_reference": "the largest building",
+    "eval_zh_direction": {
+      "left": "左侧",
+      "right": "右侧",
+      "above": "上面",
+      "below": "下面"
+    },
+    "eval_en_direction": {
+      "left": "left",
+      "right": "right",
+      "above": "above",
+      "below": "below"
+    }
+  },
+  "augmentation_hygiene": {
+    "unique_normalized_prompts": 336,
+    "repeated_normalized_prompts": 336,
+    "normalized_program_conflicts": 0,
+    "duplicate_examples": [
+      "请分割面积最大的建筑物,再分割它左侧距离最近的建筑物",
+      "请标注位于规模最大的建筑物位于左侧且与其距离最近的建筑体",
+      "在占地最大的建筑物左侧的方向上,请提取最靠近该方向区域的地块",
+      "标注面积最大的建筑物,再分割它位于左侧距离最近的建筑物",
+      "请分割位于规模最大的建筑物左侧且与其距离最近的建筑体"
+    ],
+    "conflict_examples": []
+  },
+  "task7a_fixed24_used_in_training": false,
+  "val_or_test_used_for_optimization": false
+}

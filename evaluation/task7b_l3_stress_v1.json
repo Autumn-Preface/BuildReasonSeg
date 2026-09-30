@@ -1,0 +1,1419 @@
+{
+  "_doc": "Task 7B section 6. Frozen 192-prompt held-out L3 stress pack: 4 L3 classes x 24 (12 Chinese + 12 English, short/medium/long phrasing, nearest/closest and 最近/距离最近/最靠近 variants, word-order variants), 4 L2 direction classes x 12, largest_to_nearest 16, smallest_to_nearest 8, largest 8, smallest 8 and the four extreme classes 8 in total. No Task 7A fixed24 string is reproduced.",
+  "task": "7B",
+  "stage": "C-stress-v1",
+  "prompt_count": 192,
+  "coverage": {
+    "l3_classes_total": 96,
+    "l2_direction_total": 48,
+    "largest_to_nearest": 16,
+    "smallest_to_nearest": 8,
+    "largest": 8,
+    "smallest": 8,
+    "extreme_classes_total": 8
+  },
+  "expected_total": 192,
+  "by_program": {
+    "leftmost": 2,
+    "rightmost": 2,
+    "topmost": 2,
+    "bottommost": 2,
+    "largest": 8,
+    "smallest": 8,
+    "largest_to_nearest": 16,
+    "smallest_to_nearest": 8,
+    "largest_to_above": 12,
+    "largest_to_below": 12,
+    "largest_to_left_of": 12,
+    "largest_to_right_of": 12,
+    "largest_to_above_to_nearest": 24,
+    "largest_to_below_to_nearest": 24,
+    "largest_to_left_of_to_nearest": 24,
+    "largest_to_right_of_to_nearest": 24
+  },
+  "l3_by_language": {
+    "largest_to_left_of_to_nearest|zh": 12,
+    "largest_to_left_of_to_nearest|en": 12,
+    "largest_to_right_of_to_nearest|zh": 12,
+    "largest_to_right_of_to_nearest|en": 12,
+    "largest_to_above_to_nearest|zh": 12,
+    "largest_to_above_to_nearest|en": 12,
+    "largest_to_below_to_nearest|zh": 12,
+    "largest_to_below_to_nearest|en": 12
+  },
+  "by_language": {
+    "zh": 96,
+    "en": 96
+  },
+  "by_form": {
+    "short_0": 8,
+    "medium_1": 8,
+    "long_2": 8,
+    "order_v2_3": 8,
+    "order_v3_4": 8,
+    "order_v4_5": 8,
+    "short_6": 8,
+    "medium_7": 8,
+    "long_8": 8,
+    "order_v2_9": 8,
+    "order_v3_10": 8,
+    "order_v4_11": 8,
+    "l2_short_0": 8,
+    "l2_medium_1": 8,
+    "l2_long_2": 8,
+    "l2_short_3": 8,
+    "l2_medium_4": 8,
+    "l2_long_5": 8,
+    "nearest_zh": 8,
+    "nearest_zh_v2": 4,
+    "nearest_en": 12,
+    "l1": 16,
+    "extreme": 8
+  },
+  "rows": [
+    {
+      "id": "S001",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "short_0",
+      "prompt": "请分割最大建筑左侧最近的建筑。"
+    },
+    {
+      "id": "S002",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "medium_1",
+      "prompt": "请先找到图中的最大建筑，然后分割它左侧最近的楼房。"
+    },
+    {
+      "id": "S003",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "long_2",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它左侧、并且最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S004",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "order_v2_3",
+      "prompt": "最大建筑左侧最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S005",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "order_v3_4",
+      "prompt": "在最大建筑左侧的方向上，楼房里最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S006",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "order_v4_5",
+      "prompt": "标出与最大建筑在左侧方向上最近的建筑区域。"
+    },
+    {
+      "id": "S007",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "short_6",
+      "prompt": "请分割最大建筑左侧距离最近的建筑。"
+    },
+    {
+      "id": "S008",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "medium_7",
+      "prompt": "请先找到图中的最大建筑，然后分割它左侧距离最近的楼房。"
+    },
+    {
+      "id": "S009",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "long_8",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它左侧、并且距离最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S010",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "order_v2_9",
+      "prompt": "最大建筑左侧距离最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S011",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "order_v3_10",
+      "prompt": "在最大建筑左侧的方向上，楼房里距离最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S012",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "zh",
+      "form": "order_v4_11",
+      "prompt": "标出与最大建筑在左侧方向上距离最近的建筑区域。"
+    },
+    {
+      "id": "S013",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "short_0",
+      "prompt": "Delineate the structure nearest to the left of the largest building."
+    },
+    {
+      "id": "S014",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "medium_1",
+      "prompt": "First locate the largest building in the tile, then delineate the plot nearest to its left side."
+    },
+    {
+      "id": "S015",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "long_2",
+      "prompt": "After identifying the largest building, delineate the building region that lies left of it and is nearest."
+    },
+    {
+      "id": "S016",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "order_v2_3",
+      "prompt": "Which footprint is nearest to the left of the largest building? Delineate it."
+    },
+    {
+      "id": "S017",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "order_v3_4",
+      "prompt": "On the left side of the largest building, mark the structure that is nearest."
+    },
+    {
+      "id": "S018",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "order_v4_5",
+      "prompt": "Outline the plot left the largest building that is nearest."
+    },
+    {
+      "id": "S019",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "short_6",
+      "prompt": "Delineate the building region closest to the left of the largest building."
+    },
+    {
+      "id": "S020",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "medium_7",
+      "prompt": "First locate the largest building in the tile, then delineate the footprint closest to its left side."
+    },
+    {
+      "id": "S021",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "long_8",
+      "prompt": "After identifying the largest building, delineate the structure that lies left of it and is closest."
+    },
+    {
+      "id": "S022",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "order_v2_9",
+      "prompt": "Which plot is closest to the left of the largest building? Delineate it."
+    },
+    {
+      "id": "S023",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "order_v3_10",
+      "prompt": "On the left side of the largest building, mark the building region that is closest."
+    },
+    {
+      "id": "S024",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "language": "en",
+      "form": "order_v4_11",
+      "prompt": "Outline the footprint left the largest building that is closest."
+    },
+    {
+      "id": "S025",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "short_0",
+      "prompt": "请分割最大建筑右侧最近的建筑。"
+    },
+    {
+      "id": "S026",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "medium_1",
+      "prompt": "请先找到图中的最大建筑，然后分割它右侧最近的楼房。"
+    },
+    {
+      "id": "S027",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "long_2",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它右侧、并且最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S028",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "order_v2_3",
+      "prompt": "最大建筑右侧最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S029",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "order_v3_4",
+      "prompt": "在最大建筑右侧的方向上，楼房里最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S030",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "order_v4_5",
+      "prompt": "标出与最大建筑在右侧方向上最近的建筑区域。"
+    },
+    {
+      "id": "S031",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "short_6",
+      "prompt": "请分割最大建筑右侧距离最近的建筑。"
+    },
+    {
+      "id": "S032",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "medium_7",
+      "prompt": "请先找到图中的最大建筑，然后分割它右侧距离最近的楼房。"
+    },
+    {
+      "id": "S033",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "long_8",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它右侧、并且距离最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S034",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "order_v2_9",
+      "prompt": "最大建筑右侧距离最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S035",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "order_v3_10",
+      "prompt": "在最大建筑右侧的方向上，楼房里距离最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S036",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "zh",
+      "form": "order_v4_11",
+      "prompt": "标出与最大建筑在右侧方向上距离最近的建筑区域。"
+    },
+    {
+      "id": "S037",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "short_0",
+      "prompt": "Delineate the structure nearest to the right of the largest building."
+    },
+    {
+      "id": "S038",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "medium_1",
+      "prompt": "First locate the largest building in the tile, then delineate the plot nearest to its right side."
+    },
+    {
+      "id": "S039",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "long_2",
+      "prompt": "After identifying the largest building, delineate the building region that lies right of it and is nearest."
+    },
+    {
+      "id": "S040",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "order_v2_3",
+      "prompt": "Which footprint is nearest to the right of the largest building? Delineate it."
+    },
+    {
+      "id": "S041",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "order_v3_4",
+      "prompt": "On the right side of the largest building, mark the structure that is nearest."
+    },
+    {
+      "id": "S042",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "order_v4_5",
+      "prompt": "Outline the plot right the largest building that is nearest."
+    },
+    {
+      "id": "S043",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "short_6",
+      "prompt": "Delineate the building region closest to the right of the largest building."
+    },
+    {
+      "id": "S044",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "medium_7",
+      "prompt": "First locate the largest building in the tile, then delineate the footprint closest to its right side."
+    },
+    {
+      "id": "S045",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "long_8",
+      "prompt": "After identifying the largest building, delineate the structure that lies right of it and is closest."
+    },
+    {
+      "id": "S046",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "order_v2_9",
+      "prompt": "Which plot is closest to the right of the largest building? Delineate it."
+    },
+    {
+      "id": "S047",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "order_v3_10",
+      "prompt": "On the right side of the largest building, mark the building region that is closest."
+    },
+    {
+      "id": "S048",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "language": "en",
+      "form": "order_v4_11",
+      "prompt": "Outline the footprint right the largest building that is closest."
+    },
+    {
+      "id": "S049",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "short_0",
+      "prompt": "请分割最大建筑上面最近的建筑。"
+    },
+    {
+      "id": "S050",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "medium_1",
+      "prompt": "请先找到图中的最大建筑，然后分割它上面最近的楼房。"
+    },
+    {
+      "id": "S051",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "long_2",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它上面、并且最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S052",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "order_v2_3",
+      "prompt": "最大建筑上面最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S053",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "order_v3_4",
+      "prompt": "在最大建筑上面的方向上，楼房里最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S054",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "order_v4_5",
+      "prompt": "标出与最大建筑在上面方向上最近的建筑区域。"
+    },
+    {
+      "id": "S055",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "short_6",
+      "prompt": "请分割最大建筑上面距离最近的建筑。"
+    },
+    {
+      "id": "S056",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "medium_7",
+      "prompt": "请先找到图中的最大建筑，然后分割它上面距离最近的楼房。"
+    },
+    {
+      "id": "S057",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "long_8",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它上面、并且距离最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S058",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "order_v2_9",
+      "prompt": "最大建筑上面距离最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S059",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "order_v3_10",
+      "prompt": "在最大建筑上面的方向上，楼房里距离最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S060",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "zh",
+      "form": "order_v4_11",
+      "prompt": "标出与最大建筑在上面方向上距离最近的建筑区域。"
+    },
+    {
+      "id": "S061",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "short_0",
+      "prompt": "Delineate the structure nearest to the above of the largest building."
+    },
+    {
+      "id": "S062",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "medium_1",
+      "prompt": "First locate the largest building in the tile, then delineate the plot nearest to its above side."
+    },
+    {
+      "id": "S063",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "long_2",
+      "prompt": "After identifying the largest building, delineate the building region that lies above of it and is nearest."
+    },
+    {
+      "id": "S064",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "order_v2_3",
+      "prompt": "Which footprint is nearest to the above of the largest building? Delineate it."
+    },
+    {
+      "id": "S065",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "order_v3_4",
+      "prompt": "On the above side of the largest building, mark the structure that is nearest."
+    },
+    {
+      "id": "S066",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "order_v4_5",
+      "prompt": "Outline the plot above the largest building that is nearest."
+    },
+    {
+      "id": "S067",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "short_6",
+      "prompt": "Delineate the building region closest to the above of the largest building."
+    },
+    {
+      "id": "S068",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "medium_7",
+      "prompt": "First locate the largest building in the tile, then delineate the footprint closest to its above side."
+    },
+    {
+      "id": "S069",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "long_8",
+      "prompt": "After identifying the largest building, delineate the structure that lies above of it and is closest."
+    },
+    {
+      "id": "S070",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "order_v2_9",
+      "prompt": "Which plot is closest to the above of the largest building? Delineate it."
+    },
+    {
+      "id": "S071",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "order_v3_10",
+      "prompt": "On the above side of the largest building, mark the building region that is closest."
+    },
+    {
+      "id": "S072",
+      "expected_program": "largest_to_above_to_nearest",
+      "language": "en",
+      "form": "order_v4_11",
+      "prompt": "Outline the footprint above the largest building that is closest."
+    },
+    {
+      "id": "S073",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "short_0",
+      "prompt": "请分割最大建筑下面最近的建筑。"
+    },
+    {
+      "id": "S074",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "medium_1",
+      "prompt": "请先找到图中的最大建筑，然后分割它下面最近的楼房。"
+    },
+    {
+      "id": "S075",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "long_2",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它下面、并且最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S076",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "order_v2_3",
+      "prompt": "最大建筑下面最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S077",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "order_v3_4",
+      "prompt": "在最大建筑下面的方向上，楼房里最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S078",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "order_v4_5",
+      "prompt": "标出与最大建筑在下面方向上最近的建筑区域。"
+    },
+    {
+      "id": "S079",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "short_6",
+      "prompt": "请分割最大建筑下面距离最近的建筑。"
+    },
+    {
+      "id": "S080",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "medium_7",
+      "prompt": "请先找到图中的最大建筑，然后分割它下面距离最近的楼房。"
+    },
+    {
+      "id": "S081",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "long_8",
+      "prompt": "请定位画面中的最大建筑，再从中挑选出位于它下面、并且距离最近的建筑区域并完成分割。"
+    },
+    {
+      "id": "S082",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "order_v2_9",
+      "prompt": "最大建筑下面距离最近的建筑是哪一个？请分割出来。"
+    },
+    {
+      "id": "S083",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "order_v3_10",
+      "prompt": "在最大建筑下面的方向上，楼房里距离最近的的是哪一个？请标出。"
+    },
+    {
+      "id": "S084",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "zh",
+      "form": "order_v4_11",
+      "prompt": "标出与最大建筑在下面方向上距离最近的建筑区域。"
+    },
+    {
+      "id": "S085",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "short_0",
+      "prompt": "Delineate the structure nearest to the below of the largest building."
+    },
+    {
+      "id": "S086",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "medium_1",
+      "prompt": "First locate the largest building in the tile, then delineate the plot nearest to its below side."
+    },
+    {
+      "id": "S087",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "long_2",
+      "prompt": "After identifying the largest building, delineate the building region that lies below of it and is nearest."
+    },
+    {
+      "id": "S088",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "order_v2_3",
+      "prompt": "Which footprint is nearest to the below of the largest building? Delineate it."
+    },
+    {
+      "id": "S089",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "order_v3_4",
+      "prompt": "On the below side of the largest building, mark the structure that is nearest."
+    },
+    {
+      "id": "S090",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "order_v4_5",
+      "prompt": "Outline the plot below the largest building that is nearest."
+    },
+    {
+      "id": "S091",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "short_6",
+      "prompt": "Delineate the building region closest to the below of the largest building."
+    },
+    {
+      "id": "S092",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "medium_7",
+      "prompt": "First locate the largest building in the tile, then delineate the footprint closest to its below side."
+    },
+    {
+      "id": "S093",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "long_8",
+      "prompt": "After identifying the largest building, delineate the structure that lies below of it and is closest."
+    },
+    {
+      "id": "S094",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "order_v2_9",
+      "prompt": "Which plot is closest to the below of the largest building? Delineate it."
+    },
+    {
+      "id": "S095",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "order_v3_10",
+      "prompt": "On the below side of the largest building, mark the building region that is closest."
+    },
+    {
+      "id": "S096",
+      "expected_program": "largest_to_below_to_nearest",
+      "language": "en",
+      "form": "order_v4_11",
+      "prompt": "Outline the footprint below the largest building that is closest."
+    },
+    {
+      "id": "S097",
+      "expected_program": "largest_to_left_of",
+      "language": "zh",
+      "form": "l2_short_0",
+      "prompt": "请分割最大建筑左侧的建筑。"
+    },
+    {
+      "id": "S098",
+      "expected_program": "largest_to_left_of",
+      "language": "zh",
+      "form": "l2_medium_1",
+      "prompt": "标出位于最大建筑左侧的一栋楼房。"
+    },
+    {
+      "id": "S099",
+      "expected_program": "largest_to_left_of",
+      "language": "zh",
+      "form": "l2_long_2",
+      "prompt": "请圈定最大建筑左侧的那一片建筑区域区域。"
+    },
+    {
+      "id": "S100",
+      "expected_program": "largest_to_left_of",
+      "language": "zh",
+      "form": "l2_short_3",
+      "prompt": "请分割最大建筑左侧的建筑。"
+    },
+    {
+      "id": "S101",
+      "expected_program": "largest_to_left_of",
+      "language": "zh",
+      "form": "l2_medium_4",
+      "prompt": "标出位于最大建筑左侧的一栋楼房。"
+    },
+    {
+      "id": "S102",
+      "expected_program": "largest_to_left_of",
+      "language": "zh",
+      "form": "l2_long_5",
+      "prompt": "请圈定最大建筑左侧的那一片建筑区域区域。"
+    },
+    {
+      "id": "S103",
+      "expected_program": "largest_to_left_of",
+      "language": "en",
+      "form": "l2_short_0",
+      "prompt": "Delineate the structure left the largest building."
+    },
+    {
+      "id": "S104",
+      "expected_program": "largest_to_left_of",
+      "language": "en",
+      "form": "l2_medium_1",
+      "prompt": "Outline a plot on the left side of the largest building."
+    },
+    {
+      "id": "S105",
+      "expected_program": "largest_to_left_of",
+      "language": "en",
+      "form": "l2_long_2",
+      "prompt": "Mark the building region region that lies left the largest building."
+    },
+    {
+      "id": "S106",
+      "expected_program": "largest_to_left_of",
+      "language": "en",
+      "form": "l2_short_3",
+      "prompt": "Delineate the footprint left the largest building."
+    },
+    {
+      "id": "S107",
+      "expected_program": "largest_to_left_of",
+      "language": "en",
+      "form": "l2_medium_4",
+      "prompt": "Outline a structure on the left side of the largest building."
+    },
+    {
+      "id": "S108",
+      "expected_program": "largest_to_left_of",
+      "language": "en",
+      "form": "l2_long_5",
+      "prompt": "Mark the plot region that lies left the largest building."
+    },
+    {
+      "id": "S109",
+      "expected_program": "largest_to_right_of",
+      "language": "zh",
+      "form": "l2_short_0",
+      "prompt": "请分割最大建筑右侧的建筑。"
+    },
+    {
+      "id": "S110",
+      "expected_program": "largest_to_right_of",
+      "language": "zh",
+      "form": "l2_medium_1",
+      "prompt": "标出位于最大建筑右侧的一栋楼房。"
+    },
+    {
+      "id": "S111",
+      "expected_program": "largest_to_right_of",
+      "language": "zh",
+      "form": "l2_long_2",
+      "prompt": "请圈定最大建筑右侧的那一片建筑区域区域。"
+    },
+    {
+      "id": "S112",
+      "expected_program": "largest_to_right_of",
+      "language": "zh",
+      "form": "l2_short_3",
+      "prompt": "请分割最大建筑右侧的建筑。"
+    },
+    {
+      "id": "S113",
+      "expected_program": "largest_to_right_of",
+      "language": "zh",
+      "form": "l2_medium_4",
+      "prompt": "标出位于最大建筑右侧的一栋楼房。"
+    },
+    {
+      "id": "S114",
+      "expected_program": "largest_to_right_of",
+      "language": "zh",
+      "form": "l2_long_5",
+      "prompt": "请圈定最大建筑右侧的那一片建筑区域区域。"
+    },
+    {
+      "id": "S115",
+      "expected_program": "largest_to_right_of",
+      "language": "en",
+      "form": "l2_short_0",
+      "prompt": "Delineate the structure right the largest building."
+    },
+    {
+      "id": "S116",
+      "expected_program": "largest_to_right_of",
+      "language": "en",
+      "form": "l2_medium_1",
+      "prompt": "Outline a plot on the right side of the largest building."
+    },
+    {
+      "id": "S117",
+      "expected_program": "largest_to_right_of",
+      "language": "en",
+      "form": "l2_long_2",
+      "prompt": "Mark the building region region that lies right the largest building."
+    },
+    {
+      "id": "S118",
+      "expected_program": "largest_to_right_of",
+      "language": "en",
+      "form": "l2_short_3",
+      "prompt": "Delineate the footprint right the largest building."
+    },
+    {
+      "id": "S119",
+      "expected_program": "largest_to_right_of",
+      "language": "en",
+      "form": "l2_medium_4",
+      "prompt": "Outline a structure on the right side of the largest building."
+    },
+    {
+      "id": "S120",
+      "expected_program": "largest_to_right_of",
+      "language": "en",
+      "form": "l2_long_5",
+      "prompt": "Mark the plot region that lies right the largest building."
+    },
+    {
+      "id": "S121",
+      "expected_program": "largest_to_above",
+      "language": "zh",
+      "form": "l2_short_0",
+      "prompt": "请分割最大建筑上面的建筑。"
+    },
+    {
+      "id": "S122",
+      "expected_program": "largest_to_above",
+      "language": "zh",
+      "form": "l2_medium_1",
+      "prompt": "标出位于最大建筑上面的一栋楼房。"
+    },
+    {
+      "id": "S123",
+      "expected_program": "largest_to_above",
+      "language": "zh",
+      "form": "l2_long_2",
+      "prompt": "请圈定最大建筑上面的那一片建筑区域区域。"
+    },
+    {
+      "id": "S124",
+      "expected_program": "largest_to_above",
+      "language": "zh",
+      "form": "l2_short_3",
+      "prompt": "请分割最大建筑上面的建筑。"
+    },
+    {
+      "id": "S125",
+      "expected_program": "largest_to_above",
+      "language": "zh",
+      "form": "l2_medium_4",
+      "prompt": "标出位于最大建筑上面的一栋楼房。"
+    },
+    {
+      "id": "S126",
+      "expected_program": "largest_to_above",
+      "language": "zh",
+      "form": "l2_long_5",
+      "prompt": "请圈定最大建筑上面的那一片建筑区域区域。"
+    },
+    {
+      "id": "S127",
+      "expected_program": "largest_to_above",
+      "language": "en",
+      "form": "l2_short_0",
+      "prompt": "Delineate the structure above the largest building."
+    },
+    {
+      "id": "S128",
+      "expected_program": "largest_to_above",
+      "language": "en",
+      "form": "l2_medium_1",
+      "prompt": "Outline a plot on the above side of the largest building."
+    },
+    {
+      "id": "S129",
+      "expected_program": "largest_to_above",
+      "language": "en",
+      "form": "l2_long_2",
+      "prompt": "Mark the building region region that lies above the largest building."
+    },
+    {
+      "id": "S130",
+      "expected_program": "largest_to_above",
+      "language": "en",
+      "form": "l2_short_3",
+      "prompt": "Delineate the footprint above the largest building."
+    },
+    {
+      "id": "S131",
+      "expected_program": "largest_to_above",
+      "language": "en",
+      "form": "l2_medium_4",
+      "prompt": "Outline a structure on the above side of the largest building."
+    },
+    {
+      "id": "S132",
+      "expected_program": "largest_to_above",
+      "language": "en",
+      "form": "l2_long_5",
+      "prompt": "Mark the plot region that lies above the largest building."
+    },
+    {
+      "id": "S133",
+      "expected_program": "largest_to_below",
+      "language": "zh",
+      "form": "l2_short_0",
+      "prompt": "请分割最大建筑下面的建筑。"
+    },
+    {
+      "id": "S134",
+      "expected_program": "largest_to_below",
+      "language": "zh",
+      "form": "l2_medium_1",
+      "prompt": "标出位于最大建筑下面的一栋楼房。"
+    },
+    {
+      "id": "S135",
+      "expected_program": "largest_to_below",
+      "language": "zh",
+      "form": "l2_long_2",
+      "prompt": "请圈定最大建筑下面的那一片建筑区域区域。"
+    },
+    {
+      "id": "S136",
+      "expected_program": "largest_to_below",
+      "language": "zh",
+      "form": "l2_short_3",
+      "prompt": "请分割最大建筑下面的建筑。"
+    },
+    {
+      "id": "S137",
+      "expected_program": "largest_to_below",
+      "language": "zh",
+      "form": "l2_medium_4",
+      "prompt": "标出位于最大建筑下面的一栋楼房。"
+    },
+    {
+      "id": "S138",
+      "expected_program": "largest_to_below",
+      "language": "zh",
+      "form": "l2_long_5",
+      "prompt": "请圈定最大建筑下面的那一片建筑区域区域。"
+    },
+    {
+      "id": "S139",
+      "expected_program": "largest_to_below",
+      "language": "en",
+      "form": "l2_short_0",
+      "prompt": "Delineate the structure below the largest building."
+    },
+    {
+      "id": "S140",
+      "expected_program": "largest_to_below",
+      "language": "en",
+      "form": "l2_medium_1",
+      "prompt": "Outline a plot on the below side of the largest building."
+    },
+    {
+      "id": "S141",
+      "expected_program": "largest_to_below",
+      "language": "en",
+      "form": "l2_long_2",
+      "prompt": "Mark the building region region that lies below the largest building."
+    },
+    {
+      "id": "S142",
+      "expected_program": "largest_to_below",
+      "language": "en",
+      "form": "l2_short_3",
+      "prompt": "Delineate the footprint below the largest building."
+    },
+    {
+      "id": "S143",
+      "expected_program": "largest_to_below",
+      "language": "en",
+      "form": "l2_medium_4",
+      "prompt": "Outline a structure on the below side of the largest building."
+    },
+    {
+      "id": "S144",
+      "expected_program": "largest_to_below",
+      "language": "en",
+      "form": "l2_long_5",
+      "prompt": "Mark the plot region that lies below the largest building."
+    },
+    {
+      "id": "S145",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "请分割距离最大建筑最近的建筑。"
+    },
+    {
+      "id": "S146",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh_v2",
+      "prompt": "请分割距离最大建筑最近的楼房。"
+    },
+    {
+      "id": "S147",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Delineate the structure nearest the largest building."
+    },
+    {
+      "id": "S148",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Delineate the plot nearest the largest building."
+    },
+    {
+      "id": "S149",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "标出与最大建筑距离最近的建筑。"
+    },
+    {
+      "id": "S150",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh_v2",
+      "prompt": "标出与最大建筑距离最近的楼房。"
+    },
+    {
+      "id": "S151",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Outline the structure that stands closest the largest building."
+    },
+    {
+      "id": "S152",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Outline the plot that stands closest the largest building."
+    },
+    {
+      "id": "S153",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "请圈定最靠近的的建筑，参考物是最大建筑。"
+    },
+    {
+      "id": "S154",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh_v2",
+      "prompt": "请圈定最靠近的的楼房，参考物是最大建筑。"
+    },
+    {
+      "id": "S155",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Mark the structure with the smallest gap to the largest building."
+    },
+    {
+      "id": "S156",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Mark the plot with the smallest gap to the largest building."
+    },
+    {
+      "id": "S157",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "找出最大建筑周边距离最小的建筑并分割出来。"
+    },
+    {
+      "id": "S158",
+      "expected_program": "largest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh_v2",
+      "prompt": "找出最大建筑周边距离最小的楼房并分割出来。"
+    },
+    {
+      "id": "S159",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Which structure is having the smallest gap the largest building? Delineate it."
+    },
+    {
+      "id": "S160",
+      "expected_program": "largest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Which plot is having the smallest gap the largest building? Delineate it."
+    },
+    {
+      "id": "S161",
+      "expected_program": "smallest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "请分割距离最小建筑最近的建筑。"
+    },
+    {
+      "id": "S162",
+      "expected_program": "smallest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Delineate the structure nearest the smallest building."
+    },
+    {
+      "id": "S163",
+      "expected_program": "smallest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "标出与最小建筑距离最近的建筑。"
+    },
+    {
+      "id": "S164",
+      "expected_program": "smallest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Outline the structure that stands closest the smallest building."
+    },
+    {
+      "id": "S165",
+      "expected_program": "smallest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "请圈定最靠近的的建筑，参考物是最小建筑。"
+    },
+    {
+      "id": "S166",
+      "expected_program": "smallest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Mark the structure with the smallest gap to the smallest building."
+    },
+    {
+      "id": "S167",
+      "expected_program": "smallest_to_nearest",
+      "language": "zh",
+      "form": "nearest_zh",
+      "prompt": "找出最小建筑周边距离最小的建筑并分割出来。"
+    },
+    {
+      "id": "S168",
+      "expected_program": "smallest_to_nearest",
+      "language": "en",
+      "form": "nearest_en",
+      "prompt": "Which structure is having the smallest gap the smallest building? Delineate it."
+    },
+    {
+      "id": "S169",
+      "expected_program": "largest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "请分割最大建筑。"
+    },
+    {
+      "id": "S170",
+      "expected_program": "largest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Delineate the largest building."
+    },
+    {
+      "id": "S171",
+      "expected_program": "largest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "标出最大建筑。"
+    },
+    {
+      "id": "S172",
+      "expected_program": "largest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Outline the largest building."
+    },
+    {
+      "id": "S173",
+      "expected_program": "largest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "请圈定最大建筑所在的建筑。"
+    },
+    {
+      "id": "S174",
+      "expected_program": "largest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Mark the structure of the largest building."
+    },
+    {
+      "id": "S175",
+      "expected_program": "largest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "找出最大建筑并分割。"
+    },
+    {
+      "id": "S176",
+      "expected_program": "largest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Locate and delineate the largest building."
+    },
+    {
+      "id": "S177",
+      "expected_program": "smallest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "请分割最小建筑。"
+    },
+    {
+      "id": "S178",
+      "expected_program": "smallest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Delineate the smallest building."
+    },
+    {
+      "id": "S179",
+      "expected_program": "smallest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "标出最小建筑。"
+    },
+    {
+      "id": "S180",
+      "expected_program": "smallest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Outline the smallest building."
+    },
+    {
+      "id": "S181",
+      "expected_program": "smallest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "请圈定最小建筑所在的建筑。"
+    },
+    {
+      "id": "S182",
+      "expected_program": "smallest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Mark the structure of the smallest building."
+    },
+    {
+      "id": "S183",
+      "expected_program": "smallest",
+      "language": "zh",
+      "form": "l1",
+      "prompt": "找出最小建筑并分割。"
+    },
+    {
+      "id": "S184",
+      "expected_program": "smallest",
+      "language": "en",
+      "form": "l1",
+      "prompt": "Locate and delineate the smallest building."
+    },
+    {
+      "id": "S185",
+      "expected_program": "leftmost",
+      "language": "zh",
+      "form": "extreme",
+      "prompt": "请分割图中最左侧的建筑。"
+    },
+    {
+      "id": "S186",
+      "expected_program": "leftmost",
+      "language": "en",
+      "form": "extreme",
+      "prompt": "Delineate the left-most structure in the tile."
+    },
+    {
+      "id": "S187",
+      "expected_program": "rightmost",
+      "language": "zh",
+      "form": "extreme",
+      "prompt": "请分割图中最右侧的建筑。"
+    },
+    {
+      "id": "S188",
+      "expected_program": "rightmost",
+      "language": "en",
+      "form": "extreme",
+      "prompt": "Delineate the right-most structure in the tile."
+    },
+    {
+      "id": "S189",
+      "expected_program": "topmost",
+      "language": "zh",
+      "form": "extreme",
+      "prompt": "请分割图中最上方的建筑。"
+    },
+    {
+      "id": "S190",
+      "expected_program": "topmost",
+      "language": "en",
+      "form": "extreme",
+      "prompt": "Delineate the top-most structure in the tile."
+    },
+    {
+      "id": "S191",
+      "expected_program": "bottommost",
+      "language": "zh",
+      "form": "extreme",
+      "prompt": "请分割图中最下方的建筑。"
+    },
+    {
+      "id": "S192",
+      "expected_program": "bottommost",
+      "language": "en",
+      "form": "extreme",
+      "prompt": "Delineate the bottom-most structure in the tile."
+    }
+  ]
+}

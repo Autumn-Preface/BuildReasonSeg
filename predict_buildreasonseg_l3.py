@@ -36,7 +36,7 @@ from buildreasonseg_mvp.checkpointing import write_json  # noqa: E402
 from buildreasonseg_mvp.task7a_l3_pipeline import (  # noqa: E402
     SUPPORTED_L3_PROGRAMS,
     L3Pipeline,
-    default_parser_checkpoint,
+    default_l3_parser_checkpoint,
     default_target_checkpoint,
     sha256_file,
 )
@@ -97,7 +97,7 @@ def main(argv: list[str] | None = None) -> int:
     from buildreasonseg_mvp.task6s_directional_pipeline import parse_instruction
 
     parser_checkpoint = Path(args.parser_checkpoint) if args.parser_checkpoint \
-        else default_parser_checkpoint()
+        else default_l3_parser_checkpoint()
     target_checkpoint = Path(args.target_checkpoint) if args.target_checkpoint \
         else default_target_checkpoint()
     for path in (args.image, args.proposal_checkpoint, parser_checkpoint, target_checkpoint):

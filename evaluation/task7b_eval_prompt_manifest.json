@@ -1,0 +1,42 @@
+{
+  "_doc": "Task 7B section 6. Pre-training hash manifest of every evaluation source. Written before any optimization so no evaluation prompt can be adjusted after seeing results.",
+  "task": "7B",
+  "stage": "C-eval-manifest",
+  "frozen_before_training": true,
+  "sources": {
+    "minimal_pairs": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7b_compositional_minimal_pairs.json",
+      "prompts": 96,
+      "sha256": "15f455e24c7521402979f63c755838440bd16ce6a4d2f8bca3ef1f1f6061b1b0"
+    },
+    "stress_v1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7b_l3_stress_v1.json",
+      "prompts": 192,
+      "sha256": "ccce98f71b7e4f94d1ebeda0e8fda4bd40dbbc76f9c8b49abd739647b9c870ca"
+    },
+    "task7a_fixed24": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7a_l3_paraphrase_pack.json",
+      "prompts": 24,
+      "sha256": "dd6ec129d712693c3ae4ff888550678161ae69690914449dbf6de727bb4cd590"
+    },
+    "z_minival240": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+      "prompts": 240,
+      "sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71"
+    },
+    "z_paired_val20": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_paired_val20.json",
+      "prompts": 40,
+      "sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc"
+    },
+    "v02_val": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\val.jsonl",
+      "sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f"
+    },
+    "v02_train": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\train.jsonl",
+      "sha256": "a1b36a0de99d33d47136572f7d546976b3cca8b5a4e991c0ea587212928a5237"
+    }
+  },
+  "test_split_used": false
+}
