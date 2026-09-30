@@ -1,0 +1,251 @@
+{
+  "_doc": "Task 7C sections 7-11. Tracked generation spec: exactly 8,000 unique normalized all-class rehearsal prompts — the four L3 classes 800 each (400 Chinese + 400 English) and the other sixteen classes 300 each (150 + 150) — built only from the section-10/11 TRAIN lexical pools. Original BuildSpatialReason v0.2 train instruction strings are never used for optimization; the train file was read only for the class-id schema.",
+  "task": "7C",
+  "stage": "E-rehearsal-spec",
+  "seed": 20261001,
+  "total_rows": 8000,
+  "allocation": {
+    "largest_to_left_of_to_nearest": 800,
+    "largest_to_right_of_to_nearest": 800,
+    "largest_to_above_to_nearest": 800,
+    "largest_to_below_to_nearest": 800,
+    "leftmost": 300,
+    "rightmost": 300,
+    "topmost": 300,
+    "bottommost": 300,
+    "largest": 300,
+    "smallest": 300,
+    "largest_to_nearest": 300,
+    "smallest_to_nearest": 300,
+    "largest_to_left_of": 300,
+    "largest_to_right_of": 300,
+    "largest_to_above": 300,
+    "largest_to_below": 300,
+    "smallest_to_left_of": 300,
+    "smallest_to_right_of": 300,
+    "smallest_to_above": 300,
+    "smallest_to_below": 300
+  },
+  "by_class": {
+    "leftmost": 300,
+    "rightmost": 300,
+    "topmost": 300,
+    "bottommost": 300,
+    "largest": 300,
+    "smallest": 300,
+    "largest_to_nearest": 300,
+    "smallest_to_nearest": 300,
+    "largest_to_left_of": 300,
+    "largest_to_right_of": 300,
+    "largest_to_above": 300,
+    "largest_to_below": 300,
+    "smallest_to_left_of": 300,
+    "smallest_to_right_of": 300,
+    "smallest_to_above": 300,
+    "smallest_to_below": 300,
+    "largest_to_left_of_to_nearest": 800,
+    "largest_to_right_of_to_nearest": 800,
+    "largest_to_above_to_nearest": 800,
+    "largest_to_below_to_nearest": 800
+  },
+  "by_class_language": {
+    "leftmost|zh": 150,
+    "leftmost|en": 150,
+    "rightmost|zh": 150,
+    "rightmost|en": 150,
+    "topmost|zh": 150,
+    "topmost|en": 150,
+    "bottommost|zh": 150,
+    "bottommost|en": 150,
+    "largest|zh": 150,
+    "largest|en": 150,
+    "smallest|zh": 150,
+    "smallest|en": 150,
+    "largest_to_nearest|zh": 150,
+    "largest_to_nearest|en": 150,
+    "smallest_to_nearest|zh": 150,
+    "smallest_to_nearest|en": 150,
+    "largest_to_left_of|zh": 150,
+    "largest_to_left_of|en": 150,
+    "largest_to_right_of|zh": 150,
+    "largest_to_right_of|en": 150,
+    "largest_to_above|zh": 150,
+    "largest_to_above|en": 150,
+    "largest_to_below|zh": 150,
+    "largest_to_below|en": 150,
+    "smallest_to_left_of|zh": 150,
+    "smallest_to_left_of|en": 150,
+    "smallest_to_right_of|zh": 150,
+    "smallest_to_right_of|en": 150,
+    "smallest_to_above|zh": 150,
+    "smallest_to_above|en": 150,
+    "smallest_to_below|zh": 150,
+    "smallest_to_below|en": 150,
+    "largest_to_left_of_to_nearest|zh": 400,
+    "largest_to_left_of_to_nearest|en": 400,
+    "largest_to_right_of_to_nearest|zh": 400,
+    "largest_to_right_of_to_nearest|en": 400,
+    "largest_to_above_to_nearest|zh": 400,
+    "largest_to_above_to_nearest|en": 400,
+    "largest_to_below_to_nearest|zh": 400,
+    "largest_to_below_to_nearest|en": 400
+  },
+  "l3_classes": [
+    "largest_to_left_of_to_nearest",
+    "largest_to_right_of_to_nearest",
+    "largest_to_above_to_nearest",
+    "largest_to_below_to_nearest"
+  ],
+  "other_classes": [
+    "leftmost",
+    "rightmost",
+    "topmost",
+    "bottommost",
+    "largest",
+    "smallest",
+    "largest_to_nearest",
+    "smallest_to_nearest",
+    "largest_to_left_of",
+    "largest_to_right_of",
+    "largest_to_above",
+    "largest_to_below",
+    "smallest_to_left_of",
+    "smallest_to_right_of",
+    "smallest_to_above",
+    "smallest_to_below"
+  ],
+  "zh_pools": {
+    "verb": [
+      "请分割",
+      "请标注",
+      "请提取",
+      "标出",
+      "请勾勒出",
+      "圈出"
+    ],
+    "largest_ref": [
+      "面积最大的建筑",
+      "占地最大的建筑"
+    ],
+    "smallest_ref": [
+      "面积最小的建筑",
+      "占地最小的建筑"
+    ],
+    "direction": {
+      "left_of": [
+        "位于其左侧的",
+        "处在其左方的"
+      ],
+      "right_of": [
+        "位于其右侧的",
+        "处在其右方的"
+      ],
+      "above": [
+        "位于其上方的",
+        "处在其上侧的"
+      ],
+      "below": [
+        "位于其下方的",
+        "处在其下侧的"
+      ]
+    },
+    "nearest": [
+      "其中距离最近的",
+      "其中与参考建筑间距最小的",
+      "其中最接近参考建筑的"
+    ],
+    "nearest_only": [
+      "与其距离最近的",
+      "与其间距最小的"
+    ],
+    "noun": [
+      "建筑物",
+      "楼房",
+      "地块",
+      "建筑体",
+      "房屋",
+      "建筑目标"
+    ],
+    "extreme": {
+      "leftmost": "最靠左的",
+      "rightmost": "最靠右的",
+      "topmost": "位置最高的",
+      "bottommost": "位置最低的"
+    }
+  },
+  "en_pools": {
+    "verb": [
+      "Segment",
+      "Label",
+      "Extract",
+      "Mark",
+      "Outline",
+      "Delineate"
+    ],
+    "largest_ref": [
+      "the building with the largest footprint",
+      "the greatest-area building"
+    ],
+    "smallest_ref": [
+      "the building with the smallest footprint",
+      "the least-area building"
+    ],
+    "direction": {
+      "left_of": [
+        "located on its left side",
+        "situated to its left"
+      ],
+      "right_of": [
+        "located on its right side",
+        "situated to its right"
+      ],
+      "above": [
+        "located above it",
+        "situated on its upper side"
+      ],
+      "below": [
+        "located below it",
+        "situated on its lower side"
+      ]
+    },
+    "nearest": [
+      "the one with the minimum separation",
+      "the one nearest to the reference",
+      "the closest one among them"
+    ],
+    "nearest_only": [
+      "the building with the minimum separation from it",
+      "the building nearest to it"
+    ],
+    "noun": [
+      "building",
+      "structure",
+      "parcel",
+      "block",
+      "building region",
+      "target building"
+    ],
+    "extreme": {
+      "leftmost": [
+        "the farthest-left building",
+        "the leftmost building"
+      ],
+      "rightmost": [
+        "the farthest-right building",
+        "the rightmost building"
+      ],
+      "topmost": [
+        "the uppermost building",
+        "the topmost building"
+      ],
+      "bottommost": [
+        "the lowermost building",
+        "the bottommost building"
+      ]
+    }
+  },
+  "structural_stem_sharing": "L2 and L3 templates share the `verb + reference + direction + noun` stems; the L3 forms insert one of the nearest phrases, so a style cue cannot separate them",
+  "rows_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7c\\parser_rehearsal\\parser_rehearsal_rows.jsonl",
+  "gitignored": true,
+  "original_v02_train_text_used_for_optimization": false
+}

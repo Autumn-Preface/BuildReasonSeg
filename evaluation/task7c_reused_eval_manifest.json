@@ -1,0 +1,67 @@
+{
+  "_doc": "Task 7C section 5. Hash manifest of every already-frozen evaluation source. Nothing is regenerated, edited or extended; these are the exact Task 4/6Z/7A/7B artifacts.",
+  "task": "7C",
+  "stage": "C-reused-eval-manifest",
+  "regenerated": false,
+  "sources": {
+    "task7a_fixed24": {
+      "prompts": 24,
+      "sha256_texts": "8a63bd19d9ab6020a60bc1b654ae7d5b6192c78e1e32c7efe395ac2745b366ce"
+    },
+    "task7b_minimal96": {
+      "prompts": 96,
+      "sha256_texts": "ffa13b200348961d870dbfb3f869a075c8460e46cca81fa12619009551b1d64b"
+    },
+    "task7b_scope_controls": {
+      "prompts": 6,
+      "sha256_texts": "106487a3b88bef3049ff313499d4320bf1368a2a9cea7204d989af5ff8854d1f"
+    },
+    "task7b_stress192": {
+      "prompts": 192,
+      "sha256_texts": "1d541a7362d5e6d17b4c1384a2c239b52da53a716548aa9e8fdfc99fe0018fe9"
+    },
+    "v02_val": {
+      "prompts": 18222,
+      "sha256_texts": "039dc3e868d0fb154312125be66542f7d2740b6caa8ccef2019babb88eb4ff4e"
+    },
+    "z_minival240": {
+      "prompts": 240,
+      "sha256_texts": "ad13714232094b358afa3ce2510df0c6506e0afdf2a7d48ccf1325c54cd68dbc"
+    },
+    "z_paired_val20": {
+      "prompts": 40,
+      "sha256_texts": "fd4ad77822575cfb73cd1e3db74c6875eace8fb7d78e4814dba665828faa1942"
+    }
+  },
+  "files": {
+    "task7a_fixed24": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7a_l3_paraphrase_pack.json",
+      "sha256": "dd6ec129d712693c3ae4ff888550678161ae69690914449dbf6de727bb4cd590"
+    },
+    "task7b_minimal96": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7b_compositional_minimal_pairs.json",
+      "sha256": "15f455e24c7521402979f63c755838440bd16ce6a4d2f8bca3ef1f1f6061b1b0"
+    },
+    "task7b_stress192": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7b_l3_stress_v1.json",
+      "sha256": "ccce98f71b7e4f94d1ebeda0e8fda4bd40dbbc76f9c8b49abd739647b9c870ca"
+    },
+    "task7b_scope_controls": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7b_scope_safety.json",
+      "sha256": "7b13b5fd431cd56a40d0a6f75e18ca5e1f9bfcb131f052f7bca7832d82755cb9"
+    },
+    "z_minival240": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_mini_val_240.json",
+      "sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71"
+    },
+    "z_paired_val20": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6z\\packs\\z_paired_val20.json",
+      "sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc"
+    },
+    "v02_val": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\val.jsonl",
+      "sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f"
+    }
+  },
+  "test_split_used": false
+}
