@@ -18,7 +18,7 @@ Either failure stops with `TASK7E_NUMERIC_REPRODUCTION_FAIL`.
 
 Writes `evaluation/task7f_downstream_reference_modes.json`.
 
-    python scripts/task7f_downstream_reference_modes.py
+    python scripts/task7f_evaluate_downstream.py
 """
 
 from __future__ import annotations

@@ -17,7 +17,7 @@ Part J: the four predeclared diagnostic labels with their exact thresholds.
 
 Writes `evaluation/task7f_gap_decomposition.json`.
 
-    python scripts/task7f_downstream_reference_modes.py   # (cache already built by task7f_reference_modes.py)
+    python scripts/task7f_evaluate_downstream.py          # (cache built by task7f_reference_modes.py)
     python scripts/task7f_gap_decomposition.py
 """
 

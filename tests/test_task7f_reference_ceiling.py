@@ -26,7 +26,7 @@ BASE_COMMIT = "f9c6e876f7ba2be33f5dff04a182a06813edf580"
 D_B1_SHA256 = "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0"
 YOLO_SHA256 = "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
 MODES = ("F-R0", "F-R1", "F-R2", "F-R3")
-TASK7F_SOURCES = ("task7f_reference_modes.py", "task7f_downstream_reference_modes.py",
+TASK7F_SOURCES = ("task7f_reference_modes.py", "task7f_evaluate_downstream.py",
                   "task7f_gap_decomposition.py", "task7f_report.py")
 REQUIRED_ARTIFACTS = ("task7f_reference_modes.json", "task7f_downstream_reference_modes.json",
                       "task7f_gap_decomposition.json", "task7f_paired_reference_modes.json",
@@ -342,7 +342,7 @@ def test_gt_never_enters_d_b1_except_declared_reference():
     assert "best_eligible_iou(eligible, gt_reference)" in inspect.getsource(
         __import__("buildreasonseg_mvp.task7f_reference_ceiling", fromlist=["build_mode_masks"])
         .build_mode_masks)
-    downstream = _code_only(SCRIPTS / "task7f_downstream_reference_modes.py")
+    downstream = _code_only(SCRIPTS / "task7f_evaluate_downstream.py")
     assert "masks.mask(" not in downstream
     assert "read_cache()" in downstream
 
@@ -352,7 +352,7 @@ def test_gt_target_never_enters_inference():
         __import__("scripts.task7f_reference_modes", fromlist=["main"]).main)
     prediction_block = source.split("def predict_with(")[1].split("reference_rows")[0]
     assert "target_source_feature_id" not in prediction_block
-    downstream = _code_only(SCRIPTS / "task7f_downstream_reference_modes.py")
+    downstream = _code_only(SCRIPTS / "task7f_evaluate_downstream.py")
     for marker in ("target_mask", "target_source_feature_id"):
         assert marker not in downstream, marker
 

@@ -154,7 +154,7 @@ the diagnostic labels; Task 7G was not chosen. Final recommendation exactly:
 
 ```text
 python scripts/task7f_reference_modes.py            # holdout verification, four modes, paired ceilings, cache
-python scripts/task7f_downstream_reference_modes.py # frozen D-B1 per mode + Task 7E reproductions
+python scripts/task7f_evaluate_downstream.py        # frozen D-B1 per mode + Task 7E reproductions
 python scripts/task7f_gap_decomposition.py          # COVERED50 geometry, gaps and labels
 python scripts/task7f_report.py                     # verdict + D-B1 status
 ```
