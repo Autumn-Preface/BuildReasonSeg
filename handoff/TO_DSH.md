@@ -1,28 +1,28 @@
-# TO_DSH — Task 7E: Deterministic Field-Weighted Prototype Holdout + Predicted-Reference Audit
+# TO_DSH — Task 7F: Reference Bottleneck Ceiling Decomposition for Frozen D-B1
 
 > Status: ACTIVE
 >
 > Repository: `BuildReasonSeg`
 >
-> Base commit: `86e4f4cd4bd5aa6858264a7d5709092b32678ebc`
+> Base commit: `f9c6e876f7ba2be33f5dff04a182a06813edf580`
 >
-> Predecessor: Task 7D → `GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`
+> Predecessor: Task 7E → `DB1_PREDICTED_REFERENCE_BELOW_GATE`
 >
 > Research decision already made by ChatGPT:
 >
-> 1. Reject learned global competition D-B2 as a replacement for Z-B3.
-> 2. Preserve the negative evidence that D-B2's learned competition map did not localize the target.
-> 3. Treat **D-B1 deterministic field-weighted visual prototype** as a serious architecture candidate because it achieved:
->    - oracle-reference MiniVal mIoU 0.3978996;
->    - +0.0736867 over frozen Z-B3;
->    - Paired 19/20;
->    - own-cross margin +0.3888.
-> 4. Do NOT retrain or tune D-B1 in Task 7E.
-> 5. Before adopting D-B1, test whether its gain survives on a validation remainder that was not used for D-B1 checkpoint selection, and then measure predicted-reference error propagation.
-> 6. Task 7E is evaluation/integration only. No model training is permitted.
-> 7. Parser hardening remains stopped. Reference hardening remains stopped.
->
-> DSH is an executor. Do not redesign D-B1, fields, resolver, packs, gates, or the next task.
+> 1. Accept Task 7E as a clean result:
+>    - frozen D-B1 generalizes on untouched oracle-reference L3 holdout;
+>    - D-B1 is genuinely stronger than Z-B3 under the same correct reference;
+>    - practical end-to-end performance remains below gate because the frozen U-C1 reference stage corrupts the relation state.
+> 2. Do NOT retrain or modify D-B1.
+> 3. Do NOT reopen reference hardening blindly.
+> 4. Task 7F is a **ceiling decomposition only**. It quantifies how much of the remaining end-to-end loss comes from:
+>    - wrong proposal selection;
+>    - proposal-mask geometry;
+>    - proposal coverage.
+> 5. All GT-assisted reference modes in Task 7F are diagnostic upper bounds only and are never production inference.
+> 6. No model training is permitted.
+> 7. DSH is an executor. Do not invent a repair or choose Task 7G.
 
 All user-facing DSH output must be Chinese.
 
@@ -31,689 +31,665 @@ All user-facing DSH output must be Chinese.
 # 0. DSH role
 
 DSH MAY:
-- load frozen Z-B3 and D-B1 checkpoints;
-- construct the exact held-out L3 validation remainder specified below;
-- evaluate oracle-reference Z-B3 vs D-B1;
-- evaluate predicted-reference Z-B3 vs D-B1 using the frozen U-C1 deterministic largest resolver;
-- run paired/counterfactual audits on newly frozen held-out pairs;
-- build/update a D-B1 L3 inference helper only if the final gates pass;
-- solve ordinary runtime/integration bugs without altering algorithms.
+- reuse exact Task 7E E-HoldoutL3 and E-PairedHoldout20;
+- reuse frozen U-C1 proposal inference;
+- reuse frozen D-B1;
+- construct the exact four reference modes below;
+- compute reference/downstream ceilings and causal gap decomposition;
+- solve ordinary runtime/integration bugs without changing the protocol.
 
 DSH MUST NOT:
 - train any model;
-- retrain D-B1;
-- retrain Z-B3;
-- train parser/reference/YOLO/SAM2;
+- change D-B1;
+- change Z-B3;
 - change U-C1;
-- change fields;
-- change D-B1 formula;
-- change thresholds;
-- add learned competition;
+- change YOLO weights;
+- change proposal eligibility;
+- change relation fields;
+- retrain parser/reference;
+- add ranker/filter/refinement;
 - add attention/graph/Transformer;
-- add target proposal/candidate inputs;
-- use test split;
-- use free-form parser performance to choose the architecture;
-- choose Task 7F.
+- access test;
+- use Task 7F diagnostics as hidden tuning data for a new model;
+- choose the next algorithm.
 
 If a prohibited change is required, STOP and report.
 
 ---
 
-# PART A — Freeze Task 7D interpretation
+# PART A — Freeze Task 7E evidence
 
-## 1. Record Task 7D result
+## 1. Record Task 7E result
 
-Copy into `docs/task7e_deterministic_prototype_holdout.md`:
+Copy into `docs/task7f_reference_ceiling_decomposition.md`:
 
-Task 7D verdict:
-`GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`
+Task 7E verdict:
+`DB1_PREDICTED_REFERENCE_BELOW_GATE`
 
-Frozen Task 7D results:
+Untouched E-HoldoutL3:
+- records = 669
+- four L3 programs only
+- zero overlap with Task 6Z MiniVal/Paired
+- zero test.
 
-| Variant | MiniVal mIoU | Dice | Paired | Margin |
-|---|---:|---:|---:|---:|
-| D-B0 frozen Z-B3 | 0.3242129 | 0.4389840 | 15/20 | +0.3003541 |
-| D-B1 deterministic field-weighted prototype | **0.3978996** | **0.5272593** | **19/20** | **+0.3888** |
-| D-B2 learned relation-guided competition | 0.3264764 | 0.4372995 | 17/20 | +0.2956 |
-| D-B3 learned visual-only competition | 0.1595259 | 0.2310875 | 8/20 | +0.1629 |
-| D-B4 learned competition map, no prototype | 0.3291152 | 0.4487840 | 19/20 | +0.3056 |
+Oracle-reference:
+- Z-B3 mIoU = `0.3141113773`
+- D-B1 mIoU = `0.3854957053`
+- delta = `+0.0713843280`
+- bootstrap 95% CI = `[+0.0586233648, +0.0842626436]`
+- D-B1 held-out paired = `18/20`
+- D-B1 margin = `+0.3193402994`
+- `DB1_HOLDOUT_GENERALIZES = true`.
 
-Important diagnostics:
-- D-B2 target mass 0.0067
-- D-B2 argmax-in-target 0.0000
-- D-B2 entropy 0.8848
-- learned competition is not accepted
-- D-B1 is the only variant with a clear mask/counterfactual gain over Z-B3.
+Predicted U-C1 reference:
+- reference mIoU = `0.4406471173`
+- reference Pr@0.5 = `0.5015555235`
+- `REFERENCE_OK = 346`
+- `SELECTION_WRONG = 220`
+- `NOT_COVERED = 101`
+- abstentions = 2
+- D-B1 strict mIoU = `0.2454050104`
+- answered-only = `0.2461408575`
+- D-B1 - Z-B3 strict = `+0.0385350024`
+- retention = `0.6365959646`
+- paired = `6/20`
+- margin = `+0.1250628819`.
 
-Do not modify Task 7D artifacts/verdict.
+Interpretation:
+- D-B1 architecture gain is real;
+- practical chain is reference-limited;
+- Task 7F decomposes that reference limitation without training.
+
+Do not modify Task 7E artifacts.
 
 ---
 
-# PART B — Frozen checkpoints and modules
+# PART B — Frozen assets
 
-## 2. D-B1 checkpoint
+## 2. D-B1
 
-Use exactly:
+Use exact frozen checkpoint:
 
 `artifacts/checkpoints/task7d/db1_minitrain1200.pt`
 
-Expected SHA256:
+SHA256:
 `6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0`
-
-Require:
-- exists;
-- SHA exact;
-- variant metadata D-B1;
-- checkpoint selected at Task 7D epoch 7;
-- no retraining.
-
-If unavailable/mismatch:
-STOP:
-`DB1_CHECKPOINT_UNAVAILABLE`
-
-## 3. Z-B3 checkpoint
-
-Use frozen Task 6Z Z-B3:
-
-Expected SHA256:
-`74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc`
 
 No retraining.
 
-## 4. Frozen architecture components
+## 3. U-C1 proposal source
+
+Use exactly:
+
+```text
+YOLO26m-seg Task 6M.1
+checkpoint SHA256 =
+ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
+
+imgsz = 640
+conf = 0.05
+max_det = 300
+default NMS
+no TTA
+no tiling
+source image = 512×512
+```
+
+Largest eligibility exactly:
+- not border-touching;
+- bbox extent ratio <= 0.20.
+
+No other candidate filter.
+
+## 4. Frozen fields/visual path
 
 Read-only:
 - GeometricRelationField v0.2
 - NearestBoundaryField v0.1
-- SAM2.1 Hiera Base+ frozen visual feature path
-- U-C1 proposal configuration
-- Task 6Q deterministic largest resolver
-- BuildSpatialReason v0.2
-- WHU-EA-NativeVector v1.0.
+- SAM2.1 Hiera Base+ frozen visual path/cache.
 
-No test split.
+No test.
 
 ---
 
-# PART C — Exact D-B1 semantics
+# PART C — Exact evaluation population
 
-## 5. D-B1 formula
+## 5. Reuse Task 7E packs byte-for-byte
 
-Do not rewrite or alter the Task 7D implementation.
+Use:
+- `E-HoldoutL3` exactly 669 records;
+- `E-PairedHoldout` exactly 20 pairs.
 
-For each oracle/predicted reference:
-
-```text
-P_dir
-P_near
-W = clamp(P_dir * P_near, 0, 1)
-A_fixed = W / (sum(W) + eps)
-A_fixed_vis = A_fixed * 4096
-
-F = frozen SAM2 visual feature → trainable frozen-checkpoint projection
-q = Σ_i A_fixed_i * F_i
-C_i = cosine(F_i, q)
-```
-
-Frozen D-B1 decoder input:
-
-```text
-F
-P_dir
-P_near
-direction embedding
-A_fixed_vis
-C
-```
-
-No learned competition score head.
-No threshold.
-No target proposal.
-
----
-
-# PART D — Construct untouched L3 validation remainder
-
-## 6. Source population
-
-Use the full BuildSpatialReason v0.2 **val** split and select exactly the four L3 programs:
-
-- largest_to_left_of_to_nearest
-- largest_to_right_of_to_nearest
-- largest_to_above_to_nearest
-- largest_to_below_to_nearest
-
-Expected total L3 val population:
-- above 224
-- below 213
-- left 250
-- right 249
-- total 936
-
-## 7. Exclusion set
-
-Build exclusion record-id set from:
-- every Z-MiniVal240 record;
-- every record used as either member of Z-PairedVal20.
-
-Remove the union from the 936-record population.
-
-Call the remainder:
-`E-HoldoutL3`
-
-Requirements:
-- no record-id overlap with Z-MiniVal240;
-- no record-id overlap with Z-PairedVal20;
-- no test records;
-- at least 600 records total;
-- every four L3 program has at least 120 records.
-
-If any requirement fails:
-STOP:
-`L3_HOLDOUT_REMAINDER_INSUFFICIENT`
-
-Do not subsample E-HoldoutL3. Use the complete remainder.
-
-Write:
+Read IDs/hashes from:
 `evaluation/task7e_holdout_manifest.json`
 
-Include:
-- source counts;
-- exclusion counts;
-- final per-program counts;
-- record-id hash;
-- zero-overlap checks.
+Verify:
+- record-id hash exact;
+- pair-id hash exact;
+- no test;
+- no overlap with Task 6Z MiniVal/Paired.
 
-Local expanded row file may be gitignored under:
-`artifacts/task7e/holdout/`.
-
----
-
-# PART E — New held-out paired set
-
-## 8. E-PairedHoldout
-
-Construct only from E-HoldoutL3.
-
-Pair requirements:
-- same tile;
-- same oracle largest reference source-feature id;
-- different L3 direction programs;
-- different target source-feature ids;
-- both members belong to E-HoldoutL3.
-
-Sort pairs by SHA256 stable key.
-
-Require at least 20.
-Use exactly first 20.
-
-If fewer than 20:
+If mismatch:
 STOP:
-`L3_HOLDOUT_PAIRED_INSUFFICIENT`
+`TASK7E_HOLDOUT_MISMATCH`
 
-Write pair IDs/hashes into:
-`evaluation/task7e_holdout_manifest.json`
-
-No overlap with Task 6Z Z-PairedVal20 members.
+No new sampling.
 
 ---
 
-# PART F — E0 frozen MiniVal reproduction
+# PART D — Four exact reference modes
 
-## 9. Reproduce Task 7D first
+For every E-HoldoutL3 record, generate the same frozen U-C1 proposal set once and reuse it for F-R0/F-R1/F-R2.
 
-Before holdout evaluation, reproduce on exact Z-MiniVal240:
+The canonical GT reference is available only for offline diagnostic construction/evaluation.
 
-Z-B3:
-- mIoU 0.3242128982543474
+## 6. F-R0 — CURRENT_SELECTED_PRED_MASK
 
-D-B1:
-- mIoU 0.3978996298363562
-
-Require both absolute deltas <= 1e-6.
-
-Reproduce paired:
-- Z-B3 = 15/20
-- D-B1 = 19/20.
-
-Write:
-`evaluation/task7e_minival_reproduction.json`
-
-If fail:
-STOP:
-`TASK7D_REPRODUCTION_FAIL`
-
----
-
-# PART G — E1 oracle-reference held-out architecture audit
-
-## 10. Oracle inference
-
-For every E-HoldoutL3 record:
-
-Input:
-- image
-- canonical program id
-- canonical oracle largest reference mask
-
-Compare exactly:
-
-### E-O0
-Frozen Z-B3.
-
-### E-O1
-Frozen D-B1.
-
-No retraining.
-No parser.
-No predicted reference.
-
-## 11. Metrics
-
-Report for both:
-- record count
-- mIoU
-- Dice
-- Pr@0.5
-- per program/direction mIoU
-- target area quartiles
-- boundary-distance quartiles.
-
-Report D-B1 - Z-B3 delta:
-- overall
-- each direction.
-
-Bootstrap diagnostic:
-- deterministic seed 20261001
-- 2000 paired bootstrap resamples by record id
-- report 95% percentile CI for:
-  `mean IoU(D-B1) - mean IoU(Z-B3)`
-
-Write:
-`evaluation/task7e_oracle_holdout.json`
-
-## 12. Oracle held-out paired
-
-On E-PairedHoldout20 report for Z-B3 and D-B1:
-- pass /20
-- own IoU
-- cross IoU
-- own-cross margin.
-
-Write:
-`evaluation/task7e_oracle_holdout_paired.json`
-
----
-
-# PART H — Oracle generalization gate
-
-## 13. `DB1_HOLDOUT_GENERALIZES`
-
-True iff ALL:
-
-1. E-HoldoutL3 D-B1 mIoU >= `0.36`
-2. D-B1 - Z-B3 overall mIoU >= `+0.05`
-3. D-B1 improves or ties Z-B3 in at least 3/4 directions
-4. 95% bootstrap CI lower bound for delta > `0.00`
-5. D-B1 E-PairedHoldout >= `16/20`
-6. D-B1 own-cross margin >= `0.30`
-
-If false:
-do NOT run predicted-reference adoption path.
-Proceed only to verdict/report and STOP.
-
----
-
-# PART I — E2 predicted-reference holdout audit
-
-Run only if section 13 passes.
-
-## 14. Frozen practical resolver
-
-Use exactly U-C1:
+Production-like frozen baseline:
 
 ```text
-YOLO26m-seg Task 6M.1 checkpoint
-imgsz 640
-conf 0.05
-max_det 300
-default NMS
-no TTA
-no tiling
+U-C1 eligible proposals
+→ select maximum predicted mask area
+→ tie higher YOLO confidence
+→ lower original proposal index
+→ use selected predicted mask as reference
 ```
 
-Largest eligibility:
-- not border-touching
-- bbox extent ratio <=0.20
+If no eligible proposal:
+- abstain.
 
-Select:
-- max predicted mask area
-- tie higher confidence
-- then lower original index.
+This must reproduce Task 7E predicted-reference D-B1 numerics within tolerance.
 
-No ranker/filter/SAM2 refinement.
+## 7. F-R1 — ORACLE_SELECTED_PRED_MASK
 
-## 15. Compare predicted-reference pipelines
+Diagnostic selection ceiling.
 
-For every E-HoldoutL3 record:
+Among the exact same U-C1 eligible proposals:
 
-### E-P0
-canonical program
-→ predicted U-C1 largest reference
-→ frozen Z-B3
+```text
+choose proposal with maximum IoU to canonical GT reference mask
+```
 
-### E-P1
-canonical program
-→ predicted U-C1 largest reference
+Tie-break:
+1. higher IoU;
+2. higher YOLO confidence;
+3. lower original proposal index.
+
+Use the **predicted proposal mask itself** as reference.
+
+If there are no eligible proposals:
+- abstain.
+
+GT is used only to choose the proposal for this diagnostic ceiling.
+
+This mode isolates:
+> how much could improve if candidate selection were perfect while proposal coverage and proposal mask geometry stayed unchanged.
+
+## 8. F-R2 — COVERAGE_CONDITIONAL_GT_MASK
+
+Diagnostic geometry/selection-removed ceiling under existing proposal coverage.
+
+Find the best eligible proposal exactly as F-R1.
+
+If:
+`best eligible proposal IoU with GT reference >= 0.50`
+
+then use:
+`canonical GT reference mask`
+
+as the reference mask.
+
+If:
+- no eligible proposal, OR
+- best eligible IoU < 0.50
+
+then:
+- abstain.
+
+This mode intentionally uses GT mask only on records where U-C1 already covers the true reference at IoU>=0.50.
+
+It isolates:
+> what the downstream decoder could do if selection and reference-mask geometry were perfect, while the current U-C1 coverage limitation remained.
+
+## 9. F-R3 — FULL_ORACLE_GT_MASK
+
+Use canonical GT reference mask for every record.
+
+This must reproduce the Task 7E oracle-reference D-B1 holdout result within tolerance.
+
+This is the full reference ceiling.
+
+---
+
+# PART E — Reference-mode audit
+
+## 10. Reference metrics
+
+For F-R0/F-R1/F-R2/F-R3 report:
+
+- answered records;
+- abstentions;
+- reference mIoU;
+- Dice;
+- Pr@0.5;
+- centroid median/p90;
+- per direction.
+
+For F-R0/F-R1 also:
+- selected proposal confidence;
+- selected predicted area;
+- selected-vs-best proposal IoU gap.
+
+For F-R1 report:
+- best eligible coverage@0.25 / 0.50 / 0.75.
+
+For F-R2:
+- covered records;
+- uncovered records;
+- coverage rate.
+
+Write:
+`evaluation/task7f_reference_modes.json`
+
+---
+
+# PART F — Frozen D-B1 downstream evaluation
+
+## 11. Holdout all-record evaluation
+
+For each mode F-R0...F-R3:
+
+```text
+canonical L3 program
+→ mode-specific reference mask
+→ P_dir v0.2
+→ P_near v0.1
+→ frozen SAM2 feature
 → frozen D-B1
-
-No GT reference/target inference input.
-
-Reference abstention:
-- strict target IoU = 0.
-
-## 16. Reference diagnostics
-
-GT reference only offline.
-
-Report:
-- reference mIoU
-- Dice
-- Pr@0.5
-- abstentions
-- NOT_COVERED
-- SELECTION_WRONG
-- GEOMETRY_POOR
-- REFERENCE_OK.
-
-Write:
-`evaluation/task7e_predicted_reference_quality.json`
-
-## 17. Target metrics
-
-For E-P0 and E-P1:
-- strict mIoU/Dice
-- answered-only mIoU/Dice
-- Pr@0.5
-- reference-OK subset target mIoU
-- per direction
-- abstentions.
-
-Define:
-```text
-oracle_db1 = E-O1 mIoU
-pred_db1_strict = E-P1 strict mIoU
-retention = pred_db1_strict / oracle_db1
+→ target mask
 ```
 
-Write:
-`evaluation/task7e_predicted_reference_holdout.json`
-
-## 18. Predicted-reference held-out paired
-
-Use E-PairedHoldout20.
-
-Because pair members share same tile/reference:
-- resolve reference once and reuse for both.
+If mode abstains:
+- strict IoU/Dice = 0.
 
 Report:
-- Z-B3 pass /20
-- D-B1 pass /20
-- own/cross/margin
-- reference-abstention pairs.
+- strict mIoU/Dice;
+- answered-only mIoU/Dice;
+- Pr@0.5;
+- per direction;
+- reference-OK-style subset where applicable.
 
 Write:
-`evaluation/task7e_predicted_reference_paired.json`
+`evaluation/task7f_downstream_reference_modes.json`
+
+## 12. Required reproduction checks
+
+F-R0 must reproduce Task 7E predicted D-B1:
+- strict mIoU `0.24540501038500215`
+- answered-only `0.24614085749260334`
+- abstentions `2`
+
+Tolerance:
+- floats <= `1e-6`
+- counts exact.
+
+F-R3 must reproduce Task 7E oracle D-B1:
+- mIoU `0.38549570532647004`
+
+Tolerance <= `1e-6`.
+
+If either fails:
+STOP:
+`TASK7E_NUMERIC_REPRODUCTION_FAIL`
 
 ---
 
-# PART J — Predicted-reference development gate
+# PART G — Covered-subset geometry decomposition
 
-## 19. `DB1_PREDICTED_REFERENCE_USABLE`
+## 13. Define COVERED50 subset
 
-Requires section 13 pass AND ALL:
+Records where:
+- at least one U-C1 eligible proposal exists;
+- best eligible proposal IoU with GT reference >= 0.50.
 
-1. E-P1 strict mIoU >= `0.24`
-2. E-P1 answered-only mIoU >= `0.25`
-3. E-P1 - E-P0 strict mIoU >= `+0.03`
-4. oracle→predicted retention >= `0.62`
-5. predicted-reference paired >= `11/20`
-6. own-cross margin >= `0.20`
-7. reference abstention <= `10%`.
+This is exactly the non-abstaining population of F-R2.
 
-These are development gates, not final-paper gates.
+On this SAME subset compare:
+
+### G-PRED
+D-B1 using F-R1 best predicted proposal mask.
+
+### G-GT
+D-B1 using canonical GT reference mask.
+
+Report:
+- records;
+- G-PRED mIoU/Dice;
+- G-GT mIoU/Dice;
+- delta `G-GT - G-PRED`;
+- paired diagnostics restricted where both pair members' shared reference is COVERED50.
+
+Write inside:
+`evaluation/task7f_gap_decomposition.json`
+
+This is the primary **proposal-mask geometry gap**.
 
 ---
 
-# PART K — Optional canonical parser integration
+# PART H — Paired counterfactual ceilings
 
-## 20. Interface regression only
+## 14. E-PairedHoldout20
 
-If section 19 passes, run the Task 7C parser on the existing canonical query strings associated with E-HoldoutL3.
+For each pair and each F-R0...F-R3:
+- same tile/reference;
+- resolve/build reference once;
+- reuse for both direction programs.
 
-Do NOT evaluate free-form paraphrase here.
+Report:
+- pass /20;
+- own IoU;
+- cross IoU;
+- margin;
+- abstention pairs.
 
-Require canonical accuracy >= `0.995`.
+Write:
+`evaluation/task7f_paired_reference_modes.json`
 
-Then run:
+No new pairs.
+
+---
+
+# PART I — Quantitative gap decomposition
+
+## 15. Compute exact gaps
+
+Let all be strict all-record D-B1 mIoU unless specified.
+
 ```text
-Task 7C canonical parser
-→ U-C1 reference
-→ D-B1
+M0 = F-R0
+M1 = F-R1
+M2 = F-R2
+M3 = F-R3
 ```
 
-Report strict/answered metrics.
+Report:
+
+### Selection ceiling gain
+```text
+selection_gain = M1 - M0
+```
+
+### Geometry gain on COVERED50
+```text
+geometry_gain_covered = G_GT - G_PRED
+```
+
+### Coverage ceiling gain
+Because F-R2 and F-R3 both use the same GT reference mask whenever covered:
+
+```text
+coverage_gain = M3 - M2
+```
+
+### Remaining current-to-oracle gap
+```text
+total_reference_gap = M3 - M0
+```
+
+Also report percentages:
+
+```text
+selection_fraction = max(selection_gain,0) / total_reference_gap
+coverage_fraction = max(coverage_gain,0) / total_reference_gap
+```
+
+`geometry_gain_covered` is reported separately because its denominator/subset differs.
+
+Do not force the components to sum to 100%.
 
 Write:
-`evaluation/task7e_canonical_parser_integration.json`
-
-Parser does not decide architecture adoption except an accuracy <0.995 is recorded as an interface regression.
-
-No parser training.
+`evaluation/task7f_gap_decomposition.json`
 
 ---
 
-# PART L — Development architecture decision
+# PART J — Predeclared diagnostic classifications
 
-## 21. Architecture status
+These are diagnostic labels, not new architecture verdicts.
 
-Define:
+## 16. `SELECTION_IS_ACTIONABLE`
 
-### `DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER`
+true iff ALL:
+- selection_gain >= `+0.05`
+- F-R1 strict mIoU >= `0.29`
+- F-R1 paired >= `10/20`
+- F-R1 margin >= `0.18`.
+
+## 17. `PROPOSAL_GEOMETRY_IS_MAJOR`
+
 true iff:
-- `DB1_HOLDOUT_GENERALIZES=true`
-- `DB1_PREDICTED_REFERENCE_USABLE=true`
-- no protocol violation.
+- geometry_gain_covered >= `+0.05`.
 
-If true:
-- D-B1 becomes the **development L3 decoder candidate** replacing Z-B3 for subsequent integration/formalization work.
-- Z-B3 remains frozen baseline/ablation.
-- Do NOT delete/overwrite either checkpoint.
+## 18. `PROPOSAL_COVERAGE_IS_MAJOR`
 
-If false:
-- retain Z-B3 as current development baseline;
-- D-B1 remains a positive ablation only.
+true iff:
+- coverage_gain >= `+0.04`
+OR
+- F-R2 coverage rate < `0.85`.
 
-No full training/test yet.
+## 19. `CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING`
+
+true iff ALL:
+- F-R2 strict mIoU >= `0.30`
+- F-R2 paired >= `12/20`
+- F-R2 margin >= `0.22`.
+
+Interpretation:
+- if true, existing U-C1 candidate coverage is theoretically sufficient for a materially better practical chain if selection/mask quality can be solved;
+- if false, proposal coverage itself prevents a strong chain even under perfect selection/geometry on covered cases.
+
+No thresholds may be changed after results.
 
 ---
 
-# PART M — Verdict
+# PART K — Verdict
 
-## 22. Exactly one, priority order
+## 20. Exactly one formal verdict
+
+Priority:
 
 1. `INVALID_EXPERIMENT`
-2. `DB1_CHECKPOINT_UNAVAILABLE`
-3. `L3_HOLDOUT_REMAINDER_INSUFFICIENT`
-4. `L3_HOLDOUT_PAIRED_INSUFFICIENT`
-5. `TASK7D_REPRODUCTION_FAIL`
-6. `DB1_HOLDOUT_GENERALIZATION_FAIL`
-7. `DB1_PREDICTED_REFERENCE_BELOW_GATE`
-8. `DB1_DEVELOPMENT_L3_DECODER_READY`
+   - training, test use, module mutation, GT used outside declared diagnostic modes, protocol violation.
+
+2. `TASK7E_HOLDOUT_MISMATCH`
+
+3. `TASK7E_NUMERIC_REPRODUCTION_FAIL`
+
+4. `REFERENCE_PROPOSAL_CEILING_INSUFFICIENT`
+   - `CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING=false`
+
+5. `REFERENCE_SELECTION_DOMINANT`
+   - usable ceiling true
+   - `SELECTION_IS_ACTIONABLE=true`
+   - and selection_gain >= coverage_gain.
+
+6. `REFERENCE_COVERAGE_OR_GEOMETRY_DOMINANT`
+   - usable ceiling true
+   - selection dominant condition false
+   - and (`PROPOSAL_COVERAGE_IS_MAJOR=true` OR `PROPOSAL_GEOMETRY_IS_MAJOR=true`).
+
+7. `REFERENCE_MIXED_BOTTLENECK`
+   - usable ceiling true
+   - none of verdicts 5/6 uniquely applies.
 
 No other verdict.
 
+The verdict does NOT authorize an automatic repair.
+
 ---
 
-# PART N — Interpretation boundary
+# PART L — Architecture status
+
+## 21. D-B1 status after Task 7F
+
+Regardless of reference verdict:
+
+If all Task 7E oracle holdout facts reproduce, record:
+
+> `D-B1 = preferred oracle-reference L3 target decoder candidate`
+
+because its untouched oracle-reference gain over Z-B3 is already established.
+
+Do NOT call it:
+- end-to-end ready;
+- final model;
+- paper-final architecture.
+
+Practical development chain remains blocked until ChatGPT decides what to do with the reference bottleneck.
+
+---
+
+# PART M — Interpretation boundary
 
 DSH reports measurements only.
 
 Do NOT:
-- claim D-B1 is globally novel;
-- call D-B1 final model;
-- run full training;
-- evaluate test;
-- retrain parser/reference;
-- add learned competition;
-- add graph/attention;
-- modify D-B1 after holdout results;
-- choose Task 7F.
+- train a new selector;
+- retrain YOLO;
+- change U-C1;
+- retrain D-B1;
+- propose threshold changes;
+- start full training/test;
+- choose a repair based on the diagnostic labels.
 
 Final recommendation exactly:
 
-`等待 ChatGPT 根据 Task 7E 的 untouched L3 holdout 与 predicted-reference 结果决定是否正式冻结 D-B1 为开发版 L3 decoder，不自行进行全量训练、test 评估或新的架构改动。`
+`等待 ChatGPT 根据 Task 7F 的 selection / proposal-geometry / coverage ceiling 分解决定是否值得进行最后一次 reference 干预；不自行训练 selector、重训 YOLO 或开始正式 test。`
 
 ---
 
-# PART O — Required artifacts
+# PART N — Required artifacts
 
 Create:
 
 ```text
-evaluation/task7e_holdout_manifest.json
-evaluation/task7e_minival_reproduction.json
-evaluation/task7e_oracle_holdout.json
-evaluation/task7e_oracle_holdout_paired.json
+evaluation/task7f_reference_modes.json
+evaluation/task7f_downstream_reference_modes.json
+evaluation/task7f_gap_decomposition.json
+evaluation/task7f_paired_reference_modes.json
+evaluation/task7f_verdict.json
 
-# only if oracle holdout gate passes:
-evaluation/task7e_predicted_reference_quality.json
-evaluation/task7e_predicted_reference_holdout.json
-evaluation/task7e_predicted_reference_paired.json
-evaluation/task7e_canonical_parser_integration.json
+docs/task7f_reference_ceiling_decomposition.md
 
-evaluation/task7e_verdict.json
-
-docs/task7e_deterministic_prototype_holdout.md
-
-scripts/task7e_build_holdout.py
-scripts/task7e_evaluate_oracle.py
-scripts/task7e_evaluate_predicted_reference.py
-scripts/task7e_parser_integration.py
-scripts/task7e_report.py
+scripts/task7f_reference_modes.py
+scripts/task7f_evaluate_downstream.py
+scripts/task7f_gap_decomposition.py
+scripts/task7f_report.py
 ```
 
 Optional helper:
-`buildreasonseg_mvp/task7e_l3_decoder_adapter.py`
-only if needed to cleanly load D-B1 without changing Task 7D code.
+`buildreasonseg_mvp/task7f_reference_ceiling.py`
 
 Local caches:
-`artifacts/task7e/`
+`artifacts/task7f/`
 gitignored.
 
 Update:
 - `handoff/FROM_DSH.md`
 - `handoff/PROJECT_STATE.md`
 
-No new checkpoint.
+No checkpoint creation.
 
 ---
 
-# PART P — Tests
+# PART O — Tests
 
-Task 7D ended at:
-`1243 passed, 1 skipped`
+Task 7E ended at:
+`1285 passed, 1 skipped`
 
 Add tests for at least:
 
-1. Task 7D artifacts unchanged
-2. D-B1 checkpoint hash exact
-3. Z-B3 checkpoint hash exact
-4. no training in Task 7E
-5. D-B1 architecture unchanged
-6. no learned score head in D-B1
-7. exact product field weighting
-8. exact prototype formula
-9. exact cosine similarity
-10. no target proposal input
-11. full L3 val source total checked
-12. MiniVal record IDs excluded from holdout
-13. PairedVal member IDs excluded from holdout
-14. no test split
-15. holdout >=600
-16. each L3 class >=120
-17. held-out paired same tile/reference
-18. held-out paired different direction/target
-19. held-out paired has no old paired member
-20. MiniVal reproduction exact
-21. oracle comparison has no parser
-22. oracle comparison uses GT reference only as declared
-23. bootstrap seed/count exact
-24. bootstrap samples paired by record
-25. U-C1 exact if predicted stage runs
-26. shared reference resolver between P0/P1
-27. no GT reference in predicted inference
-28. no GT target in inference
-29. reference reused within predicted pair
-30. Task 7C parser not trained
-31. no free-form paraphrase used for architecture selection
-32. fields unchanged
-33. SAM2 unchanged
-34. no ranker/quality/refinement
-35. no learned competition
-36. no attention/Transformer/GNN
-37. no GRCL
-38. no full training
-39. no test
-40. no new dataset/download/install/GUI
-41. previous suite preserved.
+1. Task 7E artifacts unchanged
+2. E-Holdout record-id hash exact
+3. E-Paired pair-id hash exact
+4. D-B1 checkpoint hash exact
+5. U-C1 exact config
+6. no training
+7. no test split
+8. same proposal set reused F-R0/F-R1/F-R2
+9. F-R0 deterministic max-area exact
+10. F-R1 maximum GT-IoU proposal exact
+11. F-R1 tie-break exact
+12. F-R1 uses predicted mask, not GT mask
+13. F-R2 coverage threshold exactly IoU>=0.50
+14. F-R2 uses GT mask only when covered
+15. F-R2 abstains when uncovered
+16. F-R3 always uses GT reference
+17. GT never enters D-B1 except as declared reference in R2/R3
+18. GT target never enters inference
+19. F-R0 numeric reproduction exact
+20. F-R3 numeric reproduction exact
+21. COVERED50 definition exact
+22. G-PRED/G-GT same subset exact
+23. selection_gain formula exact
+24. geometry_gain_covered formula exact
+25. coverage_gain formula exact
+26. total_reference_gap exact
+27. pair reference reused within pair
+28. no ranker/quality/SAM refinement
+29. fields unchanged
+30. SAM2 unchanged
+31. D-B1 unchanged
+32. no parser training/use for architecture decision
+33. no attention/graph/Transformer
+34. no GRCL
+35. no new dataset/download/install/GUI
+36. diagnostic thresholds exact
+37. verdict priority exact
+38. previous suite preserved.
 
 Run:
 `python -m pytest tests/ -q`
 
-Do not reduce previous passing tests.
+Do not reduce prior passing tests.
 
 ---
 
-# PART Q — Git/storage
+# PART P — Git/storage
 
 Do not commit:
-- checkpoints;
-- model weights;
+- model checkpoints;
 - proposal/feature caches;
-- large local expanded holdout rows;
 - source imagery/vectors;
+- large per-record local cache;
 - `.conda`.
 
 Commit:
-- small holdout manifest;
-- evaluation JSON;
-- scripts/helpers;
+- small evaluation JSON;
+- diagnostic code/scripts;
 - tests;
 - docs;
 - handoff.
 
 Suggested commits:
-1. `eval: validate deterministic prototype on untouched L3 holdout`
-2. `eval: audit D-B1 predicted-reference retention`
-3. optional docs/handoff commit
+1. `eval: decompose D-B1 reference bottleneck ceilings`
+2. `docs: record reference ceiling attribution`
 
 ---
 
-# PART R — DSH model policy
+# PART Q — DSH model policy
 
 Default:
 - **DeepSeek V4.1 Flash + High**
 
-Use Max only for genuine integration/runtime bugs.
+Use Max only for genuine runtime/integration bugs.
 
-No installs or downloads.
+No installs/downloads.
 
 ---
 
-# PART S — STOP
+# PART R — STOP
 
-After Task 7E:
+After Task 7F:
 - commit;
 - push;
 - update handoff;
@@ -721,9 +697,8 @@ After Task 7E:
 
 Do NOT:
 - train anything;
+- choose or implement a reference repair;
 - run test;
-- change parser/reference/D-B1;
-- add another architecture;
-- start formal full-data training.
+- start formal full training.
 
 Wait for ChatGPT audit.

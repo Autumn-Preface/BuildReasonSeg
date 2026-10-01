@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7E._
+_Last updated by DSH at the end of Task 7F._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -112,6 +112,44 @@ The block above is machine-checked against
 | 7D | **Oracle-reference relation-guided global competition decoder** | **done → `GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`** (parser/reference/fields/SAM2 frozen; **D-B0 = frozen Z-B3 reproduced exactly** — mIoU 0.3242128983 Δ0.0, Dice 0.4389840056 Δ0.0, paired 15/20, margin +0.3003540897 Δ0.0; four trainable variants on the byte-identical Task 6Z packs, all four pack SHA256 verified; commons `F=Conv1x1(256→128)+GN+GELU`, direction embed vocab 4/dim 16, temperature 1.0, A = global softmax over 4096 tokens (spatial sum exactly 1.000000), `q = Σ A_i F_i` no stop-grad, plain cosine C, trunk → bilinear 64→512, loss exactly BCE+Dice, competition never supervised; D1 Overfit20 lr 1e-3/1200 steps → **D-B2 0.9678/0.9835 gate ✓**; D2 MiniTrain1200→MiniVal240 lr 3e-4/patience 5 → MiniVal mIoU **D-B0 0.3242 · D-B1 0.3979 · D-B2 0.3265 · D-B3 0.1595 · D-B4 0.3291**, paired **D-B1 19/20 (+0.3888) · D-B2 17/20 (+0.2956) · D-B4 19/20 (+0.3056)**, deltas D-B2−D-B0 **+0.0023**, D-B2−D-B1 **−0.0714**, D-B2−D-B3 +0.1670 (flags: mask_gain false, prototype_gain false, field_guidance_gain true, localizes_target false), diagnostics D-B2 target mass 0.0067 / argmax-in-target 0.0000 / entropy 0.8848 vs D-B1 0.0675 / 0.0083 / 0.6933; §28 criteria **4/11** → verdict) |
 
 | 7E | **D-B1 untouched-holdout + predicted-reference audit** | **done → `DB1_PREDICTED_REFERENCE_BELOW_GATE`** (evaluation/integration only, **no training**; D-B1 `6df31909…21a89c0` exact variant D-B1 epoch 7 and Z-B3 `74f308e1…fc0f0bc` exact, both read-only; **E-HoldoutL3 = 669** records from the full v0.2 L3 val population **936** (above 224/below 213/left 250/right 249) minus Z-MiniVal240 ∪ Z-PairedVal20 = 267 ids — overlap 0/0, test 0, ≥600, every program ≥120, no subsampling; **E-PairedHoldout = 20** pairs from 175 candidates, same tile/reference, different directions/targets, old-pair overlap 0; E0 reproduction Δ **0.0** (Z-B3 0.3242128982543474, D-B1 0.3978996298363562, paired 15/20 & 19/20); **E1 oracle holdout Z-B3 0.3141 → D-B1 0.3855, Δ +0.0714**, 4/4 directions improve, bootstrap CI [+0.0586, +0.0843], paired **18/20** margin +0.3193 → **`DB1_HOLDOUT_GENERALIZES` true 6/6**; **E2 predicted U-C1** (conf 0.05/max_det 300, cache-verified) reference mIoU 0.4406, REFERENCE_OK 346 / SELECTION_WRONG 220 / NOT_COVERED 101 / abstentions 2 (0.299 %), **E-P0 0.2069 → E-P1 0.2454, Δ +0.0385, retention 0.6366**, paired **6/20** margin +0.1251 → **`DB1_PREDICTED_REFERENCE_USABLE` false 4/7**; §20 parser integration not executed; `DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER` **false** → Z-B3 retained, D-B1 a positive oracle-reference ablation only) |
+
+| 7F | **Reference bottleneck ceiling decomposition** | **done → `REFERENCE_SELECTION_DOMINANT`** (evaluation only, **no training**; frozen D-B1 `6df31909…21a89c0` + frozen U-C1 (conf 0.05/max_det 300) + frozen fields/SAM2, GT only inside declared diagnostic modes; Task 7E population reused with both hashes re-verified (**669** records / **20** pairs, zero test/overlap); four modes over one frozen proposal pass per tile — **F-R0** current selection (ref mIoU 0.4406) / **F-R1** oracle selection of a *predicted* proposal (0.7119) / **F-R2** coverage-conditional GT (1.0000, 566 covered, rate 0.8460) / **F-R3** full GT (1.0000); reproductions F-R0 Δ**0.0** and F-R3 Δ**2.27e-07** ✓; downstream strict mIoU **M0 0.245405 · M1 0.364909 · M2 0.331180 · M3 0.385496**; **selection_gain +0.119504 (fraction 0.8530)** vs **coverage_gain +0.054316 (0.3877)** vs **geometry_gain_covered +0.004253** on COVERED50 (G-PRED 0.3872 → G-GT 0.3914, 566 records); total_reference_gap **+0.140091**; paired F-R0 6/20 · **F-R1 18/20** · F-R2 16/20 (3 abstention pairs) · F-R3 18/20; labels `SELECTION_IS_ACTIONABLE` **true** / `PROPOSAL_GEOMETRY_IS_MAJOR` **false** / `PROPOSAL_COVERAGE_IS_MAJOR` **true** / `CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING` **true**; D-B1 recorded as **preferred oracle-reference L3 target decoder candidate**, not end-to-end ready) |
+
+## Task 7F measured results
+
+Ceiling decomposition only — **no training, no tuning, no repair implemented, no test**. Question: of the
+remaining end-to-end loss of frozen D-B1, how much comes from wrong proposal **selection**, proposal-mask
+**geometry** and proposal **coverage**? Full detail: `docs/task7f_reference_ceiling_decomposition.md`,
+`evaluation/task7f_*.json`.
+
+| | Value |
+|---|---|
+| Frozen assets | D-B1 `6df31909…21a89c0` · U-C1 YOLO26m-seg Task 6M.1 `ef852b58…61f474`, imgsz 640, conf 0.05, max_det 300, default NMS, no TTA/tiling · eligibility not-border + extent ≤ 0.20 · fields v0.2 / nearest v0.1 · frozen SAM2 features |
+| Population | `E-HoldoutL3` **669** records + `E-PairedHoldout` **20** pairs, record-id and pair-id hashes re-verified exact, zero test, zero Task 6Z MiniVal/Paired overlap — no new sampling |
+| F-R0 current selection | 667/669 answered (2 abstentions) · ref mIoU **0.4406** · Dice 0.5085 · Pr@0.5 0.5016 · mean selected-vs-best IoU 0.5591 · mean reference-IoU gap 0.2713 |
+| F-R1 oracle-selected predicted mask | 667/669 answered · ref mIoU **0.7119** · Dice 0.8111 · Pr@0.5 0.8710 · coverage@0.25/0.50/0.75 = 641 / 566 / 392 |
+| F-R2 coverage-conditional GT | 566/669 answered (103 abstentions) · ref mIoU 1.0000 · **coverage rate 0.8460** at IoU ≥ 0.50 |
+| F-R3 full oracle GT | 669/669 · ref mIoU 1.0000 |
+| Downstream strict mIoU | **M0 0.245405** (Δ **0.0** vs Task 7E) · **M1 0.364909** · **M2 0.331180** · **M3 0.385496** (Δ **2.27e-07** vs Task 7E) → `TASK7E_NUMERIC_REPRODUCTION_PASS` |
+| Answered-only mIoU | 0.246141 / 0.366004 / 0.391447 / 0.385496 |
+| COVERED50 geometry | 566 records · G-PRED (F-R1 mask) 0.3872 · G-GT (GT mask) 0.3914 · **geometry_gain_covered +0.004253** |
+| Gaps | **selection_gain +0.119504 (0.8530)** · **coverage_gain +0.054316 (0.3877)** · geometry +0.004253 (separate subset) · **total_reference_gap +0.140091** |
+| Paired ceilings | F-R0 **6/20** (+0.1251) · **F-R1 18/20** (+0.3005) · F-R2 **16/20** (17 answered, 3 abstention pairs, +0.3306) · F-R3 **18/20** (+0.3193) |
+| Labels | `SELECTION_IS_ACTIONABLE` **true** · `PROPOSAL_GEOMETRY_IS_MAJOR` **false** · `PROPOSAL_COVERAGE_IS_MAJOR` **true** · `CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING` **true** |
+| D-B1 status | **preferred oracle-reference L3 target decoder candidate** (Task 7E oracle facts reproduce) · not end-to-end ready · not final model · Z-B3 stays the frozen baseline/ablation |
+| Verdict | **`REFERENCE_SELECTION_DOMINANT`** |
+
+1. **Selection dominates**: fixing *which* eligible proposal is chosen is worth **+0.1195** strict mIoU
+   (85.3 % of the +0.1401 total reference gap), about **2.2×** the coverage contribution (+0.0543) and ~28×
+   the geometry contribution (+0.0043).
+2. **Coverage is a secondary but real contributor**: 103/669 records have no eligible U-C1 proposal at
+   IoU ≥ 0.50 (rate 0.8460 < 0.85), and the coverage-conditional ceiling still reaches only 0.3312 strict.
+3. **Proposal geometry is not the bottleneck** where coverage exists: on COVERED50 the GT mask beats the
+   best *predicted* proposal mask by only +0.0043 mIoU.
+4. **The candidate set has a usable ceiling** (F-R2 0.3312 strict, 16/20 paired, margin +0.3306), so the
+   reference limitation is dominated by selection rather than candidate availability — F-R0 agrees with the
+   best eligible candidate at only 0.5591 IoU and leaves a mean 0.2713 reference-IoU unused.
+5. Next: 等待 ChatGPT 根据 Task 7F 的 selection / proposal-geometry / coverage ceiling 分解决定是否值得进行最后一次 reference 干预；不自行训练 selector、重训 YOLO 或开始正式 test。
 
 ## Task 7E measured results
 
