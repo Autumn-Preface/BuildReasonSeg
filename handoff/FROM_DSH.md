@@ -17,132 +17,144 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 7D Report: Oracle-Reference L3 Relation-Guided Global Competition Decoder
+# FROM_DSH — Task 7E Report: Deterministic Prototype Holdout + Predicted-Reference Audit
 
-_This file holds the Task 7D report. The Task 7C report is preserved in git history at commit `632c9c0`;
-Task 7B at `b325585`; Task 7A at `6ee3d0d`._
+_This file holds the Task 7E report. The Task 7D report is preserved in git history at commit `86e4f4c`;
+Task 7C at `632c9c0`; Task 7B at `b325585`; Task 7A at `6ee3d0d`._
 
 **Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task7d_relation_guided_global_competition.md`.
+Full design notes: `docs/task7e_deterministic_prototype_holdout.md`. **No model was trained in Task 7E.**
 
 ## 1. Verdict
 
-**`GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`** — section 30 priority order applied literally:
+**`DB1_PREDICTED_REFERENCE_BELOW_GATE`** — section 22 priority order applied literally:
 
-1. `INVALID_EXPERIMENT` — no: frozen paths and packs unchanged, no test use, no predicted reference, no
-   competition supervision, no attention/Transformer/GNN, no GRCL.
-2. `TASK6Z_PACK_MISMATCH` — no: all four Task 6Z pack SHA256 values match the frozen manifest.
-3. `TASK6Z_BASELINE_REPRODUCTION_FAIL` — **no: D-B0 reproduced exactly** (mIoU Δ 0.0, Dice Δ 0.0, Paired
-   15/20, margin Δ 0.0).
-4. `GLOBAL_COMPETITION_NOT_LEARNABLE` — no: D-B2 Overfit20 mIoU **0.9678** / Dice **0.9835**.
-5. `GLOBAL_COMPETITION_VISUAL_ONLY` — no: D-B2−D-B3 = **+0.1670** ≥ 0.08.
-6. `GLOBAL_COMPETITION_PROTOTYPE_NOT_HELPFUL` — no: D-B2−D-B4 = −0.0026 < 0.03 but D-B4−D-B0 = +0.0049
-   < 0.05.
-7. **`GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`** — D-B2 mIoU **0.3265 < 0.38**, D-B2−D-B0 **+0.0023 < 0.05**
-   and D-B2−D-B1 **−0.0714 < 0.03**. ← **verdict**
-8. `GLOBAL_COMPETITION_COUNTERFACTUAL_WEAK` — not reached.
-9. `RELATION_GUIDED_GLOBAL_COMPETITION_FEASIBLE` — no (4 of 11 section-28 criteria pass).
+1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, no training, no test use, no ranker/quality/refinement.
+2. `DB1_CHECKPOINT_UNAVAILABLE` — no: D-B1 SHA256 `6df31909…21a89c0` exact (variant D-B1, selected epoch 7).
+3. `L3_HOLDOUT_REMAINDER_INSUFFICIENT` — no: 669 records (≥600), every L3 program ≥120, zero overlap.
+4. `L3_HOLDOUT_PAIRED_INSUFFICIENT` — no: 20 pairs chosen from 175 candidates.
+5. `TASK7D_REPRODUCTION_FAIL` — no: Z-B3 0.3242128982543474 and D-B1 0.3978996298363562 with Δ **0.0** each,
+   paired 15/20 and 19/20 as frozen.
+6. `DB1_HOLDOUT_GENERALIZATION_FAIL` — **no: the section-13 gate passed 6/6.**
+7. **`DB1_PREDICTED_REFERENCE_BELOW_GATE`** — the D-B1 gain survives the untouched oracle holdout, but the
+   section-19 predicted-reference gate fails 3 of 7 conditions. ← **verdict**
+8. `DB1_DEVELOPMENT_L3_DECODER_READY` — no.
 
 No threshold was changed after seeing results.
 
-## 2. Recorded Task 7C outcome and frozen parser status
+## 2. Frozen assets
 
-`L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`: full v0.2 val 18,222/18,222 = 1.0000, macro F1 1.0000, every
-class recall 1.0000, Z-MiniVal240 240/240, Z-Paired members 40/40; fixed24 5/24, compact 0/8, minimal96
-60/96, stress accuracy 0.6667 / macro F1 0.5924 / L3 macro recall 0.4479; checkpoint `c1505736…d58d9a`.
-Parser status: **canonical/program-template parser frozen usable for development**, **free-form L3
-paraphrase robustness a known unsolved limitation**, no further parser hardening authorized. Task 7D neither
-uses nor retrains that parser.
+| Asset | Value |
+|---|---|
+| D-B1 `artifacts/checkpoints/task7d/db1_minitrain1200.pt` | SHA256 `6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0` exact · variant **D-B1** · selected epoch **7** · never retrained |
+| Z-B3 `artifacts/checkpoints/task6z/zb3_minitrain1200.pt` | SHA256 `74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc` exact · never retrained |
 
-## 3. Literature-position boundary (fixed note, no independent search performed)
+Read-only: GeometricRelationField v0.2 (`alpha 1.2`, `tau 0.04`, `s_axis 0.02`, `s_margin 0.02`),
+NearestBoundaryField v0.1 (`sigma_diag 0.05`), frozen SAM2.1 Hiera Base+ features, U-C1 proposal config,
+Task 6Q deterministic largest resolver, BuildSpatialReason v0.2, WHU-EA-NativeVector v1.0. No test split.
+D-B1 semantics are the frozen Task 7D implementation (no learned score head, no threshold, no proposal).
 
-Current 2026 RRSIS literature already covers semantic-role decomposition, relation-aware graph reasoning,
-long-range/global dependency modelling and progressive mask refinement; SRGFormer (2026) uses
-semantic-role-guided graph reasoning with a global sink node for same-class instance discrimination. Task 7D
-therefore claims **no** novelty for global reasoning, relation-aware attention or long-range dependency
-modelling; the narrower hypothesis under test is that explicit geometric relation fields can parameterize a
-differentiable global competition distribution over dense frozen visual tokens whose winning distribution
-synthesizes a target visual prototype for mask decoding, without target proposals or graph construction.
+## 3. `E-HoldoutL3` and `E-PairedHoldout`
 
-## 4. Frozen setting and D-B0 reproduction
+Source: the full v0.2 **val** L3 population — **936** records (above 224, below 213, left 250, right 249),
+exactly as the task file states. Exclusion set: Z-MiniVal240 (240) ∪ Z-PairedVal20 members (40) = **267** ids.
+Remainder **`E-HoldoutL3` = 669** records (left 184, right 181, above 154, below 150), never subsampled: zero
+overlap with Z-MiniVal240, zero with Z-PairedVal20, zero test records, ≥600 total, every program ≥120.
+`E-PairedHoldout` = **20** pairs from **175** candidates (same tile, same oracle largest reference, different
+direction programs, different targets, both members in the holdout), sorted by SHA256 stable key, zero
+overlap with the Task 6Z PairedVal20 members.
 
-Exactly the four L3 programs (canonical ids), oracle `oracle_native_gt` largest reference, byte-identical
-Task 6Z packs (`z_overfit20`, `z_mini_train_1200`, `z_mini_val_240`, `z_paired_val20`; all SHA256 verified),
-frozen fields (`alpha 1.2`, `tau 0.04`, `s_axis 0.02`, `s_margin 0.02`; `sigma_diag 0.05`) and the frozen
-SAM2.1 Hiera Base+ `V ∈ R^(256×64×64)`.
+## 4. E0 reproduction, E1 oracle holdout and the section-13 gate
 
-D-B0: mIoU **0.3242128983** (Δ **0.0**), Dice **0.4389840056** (Δ **0.0**), Paired **15/20**, margin
-**+0.3003540897** (Δ **0.0**) → `TASK6Z_BASELINE_REPRODUCTION_PASS`.
+E0: Z-B3 mIoU `0.3242128982543474` / D-B1 `0.3978996298363562` (both Δ **0.0**), paired **15/20** and
+**19/20** → `TASK7D_REPRODUCTION_PASS`.
 
-## 5. Architecture and training
+E1 oracle holdout (669 records): Z-B3 **0.314111** mIoU / 0.424719 Dice / 0.516799 Pr@0.5; D-B1 **0.385496** /
+**0.510648** / **0.547313**. Delta **+0.071384** mIoU (+0.085929 Dice, +0.030514 Pr@0.5). Per direction
+(Z-B3 → D-B1): above 0.3493 → 0.4075 (**+0.0582**), below 0.2738 → 0.3506 (**+0.0768**), left 0.3314 →
+0.3880 (**+0.0566**), right 0.3000 → 0.3931 (**+0.0931**) → **4/4 improve**. Bootstrap (seed 20261001, 2000
+paired resamples by record id, 95 % percentile CI): mean **+0.071384**, CI **[+0.058623, +0.084263]**.
+`E-PairedHoldout20`: Z-B3 15/20 (margin +0.2592), **D-B1 18/20 (margin +0.3193)**.
 
-Commons: `F = Conv1x1(256→128) + GroupNorm(8,128) + GELU`; direction embedding vocab 4 / dim 16 (no nearest
-embedding); `temperature = 1.0`, `eps = 1e-6`, 4096 spatial tokens. Learned competition
-`A = softmax(S.flatten(2)/1.0, dim=-1)` (never detached; measured spatial sum exactly 1.000000), field
-competition (D-B1) `A_fixed = clamp(P_dir*P_near) / (sum + eps)` with `INVALID_FIELD_MASS` on zero mass,
-prototype `q = Σ A_i F_i` (no stop-gradient), similarity `C_i = <F_norm_i, q_norm>` (plain cosine). Trunk
-`Conv3x3(in→128)+GN+GELU → Conv3x3(128→64)+GN+GELU → Conv1x1(64→1)`, bilinear 64→512; loss exactly
-`BCEWithLogitsLoss + DiceLoss`.
+**`DB1_HOLDOUT_GENERALIZES = true (6/6)`**: mIoU 0.3855 ≥ 0.36 ✓ · Δ +0.0714 ≥ +0.05 ✓ · 4/4 directions ✓ ·
+CI lower +0.0586 > 0.00 ✓ · paired 18/20 ≥ 16/20 ✓ · margin +0.3193 ≥ 0.30 ✓.
 
-| Variant | Score head in | Decoder in | Params | Overfit20 | MiniVal mIoU | Dice | Pr@0.5 | Paired | margin |
-|---|---|---|---|---|---|---|---|---|---|
-| D-B0 | — (frozen Z-B3) | — | 275,777 | — | 0.3242 | 0.4390 | 0.5331 | 15/20 | +0.3004 |
-| **D-B1** | none (deterministic) | 148 | 278,081 | 0.9623/0.9807 | **0.3979** | **0.5273** | **0.5620** | **19/20** | **+0.3888** |
-| D-B2 (primary) | 146 | 148 | 362,434 | **0.9678/0.9835** | 0.3265 | 0.4373 | 0.5454 | 17/20 | +0.2956 |
-| D-B3 | 144 | 146 | 358,978 | 0.9591/0.9790 | 0.1595 | 0.2311 | 0.2760 | 8/20 | +0.1629 |
-| D-B4 | 146 | 147 | 361,282 | 0.9679/0.9836 | 0.3291 | 0.4488 | 0.4618 | 19/20 | +0.3056 |
+## 5. E2 predicted-reference audit and the section-19 gate
 
-D1: lr 1e-3 / wd 1e-4 / batch 4 / 1200 steps / eval every 100 → `GLOBAL_COMPETITION_OVERFIT_PASS`.
-D2: lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / selection by MiniVal240 mIoU / seed 20261001;
-wall 32.1-96.8 s and peak VRAM 0.667-0.698 GB per variant. Deltas: **D-B1−D-B0 +0.0737**,
-D-B2−D-B0 **+0.0023**, D-B2−D-B1 **−0.0714**, D-B2−D-B3 **+0.1670**, D-B2−D-B4 **−0.0026**,
-D-B3−D-B0 −0.1647, D-B4−D-B0 +0.0049.
+Frozen U-C1 as section 14 mandates (the Task 6U `CONFIGS['U-C1']` entry actually used): YOLO26m-seg Task 6M.1
+`ef852b58…61f474`, imgsz 640, **conf 0.05**, **max_det 300**, default NMS, no TTA, no tiling; eligibility =
+not border-touching and bbox extent ratio ≤ 0.20; selection = max area → tie higher confidence → lower index.
+No ranker, no quality filter, no SAM2 refinement. (Task 6Q's read-only `config_report()` prints the resolver
+module defaults conf 0.10 / max_det 100; the pipeline uses the frozen U-C1 entry this task specifies.)
 
-## 6. Competition diagnostics
+Reference diagnostics (GT offline): mIoU **0.440647**, Dice **0.508456**, Pr@0.5 **0.501556**, abstentions
+**2** (0.299 %), REFERENCE_OK **346**, SELECTION_WRONG **220**, NOT_COVERED **101**, ABSTENTION **2**,
+GEOMETRY_POOR **0**.
 
-| Variant | target mass | argmax-in-target | reference mass | normalized entropy | top-1 | top-16 | top-64 |
-|---|---|---|---|---|---|---|---|
-| D-B1 | **0.0675** | 0.0083 | 0.0024 | **0.6933** | 0.0122 | **0.1670** | **0.4751** |
-| D-B2 | 0.0067 | 0.0000 | 0.0862 | 0.8848 | 0.0105 | 0.0923 | 0.2202 |
-| D-B3 | 0.0189 | 0.0208 | 0.0968 | 0.8844 | 0.0091 | 0.0876 | 0.2164 |
-| D-B4 | 0.0051 | 0.0000 | 0.1040 | 0.8495 | 0.0146 | 0.1224 | 0.2800 |
+| Pipeline | Strict mIoU | Dice | Pr@0.5 | Answered | Answered-only | Reference-OK subset | Abstentions |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| E-P0 Z-B3 | 0.206911 | 0.279792 | 0.427600 | 667/669 | 0.207542 | 0.328808 | 2 |
+| **E-P1 D-B1** | **0.245405** | **0.324796** | **0.471116** | 667/669 | 0.246114 | **0.396365** | 2 |
 
-Flags: `global_competition_mask_gain` **false**, `prototype_gain` **false**, `field_guidance_gain` **true**,
-`competition_localizes_target` **false**.
+Retention = **0.636596**; E-P1 − E-P0 strict = **+0.038535**. Predicted-reference `E-PairedHoldout20`
+(reference resolved once per pair): Z-B3 **6/20** (margin +0.1251), D-B1 **6/20** (margin +0.1251),
+reference-abstention pairs 0.
+
+**`DB1_PREDICTED_REFERENCE_USABLE = false (4/7)`**: strict 0.2454 ≥ 0.24 ✓ · answered-only **0.2461 < 0.25** ✗ ·
+Δ vs E-P0 +0.0385 ≥ +0.03 ✓ · retention 0.6366 ≥ 0.62 ✓ · paired **6/20 < 11/20** ✗ · margin **+0.1251 < 0.20**
+✗ · abstention 0.299 % ≤ 10 % ✓.
+
+Because section 19 failed, **section 20 was not executed**: `evaluation/task7e_canonical_parser_integration.json`
+records `executed: false` with the reason; the Task 7C parser was neither trained nor used to choose the
+architecture.
+
+## 6. Decision
+
+| | Value |
+|---|---|
+| `DB1_HOLDOUT_GENERALIZES` | **true** |
+| `DB1_PREDICTED_REFERENCE_USABLE` | **false** |
+| `DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER` | **false** |
+| Development baseline | **Z-B3 retained** |
+| D-B1 role | **positive oracle-reference ablation only** · neither checkpoint deleted or overwritten |
+
+Measured reading (reported only, no repair proposed): D-B1's advantage is real and not a selection artifact —
+it survives 669 untouched records with +0.0714 mIoU, CI [+0.0586, +0.0843], 4/4 directions and 18/20 held-out
+pairs. Under the frozen U-C1 predicted reference the *ordering* survives (E-P1 beats E-P0 by +0.0385, retention
+0.637, reference-OK subset 0.3964 vs 0.3288) but the absolute level and the counterfactual audit miss the
+section-19 bars: answered-only 0.2461 < 0.25, predicted paired 6/20 < 11/20, margin +0.1251 < 0.20. The
+reference stage dominates the loss — only 346/669 references are REFERENCE_OK, 220 are SELECTION_WRONG and 101
+NOT_COVERED — and sharing one reference within a pair makes the own/cross audit far harder than in the oracle
+case (18/20 → 6/20).
 
 ## 7. Tests, storage, git
 
-`python -m pytest tests/ -q` → **1243 passed, 1 skipped** (Task 7C ended at 1192 passed / 1 skipped; no prior
-passing test was reduced). `tests/test_task7d_global_competition.py` adds the 51 section-R checks.
+`python -m pytest tests/ -q` → **1285 passed, 1 skipped** (Task 7D ended at 1243 passed / 1 skipped; no prior
+passing test was reduced). `tests/test_task7e_holdout_audit.py` adds the 42 Part-P checks.
 
-Not committed: the four Task 7D checkpoints, caches, model weights (YOLO/SAM2/Z-B3), source imagery/vectors,
-`.conda`. Committed: decoder/data code, small JSON evaluations, scripts, tests, docs, handoff.
+Not committed: checkpoints, model weights, proposal/feature caches, the large expanded holdout rows
+(`artifacts/task7e/holdout/`), source imagery/vectors, `.conda`. Committed: the small holdout manifest,
+evaluation JSON, scripts/helpers, tests, docs, handoff. No new checkpoint was created.
 
-Task 7D downloaded nothing and installed nothing. Watt was **not needed** in Task 7D: the pre-existing Watt
-instance is transport-only, is not owned by this project and was left running per the ownership rule; no
-proxy, host, certificate or TLS setting was read or modified.
+Task 7E downloaded nothing and installed nothing. Watt was **not needed** in Task 7E: the pre-existing Watt
+instance is transport-only, is not owned by this project and was left running per the ownership rule; no proxy,
+host, certificate or TLS setting was read or modified.
 
 ## 8. Interpretation boundary
 
-DSH reports measurements only. Global competition is **not** claimed as a novelty; no final architecture is
-claimed; no predicted reference was integrated; parser/reference were not changed; no graph/attention module
-was added; no supervision was added to the competition map; no formal full-data training was started; the
-test split was not accessed. Measured reading (no repair proposed): the deterministic field-weighted
-prototype variant D-B1 is the only variant that clearly beats the frozen Z-B3 baseline
-(+0.0737 mIoU, 19/20 paired, margin +0.3888), while the learned relation-guided competition (D-B2) is
-statistically indistinguishable from the baseline (+0.0023) and its competition maps remain near-uniform
-(entropy 0.8848 of the 4096-token maximum) and do not localize the target (mass 0.0067, argmax-in-target
-0.0000).
+DSH reports measurements only. D-B1 is **not** claimed globally novel and is **not** called the final model; no
+full training was run; the test split was not evaluated; parser/reference were not retrained; no learned
+competition, graph or attention module was added; D-B1 was **not** modified after the holdout results; Task 7F
+was not chosen.
 
-## 9. Recommended next step (exact wording required by Part P)
+## 9. Recommended next step (exact wording required by Part N)
 
-等待 ChatGPT 根据 Task 7D 的 oracle-reference global competition 因果结果决定是否替换 Z-B3，不自行加入 attention/graph、predicted reference 或正式全量训练。
+等待 ChatGPT 根据 Task 7E 的 untouched L3 holdout 与 predicted-reference 结果决定是否正式冻结 D-B1 为开发版 L3 decoder，不自行进行全量训练、test 评估或新的架构改动。
 
 ## 10. STOP
 
-Task 7D stops here: no further parser experiment, no reference re-hardening, no attention/graph module, no
-predicted-reference integration, no formal full training, no test access, no GUI. Waiting for the ChatGPT
-audit.
+Task 7E stops here: no training, no test run, no parser/reference/D-B1 change, no additional architecture, no
+formal full-data training, no GUI. Waiting for the ChatGPT audit.

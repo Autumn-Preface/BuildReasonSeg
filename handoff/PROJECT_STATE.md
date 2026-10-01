@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7D._
+_Last updated by DSH at the end of Task 7E._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -110,6 +110,47 @@ The block above is machine-checked against
 | 7C | **20-class rehearsal + L3 ProgramHead hardening** | **done → `L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL`** (final parser-hardening attempt; restarted **only** from Task 6T `4cbba36b…d44a5e`, never from the failed Task 7B checkpoint; **8,000-prompt all-20-class rehearsal** — L3 4×800 (400 zh + 400 en), other 16 classes ×300 (150 + 150) — 8,000 unique normalized, exact overlap **0**, normalized overlap **0**, duplicates **0**, per-class/zh-en counts exact → `REHEARSAL_CLEAN`; internal group-disjoint split with holdout **80/class (L3)** and **30/class (other 16)**, overlap 0; AdamW ProgramHead lr **1e-4** / LoRA lr **2e-5** / wd 1e-4 / eff. batch 32 / ≤5 epochs / patience 2 / bf16 → selected epoch **2**, checkpoint `c1505736…d58d9a`, 419.3 s, 7.41 GB; **full v0.2 val 18,222/18,222 = 1.0000 accuracy, macro F1 1.0000, every class recall 1.0000** ✓ (forgetting fully cured), Z-MiniVal240 **240/240** ✓, Z-Paired **40/40** ✓; but fixed24 **5/24** (compact 0/8, per class 1/0/2/2), minimal96 **60/96**, stress **0.6667** / macro F1 0.5924 / min recall 0.4167 / L3 0.4479 ✗; scope controls pass; frozen E2E reproduces Task 7A exactly; canonical gates pass → L3 CLI default moved to Task 7C → verdict) |
 
 | 7D | **Oracle-reference relation-guided global competition decoder** | **done → `GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN`** (parser/reference/fields/SAM2 frozen; **D-B0 = frozen Z-B3 reproduced exactly** — mIoU 0.3242128983 Δ0.0, Dice 0.4389840056 Δ0.0, paired 15/20, margin +0.3003540897 Δ0.0; four trainable variants on the byte-identical Task 6Z packs, all four pack SHA256 verified; commons `F=Conv1x1(256→128)+GN+GELU`, direction embed vocab 4/dim 16, temperature 1.0, A = global softmax over 4096 tokens (spatial sum exactly 1.000000), `q = Σ A_i F_i` no stop-grad, plain cosine C, trunk → bilinear 64→512, loss exactly BCE+Dice, competition never supervised; D1 Overfit20 lr 1e-3/1200 steps → **D-B2 0.9678/0.9835 gate ✓**; D2 MiniTrain1200→MiniVal240 lr 3e-4/patience 5 → MiniVal mIoU **D-B0 0.3242 · D-B1 0.3979 · D-B2 0.3265 · D-B3 0.1595 · D-B4 0.3291**, paired **D-B1 19/20 (+0.3888) · D-B2 17/20 (+0.2956) · D-B4 19/20 (+0.3056)**, deltas D-B2−D-B0 **+0.0023**, D-B2−D-B1 **−0.0714**, D-B2−D-B3 +0.1670 (flags: mask_gain false, prototype_gain false, field_guidance_gain true, localizes_target false), diagnostics D-B2 target mass 0.0067 / argmax-in-target 0.0000 / entropy 0.8848 vs D-B1 0.0675 / 0.0083 / 0.6933; §28 criteria **4/11** → verdict) |
+
+| 7E | **D-B1 untouched-holdout + predicted-reference audit** | **done → `DB1_PREDICTED_REFERENCE_BELOW_GATE`** (evaluation/integration only, **no training**; D-B1 `6df31909…21a89c0` exact variant D-B1 epoch 7 and Z-B3 `74f308e1…fc0f0bc` exact, both read-only; **E-HoldoutL3 = 669** records from the full v0.2 L3 val population **936** (above 224/below 213/left 250/right 249) minus Z-MiniVal240 ∪ Z-PairedVal20 = 267 ids — overlap 0/0, test 0, ≥600, every program ≥120, no subsampling; **E-PairedHoldout = 20** pairs from 175 candidates, same tile/reference, different directions/targets, old-pair overlap 0; E0 reproduction Δ **0.0** (Z-B3 0.3242128982543474, D-B1 0.3978996298363562, paired 15/20 & 19/20); **E1 oracle holdout Z-B3 0.3141 → D-B1 0.3855, Δ +0.0714**, 4/4 directions improve, bootstrap CI [+0.0586, +0.0843], paired **18/20** margin +0.3193 → **`DB1_HOLDOUT_GENERALIZES` true 6/6**; **E2 predicted U-C1** (conf 0.05/max_det 300, cache-verified) reference mIoU 0.4406, REFERENCE_OK 346 / SELECTION_WRONG 220 / NOT_COVERED 101 / abstentions 2 (0.299 %), **E-P0 0.2069 → E-P1 0.2454, Δ +0.0385, retention 0.6366**, paired **6/20** margin +0.1251 → **`DB1_PREDICTED_REFERENCE_USABLE` false 4/7**; §20 parser integration not executed; `DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER` **false** → Z-B3 retained, D-B1 a positive oracle-reference ablation only) |
+
+## Task 7E measured results
+
+Evaluation/integration only — **no model was trained, nothing was tuned, no test split was touched**. Question:
+does the frozen Task 7D **D-B1 deterministic field-weighted prototype** keep its gain on a validation remainder
+that played no part in its checkpoint selection, and how much survives predicted-reference error propagation
+from the frozen U-C1 resolver? Full detail: `docs/task7e_deterministic_prototype_holdout.md`,
+`evaluation/task7e_*.json`.
+
+| | Value |
+|---|---|
+| Frozen assets | D-B1 `6df31909…21a89c0` (variant D-B1, epoch 7) · Z-B3 `74f308e1…fc0f0bc` · fields v0.2 / nearest v0.1 · frozen SAM2 features · read-only, never retrained |
+| Source population | full v0.2 val L3 = **936** (above 224, below 213, left 250, right 249) — matches the expected totals exactly |
+| Exclusion | Z-MiniVal240 (240) ∪ Z-PairedVal20 members (40) = **267** unique ids |
+| **E-HoldoutL3** | **669** records (left 184, right 181, above 154, below 150), no subsampling · overlap with MiniVal **0** / PairedVal **0** / test **0** · ≥600 ✓ · every program ≥120 ✓ |
+| **E-PairedHoldout** | **20** pairs from **175** candidates (same tile + same oracle reference, different direction programs, different targets) · SHA256 stable key order · old-pair overlap **0** |
+| E0 reproduction | Z-B3 0.3242128982543474 (Δ **0.0**) paired 15/20 · D-B1 0.3978996298363562 (Δ **0.0**) paired 19/20 → `TASK7D_REPRODUCTION_PASS` |
+| **E1 oracle holdout** | Z-B3 **0.314111** mIoU / 0.424719 Dice · **D-B1 0.385496** / **0.510648** · **Δ +0.071384** · per direction above +0.0582, below +0.0768, left +0.0566, right +0.0931 → **4/4 improve** |
+| E1 bootstrap | seed 20261001 · 2000 paired resamples by record id · 95 % CI **[+0.058623, +0.084263]** (lower > 0) |
+| E1 held-out paired | Z-B3 15/20 (+0.2592) · **D-B1 18/20 (+0.3193)** |
+| **`DB1_HOLDOUT_GENERALIZES`** | **true (6/6)**: mIoU ≥ 0.36 ✓ · Δ ≥ +0.05 ✓ · 4/4 directions ✓ · CI lower > 0 ✓ · paired ≥ 16/20 ✓ · margin ≥ 0.30 ✓ |
+| E2 reference quality (U-C1) | mIoU **0.440647** · Dice 0.508456 · Pr@0.5 0.501556 · abstentions **2** (0.299 %) · REFERENCE_OK **346** / SELECTION_WRONG **220** / NOT_COVERED **101** / ABSTENTION 2 / GEOMETRY_POOR 0 |
+| **E2 target** | **E-P0 Z-B3 strict 0.206911** (answered-only 0.207542, reference-OK 0.328808) · **E-P1 D-B1 strict 0.245405** (answered-only 0.246114, reference-OK **0.396365**) · Δ **+0.038535** · **retention 0.636596** |
+| E2 held-out paired | Z-B3 **6/20** (+0.1251) · D-B1 **6/20** (+0.1251) · reference-abstention pairs 0 |
+| **`DB1_PREDICTED_REFERENCE_USABLE`** | **false (4/7)**: strict 0.2454 ✓ · answered-only **0.2461 < 0.25** ✗ · Δ +0.0385 ✓ · retention 0.6366 ✓ · paired **6/20 < 11/20** ✗ · margin **+0.1251 < 0.20** ✗ · abstention 0.299 % ✓ |
+| §20 parser integration | **not executed** (`task7e_canonical_parser_integration.json` records `executed: false`); parser never trained, never used to select the architecture |
+| Decision | `DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER` **false** → **Z-B3 retained** as development baseline; D-B1 recorded as a **positive oracle-reference ablation only**; neither checkpoint deleted/overwritten |
+| Verdict | **`DB1_PREDICTED_REFERENCE_BELOW_GATE`** |
+
+1. **D-B1's advantage is real, not a selection artifact**: it survives 669 records that never influenced its
+   checkpoint choice (+0.0714 mIoU, CI [+0.0586, +0.0843], 4/4 directions, 18/20 held-out pairs, margin
+   +0.3193), so the oracle-reference gain generalizes.
+2. **The predicted-reference stage is the bottleneck**: with the frozen U-C1 largest reference only 346/669
+   references are REFERENCE_OK (220 SELECTION_WRONG, 101 NOT_COVERED), E-P1 strict drops to 0.2454 (retention
+   0.637) and answered-only 0.2461 misses the 0.25 bar by 0.004.
+3. **The counterfactual audit collapses under a shared predicted reference**: sharing one reference per pair
+   drops D-B1 from 18/20 (oracle) to 6/20 (predicted) with margin +0.1251 < 0.20, which is precisely why the
+   section-19 gate blocks adoption even though the ordering (D-B1 > Z-B3) still holds.
+4. Next: 等待 ChatGPT 根据 Task 7E 的 untouched L3 holdout 与 predicted-reference 结果决定是否正式冻结 D-B1 为开发版 L3 decoder，不自行进行全量训练、test 评估或新的架构改动。
 
 ## Task 7D measured results
 
