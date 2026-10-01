@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7G._
+_Last updated by DSH at the end of Task 7H._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -116,6 +116,43 @@ The block above is machine-checked against
 | 7F | **Reference bottleneck ceiling decomposition** | **done → `REFERENCE_SELECTION_DOMINANT`** (evaluation only, **no training**; frozen D-B1 `6df31909…21a89c0` + frozen U-C1 (conf 0.05/max_det 300) + frozen fields/SAM2, GT only inside declared diagnostic modes; Task 7E population reused with both hashes re-verified (**669** records / **20** pairs, zero test/overlap); four modes over one frozen proposal pass per tile — **F-R0** current selection (ref mIoU 0.4406) / **F-R1** oracle selection of a *predicted* proposal (0.7119) / **F-R2** coverage-conditional GT (1.0000, 566 covered, rate 0.8460) / **F-R3** full GT (1.0000); reproductions F-R0 Δ**0.0** and F-R3 Δ**2.27e-07** ✓; downstream strict mIoU **M0 0.245405 · M1 0.364909 · M2 0.331180 · M3 0.385496**; **selection_gain +0.119504 (fraction 0.8530)** vs **coverage_gain +0.054316 (0.3877)** vs **geometry_gain_covered +0.004253** on COVERED50 (G-PRED 0.3872 → G-GT 0.3914, 566 records); total_reference_gap **+0.140091**; paired F-R0 6/20 · **F-R1 18/20** · F-R2 16/20 (3 abstention pairs) · F-R3 18/20; labels `SELECTION_IS_ACTIONABLE` **true** / `PROPOSAL_GEOMETRY_IS_MAJOR` **false** / `PROPOSAL_COVERAGE_IS_MAJOR` **true** / `CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING` **true**; D-B1 recorded as **preferred oracle-reference L3 target decoder candidate**, not end-to-end ready) |
 
 | 7G | **Largest-reference set-context selector (final reference intervention)** | **done → `LARGEST_SELECTOR_NOT_LEARNABLE`** (**only the selector was trained**; U-C1/YOLO, D-B1, fields, SAM2, parser and all history frozen; `G-RefTrainUniqueLargest` from **v0.2 train only** — 12,778 rows → 4,119 largest-reference → **3,002** with explicit reference id (1,117 L1 `largest` rows have empty `references`) → dedup `(split, tile_id, reference_source_feature_id)` → **1,063 unique refs/tiles**, 1,939 dupes removed, `smallest` 1,251 excluded, label = best eligible GT-IoU (tie confidence→index, min IoU 0.50), `no_eligible` 2 / `untrainable_not_covered` 33 / **trainable 1,028** ✓; exact **18-D** feature vector (geometry/confidence + boundary via `binary_erosion 3×3/1/border 0` + 6 set-overlap features + set size; no GT/centroid/relation/target/RGB/SAM2) → `SetContextLargestSelector v1` (`18→64→32` shared encoder, `mean+max` context → `96→32→1` head, **6,561 params**, one listwise CE, no attention/Transformer/GNN); tile-level 80/20 SHA256 split (seed 20261001) **805/223 tiles**, overlaps 0; AdamW 1e-3 / wd 1e-4 / batch 32 / ≤40 epochs / patience 6 → early stop epoch 25; internal gate **FAIL 2/4** — G-I0 0.5200 → **G-I1 0.6199** (gain **+0.0999** ✓ ≥0.08, but 0.6199 < **0.62** ✗), top-1 **0.6592** ✓, gap **0.1791** > **0.14** ✗ → STOP; external scene-disjoint stages **not executed** (artifacts record `executed: false`, paired artifact not created, scripts hard-guarded); `TASK7G_SELECTOR_ADOPTED` **false** → keep U-C1 + deterministic max-area + D-B1, reference selection recorded as an **unresolved limitation**, reference intervention stops) |
+
+| 7H | **Development architecture freeze + formal protocol** | **done → `DEVELOPMENT_ARCHITECTURE_FROZEN`** (governance freeze only: **no training, no test access**; `BuildReasonSeg-DevFreeze-2026-10` = controlled instruction → **Task 7C** ProgramHead (20 canonical programs) → **U-C1** YOLO26m-seg (imgsz 640 / conf 0.05 / max_det 300 / default NMS / no TTA / no tiling) → **deterministic largest** selector → **GeometricRelationField v0.2** (P_dir) + **NearestBoundaryField v0.1** (P_near) → **Task 7D D-B1** target decoder; all 5 required hashes exact — YOLO `ef852b58…61f474` · 7C parser `c1505736…d58d9a` · 6O N-B3 `7556e4a4…c7d6ab` · 6Z Z-B3 `74f308e1…fc0f0bc` · 7D D-B1 `6df31909…21a89c0`; dataset v0.2 / native-vector v1.0 / `scene_disjoint_v1`; six rejected modules (6P head, 6U ranker, 6W quality, 6X SAM2 refinement, 7G selector, 7D D-B2) recorded as frozen **negative** evidence and excluded; limitations L-01 selection (unresolved) / L-02 coverage (secondary) / L-03 geometry (not major) / L-04 free-form language (controlled-language only) / L-05 nearest-only (experimental) / L-06 unseen-city (not established); formal protocol frozen (train 1344 = 323/347/338/336, val 936, D-B1 schedule copied from `task7d_training.json` — AdamW lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / bf16 / val-mIoU selection — seeds **20261001/2/3**, practical vs oracle reported separately); **test lock LOCKED, `test_execution_authorized: false`**; claim registry C1 SUPPORTED / C2 SUPPORTED_WITH_LIMITATION / C3 SUPPORTED / C4 NOT_SUPPORTED / C5 NOT_SUPPORTED / C6 SUPPORTED_WITH_LIMITATION / C7–C9 NOT_SUPPORTED, no novelty claim; 10/10 §22 conditions) |
+
+## Task 7H measured results
+
+Research-governance freeze — **no training, no inference, no test access**. The task audited the frozen
+development assets, froze the development architecture, recorded the limitations and claims, and froze the
+formal three-seed training/test protocol to be executed only in later tasks. Full detail:
+`docs/task7h_development_architecture_freeze.md`, `docs/task7h_formal_experiment_protocol.md`,
+`evaluation/task7h_*.json`.
+
+| | Value |
+|---|---|
+| Verdict | **`DEVELOPMENT_ARCHITECTURE_FROZEN`** (10/10 §22 conditions) |
+| Architecture name | `BuildReasonSeg-DevFreeze-2026-10` (not a new checkpoint) |
+| Chain | controlled instruction → Task 7C ProgramHead (canonical 20-class ids) → U-C1 YOLO26m-seg → deterministic largest selector → P_dir (v0.2) + P_near (v0.1) → Task 7D D-B1 → target mask |
+| Frozen hashes (all exact) | YOLO `ef852b58…61f474` · Task 7C parser `c1505736…d58d9a` · Task 6O **N-B3** `7556e4a4…c7d6ab` · Task 6Z **Z-B3** `74f308e1…fc0f0bc` · Task 7D **D-B1** `6df31909…21a89c0` |
+| Data identity | BuildSpatialReason **v0.2** · WHU-EA-NativeVector **v1.0** · `scene_disjoint_v1`; L3 train **1344** (323/347/338/336), val **936**; test **not read, not hashed** |
+| Rejected (negative evidence only) | 6P ReferenceMaskHead · 6U ProposalSetRanker v0.1 · 6W ProposalQualityEstimator v0.1 · 6X SAM2 refinement · 7G SetContextLargestSelector v1 · 7D D-B2 learned competition |
+| D-B1 role / evidence | **preferred L3 target-decoder architecture candidate** · Task 7E oracle holdout Z-B3 0.3141113773 → D-B1 0.3854957053 (Δ +0.0713843280, CI [+0.0586233648, +0.0842626436], paired 18/20, margin +0.3193402994) · practical predicted reference 0.2454050104 |
+| Z-B3 / N-B3 roles | Z-B3 = frozen L3 baseline/ablation · N-B3 = verified directional-field visual segmentation component (N-B2/N-B4 must not be substituted) |
+| Limitations | **L-01 reference selection = unresolved practical bottleneck** · L-02 proposal coverage = secondary unresolved · L-03 proposal-mask geometry = not major (+0.004253) · L-04 free-form L3 language = **controlled-language interface only** (canonical 1.0 vs fixed24 5/24 / compact 0/8 / stress 0.6667) · L-05 nearest-only = experimental/limited (Task 6Y 0.2864, paired 6/20) · L-06 unseen-city generalization = **not established** |
+| Formal protocol (not executed) | four L3 programs; D-B1 retrained from fresh weights, SAM2 frozen, BCE+Dice only, schedule copied from `evaluation/task7d_training.json` (AdamW lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / bf16 AMP / val-mIoU selection); formal seeds **20261001 / 20261002 / 20261003**; practical and oracle results reported separately; per-seed + mean±std reporting; full mask/counterfactual/reference/per-relation/stratification/efficiency metric set |
+| Test lock | **LOCKED** · `architecture_head D-B1` · `reference_policy "U-C1 deterministic largest"` · `test_execution_authorized false` · unlock only after "ChatGPT audit after formal train/val completion" |
+| Test-access disclosure | the `scene_disjoint_v1` test split was accessed once in **Task 6M** (J4-v2 proposal-baseline audit); future reporting may only say **`final frozen-architecture test evaluation`**, never "untouched test" |
+| Claims | C1 SUPPORTED · C2 SUPPORTED_WITH_LIMITATION · C3 SUPPORTED · C4 NOT_SUPPORTED · C5 NOT_SUPPORTED · C6 SUPPORTED_WITH_LIMITATION · C7/C8/C9 NOT_SUPPORTED · no novelty/"first" claim |
+
+1. **The development architecture is frozen**: the deterministic reference path stays because no learned
+   replacement passed its adoption protocol (Task 7G), not because it is best in principle.
+2. **D-B1 is frozen as the preferred L3 target-decoder candidate**, verified on the untouched Task 7E
+   oracle-reference holdout, but it is explicitly not end-to-end ready and not paper-final.
+3. **All six remaining practical limitations are recorded** (reference selection, coverage, free-form language,
+   nearest-only, unseen-city generalization, geometry-not-the-issue) with measured evidence, and no claim in the
+   registry overstates them.
+4. **The formal protocol is frozen but not executed**: three seeds, val-only checkpoint selection, separated
+   practical/oracle reporting, and a LOCKED test gate that any future task must check.
+5. Next: 等待 ChatGPT 审核 Task 7H 的开发版架构冻结与正式实验协议；在审核通过前不启动正式三种子训练，不解锁 test。
 
 ## Task 7G measured results
 

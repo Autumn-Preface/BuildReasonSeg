@@ -17,145 +17,128 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 7G Report: Largest-Reference Set-Context Selector (Final Reference Intervention)
+# FROM_DSH — Task 7H Report: Development Architecture Freeze + Formal Experiment Protocol
 
-_This file holds the Task 7G report. The Task 7F report is preserved in git history at commit `c59c6d3`;
-Task 7E at `f9c6e87`; Task 7D at `86e4f4c`; Task 7C at `632c9c0`; Task 7B at `b325585`._
+_This file holds the Task 7H report. The Task 7G report is preserved in git history at commit `22401fe`;
+Task 7F at `c59c6d3`; Task 7E at `f9c6e87`; Task 7D at `86e4f4c`; Task 7C at `632c9c0`._
 
 **Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full design notes: `docs/task7g_largest_reference_set_context_selector.md`. Only the selector was trained;
-YOLO, SAM2, the fields, the parser and D-B1 stayed frozen.
+Full freeze document: `docs/task7h_development_architecture_freeze.md` · formal protocol:
+`docs/task7h_formal_experiment_protocol.md`. **Task 7H performed no training and read no test record.**
 
 ## 1. Verdict
 
-**`LARGEST_SELECTOR_NOT_LEARNABLE`** — section 34 priority order applied literally:
+**`DEVELOPMENT_ARCHITECTURE_FROZEN`** — all ten section-22 conditions hold:
 
-1. `INVALID_EXPERIMENT` — no: frozen paths unchanged, train-split-only selector data, no test use, no external
-   holdout in checkpoint selection, YOLO/D-B1 untouched.
-2. `SELECTOR_DEPENDENCY_UNAVAILABLE` — no: SciPy present and used for the boundary feature.
-3. `SELECTOR_TRAIN_DATA_INSUFFICIENT` — no: 1,028 trainable unique references ≥ 300 on 1,063 tiles.
-4. **`LARGEST_SELECTOR_NOT_LEARNABLE`** — the section-23 internal tile-disjoint gate failed 2 of 4 conditions
-   (`mean selected IoU 0.6199 < 0.62`; `mean best-minus-selected gap 0.1791 > 0.14`). ← **verdict**
-5. `TASK7F_BASELINE_REPRODUCTION_FAIL` — not reached (external stage not executed).
-6. `LARGEST_SELECTOR_SCENE_DISJOINT_FAIL` — not reached.
-7. `LARGEST_SELECTOR_DEVELOPMENT_READY` — no.
+| # | Condition | Result |
+|---|---|---|
+| 1 | required checkpoint hashes match | ✓ YOLO `ef852b58…61f474` · Task 7C parser `c1505736…d58d9a` · Task 6O N-B3 `7556e4a4…c7d6ab` · Task 6Z Z-B3 `74f308e1…fc0f0bc` · Task 7D D-B1 `6df31909…21a89c0` |
+| 2 | active dataset identity | ✓ BuildSpatialReason **v0.2** / WHU-EA-NativeVector **v1.0** / `scene_disjoint_v1` |
+| 3 | no rejected selector/ranker in the chain | ✓ all six rejected modules recorded as frozen negative evidence and excluded |
+| 4 | D-B1 role correct | ✓ `preferred L3 target-decoder architecture candidate`; Z-B3 = frozen baseline/ablation |
+| 5 | parser limitation recorded | ✓ canonical 1.0 / macro F1 1.0 / 240/240 / 40/40 vs fixed24 5/24, compact 0/8, stress 0.6667 |
+| 6 | reference limitation recorded | ✓ L-01 unresolved practical bottleneck |
+| 7 | formal protocol complete | ✓ four L3 programs (train 1344 = 323/347/338/336, val 936), D-B1 schedule copied from `task7d_training.json`, seeds 20261001/2/3, complete metric set |
+| 8 | test lock LOCKED | ✓ `test_execution_authorized: false` |
+| 9 | no training occurred | ✓ |
+| 10 | no test accessed | ✓ test file neither read nor hashed |
 
-No threshold, feature, model or loss was changed after seeing results.
+No other verdict applies: no frozen asset is missing, all hashes match, and the protocol is consistent.
 
-## 2. Recorded Task 7F evidence (frozen, not modified)
+## 2. Recorded Task 7G result (frozen, not modified)
 
-`REFERENCE_SELECTION_DOMINANT`: M0 0.2454050104, M1 0.3649093893, M2 0.3311796697, M3 0.3854959324;
-selection_gain +0.1195043789, coverage_gain +0.0543162627, geometry_gain_covered +0.0042531670,
-total_reference_gap +0.1400909220. Labels: `SELECTION_IS_ACTIONABLE = true`,
-`PROPOSAL_GEOMETRY_IS_MAJOR = false`, `PROPOSAL_COVERAGE_IS_MAJOR = true`,
-`CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING = true`. Reference ceiling: F-R0 0.440647, F-R1 0.711942,
-best eligible coverage@0.50 0.846039. Paired: F-R0 6/20 (+0.125063), F-R1 18/20 (+0.300548),
-F-R2 16/20 (+0.330636), F-R3 18/20 (+0.319340).
+`LARGEST_SELECTOR_NOT_LEARNABLE`. Internal tile-disjoint holdout: G-I0 mean selected reference IoU
+`0.5199913587`, oracle-best top-1 `0.4887892377`, mean gap `0.2789719922`; G-I1 mean selected IoU
+`0.6198877726`, median `0.7895902547`, Pr(≥0.50) `0.7309417040`, oracle top-1 `0.6591928251`, mean gap
+`0.1790755783`, gain `+0.0998964138`. Gate: gain ≥ +0.08 **PASS** · mean IoU ≥ 0.62 **FAIL** (0.6198878) ·
+top-1 ≥ 0.55 **PASS** · gap ≤ 0.14 **FAIL** (0.1790756).
 
-**Task 7F reporting erratum (recorded, artifacts untouched):** the helper stores both
-`selected_confidence/selected_area` (F-R0) and `oracle_selected_confidence/oracle_selected_area` (F-R1), but
-`scripts/task7f_reference_modes.py::summarise_references` prints the generic `selected_confidence_mean/
-selected_area_mean` fields for both modes, so the F-R1 proposal statistics shown in the Task 7F report are not
-F-R1-specific. Reporting-only: the F-R1 mask, its reference mIoU, its downstream and paired metrics, the gap
-decomposition and the verdict are unaffected. Frozen Task 7F artifacts were not rewritten.
+Consequences: the external E-HoldoutL3 stage **did not run**; the Task 7G selector is **not adopted**; **no
+scene-disjoint result may be claimed**; reference intervention stops.
 
-## 3. Frozen assets and the train-only dataset
+**Correct interpretation.** The learned selector showed a meaningful **internal** improvement but did not clear
+the predeclared internal learnability gate. Calling it a scene-disjoint failure would be scientifically
+incorrect because the external stage was never executed. The development system keeps the deterministic
+selector — not because it is best in principle, but because **no learned replacement passed the frozen adoption
+protocol**.
 
-Frozen U-C1: YOLO26m-seg Task 6M.1 `ef852b58…61f474`, imgsz 640, conf 0.05, max_det 300, default NMS, no TTA,
-no tiling, 512×512 tiles; largest eligibility = non-empty mask, not border-touching, bbox extent ratio ≤ 0.20
-(no `area ≥ 150` rule). Frozen downstream: D-B1 `6df31909…21a89c0`, fields v0.2/v0.1, frozen SAM2.1 Hiera
-Base+, Task 7E `E-HoldoutL3` (669) and `E-PairedHoldout20` (20).
+## 3. Frozen development architecture `BuildReasonSeg-DevFreeze-2026-10`
 
-`G-RefTrainUniqueLargest` (v0.2 **train** split only): 12,778 train rows → 4,119 rows with a `largest`
-reference → **3,002** with an explicit canonical reference id (the 1,117 L1 `largest` rows have an empty
-`references` list and were excluded); `smallest`-reference rows excluded 1,251; dedup by
-`(split, tile_id, reference_source_feature_id)` → **1,063 unique references on 1,063 tiles** (1,939 duplicate
-rows removed). Label = best eligible GT-IoU candidate (tie higher YOLO confidence, then lower index) with
-coverage minimum IoU 0.50; `no_eligible` **2**, `untrainable_not_covered` **33**, **trainable 1,028** → section-9
-gate passed. GT is label construction only and is never a selector input.
+```text
+controlled instruction
+→ Task 7C Qwen3-VL-2B text-only ProgramHead (20 canonical programs)
+→ U-C1 YOLO26m-seg proposals (imgsz 640, conf 0.05, max_det 300, default NMS, no TTA, no tiling)
+→ deterministic largest reference selector (max predicted mask area → higher confidence → lower index)
+→ GeometricRelationField v0.2 (P_dir) + NearestBoundaryField v0.1 (P_near)
+→ Task 7D D-B1 target decoder
+→ target mask
+```
 
-## 4. Features, architecture and training
+This is **not** a new checkpoint, **not** the final paper model, **not** an unrestricted natural-language
+system and **not** an end-to-end solved system. The front end is a **canonical-program / controlled-language
+development interface**. For L3 both fields are used separately and the product `W = clamp(P_dir * P_near)` is
+used only for D-B1 prototype weighting (Task 7D). The directional L2 path is frozen to **Task 6O N-B3** (N-B2/N-B4
+must not be substituted). nearest-only stays **`experimental/limited`**.
 
-Exact 18-D feature vector (proposal geometry/confidence + set overlap structure; boundary via
-`scipy.ndimage.binary_erosion` 3×3, 1 iteration, `border_value=0`): log_area, area_ratio, area_over_set_max,
-area_rank_desc, confidence, bbox_extent_ratio, width_ratio, height_ratio, fill_ratio, abs_log_aspect,
-boundary_over_sqrt_area, max_iou_other, mean_iou_other, max_self_contained_by_other,
-max_other_contained_in_self, self_contained_count_norm, contains_other_count_norm, proposal_count_norm. No GT
-input, no centroid x/y, no direction/relation/program, no target, no RGB/SAM2 feature.
+## 4. Frozen limitations
 
-`SetContextLargestSelector v1`: shared `Linear(18→64) → LayerNorm(64) → GELU → Linear(64→32) → GELU`;
-permutation-invariant `concat(mean, max) ∈ R^64`; head `concat(h_i, context) ∈ R^96 → Linear(96→32) → GELU →
-Linear(32→1)`; softmax over valid candidates; exactly one listwise `CrossEntropyLoss`; **6,561 parameters**; no
-Transformer/attention/GNN/positional encoding.
+| ID | Limitation | Status |
+|---|---|---|
+| L-01 | Reference selection (F-R0 0.245405 → F-R1 0.364909, gain +0.119504 = 85.3 % of the gap; Task 7G not adopted) | **unresolved practical bottleneck** |
+| L-02 | Proposal coverage (coverage@0.50 = 0.846039, coverage gain +0.054316, 103 uncovered records) | **secondary unresolved bottleneck** |
+| L-03 | Proposal-mask geometry (covered gain +0.004253) | **not a major current bottleneck** |
+| L-04 | Free-form L3 language (canonical 1.0 vs fixed24 5/24, compact 0/8, stress 0.6667) | **controlled-language interface only** |
+| L-05 | nearest-only (Task 6Y B2 0.2864, paired 6/20, `NEAREST_FIELD_NO_MEANINGFUL_GAIN`) | **not validated as standalone final capability** |
+| L-06 | unseen-city/domain generalization | **not established** (raster/scene separation only) |
 
-Training: tile-level 80/20 SHA256 split (seed 20261001) → **805 train / 223 holdout tiles** (tile overlap 0,
-`(tile, reference)` overlap 0); AdamW lr 1e-3, wd 1e-4, batch 32, max 40 epochs, patience 6, seed 20261001,
-FP32, no scheduler/augmentation/sweep; checkpoint selection on the internal holdout only (mean selected IoU →
-oracle-best top-1 → lower gap → earlier epoch); early stop at epoch 25. Checkpoint
-`artifacts/checkpoints/task7g/largest_set_context_selector_v1.pt` (gitignored).
+## 5. Formal protocol and test lock (frozen, not executed)
 
-## 5. Internal gate and the STOP
+`evaluation/task7h_formal_experiment_protocol.json` + `docs/task7h_formal_experiment_protocol.md`: train for
+gradients · val for checkpoint selection/early stopping · test only after all choices are frozen. The Task 6M
+J4-v2 test access is disclosed, so future reporting may only say **`final frozen-architecture test evaluation`**
+— never "untouched test". D-B1 formal retraining uses fresh weights with the schedule copied verbatim from
+`evaluation/task7d_training.json` (AdamW, lr 3e-4, wd 1e-4, batch 8, ≤25 epochs, patience 5, bf16 AMP, val-mIoU
+selection) and seeds **20261001 / 20261002 / 20261003**, each selected independently. Practical predicted
+reference and oracle-reference diagnostics are reported separately. Z-B3 is B-L3-0 (baseline/ablation), D-B1 is
+B-L3-1 (main candidate); the historical Task 6Z/7D controls stay ablations.
 
-| Metric (223 holdout sets) | G-I0 deterministic | **G-I1 learned** | Gate |
-|---|---:|---:|---|
-| mean selected-reference GT IoU | 0.5200 | **0.6199** | ≥ 0.62 → **✗** |
-| median selected IoU | 0.6609 | 0.7896 | — |
-| Pr(selected IoU ≥ 0.50) | 0.6278 | 0.7309 | — |
-| oracle-best exact top-1 | 0.4888 | **0.6592** | ≥ 0.55 → ✓ |
-| mean `best − selected` gap | 0.2790 | 0.1791 | ≤ 0.14 → **✗** |
-| mean selected IoU gain | — | **+0.0999** | ≥ +0.08 → ✓ |
+Test lock: `status LOCKED`, `architecture_head D-B1`, `reference_policy "U-C1 deterministic largest"`,
+`parser_role "controlled-language/canonical interface"`, `test_execution_authorized false`,
+`unlock_condition "ChatGPT audit after formal train/val completion"`. Task 7H did not unlock it.
 
-Per the task file, no alteration followed and the **external scene-disjoint stage did not run**:
-`evaluation/task7g_external_reference.json` and `evaluation/task7g_external_downstream.json` record
-`executed: false` with the STOP reason, `task7g_external_paired.json` was not created, and both external
-scripts are hard-guarded by the internal gate.
+## 6. Claim registry
 
-## 6. Decision
-
-`TASK7G_SELECTOR_ADOPTED = false`: the practical chain keeps `U-C1 proposals → deterministic max-area selector →
-predicted reference → P_dir + P_near → frozen D-B1`; D-B1 stays the development L3 decoder candidate, Z-B3 the
-frozen decoder baseline/ablation, the deterministic selector the frozen reference baseline/ablation and
-F-R1/R-F3 diagnostics only. **Practical reference selection is an unresolved limitation for this project
-version** and reference intervention stops here — no further selector, no YOLO retraining, no D-B1 change.
-
-Measured reading (no repair proposed): the learned selector does move the internal holdout the right way
-(mean selected-reference IoU +0.0999, oracle-best top-1 +0.1704, mean gap −0.0999, Pr@0.5 +0.1031) but lands
-0.0001 below the predeclared 0.62 mean-IoU bar and keeps a 0.1791 residual gap to the best eligible candidate
-(bar 0.14). A purely geometric/structural listwise selector did not clear the learnability gate that would have
-justified the scene-disjoint evaluation, even though Task 7F measured a usable U-C1 ceiling.
+C1 `SUPPORTED` · C2 `SUPPORTED_WITH_LIMITATION` · C3 `SUPPORTED` · C4 `NOT_SUPPORTED` · C5 `NOT_SUPPORTED` ·
+C6 `SUPPORTED_WITH_LIMITATION` · C7 `NOT_SUPPORTED` · C8 `NOT_SUPPORTED` · C9 `NOT_SUPPORTED`. No novelty or
+"first" claim appears anywhere in the registry or the docs.
 
 ## 7. Tests, storage, git
 
-`python -m pytest tests/ -q` → **1377 passed, 1 skipped** (Task 7F ended at 1325 passed / 1 skipped; no prior
-passing test was reduced). `tests/test_task7g_largest_reference_selector.py` adds the 52 Part-P checks.
+`python -m pytest tests/ -q` → **1420 passed, 1 skipped** (Task 7G ended at 1377 passed / 1 skipped; no prior
+passing test was reduced). `tests/test_task7h_development_freeze.py` adds the 43 Part-I checks.
 
-Not committed: the selector checkpoint, YOLO/SAM2/D-B1/Z-B3 weights, proposal caches, generated selector rows
-(`artifacts/task7g/`), source imagery/vectors, `.conda`. Committed: selector architecture code, small
-manifests/evaluation JSON, scripts, tests, docs, handoff. No new dataset was downloaded and nothing was
-installed. Production CLI defaults were not changed.
-
-Environment note: pushing needed the GitHub Desktop bundled Git because the local Git install is missing
-`git-remote-https`; no Git installation or credential configuration was modified.
-
-Watt was **not needed** in Task 7G: the pre-existing Watt instance is transport-only, is not owned by this
-project and was left running per the ownership rule; no proxy, host, certificate or TLS setting was read or
-modified.
+Not committed: model checkpoints, proposal/feature caches, imagery/vectors, local generated model data,
+`.conda`. Committed: freeze/protocol JSON, docs, audit scripts, tests, handoff. No checkpoint was created and
+no production CLI default was changed. Nothing was downloaded or installed. Watt was **not needed** in Task 7H
+(the pre-existing instance is transport-only, not owned by this project, left running).
 
 ## 8. Interpretation boundary
 
-DSH reports measurements only. The selector is **not** claimed as a project novelty; no final end-to-end
-readiness is claimed; no further selector was trained after the failure; YOLO was not retrained; D-B1 was not
-modified; the test split was not accessed; no formal full-data training was started; the next
-architecture/task was not chosen. The verdict authorizes no automatic repair.
+DSH audited and froze only. No model was trained; no test record was read, hashed or evaluated; no threshold,
+field, loss, model structure or data split was changed; the Task 7G selector was not run on E-Holdout after its
+STOP; no Task 7I implementation detail beyond the frozen protocol was chosen; D-B1 is not called the final paper
+model; unrestricted natural language, end-to-end success, novelty, "first" and unseen-city generalization are
+not claimed; the test split is never called untouched.
 
-## 9. Recommended next step (exact wording required by Part N)
+## 9. Recommended next step (exact wording required by Part L)
 
-等待 ChatGPT 根据 Task 7G 的 scene-disjoint selector 与 frozen D-B1 结果决定是否冻结开发版完整 L3 链；若 gate 失败，不自行继续 reference 干预。
+等待 ChatGPT 审核 Task 7H 的开发版架构冻结与正式实验协议；在审核通过前不启动正式三种子训练，不解锁 test。
 
 ## 10. STOP
 
-Task 7G stops here: no Task 7G.1, no further selector, no YOLO retraining, no D-B1 modification, no test access,
-no formal full training, no GUI. Waiting for the ChatGPT audit.
+Task 7H stops here: Task 7I formal training is not started, the test lock is not unlocked, no test is run, no
+further selector is trained, YOLO/parser/D-B1 are not retrained and the architecture is not modified. Waiting
+for the ChatGPT audit.
