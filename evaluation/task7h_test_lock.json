@@ -1,0 +1,21 @@
+{
+  "_doc": "Task 7H section 20. Test lock for BuildReasonSeg-DevFreeze-2026-10. Any future DSH task must read this file before executing a test evaluation; Task 7H does not unlock it.",
+  "task": "7H",
+  "stage": "E-test-lock",
+  "status": "LOCKED",
+  "architecture_head": "D-B1",
+  "reference_policy": "U-C1 deterministic largest",
+  "parser_role": "controlled-language/canonical interface",
+  "formal_seeds": [
+    20261001,
+    20261002,
+    20261003
+  ],
+  "test_execution_authorized": false,
+  "unlock_condition": "ChatGPT audit after formal train/val completion",
+  "checked_before_test_execution": true,
+  "test_access_disclosure": "the scene_disjoint_v1 test split was accessed once in Task 6M for an earlier proposal-baseline J4-v2 audit; post-6M architecture selection did not use test metrics, so future reporting must call the evaluation 'final frozen-architecture test evaluation'",
+  "task7h_test_records_read": false,
+  "training_performed": false,
+  "test_split_used": false
+}

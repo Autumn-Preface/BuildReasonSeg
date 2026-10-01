@@ -1,0 +1,259 @@
+{
+  "_doc": "Task 7H sections 22. Freeze verdict for BuildReasonSeg-DevFreeze-2026-10: the audited development architecture (Task 7C controlled-language ProgramHead, U-C1 deterministic reference, GeometricRelationField v0.2, NearestBoundaryField v0.1, Task 6O N-B3 directional path, Task 7D D-B1 preferred L3 decoder), the limitation registry, the formal three-seed experiment protocol and the LOCKED test protocol. Task 7H performed no training and read no test record.",
+  "task": "7H",
+  "verdict": "DEVELOPMENT_ARCHITECTURE_FROZEN",
+  "reason": "all section-22 conditions hold",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "FROZEN_ASSET_MISSING",
+    "FROZEN_ASSET_HASH_MISMATCH",
+    "FREEZE_PROTOCOL_INCONSISTENT",
+    "DEVELOPMENT_ARCHITECTURE_FROZEN"
+  ],
+  "architecture_name": "BuildReasonSeg-DevFreeze-2026-10",
+  "conditions": {
+    "1_required_hashes": {
+      "passed": true,
+      "measured": {
+        "yolo_task6m1": true,
+        "parser_task7c": true,
+        "z_b3_task6z": true,
+        "d_b1_task7d": true,
+        "n_b3_task6o": true
+      }
+    },
+    "2_active_dataset_identity": {
+      "passed": true,
+      "measured": {
+        "dataset": "BuildSpatialReason",
+        "version": "v0.2",
+        "native_vector": "v1.0",
+        "split_view": "scene_disjoint_v1"
+      }
+    },
+    "3_no_rejected_module_in_chain": {
+      "passed": true,
+      "measured": {
+        "forbidden_tokens_in_chain": [],
+        "rejected_modules_excluded": [
+          "task6p_reference_mask_head",
+          "task6u_proposal_set_ranker_v01",
+          "task6w_proposal_quality_estimator_v01",
+          "task6x_sam2_proposal_refinement",
+          "task7d_d_b2_learned_global_competition",
+          "task7g_set_context_largest_selector_v1"
+        ],
+        "all_rejected_recorded_as_negative": true
+      }
+    },
+    "4_d_b1_role": {
+      "passed": true,
+      "measured": {
+        "d_b1": "preferred L3 target-decoder architecture candidate",
+        "z_b3": "frozen L3 target-decoder baseline/ablation"
+      }
+    },
+    "5_parser_limitation": {
+      "passed": true,
+      "measured": {
+        "canonical_full_val_accuracy": 1.0,
+        "canonical_macro_f1": 1.0,
+        "every_class_recall": 1.0,
+        "z_minival240": "240/240",
+        "z_paired_members": "40/40",
+        "fixed24": "5/24",
+        "fixed24_compact": "0/8",
+        "minimal96": "60/96",
+        "stress_accuracy": 0.6667
+      }
+    },
+    "6_reference_limitation": {
+      "passed": true,
+      "measured": {
+        "task7f_f_r0_strict_miou": 0.24540501038500215,
+        "task7f_f_r1_oracle_selection_miou": 0.36490938928549665,
+        "selection_gain": 0.1195043789004945,
+        "selection_fraction_of_total_gap": 0.8530487001786086,
+        "task7g_selector_adopted": false,
+        "task7g_internal_gate_passed": false,
+        "task7g_external_scene_disjoint_stage": "not executed"
+      }
+    },
+    "7_formal_protocol_complete": {
+      "passed": true,
+      "measured": {
+        "metrics": [
+          "counterfactual",
+          "efficiency",
+          "mask",
+          "per_relation",
+          "reference",
+          "stratification"
+        ],
+        "programs": [
+          "largest_to_left_of_to_nearest",
+          "largest_to_right_of_to_nearest",
+          "largest_to_above_to_nearest",
+          "largest_to_below_to_nearest"
+        ],
+        "seeds": [
+          20261001,
+          20261002,
+          20261003
+        ],
+        "schedule": {
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "batch": 8,
+          "max_epochs": 25,
+          "patience": 5,
+          "amp": "bfloat16 autocast + GradScaler (Task 7D D2 trainer)",
+          "checkpoint_selection": "MiniVal240 mIoU",
+          "fresh_initialisation": true,
+          "sam2_frozen": true,
+          "source_artifact": "evaluation/task7d_training.json"
+        }
+      }
+    },
+    "8_test_lock": {
+      "passed": true,
+      "measured": {
+        "status": "LOCKED",
+        "test_execution_authorized": false,
+        "unlock_condition": "ChatGPT audit after formal train/val completion"
+      }
+    },
+    "9_no_training": {
+      "passed": true,
+      "measured": false
+    },
+    "10_no_test_access": {
+      "passed": true,
+      "measured": {
+        "test_records_read": false,
+        "test_file_hashed": false
+      }
+    }
+  },
+  "conditions_passed": true,
+  "frozen_paths_unchanged": true,
+  "changed_paths": "",
+  "checkpoint_hash_checks": {
+    "required": {
+      "yolo_task6m1": true,
+      "parser_task7c": true,
+      "z_b3_task6z": true,
+      "d_b1_task7d": true,
+      "n_b3_task6o": true
+    },
+    "all_required_match": true
+  },
+  "development_chain": [
+    "controlled instruction",
+    "Task 7C ProgramHead (canonical 20-class ids)",
+    "U-C1 YOLO26m-seg proposals",
+    "deterministic largest reference selector",
+    "GeometricRelationField v0.2 (P_dir) + NearestBoundaryField v0.1 (P_near)",
+    "Task 7D D-B1 target decoder",
+    "target mask"
+  ],
+  "excluded_from_development_chain": [
+    "task6p_reference_mask_head",
+    "task6u_proposal_set_ranker_v01",
+    "task6w_proposal_quality_estimator_v01",
+    "task6x_sam2_proposal_refinement",
+    "task7d_d_b2_learned_global_competition",
+    "task7g_set_context_largest_selector_v1"
+  ],
+  "roles": {
+    "parser": "controlled-language/canonical interface (Task 7C)",
+    "reference": "U-C1 deterministic largest (frozen); reference selection is a measured, unresolved bottleneck",
+    "d_b1": "preferred L3 target-decoder architecture candidate",
+    "z_b3": "frozen L3 target-decoder baseline/ablation",
+    "n_b3": "verified directional-field visual segmentation component (L2 directional path)",
+    "directional_field": "GeometricRelationField v0.2",
+    "nearest_field": "NearestBoundaryField v0.1"
+  },
+  "limitations": {
+    "L-01": "unresolved practical bottleneck",
+    "L-02": "secondary unresolved bottleneck",
+    "L-03": "not a major current bottleneck",
+    "L-04": "controlled-language interface only",
+    "L-05": "not validated as standalone final capability",
+    "L-06": "not established"
+  },
+  "claims": {
+    "C1": "SUPPORTED",
+    "C2": "SUPPORTED_WITH_LIMITATION",
+    "C3": "SUPPORTED",
+    "C4": "NOT_SUPPORTED",
+    "C5": "NOT_SUPPORTED",
+    "C6": "SUPPORTED_WITH_LIMITATION",
+    "C7": "NOT_SUPPORTED",
+    "C8": "NOT_SUPPORTED",
+    "C9": "NOT_SUPPORTED"
+  },
+  "test_lock": {
+    "status": "LOCKED",
+    "architecture_head": "D-B1",
+    "reference_policy": "U-C1 deterministic largest",
+    "parser_role": "controlled-language/canonical interface",
+    "formal_seeds": [
+      20261001,
+      20261002,
+      20261003
+    ],
+    "test_execution_authorized": false,
+    "unlock_condition": "ChatGPT audit after formal train/val completion"
+  },
+  "formal_protocol": {
+    "formal_seeds": [
+      20261001,
+      20261002,
+      20261003
+    ],
+    "schedule": {
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "batch": 8,
+      "max_epochs": 25,
+      "patience": 5,
+      "amp": "bfloat16 autocast + GradScaler (Task 7D D2 trainer)",
+      "checkpoint_selection": "MiniVal240 mIoU",
+      "fresh_initialisation": true,
+      "sam2_frozen": true,
+      "source_artifact": "evaluation/task7d_training.json"
+    },
+    "practical_and_oracle_separated": true,
+    "three_seed_reporting": {
+      "report_each_seed_separately": true,
+      "report_mean_and_std_on": [
+        "val",
+        "final test"
+      ],
+      "best_test_seed_only": false,
+      "crash_policy": "document it and resume only from that run's own checkpoint/state; never replace the seed"
+    },
+    "executed_by_task7h": false
+  },
+  "interpretation_boundary": {
+    "training_performed": false,
+    "test_records_read": false,
+    "test_evaluated": false,
+    "architecture_chosen_by_dsh": false,
+    "thresholds_changed": false,
+    "fields_changed": false,
+    "models_modified": false,
+    "downloads_or_installs": false,
+    "task7i_implementation_details_chosen": false,
+    "d_b1_called_final_paper_model": false,
+    "unrestricted_natural_language_claimed": false,
+    "end_to_end_solved_claimed": false,
+    "novelty_claimed": false,
+    "unseen_city_generalization_claimed": false,
+    "untouched_test_claimed": false
+  },
+  "recommendation": "等待 ChatGPT 审核 Task 7H 的开发版架构冻结与正式实验协议；在审核通过前不启动正式三种子训练，不解锁 test。",
+  "test_split_used": false,
+  "runtime_seconds": 0.03
+}

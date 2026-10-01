@@ -1,0 +1,171 @@
+{
+  "_doc": "Task 7H sections 12-19. Formal experiment protocol for BuildReasonSeg-DevFreeze-2026-10. The D-B1 training schedule is copied verbatim from the authoritative Task 7D training artifact; no value was invented. The protocol is NOT executed by Task 7H.",
+  "task": "7H",
+  "stage": "E-formal-experiment-protocol",
+  "architecture_name": "BuildReasonSeg-DevFreeze-2026-10",
+  "executed_by_task7h": false,
+  "data_policy": {
+    "active_canonical_only": true,
+    "datasets": [
+      "WHU-EA-NativeVector v1.0",
+      "BuildSpatialReason v0.2",
+      "scene_disjoint_v1"
+    ],
+    "train": "gradient updates only",
+    "val": "checkpoint selection / early stopping / frozen threshold-free model selection only",
+    "test": "only after every architecture and training choice is frozen",
+    "test_access_disclosure": {
+      "historically_accessed": true,
+      "when": "Task 6M, for an earlier proposal-baseline J4-v2 audit",
+      "consequence": "future reporting must NOT call the project test split 'never previously viewed' or 'completely untouched'; the permitted phrasing is 'final frozen-architecture test evaluation'",
+      "post_6m_architecture_selection_used_test_metrics": false
+    }
+  },
+  "formal_l3_population": {
+    "programs": [
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest"
+    ],
+    "train": {
+      "source": "BuildSpatialReason v0.2 train split, all valid records of the four programs",
+      "expected_total": 1344,
+      "per_program": {
+        "largest_to_left_of_to_nearest": 323,
+        "largest_to_right_of_to_nearest": 347,
+        "largest_to_above_to_nearest": 338,
+        "largest_to_below_to_nearest": 336
+      },
+      "verified_from": "tracked v0.2 train split (Task 7H audit, no test access)"
+    },
+    "val": {
+      "source": "all valid v0.2 val L3 records",
+      "expected_total": 936,
+      "verified_from": "tracked v0.2 val split"
+    }
+  },
+  "formal_d_b1_training": {
+    "architecture": "exact Task 7D D-B1 (deterministic field-weighted prototype)",
+    "initialize_from": "fresh random trainable decoder/projection weights",
+    "backbone": "frozen SAM2.1 Hiera Base+ features",
+    "fields": "exact GeometricRelationField v0.2 (P_dir) and NearestBoundaryField v0.1 (P_near)",
+    "loss": "BCE + Dice only",
+    "new_losses": [],
+    "architecture_tuning": false,
+    "schedule": {
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "batch": 8,
+      "max_epochs": 25,
+      "patience": 5,
+      "amp": "bfloat16 autocast + GradScaler (Task 7D D2 trainer)",
+      "checkpoint_selection": "MiniVal240 mIoU",
+      "fresh_initialisation": true,
+      "sam2_frozen": true,
+      "source_artifact": "evaluation/task7d_training.json"
+    },
+    "formal_seeds": [
+      20261001,
+      20261002,
+      20261003
+    ],
+    "run_all_three_in": "a later training task (not Task 7H)",
+    "checkpoint_selection": "val mIoU only; each seed selected independently; no seed chosen by test"
+  },
+  "reference_policy": {
+    "report_both_separately": true,
+    "practical_predicted_reference_chain": [
+      "U-C1 proposals",
+      "deterministic largest selector",
+      "D-B1 target mask"
+    ],
+    "oracle_reference_diagnostic": [
+      "GT reference",
+      "D-B1 target mask"
+    ],
+    "mixing_allowed": false,
+    "task7f_f_r1_oracle_selected_proposal_as_production_result": false
+  },
+  "baselines_and_ablations": {
+    "B-L3-0": {
+      "name": "Z-B3",
+      "definition": "visual + P_dir + P_near + direction embedding",
+      "role": "baseline/ablation"
+    },
+    "B-L3-1": {
+      "name": "D-B1",
+      "definition": "deterministic relation-conditioned prototype",
+      "role": "main target-decoder architecture candidate"
+    },
+    "historical_causal_controls": [
+      "Task 6Z visual-only / directional-only / nearest-only / geometry-only",
+      "Task 7D learned competition D-B2",
+      "Task 7D map-only D-B4"
+    ],
+    "new_retrospective_ablation_in_task7h": false,
+    "documentation_must_distinguish": [
+      "historical development ablations",
+      "future formally retrained seeds",
+      "diagnostic oracle-reference values"
+    ]
+  },
+  "required_metrics": {
+    "mask": [
+      "mIoU",
+      "Dice",
+      "Pr@0.5"
+    ],
+    "counterfactual": [
+      "pair pass rate",
+      "own IoU",
+      "cross IoU",
+      "own-cross margin"
+    ],
+    "reference": [
+      "selected-reference mIoU",
+      "reference Pr@0.5",
+      "abstention rate",
+      "NO_PROPOSALS",
+      "NO_ELIGIBLE",
+      "NOT_COVERED",
+      "SELECTION_WRONG",
+      "GEOMETRY_POOR",
+      "REFERENCE_OK"
+    ],
+    "per_relation": [
+      "left",
+      "right",
+      "above",
+      "below"
+    ],
+    "stratification": [
+      "target area quartiles",
+      "reference quality bins",
+      "boundary-distance quartiles"
+    ],
+    "efficiency": [
+      "train wall time",
+      "peak VRAM",
+      "inference time/tile",
+      "trainable parameter count"
+    ]
+  },
+  "three_seed_reporting": {
+    "report_each_seed_separately": true,
+    "report_mean_and_std_on": [
+      "val",
+      "final test"
+    ],
+    "best_test_seed_only": false,
+    "crash_policy": "document it and resume only from that run's own checkpoint/state; never replace the seed"
+  },
+  "test_lock": {
+    "status": "LOCKED",
+    "test_execution_authorized": false,
+    "artifact": "evaluation/task7h_test_lock.json",
+    "unlock_condition": "ChatGPT audit after formal train/val completion"
+  },
+  "training_performed": false,
+  "test_split_used": false
+}
