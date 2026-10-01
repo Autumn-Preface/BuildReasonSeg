@@ -1,0 +1,208 @@
+{
+  "_doc": "Task 7F sections 13-19. Covered-subset geometry decomposition, exact ceiling gaps and the four predeclared diagnostic labels. All numbers are strict all-record frozen D-B1 mIoU unless stated; GT appears only inside the declared F-R1/F-R2/F-R3 diagnostic modes.",
+  "task": "7F",
+  "stage": "G-I-gap-decomposition",
+  "covered50": {
+    "definition": "at least one eligible U-C1 proposal and best eligible IoU >= 0.50 (exactly the non-abstaining population of F-R2)",
+    "threshold_iou": 0.5,
+    "records": 566,
+    "coverage_rate": 0.8460388639760837,
+    "g_pred": {
+      "mode": "F-R1 oracle-selected predicted proposal mask",
+      "records": 566,
+      "miou": 0.3871941811291791,
+      "dice": 0.5102948850030852,
+      "precision_at_0_5": 0.54324927873247
+    },
+    "g_gt": {
+      "mode": "F-R3 canonical GT reference mask",
+      "records": 566,
+      "miou": 0.3914473480868364,
+      "dice": 0.5160268188392418,
+      "precision_at_0_5": 0.5463961534759016
+    },
+    "geometry_gain_covered": 0.004253166957657317,
+    "paired_covered50": {
+      "pairs": 17,
+      "F-R1": {
+        "passed": 16,
+        "answered_pairs": 17,
+        "mean_own_iou": 0.3314588723437074,
+        "mean_cross_iou": 0.0,
+        "own_cross_margin": 0.3314588723437074
+      },
+      "F-R3": {
+        "passed": 16,
+        "answered_pairs": 17,
+        "mean_own_iou": 0.33063554167912707,
+        "mean_cross_iou": 0.0,
+        "own_cross_margin": 0.33063554167912707
+      }
+    },
+    "per_direction": {
+      "above": {
+        "g_pred": {
+          "records": 131,
+          "miou": 0.4069337875303247,
+          "dice": 0.5285417328082985,
+          "precision_at_0_5": 0.6096026485689849
+        },
+        "g_gt": {
+          "records": 131,
+          "miou": 0.4091614611678652,
+          "dice": 0.5317651185047285,
+          "precision_at_0_5": 0.6177023418273445
+        }
+      },
+      "below": {
+        "g_pred": {
+          "records": 126,
+          "miou": 0.36004243444950706,
+          "dice": 0.48262911672134273,
+          "precision_at_0_5": 0.49033431059830235
+        },
+        "g_gt": {
+          "records": 126,
+          "miou": 0.3647697474800853,
+          "dice": 0.4912452581059764,
+          "precision_at_0_5": 0.4988691617758441
+        }
+      },
+      "left": {
+        "g_pred": {
+          "records": 152,
+          "miou": 0.3958568093004188,
+          "dice": 0.5226739172457765,
+          "precision_at_0_5": 0.5441802192876427
+        },
+        "g_gt": {
+          "records": 152,
+          "miou": 0.3979012989132886,
+          "dice": 0.5254701176783503,
+          "precision_at_0_5": 0.5445888789569815
+        }
+      },
+      "right": {
+        "g_pred": {
+          "records": 157,
+          "miou": 0.3841273796072692,
+          "dice": 0.5052881132841522,
+          "precision_at_0_5": 0.5294498619932048
+        },
+        "g_gt": {
+          "records": 157,
+          "miou": 0.3918284202983977,
+          "dice": 0.5136406912766192,
+          "precision_at_0_5": 0.5267910325016603
+        }
+      }
+    }
+  },
+  "gaps": {
+    "M0_f_r0": 0.24540501038500215,
+    "M1_f_r1": 0.36490938928549665,
+    "M2_f_r2": 0.3311796696818377,
+    "M3_f_r3": 0.38549593236339924,
+    "selection_gain": 0.1195043789004945,
+    "geometry_gain_covered": 0.004253166957657317,
+    "coverage_gain": 0.054316262681561533,
+    "total_reference_gap": 0.1400909219783971,
+    "selection_fraction": 0.8530487001786086,
+    "coverage_fraction": 0.3877215019681107,
+    "geometry_fraction_note": "geometry_gain_covered has a different subset/denominator and is reported separately; components are not forced to sum to 100%",
+    "tolerance": 1e-06
+  },
+  "labels": {
+    "SELECTION_IS_ACTIONABLE": {
+      "conditions": {
+        "selection_gain": {
+          "required": 0.05,
+          "measured": 0.1195043789004945,
+          "passed": true
+        },
+        "f_r1_strict_miou": {
+          "required": 0.29,
+          "measured": 0.36490938928549665,
+          "passed": true
+        },
+        "f_r1_paired": {
+          "required": ">= 10/20",
+          "measured": 18,
+          "passed": true
+        },
+        "f_r1_margin": {
+          "required": 0.18,
+          "measured": 0.3005475221902009,
+          "passed": true
+        }
+      },
+      "value": true
+    },
+    "PROPOSAL_GEOMETRY_IS_MAJOR": {
+      "conditions": {
+        "geometry_gain_covered": {
+          "required": 0.05,
+          "measured": 0.004253166957657317,
+          "passed": false
+        }
+      },
+      "value": false
+    },
+    "PROPOSAL_COVERAGE_IS_MAJOR": {
+      "conditions": {
+        "coverage_gain": {
+          "required": 0.04,
+          "measured": 0.054316262681561533,
+          "passed": true
+        },
+        "f_r2_coverage_rate_below": {
+          "required": "< 0.85",
+          "measured": 0.8460388639760837,
+          "passed": true
+        }
+      },
+      "value": true
+    },
+    "CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING": {
+      "conditions": {
+        "f_r2_strict_miou": {
+          "required": 0.3,
+          "measured": 0.3311796696818377,
+          "passed": true
+        },
+        "f_r2_paired": {
+          "required": ">= 12/20",
+          "measured": 16,
+          "passed": true
+        },
+        "f_r2_margin": {
+          "required": 0.22,
+          "measured": 0.33063554167912707,
+          "passed": true
+        }
+      },
+      "value": true
+    }
+  },
+  "thresholds": {
+    "selection_gain": 0.05,
+    "f_r1_miou": 0.29,
+    "f_r1_paired": 10,
+    "f_r1_margin": 0.18,
+    "geometry_gain_covered": 0.05,
+    "coverage_gain": 0.04,
+    "f_r2_coverage_rate": 0.85,
+    "f_r2_miou": 0.3,
+    "f_r2_paired": 12,
+    "f_r2_margin": 0.22
+  },
+  "reference_modes": {
+    "F-R0": "CURRENT_SELECTED_PRED_MASK",
+    "F-R1": "ORACLE_SELECTED_PRED_MASK",
+    "F-R2": "COVERAGE_CONDITIONAL_GT_MASK",
+    "F-R3": "FULL_ORACLE_GT_MASK"
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 0.0
+}

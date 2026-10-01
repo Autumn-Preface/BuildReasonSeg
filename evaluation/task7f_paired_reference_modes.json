@@ -1,0 +1,1257 @@
+{
+  "_doc": "Task 7F section 14. Paired counterfactual ceilings on the frozen E-PairedHoldout20 for F-R0 ... F-R3. Each pair shares one tile and one oracle reference, so the reference is built once per pair and reused for both direction programs and every mode.",
+  "task": "7F",
+  "stage": "H-paired-reference-modes",
+  "pairs": 20,
+  "checks": {
+    "records": 669,
+    "records_expected": 669,
+    "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "record_id_hash_expected": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "record_id_hash_ok": true,
+    "pairs": 20,
+    "pairs_expected": 20,
+    "pair_id_hash": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "pair_id_hash_expected": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "pair_id_hash_ok": true,
+    "no_test": true,
+    "overlap_minival": true,
+    "overlap_pairedval": true,
+    "d_b1_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_sha256_ok": true,
+    "yolo_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "yolo_sha256_ok": true
+  },
+  "modes": {
+    "F-R0": "CURRENT_SELECTED_PRED_MASK",
+    "F-R1": "ORACLE_SELECTED_PRED_MASK",
+    "F-R2": "COVERAGE_CONDITIONAL_GT_MASK",
+    "F-R3": "FULL_ORACLE_GT_MASK"
+  },
+  "results": {
+    "F-R0": {
+      "passed": 6,
+      "pairs": 20,
+      "answered_pairs": 20,
+      "abstention_pairs": 0,
+      "pass_rate": 0.3,
+      "mean_own_iou": 0.15599007456101677,
+      "mean_cross_iou": 0.030927192534550473,
+      "own_cross_margin": 0.1250628820264663
+    },
+    "F-R1": {
+      "passed": 18,
+      "pairs": 20,
+      "answered_pairs": 20,
+      "abstention_pairs": 0,
+      "pass_rate": 0.9,
+      "mean_own_iou": 0.3005475221902009,
+      "mean_cross_iou": 0.0,
+      "own_cross_margin": 0.3005475221902009
+    },
+    "F-R2": {
+      "passed": 16,
+      "pairs": 20,
+      "answered_pairs": 17,
+      "abstention_pairs": 3,
+      "pass_rate": 0.8,
+      "mean_own_iou": 0.33063554167912707,
+      "mean_cross_iou": 0.0,
+      "own_cross_margin": 0.33063554167912707
+    },
+    "F-R3": {
+      "passed": 18,
+      "pairs": 20,
+      "answered_pairs": 20,
+      "abstention_pairs": 0,
+      "pass_rate": 0.9,
+      "mean_own_iou": 0.31934029958858356,
+      "mean_cross_iou": 0.0,
+      "own_cross_margin": 0.31934029958858356
+    }
+  },
+  "rows": [
+    {
+      "pair_id": "2_742:000c27928d457c1a",
+      "eligible_count": 15,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.20693069306930692
+          ],
+          "cross_iou": [
+            0.0,
+            0.549580472921434
+          ],
+          "margin": -0.17132488992606354
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.29537366548042704,
+            0.5757719714964371
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4355728184884321
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.28006146753745675,
+            0.5695488721804511
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.42480516985895395
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.28006146753745675,
+            0.5695488721804511
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.42480516985895395
+        }
+      }
+    },
+    {
+      "pair_id": "2_2954:01a2c4a58298b654",
+      "eligible_count": 50,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.0009299081715680576,
+            0.3071695548759769
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1540497315237725
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.055812876331635015,
+            0.02785346654556464
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.041833171438599825
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.06613226452905811,
+            0.07195898161244696
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.06904562307075254
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.06613226452905811,
+            0.07195898161244696
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.06904562307075254
+        }
+      }
+    },
+    {
+      "pair_id": "2_2720:037ab2bc29230dc0",
+      "eligible_count": 5,
+      "covered50": false,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.07176391683433937,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.035881958417169686
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.03044041450777202,
+            0.3606945540647198
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1955674842862459
+        },
+        "F-R2": {
+          "abstained": true,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.04801670146137787,
+            0.36831604150039904
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.20816637148088846
+        }
+      }
+    },
+    {
+      "pair_id": "2_1987:060b7f640011a96b",
+      "eligible_count": 6,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.24906038586820345,
+            0.7268314210061783
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.48794590343719085
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.24906038586820345,
+            0.7268314210061783
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.48794590343719085
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2491965389369592,
+            0.7331261101243339
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.49116132453064654
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2491965389369592,
+            0.7331261101243339
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.49116132453064654
+        }
+      }
+    },
+    {
+      "pair_id": "2_402:0661e638e05bf9f6",
+      "eligible_count": 9,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.7109375,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.35546875
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.7077922077922078,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.3538961038961039
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.7077922077922078,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.3538961038961039
+        }
+      }
+    },
+    {
+      "pair_id": "2_949:06d5e568f7b66bb9",
+      "eligible_count": 35,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.14181818181818182,
+            0.09339280735991079
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1176054945890463
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.14181818181818182,
+            0.09339280735991079
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1176054945890463
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.13636363636363635,
+            0.11586325275354027
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1261134445585883
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.13636363636363635,
+            0.11586325275354027
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1261134445585883
+        }
+      }
+    },
+    {
+      "pair_id": "2_111:0893c77306217622",
+      "eligible_count": 28,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.5929938605994944,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.2964969302997472
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.604257167680278,
+            0.24763960075532776
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4259483842178029
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.5782918149466192,
+            0.23432170034111782
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4063067576438685
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.5782918149466192,
+            0.23432170034111782
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4063067576438685
+        }
+      }
+    },
+    {
+      "pair_id": "2_2927:0b1020ff6beef667",
+      "eligible_count": 3,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.7189473684210527,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.35947368421052633
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.7225433526011561,
+            0.8263781555899021
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.7744607540955291
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.7233930453108536,
+            0.8507692307692307
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.7870811380400422
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.7233930453108536,
+            0.8507692307692307
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.7870811380400422
+        }
+      }
+    },
+    {
+      "pair_id": "2_1174:0d85174aedf5bfa3",
+      "eligible_count": 64,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.1706915477497256,
+            0.12737030411449016
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.14903092593210787
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.17536192297186562,
+            0.1094632768361582
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1424125999040119
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.17536192297186562,
+            0.1094632768361582
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1424125999040119
+        }
+      }
+    },
+    {
+      "pair_id": "2_3358:0e195a37e1a7d31b",
+      "eligible_count": 20,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.7483253588516746,
+            0.33420793702853396
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.5412666479401043
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.7540514775977121,
+            0.3259968102073365
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.5400241439025243
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.7540514775977121,
+            0.3259968102073365
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.5400241439025243
+        }
+      }
+    },
+    {
+      "pair_id": "2_2897:13f5666c3565592e",
+      "eligible_count": 26,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.06875231853592186,
+            0.0
+          ],
+          "cross_iou": [
+            0.017984584641735656,
+            0.0
+          ],
+          "margin": 0.0253838669470931
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.3233021553477023,
+            0.12322421247683756
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.22326318391226993
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.32566735112936346,
+            0.12440944881889764
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.22503839997413055
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.32566735112936346,
+            0.12440944881889764
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.22503839997413055
+        }
+      }
+    },
+    {
+      "pair_id": "2_783:17e0242e682143e6",
+      "eligible_count": 9,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.39092140921409213,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.19546070460704607
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.39528795811518325,
+            0.12207670720299345
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.25868233265908835
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.3740573152337858,
+            0.11667453944260746
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.24536592733819665
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.3740573152337858,
+            0.11667453944260746
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.24536592733819665
+        }
+      }
+    },
+    {
+      "pair_id": "2_3434:1d976f98a162842d",
+      "eligible_count": 48,
+      "covered50": false,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.6695226438188494,
+            0.0
+          ],
+          "margin": -0.3347613219094247
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.03496868475991649,
+            0.3261955745895789
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.18058212967474768
+        },
+        "F-R2": {
+          "abstained": true,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.4880410022779043,
+            0.48930921052631576
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.48867510640211004
+        }
+      }
+    },
+    {
+      "pair_id": "2_1414:1dda9989e04b3b61",
+      "eligible_count": 11,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.6179279941219692,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.3089639970609846
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.6442382057231245,
+            0.2845763939174511
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.46440729982028783
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.646969696969697,
+            0.26666666666666666
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4568181818181818
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.646969696969697,
+            0.26666666666666666
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4568181818181818
+        }
+      }
+    },
+    {
+      "pair_id": "2_5:1e00b58e5395c8b4",
+      "eligible_count": 23,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.4767404555662496
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.2383702277831248
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2680154580586497,
+            0.49778059606848446
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.38289802706356707
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2611888914390636,
+            0.49366286438529783
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.37742587791218074
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2611888914390636,
+            0.49366286438529783
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.37742587791218074
+        }
+      }
+    },
+    {
+      "pair_id": "2_3464:206abf87d3f51adf",
+      "eligible_count": 9,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2810126582278481,
+            0.11389759665621735
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.19745512744203272
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.2810126582278481,
+            0.11389759665621735
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.19745512744203272
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.27490542244640603,
+            0.11648936170212766
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.19569739207426684
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.27490542244640603,
+            0.11648936170212766
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.19569739207426684
+        }
+      }
+    },
+    {
+      "pair_id": "2_2338:21e76e8049278956",
+      "eligible_count": 9,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.6304347826086957,
+            0.30741626794258375
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4689255252756397
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.6304347826086957,
+            0.30741626794258375
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4689255252756397
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.625,
+            0.31698564593301437
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4709928229665072
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.625,
+            0.31698564593301437
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.4709928229665072
+        }
+      }
+    },
+    {
+      "pair_id": "2_2883:22cccd916bd6718f",
+      "eligible_count": 25,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.07706232221360228,
+            0.30034924330616997
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.18870578275988611
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.06997850489610699,
+            0.29021497405485547
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.18009673947548122
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.06997850489610699,
+            0.29021497405485547
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.18009673947548122
+        }
+      }
+    },
+    {
+      "pair_id": "2_3558:23e57b21d5a882f3",
+      "eligible_count": 14,
+      "covered50": false,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R2": {
+          "abstained": true,
+          "passed": false,
+          "own_iou": [
+            0.0,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.0
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": false,
+          "own_iou": [
+            0.1383206106870229,
+            0.0
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.06916030534351145
+        }
+      }
+    },
+    {
+      "pair_id": "2_2749:24ce3955eaa45c6f",
+      "eligible_count": 24,
+      "covered50": true,
+      "modes": {
+        "F-R0": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.16198488521317553,
+            0.0806765163297045
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.12133070077144001
+        },
+        "F-R1": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.16198488521317553,
+            0.0806765163297045
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.12133070077144001
+        },
+        "F-R2": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.1687170474516696,
+            0.08832807570977919
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1285225615807244
+        },
+        "F-R3": {
+          "abstained": false,
+          "passed": true,
+          "own_iou": [
+            0.1687170474516696,
+            0.08832807570977919
+          ],
+          "cross_iou": [
+            0.0,
+            0.0
+          ],
+          "margin": 0.1285225615807244
+        }
+      }
+    }
+  ],
+  "training_performed": false,
+  "test_split_used": false
+}

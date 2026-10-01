@@ -1,0 +1,576 @@
+{
+  "_doc": "Task 7F sections 16-21. Reference bottleneck ceiling decomposition for the frozen D-B1 L3 target decoder on the frozen Task 7E E-HoldoutL3 / E-PairedHoldout20 populations. F-R0 is the production-like frozen U-C1 selection, F-R1 the selection ceiling on the same proposal set, F-R2 the coverage-conditional GT ceiling and F-R3 the full oracle ceiling. GT is used only inside the declared diagnostic modes; nothing was trained, tuned or repaired.",
+  "task": "7F",
+  "verdict": "REFERENCE_SELECTION_DOMINANT",
+  "reason": "selection_gain +0.1195 >= coverage_gain +0.0543 with an actionable selection ceiling",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "TASK7E_HOLDOUT_MISMATCH",
+    "TASK7E_NUMERIC_REPRODUCTION_FAIL",
+    "REFERENCE_PROPOSAL_CEILING_INSUFFICIENT",
+    "REFERENCE_SELECTION_DOMINANT",
+    "REFERENCE_COVERAGE_OR_GEOMETRY_DOMINANT",
+    "REFERENCE_MIXED_BOTTLENECK"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "training_performed": false,
+    "test_split_used": false,
+    "checkpoints_created": false,
+    "gt_used_only_in_declared_modes": true,
+    "production_selector_changed": false,
+    "detector_changed": false,
+    "eligibility_changed": false,
+    "fields_changed": false,
+    "sam2_changed": false,
+    "d_b1_changed": false,
+    "ranker_or_filter_or_refinement_added": false,
+    "selector_trained": false,
+    "yolo_retrained": false,
+    "attention_or_graph_added": false,
+    "grcl_added": false,
+    "diagnostics_used_as_tuning_data": false,
+    "parser_trained_or_used_for_decision": false,
+    "clean": true
+  },
+  "holdout": {
+    "records": 669,
+    "pairs": 20,
+    "checks": {
+      "records": 669,
+      "records_expected": 669,
+      "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+      "record_id_hash_expected": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+      "record_id_hash_ok": true,
+      "pairs": 20,
+      "pairs_expected": 20,
+      "pair_id_hash": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+      "pair_id_hash_expected": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+      "pair_id_hash_ok": true,
+      "no_test": true,
+      "overlap_minival": true,
+      "overlap_pairedval": true,
+      "d_b1_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "d_b1_sha256_ok": true,
+      "yolo_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "yolo_sha256_ok": true
+    }
+  },
+  "reference_modes": {
+    "F-R0": {
+      "label": "CURRENT_SELECTED_PRED_MASK",
+      "reference": {
+        "records": 669,
+        "answered": 667,
+        "abstentions": 2,
+        "abstention_rate": 0.0029895366218236174,
+        "reference_miou": 0.4406471173343235,
+        "reference_dice": 0.5084559704438009,
+        "reference_precision_at_0_5": 0.5015555235374375,
+        "centroid_error_median": 19.114109060371085,
+        "centroid_error_p90": 247.74824284168488,
+        "selected_confidence_mean": 0.35774943847460544,
+        "selected_area_mean": 5350.76011994003,
+        "selected_vs_best_iou_mean": 0.5590508921410173,
+        "reference_iou_gap_mean": 0.2712945828513046,
+        "per_direction": {
+          "above": {
+            "records": 154,
+            "answered": 153,
+            "abstentions": 1,
+            "abstention_rate": 0.006493506493506494,
+            "reference_miou": 0.426978801517827,
+            "reference_dice": 0.49288959627722434,
+            "reference_precision_at_0_5": 0.48487532199892314,
+            "centroid_error_median": 18.566535391771925,
+            "centroid_error_p90": 267.6519233992272
+          },
+          "below": {
+            "records": 150,
+            "answered": 150,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 0.41611407365425196,
+            "reference_dice": 0.4785572829674307,
+            "reference_precision_at_0_5": 0.4762290601564777,
+            "centroid_error_median": 25.51228522367778,
+            "centroid_error_p90": 247.7830651086583
+          },
+          "left": {
+            "records": 184,
+            "answered": 184,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 0.4580513313064905,
+            "reference_dice": 0.5271196666336059,
+            "reference_precision_at_0_5": 0.5189814469402467,
+            "centroid_error_median": 18.309831564950912,
+            "centroid_error_p90": 229.72327056332455
+          },
+          "right": {
+            "records": 181,
+            "answered": 180,
+            "abstentions": 1,
+            "abstention_rate": 0.0055248618784530384,
+            "reference_miou": 0.4549184145624122,
+            "reference_dice": 0.5275245163883427,
+            "reference_precision_at_0_5": 0.5190259148508805,
+            "centroid_error_median": 17.772593002870956,
+            "centroid_error_p90": 239.65922705071728
+          }
+        }
+      },
+      "downstream": {
+        "records": 669,
+        "miou": 0.24540501038500215,
+        "dice": 0.32476185530990626,
+        "precision_at_0_5": 0.47113021763335966,
+        "answered": 667,
+        "abstentions": 2,
+        "answered_only_miou": 0.24614085749260334,
+        "answered_only_dice": 0.3257356539765027
+      },
+      "paired": {
+        "passed": 6,
+        "pairs": 20,
+        "answered_pairs": 20,
+        "abstention_pairs": 0,
+        "pass_rate": 0.3,
+        "mean_own_iou": 0.15599007456101677,
+        "mean_cross_iou": 0.030927192534550473,
+        "own_cross_margin": 0.1250628820264663
+      }
+    },
+    "F-R1": {
+      "label": "ORACLE_SELECTED_PRED_MASK",
+      "reference": {
+        "records": 669,
+        "answered": 667,
+        "abstentions": 2,
+        "abstention_rate": 0.0029895366218236174,
+        "reference_miou": 0.711941700162734,
+        "reference_dice": 0.8111001177582284,
+        "reference_precision_at_0_5": 0.8710179494690397,
+        "centroid_error_median": 4.195105518332744,
+        "centroid_error_p90": 25.916036117234903,
+        "selected_confidence_mean": 0.35774943847460544,
+        "selected_area_mean": 5350.76011994003,
+        "selected_vs_best_iou_mean": 0.5590508921410173,
+        "reference_iou_gap_mean": 0.2712945828513046,
+        "best_eligible_coverage": {
+          "0.25": 0.9581464872944694,
+          "0.5": 0.8460388639760837,
+          "0.75": 0.585949177877429
+        },
+        "per_direction": {
+          "above": {
+            "records": 154,
+            "answered": 153,
+            "abstentions": 1,
+            "abstention_rate": 0.006493506493506494,
+            "reference_miou": 0.7198383730437059,
+            "reference_dice": 0.8174120565445069,
+            "reference_precision_at_0_5": 0.8730094852684845,
+            "centroid_error_median": 4.128522902523632,
+            "centroid_error_p90": 20.187133010687603
+          },
+          "below": {
+            "records": 150,
+            "answered": 150,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 0.7025102550962665,
+            "reference_dice": 0.8048010578526614,
+            "reference_precision_at_0_5": 0.8758150176319771,
+            "centroid_error_median": 4.98036340988967,
+            "centroid_error_p90": 32.211320972847865
+          },
+          "left": {
+            "records": 184,
+            "answered": 184,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 0.7055354212438686,
+            "reference_dice": 0.8053266010049482,
+            "reference_precision_at_0_5": 0.8690713610196772,
+            "centroid_error_median": 4.334396548998429,
+            "centroid_error_p90": 28.757410933745554
+          },
+          "right": {
+            "records": 181,
+            "answered": 180,
+            "abstentions": 1,
+            "abstention_rate": 0.0055248618784530384,
+            "reference_miou": 0.7196377064419153,
+            "reference_dice": 0.8168860035034394,
+            "reference_precision_at_0_5": 0.8673174332075234,
+            "centroid_error_median": 4.074382501720897,
+            "centroid_error_p90": 22.368937136444075
+          }
+        }
+      },
+      "downstream": {
+        "records": 669,
+        "miou": 0.36490938928549665,
+        "dice": 0.48404960482367465,
+        "precision_at_0_5": 0.5384828609551325,
+        "answered": 667,
+        "abstentions": 2,
+        "answered_only_miou": 0.36600357036281445,
+        "answered_only_dice": 0.4855010279265942
+      },
+      "paired": {
+        "passed": 18,
+        "pairs": 20,
+        "answered_pairs": 20,
+        "abstention_pairs": 0,
+        "pass_rate": 0.9,
+        "mean_own_iou": 0.3005475221902009,
+        "mean_cross_iou": 0.0,
+        "own_cross_margin": 0.3005475221902009
+      }
+    },
+    "F-R2": {
+      "label": "COVERAGE_CONDITIONAL_GT_MASK",
+      "reference": {
+        "records": 669,
+        "answered": 566,
+        "abstentions": 103,
+        "abstention_rate": 0.15396113602391628,
+        "reference_miou": 1.0,
+        "reference_dice": 1.0,
+        "reference_precision_at_0_5": 1.0,
+        "centroid_error_median": 0.0,
+        "centroid_error_p90": 0.0,
+        "covered_records": 566,
+        "uncovered_records": 103,
+        "coverage_rate": 0.8460388639760837,
+        "coverage_threshold_iou": 0.5,
+        "per_direction": {
+          "above": {
+            "records": 154,
+            "answered": 131,
+            "abstentions": 23,
+            "abstention_rate": 0.14935064935064934,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          },
+          "below": {
+            "records": 150,
+            "answered": 126,
+            "abstentions": 24,
+            "abstention_rate": 0.16,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          },
+          "left": {
+            "records": 184,
+            "answered": 152,
+            "abstentions": 32,
+            "abstention_rate": 0.17391304347826086,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          },
+          "right": {
+            "records": 181,
+            "answered": 157,
+            "abstentions": 24,
+            "abstention_rate": 0.13259668508287292,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          }
+        }
+      },
+      "downstream": {
+        "records": 669,
+        "miou": 0.3311796696818377,
+        "dice": 0.4365787435919446,
+        "precision_at_0_5": 0.46227238096765366,
+        "answered": 566,
+        "abstentions": 103,
+        "answered_only_miou": 0.3914473480868364,
+        "answered_only_dice": 0.5160268188392418
+      },
+      "paired": {
+        "passed": 16,
+        "pairs": 20,
+        "answered_pairs": 17,
+        "abstention_pairs": 3,
+        "pass_rate": 0.8,
+        "mean_own_iou": 0.33063554167912707,
+        "mean_cross_iou": 0.0,
+        "own_cross_margin": 0.33063554167912707
+      }
+    },
+    "F-R3": {
+      "label": "FULL_ORACLE_GT_MASK",
+      "reference": {
+        "records": 669,
+        "answered": 669,
+        "abstentions": 0,
+        "abstention_rate": 0.0,
+        "reference_miou": 1.0,
+        "reference_dice": 1.0,
+        "reference_precision_at_0_5": 1.0,
+        "centroid_error_median": 0.0,
+        "centroid_error_p90": 0.0,
+        "per_direction": {
+          "above": {
+            "records": 154,
+            "answered": 154,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          },
+          "below": {
+            "records": 150,
+            "answered": 150,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          },
+          "left": {
+            "records": 184,
+            "answered": 184,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          },
+          "right": {
+            "records": 181,
+            "answered": 181,
+            "abstentions": 0,
+            "abstention_rate": 0.0,
+            "reference_miou": 1.0,
+            "reference_dice": 1.0,
+            "reference_precision_at_0_5": 1.0,
+            "centroid_error_median": 0.0,
+            "centroid_error_p90": 0.0
+          }
+        }
+      },
+      "downstream": {
+        "records": 669,
+        "miou": 0.38549593236339924,
+        "dice": 0.5106488989253075,
+        "precision_at_0_5": 0.5473128444972684,
+        "answered": 669,
+        "abstentions": 0,
+        "answered_only_miou": 0.38549593236339924,
+        "answered_only_dice": 0.5106488989253075
+      },
+      "paired": {
+        "passed": 18,
+        "pairs": 20,
+        "answered_pairs": 20,
+        "abstention_pairs": 0,
+        "pass_rate": 0.9,
+        "mean_own_iou": 0.31934029958858356,
+        "mean_cross_iou": 0.0,
+        "own_cross_margin": 0.31934029958858356
+      }
+    }
+  },
+  "coverage": {
+    "covered50": 566,
+    "uncovered": 103,
+    "bands": {
+      "0.25": 641,
+      "0.5": 566,
+      "0.75": 392
+    }
+  },
+  "gaps": {
+    "M0_f_r0": 0.24540501038500215,
+    "M1_f_r1": 0.36490938928549665,
+    "M2_f_r2": 0.3311796696818377,
+    "M3_f_r3": 0.38549593236339924,
+    "selection_gain": 0.1195043789004945,
+    "geometry_gain_covered": 0.004253166957657317,
+    "coverage_gain": 0.054316262681561533,
+    "total_reference_gap": 0.1400909219783971,
+    "selection_fraction": 0.8530487001786086,
+    "coverage_fraction": 0.3877215019681107,
+    "geometry_fraction_note": "geometry_gain_covered has a different subset/denominator and is reported separately; components are not forced to sum to 100%",
+    "tolerance": 1e-06
+  },
+  "labels": {
+    "SELECTION_IS_ACTIONABLE": true,
+    "PROPOSAL_GEOMETRY_IS_MAJOR": false,
+    "PROPOSAL_COVERAGE_IS_MAJOR": true,
+    "CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING": true
+  },
+  "label_conditions": {
+    "SELECTION_IS_ACTIONABLE": {
+      "selection_gain": {
+        "required": 0.05,
+        "measured": 0.1195043789004945,
+        "passed": true
+      },
+      "f_r1_strict_miou": {
+        "required": 0.29,
+        "measured": 0.36490938928549665,
+        "passed": true
+      },
+      "f_r1_paired": {
+        "required": ">= 10/20",
+        "measured": 18,
+        "passed": true
+      },
+      "f_r1_margin": {
+        "required": 0.18,
+        "measured": 0.3005475221902009,
+        "passed": true
+      }
+    },
+    "PROPOSAL_GEOMETRY_IS_MAJOR": {
+      "geometry_gain_covered": {
+        "required": 0.05,
+        "measured": 0.004253166957657317,
+        "passed": false
+      }
+    },
+    "PROPOSAL_COVERAGE_IS_MAJOR": {
+      "coverage_gain": {
+        "required": 0.04,
+        "measured": 0.054316262681561533,
+        "passed": true
+      },
+      "f_r2_coverage_rate_below": {
+        "required": "< 0.85",
+        "measured": 0.8460388639760837,
+        "passed": true
+      }
+    },
+    "CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING": {
+      "f_r2_strict_miou": {
+        "required": 0.3,
+        "measured": 0.3311796696818377,
+        "passed": true
+      },
+      "f_r2_paired": {
+        "required": ">= 12/20",
+        "measured": 16,
+        "passed": true
+      },
+      "f_r2_margin": {
+        "required": 0.22,
+        "measured": 0.33063554167912707,
+        "passed": true
+      }
+    }
+  },
+  "thresholds": {
+    "selection_gain": 0.05,
+    "f_r1_miou": 0.29,
+    "f_r1_paired": 10,
+    "f_r1_margin": 0.18,
+    "geometry_gain_covered": 0.05,
+    "coverage_gain": 0.04,
+    "f_r2_coverage_rate": 0.85,
+    "f_r2_miou": 0.3,
+    "f_r2_paired": 12,
+    "f_r2_margin": 0.22
+  },
+  "reproduction": {
+    "f_r0": {
+      "strict_miou": 0.24540501038500215,
+      "expected_strict_miou": 0.24540501038500215,
+      "strict_delta": 0.0,
+      "strict_ok": true,
+      "abstentions": 2,
+      "expected_abstentions": 2,
+      "abstentions_ok": true,
+      "answered_only_miou": 0.24614085749260334,
+      "expected_answered_only_miou": 0.24614085749260334,
+      "answered_only_delta": 0.0,
+      "answered_only_ok": true
+    },
+    "f_r3": {
+      "strict_miou": 0.38549593236339924,
+      "expected_strict_miou": 0.38549570532647004,
+      "strict_delta": 2.2703692920122975e-07,
+      "strict_ok": true,
+      "abstentions": 0,
+      "expected_abstentions": 0,
+      "abstentions_ok": true
+    },
+    "passed": true
+  },
+  "task7e_oracle_facts": {
+    "task7e_z_b3_miou": 0.3141113773177512,
+    "task7e_d_b1_miou": 0.38549570532647004,
+    "task7e_delta": 0.07138432800871886,
+    "task7e_paired": 18,
+    "task7e_margin": 0.319340299375649,
+    "task7e_ci": [
+      0.058623364793963954,
+      0.08426264360286147
+    ],
+    "expected": {
+      "z_b3_miou": 0.3141113773177512,
+      "d_b1_miou": 0.38549570532647004,
+      "delta": 0.07138432800871886,
+      "paired": 18,
+      "margin": 0.3193402994,
+      "ci_lower": 0.058623364793963954,
+      "ci_upper": 0.08426264360286147
+    },
+    "reproduced": {
+      "z_b3_miou": true,
+      "d_b1_miou": true,
+      "delta": true,
+      "paired": true,
+      "margin": true
+    },
+    "all_reproduced": true
+  },
+  "architecture_status": {
+    "d_b1_status": "preferred oracle-reference L3 target decoder candidate",
+    "end_to_end_ready": false,
+    "final_model": false,
+    "paper_final": false,
+    "practical_chain_blocked": true,
+    "reason": "D-B1's untouched oracle-reference gain over Z-B3 is established, but the practical chain stays blocked by the reference stage",
+    "z_b3_role": "frozen baseline / ablation"
+  },
+  "interpretation_boundary": {
+    "selector_trained": false,
+    "yolo_retrained": false,
+    "u_c1_changed": false,
+    "d_b1_retrained": false,
+    "threshold_change_proposed": false,
+    "full_training_or_test_started": false,
+    "repair_chosen": false,
+    "task7g_chosen": false,
+    "gt_used_beyond_declared_diagnostics": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7F 的 selection / proposal-geometry / coverage ceiling 分解决定是否值得进行最后一次 reference 干预；不自行训练 selector、重训 YOLO 或开始正式 test。",
+  "runtime_seconds": 0.1
+}

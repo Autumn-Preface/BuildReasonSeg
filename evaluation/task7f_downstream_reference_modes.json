@@ -1,0 +1,323 @@
+{
+  "_doc": "Task 7F sections 11-12. Frozen D-B1 downstream evaluation for F-R0 ... F-R3 over the frozen Task 7E E-HoldoutL3 population. The only difference between the four runs is the reference mask; the program id, the fields, the SAM2 feature, the decoder weights and the loss are untouched, and abstentions count as strict IoU 0.",
+  "task": "7F",
+  "stage": "F-downstream-reference-modes",
+  "records": 669,
+  "checks": {
+    "records": 669,
+    "records_expected": 669,
+    "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "record_id_hash_expected": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "record_id_hash_ok": true,
+    "pairs": 20,
+    "pairs_expected": 20,
+    "pair_id_hash": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "pair_id_hash_expected": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "pair_id_hash_ok": true,
+    "no_test": true,
+    "overlap_minival": true,
+    "overlap_pairedval": true,
+    "d_b1_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_sha256_ok": true,
+    "yolo_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "yolo_sha256_ok": true
+  },
+  "modes": {
+    "F-R0": "CURRENT_SELECTED_PRED_MASK",
+    "F-R1": "ORACLE_SELECTED_PRED_MASK",
+    "F-R2": "COVERAGE_CONDITIONAL_GT_MASK",
+    "F-R3": "FULL_ORACLE_GT_MASK"
+  },
+  "results": {
+    "F-R0": {
+      "label": "CURRENT_SELECTED_PRED_MASK",
+      "strict": {
+        "records": 669,
+        "miou": 0.24540501038500215,
+        "dice": 0.32476185530990626,
+        "precision_at_0_5": 0.47113021763335966,
+        "answered": 667,
+        "abstentions": 2,
+        "answered_only_miou": 0.24614085749260334,
+        "answered_only_dice": 0.3257356539765027
+      },
+      "reference_ok_style_subset": {
+        "records": 566,
+        "miou": 0.2722015480486022,
+        "dice": 0.3599341079220196,
+        "precision_at_0_5": 0.47284438431704884,
+        "answered": 566,
+        "abstentions": 0,
+        "answered_only_miou": 0.2722015480486022,
+        "answered_only_dice": 0.3599341079220196
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.23563903287320767,
+          "dice": 0.3110029899565222,
+          "precision_at_0_5": 0.5309555077089009,
+          "answered": 153,
+          "abstentions": 1,
+          "answered_only_miou": 0.23717915727107178,
+          "answered_only_dice": 0.31303568923728375
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.23038854476702056,
+          "dice": 0.30843688593935403,
+          "precision_at_0_5": 0.43041878344504625,
+          "answered": 150,
+          "abstentions": 0,
+          "answered_only_miou": 0.23038854476702056,
+          "answered_only_dice": 0.30843688593935403
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.2590233625368577,
+          "dice": 0.340620227362783,
+          "precision_at_0_5": 0.4659628079718943,
+          "answered": 184,
+          "abstentions": 0,
+          "answered_only_miou": 0.2590233625368577,
+          "answered_only_dice": 0.340620227362783
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.25231469869203055,
+          "dice": 0.33387605537772225,
+          "precision_at_0_5": 0.4592209570495104,
+          "answered": 180,
+          "abstentions": 1,
+          "answered_only_miou": 0.2537164470180974,
+          "answered_only_dice": 0.3357309223520429
+        }
+      }
+    },
+    "F-R1": {
+      "label": "ORACLE_SELECTED_PRED_MASK",
+      "strict": {
+        "records": 669,
+        "miou": 0.36490938928549665,
+        "dice": 0.48404960482367465,
+        "precision_at_0_5": 0.5384828609551325,
+        "answered": 667,
+        "abstentions": 2,
+        "answered_only_miou": 0.36600357036281445,
+        "answered_only_dice": 0.4855010279265942
+      },
+      "reference_ok_style_subset": {
+        "records": 566,
+        "miou": 0.3871941811291791,
+        "dice": 0.5102948850030852,
+        "precision_at_0_5": 0.54324927873247,
+        "answered": 566,
+        "abstentions": 0,
+        "answered_only_miou": 0.3871941811291791,
+        "answered_only_dice": 0.5102948850030852
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.3828819911117658,
+          "dice": 0.5008389613562901,
+          "precision_at_0_5": 0.6090466270867777,
+          "answered": 153,
+          "abstentions": 1,
+          "answered_only_miou": 0.3853844877856989,
+          "answered_only_dice": 0.5041124186200567
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.333283560379456,
+          "dice": 0.4527270463998165,
+          "precision_at_0_5": 0.4784301461001512,
+          "answered": 150,
+          "abstentions": 0,
+          "answered_only_miou": 0.333283560379456,
+          "answered_only_dice": 0.4527270463998165
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.3723968236404674,
+          "dice": 0.49348608142916717,
+          "precision_at_0_5": 0.5376181890288897,
+          "answered": 184,
+          "abstentions": 0,
+          "answered_only_miou": 0.3723968236404674,
+          "answered_only_dice": 0.49348608142916717
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.36821549830950784,
+          "dice": 0.48612977699022336,
+          "precision_at_0_5": 0.5290916282391244,
+          "answered": 180,
+          "abstentions": 1,
+          "answered_only_miou": 0.3702611399667829,
+          "answered_only_dice": 0.48883049797350236
+        }
+      }
+    },
+    "F-R2": {
+      "label": "COVERAGE_CONDITIONAL_GT_MASK",
+      "strict": {
+        "records": 669,
+        "miou": 0.3311796696818377,
+        "dice": 0.4365787435919446,
+        "precision_at_0_5": 0.46227238096765366,
+        "answered": 566,
+        "abstentions": 103,
+        "answered_only_miou": 0.3914473480868364,
+        "answered_only_dice": 0.5160268188392418
+      },
+      "reference_ok_style_subset": {
+        "records": 566,
+        "miou": 0.3914473480868364,
+        "dice": 0.5160268188392418,
+        "precision_at_0_5": 0.5463961534759016,
+        "answered": 566,
+        "abstentions": 0,
+        "answered_only_miou": 0.3914473480868364,
+        "answered_only_dice": 0.5160268188392418
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.34805293125318404,
+          "dice": 0.4523456527540223,
+          "precision_at_0_5": 0.5254480959700139,
+          "answered": 131,
+          "abstentions": 23,
+          "answered_only_miou": 0.4091614611678652,
+          "answered_only_dice": 0.5317651185047285
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.30640658788327163,
+          "dice": 0.4126460168090202,
+          "precision_at_0_5": 0.419050095891709,
+          "answered": 126,
+          "abstentions": 24,
+          "answered_only_miou": 0.3647697474800853,
+          "answered_only_dice": 0.4912452581059764
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.3287010730153254,
+          "dice": 0.4340840102560285,
+          "precision_at_0_5": 0.44987776957315856,
+          "answered": 152,
+          "abstentions": 32,
+          "answered_only_miou": 0.3979012989132886,
+          "answered_only_dice": 0.5254701176783503
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.3398732706455715,
+          "dice": 0.4455336382896641,
+          "precision_at_0_5": 0.456940287860556,
+          "answered": 157,
+          "abstentions": 24,
+          "answered_only_miou": 0.3918284202983977,
+          "answered_only_dice": 0.5136406912766192
+        }
+      }
+    },
+    "F-R3": {
+      "label": "FULL_ORACLE_GT_MASK",
+      "strict": {
+        "records": 669,
+        "miou": 0.38549593236339924,
+        "dice": 0.5106488989253075,
+        "precision_at_0_5": 0.5473128444972684,
+        "answered": 669,
+        "abstentions": 0,
+        "answered_only_miou": 0.38549593236339924,
+        "answered_only_dice": 0.5106488989253075
+      },
+      "reference_ok_style_subset": {
+        "records": 566,
+        "miou": 0.3914473480868364,
+        "dice": 0.5160268188392418,
+        "precision_at_0_5": 0.5463961534759016,
+        "answered": 566,
+        "abstentions": 0,
+        "answered_only_miou": 0.3914473480868364,
+        "answered_only_dice": 0.5160268188392418
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.40753313166887406,
+          "dice": 0.5323820396329306,
+          "precision_at_0_5": 0.623012471520136,
+          "answered": 154,
+          "abstentions": 0,
+          "answered_only_miou": 0.40753313166887406,
+          "answered_only_dice": 0.5323820396329306
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.3505830504982934,
+          "dice": 0.47785508983736263,
+          "precision_at_0_5": 0.4930508207542567,
+          "answered": 150,
+          "abstentions": 0,
+          "answered_only_miou": 0.3505830504982934,
+          "answered_only_dice": 0.47785508983736263
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.3880487181083894,
+          "dice": 0.5135040779290335,
+          "precision_at_0_5": 0.5398310127636724,
+          "answered": 184,
+          "abstentions": 0,
+          "answered_only_miou": 0.3880487181083894,
+          "answered_only_dice": 0.5135040779290335
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.39308428048298233,
+          "dice": 0.516432405872999,
+          "precision_at_0_5": 0.5354797949884939,
+          "answered": 181,
+          "abstentions": 0,
+          "answered_only_miou": 0.39308428048298233,
+          "answered_only_dice": 0.516432405872999
+        }
+      }
+    }
+  },
+  "reproduction": {
+    "F-R0": {
+      "strict_miou": 0.24540501038500215,
+      "expected_strict_miou": 0.24540501038500215,
+      "strict_delta": 0.0,
+      "strict_ok": true,
+      "abstentions": 2,
+      "expected_abstentions": 2,
+      "abstentions_ok": true,
+      "answered_only_miou": 0.24614085749260334,
+      "expected_answered_only_miou": 0.24614085749260334,
+      "answered_only_delta": 0.0,
+      "answered_only_ok": true
+    },
+    "F-R3": {
+      "strict_miou": 0.38549593236339924,
+      "expected_strict_miou": 0.38549570532647004,
+      "strict_delta": 2.2703692920122975e-07,
+      "strict_ok": true,
+      "abstentions": 0,
+      "expected_abstentions": 0,
+      "abstentions_ok": true
+    },
+    "passed": true
+  },
+  "reproduction_passed": true,
+  "verdict": "TASK7E_NUMERIC_REPRODUCTION_PASS",
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 0.1
+}

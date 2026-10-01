@@ -1,0 +1,373 @@
+{
+  "_doc": "Task 7F sections 5-10. Four exact reference modes over the frozen Task 7E E-HoldoutL3 population, built from a single frozen U-C1 proposal inference per tile. F-R2/F-R3 use the canonical GT reference only as the declared diagnostic ceiling; F-R1 uses GT only to choose among existing eligible proposals and still returns a predicted mask.",
+  "task": "7F",
+  "stage": "C-E-reference-modes",
+  "checks": {
+    "records": 669,
+    "records_expected": 669,
+    "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "record_id_hash_expected": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "record_id_hash_ok": true,
+    "pairs": 20,
+    "pairs_expected": 20,
+    "pair_id_hash": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "pair_id_hash_expected": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "pair_id_hash_ok": true,
+    "no_test": true,
+    "overlap_minival": true,
+    "overlap_pairedval": true,
+    "d_b1_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_sha256_ok": true,
+    "yolo_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "yolo_sha256_ok": true
+  },
+  "checkpoints": {
+    "z_b3": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "matches": true,
+      "variant": "Z-B3",
+      "task": "6Z"
+    },
+    "d_b1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_minitrain1200.pt",
+      "sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "expected_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "matches": true,
+      "variant": "D-B1",
+      "task": "7D",
+      "checkpoint_variant": "D-B1",
+      "selected_epoch": 7,
+      "selected_step": 1050,
+      "seed": 20261001,
+      "retrained": false,
+      "epoch_matches": true
+    }
+  },
+  "resolver": {
+    "config": "U-C1",
+    "id": "U-C1",
+    "label": "lower confidence / larger candidate cap",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false,
+    "frozen_config_source": "scripts/task6u_common.CONFIGS['U-C1']",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "family": "YOLO26m-seg",
+    "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+    "eligibility": {
+      "not_border_touching": true,
+      "bbox_extent_ratio_max": 0.2
+    },
+    "selection": [
+      "max predicted mask area",
+      "tie higher confidence",
+      "then lower original index"
+    ],
+    "ranker": false,
+    "quality_filter": false,
+    "sam2_refinement": false,
+    "task6q_resolver_report": {
+      "checkpoint": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "family": "YOLO26m-seg",
+      "imgsz": 640,
+      "conf": 0.1,
+      "max_det": 100,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "threshold_sweep": false,
+      "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+      "merge_bbox_extent_ratio_max": 0.2,
+      "tiny_component_area_px": 150
+    },
+    "note": "Task 6Q's read-only `config_report()` prints the resolver module defaults (conf 0.10 / max_det 100); the Task 6U frozen `CONFIGS['U-C1']` entry used by the pipeline is conf 0.05 / max_det 300, which is what Task 7E section 14 mandates and what this run used."
+  },
+  "u_c1_config": {
+    "id": "U-C1",
+    "label": "lower confidence / larger candidate cap",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false
+  },
+  "modes": {
+    "F-R0": "CURRENT_SELECTED_PRED_MASK",
+    "F-R1": "ORACLE_SELECTED_PRED_MASK",
+    "F-R2": "COVERAGE_CONDITIONAL_GT_MASK",
+    "F-R3": "FULL_ORACLE_GT_MASK"
+  },
+  "mode_definitions": {
+    "F-R0": "max predicted mask area -> tie higher confidence -> lower original index",
+    "F-R1": "max IoU to GT reference among the same eligible proposals -> tie higher confidence -> lower index, returning the predicted proposal mask",
+    "F-R2": "canonical GT mask when best eligible IoU >= 0.5, else abstain",
+    "F-R3": "canonical GT mask for every record"
+  },
+  "reference": {
+    "F-R0": {
+      "records": 669,
+      "answered": 667,
+      "abstentions": 2,
+      "abstention_rate": 0.0029895366218236174,
+      "reference_miou": 0.4406471173343235,
+      "reference_dice": 0.5084559704438009,
+      "reference_precision_at_0_5": 0.5015555235374375,
+      "centroid_error_median": 19.114109060371085,
+      "centroid_error_p90": 247.74824284168488,
+      "selected_confidence_mean": 0.35774943847460544,
+      "selected_area_mean": 5350.76011994003,
+      "selected_vs_best_iou_mean": 0.5590508921410173,
+      "reference_iou_gap_mean": 0.2712945828513046,
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "answered": 153,
+          "abstentions": 1,
+          "abstention_rate": 0.006493506493506494,
+          "reference_miou": 0.426978801517827,
+          "reference_dice": 0.49288959627722434,
+          "reference_precision_at_0_5": 0.48487532199892314,
+          "centroid_error_median": 18.566535391771925,
+          "centroid_error_p90": 267.6519233992272
+        },
+        "below": {
+          "records": 150,
+          "answered": 150,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 0.41611407365425196,
+          "reference_dice": 0.4785572829674307,
+          "reference_precision_at_0_5": 0.4762290601564777,
+          "centroid_error_median": 25.51228522367778,
+          "centroid_error_p90": 247.7830651086583
+        },
+        "left": {
+          "records": 184,
+          "answered": 184,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 0.4580513313064905,
+          "reference_dice": 0.5271196666336059,
+          "reference_precision_at_0_5": 0.5189814469402467,
+          "centroid_error_median": 18.309831564950912,
+          "centroid_error_p90": 229.72327056332455
+        },
+        "right": {
+          "records": 181,
+          "answered": 180,
+          "abstentions": 1,
+          "abstention_rate": 0.0055248618784530384,
+          "reference_miou": 0.4549184145624122,
+          "reference_dice": 0.5275245163883427,
+          "reference_precision_at_0_5": 0.5190259148508805,
+          "centroid_error_median": 17.772593002870956,
+          "centroid_error_p90": 239.65922705071728
+        }
+      }
+    },
+    "F-R1": {
+      "records": 669,
+      "answered": 667,
+      "abstentions": 2,
+      "abstention_rate": 0.0029895366218236174,
+      "reference_miou": 0.711941700162734,
+      "reference_dice": 0.8111001177582284,
+      "reference_precision_at_0_5": 0.8710179494690397,
+      "centroid_error_median": 4.195105518332744,
+      "centroid_error_p90": 25.916036117234903,
+      "selected_confidence_mean": 0.35774943847460544,
+      "selected_area_mean": 5350.76011994003,
+      "selected_vs_best_iou_mean": 0.5590508921410173,
+      "reference_iou_gap_mean": 0.2712945828513046,
+      "best_eligible_coverage": {
+        "0.25": 0.9581464872944694,
+        "0.5": 0.8460388639760837,
+        "0.75": 0.585949177877429
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "answered": 153,
+          "abstentions": 1,
+          "abstention_rate": 0.006493506493506494,
+          "reference_miou": 0.7198383730437059,
+          "reference_dice": 0.8174120565445069,
+          "reference_precision_at_0_5": 0.8730094852684845,
+          "centroid_error_median": 4.128522902523632,
+          "centroid_error_p90": 20.187133010687603
+        },
+        "below": {
+          "records": 150,
+          "answered": 150,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 0.7025102550962665,
+          "reference_dice": 0.8048010578526614,
+          "reference_precision_at_0_5": 0.8758150176319771,
+          "centroid_error_median": 4.98036340988967,
+          "centroid_error_p90": 32.211320972847865
+        },
+        "left": {
+          "records": 184,
+          "answered": 184,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 0.7055354212438686,
+          "reference_dice": 0.8053266010049482,
+          "reference_precision_at_0_5": 0.8690713610196772,
+          "centroid_error_median": 4.334396548998429,
+          "centroid_error_p90": 28.757410933745554
+        },
+        "right": {
+          "records": 181,
+          "answered": 180,
+          "abstentions": 1,
+          "abstention_rate": 0.0055248618784530384,
+          "reference_miou": 0.7196377064419153,
+          "reference_dice": 0.8168860035034394,
+          "reference_precision_at_0_5": 0.8673174332075234,
+          "centroid_error_median": 4.074382501720897,
+          "centroid_error_p90": 22.368937136444075
+        }
+      }
+    },
+    "F-R2": {
+      "records": 669,
+      "answered": 566,
+      "abstentions": 103,
+      "abstention_rate": 0.15396113602391628,
+      "reference_miou": 1.0,
+      "reference_dice": 1.0,
+      "reference_precision_at_0_5": 1.0,
+      "centroid_error_median": 0.0,
+      "centroid_error_p90": 0.0,
+      "covered_records": 566,
+      "uncovered_records": 103,
+      "coverage_rate": 0.8460388639760837,
+      "coverage_threshold_iou": 0.5,
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "answered": 131,
+          "abstentions": 23,
+          "abstention_rate": 0.14935064935064934,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        },
+        "below": {
+          "records": 150,
+          "answered": 126,
+          "abstentions": 24,
+          "abstention_rate": 0.16,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        },
+        "left": {
+          "records": 184,
+          "answered": 152,
+          "abstentions": 32,
+          "abstention_rate": 0.17391304347826086,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        },
+        "right": {
+          "records": 181,
+          "answered": 157,
+          "abstentions": 24,
+          "abstention_rate": 0.13259668508287292,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        }
+      }
+    },
+    "F-R3": {
+      "records": 669,
+      "answered": 669,
+      "abstentions": 0,
+      "abstention_rate": 0.0,
+      "reference_miou": 1.0,
+      "reference_dice": 1.0,
+      "reference_precision_at_0_5": 1.0,
+      "centroid_error_median": 0.0,
+      "centroid_error_p90": 0.0,
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "answered": 154,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        },
+        "below": {
+          "records": 150,
+          "answered": 150,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        },
+        "left": {
+          "records": 184,
+          "answered": 184,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        },
+        "right": {
+          "records": 181,
+          "answered": 181,
+          "abstentions": 0,
+          "abstention_rate": 0.0,
+          "reference_miou": 1.0,
+          "reference_dice": 1.0,
+          "reference_precision_at_0_5": 1.0,
+          "centroid_error_median": 0.0,
+          "centroid_error_p90": 0.0
+        }
+      }
+    }
+  },
+  "coverage": {
+    "covered50": 566,
+    "uncovered": 103,
+    "bands": {
+      "0.25": 641,
+      "0.5": 566,
+      "0.75": 392
+    }
+  },
+  "records": 669,
+  "training_performed": false,
+  "test_split_used": false
+}
