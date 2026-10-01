@@ -1,0 +1,756 @@
+{
+  "_doc": "Task 7G section 21. Training of SetContextLargestSelector v1 on G-RefTrainUniqueLargest with the exact frozen protocol and tile-level 80/20 internal split.",
+  "task": "7G",
+  "stage": "F-training",
+  "seed": 20261001,
+  "dataset": {
+    "rows": 1028,
+    "trainable": 1028,
+    "trainable_train": 805,
+    "trainable_holdout": 223,
+    "train_tiles": 805,
+    "holdout_tiles": 223,
+    "tile_assignment": "SHA256(seed:tile_id) < 0.80 -> train"
+  },
+  "protocol": {
+    "optimizer": "AdamW",
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "batch": 32,
+    "max_epochs": 40,
+    "patience": 6,
+    "seed": 20261001,
+    "scheduler": "none",
+    "augmentation": "none",
+    "precision": "fp32",
+    "sweep": false,
+    "loss": "CrossEntropyLoss (listwise, single loss)"
+  },
+  "architecture": {
+    "name": "SetContextLargestSelector",
+    "version": "v1",
+    "feature_dim": 18,
+    "feature_names": [
+      "log_area",
+      "area_ratio",
+      "area_over_set_max",
+      "area_rank_desc",
+      "confidence",
+      "bbox_extent_ratio",
+      "width_ratio",
+      "height_ratio",
+      "fill_ratio",
+      "abs_log_aspect",
+      "boundary_over_sqrt_area",
+      "max_iou_other",
+      "mean_iou_other",
+      "max_self_contained_by_other",
+      "max_other_contained_in_self",
+      "self_contained_count_norm",
+      "contains_other_count_norm",
+      "proposal_count_norm"
+    ],
+    "proposal_encoder": [
+      "Linear(18,64)",
+      "LayerNorm(64)",
+      "GELU",
+      "Linear(64,32)",
+      "GELU"
+    ],
+    "set_context": [
+      "mean_i h_i",
+      "max_i h_i",
+      "concat -> 64"
+    ],
+    "candidate_head": [
+      "concat(h_i, context) -> 96",
+      "Linear(96,32)",
+      "GELU",
+      "Linear(32,1)"
+    ],
+    "softmax": "over valid candidates only",
+    "loss": "CrossEntropyLoss (listwise, single loss)",
+    "extra_losses": [],
+    "parameters": 6561,
+    "transformer": false,
+    "attention": false,
+    "gnn": false,
+    "positional_encoding": false,
+    "proposal_order_feature": false,
+    "uses_gt_at_inference": false,
+    "uses_sam2_or_rgb": false,
+    "uses_absolute_position": false,
+    "uses_relation_or_program": false,
+    "uses_target": false,
+    "proposal_config": {
+      "imgsz": 640,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false
+    },
+    "source_area": 262144,
+    "eps": 1e-06,
+    "boundary_operator": {
+      "function": "scipy.ndimage.binary_erosion",
+      "structure": "3x3 ones",
+      "iterations": 1,
+      "border_value": 0
+    },
+    "overlap_features": [
+      "max_iou_other",
+      "mean_iou_other",
+      "max_self_contained_by_other",
+      "max_other_contained_in_self",
+      "self_contained_count_norm",
+      "contains_other_count_norm"
+    ],
+    "select_rule": [
+      "highest score",
+      "exact-float tie -> higher confidence",
+      "then lower original index"
+    ]
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 1.9555423305584834,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.48605623708209694,
+        "median_selected_iou": 0.6248888888888889,
+        "selected_iou_at_0_5": 0.5829596412556054,
+        "oracle_best_top1": 0.452914798206278,
+        "mean_best_minus_selected": 0.3129071138136459,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 2,
+      "loss": 1.3466735528065608,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.576517508981335,
+        "median_selected_iou": 0.7532051282051282,
+        "selected_iou_at_0_5": 0.6860986547085202,
+        "oracle_best_top1": 0.5874439461883408,
+        "mean_best_minus_selected": 0.22244584191440786,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 3,
+      "loss": 1.041000620676921,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.5841156637150706,
+        "median_selected_iou": 0.7779383429672447,
+        "selected_iou_at_0_5": 0.695067264573991,
+        "oracle_best_top1": 0.6143497757847534,
+        "mean_best_minus_selected": 0.21484768718067224,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 4,
+      "loss": 0.9289603577210352,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.5804497477385252,
+        "median_selected_iou": 0.7759856630824373,
+        "selected_iou_at_0_5": 0.6905829596412556,
+        "oracle_best_top1": 0.6143497757847534,
+        "mean_best_minus_selected": 0.2185136031572177,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 5,
+      "loss": 0.9153223908864535,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6015591306630983,
+        "median_selected_iou": 0.7875432525951557,
+        "selected_iou_at_0_5": 0.7085201793721974,
+        "oracle_best_top1": 0.6367713004484304,
+        "mean_best_minus_selected": 0.1974042202326446,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 6,
+      "loss": 0.8673619375779078,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.5904688551468579,
+        "median_selected_iou": 0.7779383429672447,
+        "selected_iou_at_0_5": 0.695067264573991,
+        "oracle_best_top1": 0.6143497757847534,
+        "mean_best_minus_selected": 0.20849449574888504,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 7,
+      "loss": 0.876076306288059,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6105730094681894,
+        "median_selected_iou": 0.7925506836397925,
+        "selected_iou_at_0_5": 0.7174887892376681,
+        "oracle_best_top1": 0.6547085201793722,
+        "mean_best_minus_selected": 0.18839034142755345,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 8,
+      "loss": 0.850172507075163,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6000436539771828,
+        "median_selected_iou": 0.7853136155022947,
+        "selected_iou_at_0_5": 0.7040358744394619,
+        "oracle_best_top1": 0.6367713004484304,
+        "mean_best_minus_selected": 0.1989196969185598,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 9,
+      "loss": 0.8405316797300026,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.5956832273525962,
+        "median_selected_iou": 0.7866770347330223,
+        "selected_iou_at_0_5": 0.6995515695067265,
+        "oracle_best_top1": 0.6278026905829597,
+        "mean_best_minus_selected": 0.20328012354314676,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 10,
+      "loss": 0.8804740997461172,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6063529956496384,
+        "median_selected_iou": 0.7885985748218527,
+        "selected_iou_at_0_5": 0.7130044843049327,
+        "oracle_best_top1": 0.6457399103139013,
+        "mean_best_minus_selected": 0.19261035524610448,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 11,
+      "loss": 0.8424231146390622,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.5957843926241624,
+        "median_selected_iou": 0.7866770347330223,
+        "selected_iou_at_0_5": 0.6995515695067265,
+        "oracle_best_top1": 0.6322869955156951,
+        "mean_best_minus_selected": 0.20317895827158042,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 12,
+      "loss": 0.8484674061720188,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6166075867576162,
+        "median_selected_iou": 0.7895902547065338,
+        "selected_iou_at_0_5": 0.726457399103139,
+        "oracle_best_top1": 0.6591928251121076,
+        "mean_best_minus_selected": 0.18235576413812665,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 13,
+      "loss": 0.83440551505639,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6016539733152255,
+        "median_selected_iou": 0.7885985748218527,
+        "selected_iou_at_0_5": 0.7085201793721974,
+        "oracle_best_top1": 0.6367713004484304,
+        "mean_best_minus_selected": 0.1973093775805173,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 14,
+      "loss": 0.8494575688472161,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6008431897250445,
+        "median_selected_iou": 0.7875432525951557,
+        "selected_iou_at_0_5": 0.7085201793721974,
+        "oracle_best_top1": 0.6367713004484304,
+        "mean_best_minus_selected": 0.19812016117069825,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 15,
+      "loss": 0.8431545702310709,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6026243922826415,
+        "median_selected_iou": 0.7875432525951557,
+        "selected_iou_at_0_5": 0.7085201793721974,
+        "oracle_best_top1": 0.6367713004484304,
+        "mean_best_minus_selected": 0.19633895861310138,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 16,
+      "loss": 0.8600590435358194,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.616051959857922,
+        "median_selected_iou": 0.7925506836397925,
+        "selected_iou_at_0_5": 0.7309417040358744,
+        "oracle_best_top1": 0.6591928251121076,
+        "mean_best_minus_selected": 0.18291139103782095,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 17,
+      "loss": 0.867948266176077,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6143150507448346,
+        "median_selected_iou": 0.7925506836397925,
+        "selected_iou_at_0_5": 0.726457399103139,
+        "oracle_best_top1": 0.6547085201793722,
+        "mean_best_minus_selected": 0.1846483001509082,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 18,
+      "loss": 0.8349153468242059,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6182653665646175,
+        "median_selected_iou": 0.7925506836397925,
+        "selected_iou_at_0_5": 0.7309417040358744,
+        "oracle_best_top1": 0.6591928251121076,
+        "mean_best_minus_selected": 0.18069798433112536,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 19,
+      "loss": 0.8346444368362427,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6198877725708375,
+        "median_selected_iou": 0.7895902547065338,
+        "selected_iou_at_0_5": 0.7309417040358744,
+        "oracle_best_top1": 0.6591928251121076,
+        "mean_best_minus_selected": 0.17907557832490537,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 20,
+      "loss": 0.831090007837002,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6096640784986515,
+        "median_selected_iou": 0.7895902547065338,
+        "selected_iou_at_0_5": 0.7219730941704036,
+        "oracle_best_top1": 0.6457399103139013,
+        "mean_best_minus_selected": 0.18929927239709132,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 21,
+      "loss": 0.8238057276377311,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.5946000937520809,
+        "median_selected_iou": 0.7780429594272077,
+        "selected_iou_at_0_5": 0.6995515695067265,
+        "oracle_best_top1": 0.6233183856502242,
+        "mean_best_minus_selected": 0.20436325714366194,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 22,
+      "loss": 0.8419036337962518,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6084758643047329,
+        "median_selected_iou": 0.7895902547065338,
+        "selected_iou_at_0_5": 0.7174887892376681,
+        "oracle_best_top1": 0.6457399103139013,
+        "mean_best_minus_selected": 0.19048748659100986,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 23,
+      "loss": 0.8042760858168969,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.605264237623602,
+        "median_selected_iou": 0.7885985748218527,
+        "selected_iou_at_0_5": 0.7130044843049327,
+        "oracle_best_top1": 0.6412556053811659,
+        "mean_best_minus_selected": 0.19369911327214065,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 24,
+      "loss": 0.8203053783911926,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6150626857053971,
+        "median_selected_iou": 0.7925506836397925,
+        "selected_iou_at_0_5": 0.726457399103139,
+        "oracle_best_top1": 0.6547085201793722,
+        "mean_best_minus_selected": 0.18390066519034565,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    },
+    {
+      "epoch": 25,
+      "loss": 0.8115320526636564,
+      "holdout_g_i1": {
+        "records": 223,
+        "label": "G-I1 learned selector",
+        "mean_selected_iou": 0.6058502774275126,
+        "median_selected_iou": 0.7895902547065338,
+        "selected_iou_at_0_5": 0.7174887892376681,
+        "oracle_best_top1": 0.6457399103139013,
+        "mean_best_minus_selected": 0.1931130734682302,
+        "mean_best_eligible_iou": 0.7989633508957428
+      },
+      "holdout_g_i0": {
+        "records": 223,
+        "label": "G-I0 deterministic max-area",
+        "mean_selected_iou": 0.5199913587222026,
+        "median_selected_iou": 0.6609375,
+        "selected_iou_at_0_5": 0.6278026905829597,
+        "oracle_best_top1": 0.48878923766816146,
+        "mean_best_minus_selected": 0.2789719921735403,
+        "mean_best_eligible_iou": 0.7989633508957428
+      }
+    }
+  ],
+  "selected_epoch": 19,
+  "selection_metrics": {
+    "mean_selected_iou": 0.6198877725708375,
+    "oracle_best_top1": 0.6591928251121076,
+    "mean_best_minus_selected": 0.17907557832490537
+  },
+  "internal_holdout_metrics": {
+    "g_i0_deterministic_max_area": {
+      "records": 223,
+      "label": "G-I0 deterministic max-area",
+      "mean_selected_iou": 0.5199913587222026,
+      "median_selected_iou": 0.6609375,
+      "selected_iou_at_0_5": 0.6278026905829597,
+      "oracle_best_top1": 0.48878923766816146,
+      "mean_best_minus_selected": 0.2789719921735403,
+      "mean_best_eligible_iou": 0.7989633508957428
+    },
+    "g_i1_learned_selector": {
+      "records": 223,
+      "label": "G-I1 learned selector",
+      "mean_selected_iou": 0.6198877725708375,
+      "median_selected_iou": 0.7895902547065338,
+      "selected_iou_at_0_5": 0.7309417040358744,
+      "oracle_best_top1": 0.6591928251121076,
+      "mean_best_minus_selected": 0.17907557832490537,
+      "mean_best_eligible_iou": 0.7989633508957428
+    }
+  },
+  "checkpoint": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7g\\largest_set_context_selector_v1.pt",
+    "sha256": "57dc92a7f56a2765093bbdfc1238e6679050ca99161b5e3fc8eac647641995aa",
+    "bytes": 31685,
+    "committed": false
+  },
+  "internal_gate_passed": false,
+  "verdict": "LARGEST_SELECTOR_NOT_LEARNABLE",
+  "training_performed": true,
+  "test_split_used": false,
+  "runtime_seconds": 16.1
+}

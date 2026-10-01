@@ -1,0 +1,71 @@
+{
+  "_doc": "Task 7G sections 22-23. Train-internal tile-disjoint holdout comparison of the deterministic max-area selector (G-I0) and the frozen Task 7G selector (G-I1), with the section-23 learnability gate. E-HoldoutL3 was not used for checkpoint selection or early stopping.",
+  "task": "7G",
+  "stage": "G-internal-holdout",
+  "holdout": {
+    "tiles": 223,
+    "trainable_sets": 223,
+    "train_tiles": 805,
+    "trainable_train_sets": 805,
+    "tile_overlap": 0,
+    "reference_overlap": 0,
+    "excluded_from_loss": {
+      "no_eligible": 2,
+      "untrainable_not_covered": 33
+    }
+  },
+  "g_i0_deterministic_max_area": {
+    "records": 223,
+    "label": "G-I0 deterministic max-area",
+    "mean_selected_iou": 0.5199913587222026,
+    "median_selected_iou": 0.6609375,
+    "selected_iou_at_0_5": 0.6278026905829597,
+    "oracle_best_top1": 0.48878923766816146,
+    "mean_best_minus_selected": 0.2789719921735403,
+    "mean_best_eligible_iou": 0.7989633508957428
+  },
+  "g_i1_learned_selector": {
+    "records": 223,
+    "label": "G-I1 learned selector",
+    "mean_selected_iou": 0.6198877725708375,
+    "median_selected_iou": 0.7895902547065338,
+    "selected_iou_at_0_5": 0.7309417040358744,
+    "oracle_best_top1": 0.6591928251121076,
+    "mean_best_minus_selected": 0.17907557832490537,
+    "mean_best_eligible_iou": 0.7989633508957428
+  },
+  "gate": {
+    "1_mean_gain": {
+      "required": 0.08,
+      "measured": 0.0998964138486349,
+      "passed": true
+    },
+    "2_mean_selected_iou": {
+      "required": 0.62,
+      "measured": 0.6198877725708375,
+      "passed": false
+    },
+    "3_oracle_top1": {
+      "required": 0.55,
+      "measured": 0.6591928251121076,
+      "passed": true
+    },
+    "4_mean_gap": {
+      "required": "<= 0.14",
+      "measured": 0.17907557832490537,
+      "passed": false
+    }
+  },
+  "gate_constants": {
+    "mean_gain": 0.08,
+    "mean_selected_iou": 0.62,
+    "oracle_top1": 0.55,
+    "mean_gap_max": 0.14
+  },
+  "gate_passed": false,
+  "selected_epoch": 19,
+  "checkpoint_sha256": "57dc92a7f56a2765093bbdfc1238e6679050ca99161b5e3fc8eac647641995aa",
+  "training_performed": true,
+  "test_split_used": false,
+  "external_holdout_used": false
+}

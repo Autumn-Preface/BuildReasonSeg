@@ -1,0 +1,160 @@
+{
+  "_doc": "Task 7G sections 6-9. G-RefTrainUniqueLargest: the train-only deduplicated largest-reference selection dataset. GT is used for label construction only (best eligible IoU >= 0.50) and is never an inference input; no eligible or uncovered reference is excluded from the loss.",
+  "task": "7G",
+  "stage": "C-selector-dataset",
+  "source": {
+    "split": "train",
+    "dataset": "BuildSpatialReason v0.2",
+    "train_rows": 12778,
+    "largest_reference_rows": 4119,
+    "rows_with_reference_id": 3002,
+    "rows_without_reference_id": 1117,
+    "excluded_smallest_reference_rows": 1251,
+    "unique_references": 1063,
+    "unique_tiles": 1063,
+    "duplicate_rows_removed": 1939,
+    "per_program": {
+      "largest_to_left_of": 120,
+      "largest_to_nearest": 661,
+      "largest_to_above_to_nearest": 16,
+      "largest_to_right_of": 102,
+      "largest_to_right_of_to_nearest": 22,
+      "largest_to_below": 52,
+      "largest_to_above": 68,
+      "largest_to_left_of_to_nearest": 13,
+      "largest_to_below_to_nearest": 9
+    }
+  },
+  "proposal_generation": {
+    "config": "U-C1",
+    "id": "U-C1",
+    "label": "lower confidence / larger candidate cap",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false,
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "eligibility": {
+      "non_empty": true,
+      "not_border_touching": true,
+      "bbox_extent_ratio_max": 0.2,
+      "area_min_rule": null
+    }
+  },
+  "labels": {
+    "coverage_min_iou": 0.5,
+    "tie_break": [
+      "higher GT IoU",
+      "higher YOLO confidence",
+      "lower original proposal index"
+    ],
+    "counts": {
+      "no_eligible": 2,
+      "untrainable_not_covered": 33,
+      "trainable": 1028
+    },
+    "trainable_tiles": 1028
+  },
+  "selector": {
+    "name": "SetContextLargestSelector",
+    "version": "v1",
+    "feature_dim": 18,
+    "feature_names": [
+      "log_area",
+      "area_ratio",
+      "area_over_set_max",
+      "area_rank_desc",
+      "confidence",
+      "bbox_extent_ratio",
+      "width_ratio",
+      "height_ratio",
+      "fill_ratio",
+      "abs_log_aspect",
+      "boundary_over_sqrt_area",
+      "max_iou_other",
+      "mean_iou_other",
+      "max_self_contained_by_other",
+      "max_other_contained_in_self",
+      "self_contained_count_norm",
+      "contains_other_count_norm",
+      "proposal_count_norm"
+    ],
+    "proposal_encoder": [
+      "Linear(18,64)",
+      "LayerNorm(64)",
+      "GELU",
+      "Linear(64,32)",
+      "GELU"
+    ],
+    "set_context": [
+      "mean_i h_i",
+      "max_i h_i",
+      "concat -> 64"
+    ],
+    "candidate_head": [
+      "concat(h_i, context) -> 96",
+      "Linear(96,32)",
+      "GELU",
+      "Linear(32,1)"
+    ],
+    "softmax": "over valid candidates only",
+    "loss": "CrossEntropyLoss (listwise, single loss)",
+    "extra_losses": [],
+    "parameters": 6561,
+    "transformer": false,
+    "attention": false,
+    "gnn": false,
+    "positional_encoding": false,
+    "proposal_order_feature": false,
+    "uses_gt_at_inference": false,
+    "uses_sam2_or_rgb": false,
+    "uses_absolute_position": false,
+    "uses_relation_or_program": false,
+    "uses_target": false,
+    "proposal_config": {
+      "imgsz": 640,
+      "conf": 0.05,
+      "max_det": 300,
+      "nms": "default",
+      "tta": false,
+      "tiling": false
+    },
+    "source_area": 262144,
+    "eps": 1e-06,
+    "boundary_operator": {
+      "function": "scipy.ndimage.binary_erosion",
+      "structure": "3x3 ones",
+      "iterations": 1,
+      "border_value": 0
+    },
+    "overlap_features": [
+      "max_iou_other",
+      "mean_iou_other",
+      "max_self_contained_by_other",
+      "max_other_contained_in_self",
+      "self_contained_count_norm",
+      "contains_other_count_norm"
+    ],
+    "select_rule": [
+      "highest score",
+      "exact-float tie -> higher confidence",
+      "then lower original index"
+    ]
+  },
+  "rows_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7g\\selector_dataset\\selector_rows.jsonl",
+  "rows_gitignored": true,
+  "gate": {
+    "min_trainable": 300,
+    "measured_trainable": 1028,
+    "min_holdout_tiles": 50,
+    "unique_train_tiles": 1028,
+    "passed": true
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 103.5,
+  "verdict": "SELECTOR_TRAIN_DATA_READY"
+}
