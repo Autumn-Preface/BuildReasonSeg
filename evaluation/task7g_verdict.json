@@ -1,0 +1,324 @@
+{
+  "_doc": "Task 7G sections 30-34. Final reference intervention: a largest-only permutation-invariant proposal-set selector trained on BuildSpatialReason v0.2 train-split unique largest references with the exact 18-dimensional feature vector and 96->32->1 listwise architecture, selected on a train-internal tile-disjoint holdout and (only if that gate passes) evaluated on the frozen Task 7E scene-disjoint holdout with the frozen D-B1 decoder. The verdict follows the fixed section-34 priority order.",
+  "task": "7G",
+  "verdict": "LARGEST_SELECTOR_NOT_LEARNABLE",
+  "reason": "the section-23 internal holdout gate failed: ['2_mean_selected_iou', '4_mean_gap']",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "SELECTOR_DEPENDENCY_UNAVAILABLE",
+    "SELECTOR_TRAIN_DATA_INSUFFICIENT",
+    "LARGEST_SELECTOR_NOT_LEARNABLE",
+    "TASK7F_BASELINE_REPRODUCTION_FAIL",
+    "LARGEST_SELECTOR_SCENE_DISJOINT_FAIL",
+    "LARGEST_SELECTOR_DEVELOPMENT_READY"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "d_b1_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_sha256_expected": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_checked": true,
+    "yolo_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "yolo_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "u_c1_config_unchanged": true,
+    "eligibility_unchanged": true,
+    "selector_trained": true,
+    "selector_training_scope": "train split only",
+    "yolo_retrained": false,
+    "d_b1_trained": false,
+    "parser_trained": false,
+    "fields_changed": false,
+    "sam2_changed": false,
+    "external_holdout_used_for_selection": false,
+    "test_split_used": false,
+    "ranker_or_quality_estimator_used": false,
+    "mask_refinement_used": false,
+    "attention_or_transformer_or_gnn": false,
+    "external_stage_executed": false,
+    "clean": true
+  },
+  "dataset": {
+    "manifest_verdict": "SELECTOR_TRAIN_DATA_READY",
+    "gate": {
+      "min_trainable": 300,
+      "measured_trainable": 1028,
+      "min_holdout_tiles": 50,
+      "unique_train_tiles": 1028,
+      "passed": true
+    },
+    "source": {
+      "split": "train",
+      "dataset": "BuildSpatialReason v0.2",
+      "train_rows": 12778,
+      "largest_reference_rows": 4119,
+      "rows_with_reference_id": 3002,
+      "rows_without_reference_id": 1117,
+      "excluded_smallest_reference_rows": 1251,
+      "unique_references": 1063,
+      "unique_tiles": 1063,
+      "duplicate_rows_removed": 1939,
+      "per_program": {
+        "largest_to_left_of": 120,
+        "largest_to_nearest": 661,
+        "largest_to_above_to_nearest": 16,
+        "largest_to_right_of": 102,
+        "largest_to_right_of_to_nearest": 22,
+        "largest_to_below": 52,
+        "largest_to_above": 68,
+        "largest_to_left_of_to_nearest": 13,
+        "largest_to_below_to_nearest": 9
+      }
+    },
+    "labels": {
+      "no_eligible": 2,
+      "untrainable_not_covered": 33,
+      "trainable": 1028
+    },
+    "coverage_min_iou": 0.5
+  },
+  "training": {
+    "selected_epoch": 19,
+    "protocol": {
+      "optimizer": "AdamW",
+      "lr": 0.001,
+      "weight_decay": 0.0001,
+      "batch": 32,
+      "max_epochs": 40,
+      "patience": 6,
+      "seed": 20261001,
+      "scheduler": "none",
+      "augmentation": "none",
+      "precision": "fp32",
+      "sweep": false,
+      "loss": "CrossEntropyLoss (listwise, single loss)"
+    },
+    "checkpoint": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7g\\largest_set_context_selector_v1.pt",
+      "sha256": "57dc92a7f56a2765093bbdfc1238e6679050ca99161b5e3fc8eac647641995aa",
+      "bytes": 31685,
+      "committed": false
+    },
+    "selection_metrics": {
+      "mean_selected_iou": 0.6198877725708375,
+      "oracle_best_top1": 0.6591928251121076,
+      "mean_best_minus_selected": 0.17907557832490537
+    },
+    "verdict": "LARGEST_SELECTOR_NOT_LEARNABLE",
+    "architecture": {
+      "name": "SetContextLargestSelector",
+      "version": "v1",
+      "feature_dim": 18,
+      "feature_names": [
+        "log_area",
+        "area_ratio",
+        "area_over_set_max",
+        "area_rank_desc",
+        "confidence",
+        "bbox_extent_ratio",
+        "width_ratio",
+        "height_ratio",
+        "fill_ratio",
+        "abs_log_aspect",
+        "boundary_over_sqrt_area",
+        "max_iou_other",
+        "mean_iou_other",
+        "max_self_contained_by_other",
+        "max_other_contained_in_self",
+        "self_contained_count_norm",
+        "contains_other_count_norm",
+        "proposal_count_norm"
+      ],
+      "proposal_encoder": [
+        "Linear(18,64)",
+        "LayerNorm(64)",
+        "GELU",
+        "Linear(64,32)",
+        "GELU"
+      ],
+      "set_context": [
+        "mean_i h_i",
+        "max_i h_i",
+        "concat -> 64"
+      ],
+      "candidate_head": [
+        "concat(h_i, context) -> 96",
+        "Linear(96,32)",
+        "GELU",
+        "Linear(32,1)"
+      ],
+      "softmax": "over valid candidates only",
+      "loss": "CrossEntropyLoss (listwise, single loss)",
+      "extra_losses": [],
+      "parameters": 6561,
+      "transformer": false,
+      "attention": false,
+      "gnn": false,
+      "positional_encoding": false,
+      "proposal_order_feature": false,
+      "uses_gt_at_inference": false,
+      "uses_sam2_or_rgb": false,
+      "uses_absolute_position": false,
+      "uses_relation_or_program": false,
+      "uses_target": false,
+      "proposal_config": {
+        "imgsz": 640,
+        "conf": 0.05,
+        "max_det": 300,
+        "nms": "default",
+        "tta": false,
+        "tiling": false
+      },
+      "source_area": 262144,
+      "eps": 1e-06,
+      "boundary_operator": {
+        "function": "scipy.ndimage.binary_erosion",
+        "structure": "3x3 ones",
+        "iterations": 1,
+        "border_value": 0
+      },
+      "overlap_features": [
+        "max_iou_other",
+        "mean_iou_other",
+        "max_self_contained_by_other",
+        "max_other_contained_in_self",
+        "self_contained_count_norm",
+        "contains_other_count_norm"
+      ],
+      "select_rule": [
+        "highest score",
+        "exact-float tie -> higher confidence",
+        "then lower original index"
+      ]
+    }
+  },
+  "internal_holdout": {
+    "g_i0": {
+      "records": 223,
+      "label": "G-I0 deterministic max-area",
+      "mean_selected_iou": 0.5199913587222026,
+      "median_selected_iou": 0.6609375,
+      "selected_iou_at_0_5": 0.6278026905829597,
+      "oracle_best_top1": 0.48878923766816146,
+      "mean_best_minus_selected": 0.2789719921735403,
+      "mean_best_eligible_iou": 0.7989633508957428
+    },
+    "g_i1": {
+      "records": 223,
+      "label": "G-I1 learned selector",
+      "mean_selected_iou": 0.6198877725708375,
+      "median_selected_iou": 0.7895902547065338,
+      "selected_iou_at_0_5": 0.7309417040358744,
+      "oracle_best_top1": 0.6591928251121076,
+      "mean_best_minus_selected": 0.17907557832490537,
+      "mean_best_eligible_iou": 0.7989633508957428
+    },
+    "gate": {
+      "1_mean_gain": {
+        "required": 0.08,
+        "measured": 0.0998964138486349,
+        "passed": true
+      },
+      "2_mean_selected_iou": {
+        "required": 0.62,
+        "measured": 0.6198877725708375,
+        "passed": false
+      },
+      "3_oracle_top1": {
+        "required": 0.55,
+        "measured": 0.6591928251121076,
+        "passed": true
+      },
+      "4_mean_gap": {
+        "required": "<= 0.14",
+        "measured": 0.17907557832490537,
+        "passed": false
+      }
+    },
+    "gate_constants": {
+      "mean_gain": 0.08,
+      "mean_selected_iou": 0.62,
+      "oracle_top1": 0.55,
+      "mean_gap_max": 0.14
+    },
+    "gate_passed": false,
+    "holdout": {
+      "tiles": 223,
+      "trainable_sets": 223,
+      "train_tiles": 805,
+      "trainable_train_sets": 805,
+      "tile_overlap": 0,
+      "reference_overlap": 0,
+      "excluded_from_loss": {
+        "no_eligible": 2,
+        "untrainable_not_covered": 33
+      }
+    }
+  },
+  "external": {
+    "executed": false,
+    "reference_g_s0": null,
+    "reference_g_s1": null,
+    "reference_g_oracle": null,
+    "downstream": null,
+    "paired": null,
+    "gate": {
+      "1_g_s1_reference_miou": {
+        "required": 0.55,
+        "measured": null,
+        "passed": false,
+        "reason": "external stage not executed"
+      }
+    },
+    "gate_constants": {
+      "1_g_s1_reference_miou": 0.55,
+      "2_reference_gain": 0.08,
+      "3_g_s1_pr_at_0_5": 0.65,
+      "4_mean_gap_max": 0.15,
+      "5_g_s1_strict_miou": 0.3,
+      "6_strict_gain": 0.05,
+      "7_g_s1_answered_miou": 0.3,
+      "8_paired": 12,
+      "9_margin": 0.2,
+      "10_abstention_rate": 0.01
+    },
+    "gate_passed": false,
+    "reproduction_passed": null,
+    "reproduction": {
+      "downstream": null,
+      "reference": null,
+      "paired": null
+    },
+    "not_executed_reason": "section 23 internal gate failed: LARGEST_SELECTOR_NOT_LEARNABLE"
+  },
+  "ceiling_capture": {
+    "selection_gain_ceiling": 0.1195043789004945,
+    "learned_selection_gain": null,
+    "ceiling_capture_fraction": null,
+    "reference_ceiling_capture": null
+  },
+  "decision": {
+    "TASK7G_SELECTOR_ADOPTED": false,
+    "development_chain": "U-C1 proposals -> deterministic max-area selector -> predicted reference -> P_dir + P_near -> frozen D-B1",
+    "d_b1_role": "development L3 decoder candidate",
+    "z_b3_role": "frozen decoder baseline/ablation",
+    "deterministic_selector_role": "frozen reference baseline/ablation",
+    "g_oracle_modes_role": "diagnostic only",
+    "reference_selection_status": "unresolved limitation for this project version",
+    "another_selector_authorized": false,
+    "yolo_retraining_authorized": false,
+    "reference_intervention_stopped": true
+  },
+  "interpretation_boundary": {
+    "selector_claimed_as_novelty": false,
+    "final_end_to_end_readiness_claimed": false,
+    "another_selector_trained": false,
+    "yolo_retrained": false,
+    "d_b1_modified": false,
+    "test_accessed": false,
+    "formal_full_data_training_started": false,
+    "next_architecture_or_task_chosen": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7G 的 scene-disjoint selector 与 frozen D-B1 结果决定是否冻结开发版完整 L3 链；若 gate 失败，不自行继续 reference 干预。",
+  "runtime_seconds": 0.04
+}

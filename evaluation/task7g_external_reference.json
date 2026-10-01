@@ -1,0 +1,31 @@
+{
+  "_doc": "Task 7G sections 24-26. External scene-disjoint selection audit, which is conditional on the section-23 internal gate. That gate did not pass, so the external stage did not run.",
+  "task": "7G",
+  "stage": "H-external-reference",
+  "executed": false,
+  "reason": "section 23 gate failed: LARGEST_SELECTOR_NOT_LEARNABLE",
+  "internal_gate": {
+    "1_mean_gain": {
+      "required": 0.08,
+      "measured": 0.0998964138486349,
+      "passed": true
+    },
+    "2_mean_selected_iou": {
+      "required": 0.62,
+      "measured": 0.6198877725708375,
+      "passed": false
+    },
+    "3_oracle_top1": {
+      "required": 0.55,
+      "measured": 0.6591928251121076,
+      "passed": true
+    },
+    "4_mean_gap": {
+      "required": "<= 0.14",
+      "measured": 0.17907557832490537,
+      "passed": false
+    }
+  },
+  "training_performed": false,
+  "test_split_used": false
+}

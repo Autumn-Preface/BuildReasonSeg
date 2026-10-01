@@ -1,0 +1,10 @@
+{
+  "_doc": "Task 7G sections 27-28. Frozen D-B1 external downstream audit, conditional on the section-23 internal gate and the section-24 external reference stage. Those did not run, so the downstream stage did not run either.",
+  "task": "7G",
+  "stage": "I-external-downstream",
+  "executed": false,
+  "reason": "section 23 gate failed (LARGEST_SELECTOR_NOT_LEARNABLE); external stages not run",
+  "internal_gate_passed": false,
+  "training_performed": false,
+  "test_split_used": false
+}
