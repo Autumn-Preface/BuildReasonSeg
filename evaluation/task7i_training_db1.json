@@ -1,0 +1,498 @@
+{
+  "_doc": "Task 7I sections 15-18. Formal three-seed training of D-B1 from fresh trainable weights on the 1344-record formal L3 train population, with per-epoch full-936 oracle-reference validation, selection by val mIoU/Dice/Pr@0.5 and full-val-mIoU early stopping. MiniVal240, the pair set and the predicted-reference results were never used for selection.",
+  "task": "7I",
+  "stage": "F/G-formal-training",
+  "model": "D-B1",
+  "protocol": {
+    "optimizer": "AdamW",
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_size": 8,
+    "max_epochs": 25,
+    "early_stopping_patience": 5,
+    "scheduler": "none",
+    "augmentation": "none",
+    "amp": "bfloat16 autocast",
+    "loss": "BCEWithLogitsLoss + DiceLoss",
+    "reference_source": "oracle_native_gt"
+  },
+  "seeds": [
+    20261001,
+    20261002,
+    20261003
+  ],
+  "runs": [
+    {
+      "model": "D-B1",
+      "seed": 20261001,
+      "fresh_initialization": true,
+      "initialized_from_historical_checkpoint": false,
+      "trainable_parameters": 278081,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.9734215700910205,
+          "val_miou": 0.32882791724580596,
+          "val_dice": 0.44655943829274297,
+          "val_precision_at_0_5": 0.560474909383611,
+          "val_records": 936
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.6902098503141176,
+          "val_miou": 0.3373541520338723,
+          "val_dice": 0.4549229752607948,
+          "val_precision_at_0_5": 0.6187273289872374,
+          "val_records": 936
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.5491607040166855,
+          "val_miou": 0.33884680985545634,
+          "val_dice": 0.4482758165153994,
+          "val_precision_at_0_5": 0.6221016454568905,
+          "val_records": 936
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.5007464078565439,
+          "val_miou": 0.3602078290561276,
+          "val_dice": 0.48379646232974827,
+          "val_precision_at_0_5": 0.5294625823260969,
+          "val_records": 936
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.48197755208682447,
+          "val_miou": 0.3610272164723639,
+          "val_dice": 0.47639828800386397,
+          "val_precision_at_0_5": 0.6255197358026257,
+          "val_records": 936
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.45087645593143644,
+          "val_miou": 0.37779387409855747,
+          "val_dice": 0.501198700090744,
+          "val_precision_at_0_5": 0.5493973670633753,
+          "val_records": 936
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.4277151687336819,
+          "val_miou": 0.3631727415630887,
+          "val_dice": 0.4830185453812479,
+          "val_precision_at_0_5": 0.600791690747098,
+          "val_records": 936
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.40584842541388105,
+          "val_miou": 0.3377854698830947,
+          "val_dice": 0.45114361471506176,
+          "val_precision_at_0_5": 0.6356390849340854,
+          "val_records": 936
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.3986292668573913,
+          "val_miou": 0.3456564418632473,
+          "val_dice": 0.45383639439015394,
+          "val_precision_at_0_5": 0.6597012780701331,
+          "val_records": 936
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.37782305346003603,
+          "val_miou": 0.3606955950523894,
+          "val_dice": 0.47541260041782135,
+          "val_precision_at_0_5": 0.6445868293817344,
+          "val_records": 936
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.3610877021260205,
+          "val_miou": 0.3799342569123541,
+          "val_dice": 0.49654864346971805,
+          "val_precision_at_0_5": 0.6035551755552649,
+          "val_records": 936
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.35347371575023445,
+          "val_miou": 0.35468167696313874,
+          "val_dice": 0.4632696121154571,
+          "val_precision_at_0_5": 0.6409318531334602,
+          "val_records": 936
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.3392500137644155,
+          "val_miou": 0.33965151275973166,
+          "val_dice": 0.44327592929858844,
+          "val_precision_at_0_5": 0.6428446073421156,
+          "val_records": 936
+        },
+        {
+          "epoch": 14,
+          "train_loss": 0.3288293555378914,
+          "val_miou": 0.3423129307850214,
+          "val_dice": 0.44646395962261765,
+          "val_precision_at_0_5": 0.6841020262773156,
+          "val_records": 936
+        },
+        {
+          "epoch": 15,
+          "train_loss": 0.318864865051139,
+          "val_miou": 0.37859779951030637,
+          "val_dice": 0.4972865262365629,
+          "val_precision_at_0_5": 0.6011298023789992,
+          "val_records": 936
+        },
+        {
+          "epoch": 16,
+          "train_loss": 0.3062578217969054,
+          "val_miou": 0.3336928346273629,
+          "val_dice": 0.4384656777760452,
+          "val_precision_at_0_5": 0.6349489575773493,
+          "val_records": 936
+        }
+      ],
+      "selected_epoch": 11,
+      "final_epoch": 16,
+      "selected_val_metrics": {
+        "records": 936,
+        "miou": 0.3799342569123541,
+        "dice": 0.49654864346971805,
+        "precision_at_0_5": 0.6035551755552649
+      },
+      "checkpoint_best": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261001\\best.pt",
+        "exists": true,
+        "sha256": "d89b0f6f88c2c2d3fe5040679d6727ae513106e29685c321bcd22e9a030d2954",
+        "bytes": 1117495
+      },
+      "checkpoint_last": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261001\\last.pt",
+        "exists": true,
+        "sha256": "931fd644162fc087f13149ba28bfde8914fb38802dcecd05c437bf0456fafe2c",
+        "bytes": 3354345
+      },
+      "wall_seconds": 126.3,
+      "peak_vram_gb": 0.675,
+      "nan_or_inf": false,
+      "oom": false,
+      "valid": true,
+      "committed": false
+    },
+    {
+      "model": "D-B1",
+      "seed": 20261002,
+      "fresh_initialization": true,
+      "initialized_from_historical_checkpoint": false,
+      "trainable_parameters": 278081,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.981175734883263,
+          "val_miou": 0.31231817745136187,
+          "val_dice": 0.42608980241178246,
+          "val_precision_at_0_5": 0.6301272627581987,
+          "val_records": 936
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.704676475198496,
+          "val_miou": 0.35871688703809146,
+          "val_dice": 0.483339822341287,
+          "val_precision_at_0_5": 0.5812378374038061,
+          "val_records": 936
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.5626825406437829,
+          "val_miou": 0.34439525006288113,
+          "val_dice": 0.45462338004283315,
+          "val_precision_at_0_5": 0.6195063836066701,
+          "val_records": 936
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.5082260874055681,
+          "val_miou": 0.3581761554354601,
+          "val_dice": 0.4780090087342264,
+          "val_precision_at_0_5": 0.5924413711186853,
+          "val_records": 936
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.475071568751619,
+          "val_miou": 0.36669657979043047,
+          "val_dice": 0.48574459662019326,
+          "val_precision_at_0_5": 0.5787355654516754,
+          "val_records": 936
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.4514585683743159,
+          "val_miou": 0.3790515419186862,
+          "val_dice": 0.507365739332537,
+          "val_precision_at_0_5": 0.5209690793448515,
+          "val_records": 936
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.4315563205274798,
+          "val_miou": 0.33534385392280264,
+          "val_dice": 0.4484268197401143,
+          "val_precision_at_0_5": 0.6243308031411866,
+          "val_records": 936
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.4113590531051159,
+          "val_miou": 0.3500400667084849,
+          "val_dice": 0.4612116031837374,
+          "val_precision_at_0_5": 0.612274502912206,
+          "val_records": 936
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.4005304982974416,
+          "val_miou": 0.3826506585458803,
+          "val_dice": 0.507941929811839,
+          "val_precision_at_0_5": 0.5634307264816115,
+          "val_records": 936
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.3831215257800761,
+          "val_miou": 0.36455683705176267,
+          "val_dice": 0.4744387880113716,
+          "val_precision_at_0_5": 0.6353989608501507,
+          "val_records": 936
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.3760649582282418,
+          "val_miou": 0.3628264295924211,
+          "val_dice": 0.4761805112930838,
+          "val_precision_at_0_5": 0.6202362532685338,
+          "val_records": 936
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.35342867619224955,
+          "val_miou": 0.3765410571910452,
+          "val_dice": 0.4975930621109534,
+          "val_precision_at_0_5": 0.5656351046191795,
+          "val_records": 936
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.3371653663260596,
+          "val_miou": 0.359416067046444,
+          "val_dice": 0.47457685448382325,
+          "val_precision_at_0_5": 0.6204577885492656,
+          "val_records": 936
+        },
+        {
+          "epoch": 14,
+          "train_loss": 0.330097200969855,
+          "val_miou": 0.3721761069748832,
+          "val_dice": 0.4871044311925642,
+          "val_precision_at_0_5": 0.6044281906408925,
+          "val_records": 936
+        }
+      ],
+      "selected_epoch": 9,
+      "final_epoch": 14,
+      "selected_val_metrics": {
+        "records": 936,
+        "miou": 0.3826506585458803,
+        "dice": 0.507941929811839,
+        "precision_at_0_5": 0.5634307264816115
+      },
+      "checkpoint_best": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261002\\best.pt",
+        "exists": true,
+        "sha256": "95ac39112ac4e4048ed315718404d7c2bf30906c9ebc645e7b3b5d27495b7ad4",
+        "bytes": 1117495
+      },
+      "checkpoint_last": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261002\\last.pt",
+        "exists": true,
+        "sha256": "c16aa53555708693b76fa995d3af67c408bfd662ac8be3703b7d6abe95c3c689",
+        "bytes": 3354217
+      },
+      "wall_seconds": 62.1,
+      "peak_vram_gb": 0.675,
+      "nan_or_inf": false,
+      "oom": false,
+      "valid": true,
+      "committed": false
+    },
+    {
+      "model": "D-B1",
+      "seed": 20261003,
+      "fresh_initialization": true,
+      "initialized_from_historical_checkpoint": false,
+      "trainable_parameters": 278081,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.95716461929537,
+          "val_miou": 0.34486147396523853,
+          "val_dice": 0.47548202723051897,
+          "val_precision_at_0_5": 0.49739536337643814,
+          "val_records": 936
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.6735608563536689,
+          "val_miou": 0.2960569322645234,
+          "val_dice": 0.4037979920960184,
+          "val_precision_at_0_5": 0.6691942279987121,
+          "val_records": 936
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.5467467281435218,
+          "val_miou": 0.3517019757666557,
+          "val_dice": 0.4709340530663965,
+          "val_precision_at_0_5": 0.5956651492505755,
+          "val_records": 936
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.4979283144431455,
+          "val_miou": 0.32927557179579087,
+          "val_dice": 0.43938751662752173,
+          "val_precision_at_0_5": 0.6479429466460209,
+          "val_records": 936
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.4739292443153404,
+          "val_miou": 0.35576800411073345,
+          "val_dice": 0.4714171757767082,
+          "val_precision_at_0_5": 0.6090864686174763,
+          "val_records": 936
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.4482779729046992,
+          "val_miou": 0.35003817155590927,
+          "val_dice": 0.4630000540766686,
+          "val_precision_at_0_5": 0.6372704496201761,
+          "val_records": 936
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.42338657609763597,
+          "val_miou": 0.3642779770138832,
+          "val_dice": 0.48318126108983583,
+          "val_precision_at_0_5": 0.5801877170253291,
+          "val_records": 936
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.4125878723959128,
+          "val_miou": 0.3876878614249295,
+          "val_dice": 0.5117248764082531,
+          "val_precision_at_0_5": 0.5763690366808225,
+          "val_records": 936
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.3934156790907894,
+          "val_miou": 0.3802821246974363,
+          "val_dice": 0.5021714063005196,
+          "val_precision_at_0_5": 0.5731270886374277,
+          "val_records": 936
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.3795870855628025,
+          "val_miou": 0.3567045543109511,
+          "val_dice": 0.4731411394373889,
+          "val_precision_at_0_5": 0.5975854595406307,
+          "val_records": 936
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.36269571561188924,
+          "val_miou": 0.305834948101876,
+          "val_dice": 0.4013844091735909,
+          "val_precision_at_0_5": 0.711706300277633,
+          "val_records": 936
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.35793303325772285,
+          "val_miou": 0.36619947796110663,
+          "val_dice": 0.47984958149642953,
+          "val_precision_at_0_5": 0.6231779466448364,
+          "val_records": 936
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.3444368268939711,
+          "val_miou": 0.3621523774446158,
+          "val_dice": 0.4737401265983956,
+          "val_precision_at_0_5": 0.5730041673675009,
+          "val_records": 936
+        }
+      ],
+      "selected_epoch": 8,
+      "final_epoch": 13,
+      "selected_val_metrics": {
+        "records": 936,
+        "miou": 0.3876878614249295,
+        "dice": 0.5117248764082531,
+        "precision_at_0_5": 0.5763690366808225
+      },
+      "checkpoint_best": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261003\\best.pt",
+        "exists": true,
+        "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+        "bytes": 1117495
+      },
+      "checkpoint_last": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261003\\last.pt",
+        "exists": true,
+        "sha256": "dff0a362d73f3dcfb9f2f8c379f5ac6f3aac5c4da232467cfa7627383f497d7f",
+        "bytes": 3354153
+      },
+      "wall_seconds": 57.5,
+      "peak_vram_gb": 0.675,
+      "nan_or_inf": false,
+      "oom": false,
+      "valid": true,
+      "committed": false
+    }
+  ],
+  "population": {
+    "train_records": 1344,
+    "val_records": 936,
+    "train_sample_id_sha256": "86321a5df109f47fc4ccae9a6dcbf2f999afbbc63b9f3184fa709e1133413707",
+    "val_sample_id_sha256": "3029ff9c84c152d8f2097b8ede47a7dd3725f5e04115588e5b7db001c87a6cdc"
+  },
+  "selection": {
+    "metric": "full 936-record oracle-reference val mean mIoU",
+    "tie_break": [
+      "val Dice",
+      "val Pr@0.5",
+      "earlier epoch"
+    ],
+    "minival240_used": false,
+    "pair_set_used": false,
+    "predicted_reference_used": false,
+    "test_used": false
+  },
+  "all_runs_valid": true,
+  "training_performed": true,
+  "test_split_used": false,
+  "verdict": "FORMAL_TRAINING_COMPLETE",
+  "wall_seconds": 249.8
+}

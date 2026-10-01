@@ -1,0 +1,458 @@
+{
+  "_doc": "Task 7I sections 15-18. Formal three-seed training of Z-B3 from fresh trainable weights on the 1344-record formal L3 train population, with per-epoch full-936 oracle-reference validation, selection by val mIoU/Dice/Pr@0.5 and full-val-mIoU early stopping. MiniVal240, the pair set and the predicted-reference results were never used for selection.",
+  "task": "7I",
+  "stage": "F/G-formal-training",
+  "model": "Z-B3",
+  "protocol": {
+    "optimizer": "AdamW",
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_size": 8,
+    "max_epochs": 25,
+    "early_stopping_patience": 5,
+    "scheduler": "none",
+    "augmentation": "none",
+    "amp": "bfloat16 autocast",
+    "loss": "BCEWithLogitsLoss + DiceLoss",
+    "reference_source": "oracle_native_gt"
+  },
+  "seeds": [
+    20261001,
+    20261002,
+    20261003
+  ],
+  "runs": [
+    {
+      "model": "Z-B3",
+      "seed": 20261001,
+      "fresh_initialization": true,
+      "initialized_from_historical_checkpoint": false,
+      "trainable_parameters": 275777,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.9858101077732586,
+          "val_miou": 0.28559609565437877,
+          "val_dice": 0.40070509327991055,
+          "val_precision_at_0_5": 0.46215843838402626,
+          "val_records": 936
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.7092275818188986,
+          "val_miou": 0.31327024744652565,
+          "val_dice": 0.43331019946840815,
+          "val_precision_at_0_5": 0.45329303106340424,
+          "val_records": 936
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.5900389124594984,
+          "val_miou": 0.31767255505579534,
+          "val_dice": 0.43736707772870664,
+          "val_precision_at_0_5": 0.46413370944763843,
+          "val_records": 936
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.5432323300767512,
+          "val_miou": 0.31936702404534684,
+          "val_dice": 0.43595405859038405,
+          "val_precision_at_0_5": 0.481685540653748,
+          "val_records": 936
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.5172910931564513,
+          "val_miou": 0.3156507621828284,
+          "val_dice": 0.42718240903599286,
+          "val_precision_at_0_5": 0.5101942191315264,
+          "val_records": 936
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.49464949983216466,
+          "val_miou": 0.3140037230624854,
+          "val_dice": 0.4234437534125616,
+          "val_precision_at_0_5": 0.5273888598857317,
+          "val_records": 936
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.4781760709981124,
+          "val_miou": 0.2891429017792756,
+          "val_dice": 0.393681833006854,
+          "val_precision_at_0_5": 0.5670376871385034,
+          "val_records": 936
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.4572162842821507,
+          "val_miou": 0.30775670705960073,
+          "val_dice": 0.41554406641827485,
+          "val_precision_at_0_5": 0.5546874279807256,
+          "val_records": 936
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.43798822900723844,
+          "val_miou": 0.2922856063398145,
+          "val_dice": 0.3931698034567496,
+          "val_precision_at_0_5": 0.5779248826568044,
+          "val_records": 936
+        }
+      ],
+      "selected_epoch": 4,
+      "final_epoch": 9,
+      "selected_val_metrics": {
+        "records": 936,
+        "miou": 0.31936702404534684,
+        "dice": 0.43595405859038405,
+        "precision_at_0_5": 0.481685540653748
+      },
+      "checkpoint_best": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261001\\best.pt",
+        "exists": true,
+        "sha256": "5c9fada7c7395d4172a9be27aa4fbc96a470ed4c248d8a4d78a4d9d7eb251201",
+        "bytes": 1108279
+      },
+      "checkpoint_last": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261001\\last.pt",
+        "exists": true,
+        "sha256": "96a1288cd52ced826987f801caa2902df1e81939316f656afd08bc25ddd4e9f9",
+        "bytes": 3326185
+      },
+      "wall_seconds": 120.6,
+      "peak_vram_gb": 0.862,
+      "nan_or_inf": false,
+      "oom": false,
+      "valid": true,
+      "committed": false
+    },
+    {
+      "model": "Z-B3",
+      "seed": 20261002,
+      "fresh_initialization": true,
+      "initialized_from_historical_checkpoint": false,
+      "trainable_parameters": 275777,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.9814289723123822,
+          "val_miou": 0.28980443605520134,
+          "val_dice": 0.40660211018047304,
+          "val_precision_at_0_5": 0.4643901125301902,
+          "val_records": 936
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.7070120871067047,
+          "val_miou": 0.3126429191514351,
+          "val_dice": 0.43611901006575127,
+          "val_precision_at_0_5": 0.43343769659497894,
+          "val_records": 936
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.5924695155450276,
+          "val_miou": 0.3076883623202002,
+          "val_dice": 0.4262017263498831,
+          "val_precision_at_0_5": 0.44660327706368974,
+          "val_records": 936
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.5538573458435989,
+          "val_miou": 0.29436271091798505,
+          "val_dice": 0.40359642094545145,
+          "val_precision_at_0_5": 0.5135959065649138,
+          "val_records": 936
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.529344016952174,
+          "val_miou": 0.3257430497636744,
+          "val_dice": 0.4424844279679233,
+          "val_precision_at_0_5": 0.4945096632101992,
+          "val_records": 936
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.5033224358090332,
+          "val_miou": 0.31277876601336074,
+          "val_dice": 0.4250442487075696,
+          "val_precision_at_0_5": 0.5112985938523299,
+          "val_records": 936
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.4846797924311388,
+          "val_miou": 0.3090779566422845,
+          "val_dice": 0.4190693857556962,
+          "val_precision_at_0_5": 0.5209444507191133,
+          "val_records": 936
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.46918910803894204,
+          "val_miou": 0.2771691308769588,
+          "val_dice": 0.3778758069890314,
+          "val_precision_at_0_5": 0.5678446681778407,
+          "val_records": 936
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.4491818469195139,
+          "val_miou": 0.32902951958528054,
+          "val_dice": 0.44441802388163415,
+          "val_precision_at_0_5": 0.5195531326207535,
+          "val_records": 936
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.4347469610649915,
+          "val_miou": 0.3143345508058256,
+          "val_dice": 0.4213386769084929,
+          "val_precision_at_0_5": 0.5584609872684041,
+          "val_records": 936
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.4231467765002024,
+          "val_miou": 0.31000361086022277,
+          "val_dice": 0.4154942827915347,
+          "val_precision_at_0_5": 0.5473148357310696,
+          "val_records": 936
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.3970329265686728,
+          "val_miou": 0.3259011431481345,
+          "val_dice": 0.4426240835011108,
+          "val_precision_at_0_5": 0.5371116683919414,
+          "val_records": 936
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.3828906739751498,
+          "val_miou": 0.3104569030036863,
+          "val_dice": 0.4181265028371926,
+          "val_precision_at_0_5": 0.5662892310892682,
+          "val_records": 936
+        },
+        {
+          "epoch": 14,
+          "train_loss": 0.36572604307106565,
+          "val_miou": 0.3393820645682365,
+          "val_dice": 0.46132127652633736,
+          "val_precision_at_0_5": 0.47669729900802355,
+          "val_records": 936
+        },
+        {
+          "epoch": 15,
+          "train_loss": 0.36039789029884906,
+          "val_miou": 0.3201355726051937,
+          "val_dice": 0.432198974689551,
+          "val_precision_at_0_5": 0.5437747466210064,
+          "val_records": 936
+        },
+        {
+          "epoch": 16,
+          "train_loss": 0.3435613645151967,
+          "val_miou": 0.2961376044917846,
+          "val_dice": 0.3970700773419743,
+          "val_precision_at_0_5": 0.5909952770376541,
+          "val_records": 936
+        },
+        {
+          "epoch": 17,
+          "train_loss": 0.32823011554068043,
+          "val_miou": 0.31692384902173637,
+          "val_dice": 0.42401071073344804,
+          "val_precision_at_0_5": 0.5699298723820467,
+          "val_records": 936
+        },
+        {
+          "epoch": 18,
+          "train_loss": 0.3095593032027994,
+          "val_miou": 0.28610040317385665,
+          "val_dice": 0.38453041173755276,
+          "val_precision_at_0_5": 0.5988930745718444,
+          "val_records": 936
+        },
+        {
+          "epoch": 19,
+          "train_loss": 0.30614698199289186,
+          "val_miou": 0.30656285976514175,
+          "val_dice": 0.41344124076461264,
+          "val_precision_at_0_5": 0.5699143395233246,
+          "val_records": 936
+        }
+      ],
+      "selected_epoch": 14,
+      "final_epoch": 19,
+      "selected_val_metrics": {
+        "records": 936,
+        "miou": 0.3393820645682365,
+        "dice": 0.46132127652633736,
+        "precision_at_0_5": 0.47669729900802355
+      },
+      "checkpoint_best": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261002\\best.pt",
+        "exists": true,
+        "sha256": "f7ee1a094d3aef7e0bc099d217a5c9cda6eac5e1ad6309dc24813e41a6f8fea9",
+        "bytes": 1108279
+      },
+      "checkpoint_last": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261002\\last.pt",
+        "exists": true,
+        "sha256": "cbc4868902d41beaee743048124bc0b3dc15b23fb246e0b8c6a075bc495d81cd",
+        "bytes": 3326953
+      },
+      "wall_seconds": 75.8,
+      "peak_vram_gb": 0.689,
+      "nan_or_inf": false,
+      "oom": false,
+      "valid": true,
+      "committed": false
+    },
+    {
+      "model": "Z-B3",
+      "seed": 20261003,
+      "fresh_initialization": true,
+      "initialized_from_historical_checkpoint": false,
+      "trainable_parameters": 275777,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 1.0232481857140858,
+          "val_miou": 0.26436006996317885,
+          "val_dice": 0.37930489975704307,
+          "val_precision_at_0_5": 0.3841148348671053,
+          "val_records": 936
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.7526310441039857,
+          "val_miou": 0.2919085128233574,
+          "val_dice": 0.4047372469812488,
+          "val_precision_at_0_5": 0.5102291564737862,
+          "val_records": 936
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.5992264084163166,
+          "val_miou": 0.32246019488856514,
+          "val_dice": 0.4400199680627251,
+          "val_precision_at_0_5": 0.48875616825881985,
+          "val_records": 936
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.5531294182652519,
+          "val_miou": 0.29263702949008635,
+          "val_dice": 0.40211938728578306,
+          "val_precision_at_0_5": 0.5294926346797123,
+          "val_records": 936
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.5179901327050868,
+          "val_miou": 0.33857899416418413,
+          "val_dice": 0.4604113674750556,
+          "val_precision_at_0_5": 0.4591179731285745,
+          "val_records": 936
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.5094891182546105,
+          "val_miou": 0.2759183879660544,
+          "val_dice": 0.37769929013767034,
+          "val_precision_at_0_5": 0.5718117970860135,
+          "val_records": 936
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.4892031523798193,
+          "val_miou": 0.2848230199855132,
+          "val_dice": 0.38679535182360353,
+          "val_precision_at_0_5": 0.5667542209851045,
+          "val_records": 936
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.46622307208322344,
+          "val_miou": 0.331253260233992,
+          "val_dice": 0.44723097036447584,
+          "val_precision_at_0_5": 0.5172664361153889,
+          "val_records": 936
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.4481110731583266,
+          "val_miou": 0.3171675714651417,
+          "val_dice": 0.425305544204485,
+          "val_precision_at_0_5": 0.5389586349133693,
+          "val_records": 936
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.4326811655468884,
+          "val_miou": 0.3070629284028077,
+          "val_dice": 0.41663942288787026,
+          "val_precision_at_0_5": 0.5283823262380842,
+          "val_records": 936
+        }
+      ],
+      "selected_epoch": 5,
+      "final_epoch": 10,
+      "selected_val_metrics": {
+        "records": 936,
+        "miou": 0.33857899416418413,
+        "dice": 0.4604113674750556,
+        "precision_at_0_5": 0.4591179731285745
+      },
+      "checkpoint_best": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261003\\best.pt",
+        "exists": true,
+        "sha256": "10aee8e04b0e44b3a9f99efc3b000485fd817746290f4e19d3b29e1b72c55859",
+        "bytes": 1108279
+      },
+      "checkpoint_last": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261003\\last.pt",
+        "exists": true,
+        "sha256": "9390f8dc676a0e8830e0daaf1364a5aa2d9b4d65244f380bec20e32e1b5e0732",
+        "bytes": 3326249
+      },
+      "wall_seconds": 40.6,
+      "peak_vram_gb": 0.689,
+      "nan_or_inf": false,
+      "oom": false,
+      "valid": true,
+      "committed": false
+    }
+  ],
+  "population": {
+    "train_records": 1344,
+    "val_records": 936,
+    "train_sample_id_sha256": "86321a5df109f47fc4ccae9a6dcbf2f999afbbc63b9f3184fa709e1133413707",
+    "val_sample_id_sha256": "3029ff9c84c152d8f2097b8ede47a7dd3725f5e04115588e5b7db001c87a6cdc"
+  },
+  "selection": {
+    "metric": "full 936-record oracle-reference val mean mIoU",
+    "tie_break": [
+      "val Dice",
+      "val Pr@0.5",
+      "earlier epoch"
+    ],
+    "minival240_used": false,
+    "pair_set_used": false,
+    "predicted_reference_used": false,
+    "test_used": false
+  },
+  "all_runs_valid": true,
+  "training_performed": true,
+  "test_split_used": false,
+  "verdict": "FORMAL_TRAINING_COMPLETE",
+  "wall_seconds": 241.2
+}

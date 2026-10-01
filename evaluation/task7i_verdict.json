@@ -1,0 +1,664 @@
+{
+  "_doc": "Task 7I section 28. Formal L3 three-seed train/validation verdict for the frozen development architecture: Z-B3 (F0) and D-B1 (F1) retrained from fresh trainable weights under the same three seeds and the same formal train (1344) / val (936) populations, checkpoint selection by full-val oracle-reference mIoU, then oracle-reference, predicted-reference and complete counterfactual full-val evaluation. Validation results are not test results; the test lock stays LOCKED.",
+  "task": "7I",
+  "verdict": "DB1_FORMAL_VAL_NOT_CONFIRMED",
+  "reason": "failed gates: ['5_predicted_delta']",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "TEST_LOCK_INCONSISTENT",
+    "FORMAL_POPULATION_MISMATCH",
+    "FORMAL_TRAINING_INCOMPLETE",
+    "DB1_FORMAL_VAL_NOT_CONFIRMED",
+    "DB1_FORMAL_VAL_CONFIRMED"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "test_lock_locked": true,
+    "previous_test_lock_locked": true,
+    "test_material_read": false,
+    "test_metrics_produced": false,
+    "training_performed": true,
+    "test_split_used": false,
+    "only_selector_or_reference_modules_trained": false,
+    "yolo_or_parser_or_sam2_trained": false,
+    "architecture_changed": false,
+    "loss_changed": false,
+    "hyperparameters_changed": false,
+    "clean": true
+  },
+  "population": {
+    "train_records": 1344,
+    "train_per_program": {
+      "largest_to_left_of_to_nearest": 323,
+      "largest_to_right_of_to_nearest": 347,
+      "largest_to_above_to_nearest": 338,
+      "largest_to_below_to_nearest": 336
+    },
+    "val_records": 936,
+    "val_per_program": {
+      "largest_to_left_of_to_nearest": 250,
+      "largest_to_right_of_to_nearest": 249,
+      "largest_to_above_to_nearest": 224,
+      "largest_to_below_to_nearest": 213
+    },
+    "train_sample_id_sha256": "86321a5df109f47fc4ccae9a6dcbf2f999afbbc63b9f3184fa709e1133413707",
+    "val_sample_id_sha256": "3029ff9c84c152d8f2097b8ede47a7dd3725f5e04115588e5b7db001c87a6cdc",
+    "disjoint": true,
+    "pairs": 326,
+    "pair_key_hash": "ea5945b568110ffc59e748408505b70d244846f07bdd9308dcfc83b646db0ee3"
+  },
+  "protocol_corrections": {
+    "I-01": {
+      "task7h_value": "MiniVal240 mIoU",
+      "task7i_value": "all 936 valid v0.2 L3 validation records, oracle-reference mIoU",
+      "recorded": true
+    },
+    "I-02": {
+      "task7h_value": "D-B1 only",
+      "task7i_value": "both Z-B3 and D-B1 retrained from fresh weights under the same three seeds and the same formal train/val population",
+      "recorded": true
+    },
+    "task7h_artifacts_modified": false
+  },
+  "training": {
+    "protocol": {
+      "optimizer": "AdamW",
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "batch_size": 8,
+      "max_epochs": 25,
+      "early_stopping_patience": 5,
+      "scheduler": "none",
+      "augmentation": "none",
+      "amp": "bfloat16 autocast",
+      "loss": "BCEWithLogitsLoss + DiceLoss",
+      "reference_source": "oracle_native_gt"
+    },
+    "seeds": [
+      20261001,
+      20261002,
+      20261003
+    ],
+    "model_seeds": 6,
+    "per_model": {
+      "Z-B3": {
+        "seeds": {
+          "20261001": {
+            "selected_epoch": 4,
+            "final_epoch": 9,
+            "selected_val_miou": 0.31936702404534684,
+            "wall_seconds": 120.6,
+            "peak_vram_gb": 0.862,
+            "trainable_parameters": 275777,
+            "nan_or_inf": false
+          },
+          "20261002": {
+            "selected_epoch": 14,
+            "final_epoch": 19,
+            "selected_val_miou": 0.3393820645682365,
+            "wall_seconds": 75.8,
+            "peak_vram_gb": 0.689,
+            "trainable_parameters": 275777,
+            "nan_or_inf": false
+          },
+          "20261003": {
+            "selected_epoch": 5,
+            "final_epoch": 10,
+            "selected_val_miou": 0.33857899416418413,
+            "wall_seconds": 40.6,
+            "peak_vram_gb": 0.689,
+            "trainable_parameters": 275777,
+            "nan_or_inf": false
+          }
+        },
+        "all_runs_valid": true
+      },
+      "D-B1": {
+        "seeds": {
+          "20261001": {
+            "selected_epoch": 11,
+            "final_epoch": 16,
+            "selected_val_miou": 0.3799342569123541,
+            "wall_seconds": 126.3,
+            "peak_vram_gb": 0.675,
+            "trainable_parameters": 278081,
+            "nan_or_inf": false
+          },
+          "20261002": {
+            "selected_epoch": 9,
+            "final_epoch": 14,
+            "selected_val_miou": 0.3826506585458803,
+            "wall_seconds": 62.1,
+            "peak_vram_gb": 0.675,
+            "trainable_parameters": 278081,
+            "nan_or_inf": false
+          },
+          "20261003": {
+            "selected_epoch": 8,
+            "final_epoch": 13,
+            "selected_val_miou": 0.3876878614249295,
+            "wall_seconds": 57.5,
+            "peak_vram_gb": 0.675,
+            "trainable_parameters": 278081,
+            "nan_or_inf": false
+          }
+        },
+        "all_runs_valid": true
+      }
+    },
+    "checkpoint_selection": {
+      "metric": "full 936-record oracle-reference val mean mIoU",
+      "tie_break": [
+        "val Dice",
+        "val Pr@0.5",
+        "earlier epoch"
+      ],
+      "minival240_used": false,
+      "pair_set_used": false,
+      "predicted_reference_used": false,
+      "test_used": false
+    }
+  },
+  "oracle_val": {
+    "per_run": {
+      "Z-B3/20261001": {
+        "miou": 0.31936702404534684,
+        "dice": 0.43595405859038405,
+        "precision_at_0_5": 0.481685540653748,
+        "pair_pass_rate": 0.8404907975460123,
+        "pair_margin": 0.30268898950381656
+      },
+      "Z-B3/20261002": {
+        "miou": 0.3393820645682365,
+        "dice": 0.46132127652633736,
+        "precision_at_0_5": 0.47669729900802355,
+        "pair_pass_rate": 0.8680981595092024,
+        "pair_margin": 0.3255439949050042
+      },
+      "Z-B3/20261003": {
+        "miou": 0.33857899416418413,
+        "dice": 0.4604113674750556,
+        "precision_at_0_5": 0.4591179731285745,
+        "pair_pass_rate": 0.8987730061349694,
+        "pair_margin": 0.32181822108860864
+      },
+      "D-B1/20261001": {
+        "miou": 0.3799342569123541,
+        "dice": 0.49654864346971805,
+        "precision_at_0_5": 0.6035551755552649,
+        "pair_pass_rate": 0.7975460122699386,
+        "pair_margin": 0.37887595815277175
+      },
+      "D-B1/20261002": {
+        "miou": 0.3826506585458803,
+        "dice": 0.507941929811839,
+        "precision_at_0_5": 0.5634307264816115,
+        "pair_pass_rate": 0.8865030674846626,
+        "pair_margin": 0.3766059906125809
+      },
+      "D-B1/20261003": {
+        "miou": 0.3876878614249295,
+        "dice": 0.5117248764082531,
+        "precision_at_0_5": 0.5763690366808225,
+        "pair_pass_rate": 0.8496932515337423,
+        "pair_margin": 0.3769719884928459
+      }
+    },
+    "aggregate": {
+      "Z-B3": {
+        "miou": {
+          "values": [
+            0.31936702404534684,
+            0.3393820645682365,
+            0.33857899416418413
+          ],
+          "mean": 0.3324426942592558,
+          "std_ddof1": 0.011330979400548136,
+          "min": 0.31936702404534684,
+          "max": 0.3393820645682365
+        },
+        "dice": {
+          "values": [
+            0.43595405859038405,
+            0.46132127652633736,
+            0.4604113674750556
+          ],
+          "mean": 0.452562234197259,
+          "std_ddof1": 0.014390295562009783,
+          "min": 0.43595405859038405,
+          "max": 0.46132127652633736
+        },
+        "precision_at_0_5": {
+          "values": [
+            0.481685540653748,
+            0.47669729900802355,
+            0.4591179731285745
+          ],
+          "mean": 0.4725002709301154,
+          "std_ddof1": 0.011854748395300468,
+          "min": 0.4591179731285745,
+          "max": 0.481685540653748
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.8404907975460123,
+            0.8680981595092024,
+            0.8987730061349694
+          ],
+          "mean": 0.869120654396728,
+          "std_ddof1": 0.0291545550703134,
+          "min": 0.8404907975460123,
+          "max": 0.8987730061349694
+        },
+        "pair_margin": {
+          "values": [
+            0.30268898950381656,
+            0.3255439949050042,
+            0.32181822108860864
+          ],
+          "mean": 0.31668373516580983,
+          "std_ddof1": 0.01226213795553791,
+          "min": 0.30268898950381656,
+          "max": 0.3255439949050042
+        }
+      },
+      "D-B1": {
+        "miou": {
+          "values": [
+            0.3799342569123541,
+            0.3826506585458803,
+            0.3876878614249295
+          ],
+          "mean": 0.38342425896105464,
+          "std_ddof1": 0.003934264726238665,
+          "min": 0.3799342569123541,
+          "max": 0.3876878614249295
+        },
+        "dice": {
+          "values": [
+            0.49654864346971805,
+            0.507941929811839,
+            0.5117248764082531
+          ],
+          "mean": 0.5054051498966033,
+          "std_ddof1": 0.007899743717673794,
+          "min": 0.49654864346971805,
+          "max": 0.5117248764082531
+        },
+        "precision_at_0_5": {
+          "values": [
+            0.6035551755552649,
+            0.5634307264816115,
+            0.5763690366808225
+          ],
+          "mean": 0.5811183129058997,
+          "std_ddof1": 0.02047949149423916,
+          "min": 0.5634307264816115,
+          "max": 0.6035551755552649
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.7975460122699386,
+            0.8865030674846626,
+            0.8496932515337423
+          ],
+          "mean": 0.8445807770961146,
+          "std_ddof1": 0.044698349681788145,
+          "min": 0.7975460122699386,
+          "max": 0.8865030674846626
+        },
+        "pair_margin": {
+          "values": [
+            0.37887595815277175,
+            0.3766059906125809,
+            0.3769719884928459
+          ],
+          "mean": 0.37748464575273283,
+          "std_ddof1": 0.0012187293620677807,
+          "min": 0.3766059906125809,
+          "max": 0.37887595815277175
+        }
+      }
+    },
+    "matched_seed": [
+      {
+        "seed": 20261001,
+        "z_b3_oracle_miou": 0.31936702404534684,
+        "d_b1_oracle_miou": 0.3799342569123541,
+        "delta": 0.06056723286700727,
+        "z_b3_predicted_strict": 0.22030309688740957,
+        "d_b1_predicted_strict": 0.22592562242475112,
+        "retention": 0.5946439898860428
+      },
+      {
+        "seed": 20261002,
+        "z_b3_oracle_miou": 0.3393820645682365,
+        "d_b1_oracle_miou": 0.3826506585458803,
+        "delta": 0.04326859397764382,
+        "z_b3_predicted_strict": 0.22665433076683353,
+        "d_b1_predicted_strict": 0.2356496865917081,
+        "retention": 0.6158350477879901
+      },
+      {
+        "seed": 20261003,
+        "z_b3_oracle_miou": 0.33857899416418413,
+        "d_b1_oracle_miou": 0.3876878614249295,
+        "delta": 0.04910886726074537,
+        "z_b3_predicted_strict": 0.2339931745526598,
+        "d_b1_predicted_strict": 0.23898173074744,
+        "retention": 0.6164282004318455
+      }
+    ],
+    "matched_seed_wins": 3
+  },
+  "predicted_reference_val": {
+    "reference": {
+      "records": 936,
+      "answered": 931,
+      "abstentions": 5,
+      "abstention_rate": 0.005341880341880342,
+      "reference_miou": 0.4469491468075261,
+      "reference_dice": 0.5161075518661564,
+      "reference_precision_at_0_5": 0.5087140304585562,
+      "buckets": {
+        "SELECTION_WRONG": 305,
+        "REFERENCE_OK": 491,
+        "NOT_COVERED": 135,
+        "ABSTENTION": 5
+      },
+      "best_eligible_coverage_at_0_50": 0.8504273504273504
+    },
+    "aggregate": {
+      "Z-B3": {
+        "strict_miou": {
+          "values": [
+            0.22030309688740957,
+            0.22665433076683353,
+            0.2339931745526598
+          ],
+          "mean": 0.22698353406896762,
+          "std_ddof1": 0.006850973487815279,
+          "min": 0.22030309688740957,
+          "max": 0.2339931745526598
+        },
+        "strict_dice": {
+          "values": [
+            0.3009882205209652,
+            0.3098218430602149,
+            0.31770338751288113
+          ],
+          "mean": 0.30950448369802036,
+          "std_ddof1": 0.008362101387539404,
+          "min": 0.3009882205209652,
+          "max": 0.31770338751288113
+        },
+        "answered_only_miou": {
+          "values": [
+            0.2214862499319177,
+            0.2278715935529067,
+            0.23524985110772242
+          ],
+          "mean": 0.2282025648641823,
+          "std_ddof1": 0.006887767115569375,
+          "min": 0.2214862499319177,
+          "max": 0.23524985110772242
+        },
+        "reference_ok_subset_miou": {
+          "values": [
+            0.34400403342108316,
+            0.35443146839868367,
+            0.36572152475118463
+          ],
+          "mean": 0.3547190088569838,
+          "std_ddof1": 0.010861600575174353,
+          "min": 0.34400403342108316,
+          "max": 0.36572152475118463
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.5,
+            0.5276073619631901,
+            0.5184049079754601
+          ],
+          "mean": 0.5153374233128835,
+          "std_ddof1": 0.01405698065937372,
+          "min": 0.5,
+          "max": 0.5276073619631901
+        },
+        "pair_margin": {
+          "values": [
+            0.1887663422945611,
+            0.19524685343669385,
+            0.20147298811648337
+          ],
+          "mean": 0.19516206128257943,
+          "std_ddof1": 0.006353747263858799,
+          "min": 0.1887663422945611,
+          "max": 0.20147298811648337
+        }
+      },
+      "D-B1": {
+        "strict_miou": {
+          "values": [
+            0.22592562242475112,
+            0.2356496865917081,
+            0.23898173074744
+          ],
+          "mean": 0.23351901325463306,
+          "std_ddof1": 0.006783827664780284,
+          "min": 0.22592562242475112,
+          "max": 0.23898173074744
+        },
+        "strict_dice": {
+          "values": [
+            0.29544230075938444,
+            0.3138843873004099,
+            0.31539160609147765
+          ],
+          "mean": 0.3082394313837573,
+          "std_ddof1": 0.011108233040586783,
+          "min": 0.29544230075938444,
+          "max": 0.31539160609147765
+        },
+        "answered_only_miou": {
+          "values": [
+            0.22713897163218802,
+            0.23691525955944015,
+            0.24026519868915558
+          ],
+          "mean": 0.23477314329359458,
+          "std_ddof1": 0.0068202606812398986,
+          "min": 0.22713897163218802,
+          "max": 0.24026519868915558
+        },
+        "reference_ok_subset_miou": {
+          "values": [
+            0.36969704719670393,
+            0.38426318872865817,
+            0.3894724255761596
+          ],
+          "mean": 0.3811442205005073,
+          "std_ddof1": 0.010249993639940549,
+          "min": 0.36969704719670393,
+          "max": 0.3894724255761596
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.37423312883435583,
+            0.4570552147239264,
+            0.42024539877300615
+          ],
+          "mean": 0.4171779141104295,
+          "std_ddof1": 0.04149616336953585,
+          "min": 0.37423312883435583,
+          "max": 0.4570552147239264
+        },
+        "pair_margin": {
+          "values": [
+            0.19689182232435906,
+            0.20395628507897348,
+            0.20194593514315984
+          ],
+          "mean": 0.20093134751549746,
+          "std_ddof1": 0.0036398763088170685,
+          "min": 0.19689182232435906,
+          "max": 0.20395628507897348
+        }
+      }
+    },
+    "per_run": {
+      "Z-B3/20261001": {
+        "strict_miou": 0.22030309688740957,
+        "strict_dice": 0.3009882205209652,
+        "answered_only_miou": 0.2214862499319177,
+        "reference_ok_subset_miou": 0.34400403342108316,
+        "pair_pass_rate": 0.5,
+        "pair_margin": 0.1887663422945611
+      },
+      "Z-B3/20261002": {
+        "strict_miou": 0.22665433076683353,
+        "strict_dice": 0.3098218430602149,
+        "answered_only_miou": 0.2278715935529067,
+        "reference_ok_subset_miou": 0.35443146839868367,
+        "pair_pass_rate": 0.5276073619631901,
+        "pair_margin": 0.19524685343669385
+      },
+      "Z-B3/20261003": {
+        "strict_miou": 0.2339931745526598,
+        "strict_dice": 0.31770338751288113,
+        "answered_only_miou": 0.23524985110772242,
+        "reference_ok_subset_miou": 0.36572152475118463,
+        "pair_pass_rate": 0.5184049079754601,
+        "pair_margin": 0.20147298811648337
+      },
+      "D-B1/20261001": {
+        "strict_miou": 0.22592562242475112,
+        "strict_dice": 0.29544230075938444,
+        "answered_only_miou": 0.22713897163218802,
+        "reference_ok_subset_miou": 0.36969704719670393,
+        "pair_pass_rate": 0.37423312883435583,
+        "pair_margin": 0.19689182232435906
+      },
+      "D-B1/20261002": {
+        "strict_miou": 0.2356496865917081,
+        "strict_dice": 0.3138843873004099,
+        "answered_only_miou": 0.23691525955944015,
+        "reference_ok_subset_miou": 0.38426318872865817,
+        "pair_pass_rate": 0.4570552147239264,
+        "pair_margin": 0.20395628507897348
+      },
+      "D-B1/20261003": {
+        "strict_miou": 0.23898173074744,
+        "strict_dice": 0.31539160609147765,
+        "answered_only_miou": 0.24026519868915558,
+        "reference_ok_subset_miou": 0.3894724255761596,
+        "pair_pass_rate": 0.42024539877300615,
+        "pair_margin": 0.20194593514315984
+      }
+    },
+    "shared_reference_cache": {
+      "tiles": 610,
+      "computed_once": true
+    },
+    "used_for_checkpoint_selection": false
+  },
+  "gates": {
+    "1_d_b1_mean_oracle_miou": {
+      "required": 0.35,
+      "measured": 0.38342425896105464,
+      "passed": true
+    },
+    "2_mean_delta_over_z_b3": {
+      "required": 0.04,
+      "measured": 0.05098156470179882,
+      "passed": true
+    },
+    "3_matched_seeds": {
+      "required": ">= 2/3",
+      "measured": "3/3",
+      "passed": true
+    },
+    "4_min_d_b1_seed": {
+      "required": 0.32,
+      "measured": 0.3799342569123541,
+      "passed": true
+    },
+    "5_predicted_delta": {
+      "required": 0.02,
+      "measured": 0.006535479185665438,
+      "passed": false
+    },
+    "6_d_b1_predicted_strict": {
+      "required": 0.22,
+      "measured": 0.23351901325463306,
+      "passed": true
+    },
+    "7_margin_not_worse": {
+      "required": ">= z_b3 - 0.02",
+      "measured": 0.20093134751549746,
+      "measured_z_b3": 0.19516206128257943,
+      "passed": true
+    },
+    "8_no_protocol_violation": {
+      "passed": true
+    }
+  },
+  "gate_constants": {
+    "d_b1_mean_oracle_miou": 0.35,
+    "mean_delta_over_z_b3": 0.04,
+    "matched_seed_wins": 2,
+    "min_d_b1_seed_oracle_miou": 0.32,
+    "predicted_delta": 0.02,
+    "d_b1_predicted_strict_miou": 0.22,
+    "margin_tolerance": 0.02
+  },
+  "DB1_FORMAL_VAL_CONFIRMED": false,
+  "diagnostics": {
+    "oracle_to_predicted_retention": {
+      "20261001": 0.5946439898860428,
+      "20261002": 0.6158350477879901,
+      "20261003": 0.6164282004318455
+    },
+    "retention_mean": 0.6089690793686262,
+    "seed_std": {
+      "Z-B3": 0.011330979400548136,
+      "D-B1": 0.003934264726238665
+    },
+    "parameter_difference": 2304,
+    "training_time_difference_seconds": 2.9666666666666828,
+    "inference_time_difference_seconds": -7.736666666666666,
+    "reference_failure_attribution": {
+      "reference_ok": 491,
+      "selection_wrong": 305,
+      "not_covered": 135,
+      "abstention": 5,
+      "geometry_poor": 0,
+      "note": "attribution of the predicted-reference gap; diagnostic only"
+    }
+  },
+  "test_lock": {
+    "status": "LOCKED",
+    "test_execution_authorized": false,
+    "task7i_completed_train_val": true,
+    "db1_formal_val_confirmed": false,
+    "unlock_requires": "ChatGPT audit of Task 7I"
+  },
+  "interpretation_boundary": {
+    "validation_called_test": false,
+    "test_called_untouched": false,
+    "best_seed_chosen_by_test": false,
+    "only_favourable_seeds_averaged": false,
+    "architecture_changed_after_val": false,
+    "test_unlocked": false,
+    "final_test_started": false,
+    "parser_or_reference_or_yolo_retrained": false,
+    "another_selector_trained": false,
+    "unrestricted_natural_language_claimed": false,
+    "unseen_city_generalization_claimed": false,
+    "novelty_claimed": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 审核 Task 7I 的三种子正式 train/val 结果；在 ChatGPT 明确解锁前，test 保持 LOCKED，不运行任何 final-test inference。",
+  "runtime_seconds": 0.21
+}

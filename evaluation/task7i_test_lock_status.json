@@ -1,0 +1,18 @@
+{
+  "_doc": "Task 7I section 27. Test-lock status after the formal train/val stage. DSH does not unlock the test split: only a ChatGPT audit of Task 7I can authorize final-test execution.",
+  "task": "7I",
+  "stage": "L-test-lock-status",
+  "status": "LOCKED",
+  "test_execution_authorized": false,
+  "task7i_completed_train_val": true,
+  "db1_formal_val_confirmed": false,
+  "unlock_requires": "ChatGPT audit of Task 7I",
+  "previous_lock": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7h_test_lock.json",
+    "status": "LOCKED",
+    "test_execution_authorized": false
+  },
+  "test_material_read": false,
+  "test_metrics_produced": false,
+  "runtime_seconds": 0.0
+}

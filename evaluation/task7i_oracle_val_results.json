@@ -1,0 +1,605 @@
+{
+  "_doc": "Task 7I sections 19-20. Final oracle-reference full-val evaluation of the six frozen formal checkpoints on all 936 formal val records, including the complete I-FormalValPairsAll counterfactual set (326 pairs). Oracle GT largest reference only.",
+  "task": "7I",
+  "stage": "I-oracle-val-evaluation",
+  "population": {
+    "val_records": 936,
+    "pairs": 326,
+    "pair_key_hash": "ea5945b568110ffc59e748408505b70d244846f07bdd9308dcfc83b646db0ee3"
+  },
+  "results": {
+    "Z-B3/20261001": {
+      "model": "Z-B3",
+      "seed": 20261001,
+      "selected_epoch": 4,
+      "checkpoint_sha256": "5c9fada7c7395d4172a9be27aa4fbc96a470ed4c248d8a4d78a4d9d7eb251201",
+      "overall": {
+        "records": 936,
+        "miou": 0.31936702404534684,
+        "dice": 0.43595405859038405,
+        "precision_at_0_5": 0.481685540653748
+      },
+      "per_direction": {
+        "above": {
+          "records": 224,
+          "miou": 0.3284528852692058,
+          "dice": 0.4409370830140271,
+          "precision_at_0_5": 0.5436575048222685
+        },
+        "below": {
+          "records": 213,
+          "miou": 0.2936739944681386,
+          "dice": 0.4085063888477254,
+          "precision_at_0_5": 0.4298714289675378
+        },
+        "left": {
+          "records": 250,
+          "miou": 0.3148728915840977,
+          "dice": 0.4313414414452347,
+          "precision_at_0_5": 0.47506458920289163
+        },
+        "right": {
+          "records": 249,
+          "miou": 0.3376839537686935,
+          "dice": 0.45958181148427,
+          "precision_at_0_5": 0.47690611767434377
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1027.0,
+          1523.5,
+          2453.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 233,
+            "miou": 0.31117843062123723
+          },
+          "q2": {
+            "records": 235,
+            "miou": 0.40294245634298415
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.3555587646081273
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.2073962906529632
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          19.093458848123582,
+          49.467807633987555,
+          97.06355392820038
+        ],
+        "buckets": {
+          "q1": {
+            "records": 234,
+            "miou": 0.2937528474034865
+          },
+          "q2": {
+            "records": 234,
+            "miou": 0.29923891776575257
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.3128478028022902
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.3716285282098584
+          }
+        }
+      },
+      "pairs": {
+        "passed": 274,
+        "pairs": 326,
+        "pass_rate": 0.8404907975460123,
+        "mean_own_iou": 0.3034682960931897,
+        "mean_cross_iou": 0.000779306589373152,
+        "own_cross_margin": 0.30268898950381656
+      },
+      "inference_seconds": 24.73
+    },
+    "Z-B3/20261002": {
+      "model": "Z-B3",
+      "seed": 20261002,
+      "selected_epoch": 14,
+      "checkpoint_sha256": "f7ee1a094d3aef7e0bc099d217a5c9cda6eac5e1ad6309dc24813e41a6f8fea9",
+      "overall": {
+        "records": 936,
+        "miou": 0.3393820645682365,
+        "dice": 0.46132127652633736,
+        "precision_at_0_5": 0.47669729900802355
+      },
+      "per_direction": {
+        "above": {
+          "records": 224,
+          "miou": 0.3571273452616775,
+          "dice": 0.4786457262704858,
+          "precision_at_0_5": 0.5089344000008422
+        },
+        "below": {
+          "records": 213,
+          "miou": 0.2897055038231252,
+          "dice": 0.40501506935772835,
+          "precision_at_0_5": 0.4380720664055693
+        },
+        "left": {
+          "records": 250,
+          "miou": 0.35097415538528254,
+          "dice": 0.47601196100104803,
+          "precision_at_0_5": 0.45421317541564415
+        },
+        "right": {
+          "records": 249,
+          "miou": 0.3542742005486238,
+          "dice": 0.47915209686989874,
+          "precision_at_0_5": 0.503312137642667
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1027.0,
+          1523.5,
+          2453.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 233,
+            "miou": 0.31393946445007087
+          },
+          "q2": {
+            "records": 235,
+            "miou": 0.4169522886004621
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.38635773289637276
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.23983854658180784
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          19.093458848123582,
+          49.467807633987555,
+          97.06355392820038
+        ],
+        "buckets": {
+          "q1": {
+            "records": 234,
+            "miou": 0.31589811001708773
+          },
+          "q2": {
+            "records": 234,
+            "miou": 0.3334048095871909
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.3383485304474198
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.3698768082212477
+          }
+        }
+      },
+      "pairs": {
+        "passed": 283,
+        "pairs": 326,
+        "pass_rate": 0.8680981595092024,
+        "mean_own_iou": 0.326317967424878,
+        "mean_cross_iou": 0.0007739725198738403,
+        "own_cross_margin": 0.3255439949050042
+      },
+      "inference_seconds": 1.18
+    },
+    "Z-B3/20261003": {
+      "model": "Z-B3",
+      "seed": 20261003,
+      "selected_epoch": 5,
+      "checkpoint_sha256": "10aee8e04b0e44b3a9f99efc3b000485fd817746290f4e19d3b29e1b72c55859",
+      "overall": {
+        "records": 936,
+        "miou": 0.33857899416418413,
+        "dice": 0.4604113674750556,
+        "precision_at_0_5": 0.4591179731285745
+      },
+      "per_direction": {
+        "above": {
+          "records": 224,
+          "miou": 0.35931611926801965,
+          "dice": 0.4771277775912834,
+          "precision_at_0_5": 0.5072020888775727
+        },
+        "below": {
+          "records": 213,
+          "miou": 0.3113853115372583,
+          "dice": 0.4343802828156975,
+          "precision_at_0_5": 0.41943218295181256
+        },
+        "left": {
+          "records": 250,
+          "miou": 0.3402584776613693,
+          "dice": 0.459828192027928,
+          "precision_at_0_5": 0.4685021548875154
+        },
+        "right": {
+          "records": 249,
+          "miou": 0.34149974718418313,
+          "dice": 0.4682263836525262,
+          "precision_at_0_5": 0.44038779618134355
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1027.0,
+          1523.5,
+          2453.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 233,
+            "miou": 0.3126639806195725
+          },
+          "q2": {
+            "records": 235,
+            "miou": 0.4155894546790123
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.38567004148809697
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.23995264741680916
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          19.093458848123582,
+          49.467807633987555,
+          97.06355392820038
+        ],
+        "buckets": {
+          "q1": {
+            "records": 234,
+            "miou": 0.30994891598131863
+          },
+          "q2": {
+            "records": 234,
+            "miou": 0.32611322803772097
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.32969784231585636
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.38855599032184057
+          }
+        }
+      },
+      "pairs": {
+        "passed": 293,
+        "pairs": 326,
+        "pass_rate": 0.8987730061349694,
+        "mean_own_iou": 0.3226359277054358,
+        "mean_cross_iou": 0.0008177066168271517,
+        "own_cross_margin": 0.32181822108860864
+      },
+      "inference_seconds": 1.15
+    },
+    "D-B1/20261001": {
+      "model": "D-B1",
+      "seed": 20261001,
+      "selected_epoch": 11,
+      "checkpoint_sha256": "d89b0f6f88c2c2d3fe5040679d6727ae513106e29685c321bcd22e9a030d2954",
+      "overall": {
+        "records": 936,
+        "miou": 0.3799342569123541,
+        "dice": 0.49654864346971805,
+        "precision_at_0_5": 0.6035551755552649
+      },
+      "per_direction": {
+        "above": {
+          "records": 224,
+          "miou": 0.3759397067505629,
+          "dice": 0.4929197826108463,
+          "precision_at_0_5": 0.6504521207252358
+        },
+        "below": {
+          "records": 213,
+          "miou": 0.3672936315561164,
+          "dice": 0.49079632419008556,
+          "precision_at_0_5": 0.5751107430110649
+        },
+        "left": {
+          "records": 250,
+          "miou": 0.3774459723580821,
+          "dice": 0.48359382399504763,
+          "precision_at_0_5": 0.6264335638326013
+        },
+        "right": {
+          "records": 249,
+          "miou": 0.3968390905496549,
+          "dice": 0.5177406663918732,
+          "precision_at_0_5": 0.5627284741275823
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1027.0,
+          1523.5,
+          2453.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 233,
+            "miou": 0.34883311879335993
+          },
+          "q2": {
+            "records": 235,
+            "miou": 0.4274096577070914
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.4421143853675099
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.3010440686066101
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          19.093458848123582,
+          49.467807633987555,
+          97.06355392820038
+        ],
+        "buckets": {
+          "q1": {
+            "records": 234,
+            "miou": 0.40236091812750485
+          },
+          "q2": {
+            "records": 234,
+            "miou": 0.44380730411090874
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.4205636205084864
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.25300518490251644
+          }
+        }
+      },
+      "pairs": {
+        "passed": 260,
+        "pairs": 326,
+        "pass_rate": 0.7975460122699386,
+        "mean_own_iou": 0.37962881797174924,
+        "mean_cross_iou": 0.0007528598189775176,
+        "own_cross_margin": 0.37887595815277175
+      },
+      "inference_seconds": 1.4
+    },
+    "D-B1/20261002": {
+      "model": "D-B1",
+      "seed": 20261002,
+      "selected_epoch": 9,
+      "checkpoint_sha256": "95ac39112ac4e4048ed315718404d7c2bf30906c9ebc645e7b3b5d27495b7ad4",
+      "overall": {
+        "records": 936,
+        "miou": 0.3826506585458803,
+        "dice": 0.507941929811839,
+        "precision_at_0_5": 0.5634307264816115
+      },
+      "per_direction": {
+        "above": {
+          "records": 224,
+          "miou": 0.3884231313839354,
+          "dice": 0.5128611338842416,
+          "precision_at_0_5": 0.5928252533485361
+        },
+        "below": {
+          "records": 213,
+          "miou": 0.35562629398078316,
+          "dice": 0.47648389742123254,
+          "precision_at_0_5": 0.5488792643338734
+        },
+        "left": {
+          "records": 250,
+          "miou": 0.39271468459269,
+          "dice": 0.5198424261282611,
+          "precision_at_0_5": 0.5580988817094039
+        },
+        "right": {
+          "records": 249,
+          "miou": 0.3904705349512574,
+          "dice": 0.5184782153856361,
+          "precision_at_0_5": 0.5547883514307239
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1027.0,
+          1523.5,
+          2453.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 233,
+            "miou": 0.34664780183504135
+          },
+          "q2": {
+            "records": 235,
+            "miou": 0.44844503088028603
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.4269639832752553
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.30811078729958274
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          19.093458848123582,
+          49.467807633987555,
+          97.06355392820038
+        ],
+        "buckets": {
+          "q1": {
+            "records": 234,
+            "miou": 0.37903399182084363
+          },
+          "q2": {
+            "records": 234,
+            "miou": 0.40882506290977566
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.411991585887557
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.33075199356534485
+          }
+        }
+      },
+      "pairs": {
+        "passed": 289,
+        "pairs": 326,
+        "pass_rate": 0.8865030674846626,
+        "mean_own_iou": 0.3778382229596617,
+        "mean_cross_iou": 0.0012322323470807816,
+        "own_cross_margin": 0.3766059906125809
+      },
+      "inference_seconds": 1.19
+    },
+    "D-B1/20261003": {
+      "model": "D-B1",
+      "seed": 20261003,
+      "selected_epoch": 8,
+      "checkpoint_sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+      "overall": {
+        "records": 936,
+        "miou": 0.3876878614249295,
+        "dice": 0.5117248764082531,
+        "precision_at_0_5": 0.5763690366808225
+      },
+      "per_direction": {
+        "above": {
+          "records": 224,
+          "miou": 0.3994830908895522,
+          "dice": 0.5270547732105997,
+          "precision_at_0_5": 0.5978298267530645
+        },
+        "below": {
+          "records": 213,
+          "miou": 0.3506326042926417,
+          "dice": 0.4638688871786581,
+          "precision_at_0_5": 0.6182345696808863
+        },
+        "left": {
+          "records": 250,
+          "miou": 0.39519356566273006,
+          "dice": 0.5251503542311992,
+          "precision_at_0_5": 0.526190980452239
+        },
+        "right": {
+          "records": 249,
+          "miou": 0.401238914877346,
+          "dice": 0.5253917814943643,
+          "precision_at_0_5": 0.5716298340782121
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1027.0,
+          1523.5,
+          2453.5
+        ],
+        "buckets": {
+          "q1": {
+            "records": 233,
+            "miou": 0.33236833011403777
+          },
+          "q2": {
+            "records": 235,
+            "miou": 0.4495056014923388
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.4458794757987452
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.3224974516647746
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          19.093458848123582,
+          49.467807633987555,
+          97.06355392820038
+        ],
+        "buckets": {
+          "q1": {
+            "records": 234,
+            "miou": 0.37241866652101524
+          },
+          "q2": {
+            "records": 234,
+            "miou": 0.42509578355633976
+          },
+          "q3": {
+            "records": 234,
+            "miou": 0.42595018956699976
+          },
+          "q4": {
+            "records": 234,
+            "miou": 0.32728680605536337
+          }
+        }
+      },
+      "pairs": {
+        "passed": 277,
+        "pairs": 326,
+        "pass_rate": 0.8496932515337423,
+        "mean_own_iou": 0.3783057413426412,
+        "mean_cross_iou": 0.0013337528497952991,
+        "own_cross_margin": 0.3769719884928459
+      },
+      "inference_seconds": 1.26
+    }
+  },
+  "models": [
+    "Z-B3",
+    "D-B1"
+  ],
+  "seeds": [
+    20261001,
+    20261002,
+    20261003
+  ],
+  "test_split_used": false,
+  "runtime_seconds": 77.5
+}
