@@ -1,0 +1,768 @@
+{
+  "_doc": "Task 7J section 7. Oracle-reference final test evaluation of the six frozen Task 7I checkpoints on the frozen final L3 test population. No seed selection, no performance gate; all three seeds are reported for both models.",
+  "task": "7J",
+  "stage": "7-oracle-final-test",
+  "population": {
+    "records": 736,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 190,
+      "largest_to_right_of_to_nearest": 178,
+      "largest_to_above_to_nearest": 174,
+      "largest_to_below_to_nearest": 194
+    },
+    "sample_id_sha256": "b6d2c9d5298ac46cfce88ea657f4b4e71337f8f6379755c26c443aaefdbd5d5b",
+    "pairs": 274,
+    "pair_id_sha256": "018209fceb610546946d0d84778c7deac6358edcd82561514fd80a8796f3d7d6"
+  },
+  "results": {
+    "Z-B3/20261001": {
+      "model": "Z-B3",
+      "seed": 20261001,
+      "reference_source": "oracle_native_gt",
+      "selected_epoch": 4,
+      "checkpoint_sha256": "5c9fada7c7395d4172a9be27aa4fbc96a470ed4c248d8a4d78a4d9d7eb251201",
+      "overall": {
+        "records": 736,
+        "miou": 0.33153243429179047,
+        "dice": 0.4532790583436495,
+        "precision_at_0_5": 0.44392527228008644
+      },
+      "per_direction": {
+        "above": {
+          "records": 174,
+          "miou": 0.31218566991373964,
+          "dice": 0.4302351156067813,
+          "precision_at_0_5": 0.45587621501846
+        },
+        "below": {
+          "records": 194,
+          "miou": 0.3285853271482318,
+          "dice": 0.4566562367127208,
+          "precision_at_0_5": 0.42112733043422973
+        },
+        "left": {
+          "records": 190,
+          "miou": 0.32577270876134934,
+          "dice": 0.44429309230245795,
+          "precision_at_0_5": 0.43547608083960326
+        },
+        "right": {
+          "records": 178,
+          "miou": 0.3598044772042346,
+          "dice": 0.48171617621129936,
+          "precision_at_0_5": 0.46610888495037295
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          787.25,
+          1159.5,
+          1539.25
+        ],
+        "buckets": {
+          "q1": {
+            "records": 184,
+            "miou": 0.28858884658410966
+          },
+          "q2": {
+            "records": 184,
+            "miou": 0.3228931888327685
+          },
+          "q3": {
+            "records": 184,
+            "miou": 0.3794031659392701
+          },
+          "q4": {
+            "records": 184,
+            "miou": 0.33524453581101366
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          21.0,
+          52.562688239683894,
+          101.1077861869505
+        ],
+        "buckets": {
+          "q1": {
+            "records": 183,
+            "miou": 0.3383004177269197
+          },
+          "q2": {
+            "records": 185,
+            "miou": 0.3392062997389582
+          },
+          "q3": {
+            "records": 183,
+            "miou": 0.31272238150859455
+          },
+          "q4": {
+            "records": 185,
+            "miou": 0.33577045365919683
+          }
+        }
+      },
+      "pairs": {
+        "passed": 224,
+        "pairs": 274,
+        "pass_rate": 0.8175182481751825,
+        "mean_own_iou": 0.3148117283269722,
+        "mean_cross_iou": 0.0012634387560033246,
+        "own_cross_margin": 0.31354828957096886
+      },
+      "efficiency": {
+        "trainable_parameters": 275777,
+        "inference_seconds": 76.98,
+        "ms_per_record": 104.589,
+        "peak_inference_vram_gb": 0.86
+      }
+    },
+    "Z-B3/20261002": {
+      "model": "Z-B3",
+      "seed": 20261002,
+      "reference_source": "oracle_native_gt",
+      "selected_epoch": 14,
+      "checkpoint_sha256": "f7ee1a094d3aef7e0bc099d217a5c9cda6eac5e1ad6309dc24813e41a6f8fea9",
+      "overall": {
+        "records": 736,
+        "miou": 0.3415642873427918,
+        "dice": 0.465081442591024,
+        "precision_at_0_5": 0.4463081308203374
+      },
+      "per_direction": {
+        "above": {
+          "records": 174,
+          "miou": 0.33024017284933266,
+          "dice": 0.4509692730983551,
+          "precision_at_0_5": 0.4299447594006212
+        },
+        "below": {
+          "records": 194,
+          "miou": 0.32326488648090235,
+          "dice": 0.44941997726910005,
+          "precision_at_0_5": 0.4283378658464087
+        },
+        "left": {
+          "records": 190,
+          "miou": 0.3386669735043836,
+          "dice": 0.46066331838691676,
+          "precision_at_0_5": 0.431016534470833
+        },
+        "right": {
+          "records": 178,
+          "miou": 0.37567085654709514,
+          "dice": 0.5006616974391026,
+          "precision_at_0_5": 0.4982118462044867
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          787.25,
+          1159.5,
+          1539.25
+        ],
+        "buckets": {
+          "q1": {
+            "records": 184,
+            "miou": 0.27426308622553963
+          },
+          "q2": {
+            "records": 184,
+            "miou": 0.3428335475526186
+          },
+          "q3": {
+            "records": 184,
+            "miou": 0.39516900778631653
+          },
+          "q4": {
+            "records": 184,
+            "miou": 0.3539915078066925
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          21.0,
+          52.562688239683894,
+          101.1077861869505
+        ],
+        "buckets": {
+          "q1": {
+            "records": 183,
+            "miou": 0.3267632136716556
+          },
+          "q2": {
+            "records": 185,
+            "miou": 0.3677515232545893
+          },
+          "q3": {
+            "records": 183,
+            "miou": 0.34828717046821256
+          },
+          "q4": {
+            "records": 185,
+            "miou": 0.32336791018702626
+          }
+        }
+      },
+      "pairs": {
+        "passed": 233,
+        "pairs": 274,
+        "pass_rate": 0.8503649635036497,
+        "mean_own_iou": 0.3259629895581157,
+        "mean_cross_iou": 0.0041394779697788535,
+        "own_cross_margin": 0.32182351158833683
+      },
+      "efficiency": {
+        "trainable_parameters": 275777,
+        "inference_seconds": 14.8,
+        "ms_per_record": 20.11,
+        "peak_inference_vram_gb": 0.594
+      }
+    },
+    "Z-B3/20261003": {
+      "model": "Z-B3",
+      "seed": 20261003,
+      "reference_source": "oracle_native_gt",
+      "selected_epoch": 5,
+      "checkpoint_sha256": "10aee8e04b0e44b3a9f99efc3b000485fd817746290f4e19d3b29e1b72c55859",
+      "overall": {
+        "records": 736,
+        "miou": 0.3393670504410267,
+        "dice": 0.4640347107064058,
+        "precision_at_0_5": 0.41759808401305476
+      },
+      "per_direction": {
+        "above": {
+          "records": 174,
+          "miou": 0.33554765645156986,
+          "dice": 0.4585675779578282,
+          "precision_at_0_5": 0.4209462568844129
+        },
+        "below": {
+          "records": 194,
+          "miou": 0.3211837409051148,
+          "dice": 0.44871214424224753,
+          "precision_at_0_5": 0.40497032669611527
+        },
+        "left": {
+          "records": 190,
+          "miou": 0.33760980447683736,
+          "dice": 0.45753290457341134,
+          "precision_at_0_5": 0.4202729464845115
+        },
+        "right": {
+          "records": 178,
+          "miou": 0.3647940916619727,
+          "dice": 0.49301899249049647,
+          "precision_at_0_5": 0.42523279732930863
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          787.25,
+          1159.5,
+          1539.25
+        ],
+        "buckets": {
+          "q1": {
+            "records": 184,
+            "miou": 0.27514884069728446
+          },
+          "q2": {
+            "records": 184,
+            "miou": 0.33492601717181836
+          },
+          "q3": {
+            "records": 184,
+            "miou": 0.38655595806902515
+          },
+          "q4": {
+            "records": 184,
+            "miou": 0.360837385825979
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          21.0,
+          52.562688239683894,
+          101.1077861869505
+        ],
+        "buckets": {
+          "q1": {
+            "records": 183,
+            "miou": 0.3377804228888149
+          },
+          "q2": {
+            "records": 185,
+            "miou": 0.3460656152677735
+          },
+          "q3": {
+            "records": 183,
+            "miou": 0.3277938514550121
+          },
+          "q4": {
+            "records": 185,
+            "miou": 0.3456860437574986
+          }
+        }
+      },
+      "pairs": {
+        "passed": 241,
+        "pairs": 274,
+        "pass_rate": 0.8795620437956204,
+        "mean_own_iou": 0.3233509711599921,
+        "mean_cross_iou": 0.0030700629420123624,
+        "own_cross_margin": 0.3202809082179798
+      },
+      "efficiency": {
+        "trainable_parameters": 275777,
+        "inference_seconds": 11.98,
+        "ms_per_record": 16.283,
+        "peak_inference_vram_gb": 0.594
+      }
+    },
+    "D-B1/20261001": {
+      "model": "D-B1",
+      "seed": 20261001,
+      "reference_source": "oracle_native_gt",
+      "selected_epoch": 11,
+      "checkpoint_sha256": "d89b0f6f88c2c2d3fe5040679d6727ae513106e29685c321bcd22e9a030d2954",
+      "overall": {
+        "records": 736,
+        "miou": 0.3984904067638656,
+        "dice": 0.5171552507719004,
+        "precision_at_0_5": 0.574884337777423
+      },
+      "per_direction": {
+        "above": {
+          "records": 174,
+          "miou": 0.38080068965392955,
+          "dice": 0.49361628966899235,
+          "precision_at_0_5": 0.57555921496195
+        },
+        "below": {
+          "records": 194,
+          "miou": 0.3924998005094414,
+          "dice": 0.5182346200819368,
+          "precision_at_0_5": 0.5712947193990737
+        },
+        "left": {
+          "records": 190,
+          "miou": 0.40362496014533245,
+          "dice": 0.5174040024628407,
+          "precision_at_0_5": 0.5781853022577157
+        },
+        "right": {
+          "records": 178,
+          "miou": 0.41683098680885716,
+          "dice": 0.5387233337184191,
+          "precision_at_0_5": 0.5746134056652684
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          787.25,
+          1159.5,
+          1539.25
+        ],
+        "buckets": {
+          "q1": {
+            "records": 184,
+            "miou": 0.3123346778413271
+          },
+          "q2": {
+            "records": 184,
+            "miou": 0.42112379288318025
+          },
+          "q3": {
+            "records": 184,
+            "miou": 0.44000749612541473
+          },
+          "q4": {
+            "records": 184,
+            "miou": 0.4204956602055404
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          21.0,
+          52.562688239683894,
+          101.1077861869505
+        ],
+        "buckets": {
+          "q1": {
+            "records": 183,
+            "miou": 0.42815193792200923
+          },
+          "q2": {
+            "records": 185,
+            "miou": 0.4810202926290064
+          },
+          "q3": {
+            "records": 183,
+            "miou": 0.4298823135652443
+          },
+          "q4": {
+            "records": 185,
+            "miou": 0.25556712010633253
+          }
+        }
+      },
+      "pairs": {
+        "passed": 216,
+        "pairs": 274,
+        "pass_rate": 0.7883211678832117,
+        "mean_own_iou": 0.3798929562881313,
+        "mean_cross_iou": 0.00026205449299923595,
+        "own_cross_margin": 0.3796309017951321
+      },
+      "efficiency": {
+        "trainable_parameters": 278081,
+        "inference_seconds": 18.14,
+        "ms_per_record": 24.649,
+        "peak_inference_vram_gb": 0.594
+      }
+    },
+    "D-B1/20261002": {
+      "model": "D-B1",
+      "seed": 20261002,
+      "reference_source": "oracle_native_gt",
+      "selected_epoch": 9,
+      "checkpoint_sha256": "95ac39112ac4e4048ed315718404d7c2bf30906c9ebc645e7b3b5d27495b7ad4",
+      "overall": {
+        "records": 736,
+        "miou": 0.38676720868271003,
+        "dice": 0.513067092380072,
+        "precision_at_0_5": 0.5272242480815185
+      },
+      "per_direction": {
+        "above": {
+          "records": 174,
+          "miou": 0.37108718403046487,
+          "dice": 0.4930718194639536,
+          "precision_at_0_5": 0.5072017039019838
+        },
+        "below": {
+          "records": 194,
+          "miou": 0.37716244312050495,
+          "dice": 0.504276064185061,
+          "precision_at_0_5": 0.5514140141002926
+        },
+        "left": {
+          "records": 190,
+          "miou": 0.3866674546937167,
+          "dice": 0.5130057615503827,
+          "precision_at_0_5": 0.4985347910065387
+        },
+        "right": {
+          "records": 178,
+          "miou": 0.41266946748308747,
+          "dice": 0.5422597317894972,
+          "precision_at_0_5": 0.551056298215468
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          787.25,
+          1159.5,
+          1539.25
+        ],
+        "buckets": {
+          "q1": {
+            "records": 184,
+            "miou": 0.30087840836833213
+          },
+          "q2": {
+            "records": 184,
+            "miou": 0.39877275483491503
+          },
+          "q3": {
+            "records": 184,
+            "miou": 0.4395373158766957
+          },
+          "q4": {
+            "records": 184,
+            "miou": 0.4078803556508973
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          21.0,
+          52.562688239683894,
+          101.1077861869505
+        ],
+        "buckets": {
+          "q1": {
+            "records": 183,
+            "miou": 0.38873631910161593
+          },
+          "q2": {
+            "records": 185,
+            "miou": 0.4416824512171665
+          },
+          "q3": {
+            "records": 183,
+            "miou": 0.41779093352275853
+          },
+          "q4": {
+            "records": 185,
+            "miou": 0.29921581018939597
+          }
+        }
+      },
+      "pairs": {
+        "passed": 227,
+        "pairs": 274,
+        "pass_rate": 0.8284671532846716,
+        "mean_own_iou": 0.3701476585793653,
+        "mean_cross_iou": 0.002042602351676407,
+        "own_cross_margin": 0.3681050562276889
+      },
+      "efficiency": {
+        "trainable_parameters": 278081,
+        "inference_seconds": 12.26,
+        "ms_per_record": 16.652,
+        "peak_inference_vram_gb": 0.594
+      }
+    },
+    "D-B1/20261003": {
+      "model": "D-B1",
+      "seed": 20261003,
+      "reference_source": "oracle_native_gt",
+      "selected_epoch": 8,
+      "checkpoint_sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+      "overall": {
+        "records": 736,
+        "miou": 0.39165353514048507,
+        "dice": 0.5182880095496093,
+        "precision_at_0_5": 0.5309281040732978
+      },
+      "per_direction": {
+        "above": {
+          "records": 174,
+          "miou": 0.3755776743576431,
+          "dice": 0.504046181496054,
+          "precision_at_0_5": 0.4984835154491151
+        },
+        "below": {
+          "records": 194,
+          "miou": 0.38118171915965926,
+          "dice": 0.49984852036747834,
+          "precision_at_0_5": 0.5992902786050621
+        },
+        "left": {
+          "records": 190,
+          "miou": 0.3742366595903145,
+          "dice": 0.5051280966092928,
+          "precision_at_0_5": 0.4549119146087951
+        },
+        "right": {
+          "records": 178,
+          "miou": 0.4373722903709747,
+          "dice": 0.5663538659614757,
+          "precision_at_0_5": 0.5692773881165625
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          787.25,
+          1159.5,
+          1539.25
+        ],
+        "buckets": {
+          "q1": {
+            "records": 184,
+            "miou": 0.31138107414524735
+          },
+          "q2": {
+            "records": 184,
+            "miou": 0.4015792463821523
+          },
+          "q3": {
+            "records": 184,
+            "miou": 0.43287165534447364
+          },
+          "q4": {
+            "records": 184,
+            "miou": 0.4207821646900673
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          21.0,
+          52.562688239683894,
+          101.1077861869505
+        ],
+        "buckets": {
+          "q1": {
+            "records": 183,
+            "miou": 0.38442366189458266
+          },
+          "q2": {
+            "records": 185,
+            "miou": 0.44268282002706383
+          },
+          "q3": {
+            "records": 183,
+            "miou": 0.4242778706192154
+          },
+          "q4": {
+            "records": 185,
+            "miou": 0.31550432274791984
+          }
+        }
+      },
+      "pairs": {
+        "passed": 234,
+        "pairs": 274,
+        "pass_rate": 0.8540145985401459,
+        "mean_own_iou": 0.37412745208522313,
+        "mean_cross_iou": 0.0013373386951408372,
+        "own_cross_margin": 0.3727901133900823
+      },
+      "efficiency": {
+        "trainable_parameters": 278081,
+        "inference_seconds": 12.28,
+        "ms_per_record": 16.682,
+        "peak_inference_vram_gb": 0.594
+      }
+    }
+  },
+  "aggregates": {
+    "Z-B3": {
+      "miou": {
+        "values": [
+          0.33153243429179047,
+          0.3415642873427918,
+          0.3393670504410267
+        ],
+        "mean": 0.33748792402520295,
+        "std_ddof1": 0.005273315463179321
+      },
+      "dice": {
+        "values": [
+          0.4532790583436495,
+          0.465081442591024,
+          0.4640347107064058
+        ],
+        "mean": 0.4607984038803598,
+        "std_ddof1": 0.006532941901234275
+      },
+      "precision_at_0_5": {
+        "values": [
+          0.44392527228008644,
+          0.4463081308203374,
+          0.41759808401305476
+        ],
+        "mean": 0.4359438290378262,
+        "std_ddof1": 0.01593249114517739
+      },
+      "pair_pass_rate": {
+        "values": [
+          0.8175182481751825,
+          0.8503649635036497,
+          0.8795620437956204
+        ],
+        "mean": 0.8491484184914841,
+        "std_ddof1": 0.031039783022318905
+      },
+      "pair_margin": {
+        "values": [
+          0.31354828957096886,
+          0.32182351158833683,
+          0.3202809082179798
+        ],
+        "mean": 0.31855090312576184,
+        "std_ddof1": 0.004400512819377752
+      },
+      "parameters": 275777
+    },
+    "D-B1": {
+      "miou": {
+        "values": [
+          0.3984904067638656,
+          0.38676720868271003,
+          0.39165353514048507
+        ],
+        "mean": 0.39230371686235355,
+        "std_ddof1": 0.005888581791576928
+      },
+      "dice": {
+        "values": [
+          0.5171552507719004,
+          0.513067092380072,
+          0.5182880095496093
+        ],
+        "mean": 0.5161701175671939,
+        "std_ddof1": 0.002746335667039605
+      },
+      "precision_at_0_5": {
+        "values": [
+          0.574884337777423,
+          0.5272242480815185,
+          0.5309281040732978
+        ],
+        "mean": 0.5443455633107465,
+        "std_ddof1": 0.026512114150834182
+      },
+      "pair_pass_rate": {
+        "values": [
+          0.7883211678832117,
+          0.8284671532846716,
+          0.8540145985401459
+        ],
+        "mean": 0.8236009732360098,
+        "std_ddof1": 0.033115955203932325
+      },
+      "pair_margin": {
+        "values": [
+          0.3796309017951321,
+          0.3681050562276889,
+          0.3727901133900823
+        ],
+        "mean": 0.37350869047096774,
+        "std_ddof1": 0.005796425085948911
+      },
+      "parameters": 278081
+    }
+  },
+  "matched_seed": [
+    {
+      "seed": 20261001,
+      "z_b3_miou": 0.33153243429179047,
+      "d_b1_miou": 0.3984904067638656,
+      "delta": 0.06695797247207513
+    },
+    {
+      "seed": 20261002,
+      "z_b3_miou": 0.3415642873427918,
+      "d_b1_miou": 0.38676720868271003,
+      "delta": 0.04520292133991821
+    },
+    {
+      "seed": 20261003,
+      "z_b3_miou": 0.3393670504410267,
+      "d_b1_miou": 0.39165353514048507,
+      "delta": 0.05228648469945835
+    }
+  ],
+  "matched_seed_wins": 3,
+  "seeds": [
+    20261001,
+    20261002,
+    20261003
+  ],
+  "models": [
+    "Z-B3",
+    "D-B1"
+  ],
+  "seed_selected": false,
+  "training_performed": false,
+  "runtime_seconds": 180.2
+}

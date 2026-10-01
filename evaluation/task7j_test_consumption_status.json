@@ -1,0 +1,20 @@
+{
+  "_doc": "Task 7J section 11. Test-consumption lock. The single authorized final frozen-architecture test evaluation is complete; the test split may later be reproduced or reported for the same frozen setup but must never be used for iterative development.",
+  "task": "7J",
+  "stage": "11-test-consumption",
+  "status": "FINAL_TEST_CONSUMED",
+  "test_execution_authorized": false,
+  "task7j_final_test_completed": true,
+  "architecture_changes_after_test_authorized": false,
+  "retest_for_model_selection_authorized": false,
+  "authorization": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7j_test_authorization.json",
+    "scope": "Task 7J final frozen-architecture evaluation only"
+  },
+  "test_population": {
+    "records": 736,
+    "sample_id_sha256": "b6d2c9d5298ac46cfce88ea657f4b4e71337f8f6379755c26c443aaefdbd5d5b"
+  },
+  "consumed_by": "Task 7J final frozen-architecture test evaluation",
+  "note": "test may be reproduced/reported for the same frozen setup only"
+}
