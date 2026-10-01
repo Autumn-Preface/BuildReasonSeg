@@ -1,0 +1,79 @@
+{
+  "_doc": "Task 7H section 11. Frozen limitation registry for the BuildReasonSeg-DevFreeze-2026-10 development architecture. Every limitation is recorded with its measured evidence and its status; none of them is hidden or repaired by this task.",
+  "task": "7H",
+  "stage": "D-limitation-registry",
+  "limitations": {
+    "L-01": {
+      "title": "Reference selection",
+      "status": "unresolved practical bottleneck",
+      "evidence": {
+        "task7f_f_r0_strict_miou": 0.24540501038500215,
+        "task7f_f_r1_oracle_selection_miou": 0.36490938928549665,
+        "selection_gain": 0.1195043789004945,
+        "selection_fraction_of_total_gap": 0.8530487001786086,
+        "task7g_selector_adopted": false,
+        "task7g_internal_gate_passed": false,
+        "task7g_external_scene_disjoint_stage": "not executed"
+      },
+      "claim_boundary": "the current project version contains no learned selector that passed its adoption protocol; the deterministic U-C1 selector stays in the chain"
+    },
+    "L-02": {
+      "title": "Proposal coverage",
+      "status": "secondary unresolved bottleneck",
+      "evidence": {
+        "u_c1_best_eligible_coverage_at_0_50": 0.8460388639760837,
+        "coverage_gain": 0.054316262681561533,
+        "task7f_f_r2_coverage_rate": 0.8460388639760837,
+        "uncovered_records": 103
+      },
+      "claim_boundary": "103/669 holdout records have no eligible U-C1 proposal at IoU >= 0.50"
+    },
+    "L-03": {
+      "title": "Proposal-mask geometry",
+      "status": "not a major current bottleneck",
+      "evidence": {
+        "task7f_geometry_gain_covered": 0.004253166957657317,
+        "covered_subset_records": 566
+      },
+      "claim_boundary": "where coverage exists, the predicted proposal mask is nearly as good as the GT reference mask"
+    },
+    "L-04": {
+      "title": "Free-form L3 language",
+      "status": "controlled-language interface only",
+      "evidence": {
+        "task7c_canonical_full_val_accuracy": 1.0,
+        "task7c_canonical_macro_f1": 1.0,
+        "task7c_fixed24": "5/24",
+        "task7c_fixed24_compact": "0/8",
+        "task7c_minimal96": "60/96",
+        "task7c_stress_accuracy": 0.6666666666666666,
+        "task7c_stress_macro_f1": 0.5924464770230274,
+        "task7c_stress_l3_macro_recall": 0.44791666666666663,
+        "task7c_verdict": "L3_20CLASS_COMPOSITIONAL_ROBUSTNESS_FAIL"
+      },
+      "claim_boundary": "canonical/program-template behaviour is verified; unrestricted free-form language is NOT verified and must not be claimed"
+    },
+    "L-05": {
+      "title": "nearest-only L2",
+      "status": "not validated as standalone final capability",
+      "evidence": {
+        "task6y_b2_minival_miou": 0.2864,
+        "task6y_b2_paired": "6/20",
+        "task6y_verdict": "NEAREST_FIELD_NO_MEANINGFUL_GAIN"
+      },
+      "claim_boundary": "field semantics verified and a clear gain over the visual baseline was measured, but the absolute/generalization/counterfactual feasibility gate failed; nearest-only stays experimental/limited"
+    },
+    "L-06": {
+      "title": "unseen-city / domain generalization",
+      "status": "not established",
+      "evidence": {
+        "split_view": "scene_disjoint_v1",
+        "note": "the native split demonstrates raster/scene separation only"
+      },
+      "claim_boundary": "no unseen-city or cross-domain generalization result exists; it must not be claimed"
+    }
+  },
+  "count": 6,
+  "training_performed": false,
+  "test_split_used": false
+}

@@ -1,0 +1,365 @@
+{
+  "_doc": "Task 7H section 3. Read-only evidence registry for the frozen BuildReasonSeg development architecture: data identity, proposal model, parser, relation fields, directional L2 decoder, L3 baseline, preferred L3 decoder and the rejected support modules recorded as frozen negative evidence. No training, no test access.",
+  "task": "7H",
+  "stage": "B-evidence-registry",
+  "architecture_name": "BuildReasonSeg-DevFreeze-2026-10",
+  "data": {
+    "name": "BuildSpatialReason",
+    "version": "v0.2",
+    "level_scope": "L1-L3",
+    "native_vector": {
+      "name": "WHU-EA-NativeVector",
+      "version": "v1.0",
+      "source_dataset": "WHU Building Dataset",
+      "source_subset": "Satellite dataset II (East Asia)"
+    },
+    "split_view": "scene_disjoint_v1",
+    "splits": {
+      "train": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\train.jsonl",
+        "exists": true,
+        "sha256": "a1b36a0de99d33d47136572f7d546976b3cca8b5a4e991c0ea587212928a5237",
+        "bytes": 29572306,
+        "rows": 12778,
+        "l3_programs": {
+          "largest_to_left_of_to_nearest": 323,
+          "largest_to_right_of_to_nearest": 347,
+          "largest_to_above_to_nearest": 338,
+          "largest_to_below_to_nearest": 336
+        },
+        "l3_total": 1344,
+        "expected_l3_total": 1344,
+        "matches_expected": true
+      },
+      "val": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\val.jsonl",
+        "exists": true,
+        "sha256": "f524c6fc74ad8193eea61fda5b3476a159911cc28cf9047a6c087938a1460a0f",
+        "bytes": 21084930,
+        "rows": 9111,
+        "l3_programs": {
+          "largest_to_left_of_to_nearest": 250,
+          "largest_to_right_of_to_nearest": 249,
+          "largest_to_above_to_nearest": 224,
+          "largest_to_below_to_nearest": 213
+        },
+        "l3_total": 936,
+        "expected_l3_total": 936,
+        "matches_expected": true
+      },
+      "test": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\test.jsonl",
+        "exists": true,
+        "read": false,
+        "hashed": false,
+        "note": "Task 7H does not read, hash or evaluate the test split"
+      }
+    },
+    "native_view": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\reasoning_view\\scene_disjoint_v1",
+      "exists": true,
+      "metadata": {
+        "train": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\reasoning_view\\scene_disjoint_v1\\metadata\\train.jsonl",
+          "exists": true,
+          "read": true
+        },
+        "val": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\reasoning_view\\scene_disjoint_v1\\metadata\\val.jsonl",
+          "exists": true,
+          "read": true
+        },
+        "test": {
+          "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\reasoning_view\\scene_disjoint_v1\\metadata\\test.jsonl",
+          "exists": true,
+          "read": false
+        }
+      }
+    },
+    "claim_boundary": "the native split demonstrates raster/scene separation, NOT unseen-city generalization"
+  },
+  "checkpoints_and_modules": {
+    "yolo_task6m1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "exists": true,
+      "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "bytes": 54480241,
+      "expected_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "matches": true,
+      "role": "frozen proposal generator (U-C1)",
+      "task_of_origin": "6M.1",
+      "config": {
+        "imgsz": 640,
+        "conf": 0.05,
+        "max_det": 300,
+        "nms": "default",
+        "tta": false,
+        "tiling": false
+      },
+      "frozen": true,
+      "evidence_population": "Task 6U/6Z/7F/7G proposal caches (val tiles)",
+      "verified_result": "proposal source for every reference experiment",
+      "claim_boundary": "proposal quality is a measured bottleneck carrier; YOLO was never retrained"
+    },
+    "parser_task7c": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7c\\program_parser_l3_rehearsal_v1.pt",
+      "exists": true,
+      "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+      "bytes": 70090713,
+      "expected_sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+      "matches": true,
+      "role": "controlled-language 20-class ProgramHead (development front end)",
+      "task_of_origin": "7C",
+      "frozen": true,
+      "evidence_population": "full v0.2 val 18,222 prompts + Task 7A/7B paraphrase packs",
+      "verified_result": {
+        "canonical_full_val_accuracy": 1.0,
+        "canonical_macro_f1": 1.0,
+        "every_class_recall": 1.0,
+        "z_minival240": "240/240",
+        "z_paired_members": "40/40",
+        "fixed24": "5/24",
+        "fixed24_compact": "0/8",
+        "minimal96": "60/96",
+        "stress_accuracy": 0.6667
+      },
+      "claim_boundary": "canonical/program-template behaviour verified; free-form L3 paraphrase robustness NOT solved"
+    },
+    "z_b3_task6z": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "exists": true,
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "bytes": 1109448,
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "matches": true,
+      "role": "frozen L3 target-decoder baseline/ablation",
+      "task_of_origin": "6Z",
+      "frozen": true,
+      "evidence_population": "Z-MiniVal240, Z-PairedVal20, Task 7E E-HoldoutL3 (669)",
+      "verified_result": {
+        "minival_miou": 0.3242128982543474,
+        "holdout_oracle_miou": 0.3141113773177512,
+        "holdout_paired": "15/20"
+      },
+      "claim_boundary": "baseline/ablation only; not the preferred L3 decoder"
+    },
+    "d_b1_task7d": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_minitrain1200.pt",
+      "exists": true,
+      "sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "bytes": 1118664,
+      "expected_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "matches": true,
+      "role": "preferred L3 target-decoder architecture candidate",
+      "task_of_origin": "7D",
+      "frozen": true,
+      "evidence_population": "Task 7E untouched oracle-reference E-HoldoutL3 (669 records) + E-PairedHoldout20",
+      "verified_result": {
+        "minival_miou": 0.3978996298363562,
+        "holdout_oracle_miou": 0.38549570532647004,
+        "holdout_delta_over_z_b3": 0.07138432800871886,
+        "holdout_bootstrap_ci": [
+          0.058623364793963954,
+          0.08426264360286147
+        ],
+        "holdout_paired": "18/20",
+        "holdout_margin": 0.3193402994,
+        "practical_predicted_reference_strict_miou": 0.24540501038500215
+      },
+      "claim_boundary": "preferred architecture candidate pending formal three-seed retraining and the locked test evaluation; NOT end-to-end ready"
+    },
+    "n_b3_task6o": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task6o\\checkpoints\\o2_B3.pt",
+      "exists": true,
+      "sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+      "bytes": 1104012,
+      "expected_sha256": "7556e4a4862b75d47e61b5c6391c2a05689d5bde3e74586aed1d94a1c3c7d6ab",
+      "matches": true,
+      "role": "verified directional-field visual segmentation component (L2 directional path)",
+      "task_of_origin": "6O",
+      "frozen": true,
+      "evidence_population": "Task 6O MiniVal240 (field causal decomposition)",
+      "verified_result": {
+        "minival_miou": 0.4299680351479113,
+        "source": "evaluation/task6o_o2_training.json"
+      },
+      "claim_boundary": "field-guided visual segmentation supported; universal relation reasoning is NOT claimed; N-B2/N-B4 must not be substituted"
+    },
+    "modules": {
+      "direction_field": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\geometric_relation_field_v02.py",
+        "exists": true,
+        "sha256": "b6d3367f250549f02641a15097403f3290c7578894865451e3beb449359e2de6",
+        "bytes": 8395,
+        "role": "directional relation field v0.2 (field source)"
+      },
+      "nearest_field": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\nearest_boundary_field.py",
+        "exists": true,
+        "sha256": "2f8405642780ae24afcd17aff9cc597ea467f9e7178533e34201ea314e15afd3",
+        "bytes": 5213,
+        "role": "nearest boundary field v0.1 (field source)"
+      },
+      "l3_decoder_z_b3": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\task6z_l3_decoder.py",
+        "exists": true,
+        "sha256": "a0b44e8773389788a58830f2e2c194bd86c59e571fc88ef1dd1b6d40a5d1678a",
+        "bytes": 10137,
+        "role": "Z-B3 L3 decoder architecture source"
+      },
+      "d_b1_decoder": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\task7d_global_competition_decoder.py",
+        "exists": true,
+        "sha256": "de4da2bbf8ee62a54554588cce05674b08c8f57123bb2e2b8f83bc3fb1af3ec6",
+        "bytes": 14790,
+        "role": "D-B1 decoder architecture source"
+      },
+      "reference_resolver": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\task6q_reference_resolver.py",
+        "exists": true,
+        "sha256": "83475bd5b5a79c239ce96652869e9e89cb2a7116cbc3646d8f7f332e6ff01eec",
+        "bytes": 10006,
+        "role": "Task 6Q deterministic reference resolver source"
+      },
+      "program_parser": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp\\program_parser.py",
+        "exists": true,
+        "sha256": "d501607dc692fbfb28986d45abd8807721101ac73aa9296a83af217780f71840",
+        "bytes": 12281,
+        "role": "20-class ProgramHead model source"
+      },
+      "u_c1_config": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6u_common.py",
+        "exists": true,
+        "sha256": "2e798aa00595cfcf6705242c1b26a2a926f73df42a5a2591db1a1fd73f189ccb",
+        "bytes": 12628,
+        "role": "frozen U-C1 proposal configuration source"
+      }
+    }
+  },
+  "rejected_negative_evidence": {
+    "task6p_reference_mask_head": {
+      "role": "rejected reference-support module (frozen negative evidence)",
+      "task_of_origin": "6P",
+      "frozen": true,
+      "adopted": false,
+      "artifact": "evaluation/task6p_verdict.json",
+      "verified_result": {
+        "verdict": "REFERENCE_HEAD_INSUFFICIENT"
+      },
+      "claim_boundary": "must not appear in the development chain"
+    },
+    "task6u_proposal_set_ranker_v01": {
+      "role": "rejected reference ranker (frozen negative evidence)",
+      "task_of_origin": "6U",
+      "frozen": true,
+      "adopted": false,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6u\\reference_ranker_v01.pt",
+        "exists": true,
+        "sha256": "c738fcf77419626f5f9bde21ff8cd477547418c095537b4bf50f1d6c1b1a46c0",
+        "bytes": 8049
+      },
+      "artifact": "evaluation/task6u_verdict.json",
+      "verified_result": {
+        "verdict": "REFERENCE_RANKER_NOT_HELPFUL"
+      },
+      "claim_boundary": "must not appear in the development chain"
+    },
+    "task6w_proposal_quality_estimator_v01": {
+      "role": "rejected proposal quality filter (frozen negative evidence)",
+      "task_of_origin": "6W",
+      "frozen": true,
+      "adopted": false,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6w\\proposal_quality_v01.pt",
+        "exists": true,
+        "sha256": "ebf9e6bddb1bdb2eb7d76d8db3bdbc0cb738fcb5eb1b7cbb87c98892b52834d9",
+        "bytes": 148181
+      },
+      "artifact": "evaluation/task6w_verdict.json",
+      "verified_result": {
+        "verdict": "QUALITY_FILTER_NOT_HELPFUL"
+      },
+      "claim_boundary": "must not appear in the development chain"
+    },
+    "task6x_sam2_proposal_refinement": {
+      "role": "rejected SAM2 mask refinement (frozen negative evidence)",
+      "task_of_origin": "6X",
+      "frozen": true,
+      "adopted": false,
+      "artifact": "evaluation/task6x_verdict.json",
+      "verified_result": {
+        "verdict": "SAM2_REFINEMENT_NOT_HELPFUL"
+      },
+      "claim_boundary": "must not appear in the development chain"
+    },
+    "task7g_set_context_largest_selector_v1": {
+      "role": "rejected learned largest-reference selector (frozen negative evidence)",
+      "task_of_origin": "7G",
+      "frozen": true,
+      "adopted": false,
+      "checkpoint": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7g\\largest_set_context_selector_v1.pt",
+        "exists": true,
+        "sha256": "57dc92a7f56a2765093bbdfc1238e6679050ca99161b5e3fc8eac647641995aa",
+        "bytes": 31685
+      },
+      "artifact": "evaluation/task7g_verdict.json",
+      "verified_result": {
+        "verdict": "LARGEST_SELECTOR_NOT_LEARNABLE",
+        "internal_gate_passed": false,
+        "internal_mean_selected_iou": 0.6198877725708375,
+        "external_scene_disjoint_run": false
+      },
+      "claim_boundary": "internal gate failed; the external scene-disjoint stage never ran, so no scene-disjoint failure or success may be claimed"
+    },
+    "task7d_d_b2_learned_global_competition": {
+      "role": "rejected learned competition decoder (frozen negative evidence)",
+      "task_of_origin": "7D",
+      "frozen": true,
+      "adopted": false,
+      "artifact": "evaluation/task7d_verdict.json",
+      "verified_result": {
+        "verdict": "GLOBAL_COMPETITION_NO_MEANINGFUL_GAIN",
+        "minival_miou": 0.3264764207334784,
+        "target_mass": 0.0067,
+        "argmax_in_target": 0.0,
+        "entropy": 0.8848
+      },
+      "claim_boundary": "must not appear in the development chain"
+    }
+  },
+  "hash_checks": {
+    "required": {
+      "yolo_task6m1": true,
+      "parser_task7c": true,
+      "z_b3_task6z": true,
+      "d_b1_task7d": true,
+      "n_b3_task6o": true
+    },
+    "all_required_match": true
+  },
+  "development_chain": [
+    "controlled instruction",
+    "Task 7C ProgramHead (canonical 20-class ids)",
+    "U-C1 YOLO26m-seg proposals",
+    "deterministic largest reference selector",
+    "GeometricRelationField v0.2 (P_dir) + NearestBoundaryField v0.1 (P_near)",
+    "Task 7D D-B1 target decoder",
+    "target mask"
+  ],
+  "excluded_from_development_chain": [
+    "task6p_reference_mask_head",
+    "task6u_proposal_set_ranker_v01",
+    "task6w_proposal_quality_estimator_v01",
+    "task6x_sam2_proposal_refinement",
+    "task7g_set_context_largest_selector_v1",
+    "task7d_d_b2_learned_global_competition"
+  ],
+  "training_performed": false,
+  "test_split_used": false,
+  "test_records_read": false,
+  "runtime_seconds": 0.7,
+  "verdict": "FROZEN_ASSETS_VERIFIED"
+}

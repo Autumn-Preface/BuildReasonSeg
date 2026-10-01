@@ -1,0 +1,86 @@
+{
+  "_doc": "Task 7H section 21. Claim registry for BuildReasonSeg-DevFreeze-2026-10. Every claim is tagged SUPPORTED / SUPPORTED_WITH_LIMITATION / NOT_SUPPORTED / DIAGNOSTIC_ONLY. No novelty or 'first' claim appears anywhere in this registry.",
+  "task": "7H",
+  "stage": "F-claim-registry",
+  "allowed_statuses": [
+    "SUPPORTED",
+    "SUPPORTED_WITH_LIMITATION",
+    "NOT_SUPPORTED",
+    "DIAGNOSTIC_ONLY"
+  ],
+  "novelty_or_first_claim": false,
+  "claims": {
+    "C1": {
+      "statement": "Explicit reference-conditioned directional geometric fields improve same-class building target segmentation.",
+      "status": "SUPPORTED",
+      "evidence": [
+        "Task 6N",
+        "Task 6O"
+      ]
+    },
+    "C2": {
+      "statement": "Directional and nearest geometric priors can be composed for L3 direction-to-nearest reasoning.",
+      "status": "SUPPORTED_WITH_LIMITATION",
+      "evidence": [
+        "Task 6Z paired strength",
+        "Task 7E D-B1 oracle holdout gain",
+        "practical performance remains reference-limited"
+      ]
+    },
+    "C3": {
+      "statement": "Relation-conditioned deterministic spatial weighting can extract a useful target visual prototype.",
+      "status": "SUPPORTED",
+      "evidence": [
+        "Task 7D D-B1",
+        "Task 7E untouched oracle-reference holdout"
+      ]
+    },
+    "C4": {
+      "statement": "Learned global competition is superior.",
+      "status": "NOT_SUPPORTED",
+      "evidence": [
+        "Task 7D D-B2"
+      ]
+    },
+    "C5": {
+      "statement": "The practical end-to-end system solves unrestricted natural-language L3 segmentation.",
+      "status": "NOT_SUPPORTED",
+      "evidence": [
+        "Task 7C language robustness",
+        "Task 7E practical chain"
+      ]
+    },
+    "C6": {
+      "statement": "Reference selection is the dominant practical bottleneck.",
+      "status": "SUPPORTED_WITH_LIMITATION",
+      "evidence": [
+        "Task 7F ceilings",
+        "no learned replacement passed the Task 7G adoption gate"
+      ]
+    },
+    "C7": {
+      "statement": "Proposal-mask geometry is the main reference problem.",
+      "status": "NOT_SUPPORTED",
+      "evidence": [
+        "Task 7F geometry gain +0.004253"
+      ]
+    },
+    "C8": {
+      "statement": "Performance generalizes to unseen cities.",
+      "status": "NOT_SUPPORTED",
+      "evidence": [
+        "no cross-city evaluation exists"
+      ]
+    },
+    "C9": {
+      "statement": "D-B1 is the final paper-ready architecture.",
+      "status": "NOT_SUPPORTED",
+      "evidence": [
+        "D-B1 is a frozen development architecture candidate pending formal retraining and the locked test evaluation"
+      ]
+    }
+  },
+  "count": 9,
+  "training_performed": false,
+  "test_split_used": false
+}
