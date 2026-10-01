@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7F._
+_Last updated by DSH at the end of Task 7G._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -114,6 +114,43 @@ The block above is machine-checked against
 | 7E | **D-B1 untouched-holdout + predicted-reference audit** | **done → `DB1_PREDICTED_REFERENCE_BELOW_GATE`** (evaluation/integration only, **no training**; D-B1 `6df31909…21a89c0` exact variant D-B1 epoch 7 and Z-B3 `74f308e1…fc0f0bc` exact, both read-only; **E-HoldoutL3 = 669** records from the full v0.2 L3 val population **936** (above 224/below 213/left 250/right 249) minus Z-MiniVal240 ∪ Z-PairedVal20 = 267 ids — overlap 0/0, test 0, ≥600, every program ≥120, no subsampling; **E-PairedHoldout = 20** pairs from 175 candidates, same tile/reference, different directions/targets, old-pair overlap 0; E0 reproduction Δ **0.0** (Z-B3 0.3242128982543474, D-B1 0.3978996298363562, paired 15/20 & 19/20); **E1 oracle holdout Z-B3 0.3141 → D-B1 0.3855, Δ +0.0714**, 4/4 directions improve, bootstrap CI [+0.0586, +0.0843], paired **18/20** margin +0.3193 → **`DB1_HOLDOUT_GENERALIZES` true 6/6**; **E2 predicted U-C1** (conf 0.05/max_det 300, cache-verified) reference mIoU 0.4406, REFERENCE_OK 346 / SELECTION_WRONG 220 / NOT_COVERED 101 / abstentions 2 (0.299 %), **E-P0 0.2069 → E-P1 0.2454, Δ +0.0385, retention 0.6366**, paired **6/20** margin +0.1251 → **`DB1_PREDICTED_REFERENCE_USABLE` false 4/7**; §20 parser integration not executed; `DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER` **false** → Z-B3 retained, D-B1 a positive oracle-reference ablation only) |
 
 | 7F | **Reference bottleneck ceiling decomposition** | **done → `REFERENCE_SELECTION_DOMINANT`** (evaluation only, **no training**; frozen D-B1 `6df31909…21a89c0` + frozen U-C1 (conf 0.05/max_det 300) + frozen fields/SAM2, GT only inside declared diagnostic modes; Task 7E population reused with both hashes re-verified (**669** records / **20** pairs, zero test/overlap); four modes over one frozen proposal pass per tile — **F-R0** current selection (ref mIoU 0.4406) / **F-R1** oracle selection of a *predicted* proposal (0.7119) / **F-R2** coverage-conditional GT (1.0000, 566 covered, rate 0.8460) / **F-R3** full GT (1.0000); reproductions F-R0 Δ**0.0** and F-R3 Δ**2.27e-07** ✓; downstream strict mIoU **M0 0.245405 · M1 0.364909 · M2 0.331180 · M3 0.385496**; **selection_gain +0.119504 (fraction 0.8530)** vs **coverage_gain +0.054316 (0.3877)** vs **geometry_gain_covered +0.004253** on COVERED50 (G-PRED 0.3872 → G-GT 0.3914, 566 records); total_reference_gap **+0.140091**; paired F-R0 6/20 · **F-R1 18/20** · F-R2 16/20 (3 abstention pairs) · F-R3 18/20; labels `SELECTION_IS_ACTIONABLE` **true** / `PROPOSAL_GEOMETRY_IS_MAJOR` **false** / `PROPOSAL_COVERAGE_IS_MAJOR` **true** / `CURRENT_PROPOSAL_SET_HAS_USABLE_CEILING` **true**; D-B1 recorded as **preferred oracle-reference L3 target decoder candidate**, not end-to-end ready) |
+
+| 7G | **Largest-reference set-context selector (final reference intervention)** | **done → `LARGEST_SELECTOR_NOT_LEARNABLE`** (**only the selector was trained**; U-C1/YOLO, D-B1, fields, SAM2, parser and all history frozen; `G-RefTrainUniqueLargest` from **v0.2 train only** — 12,778 rows → 4,119 largest-reference → **3,002** with explicit reference id (1,117 L1 `largest` rows have empty `references`) → dedup `(split, tile_id, reference_source_feature_id)` → **1,063 unique refs/tiles**, 1,939 dupes removed, `smallest` 1,251 excluded, label = best eligible GT-IoU (tie confidence→index, min IoU 0.50), `no_eligible` 2 / `untrainable_not_covered` 33 / **trainable 1,028** ✓; exact **18-D** feature vector (geometry/confidence + boundary via `binary_erosion 3×3/1/border 0` + 6 set-overlap features + set size; no GT/centroid/relation/target/RGB/SAM2) → `SetContextLargestSelector v1` (`18→64→32` shared encoder, `mean+max` context → `96→32→1` head, **6,561 params**, one listwise CE, no attention/Transformer/GNN); tile-level 80/20 SHA256 split (seed 20261001) **805/223 tiles**, overlaps 0; AdamW 1e-3 / wd 1e-4 / batch 32 / ≤40 epochs / patience 6 → early stop epoch 25; internal gate **FAIL 2/4** — G-I0 0.5200 → **G-I1 0.6199** (gain **+0.0999** ✓ ≥0.08, but 0.6199 < **0.62** ✗), top-1 **0.6592** ✓, gap **0.1791** > **0.14** ✗ → STOP; external scene-disjoint stages **not executed** (artifacts record `executed: false`, paired artifact not created, scripts hard-guarded); `TASK7G_SELECTOR_ADOPTED` **false** → keep U-C1 + deterministic max-area + D-B1, reference selection recorded as an **unresolved limitation**, reference intervention stops) |
+
+## Task 7G measured results
+
+The project's final reference intervention: a **largest-only permutation-invariant proposal-set selector**
+trained on BuildSpatialReason v0.2 **train-split** unique largest references with an exact 18-D
+proposal/set-structure feature vector and a `96→32→1` listwise head, checkpoint-selected on a train-internal
+tile-disjoint holdout and (only if that gate passed) evaluated on the frozen Task 7E scene-disjoint holdout with
+frozen D-B1. Only the selector was trained. Full detail:
+`docs/task7g_largest_reference_set_context_selector.md`, `evaluation/task7g_*.json`.
+
+| | Value |
+|---|---|
+| Frozen | U-C1 YOLO26m-seg `ef852b58…61f474` (conf 0.05 / max_det 300 / imgsz 640, eligibility non-empty + not-border + extent ≤ 0.20) · D-B1 `6df31909…21a89c0` · fields v0.2/v0.1 · frozen SAM2 · E-HoldoutL3 669 / E-PairedHoldout20 — all untouched |
+| Selector dataset (train only) | 12,778 train rows → 4,119 largest-reference rows → **3,002** with explicit reference id → dedup key `(split, tile_id, reference_source_feature_id)` → **1,063 unique references on 1,063 tiles** (1,939 duplicates removed) · `smallest` rows excluded 1,251 · `no_eligible` **2**, `untrainable_not_covered` **33**, **trainable 1,028** ✓ (≥300) |
+| Features | exactly **18**: log_area, area_ratio, area_over_set_max, area_rank_desc, confidence, bbox_extent_ratio, width_ratio, height_ratio, fill_ratio, abs_log_aspect, boundary_over_sqrt_area (`binary_erosion` 3×3 / 1 iter / border 0), max_iou_other, mean_iou_other, max_self_contained_by_other, max_other_contained_in_self, self_contained_count_norm, contains_other_count_norm, proposal_count_norm |
+| Architecture | `SetContextLargestSelector v1`: shared `Linear(18→64) → LayerNorm(64) → GELU → Linear(64→32) → GELU`; context `concat(mean, max) ∈ R^64`; head `concat(h_i, context) ∈ R^96 → Linear(96→32) → GELU → Linear(32→1)`; softmax over valid candidates; **6,561 parameters**; exactly one listwise `CrossEntropyLoss` |
+| Internal split | tile-level 80/20 by SHA256 (seed 20261001) → **805 train tiles / 805 sets**, **223 holdout tiles / 223 sets**, tile overlap **0**, `(tile, reference)` overlap **0** |
+| Training | AdamW lr 1e-3 · wd 1e-4 · batch 32 · ≤40 epochs · patience 6 · seed 20261001 · FP32 · no scheduler/augmentation/sweep · early stop **epoch 25** · checkpoint selection on the internal holdout only |
+| **Internal gate (§23)** | G-I0 mean selected IoU **0.5200** → G-I1 **0.6199** (**gain +0.0999** ✓ ≥0.08) · G-I1 median 0.7896 · Pr@0.5 0.7309 · oracle-best top-1 **0.6592** ✓ ≥0.55 · mean `best−selected` gap **0.1791** ✗ >0.14 · **0.6199 < 0.62** ✗ → **FAIL 2/4** |
+| External stage | **not executed** (section 23 is a STOP gate): `task7g_external_reference.json` / `task7g_external_downstream.json` record `executed: false`; `task7g_external_paired.json` not created; both driver scripts hard-guarded (exit 4) |
+| §30 external gate | recorded unchanged (G-S1 ref mIoU ≥ 0.55, gain ≥ 0.08, Pr@0.5 ≥ 0.65, gap ≤ 0.15, strict ≥ 0.30, gain ≥ 0.05, answered ≥ 0.30, paired ≥ 12/20, margin ≥ 0.20, abstention ≤ 0.01) — never applied |
+| Decision | `TASK7G_SELECTOR_ADOPTED` **false** · chain stays `U-C1 → deterministic max-area → predicted reference → P_dir + P_near → frozen D-B1` · D-B1 remains the development L3 decoder candidate · Z-B3 frozen baseline/ablation · deterministic selector frozen reference baseline/ablation · **reference selection = unresolved limitation**, intervention stopped |
+| Verdict | **`LARGEST_SELECTOR_NOT_LEARNABLE`** |
+
+1. **The learned selector improves but does not clear the predeclared bar**: mean selected-reference IoU
+   0.5200 → **0.6199** (+0.0999), oracle-best top-1 0.4888 → **0.6592**, mean gap 0.2790 → **0.1791**,
+   Pr@0.5 0.6278 → 0.7309 — yet the mean-IoU bar 0.62 fails by **0.0001** and the gap bar 0.14 fails by
+   **0.0391**.
+2. **No tuning followed**: the task file forbids altering features/model/loss after the gate result, so the
+   external scene-disjoint stage never ran and no external artifact was fabricated.
+3. Task 7F's erratum is recorded (F-R1 proposal statistics in the 7F report are the generic fields) without
+   mutating frozen Task 7F artifacts.
+4. Practical reference selection therefore remains the unresolved limitation of the development L3 chain; the
+   next step is a ChatGPT decision, not another DSH selector.
+5. Next: 等待 ChatGPT 根据 Task 7G 的 scene-disjoint selector 与 frozen D-B1 结果决定是否冻结开发版完整 L3 链；若 gate 失败，不自行继续 reference 干预。
 
 ## Task 7F measured results
 
