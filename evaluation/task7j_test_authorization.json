@@ -1,0 +1,21 @@
+{
+  "_doc": "Task 7J section 2. One-time ChatGPT authorization for the single final frozen-architecture test evaluation. Written before any test record is read. No training, no checkpoint selection and no architecture change are authorized.",
+  "task": "7J",
+  "stage": "2-one-time-authorization",
+  "authorized_by": "ChatGPT audit after Task 7I",
+  "scope": "Task 7J final frozen-architecture evaluation only",
+  "training_allowed": false,
+  "checkpoint_selection_allowed": false,
+  "architecture_change_allowed": false,
+  "test_access_authorized": true,
+  "historical_test_access_disclosed": true,
+  "permitted_test_description": "final frozen-architecture test evaluation",
+  "forbidden_description": "untouched test",
+  "previous_test_lock": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_test_lock_status.json",
+    "status": "LOCKED",
+    "test_execution_authorized": false
+  },
+  "previous_lock_was_locked": true,
+  "written_before_test_read": true
+}
