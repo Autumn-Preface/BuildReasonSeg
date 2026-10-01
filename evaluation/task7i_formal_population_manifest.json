@@ -1,0 +1,73 @@
+{
+  "_doc": "Task 7I sections 5-8. Frozen formal L3 populations: all valid v0.2 train records (1344) and all valid v0.2 val records (936) of the four canonical L3 programs. Checkpoint selection and early stopping use the full 936 oracle-reference val records; MiniVal240 is not used. No test material was read.",
+  "task": "7I",
+  "stage": "C-formal-population",
+  "test_lock": {
+    "status": "LOCKED",
+    "test_execution_authorized": false,
+    "verified_before_training": true,
+    "test_material_read": false
+  },
+  "programs": [
+    "largest_to_left_of_to_nearest",
+    "largest_to_right_of_to_nearest",
+    "largest_to_above_to_nearest",
+    "largest_to_below_to_nearest"
+  ],
+  "train": {
+    "records": 1344,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 323,
+      "largest_to_right_of_to_nearest": 347,
+      "largest_to_above_to_nearest": 338,
+      "largest_to_below_to_nearest": 336
+    },
+    "expected_per_program": {
+      "largest_to_left_of_to_nearest": 323,
+      "largest_to_right_of_to_nearest": 347,
+      "largest_to_above_to_nearest": 338,
+      "largest_to_below_to_nearest": 336
+    },
+    "expected_total": 1344,
+    "sample_id_sha256": "86321a5df109f47fc4ccae9a6dcbf2f999afbbc63b9f3184fa709e1133413707",
+    "rows_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7i\\packs\\formal_train_1344.jsonl",
+    "gitignored": true,
+    "inputs": [
+      "source image",
+      "canonical GT largest reference mask",
+      "canonical direction",
+      "canonical GT target mask (label only, never a feature)"
+    ]
+  },
+  "val": {
+    "records": 936,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 250,
+      "largest_to_right_of_to_nearest": 249,
+      "largest_to_above_to_nearest": 224,
+      "largest_to_below_to_nearest": 213
+    },
+    "expected_per_program": {
+      "largest_to_left_of_to_nearest": 250,
+      "largest_to_right_of_to_nearest": 249,
+      "largest_to_above_to_nearest": 224,
+      "largest_to_below_to_nearest": 213
+    },
+    "expected_total": 936,
+    "sample_id_sha256": "3029ff9c84c152d8f2097b8ede47a7dd3725f5e04115588e5b7db001c87a6cdc",
+    "rows_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7i\\packs\\formal_val_936.jsonl",
+    "gitignored": true,
+    "selection_protocol": "all 936 records, oracle GT reference, mean target mIoU"
+  },
+  "checks": {
+    "train_counts_match": true,
+    "val_counts_match": true,
+    "train_val_overlap": 0,
+    "disjoint": true,
+    "test_material_read": false,
+    "population_ok": true
+  },
+  "training": "AdamW lr 3e-4, wd 1e-4, batch 8, max 25 epochs, patience 5, bf16 AMP, BCE+Dice, seeds 20261001/20261002/20261003 for both Z-B3 and D-B1",
+  "verdict": "FORMAL_POPULATION_FROZEN",
+  "runtime_seconds": 0.3
+}
