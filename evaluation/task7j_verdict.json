@@ -1,0 +1,477 @@
+{
+  "_doc": "Task 7J section 12. Procedural verdict for the single authorized final frozen-architecture test evaluation of the six Task 7I checkpoints (Z-B3 and D-B1, three seeds each) on the frozen v0.2 L3 test population, under the oracle and the frozen U-C1 deterministic predicted reference. There is no performance-based PASS/FAIL verdict; no model, seed, threshold, reference or architecture was changed after the test.",
+  "task": "7J",
+  "verdict": "FINAL_FROZEN_TEST_COMPLETE",
+  "reason": "the single authorized final frozen-architecture test evaluation is complete",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "FORMAL_CHECKPOINT_MISMATCH",
+    "FINAL_TEST_POPULATION_INVALID",
+    "FINAL_TEST_INCOMPLETE",
+    "FINAL_FROZEN_TEST_COMPLETE"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "authorization_written_before_test_read": true,
+    "one_time_authorization": true,
+    "historical_test_access_disclosed": true,
+    "permitted_description": "final frozen-architecture test evaluation",
+    "six_checkpoints_verified": true,
+    "best_pt_only": true,
+    "training_performed": false,
+    "seed_selected": false,
+    "all_six_evaluated": true,
+    "both_reference_modes": true,
+    "population_frozen_before_inference": true,
+    "no_output_filtering": true,
+    "no_test_metric_used_for_selection": true,
+    "clean": true
+  },
+  "authorization": {
+    "authorized_by": "ChatGPT audit after Task 7I",
+    "scope": "Task 7J final frozen-architecture evaluation only",
+    "permitted_test_description": "final frozen-architecture test evaluation",
+    "written_before_test_read": true
+  },
+  "checkpoints": {
+    "Z-B3/20261001": {
+      "model": "Z-B3",
+      "seed": 20261001,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261001\\best.pt",
+      "exists": true,
+      "expected_sha256": "5c9fada7c7395d4172a9be27aa4fbc96a470ed4c248d8a4d78a4d9d7eb251201",
+      "expected_bytes": 1108279,
+      "selected_epoch": 4,
+      "trainable_parameters": 275777,
+      "source_artifact": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_zb3.json",
+      "sha256": "5c9fada7c7395d4172a9be27aa4fbc96a470ed4c248d8a4d78a4d9d7eb251201",
+      "bytes": 1108279,
+      "matches": true
+    },
+    "Z-B3/20261002": {
+      "model": "Z-B3",
+      "seed": 20261002,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261002\\best.pt",
+      "exists": true,
+      "expected_sha256": "f7ee1a094d3aef7e0bc099d217a5c9cda6eac5e1ad6309dc24813e41a6f8fea9",
+      "expected_bytes": 1108279,
+      "selected_epoch": 14,
+      "trainable_parameters": 275777,
+      "source_artifact": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_zb3.json",
+      "sha256": "f7ee1a094d3aef7e0bc099d217a5c9cda6eac5e1ad6309dc24813e41a6f8fea9",
+      "bytes": 1108279,
+      "matches": true
+    },
+    "Z-B3/20261003": {
+      "model": "Z-B3",
+      "seed": 20261003,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261003\\best.pt",
+      "exists": true,
+      "expected_sha256": "10aee8e04b0e44b3a9f99efc3b000485fd817746290f4e19d3b29e1b72c55859",
+      "expected_bytes": 1108279,
+      "selected_epoch": 5,
+      "trainable_parameters": 275777,
+      "source_artifact": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_zb3.json",
+      "sha256": "10aee8e04b0e44b3a9f99efc3b000485fd817746290f4e19d3b29e1b72c55859",
+      "bytes": 1108279,
+      "matches": true
+    },
+    "D-B1/20261001": {
+      "model": "D-B1",
+      "seed": 20261001,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261001\\best.pt",
+      "exists": true,
+      "expected_sha256": "d89b0f6f88c2c2d3fe5040679d6727ae513106e29685c321bcd22e9a030d2954",
+      "expected_bytes": 1117495,
+      "selected_epoch": 11,
+      "trainable_parameters": 278081,
+      "source_artifact": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_db1.json",
+      "sha256": "d89b0f6f88c2c2d3fe5040679d6727ae513106e29685c321bcd22e9a030d2954",
+      "bytes": 1117495,
+      "matches": true
+    },
+    "D-B1/20261002": {
+      "model": "D-B1",
+      "seed": 20261002,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261002\\best.pt",
+      "exists": true,
+      "expected_sha256": "95ac39112ac4e4048ed315718404d7c2bf30906c9ebc645e7b3b5d27495b7ad4",
+      "expected_bytes": 1117495,
+      "selected_epoch": 9,
+      "trainable_parameters": 278081,
+      "source_artifact": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_db1.json",
+      "sha256": "95ac39112ac4e4048ed315718404d7c2bf30906c9ebc645e7b3b5d27495b7ad4",
+      "bytes": 1117495,
+      "matches": true
+    },
+    "D-B1/20261003": {
+      "model": "D-B1",
+      "seed": 20261003,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261003\\best.pt",
+      "exists": true,
+      "expected_sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+      "expected_bytes": 1117495,
+      "selected_epoch": 8,
+      "trainable_parameters": 278081,
+      "source_artifact": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_db1.json",
+      "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+      "bytes": 1117495,
+      "matches": true
+    }
+  },
+  "population": {
+    "records": 736,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 190,
+      "largest_to_right_of_to_nearest": 178,
+      "largest_to_above_to_nearest": 174,
+      "largest_to_below_to_nearest": 194
+    },
+    "unique_tiles": 462,
+    "sample_id_sha256": "b6d2c9d5298ac46cfce88ea657f4b4e71337f8f6379755c26c443aaefdbd5d5b",
+    "pairs": 274,
+    "pair_id_sha256": "018209fceb610546946d0d84778c7deac6358edcd82561514fd80a8796f3d7d6",
+    "direction_pair_counts": {
+      "above|left_of": 60,
+      "above|below": 26,
+      "below|right_of": 55,
+      "above|right_of": 45,
+      "below|left_of": 58,
+      "left_of|right_of": 30
+    }
+  },
+  "oracle_test": {
+    "aggregates": {
+      "Z-B3": {
+        "miou": {
+          "values": [
+            0.33153243429179047,
+            0.3415642873427918,
+            0.3393670504410267
+          ],
+          "mean": 0.33748792402520295,
+          "std_ddof1": 0.005273315463179321
+        },
+        "dice": {
+          "values": [
+            0.4532790583436495,
+            0.465081442591024,
+            0.4640347107064058
+          ],
+          "mean": 0.4607984038803598,
+          "std_ddof1": 0.006532941901234275
+        },
+        "precision_at_0_5": {
+          "values": [
+            0.44392527228008644,
+            0.4463081308203374,
+            0.41759808401305476
+          ],
+          "mean": 0.4359438290378262,
+          "std_ddof1": 0.01593249114517739
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.8175182481751825,
+            0.8503649635036497,
+            0.8795620437956204
+          ],
+          "mean": 0.8491484184914841,
+          "std_ddof1": 0.031039783022318905
+        },
+        "pair_margin": {
+          "values": [
+            0.31354828957096886,
+            0.32182351158833683,
+            0.3202809082179798
+          ],
+          "mean": 0.31855090312576184,
+          "std_ddof1": 0.004400512819377752
+        },
+        "parameters": 275777
+      },
+      "D-B1": {
+        "miou": {
+          "values": [
+            0.3984904067638656,
+            0.38676720868271003,
+            0.39165353514048507
+          ],
+          "mean": 0.39230371686235355,
+          "std_ddof1": 0.005888581791576928
+        },
+        "dice": {
+          "values": [
+            0.5171552507719004,
+            0.513067092380072,
+            0.5182880095496093
+          ],
+          "mean": 0.5161701175671939,
+          "std_ddof1": 0.002746335667039605
+        },
+        "precision_at_0_5": {
+          "values": [
+            0.574884337777423,
+            0.5272242480815185,
+            0.5309281040732978
+          ],
+          "mean": 0.5443455633107465,
+          "std_ddof1": 0.026512114150834182
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.7883211678832117,
+            0.8284671532846716,
+            0.8540145985401459
+          ],
+          "mean": 0.8236009732360098,
+          "std_ddof1": 0.033115955203932325
+        },
+        "pair_margin": {
+          "values": [
+            0.3796309017951321,
+            0.3681050562276889,
+            0.3727901133900823
+          ],
+          "mean": 0.37350869047096774,
+          "std_ddof1": 0.005796425085948911
+        },
+        "parameters": 278081
+      }
+    },
+    "matched_seed": [
+      {
+        "seed": 20261001,
+        "z_b3_miou": 0.33153243429179047,
+        "d_b1_miou": 0.3984904067638656,
+        "delta": 0.06695797247207513
+      },
+      {
+        "seed": 20261002,
+        "z_b3_miou": 0.3415642873427918,
+        "d_b1_miou": 0.38676720868271003,
+        "delta": 0.04520292133991821
+      },
+      {
+        "seed": 20261003,
+        "z_b3_miou": 0.3393670504410267,
+        "d_b1_miou": 0.39165353514048507,
+        "delta": 0.05228648469945835
+      }
+    ],
+    "matched_seed_wins": 3
+  },
+  "predicted_reference_test": {
+    "reference": {
+      "records": 736,
+      "answered": 734,
+      "abstentions": 2,
+      "abstention_rate": 0.002717391304347826,
+      "reference_miou": 0.3751554987702364,
+      "reference_dice": 0.43955972583103997,
+      "reference_precision_at_0_5": 0.4152441838599763,
+      "buckets": {
+        "SELECTION_WRONG": 369,
+        "REFERENCE_OK": 319,
+        "NOT_COVERED": 46,
+        "ABSTENTION": 2
+      },
+      "raw_buckets": {
+        "REFERENCE_SELECTION_WRONG": 369,
+        "REFERENCE_OK": 319,
+        "REFERENCE_NOT_COVERED_IOU50": 46,
+        "NO_ELIGIBLE_PROPOSALS": 1,
+        "NO_PROPOSALS": 1
+      },
+      "best_eligible_coverage_at_0_50": 0.9347826086956522
+    },
+    "aggregates": {
+      "Z-B3": {
+        "strict_miou": {
+          "values": [
+            0.20653298116945498,
+            0.20760604131906174,
+            0.20968789464397244
+          ],
+          "mean": 0.20794230571082972,
+          "std_ddof1": 0.0016041119237139533
+        },
+        "strict_dice": {
+          "values": [
+            0.28116586550720063,
+            0.28015685055149486,
+            0.2848958070667782
+          ],
+          "mean": 0.28207284104182456,
+          "std_ddof1": 0.0024962733581764163
+        },
+        "answered_only_miou": {
+          "values": [
+            0.20709574133612924,
+            0.20817172535535347,
+            0.21025925130512763
+          ],
+          "mean": 0.20850890599887015,
+          "std_ddof1": 0.0016084828008902585
+        },
+        "reference_ok_subset_miou": {
+          "values": [
+            0.3624028598606673,
+            0.3734496416823531,
+            0.36901755312979945
+          ],
+          "mean": 0.36829001822427326,
+          "std_ddof1": 0.005559211044118705
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.3978102189781022,
+            0.4124087591240876,
+            0.4306569343065693
+          ],
+          "mean": 0.41362530413625304,
+          "std_ddof1": 0.016457115886214922
+        },
+        "pair_margin": {
+          "values": [
+            0.1801407300960887,
+            0.17807265366034353,
+            0.18200969444912513
+          ],
+          "mean": 0.18007435940185243,
+          "std_ddof1": 0.001969359374243959
+        }
+      },
+      "D-B1": {
+        "strict_miou": {
+          "values": [
+            0.20477916019258774,
+            0.21189387216751576,
+            0.2157415587424509
+          ],
+          "mean": 0.21080486370085147,
+          "std_ddof1": 0.005561744337153624
+        },
+        "strict_dice": {
+          "values": [
+            0.26382418242456146,
+            0.27791840440580146,
+            0.2829632091520105
+          ],
+          "mean": 0.27490193199412444,
+          "std_ddof1": 0.009919673148663141
+        },
+        "answered_only_miou": {
+          "values": [
+            0.2053371415555103,
+            0.2124712396666098,
+            0.21632941040114967
+          ],
+          "mean": 0.21137926387442327,
+          "std_ddof1": 0.0055768989538761155
+        },
+        "reference_ok_subset_miou": {
+          "values": [
+            0.38342950211515536,
+            0.3860815871119322,
+            0.3956065595290276
+          ],
+          "mean": 0.38837254958537176,
+          "std_ddof1": 0.006403636748459151
+        },
+        "pair_pass_rate": {
+          "values": [
+            0.28832116788321166,
+            0.3248175182481752,
+            0.3357664233576642
+          ],
+          "mean": 0.31630170316301703,
+          "std_ddof1": 0.024842552137058563
+        },
+        "pair_margin": {
+          "values": [
+            0.17373981640639627,
+            0.18299715683026693,
+            0.18343708156241972
+          ],
+          "mean": 0.180058018266361,
+          "std_ddof1": 0.005476142757446708
+        }
+      }
+    },
+    "matched_seed": [
+      {
+        "seed": 20261001,
+        "z_b3_strict_miou": 0.20653298116945498,
+        "d_b1_strict_miou": 0.20477916019258774,
+        "delta": -0.001753820976867243,
+        "retention": 0.20477916019258774
+      },
+      {
+        "seed": 20261002,
+        "z_b3_strict_miou": 0.20760604131906174,
+        "d_b1_strict_miou": 0.21189387216751576,
+        "delta": 0.004287830848454022,
+        "retention": 0.21189387216751576
+      },
+      {
+        "seed": 20261003,
+        "z_b3_strict_miou": 0.20968789464397244,
+        "d_b1_strict_miou": 0.2157415587424509,
+        "delta": 0.006053664098478462,
+        "retention": 0.2157415587424509
+      }
+    ]
+  },
+  "final_comparison": {
+    "oracle_mean_delta": 0.0548157928371506,
+    "practical_mean_delta": 0.002862557990021747,
+    "retention_mean": 0.5375314068368852,
+    "validation_to_test_shift": {
+      "oracle": {
+        "Z-B3": {
+          "validation_mean": 0.3324426942592558,
+          "test_mean": 0.33748792402520295,
+          "delta": 0.0050452297659471235
+        },
+        "D-B1": {
+          "validation_mean": 0.38342425896105464,
+          "test_mean": 0.39230371686235355,
+          "delta": 0.008879457901298904
+        }
+      },
+      "practical": {
+        "Z-B3": {
+          "validation_mean": 0.22698353406896762,
+          "test_mean": 0.20794230571082972,
+          "delta": -0.0190412283581379
+        },
+        "D-B1": {
+          "validation_mean": 0.23351901325463306,
+          "test_mean": 0.21080486370085147,
+          "delta": -0.022714149553781593
+        }
+      }
+    }
+  },
+  "consumption": {
+    "status": "FINAL_TEST_CONSUMED",
+    "architecture_changes_after_test_authorized": false,
+    "retest_for_model_selection_authorized": false
+  },
+  "interpretation_boundary": {
+    "unrestricted_natural_language_claimed": false,
+    "unseen_city_generalization_claimed": false,
+    "reference_solved_claimed": false,
+    "untouched_test_claimed": false,
+    "novelty_or_first_claimed": false,
+    "architecture_changed_after_test": false,
+    "seed_selected": false,
+    "second_test_run_with_changed_settings": false,
+    "training_performed": false,
+    "demo_packaging_started": false
+  },
+  "recommendation": "等待 ChatGPT 审核 Task 7J 的 final frozen-architecture test 结果；test 已消费，不自行据此修改模型、选择 seed、调整阈值或重新运行开发实验。",
+  "runtime_seconds": 0.05
+}

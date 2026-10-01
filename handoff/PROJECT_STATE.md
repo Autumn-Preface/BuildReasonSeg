@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7I._
+_Last updated by DSH at the end of Task 7J._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -120,6 +120,40 @@ The block above is machine-checked against
 | 7H | **Development architecture freeze + formal protocol** | **done → `DEVELOPMENT_ARCHITECTURE_FROZEN`** (governance freeze only: **no training, no test access**; `BuildReasonSeg-DevFreeze-2026-10` = controlled instruction → **Task 7C** ProgramHead (20 canonical programs) → **U-C1** YOLO26m-seg (imgsz 640 / conf 0.05 / max_det 300 / default NMS / no TTA / no tiling) → **deterministic largest** selector → **GeometricRelationField v0.2** (P_dir) + **NearestBoundaryField v0.1** (P_near) → **Task 7D D-B1** target decoder; all 5 required hashes exact — YOLO `ef852b58…61f474` · 7C parser `c1505736…d58d9a` · 6O N-B3 `7556e4a4…c7d6ab` · 6Z Z-B3 `74f308e1…fc0f0bc` · 7D D-B1 `6df31909…21a89c0`; dataset v0.2 / native-vector v1.0 / `scene_disjoint_v1`; six rejected modules (6P head, 6U ranker, 6W quality, 6X SAM2 refinement, 7G selector, 7D D-B2) recorded as frozen **negative** evidence and excluded; limitations L-01 selection (unresolved) / L-02 coverage (secondary) / L-03 geometry (not major) / L-04 free-form language (controlled-language only) / L-05 nearest-only (experimental) / L-06 unseen-city (not established); formal protocol frozen (train 1344 = 323/347/338/336, val 936, D-B1 schedule copied from `task7d_training.json` — AdamW lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / bf16 / val-mIoU selection — seeds **20261001/2/3**, practical vs oracle reported separately); **test lock LOCKED, `test_execution_authorized: false`**; claim registry C1 SUPPORTED / C2 SUPPORTED_WITH_LIMITATION / C3 SUPPORTED / C4 NOT_SUPPORTED / C5 NOT_SUPPORTED / C6 SUPPORTED_WITH_LIMITATION / C7–C9 NOT_SUPPORTED, no novelty claim; 10/10 §22 conditions) |
 
 | 7I | **Formal L3 three-seed train/validation (Z-B3 vs D-B1)** | **done → `DB1_FORMAL_VAL_NOT_CONFIRMED`** (6 formal runs: Z-B3 × 3 seeds **and** D-B1 × 3 seeds, all from **fresh** trainable weights, identical population/schedule; protocol corrections **I-01** (checkpoint selection = full **936** oracle-reference L3 val, not MiniVal240) and **I-02** (both architectures retrained) recorded without touching Task 7H files; `G-FormalTrain` **1344** = 323/347/338/336, `G-FormalVal` **936** = 250/249/224/213, overlap 0; `I-FormalValPairsAll` **326** pairs, dedup/sorted/no subsampling, reporting-only; AdamW lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / bf16 / BCE+Dice; per-epoch full-936 val, selection by (mIoU → Dice → Pr@0.5 → earlier epoch); **oracle full-val**: Z-B3 0.3194/0.3394/0.3386 (**mean 0.3324 ± 0.0113**, pairs 0.8691, margin +0.3167) vs **D-B1 0.3799/0.3827/0.3877 (mean 0.3834 ± 0.0039** , pairs 0.8446, margin **+0.3775**), matched-seed Δ **+0.0606/+0.0433/+0.0491 (3/3)**; **predicted U-C1 full-val**: reference mIoU 0.4469, REFERENCE_OK 491 / SELECTION_WRONG 305 / NOT_COVERED 135 / abstentions 5, Z-B3 strict **0.2270** (pairs 0.5153, margin +0.1952) vs D-B1 strict **0.2335** (Δ **+0.0065**, pairs 0.4172, margin +0.2009), retention 0.6090; §25 gates **7/8** — the only failure is gate 5 (predicted-reference gain +0.0065 < +0.02); **test lock stayed LOCKED**, `test_execution_authorized: false`) |
+
+| 7J | **Final frozen-architecture test evaluation** | **done → `FINAL_FROZEN_TEST_COMPLETE`** (**test consumed: `FINAL_TEST_CONSUMED`**; the single ChatGPT-authorized final test, written authorization **before** any test read, historical Task 6M access disclosed, permitted wording `final frozen-architecture test evaluation`; six Task 7I `best.pt` checkpoints hash-verified (no `last.pt`, no retraining); final L3 test population **736** records = left 190 / right 178 / above 174 / below 194 on **462** tiles, no filtering, frozen before inference; `I-FinalTestPairsAll` **274** pairs over 228 tiles; **oracle test**: Z-B3 0.3315/0.3416/0.3394 → **0.3375 ± 0.0053** (pair pass 0.8491, margin +0.3186) vs **D-B1 0.3985/0.3868/0.3917 → 0.3923 ± 0.0059**, **Δ +0.0548, wins 3/3** (pair pass 0.8236, margin **+0.3735**); **predicted U-C1 test**: reference mIoU **0.3752**, `REFERENCE_OK 319` / `SELECTION_WRONG 369` / `NOT_COVERED 46` / abstentions 2, coverage@0.50 0.9348, Z-B3 strict **0.2079** vs **D-B1 0.2108** (**Δ +0.0029**), retention **0.5375**; val→test shift oracle +0.0051/+0.0089, practical −0.0191/−0.0227; no seed selected, no gate, no post-test change) |
+
+## Task 7J measured results
+
+The single ChatGPT-authorized **final frozen-architecture test evaluation** of the six Task 7I checkpoints
+(Z-B3 and D-B1, three fixed seeds each) on the frozen v0.2 L3 test population, under the oracle and the frozen
+U-C1 deterministic predicted reference. Measurement only — **no training, no seed selection, no model or
+threshold change, no rerun**; the test split is now **consumed** for iterative development. Full detail:
+`docs/task7j_final_test.md`, `evaluation/task7j_*.json`.
+
+| | Value |
+|---|---|
+| Authorization | `authorized_by = "ChatGPT audit after Task 7I"` · scope "final frozen-architecture evaluation only" · training/checkpoint-selection/architecture-change **all false** · written **before** the first test read · Task 7I lock verified LOCKED |
+| Checkpoints | 6 × `artifacts/checkpoints/task7i/<model>/<seed>/best.pt` hash+bytes verified vs the Task 7I training artifacts (Z-B3 275,777 params, D-B1 278,081) · `last.pt` never used · no retraining |
+| Test population | **736** records = left 190 / right 178 / above 174 / below 194 · **462** unique tiles · no filtering, no post-inference exclusion · frozen before inference · `I-FinalTestPairsAll` **274** pairs over 228 tiles |
+| **Oracle test** | Z-B3 0.3315 / 0.3416 / 0.3394 → **0.3375 ± 0.0053** mIoU, pair pass 0.8491, margin +0.3186 · **D-B1 0.3985 / 0.3868 / 0.3917 → 0.3923 ± 0.0059**, pair pass 0.8236, margin **+0.3735** · **Δ +0.0548, matched-seed wins 3/3** (+0.0670/+0.0452/+0.0523) |
+| **Predicted U-C1 test** | reference mIoU **0.3752**, Dice 0.4396, Pr@0.5 0.4152, abstentions **2**, `REFERENCE_OK 319` / `SELECTION_WRONG 369` / `NOT_COVERED 46` / `GEOMETRY_POOR 0`, coverage@0.50 **0.9348** · Z-B3 strict **0.2079** (`REFERENCE_OK` subset 0.3683, pair pass 0.4136) · **D-B1 strict 0.2108** (subset **0.3884**, pair pass 0.3163) · **Δ +0.0029**, retention **0.5375** |
+| Val→test shift | oracle Z-B3 +0.0051 / D-B1 +0.0089 · practical Z-B3 −0.0191 / D-B1 −0.0227 (test slightly harder, same ordering) |
+| Consumption | **`FINAL_TEST_CONSUMED`** · `test_execution_authorized: false` · `task7j_final_test_completed: true` · `architecture_changes_after_test_authorized: false` · `retest_for_model_selection_authorized: false` |
+| Verdict | **`FINAL_FROZEN_TEST_COMPLETE`** (procedural; no performance PASS/FAIL) |
+
+1. **The decoder-level advantage transfers to the final test under the oracle reference**: D-B1
+   **0.3923 ± 0.0059** vs Z-B3 **0.3375 ± 0.0053** (Δ **+0.0548**, 3/3 matched seeds, larger pair margin
+   +0.3735 vs +0.3186).
+2. **It still does not translate proportionally to the practical chain**: with the frozen U-C1 reference the
+   gap is **+0.0029** strict mIoU with retention **0.5375**, because 369/736 references are SELECTION_WRONG and
+   46/736 NOT_COVERED.
+3. **D-B1 does not universally improve the counterfactual pair pass rate** — its margin is larger but its pass
+   rate is lower than Z-B3 under both references (oracle 0.8236 vs 0.8491, predicted 0.3163 vs 0.4136); this is
+   reported as measured.
+4. **The test split is consumed**: it may be reproduced or reported for the same frozen setup only, never for
+   iterative development.
+5. Next: 等待 ChatGPT 审核 Task 7J 的 final frozen-architecture test 结果；test 已消费，不自行据此修改模型、选择 seed、调整阈值或重新运行开发实验。
 
 ## Task 7I measured results
 
