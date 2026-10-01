@@ -1,0 +1,96 @@
+{
+  "_doc": "Task 7E section 9. E0: exact Z-MiniVal240 / Z-PairedVal20 reproduction of the frozen Task 7D measurements before any holdout evaluation. Both decoders are loaded read-only.",
+  "task": "7E",
+  "stage": "F-minival-reproduction",
+  "checkpoints": {
+    "z_b3": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "matches": true,
+      "variant": "Z-B3",
+      "task": "6Z"
+    },
+    "d_b1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_minitrain1200.pt",
+      "sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "expected_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "matches": true,
+      "variant": "D-B1",
+      "task": "7D",
+      "checkpoint_variant": "D-B1",
+      "selected_epoch": 7,
+      "selected_step": 1050,
+      "seed": 20261001,
+      "retrained": false,
+      "epoch_matches": true
+    }
+  },
+  "pack": {
+    "name": "z_mini_val_240",
+    "records": 240,
+    "paired": 20
+  },
+  "results": {
+    "metrics": {
+      "Z-B3": {
+        "records": 240,
+        "miou": 0.3242128982543474,
+        "dice": 0.4389840055529761,
+        "precision_at_0_5": 0.5331188918325193
+      },
+      "D-B1": {
+        "records": 240,
+        "miou": 0.3978996298363562,
+        "dice": 0.5272592647111778,
+        "precision_at_0_5": 0.561976809693139
+      }
+    },
+    "paired": {
+      "Z-B3": {
+        "passed": 15,
+        "pairs": 20,
+        "pass_rate": 0.75,
+        "mean_own_iou": 0.303156315945526,
+        "mean_cross_iou": 0.0028022262483038502,
+        "own_cross_margin": 0.30035408969722216
+      },
+      "D-B1": {
+        "passed": 19,
+        "pairs": 20,
+        "pass_rate": 0.95,
+        "mean_own_iou": 0.39134577083984523,
+        "mean_cross_iou": 0.0025828313245232436,
+        "own_cross_margin": 0.388762939515322
+      }
+    }
+  },
+  "reproduction": {
+    "Z-B3": {
+      "miou": 0.3242128982543474,
+      "expected_miou": 0.3242128982543474,
+      "delta": 0.0,
+      "miou_ok": true,
+      "paired_passed": 15,
+      "expected_paired": 15,
+      "paired_ok": true,
+      "dice": 0.4389840055529761
+    },
+    "D-B1": {
+      "miou": 0.3978996298363562,
+      "expected_miou": 0.3978996298363562,
+      "delta": 0.0,
+      "miou_ok": true,
+      "paired_passed": 19,
+      "expected_paired": 19,
+      "paired_ok": true,
+      "dice": 0.5272592647111778
+    }
+  },
+  "tolerance": 1e-06,
+  "reproduction_passed": true,
+  "verdict": "TASK7D_REPRODUCTION_PASS",
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 12.8
+}

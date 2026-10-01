@@ -1,0 +1,120 @@
+{
+  "_doc": "Task 7E sections 6-8. Untouched L3 validation remainder E-HoldoutL3: the full BuildSpatialReason v0.2 val population of the four canonical L3 programs minus every Z-MiniVal240 record and every Z-PairedVal20 member (by sample_id). No subsampling, no regeneration, no test record, no training.",
+  "task": "7E",
+  "stage": "D-holdout-remainder",
+  "source": {
+    "split": "val",
+    "dataset": "BuildSpatialReason v0.2",
+    "programs": [
+      "largest_to_left_of_to_nearest",
+      "largest_to_right_of_to_nearest",
+      "largest_to_above_to_nearest",
+      "largest_to_below_to_nearest"
+    ],
+    "records": 936,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 250,
+      "largest_to_right_of_to_nearest": 249,
+      "largest_to_above_to_nearest": 224,
+      "largest_to_below_to_nearest": 213
+    },
+    "expected_per_program": {
+      "largest_to_above_to_nearest": 224,
+      "largest_to_below_to_nearest": 213,
+      "largest_to_left_of_to_nearest": 250,
+      "largest_to_right_of_to_nearest": 249
+    },
+    "matches_expected": true
+  },
+  "exclusion": {
+    "z_mini_val_240": {
+      "records": 240,
+      "path": "z_mini_val_240.json"
+    },
+    "z_paired_val20_members": {
+      "records": 40,
+      "path": "z_paired_val20.json"
+    },
+    "union": 267,
+    "excluded_present": 1
+  },
+  "holdout": {
+    "records": 669,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 184,
+      "largest_to_right_of_to_nearest": 181,
+      "largest_to_above_to_nearest": 154,
+      "largest_to_below_to_nearest": 150
+    },
+    "per_direction": {
+      "below": 150,
+      "right_of": 181,
+      "above": 154,
+      "left_of": 184
+    },
+    "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "rows_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7e\\holdout\\holdout_l3_rows.jsonl",
+    "gitignored": true,
+    "subsampled": false
+  },
+  "checks": {
+    "source_total_matches": true,
+    "overlap_with_z_mini_val_240": 0,
+    "overlap_with_z_paired_val20": 0,
+    "test_records": 0,
+    "records_gte_600": true,
+    "min_records": 600,
+    "every_program_gte_120": true,
+    "min_per_program": 120,
+    "remainder_ok": true
+  },
+  "paired": {
+    "name": "E-PairedHoldout",
+    "pairs": 20,
+    "required": 20,
+    "candidate_pairs": 175,
+    "passed": true,
+    "pair_ids": [
+      "2_742:000c27928d457c1a",
+      "2_2954:01a2c4a58298b654",
+      "2_2720:037ab2bc29230dc0",
+      "2_1987:060b7f640011a96b",
+      "2_402:0661e638e05bf9f6",
+      "2_949:06d5e568f7b66bb9",
+      "2_111:0893c77306217622",
+      "2_2927:0b1020ff6beef667",
+      "2_1174:0d85174aedf5bfa3",
+      "2_3358:0e195a37e1a7d31b",
+      "2_2897:13f5666c3565592e",
+      "2_783:17e0242e682143e6",
+      "2_3434:1d976f98a162842d",
+      "2_1414:1dda9989e04b3b61",
+      "2_5:1e00b58e5395c8b4",
+      "2_3464:206abf87d3f51adf",
+      "2_2338:21e76e8049278956",
+      "2_2883:22cccd916bd6718f",
+      "2_3558:23e57b21d5a882f3",
+      "2_2749:24ce3955eaa45c6f"
+    ],
+    "pair_id_hash": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9",
+    "member_id_hash": "da2b31b92b3b985ee51e265f2c661a6b907ce61d882ef90f33c91ae5381b973d",
+    "overlap_with_task6z_paired_members": 0,
+    "pairs_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7e\\holdout\\holdout_pairs.json",
+    "gitignored": true,
+    "requirements": {
+      "same_tile": true,
+      "same_oracle_reference": true,
+      "different_direction_programs": true,
+      "different_targets": true,
+      "both_members_in_holdout": true
+    }
+  },
+  "packs_read_only": {
+    "z_mini_val_240_sha256": "048a7c9c5ea252de2dac590ee6bcfbab041f217bbec01d727334891ba802de71",
+    "z_paired_val20_sha256": "b07e94627d4ca22361f4199023c46beaa77ceaba890da4c8c7f752a195b12bdc"
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "verdict": "L3_HOLDOUT_READY",
+  "runtime_seconds": 0.2
+}

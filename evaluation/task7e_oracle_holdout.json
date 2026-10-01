@@ -1,0 +1,384 @@
+{
+  "_doc": "Task 7E sections 10-11. E1 oracle-reference L3 holdout: frozen Z-B3 (E-O0) vs frozen D-B1 (E-O1) on the untouched E-HoldoutL3 remainder, canonical program id + canonical oracle largest reference mask only, no parser, no predicted reference, no retraining.",
+  "task": "7E",
+  "stage": "G-oracle-holdout",
+  "checkpoints": {
+    "z_b3": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "matches": true,
+      "variant": "Z-B3",
+      "task": "6Z"
+    },
+    "d_b1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_minitrain1200.pt",
+      "sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "expected_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "matches": true,
+      "variant": "D-B1",
+      "task": "7D",
+      "checkpoint_variant": "D-B1",
+      "selected_epoch": 7,
+      "selected_step": 1050,
+      "seed": 20261001,
+      "retrained": false,
+      "epoch_matches": true
+    }
+  },
+  "holdout": {
+    "records": 669,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 184,
+      "largest_to_right_of_to_nearest": 181,
+      "largest_to_above_to_nearest": 154,
+      "largest_to_below_to_nearest": 150
+    },
+    "per_direction": {
+      "below": 150,
+      "right_of": 181,
+      "above": 154,
+      "left_of": 184
+    },
+    "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "rows_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\task7e\\holdout\\holdout_l3_rows.jsonl",
+    "gitignored": true,
+    "subsampled": false
+  },
+  "source": "evaluation/task7e_holdout_manifest.json",
+  "records": 669,
+  "results": {
+    "Z-B3": {
+      "overall": {
+        "records": 669,
+        "miou": 0.3141113773177512,
+        "dice": 0.4247189712330476,
+        "precision_at_0_5": 0.5167990645724042
+      },
+      "per_program": {
+        "largest_to_above_to_nearest": {
+          "records": 154,
+          "miou": 0.3493240086854828,
+          "dice": 0.4584355851996578,
+          "precision_at_0_5": 0.5759070097790929
+        },
+        "largest_to_below_to_nearest": {
+          "records": 150,
+          "miou": 0.27376141710491025,
+          "dice": 0.38141871287988866,
+          "precision_at_0_5": 0.44649521965412653
+        },
+        "largest_to_left_of_to_nearest": {
+          "records": 184,
+          "miou": 0.33142923370348426,
+          "dice": 0.44702306024407495,
+          "precision_at_0_5": 0.5357477556591924
+        },
+        "largest_to_right_of_to_nearest": {
+          "records": 181,
+          "miou": 0.2999857597836107,
+          "dice": 0.4092423293771736,
+          "precision_at_0_5": 0.5055084237765071
+        }
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.3493240086854828,
+          "dice": 0.4584355851996578,
+          "precision_at_0_5": 0.5759070097790929
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.27376141710491025,
+          "dice": 0.38141871287988866,
+          "precision_at_0_5": 0.44649521965412653
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.33142923370348426,
+          "dice": 0.44702306024407495,
+          "precision_at_0_5": 0.5357477556591924
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.2999857597836107,
+          "dice": 0.4092423293771736,
+          "precision_at_0_5": 0.5055084237765071
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1028.0,
+          1557.0,
+          2500.0
+        ],
+        "buckets": {
+          "q1": {
+            "records": 167,
+            "miou": 0.3075355428946626
+          },
+          "q2": {
+            "records": 167,
+            "miou": 0.4165187027734276
+          },
+          "q3": {
+            "records": 167,
+            "miou": 0.3418609466113899
+          },
+          "q4": {
+            "records": 168,
+            "miou": 0.19126591854108543
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          18.697715603592208,
+          47.507731342539614,
+          95.04686356149273
+        ],
+        "buckets": {
+          "q1": {
+            "records": 167,
+            "miou": 0.31056707039220866
+          },
+          "q2": {
+            "records": 167,
+            "miou": 0.32017587281393134
+          },
+          "q3": {
+            "records": 167,
+            "miou": 0.3128510822561618
+          },
+          "q4": {
+            "records": 168,
+            "miou": 0.3128589831748283
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 275777,
+      "checkpoint_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc"
+    },
+    "D-B1": {
+      "overall": {
+        "records": 669,
+        "miou": 0.38549570532647004,
+        "dice": 0.5106484027347514,
+        "precision_at_0_5": 0.5473128848775005
+      },
+      "per_program": {
+        "largest_to_above_to_nearest": {
+          "records": 154,
+          "miou": 0.40753313166887406,
+          "dice": 0.5323820398167267,
+          "precision_at_0_5": 0.623012471520136
+        },
+        "largest_to_below_to_nearest": {
+          "records": 150,
+          "miou": 0.35058139171310404,
+          "dice": 0.4778523268932325,
+          "precision_at_0_5": 0.49304911111770705
+        },
+        "largest_to_left_of_to_nearest": {
+          "records": 184,
+          "miou": 0.3880491900892969,
+          "dice": 0.5135044232867191,
+          "precision_at_0_5": 0.5398319048200684
+        },
+        "largest_to_right_of_to_nearest": {
+          "records": 181,
+          "miou": 0.393084336204451,
+          "dice": 0.51643251038139,
+          "precision_at_0_5": 0.5354804542231948
+        }
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.40753313166887406,
+          "dice": 0.5323820398167267,
+          "precision_at_0_5": 0.623012471520136
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.35058139171310404,
+          "dice": 0.4778523268932325,
+          "precision_at_0_5": 0.49304911111770705
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.3880491900892969,
+          "dice": 0.5135044232867191,
+          "precision_at_0_5": 0.5398319048200684
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.393084336204451,
+          "dice": 0.51643251038139,
+          "precision_at_0_5": 0.5354804542231948
+        }
+      },
+      "target_area_quartiles": {
+        "edges": [
+          1028.0,
+          1557.0,
+          2500.0
+        ],
+        "buckets": {
+          "q1": {
+            "records": 167,
+            "miou": 0.3368146188818207
+          },
+          "q2": {
+            "records": 167,
+            "miou": 0.46720195586360413
+          },
+          "q3": {
+            "records": 167,
+            "miou": 0.4274862974188793
+          },
+          "q4": {
+            "records": 168,
+            "miou": 0.3109264714998195
+          }
+        }
+      },
+      "boundary_distance_quartiles": {
+        "edges": [
+          18.697715603592208,
+          47.507731342539614,
+          95.04686356149273
+        ],
+        "buckets": {
+          "q1": {
+            "records": 167,
+            "miou": 0.3325507447804343
+          },
+          "q2": {
+            "records": 167,
+            "miou": 0.41317205474949387
+          },
+          "q3": {
+            "records": 167,
+            "miou": 0.41578551237378575
+          },
+          "q4": {
+            "records": 168,
+            "miou": 0.3805043974731443
+          }
+        }
+      },
+      "border_target": {
+        "records": 0
+      },
+      "tiny_target": {
+        "records": 0
+      },
+      "params": 278081,
+      "checkpoint_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0"
+    }
+  },
+  "delta": {
+    "overall": 0.07138432800871886,
+    "per_direction": {
+      "above": 0.05820912298339126,
+      "below": 0.07681997460819379,
+      "left": 0.05661995638581263,
+      "right": 0.0930985764208403
+    },
+    "dice": 0.08592943150170385,
+    "precision_at_0_5": 0.030513820305096306
+  },
+  "per_direction": {
+    "above": {
+      "records": 154,
+      "z_b3_miou": 0.3493240086854828,
+      "d_b1_miou": 0.40753313166887406,
+      "delta": 0.05820912298339126
+    },
+    "below": {
+      "records": 150,
+      "z_b3_miou": 0.27376141710491025,
+      "d_b1_miou": 0.35058139171310404,
+      "delta": 0.07681997460819379
+    },
+    "left": {
+      "records": 184,
+      "z_b3_miou": 0.33142923370348426,
+      "d_b1_miou": 0.3880491900892969,
+      "delta": 0.05661995638581263
+    },
+    "right": {
+      "records": 181,
+      "z_b3_miou": 0.2999857597836107,
+      "d_b1_miou": 0.393084336204451,
+      "delta": 0.0930985764208403
+    }
+  },
+  "bootstrap": {
+    "seed": 20261001,
+    "resamples": 2000,
+    "unit": "record_id",
+    "paired": true,
+    "ci_percent": [
+      2.5,
+      97.5
+    ],
+    "mean_delta": 0.07138432800871886,
+    "ci_lower": 0.058623364793963954,
+    "ci_upper": 0.08426264360286147,
+    "bootstrap_mean": 0.07156745663754224
+  },
+  "bootstrap_sample_ids_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+  "gate_constants": {
+    "d_b1_miou": 0.36,
+    "delta": 0.05,
+    "directions_improved": 3,
+    "ci_lower": 0.0,
+    "paired": 16,
+    "margin": 0.3
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 63.8,
+  "gate": {
+    "1_d_b1_miou": {
+      "required": 0.36,
+      "measured": 0.38549570532647004,
+      "passed": true
+    },
+    "2_delta_overall": {
+      "required": 0.05,
+      "measured": 0.07138432800871886,
+      "passed": true
+    },
+    "3_directions": {
+      "required": ">= 3/4",
+      "measured": "4/4",
+      "passed": true
+    },
+    "4_bootstrap_ci_lower": {
+      "required": "> 0.0",
+      "measured": 0.058623364793963954,
+      "passed": true
+    },
+    "5_paired": {
+      "required": ">= 16/20",
+      "measured": 18,
+      "passed": true
+    },
+    "6_margin": {
+      "required": 0.3,
+      "measured": 0.319340299375649,
+      "passed": true
+    }
+  },
+  "DB1_HOLDOUT_GENERALIZES": true
+}
