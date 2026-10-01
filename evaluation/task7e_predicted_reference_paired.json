@@ -1,0 +1,613 @@
+{
+  "_doc": "Task 7E section 18. Predicted-reference E-PairedHoldout20: because pair members share the same tile and oracle reference, the U-C1 reference is resolved once per pair and reused for both members and both decoders.",
+  "task": "7E",
+  "stage": "I-predicted-reference-paired",
+  "pairs": {
+    "count": 20,
+    "reference_abstention_pairs": 0,
+    "pair_ids": [
+      "2_742:000c27928d457c1a",
+      "2_2954:01a2c4a58298b654",
+      "2_2720:037ab2bc29230dc0",
+      "2_1987:060b7f640011a96b",
+      "2_402:0661e638e05bf9f6",
+      "2_949:06d5e568f7b66bb9",
+      "2_111:0893c77306217622",
+      "2_2927:0b1020ff6beef667",
+      "2_1174:0d85174aedf5bfa3",
+      "2_3358:0e195a37e1a7d31b",
+      "2_2897:13f5666c3565592e",
+      "2_783:17e0242e682143e6",
+      "2_3434:1d976f98a162842d",
+      "2_1414:1dda9989e04b3b61",
+      "2_5:1e00b58e5395c8b4",
+      "2_3464:206abf87d3f51adf",
+      "2_2338:21e76e8049278956",
+      "2_2883:22cccd916bd6718f",
+      "2_3558:23e57b21d5a882f3",
+      "2_2749:24ce3955eaa45c6f"
+    ]
+  },
+  "results": {
+    "Z-B3": {
+      "passed": 6,
+      "pairs": 20,
+      "pass_rate": 0.3,
+      "mean_own_iou": 0.13723491599247603,
+      "mean_cross_iou": 0.013130537647692151,
+      "own_cross_margin": 0.12410437834478388
+    },
+    "D-B1": {
+      "passed": 6,
+      "pairs": 20,
+      "pass_rate": 0.3,
+      "mean_own_iou": 0.15599007444872226,
+      "mean_cross_iou": 0.03092719250875899,
+      "own_cross_margin": 0.12506288193996326
+    }
+  },
+  "per_pair": [
+    {
+      "pair_id": "2_742:000c27928d457c1a",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.32279314877378357
+        ],
+        "cross_iou": [
+          0.0,
+          0.4863865544583575
+        ],
+        "margin": -0.08179670284228696
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.206930693001013
+        ],
+        "cross_iou": [
+          0.0,
+          0.5495804727118305
+        ],
+        "margin": -0.17132488985540878
+      }
+    },
+    {
+      "pair_id": "2_2954:01a2c4a58298b654",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": true,
+        "own_iou": [
+          0.0026550552248667102,
+          0.27118914600619487
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.13692210061553078
+      },
+      "D-B1": {
+        "passed": true,
+        "own_iou": [
+          0.0009299081714599665,
+          0.3071695548237904
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.1540497314976252
+      }
+    },
+    {
+      "pair_id": "2_2720:037ab2bc29230dc0",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.5177595624878691,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.25887978124393457
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.07176391678620797,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.035881958393103985
+      }
+    },
+    {
+      "pair_id": "2_1987:060b7f640011a96b",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": true,
+        "own_iou": [
+          0.1843258571321666,
+          0.5946843850998176
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.3895051211159921
+      },
+      "D-B1": {
+        "passed": true,
+        "own_iou": [
+          0.24906038580579795,
+          0.7268314206854231
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.4879459032456105
+      }
+    },
+    {
+      "pair_id": "2_402:0661e638e05bf9f6",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      }
+    },
+    {
+      "pair_id": "2_949:06d5e568f7b66bb9",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.26651012613251834,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.13325506306625917
+      },
+      "D-B1": {
+        "passed": true,
+        "own_iou": [
+          0.14181818176661157,
+          0.09339280734689255
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.11760549455675207
+      }
+    },
+    {
+      "pair_id": "2_111:0893c77306217622",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.5235513383518973,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.26177566917594863
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.5929938603853399,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.2964969301926699
+      }
+    },
+    {
+      "pair_id": "2_2927:0b1020ff6beef667",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.6941105765059431,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.34705528825297155
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.7189473680426592,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.3594736840213296
+      }
+    },
+    {
+      "pair_id": "2_1174:0d85174aedf5bfa3",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      }
+    },
+    {
+      "pair_id": "2_3358:0e195a37e1a7d31b",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      }
+    },
+    {
+      "pair_id": "2_2897:13f5666c3565592e",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.049380938662628715,
+          0.0
+        ],
+        "cross_iou": [
+          0.038834951449328484,
+          0.0
+        ],
+        "margin": 0.005272993606650116
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.06875231852742027,
+          0.0
+        ],
+        "cross_iou": [
+          0.01798458463916863,
+          0.0
+        ],
+        "margin": 0.025383866944125817
+      }
+    },
+    {
+      "pair_id": "2_783:17e0242e682143e6",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.6355096286352703,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.31775481431763514
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.3909214090816662,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.1954607045408331
+      }
+    },
+    {
+      "pair_id": "2_3434:1d976f98a162842d",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.6695226429993603,
+          0.0
+        ],
+        "margin": -0.33476132149968013
+      }
+    },
+    {
+      "pair_id": "2_1414:1dda9989e04b3b61",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": true,
+        "own_iou": [
+          0.14205607463359243,
+          0.001951219510291493
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.07200364707194196
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.6179279936679442,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.3089639968339721
+      }
+    },
+    {
+      "pair_id": "2_5:1e00b58e5395c8b4",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": true,
+        "own_iou": [
+          0.05078124998196689,
+          0.31521426508046757
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.18299775753121722
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.4767404554133011
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.23837022770665056
+      }
+    },
+    {
+      "pair_id": "2_3464:206abf87d3f51adf",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": true,
+        "own_iou": [
+          0.23658751078576293,
+          0.11745513859844744
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.1770213246921052
+      },
+      "D-B1": {
+        "passed": true,
+        "own_iou": [
+          0.28101265787213586,
+          0.11389759659670971
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.1974551272344228
+      }
+    },
+    {
+      "pair_id": "2_2338:21e76e8049278956",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.3569553801089824,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.1784776900544912
+      },
+      "D-B1": {
+        "passed": true,
+        "own_iou": [
+          0.6304347808955577,
+          0.3074162675748609
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.4689255242352093
+      }
+    },
+    {
+      "pair_id": "2_2883:22cccd916bd6718f",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      }
+    },
+    {
+      "pair_id": "2_3558:23e57b21d5a882f3",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      },
+      "D-B1": {
+        "passed": false,
+        "own_iou": [
+          0.0,
+          0.0
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.0
+      }
+    },
+    {
+      "pair_id": "2_2749:24ce3955eaa45c6f",
+      "reference_abstained": false,
+      "Z-B3": {
+        "passed": true,
+        "own_iou": [
+          0.15366473146704196,
+          0.052261306519532334
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.10296301899328715
+      },
+      "D-B1": {
+        "passed": true,
+        "own_iou": [
+          0.16198488519007773,
+          0.0806765163140209
+        ],
+        "cross_iou": [
+          0.0,
+          0.0
+        ],
+        "margin": 0.12133070075204931
+      }
+    }
+  ],
+  "training_performed": false,
+  "test_split_used": false
+}

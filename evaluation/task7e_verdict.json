@@ -1,0 +1,360 @@
+{
+  "_doc": "Task 7E sections 21-22. Deterministic field-weighted prototype (frozen Task 7D D-B1) audited on the untouched E-HoldoutL3 remainder with the frozen oracle largest reference and then with the frozen U-C1 predicted reference; frozen Z-B3 is the baseline. No model was trained, nothing was tuned, and the verdict follows the fixed section-22 priority order.",
+  "task": "7E",
+  "verdict": "DB1_PREDICTED_REFERENCE_BELOW_GATE",
+  "reason": "the learned-free D-B1 gain survives the untouched oracle holdout, but the predicted-reference gate fails: ['2_answered_only_miou', '5_paired', '6_margin']",
+  "allowed_verdicts": [
+    "INVALID_EXPERIMENT",
+    "DB1_CHECKPOINT_UNAVAILABLE",
+    "L3_HOLDOUT_REMAINDER_INSUFFICIENT",
+    "L3_HOLDOUT_PAIRED_INSUFFICIENT",
+    "TASK7D_REPRODUCTION_FAIL",
+    "DB1_HOLDOUT_GENERALIZATION_FAIL",
+    "DB1_PREDICTED_REFERENCE_BELOW_GATE",
+    "DB1_DEVELOPMENT_L3_DECODER_READY"
+  ],
+  "protocol": {
+    "frozen_paths_unchanged": true,
+    "changed_paths": "",
+    "d_b1_checkpoint_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_expected_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+    "d_b1_checkpoint_matches": true,
+    "d_b1_checkpoint_variant": "D-B1",
+    "d_b1_selected_epoch": 7,
+    "z_b3_checkpoint_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+    "z_b3_checkpoint_matches": true,
+    "training_performed": false,
+    "retrained_any_checkpoint": false,
+    "test_split_used": false,
+    "parser_used_for_oracle": false,
+    "predicted_reference_in_oracle_stage": false,
+    "fields_changed": false,
+    "sam2_changed": false,
+    "u_c1_changed": false,
+    "ranker_or_filter_or_refinement": false,
+    "learned_competition": false,
+    "attention_or_graph": false,
+    "grcl": false,
+    "free_form_paraphrase_used_for_selection": false,
+    "full_training_started": false,
+    "clean": true
+  },
+  "holdout": {
+    "records": 669,
+    "per_program": {
+      "largest_to_left_of_to_nearest": 184,
+      "largest_to_right_of_to_nearest": 181,
+      "largest_to_above_to_nearest": 154,
+      "largest_to_below_to_nearest": 150
+    },
+    "per_direction": {
+      "below": 150,
+      "right_of": 181,
+      "above": 154,
+      "left_of": 184
+    },
+    "record_id_hash": "1ad0044236b7b200261912f93e50437a32cd82d2cc825e2740a2b79170c54f62",
+    "excluded": 267,
+    "source_records": 936,
+    "source_matches_expected": true,
+    "checks": {
+      "source_total_matches": true,
+      "overlap_with_z_mini_val_240": 0,
+      "overlap_with_z_paired_val20": 0,
+      "test_records": 0,
+      "records_gte_600": true,
+      "min_records": 600,
+      "every_program_gte_120": true,
+      "min_per_program": 120,
+      "remainder_ok": true
+    },
+    "paired": {
+      "pairs": 20,
+      "candidate_pairs": 175,
+      "overlap_with_task6z_paired_members": 0,
+      "pair_id_hash": "1a0541a89c200f58555a32c2c6775903e980f15717bae77d139554e0a22477f9"
+    }
+  },
+  "minival_reproduction": {
+    "passed": true,
+    "tolerance": 1e-06,
+    "reproduction": {
+      "Z-B3": {
+        "miou": 0.3242128982543474,
+        "expected_miou": 0.3242128982543474,
+        "delta": 0.0,
+        "miou_ok": true,
+        "paired_passed": 15,
+        "expected_paired": 15,
+        "paired_ok": true,
+        "dice": 0.4389840055529761
+      },
+      "D-B1": {
+        "miou": 0.3978996298363562,
+        "expected_miou": 0.3978996298363562,
+        "delta": 0.0,
+        "miou_ok": true,
+        "paired_passed": 19,
+        "expected_paired": 19,
+        "paired_ok": true,
+        "dice": 0.5272592647111778
+      }
+    }
+  },
+  "oracle_holdout": {
+    "z_b3_miou": 0.3141113773177512,
+    "d_b1_miou": 0.38549570532647004,
+    "delta": 0.07138432800871886,
+    "delta_per_direction": {
+      "above": 0.05820912298339126,
+      "below": 0.07681997460819379,
+      "left": 0.05661995638581263,
+      "right": 0.0930985764208403
+    },
+    "z_b3_dice": 0.4247189712330476,
+    "d_b1_dice": 0.5106484027347514,
+    "bootstrap": {
+      "seed": 20261001,
+      "resamples": 2000,
+      "unit": "record_id",
+      "paired": true,
+      "ci_percent": [
+        2.5,
+        97.5
+      ],
+      "mean_delta": 0.07138432800871886,
+      "ci_lower": 0.058623364793963954,
+      "ci_upper": 0.08426264360286147,
+      "bootstrap_mean": 0.07156745663754224
+    },
+    "gate": {
+      "1_d_b1_miou": {
+        "required": 0.36,
+        "measured": 0.38549570532647004,
+        "passed": true
+      },
+      "2_delta_overall": {
+        "required": 0.05,
+        "measured": 0.07138432800871886,
+        "passed": true
+      },
+      "3_directions": {
+        "required": ">= 3/4",
+        "measured": "4/4",
+        "passed": true
+      },
+      "4_bootstrap_ci_lower": {
+        "required": "> 0.0",
+        "measured": 0.058623364793963954,
+        "passed": true
+      },
+      "5_paired": {
+        "required": ">= 16/20",
+        "measured": 18,
+        "passed": true
+      },
+      "6_margin": {
+        "required": 0.3,
+        "measured": 0.319340299375649,
+        "passed": true
+      }
+    },
+    "gate_passed": true
+  },
+  "oracle_holdout_paired": {
+    "z_b3": {
+      "passed": 15,
+      "pairs": 20,
+      "pass_rate": 0.75,
+      "mean_own_iou": 0.2592388464915154,
+      "mean_cross_iou": 0.0,
+      "own_cross_margin": 0.2592388464915154
+    },
+    "d_b1": {
+      "passed": 18,
+      "pairs": 20,
+      "pass_rate": 0.9,
+      "mean_own_iou": 0.319340299375649,
+      "mean_cross_iou": 0.0,
+      "own_cross_margin": 0.319340299375649
+    }
+  },
+  "predicted_reference": {
+    "executed": true,
+    "reference": {
+      "records": 669,
+      "proposal_count_mean": 19.750373692077726,
+      "eligible_count_mean": 14.696562032884902,
+      "reference_miou": 0.4406471173343235,
+      "reference_dice": 0.5084559705136132,
+      "reference_precision_at_0_5": 0.5015555235374375,
+      "abstentions": 2,
+      "abstention_rate": 0.0029895366218236174,
+      "best_eligible_coverage_at_0_5": 0.8460388639760837,
+      "buckets": {
+        "SELECTION_WRONG": 220,
+        "REFERENCE_OK": 346,
+        "NOT_COVERED": 101,
+        "ABSTENTION": 2
+      },
+      "raw_buckets": {
+        "REFERENCE_SELECTION_WRONG": 220,
+        "REFERENCE_OK": 346,
+        "REFERENCE_NOT_COVERED_IOU50": 101,
+        "NO_PROPOSALS": 2
+      },
+      "frozen_bucket_definitions": [
+        "NO_PROPOSALS",
+        "NO_ELIGIBLE_PROPOSALS",
+        "REFERENCE_NOT_COVERED_IOU50",
+        "REFERENCE_SELECTION_WRONG",
+        "REFERENCE_GEOMETRY_POOR",
+        "REFERENCE_OK"
+      ]
+    },
+    "z_b3": {
+      "strict": {
+        "records": 669,
+        "miou": 0.2068700080075112,
+        "dice": 0.2798335779869148,
+        "precision_at_0_5": 0.42763066576708414,
+        "answered": 667,
+        "answered_only_miou": 0.20749030788159675,
+        "answered_only_dice": 0.2806726591802789
+      },
+      "reference_ok_subset": {
+        "records": 346,
+        "miou": 0.32878983471765233,
+        "dice": 0.43910520819123594,
+        "precision_at_0_5": 0.5233969826691665,
+        "answered": 346,
+        "answered_only_miou": 0.32878983471765233,
+        "answered_only_dice": 0.43910520819123594
+      },
+      "abstentions": 2,
+      "params": 275777,
+      "checkpoint_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc"
+    },
+    "d_b1": {
+      "strict": {
+        "records": 669,
+        "miou": 0.24540501038500215,
+        "dice": 0.32476185563365384,
+        "precision_at_0_5": 0.47113021763335966,
+        "answered": 667,
+        "answered_only_miou": 0.24614085749260334,
+        "answered_only_dice": 0.32573565430122103
+      },
+      "reference_ok_subset": {
+        "records": 346,
+        "miou": 0.3963897407774108,
+        "dice": 0.5196014876589141,
+        "precision_at_0_5": 0.5555082402985998,
+        "answered": 346,
+        "answered_only_miou": 0.3963897407774108,
+        "answered_only_dice": 0.5196014876589141
+      },
+      "abstentions": 2,
+      "params": 278081,
+      "checkpoint_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0"
+    },
+    "retention": {
+      "oracle_d_b1_miou": 0.38549570532647004,
+      "oracle_z_b3_miou": 0.3141113773177512,
+      "pred_d_b1_strict_miou": 0.24540501038500215,
+      "retention": 0.6365959646091846,
+      "definition": "pred_db1_strict / oracle_db1"
+    },
+    "delta": {
+      "d_b1_minus_z_b3_strict": 0.03853500237749094,
+      "answered_only": 0.038650549611006585
+    },
+    "gate": {
+      "1_strict_miou": {
+        "required": 0.24,
+        "measured": 0.24540501038500215,
+        "passed": true
+      },
+      "2_answered_only_miou": {
+        "required": 0.25,
+        "measured": 0.24614085749260334,
+        "passed": false
+      },
+      "3_delta_vs_p0": {
+        "required": 0.03,
+        "measured": 0.03853500237749094,
+        "passed": true
+      },
+      "4_retention": {
+        "required": 0.62,
+        "measured": 0.6365959646091846,
+        "passed": true
+      },
+      "5_paired": {
+        "required": ">= 11/20",
+        "measured": 6,
+        "passed": false
+      },
+      "6_margin": {
+        "required": 0.2,
+        "measured": 0.12506288193996326,
+        "passed": false
+      },
+      "7_abstention_rate": {
+        "required": "<= 10%",
+        "measured": 0.0029895366218236174,
+        "passed": true
+      }
+    },
+    "gate_passed": false,
+    "paired": {
+      "Z-B3": {
+        "passed": 6,
+        "pairs": 20,
+        "pass_rate": 0.3,
+        "mean_own_iou": 0.13723491599247603,
+        "mean_cross_iou": 0.013130537647692151,
+        "own_cross_margin": 0.12410437834478388
+      },
+      "D-B1": {
+        "passed": 6,
+        "pairs": 20,
+        "pass_rate": 0.3,
+        "mean_own_iou": 0.15599007444872226,
+        "mean_cross_iou": 0.03092719250875899,
+        "own_cross_margin": 0.12506288193996326
+      }
+    },
+    "reference_abstention_pairs": 0
+  },
+  "canonical_parser_integration": {
+    "executed": false,
+    "reason": "DB1_PREDICTED_REFERENCE_USABLE is false; section 20 is conditional on section 19",
+    "artifact_present": true,
+    "parser_trained": false,
+    "free_form_paraphrase_used": false
+  },
+  "decision": {
+    "DB1_HOLDOUT_GENERALIZES": true,
+    "DB1_PREDICTED_REFERENCE_USABLE": false,
+    "DB1_ADOPT_AS_DEVELOPMENT_L3_DECODER": false,
+    "development_baseline": "Z-B3",
+    "z_b3_role": "frozen baseline / ablation",
+    "d_b1_role": "positive oracle-reference ablation only",
+    "checkpoints_deleted_or_overwritten": false
+  },
+  "interpretation_boundary": {
+    "d_b1_claimed_globally_novel": false,
+    "d_b1_called_final_model": false,
+    "full_training_run": false,
+    "test_evaluated": false,
+    "parser_or_reference_retrained": false,
+    "learned_competition_added": false,
+    "graph_or_attention_added": false,
+    "d_b1_modified_after_holdout": false,
+    "task7f_chosen": false
+  },
+  "test_split_used": false,
+  "recommendation": "等待 ChatGPT 根据 Task 7E 的 untouched L3 holdout 与 predicted-reference 结果决定是否正式冻结 D-B1 为开发版 L3 decoder，不自行进行全量训练、test 评估或新的架构改动。",
+  "runtime_seconds": 0.05
+}

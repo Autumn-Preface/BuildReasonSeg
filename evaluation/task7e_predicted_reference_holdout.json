@@ -1,0 +1,259 @@
+{
+  "_doc": "Task 7E section 17. E2 predicted-reference holdout: E-P0 (canonical program -> predicted U-C1 largest reference -> frozen Z-B3) vs E-P1 (... -> frozen D-B1) on every E-HoldoutL3 record. Both pipelines share the same resolved reference mask. No GT reference or target enters inference.",
+  "task": "7E",
+  "stage": "I-predicted-reference-holdout",
+  "checkpoints": {
+    "z_b3": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6z\\zb3_minitrain1200.pt",
+      "sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "expected_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc",
+      "matches": true,
+      "variant": "Z-B3",
+      "task": "6Z"
+    },
+    "d_b1": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7d\\db1_minitrain1200.pt",
+      "sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "expected_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0",
+      "matches": true,
+      "variant": "D-B1",
+      "task": "7D",
+      "checkpoint_variant": "D-B1",
+      "selected_epoch": 7,
+      "selected_step": 1050,
+      "seed": 20261001,
+      "retrained": false,
+      "epoch_matches": true
+    }
+  },
+  "resolver": {
+    "config": "U-C1",
+    "id": "U-C1",
+    "label": "lower confidence / larger candidate cap",
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false,
+    "frozen_config_source": "scripts/task6u_common.CONFIGS['U-C1']",
+    "checkpoint": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+    "checkpoint_sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "family": "YOLO26m-seg",
+    "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+    "eligibility": {
+      "not_border_touching": true,
+      "bbox_extent_ratio_max": 0.2
+    },
+    "selection": [
+      "max predicted mask area",
+      "tie higher confidence",
+      "then lower original index"
+    ],
+    "ranker": false,
+    "quality_filter": false,
+    "sam2_refinement": false,
+    "task6q_resolver_report": {
+      "checkpoint": "artifacts\\checkpoints\\task6m1\\runs\\m1_yolo26m_seg_continued\\weights\\best.pt",
+      "checkpoint_sha256_expected": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "family": "YOLO26m-seg",
+      "imgsz": 640,
+      "conf": 0.1,
+      "max_det": 100,
+      "nms": "default",
+      "tta": false,
+      "tiling": false,
+      "threshold_sweep": false,
+      "mask_threshold": "canonical Task 6M (Ultralytics retina mask > 0 via normalize_mask)",
+      "merge_bbox_extent_ratio_max": 0.2,
+      "tiny_component_area_px": 150
+    },
+    "note": "Task 6Q's read-only `config_report()` prints the resolver module defaults (conf 0.10 / max_det 100); the Task 6U frozen `CONFIGS['U-C1']` entry used by the pipeline is conf 0.05 / max_det 300, which is what Task 7E section 14 mandates and what this run used."
+  },
+  "records": 669,
+  "results": {
+    "Z-B3": {
+      "strict": {
+        "records": 669,
+        "miou": 0.2068700080075112,
+        "dice": 0.2798335779869148,
+        "precision_at_0_5": 0.42763066576708414,
+        "answered": 667,
+        "answered_only_miou": 0.20749030788159675,
+        "answered_only_dice": 0.2806726591802789
+      },
+      "reference_ok_subset": {
+        "records": 346,
+        "miou": 0.32878983471765233,
+        "dice": 0.43910520819123594,
+        "precision_at_0_5": 0.5233969826691665,
+        "answered": 346,
+        "answered_only_miou": 0.32878983471765233,
+        "answered_only_dice": 0.43910520819123594
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.22262510405118394,
+          "dice": 0.2946514824253312,
+          "precision_at_0_5": 0.4995491872277347,
+          "answered": 153,
+          "answered_only_miou": 0.22408017009073414,
+          "answered_only_dice": 0.29657730910784963
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.18130819925656863,
+          "dice": 0.2484358590987848,
+          "precision_at_0_5": 0.37054460069222567,
+          "answered": 150,
+          "answered_only_miou": 0.18130819925656863,
+          "answered_only_dice": 0.2484358590987848
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.2205685695215079,
+          "dice": 0.29755921982699524,
+          "precision_at_0_5": 0.44760030571727066,
+          "answered": 184,
+          "answered_only_miou": 0.2205685695215079,
+          "answered_only_dice": 0.29755921982699524
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.20072332957292785,
+          "dice": 0.27522685119756995,
+          "precision_at_0_5": 0.3934485867916933,
+          "answered": 180,
+          "answered_only_miou": 0.20183845918166632,
+          "answered_only_dice": 0.2767558892597787
+        }
+      },
+      "abstentions": 2,
+      "params": 275777,
+      "checkpoint_sha256": "74f308e11e7f7f1098dd0d092ddcf6be1220d0b322b39df39c4ce05c9fc0f0bc"
+    },
+    "D-B1": {
+      "strict": {
+        "records": 669,
+        "miou": 0.24540501038500215,
+        "dice": 0.32476185563365384,
+        "precision_at_0_5": 0.47113021763335966,
+        "answered": 667,
+        "answered_only_miou": 0.24614085749260334,
+        "answered_only_dice": 0.32573565430122103
+      },
+      "reference_ok_subset": {
+        "records": 346,
+        "miou": 0.3963897407774108,
+        "dice": 0.5196014876589141,
+        "precision_at_0_5": 0.5555082402985998,
+        "answered": 346,
+        "answered_only_miou": 0.3963897407774108,
+        "answered_only_dice": 0.5196014876589141
+      },
+      "per_direction": {
+        "above": {
+          "records": 154,
+          "miou": 0.23563903287320767,
+          "dice": 0.3110029902853848,
+          "precision_at_0_5": 0.5309555077089009,
+          "answered": 153,
+          "answered_only_miou": 0.23717915727107178,
+          "answered_only_dice": 0.3130356895682958
+        },
+        "below": {
+          "records": 150,
+          "miou": 0.23038854476702056,
+          "dice": 0.30843688625940086,
+          "precision_at_0_5": 0.43041878344504625,
+          "answered": 150,
+          "answered_only_miou": 0.23038854476702056,
+          "answered_only_dice": 0.30843688625940086
+        },
+        "left": {
+          "records": 184,
+          "miou": 0.2590233625368577,
+          "dice": 0.34062022773164174,
+          "precision_at_0_5": 0.4659628079718943,
+          "answered": 184,
+          "answered_only_miou": 0.2590233625368577,
+          "answered_only_dice": 0.34062022773164174
+        },
+        "right": {
+          "records": 181,
+          "miou": 0.25231469869203055,
+          "dice": 0.3338760556543258,
+          "precision_at_0_5": 0.4592209570495104,
+          "answered": 180,
+          "answered_only_miou": 0.2537164470180974,
+          "answered_only_dice": 0.33573092263018317
+        }
+      },
+      "abstentions": 2,
+      "params": 278081,
+      "checkpoint_sha256": "6df31909cefdb54b9997b1e6ab76b8c5589771defa55666edbe75106221a89c0"
+    }
+  },
+  "retention": {
+    "oracle_d_b1_miou": 0.38549570532647004,
+    "oracle_z_b3_miou": 0.3141113773177512,
+    "pred_d_b1_strict_miou": 0.24540501038500215,
+    "retention": 0.6365959646091846,
+    "definition": "pred_db1_strict / oracle_db1"
+  },
+  "delta": {
+    "d_b1_minus_z_b3_strict": 0.03853500237749094,
+    "answered_only": 0.038650549611006585
+  },
+  "gate_constants": {
+    "strict_miou": 0.24,
+    "answered_miou": 0.25,
+    "delta_vs_p0": 0.03,
+    "retention": 0.62,
+    "paired": 11,
+    "margin": 0.2,
+    "abstention_rate": 0.1
+  },
+  "training_performed": false,
+  "test_split_used": false,
+  "runtime_seconds": 57.1,
+  "gate": {
+    "1_strict_miou": {
+      "required": 0.24,
+      "measured": 0.24540501038500215,
+      "passed": true
+    },
+    "2_answered_only_miou": {
+      "required": 0.25,
+      "measured": 0.24614085749260334,
+      "passed": false
+    },
+    "3_delta_vs_p0": {
+      "required": 0.03,
+      "measured": 0.03853500237749094,
+      "passed": true
+    },
+    "4_retention": {
+      "required": 0.62,
+      "measured": 0.6365959646091846,
+      "passed": true
+    },
+    "5_paired": {
+      "required": ">= 11/20",
+      "measured": 6,
+      "passed": false
+    },
+    "6_margin": {
+      "required": 0.2,
+      "measured": 0.12506288193996326,
+      "passed": false
+    },
+    "7_abstention_rate": {
+      "required": "<= 10%",
+      "measured": 0.0029895366218236174,
+      "passed": true
+    }
+  },
+  "DB1_PREDICTED_REFERENCE_USABLE": false
+}

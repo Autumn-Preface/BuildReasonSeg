@@ -1,0 +1,50 @@
+{
+  "_doc": "Task 7E section 20. Canonical parser interface regression, which is conditional on the section-19 predicted-reference gate. That gate did not pass, so the parser integration was not executed.",
+  "task": "7E",
+  "stage": "K-parser-integration",
+  "executed": false,
+  "reason": "DB1_PREDICTED_REFERENCE_USABLE is false; section 20 is conditional on section 19",
+  "predicted_reference_gate": {
+    "1_strict_miou": {
+      "required": 0.24,
+      "measured": 0.24540501038500215,
+      "passed": true
+    },
+    "2_answered_only_miou": {
+      "required": 0.25,
+      "measured": 0.24614085749260334,
+      "passed": false
+    },
+    "3_delta_vs_p0": {
+      "required": 0.03,
+      "measured": 0.03853500237749094,
+      "passed": true
+    },
+    "4_retention": {
+      "required": 0.62,
+      "measured": 0.6365959646091846,
+      "passed": true
+    },
+    "5_paired": {
+      "required": ">= 11/20",
+      "measured": 6,
+      "passed": false
+    },
+    "6_margin": {
+      "required": 0.2,
+      "measured": 0.12506288193996326,
+      "passed": false
+    },
+    "7_abstention_rate": {
+      "required": "<= 10%",
+      "measured": 0.0029895366218236174,
+      "passed": true
+    }
+  },
+  "canonical_parser_accuracy_min": 0.995,
+  "training_performed": false,
+  "parser_trained": false,
+  "free_form_paraphrase_used": false,
+  "test_split_used": false,
+  "runtime_seconds": 0.0
+}
