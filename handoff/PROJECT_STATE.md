@@ -1,6 +1,6 @@
 # PROJECT_STATE — BuildReasonSeg
 
-_Last updated by DSH at the end of Task 7H._
+_Last updated by DSH at the end of Task 7I._
 
 **Legacy artifact-consistency block (machine-checked, historical/frozen).** The `ARTIFACT-FACTS` block
 below describes the superseded **BuildSpatialReason v0.1.1** dataset; its numbers are read-only legacy
@@ -118,6 +118,38 @@ The block above is machine-checked against
 | 7G | **Largest-reference set-context selector (final reference intervention)** | **done → `LARGEST_SELECTOR_NOT_LEARNABLE`** (**only the selector was trained**; U-C1/YOLO, D-B1, fields, SAM2, parser and all history frozen; `G-RefTrainUniqueLargest` from **v0.2 train only** — 12,778 rows → 4,119 largest-reference → **3,002** with explicit reference id (1,117 L1 `largest` rows have empty `references`) → dedup `(split, tile_id, reference_source_feature_id)` → **1,063 unique refs/tiles**, 1,939 dupes removed, `smallest` 1,251 excluded, label = best eligible GT-IoU (tie confidence→index, min IoU 0.50), `no_eligible` 2 / `untrainable_not_covered` 33 / **trainable 1,028** ✓; exact **18-D** feature vector (geometry/confidence + boundary via `binary_erosion 3×3/1/border 0` + 6 set-overlap features + set size; no GT/centroid/relation/target/RGB/SAM2) → `SetContextLargestSelector v1` (`18→64→32` shared encoder, `mean+max` context → `96→32→1` head, **6,561 params**, one listwise CE, no attention/Transformer/GNN); tile-level 80/20 SHA256 split (seed 20261001) **805/223 tiles**, overlaps 0; AdamW 1e-3 / wd 1e-4 / batch 32 / ≤40 epochs / patience 6 → early stop epoch 25; internal gate **FAIL 2/4** — G-I0 0.5200 → **G-I1 0.6199** (gain **+0.0999** ✓ ≥0.08, but 0.6199 < **0.62** ✗), top-1 **0.6592** ✓, gap **0.1791** > **0.14** ✗ → STOP; external scene-disjoint stages **not executed** (artifacts record `executed: false`, paired artifact not created, scripts hard-guarded); `TASK7G_SELECTOR_ADOPTED` **false** → keep U-C1 + deterministic max-area + D-B1, reference selection recorded as an **unresolved limitation**, reference intervention stops) |
 
 | 7H | **Development architecture freeze + formal protocol** | **done → `DEVELOPMENT_ARCHITECTURE_FROZEN`** (governance freeze only: **no training, no test access**; `BuildReasonSeg-DevFreeze-2026-10` = controlled instruction → **Task 7C** ProgramHead (20 canonical programs) → **U-C1** YOLO26m-seg (imgsz 640 / conf 0.05 / max_det 300 / default NMS / no TTA / no tiling) → **deterministic largest** selector → **GeometricRelationField v0.2** (P_dir) + **NearestBoundaryField v0.1** (P_near) → **Task 7D D-B1** target decoder; all 5 required hashes exact — YOLO `ef852b58…61f474` · 7C parser `c1505736…d58d9a` · 6O N-B3 `7556e4a4…c7d6ab` · 6Z Z-B3 `74f308e1…fc0f0bc` · 7D D-B1 `6df31909…21a89c0`; dataset v0.2 / native-vector v1.0 / `scene_disjoint_v1`; six rejected modules (6P head, 6U ranker, 6W quality, 6X SAM2 refinement, 7G selector, 7D D-B2) recorded as frozen **negative** evidence and excluded; limitations L-01 selection (unresolved) / L-02 coverage (secondary) / L-03 geometry (not major) / L-04 free-form language (controlled-language only) / L-05 nearest-only (experimental) / L-06 unseen-city (not established); formal protocol frozen (train 1344 = 323/347/338/336, val 936, D-B1 schedule copied from `task7d_training.json` — AdamW lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / bf16 / val-mIoU selection — seeds **20261001/2/3**, practical vs oracle reported separately); **test lock LOCKED, `test_execution_authorized: false`**; claim registry C1 SUPPORTED / C2 SUPPORTED_WITH_LIMITATION / C3 SUPPORTED / C4 NOT_SUPPORTED / C5 NOT_SUPPORTED / C6 SUPPORTED_WITH_LIMITATION / C7–C9 NOT_SUPPORTED, no novelty claim; 10/10 §22 conditions) |
+
+| 7I | **Formal L3 three-seed train/validation (Z-B3 vs D-B1)** | **done → `DB1_FORMAL_VAL_NOT_CONFIRMED`** (6 formal runs: Z-B3 × 3 seeds **and** D-B1 × 3 seeds, all from **fresh** trainable weights, identical population/schedule; protocol corrections **I-01** (checkpoint selection = full **936** oracle-reference L3 val, not MiniVal240) and **I-02** (both architectures retrained) recorded without touching Task 7H files; `G-FormalTrain` **1344** = 323/347/338/336, `G-FormalVal` **936** = 250/249/224/213, overlap 0; `I-FormalValPairsAll` **326** pairs, dedup/sorted/no subsampling, reporting-only; AdamW lr 3e-4 / wd 1e-4 / batch 8 / ≤25 epochs / patience 5 / bf16 / BCE+Dice; per-epoch full-936 val, selection by (mIoU → Dice → Pr@0.5 → earlier epoch); **oracle full-val**: Z-B3 0.3194/0.3394/0.3386 (**mean 0.3324 ± 0.0113**, pairs 0.8691, margin +0.3167) vs **D-B1 0.3799/0.3827/0.3877 (mean 0.3834 ± 0.0039** , pairs 0.8446, margin **+0.3775**), matched-seed Δ **+0.0606/+0.0433/+0.0491 (3/3)**; **predicted U-C1 full-val**: reference mIoU 0.4469, REFERENCE_OK 491 / SELECTION_WRONG 305 / NOT_COVERED 135 / abstentions 5, Z-B3 strict **0.2270** (pairs 0.5153, margin +0.1952) vs D-B1 strict **0.2335** (Δ **+0.0065**, pairs 0.4172, margin +0.2009), retention 0.6090; §25 gates **7/8** — the only failure is gate 5 (predicted-reference gain +0.0065 < +0.02); **test lock stayed LOCKED**, `test_execution_authorized: false`) |
+
+## Task 7I measured results
+
+Formal three-seed train/validation of the frozen L3 target-decoder architecture: **Z-B3 and D-B1 retrained from
+fresh trainable weights** under the identical formal population, seeds and schedule, with checkpoint selection
+on the **full 936-record oracle-reference L3 val** population (not MiniVal240) and then oracle-reference,
+predicted-reference and complete counterfactual full-val evaluation. **Validation only — the test split was
+never opened and stays LOCKED.** Full detail: `docs/task7i_formal_l3_trainval.md`, `evaluation/task7i_*.json`.
+
+| | Value |
+|---|---|
+| Protocol corrections | **I-01** checkpoint selection = all 936 oracle-reference L3 val records (supersedes Task 7H's MiniVal240 mIoU) · **I-02** both Z-B3 and D-B1 retrained under the same three seeds/population · Task 7H artifacts untouched |
+| Populations | train **1344** (left 323 / right 347 / above 338 / below 336) · val **936** (250 / 249 / 224 / 213) · overlap **0** · `I-FormalValPairsAll` **326** pairs (same tile+reference, different direction+target; dedup + sorted + no subsampling; reporting-only) |
+| Protocol | fresh init · frozen SAM2 + fields · oracle GT reference · AdamW lr 3e-4 / wd 1e-4 / batch 8 / max 25 epochs / patience 5 / no scheduler / no augmentation / bf16 AMP / `BCE+Dice` only · per-epoch full-936 val · selection (mIoU → Dice → Pr@0.5 → earlier epoch) |
+| Selected epochs | Z-B3 4 / 14 / 5 · D-B1 11 / 9 / 8 (final epochs 9 / 19 / 10 and 16 / 14 / 13) |
+| **Oracle full-val (936)** | Z-B3 0.3194 / 0.3394 / 0.3386 → **0.3324 ± 0.0113** mIoU, pairs 0.8691, margin +0.3167 · **D-B1 0.3799 / 0.3827 / 0.3877 → 0.3834 ± 0.0039**, pairs 0.8446, margin **+0.3775** · matched-seed Δ **+0.0606 / +0.0433 / +0.0491 (3/3)** |
+| **Predicted U-C1 full-val** | reference mIoU **0.4469**, abstentions **5**, `REFERENCE_OK 491` / `SELECTION_WRONG 305` / `NOT_COVERED 135` / `ABSTENTION 5` / `GEOMETRY_POOR 0` · Z-B3 strict **0.2270** (pairs 0.5153, margin +0.1952) · **D-B1 strict 0.2335** (Δ **+0.0065**, pairs 0.4172, margin **+0.2009**) · retention 0.5946 / 0.6158 / 0.6164 (mean **0.6090**) |
+| §25 gates | **7/8** — pass: mean oracle mIoU 0.3834 ≥ 0.35 · Δ +0.0510 ≥ +0.04 · 3/3 seeds · min seed 0.3799 ≥ 0.32 · predicted strict 0.2335 ≥ 0.22 · margin not worse · no violation · **fail: gate 5, predicted-reference gain +0.0065 < +0.02** |
+| Test lock | **LOCKED**, `test_execution_authorized: false`, `task7i_completed_train_val: true`, `db1_formal_val_confirmed: false`, `unlock_requires: "ChatGPT audit of Task 7I"` |
+| Verdict | **`DB1_FORMAL_VAL_NOT_CONFIRMED`** |
+
+1. **D-B1's decoder-level advantage is confirmed and seed-robust under the oracle reference**: +0.0510 mIoU
+   mean, 3/3 matched seeds, std 0.0039 (vs Z-B3 0.0113) and a pair margin of +0.3775 vs +0.3167.
+2. **It is not yet confirmed end-to-end**: with the frozen U-C1 predicted reference the gain shrinks to
+   +0.0065 strict mIoU (below the predeclared +0.02 gate) and the counterfactual pair pass rate falls to 0.4172
+   from Z-B3's 0.5153 — the reference stage (305/936 SELECTION_WRONG, 135/936 NOT_COVERED) dilutes the
+   decoder-level benefit.
+3. **No tuning followed**: architecture, loss, hyperparameters, fields, parser and reference policy were left
+   untouched after the validation result, and the test lock was re-verified LOCKED.
+4. Next: 等待 ChatGPT 审核 Task 7I 的三种子正式 train/val 结果；在 ChatGPT 明确解锁前，test 保持 LOCKED，不运行任何 final-test inference。
 
 ## Task 7H measured results
 

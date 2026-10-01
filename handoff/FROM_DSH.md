@@ -17,128 +17,130 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 7H Report: Development Architecture Freeze + Formal Experiment Protocol
+# FROM_DSH — Task 7I Report: Formal L3 Three-Seed Train/Validation (Z-B3 vs D-B1)
 
-_This file holds the Task 7H report. The Task 7G report is preserved in git history at commit `22401fe`;
-Task 7F at `c59c6d3`; Task 7E at `f9c6e87`; Task 7D at `86e4f4c`; Task 7C at `632c9c0`._
+_This file holds the Task 7I report. The Task 7H report is preserved in git history at commit `511a7bd`;
+Task 7G at `22401fe`; Task 7F at `c59c6d3`; Task 7E at `f9c6e87`._
 
 **Note on the legacy `ARTIFACT-FACTS` block above:** those numbers describe the superseded
 BuildSpatialReason **v0.1.1** dataset (read-only legacy evidence). The active canonical reasoning dataset
 for all Task 6L+ work is **BuildSpatialReason v0.2 over WHU-EA-NativeVector v1.0**.
 
-Full freeze document: `docs/task7h_development_architecture_freeze.md` · formal protocol:
-`docs/task7h_formal_experiment_protocol.md`. **Task 7H performed no training and read no test record.**
+Full design notes: `docs/task7i_formal_l3_trainval.md`. Validation stage only — **the test split was never
+opened, hashed, enumerated or evaluated and stays LOCKED.**
 
 ## 1. Verdict
 
-**`DEVELOPMENT_ARCHITECTURE_FROZEN`** — all ten section-22 conditions hold:
+**`DB1_FORMAL_VAL_NOT_CONFIRMED`** — section 28 priority: protocol clean, test lock LOCKED before and after,
+formal population exact, all six runs complete and fresh-initialized, but **one of the eight section-25 gates
+fails** → item 5.
 
-| # | Condition | Result |
-|---|---|---|
-| 1 | required checkpoint hashes match | ✓ YOLO `ef852b58…61f474` · Task 7C parser `c1505736…d58d9a` · Task 6O N-B3 `7556e4a4…c7d6ab` · Task 6Z Z-B3 `74f308e1…fc0f0bc` · Task 7D D-B1 `6df31909…21a89c0` |
-| 2 | active dataset identity | ✓ BuildSpatialReason **v0.2** / WHU-EA-NativeVector **v1.0** / `scene_disjoint_v1` |
-| 3 | no rejected selector/ranker in the chain | ✓ all six rejected modules recorded as frozen negative evidence and excluded |
-| 4 | D-B1 role correct | ✓ `preferred L3 target-decoder architecture candidate`; Z-B3 = frozen baseline/ablation |
-| 5 | parser limitation recorded | ✓ canonical 1.0 / macro F1 1.0 / 240/240 / 40/40 vs fixed24 5/24, compact 0/8, stress 0.6667 |
-| 6 | reference limitation recorded | ✓ L-01 unresolved practical bottleneck |
-| 7 | formal protocol complete | ✓ four L3 programs (train 1344 = 323/347/338/336, val 936), D-B1 schedule copied from `task7d_training.json`, seeds 20261001/2/3, complete metric set |
-| 8 | test lock LOCKED | ✓ `test_execution_authorized: false` |
-| 9 | no training occurred | ✓ |
-| 10 | no test accessed | ✓ test file neither read nor hashed |
+| # | Gate | Required | Measured | Pass |
+|---|---|---|---:|---|
+| 1 | D-B1 mean oracle full-val mIoU | ≥ 0.35 | 0.3834 | ✓ |
+| 2 | D-B1 mean − Z-B3 mean (oracle) | ≥ +0.04 | +0.0510 | ✓ |
+| 3 | matched seeds with D-B1 > Z-B3 | ≥ 2/3 | 3/3 | ✓ |
+| 4 | lowest D-B1 seed oracle mIoU | ≥ 0.32 | 0.3799 | ✓ |
+| 5 | D-B1 mean − Z-B3 mean (predicted strict) | ≥ +0.02 | **+0.0065** | **✗** |
+| 6 | D-B1 mean predicted strict mIoU | ≥ 0.22 | 0.2335 | ✓ |
+| 7 | D-B1 predicted pair margin not lower by > 0.02 | ≥ Z-B3 − 0.02 | +0.2009 vs +0.1952 | ✓ |
+| 8 | no protocol violation | — | — | ✓ |
 
-No other verdict applies: no frozen asset is missing, all hashes match, and the protocol is consistent.
+## 2. Recorded Task 7G result (unchanged)
 
-## 2. Recorded Task 7G result (frozen, not modified)
+`LARGEST_SELECTOR_NOT_LEARNABLE`: G-I0 mean selected reference IoU `0.5199913587`; G-I1 `0.6198877726`
+(gain `+0.0998964138`), oracle-best top-1 `0.6591928251`, mean gap `0.1790755783`; gate gain PASS,
+mean IoU ≥ 0.62 FAIL, top1 PASS, gap ≤ 0.14 FAIL → external stage never executed, no scene-disjoint claim,
+selector not adopted, reference intervention stops.
 
-`LARGEST_SELECTOR_NOT_LEARNABLE`. Internal tile-disjoint holdout: G-I0 mean selected reference IoU
-`0.5199913587`, oracle-best top-1 `0.4887892377`, mean gap `0.2789719922`; G-I1 mean selected IoU
-`0.6198877726`, median `0.7895902547`, Pr(≥0.50) `0.7309417040`, oracle top-1 `0.6591928251`, mean gap
-`0.1790755783`, gain `+0.0998964138`. Gate: gain ≥ +0.08 **PASS** · mean IoU ≥ 0.62 **FAIL** (0.6198878) ·
-top-1 ≥ 0.55 **PASS** · gap ≤ 0.14 **FAIL** (0.1790756).
+## 3. Protocol corrections (Task 7H artifacts untouched)
 
-Consequences: the external E-HoldoutL3 stage **did not run**; the Task 7G selector is **not adopted**; **no
-scene-disjoint result may be claimed**; reference intervention stops.
+* **I-01** — Task 7H's `checkpoint_selection = "MiniVal240 mIoU"` is superseded by **all 936 valid v0.2 L3
+  validation records, oracle-reference mIoU**.
+* **I-02** — the formal comparison retrains **both Z-B3 and D-B1** with the identical formal train/val
+  population, identical seeds, identical optimizer schedule and fresh trainable initialization; the historical
+  checkpoints remain development evidence only.
 
-**Correct interpretation.** The learned selector showed a meaningful **internal** improvement but did not clear
-the predeclared internal learnability gate. Calling it a scene-disjoint failure would be scientifically
-incorrect because the external stage was never executed. The development system keeps the deterministic
-selector — not because it is best in principle, but because **no learned replacement passed the frozen adoption
-protocol**.
+## 4. Frozen populations
 
-## 3. Frozen development architecture `BuildReasonSeg-DevFreeze-2026-10`
+`G-FormalTrain` **1344** = left 323 / right 347 / above 338 / below 336; `G-FormalVal` **936** = left 250 /
+right 249 / above 224 / below 213; train∩val = **0**; both sample-id SHA256 recorded; no test material read.
+`I-FormalValPairsAll` = **326** pairs (same tile, same oracle reference, different direction, different target;
+dedup by the exact `min||max` key; sorted; never subsampled; reporting-only).
 
-```text
-controlled instruction
-→ Task 7C Qwen3-VL-2B text-only ProgramHead (20 canonical programs)
-→ U-C1 YOLO26m-seg proposals (imgsz 640, conf 0.05, max_det 300, default NMS, no TTA, no tiling)
-→ deterministic largest reference selector (max predicted mask area → higher confidence → lower index)
-→ GeometricRelationField v0.2 (P_dir) + NearestBoundaryField v0.1 (P_near)
-→ Task 7D D-B1 target decoder
-→ target mask
-```
+## 5. Six formal runs (frozen protocol)
 
-This is **not** a new checkpoint, **not** the final paper model, **not** an unrestricted natural-language
-system and **not** an end-to-end solved system. The front end is a **canonical-program / controlled-language
-development interface**. For L3 both fields are used separately and the product `W = clamp(P_dir * P_near)` is
-used only for D-B1 prototype weighting (Task 7D). The directional L2 path is frozen to **Task 6O N-B3** (N-B2/N-B4
-must not be substituted). nearest-only stays **`experimental/limited`**.
+Frozen SAM2 features, frozen fields, oracle GT reference, fresh initialization, AdamW lr 3e-4 / wd 1e-4 /
+batch 8 / max 25 epochs / patience 5 / no scheduler / no augmentation / bf16 AMP / `BCE + Dice` only; per-epoch
+evaluation of all 936 val records; selection by (val mIoU, val Dice, val Pr@0.5, earlier epoch); early stopping
+on full-val mIoU.
 
-## 4. Frozen limitations
+| Run | Selected epoch | Final epoch | Val mIoU | Wall | Params |
+|---|---:|---:|---:|---:|---:|
+| Z-B3 / 20261001 | 4 | 9 | 0.3194 | 120.6 s | 275,777 |
+| Z-B3 / 20261002 | 14 | 19 | 0.3394 | 75.8 s | 275,777 |
+| Z-B3 / 20261003 | 5 | 10 | 0.3386 | 40.6 s | 275,777 |
+| D-B1 / 20261001 | 11 | 16 | 0.3799 | 126.3 s | 278,081 |
+| D-B1 / 20261002 | 9 | 14 | 0.3827 | 62.1 s | 278,081 |
+| D-B1 / 20261003 | 8 | 13 | 0.3877 | 57.5 s | 278,081 |
 
-| ID | Limitation | Status |
-|---|---|---|
-| L-01 | Reference selection (F-R0 0.245405 → F-R1 0.364909, gain +0.119504 = 85.3 % of the gap; Task 7G not adopted) | **unresolved practical bottleneck** |
-| L-02 | Proposal coverage (coverage@0.50 = 0.846039, coverage gain +0.054316, 103 uncovered records) | **secondary unresolved bottleneck** |
-| L-03 | Proposal-mask geometry (covered gain +0.004253) | **not a major current bottleneck** |
-| L-04 | Free-form L3 language (canonical 1.0 vs fixed24 5/24, compact 0/8, stress 0.6667) | **controlled-language interface only** |
-| L-05 | nearest-only (Task 6Y B2 0.2864, paired 6/20, `NEAREST_FIELD_NO_MEANINGFUL_GAIN`) | **not validated as standalone final capability** |
-| L-06 | unseen-city/domain generalization | **not established** (raster/scene separation only) |
+## 6. Oracle-reference full-val results
 
-## 5. Formal protocol and test lock (frozen, not executed)
+Z-B3 mIoU 0.3194 / 0.3394 / 0.3386 (mean **0.3324** ± 0.0113), pair pass rate 0.8691, margin +0.3167.
+**D-B1 0.3799 / 0.3827 / 0.3877 (mean 0.3834 ± 0.0039)**, pair pass rate 0.8446, margin **+0.3775**.
+Matched-seed deltas D-B1 − Z-B3: **+0.0606 / +0.0433 / +0.0491 (3/3)**.
 
-`evaluation/task7h_formal_experiment_protocol.json` + `docs/task7h_formal_experiment_protocol.md`: train for
-gradients · val for checkpoint selection/early stopping · test only after all choices are frozen. The Task 6M
-J4-v2 test access is disclosed, so future reporting may only say **`final frozen-architecture test evaluation`**
-— never "untouched test". D-B1 formal retraining uses fresh weights with the schedule copied verbatim from
-`evaluation/task7d_training.json` (AdamW, lr 3e-4, wd 1e-4, batch 8, ≤25 epochs, patience 5, bf16 AMP, val-mIoU
-selection) and seeds **20261001 / 20261002 / 20261003**, each selected independently. Practical predicted
-reference and oracle-reference diagnostics are reported separately. Z-B3 is B-L3-0 (baseline/ablation), D-B1 is
-B-L3-1 (main candidate); the historical Task 6Z/7D controls stay ablations.
+## 7. Practical predicted-reference full-val results
 
-Test lock: `status LOCKED`, `architecture_head D-B1`, `reference_policy "U-C1 deterministic largest"`,
-`parser_role "controlled-language/canonical interface"`, `test_execution_authorized false`,
-`unlock_condition "ChatGPT audit after formal train/val completion"`. Task 7H did not unlock it.
+Reference computed once and shared by all six runs: mIoU **0.4469**, abstentions **5**, `REFERENCE_OK 491`,
+`SELECTION_WRONG 305`, `NOT_COVERED 135`, `ABSTENTION 5`, `GEOMETRY_POOR 0`.
+Z-B3 strict 0.2203 / 0.2267 / 0.2340 (mean **0.2270**, pair pass rate 0.5153, margin +0.1952);
+**D-B1 strict 0.2259 / 0.2356 / 0.2390 (mean 0.2335**, pair pass rate 0.4172, margin **+0.2009)**.
+Oracle→predicted retention (D-B1): 0.5946 / 0.6158 / 0.6164 (mean **0.6090**).
 
-## 6. Claim registry
+## 8. Measured reading (no repair proposed)
 
-C1 `SUPPORTED` · C2 `SUPPORTED_WITH_LIMITATION` · C3 `SUPPORTED` · C4 `NOT_SUPPORTED` · C5 `NOT_SUPPORTED` ·
-C6 `SUPPORTED_WITH_LIMITATION` · C7 `NOT_SUPPORTED` · C8 `NOT_SUPPORTED` · C9 `NOT_SUPPORTED`. No novelty or
-"first" claim appears anywhere in the registry or the docs.
+Under the **oracle** reference the D-B1 advantage is confirmed and clearly more seed-stable than Z-B3
+(+0.0510 mIoU mean, 3/3 matched seeds, std 0.0039 vs 0.0113, pair margin +0.3775 vs +0.3167). Under the
+**practical predicted** reference the same comparison loses most of that advantage (+0.0065 strict mIoU, below
+the predeclared +0.02 gate) and its counterfactual pair **pass rate** drops to 0.4172 versus Z-B3's 0.5153,
+although its margin stays slightly higher (+0.2009 vs +0.1952). The reference stage — 305/936
+`SELECTION_WRONG` and 135/936 `NOT_COVERED` — dilutes the decoder-level gain, exactly the limitation recorded
+in Tasks 7F/7H: **the architecture gain is real at the decoder level but not yet confirmed end-to-end.**
 
-## 7. Tests, storage, git
+## 9. Test lock
 
-`python -m pytest tests/ -q` → **1420 passed, 1 skipped** (Task 7G ended at 1377 passed / 1 skipped; no prior
-passing test was reduced). `tests/test_task7h_development_freeze.py` adds the 43 Part-I checks.
+`evaluation/task7i_test_lock_status.json`: `status = LOCKED`, `test_execution_authorized = false`,
+`task7i_completed_train_val = true`, `db1_formal_val_confirmed = false`,
+`unlock_requires = "ChatGPT audit of Task 7I"`. The Task 7H lock was re-verified as LOCKED before and after the
+stage. DSH does not unlock it and authorizes no test action.
 
-Not committed: model checkpoints, proposal/feature caches, imagery/vectors, local generated model data,
-`.conda`. Committed: freeze/protocol JSON, docs, audit scripts, tests, handoff. No checkpoint was created and
-no production CLI default was changed. Nothing was downloaded or installed. Watt was **not needed** in Task 7H
-(the pre-existing instance is transport-only, not owned by this project, left running).
+## 10. Tests, storage, git
 
-## 8. Interpretation boundary
+`python -m pytest tests/ -q` → **1467 passed, 1 skipped** (Task 7H ended at 1420 passed / 1 skipped; no prior
+passing test was reduced). `tests/test_task7i_formal_trainval.py` adds the 47 Part-P checks.
 
-DSH audited and froze only. No model was trained; no test record was read, hashed or evaluated; no threshold,
-field, loss, model structure or data split was changed; the Task 7G selector was not run on E-Holdout after its
-STOP; no Task 7I implementation detail beyond the frozen protocol was chosen; D-B1 is not called the final paper
-model; unrestricted natural language, end-to-end success, novelty, "first" and unseen-city generalization are
-not claimed; the test split is never called untouched.
+Not committed: the six Task 7I checkpoints (gitignored under `artifacts/checkpoints/task7i/`), SAM2/proposal
+feature caches, expanded pack rows, source imagery/vectors, `.conda`. Committed: population/pair manifests,
+small training/evaluation JSON, scripts, tests, docs, handoff. No production CLI default was changed. Nothing
+was downloaded or installed. Watt was **not needed** in Task 7I (the pre-existing instance is transport-only,
+not owned by this project, left running).
 
-## 9. Recommended next step (exact wording required by Part L)
+## 11. Interpretation boundary
 
-等待 ChatGPT 审核 Task 7H 的开发版架构冻结与正式实验协议；在审核通过前不启动正式三种子训练，不解锁 test。
+DSH reports measurements only. Validation results are **not** called test results; the test split is never
+called untouched; no seed was chosen by test; no unfavourable seed was dropped; no architecture, loss,
+hyperparameter, field, parser or reference policy was changed after seeing the formal val results; the test
+split stays LOCKED; no final-test inference was started; parser/reference/YOLO were not retrained; no further
+selector was trained; unrestricted natural-language capability, unseen-city generalization and novelty/"first"
+claims are not made.
 
-## 10. STOP
+## 12. Recommended next step (exact wording required by Part N)
 
-Task 7H stops here: Task 7I formal training is not started, the test lock is not unlocked, no test is run, no
-further selector is trained, YOLO/parser/D-B1 are not retrained and the architecture is not modified. Waiting
-for the ChatGPT audit.
+等待 ChatGPT 审核 Task 7I 的三种子正式 train/val 结果；在 ChatGPT 明确解锁前，test 保持 LOCKED，不运行任何 final-test inference。
+
+## 13. STOP
+
+Task 7I stops here: the test lock is not unlocked, no final test is run, Task 7J is not started, the
+architecture is not changed and no further selector/reference/parser training is started. Waiting for the
+ChatGPT audit.
