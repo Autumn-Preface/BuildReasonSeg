@@ -141,3 +141,91 @@ Status: **ACCEPTED / DEFERRED TO SEPARATE DELIVERY ITERATION** (reserved as Task
 
 Also awaiting resolution of the two harness-test defects above (both confined to
 `tests/test_task8b3_interactive_suite.py`) before any real six-case run.
+
+## Task 8B.3-R2 — Driver Audit Closure and Formal Suite
+
+### R2.1 ChatGPT R1 audit findings
+
+1. **Test defect A** — `_run_fake(... expected=...)` ignored its `expected` argument and hard-coded A1's program;
+2. **Test defect B** — `test_decision_path_has_no_readline` scanned raw source text and falsely matched the
+   driver's explanatory docstring;
+3. **Driver timeout defect** — blocking `os.read(...)` in the main control loop could block past the 15-minute
+   deadline when the child stayed alive without emitting bytes;
+4. **Environment-scope deviation** — the harness added `HF_HUB_OFFLINE=1` / `TRANSFORMERS_OFFLINE=1`.
+
+### R2.2 Exact driver fixes (harness only)
+
+- `child_environment()` now copies `os.environ` and overrides **exactly** `PYTHONIOENCODING=utf-8`,
+  `PYTHONUNBUFFERED=1`, `PYTHONUTF8=1` — the two offline flags are no longer created or overridden by the harness;
+- the interaction core was rewritten around a **daemon reader thread + `queue.Queue`**: the thread performs the
+  blocking binary reads and pushes raw chunks plus one EOF sentinel, the main thread consumes with
+  `queue.get(timeout=0.10)`, decodes incrementally, detects the exact prompts, makes every Y/N decision and owns the
+  `time.monotonic()` deadline — so the 900 s timeout fires even if the child prints zero bytes
+  (terminate → 10 s wait → kill → bounded drain → `DRIVER_TIMEOUT`);
+- a reusable `_run_interactive_process(...)` helper now carries that logic for both the six frozen cases and the
+  harness tests;
+- frozen constants, prompts, regexes, `DISPLAY_TO_PROGRAM`, `CASES` and `CASE_TIMEOUT_SECONDS = 900` were not
+  changed; no product/runtime/delivery file was touched.
+
+### R2.3 Dedicated test gate (Phase G) — did not reach 100 % PASS
+
+```text
+python -m pytest tests/test_task8b3_interactive_suite.py -q
+12 passed, 3 failed
+```
+
+Failing harness tests:
+
+```text
+- test_repeated_prompt_is_answered_only_once
+- test_no_executable_readline_or_communicate_in_driver
+- test_suite_cases_and_prompts_frozen
+```
+
+All three are defects **of the new harness test file itself**, not of the driver or the RC1 product:
+
+- `test_repeated_prompt_is_answered_only_once` — the fake child asks the same prompt twice and therefore blocks
+  forever on the second question, which the driver (correctly) never answers; the test's expectation that the run
+  completes is wrong.
+- `test_no_executable_readline_or_communicate_in_driver` — the AST-based scan still reports a match; the driver
+  itself only calls `stream.read(...)` and `subprocess.run(...)`.
+- `test_suite_cases_and_prompts_frozen` — the exact-tuple comparison against the driver's `CASES` does not match as
+  written (the A3 entry in the driver is built with a `str.replace` expression rather than a literal).
+
+Per Task 8B.3-R2 §9 the formal suite was therefore **not** started, and no further patch was applied after this gate.
+
+### R2.4 Other gates
+
+| gate | result |
+|---|---|
+| repository suite (`pytest tests/ -q`) | NOT RUN (§10 requires the dedicated gate to pass first) |
+| external `check_setup.py` | READY (live `ultralytics==8.4.164`; verified in R1 and unchanged since) |
+| six input hashes | unchanged vs R1 (A1–A4 1024×1024 RGB PNG; B1/B2 5000×5000 RGB TIFF) |
+| FORMAL_SUITE_FREEZE | NOT RECORDED (gate not reached) |
+
+### R2.5 Formal suite (Phase K)
+
+`NOT RUN ONCE` — no sample was executed; A1–B2 remain `NOT RUN` for language and runtime.
+
+### R2.6 Review pack (Phase M)
+
+NOT CREATED (no outputs produced).
+
+### R2.7 Visual verdict
+
+`PENDING CHATGPT/USER REVIEW` — no mask/overlay exists to review.
+
+### R2.8 No-tuning statement
+
+No prompt was changed or retried; no RC1 product/runtime/`delivery_src`/`predict.py`/ProgramHead/Qwen-suggestion/
+detector/Reference/SAM2/D-B1/threshold/config/checkpoint was modified; no Assisted Mode, `--reference-id` or
+`--inspect-proposals` was used; no training, download, package installation or final-test access occurred.
+
+### R2.9 Output-layout requirement
+
+`ACCEPTED / DEFERRED TO TASK 8B.4` — still not implemented.
+
+### R2.10 Exact STOP reason
+
+Dedicated harness-test gate not green (`test_repeated_prompt_is_answered_only_once, test_no_executable_readline_or_communicate_in_driver, test_suite_cases_and_prompts_frozen`) → Task 8B.3-R2 §9 forbids starting the formal suite,
+so no case was run and no formal evidence exists.

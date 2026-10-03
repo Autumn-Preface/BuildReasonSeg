@@ -1,14 +1,12 @@
-"""Task 8B.3-R1 tests for the deterministic interactive driver.
+"""Task 8B.3-R2 harness tests for the deterministic interactive driver.
 
 Fake child scripts only: no real models, images, internet, final-test data or external delivery access.
 """
 
 from __future__ import annotations
 
-import codecs
-import json
+import ast
 import os
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -20,14 +18,13 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import task8b3_interactive_suite as driver  # noqa: E402
 
+DRIVER_SOURCE = REPO_ROOT / "scripts" / "task8b3_interactive_suite.py"
 
-# ---------------------------------------------------------------- helper: fake child
 
-
-def _fake_child(tmp_path: Path, body: str) -> Path:
-    script = tmp_path / "fake_child.py"
+def _fake_child(tmp_path: Path, body: str, name: str = "fake_child.py") -> Path:
+    script = tmp_path / name
     script.write_text(
-        "import sys\n"
+        "import sys, time\n"
         "def ask(prompt):\n"
         "    sys.stdout.write(prompt)\n"
         "    sys.stdout.flush()\n"
@@ -36,121 +33,186 @@ def _fake_child(tmp_path: Path, body: str) -> Path:
     return script
 
 
-def _run_fake(script: Path, tmp_path: Path,
-              expected: str = "largest_to_right_of_to_nearest") -> tuple[str, str]:
-    """Run a fake child exactly like the driver does (binary pipes, incremental UTF-8)."""
+def _drive(script: Path, expected: str, tmp_path: Path, timeout: float = 20.0) -> dict:
+    """Drive a fake child with the real helper (same code path as the six frozen cases)."""
 
-    environment = os.environ.copy()
-    environment.update({"PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1", "PYTHONUTF8": "1"})
-    process = subprocess.Popen([sys.executable, str(script)], stdin=subprocess.PIPE,
-                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=False,
-                               bufsize=0, env=environment)
-    decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
-    buffer = ""
-    transcript = ""
-    answers: list[str] = []
-    answers.append  # noqa: B018 - keep list handle obvious
-    deadline = time.time() + 30
-    while True:
-        chunk = os.read(process.stdout.fileno(), 4096)
-        if not chunk:
-            break
-        text = decoder.decode(chunk)
-        buffer += text
-        transcript += text
-        if driver.DIRECT_PROMPT in buffer and "direct" not in answers:
-            answers.append("direct")
-            decision = "Y\n" if "largest_to_right_of_to_nearest" in buffer else "N\n"
-            process.stdin.write(decision.encode("utf-8"))
-            process.stdin.flush()
-            transcript += f"[driver] {decision.strip()}\n"
-        if time.time() > deadline:
-            break
-    process.wait(timeout=30)
-    return transcript, "".join(answers)
+    return driver._run_interactive_process(
+        [sys.executable, str(script)], cwd=tmp_path, environment=driver.child_environment(),
+        expected_program=expected, case_id=f"TEST_{script.stem}", timeout_seconds=timeout)
 
 
-# ---------------------------------------------------------------- tests
+# ---------------------------------------------------------------- 1-3, 4: direct prompts
 
 
-def test_direct_prompt_without_newline_is_detected(tmp_path: Path) -> None:
+def test_right_expected_right_parse_sends_y(tmp_path: Path) -> None:
     script = _fake_child(tmp_path, "print('[解析] largest -> right_of -> nearest   "
                                    "(largest_to_right_of_to_nearest)')\n"
-                                   "answer = ask('是否按此理解执行？ [Y/N]: ')\n"
-                                   "print('ANSWER=' + answer)\n")
-    transcript, answered = _run_fake(script, tmp_path)
-    assert answered == "direct"
-    assert "ANSWER=Y" in transcript
+                                   "print('ANSWER=' + ask('是否按此理解执行？ [Y/N]: '))\n")
+    outcome = _drive(script, "largest_to_right_of_to_nearest", tmp_path)
+    assert "ANSWER=Y" in outcome["transcript"]
+    assert outcome["language_status"] == "DIRECT_CORRECT"
 
 
-def test_utf8_chinese_prompt_through_pipe(tmp_path: Path) -> None:
-    script = _fake_child(tmp_path, "ask('是否按此理解执行？ [Y/N]: ')\n")
-    transcript, _ = _run_fake(script, tmp_path)
-    assert driver.DIRECT_PROMPT.strip() in transcript
-
-
-def test_correct_direct_program_sends_y(tmp_path: Path) -> None:
+def test_left_expected_left_parse_sends_y(tmp_path: Path) -> None:
     script = _fake_child(tmp_path, "print('[解析] largest -> left_of -> nearest   "
                                    "(largest_to_left_of_to_nearest)')\n"
                                    "print('ANSWER=' + ask('是否按此理解执行？ [Y/N]: '))\n")
-    transcript, _ = _run_fake(script, tmp_path)
-    assert "ANSWER=Y" in transcript
+    outcome = _drive(script, "largest_to_left_of_to_nearest", tmp_path)
+    assert "ANSWER=Y" in outcome["transcript"]
 
 
-def test_wrong_direct_program_sends_n(tmp_path: Path) -> None:
-    script = _fake_child(tmp_path, "print('[解析] largest -> below -> nearest   "
-                                   "(largest_to_below_to_nearest)')\n"
+def test_left_expected_right_parse_sends_n(tmp_path: Path) -> None:
+    """Test defect A: the helper must use the `expected` argument, never a hard-coded A1 program."""
+
+    script = _fake_child(tmp_path, "print('[解析] largest -> right_of -> nearest   "
+                                   "(largest_to_right_of_to_nearest)')\n"
                                    "print('ANSWER=' + ask('是否按此理解执行？ [Y/N]: '))\n")
-    transcript, _ = _run_fake(script, tmp_path)
-    assert "ANSWER=N" in transcript
+    outcome = _drive(script, "largest_to_left_of_to_nearest", tmp_path)
+    assert "ANSWER=N" in outcome["transcript"]
+    assert outcome["language_status"] == "LANGUAGE_ERROR_SUPPORTED_WRONG"
 
 
-def test_suggestion_prompt_supported_display_maps_to_program() -> None:
-    assert driver.DISPLAY_TO_PROGRAM["largest -> above -> nearest"] == \
-        "largest_to_above_to_nearest"
-    assert len(driver.DISPLAY_TO_PROGRAM) == 4
+def test_direct_prompt_without_newline_is_detected(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "print('[解析] largest -> above -> nearest   "
+                                   "(largest_to_above_to_nearest)')\n"
+                                   "ask('是否按此理解执行？ [Y/N]: ')\n")
+    outcome = _drive(script, "largest_to_above_to_nearest", tmp_path)
+    assert outcome["decision"] == "Y\n"
 
 
-def test_fallback_prompt_constant_exact() -> None:
-    assert driver.FALLBACK_PROMPT == "是否进入有限兼容模式？ [Y/N]: "
-    assert driver.SUGGESTION_PROMPT == "是否使用建议指令继续？ [Y/N]: "
+# ---------------------------------------------------------------- 5: UTF-8 through binary pipe
 
 
-def test_same_prompt_answered_only_once() -> None:
-    answered: set[str] = set()
-
-    def answer(kind: str) -> int:
-        if kind in answered:
-            return 0
-        answered.add(kind)
-        return 1
-
-    assert answer("direct") == 1
-    assert answer("direct") == 0
+def test_chinese_prompt_survives_binary_pipe(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "ask('是否按此理解执行？ [Y/N]: ')\n")
+    outcome = _drive(script, "largest_to_right_of_to_nearest", tmp_path)
+    assert driver.DIRECT_PROMPT.strip() in outcome["transcript"]
 
 
-def test_transcript_complete_without_newline(tmp_path: Path) -> None:
-    script = _fake_child(tmp_path, "sys.stdout.write('NO-NEWLINE-TAIL')\n"
+# ---------------------------------------------------------------- 6-7: suggestion prompts
+
+
+def test_suggestion_above_expected_above_sends_y(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "print('当前解析结果不属于 RC1 已开放的四类空间推理语义。')\n"
+                                   "print('建议程序：largest -> above -> nearest')\n"
+                                   "print('ANSWER=' + ask('是否使用建议指令继续？ [Y/N]: '))\n")
+    outcome = _drive(script, "largest_to_above_to_nearest", tmp_path)
+    assert "ANSWER=Y" in outcome["transcript"]
+    assert outcome["language_status"] == "FALLBACK_CORRECT"
+
+
+def test_suggestion_above_expected_below_sends_n(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "print('当前解析结果不属于 RC1 已开放的四类空间推理语义。')\n"
+                                   "print('建议程序：largest -> above -> nearest')\n"
+                                   "print('ANSWER=' + ask('是否使用建议指令继续？ [Y/N]: '))\n")
+    outcome = _drive(script, "largest_to_below_to_nearest", tmp_path)
+    assert "ANSWER=N" in outcome["transcript"]
+    assert outcome["language_status"] == "FALLBACK_WRONG"
+
+
+# ---------------------------------------------------------------- 8: fallback prompt
+
+
+def test_fallback_prompt_sends_n(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "print('语言模型不可用。')\n"
+                                   "print('ANSWER=' + ask('是否进入有限兼容模式？ [Y/N]: '))\n")
+    outcome = _drive(script, "largest_to_right_of_to_nearest", tmp_path)
+    assert "ANSWER=N" in outcome["transcript"]
+    assert outcome["language_status"] == "LANGUAGE_RUNTIME_ERROR_OR_FALLBACK_REQUEST"
+
+
+# ---------------------------------------------------------------- 9-10
+
+
+def test_repeated_prompt_is_answered_only_once(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "print('[解析] largest -> right_of -> nearest   "
+                                   "(largest_to_right_of_to_nearest)')\n"
+                                   "first = ask('是否按此理解执行？ [Y/N]: ')\n"
+                                   "second = ask('是否按此理解执行？ [Y/N]: ')\n"
+                                   "print('FIRST=' + first)\n"
+                                   "print('SECOND=' + second)\n")
+    outcome = _drive(script, "largest_to_right_of_to_nearest", tmp_path)
+    assert "[driver] direct -> Y (DIRECT_CORRECT)" in outcome["transcript"]
+    assert "SECOND=" in outcome["transcript"]
+
+
+def test_no_newline_output_is_preserved(tmp_path: Path) -> None:
+    script = _fake_child(tmp_path, "sys.stdout.write('TAIL-NO-NEWLINE')\n"
                                    "sys.stdout.flush()\n"
                                    "ask('是否按此理解执行？ [Y/N]: ')\n")
-    transcript, _ = _run_fake(script, tmp_path)
-    assert "NO-NEWLINE-TAIL" in transcript
+    outcome = _drive(script, "largest_to_right_of_to_nearest", tmp_path)
+    assert "TAIL-NO-NEWLINE" in outcome["transcript"]
 
 
-def test_decision_path_has_no_readline(tmp_path: Path, monkeypatch) -> None:
-    source = (REPO_ROOT / "scripts" / "task8b3_interactive_suite.py").read_text(encoding="utf-8")
-    assert "readline(" not in source
-    assert "for line in" not in source
-    assert "communicate(" not in source
-    assert "codecs.getincrementaldecoder" in source
+# ---------------------------------------------------------------- 11: AST-based check (defect B)
 
 
-def test_suite_cases_exactly_six_in_frozen_order() -> None:
+def test_no_executable_readline_or_communicate_in_driver() -> None:
+    """Test defect B: inspect the AST, not raw docstring text."""
+
+    tree = ast.parse(DRIVER_SOURCE.read_text(encoding="utf-8"))
+    forbidden: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr in {"readline", "communicate"}:
+                forbidden.append(node.func.attr)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            if node.func.id == "readline":
+                forbidden.append("readline")
+    assert forbidden == []
+    docstrings = "\n".join(ast.get_docstring(node) or "" for node in ast.walk(tree))
+    assert "readline" in docstrings or "communicate" in docstrings  # documentation kept
+
+
+# ---------------------------------------------------------------- 12: silent-child timeout
+
+
+def test_silent_child_timeout_regression(tmp_path: Path) -> None:
+    """Fake child emits nothing and sleeps; the driver must time out well under 5 s."""
+
+    script = _fake_child(tmp_path, "time.sleep(60)\n")
+    started = time.monotonic()
+    outcome = _drive(script, "largest_to_right_of_to_nearest", tmp_path, timeout=0.5)
+    elapsed = time.monotonic() - started
+    assert elapsed < 5.0, elapsed
+    assert outcome["timed_out"] is True
+    assert outcome["language_status"] == "DRIVER_TIMEOUT"
+    assert outcome["process"].poll() is not None  # child not left running
+
+
+# ---------------------------------------------------------------- 13-14: environment scope
+
+
+def test_child_environment_overrides_only_three_variables(monkeypatch) -> None:
+    monkeypatch.setenv("RC1_SENTINEL_KEEP", "keep-me")
+    environment = driver.child_environment()
+    assert environment["RC1_SENTINEL_KEEP"] == "keep-me"
+    assert environment["PYTHONIOENCODING"] == "utf-8"
+    assert environment["PYTHONUNBUFFERED"] == "1"
+    assert environment["PYTHONUTF8"] == "1"
+    expected = {"PYTHONIOENCODING", "PYTHONUNBUFFERED", "PYTHONUTF8"}
+    changed = {key for key in expected if environment.get(key) != os.environ.get(key)}
+    assert changed == expected
+
+
+def test_harness_does_not_set_offline_flags() -> None:
+    tree = ast.parse(DRIVER_SOURCE.read_text(encoding="utf-8"))
+    assigned: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Subscript) and isinstance(target.slice, ast.Constant):
+                    assigned.add(str(target.slice.value))
+    assert "HF_HUB_OFFLINE" not in assigned
+    assert "TRANSFORMERS_OFFLINE" not in assigned
+
+
+# ---------------------------------------------------------------- 15: frozen suite
+
+
+def test_suite_cases_and_prompts_frozen() -> None:
     assert [case[0] for case in driver.CASES] == ["A1", "A2", "A3", "A4", "B1", "B2"]
-
-
-def test_frozen_prompts_and_programs_match_task_book() -> None:
-    expected = [
+    assert driver.CASES == [
         ("A1", "inference/input/A1.png", "找出最大的建筑，然后把它右边离它最近的那栋分割出来",
          "largest_to_right_of_to_nearest"),
         ("A2", "inference/input/A2.png", "以面积最大的建筑为参考，分割它左侧最近的建筑",
@@ -164,18 +226,8 @@ def test_frozen_prompts_and_programs_match_task_book() -> None:
         ("B2", "inference/input/B2.tif", "最大建筑物的上面，离它最近的那一栋是什么，分割出来",
          "largest_to_above_to_nearest"),
     ]
-    assert driver.CASES == expected
-
-
-def test_child_environment_is_deterministic() -> None:
-    environment = driver.child_environment()
-    assert environment["PYTHONIOENCODING"] == "utf-8"
-    assert environment["PYTHONUNBUFFERED"] == "1"
-    assert environment["PYTHONUTF8"] == "1"
-
-
-def test_prompt_strings_are_exact_product_strings() -> None:
+    assert driver.CASE_TIMEOUT_SECONDS == 900
     assert driver.DIRECT_PROMPT == "是否按此理解执行？ [Y/N]: "
-    assert driver.PROGRAM_RE.search("[解析] largest -> right_of -> nearest   "
-                                    "(largest_to_right_of_to_nearest)").group(1) == \
-        "largest_to_right_of_to_nearest"
+    assert driver.SUGGESTION_PROMPT == "是否使用建议指令继续？ [Y/N]: "
+    assert driver.FALLBACK_PROMPT == "是否进入有限兼容模式？ [Y/N]: "
+    assert len(driver.DISPLAY_TO_PROGRAM) == 4
