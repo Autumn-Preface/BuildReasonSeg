@@ -391,3 +391,116 @@ The Watt handoff invariant (`tests/test_task6h_counterfactual_grounding.py`) tha
 passes as part of this green suite; the previously skipped test set is unchanged.
 
 Next action: Awaiting ChatGPT audit.
+
+## Task 8B.3-R4B — One Formal Six-Image Demo Run
+
+### R4B.0 FORMAL_SUITE_FREEZE_R4B
+
+```text
+FORMAL_SUITE_FREEZE_R4B
+branch_head = b579148df7aac9c979265b2e4da5b91c9d41d34b
+driver_sha256 = c3bb806d0e8d7e8fdf8d650961888c44cae6fc545b7c2b1cbd78b2ab7ad7bb11
+tests_sha256 = f6fba38c74aeca6d9e2e9e24a59a3f5c2e6d24596513ce8843dcd752236d191b
+check_setup = READY
+A1_sha256 = 8a4b459d65773a7dfb0ffcc509c26b5d3a7cea23cd759cdadf94cd46be84c227
+A2_sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+A3_sha256 = f3cd05870385bd7f978b345b703d407cca757d909fc7be64011449ca711b19fd
+A4_sha256 = a3962ed18467997366de7b070d7ae39b3ac9916ca01497014ad5c03b434775a3
+B1_sha256 = 8b68c9e2fe3438b511e482998f34f772a870b99020eb5e7fc1b83b08b4828e31
+B2_sha256 = c91663edd7abfaa3d1f198a9903ce28b5d8c99f80028fc24bd883e285b62319a
+repository_gate = 1555 passed
+```
+
+### R4B.1 Formal suite invocation
+
+```text
+FORMAL SUITE INVOCATIONS = 1
+```
+
+Command (run once, from the repository root, designated runtime Python):
+
+```text
+ENV_PYTHON scripts/task8b3_interactive_suite.py
+```
+
+Exit code 0; the driver attempted all six cases in the frozen order A1 → A2 → A3 → A4 → B1 → B2 and finished.
+No individual sample was retried, no code/test/prompt/config/threshold/checkpoint was changed after the freeze.
+
+### R4B.2 Per-case objective results
+
+| ID | expected | initial | conf | Y/N | language | visual | result | error | ref | mask_area | tiles | raw | merged |
+|---|---|---|---:|---|---|---|---|---|---:|---:|---:|---:|---:|
+| A1 | largest_to_right_of_to_nearest | largest_to_right_of_to_nearest | 0.974 | Y | DIRECT_CORRECT | True | SUCCESS |  | 48 | 101 | 9 | 133 | 52 |
+| A2 | largest_to_left_of_to_nearest | largest_to_left_of | 0.98 | Y | FALLBACK_CORRECT | True | FAILED | E401 |  |  | 9 | 0 | 0 |
+| A3 | largest_to_above_to_nearest | largest_to_above_to_nearest | 1.0 | Y | DIRECT_CORRECT | True | SUCCESS |  | 1 | 1439 | 9 | 7 | 6 |
+| A4 | largest_to_below_to_nearest | largest_to_below | 0.999 | Y | FALLBACK_CORRECT | True | SUCCESS |  | 30 | 359 | 9 | 216 | 77 |
+| B1 | largest_to_right_of_to_nearest | largest_to_right_of | 0.679 | Y | FALLBACK_CORRECT | True | FAILED | E502 |  |  |  |  |  |
+| B2 | largest_to_above_to_nearest | largest_to_above_to_nearest | 1.0 | Y | DIRECT_CORRECT | True | FAILED | E502 |  |  |  |  |  |
+
+**A1** — expected `largest_to_right_of_to_nearest`; initial `largest_to_right_of_to_nearest` (conf 0.974); Y/N `Y`; language `DIRECT_CORRECT`; visual executed `True`; exit `0`; runtime `SUCCESS`; reference `48`; mask area `101`; tiles `9`; raw `133`; merged `52`; mask `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A1_mask_001.png`; overlay C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A1_overlay_001.png`; diagnostics `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A1_001`; 41.8s
+
+**A2** — expected `largest_to_left_of_to_nearest`; initial `largest_to_left_of` (conf 0.98); Y/N `Y`; language `FALLBACK_CORRECT`; visual executed `True`; exit `40`; runtime `FAILED` (`E401` / None); reference ``; mask area ``; tiles `9`; raw `0`; merged `0`; mask ``; overlay `; diagnostics ``; 25.0s
+
+**A3** — expected `largest_to_above_to_nearest`; initial `largest_to_above_to_nearest` (conf 1.0); Y/N `Y`; language `DIRECT_CORRECT`; visual executed `True`; exit `0`; runtime `SUCCESS`; reference `1`; mask area `1439`; tiles `9`; raw `7`; merged `6`; mask `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A3_mask.png`; overlay C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A3_overlay.png`; diagnostics `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A3`; 27.7s
+
+**A4** — expected `largest_to_below_to_nearest`; initial `largest_to_below` (conf 0.999); Y/N `Y`; language `FALLBACK_CORRECT`; visual executed `True`; exit `0`; runtime `SUCCESS`; reference `30`; mask area `359`; tiles `9`; raw `216`; merged `77`; mask `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A4_mask.png`; overlay C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A4_overlay.png`; diagnostics `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A4`; 61.8s
+
+**B1** — expected `largest_to_right_of_to_nearest`; initial `largest_to_right_of` (conf 0.679); Y/N `Y`; language `FALLBACK_CORRECT`; visual executed `True`; exit `50`; runtime `FAILED` (`E502` / None); reference ``; mask area ``; tiles ``; raw ``; merged ``; mask ``; overlay `; diagnostics ``; 38.9s
+
+**B2** — expected `largest_to_above_to_nearest`; initial `largest_to_above_to_nearest` (conf 1.0); Y/N `Y`; language `DIRECT_CORRECT`; visual executed `True`; exit `50`; runtime `FAILED` (`E502` / None); reference ``; mask area ``; tiles ``; raw ``; merged ``; mask ``; overlay `; diagnostics ``; 27.2s
+
+### R4B.3 Language summary
+
+```text
+direct_correct   = 3/6
+fallback_correct = 3/6
+language_failed  = 0/6
+```
+
+### R4B.4 Automatic runtime summary
+
+```text
+runtime_success_pending_visual_review = 3/6  (A1, A3, A4)
+runtime_failed                        = 3/6  (A2, B1, B2)
+A-group runtime success               = 3/4
+B-group runtime success               = 0/2
+```
+
+Every `SUCCESS` above is `AUTOMATIC_RUNTIME_SUCCESS_PENDING_VISUAL_REVIEW`; no semantic/visual verdict is made here.
+
+### R4B.5 B1/B2 large-image evidence
+
+B1 (5000×5000) and B2 (5000×5000) both ran and failed at runtime level with `E502`; because the failure occurred
+before final artifacts were produced, no `tile_count` / proposal counts / full-size mask were recorded for them
+(`mask=None`, `tiles=None`). The exact error reason per case is in R4B.2 and in the case transcript/diagnostics.
+No `--inspect-proposals` was launched and no sample was retried.
+
+### R4B.6 Review pack
+
+`C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3` (local-only, not Git-tracked) with `INDEX.md` and copied artifacts:
+
+```text
+A1_overlay_review.png
+A3_overlay_review.png
+A4_overlay_review.png
+```
+
+### R4B.7 Visual verdict
+
+`PENDING CHATGPT/USER REVIEW` — DSH makes no claim about mask quality, Reference correctness, target side or
+nearest-building selection.
+
+### R4B.8 No-retry / no-tuning statement
+
+The formal suite was invoked exactly once; no individual case was retried; no prompt, program, threshold, config,
+checkpoint, harness or test file was modified before, during or after the run; no Assisted Mode, `--reference-id`
+or `--inspect-proposals` was used; no training, download, package installation or final-test access occurred.
+
+### R4B.9 Output layout
+
+`ACCEPTED / DEFERRED TO TASK 8B.4` — not implemented here.
+
+### R4B.10 Stop reason
+
+None: the single authorized invocation completed with all six cases attempted in order; B1/B2 runtime failures are
+recorded sample-level evidence, not a procedure failure.
