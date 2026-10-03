@@ -125,3 +125,45 @@ Nothing scientific was touched in this turn because no functional file was modif
 `fix/task8b3-mem01-compact-proposals` exists at the starting HEAD with only documentation/handoff changes; the
 refactor must be executed in a dedicated turn that has budget for the implementation, the seven required test
 groups, the manifest refresh and the two test gates.
+
+
+---
+
+## Task 8B.3-M1A.1 — implementation attempt (budget-limited, no functional change)
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `8fc71ca49797112cd0a551faadf27ad7e1de29f1` |
+| status | **PARTIAL / STOP** |
+| functional canonical files changed | **none** |
+| `source_manifest.json` | not updated (no canonical content change) |
+| dedicated `tests/test_task8b_runtime.py` gate | NOT RUN |
+| full canonical suite | NOT RUN (excluded by this task book) |
+| external delivery | UNCHANGED |
+| real inference / six-image Demo | NOT RUN |
+
+**Why no code was changed:** the M1A.1 implementation requires coordinated edits to four canonical files
+(`detector.py` representation + `detect_global` compaction + `proposal_iou` + merge loop; `core.py`
+`reference_mask_from_proposal`; `outputs.py` `proposals_preview_image`; `tests/test_task8b_runtime.py` helper plus
+the seven required test groups). Writing those edits safely needs an exact read of the current function bodies first,
+and this execution turn ran out of budget before that read could be completed. Rather than risk a partially applied
+refactor that would leave the canonical tree broken and the single dedicated-test gate failing for implementation
+reasons, **no file was modified**; the branch remains exactly at its starting HEAD with only documentation/handoff
+changes.
+
+**Dependency inventory already established (M1A §4, unchanged):** all 13 executable `global_mask` usages live in
+`buildreasonseg/runtime/detector.py` (field, `np.zeros((H,W))`, paste, retain, construction, `iou_of` call,
+eligibility `.any()`), `buildreasonseg/runtime/core.py` (shape lookup + slice), `buildreasonseg/runtime/outputs.py`
+(preview outline) and `tests/test_task8b_runtime.py` (test helper + duplicate-winner assertions). This site list is
+the complete work list for the next turn.
+
+**Suggested split for the next task book (factual, not a decision):** (1) representation + `detect_global`
+compaction; (2) `proposal_iou` + merge loop; (3) `core.py` / `outputs.py` adaptation; (4) the seven test groups +
+the 5000×5000 synthetic guard. Each is independently verifiable and keeps the dedicated gate meaningful.
+
+**Unchanged defects:** `RC1-DEMO-MEM-01` still pending implementation; `RC1-DEMO-PROP-01`, `RC1-DEMO-REF-01`,
+`RC1-DEMO-MASK-01` untouched.
+
+**Scope compliance:** no detector parameter/tiling/IoU-threshold/winner/stable-ID/Reference/context/language/SAM2/
+D-B1/validity change; no PROP-01/REF-01/MASK-01 fix; no manifest update; no canonical suite; no external delivery
+sync or edit; no real predict or six-image Demo; no package change.

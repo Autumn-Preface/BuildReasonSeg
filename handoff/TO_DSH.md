@@ -1,73 +1,59 @@
-# TO_DSH — Task 8B.3-M1A: Compact Proposal Masks (Canonical Only)
+# TO_DSH — Task 8B.3-M1A.1: Implement Compact Proposal Masks + Dedicated Tests
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `eval/task8b3-six-image-demo-suite`
-> Required starting HEAD: `7a9c576692abf82510d61fb1c814df47d4b053a5`
-> New branch: `fix/task8b3-mem01-compact-proposals`
+> Branch: `fix/task8b3-mem01-compact-proposals`
+> Required starting HEAD: `8fc71ca49797112cd0a551faadf27ad7e1de29f1`
 > Canonical RC1: `delivery_src/BuildReasonSeg_Advisor_RC1`
 > External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 > Runtime Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\python.exe`
 
 # 0. Purpose
 
-Fix the canonical implementation of `RC1-DEMO-MEM-01` without changing scientific/runtime semantics.
+Implement the already-frozen `RC1-DEMO-MEM-01` compact-proposal refactor in the workspace canonical source and run only the dedicated runtime test file.
 
-Frozen architectural decision:
-
-```text
-OLD:
-one full H×W bool mask retained per raw proposal
-+ pairwise H×W logical_and/logical_or during duplicate merge
-
-NEW:
-one tight bbox-local bool crop retained per raw proposal
-+ duplicate IoU computed only in the two proposal bboxes' intersection
-```
-
-This task modifies and tests the **workspace canonical source only**.
-
-It does NOT sync or edit external delivery and does NOT run real inference.
+This task intentionally does **not** run the full canonical test suite and does **not** update `source_manifest.json`.
+Those are deferred to Task 8B.3-M1A.2 after ChatGPT audits this implementation.
 
 # 1. Permanent reporting rule
 
-For COMPLETE / PARTIAL / STOP / FAILED, when Git is safe:
+For COMPLETE / PARTIAL / STOP / FAILED, if Git is safe:
 
-1. update the task report;
+1. update `docs/task8b3_m1a_compact_proposal_masks.md`;
 2. update `handoff/FROM_DSH.md`;
 3. commit;
-4. push the current fix branch;
-5. stop and wait for ChatGPT.
+4. push `fix/task8b3-mem01-compact-proposals`;
+5. stop.
 
 # 2. Strict prohibitions
 
 Do NOT:
 
-- edit any file under external delivery;
+- edit external delivery;
+- sync canonical → delivery;
 - run `predict.py`;
 - run the six-image suite;
 - run real YOLO/Qwen/SAM2/D-B1 inference;
-- modify detector checkpoint or model parameters;
-- modify `TILE_SIZE`, overlap, stride, `IMGSZ`, `CONF`, `MAX_DET`;
+- modify detector checkpoint/model parameters;
+- modify detector tiling/overlap/imgsz/conf/max_det;
 - modify `DUPLICATE_IOU`;
-- change duplicate winner priority;
-- change stable-ID ordering;
-- change Reference eligibility or `MERGE_BBOX_EXTENT_RATIO_MAX`;
-- change Reference selection semantics;
-- change reasoning context;
-- change ProgramHead/language;
-- change SAM2/D-B1/relation fields;
-- change post-inference SUCCESS validity;
-- fix PROP-01 / REF-01 / MASK-01;
-- implement Task 8B.4;
-- access final test;
+- modify duplicate winner priority;
+- modify stable proposal-ID ordering;
+- modify Reference eligibility/selection;
+- modify ProgramHead/language;
+- modify reasoning-context policy;
+- modify SAM2/D-B1/relation fields;
+- modify SUCCESS validity;
+- modify PROP-01 / REF-01 / MASK-01;
+- update `source_manifest.json`;
+- run full `pytest tests -q`;
+- enter Task 8B.4 or Task 8C;
 - install packages;
-- train/download.
+- train/download;
+- access final test.
 
-Unexpected dependency/use of `global_mask` outside the explicitly allowed files below -> STOP and report.
-
-# 3. Git safety and branch
+# 3. Git safety
 
 Run:
 
@@ -81,33 +67,23 @@ git status --short
 Continue only if:
 
 ```text
-branch = eval/task8b3-six-image-demo-suite
-HEAD = 7a9c576692abf82510d61fb1c814df47d4b053a5
+branch = fix/task8b3-mem01-compact-proposals
+HEAD = 8fc71ca49797112cd0a551faadf27ad7e1de29f1
 ```
 
 Allowed working tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
-If `fix/task8b3-mem01-compact-proposals` already exists -> STOP.
+Anything else -> STOP.
 
-Create:
+Do not branch/switch/rebase/reset/stash/clean.
 
-```bat
-git switch -c fix/task8b3-mem01-compact-proposals
-```
+# 4. Dependency inventory is already accepted
 
-Do not merge/rebase/reset/stash/clean.
+Do NOT repeat the broad dependency audit.
 
-# 4. Pre-change dependency gate
-
-Run read-only:
-
-```bat
-git grep -n "global_mask" -- delivery_src/BuildReasonSeg_Advisor_RC1
-```
-
-Expected product/test usages must be confined to:
+The previous turn already established executable `global_mask` use is confined to:
 
 ```text
 buildreasonseg/runtime/detector.py
@@ -116,23 +92,20 @@ buildreasonseg/runtime/outputs.py
 tests/test_task8b_runtime.py
 ```
 
-Comments/docs inside the canonical package are allowed only if they describe the same API.
-
-If an executable use appears in any other canonical file -> STOP before code changes and report the path/line.
+This task may modify only those four functional/test files.
 
 # 5. Allowed repository paths
 
-Functional canonical edits are limited to:
+Functional/test:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
 delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 ```
 
-Engineering documentation:
+Documentation/handoff:
 
 ```text
 docs/task8b3_m1a_compact_proposal_masks.md
@@ -142,51 +115,46 @@ handoff/TO_DSH.md
 
 No other path may change.
 
-# 6. Frozen `GlobalProposal` representation
+# 6. `GlobalProposal` frozen representation
 
-In canonical `detector.py`, change `GlobalProposal` so proposal mask storage is:
+In `detector.py`:
+
+Replace:
+
+```python
+global_mask: np.ndarray
+```
+
+with:
 
 ```python
 mask_crop: np.ndarray
+```
+
+Keep:
+
+```python
 global_bbox: tuple[int, int, int, int]
 ```
 
-where:
-
-- bbox order remains `(top, left, bottom, right)`;
-- bounds remain inclusive;
-- `mask_crop.shape == (bottom-top+1, right-left+1)`;
-- crop is tight: first/last bbox coordinates come from true foreground extent;
-- `mask_crop` is bool;
-- no `global_mask` full-image field remains on `GlobalProposal`.
-
-Keep existing metadata fields and meanings:
+Invariant:
 
 ```text
-proposal_id
-source_tile_id
-tile_index
-confidence
-mask_area
-touches_image_border
-border_clearance
-centroid
-raw_index
-pad_mask_empty
+bbox order = (top, left, bottom, right), inclusive
+mask_crop.dtype = bool
+mask_crop.shape = (bottom-top+1, right-left+1)
+mask_crop is tight around foreground
 ```
 
-`to_dict()` must preserve the existing external JSON contract:
-- same keys;
-- same coordinate/order semantics;
-- do NOT serialize `mask_crop`.
+Keep all existing metadata fields and external `to_dict()` keys/semantics unchanged.
 
-# 7. Frozen raw-detection compaction
+`mask_crop` must NOT appear in `to_dict()`.
 
-Inside `detect_global()`:
+No lazy or compatibility `global_mask` property may materialize a full H×W array.
 
-After any existing padding crop, convert each non-empty tile-local detection mask into a **tight crop** before retaining it.
+# 7. Compact raw detections
 
-Add exactly one helper with this semantic role:
+Add exactly one helper:
 
 ```python
 def _compact_mask(mask: np.ndarray, *, top: int, left: int
@@ -195,13 +163,17 @@ def _compact_mask(mask: np.ndarray, *, top: int, left: int
 
 Required semantics:
 
-1. compute tight local bbox using existing `bbox_of(mask)`;
+1. `bbox_of(mask)`;
 2. empty -> `None`;
-3. copy only the tight bool crop;
-4. convert local bbox to inclusive global bbox using `top`, `left`;
+3. tight local crop copied as bool;
+4. convert tight local inclusive bbox to global inclusive bbox by adding `top`/`left`;
 5. return `(mask_crop, global_bbox)`.
 
-The `accumulated` entry must retain:
+In `DetectorRuntime.detect_global()`:
+
+After existing padding crop and valid source-range calculation, compact only the valid mask region.
+
+The retained `accumulated` entry must contain:
 
 ```text
 mask_crop
@@ -215,354 +187,294 @@ tile_top
 tile_left
 ```
 
-Do NOT allocate any `(height_px, width_px)` bool array per proposal.
+Normal product path must not execute:
 
-Do NOT retain the original 512×512 mask after compaction beyond the current tile loop.
+```python
+np.zeros((height_px, width_px), dtype=bool)
+```
 
-# 8. Frozen compact geometry
+for proposals.
 
-When constructing `GlobalProposal` in `merge_proposals()`:
+Do not retain a 512×512 detection mask after the corresponding compact entry is formed.
 
-Compute from `mask_crop + global_bbox + image_size`:
+# 8. Compact proposal geometry
 
-- `mask_area` = `mask_crop.sum()`;
-- centroid = local foreground centroid offset by bbox top/left;
-- `touches_image_border` from tight global bbox against image dimensions;
-- `border_clearance` from tight global bbox against image dimensions.
+In `merge_proposals()` create `GlobalProposal` directly from:
 
-Because the crop is tight, border-touch/clearance derived from bbox must be exactly equivalent to the prior full-mask result.
+```text
+mask_crop
+global_bbox
+image_size
+```
 
-Do not change `bbox_extent_ratio`; it must still divide maximum bbox extent by frozen `TILE_SIZE=512`.
+Compute:
 
-# 9. Frozen compact IoU
+```text
+mask_area = mask_crop.sum()
+centroid = foreground centroid within crop + global_bbox top/left
+touches_image_border = bbox touches image boundary
+border_clearance = min(top, left, height-1-bottom, width-1-right)
+```
 
-Replace full-frame duplicate IoU with:
+For a tight crop these must be equivalent to the legacy full-frame mask calculations.
+
+Do not change `bbox_extent_ratio`; it continues using the global bbox and frozen `TILE_SIZE=512`.
+
+# 9. Compact IoU
+
+Add:
 
 ```python
 def proposal_iou(first: GlobalProposal, second: GlobalProposal) -> float:
 ```
 
-Required exact semantics:
+Exact semantics:
 
-1. intersect the two inclusive global bboxes;
-2. no bbox overlap -> `0.0` without mask allocation;
-3. slice each proposal's `mask_crop` only over the global intersection rectangle;
-4. intersection = count of logical AND in that overlap;
+1. find inclusive global bbox intersection;
+2. no bbox intersection -> `0.0`;
+3. convert global intersection to local slices for each `mask_crop`;
+4. intersection count = logical AND of those two local slices;
 5. union = `first.mask_area + second.mask_area - intersection`;
-6. union <= 0 -> `0.0`;
-7. return `intersection / union`.
+6. union <= 0 -> 0.0;
+7. return intersection / union.
 
-Temporary bool allocation, if any, may only have the overlap-crop shape.
+No full-frame `logical_or`.
 
-Do NOT use full-frame `np.logical_or`.
+Any temporary bool array may be no larger than the bbox-intersection slice.
 
-Duplicate grouping threshold remains exactly:
+`merge_proposals()` must call `proposal_iou()`.
 
-```text
-IoU >= 0.50
-```
-
-Winner priority remains exactly:
+Keep exactly:
 
 ```text
-touches_image_border
-→ -border_clearance
-→ -mask_area
-→ -confidence
-→ source_tile_id
-→ raw_index
+DUPLICATE_IOU = 0.50
+winner priority = touches_border → -clearance → -area → -confidence → source_tile_id → raw_index
+stable IDs = centroid_y → centroid_x → mask_area
+no mask union
 ```
 
-Stable global proposal IDs remain sorted exactly as before:
+# 10. Adapt core Reference extraction
 
-```text
-centroid_y
-→ centroid_x
-→ mask_area
-```
-
-No union of duplicate masks is introduced.
-
-# 10. Adapt Reference context without full masks
-
-In canonical `core.py`, update `reference_mask_from_proposal()`.
+In `core.py`, modify only `reference_mask_from_proposal()`.
 
 It must:
 
-1. allocate only the existing 512×512 reasoning-context bool mask;
-2. intersect `proposal.global_bbox` with the 512 reasoning context in global coordinates;
-3. slice the corresponding portion of `proposal.mask_crop`;
-4. paste that slice into the correct location in the 512×512 context mask;
-5. preserve all existing padding/context behavior.
+1. allocate only the existing 512×512 context bool target;
+2. intersect proposal `global_bbox` and reasoning context in global coordinates;
+3. slice `proposal.mask_crop` by that intersection;
+4. paste into the correct context coordinates;
+5. return the 512×512 bool mask.
 
-Do NOT materialize a full-image proposal mask.
+Do not materialize a full-image proposal mask.
 
-# 11. Adapt diagnostics preview without full masks
+# 11. Adapt diagnostics preview
 
-In canonical `outputs.py`, update `proposals_preview_image()`.
+In `outputs.py`, modify only proposal outline handling in `proposals_preview_image()`.
 
-For each proposal:
+Keep bbox drawing, colors, centroid marker and resize semantics unchanged.
 
-- bbox drawing remains unchanged;
-- centroid marker remains unchanged;
-- compute `_erode()` only on `proposal.mask_crop`;
-- compute magenta outline in crop coordinates;
-- paste that outline only into `preview[top:bottom+1, left:right+1]`.
+For outline:
 
-Do NOT materialize a full-image proposal mask.
+1. run `_erode()` on `proposal.mask_crop`;
+2. compute crop-local outline;
+3. paste magenta outline into the proposal bbox region of `preview`.
 
-Preview output meaning/colors must remain unchanged.
+Do not allocate/materialize full H×W proposal masks.
 
-# 12. Existing helper policy
+# 12. Dedicated tests only
 
-Existing generic helpers such as:
+Modify `tests/test_task8b_runtime.py`.
+
+Update existing test helpers that construct `GlobalProposal`.
+
+Add focused tests for all of these:
+
+## A. compact geometry equivalence
+
+Using small synthetic legacy full masks, convert to compact proposal and assert:
 
 ```text
-bbox_of
-centroid_of
-touches_original_border
+mask_area
+global_bbox
+centroid
+touches_image_border
 border_clearance
 ```
 
-may remain for compatibility/tests.
+match test-only legacy full-mask calculations.
 
-However, the normal `detect_global → merge_proposals → downstream` product path must not construct or retain full-image proposal masks.
+## B. `proposal_iou()` equivalence
 
-Do not add a lazy `global_mask` property that materializes H×W arrays.
-
-# 13. Unit/regression tests
-
-Modify only:
+Cases:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+identical
+partial overlap
+disjoint bboxes
+overlapping bboxes but zero foreground intersection
 ```
 
-Update existing proposal helpers/tests for `mask_crop`.
+Compare to a test-only legacy full-frame IoU.
 
-Add all of the following.
+## C. merge equivalence
 
-## 13.1 Compact representation invariant
-
-For synthetic full masks converted by a test helper:
-
-- crop shape equals global bbox extent;
-- crop is tight;
-- area, bbox, centroid, border-touch and clearance equal a test-only legacy full-mask calculation.
-
-## 13.2 IoU equivalence
-
-For at least:
-
-- identical masks;
-- partially overlapping masks;
-- disjoint masks;
-- masks whose bboxes overlap but foreground does not;
-
-assert:
-
-```text
-proposal_iou(compact proposals)
-==
-legacy full-frame intersection/union IoU
-```
-
-within floating tolerance.
-
-## 13.3 Merge-equivalence regression
-
-Create a deterministic synthetic proposal set containing:
-- duplicate overlap > 0.50;
-- non-duplicate overlap < 0.50;
-- border vs non-border duplicate;
-- confidence tie-break case;
+Synthetic set must include:
+- duplicate IoU >0.50;
+- non-duplicate IoU <0.50;
+- border/non-border duplicate;
+- confidence tie-break;
 - distinct centroids.
 
-Implement a **test-only** small legacy full-frame merge reference.
+Use a small test-only legacy merge reference.
 
-Assert new compact merge gives identical:
-- duplicate grouping;
+Assert identical:
+- duplicate groups;
 - winner source/raw identity;
-- proposal count;
-- mask area;
+- selected count;
+- area;
 - bbox;
 - centroid;
 - confidence;
-- stable proposal IDs.
+- stable IDs.
 
-Do not put legacy full-frame implementation into product code.
+## D. reference-context equivalence
 
-## 13.4 Reference context equivalence
-
-For synthetic proposals and contexts:
+Compare compact implementation to test-only legacy full-mask slicing for:
 - fully inside;
-- clipped by context left/top;
-- clipped by context right/bottom;
+- clipped left/top;
+- clipped right/bottom.
 
-assert new `reference_mask_from_proposal()` is bit-identical to a test-only legacy full global-mask slice.
+## E. preview smoke
 
-## 13.5 Preview smoke
+Compact proposals only:
+- function succeeds;
+- output shape equals RGB shape;
+- no `global_mask` field needed.
 
-Construct compact proposals and call `proposals_preview_image()`.
+## F. 5000×5000 synthetic guard
 
-Assert:
-- output size equals input RGB;
-- bbox/centroid/outline execution succeeds;
-- no full proposal mask is required.
+No real large RGB allocation and no model inference.
 
-## 13.6 5000×5000 no-full-bool regression
+Mechanically exercise `DetectorRuntime.detect_global()` by monkeypatching:
+- `plan_tiles()` -> tiny fixed window list;
+- `extract_tile()` -> fixed small 512×512 RGB tile;
+- `detect_tile()` -> fixed small bool proposal masks.
 
-No model inference.
+Use a lightweight fake RGB object exposing:
 
-Mechanically test `DetectorRuntime.detect_global()` with:
+```text
+shape = (5000, 5000, 3)
+```
 
-- a fake RGB-like object exposing `shape=(5000,5000,3)`;
-- monkeypatched `plan_tiles()` returning a tiny fixed set of windows;
-- monkeypatched `extract_tile()` returning a fixed 512×512 RGB tile;
-- monkeypatched `detect_tile()` returning fixed small bool detections.
-
-Monkeypatch detector-module `np.zeros` so it raises if code requests:
+Monkeypatch detector-module `np.zeros` to raise if requested:
 
 ```text
 shape == (5000, 5000)
-and dtype == bool
+dtype == bool
 ```
 
-The compact detector path must complete without triggering that guard.
+The compact detector/merge path must finish without triggering that guard.
 
-Also ensure pairwise IoU receives/slices compact masks only; no operand with shape `(5000,5000)` may reach a logical operation.
+Also guard `np.logical_and`/equivalent so the test fails if either operand/result uses a `(5000,5000)` proposal-mask shape.
 
-This test must not allocate a real 5000×5000 RGB image.
+Do NOT allocate a real 5000×5000 RGB array.
 
-## 13.7 Serialization contract
+## G. serialization
 
-Assert `GlobalProposal.to_dict()` retains the same existing externally visible keys/semantics and does not serialize `mask_crop`.
+`GlobalProposal.to_dict()` must preserve the same public keys/meanings as before and must not include `mask_crop`.
 
-# 14. Dedicated canonical test gate
+# 13. One dedicated test gate
 
-From canonical delivery source:
+Run only:
 
 ```bat
 cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1
 ENV_PYTHON -m pytest tests/test_task8b_runtime.py -q
 ```
 
-Must PASS.
+If PASS:
+- do not run additional tests;
+- proceed to report/commit.
 
-If it fails:
-- no second implementation attempt in this task after the gate;
-- report/commit/push PARTIAL;
-- STOP.
+If FAIL:
+- do not perform a second code-fix attempt in this task;
+- record failure;
+- commit/push PARTIAL;
+- stop.
 
-# 15. Canonical full test gate
+# 14. Manifest status
 
-Only if dedicated tests pass:
+Do NOT edit `source_manifest.json`.
 
-```bat
-ENV_PYTHON -m pytest tests -q
-```
-
-Must PASS.
-
-Do not run external delivery tests.
-
-Do not run real inference.
-
-# 16. Manifest update and verification
-
-Keep `source_manifest.json` path set exactly unchanged from starting HEAD.
-
-Expected manifest entry count remains:
+Because functional canonical files change, report:
 
 ```text
-135
+source_manifest status = INTENTIONALLY STALE ON FIX BRANCH
 ```
 
-Update hash/size only for canonical files that actually changed and are manifest-listed.
+This is allowed only because:
+- external delivery is not synced;
+- M1A.2 will update/verify the manifest after ChatGPT audits implementation.
 
-Expected functional manifest changes are limited to:
+Do not claim 135/135 after code changes.
 
-```text
-buildreasonseg/runtime/detector.py
-buildreasonseg/runtime/core.py
-buildreasonseg/runtime/outputs.py
-tests/test_task8b_runtime.py
-```
+# 15. External delivery
 
-Verify locally, without syncing external delivery:
+Must remain byte-untouched.
 
-- manifest has exactly 135 entries;
-- same path set as at starting HEAD;
-- all 135 canonical files exist;
-- every manifest size/hash matches current canonical content.
+Do not call sync helper in write mode.
 
-If any other manifest-listed path changed -> STOP.
+No package/environment change.
 
-# 17. External delivery must remain untouched
+# 16. Report
 
-Do NOT call the sync helper in write mode.
-
-Do NOT copy any changed canonical file into:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-Do NOT install/change runtime packages.
-
-This task intentionally leaves canonical and external delivery different until ChatGPT audits M1A.
-
-# 18. Report
-
-Create:
+Update/create:
 
 ```text
 docs/task8b3_m1a_compact_proposal_masks.md
 ```
 
-Required sections:
+Preserve the previous PARTIAL history, then add:
 
-1. Task / scope
-2. Starting branch/HEAD
-3. Frozen architecture decision
-4. Changed canonical paths
-5. Compact mask representation
-6. IoU/merge semantic-equivalence proof
-7. Downstream core/preview adaptations
-8. Dedicated test result
-9. Canonical full-test result
-10. Manifest 135/135 verification
-11. External delivery = UNCHANGED
-12. Real inference = NOT RUN
-13. Scientific scope statement:
-   - no detector model/threshold/tiling change;
-   - no merge threshold/winner/ID change;
-   - no Reference eligibility/selection change;
-   - no language/SAM2/D-B1/relation/context/validity change;
-14. Remaining defects:
-   - PROP-01 unchanged;
-   - REF-01 unchanged;
-   - MASK-01 unchanged;
-15. Next gate = Awaiting ChatGPT audit before any canonical→delivery sync.
+```text
+## Task 8B.3-M1A.1 — Implementation + Dedicated Tests
+```
 
-# 19. FROM_DSH
+Record:
+
+- starting HEAD;
+- four functional/test files changed;
+- exact compact representation;
+- IoU semantics;
+- merge-equivalence tests;
+- core/preview adaptations;
+- dedicated test result;
+- 5000×5000 synthetic guard result;
+- full canonical tests = NOT RUN BY DESIGN;
+- source manifest = INTENTIONALLY STALE ON FIX BRANCH;
+- external delivery = UNCHANGED;
+- real inference = NOT RUN;
+- PROP-01/REF-01/MASK-01 = UNCHANGED;
+- next gate = Awaiting ChatGPT audit before M1A.2.
+
+# 17. FROM_DSH
 
 Update `handoff/FROM_DSH.md`, preserving `ARTIFACT-FACTS` exactly.
 
 Required:
 
 ```text
-Task: 8B.3-M1A
+Task: 8B.3-M1A.1
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-mem01-compact-proposals
-Starting HEAD: 7a9c576692abf82510d61fb1c814df47d4b053a5
-MEM-01 implementation: <status>
-Representation: tight bbox + mask_crop
-Full-frame proposal masks retained: NO
-Full-frame pairwise IoU temporaries: NO
-Dedicated tests: <result>
-Canonical tests: <result>
-Manifest: 135/135 / other
+Starting HEAD: 8fc71ca49797112cd0a551faadf27ad7e1de29f1
+Compact proposal representation: PASS / FAIL
+Full-frame proposal masks retained: NO / YES / NOT VERIFIED
+Full-frame pairwise IoU temporaries: NO / YES / NOT VERIFIED
+Dedicated tests: <exact result>
+5000x5000 synthetic guard: PASS / FAIL / NOT RUN
+Canonical full tests: NOT RUN BY DESIGN
+Source manifest: INTENTIONALLY STALE ON FIX BRANCH
 External delivery modified: NO
 Real inference executed: NO
 Scientific model/checkpoint changed: NO
@@ -571,23 +483,24 @@ REF-01: UNCHANGED
 MASK-01: UNCHANGED
 Report: docs/task8b3_m1a_compact_proposal_masks.md
 STOP reason: <none/exact>
-Next action: Awaiting ChatGPT audit; do not sync delivery.
+Next action: Awaiting ChatGPT audit before M1A.2.
 ```
 
-# 20. Git gate
+# 18. Git gate
 
-Allowed repository changes exactly:
+Allowed changed paths exactly:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
 delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 docs/task8b3_m1a_compact_proposal_masks.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
+
+`source_manifest.json` must NOT change.
 
 Run:
 
@@ -597,63 +510,58 @@ git diff --check
 git diff
 ```
 
-Anything else -> STOP.
+Stage individually only.
 
-Stage individually. Never `git add .` or `git add -A`.
-
-# 21. Commit / push
+# 19. Commit / push
 
 If COMPLETE, exact commit:
 
 ```text
-fix(rc1): use compact proposal masks
+fix(rc1): implement compact proposal masks
 ```
 
 If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record compact proposal refactor stop
+docs(rc1): record compact proposal implementation stop
 ```
 
 Push:
 
 ```bat
-git push -u origin fix/task8b3-mem01-compact-proposals
+git push origin fix/task8b3-mem01-compact-proposals
 ```
 
 No force push.
 
-Do NOT merge to main.
-
-# 22. COMPLETE definition
+# 20. COMPLETE definition
 
 COMPLETE only if:
 
-- exact starting state and new branch;
-- pre-change `global_mask` dependency gate matches expectations;
+- exact starting state;
+- only allowed files changed;
 - no external delivery modification;
 - no real inference;
-- no model/config/semantic policy change;
-- raw proposals retained as tight crops only;
-- no full H×W proposal mask allocation in normal detector/merge path;
-- duplicate IoU uses bbox-overlap crops only;
-- merge/winner/ID semantics preserved;
-- core Reference crop adapted;
-- diagnostics preview adapted;
-- dedicated tests pass;
-- all canonical tests pass;
-- 5000×5000 synthetic guard proves no full bool proposal allocation;
-- manifest path set unchanged and 135/135 valid;
-- report and FROM_DSH complete;
-- only allowed paths changed;
+- `GlobalProposal` uses `mask_crop`, not `global_mask`;
+- detect path retains only tight crops;
+- merge uses bbox-intersection IoU;
+- no full-frame proposal mask allocation in normal detector/merge path;
+- Reference context adapted without full mask;
+- preview adapted without full mask;
+- dedicated runtime tests all pass;
+- geometry/IoU/merge/context equivalence covered;
+- 5000×5000 synthetic guard passes;
+- source manifest intentionally left stale and explicitly reported;
+- no full canonical suite run;
+- report/FROM_DSH complete;
 - commit/push succeed;
 - working tree clean;
 - DSH stops.
 
-# 23. Final response
+# 21. Final response
 
 ```text
-TASK 8B.3-M1A COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-M1A.1 COMPLETE / PARTIAL / STOP / FAILED
 
 Branch:
 fix/task8b3-mem01-compact-proposals
@@ -674,16 +582,16 @@ Full-frame pairwise IoU temporaries:
 NO / YES / NOT VERIFIED
 
 Dedicated tests:
-<result>
-
-Canonical tests:
-<result>
+<exact result>
 
 5000x5000 synthetic guard:
 PASS / FAIL / NOT RUN
 
-Manifest:
-135/135 / other
+Canonical full tests:
+NOT RUN BY DESIGN
+
+Source manifest:
+INTENTIONALLY STALE ON FIX BRANCH
 
 External delivery modified:
 NO
@@ -712,5 +620,5 @@ handoff/FROM_DSH.md
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得同步 delivery、不得运行真实 Demo、不得进入 Task 8B.4 或 Task 8C。
+等待 ChatGPT 审核；不得运行全 canonical suite、不得更新 manifest、不得同步 delivery、不得运行真实 Demo、不得进入 Task 8B.4 或 Task 8C。
 ```

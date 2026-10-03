@@ -17,38 +17,34 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1A Report
+# FROM_DSH — Task 8B.3-M1A.1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in
 git history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1A` |
-| Status | **PARTIAL / STOP** — frozen refactor not implemented in this turn; branch and dependency audit completed |
-| Branch | `fix/task8b3-mem01-compact-proposals` (created from `7a9c576692abf82510d61fb1c814fd47d4b053a5`) |
-| Starting HEAD | `7a9c576692abf82510d61fb1c814fd47d4b053a5` |
-| MEM-01 implementation | NOT IMPLEMENTED (specified only) |
-| Representation | tight global bbox + `mask_crop` — **planned, not applied** |
-| Full-frame proposal masks retained | YES (unchanged; `detector.py:265` still present) |
-| Full-frame pairwise IoU temporaries | YES (unchanged; `iou_of` still full-frame) |
-| §4 dependency gate | PASS — `global_mask` usage confined to `detector.py`, `core.py`, `outputs.py`, `tests/test_task8b_runtime.py` (13 executable sites inventoried in the report) |
-| Dedicated tests | NOT RUN |
-| Canonical tests | NOT RUN |
-| Manifest | 135/135 verified, no path or hash changed |
+| Task | `8B.3-M1A.1` |
+| Status | **PARTIAL / STOP** (budget-limited; no functional canonical change) |
+| Branch | `fix/task8b3-mem01-compact-proposals` @ starting HEAD `8fc71ca49797112cd0a551faadf27ad7e1de29f1` |
+| Compact representation | NOT IMPLEMENTED (`global_mask` field still present; full-frame `np.zeros((H,W))` unchanged) |
+| Duplicate IoU | still full-frame (`iou_of`) |
+| core.py / outputs.py adaptation | NOT IMPLEMENTED |
+| Dedicated runtime tests (single gate) | NOT RUN |
+| Full canonical suite | NOT RUN (excluded by this task book) |
+| `source_manifest.json` | NOT UPDATED (no canonical content change) |
 | External delivery modified | NO |
 | Real inference executed | NO |
-| Scientific model/checkpoint changed | NO |
-| PROP-01 | UNCHANGED |
-| REF-01 | UNCHANGED |
-| MASK-01 | UNCHANGED |
+| PROP-01 / REF-01 / MASK-01 | UNCHANGED / UNCHANGED / UNCHANGED |
+| MEM-01 | implementation still pending |
 | Report | `docs/task8b3_m1a_compact_proposal_masks.md` |
-| STOP reason | execution budget exhausted after the branch/dependency gates; the refactor plus its seven test groups, manifest refresh and two test gates were not attempted, so no functional canonical file was modified |
-| Next action | Awaiting ChatGPT audit; do not sync delivery. |
+| STOP reason | execution budget exhausted before the required read of the current function bodies; the coordinated four-file refactor plus its seven test groups was therefore not started, and no file was modified to avoid leaving a broken canonical tree |
+| Next action | Awaiting ChatGPT audit. |
 
-No functional canonical file (`detector.py`, `core.py`, `outputs.py`, `tests/test_task8b_runtime.py`,
-`source_manifest.json`) was modified; no external-delivery file was touched; no inference, package change, training
-or final-test access occurred; no detector model/threshold/tiling, merge threshold/winner/ID, Reference
-eligibility/selection, language/SAM2/D-B1/relation/context/validity semantics were changed.
+The M1A §4 dependency inventory (13 executable `global_mask` sites across `detector.py`, `core.py`, `outputs.py` and
+`tests/test_task8b_runtime.py`) remains the complete work list. No detector parameter, tiling, IoU threshold, winner
+policy, stable ID, Reference eligibility/selection, reasoning context, language, SAM2, D-B1 or SUCCESS-validity
+semantics was changed; no manifest update, canonical suite run, external-delivery sync/edits, real predict, Demo run,
+package change, training or final-test access occurred.
 
-Watt was not needed for Task 8B.3-M1A (no downloads, no transfers).
+Watt was not needed for Task 8B.3-M1A.1 (no downloads, no transfers).
