@@ -17,41 +17,38 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-D1.2 Report
+# FROM_DSH — Task 8B.3-M1A Report
 
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
-history._
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in
+git history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-D1.2` |
-| Status | **COMPLETE** (documentation normalization only) |
-| Branch | `eval/task8b3-six-image-demo-suite` |
-| Starting HEAD | `e9bbfa4fc536335c8cbfd3f1afecdd8d6dedae6f` |
-| Inference executed | NO |
-| Delivery modified | NO |
-| Product/harness/tests modified | NO |
-| MEM-01 | CONFIRMED |
-| Exception signature | EXACT_SIGNATURE_MATCH |
-| Unique throwing allocation site | NOT CONFIRMED FROM EXISTING ARTIFACTS |
-| Failure threshold | NOT ESTABLISHED |
-| 5000×5000 path | BLOCKED IN B1/B2 BASELINE |
-| >512 universal-failure claim | REMOVED |
-| Report consistency | NORMALIZED |
-| Encoding | UTF-8 WITHOUT BOM |
-| Output-layout proposal | STILL DEFERRED TO TASK 8B.4 |
-| Report | `docs/task8b3_d1_demo_failure_forensics.md` |
-| STOP reason | none |
-| Next action | Awaiting ChatGPT audit. |
+| Task | `8B.3-M1A` |
+| Status | **PARTIAL / STOP** — frozen refactor not implemented in this turn; branch and dependency audit completed |
+| Branch | `fix/task8b3-mem01-compact-proposals` (created from `7a9c576692abf82510d61fb1c814fd47d4b053a5`) |
+| Starting HEAD | `7a9c576692abf82510d61fb1c814fd47d4b053a5` |
+| MEM-01 implementation | NOT IMPLEMENTED (specified only) |
+| Representation | tight global bbox + `mask_crop` — **planned, not applied** |
+| Full-frame proposal masks retained | YES (unchanged; `detector.py:265` still present) |
+| Full-frame pairwise IoU temporaries | YES (unchanged; `iou_of` still full-frame) |
+| §4 dependency gate | PASS — `global_mask` usage confined to `detector.py`, `core.py`, `outputs.py`, `tests/test_task8b_runtime.py` (13 executable sites inventoried in the report) |
+| Dedicated tests | NOT RUN |
+| Canonical tests | NOT RUN |
+| Manifest | 135/135 verified, no path or hash changed |
+| External delivery modified | NO |
+| Real inference executed | NO |
+| Scientific model/checkpoint changed | NO |
+| PROP-01 | UNCHANGED |
+| REF-01 | UNCHANGED |
+| MASK-01 | UNCHANGED |
+| Report | `docs/task8b3_m1a_compact_proposal_masks.md` |
+| STOP reason | execution budget exhausted after the branch/dependency gates; the refactor plus its seven test groups, manifest refresh and two test gates were not attempted, so no functional canonical file was modified |
+| Next action | Awaiting ChatGPT audit; do not sync delivery. |
 
-Accepted D1 facts preserved (unchanged): **REF-01** — on A1/A3/A4 the implementation selects the largest *eligible*
-proposal (A1 #48, A3 #1, A4 #30) while the user-facing “largest building” differs from that semantics
-(fragmentation + eligibility filtering); **MASK-01** — SUCCESS validity is only non-empty + non-padding +
-directional-centroid, so A1 (101 px) and A4 (359 px) returned SUCCESS with tiny fragments; **PROP-01** — A2 is a
-detector/proposal-stage zero-proposal failure (9 tiles, 0 raw / 0 merged) with `WARNING NMS time limit 2.050s
-exceeded` recorded but NMS causality NOT CONFIRMED. The frozen R4B baseline remains language 6/6, runtime 3/6 and
-manual end-to-end semantic 0/6 — a qualitative six-sample Demo audit, not a research metric.
+No functional canonical file (`detector.py`, `core.py`, `outputs.py`, `tests/test_task8b_runtime.py`,
+`source_manifest.json`) was modified; no external-delivery file was touched; no inference, package change, training
+or final-test access occurred; no detector model/threshold/tiling, merge threshold/winner/ID, Reference
+eligibility/selection, language/SAM2/D-B1/relation/context/validity semantics were changed.
 
-Watt was not needed for Task 8B.3-D1.2 (no downloads, no transfers).
-
-No inference, no delivery modification, no defect fix and no source/test/harness change occurred in this task.
+Watt was not needed for Task 8B.3-M1A (no downloads, no transfers).
