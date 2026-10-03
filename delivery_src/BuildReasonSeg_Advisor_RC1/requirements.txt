@@ -5,7 +5,7 @@
 
 torch>=2.4
 torchvision>=0.19
-ultralytics>=8.3
+ultralytics==8.4.164
 transformers>=4.49
 accelerate>=1.0
 safetensors>=0.4

@@ -1,7 +1,8 @@
 # BuildReasonSeg Advisor RC1 — conda environment description
 #
 # 该文件只描述交付所需环境；Task 8A 未创建、未修改任何 conda 环境，也未执行任何安装。
-# 版本以当前项目实际可工作的研究环境为依据（Python 3.11.16 / torch 2.13.0+cu132 / ultralytics 8.4.164 /
+# 版本以当前项目实际可工作的研究环境为依据；ultralytics==8.4.164 是 RC1 U-C1 detector 的冻结 runtime 要求
+# （Python 3.11.16 / torch 2.13.0+cu132 /
 # transformers 5.17.0），用户可用 setup_env.bat 自行创建**项目本地**环境。
 
 name: buildreasonseg-advisor-rc1
@@ -21,7 +22,7 @@ dependencies:
   - pip:
       - torch>=2.4
       - torchvision>=0.19
-      - ultralytics>=8.3
+      - ultralytics==8.4.164
       - transformers>=4.49
       - accelerate>=1.0
       - safetensors>=0.4

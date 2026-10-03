@@ -547,8 +547,8 @@
     },
     {
       "path": "check_setup.py",
-      "bytes": 12234,
-      "sha256": "be589a62326136c6425f3959fdb8246f0725408bb226ee1e88326bbc1061f868"
+      "bytes": 14823,
+      "sha256": "5b846390a4c9dada07161b2e6c4f5cac2ff307ae49f077169ffaa060e822f597"
     },
     {
       "path": "configs/inference.yaml",
@@ -587,8 +587,8 @@
     },
     {
       "path": "environment.yml",
-      "bytes": 820,
-      "sha256": "d5502c34ee2ba4b163e73af412e700b776566a3a3e65773b7250b256a4e3f0ca"
+      "bytes": 906,
+      "sha256": "c03d734cb07eecd571c49765f0d59159808eb2160cfcccf8d47d6275615792a3"
     },
     {
       "path": "evaluate.py",
@@ -632,8 +632,8 @@
     },
     {
       "path": "requirements.txt",
-      "bytes": 431,
-      "sha256": "90933f6054d220240bcc82f1285de02c5a10120504044d2dd406e8a271992dc8"
+      "bytes": 454,
+      "sha256": "56de38bd614ea0194a03fe1a86058c127d93c342de4cbeaac76dbb96f6adbd8f"
     },
     {
       "path": "tests/conftest.py",
@@ -662,8 +662,8 @@
     },
     {
       "path": "tests/test_setup_checker.py",
-      "bytes": 7270,
-      "sha256": "1c5c62bb94f7aa289d124a6c1fbd598f115ce3b65a6daecdf0e7cba2a52333e9"
+      "bytes": 10661,
+      "sha256": "f605f45e947ff018fa51ce8615841e4d771f38958075234d4a664a66db143ee0"
     },
     {
       "path": "tests/test_task8b1_fallback_ux.py",

@@ -14,8 +14,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def run_check(root: Path) -> subprocess.CompletedProcess:
+    # Task 8B.2-R2: after `check_setup.py` imports ultralytics/transformers the child writes UTF-8 to the pipe;
+    # decode explicitly instead of relying on the machine locale (GBK), which left stdout as None.
     return subprocess.run([sys.executable, str(root / "check_setup.py")], capture_output=True,
-                          text=True, cwd=str(root))
+                          text=True, encoding="utf-8", errors="replace", cwd=str(root))
 
 
 @pytest.fixture()
@@ -90,7 +92,7 @@ def fixture_project(tmp_path: Path) -> Path:
         "from buildreasonseg.runtime import manifest as m;"
         "print(json.dumps(m.write_manifest(m.build_manifest())))" % target)
     completed = _subprocess.run([sys.executable, "-c", manifest_code], capture_output=True,
-                                text=True)
+                                text=True, encoding="utf-8", errors="replace")
     assert completed.returncode == 0, completed.stderr
     return target
 
@@ -144,3 +146,85 @@ def test_real_project_check_reports_ready() -> None:
     completed = run_check(ROOT)
     assert "BuildReasonSeg environment: READY" in completed.stdout, completed.stdout
     assert completed.returncode == 0
+
+
+# ------------------------------------------------- Task 8B.2-R2 runtime dependency regressions
+
+
+def _load_check_setup_module():
+    import importlib.util
+
+    module_path = ROOT / "check_setup.py"
+    spec = importlib.util.spec_from_file_location("rc1_check_setup_module", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _fresh_report(module):
+    return module.Report()
+
+
+def test_real_runtime_reports_ultralytics_and_ready() -> None:
+    completed = run_check(ROOT)
+    assert "Ultralytics runtime" in completed.stdout
+    assert "8.4.164" in completed.stdout
+    assert "BuildReasonSeg environment: READY" in completed.stdout, completed.stdout
+    assert completed.returncode == 0
+
+
+def test_runtime_ultralytics_missing_is_not_ready(monkeypatch, tmp_path: Path) -> None:
+    import builtins
+
+    module = _load_check_setup_module()
+    report = _fresh_report(module)
+    real_import = builtins.__import__
+
+    def blocked_import(name, *args, **kwargs):
+        if name == "ultralytics" or name.startswith("ultralytics."):
+            raise ModuleNotFoundError("No module named 'ultralytics'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", blocked_import)
+    module.check_runtime_dependencies(report, None)
+    assert report.ready is False
+    assert any("[MISSING] Ultralytics runtime" in line for line in report.lines), report.lines
+
+
+def test_runtime_ultralytics_wrong_version_is_not_ready(monkeypatch, tmp_path: Path) -> None:
+    import builtins
+    import types
+
+    module = _load_check_setup_module()
+    report = _fresh_report(module)
+    real_import = builtins.__import__
+    fake = types.ModuleType("ultralytics")
+    fake.__version__ = "8.3.0"
+
+    def fake_import(name, *args, **kwargs):
+        if name == "ultralytics" or name.startswith("ultralytics."):
+            return fake
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    module.check_runtime_dependencies(report, None)
+    assert report.ready is False
+    assert any("[INVALID] Ultralytics runtime" in line for line in report.lines), report.lines
+    assert any("8.4.164" in line for line in report.lines)
+
+
+def test_portability_wording_no_longer_claims_bundled_runtime() -> None:
+    completed = run_check(ROOT)
+    assert "source/assets portability" in completed.stdout
+    assert "项目可整体移动" not in completed.stdout
+    assert "runtime environment" in completed.stdout
+
+
+def test_runtime_and_provenance_are_distinguished() -> None:
+    completed = run_check(ROOT)
+    assert "Ultralytics runtime" in completed.stdout
+    assert "model provenance" in completed.stdout
+    assert "Transformers runtime" in completed.stdout
+    check_setup_source = (ROOT / "check_setup.py").read_text(encoding="utf-8")
+    assert "def model_provenance_version" in check_setup_source
+    assert "REQUIRED_ULTRALYTICS = \"8.4.164\"" in check_setup_source

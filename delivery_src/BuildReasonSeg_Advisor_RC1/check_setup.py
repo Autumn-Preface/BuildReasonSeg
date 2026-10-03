@@ -23,6 +23,9 @@ from buildreasonseg.utils.device import cuda_available, gpu_name, torch_availabl
 from buildreasonseg.utils.hashing import verify_sha256
 
 MIN_PYTHON = (3, 10)
+
+#: frozen RC1 U-C1 detector runtime requirement (Task 8B.2-R2)
+REQUIRED_ULTRALYTICS = "8.4.164"
 REQUIRED_DIRS = ("buildreasonseg", "configs", "model", "model/buildreasonseg_advisor",
                  "model/components/sam2", "model/components/program_head", "datasets",
                  "inference/input", "inference/output/masks", "inference/output/overlays",
@@ -234,7 +237,55 @@ def check_portability(report: Report) -> None:
     if offenders:
         report.invalid("portability (no workspace dependency)", "; ".join(offenders[:5]))
     else:
-        report.ok("portability", "无 workspace 依赖；项目可整体移动")
+        report.ok("source/assets portability",
+                  "delivery 内未发现 workspace 绝对路径依赖；runtime environment 需单独配置")
+
+
+def model_provenance_version(package: ModelPackage | None, key: str) -> str | None:
+    """The version recorded in the model package metadata (provenance, not proof of installation)."""
+
+    if package is None:
+        return None
+    framework = (package.metadata or {}).get("framework") or {}
+    value = framework.get(key)
+    return None if value is None else str(value)
+
+
+def check_runtime_dependencies(report: Report, package: ModelPackage | None) -> None:
+    """Verify the LIVE Python environment (never a metadata value presented as an installation).
+
+    Task 8B.2-R2 / RC1-ENV-01: the U-C1 detector runtime imports `ultralytics`; before this fix the checker could
+    report READY without that import being possible.
+    """
+
+    provenance = model_provenance_version(package, "ultralytics")
+    try:
+        import ultralytics
+    except Exception:
+        report.missing("Ultralytics runtime",
+                       f"U-C1 detector requires ultralytics=={REQUIRED_ULTRALYTICS}")
+    else:
+        runtime = str(getattr(ultralytics, "__version__", "unknown"))
+        if runtime != REQUIRED_ULTRALYTICS:
+            report.invalid("Ultralytics runtime",
+                           f"runtime={runtime}, required={REQUIRED_ULTRALYTICS}")
+        elif provenance is not None and runtime != provenance:
+            report.invalid("Ultralytics runtime",
+                           f"runtime={runtime}, model provenance={provenance}")
+        else:
+            report.ok("Ultralytics runtime",
+                      f"runtime={runtime}; model provenance={provenance or 'n/a'}")
+
+    transformers_provenance = model_provenance_version(package, "transformers")
+    try:
+        import transformers
+    except Exception:
+        report.missing("Transformers runtime", "Qwen / ProgramHead requires transformers")
+    else:
+        detail = f"runtime={transformers.__version__}"
+        if transformers_provenance:
+            detail += f"; model provenance={transformers_provenance}"
+        report.ok("Transformers runtime", detail)
 
 
 def run_checks(*, require_cuda: bool = False) -> Report:
@@ -245,6 +296,7 @@ def run_checks(*, require_cuda: bool = False) -> Report:
     check_paths(report)
     package = check_model_package(report)
     check_components(report, package)
+    check_runtime_dependencies(report, package)
     check_portability(report)
     return report
 
