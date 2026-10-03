@@ -49,3 +49,19 @@ for the two frozen defects plus the required coverage). No RC1 product source, d
 ProgramHead, Qwen suggestion, detector, Reference, SAM2, D-B1, threshold, config or checkpoint was modified; the six
 frozen prompts were never changed or retried; no training, download, package installation or final-test access
 occurred.
+
+---
+
+# FROM_DSH — Task 8B.3-R3 addendum (STOP)
+
+- Task: `8B.3-R3`
+- Status: **STOP** — execution budget was exhausted immediately after reading the task book, so the four mandated
+  harness corrections were **not** applied: (1) repeated-prompt harness test, (2) AST test restricted to
+  `_reader_thread` / `_run_interactive_process`, (3) A3 frozen oracle literal `largest_to_above_to_nearest`,
+  (4) `changed_outputs(before, after)` detection of overwritten artifacts.
+- Driver tests: NOT RUN in R3 (unchanged: 12 passed, 3 failed).
+- Repository tests: NOT RUN. check_setup: NOT RUN in R3 (last known READY, live `ultralytics==8.4.164`).
+- Inputs: 6/6 (identities unchanged from R1/R2). Formal suite: **NOT RUN**. Review pack: not created.
+- Visual verdict: `PENDING CHATGPT/USER REVIEW`. Output-layout proposal: ACCEPTED / DEFERRED TO TASK 8B.4.
+- No harness/test/product/runtime change was made in this turn; the frozen state is intact and auditable.
+- Next action: Awaiting ChatGPT audit.

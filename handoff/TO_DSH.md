@@ -1,11 +1,11 @@
-# TO_DSH — Task 8B.3-R2: Finalize Deterministic Driver and Run the Frozen Six-Image Suite
+# TO_DSH — Task 8B.3-R3: Final Harness Corrections and One Formal Six-Image Run
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `eval/task8b3-six-image-demo-suite`
-> Required starting HEAD: `1287d0a2bab50a278452d4cd0ec8d492347afdfe`
-> Audited RC1/main HEAD: `c45ecbec7fd293c454ccced22310db32c1542be4`
+> Required starting HEAD: `c08c65998f045d0e712c7e212f37a63042ec0f27`
+> Main/origin-main: `c45ecbec7fd293c454ccced22310db32c1542be4`
 > External runnable RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 > Runtime Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\python.exe`
 
@@ -21,88 +21,115 @@ On every terminal state (`COMPLETE / PARTIAL / STOP / FAILED`), if Git remains s
 4. push `eval/task8b3-six-image-demo-suite`;
 5. stop and wait for ChatGPT.
 
-Only Git safety/auth/network failure may prevent commit/push. Never destroy user changes to force a push.
+Do not leave decisive evidence only in local logs.
+
+---
 
 # 1. Executor-only rule
 
 DSH is executor only.
 
 Do not:
-- modify any RC1 product/runtime source;
 - modify `delivery_src/BuildReasonSeg_Advisor_RC1/**`;
-- edit external delivery source/config directly;
+- modify external delivery source/config;
 - modify `predict.py`;
 - modify ProgramHead/Qwen/suggestion/Validator;
 - modify detector/Reference/SAM2/D-B1;
-- modify thresholds/config/checkpoints;
+- modify threshold/config/checkpoint/model assets;
 - install/uninstall packages;
-- change or retry any frozen natural-language prompt;
+- change/retry any frozen prompt;
 - use Assisted Mode, `--reference-id`, or `--inspect-proposals`;
 - access final test;
-- train/download anything;
-- implement the future per-run output-directory product layout;
+- train/download;
+- implement Task 8B.4 output layout;
 - enter Task 8B.4 or Task 8C.
 
-If an uncovered decision is required: STOP and report.
+Only validation harness, harness tests, report, and handoff may change.
 
-# 2. ChatGPT audit verdict on Task 8B.3-R1
+---
 
-The R1 PARTIAL/STOP is accepted.
+# 2. ChatGPT audit of R2
 
-Git reporting protocol worked correctly:
-- branch was pushed;
-- report exists;
-- `FROM_DSH` exists;
-- remote `main` is now correctly `c45ecbec7fd293c454ccced22310db32c1542be4`.
+R2 correctly implemented:
+- reader-thread + queue;
+- bounded main-thread polling;
+- monotonic timeout;
+- exact three child-environment overrides;
+- no RC1 product changes.
 
-The real six-image suite has not started.
+Formal suite remains unrun.
 
-ChatGPT found four harness-level items that must be fixed before the one formal suite run.
+Four final harness issues must be corrected before the one formal run.
 
-## 2.1 Test defect A
+## 2.1 Repeated-prompt test is invalid
 
-`tests/test_task8b3_interactive_suite.py::_run_fake(... expected=...)` receives an expected program but ignores it and hard-codes `largest_to_right_of_to_nearest`.
+Current fake child calls the same Y/N prompt twice and blocks waiting for a second stdin answer.
+The production contract is “same prompt instance/type is answered at most once”, so deliberately refusing the second answer is correct.
+
+Frozen test replacement:
+- fake child must print the same direct confirmation substring twice **before a single stdin read**;
+- then perform exactly one stdin read;
+- then print `ANSWER=<value>`;
+- assert driver transcript contains exactly one `[driver] direct -> ...` decision line;
+- assert child receives exactly one Y/N answer;
+- do not require a second answer.
+
+## 2.2 AST test implementation is invalid
+
+Do not call `ast.get_docstring()` indiscriminately on every AST node.
+
+Frozen replacement:
+- parse the module with `ast.parse`;
+- locate only function definitions named:
+  - `_reader_thread`
+  - `_run_interactive_process`
+- walk only those function bodies;
+- collect executable `ast.Call` nodes;
+- assert no call target attribute/name is `readline` or `communicate`;
+- no assertion about docstring contents is required.
+
+## 2.3 A3 frozen oracle is wrong in the driver
+
+Current driver contains:
+
+```python
+"largest_to_above_of_to_nearest".replace("_above_of_", "_above_to_")
+```
+
+This is not an acceptable representation of the frozen oracle.
+
+Replace that A3 expected program with the exact literal:
+
+```text
+largest_to_above_to_nearest
+```
+
+No other CASES tuple may change.
+
+## 2.4 Output diff misses overwritten artifacts
+
+Current `run_case()` derives artifacts by set difference of file names only.
+A1 already has prior R2 outputs, so a formal A1 run may overwrite an existing file name; that must still count as this run's artifact.
 
 Frozen fix:
-- make the fake-driver decision compare the parsed program to the `expected` argument;
-- do not hard-code A1's program inside `_run_fake`.
+- compare both path presence and recorded metadata;
+- a path is “changed in this run” if:
+  1. absent before and present after, OR
+  2. present before and after but its stored metadata differs.
+- use the existing `(size, mtime_ns)` snapshot information; do not hash large outputs.
+- result.json discovery must search the changed diagnostics set, not only newly named files.
+- preserve old files; do not delete outputs before the suite.
 
-## 2.2 Test defect B
+Add a pure helper such as:
 
-`test_decision_path_has_no_readline` scans the whole source text and falsely matches the driver's explanatory docstring.
+```python
+def changed_outputs(before: dict, after: dict) -> dict:
+    ...
+```
 
-Frozen fix:
-- parse the driver with Python `ast`;
-- inspect executable call nodes / executable source semantics rather than raw docstring text;
-- assert there is no executable `.readline(...)` call and no `.communicate(...)` call in the interaction path;
-- do not remove useful documentation merely to satisfy string search.
+or equivalent.
 
-## 2.3 Driver timeout defect
-
-The current driver calls blocking `os.read(...)` directly in the main control loop. If the child stays alive but emits no bytes, the main thread can block beyond the intended 15-minute deadline.
-
-Frozen fix:
-- move blocking stdout reads into a dedicated daemon reader thread;
-- reader thread pushes raw byte chunks and one EOF sentinel into `queue.Queue`;
-- main thread uses `queue.get(timeout=0.10)` or equivalent bounded wait;
-- main thread alone owns wall-clock deadline checks and Y/N decisions;
-- timeout must trigger even if child emits no output at all.
-
-## 2.4 Environment-scope deviation
-
-The current driver adds:
-`HF_HUB_OFFLINE=1`
-`TRANSFORMERS_OFFLINE=1`
-
-Frozen fix:
-- remove those two harness-added assignments;
-- `child_environment()` must copy `os.environ` and then explicitly set only:
-  - `PYTHONIOENCODING=utf-8`
-  - `PYTHONUNBUFFERED=1`
-  - `PYTHONUTF8=1`
-- do not remove those variables if they already existed naturally in the inherited parent environment; simply do not create/override them in the harness.
-
-No other driver behavior is authorized to change.
+---
 
 # 3. Phase A — Git safety
 
@@ -115,14 +142,13 @@ git rev-parse HEAD
 git rev-parse main
 git rev-parse origin/main
 git status --short
-git remote -v
 ```
 
 Continue only if:
 
 ```text
 branch = eval/task8b3-six-image-demo-suite
-HEAD = 1287d0a2bab50a278452d4cd0ec8d492347afdfe
+HEAD = c08c65998f045d0e712c7e212f37a63042ec0f27
 main = c45ecbec7fd293c454ccced22310db32c1542be4
 origin/main = c45ecbec7fd293c454ccced22310db32c1542be4
 ```
@@ -131,13 +157,15 @@ Allowed working tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
-Any other state -> STOP, report/push if Git-safe.
+Any other state -> STOP and persist/push report if Git-safe.
 
 No reset/stash/clean/rebase/merge.
 
-# 4. Phase B — Allowed files
+---
 
-Only these repository files may change:
+# 4. Phase B — Allowed repository files
+
+Only:
 
 ```text
 scripts/task8b3_interactive_suite.py
@@ -148,140 +176,131 @@ handoff/TO_DSH.md
 ```
 
 No other repository path may change.
-No external delivery source/config file may be edited.
-Runtime outputs/transcripts/review pack remain local-only outside Git.
 
-# 5. Phase C — Fix child environment exactly
+---
 
-In `scripts/task8b3_interactive_suite.py`, `child_environment()` must have this semantic behavior:
+# 5. Phase C — Driver changes
+
+Modify `scripts/task8b3_interactive_suite.py` only as follows.
+
+## C1. A3 oracle
+
+Set exactly:
 
 ```python
-def child_environment() -> dict:
-    environment = os.environ.copy()
-    environment["PYTHONIOENCODING"] = "utf-8"
-    environment["PYTHONUNBUFFERED"] = "1"
-    environment["PYTHONUTF8"] = "1"
-    return environment
+("A3", "inference/input/A3.png",
+ "以最大建筑为准，分割位于其上方且距离最近的建筑",
+ "largest_to_above_to_nearest")
 ```
 
-No harness-created/overridden environment variable besides those three.
+Do not use `.replace()` or computed expressions in any frozen expected program.
 
-# 6. Phase D — Implement reader-thread/queue architecture
+## C2. Changed-output helper
 
-Use Python standard library only:
-`queue`, `threading`.
+Introduce a deterministic helper with semantic behavior:
 
-## 6.1 Reader thread
-
-After `Popen`, create one daemon reader thread whose only responsibilities are:
-1. obtain `process.stdout`;
-2. repeatedly perform blocking binary reads;
-3. put each non-empty `bytes` chunk into `queue.Queue`;
-4. when EOF is reached, put one fixed EOF sentinel into the queue;
-5. never decode text;
-6. never decide Y/N;
-7. never mutate language/program state.
-
-A fixed read size such as 4096 is allowed.
-
-## 6.2 Main control loop
-
-The main thread must:
-- create incremental UTF-8 decoder;
-- consume queue with bounded wait of at most 0.10 s;
-- append decoded text to buffer/transcript;
-- parse initial program;
-- detect exact prompt substrings;
-- make Y/N decisions;
-- check `time.monotonic()` deadline on every control-loop cycle;
-- observe process state;
-- exit only after process ended and EOF consumed, or timeout handling completes.
-
-Do not use:
-- `readline()`;
-- `for line in process.stdout`;
-- `communicate(input=...)`.
-
-## 6.3 Timeout
-
-Use:
 ```python
-deadline = time.monotonic() + CASE_TIMEOUT_SECONDS
+changed[sub] = sorted(
+    path
+    for path, after_meta in after[sub].items()
+    if path not in before[sub] or before[sub][path] != after_meta
+)
 ```
 
-When deadline expires while child is alive:
-1. mark timeout;
-2. `process.terminate()`;
-3. wait up to 10 s;
-4. if still alive, `process.kill()`;
-5. drain already queued output for a bounded short period;
-6. save transcript;
-7. classify `DRIVER_TIMEOUT`.
+It must support the existing `masks`, `overlays`, `diagnostics` dictionaries.
 
-This timeout must work even if the child printed zero bytes.
+`run_case()` must use this changed set for:
+- per-run artifact evidence;
+- locating this run's `result.json`.
 
-Do not retry timed-out sample.
+Do not clear output directories.
 
-# 7. Phase E — Keep frozen interaction semantics
+## C3. No other driver change
 
 Do not change:
-```text
-DIRECT_PROMPT
-SUGGESTION_PROMPT
-FALLBACK_PROMPT
-PROGRAM_RE
-DISPLAY_TO_PROGRAM
-CASES
-CASE_TIMEOUT_SECONDS = 900
-```
+- reader thread;
+- queue timing;
+- timeout;
+- prompt constants;
+- regex;
+- DISPLAY_TO_PROGRAM;
+- remaining five CASES;
+- child environment;
+- process invocation;
+- Y/N rules.
 
-Direct:
-- parsed exact expected -> Y;
-- supported but wrong -> N.
+---
 
-Suggestion:
-- suggestion exact expected -> Y;
-- other suggestion -> N.
-
-Fallback:
-- always N.
-
-Do not add keyword parsing of user prompt.
-
-# 8. Phase F — Repair and strengthen harness unit tests
+# 6. Phase D — Harness test corrections
 
 Modify only `tests/test_task8b3_interactive_suite.py`.
 
-Required coverage:
+## D1. Repeated prompt test
 
-1. right expected + right parse -> Y;
-2. left expected + left parse -> Y;
-3. left expected + right parse -> N;
-4. direct Y/N prompt without newline;
-5. Chinese prompt survives binary pipe and UTF-8 incremental decoding;
-6. suggestion above + expected above -> Y;
-7. suggestion above + expected below -> N;
-8. fallback prompt -> N;
-9. repeated prompt -> only one stdin answer;
-10. no-newline output before/after prompt preserved in transcript;
-11. AST-based check: no executable `readline()` or `communicate()` call in driver interaction implementation;
-12. silent-child timeout regression:
-   - monkeypatch `CASE_TIMEOUT_SECONDS = 0.5`;
-   - fake child emits zero output and sleeps longer;
-   - driver helper returns/terminates within <5 seconds;
-   - timeout classified;
-   - child not left running;
-13. child environment explicitly overrides only the three frozen encoding/buffering variables;
-14. driver does not explicitly assign `HF_HUB_OFFLINE` or `TRANSFORMERS_OFFLINE`;
-15. suite contains exactly A1/A2/A3/A4/B1/B2 with exact frozen prompts/programs.
+Replace the current blocking two-read fake child.
 
-Use fake child scripts only; no real models/images.
+Use a fake child that:
+1. prints a valid `[解析]` line;
+2. writes `DIRECT_PROMPT` twice consecutively without newline requirement;
+3. flushes;
+4. performs one `sys.stdin.readline()`;
+5. prints `ANSWER=<answer>`;
+6. exits.
 
-If needed, refactor the validation harness into a reusable internal helper such as `_run_interactive_process(...)`, but do not change product runtime.
+Assertions:
+- child receives `Y` when expected program matches;
+- transcript contains exactly one driver direct-decision marker;
+- process exits normally;
+- no timeout.
 
-# 9. Phase G — Dedicated test gate
+## D2. AST test
 
-Run with designated runtime Python:
+Locate only `_reader_thread` and `_run_interactive_process`.
+
+For each:
+- walk function AST;
+- collect executable calls;
+- assert no called attribute/name equals `readline` or `communicate`.
+
+Do not scan docstrings with `ast.get_docstring()`.
+
+## D3. Frozen A3 test
+
+Assert `driver.CASES` exactly contains literal:
+
+```text
+largest_to_above_to_nearest
+```
+
+for A3.
+
+## D4. Changed-output regression
+
+Add pure unit tests for the helper:
+1. new path is reported changed;
+2. same path + same metadata is not changed;
+3. same path + different size is changed;
+4. same path + same size but different `mtime_ns` is changed;
+5. changed diagnostics `A1/result.json` is included even when the path existed before.
+
+No real delivery files used.
+
+## D5. Preserve prior required tests
+
+All prior valid coverage remains:
+- direct Y/N;
+- UTF-8 no-newline;
+- suggestion Y/N;
+- fallback N;
+- silent-child timeout;
+- exact child environment;
+- six frozen cases.
+
+---
+
+# 7. Phase E — Dedicated test gate
+
+Run once:
 
 ```bat
 ENV_PYTHON -m pytest tests/test_task8b3_interactive_suite.py -q
@@ -289,16 +308,18 @@ ENV_PYTHON -m pytest tests/test_task8b3_interactive_suite.py -q
 
 Must be 100% PASS.
 
-If any dedicated test fails:
+If any failure:
+- do not patch further in this task;
 - do not run real suite;
-- do not patch again in this task after this gate;
 - update report/FROM_DSH;
-- commit/push PARTIAL/STOP;
-- stop for ChatGPT.
+- commit/push STOP;
+- stop.
 
-# 10. Phase H — Full repository test gate
+---
 
-Only after dedicated tests pass:
+# 8. Phase F — Full repository gate
+
+Only if dedicated tests PASS:
 
 ```bat
 ENV_PYTHON -m pytest tests/ -q
@@ -306,181 +327,197 @@ ENV_PYTHON -m pytest tests/ -q
 
 Must PASS.
 
-If any failure:
-- do not run real suite;
-- do not modify unrelated code;
-- report/push STOP.
+Any failure -> no formal suite, no unrelated repair; report/push STOP.
 
-# 11. Phase I — External runtime/input gate
+---
 
-Run:
+# 9. Phase G — External runtime/input gate
+
+Run external:
 
 ```bat
-cd /d C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
 ENV_PYTHON check_setup.py
 ```
 
 Must end:
-`BuildReasonSeg environment: READY`
-
-Verify all six frozen inputs and preserve the SHA256 identities already recorded in R1 report.
-
-If any SHA differs -> STOP before formal suite.
-
-Do not substitute images.
-
-# 12. Phase J — Formal suite freeze point
-
-Immediately before real suite, record in the report:
 
 ```text
-FORMAL_SUITE_FREEZE:
-driver working-copy sha256 = <sha256>
-test file sha256 = <sha256>
-six input hashes = <A1..B2>
-dedicated tests = PASS
-repository tests = PASS
+BuildReasonSeg environment: READY
+```
+
+Verify 6/6 inputs and exact previously recorded SHA256 identities.
+
+Any input hash mismatch -> STOP.
+
+---
+
+# 10. Phase H — Formal suite freeze
+
+Before formal suite, append to report:
+
+```text
+FORMAL_SUITE_FREEZE
+driver_sha256 = ...
+tests_sha256 = ...
+A1_sha256 = ...
+A2_sha256 = ...
+A3_sha256 = ...
+A4_sha256 = ...
+B1_sha256 = ...
+B2_sha256 = ...
+dedicated_tests = PASS
+repository_tests = PASS
 check_setup = READY
 ```
 
 After this point:
-- do not edit driver;
-- do not edit tests;
-- do not edit prompt suite;
-- do not edit RC1;
-- do not rerun an individual formal sample.
+- no driver/test/prompt/product edit;
+- no individual sample retry.
 
-# 13. Phase K — Run the formal suite exactly once
+---
 
-From repository root run:
+# 11. Phase I — One formal suite run
+
+Run exactly once:
 
 ```bat
 ENV_PYTHON scripts/task8b3_interactive_suite.py
 ```
 
 Required order:
-`A1 -> A2 -> A3 -> A4 -> B1 -> B2`
 
-A sample-level model/language failure is recorded and later samples continue if environment remains healthy.
+```text
+A1 -> A2 -> A3 -> A4 -> B1 -> B2
+```
 
-If the driver orchestration itself crashes after formal suite begins:
-- do not patch;
-- do not rerun;
-- report/push partial evidence;
+Sample-level language/model failures are recorded and later cases continue if environment remains READY.
+
+If driver orchestration itself crashes:
+- no patch;
+- no rerun;
+- report/push partial;
 - STOP.
 
-No semantic-result-driven changes allowed after formal run begins.
+---
 
-# 14. Phase L — Objective result interpretation
+# 12. Phase J — Objective result collection
 
-For every case record:
-- initial program;
-- confidence;
+For each A1–B2 record:
+- initial program/confidence;
+- Y/N;
 - language status;
-- sent Y/N;
-- whether visual chain executed;
-- exit code;
-- runtime result/error;
+- executed_visual;
+- exit/result/error;
 - Reference ID;
 - mask/overlay/diagnostics;
-- tile count;
-- raw/merged proposals if available;
-- context-limit flag if present.
+- tile/raw/merged proposals if available;
+- context-limit flag.
 
-A runtime `SUCCESS` must be labeled:
-`AUTOMATIC_RUNTIME_SUCCESS_PENDING_VISUAL_REVIEW`
+Runtime success label:
 
-Never label visual correctness from successful exit alone.
+```text
+AUTOMATIC_RUNTIME_SUCCESS_PENDING_VISUAL_REVIEW
+```
 
-# 15. Phase M — Review pack
+Do not issue a semantic mask-quality verdict.
 
-If formal suite produces outputs, create local-only:
+For A1 specifically, verify the per-run evidence can identify changed/overwritten result artifacts even though prior R2 A1 outputs already existed.
 
-`C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3`
+---
+
+# 13. Phase K — Review pack
+
+Create local-only if outputs exist:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3
+```
 
 Create `INDEX.md`.
 
-Copy successful overlays as:
-- `A1_overlay_review.png`
-- `A2_overlay_review.png`
-- `A3_overlay_review.png`
-- `A4_overlay_review.png`
-- `B1_overlay_review.png`
-- `B2_overlay_review.png`
+Copy successful overlays to `<ID>_overlay_review.png`.
 
-Only if actually produced.
+For failures, only copy proposal evidence already generated by normal execution; do not launch inspect-proposals.
 
-Failed cases may include copied `global_proposals` if already produced by normal diagnostics. Do not invoke new `--inspect-proposals`.
+Do not Git-track review pack.
 
-Review pack is not Git-tracked.
+---
 
-# 16. Phase N — Report update
+# 14. Phase L — Report
 
 Update:
-`docs/task8b3_six_image_demo_suite.md`
 
-Preserve previous R1 PARTIAL history and add:
-`## Task 8B.3-R2 — Driver Audit Closure and Formal Suite`
+```text
+docs/task8b3_six_image_demo_suite.md
+```
+
+Preserve R1/R2 history and add:
+
+```text
+## Task 8B.3-R3 — Final Harness Corrections and Formal Suite
+```
 
 Include:
-1. ChatGPT R1 audit findings;
-2. exact driver fixes;
-3. dedicated test result;
-4. repository suite result;
-5. check_setup;
-6. input hash confirmation;
-7. FORMAL_SUITE_FREEZE hashes;
-8. six-case objective table;
-9. language summary;
-10. runtime summary;
-11. B1/B2 mechanical information;
-12. review pack contents;
-13. visual verdict = `PENDING CHATGPT/USER REVIEW`;
-14. no-tuning statement;
-15. output-layout requirement remains `ACCEPTED / DEFERRED TO TASK 8B.4`;
-16. exact STOP reason if not COMPLETE.
+- four ChatGPT audit findings above;
+- exact corrections;
+- dedicated tests;
+- repo tests;
+- setup/input gate;
+- freeze hashes;
+- formal-run statement: RUN ONCE / NOT RUN / PARTIAL;
+- six-case table;
+- runtime/language summary;
+- review pack;
+- Visual Verdict = `PENDING CHATGPT/USER REVIEW`;
+- output layout = `ACCEPTED / DEFERRED TO TASK 8B.4`;
+- no-tuning statement;
+- stop reason if any.
 
-If formal suite does not run, mark all unrun sections `NOT RUN`.
+---
 
-# 17. Phase O — FROM_DSH mandatory
+# 15. Phase M — FROM_DSH
 
-Update:
-`handoff/FROM_DSH.md`
+Always update:
+
+```text
+handoff/FROM_DSH.md
+```
 
 Preserve `ARTIFACT-FACTS` verbatim.
 
-Required fields:
+Required:
+
 ```text
-Task: 8B.3-R2
+Task: 8B.3-R3
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: eval/task8b3-six-image-demo-suite
-Starting HEAD: 1287d0a2...
+Starting HEAD: c08c6599...
 Main/origin-main: c45ecbec...
-Driver: PASS/FAIL
-Driver tests: <result>
-Repository tests: <result>
-check_setup: <result>
-Inputs: 6/6 or other
-Formal suite: RUN / NOT RUN / PARTIAL
+Driver tests: ...
+Repository tests: ...
+check_setup: ...
+Inputs: ...
+Formal suite: RUN ONCE / NOT RUN / PARTIAL
 A1: ...
 A2: ...
 A3: ...
 A4: ...
 B1: ...
 B2: ...
-Review pack: <path/not created>
+Review pack: ...
 Visual verdict: PENDING CHATGPT/USER REVIEW
 Output-layout proposal: ACCEPTED / DEFERRED TO TASK 8B.4
 Report: docs/task8b3_six_image_demo_suite.md
-STOP reason: <none/exact>
+STOP reason: ...
 Next action: Awaiting ChatGPT audit.
 ```
 
-No autonomous next-task decision.
+---
 
-# 18. Phase P — Git safety and commit
+# 16. Phase N — Git gate / commit / push
 
-Allowed repo paths only:
+Allowed paths only:
+
 ```text
 scripts/task8b3_interactive_suite.py
 tests/test_task8b3_interactive_suite.py
@@ -490,75 +527,75 @@ handoff/TO_DSH.md
 ```
 
 Run:
+
 ```bat
 git status --short
 git diff --check
 git diff
 ```
 
-Any other repo change -> STOP/report.
+Stage individually.
 
-Stage individually. Never `git add .` or `git add -A`.
+COMPLETE commit:
 
-If COMPLETE:
-`test(demo): close deterministic six-image suite`
-
-If PARTIAL/STOP/FAILED:
-`docs(demo): record task8b3-r2 execution stop`
-
-After commit:
-```bat
-git status --short
-git show --stat --oneline HEAD
+```text
+test(demo): complete frozen six-image suite
 ```
 
-Working tree must be clean.
+PARTIAL/STOP/FAILED commit:
 
-# 19. Phase Q — Push
+```text
+docs(demo): record task8b3-r3 execution stop
+```
 
 Push:
+
 ```bat
 git push origin eval/task8b3-six-image-demo-suite
 ```
 
 No force.
 
+Working tree must be clean after commit.
+
 Do not merge eval branch to main.
 
-# 20. COMPLETE definition
+---
 
-`TASK 8B.3-R2 COMPLETE` only if:
-1. exact start state matched;
-2. only harness/tests/docs/handoff changed;
-3. test defects A/B fixed;
-4. reader-thread/queue timeout architecture implemented;
-5. harness no longer explicitly sets HF/Transformers offline flags;
-6. silent-child timeout regression passes;
-7. all dedicated driver tests pass;
-8. full repository suite passes;
+# 17. COMPLETE definition
+
+COMPLETE only if:
+1. exact start state;
+2. only allowed files changed;
+3. A3 oracle exact literal fixed;
+4. repeated-prompt test valid;
+5. AST test valid;
+6. changed/overwritten output detection implemented and tested;
+7. dedicated tests 100% PASS;
+8. repo tests PASS;
 9. check_setup READY;
-10. six input hashes unchanged;
+10. 6 input hashes unchanged;
 11. formal freeze recorded;
 12. formal suite run exactly once;
-13. A1–B2 all attempted in order;
-14. no formal sample retry;
-15. no prompt/model/config tuning;
-16. objective evidence captured;
-17. review pack created as applicable;
-18. DSH makes no visual semantic verdict;
-19. report updated;
-20. FROM_DSH updated;
-21. output-layout request remains deferred to Task 8B.4;
-22. commit/push succeed;
-23. tree clean;
-24. DSH stops.
+13. all six attempted in order;
+14. no retry/tuning;
+15. objective evidence captured;
+16. review pack created as applicable;
+17. no product source change;
+18. report/FROM_DSH updated;
+19. output-layout deferred;
+20. commit/push succeed;
+21. clean tree;
+22. stop.
 
-`COMPLETE` does not mean 6/6 segmentation quality is correct.
+COMPLETE does not mean 6/6 visually correct.
 
-# 21. Final DSH response
+---
+
+# 18. Final response
 
 ```text
-TASK 8B.3-R2 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-R3 COMPLETE / PARTIAL / STOP / FAILED
 
 Branch:
 eval/task8b3-six-image-demo-suite
@@ -568,12 +605,6 @@ Commit:
 
 Push:
 PASS / FAIL / NOT POSSIBLE
-
-Main/origin-main:
-c45ecbec... / other
-
-Driver:
-PASS / FAIL
 
 Driver tests:
 <result>
@@ -634,5 +665,3 @@ STOP reason:
 
 等待 ChatGPT 审核；不得进入 Assisted Mode、Task 8B.4、Task 8C 或任何新研发。
 ```
-
-Then stop.

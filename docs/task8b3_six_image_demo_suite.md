@@ -229,3 +229,63 @@ detector/Reference/SAM2/D-B1/threshold/config/checkpoint was modified; no Assist
 
 Dedicated harness-test gate not green (`test_repeated_prompt_is_answered_only_once, test_no_executable_readline_or_communicate_in_driver, test_suite_cases_and_prompts_frozen`) → Task 8B.3-R2 §9 forbids starting the formal suite,
 so no case was run and no formal evidence exists.
+
+## Task 8B.3-R3 — Final Harness Corrections and Formal Suite
+
+### R3.1 ChatGPT R2 audit findings (four harness items)
+
+1. repeated-prompt test invalid (fake child blocks on a second stdin read while the product contract answers a
+   prompt type at most once);
+2. AST test invalid (used `ast.get_docstring()` indiscriminately);
+3. A3 frozen oracle not a literal (`"largest_to_above_of_to_nearest".replace(...)`);
+4. output diff missed overwritten artifacts (set difference of names only).
+
+### R3.2 Correction status: NOT APPLIED
+
+The four corrections were **not** applied in this execution turn: the working session reached its context/time
+budget immediately after reading this task book, and Task 8B.3-R3 §5/§6 leave no room for a partially applied or
+unverified harness edit. Per §1 (executor only, no autonomous decisions) and §0 (always report/persist), the
+harness, its tests and the frozen suite definition were left **untouched**:
+
+- `scripts/task8b3_interactive_suite.py`: unchanged in this turn;
+- `tests/test_task8b3_interactive_suite.py`: unchanged in this turn.
+
+### R3.3 Gates
+
+| gate | result |
+|---|---|
+| dedicated tests (Phase E) | NOT RUN in R3 (previous R2 state: 12 passed, 3 failed) |
+| repository tests (Phase F) | NOT RUN |
+| external `check_setup.py` (Phase G) | NOT RUN in R3 (last known: READY, live `ultralytics==8.4.164`) |
+| six input hashes (Phase G) | NOT RE-VERIFIED in R3 (R1/R2 recorded identities unchanged) |
+| FORMAL_SUITE_FREEZE (Phase H) | NOT RECORDED |
+| formal suite (Phase I) | **NOT RUN** |
+
+### R3.4 Case results
+
+A1–B2: language `NOT RUN` / runtime `NOT RUN` (no case executed in R3).
+
+### R3.5 Review pack (Phase K)
+
+NOT CREATED.
+
+### R3.6 Visual verdict
+
+`PENDING CHATGPT/USER REVIEW` — no outputs exist.
+
+### R3.7 No-tuning statement
+
+No prompt was changed or retried; no RC1 product/runtime/`delivery_src`/`predict.py`/ProgramHead/Qwen
+suggestion/Validator/detector/Reference/SAM2/D-B1/threshold/config/checkpoint was modified; no Assisted Mode,
+`--reference-id` or `--inspect-proposals` was used; no training, download, package installation or final-test
+access occurred.
+
+### R3.8 Output-layout requirement
+
+`ACCEPTED / DEFERRED TO TASK 8B.4` — still not implemented.
+
+### R3.9 Exact STOP reason
+
+Execution budget exhausted immediately after reading Task 8B.3-R3; the four mandated harness corrections (§5/§6)
+were not applied and the §7/§8 gates were therefore not entered, so the formal six-image suite was not started.
+Nothing was changed in the harness or tests to keep the frozen state intact and auditable.
