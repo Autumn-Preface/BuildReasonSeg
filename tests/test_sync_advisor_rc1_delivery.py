@@ -153,3 +153,63 @@ def test_check_does_not_modify_destination(canonical: Path, destination: Path) -
     before = sha256(target)
     assert sync.main(["--destination", str(destination), "--check"]) != 0
     assert sha256(target) == before
+
+
+# ---------------------------------------------------------------- canonical policy (Task 8B.2-R1.1)
+
+REAL_MANIFEST = REPO_ROOT / "delivery_src" / "BuildReasonSeg_Advisor_RC1" / "source_manifest.json"
+REAL_CANONICAL = REPO_ROOT / "delivery_src" / "BuildReasonSeg_Advisor_RC1"
+QWEN_SUBTREE = "model/components/program_head/Qwen3-VL-2B-Instruct/"
+INTEGRITY_CACHE = "model/components/program_head/qwen_integrity_cache.json"
+SAM2_CONFIG = "model/components/sam2/sam2.1_hiera_b+.yaml"
+ASSET_MANIFEST = "model/components/program_head/qwen_asset_manifest.json"
+
+
+@pytest.fixture(scope="module")
+def real_manifest() -> dict:
+    return json.loads(REAL_MANIFEST.read_text(encoding="utf-8"))
+
+
+def test_canonical_manifest_excludes_qwen_downloaded_subtree(real_manifest: dict) -> None:
+    assert not [entry["path"] for entry in real_manifest["files"]
+                if entry["path"].startswith(QWEN_SUBTREE)]
+
+
+def test_canonical_manifest_excludes_generated_integrity_cache(real_manifest: dict) -> None:
+    paths = {entry["path"] for entry in real_manifest["files"]}
+    assert INTEGRITY_CACHE not in paths
+
+
+def test_canonical_manifest_excludes_downloaded_sam2_config(real_manifest: dict) -> None:
+    paths = {entry["path"] for entry in real_manifest["files"]}
+    assert SAM2_CONFIG not in paths
+
+
+def test_canonical_tree_has_no_qwen_subtree_directory() -> None:
+    assert not (REAL_CANONICAL / QWEN_SUBTREE).exists()
+
+
+def test_canonical_tree_has_no_integrity_cache_file() -> None:
+    assert not (REAL_CANONICAL / INTEGRITY_CACHE).exists()
+
+
+def test_canonical_tree_has_no_sam2_config_file() -> None:
+    assert not (REAL_CANONICAL / SAM2_CONFIG).exists()
+
+
+def test_canonical_tree_keeps_project_generated_asset_manifest() -> None:
+    assert (REAL_CANONICAL / ASSET_MANIFEST).is_file()
+    assert ASSET_MANIFEST in {entry["path"] for entry in
+                               json.loads(REAL_MANIFEST.read_text(encoding="utf-8"))["files"]}
+
+
+def test_canonical_manifest_has_exactly_135_entries(real_manifest: dict) -> None:
+    assert len(real_manifest["files"]) == 135
+
+
+def test_every_real_manifest_entry_matches_canonical_file(real_manifest: dict) -> None:
+    for entry in real_manifest["files"]:
+        target = REAL_CANONICAL / entry["path"]
+        assert target.is_file(), entry["path"]
+        assert target.stat().st_size == entry["bytes"], entry["path"]
+        assert sha256(target) == entry["sha256"], entry["path"]

@@ -66,9 +66,11 @@ no duplicate path, no absolute path and no `..`; `schema` =
 
 **No model weights were copied**: `decoder.pt`, `detector.pt`,
 `model/components/sam2/sam2.1_hiera_base_plus.pt` and the Qwen `.safetensors` weights are excluded by extension
-policy. Note for audit transparency: Qwen **tokenizer/config** files matching the allowed extensions
-(`.json`/`.txt`) *are* included by the mechanical extension policy, because the policy excludes only the listed
-binary extensions:
+policy. Original R1 state (historical fact, superseded by Task 8B.2-R1.1): the mechanical extension policy also
+copied Qwen **tokenizer/config** files matching the allowed extensions (`.json`/`.txt`), because it excluded
+only the listed binary extensions. ChatGPT audit found that policy too broad; Task 8B.2-R1.1 removed those
+files from the canonical source (section 11). The final canonical source contains **none** of these
+downloaded assets:
 
 ```text
 model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json
@@ -123,3 +125,34 @@ edited by this task.
 ## 10. Scientific Scope
 
 > No training, checkpoint modification, final-test access, architecture change, parser-semantic change, threshold tuning or research conclusion change occurred in Task 8B.2-R1.
+
+## 11. ChatGPT Audit Cleanup — Task 8B.2-R1.1
+
+- ChatGPT audit identified the original R1 copy policy as **too broad**: the extension-based policy also copied
+  downloaded third-party Qwen/SAM2 assets and a generated integrity cache into the canonical tree, while the frozen
+  R1 design and `CANONICAL_SOURCE.md` state that downloaded assets and caches remain local-only.
+- DSH R1 execution itself **followed the prescribed policy**; the inconsistency came from the policy, not from any
+  deviation during execution.
+- Exactly **11 canonical files** were removed (canonical Git tree only):
+  - **9 downloaded Qwen text assets** under `model/components/program_head/Qwen3-VL-2B-Instruct/`
+    (`chat_template.json`, `config.json`, `generation_config.json`, `merges.txt`, `preprocessor_config.json`,
+    `tokenizer.json`, `tokenizer_config.json`, `video_preprocessor_config.json`, `vocab.json`);
+  - **1 generated Qwen integrity cache**: `model/components/program_head/qwen_integrity_cache.json`;
+  - **1 downloaded SAM2 config asset**: `model/components/sam2/sam2.1_hiera_b+.yaml`.
+- The **external runnable delivery was not modified**: all 11 files remain present there, and the sync helper ignores
+  them because they are no longer manifest-listed. No normal sync was executed.
+- `qwen_asset_manifest.json` **remains tracked** (project-generated integrity metadata is canonical), together with
+  `model/buildreasonseg_advisor/model.yaml`, `metadata.json` and `metrics.json`.
+- Manifest entries changed from **146 → 135**; every remaining entry was re-verified against its canonical file
+  (bytes + SHA256), entries remain lexicographically sorted with no duplicates, and none of the 11 removed paths
+  appears.
+- External delivery read-only sync check: `checked=135 match=135 missing=0 mismatch=0`, exit code 0.
+- Dedicated tests: `pytest tests/test_sync_advisor_rc1_delivery.py -q` → **23 passed** (14 original + 9 new
+  canonical-policy assertions).
+- Full repository suite: **1534 passed, 1 skipped**.
+- Repair note: R1's handoff rewrite had dropped the repository-required `ARTIFACT-FACTS` block in
+  `handoff/FROM_DSH.md` (R1's suite ran before that write). Task 8B.2-R1.1 restored the block verbatim from the last
+  committed copy plus the required Watt reference; no other handoff content was altered.
+- **No RC1 runtime behaviour changed**; `scripts/sync_advisor_rc1_delivery.py` was not modified; no package was
+  installed; no inference or training was run; no checkpoint or final-test data was accessed.
+- `RC1-ENV-01` **remains deferred** to Task 8B.2-R2.

@@ -21,3 +21,7 @@ external delivery using scripts/sync_advisor_rc1_delivery.py.
 Task 8B.2-R1 performs registration only and does not change runtime behaviour.
 The Ultralytics/readiness issue remains deferred to Task 8B.2-R2 pending
 ChatGPT audit.
+
+Project-generated asset manifests such as `qwen_asset_manifest.json` may remain tracked because they
+describe integrity requirements for local assets; downloaded third-party Qwen/SAM2 asset files and
+generated integrity caches are not canonical Git source.
