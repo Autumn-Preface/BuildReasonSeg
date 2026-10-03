@@ -1,0 +1,78 @@
+{
+ "_doc": "Task 8A section 5. Metrics recorded from the already-completed formal research stages; nothing is recomputed, and Task 7I validation is kept strictly separate from the Task 7J final frozen-architecture test and from the oracle-reference vs predicted-reference protocols.",
+ "product": "BuildReasonSeg Advisor RC1",
+ "recording_policy": {
+  "recomputed_in_task8a": false,
+  "validation_and_test_separated": true,
+  "oracle_and_predicted_reference_separated": true,
+  "end_to_end_significant_improvement_claimed": false
+ },
+ "task7i_validation": {
+  "split": "BuildSpatialReason v0.2 L3 val, all 936 records",
+  "reference_mode": "oracle_native_gt",
+  "checkpoint_selection_metric": "mean target mIoU over all 936 records",
+  "z_b3": {"seeds": {"20261001": 0.319367, "20261002": 0.339382, "20261003": 0.338579},
+           "mean": 0.332443, "std_ddof1": 0.011331},
+  "d_b1": {"seeds": {"20261001": 0.379934, "20261002": 0.382651, "20261003": 0.387688},
+           "mean": 0.383424, "std_ddof1": 0.003934},
+  "matched_seed_delta_d_b1_minus_z_b3": {"20261001": 0.060567, "20261002": 0.043269, "20261003": 0.049109},
+  "matched_seed_wins": "3/3",
+  "counterfactual_pairs": 326,
+  "oracle_pair_pass_rate": {"z_b3": 0.869121, "d_b1": 0.844581},
+  "oracle_pair_margin": {"z_b3": 0.316684, "d_b1": 0.377485},
+  "predicted_pair_pass_rate": {"z_b3": 0.515337, "d_b1": 0.417178},
+  "predicted_pair_margin": {"z_b3": 0.195162, "d_b1": 0.200931},
+  "verdict": "DB1_FORMAL_VAL_NOT_CONFIRMED",
+  "failed_gate": "practical predicted-reference gain +0.006535 < +0.02"
+ },
+ "task7i_validation_practical_predicted_reference": {
+  "reference": "frozen U-C1 proposals + deterministic largest selector",
+  "reference_miou": 0.446949,
+  "reference_buckets": {"REFERENCE_OK": 491, "SELECTION_WRONG": 305, "NOT_COVERED": 135, "ABSTENTION": 5},
+  "reference_abstentions": 5,
+  "best_eligible_coverage_at_0_50": 0.850427,
+  "strict_miou": {"z_b3_mean": 0.226984, "d_b1_mean": 0.233519, "delta": 0.006535}
+ },
+ "task7j_final_frozen_architecture_test": {
+  "split": "BuildSpatialReason v0.2 L3 test, all 736 valid records (462 tiles)",
+  "authorized_by": "ChatGPT audit after Task 7I",
+  "single_authorized_evaluation": true,
+  "status_after_evaluation": "FINAL_TEST_CONSUMED",
+  "permitted_description": "final frozen-architecture test evaluation",
+  "oracle_reference": {
+   "z_b3": {"mean": 0.337488, "std_ddof1": 0.005273, "pair_pass_rate": 0.849148, "pair_margin": 0.318551},
+   "d_b1": {"mean": 0.392304, "std_ddof1": 0.005889, "pair_pass_rate": 0.823601, "pair_margin": 0.373509},
+   "mean_delta": 0.054816,
+   "matched_seed_wins": "3/3"
+  },
+  "predicted_reference": {
+   "reference_miou": 0.375155,
+   "reference_buckets": {"REFERENCE_OK": 319, "SELECTION_WRONG": 369, "NOT_COVERED": 46, "ABSTENTION": 2,
+                         "GEOMETRY_POOR": 0},
+   "reference_abstentions": 2,
+   "best_eligible_coverage_at_0_50": 0.934783,
+   "z_b3": {"mean": 0.207942, "std_ddof1": 0.001604, "pair_pass_rate": 0.413625, "pair_margin": 0.180074},
+   "d_b1": {"mean": 0.210805, "std_ddof1": 0.005562, "pair_pass_rate": 0.316302, "pair_margin": 0.180058},
+   "mean_delta": 0.002863,
+   "oracle_to_predicted_retention_d_b1_mean": 0.5375
+  },
+  "validation_to_test_shift": {
+   "oracle": {"z_b3": 0.005045, "d_b1": 0.00888},
+   "practical": {"z_b3": -0.019042, "d_b1": -0.022714}
+  },
+  "performance_verdict": null
+ },
+ "default_model_selection": {
+  "decoder": "D-B1",
+  "seed": 20261003,
+  "reason": "highest oracle-reference full-val mIoU among the three D-B1 seeds (0.387688)",
+  "selected_by": "task7i_validation",
+  "test_used": false,
+  "ensembled": false
+ },
+ "safe_interpretation": [
+  "D-B1 在 oracle-reference（参考正确）下保持目标解码器优势，且在最终 frozen-architecture test 上仍然成立。",
+  "在冻结的实际 U-C1 预测参考下，该解码器层面的优势并未按比例传导到实际链路（retention 约 0.54）；参考选择/覆盖仍是限制因素。",
+  "不得把上述结果表述为 end-to-end 显著提升；不得使用 untouched test 表述；不得声称 novelty/first。"
+ ]
+}

@@ -1,0 +1,40 @@
+# BuildReasonSeg Advisor RC1 — inference configuration (frozen by Task 8A)
+#
+# 未经验证的大图参数（tile size / overlap / merge threshold / context）**不在此冻结**，
+# 它们将在真正实现大图 inference 时由 ChatGPT 进一步定义。
+
+model: buildreasonseg_advisor
+device: auto
+overlay_alpha: 0.45
+save_diagnostics: true
+
+language:
+  mode: qwen-first
+  validator: hard
+  fallback: deterministic_only_when_qwen_unavailable
+  supported_programs:
+    - largest_to_left_of_to_nearest
+    - largest_to_right_of_to_nearest
+    - largest_to_above_to_nearest
+    - largest_to_below_to_nearest
+
+reference:
+  policy: uc1_deterministic_largest
+  eligibility: [non_empty, not_border_touching, bbox_extent_ratio<=0.20]
+  selector: [max_predicted_mask_area, higher_confidence, lower_original_index]
+  reference_assisted_mode: true
+  learned_selector: false
+
+large_image:
+  enabled: true
+  parameters_frozen: false
+  note: "tile size / overlap / merge threshold / context 参数未在 Task 8A 冻结。"
+
+output:
+  masks: inference/output/masks
+  overlays: inference/output/overlays
+  diagnostics: inference/output/diagnostics
+
+limits:
+  input_modality: RGB optical remote sensing
+  unsupported_modalities: [SAR, infrared, raw multispectral]

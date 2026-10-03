@@ -1,0 +1,49 @@
+# BuildReasonSeg Advisor RC1 — training configuration schema (frozen by Task 8A)
+#
+# Task 8A 只建立 schema 与“当前正式训练默认值来源说明”，不重新训练任何模型。
+# 默认值为 Task 7I 正式三 seed train/val 所使用的冻结配置（来自 Task 7D D-B1 训练产物）。
+
+defaults:
+  stage: all
+  init: default
+  device: auto
+
+decoder:
+  architecture: D-B1
+  optimizer: AdamW
+  lr: 0.0003
+  weight_decay: 0.0001
+  batch_size: 8
+  max_epochs: 25
+  early_stopping_patience: 5
+  amp: bfloat16
+  loss: BCEWithLogitsLoss + DiceLoss
+  checkpoint_selection: val_mean_miou
+  source: "Task 7I formal training (frozen); selection on full v0.2 L3 validation, never on test"
+
+detector:
+  family: YOLO26m-seg
+  imgsz: 640
+  conf: 0.05
+  max_det: 300
+  nms: default
+  tta: false
+  note: "用户自有数据可微调检测器；不得更换冻结默认模型包中的 detector。"
+
+principles:
+  transfer_learning_default: true
+  program_head_trained_with_new_visual_dataset: false
+  sam2_frozen: true
+  consume_splits: [train, val]
+  consume_test_automatically: false
+
+paths:
+  artifacts: runs/train/<name>
+  deployable_package: model/<name>
+  package_contract: same_as_buildreasonseg_advisor
+
+dataset:
+  layout: datasets/<name>/{raw,prepared}
+  formats: [coco, instance-mask, vector]
+  instance_annotation_required: true
+  split_before_tiling: true

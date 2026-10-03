@@ -1,0 +1,69 @@
+name: buildreasonseg_advisor
+version: RC1
+stage: task8a_foundation
+
+decoder:
+  architecture: D-B1
+  checkpoint: decoder.pt
+  seed: 20261003
+  sha256: 9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586
+  bytes: 1117495
+  selected_epoch: 8
+  trainable_parameters: 278081
+  selected_by: task7i_validation
+  source: artifacts/checkpoints/task7i/D-B1/20261003/best.pt
+
+detector:
+  family: YOLO26m-seg
+  checkpoint: detector.pt
+  sha256: ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
+  bytes: 54480241
+  imgsz: 640
+  conf: 0.05
+  max_det: 300
+  nms: default
+  tta: false
+  tiling: false
+  source: artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/weights/best.pt
+  note: "`tiling: false` 描述冻结 proposal model 本体配置；大图 orchestration 属于外层工程。"
+
+visual_encoder:
+  family: SAM2.1-Hiera-Base+
+  asset_root: ../components/sam2
+  checkpoint: ../components/sam2/sam2.1_hiera_base_plus.pt
+  config: ../components/sam2/sam2.1_hiera_b+.yaml
+  sha256: a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5
+  bytes: 323606802
+  frozen: true
+
+language:
+  family: Qwen3-VL-2B-Instruct
+  asset_root: ../components/program_head
+  mode: qwen-first
+  contract: "Qwen-first, Validator-controlled, deterministic fallback only when Qwen is unavailable"
+  program_head_checkpoint: ../components/program_head/program_parser_l3_rehearsal_v1.pt
+  program_head_sha256: c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a
+  qwen_base_dir: ../components/program_head/Qwen3-VL-2B-Instruct
+  fallback_parser: deterministic_only_when_qwen_unavailable
+  unrestricted_natural_language_verified: false
+
+program_set:
+  - largest_to_left_of_to_nearest
+  - largest_to_right_of_to_nearest
+  - largest_to_above_to_nearest
+  - largest_to_below_to_nearest
+
+input:
+  modality: RGB optical remote sensing
+  unsupported: [SAR, infrared, raw multispectral]
+
+reference:
+  policy: U-C1 deterministic largest selector（最大预测面积 → 置信度更高 → 索引更小）
+  reference_assisted_mode: --reference-id
+  learned_selector_adopted: false
+  practical_bottleneck: reference selection
+
+outputs:
+  masks: inference/output/masks
+  overlays: inference/output/overlays
+  diagnostics: inference/output/diagnostics

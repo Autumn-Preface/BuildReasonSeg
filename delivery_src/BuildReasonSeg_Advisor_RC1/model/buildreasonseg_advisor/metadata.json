@@ -1,0 +1,172 @@
+{
+ "_doc": "BuildReasonSeg Advisor RC1 default model package. Every asset records its source, SHA256 and bytes; the decoder was selected by Task 7I validation (NOT by the Task 7J final test).",
+ "product": "BuildReasonSeg Advisor",
+ "package": "buildreasonseg_advisor",
+ "project_version": "RC1",
+ "build_task": "Task 8A (local delivery foundation and package contract)",
+ "research_baseline": {
+  "research_repository": "BuildReasonSeg",
+  "research_state_commit": "6c2b915dbc64acdeb099d194005d74c7180c95fa",
+  "research_tasks": "Task 7I formal train/validation, Task 7J final frozen-architecture test",
+  "task7j_test_status": "FINAL_TEST_CONSUMED"
+ },
+ "framework": {
+  "python": "3.11",
+  "pytorch": "2.13.0+cu132 (research environment; delivery environment describes the same versions)",
+  "ultralytics": "8.4.164",
+  "transformers": "5.17.0"
+ },
+ "architecture": {
+  "decoder": "D-B1 (deterministic field-weighted visual prototype over frozen SAM2 tokens)",
+  "detector": "YOLO26m-seg (frozen U-C1 proposal model)",
+  "visual_encoder": "SAM2.1 Hiera Base+",
+  "language": "Qwen3-VL-2B-Instruct + Task 7C controlled-language ProgramHead"
+ },
+ "decoder_selection": {
+  "seed": 20261003,
+  "selected_by": "task7i_validation",
+  "selected_by_detail": "highest oracle-reference full-val (936 records) mIoU among the three D-B1 seeds: 0.387688 (20261003) vs 0.382651 (20261002) vs 0.379934 (20261001)",
+  "not_selected_by": "Task 7J final frozen-architecture test",
+  "ensembled": false,
+  "reexported": false
+ },
+ "assets": [
+  {
+   "role": "decoder",
+   "family": "D-B1",
+   "source": "artifacts/checkpoints/task7i/D-B1/20261003/best.pt",
+   "target": "model/buildreasonseg_advisor/decoder.pt",
+   "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+   "bytes": 1117495,
+   "selected_epoch": 8,
+   "trainable_parameters": 278081,
+   "copied": true,
+   "verified": true
+  },
+  {
+   "role": "detector",
+   "family": "YOLO26m-seg",
+   "source": "artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/weights/best.pt",
+   "target": "model/buildreasonseg_advisor/detector.pt",
+   "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+   "bytes": 54480241,
+   "config": {
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "nms": "default",
+    "tta": false,
+    "tiling": false
+   },
+   "authoritative_source": "scripts/task6u_common.py::PROPOSAL_CHECKPOINT (frozen U-C1 configuration)",
+   "copied": true,
+   "verified": true
+  },
+  {
+   "role": "sam2_checkpoint",
+   "family": "SAM2.1-Hiera-Base+",
+   "source": "local_cache/models/sam2.1_hiera_base_plus.pt",
+   "target": "model/components/sam2/sam2.1_hiera_base_plus.pt",
+   "sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+   "bytes": 323606802,
+   "unique_candidate": true,
+   "copied": true,
+   "verified": true
+  },
+  {
+   "role": "sam2_config",
+   "family": "SAM2.1-Hiera-Base+",
+   "source": ".conda/buildreasonseg-proposal/Lib/site-packages/sam2/configs/sam2.1/sam2.1_hiera_b+.yaml",
+   "target": "model/components/sam2/sam2.1_hiera_b+.yaml",
+   "sha256": "ef47e14197a65c1fd542e1862270ee851c2b15e571b2c58ceb0329d15be33769",
+   "bytes": 3766,
+   "note": "sha256 recorded from the copied file at build time; the delivery copy is authoritative for RC1",
+   "copied": true,
+   "verified": true
+  },
+  {
+   "role": "program_head",
+   "family": "Task 7C controlled-language ProgramHead",
+   "source": "artifacts/checkpoints/task7c/program_parser_l3_rehearsal_v1.pt",
+   "target": "model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+   "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+   "bytes": 70090713,
+   "parsed_from": "text-only Qwen3-VL-2B + ProgramHead (20 canonical program ids)",
+   "copied": true,
+   "verified": true
+  },
+  {
+   "role": "qwen_base",
+   "family": "Qwen3-VL-2B-Instruct",
+   "source": "local_cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203",
+   "target": "model/components/program_head/Qwen3-VL-2B-Instruct",
+   "bytes": 4266640306,
+   "file_count": 10,
+   "files": [
+    "chat_template.json",
+    "config.json",
+    "generation_config.json",
+    "merges.txt",
+    "model.safetensors",
+    "preprocessor_config.json",
+    "tokenizer.json",
+    "tokenizer_config.json",
+    "video_preprocessor_config.json",
+    "vocab.json"
+   ],
+   "copied": true,
+   "verified": true
+  }
+ ],
+ "supported_program_set": [
+  "largest_to_left_of_to_nearest",
+  "largest_to_right_of_to_nearest",
+  "largest_to_above_to_nearest",
+  "largest_to_below_to_nearest"
+ ],
+ "checkpoint_selection_provenance": {
+  "selection_split": "Task 7I formal validation (936 oracle-reference v0.2 L3 val records)",
+  "selection_metric": "mean target mIoU over all 936 records",
+  "tie_break": [
+   "val Dice",
+   "val Pr@0.5",
+   "earlier epoch"
+  ],
+  "test_used_for_selection": false,
+  "minival240_used_for_selection": false,
+  "ensembling": false
+ },
+ "input_domain": {
+  "supported": "RGB optical remote sensing imagery (512x512 tiles or larger images via outer orchestration)",
+  "unsupported": [
+   "SAR",
+   "infrared",
+   "raw multispectral",
+   "unrestricted cross-city generalization"
+  ]
+ },
+ "known_limitations": [
+  "Reference selection is the dominant practical bottleneck (Task 7F/7H); the frozen U-C1 deterministic largest selector stays in the chain because no learned replacement passed its adoption gate (Task 7G).",
+  "Practical predicted-reference advantage of D-B1 over Z-B3 is small: +0.006535 on Task 7I validation and +0.002863 on the Task 7J final test, while the oracle-reference advantage is +0.050982 / +0.054816.",
+  "Free-form natural-language robustness is NOT solved: Task 7C canonical accuracy 1.0 but fixed24 5/24, compact 0/8, stress 0.6667. RC1 must present a controlled-language/canonical interface.",
+  "D-B1 does not universally improve the counterfactual pair pass rate: its own-cross margin is larger but its pass rate is lower than Z-B3 under both references.",
+  "nearest-only L2 is experimental/limited and is NOT a formal RC1 capability.",
+  "Unseen-city / cross-domain generalization is not established; the native split demonstrates raster/scene separation only.",
+  "No performance PASS/FAIL verdict exists for the Task 7J final test; it is a measurement stage.",
+  "Unrestricted natural language, a solved reference stage, an untouched test split and any novelty/first claim must not be stated."
+ ],
+ "integrity": {
+  "checker": "check_setup.py",
+  "all_assets_copied_and_verified": true,
+  "copy_manifest": "logs/task8a_build_step1.json",
+  "research_repo_modified": false,
+  "copy_manifest_roles": [
+   "decoder",
+   "detector",
+   "program_head",
+   "qwen_base",
+   "sam2_checkpoint",
+   "sam2_config"
+  ]
+ }
+}

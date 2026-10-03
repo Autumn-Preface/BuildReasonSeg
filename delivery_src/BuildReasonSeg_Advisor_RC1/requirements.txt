@@ -1,0 +1,19 @@
+# BuildReasonSeg Advisor RC1 — pip dependencies (consistent with environment.yml)
+#
+# 这里只列出交付运行/测试所需的 pip 依赖，不是 `pip freeze` 的开发环境快照。
+# Task 8A 未安装任何依赖。
+
+torch>=2.4
+torchvision>=0.19
+ultralytics>=8.3
+transformers>=4.49
+accelerate>=1.0
+safetensors>=0.4
+numpy>=1.26
+scipy>=1.11
+PyYAML>=6.0
+Pillow>=10.0
+opencv-python>=4.9
+matplotlib>=3.8
+tqdm>=4.66
+pytest>=8.0
