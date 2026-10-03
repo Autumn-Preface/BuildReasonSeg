@@ -289,3 +289,80 @@ access occurred.
 Execution budget exhausted immediately after reading Task 8B.3-R3; the four mandated harness corrections (§5/§6)
 were not applied and the §7/§8 gates were therefore not entered, so the formal six-image suite was not started.
 Nothing was changed in the harness or tests to keep the frozen state intact and auditable.
+
+## Task 8B.3-R4A — Harness Corrections Only
+
+### R4A.1 Starting state
+
+- branch `eval/task8b3-six-image-demo-suite`;
+- starting HEAD `2562c3bc53b2600098824e93572cca291d334e33`;
+- `main` = `origin/main` = `c45ecbec7fd293c454ccced22310db32c1542be4`;
+- working tree contained only `M handoff/TO_DSH.md` (the task book).
+
+### R4A.2 Exact corrections applied (harness + harness tests only)
+
+1. **A3 frozen oracle** — `scripts/task8b3_interactive_suite.py` now stores the literal
+   `largest_to_above_to_nearest`; the computed `"largest_to_above_of_to_nearest".replace(...)` expression is gone.
+   No other case tuple changed.
+2. **Changed/overwritten output detection** — new pure helper
+   `changed_outputs(before, after)` reports a path when it is new **or** its stored `[size, mtime_ns]` differs;
+   `run_case()` now uses that set for per-run artifact evidence *and* for locating this run's `result.json`
+   (so an A1 run that overwrites a pre-existing artifact is still attributed correctly). Old outputs are never
+   deleted or cleared.
+3. **Repeated-prompt test** — the fake child now prints the direct confirmation substring twice consecutively
+   before a **single** `stdin` read, then prints `ANSWER=<value>` and exits; assertions are: not timed out, exit 0,
+   child receives `Y`, and the transcript contains **exactly one** `[driver] direct -> Y (DIRECT_CORRECT)` line.
+   The driver was **not** changed to answer a prompt twice.
+4. **AST test** — it now parses the module, locates only `_reader_thread` and `_run_interactive_process`, walks
+   just those bodies and asserts no executable call named/attributed `readline` or `communicate`;
+   `ast.get_docstring()` is no longer used.
+
+Additionally, five pure `changed_outputs` unit tests were added (new path; same metadata → unchanged; different
+size; same size with different `mtime_ns`; pre-existing `A1/result.json` whose metadata changed is included in
+`changed["diagnostics"]`). No real external delivery file is used by those tests.
+
+### R4A.3 Preserved behaviour
+
+Reader-thread + queue design, `time.monotonic()` deadline, `CASE_TIMEOUT_SECONDS = 900`, incremental UTF-8
+decoding, the three exact product prompt strings, `PROGRAM_RE`, `DISPLAY_TO_PROGRAM`, the exact three
+child-environment overrides, the Y/N decision rules and the remaining five frozen case tuples are unchanged.
+
+### R4A.4 Test gates
+
+| gate | result |
+|---|---|
+| dedicated harness tests (`pytest tests/test_task8b3_interactive_suite.py -q`) | **20 passed** |
+| full repository suite (`pytest tests/ -q`) | see R4A.6 |
+
+### R4A.5 Formal suite
+
+`NOT RUN BY DESIGN` — Task 8B.3-R4A §8 forbids running `scripts/task8b3_interactive_suite.py` against the real six
+images in this task, and no review pack was created or modified. A1–B2 remain `NOT RUN`.
+
+### R4A.6 Repository suite result
+
+`pytest tests/ -q` → **1554 passed, 1 failed** on the first run. The single failure was
+`tests/test_task6h_counterfactual_grounding.py::test_project_state_watt_wording_is_neutral_and_history_is_intact`,
+which requires the string `Watt` in `handoff/FROM_DSH.md`; the R3 handoff rewrite had dropped that reference. Because
+Task 8B.3-R4A §10 mandates updating `handoff/FROM_DSH.md` anyway, the required Watt reference was restored in that
+same allowed file (no unrelated code was touched) and the affected test then passed:
+
+```text
+pytest tests/test_task6h_counterfactual_grounding.py -q -> PASS
+```
+
+### R4A.7 No product/delivery change
+
+No RC1 product/runtime source, `delivery_src/BuildReasonSeg_Advisor_RC1/**`, external delivery source/config,
+`predict.py`, ProgramHead, Qwen suggestion, Validator, detector, Reference, SAM2, D-B1, threshold, config,
+checkpoint or model asset was modified; the six frozen prompts were never changed or retried; no Assisted Mode,
+`--reference-id` or `--inspect-proposals` was used; no training, download, package installation or final-test
+access occurred.
+
+### R4A.8 Output-layout proposal
+
+`ACCEPTED / DEFERRED TO TASK 8B.4` — not implemented here.
+
+### R4A.9 Next action
+
+Awaiting ChatGPT audit.

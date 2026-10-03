@@ -54,7 +54,7 @@ CASES = [
     ("A2", "inference/input/A2.png", "以面积最大的建筑为参考，分割它左侧最近的建筑",
      "largest_to_left_of_to_nearest"),
     ("A3", "inference/input/A3.png", "以最大建筑为准，分割位于其上方且距离最近的建筑",
-     "largest_to_above_of_to_nearest".replace("_above_of_", "_above_to_")),
+     "largest_to_above_to_nearest"),
     ("A4", "inference/input/A4.png", "请分割最大建筑下方距离最近的一栋建筑",
      "largest_to_below_to_nearest"),
     ("B1", "inference/input/B1.tif", "请找出面积最大的建筑，并分割它右边离它最近的那栋楼。",
@@ -250,6 +250,24 @@ def environment_ready() -> bool:
     return "BuildReasonSeg environment: READY" in (completed.stdout or "")
 
 
+def changed_outputs(before: dict, after: dict) -> dict:
+    """Per-run artifact set: a path counts when it is new **or** its `[size, mtime_ns]` changed.
+
+    Task 8B.3-R4A: a formal run may overwrite an artifact that already existed (e.g. A1 from an earlier run), so
+    filename set-difference alone would miss this run's outputs.
+    """
+
+    result = {}
+    for sub in ("masks", "overlays", "diagnostics"):
+        result[sub] = sorted(
+            path
+            for path, after_meta in after.get(sub, {}).items()
+            if path not in before.get(sub, {})
+            or before[sub][path] != after_meta
+        )
+    return result
+
+
 def run_case(case_id: str, image: str, prompt: str, expected_program: str) -> dict:
     before = snapshot_outputs()
     outcome = _run_interactive_process(
@@ -258,7 +276,7 @@ def run_case(case_id: str, image: str, prompt: str, expected_program: str) -> di
         cwd=EXTERNAL_RC1_ROOT, environment=child_environment(),
         expected_program=expected_program, case_id=case_id)
     after = snapshot_outputs()
-    added = {sub: sorted(set(after[sub]) - set(before[sub])) for sub in after}
+    added = changed_outputs(before, after)
     result_json = None
     for name in added["diagnostics"]:
         if name.endswith("result.json"):
