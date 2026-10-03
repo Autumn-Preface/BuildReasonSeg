@@ -1,70 +1,39 @@
-# TO_DSH — Task 8B.3-D1.1: Correct Large-Image Memory Forensics
+# TO_DSH — Task 8B.3-D1.2: Normalize Forensics Report and Handoff
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `eval/task8b3-six-image-demo-suite`
-> Required starting HEAD: `4bcd26b5403bcdaf3ee73f9855c1ffca8db5ac63`
-> External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
+> Required starting HEAD: `e9bbfa4fc536335c8cbfd3f1afecdd8d6dedae6f`
 
-# 0. Why this correction task exists
+# 0. Purpose
 
-Task 8B.3-D1 is **not yet approved**.
+Task 8B.3-D1.1 corrected the memory-forensics substance, but the canonical report still contains stale pre-correction text
+in §7/§8 and then appends the correction later. This leaves the report internally inconsistent.
 
-ChatGPT independently audited commit:
+This task performs documentation normalization only.
 
-```text
-4bcd26b5403bcdaf3ee73f9855c1ffca8db5ac63
-docs(demo): record six-image failure forensics
-```
+No inference, source change, test change, delivery change, or defect fix is authorized.
 
-The commit chain and allowed-file scope are correct, and the Reference / SUCCESS-validity / A2 findings are accepted.
-
-However, two factual defects remain in the D1 memory forensics:
-
-1. D1 enumerated only the explicit per-detection allocation:
-
-```python
-global_mask = np.zeros((height_px, width_px), dtype=bool)
-```
-
-but did **not** enumerate other full-frame boolean allocations in the same pre-return execution path, especially
-`iou_of()` inside proposal merge:
-
-```python
-np.logical_and(first, second)
-np.logical_or(first, second)
-```
-
-Both operands are full-image `global_mask` arrays, so these operations also create full-frame boolean temporaries.
-
-2. D1 described `RC1-DEMO-MEM-01` as a blocker for `>512 px inputs`. This is unsupported and contradicted by
-the frozen Demo evidence: 1024×1024 A1/A3/A4 ran through the pipeline (and A2 reached proposal processing).
-The observed failure is on the 5000×5000 B1/B2 path. The exact failure-size threshold is **not established**.
-
-This task corrects documentation/forensics only.
-
-# 1. Absolute prohibitions
+# 1. Strict prohibitions
 
 Do NOT:
 
 - run `predict.py`;
-- run `scripts/task8b3_interactive_suite.py`;
-- run detector / Qwen / SAM2 / D-B1;
-- rerun A1–B2;
+- run the six-image suite;
+- run detector/Qwen/SAM2/D-B1;
+- modify any product/canonical/runtime/harness/test source;
 - modify external delivery;
-- modify product/canonical source;
-- modify harness/tests;
 - modify configs/thresholds/checkpoints/model assets;
 - install packages;
 - train/download;
 - access final test;
-- implement a memory fix;
-- implement proposal/reference or mask-validity fixes;
-- enter Task 8B.4;
-- enter Task 8C.
+- implement MEM-01 / PROP-01 / REF-01 / MASK-01 fixes;
+- implement Task 8B.4;
+- enter Task 8C;
+- rewrite or squash Git history.
 
-Only these repository files may change:
+Only these repository paths may change:
 
 ```text
 docs/task8b3_d1_demo_failure_forensics.md
@@ -72,7 +41,7 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-# 2. Git safety gate
+# 2. Git safety
 
 Run:
 
@@ -87,264 +56,229 @@ Continue only if:
 
 ```text
 branch = eval/task8b3-six-image-demo-suite
-HEAD = 4bcd26b5403bcdaf3ee73f9855c1ffca8db5ac63
+HEAD = e9bbfa4fc536335c8cbfd3f1afecdd8d6dedae6f
 ```
 
-Allowed initial working tree:
-
+Allowed working tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
 Anything else -> STOP.
 
-Do not reset/stash/clean/discard/switch branches.
+Do not reset/stash/clean/discard.
 
-# 3. Findings that are already accepted and must not be reworked
+# 3. Normalize report encoding
 
-Preserve the D1 findings for:
-
-```text
-RC1-DEMO-REF-01
-RC1-DEMO-MASK-01
-RC1-DEMO-PROP-01
-```
-
-Specifically preserve:
-
-- A1/A3/A4 selected Reference = largest **eligible** proposal;
-- user-facing “largest building” != implementation “largest eligible detected proposal”;
-- A1/A4 SUCCESS hard gates are only non-empty + non-padding + directional-centroid;
-- A2 = detector/proposal-stage zero-proposal failure;
-- A2 NMS warning causality remains NOT CONFIRMED;
-- frozen six-image result remains manual end-to-end semantic success 0/6;
-- no research metric claim.
-
-Do not change these except for wording needed to keep the report internally consistent.
-
-# 4. Static memory audit — required correction
-
-Read only:
+Rewrite:
 
 ```text
-delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+docs/task8b3_d1_demo_failure_forensics.md
 ```
 
-Do not execute it.
+as UTF-8 **without BOM**.
 
-Enumerate **all relevant full-frame boolean allocation/retention mechanisms in `detect_global()` → `merge_proposals()` → `iou_of()` before `detect_global()` returns**.
+Do not alter frozen A1–B2 facts, REF-01/MASK-01/PROP-01 conclusions, or the qualitative `0/6` Demo audit.
 
-At minimum document separately:
+# 4. Replace §7 directly — do not append another correction
 
-## 4.1 Per-raw-detection retained full-frame mask
+Replace the existing §7 with one internally consistent section.
 
-Inside `detect_global()`:
+Required facts:
+
+```text
+B1/B2 image size = 5000 × 5000
+exception = Unable to allocate 23.8 MiB for an array with shape (5000, 5000) and data type bool
+one full-frame bool array = 25,000,000 B = 23.84 MiB
+```
+
+Document both memory mechanisms:
+
+## A. Retained full-frame proposal masks
 
 ```python
 global_mask = np.zeros((height_px, width_px), dtype=bool)
 ```
 
-Facts to record:
+- one allocation per raw detection reaching this point;
+- stored in `accumulated` as `"mask": global_mask`;
+- retained masks may coexist until merge;
+- approximate payload = `N × 23.84 MiB` at 5000×5000, excluding overhead;
+- `N` must not be invented;
+- `GlobalProposal.global_mask` reuses the same mask object; no explicit constructor copy.
 
-- allocated once per raw detection that reaches this point;
-- for 5000×5000 bool:
-  - `25,000,000` bytes;
-  - `23.84185791015625 MiB` (~23.84 MiB);
-- the array is stored in the `accumulated` entry as `"mask": global_mask`;
-- therefore full-frame proposal masks can remain simultaneously retained until merge;
-- if `N` such raw proposals are retained, mask payload alone is approximately:
+## B. Pairwise merge temporaries
 
-```text
-N × 23.84 MiB
-```
-
-for 5000×5000, excluding Python/object/other-array overhead.
-
-Do NOT invent `N` for B1/B2 if the frozen artifacts do not expose how many masks had already accumulated before failure.
-
-## 4.2 Pairwise merge temporary arrays
-
-Inside `iou_of()`:
+`iou_of()` uses:
 
 ```python
 np.logical_and(first, second)
 np.logical_or(first, second)
 ```
 
-Facts to record:
-
-- `first` and `second` are full-frame proposal masks;
-- for 5000×5000, each result temporary is also a 23.84 MiB bool array;
-- each pairwise IoU comparison performs both a full-frame logical-AND and logical-OR operation;
-- the two expressions execute sequentially in the current Python code, so do NOT claim both 23.84 MiB temporaries must coexist simultaneously;
-- the proposal merge loop can perform up to `N(N-1)/2` pairwise comparisons for `N` proposals;
-- this creates substantial allocation churn in addition to the retained proposal masks.
-
-## 4.3 Other retention/copy facts
-
-State whether `GlobalProposal.global_mask` reuses the accumulated mask object or explicitly copies it in the constructor.
-
-Do not infer a copy if the source does not make one.
-
-If any additional full-frame bool allocation/copy is found in this exact execution path, document it.
-
-# 5. Correct interpretation of the B1/B2 exception
-
-Frozen exception:
-
-```text
-Unable to allocate 23.8 MiB for an array with shape (5000, 5000) and data type bool
-```
+- operands are full-frame masks;
+- each result is also a full-frame bool array;
+- each result is 23.84 MiB at 5000×5000;
+- expressions execute sequentially, so do not claim both temporaries necessarily coexist;
+- for `N` proposals, pairwise merge can perform up to `N(N-1)/2` comparisons.
 
 Required conclusion:
 
 ```text
-Signature match: EXACT_SIGNATURE_MATCH
-Unique allocation-site attribution from existing artifacts: NOT CONFIRMED
+Exception signature: EXACT_SIGNATURE_MATCH (shape/dtype/size)
+Unique throwing allocation site: NOT CONFIRMED FROM EXISTING ARTIFACTS
+RC1-DEMO-MEM-01: CONFIRMED
+Exact failure threshold: NOT ESTABLISHED
 ```
 
-Explanation must state:
+Do not describe `detector.py:265` as the uniquely proven throwing line.
 
-- the shape/dtype/size exactly matches a 5000×5000 full-frame bool allocation;
-- the explicit `np.zeros((height_px, width_px), dtype=bool)` is one direct matching site;
-- `np.logical_and` / `np.logical_or` over two full-frame bool masks can also request a same-shaped bool result;
-- unless the frozen transcript/result contains a traceback pinpointing a source line, the existing error text alone does not uniquely prove which matching allocation expression threw the exception.
+# 5. Replace MEM-01 row in §8
 
-Do NOT downgrade the broader defect:
+The MEM-01 taxonomy row must be internally consistent with §7.
+
+Required meaning:
 
 ```text
-RC1-DEMO-MEM-01 = CONFIRMED
+status = CONFIRMED
+affected = B1, B2
+layer = large-image runtime/engineering
+severity = blocker for demonstrated 5000×5000 B1/B2 Demo path
+needs product code change = yes
+needs scientific model/checkpoint change = no
 ```
 
-The confirmed defect is that the large-image proposal path uses O(H×W) full-frame boolean masks per proposal plus full-frame pairwise merge operations and failed on both 5000×5000 Demo inputs.
+Evidence must mention:
 
-# 6. Correct the unsupported `>512` wording
+- retained per-proposal full-frame masks;
+- pairwise full-frame `logical_and` / `logical_or` temporaries;
+- exact exception signature;
+- unique throwing expression not confirmed.
 
-Remove every claim equivalent to:
+Remove all wording equivalent to:
 
 ```text
 blocker for >512 px inputs
 ```
 
-Replace it with wording equivalent to:
+# 6. Normalize §9 priority wording
+
+The order may remain:
 
 ```text
-Observed blocker for the 5000×5000 B1/B2 Demo inputs and a confirmed large-image scalability defect.
-The exact image-size / proposal-count failure threshold is not established by the frozen evidence.
-Inputs merely larger than 512 are not universally failing; the 1024×1024 Demo samples provide counterexamples.
+MEM-01 → PROP-01 → REF-01 → MASK-01 → Task 8B.4 → free manual Demo
 ```
 
-Do not invent a safe maximum image dimension.
-
-# 7. Correct defect taxonomy entry
-
-Keep:
+But MEM-01 justification must say only:
 
 ```text
-RC1-DEMO-MEM-01 = CONFIRMED
-severity = blocker for the demonstrated 5000×5000 large-image Demo path
-needs product code change = yes
-needs scientific model/checkpoint change = no
+blocks the demonstrated 5000×5000 B1/B2 path
 ```
 
-The evidence cell must mention both:
-
-1. retained per-proposal full-frame bool masks;
-2. pairwise full-frame boolean IoU temporaries.
-
-Do not state that `detector.py:265` is proven to be the unique throwing line.
-
-# 8. Priority recommendation
-
-The existing priority may remain:
+and:
 
 ```text
-MEM-01
-→ PROP-01
-→ REF-01
-→ MASK-01
-→ Task 8B.4 packaging
-→ free manual Demo
+exact size/proposal-count failure threshold is not established
 ```
 
-But justify MEM-01 as:
+Do not claim all images larger than 512 fail.
 
-```text
-it blocks the demonstrated 5000×5000 B1/B2 execution path
-```
+# 7. Fold D1.1 correction into the main report
 
-not as blocking every image above 512 px.
-
-No fix is authorized.
-
-# 9. Output-layout handoff wording
-
-In `handoff/FROM_DSH.md`, make the output-layout status unambiguous:
-
-```text
-Output-layout proposal: STILL DEFERRED TO TASK 8B.4
-```
-
-Do not leave both choice strings joined by `/`.
-
-# 10. Report edits
-
-Update:
-
-```text
-docs/task8b3_d1_demo_failure_forensics.md
-```
-
-Required corrected sections:
-
-- §7 B1/B2 E502 memory forensics;
-- §8 defect taxonomy MEM-01 row;
-- §9 dependency/prioritization wording;
-- any other sentence containing the unsupported `>512` generalization or unique-line attribution.
-
-Add a short subsection:
+After replacing §7/§8/§9, remove the long appended:
 
 ```text
 ### D1.1 audit correction
 ```
 
-stating that ChatGPT audit found:
+section, or reduce it to a short historical note that contains **no duplicate technical conclusions**.
 
-1. pairwise `logical_and` / `logical_or` full-frame temporaries had been omitted;
-2. `>512 px blocker` was an overgeneralization;
-3. the static signature is exact, but unique allocation-site attribution is not proven without a traceback.
-
-Do not alter the frozen R4B sample outcomes.
-
-# 11. Handoff update
-
-Update `handoff/FROM_DSH.md`, preserving `ARTIFACT-FACTS` verbatim.
-
-Required:
+Preferred historical note:
 
 ```text
-Task: 8B.3-D1.1
+### Audit history
+Task 8B.3-D1.1 corrected the original D1 memory-forensics report by adding pairwise full-frame IoU temporaries,
+removing the unsupported >512-px generalization, and separating exact allocation-signature matching from unique
+throwing-site attribution. The normalized §7–§9 above are authoritative.
+```
+
+There must be only one authoritative technical statement for MEM-01 in the document.
+
+# 8. Normalize FROM_DSH encoding and ARTIFACT-FACTS
+
+Rewrite:
+
+```text
+handoff/FROM_DSH.md
+```
+
+as UTF-8 **without BOM**.
+
+The complete block from:
+
+```text
+<!-- ARTIFACT-FACTS:BEGIN -->
+...
+<!-- ARTIFACT-FACTS:END -->
+```
+
+must be byte-for-byte text-equivalent to the pre-D1.1 block:
+- no BOM before the opening marker;
+- no edits inside the block;
+- same ordering and values.
+
+Do not change any ARTIFACT-FACTS value.
+
+# 9. FROM_DSH content
+
+Set:
+
+```text
+Task: 8B.3-D1.2
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: eval/task8b3-six-image-demo-suite
-Starting HEAD: 4bcd26b5403bcdaf3ee73f9855c1ffca8db5ac63
+Starting HEAD: e9bbfa4fc536335c8cbfd3f1afecdd8d6dedae6f
 Inference executed: NO
 Delivery modified: NO
 Product/harness/tests modified: NO
 MEM-01: CONFIRMED
-5000x5000 bool payload: 25,000,000 B = 23.84 MiB per full-frame bool array
-Retained proposal masks: one full-frame bool mask per retained raw proposal
-Pairwise merge temporaries: logical_and + logical_or full-frame bool results per comparison
 Exception signature: EXACT_SIGNATURE_MATCH
 Unique throwing allocation site: NOT CONFIRMED FROM EXISTING ARTIFACTS
 Failure threshold: NOT ESTABLISHED
+5000×5000 path: BLOCKED IN B1/B2 BASELINE
+>512 universal-failure claim: REMOVED
+Report consistency: NORMALIZED
+Encoding: UTF-8 WITHOUT BOM
 Output-layout proposal: STILL DEFERRED TO TASK 8B.4
 Report: docs/task8b3_d1_demo_failure_forensics.md
 STOP reason: <none/exact>
 Next action: Awaiting ChatGPT audit.
 ```
 
-# 12. Git gate
+Also preserve accepted D1 facts for REF-01 / MASK-01 / PROP-01 in a concise paragraph or table.
 
-Allowed changes exactly:
+# 10. Validation
+
+Before commit, perform text-only checks.
+
+Verify:
+
+1. `docs/task8b3_d1_demo_failure_forensics.md` first bytes are NOT UTF-8 BOM (`EF BB BF`);
+2. `handoff/FROM_DSH.md` first bytes are NOT UTF-8 BOM;
+3. report contains exactly one authoritative MEM-01 forensic section;
+4. report contains:
+   - `EXACT_SIGNATURE_MATCH`;
+   - `NOT CONFIRMED FROM EXISTING ARTIFACTS`;
+   - `NOT ESTABLISHED`;
+   - `logical_and`;
+   - `logical_or`;
+5. report does not contain any active claim equivalent to `blocker for >512 px inputs`;
+6. `ARTIFACT-FACTS` content and values are unchanged.
+
+Do not run pytest; no code changed.
+
+# 11. Git gate
+
+Allowed changed paths exactly:
 
 ```text
 docs/task8b3_d1_demo_failure_forensics.md
@@ -352,32 +286,29 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Before commit:
+Run:
 
 ```bat
 git status --short
 git diff --check
+git diff
 ```
-
-No other path may be staged.
 
 Stage individually.
 
-# 13. Commit and push
+Do not use `git add .` or `git add -A`.
 
-If COMPLETE, exact commit message:
+# 12. Commit / push
 
-```text
-docs(demo): correct large-image memory forensics
-```
-
-If PARTIAL/STOP/FAILED:
+Create **one new commit** for D1.2 with exact message:
 
 ```text
-docs(demo): record memory forensics correction stop
+docs(demo): normalize memory forensics report
 ```
 
-Push only:
+Do not amend, squash, reset, or rewrite the previous two D1.1 commits.
+
+Push:
 
 ```bat
 git push origin eval/task8b3-six-image-demo-suite
@@ -385,30 +316,29 @@ git push origin eval/task8b3-six-image-demo-suite
 
 No force push.
 
-# 14. COMPLETE definition
+# 13. COMPLETE definition
 
 COMPLETE only if:
 
-- no inference executed;
-- no delivery/source/test/harness modification;
-- retained per-proposal full-frame masks documented;
-- pairwise `logical_and` / `logical_or` full-frame temporaries documented;
-- 5000×5000 byte/MiB calculation correct;
-- `EXACT_SIGNATURE_MATCH` retained only as a shape/dtype/size signature statement;
-- unique throwing allocation site explicitly NOT CONFIRMED absent traceback;
-- all `>512 inputs fail` implications removed;
-- exact failure threshold marked NOT ESTABLISHED;
-- output-layout handoff unambiguous;
-- report/handoff corrected;
-- only allowed files changed;
-- commit/push succeed;
+- no inference/source/test/delivery change;
+- report §7/§8/§9 directly corrected;
+- stale contradictory MEM-01 text removed;
+- no duplicate authoritative correction section remains;
+- both report and FROM_DSH are UTF-8 without BOM;
+- ARTIFACT-FACTS opening marker and block restored without BOM/edit;
+- unique throwing site remains NOT CONFIRMED;
+- exact failure threshold remains NOT ESTABLISHED;
+- >512 universal-failure claim absent;
+- only allowed paths changed;
+- exactly one new D1.2 commit created;
+- push succeeds;
 - working tree clean;
 - DSH stops.
 
-# 15. Final response
+# 14. Final response
 
 ```text
-TASK 8B.3-D1.1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-D1.2 COMPLETE / PARTIAL / STOP / FAILED
 
 Branch:
 eval/task8b3-six-image-demo-suite
@@ -428,17 +358,20 @@ NO
 Product/harness/tests modified:
 NO
 
+Report consistency:
+NORMALIZED / FAIL
+
+Report encoding:
+UTF-8 WITHOUT BOM / FAIL
+
+FROM_DSH encoding:
+UTF-8 WITHOUT BOM / FAIL
+
+ARTIFACT-FACTS:
+PRESERVED / FAIL
+
 MEM-01:
 CONFIRMED
-
-5000x5000 bool array:
-25,000,000 B = 23.84 MiB
-
-Retained masks:
-<summary>
-
-Pairwise IoU temporaries:
-<summary>
 
 Exception signature:
 EXACT_SIGNATURE_MATCH
@@ -449,7 +382,7 @@ NOT CONFIRMED FROM EXISTING ARTIFACTS
 Failure threshold:
 NOT ESTABLISHED
 
-Unsupported >512 generalization:
+>512 universal-failure claim:
 REMOVED
 
 Output layout:
@@ -462,7 +395,7 @@ Handoff:
 handoff/FROM_DSH.md
 
 STOP reason:
-<none or exact reason>
+<none or exact>
 
-等待 ChatGPT 审核；不得修复内存实现、不得运行 Demo、不得进入 Task 8B.4 或 Task 8C。
+等待 ChatGPT 审核；不得修复缺陷、不得运行 Demo、不得进入 Task 8B.4 或 Task 8C。
 ```

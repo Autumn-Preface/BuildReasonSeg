@@ -1,4 +1,4 @@
-﻿# Task 8B.3-D1 — Demo Failure Forensics (read-only)
+# Task 8B.3-D1 — Demo Failure Forensics (read-only)
 
 ## 1. Task and scope
 
@@ -99,30 +99,55 @@ detections, so no merged proposal and no eligible Reference existed. The NMS tim
 observed message only; **causality between the warning and the empty proposal set is NOT established** by the
 available evidence.
 
-## 7. B1/B2 E502 memory forensics (transcripts + static source)
+## 7. B1/B2 E502 memory forensics
 
-* image dimensions: **5000 × 5000** (RGB, 3 channels) for both B1 and B2;
-* exact allocation error (both samples, `result.json` detail):
+Facts (frozen artifacts + static reading of canonical `detector.py`; nothing was executed):
 
-```text
-Unable to allocate 23.8 MiB for an array with shape (5000, 5000) and data type bool
-```
+* B1/B2 image size = **5000 × 5000** RGB;
+* exception (both samples): `Unable to allocate 23.8 MiB for an array with shape (5000, 5000) and data type bool`;
+* one full-frame bool array at 5000 × 5000 = **25,000,000 B = 23.84185791015625 MiB (~23.84 MiB)**.
 
-* requested allocation: shape `(5000, 5000)`, dtype `bool`, i.e. 5000 × 5000 × 1 byte = **25,000,000 bytes = 23.84 MiB**;
-* relevant full-frame boolean allocation site in the execution path
-  (`delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py`, line **265**):
+### A. Retained full-frame proposal masks (`detect_global()`, line 265)
 
 ```python
 global_mask = np.zeros((height_px, width_px), dtype=bool)
 ```
 
-* allocation frequency (static reading of `detect_global()`): the full-frame bool array is allocated **once per raw
-  detection/proposal** (i.e. inside the per-detection loop over accumulated tile detections) — not once per image
-  and not once per tile. That is the dominant large-allocation pattern on the 5000 × 5000 path.
+* allocated **once per raw detection that reaches this point**;
+* stored in the `accumulated` entry as `"mask": global_mask`, so full-frame proposal masks can coexist — retained
+  until merge runs;
+* approximate payload at 5000 × 5000: `N × 23.84 MiB`, excluding Python/object and other-array overhead, where `N`
+  is the number of retained raw proposals; the frozen artifacts do not expose how many masks had accumulated before
+  the failure, so **`N` is not invented**;
+* `GlobalProposal.global_mask` **reuses** the same mask object (`merge_proposals()` passes `global_mask=mask`
+  straight from the accumulated entry); there is no explicit constructor copy.
 
-**Signature comparison: `EXACT_SIGNATURE_MATCH`** — the exception's requested shape/dtype/size (23.8 MiB, bool,
-`(5000, 5000)`) is exactly the size produced by that allocation expression for a 5000 × 5000 input
-(25,000,000 bytes = 23.84 MiB). No memory fix is implemented in this task.
+### B. Pairwise merge temporaries (`merge_proposals()` → `iou_of()`)
+
+```python
+np.logical_and(first, second)
+np.logical_or(first, second)
+```
+
+* the operands are full-frame proposal masks;
+* each result is also a full-frame bool array, i.e. **23.84 MiB at 5000 × 5000**;
+* the two expressions execute **sequentially** in the current Python code, so this report does not claim that both
+  temporaries necessarily coexist simultaneously;
+* for `N` proposals the pairwise merge can perform up to `N(N-1)/2` comparisons, i.e. allocation churn in addition
+  to the retained masks.
+
+### Conclusion
+
+```text
+Exception signature: EXACT_SIGNATURE_MATCH (shape/dtype/size)
+Unique throwing allocation site: NOT CONFIRMED FROM EXISTING ARTIFACTS
+RC1-DEMO-MEM-01: CONFIRMED
+Exact failure threshold: NOT ESTABLISHED
+```
+
+`detector.py:265` is one directly matching allocation site; `np.logical_and` / `np.logical_or` can request the same
+shape, and the frozen transcript/result contain no traceback pinning a source line, so no single line is described
+as the uniquely proven throwing line.
 
 ## 8. Defect taxonomy
 
@@ -131,28 +156,29 @@ global_mask = np.zeros((height_px, width_px), dtype=bool)
 | **RC1-DEMO-REF-01** — Reference semantics/proposal quality: user-facing “largest building” may resolve to a fragmented or eligibility-filtered proposal rather than the visually largest complete building | **CONFIRMED** | §3 table (largest-area proposals A1 #6 6470, A3 #4 2023, A4 #29 10404 all ineligible under extent/border; selected = largest eligible fragment) + §4 contract mismatch | A1, A3, A4 (all three successes) | proposal/reference layer | **blocker** for Demo semantic value | yes (fragmentation handling / eligibility policy / possibly detector quality) | not yet known |
 | **RC1-DEMO-MASK-01** — SUCCESS validity too weak to reject tiny/incomplete target fragments | **CONFIRMED** | §5: only non-empty + non-padding + directional-centroid gates exist; A1 SUCCESS with 101 px, A4 with 359 px | A1, A4 | post-inference validity layer | major | yes (validity guard) | no |
 | **RC1-DEMO-PROP-01** — A2 detector/proposal path can return zero proposals on a building-containing Demo scene | **CONFIRMED** (zero proposals is fact; NMS causality NOT confirmed) | §6: raw 0 / merged 0 over 9 tiles, `WARNING NMS time limit 2.050s exceeded` | A2 | detector/proposal stage | major | not yet known (investigation first) | not yet known |
-| **RC1-DEMO-MEM-01** — large-image path uses full-frame boolean proposal allocations and fails on 5000 × 5000 inputs | **CONFIRMED** | §7: `EXACT_SIGNATURE_MATCH` with `detector.py:265` `np.zeros((height_px, width_px), dtype=bool)` allocated per raw detection | B1, B2 | large-image runtime/engineering | **blocker for the demonstrated 5000 × 5000 B1/B2 Demo path** (exact failure threshold NOT ESTABLISHED; inputs merely larger than 512 px are not universally failing — the 1024 × 1024 samples A1/A3/A4 ran through the pipeline and A2 reached proposal processing) | yes (allocation strategy) | no |
+| **RC1-DEMO-MEM-01** — large-image proposal path uses full-frame boolean proposal masks plus full-frame pairwise merge temporaries and failed on 5000 × 5000 inputs | **CONFIRMED** | §7: one retained full-frame bool mask per retained raw proposal (`detector.py:265`, kept in `accumulated` until merge), plus full-frame `np.logical_and` / `np.logical_or` bool temporaries per pairwise comparison (up to `N(N-1)/2`); exception is an EXACT_SIGNATURE_MATCH in shape/dtype/size, while the unique throwing expression is NOT CONFIRMED from existing artifacts | B1, B2 | large-image runtime/engineering | **blocker for the demonstrated 5000 × 5000 B1/B2 Demo path** | yes | no |
 
 ## 9. Dependency/prioritization recommendation (no implementation)
 
 Decision policy applied: (1) run-blocking bugs → (2) proposal/reference correctness → (3) target validity guard →
 (4) packaging/output layout → (5) free manual Demo.
 
-1. **RC1-DEMO-MEM-01** first: it is the only defect that prevents the pipeline from running at all on large inputs,
-   and any later B1/B2 evidence (proposal quality, reference behaviour at scale) is blocked until it is resolved.
-2. **RC1-DEMO-PROP-01** second: A2 shows the proposal stage can yield zero detections; without proposals there is
-   nothing for reference selection or masking to act on, so proposal reliability must be understood before
-   reference-quality work can be judged.
-3. **RC1-DEMO-REF-01** third: after the pipeline runs on both image scales with a functioning proposal stage, the
-   “largest building” semantics (fragmentation + eligibility) is the dominant remaining semantic blocker; the
-   visual audit shows it affects 3/3 runtime successes.
-4. **RC1-DEMO-MASK-01** fourth: the validity guard depends on knowing what a legitimate target looks like, which
-   follows from 1–3; it is also the smallest, most self-contained change.
+1. **RC1-DEMO-MEM-01** first: it blocks the **demonstrated 5000 × 5000 B1/B2 path**, so later B1/B2 evidence
+   (proposal quality, reference behaviour at scale) is blocked until it is resolved. The exact image-size /
+   proposal-count failure threshold is **not established**, and no claim is made that all images larger than 512 px
+   fail (the 1024 × 1024 samples are counterexamples).
+2. **RC1-DEMO-PROP-01** second: A2 shows the proposal stage can yield zero detections; without proposals nothing
+   downstream can act, so proposal reliability must be understood first.
+3. **RC1-DEMO-REF-01** third: once the pipeline runs at both scales with a functioning proposal stage, the
+   “largest building” semantics (fragmentation + eligibility) is the dominant semantic blocker — it affects 3/3
+   runtime successes in the frozen visual audit.
+4. **RC1-DEMO-MASK-01** fourth: the validity guard depends on knowing what a legitimate target is, which follows
+   from 1–3; it is the smallest self-contained change.
 5. Packaging/output layout (Task 8B.4) and free manual Demo remain last.
 
 Dependency note: MEM-01 is independent; PROP-01 and REF-01 both live in the detection/proposal layer and should be
-investigated together before any fix is chosen; MASK-01 is independent of the first three but should not be
-finalized before the intended target definition is settled.
+investigated together before a fix is chosen; MASK-01 is independent of the first three but should not be finalized
+before the intended target definition is settled.
 
 Task 8B.4 stays deferred until ChatGPT reviews this report.
 
@@ -169,34 +195,8 @@ reading the frozen R4B artifacts listed in the task book and the canonical sourc
 
 **Awaiting ChatGPT audit.** No defect is fixed here; do not run the Demo, do not enter Task 8B.4 or Task 8C.
 
-### D1.1 audit correction
+### Audit history
 
-ChatGPT's audit of commit `4bcd26b` found three factual problems in the original D1 memory forensics. They are
-corrected here; no frozen R4B sample outcome is altered.
-
-1. **Omitted pairwise full-frame temporaries.** `iou_of()` computes `np.logical_and(first, second)` and
-   `np.logical_or(first, second)` over two full-frame proposal masks, so each comparison also creates full-frame
-   boolean temporaries. For 5000 × 5000 these are 25,000,000 B = 23.84185791015625 MiB (~23.84 MiB) each. The two
-   expressions execute sequentially in the current Python code, so this report does not claim both temporaries
-   coexist simultaneously; the merge loop can perform up to `N(N-1)/2` comparisons, i.e. substantial allocation
-   churn in addition to the retained proposal masks.
-2. **`>512 px` overgeneralization removed.** The defect is a blocker for the *demonstrated* 5000 × 5000 B1/B2 Demo
-   path and a confirmed large-image scalability defect; the exact image-size / proposal-count failure threshold is
-   **NOT ESTABLISHED** by the frozen evidence, and inputs merely larger than 512 px are **not** universally failing
-   (1024 × 1024 A1/A3/A4 are counterexamples). No safe maximum image dimension is asserted.
-3. **Signature vs attribution.** The exception is an `EXACT_SIGNATURE_MATCH` in shape/dtype/size only
-   (`(5000, 5000)`, bool, 23.8 MiB). The explicit `np.zeros((height_px, width_px), dtype=bool)` in
-   `detect_global()` is **one** matching site, and `np.logical_and` / `np.logical_or` can request an identical
-   shape; because the frozen transcript/result contain no traceback pinning a source line, the **unique throwing
-   allocation site is NOT CONFIRMED FROM EXISTING ARTIFACTS**.
-
-Additional retention fact recorded for completeness: the full-frame mask is allocated once per raw detection that
-reaches that point and stored as `"mask": global_mask` in `accumulated`, so retained proposal masks can coexist
-until merge (`N × 23.84 MiB` payload for 5000 × 5000, excluding object overhead; `N` is not invented because the
-frozen artifacts do not expose how many masks had accumulated). `merge_proposals()` constructs each
-`GlobalProposal` with `global_mask=mask` directly, i.e. `GlobalProposal.global_mask` **reuses** the accumulated mask
-object and makes no explicit copy. No further full-frame bool allocation/copy was found in
-`detect_global()` → `merge_proposals()` → `iou_of()`.
-
-`RC1-DEMO-MEM-01` remains **CONFIRMED** (severity: blocker for the demonstrated 5000 × 5000 large-image Demo path;
-product code change: yes; scientific model/checkpoint change: no). No fix is implemented in this task.
+Task 8B.3-D1.1 corrected the original D1 memory-forensics report by adding pairwise full-frame IoU temporaries,
+removing the unsupported >512-px generalization, and separating exact allocation-signature matching from unique
+throwing-site attribution. The normalized §7–§9 above are authoritative.
