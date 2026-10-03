@@ -17,34 +17,33 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-R4B Report
+# FROM_DSH — Task 8B.3-D1 Report
 
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in
+git history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-R4B` |
-| Status | **COMPLETE** (procedure) |
+| Task | `8B.3-D1` |
+| Status | **COMPLETE** (read-only forensics) |
 | Branch | `eval/task8b3-six-image-demo-suite` |
-| Starting HEAD | `b579148df7aac9c979265b2e4da5b91c9d41d34b` |
-| check_setup | READY (live `ultralytics==8.4.164`) |
-| Inputs | 6/6 with exact frozen SHA256 |
-| Formal suite invocations | **1** |
-| A1 | language=`DIRECT_CORRECT` runtime=`SUCCESS` |
-| A2 | language=`FALLBACK_CORRECT` runtime=`FAILED` `E401` |
-| A3 | language=`DIRECT_CORRECT` runtime=`SUCCESS` |
-| A4 | language=`FALLBACK_CORRECT` runtime=`SUCCESS` |
-| B1 | language=`FALLBACK_CORRECT` runtime=`FAILED` `E502` |
-| B2 | language=`DIRECT_CORRECT` runtime=`FAILED` `E502` |
-| Runtime successes pending visual review | 3/6 (A1, A3, A4) |
-| Runtime failures | 3/6 (A2, B1, B2) |
-| Review pack | `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3` |
-| Visual verdict | PENDING CHATGPT/USER REVIEW |
-| Output-layout proposal | ACCEPTED / DEFERRED TO TASK 8B.4 |
-| Report | `docs/task8b3_six_image_demo_suite.md` |
+| Starting HEAD | `648dc9d48886f6da478f8e27b54116d48ca1d725` |
+| Inference executed | NO |
+| Delivery modified | NO |
+| Product/harness/tests modified | NO |
+| Reference forensics | A1/A3/A4 each correctly selected the largest **eligible** proposal (A1 #48 4853, A3 #1 680, A4 #30 3622), but the largest-area proposals (A1 #6 6470, A3 #4 2023, A4 #29 10404) were all rejected by the frozen extent/border rule → eligibility filtering **and** proposal fragmentation; implementation “largest” = largest eligible detected proposal, not the visually largest complete building |
+| A2 forensics | detector/proposal-stage failure: 9 tiles, **0 raw** and 0 merged proposals, `WARNING NMS time limit 2.050s exceeded` recorded; NMS causality NOT established |
+| B1/B2 memory signature | **EXACT_SIGNATURE_MATCH** — `Unable to allocate 23.8 MiB for an array with shape (5000, 5000) and data type bool` matches `detector.py:265 global_mask = np.zeros((height_px, width_px), dtype=bool)` (25,000,000 B = 23.84 MiB), allocated once per raw detection |
+| Defects | `RC1-DEMO-REF-01` = CONFIRMED (blocker) · `RC1-DEMO-MASK-01` = CONFIRMED (major) · `RC1-DEMO-PROP-01` = CONFIRMED, NMS causality NOT CONFIRMED (major) · `RC1-DEMO-MEM-01` = CONFIRMED (blocker) |
+| Report | `docs/task8b3_d1_demo_failure_forensics.md` |
+| Output-layout proposal | ACCEPTED / STILL DEFERRED TO TASK 8B.4 |
 | STOP reason | none |
-| Next action | Awaiting ChatGPT/user visual review. |
+| Next action | Awaiting ChatGPT audit. |
 
-Watt was not needed for Task 8B.3-R4B (no downloads, no transfers).
+Priority recommendation (factual, not implemented): RC1-DEMO-MEM-01 → RC1-DEMO-PROP-01 → RC1-DEMO-REF-01 →
+RC1-DEMO-MASK-01 → packaging/output layout (Task 8B.4) → free manual Demo.
 
-No RC1 product/canonical/delivery source/config, harness, test, prompt, program, threshold, config or checkpoint was modified; the formal suite was invoked exactly once and no sample was retried.
+Watt was not needed for Task 8B.3-D1 (no downloads, no transfers).
+
+No inference, no delivery modification and no source/test/harness change occurred in this task; the frozen R4B
+baseline and the ChatGPT visual labels are reproduced unchanged.

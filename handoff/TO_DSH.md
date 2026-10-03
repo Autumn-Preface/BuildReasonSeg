@@ -1,54 +1,56 @@
-# TO_DSH — Task 8B.3-R4B: One Formal Six-Image Demo Run
+# TO_DSH — Task 8B.3-D1: Demo Failure Forensics Only
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `eval/task8b3-six-image-demo-suite`
-> Required starting HEAD: `b579148df7aac9c979265b2e4da5b91c9d41d34b`
-> Main/origin-main: `c45ecbec7fd293c454ccced22310db32c1542be4`
+> Required starting HEAD: `648dc9d48886f6da478f8e27b54116d48ca1d725`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
-> Runtime Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\python.exe`
 
-# 0. Permanent reporting rule
+# 0. Purpose
 
-For COMPLETE / PARTIAL / STOP / FAILED, if Git is safe:
-1. update `docs/task8b3_six_image_demo_suite.md`;
+Perform a forensic/root-cause audit of the already completed Task 8B.3-R4B six-image Demo baseline.
+
+This task is **read-only with respect to all model/runtime/input/output artifacts**.
+
+No inference is authorized.
+
+The goal is to convert the six observed Demo failures into precise engineering defect facts before any fix is designed.
+
+# 1. Permanent reporting rule
+
+For COMPLETE / PARTIAL / STOP / FAILED, when Git remains safe:
+1. create/update the task report;
 2. update `handoff/FROM_DSH.md`;
 3. commit;
 4. push current branch;
-5. stop.
-
-# 1. Purpose
-
-This task performs the **single formal first-pass six-image Automatic Demo suite**.
-
-All harness and repository gates are already accepted:
-- dedicated harness tests: 20 passed;
-- full repository suite: 1555 passed;
-- harness code frozen;
-- formal suite has never been run before this task.
-
-This task is execution/reporting only.
+5. stop and wait for ChatGPT.
 
 # 2. Strict prohibitions
 
 Do not:
-- modify `scripts/task8b3_interactive_suite.py`;
-- modify `tests/test_task8b3_interactive_suite.py`;
-- modify any product/canonical/delivery source or config;
-- modify prompts/programs;
-- rerun an individual sample;
-- rerun the formal suite;
-- use Assisted Mode;
-- use `--reference-id`;
-- use `--inspect-proposals`;
-- tune thresholds/config;
+- run `predict.py`;
+- run `scripts/task8b3_interactive_suite.py`;
+- run detector/SAM2/D-B1/Qwen inference;
+- rerun any A1–B2 sample;
+- modify any file under external delivery;
+- modify any existing inference input/output/log/diagnostic artifact;
+- modify any product/canonical/harness/test source;
+- modify threshold/config/checkpoint/model assets;
 - install packages;
 - train/download;
 - access final test;
-- enter Task 8B.4 or Task 8C.
+- use Assisted Mode / `--reference-id` / `--inspect-proposals`;
+- implement Task 8B.4;
+- enter Task 8C.
 
-The formal suite may be invoked **exactly once**.
+Only repository documentation/handoff may change:
+
+```text
+docs/task8b3_d1_demo_failure_forensics.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
 
 # 3. Git safety
 
@@ -65,292 +67,351 @@ Continue only if:
 
 ```text
 branch = eval/task8b3-six-image-demo-suite
-HEAD = b579148df7aac9c979265b2e4da5b91c9d41d34b
+HEAD = 648dc9d48886f6da478f8e27b54116d48ca1d725
 ```
 
 Allowed working tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
-Anything else -> STOP and report/push if Git-safe.
+Anything else -> STOP and persist/push handoff if safe.
 
-# 4. Runtime gate
+# 4. Frozen baseline facts
 
-Run external:
+Do not reinterpret the formal R4B run as a new evaluation.
 
-```bat
-cd /d C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-ENV_PYTHON check_setup.py
-```
-
-Required:
+Frozen result:
 
 ```text
-BuildReasonSeg environment: READY
+A1 language DIRECT_CORRECT   runtime SUCCESS
+A2 language FALLBACK_CORRECT runtime FAILED E401
+A3 language DIRECT_CORRECT   runtime SUCCESS
+A4 language FALLBACK_CORRECT runtime SUCCESS
+B1 language FALLBACK_CORRECT runtime FAILED E502
+B2 language DIRECT_CORRECT   runtime FAILED E502
 ```
 
-and live Ultralytics runtime must still be `8.4.164`.
-
-If not READY -> STOP. Do not repair.
-
-# 5. Six-input identity gate
-
-Verify the six files exist, are readable, and SHA256 exactly match:
+Human visual audit by ChatGPT after R4B:
 
 ```text
-A1.png
-8a4b459d65773a7dfb0ffcc509c26b5d3a7cea23cd759cdadf94cd46be84c227
+A1: semantic FAIL — selected Reference is a fragment/proposal of a larger blue-roof complex;
+    target is a tiny fragment and not a convincing separate right-nearest building.
 
-A2.png
-10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+A3: semantic FAIL — target mask is the best-looking of the three successes, but selected Reference
+    is a small roadside proposal rather than the visually largest building; therefore the full
+    Reference→Relation→Target instruction is not satisfied.
 
-A3.png
-f3cd05870385bd7f978b345b703d407cca757d909fc7be64011449ca711b19fd
+A4: semantic FAIL — selected Reference is not a convincing global largest complete building;
+    final target is a small/incomplete fragment.
 
-A4.png
-a3962ed18467997366de7b070d7ae39b3ac9916ca01497014ad5c03b434775a3
-
-B1.tif
-8b68c9e2fe3438b511e482998f34f772a870b99020eb5e7fc1b83b08b4828e31
-
-B2.tif
-c91663edd7abfaa3d1f198a9903ce28b5d8c99f80028fc24bd883e285b62319a
+Therefore the six-image Demo baseline currently has:
+language resolution 6/6,
+runtime success 3/6,
+manual end-to-end semantic success 0/6.
+This 0/6 is a qualitative six-sample Demo audit, NOT a research benchmark metric.
 ```
 
-Any mismatch -> STOP. Do not substitute images.
+Do not change these human-review labels in DSH.
 
-# 6. Formal freeze record
+# 5. Evidence paths to inspect read-only
 
-Before running the suite, append to the task report:
+Use existing files only.
 
-```text
-FORMAL_SUITE_FREEZE_R4B
-branch_head = b579148df7aac9c979265b2e4da5b91c9d41d34b
-driver_sha256 = <sha256 of scripts/task8b3_interactive_suite.py>
-tests_sha256 = <sha256 of tests/test_task8b3_interactive_suite.py>
-check_setup = READY
-A1_sha256 = 8a4b459...
-A2_sha256 = 10286b1...
-A3_sha256 = f3cd058...
-A4_sha256 = a3962ed...
-B1_sha256 = 8b68c9e...
-B2_sha256 = c91663e...
-repository_gate = 1555 passed
-```
-
-After this line is recorded:
-- no code/test/prompt edit;
-- no formal sample retry;
-- no suite rerun.
-
-# 7. Run the formal suite exactly once
-
-Return to repo root and run exactly once:
-
-```bat
-cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
-ENV_PYTHON scripts/task8b3_interactive_suite.py
-```
-
-Do not invoke that script a second time.
-
-Expected order:
-
-```text
-A1 -> A2 -> A3 -> A4 -> B1 -> B2
-```
-
-Sample-level language/model failure is valid evidence and does not authorize a retry.
-
-If the driver itself crashes or stops before all six:
-- do not patch;
-- do not rerun;
-- mark PARTIAL;
-- preserve existing transcripts/results;
-- continue to report/commit/push.
-
-# 8. Objective evidence source
-
-After the single run, use:
+Formal suite summary/logs:
 
 ```text
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_suite_results.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\A1.txt
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\A2.txt
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\A3.txt
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\A4.txt
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\B1.txt
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\B2.txt
 ```
 
-and each normal diagnostics `result.json`.
+Success diagnostics:
 
-For each case record:
-- expected program;
-- initial program;
-- initial confidence;
-- Y/N sent;
-- language status;
-- visual executed yes/no;
-- exit code;
-- runtime result/error;
-- Reference ID;
-- mask area;
+```text
+inference\output\diagnostics\A1_001\
+inference\output\diagnostics\A3\
+inference\output\diagnostics\A4\
+```
+
+Failed diagnostics:
+
+```text
+inference\output\diagnostics\A2\
+inference\output\diagnostics\B1\
+inference\output\diagnostics\B2\
+```
+
+Relevant canonical source read-only:
+
+```text
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\pipeline.py
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\outputs.py
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\context.py
+```
+
+# 6. Forensics A — Reference selection on A1/A3/A4
+
+For each A1, A3, A4, read `proposals.json` and `result.json`.
+
+Produce a table with:
+
+```text
+sample
+merged_proposal_count
+selected_reference_id
+selected_reference_area
+selected_reference_bbox
+selected_reference_bbox_extent_ratio
+selected_reference_touches_border
+selected_reference_confidence
+largest_proposal_id_by_mask_area
+largest_proposal_area
+largest_proposal_eligible_under_frozen_rule?
+largest_eligible_proposal_id
+largest_eligible_proposal_area
+selected_is_largest_eligible?
+number_of_eligible_proposals
+```
+
+Use the actual frozen eligibility rule from canonical `detector.py`.
+
+Do not change or reinterpret the rule.
+
+Then state separately for each sample:
+
+1. whether implementation selected the largest **eligible detected proposal** correctly;
+2. whether that selected proposal visually/structurally represents the user's intended “largest building” according to the frozen ChatGPT visual audit;
+3. whether discrepancy is:
+   - proposal coverage/fragmentation,
+   - eligibility filtering,
+   - or both.
+
+Do not claim a ground-truth building identity.
+
+# 7. Forensics B — Semantic contract of `largest`
+
+Read `detector.py` and document exactly:
+
+- eligibility criteria;
+- area/confidence/id tie-break;
+- whether “largest” means largest among all proposals or largest among eligible proposals.
+
+Explicitly compare the actual implementation semantics to the user-facing prompt semantics:
+
+```text
+user-facing: largest building in the image
+implementation: <exact factual semantics>
+```
+
+If these differ, label this as a semantic-contract mismatch; do not fix it.
+
+# 8. Forensics C — Why A1/A4 tiny fragments can return SUCCESS
+
+Read `pipeline.py`.
+
+List every post-inference hard validity gate applied before `status=SUCCESS`.
+
+Answer factually:
+- Is there a minimum target area gate?
+- Is there a target connected-component/instance-integrity gate?
+- Is there a requirement that target correspond to an existing detector proposal?
+- Is there only non-empty / non-padding / directional-centroid validation?
+
+Use the actual source only.
+
+For A1 and A4, record mask area from existing `result.json`.
+
+Do not propose a threshold in this task.
+
+# 9. Forensics D — A2 E401
+
+From existing A2 transcript/result/proposals only:
+
+Record:
+- Qwen initial program;
+- suggested program;
+- final language status;
 - tile count;
 - raw proposal count;
 - merged proposal count;
-- mask path;
-- overlay path;
-- diagnostics path.
+- detector-related warning text;
+- final E401 detail;
+- detector timing if available.
 
-Do not infer values that are absent.
+State only supported conclusions.
 
-Runtime `SUCCESS` must be described as:
+Important:
+- do not claim the NMS warning definitely caused zero proposals unless evidence proves causality;
+- classify as detector/proposal-stage failure.
 
-```text
-AUTOMATIC_RUNTIME_SUCCESS_PENDING_VISUAL_REVIEW
+# 10. Forensics E — B1/B2 E502 memory failure
+
+From existing transcripts and source only.
+
+Record:
+- image dimensions;
+- exact allocation error;
+- requested allocation shape/dtype/size;
+- all relevant full-frame boolean allocation sites in the execution path before detector return.
+
+In particular inspect `DetectorRuntime.detect_global()` for allocations semantically equivalent to:
+
+```python
+np.zeros((height_px, width_px), dtype=bool)
 ```
 
-Do not call it visually correct.
-
-# 9. Review pack
-
-Create local-only:
+Calculate:
 
 ```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3
+5000 * 5000 * 1 byte
 ```
 
-This is a runtime result/review bundle, not a source modification.
+in bytes and MiB.
+
+Compare it to the exact exception request (`23.8 MiB`, bool, `(5000, 5000)`).
+
+State one of:
+
+```text
+EXACT_SIGNATURE_MATCH
+STRONG_MATCH
+NOT_CONFIRMED
+```
+
+based only on static code + exception signature.
+
+Also document whether the full-frame bool allocation is made:
+- once per image,
+- once per tile,
+- or once per raw detection/proposal.
+
+Do not implement a memory fix.
+
+# 11. Defect taxonomy
+
+Create exactly these candidate defect IDs, but mark CONFIRMED / PARTIAL / NOT CONFIRMED according to evidence:
+
+```text
+RC1-DEMO-REF-01
+Reference semantics/proposal quality: user-facing “largest building” may resolve to a fragmented or
+eligibility-filtered proposal rather than the visually largest complete building.
+
+RC1-DEMO-MASK-01
+SUCCESS validity is too weak to reject tiny/incomplete target fragments.
+
+RC1-DEMO-PROP-01
+A2 detector/proposal path can return zero proposals on a building-containing Demo scene.
+
+RC1-DEMO-MEM-01
+Large-image path uses full-frame boolean proposal allocations and fails on 5000×5000 inputs.
+```
+
+For each:
+- evidence;
+- affected samples;
+- layer;
+- severity: blocker / major / minor;
+- whether fix requires product code change;
+- whether scientific model/checkpoint change is required (`yes/no/not yet known`).
+
+Do not design the fix yet.
+
+# 12. Prioritization recommendation
+
+Produce a factual fix-order recommendation without implementing:
+
+Recommended ordering must explicitly consider dependencies between defects.
+
+Use this decision policy:
+
+1. bugs preventing the pipeline from running at all;
+2. proposal/reference correctness;
+3. target validity/quality guard;
+4. packaging/output layout;
+5. free manual Demo.
+
+Task 8B.4 remains deferred until ChatGPT reviews this forensics report.
+
+# 13. Report
 
 Create:
 
 ```text
-review_task8b3\INDEX.md
+docs/task8b3_d1_demo_failure_forensics.md
 ```
 
-For every A1–B2 include:
-- frozen prompt;
-- expected program;
-- language status;
-- runtime status;
-- mask path if any;
-- overlay path if any;
-- diagnostics path;
-- error if any.
+Required sections:
 
-For every sample that actually produced an overlay, copy it as:
+1. Task and scope
+2. Frozen R4B baseline
+3. A1/A3/A4 Reference-selection table
+4. `largest` semantic-contract audit
+5. A1/A4 SUCCESS-validity audit
+6. A2 E401 forensics
+7. B1/B2 E502 memory forensics
+8. Defect taxonomy
+9. Dependency/prioritization recommendation
+10. No-change statement
+11. Next gate = Awaiting ChatGPT audit
 
-```text
-A1_overlay_review.png
-A2_overlay_review.png
-A3_overlay_review.png
-A4_overlay_review.png
-B1_overlay_review.png
-B2_overlay_review.png
-```
-
-Only copy files that actually exist.
-
-For failed samples, if normal execution already produced `global_proposals.png`, copy it as:
-
-```text
-<ID>_global_proposals_review.png
-```
-
-Do not launch `--inspect-proposals`.
-
-Do not Git-track review pack.
-
-# 10. Report
-
-Update:
-
-```text
-docs/task8b3_six_image_demo_suite.md
-```
-
-Add:
-
-```text
-## Task 8B.3-R4B — One Formal Six-Image Demo Run
-```
-
-Include:
-1. formal freeze record;
-2. statement `FORMAL SUITE INVOCATIONS = 1`;
-3. exact per-case table;
-4. language summary;
-5. runtime summary;
-6. A-group vs B-group runtime counts;
-7. B1/B2 tile/proposal evidence if present;
-8. review pack file list;
-9. Visual Verdict = `PENDING CHATGPT/USER REVIEW`;
-10. no-retry/no-tuning statement;
-11. output layout = `ACCEPTED / DEFERRED TO TASK 8B.4`;
-12. exact STOP reason if PARTIAL.
-
-# 11. FROM_DSH
+# 14. FROM_DSH
 
 Update `handoff/FROM_DSH.md`, preserving `ARTIFACT-FACTS` verbatim.
 
 Required:
 
 ```text
-Task: 8B.3-R4B
+Task: 8B.3-D1
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: eval/task8b3-six-image-demo-suite
-Starting HEAD: b579148d...
-check_setup: READY / other
-Inputs: 6/6 / other
-Formal suite invocations: 1 / 0
-A1: language=<...> runtime=<...>
-A2: language=<...> runtime=<...>
-A3: language=<...> runtime=<...>
-A4: language=<...> runtime=<...>
-B1: language=<...> runtime=<...>
-B2: language=<...> runtime=<...>
-Review pack: <path or NOT CREATED>
-Visual verdict: PENDING CHATGPT/USER REVIEW
-Output-layout proposal: ACCEPTED / DEFERRED TO TASK 8B.4
-Report: docs/task8b3_six_image_demo_suite.md
+Starting HEAD: 648dc9d4...
+Inference executed: NO
+Delivery modified: NO
+Product/harness/tests modified: NO
+Reference forensics: <summary>
+A2 forensics: <summary>
+B1/B2 memory signature: <status>
+Defects: <IDs + status>
+Report: docs/task8b3_d1_demo_failure_forensics.md
+Output-layout proposal: ACCEPTED / STILL DEFERRED TO TASK 8B.4
 STOP reason: <none/exact>
-Next action: Awaiting ChatGPT/user visual review.
+Next action: Awaiting ChatGPT audit.
 ```
 
-# 12. Git change gate
+# 15. Git gate / commit / push
 
 Allowed repository changes only:
 
 ```text
-handoff/TO_DSH.md
+docs/task8b3_d1_demo_failure_forensics.md
 handoff/FROM_DSH.md
-docs/task8b3_six_image_demo_suite.md
+handoff/TO_DSH.md
 ```
-
-No script/test/product file may change.
 
 Run:
 
 ```bat
 git status --short
 git diff --check
-git diff
 ```
 
-Any other repo path changed -> STOP. Do not discard it; report.
+Stage individually.
 
-# 13. Commit/push
-
-Stage only the three allowed paths individually.
-
-If the suite was invoked once and all six cases were attempted in order, commit exactly:
+If COMPLETE, commit exactly:
 
 ```text
-docs(demo): record formal six-image suite
+docs(demo): record six-image failure forensics
 ```
 
-This commit message is used even if some samples fail at model/runtime level.
-
-If the driver/suite was not invoked or stopped before all six due orchestration/environment failure:
+If PARTIAL/STOP/FAILED:
 
 ```text
-docs(demo): record formal suite partial
+docs(demo): record demo forensics stop
 ```
 
 Push:
@@ -361,33 +422,27 @@ git push origin eval/task8b3-six-image-demo-suite
 
 No force.
 
-Working tree must be clean.
-
-# 14. COMPLETE definition
-
-COMPLETE means the formal evaluation procedure completed, not that 6/6 outputs are correct.
+# 16. COMPLETE definition
 
 COMPLETE only if:
-1. exact starting state;
-2. check_setup READY;
-3. six hashes match;
-4. freeze recorded;
-5. suite invoked exactly once;
-6. all six attempted in order;
-7. no individual retry;
-8. no code/prompt/config tuning;
-9. results recorded objectively;
-10. review pack created;
-11. no semantic visual verdict made;
-12. only report/handoff/taskbook changed in Git;
-13. commit/push succeed;
-14. clean tree;
-15. DSH stops.
+- no inference ran;
+- no delivery artifact changed;
+- no source/test/harness changed;
+- A1/A3/A4 proposal/reference facts quantified;
+- implementation `largest` semantics documented;
+- SUCCESS validity gates documented;
+- A2 forensics documented without unsupported causality;
+- B1/B2 memory signature statically audited;
+- defect statuses assigned;
+- report/FROM_DSH created;
+- commit/push succeed;
+- clean tree;
+- DSH stops.
 
-# 15. Final response
+# 17. Final response
 
 ```text
-TASK 8B.3-R4B COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-D1 COMPLETE / PARTIAL / STOP / FAILED
 
 Branch:
 eval/task8b3-six-image-demo-suite
@@ -398,63 +453,41 @@ Commit:
 Push:
 PASS / FAIL / NOT POSSIBLE
 
-check_setup:
-READY / NOT READY / NOT RUN
+Inference executed:
+NO
 
-Inputs:
-6/6 / other
+Delivery modified:
+NO
 
-Formal suite invocations:
-1 / 0
+Product/harness/tests modified:
+NO
 
-A1:
-language=<status>
-runtime=<status>
+Reference forensics:
+<one-line summary>
 
 A2:
-language=<status>
-runtime=<status>
+<one-line summary>
 
-A3:
-language=<status>
-runtime=<status>
+B1/B2 memory:
+<EXACT_SIGNATURE_MATCH / STRONG_MATCH / NOT_CONFIRMED>
 
-A4:
-language=<status>
-runtime=<status>
-
-B1:
-language=<status>
-runtime=<status>
-
-B2:
-language=<status>
-runtime=<status>
-
-Runtime successes pending visual review:
-<n>/6
-
-Runtime failures:
-<n>/6
-
-Review pack:
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3
-or NOT CREATED
-
-Visual verdict:
-PENDING CHATGPT/USER REVIEW
-
-Output layout proposal:
-ACCEPTED / DEFERRED TO TASK 8B.4
+Defects:
+RC1-DEMO-REF-01=<status>
+RC1-DEMO-MASK-01=<status>
+RC1-DEMO-PROP-01=<status>
+RC1-DEMO-MEM-01=<status>
 
 Report:
-docs/task8b3_six_image_demo_suite.md
+docs/task8b3_d1_demo_failure_forensics.md
 
 Handoff:
 handoff/FROM_DSH.md
 
+Output layout:
+ACCEPTED / STILL DEFERRED TO TASK 8B.4
+
 STOP reason:
 <none or exact reason>
 
-等待 ChatGPT/用户审核；不得进入 Assisted Mode、Task 8B.4、Task 8C 或任何新研发。
+等待 ChatGPT 审核；不得修复缺陷、不得运行 Demo、不得进入 Task 8B.4 或 Task 8C。
 ```
