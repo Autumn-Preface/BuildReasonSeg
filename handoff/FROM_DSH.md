@@ -17,32 +17,38 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.2-R2 Report
+# FROM_DSH — Task 8B.3-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in
 git history._
 
 | item | value |
 |---|---|
-| Task | `8B.2-R2` |
-| Branch | `audit/task8b2-rc1-runtime-closure` |
-| Starting HEAD | `7e885e176f23f301156d32f1800c5719165c8322` |
-| Ultralytics runtime | 8.4.164 (installed into `.conda/buildreasonseg-mvp`; pinned `==8.4.164` in `environment.yml` and `requirements.txt`) |
-| check_setup | `BuildReasonSeg environment: READY` (live runtime checks; runtime vs model provenance explicit) |
-| External sync | canonical manifest 135 entries; pre-sync exactly the 4 authorized mismatches; post-sync 135/135 PASS |
-| External test suite | 109 passed (external `tests/test_setup_checker.py` 12 passed) |
-| Repository test suite | 1535 passed |
-| A1 parse | `largest -> right_of -> nearest` (`largest_to_right_of_to_nearest`) |
-| A1 Y-path | PASS (`Result : SUCCESS`; detector → Reference 48 → SAM2 → D-B1 executed; mask/overlay/diagnostics written) |
-| A1 N-path | PASS (`[E901 USER_ABORTED]`, exit 90; detector/core not executed; no new mask/overlay) |
-| Report path | `docs/task8b2_r2_runtime_environment_closure.md` |
-| RC1 status | READY |
-| Next action | Awaiting ChatGPT audit. Do not start Task 8C or additional Demo images. |
+| Task | `8B.3-R1` |
+| Status | **PARTIAL** (deterministic driver implemented; driver-test gate not green, so the real six-case suite was not started) |
+| Branch | `eval/task8b3-six-image-demo-suite` |
+| Base audited RC1 | `c45ecbec7fd293c454ccced22310db32c1542be4` |
+| Remote main | `c45ecbec7fd293c454ccced22310db32c1542be4` (fast-forwarded and pushed this task) |
+| Driver | `scripts/task8b3_interactive_suite.py` — implemented per the frozen design (binary pipes, incremental UTF-8 decoding, no newline required, 15-min per-case timeout) |
+| Driver tests | `tests/test_task8b3_interactive_suite.py` → **11 passed, 2 failed** (both are defects of the new test file itself; the fix is confined to that file) |
+| Repository tests | not run (the gate order requires the dedicated tests to pass first) |
+| check_setup | READY (live `ultralytics==8.4.164`) |
+| Inputs | 6/6 present and hashed (A1–A4 1024×1024 RGB PNG; B1/B2 5000×5000 RGB TIFF) |
+| A1 | language=NOT RUN runtime=NOT RUN |
+| A2 | language=NOT RUN runtime=NOT RUN |
+| A3 | language=NOT RUN runtime=NOT RUN |
+| A4 | language=NOT RUN runtime=NOT RUN |
+| B1 | language=NOT RUN runtime=NOT RUN |
+| B2 | language=NOT RUN runtime=NOT RUN |
+| Review pack | not created (no outputs produced) |
+| Report | `docs/task8b3_six_image_demo_suite.md` |
+| Output-layout proposal | ACCEPTED / DEFERRED TO SEPARATE DELIVERY ITERATION (reserved as Task 8B.4; not implemented) |
+| STOP reason | driver-test gate not green (`test_correct_direct_program_sends_y`, `test_decision_path_has_no_readline`); Task 8B.3-R1 §10 forbids starting the real suite before both test commands pass |
+| Next action | Awaiting ChatGPT audit. |
 
-Environment closure only: no training, no checkpoint/threshold/ProgramHead/Qwen-prompt/Reference/SAM2/D-B1/
-dataset/final-test change, no package other than `ultralytics==8.4.164` added, and no research conclusion changed.
-Protected core versions were verified unchanged (torch 2.13.0+cu132, torchvision 0.28.0+cu132, transformers 5.17.0,
-numpy 2.4.6, OpenCV 5.0.0, scipy 1.17.1) and `pip check` reports no broken requirements.
+No RC1 product runtime, `predict.py`, ProgramHead, Qwen suggestion, detector/Reference/SAM2/D-B1, threshold,
+config or checkpoint was modified; the six frozen prompts were never altered or retried; no Assisted Mode,
+`--reference-id` or `--inspect-proposals` was used; no training, download, package installation or final-test
+access occurred.
 
-Watt was not needed for Task 8B.2-R2 (no downloads, no transfers); the pre-existing Watt instance, when present,
-remains transport-only and is not owned by this project.
+Watt was not needed for Task 8B.3-R1 (no downloads, no transfers).

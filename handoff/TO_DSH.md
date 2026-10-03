@@ -1,1228 +1,720 @@
-# TO_DSH — Task 8B.2-R2: Close RC1 Runtime Dependency and Readiness Gap
+# TO_DSH — Task 8B.3-R1: Deterministic Interactive Driver and Mandatory Handoff
 
 > Status: ACTIVE  
 > Role boundary: ChatGPT decides; DSH executes only.  
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`  
-> Branch: `audit/task8b2-rc1-runtime-closure`  
-> Required starting HEAD: `7e885e176f23f301156d32f1800c5719165c8322`  
-> Canonical RC1 source: `delivery_src/BuildReasonSeg_Advisor_RC1`  
+> Existing local validation branch: `eval/task8b3-six-image-demo-suite`  
+> Audited RC1 commit: `c45ecbec7fd293c454ccced22310db32c1542be4`  
 > External runnable RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`  
 > Runtime Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\python.exe`  
-> Predecessor: Task 8B.2-R1.1 — canonical source policy cleanup accepted by ChatGPT.
+> Predecessor: Task 8B.3 PARTIAL — suite not executed because the ad-hoc interactive driver blocked on no-newline Y/N prompts and mixed GBK/UTF-8 decoding.
 
 ---
 
-# 0. Executor-only rule
+# 0. Permanent DSH reporting rule
 
-You are the executor only.
+This rule applies to this and later DSH tasks unless ChatGPT explicitly overrides it.
 
-ChatGPT has already frozen the diagnosis, required dependency version, files to edit, test procedure, A1 command, acceptance criteria and STOP conditions.
+For every outcome (`COMPLETE / PARTIAL / STOP / FAILED`), whenever the Git repository is still safe to write, DSH must:
 
-Do not make independent technical decisions.
+1. update `handoff/FROM_DSH.md`;
+2. create/update the task report or stop report in the repository;
+3. commit the current task evidence;
+4. push the current task branch;
+5. stop and wait for ChatGPT.
+
+Do not leave the only useful execution evidence inside local delivery logs.
+
+Only if Git write/push is genuinely unsafe or impossible because of unauthorized pre-existing changes, repository/ref ambiguity, corruption, authentication, or network push failure may this be skipped. In that case print the exact blocking state and preserve a local stop report if possible.
+
+---
+
+# 1. Executor-only rule
+
+You are executor only. ChatGPT has frozen all decisions below.
 
 Do not:
-- choose another Python/Conda environment;
-- install a different Ultralytics version;
-- upgrade/downgrade torch, torchvision, transformers, numpy or OpenCV;
-- modify ProgramHead, Qwen prompt, fallback UX or parser semantics;
-- modify detector weights, detector thresholds, tiling, merge logic or reference selection;
-- modify SAM2, relation fields, D-B1, checkpoints, model architecture or losses;
-- retrain anything;
-- access final test data;
-- download a new model;
-- alter A1 prompt to rescue a result;
-- run A2/A3/A4/B1/B2;
-- start Task 8C or external-image testing;
-- merge to `main`;
-- force-push;
-- solve any unexpected model/inference failure by editing algorithm code.
+- modify RC1 product/runtime source or `predict.py`;
+- modify language frontend, ProgramHead, Qwen suggestion logic or Validator;
+- modify detector/Reference/SAM2/D-B1;
+- modify thresholds/config/checkpoints;
+- edit external delivery source/config directly;
+- install packages or PTY/ConPTY libraries;
+- change the six fixed prompts;
+- retry with alternate wording;
+- use Assisted Mode, `--reference-id`, or `--inspect-proposals`;
+- access final test, train, download anything, or start Task 8C;
+- implement the proposed new per-run output-directory product layout in this task.
 
-If this task reaches a STOP condition, stop and report the exact evidence. Do not invent a workaround.
-
-All user-facing DSH output must be Chinese. Code identifiers and commands remain English.
+The user's proposed per-run output layout is **accepted in principle but deferred to a separate complete delivery iteration after Task 8B.3**, currently reserved as Task 8B.4.
 
 ---
 
-# 1. ChatGPT frozen audit decision
+# 2. Frozen diagnosis and solution
 
-The following facts are already accepted and must not be re-decided:
+The failed Task 8B.3 driver had two orchestration bugs:
 
-1. External RC1 `buildreasonseg/runtime/detector.py` requires:
+1. confirmation prompts are emitted without trailing newline (`input(prompt)`);
+2. child-process output encoding was not deterministic, causing GBK/UTF-8 mismatch.
 
-```python
-from ultralytics import YOLO
-```
+The RC1 product must not be changed.
 
-2. The required frozen U-C1 runtime version is:
-
-```text
-ultralytics==8.4.164
-```
-
-3. The designated runtime environment currently has:
-- Python 3.11.16;
-- torch 2.13.0+cu132;
-- CUDA available;
-- NVIDIA GeForce RTX 5080 Laptop GPU;
-- transformers 5.17.0;
-- no importable Ultralytics before R2.
-
-4. The old `check_setup.py` can report `READY` without validating the required Ultralytics runtime import. This defect remains:
+Frozen solution:
 
 ```text
-RC1-ENV-01
+subprocess.Popen
+stdin=PIPE
+stdout=PIPE
+stderr=STDOUT
+text=False
+bufsize=0
+PYTHONIOENCODING=utf-8
+PYTHONUNBUFFERED=1
+PYTHONUTF8=1
+binary incremental read (not readline)
+incremental UTF-8 decoder
+respond only after exact known Y/N prompt is detected
 ```
 
-5. `environment.yml` currently declares:
-
-```text
-ultralytics>=8.3
-```
-
-6. `requirements.txt` currently declares:
-
-```text
-ultralytics>=8.3
-```
-
-7. `metadata.json` records model provenance:
-
-```text
-ultralytics = 8.4.164
-transformers = 5.17.0
-pytorch = 2.13.0+cu132 ...
-```
-
-8. Task 8B.2-R2 must:
-- pin the RC1 Ultralytics runtime requirement to exactly 8.4.164;
-- install exactly that package into the designated runtime environment if the dry-run safety gate passes;
-- make `check_setup.py` validate the live Ultralytics runtime;
-- clearly distinguish live runtime information from model provenance;
-- correct the misleading portability wording;
-- sync canonical source to the external RC1;
-- run readiness regression tests;
-- continue the **same A1** test with the same natural-language command;
-- not perform new algorithm development.
+No PTY and no package installation.
 
 ---
 
-# 2. Allowed canonical source edits
+# 3. Exact product prompt strings
 
-Only these RC1 canonical files may be edited for runtime functionality:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/environment.yml
-delivery_src/BuildReasonSeg_Advisor_RC1/requirements.txt
-delivery_src/BuildReasonSeg_Advisor_RC1/check_setup.py
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_setup_checker.py
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-```
-
-Do NOT edit `predict.py` in this task.
-
-Reason: after the runtime is installed at the exact provenance version, the observed `ultralytics = 8.4.164` line is no longer false. Runtime/provenance distinction will be made explicitly by `check_setup.py`, without changing Demo inference UX.
-
-Allowed repository documentation/handoff edits:
+Recognize these exact substrings:
 
 ```text
-docs/task8b2_r2_runtime_environment_closure.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
+DIRECT_PROMPT = 是否按此理解执行？ [Y/N]: 
+SUGGESTION_PROMPT = 是否使用建议指令继续？ [Y/N]: 
+FALLBACK_PROMPT = 是否进入有限兼容模式？ [Y/N]: 
 ```
 
-Do not modify `handoff/PROJECT_STATE.md`.
+Do not require a newline.
 
-No other path may change.
+If `FALLBACK_PROMPT` appears:
+- send exactly `N\n`;
+- classify `LANGUAGE_RUNTIME_ERROR_OR_FALLBACK_REQUEST`;
+- continue next sample only if environment remains healthy.
 
 ---
 
-# 3. Phase A — Git safety gate
+# 4. Frozen six cases
+
+Run in this exact order.
+
+## A1
+```text
+file = inference/input/A1.png
+prompt = 找出最大的建筑，然后把它右边离它最近的那栋分割出来
+expected_program = largest_to_right_of_to_nearest
+```
+
+## A2
+```text
+file = inference/input/A2.png
+prompt = 以面积最大的建筑为参考，分割它左侧最近的建筑
+expected_program = largest_to_left_of_to_nearest
+```
+
+## A3
+```text
+file = inference/input/A3.png
+prompt = 以最大建筑为准，分割位于其上方且距离最近的建筑
+expected_program = largest_to_above_to_nearest
+```
+
+## A4
+```text
+file = inference/input/A4.png
+prompt = 请分割最大建筑下方距离最近的一栋建筑
+expected_program = largest_to_below_to_nearest
+```
+
+## B1
+```text
+file = inference/input/B1.tif
+prompt = 请找出面积最大的建筑，并分割它右边离它最近的那栋楼。
+expected_program = largest_to_right_of_to_nearest
+```
+
+## B2
+```text
+file = inference/input/B2.tif
+prompt = 最大建筑物的上面，离它最近的那一栋是什么，分割出来
+expected_program = largest_to_above_to_nearest
+```
+
+Never alter or retry these strings.
+
+---
+
+# 5. Phase A — Recover exact local Git state
 
 Run:
 
 ```bat
 cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
+git status --short
 git branch --show-current
 git rev-parse HEAD
-git status --short
+git rev-parse main
+git rev-parse eval/task8b3-six-image-demo-suite
+git fetch origin main
+git rev-parse origin/main
 git remote -v
 ```
 
 Continue only if:
 
 ```text
-branch = audit/task8b2-rc1-runtime-closure
-HEAD   = 7e885e176f23f301156d32f1800c5719165c8322
+local main = c45ecbec7fd293c454ccced22310db32c1542be4
+local eval/task8b3-six-image-demo-suite = c45ecbec7fd293c454ccced22310db32c1542be4
 ```
 
-Allowed starting working tree:
-- only `M handoff/TO_DSH.md`, if this R2 task book has been written there; or
-- completely clean.
+Current branch may be `main` or `eval/task8b3-six-image-demo-suite`. If on main, switch exactly to the eval branch.
 
-Any additional tracked/untracked file -> STOP.
+Allowed working tree:
+- clean; or
+- only `M handoff/TO_DSH.md`.
 
-Do not reset, stash, clean, discard, delete or switch branch.
+Remote `origin/main` may be either:
+- `6c2b915dbc64acdeb099d194005d74c7180c95fa`, or
+- `c45ecbec7fd293c454ccced22310db32c1542be4`.
 
-STOP report:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b2_r2_stop_report.md
-```
-
----
-
-# 4. Phase B — Runtime precondition and reproducibility record
-
-Use the exact interpreter below for every environment command:
-
-```text
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\python.exe
-```
-
-For readability below:
-
-```text
-ENV_PYTHON = C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\python.exe
-```
-
-Do not substitute `python` from PATH.
-
-Run and record:
+If remote main is old `6c2b915...`, push the already audited fast-forward:
 
 ```bat
-ENV_PYTHON --version
-ENV_PYTHON -c "import sys; print(sys.executable)"
-ENV_PYTHON -m pip --version
-ENV_PYTHON -c "import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NO CUDA')"
-ENV_PYTHON -c "import transformers; print(transformers.__version__)"
-ENV_PYTHON -c "import numpy; print(numpy.__version__)"
-ENV_PYTHON -c "import cv2; print(cv2.__version__)"
-ENV_PYTHON -m pip show ultralytics
-ENV_PYTHON -c "import ultralytics; print(ultralytics.__version__)"
+git push origin main
+git fetch origin main
 ```
 
-The last two are expected to fail before installation.
+Then require remote main = `c45ecbec...`.
 
-## B1. Continue only if all are true
-
-- Python major/minor = 3.11;
-- `sys.executable` exactly belongs to `buildreasonseg-mvp`;
-- torch = `2.13.0+cu132`;
-- CUDA = True;
-- GPU contains `NVIDIA GeForce RTX 5080 Laptop GPU`;
-- transformers = `5.17.0`;
-- Ultralytics is not importable / pip show cannot find it.
-
-Record baseline versions of:
-- torch;
-- torchvision if importable;
-- transformers;
-- numpy;
-- cv2 / opencv;
-- scipy.
-
-If Ultralytics is already importable before R2 -> STOP.
-If any other frozen fact above differs -> STOP.
-
-Do not repair the environment.
+Any third SHA -> STOP. Do not merge/rebase again.
 
 ---
 
-# 5. Phase C — pip dry-run safety gate
+# 6. Phase B — Create deterministic validation driver in workspace
 
-Run exactly:
-
-```bat
-ENV_PYTHON -m pip install --dry-run ultralytics==8.4.164
-```
-
-Save the complete dry-run output to the R2 report evidence notes.
-
-## C1. Allowed dry-run effects
-
-The dry-run may install:
-- `ultralytics==8.4.164`;
-- currently missing direct/transitive dependencies required by that package.
-
-## C2. Mandatory STOP if dry-run proposes changing any currently installed core package
-
-STOP if dry-run proposes upgrade, downgrade, uninstall or replacement of any of:
+Create exactly:
 
 ```text
-torch
-torchvision
-torchaudio
-transformers
-numpy
-opencv-python
-opencv-python-headless
-scipy
+scripts/task8b3_interactive_suite.py
 ```
 
-Do not install.
-Do not choose another Ultralytics version.
-Do not manually resolve.
+This is a validation harness, not RC1 product code. It may hard-code the six evaluation cases and expected programs as test-oracle data. It must not be copied to delivery.
 
-Also STOP if pip reports an unsatisfied/conflicting resolution.
-
-If the dry-run passes this gate, continue.
-
----
-
-# 6. Phase D — Canonical dependency pin
-
-Edit:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/environment.yml
-```
-
-Change only:
-
-```text
-ultralytics>=8.3
-```
-
-to:
-
-```text
-ultralytics==8.4.164
-```
-
-Also adjust the nearby explanatory comment only if necessary so it says this is the **frozen RC1 U-C1 runtime requirement**, not merely an approximate compatible range.
-
-Do not change any other dependency version.
-
-Edit:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/requirements.txt
-```
-
-Change only:
-
-```text
-ultralytics>=8.3
-```
-
-to:
-
-```text
-ultralytics==8.4.164
-```
-
-Do not change any other dependency line.
-
----
-
-# 7. Phase E — Fix `check_setup.py`
-
-Edit only:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/check_setup.py
-```
-
-## E1. Add frozen constant
-
-Add:
+For each case invoke the real external RC1 CLI using:
 
 ```python
-REQUIRED_ULTRALYTICS = "8.4.164"
+subprocess.Popen(
+    ...,
+    cwd=EXTERNAL_RC1_ROOT,
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=False,
+    bufsize=0,
+    env=child_env,
+)
 ```
 
-## E2. Add a live runtime dependency check
-
-Add a function with equivalent semantics to:
+`child_env` = `os.environ.copy()` plus exactly:
 
 ```python
-def check_runtime_dependencies(report: Report, package: ModelPackage | None) -> None:
-    ...
+child_env["PYTHONIOENCODING"] = "utf-8"
+child_env["PYTHONUNBUFFERED"] = "1"
+child_env["PYTHONUTF8"] = "1"
 ```
 
-It must verify the **live Python environment**, not read a version from metadata and pretend it is installed.
+Do not set CUDA/model/device variables.
 
-### Ultralytics rules
+---
 
-Attempt a real:
+# 7. Phase C — Binary reader and transcript
+
+The Y/N decision path must not use:
+- `readline()`;
+- `for line in pipe`;
+- `communicate(input=...)`.
+
+Use a binary reader thread/loop that reads bytes without waiting for newline, feeds an incremental UTF-8 decoder, and appends decoded characters to a full transcript buffer.
+
+Use equivalent to:
 
 ```python
-import ultralytics
+codecs.getincrementaldecoder("utf-8")(errors="replace")
 ```
 
-If import fails:
+Save every case transcript locally:
 
 ```text
-[MISSING] Ultralytics runtime — U-C1 detector requires ultralytics==8.4.164
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_transcripts\A1.txt
+...
+B2.txt
 ```
 
-and `report.ready` must become false.
+Do not Git-commit transcripts.
 
-If import succeeds but:
-
-```text
-ultralytics.__version__ != "8.4.164"
-```
-
-output semantic equivalent of:
-
-```text
-[INVALID] Ultralytics runtime — runtime=<actual>, required=8.4.164
-```
-
-and `report.ready` must become false.
-
-If exact, output semantic equivalent of:
-
-```text
-[OK] Ultralytics runtime — runtime=8.4.164; model provenance=8.4.164
-```
-
-The current live runtime must be obtained from the imported module.
-
-If runtime != model provenance, the checker must be NOT READY.
-
-### Transformers rules
-
-Attempt a real:
-
-```python
-import transformers
-```
-
-If import fails:
-- report `[MISSING] Transformers runtime`;
-- NOT READY.
-
-If import succeeds:
-- report actual `transformers.__version__`;
-- if model metadata has provenance, show it separately in the detail.
-
-Do **not** enforce an exact Transformers version in R2.
-Do **not** change the Transformers dependency specification.
-
-## E3. Call order
-
-`run_checks()` must call the new runtime dependency check after `check_model_package()` returns the package and before final readiness is computed.
-
-## E4. Portability wording
-
-Do not change the portability scan algorithm.
-
-Replace the success wording:
-
-```text
-[OK] portability — 无 workspace 依赖；项目可整体移动
-```
-
-with wording semantically equivalent to:
-
-```text
-[OK] source/assets portability — delivery 内未发现 workspace 绝对路径依赖；runtime environment 需单独配置
-```
-
-Do not claim the Conda/Python environment is bundled into the delivery.
+Each detected prompt instance may be answered only once.
 
 ---
 
-# 8. Phase F — Setup-checker regression tests
+# 8. Phase D — Deterministic Y/N decision
 
-Modify only:
+## D1 Initial program
 
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_setup_checker.py
-```
-
-Preserve all existing tests.
-
-Add at least these tests.
-
-## F1. Exact real runtime version
-
-On the actual RC1 runtime after installation, the real-project setup check must contain:
+Extract initial program only from product output:
 
 ```text
-Ultralytics runtime
-8.4.164
-BuildReasonSeg environment: READY
+[解析] ...   (<program_id>)
 ```
 
-## F2. Missing Ultralytics regression
+using equivalent regex:
 
-Without uninstalling or changing site-packages:
+```regex
+\[解析\].*?\(([^()\r\n]+)\)
+```
 
-- import `check_setup.py` as a module in-process;
-- monkeypatch Python import behavior so an attempt to import `ultralytics` raises `ModuleNotFoundError`;
-- call only the new runtime dependency check with a fresh `Report`;
-- verify:
-  - `report.ready == False`;
-  - a `[MISSING] Ultralytics runtime` line exists.
+Do not derive it from Chinese keywords.
 
-Do not uninstall the real package for this test.
+## D2 Direct confirmation
 
-## F3. Wrong Ultralytics version regression
+When `DIRECT_PROMPT` appears:
 
-Without modifying the real installation:
+- if `initial_program == expected_program`: send `Y\n`, status `DIRECT_CORRECT`;
+- otherwise: send `N\n`, status `LANGUAGE_ERROR_SUPPORTED_WRONG`.
 
-- monkeypatch the import result with a fake module whose `__version__` is not `8.4.164`;
-- call the new runtime dependency check;
-- verify:
-  - `report.ready == False`;
-  - the report contains `[INVALID] Ultralytics runtime`;
-  - required version `8.4.164` is visible.
+Never send Y for a different direct program.
 
-## F4. Portability wording regression
+## D3 Suggestion confirmation
 
-Verify setup output:
-- contains `source/assets portability` or the exact equivalent implemented;
-- does not contain `项目可整体移动`.
+The product prints one of these exact display forms:
 
-## F5. Runtime/provenance distinction
+```text
+largest -> left_of -> nearest
+largest -> right_of -> nearest
+largest -> above -> nearest
+largest -> below -> nearest
+```
 
-Verify the good runtime result shows:
-- actual runtime Ultralytics version;
-- model provenance version as a separate labeled concept.
+The validation harness may map those four display strings to their corresponding four supported program IDs for test-output decoding only.
 
-Do not add tests that require final-test data, internet, training or new model assets.
+When `SUGGESTION_PROMPT` appears:
+- mapped suggestion == expected -> `Y\n`, `FALLBACK_CORRECT`;
+- otherwise -> `N\n`, `FALLBACK_WRONG`.
+
+This mapping must never enter product runtime.
+
+## D4 Fallback prompt
+
+When `FALLBACK_PROMPT` appears:
+- send `N\n`;
+- status `LANGUAGE_RUNTIME_ERROR_OR_FALLBACK_REQUEST`.
 
 ---
 
-# 9. Phase G — Refresh canonical source manifest
+# 9. Phase E — Fixed timeout
 
-Because canonical source files changed, update:
+Per case wall-clock timeout = **15 minutes**.
 
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-```
+On timeout:
+1. terminate child;
+2. wait 10 seconds;
+3. kill only if still alive;
+4. classify `DRIVER_TIMEOUT`;
+5. preserve transcript;
+6. rerun `check_setup.py`;
+7. continue next sample only if environment remains READY.
 
-The manifest must remain at exactly:
-
-```text
-135 entries
-```
-
-Do not add or remove a manifest path in R2.
-
-Only update `bytes` and `sha256` for canonical files whose contents actually changed:
-
-```text
-environment.yml
-requirements.txt
-check_setup.py
-tests/test_setup_checker.py
-```
-
-If any other manifest-listed file changed -> STOP.
-
-For all 135 entries verify:
-- path exists;
-- `bytes` equals actual size;
-- `sha256` equals actual SHA256;
-- entries remain lexicographically sorted;
-- no duplicates;
-- no absolute path;
-- no `..`.
-
-If entry count differs from 135 -> STOP.
+Do not retry the timed-out case.
 
 ---
 
-# 10. Phase H — Install exact Ultralytics runtime
+# 10. Phase F — Driver unit tests
 
-Only after Phase C dry-run passed.
-
-Run exactly:
-
-```bat
-ENV_PYTHON -m pip install ultralytics==8.4.164
-```
-
-Then run:
-
-```bat
-ENV_PYTHON -c "import ultralytics; print(ultralytics.__version__); print(ultralytics.__file__)"
-ENV_PYTHON -m pip show ultralytics
-ENV_PYTHON -m pip check
-```
-
-Re-record:
-
-```bat
-ENV_PYTHON -c "import torch; print(torch.__version__)"
-ENV_PYTHON -c "import torchvision; print(torchvision.__version__)"
-ENV_PYTHON -c "import transformers; print(transformers.__version__)"
-ENV_PYTHON -c "import numpy; print(numpy.__version__)"
-ENV_PYTHON -c "import cv2; print(cv2.__version__)"
-ENV_PYTHON -c "import scipy; print(scipy.__version__)"
-```
-
-## H1. Required outcome
-
-- Ultralytics = exactly `8.4.164`;
-- `pip check` succeeds;
-- all pre-existing recorded core versions from Phase B remain unchanged:
-  - torch;
-  - torchvision;
-  - transformers;
-  - numpy;
-  - cv2/OpenCV;
-  - scipy.
-
-If any core version changed -> STOP immediately.
-Do not attempt to roll back automatically.
-Record exact before/after values for ChatGPT.
-
----
-
-# 11. Phase I — Canonical tests before delivery sync
-
-From repository root run:
-
-```bat
-ENV_PYTHON -m pytest tests/test_sync_advisor_rc1_delivery.py -q
-```
-
-Must PASS, including the 135-entry policy checks from R1.1.
-
-If it fails because manifest hashes/sizes are stale, correct only the four expected changed manifest entries from Phase G and rerun.
-
-Any other failure -> STOP.
-
----
-
-# 12. Phase J — Synchronize canonical source to external RC1
-
-First perform read-only check:
-
-```bat
-ENV_PYTHON scripts/sync_advisor_rc1_delivery.py ^
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
-  --check
-```
-
-Because R2 intentionally changed four manifest-listed canonical files, exactly those files are expected to appear as MISMATCH before sync.
-
-Required pre-sync check:
-- no MISSING;
-- mismatch set is exactly:
+Create exactly:
 
 ```text
-environment.yml
-requirements.txt
-check_setup.py
-tests/test_setup_checker.py
+tests/test_task8b3_interactive_suite.py
 ```
 
-If any other mismatch exists -> STOP.
+Use temporary fake child scripts only. Do not load real models/images.
 
-Then run the normal sync exactly once:
+Required coverage:
+
+1. direct Y/N prompt without newline;
+2. UTF-8 Chinese prompt recognized through pipe;
+3. correct direct program -> Y;
+4. wrong direct program -> N;
+5. suggestion prompt without newline -> Y when expected;
+6. wrong suggestion -> N;
+7. fallback prompt -> N;
+8. same prompt answered only once;
+9. transcript complete without newline;
+10. interaction decision path does not depend on `readline()`;
+11. suite contains exactly A1/A2/A3/A4/B1/B2;
+12. all frozen prompts/expected programs exactly match this task book.
+
+Fake child must flush its prompt before reading stdin.
+
+Run:
 
 ```bat
-ENV_PYTHON scripts/sync_advisor_rc1_delivery.py ^
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+ENV_PYTHON -m pytest tests/test_task8b3_interactive_suite.py -q
+ENV_PYTHON -m pytest tests/ -q
 ```
 
-Then rerun:
+Both must PASS before real suite.
 
-```bat
-ENV_PYTHON scripts/sync_advisor_rc1_delivery.py ^
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
-  --check
-```
-
-Required final result:
-
-```text
-checked=135
-match=135
-missing=0
-mismatch=0
-```
-
-No external model asset may be deleted.
-The sync helper must remain unchanged.
+If unrelated repo tests fail, do not fix unrelated code; STOP and persist/push report/handoff.
 
 ---
 
-# 13. Phase K — True readiness verification
+# 11. Phase G — Environment/input gate
 
-Enter external RC1:
-
-```bat
-cd /d C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-Run with exact interpreter:
+External RC1:
 
 ```bat
 ENV_PYTHON check_setup.py
 ```
 
-Required output semantics:
+Must end `BuildReasonSeg environment: READY`.
 
-```text
-[OK] Python
-[OK] PyTorch — 2.13.0+cu132
-[OK] CUDA
-[OK] GPU — NVIDIA GeForce RTX 5080 Laptop GPU
-[OK] Ultralytics runtime — runtime=8.4.164; model provenance=8.4.164
-[OK] Transformers runtime — runtime=5.17.0; model provenance=5.17.0
-...
-[OK] source/assets portability — ... runtime environment ...
-BuildReasonSeg environment: READY
-```
+Verify all six inputs exist/read and record:
+- bytes;
+- width;
+- height;
+- mode/channels if available;
+- SHA256.
 
-Exact punctuation may differ; semantic content may not.
-
-The old success phrase:
-
-```text
-项目可整体移动
-```
-
-must not appear.
-
-If setup is NOT READY -> STOP.
-Do not change algorithm/runtime code beyond the authorized source files.
+Any missing/unreadable input -> STOP before suite and persist/push evidence.
 
 ---
 
-# 14. Phase L — External RC1 tests
+# 12. Phase H — One formal real-suite run
+
+Run exactly once:
+
+```bat
+ENV_PYTHON scripts/task8b3_interactive_suite.py
+```
+
+It must execute A1→A2→A3→A4→B1→B2.
+
+Do not manually rerun a case.
+Do not edit the driver after observing any semantic result.
+
+If the driver itself crashes due to orchestration after the real suite starts:
+- do not patch and rerun;
+- STOP;
+- persist/push partial evidence;
+- wait for ChatGPT.
+
+---
+
+# 13. Phase I — Sample continuation rules
+
+Sample-level failure does not stop later samples if environment remains healthy.
+
+Continue after:
+- language error;
+- NO_SAFE_SUGGESTION;
+- E1xx/E2xx/E3xx/E4xx/E5xx;
+- proposal/reference/context/segmentation failure.
+
+Do not retry or tune.
+
+If a runtime anomaly may affect later samples, run `check_setup.py`; if NOT READY, stop suite.
+
+---
+
+# 14. Phase J — Objective evidence
+
+For each case record:
+- initial program/confidence;
+- language status;
+- Y/N sent;
+- visual executed?;
+- exit code/result/error;
+- Reference ID;
+- mask/overlay/diagnostics paths;
+- tile count;
+- raw proposal count;
+- merged proposal count;
+- `directional_candidates_outside_rc1_context` if present.
+
+Do not make semantic visual verdicts.
+
+A runtime SUCCESS is:
+
+```text
+AUTOMATIC_RUNTIME_SUCCESS_PENDING_VISUAL_REVIEW
+```
+
+---
+
+# 15. Phase K — Review pack
+
+Create local-only:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\review_task8b3
+```
+
+Create `INDEX.md`.
+
+For successful samples copy overlays as:
+
+```text
+A1_overlay_review.png
+A2_overlay_review.png
+A3_overlay_review.png
+A4_overlay_review.png
+B1_overlay_review.png
+B2_overlay_review.png
+```
+
+Only if produced.
+
+For failed samples, if a `global_proposals.png` exists, copy as:
+
+```text
+<ID>_global_proposals_review.png
+```
+
+Do not commit review pack.
+
+---
+
+# 16. Phase L — User output-layout proposal
+
+Record this accepted future requirement in the report:
+
+```text
+Each predict run should own one independent directory under inference/output,
+with subdirectories diagnostics/, masks/, overlays/.
+```
+
+Status:
+
+```text
+ACCEPTED / DEFERRED TO SEPARATE DELIVERY ITERATION
+```
+
+Do not implement it in 8B.3-R1. It requires a later complete canonical-source→tests→sync delivery iteration (reserved as Task 8B.4).
+
+---
+
+# 17. Phase M — Report always required
+
+Create/update:
+
+```text
+docs/task8b3_six_image_demo_suite.md
+```
+
+This file must be created even if the task STOPs before real suite.
+
+If STOP occurs, mark unrun sections `NOT RUN` and include exact STOP phase/evidence.
+
+If suite runs, include:
+- deterministic driver design;
+- driver tests;
+- fixed suite/input identities;
+- per-case table;
+- language/runtime summaries;
+- B1/B2 mechanical evidence;
+- review pack;
+- Visual Verdict = `PENDING CHATGPT/USER REVIEW`;
+- no-tuning statement;
+- output-layout requirement;
+- next gate.
+
+---
+
+# 18. Phase N — FROM_DSH always required
+
+Update `handoff/FROM_DSH.md` on every terminal state and preserve `ARTIFACT-FACTS` verbatim.
+
+Required fields:
+
+```text
+Task: 8B.3-R1
+Status: COMPLETE / PARTIAL / STOP / FAILED
+Branch: eval/task8b3-six-image-demo-suite
+Base audited RC1: c45ecbec...
+Remote main: <actual>
+Driver tests: <actual/not run>
+Repository tests: <actual/not run>
+check_setup: <actual/not run>
+Inputs: <actual/not run>
+A1: ...
+A2: ...
+A3: ...
+A4: ...
+B1: ...
+B2: ...
+Review pack: <path/not created>
+Report: docs/task8b3_six_image_demo_suite.md
+Output-layout proposal: ACCEPTED / DEFERRED TO SEPARATE DELIVERY ITERATION
+STOP reason: <none/exact>
+Next action: Awaiting ChatGPT audit.
+```
+
+No future technical decision beyond awaiting ChatGPT audit.
+
+---
+
+# 19. Phase O — Git change gate
+
+Allowed repository changes only:
+
+```text
+handoff/TO_DSH.md
+handoff/FROM_DSH.md
+docs/task8b3_six_image_demo_suite.md
+scripts/task8b3_interactive_suite.py
+tests/test_task8b3_interactive_suite.py
+```
+
+No canonical RC1 product source/config may change.
 
 Run:
 
 ```bat
-ENV_PYTHON -m pytest tests/test_setup_checker.py -q
-```
-
-Must PASS.
-
-Then run the full external RC1 test suite:
-
-```bat
-ENV_PYTHON -m pytest tests -q
-```
-
-Must PASS with no reduction caused by R2.
-
-Then return to repository root and run:
-
-```bat
-cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
-ENV_PYTHON -m pytest tests/ -q
-```
-
-The repository suite must PASS.
-
-Do not modify unrelated tests to obtain green status.
-
-Any unrelated failure -> STOP and report.
-
----
-
-# 15. Phase M — Same A1 positive path
-
-This is continuation of the already-authorized user Demo test, not a new research experiment.
-
-Do not use another image.
-Do not change the prompt.
-Do not change thresholds/config/model.
-
-Confirm this file exists:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\input\A1.png
-```
-
-If missing -> STOP.
-
-Record a pre-run listing/timestamp snapshot of:
-- `inference/output/masks`
-- `inference/output/overlays`
-- `inference/output/diagnostics`
-
-Run exactly from external RC1:
-
-```bat
-(echo Y)| ENV_PYTHON predict.py ^
-  --image inference/input/A1.png ^
-  --prompt "找出最大的建筑，然后把它右边离它最近的那栋分割出来" ^
-  --confirm-command
-```
-
-If piping does not satisfy the existing Y/N input on Windows, use an equivalent deterministic stdin method that supplies exactly one `Y`. Do not edit code to automate confirmation.
-
-## M1. Required language result
-
-The initial Qwen / ProgramHead parse must be:
-
-```text
-largest -> right_of -> nearest
-largest_to_right_of_to_nearest
-```
-
-This is a regression confirmation only.
-
-If language parse differs -> STOP.
-Do not change prompt or parser.
-
-## M2. Required runtime result
-
-After Y:
-- U-C1 detector must actually execute;
-- no `ModuleNotFoundError: ultralytics`;
-- Reference resolution must execute;
-- SAM2 must execute;
-- D-B1 must execute;
-- final result must reach `SUCCESS`.
-
-Required new artifacts:
-- mask;
-- overlay;
-- diagnostics/result data.
-
-Record exact newly generated paths.
-
-If any stage fails:
-- STOP;
-- do not alter detector/SAM2/D-B1/Reference/thresholds;
-- record stage and exact error/log path for ChatGPT.
-
-Do not inspect the image result to tune anything in R2.
-R2 only verifies that the pipeline executes after environment closure.
-
----
-
-# 16. Phase N — Same A1 negative confirmation path
-
-Record another pre-run output snapshot.
-
-Run the same A1 and same prompt:
-
-```bat
-(echo N)| ENV_PYTHON predict.py ^
-  --image inference/input/A1.png ^
-  --prompt "找出最大的建筑，然后把它右边离它最近的那栋分割出来" ^
-  --confirm-command
-```
-
-Supply exactly one `N`.
-
-Required:
-- initial parse remains `largest_to_right_of_to_nearest`;
-- user rejection exits through the existing user-abort behavior;
-- U-C1 detector must not load/run;
-- SAM2 must not run;
-- D-B1 must not run;
-- no new final mask/overlay may be generated by this N run.
-
-Do not change the existing error protocol.
-
-If the N run executes detector/core or creates final mask/overlay -> STOP.
-
----
-
-# 17. Phase O — Git diff safety gate
-
-Return to repository:
-
-```bat
-cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
 git status --short
 git diff --check
 git diff
 ```
 
-Allowed changed repository paths only:
-
-```text
-handoff/TO_DSH.md
-delivery_src/BuildReasonSeg_Advisor_RC1/environment.yml
-delivery_src/BuildReasonSeg_Advisor_RC1/requirements.txt
-delivery_src/BuildReasonSeg_Advisor_RC1/check_setup.py
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_setup_checker.py
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-docs/task8b2_r2_runtime_environment_closure.md
-handoff/FROM_DSH.md
-```
-
-No other repository path may change.
-
-Do not commit:
-- A1 image;
-- masks/overlays/diagnostics;
-- logs;
-- Conda environment;
-- installed packages;
-- model assets;
-- checkpoints.
-
-Any other repository change -> STOP.
+Any other repo path -> STOP.
 
 ---
 
-# 18. Phase P — Required audit report
+# 20. Phase P — Commit and push even on safe STOP
 
-Create:
+Stage allowed files individually. Never `git add .` or `git add -A`.
 
-```text
-docs/task8b2_r2_runtime_environment_closure.md
-```
-
-Required sections:
-
-## 1. Task
-`Task 8B.2-R2 — Close RC1 Runtime Dependency and Readiness Gap`
-
-## 2. ChatGPT Frozen Decision
-Record:
-- required Ultralytics = 8.4.164;
-- designated environment;
-- no algorithm changes;
-- same A1 continuation.
-
-## 3. Initial Runtime State
-Record:
-- Python;
-- executable;
-- pip;
-- torch;
-- CUDA;
-- GPU;
-- transformers;
-- numpy;
-- OpenCV;
-- scipy;
-- Ultralytics missing evidence;
-- old check_setup false-positive state if reproduced.
-
-## 4. pip Dry-run
-Record:
-- exact command;
-- packages proposed;
-- explicit statement that no protected core package replacement was proposed.
-
-## 5. Dependency Specification
-Record:
-- `environment.yml`: `ultralytics==8.4.164`;
-- `requirements.txt`: `ultralytics==8.4.164`;
-- no other dependency version changed.
-
-## 6. RC1-ENV-01 Fix
-Describe:
-- old problem;
-- new live import/version check;
-- missing-dependency behavior;
-- wrong-version behavior;
-- readiness result.
-
-## 7. Runtime vs Model Provenance
-Record actual live:
-- torch;
-- ultralytics;
-- transformers.
-
-Record metadata provenance separately.
-
-State explicitly that metadata is provenance, not proof of an installed package.
-
-## 8. Portability Wording
-Record new wording and state:
-- source/assets path portability verified;
-- Python/Conda runtime remains separately configured.
-
-## 9. Installation Before/After
-
-| package | before | after | changed? |
-|---|---|---|---|
-| torch | | | |
-| torchvision | | | |
-| transformers | | | |
-| numpy | | | |
-| OpenCV | | | |
-| scipy | | | |
-| ultralytics | missing | 8.4.164 | expected |
-
-## 10. Canonical/Delivery Sync
-Record:
-- manifest count = 135;
-- exact four pre-sync mismatches;
-- post-sync 135/135.
-
-## 11. Validation
-
-| Check | Result |
-|---|---|
-| dry-run safety gate | PASS/FAIL |
-| ultralytics import 8.4.164 | PASS/FAIL |
-| pip check | PASS/FAIL |
-| protected packages unchanged | PASS/FAIL |
-| missing-ultralytics regression | PASS/FAIL |
-| wrong-version regression | PASS/FAIL |
-| true check_setup READY | PASS/FAIL |
-| portability wording | PASS/FAIL |
-| canonical sync tests | PASS/FAIL |
-| external setup tests | PASS/FAIL |
-| external full suite | PASS/FAIL |
-| repository full suite | PASS/FAIL |
-| A1 Qwen parse | PASS/FAIL |
-| A1 Y-path full inference | PASS/FAIL |
-| A1 N-path early abort | PASS/FAIL |
-
-## 12. A1 Positive Path
-Record:
-- exact unchanged prompt;
-- parse;
-- detector reached;
-- Reference reached;
-- SAM2 reached;
-- D-B1 reached;
-- final status;
-- generated mask/overlay/diagnostics paths.
-
-Do not claim visual semantic correctness beyond what was actually inspected.
-This task is execution closure, not Demo-quality scoring.
-
-## 13. A1 Negative Path
-Record:
-- parse;
-- N rejection behavior;
-- detector/core not executed;
-- no new final mask/overlay.
-
-## 14. RC1 Final Environment State
-Use only:
-- `READY` if all R2 runtime gates pass;
-- `NOT READY` otherwise.
-
-## 15. Remaining Issues
-Only factual remaining issues.
-Do not propose a new algorithm.
-
-## 16. Scientific Scope
-Include:
-
-> Task 8B.2-R2 did not modify training, checkpoints, detector thresholds, tiling/merge policy, ProgramHead semantics, Qwen prompt template, Reference policy, SAM2, relation fields, D-B1, datasets, final-test results or scientific claims. It only closed the RC1 runtime dependency/readiness gap and continued the already-authorized A1 Demo smoke.
-
----
-
-# 19. Phase Q — Update handoff
-
-Update:
+For COMPLETE commit exactly:
 
 ```text
-handoff/FROM_DSH.md
+test(demo): add deterministic six-image interactive suite
 ```
 
-Preserve the existing required `ARTIFACT-FACTS` block verbatim.
-
-Below it write current engineering handoff:
-
-- Task = `8B.2-R2`;
-- branch;
-- starting HEAD;
-- Ultralytics runtime;
-- check_setup;
-- external sync;
-- external test suite;
-- repository test suite;
-- A1 parse;
-- A1 Y-path;
-- A1 N-path;
-- report path;
-- RC1 status;
-- next action:
+For PARTIAL/STOP after report/evidence exists commit exactly:
 
 ```text
-Awaiting ChatGPT audit. Do not start Task 8C or additional Demo images.
+docs(demo): record task8b3 execution stop
 ```
 
-Do not modify `handoff/PROJECT_STATE.md`.
-
----
-
-# 20. Phase R — Commit
-
-Run:
+Push current branch:
 
 ```bat
-git status --short
-git diff --check
-```
-
-Stage allowed files individually.
-
-Do not use:
-
-```text
-git add .
-git add -A
-```
-
-Verify:
-
-```bat
-git diff --cached --name-only
-```
-
-Commit exactly:
-
-```text
-fix(rc1): close runtime dependency readiness gap
-```
-
-After commit:
-
-```bat
-git status --short
-git show --stat --oneline HEAD
-```
-
-Working tree must be clean.
-
-If not clean -> STOP and do not push.
-
----
-
-# 21. Phase S — Push
-
-Push:
-
-```bat
-git push origin audit/task8b2-rc1-runtime-closure
+git push -u origin eval/task8b3-six-image-demo-suite
 ```
 
 No force push.
 
-Record:
-
-```bat
-git rev-parse HEAD
-git status --short
-```
+A safe PARTIAL/STOP must still be pushed so ChatGPT can audit it.
 
 ---
 
-# 22. Completion gate
+# 21. Completion rule
 
-Declare `TASK 8B.2-R2 COMPLETE` only if all are true:
+COMPLETE only if:
+- remote main reconciled to audited RC1;
+- deterministic driver + tests pass;
+- repo suite passes;
+- check_setup READY;
+- 6/6 inputs valid;
+- six cases attempted once in order;
+- no prompt retry/tuning;
+- Y/N obeyed frozen program comparison;
+- evidence/review pack/report/handoff produced;
+- no product code changed;
+- output-layout request recorded but not implemented;
+- commit/push succeed;
+- working tree clean;
+- DSH stops.
 
-1. correct branch/head used;
-2. pre-R2 environment exactly matched frozen state;
-3. pip dry-run passed protected-package gate;
-4. only `ultralytics==8.4.164` was intentionally added for the missing runtime dependency;
-5. protected core package versions remained unchanged;
-6. `pip check` passed;
-7. environment.yml exact pin is present;
-8. requirements.txt exact pin is present;
-9. check_setup performs a real Ultralytics import;
-10. missing Ultralytics -> NOT READY regression passes;
-11. wrong Ultralytics version -> NOT READY regression passes;
-12. live runtime/provenance distinction is explicit;
-13. portability wording no longer claims bundled runtime portability;
-14. source manifest remains exactly 135 and valid;
-15. external delivery final sync check is 135/135;
-16. `check_setup.py` reports true READY;
-17. external RC1 tests pass;
-18. repository tests pass;
-19. same A1 parse is exactly `largest_to_right_of_to_nearest`;
-20. A1 Y path reaches actual final SUCCESS with mask/overlay/diagnostics;
-21. A1 N path exits before detector/core and creates no final mask/overlay;
-22. no algorithm/research/checkpoint/final-test change occurred;
-23. report completed;
-24. handoff completed with ARTIFACT-FACTS preserved;
-25. exact commit created;
-26. push succeeded;
-27. working tree clean;
-28. DSH stops.
-
-If any item fails:
-
-```text
-TASK 8B.2-R2 PARTIAL
-```
-
-Do not enter Task 8C.
+Otherwise PARTIAL/STOP, but still report/FROM_DSH/commit/push when Git-safe.
 
 ---
 
-# 23. Final DSH reply
-
-Output only:
+# 22. Final DSH reply
 
 ```text
-TASK 8B.2-R2 COMPLETE / PARTIAL
+TASK 8B.3-R1 COMPLETE / PARTIAL / STOP / FAILED
 
 Branch:
-audit/task8b2-rc1-runtime-closure
+eval/task8b3-six-image-demo-suite
 
 Commit:
 <sha or NONE>
 
 Push:
-PASS / NOT DONE
+PASS / FAIL / NOT POSSIBLE
 
-Ultralytics:
-before = MISSING / other
-after  = 8.4.164 / other
+Remote main:
+<sha>
 
-Protected core packages unchanged:
-PASS / FAIL
-
-pip check:
+Driver:
 PASS / FAIL / NOT RUN
 
-Canonical manifest:
-135 / other
-
-External delivery sync:
-135/135 PASS / FAIL / NOT RUN
-
-check_setup:
-READY / NOT READY / NOT RUN
-
-Missing-Ultralytics regression:
-PASS / FAIL / NOT RUN
-
-Wrong-version regression:
-PASS / FAIL / NOT RUN
-
-External RC1 tests:
+Driver tests:
 <result>
 
 Repository tests:
 <result>
 
-A1 parse:
-largest_to_right_of_to_nearest / other / NOT RUN
+check_setup:
+READY / NOT READY / NOT RUN
 
-A1 Y-path:
-PASS / FAIL / NOT RUN
+Inputs:
+6/6 / other / NOT RUN
 
-A1 Y outputs:
-mask = <path or NONE>
-overlay = <path or NONE>
-diagnostics = <path or NONE>
+A1:
+language=<status>
+runtime=<status>
 
-A1 N-path:
-PASS / FAIL / NOT RUN
+A2:
+language=<status>
+runtime=<status>
 
-RC1-ENV-01:
-FIXED / NOT FIXED
+A3:
+language=<status>
+runtime=<status>
 
-RC1:
-READY / NOT READY
+A4:
+language=<status>
+runtime=<status>
+
+B1:
+language=<status>
+runtime=<status>
+
+B2:
+language=<status>
+runtime=<status>
+
+Review pack:
+<path or NOT CREATED>
 
 Report:
-docs/task8b2_r2_runtime_environment_closure.md / NOT CREATED
+docs/task8b3_six_image_demo_suite.md
 
 Handoff:
-handoff/FROM_DSH.md / NOT UPDATED
+handoff/FROM_DSH.md
+
+Output layout proposal:
+ACCEPTED / DEFERRED TO SEPARATE DELIVERY ITERATION
 
 STOP reason:
 <none or exact reason>
 
-等待 ChatGPT 审核；不得进入 Task 8C、A2/A3/A4/B1/B2 或任何新研发。
+等待 ChatGPT 审核；不得进入 Assisted Mode、Task 8B.4、Task 8C 或任何新研发。
 ```
 
 Then stop.
