@@ -17,22 +17,21 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-R4A Report
+# FROM_DSH — Task 8B.3-R4A.1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in
 git history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-R4A` |
+| Task | `8B.3-R4A.1` |
 | Status | **COMPLETE** |
 | Branch | `eval/task8b3-six-image-demo-suite` |
-| Starting HEAD | `2562c3bc53b2600098824e93572cca291d334e33` |
-| Main / origin-main | `c45ecbec7fd293c454ccced22310db32c1542be4` / `c45ecbec7fd293c454ccced22310db32c1542be4` |
-| Harness corrections | PASS (A3 literal oracle; `changed_outputs(before, after)`; repeated-prompt test; AST test on `_reader_thread` / `_run_interactive_process` only) |
-| Driver tests | **20 passed** (`pytest tests/test_task8b3_interactive_suite.py -q`) |
-| Repository tests | **1554 passed, 1 failed** first run → failure was the `Watt` reference dropped from this handoff by the R3 rewrite; restored in this same allowed file → affected test PASS |
-| Formal suite | NOT RUN BY DESIGN (§8 of this task forbids it; a separate ChatGPT task will issue the single formal run) |
+| Starting HEAD | `d4b7d36c68be7cee6970b9f3d58cc1cd4f47caf1` |
+| Harness code | UNCHANGED |
+| Harness tests | UNCHANGED |
+| Repository tests | **1555 passed** (`pytest tests/ -q`, single run, exit 0) |
+| Formal suite | NOT RUN BY DESIGN |
 | A1–B2 | NOT RUN |
 | Review pack | NOT CREATED / unchanged |
 | Output-layout proposal | ACCEPTED / DEFERRED TO TASK 8B.4 |
@@ -40,11 +39,9 @@ git history._
 | STOP reason | none |
 | Next action | Awaiting ChatGPT audit. |
 
-Watt was not needed for Task 8B.3-R4A (no downloads, no transfers); the pre-existing Watt instance, when present,
+Watt was not needed for Task 8B.3-R4A.1 (no downloads, no transfers); the pre-existing Watt instance, when present,
 remains transport-only and is not owned by this project.
 
-No RC1 product/runtime source, `delivery_src/**`, external delivery source/config, `predict.py`, ProgramHead, Qwen
-suggestion, Validator, detector, Reference, SAM2, D-B1, threshold, config, checkpoint or model asset was modified;
-the six frozen prompts were never changed or retried; no Assisted Mode, `--reference-id` or `--inspect-proposals`
-was used; no real six-image suite was executed; no training, download, package installation or final-test access
-occurred.
+No harness, test, RC1 canonical/product/delivery source, ProgramHead, Qwen suggestion, detector, Reference, SAM2,
+D-B1, threshold, config, checkpoint or model asset was modified; no real predict, no six-image suite and no review
+pack action occurred; no Assisted Mode and no package installation.

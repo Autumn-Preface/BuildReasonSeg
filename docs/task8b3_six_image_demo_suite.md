@@ -366,3 +366,28 @@ access occurred.
 ### R4A.9 Next action
 
 Awaiting ChatGPT audit.
+
+
+## Task 8B.3-R4A.1 — Full Repository Gate Confirmation
+
+Single verification task: rerun the complete repository suite after the allowed `handoff/FROM_DSH.md` Watt wording
+repair of Task 8B.3-R4A. Nothing else was executed or changed.
+
+| item | value |
+|---|---|
+| starting HEAD | `d4b7d36c68be7cee6970b9f3d58cc1cd4f47caf1` |
+| running branch | `eval/task8b3-six-image-demo-suite` |
+| command | `ENV_PYTHON -m pytest tests/ -q` (run exactly once) |
+| exact result | **1555 passed**, exit code 0 (~11.6 min) |
+| harness code | UNCHANGED (`scripts/task8b3_interactive_suite.py` untouched) |
+| harness tests | UNCHANGED (`tests/test_task8b3_interactive_suite.py` untouched) |
+| other tests / product / delivery / canonical RC1 | UNCHANGED |
+| formal six-image suite | NOT RUN BY DESIGN |
+| A1–B2 | NOT RUN |
+| review pack | NOT CREATED / unchanged |
+| output-layout proposal | ACCEPTED / DEFERRED TO TASK 8B.4 |
+
+The Watt handoff invariant (`tests/test_task6h_counterfactual_grounding.py`) that failed in R4A before the repair now
+passes as part of this green suite; the previously skipped test set is unchanged.
+
+Next action: Awaiting ChatGPT audit.
