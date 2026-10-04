@@ -17,37 +17,34 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D10-R3 Report
+# FROM_DSH — Task 8B.3-P1D11A Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D10-R3` |
-| Status | **COMPLETE** (canonical raster resolution + identity check) |
+| Task | `8B.3-P1D11A` |
+| Status | **STOP** (pre-edit canonical manifest gate failed) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `cbde8755f1cae0593274746f128760e13ebe86a1` |
-| Model/test execution / functional modification | NONE / NO |
-| Original root | `C:\D\resources\Satellite dataset Ⅱ (East Asia)` |
-| Canonical tile index | `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\whu_native_vector\v1.0\tiles\index.jsonl` |
-| Tile index identity | MATCH |
-| Right raster | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1010.tif` \| `1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2` |
-| Left raster | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1003.tif` \| `eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38` |
-| Above raster | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1008.tif` \| `0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd` |
-| Below raster | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1009.tif` \| `c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7` |
-| All four raster dimensions | ['512x512'] |
-| v0.2 identity cross-check | ALL MATCH |
-| R2 §20.8 raster gap | RESOLVED |
-| Locked candidates | UNCHANGED (4; no substitution) |
-| Primary resolution / PROP-01 status | `PROP01_RESOLUTION_DEMO_POLICY` / `PROP01_OPEN_ENGINEERING_DEFECT` (unchanged) |
-| Scientific freeze preserved | YES |
-| Next gate | `PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION` (recommended, not executed) |
-| Report | `docs/task8b3_p1d10_prop01_resolution_decision.md` |
-| STOP reason | none |
-| Next action | Awaiting ChatGPT audit; locked candidates must not be run or replaced. |
+| Starting HEAD | `d414c33762968ac4e6ea441f334082fc43adc0d0` |
+| Pre-edit canonical manifest | **FAIL** — 4 of 135 entries stale |
+| Post-edit canonical manifest | NOT RUN (no edits performed) |
+| Manifest entry count | 135 |
+| Stale entries | `buildreasonseg/runtime/detector.py`, `buildreasonseg/runtime/core.py`, `buildreasonseg/runtime/outputs.py`, `tests/test_task8b_runtime.py` |
+| Canonical policy doc | NOT CREATED |
+| Canonical README policy | NOT UPDATED |
+| Canonical model card policy | NOT UPDATED |
+| Supported-domain policy | NOT IMPLEMENTED (blocked) |
+| A2 policy status | unchanged (`DOCUMENTED_PERSISTENT_NON_DETECTION` as recorded in the P1D10-R1 report) |
+| Model runs / candidate runs / external write sync | NONE / NONE / NONE |
+| Frozen metrics / architecture / locked candidates | UNCHANGED |
+| PROP-01 status | OPEN (not closed) |
+| Report | `docs/task8b3_p1d11a_policy_implementation.md` |
+| STOP reason | the mandated pre-edit manifest self-check is not 135/135 (four stale runtime/test entries); the task book forbids policy/manifest edits in that state and forbids repairing unrelated entries here |
+| Next action | Awaiting ChatGPT audit; canonical manifest reconciliation needs a new task book |
 
-Watt was not needed for Task 8B.3-P1D10-R3 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D11A (no downloads, no transfers).
 
-No model, test, training or inference execution occurred; the rasters were read and hashed only, and no image was
-copied into RC1.
+Only this report and `handoff/FROM_DSH.md` changed; no canonical document, manifest entry, model or candidate was
+touched.
