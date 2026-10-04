@@ -17,33 +17,35 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D12 Report
+# FROM_DSH — Task 8B.3-P1D12-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D12` |
-| Status | **COMPLETE** (locked-candidate proposal-only gate) |
+| Task | `8B.3-P1D12-R1` |
+| Status | **COMPLETE** (read-only evidence closure) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `6651c4bf89663e5fff3e7854c9e2115d084ae003` |
-| Locked candidate status | FINAL_METADATA_LOCK (unchanged) |
-| Locked candidate runtime status | RUN (4 of 4, once each, order right → left → above → below) |
-| Per-candidate raw/merged/eligible | right=6/6/4, left=66/53/42, above=9/9/4, below=7/6/3 |
-| Exit codes | 0, 0, 0, 0 |
-| Diagnostics produced | `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\{1010,1003,1008,1009}` (authorised inspect-mode output) |
-| Internal consistency | status SUCCESS · merged == proposals.count · tile_count 1 · tile_size 512 · overlap 128 (all four) |
-| Pre-existing candidate diagnostics | NONE |
-| Core chain (Qwen / SAM2 / D-B1 / reference selection / GT / visual) | NOT EXECUTED |
-| Candidate replacement | NONE |
+| Starting HEAD | `75e01defde3ad6e9f8a247481028536e68ef4ee4` |
+| Candidate / predict / detector / model executions | NONE |
+| External sync check | 135/135 PASS (Git canonical byte comparison) |
+| External setup | READY |
+| Locked raster SHA identities | 4/4 PASS (1010 `1688306c…`, 1003 `eea4edd0…`, 1008 `0efe8bc2…`, 1009 `c22134e6…`) |
+| Locked raster dimensions | 4/4 512×512 |
+| Locked raster RGB readability | 4/4 PASS (RGB, TIFF) |
+| Detector constants | MATCH (512 / 128 / STRIDE=TILE_SIZE-TILE_OVERLAP / 640 / 0.05 / 300 / 0.50 / 0.20) |
+| Existing diagnostics file set | 4/4 PASS (exactly `global_proposals.png`, `parsed_program.json`, `prompt.txt`, `proposals.json`, `result.json`) |
+| Inspect-only proof | PASS — no sam2/relation/d-b1/decoder/language/reference/qwen field and no mask/overlay artifact in any candidate diagnostics |
+| eligible_largest recomputation | 4/4 match P1D12 values (right 4 · left 42 · above 4 · below 3) |
+| Locked candidate identities | UNCHANGED |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| Outcome | **PROP01_LOCKED_DEMO_PROPOSAL_GATE_PASS** |
+| Outcome | **PROP01_LOCKED_DEMO_PROPOSAL_GATE_EVIDENCE_CLOSED** |
 | Next gate (recommended, not executed) | `NEXT = REF01_LOCKED_DEMO_REFERENCE_FORENSICS` |
-| Report | `docs/task8b3_p1d12_locked_demo_proposal_gate.md` |
+| Report | `docs/task8b3_p1d12_r1_evidence_closure.md` |
 | Next action | Awaiting ChatGPT audit; the next gate needs its own task book |
 
-Watt was not needed for Task 8B.3-P1D12 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D12-R1 (no downloads, no transfers).
 
-Only the authorised `--inspect-proposals` diagnostics were created under the external delivery; the canonical tree, the
-external source/config files, the locked candidates and all model assets were untouched.
+No model, detector or candidate was executed and no delivery file was modified; only this report and the handoff
+changed.
