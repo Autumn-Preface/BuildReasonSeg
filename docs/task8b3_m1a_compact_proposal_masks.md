@@ -221,3 +221,30 @@ Detector parameters (TILE_SIZE/overlap/stride/IMGSZ/CONF/MAX_DET), `DUPLICATE_IO
 ordering, Reference eligibility/`MERGE_BBOX_EXTENT_RATIO_MAX`/selection, reasoning context, ProgramHead, SAM2, D-B1
 and post-inference SUCCESS validity are unchanged; PROP-01, REF-01 and MASK-01 are untouched. No test file,
 `source_manifest.json`, external delivery, pytest run, predict run or six-image Demo was involved.
+
+
+---
+
+## Task 8B.3-M1A.2A-R1 — core reference crop three-way intersection fix
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `10d36117993f128c9a3d6bd2bea114dc63120121` |
+| files changed | `buildreasonseg/runtime/core.py` only (+ report/handoff) |
+| valid region | **original image ∩ 512 reasoning context ∩ `proposal.global_bbox`** (inclusive bbox) |
+| py_compile gate | PASS (`core.py`) |
+| legacy-equivalence smokes | 3 synthetic, model-free (context at proposal top-left; proposal clipped top-left; proposal clipped bottom-right) |
+| `detector.py` / `outputs.py` / tests / `source_manifest.json` / external delivery | NOT modified |
+| real predict / six-image Demo | NOT RUN |
+
+Fix: `reference_mask_from_proposal()` previously intersected only the image and the context, so a context window
+that extended past the proposal bbox produced negative crop offsets (and slices beyond `mask_crop`). The valid
+window is now the three-way intersection, `valid_top = max(0, context.top, top)`,
+`valid_left = max(0, context.left, left)`, `valid_bottom = min(image_height, context.top + CONTEXT_SIZE, bottom + 1)`,
+`valid_right = min(image_width, context.left + CONTEXT_SIZE, right + 1)`, with the crop sliced by
+`valid_* - bbox` offsets and pasted at `valid_* - context` offsets. No other semantic changed.
+
+Legacy equivalence: for all three geometries the new function returns arrays identical to the pre-refactor
+full-frame computation (`np.array_equal` true), which is the expected behaviour wherever the legacy result was
+already inside the bbox; the fix additionally removes the out-of-bbox offsets that the legacy code only avoided
+incidentally.
