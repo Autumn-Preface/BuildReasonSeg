@@ -1,51 +1,37 @@
-# TO_DSH — Task 8B.3-P1D4: Controlled A2 Subthreshold Tile Probe
+# TO_DSH — Task 8B.3-P1D5: Detector Provenance and A2 Domain-Gap Forensics
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `9f260ab035b5072d44b1979042fbcc63f7c458b8`
+> Required starting HEAD: `15a90ec11ad66c8f365284bf53eb320661a1e73f`
 > External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
 # 0. Purpose
 
-P1D2 established on the real tiled geometry:
+P1D1–P1D4 have excluded these explanations for A2 zero proposals:
 
 ```text
-A2 = 1024×1024
-9 × 512 tiles
-conf = 0.05
-all 9 tiles boxes_count = 0
-outcome = PROP01_MODEL_ZERO_AT_FROZEN_CONF_CONFIRMED
+NMS warning erasing returned detections             = EXCLUDED
+wrapper masks=None hiding returned boxes             = EXCLUDED by direct P1D2 measurement
+512-px tiling/context loss at conf=0.05              = EXCLUDED by P1D3
+product threshold merely being slightly too high     = EXCLUDED down to conf=0.001
 ```
 
-P1D3 established that full-image context does not rescue the detector:
+Frozen evidence:
 
 ```text
-full 1024×1024 A2
-conf = 0.05
-boxes_count = 0
-outcome = PROP01_GLOBAL_ZERO_AT_FROZEN_CONF_CONFIRMED
+A2 = 1024×1024 RGB
+P1D2: 9 tiled calls @ conf=0.05 → 9/9 boxes_count=0
+P1D3: one full-frame call @ conf=0.05 → boxes_count=0
+P1D4: 9 tiled calls @ conf=0.001 → 9/9 boxes_count=0
+P1D4 outcome = PROP01_NO_MEANINGFUL_SUBTHRESHOLD_SIGNAL
 ```
 
-Therefore the next unresolved causal question is:
+Before any detector replacement, retraining, fine-tuning, ensemble, preprocessing rescue, or fallback proposal source
+is authorized, establish the provenance and validated scope of the actual RC1 `detector.pt`.
 
-```text
-Does A2 contain detector responses below the frozen 0.05 threshold?
-```
-
-This is a diagnostic task only.
-
-Change exactly one detector variable relative to P1D2:
-
-```text
-conf: 0.05 → 0.001
-```
-
-Return to the real 9-tile geometry.
-
-Do NOT change product/runtime configuration.
-Do NOT fix PROP-01.
+This task is READ-ONLY FORENSICS. No detector/model inference is allowed.
 
 # 1. Git gate
 
@@ -53,10 +39,10 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 9f260ab035b5072d44b1979042fbcc63f7c458b8
+HEAD = 15a90ec11ad66c8f365284bf53eb320661a1e73f
 ```
 
-Allowed initial tracked tree:
+Allowed tracked tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
@@ -65,425 +51,384 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- edit detector/runtime source;
-- edit tests/manifests;
-- edit external delivery;
-- edit model assets;
-- change checkpoint;
-- change tile size/overlap/stride;
-- change `imgsz=640`;
-- change `max_det=300`;
-- change NMS IoU/config;
-- change `retina_masks=False`;
-- change device from `cpu`;
-- enable TTA;
-- run full-frame A2;
-- run normal `predict.py`;
-- run `--inspect-proposals`;
-- call `DetectorRuntime.detect_tile()` after the probe;
-- call `DetectorRuntime.detect_global()`;
+- run `predict.py` or `--inspect-proposals`;
+- call YOLO/model forward/predict;
 - run Qwen/SAM2/D-B1;
-- run A1/A3/A4/B1/B2;
+- run A1/A2/A3/A4/B1/B2 inference;
 - run pytest/check_setup;
-- perform more than one diagnostic process;
-- perform more than one `model.predict()` per tile;
-- run another confidence value;
-- save this threshold into product config;
-- fix PROP-01;
-- enter REF-01 / MASK-01 / Task 8B.4 / 8C.
+- lower/change thresholds;
+- alter detector runtime/config/checkpoint/model package;
+- train/fine-tune/resume/export/download a model;
+- replace `detector.pt`;
+- copy an alternate checkpoint into the external package;
+- modify tests/manifests/external delivery;
+- implement fallback proposal logic;
+- enter REF-01/MASK-01/Task 8B.4/8C;
+- update main;
+- force push.
+
+Checkpoint METADATA inspection is allowed only if it performs no forward/inference/training/export and writes nothing
+back to the checkpoint.
 
 # 3. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_p1d4_a2_subthreshold_tile_probe.md
+docs/task8b3_p1d5_detector_provenance_domain_gap.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-A temporary probe script/transcript may exist outside the repository or under external runtime logs.
-Do not commit it.
+No functional file may change.
 
-# 4. Preflight integrity
+# 4. Establish exact active detector identity
 
-Before model execution verify:
-
-```text
-external manifest = 135/135 PASS
-external source_manifest byte-identical to canonical = YES
-```
-
-Verify A2:
+For:
 
 ```text
-path = inference/input/A2.png
-dimensions = 1024×1024
-mode = RGB
-sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\buildreasonseg_advisor\detector.pt
 ```
 
-If mismatch:
-- do not run model;
-- STOP.
-
-# 5. Frozen geometry/settings
-
-Use the synchronized external runtime's existing:
+record:
 
 ```text
-TILE_SIZE = 512
-TILE_OVERLAP = 128
-TILE_STRIDE = 384
+exists
+file size
+SHA256
 ```
 
-Require the A2 tile plan:
+Find corresponding canonical/source model reference, manifest entry, model-package metadata, model card, or build record.
+
+Record every authoritative source path that identifies:
+- model family/version;
+- task type;
+- class names/count;
+- checkpoint origin;
+- expected hash/size if recorded.
+
+Do not infer provenance from filename alone.
+
+# 5. Recover U-C1 detector decision history
+
+Search repository/history and local workspace artifacts for:
 
 ```text
-9 tiles
-tops  = [0, 384, 512]
-lefts = [0, 384, 512]
+U-C1
+YOLO26m
+YOLO26m-seg
+detector.pt
+proposal detector
+proposal quality
+proposal baseline
+WHU
+WHU-EA
+WHU-EA-NativeVector
+checkpoint selection
+model selection
+proposal recall
+proposal coverage
 ```
 
-Use the same external checkpoint as P1D2/P1D3.
+At minimum inspect relevant `docs/`, `handoff/`, `evaluation/`, `baseline/`, model-package metadata/configs/manifests,
+and available git history/prior task reports.
+
+Recover, if supported:
+
+```text
+task/commit where U-C1 was selected
+candidate models compared
+selection metrics
+validation split/domain
+detector evaluation result
+training/fine-tuning dataset
+training image/tile size
+class definition
+pretrained initialization
+epoch/checkpoint selection
+whether active external detector.pt is byte-identical to selected checkpoint
+```
+
+Unsupported items = `NOT ESTABLISHED`. Do not reconstruct missing facts from memory.
+
+# 6. Separate baseline/yolo_whu from active detector
+
+Inspect `baseline/yolo_whu/` README, args/config/manifest and checkpoint identity/history evidence.
+
+Classify relation to active `detector.pt` exactly as:
+
+```text
+SAME_CHECKPOINT
+DIRECT_ANCESTOR_OR_FINETUNE_SOURCE
+SEPARATE_HISTORICAL_BASELINE
+RELATION_NOT_ESTABLISHED
+```
+
+Require hash/metadata/history evidence for the first two.
+
+# 7. Read-only checkpoint metadata inspection
+
+Only if docs/history do not establish needed fields, inspect active checkpoint metadata without inference.
+
+Allowed fields:
+- embedded model YAML/name;
+- `names`;
+- task;
+- train args;
+- epoch/date;
+- source/pretrained metadata.
+
+Do NOT call `.predict()`, model forward, train/resume/export, or save checkpoint.
+
+Record method and confirm:
+
+```text
+forward/inference calls = 0
+checkpoint writes = 0
+```
+
+If safe extraction is uncertain, SKIP and record `NOT ESTABLISHED`.
+
+# 8. Recover A2 provenance and input-domain facts
+
+Search Demo/R4B artifacts and file metadata for A2 provenance.
+
+Record if supported:
+
+```text
+source/origin
+whether from WHU / WHU-EA / another aerial dataset / external user-selected image
+GSD/spatial resolution
+sensor/source
+bit depth
+original dimensions before demo preparation
+whether resized/cropped/compressed
+```
+
+Unsupported fields = `NOT ESTABLISHED`.
+
+Record directly measurable frozen A2 facts:
+
+```text
+1024×1024
+RGB
+file size
+SHA256
+dtype / bit depth
+per-channel min/max/mean/std
+fraction of exactly 0 and 255 pixels per channel
+```
+
+These statistics are diagnostic facts only; do not call them domain-gap proof.
+
+# 9. Training-domain vs A2 comparison
+
+Build a table:
+
+```text
+property                         active detector training/validation domain    A2
+dataset/source
+task/class definition
+native image size
+training crop/tile size
+RGB/bit depth
+known spatial resolution/GSD
+known augmentation/resizing
+building morphology/context
+```
+
+Unavailable fields = `NOT ESTABLISHED`.
+For morphology/context use only documented descriptions; do not invent visual interpretation.
+
+# 10. Search for existing alternate detector candidates
+
+Search workspace/repository/external-support directories for detector checkpoints/model packages already created or
+evaluated earlier in this project. Do NOT download or run them.
+
+For each plausible candidate record:
+
+```text
+path
+file size
+SHA256
+model family/task if documented
+origin task/report
+validation evidence
+why it is/is not a legitimate already-validated candidate
+```
+
+Exclude arbitrary unvalidated snapshots, optimizer checkpoints without evaluation, and incompatible tasks/classes.
+
+Classify availability:
+
+```text
+VALIDATED_ALTERNATE_AVAILABLE
+NO_VALIDATED_ALTERNATE_FOUND
+ALTERNATE_STATUS_NOT_ESTABLISHED
+```
+
+# 11. Scientific-freeze compatibility audit
+
+From Task7/RC1 documentation classify detector change impact exactly as:
+
+```text
+DETECTOR_CHANGE_ENGINEERING_ONLY_IF_REVALIDATED
+DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
+SCIENTIFIC_FREEZE_IMPACT_NOT_ESTABLISHED
+```
+
+Do NOT actually change detector.
+
+# 12. Primary diagnosis classification
+
+Choose exactly ONE:
+
+`PROP01_DETECTOR_DOMAIN_GAP_STRONGLY_SUPPORTED`
+- only if detector training/validation domain and A2 source/domain are established and materially mismatched.
+
+`PROP01_SINGLE_IMAGE_BLINDSPOT_WITHIN_EXPECTED_DOMAIN`
+- only if A2 is established to belong to the expected detector domain and still fails through P1D4.
+
+`PROP01_CHECKPOINT_PROVENANCE_INCOMPLETE`
+- if active checkpoint training/selection provenance cannot be established sufficiently.
+
+`PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE`
+- if checkpoint provenance exists but A2 provenance/domain is too incomplete to distinguish mismatch from in-domain blind spot.
+
+Do not choose a stronger classification than evidence supports.
+
+# 13. Next-gate decision — recommend only
 
 Use exactly:
 
+If `VALIDATED_ALTERNATE_AVAILABLE` and scientifically compatible:
 ```text
-imgsz = 640
-conf = 0.001        ← the only diagnostic change
-max_det = 300
-verbose = False
-retina_masks = False
-device = cpu
-TTA = disabled
+NEXT = CONTROLLED_ALTERNATE_DETECTOR_A2_PROBE
 ```
 
-# 6. One diagnostic process
-
-Create one temporary script outside the repo.
-
-Run the script exactly once.
-
-Inside the one process:
-
-1. load A2 RGB once;
-2. use the existing external `plan_tiles` and `extract_tile`;
-3. load the existing detector checkpoint once;
-4. obtain the normal 9 tile windows;
-5. for each tile call the underlying model exactly once:
-
-```python
-model.predict(
-    source=tile_rgb,
-    imgsz=640,
-    conf=0.001,
-    max_det=300,
-    verbose=False,
-    retina_masks=False,
-    device="cpu",
-)
-```
-
-Total detector calls must be exactly:
-
+Else if `PROP01_DETECTOR_DOMAIN_GAP_STRONGLY_SUPPORTED`:
 ```text
-9
+NEXT = DETECTOR_ADAPTATION_DESIGN
 ```
 
-No rerun.
-
-# 7. Required per-tile capture
-
-For each tile print markers:
-
+Else if `PROP01_SINGLE_IMAGE_BLINDSPOT_WITHIN_EXPECTED_DOMAIN`:
 ```text
-BEGIN_TILE <source_tile_id>
-...
-END_TILE <source_tile_id>
+NEXT = DETECTOR_ROBUSTNESS_DECISION
 ```
 
-Record:
-
+Else if `PROP01_CHECKPOINT_PROVENANCE_INCOMPLETE`:
 ```text
-results_len
-boxes_is_none
-boxes_count
-masks_is_none
-masks_count
-wrapper_equivalent_count
-boxes_conf_min
-boxes_conf_max
-boxes_conf_top10
+NEXT = CHECKPOINT_PROVENANCE_RECOVERY
 ```
 
-Also for up to the top 10 boxes by confidence record:
-
+Else:
 ```text
-rank
-confidence
-xyxy
-mask_area (if corresponding mask exists)
+NEXT = DOMAIN_EVIDENCE_RECOVERY
 ```
 
-Do not judge semantic quality.
+Do NOT execute the next gate.
 
-Do not apply a second model threshold.
-
-# 8. Derive threshold counts WITHOUT rerunning inference
-
-From each tile's returned box confidences from the `conf=0.001` call, compute counts at:
-
-```text
->= 0.001
->= 0.005
->= 0.010
->= 0.020
->= 0.030
->= 0.040
->= 0.050
-```
-
-This is arithmetic on the single returned result only.
-
-Do NOT call the model again.
-
-Aggregate across all 9 tiles:
-
-```text
-total_boxes_at_0.001
-total_boxes_at_0.005
-total_boxes_at_0.010
-total_boxes_at_0.020
-total_boxes_at_0.030
-total_boxes_at_0.040
-total_boxes_at_0.050
-global_max_confidence
-global_top20_confidences
-tiles_with_boxes
-tiles_with_masks
-sum_masks_count
-NMS warning count
-NMS warning tile ids
-```
-
-Important:
-`total_boxes_at_*` are post-NMS returned boxes from the one low-conf call, filtered arithmetically afterward.
-
-# 9. Outcome classification
-
-Choose exactly ONE.
-
-## A — `PROP01_SUBTHRESHOLD_SIGNAL_CONFIRMED`
-
-Require:
-
-```text
-total_boxes_at_0.001 > 0
-global_max_confidence < 0.05
-```
-
-Interpretation:
-
-```text
-A2 has post-NMS detector responses below the product threshold;
-0.05 is causally involved in the zero-proposal outcome.
-```
-
-Do NOT call those responses valid buildings yet.
-
-## B — `PROP01_NO_MEANINGFUL_SUBTHRESHOLD_SIGNAL`
-
-Require:
-
-```text
-total_boxes_at_0.001 = 0
-```
-
-Interpretation:
-even at diagnostic conf=0.001, the frozen detector returns no post-NMS boxes on all 9 tiles.
-
-## C — `PROP01_FROZEN_THRESHOLD_RESULT_INCONSISTENT`
-
-If any returned confidence is:
-
-```text
->= 0.05
-```
-
-despite P1D2 having all-zero boxes at `conf=0.05` under the same checkpoint/geometry/device.
-
-Do not explain away the inconsistency.
-Record it and STOP after documentation.
-
-## D — `PROP01_SUBTHRESHOLD_DIAGNOSTIC_INCONCLUSIVE`
-
-For runtime errors, missing result structure, or any state that cannot satisfy A/B/C.
-
-# 10. Next-gate recommendation — DO NOT EXECUTE
-
-Choose exactly one based on outcome.
-
-If A:
-
-```text
-NEXT = SUBTHRESHOLD_CANDIDATE_QUALITY_AUDIT
-```
-
-Purpose of future task:
-determine whether the low-confidence masks correspond to real buildings and whether a generic zero-proposal rescue can
-be designed without globally lowering the product threshold.
-
-If B:
-
-```text
-NEXT = DETECTOR_DOMAIN_GAP_DECISION
-```
-
-Purpose:
-decide whether PROP-01 requires alternate detector/model-level intervention rather than threshold logic.
-
-If C:
-
-```text
-NEXT = DETECTOR_REPRODUCIBILITY_FORENSICS
-```
-
-If D:
-
-```text
-NEXT = DIAGNOSTIC_RECOVERY_REQUIRED
-```
-
-Do not execute the recommendation.
-
-# 11. Post-run integrity
-
-After the one 9-tile process verify:
-
-```text
-external manifest = 135/135 PASS
-external source_manifest byte-identical = YES
-```
-
-No second model run.
-
-# 12. Report
+# 14. Report
 
 Create:
 
 ```text
-docs/task8b3_p1d4_a2_subthreshold_tile_probe.md
+docs/task8b3_p1d5_detector_provenance_domain_gap.md
 ```
 
 Required sections:
-
-1. task/scope/starting HEAD
-2. P1D2 and P1D3 frozen facts
-3. preflight integrity
-4. A2 identity
-5. exact settings and single changed variable
-6. process count = 1
-7. model.predict calls = 9
-8. 9-row per-tile table
-9. top box confidence/bbox/mask-area evidence
-10. derived threshold-count table
-11. aggregate facts
-12. NMS warning evidence
-13. exact outcome enum
-14. causal interpretation with explicit limits
-15. next gate recommendation
-16. post-run integrity
-17. functional modifications = NO
+1. scope/starting HEAD
+2. P1D1–P1D4 frozen evidence
+3. active detector identity
+4. active model family/task/classes
+5. U-C1 selection history
+6. training/fine-tuning provenance
+7. validation/selection evidence
+8. baseline/yolo_whu relationship
+9. checkpoint metadata method/evidence
+10. A2 provenance and measurable facts
+11. training-domain vs A2 comparison
+12. alternate detector candidates
+13. alternate availability enum
+14. scientific-freeze impact enum
+15. primary diagnosis enum
+16. evidence gaps
+17. exact next gate
 18. `RC1-DEMO-PROP-01 = OPEN`
-19. MEM-01 CLOSED
+19. `MEM-01 = CLOSED`
 20. REF-01/MASK-01 OPEN untouched
-21. no product threshold change.
+21. model inference/training = NONE
+22. functional modifications = NONE.
 
-# 13. FROM_DSH
+# 15. FROM_DSH
 
-Preserve ARTIFACT-FACTS exactly.
-UTF-8 without BOM.
+Preserve ARTIFACT-FACTS exactly. UTF-8 without BOM.
 
 Required:
 
 ```text
-Task: 8B.3-P1D4
+Task: 8B.3-P1D5
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 9f260ab035b5072d44b1979042fbcc63f7c458b8
+Starting HEAD: 15a90ec11ad66c8f365284bf53eb320661a1e73f
+Model inference/training: NONE
 Functional files modified: NO
-Diagnostic process invocation count: 1 / 0
-Detector model.predict call count: 9 / other
-A2 dimensions/hash: 1024x1024 / MATCH
-Geometry: 9 x 512 tiles, overlap 128, stride 384
-Device: cpu
-imgsz/max_det/retina_masks: 640 / 300 / False
-Diagnostic conf: 0.001
-Product conf modified: NO
-total_boxes_at_0.001: <n>
-total_boxes_at_0.005: <n>
-total_boxes_at_0.010: <n>
-total_boxes_at_0.020: <n>
-total_boxes_at_0.030: <n>
-total_boxes_at_0.040: <n>
-total_boxes_at_0.050: <n>
-global_max_confidence: <value / NONE>
-tiles_with_boxes: <n>
-tiles_with_masks: <n>
-sum_masks_count: <n>
-NMS warning count: <n>
-Outcome: <one enum>
-Next gate: <one enum>
-Pre-run external manifest: 135/135 PASS / FAIL
-Post-run external manifest: 135/135 PASS / FAIL / NOT RUN
-source_manifest byte-identical: YES / NO
+Active detector SHA256: <sha>
+Active detector family/task: <value / NOT ESTABLISHED>
+Training/fine-tuning dataset: <value / NOT ESTABLISHED>
+U-C1 selection evidence: ESTABLISHED / PARTIAL / NOT ESTABLISHED
+baseline/yolo_whu relation: <enum>
+A2 source/domain: <value / NOT ESTABLISHED>
+Validated alternate candidate: <enum>
+Scientific-freeze impact: <enum>
+Primary diagnosis: <enum>
+Next gate: <enum>
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
-Report: docs/task8b3_p1d4_a2_subthreshold_tile_probe.md
-Next action: Awaiting ChatGPT audit; no fix authorized.
+Report: docs/task8b3_p1d5_detector_provenance_domain_gap.md
+Next action: Awaiting ChatGPT audit; no detector change authorized.
 ```
 
-# 14. Commit / push
+# 16. Commit / push
 
 If COMPLETE:
 
 ```text
-test(rc1): probe a2 subthreshold detector signal
+docs(rc1): audit detector provenance for a2
 ```
 
-If STOP/FAILED:
+If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record a2 subthreshold probe stop
+docs(rc1): record detector provenance forensic stop
 ```
 
 Push current branch normally, no force.
 
-# 15. COMPLETE definition
+# 17. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- one diagnostic process;
-- exactly 9 detector calls, one per normal tile;
-- only changed detector variable is diagnostic conf=0.001;
-- no product threshold/config change;
-- no second threshold inference;
-- confidence distribution and derived counts recorded;
-- exact outcome enum chosen;
-- next gate recommended but NOT executed;
-- post-run manifest intact;
-- no functional code/test/manifest change;
-- report/handoff committed and pushed;
+- no inference/training/test execution;
+- no functional/external modification;
+- active detector identity/hash recorded;
+- provenance searched exhaustively in available local evidence;
+- baseline/yolo_whu relation classified without assumption;
+- A2 provenance searched and unknowns retained;
+- validated alternate candidates audited;
+- scientific-freeze impact classified;
+- exactly one primary diagnosis selected;
+- exactly one next gate recommended but NOT executed;
+- report/FROM_DSH committed/pushed;
 - clean tracked tree;
 - STOP.
 
-# 16. Final response
+# 18. Final response
 
 ```text
-TASK 8B.3-P1D4 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D5 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -491,41 +436,37 @@ Commit:
 Push:
 PASS / FAIL
 
-Diagnostic process:
-1
+Model inference/training:
+NONE
 
-model.predict calls:
-9
-
-Diagnostic conf:
-0.001
-
-Product conf modified:
+Functional files modified:
 NO
 
-A2 aggregate:
-boxes@0.001 = <n>
-boxes@0.005 = <n>
-boxes@0.010 = <n>
-boxes@0.020 = <n>
-boxes@0.030 = <n>
-boxes@0.040 = <n>
-boxes@0.050 = <n>
-global_max_conf = <...>
-tiles_with_boxes = <n>
-tiles_with_masks = <n>
+Active detector:
+SHA256 = <...>
+family/task = <...>
+training dataset = <...>
 
-Outcome:
+U-C1 provenance:
+<ESTABLISHED / PARTIAL / NOT ESTABLISHED>
+
+baseline/yolo_whu:
+<relation enum>
+
+A2 source/domain:
+<...>
+
+Validated alternate candidate:
+<enum>
+
+Scientific-freeze impact:
+<enum>
+
+Primary diagnosis:
 <enum>
 
 Next gate:
 <enum>
-
-Pre/post external manifest:
-135/135 PASS / 135/135 PASS
-
-Functional files modified:
-NO
 
 MEM-01:
 CLOSED
@@ -539,5 +480,5 @@ OPEN / OPEN
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得修改产品阈值、不得重跑 A2、不得执行下一 gate、不得进入 REF-01/MASK-01/Task 8B.4/8C。
+等待 ChatGPT 审核；不得更换/训练 detector，不得运行新模型诊断，不得进入 REF-01/MASK-01/Task 8B.4/8C。
 ```
