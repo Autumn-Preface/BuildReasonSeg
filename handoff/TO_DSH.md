@@ -1,59 +1,50 @@
-# TO_DSH — Task 8B.3-P1D11A: Implement PROP-01 Supported-Domain Policy in Canonical RC1 Docs
+# TO_DSH — Task 8B.3-P1D11A-R1: Line-Ending-Safe Manifest Gate and Supported-Domain Policy
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `d414c33762968ac4e6ea441f334082fc43adc0d0`
+> Required starting HEAD: `9f91d953b9ef5bb3993be4b7434b174de9856648`
 
-# 0. Frozen decision
+# 0. ChatGPT audit correction
 
-P1D10-R3 is approved by ChatGPT.
+P1D11A correctly STOPPED because its written preflight failed.
 
-Freeze:
+However ChatGPT independently audited the remote Git tree and found that the failure is very likely a
+**working-tree line-ending false positive**, not stale canonical content.
 
-```text
-raster outcome =
-PROP01_LOCKED_DEMO_RASTERS_RESOLVED
-
-replacement selection policy =
-READY
-
-locked candidate status =
-FINAL_METADATA_LOCK
-
-Demo policy feasibility =
-DEMO_POLICY_PATH_READY
-
-primary resolution =
-PROP01_RESOLUTION_DEMO_POLICY
-
-PROP-01 status =
-PROP01_OPEN_ENGINEERING_DEFECT
-
-A2 provenance/domain =
-NOT ESTABLISHED
-```
-
-The four immutable locked candidates are:
+P1D11A local working-tree report:
 
 ```text
-right =
-buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
-
-left =
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
-
-above =
-buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
-
-below =
-buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+path                                      manifest/Git bytes    local bytes    delta
+runtime/core.py                           11064                 11310          +246
+runtime/detector.py                       20300                 20772          +472
+runtime/outputs.py                        9166                  9367           +201
+tests/test_task8b_runtime.py              24983                 25552          +569
 ```
 
-No locked candidate has yet been run as a new RC1 Demo acceptance case.
+Remote Git at current branch still reports exactly:
 
-This task implements policy/documentation only. It does NOT close PROP-01.
+```text
+runtime/core.py              11064
+runtime/detector.py          20300
+runtime/outputs.py           9166
+tests/test_task8b_runtime.py 24983
+```
+
+and the first three current Git blob IDs are identical to their blobs at commit
+`c432ec41f2d8bad9ddc67d65d0dbc033724e482a`, where `source_manifest.json` was updated for the compact-proposal
+implementation.
+
+Therefore:
+
+```text
+DO NOT update the four runtime/test manifest entries merely to match CRLF-expanded working-tree bytes.
+```
+
+This task must first prove the line-ending diagnosis using Git canonical/index bytes.
+
+If proven, continue the original supported-domain policy implementation.
 
 # 1. Git gate
 
@@ -61,7 +52,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = d414c33762968ac4e6ea441f334082fc43adc0d0
+HEAD = 9f91d953b9ef5bb3993be4b7434b174de9856648
 ```
 
 Allowed initial tracked tree:
@@ -77,17 +68,19 @@ Do NOT:
 - run `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1;
 - run pytest/check_setup;
 - train/fine-tune/export/download;
-- copy any locked raster into RC1;
-- run or inspect locked candidates;
+- modify runtime implementation files;
+- modify runtime test files;
+- change the four compact-proposal manifest entries unless this task proves the Git canonical bytes themselves
+  disagree with the manifest;
+- normalize/renormalize the entire repository;
+- run `git add --renormalize .`;
+- change global/local Git configuration;
+- copy/run/inspect locked Demo candidates;
 - replace any locked candidate;
-- modify A1/A2/A3/A4/B1/B2;
-- modify runtime code, tests, configs, checkpoints or model metadata;
 - modify external delivery;
-- run `sync_advisor_rc1_delivery.py` without `--check`;
+- run external write sync;
 - mark PROP-01 CLOSED;
-- claim A2 is proven out-of-domain;
-- claim the four locked candidates succeed;
-- claim arbitrary aerial-image, cross-city or cross-sensor robustness;
+- call A2 proven out-of-domain;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - update main;
 - force push.
@@ -97,6 +90,7 @@ Do NOT:
 Only:
 
 ```text
+docs/task8b3_p1d11a_policy_implementation.md
 docs/task8b3_p1d11_supported_domain_policy.md
 delivery_src/BuildReasonSeg_Advisor_RC1/README.md
 delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
@@ -107,49 +101,142 @@ handoff/TO_DSH.md
 
 No other tracked file may change.
 
-# 4. Canonical source-manifest preflight
+# 4. Diagnose the four P1D11A false mismatches
 
-Before editing canonical RC1 files, read:
+For exactly:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+```
+
+record:
+
+```text
+git status --porcelain for path
+manifest bytes
+manifest sha256
+HEAD/index canonical bytes
+HEAD/index canonical sha256
+working-tree bytes
+working-tree sha256
+HEAD LF count
+HEAD CRLF count
+working-tree LF count
+working-tree CRLF count
+```
+
+Canonical bytes MUST be obtained from Git, not from the checkout representation, e.g. by capturing:
+
+```text
+git show HEAD:<repo-relative-path>
+```
+
+or, after staging later in the task:
+
+```text
+git show :<repo-relative-path>
+```
+
+Important:
+- use binary stdout capture;
+- hash those exact bytes;
+- do not allow shell text decoding/newline conversion before hashing.
+
+Classify each exactly:
+
+```text
+GIT_CANONICAL_MATCH_WORKTREE_EOL_ONLY
+GIT_CANONICAL_MANIFEST_MISMATCH
+OTHER_MISMATCH
+```
+
+`GIT_CANONICAL_MATCH_WORKTREE_EOL_ONLY` requires:
+- Git canonical bytes/hash match manifest exactly;
+- the tracked path has no semantic `git diff`;
+- working-tree mismatch is fully explained by line-ending representation.
+
+If ANY of the four is not `GIT_CANONICAL_MATCH_WORKTREE_EOL_ONLY`:
+- no policy edits;
+- record STOP;
+- push;
+- STOP.
+
+# 5. Authoritative 135-entry preflight — Git canonical bytes
+
+Do NOT use direct `Path.read_bytes()` on the Windows checkout as the authoritative manifest check.
+
+Parse the current manifest and for all 135 entries compute bytes/SHA256 from:
+
+```text
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<manifest path>
 ```
 
 Require:
 
 ```text
 schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
-manifest entry count = 135
-README.md entry exists exactly once
-docs/model_card.md entry exists exactly once
+manifest entries = 135
+Git-canonical manifest self-check = 135/135 PASS
+README.md entry count = 1
+docs/model_card.md entry count = 1
 ```
 
-Perform a read-only full canonical manifest self-check:
+If not 135/135:
+- STOP;
+- no policy edits.
 
-For every one of the 135 manifest entries:
+Append a correction to:
 
 ```text
-canonical file exists
-actual bytes == manifest bytes
-actual SHA256 == manifest SHA256
+docs/task8b3_p1d11a_policy_implementation.md
 ```
 
-Record:
+stating that the original P1D11A STOP was caused by checkout representation if and only if this gate proves it.
+
+# 6. Frozen policy decision
+
+Retain:
 
 ```text
-pre-edit canonical manifest check = 135/135 PASS
+primary resolution =
+PROP01_RESOLUTION_DEMO_POLICY
+
+PROP-01 =
+PROP01_OPEN_ENGINEERING_DEFECT
+
+A2 provenance/domain =
+NOT ESTABLISHED
+
+A2 =
+documented persistent non-detection/stress case
+
+locked candidate status =
+FINAL_METADATA_LOCK
+
+locked candidate runtime status =
+NOT YET RUN
 ```
 
-If not exactly 135/135:
-- do NOT edit README/model_card/source_manifest;
-- update report/handoffs only with STOP evidence;
-- commit using STOP message;
-- push;
-- STOP.
+Exact four candidate IDs remain immutable:
 
-Do not “repair” unrelated stale manifest entries in this task.
+```text
+right =
+buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
 
-# 5. Authoritative supported-domain policy
+left =
+buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+
+above =
+buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
+
+below =
+buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+```
+
+# 7. Create authoritative policy document
 
 Create:
 
@@ -157,136 +244,91 @@ Create:
 docs/task8b3_p1d11_supported_domain_policy.md
 ```
 
-The document must state the following as authoritative policy.
+Required policy:
 
-## 5.1 Positively verified scope
+## Verified research/evaluation domain
 
 ```text
-Research/evaluation domain:
 BuildSpatialReason v0.2
 over WHU-EA-NativeVector v1.0
-source: WHU Building Dataset — Satellite dataset II (East Asia)
-split view: scene_disjoint_v1
-
-image modality:
-RGB optical overhead/aerial imagery
-
-instance concept:
-building instances represented by WHU native-vector annotations
-
-reasoning scope:
-tile-relative spatial reasoning
-
-formal RC1 semantics:
-largest -> left_of  -> nearest
-largest -> right_of -> nearest
-largest -> above    -> nearest
-largest -> below    -> nearest
+source = WHU Building Dataset — Satellite dataset II (East Asia)
+split view = scene_disjoint_v1
+modality = RGB optical overhead/aerial imagery
+instance concept = WHU native-vector building instances
+reasoning = tile-relative spatial reasoning
+formal RC1 programs =
+  largest -> left_of  -> nearest
+  largest -> right_of -> nearest
+  largest -> above    -> nearest
+  largest -> below    -> nearest
 ```
 
-Clarify:
+Explicitly state:
 
 ```text
-software input-format/size support != demonstrated generalization domain
+software format/size acceptance != demonstrated generalization domain
+scene-disjoint split != proof of cross-city generalization
 ```
 
-The runtime may read PNG/JPEG/TIFF and tile large images, but this does not establish broad geographic/sensor robustness.
-
-## 5.2 Explicit non-claims
-
-State all:
+## Non-claims
 
 ```text
 cross-city generalization = NOT ESTABLISHED
 broad geographic generalization = NOT ESTABLISHED
 cross-sensor generalization = NOT ESTABLISHED
 arbitrary aerial-image robustness = NOT ESTABLISHED
-SAR / infrared / raw multispectral = NOT SUPPORTED
 unrestricted natural language = NOT ESTABLISHED
+SAR / infrared / raw multispectral = NOT SUPPORTED
 ```
 
-Also preserve the v0.2 limitation:
-
-```text
-scene-disjoint separation is scene separation, not proof of cross-city generalization
-```
-
-## 5.3 A2 policy
-
-State exactly in meaning:
-
-```text
-A2 provenance/domain = NOT ESTABLISHED.
-A2 is a fixed, documented persistent non-detection / stress case.
-It remains part of the historical Task 8B.3 six-case diagnostic evidence.
-It was not fixed by P1D1-P1D9.
-It must not be described as proven out-of-domain.
-It must not be silently removed or rewritten as a success.
-```
-
-Summarize bounded evidence without overclaiming:
-
-```text
-active YOLO26 tiled/full-frame -> zero
-active YOLO26 at diagnostic conf=0.001 -> zero
-same-lineage epoch-18 YOLO26 -> zero
-independent WHU YOLOv8m baseline -> zero
-one predeclared validation-moment photometric rescue -> zero
-```
-
-Do NOT infer cause beyond that evidence.
-
-## 5.4 Two distinct Demo sets
-
-Define them separately.
-
-### Historical diagnostic suite
-
-```text
-A1/A2/A3/A4/B1/B2
-```
-
-Purpose:
-- historical fixed defect/audit evidence;
-- preserve failures and manual findings;
-- not retroactively relabeled as a 6/6 success suite.
-
-### Locked supported-domain qualitative candidates
-
-Source:
-
-```text
-BuildSpatialReason v0.2 TEST
-```
-
-Selection:
-- deterministic;
-- metadata-only;
-- selected after Task 7J final metrics had already been consumed;
-- no detector/parser/runtime/manual visual result was consulted;
-- reuse is disclosed;
-- no research metric is changed.
-
-List the exact four immutable sample IDs from §0.
+## A2
 
 State:
+- provenance/domain NOT ESTABLISHED;
+- fixed historical persistent non-detection/stress case;
+- remains in Task 8B.3 historical six-case evidence;
+- P1D1-P1D9 did not fix it;
+- MUST NOT be called proven out-of-domain;
+- MUST NOT be silently rewritten as success.
+
+Bounded evidence only:
+- active YOLO26 tiled/full-frame zero;
+- active YOLO26 diagnostic conf=0.001 zero;
+- epoch-18 YOLO26 zero;
+- independent WHU YOLOv8m zero;
+- one predeclared validation-moment affine rescue zero.
+
+## Demo sets
+
+Separate:
 
 ```text
-These are locked candidates, NOT yet demonstrated successes.
-Future failure does not permit replacement without a new ChatGPT decision explicitly recording that failed lock.
+Historical diagnostic suite:
+A1/A2/A3/A4/B1/B2
+
+Locked supported-domain qualitative candidates:
+the four exact v0.2 TEST sample IDs above
 ```
 
-## 5.5 Test-reuse disclosure
+Locked cases:
+- deterministic metadata-only selection;
+- selected after Task7J final metrics consumed;
+- no detector/parser/runtime/manual visual outcome used;
+- immutable without new ChatGPT decision;
+- NOT YET RUN;
+- NOT yet claimed successful.
 
-Include verbatim in English:
+## Required English disclosure
+
+Include exactly:
 
 ```text
 The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
 ```
 
-And a faithful Chinese equivalent.
+Also provide faithful Chinese equivalent.
 
-# 6. Update canonical RC1 README
+# 8. Update canonical README
 
 Modify only:
 
@@ -294,37 +336,20 @@ Modify only:
 delivery_src/BuildReasonSeg_Advisor_RC1/README.md
 ```
 
-Required changes:
+Required:
+- remove/replace the ambiguous `RGB 光学遥感影像（正式输入域）`;
+- distinguish software-readable modality from verified evaluation domain;
+- add `### 已验证数据域与 Demo 边界`;
+- state WHU East Asia / v0.2 / native-vector / scene_disjoint_v1;
+- state scene split != cross-city evidence;
+- state arbitrary aerial input success is not guaranteed;
+- state A2 is persistent non-detection with provenance unknown, not proven out-of-domain;
+- preserve historical A1–B2 audit;
+- list/point to the four locked TEST candidates as NOT YET RUN;
+- disclose qualitative TEST reuse;
+- do not change runtime commands/algorithm/metrics.
 
-1. Under `## 输入`, replace the ambiguous phrase:
-
-```text
-RGB 光学遥感影像（正式输入域）
-```
-
-with wording that distinguishes:
-- accepted software input modality;
-- verified research/evaluation domain.
-
-2. Add a compact subsection:
-
-```text
-### 已验证数据域与 Demo 边界
-```
-
-It must state:
-- WHU East Asia / BuildSpatialReason v0.2 / WHU-EA-NativeVector v1.0 / scene_disjoint_v1;
-- scene-disjoint does not establish cross-city generalization;
-- arbitrary aerial images are not guaranteed;
-- A2 is a documented persistent non-detection case with unknown provenance;
-- A2 is not claimed out-of-domain;
-- historical six-case diagnostic suite is not rewritten;
-- four locked v0.2 TEST cases are qualitative candidates only and have not yet been run as a new acceptance Demo;
-- deterministic test reuse is disclosed.
-
-3. Do not alter runtime commands, algorithms, thresholds, model names or metrics.
-
-# 7. Update canonical RC1 model card
+# 9. Update canonical model card
 
 Modify only:
 
@@ -332,78 +357,104 @@ Modify only:
 delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
 ```
 
-Required changes:
+Required:
+- clarify verified WHU East Asia / native-vector / scene_disjoint_v1 / tile-relative domain;
+- preserve four formal L3 programs;
+- add limitations: scene split != cross-city proof, arbitrary aerial/cross-sensor robustness not established;
+- A2 persistent non-detection, provenance NOT ESTABLISHED, not proven out-of-domain;
+- add Demo-policy subsection distinguishing historical six-case audit vs four locked not-yet-run TEST candidates;
+- include TEST reuse disclosure;
+- no frozen metric value may change.
 
-1. Expand `## 2. 数据` so the verified domain is explicit:
-   - WHU East Asia;
-   - native-vector;
-   - `scene_disjoint_v1`;
-   - tile-relative;
-   - four formal L3 programs.
+# 10. Stage target documents before computing manifest hashes
 
-2. In known limitations add:
-   - scene split != cross-city evidence;
-   - arbitrary aerial/cross-sensor robustness not established;
-   - A2 is a persistent non-detection case with provenance NOT ESTABLISHED;
-   - do not classify A2 as proven out-of-domain.
+Because this checkout may expand LF→CRLF in the working tree, manifest identities must be calculated from the
+**Git index representation**.
 
-3. Add a short `Demo policy` subsection:
-   - historical A1–B2 diagnostic suite retained;
-   - locked candidates come from v0.2 TEST by metadata-only deterministic rule;
-   - qualitative reuse disclosed;
-   - no Task7J metric/model/threshold/seed/architecture changed;
-   - locked candidates are not yet claimed successful.
+After editing README/model_card:
 
-4. Do not change any frozen metric value.
+Stage ONLY:
 
-# 8. Update source_manifest.json narrowly
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/README.md
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
+```
 
-After README/model_card edits:
+Then obtain canonical bytes via:
 
-Update exactly these two manifest entries:
+```text
+git show :delivery_src/BuildReasonSeg_Advisor_RC1/README.md
+git show :delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
+```
+
+Compute exact SHA256/bytes from those binary byte streams.
+
+Do NOT derive manifest values from direct Windows working-tree `Path.read_bytes()`.
+
+# 11. Update source_manifest narrowly
+
+Update exactly:
 
 ```text
 README.md
 docs/model_card.md
 ```
 
-Set their:
+with the Git-index canonical:
 
 ```text
-bytes = actual post-edit file bytes
-sha256 = actual post-edit SHA256
+bytes
+sha256
 ```
 
-Do not:
-- add/remove manifest paths;
-- change entry count;
-- rewrite unrelated entries;
-- change schema/task/copy_policy metadata.
+Do NOT modify the four runtime/test entries from §4.
+Do NOT modify any other entry.
+Do NOT add/remove paths.
 
-Then perform the full canonical self-check again.
+Stage:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+# 12. Post-edit canonical manifest check — INDEX aware
+
+Parse the STAGED manifest bytes from:
+
+```text
+git show :delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+For every one of its 135 entries, hash canonical source bytes from:
+
+```text
+git show :delivery_src/BuildReasonSeg_Advisor_RC1/<manifest path>
+```
 
 Require:
 
 ```text
-post-edit canonical manifest check = 135/135 PASS
-manifest entry count = 135
+staged/index canonical manifest check = 135/135 PASS
+entry count = 135
 ```
 
-If any non-target manifest entry changes or fails:
+This is the authoritative post-edit gate.
+
+Also require:
+- the four runtime/test entries retain their original manifest bytes/SHA256;
+- only README/model_card manifest records differ from starting HEAD.
+
+If not:
 - STOP;
-- do not sync external.
+- do not write external.
 
-# 9. External delivery boundary
+# 13. External boundary
 
-External delivery must remain untouched:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
+External delivery remains untouched.
 
 Do NOT run write sync.
 
-A read-only comparison after canonical edits is allowed:
+A read-only check is allowed:
 
 ```text
 python scripts/sync_advisor_rc1_delivery.py
@@ -411,102 +462,98 @@ python scripts/sync_advisor_rc1_delivery.py
   --check
 ```
 
-If run, expected result after canonical doc edits is exactly two content mismatches:
+Because this script compares working-tree canonical vs external, interpret line endings carefully.
+
+Expected semantic content drift from this task is:
+- README.md;
+- docs/model_card.md;
+- canonical `source_manifest.json` itself is intentionally not an entry copied by the sync helper.
+
+If the check reports unrelated runtime/test mismatches, determine whether they are merely the same EOL checkout
+representation issue before drawing any conclusion.
+
+No external write.
+
+# 14. Stage remaining authorized files and diff gate
+
+Update/stage:
 
 ```text
-README.md
-docs/model_card.md
+docs/task8b3_p1d11a_policy_implementation.md
+docs/task8b3_p1d11_supported_domain_policy.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
 ```
 
-because external sync is intentionally deferred.
+Require final staged/commit diff contains ONLY the seven authorized paths listed in §3.
 
-If result differs from exactly those two mismatches:
-- record it;
-- STOP before any external change.
+Explicitly require NO diff in:
+- runtime files;
+- tests;
+- configs;
+- model package;
+- locked inputs.
 
-Do not treat expected two-doc mismatch as failure of this canonical-only task.
-
-# 10. Policy status after implementation
-
-If COMPLETE, record:
-
-```text
-supported-domain policy = IMPLEMENTED_IN_CANONICAL_RC1_DOCS
-A2 status = DOCUMENTED_PERSISTENT_NON_DETECTION
-A2 domain = NOT ESTABLISHED
-locked candidate status = FINAL_METADATA_LOCK
-locked candidate runtime status = NOT YET RUN
-PROP-01 status = PROP01_OPEN_ENGINEERING_DEFECT
-scientific freeze preserved = YES
-```
-
-Do NOT close PROP-01.
-
-# 11. Next gate
+# 15. Final status
 
 If COMPLETE:
 
 ```text
-NEXT = PROP01_LOCKED_DEMO_PROPOSAL_GATE
+P1D11A original STOP root cause =
+WORKTREE_EOL_FALSE_POSITIVE
+
+Git canonical preflight =
+135/135 PASS
+
+supported-domain policy =
+IMPLEMENTED_IN_CANONICAL_RC1_DOCS
+
+A2 domain =
+NOT ESTABLISHED
+
+A2 policy =
+DOCUMENTED_PERSISTENT_NON_DETECTION
+
+locked candidate status =
+FINAL_METADATA_LOCK
+
+locked candidate runtime status =
+NOT YET RUN
+
+PROP-01 =
+PROP01_OPEN_ENGINEERING_DEFECT
+
+scientific freeze =
+PRESERVED
+
+NEXT =
+PROP01_LOCKED_DEMO_PROPOSAL_GATE
 ```
 
-Purpose of the future gate:
-- copy/use the already locked four rasters under a controlled diagnostic location;
-- run the frozen active detector only;
-- test whether each locked supported-domain candidate produces usable proposals;
-- candidate replacement remains forbidden.
+Do NOT execute next gate.
 
-Do NOT execute that gate now.
-
-If STOP:
-
-```text
-NEXT = PROP01_POLICY_IMPLEMENTATION_RECOVERY
-```
-
-# 12. Report
-
-Create:
-
-```text
-docs/task8b3_p1d11_supported_domain_policy.md
-```
-
-Required audit appendix:
-
-```text
-Task: 8B.3-P1D11A
-Starting HEAD
-pre-edit manifest check
-files changed
-post-edit manifest check
-external write sync = NOT RUN
-external read-only check result if run
-policy status
-A2 status/domain
-locked candidate status/runtime status
-PROP-01 status
-scientific freeze
-next gate
-```
-
-# 13. FROM_DSH
+# 16. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D11A
+Task: 8B.3-P1D11A-R1
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: d414c33762968ac4e6ea441f334082fc43adc0d0
+Starting HEAD: 9f91d953b9ef5bb3993be4b7434b174de9856648
 Model/test execution: NONE
 Functional runtime files modified: NO
 External delivery modified: NO
-Pre-edit canonical manifest: 135/135 PASS / FAIL
-Post-edit canonical manifest: 135/135 PASS / FAIL / NOT RUN
+Original P1D11A STOP root cause: WORKTREE_EOL_FALSE_POSITIVE / REAL_MANIFEST_DRIFT / OTHER
+Four flagged Git-canonical entries: 4/4 MATCH / other
+Git-canonical pre-edit manifest: 135/135 PASS / FAIL
+Post-edit staged/index manifest: 135/135 PASS / FAIL / NOT RUN
 Manifest entry count: 135 / other
+Runtime/test manifest entries modified: NO
+README manifest entry updated: YES / NO
+model_card manifest entry updated: YES / NO
 Canonical policy doc: docs/task8b3_p1d11_supported_domain_policy.md
 Canonical README policy: UPDATED / NOT UPDATED
 Canonical model card policy: UPDATED / NOT UPDATED
@@ -523,10 +570,10 @@ RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
-Next action: Awaiting ChatGPT audit; do not run locked candidates or sync external.
+Next action: Awaiting ChatGPT audit; do not run candidates or sync external.
 ```
 
-# 14. Commit / push
+# 17. Commit / push
 
 If COMPLETE:
 
@@ -537,29 +584,29 @@ docs(rc1): implement prop01 supported-domain policy
 If STOP/FAILED:
 
 ```text
-docs(rc1): record prop01 policy implementation stop
+docs(rc1): record prop01 policy recovery stop
 ```
 
-Push current branch normally.
+Push normally.
 No force push.
 
-# 15. COMPLETE definition
+# 18. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
 - no model/test execution;
-- no functional runtime modification;
-- no external write;
-- pre-edit manifest self-check = 135/135;
-- authoritative policy doc created;
-- README and model_card updated with evidence-bounded wording;
-- A2 remains NOT ESTABLISHED and is not called proven out-of-domain;
-- historical six-case audit preserved;
-- four exact locks documented as not-yet-run candidates;
-- test reuse disclosure present;
-- only two manifest entries updated;
-- post-edit manifest self-check = 135/135;
+- no functional/runtime/test modification;
+- four false mismatches are proven EOL-only against Git canonical bytes;
+- Git canonical preflight = 135/135;
+- policy document is created;
+- README/model_card are evidence-bounded;
+- only their two manifest entries change;
+- post-edit INDEX-aware manifest check = 135/135;
+- A2 remains provenance/domain NOT ESTABLISHED;
+- four locks remain immutable and NOT YET RUN;
+- external delivery untouched;
 - PROP-01 remains OPEN;
-- next gate recorded but not executed;
+- next gate not executed;
+- only authorized paths committed;
 - commit/push succeeds;
 - STOP.
