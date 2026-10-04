@@ -14,7 +14,7 @@
 ## 2. 数据
 
 - **BuildSpatialReason v0.2** over **WHU-EA-NativeVector v1.0**（`scene_disjoint_v1`）；
-- 输入域：**RGB 光学遥感影像**（不支持 SAR / 红外 / 原始多光谱）；
+- 软件输入模态：**RGB 光学遥感影像**（不支持 SAR / 红外 / 原始多光谱）；
 - 正式语义：**largest → direction → nearest**（四个 L3 program）。
 
 - 已验证域：WHU East Asia（Satellite dataset II (East Asia)）上的 native-vector 标注

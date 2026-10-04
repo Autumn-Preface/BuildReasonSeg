@@ -32,7 +32,7 @@ python predict.py --input-dir inference/input --prompt "分割最大建筑物右
 
 ## 输入
 
-- **RGB 光学遥感影像**（正式输入域）；支持 `.png / .jpg / .jpeg / .tif / .tiff`；
+- **RGB 光学遥感影像**（软件接受的输入模态；已验证研究/评测域见下文“已验证数据域与 Demo 边界”）；支持 `.png / .jpg / .jpeg / .tif / .tiff`；
 - **uint8** 与 **uint16**（uint16 使用固定线性缩放 0→0、65535→255，**不做** histogram/percentile 拉伸）；
 - 4 通道 RGBA 会**明确去掉 alpha**；灰度、2 通道、>4 通道、SAR、原始多光谱会被拒绝（E203）；
 - **任意尺寸在软件层面支持**：≤512 反射 padding 到 512；>512 使用 512 px 滑窗（overlap 128、stride 384）

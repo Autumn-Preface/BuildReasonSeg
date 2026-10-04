@@ -22,8 +22,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 10411,
-      "sha256": "8615537af64483214679f3cab1ece4189f5be1e7d493f85abc8e0a78d135641b"
+      "bytes": 10499,
+      "sha256": "f709903048d4385a0a4bcdb7b5a471018e70618909a075aa0a51d57fc99155bd"
     },
     {
       "path": "buildreasonseg/__init__.py",
@@ -577,8 +577,8 @@
     },
     {
       "path": "docs/model_card.md",
-      "bytes": 6945,
-      "sha256": "1c190ad3c260cdd0737514f80e325d2b0a15398efcaeba4acfc091bc8b341c98"
+      "bytes": 6954,
+      "sha256": "8cbb29b72e69b902b3897c5e4238eea299e7e52f043c193dbc72bb282c004152"
     },
     {
       "path": "docs/runtime_mapping.md",

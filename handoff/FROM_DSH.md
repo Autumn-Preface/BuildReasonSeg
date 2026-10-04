@@ -17,34 +17,35 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D11A-R2 Report
+# FROM_DSH — Task 8B.3-P1D11A-R3 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D11A-R2` |
-| Status | **COMPLETE** (canonical supported-domain policy implemented) |
+| Task | `8B.3-P1D11A-R3` |
+| Status | **COMPLETE** (candidate-ID and input-domain wording corrections) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `581f91de8145a5b680d510b185b38b6e9878aa1d` |
-| Pre-edit canonical manifest | **135/135 PASS** (Git canonical HEAD blobs) |
-| Post-edit canonical manifest | **135/135 PASS** (Git canonical index blobs; 135 entries; path list identical) |
-| Identity convention | `GIT_CANONICAL_BLOB_BYTES` (unchanged) |
+| Starting HEAD | `e0e0a74760d619db3cdd6be62c4ea42520f802ec` |
+| Left candidate ID typo | **CORRECTED** → `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
+| Locked right candidate | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` |
+| Locked left candidate | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
+| Locked above candidate | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` |
+| Locked below candidate | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` |
+| Other candidate identities | UNCHANGED |
+| README input wording | `正式输入域` removed; now `软件接受的输入模态：RGB 光学影像` |
+| Model-card input wording | **SOFTWARE_INPUT_MODALITY** (`- 软件输入模态：**RGB 光学遥感影像** …`) |
+| A2 wording | unchanged and evidence-bounded (NOT ESTABLISHED · documented persistent non-detection · not claimed out-of-domain) |
+| Pre-edit canonical manifest | **135/135 PASS** |
+| Post-edit canonical manifest | **135/135 PASS** (135 entries, path list identical) |
 | Manifest entries updated | exactly two: `README.md`, `docs/model_card.md` (canonical blob identities) |
-| Canonical policy doc | `docs/task8b3_p1d11_supported_domain_policy.md` (created) |
-| Canonical README policy | UPDATED |
-| Canonical model card policy | UPDATED |
-| A2 policy status | `DOCUMENTED_PERSISTENT_NON_DETECTION` |
-| Supported-domain policy | **IMPLEMENTED_IN_CANONICAL_RC1_DOCS** |
-| Runtime / tests / `.gitattributes` | UNCHANGED |
-| External write sync / model runs | NONE / NONE |
+| Model / runtime / tests / external changes | NONE |
 | Frozen metrics / architecture / locked candidates | UNCHANGED |
 | PROP-01 status | OPEN (not closed) |
-| Report | `docs/task8b3_p1d11_supported_domain_policy.md`, `docs/task8b3_p1d11a_policy_implementation.md` |
-| Next action | Awaiting ChatGPT audit; the canonical → external controlled sync needs its own task book |
+| Report | `docs/task8b3_p1d11a_policy_implementation.md` (also `docs/task8b3_p1d11_supported_domain_policy.md`) |
+| Next action | Awaiting ChatGPT audit; do not sync external or run locked candidates |
 
-Watt was not needed for Task 8B.3-P1D11A-R2 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D11A-R3 (no downloads, no transfers).
 
-Only the policy document, the two canonical documentation files, their two manifest identities and this handoff
-changed; nothing was written to the external delivery.
+Only documentation, the two canonical manifest identities and this handoff changed.

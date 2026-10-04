@@ -85,7 +85,7 @@ disclosed; no research metric changes.
 | relation | immutable sample_id |
 |---|---|
 | largest_to_right_of_to_nearest | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` |
-| largest_to_left_of_to_nearest | `buildsr_test_1003_3_largest_to_left_of_nearest_f3fcb14e14c3` |
+| largest_to_left_of_to_nearest | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
 | largest_to_above_to_nearest | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` |
 | largest_to_below_to_nearest | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` |
 
