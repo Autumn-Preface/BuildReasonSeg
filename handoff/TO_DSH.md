@@ -1,50 +1,45 @@
-# TO_DSH — Task 8B.3-P1D11A-R1: Line-Ending-Safe Manifest Gate and Supported-Domain Policy
+# TO_DSH — Task 8B.3-P1D11M1: Normalize Canonical RC1 Source-Manifest Identity
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `9f91d953b9ef5bb3993be4b7434b174de9856648`
+> Required starting HEAD: `ca0e9f4217f0abfb58bffe36ac297c46206fe016`
 
-# 0. ChatGPT audit correction
+# 0. Purpose
 
-P1D11A correctly STOPPED because its written preflight failed.
-
-However ChatGPT independently audited the remote Git tree and found that the failure is very likely a
-**working-tree line-ending false positive**, not stale canonical content.
-
-P1D11A local working-tree report:
+P1D11A-R1 correctly STOPPED and established:
 
 ```text
-path                                      manifest/Git bytes    local bytes    delta
-runtime/core.py                           11064                 11310          +246
-runtime/detector.py                       20300                 20772          +472
-runtime/outputs.py                        9166                  9367           +201
-tests/test_task8b_runtime.py              24983                 25552          +569
+manifest entries = 135
+
+match Git-index AND working-tree bytes = 93
+match Git-index only                  = 4
+match working-tree only               = 38
+match neither                         = 0
 ```
 
-Remote Git at current branch still reports exactly:
+Therefore the current `source_manifest.json` mixes byte conventions.
+
+This task performs ONE infrastructure repair:
 
 ```text
-runtime/core.py              11064
-runtime/detector.py          20300
-runtime/outputs.py           9166
-tests/test_task8b_runtime.py 24983
+normalize all 135 manifest entry identities to Git canonical blob/index bytes
 ```
 
-and the first three current Git blob IDs are identical to their blobs at commit
-`c432ec41f2d8bad9ddc67d65d0dbc033724e482a`, where `source_manifest.json` was updated for the compact-proposal
-implementation.
+It does NOT implement the supported-domain policy yet.
 
-Therefore:
+The chosen authoritative identity convention is:
 
 ```text
-DO NOT update the four runtime/test manifest entries merely to match CRLF-expanded working-tree bytes.
+GIT_CANONICAL_BLOB_BYTES
 ```
 
-This task must first prove the line-ending diagnosis using Git canonical/index bytes.
+Meaning:
 
-If proven, continue the original supported-domain policy implementation.
+- manifest `bytes` and `sha256` describe the Git canonical content of each tracked canonical RC1 source/config file;
+- Windows checkout CRLF expansion is NOT part of the manifest identity;
+- external-delivery byte equality remains a separate sync/check concern.
 
 # 1. Git gate
 
@@ -52,37 +47,43 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 9f91d953b9ef5bb3993be4b7434b174de9856648
+HEAD = ca0e9f4217f0abfb58bffe36ac297c46206fe016
 ```
 
 Allowed initial tracked tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
+
+```text
+clean
+```
+
+or only:
+
+```text
+M handoff/TO_DSH.md
+```
 
 No reset/rebase/stash/clean/merge.
 
 # 2. Strict prohibitions
 
 Do NOT:
+
 - run any detector/model/inference;
-- run `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1;
+- run `predict.py`, Qwen, SAM2, D-B1;
 - run pytest/check_setup;
 - train/fine-tune/export/download;
-- modify runtime implementation files;
-- modify runtime test files;
-- change the four compact-proposal manifest entries unless this task proves the Git canonical bytes themselves
-  disagree with the manifest;
-- normalize/renormalize the entire repository;
-- run `git add --renormalize .`;
-- change global/local Git configuration;
-- copy/run/inspect locked Demo candidates;
-- replace any locked candidate;
+- modify runtime source;
+- modify tests;
+- modify README/model_card or supported-domain wording;
+- modify `.gitattributes`;
+- change `core.autocrlf` or any Git configuration;
+- run repository-wide line-ending normalization;
+- run `git add --renormalize`;
+- modify model assets/checkpoints/configs;
+- modify/copy/run locked Demo candidates;
 - modify external delivery;
 - run external write sync;
-- mark PROP-01 CLOSED;
-- call A2 proven out-of-domain;
-- enter REF-01/MASK-01/Task 8B.4/8C;
-- update main;
+- modify `main`;
 - force push.
 
 # 3. Allowed tracked changes
@@ -90,523 +91,389 @@ Do NOT:
 Only:
 
 ```text
-docs/task8b3_p1d11a_policy_implementation.md
-docs/task8b3_p1d11_supported_domain_policy.md
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
 delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+docs/task8b3_p1d11_manifest_normalization.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
 No other tracked file may change.
 
-# 4. Diagnose the four P1D11A false mismatches
+# 4. Reproduce the mixed-convention finding
 
-For exactly:
+Before modifying the manifest, reproduce the current state across all 135 entries.
 
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-```
-
-record:
+For each manifest entry:
 
 ```text
-git status --porcelain for path
+relative path
 manifest bytes
 manifest sha256
-HEAD/index canonical bytes
-HEAD/index canonical sha256
+Git canonical bytes
+Git canonical sha256
 working-tree bytes
 working-tree sha256
-HEAD LF count
-HEAD CRLF count
-working-tree LF count
-working-tree CRLF count
+matches Git canonical? YES/NO
+matches working tree? YES/NO
 ```
 
-Canonical bytes MUST be obtained from Git, not from the checkout representation, e.g. by capturing:
+Git canonical bytes MUST be read as binary from:
 
 ```text
-git show HEAD:<repo-relative-path>
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<relative path>
 ```
 
-or, after staging later in the task:
+Do not text-decode before hashing.
+
+Require aggregate exactly:
 
 ```text
-git show :<repo-relative-path>
+both = 93
+Git-only = 4
+working-tree-only = 38
+neither = 0
+total = 135
 ```
 
-Important:
-- use binary stdout capture;
-- hash those exact bytes;
-- do not allow shell text decoding/newline conversion before hashing.
-
-Classify each exactly:
+If these exact counts are not reproduced:
 
 ```text
-GIT_CANONICAL_MATCH_WORKTREE_EOL_ONLY
-GIT_CANONICAL_MANIFEST_MISMATCH
-OTHER_MISMATCH
+STOP
 ```
 
-`GIT_CANONICAL_MATCH_WORKTREE_EOL_ONLY` requires:
-- Git canonical bytes/hash match manifest exactly;
-- the tracked path has no semantic `git diff`;
-- working-tree mismatch is fully explained by line-ending representation.
+Do not normalize.
 
-If ANY of the four is not `GIT_CANONICAL_MATCH_WORKTREE_EOL_ONLY`:
-- no policy edits;
-- record STOP;
-- push;
-- STOP.
+# 5. Verify consumer semantics before normalization
 
-# 5. Authoritative 135-entry preflight — Git canonical bytes
-
-Do NOT use direct `Path.read_bytes()` on the Windows checkout as the authoritative manifest check.
-
-Parse the current manifest and for all 135 entries compute bytes/SHA256 from:
+Read only:
 
 ```text
-git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<manifest path>
+scripts/sync_advisor_rc1_delivery.py
 ```
 
-Require:
+Record whether the sync helper uses manifest fields as follows:
+
+```text
+path field used to enumerate sync files = YES / NO
+manifest bytes used to validate source/destination = YES / NO
+manifest sha256 used to validate source/destination = YES / NO
+source-vs-destination actual bytes/hash compared directly = YES / NO
+```
+
+Expected from current code:
+
+```text
+path = YES
+manifest bytes = NO
+manifest sha256 = NO
+actual source-vs-destination comparison = YES
+```
+
+If current code materially disagrees:
+
+```text
+STOP
+```
+
+because normalization semantics need a new ChatGPT decision.
+
+Also confirm:
+
+```text
+source_manifest.json is NOT itself one of the 135 manifest file entries
+```
+
+If it is self-listed:
+
+```text
+STOP
+```
+
+# 6. Freeze identity semantics in manifest metadata
+
+Keep:
 
 ```text
 schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
-manifest entries = 135
-Git-canonical manifest self-check = 135/135 PASS
-README.md entry count = 1
-docs/model_card.md entry count = 1
+task
+source_delivery
+canonical_root
+copy_policy
 ```
 
-If not 135/135:
-- STOP;
-- no policy edits.
+unchanged.
 
-Append a correction to:
+Add exactly these top-level metadata fields:
+
+```json
+"identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+"identity_basis_note": "bytes and sha256 are computed from Git canonical blob/index bytes; working-tree line-ending expansion is not part of source identity"
+```
+
+Do NOT change the schema string.
+
+Do NOT add per-entry metadata fields.
+
+# 7. Normalize all 135 entry identities
+
+For every entry, preserve exactly:
 
 ```text
-docs/task8b3_p1d11a_policy_implementation.md
+path
+entry order
+number of entries
 ```
 
-stating that the original P1D11A STOP was caused by checkout representation if and only if this gate proves it.
-
-# 6. Frozen policy decision
-
-Retain:
-
-```text
-primary resolution =
-PROP01_RESOLUTION_DEMO_POLICY
-
-PROP-01 =
-PROP01_OPEN_ENGINEERING_DEFECT
-
-A2 provenance/domain =
-NOT ESTABLISHED
-
-A2 =
-documented persistent non-detection/stress case
-
-locked candidate status =
-FINAL_METADATA_LOCK
-
-locked candidate runtime status =
-NOT YET RUN
-```
-
-Exact four candidate IDs remain immutable:
-
-```text
-right =
-buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
-
-left =
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
-
-above =
-buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
-
-below =
-buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
-```
-
-# 7. Create authoritative policy document
-
-Create:
-
-```text
-docs/task8b3_p1d11_supported_domain_policy.md
-```
-
-Required policy:
-
-## Verified research/evaluation domain
-
-```text
-BuildSpatialReason v0.2
-over WHU-EA-NativeVector v1.0
-source = WHU Building Dataset — Satellite dataset II (East Asia)
-split view = scene_disjoint_v1
-modality = RGB optical overhead/aerial imagery
-instance concept = WHU native-vector building instances
-reasoning = tile-relative spatial reasoning
-formal RC1 programs =
-  largest -> left_of  -> nearest
-  largest -> right_of -> nearest
-  largest -> above    -> nearest
-  largest -> below    -> nearest
-```
-
-Explicitly state:
-
-```text
-software format/size acceptance != demonstrated generalization domain
-scene-disjoint split != proof of cross-city generalization
-```
-
-## Non-claims
-
-```text
-cross-city generalization = NOT ESTABLISHED
-broad geographic generalization = NOT ESTABLISHED
-cross-sensor generalization = NOT ESTABLISHED
-arbitrary aerial-image robustness = NOT ESTABLISHED
-unrestricted natural language = NOT ESTABLISHED
-SAR / infrared / raw multispectral = NOT SUPPORTED
-```
-
-## A2
-
-State:
-- provenance/domain NOT ESTABLISHED;
-- fixed historical persistent non-detection/stress case;
-- remains in Task 8B.3 historical six-case evidence;
-- P1D1-P1D9 did not fix it;
-- MUST NOT be called proven out-of-domain;
-- MUST NOT be silently rewritten as success.
-
-Bounded evidence only:
-- active YOLO26 tiled/full-frame zero;
-- active YOLO26 diagnostic conf=0.001 zero;
-- epoch-18 YOLO26 zero;
-- independent WHU YOLOv8m zero;
-- one predeclared validation-moment affine rescue zero.
-
-## Demo sets
-
-Separate:
-
-```text
-Historical diagnostic suite:
-A1/A2/A3/A4/B1/B2
-
-Locked supported-domain qualitative candidates:
-the four exact v0.2 TEST sample IDs above
-```
-
-Locked cases:
-- deterministic metadata-only selection;
-- selected after Task7J final metrics consumed;
-- no detector/parser/runtime/manual visual outcome used;
-- immutable without new ChatGPT decision;
-- NOT YET RUN;
-- NOT yet claimed successful.
-
-## Required English disclosure
-
-Include exactly:
-
-```text
-The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
-```
-
-Also provide faithful Chinese equivalent.
-
-# 8. Update canonical README
-
-Modify only:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-```
-
-Required:
-- remove/replace the ambiguous `RGB 光学遥感影像（正式输入域）`;
-- distinguish software-readable modality from verified evaluation domain;
-- add `### 已验证数据域与 Demo 边界`;
-- state WHU East Asia / v0.2 / native-vector / scene_disjoint_v1;
-- state scene split != cross-city evidence;
-- state arbitrary aerial input success is not guaranteed;
-- state A2 is persistent non-detection with provenance unknown, not proven out-of-domain;
-- preserve historical A1–B2 audit;
-- list/point to the four locked TEST candidates as NOT YET RUN;
-- disclose qualitative TEST reuse;
-- do not change runtime commands/algorithm/metrics.
-
-# 9. Update canonical model card
-
-Modify only:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
-```
-
-Required:
-- clarify verified WHU East Asia / native-vector / scene_disjoint_v1 / tile-relative domain;
-- preserve four formal L3 programs;
-- add limitations: scene split != cross-city proof, arbitrary aerial/cross-sensor robustness not established;
-- A2 persistent non-detection, provenance NOT ESTABLISHED, not proven out-of-domain;
-- add Demo-policy subsection distinguishing historical six-case audit vs four locked not-yet-run TEST candidates;
-- include TEST reuse disclosure;
-- no frozen metric value may change.
-
-# 10. Stage target documents before computing manifest hashes
-
-Because this checkout may expand LF→CRLF in the working tree, manifest identities must be calculated from the
-**Git index representation**.
-
-After editing README/model_card:
-
-Stage ONLY:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
-```
-
-Then obtain canonical bytes via:
-
-```text
-git show :delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-git show :delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
-```
-
-Compute exact SHA256/bytes from those binary byte streams.
-
-Do NOT derive manifest values from direct Windows working-tree `Path.read_bytes()`.
-
-# 11. Update source_manifest narrowly
-
-Update exactly:
-
-```text
-README.md
-docs/model_card.md
-```
-
-with the Git-index canonical:
+Replace its:
 
 ```text
 bytes
 sha256
 ```
 
-Do NOT modify the four runtime/test entries from §4.
-Do NOT modify any other entry.
-Do NOT add/remove paths.
-
-Stage:
+with values computed from the exact binary Git canonical bytes:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<path>
 ```
 
-# 12. Post-edit canonical manifest check — INDEX aware
-
-Parse the STAGED manifest bytes from:
+Expected effects from the preflight classification:
 
 ```text
-git show :delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-```
+93 both-match entries:
+  identity values remain unchanged
 
-For every one of its 135 entries, hash canonical source bytes from:
+4 Git-only entries:
+  identity values remain unchanged
 
-```text
-git show :delivery_src/BuildReasonSeg_Advisor_RC1/<manifest path>
+38 working-tree-only entries:
+  identity values change to Git canonical identity
+
+path additions/removals:
+  0
 ```
 
 Require:
 
 ```text
-staged/index canonical manifest check = 135/135 PASS
 entry count = 135
+changed entry identities = 38
+unchanged entry identities = 97
 ```
 
-This is the authoritative post-edit gate.
-
-Also require:
-- the four runtime/test entries retain their original manifest bytes/SHA256;
-- only README/model_card manifest records differ from starting HEAD.
-
-If not:
-- STOP;
-- do not write external.
-
-# 13. External boundary
-
-External delivery remains untouched.
-
-Do NOT run write sync.
-
-A read-only check is allowed:
+If a different number of entry identities changes:
 
 ```text
-python scripts/sync_advisor_rc1_delivery.py
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-  --check
+STOP before commit
 ```
 
-Because this script compares working-tree canonical vs external, interpret line endings carefully.
+Do not adjust criteria.
 
-Expected semantic content drift from this task is:
-- README.md;
-- docs/model_card.md;
-- canonical `source_manifest.json` itself is intentionally not an entry copied by the sync helper.
+# 8. Authoritative post-normalization check
 
-If the check reports unrelated runtime/test mismatches, determine whether they are merely the same EOL checkout
-representation issue before drawing any conclusion.
+After editing `source_manifest.json`, parse the new manifest.
 
-No external write.
-
-# 14. Stage remaining authorized files and diff gate
-
-Update/stage:
+For all 135 entries, independently read binary canonical bytes from:
 
 ```text
-docs/task8b3_p1d11a_policy_implementation.md
-docs/task8b3_p1d11_supported_domain_policy.md
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<path>
+```
+
+and compare to normalized:
+
+```text
+bytes
+sha256
+```
+
+Require:
+
+```text
+Git-canonical normalized manifest = 135/135 PASS
+missing paths = 0
+duplicate paths = 0
+entry count = 135
+identity_basis = GIT_CANONICAL_BLOB_BYTES
+```
+
+Because source files are not modified in this task, `HEAD:<path>` remains authoritative.
+
+# 9. No semantic/source changes gate
+
+Require:
+
+```text
+git diff --name-only <starting HEAD>
+```
+
+contains only:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+docs/task8b3_p1d11_manifest_normalization.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Require final staged/commit diff contains ONLY the seven authorized paths listed in §3.
-
-Explicitly require NO diff in:
-- runtime files;
-- tests;
-- configs;
-- model package;
-- locked inputs.
-
-# 15. Final status
-
-If COMPLETE:
+Explicitly confirm:
 
 ```text
-P1D11A original STOP root cause =
-WORKTREE_EOL_FALSE_POSITIVE
+runtime source modified = NO
+tests modified = NO
+README modified = NO
+model_card modified = NO
+external delivery modified = NO
+locked candidates modified/run = NO
+```
 
-Git canonical preflight =
-135/135 PASS
+# 10. External-delivery interpretation
 
-supported-domain policy =
-IMPLEMENTED_IN_CANONICAL_RC1_DOCS
+Do NOT sync external delivery.
 
-A2 domain =
-NOT ESTABLISHED
+Record:
 
-A2 policy =
-DOCUMENTED_PERSISTENT_NON_DETECTION
+```text
+external source/config files = UNCHANGED
+external source_manifest.json = UNCHANGED
+canonical source_manifest.json = NORMALIZED
+```
 
-locked candidate status =
-FINAL_METADATA_LOCK
+State clearly:
 
-locked candidate runtime status =
-NOT YET RUN
+```text
+The normalized source manifest now describes Git canonical source identity.
+It is not a claim that CRLF-expanded external files have identical bytes to each manifest entry.
+External source-vs-destination equivalence remains governed by the existing sync helper's direct comparison.
+```
 
-PROP-01 =
-PROP01_OPEN_ENGINEERING_DEFECT
+Do not run write sync.
 
-scientific freeze =
-PRESERVED
+A read-only sync check is NOT required for this task.
 
-NEXT =
-PROP01_LOCKED_DEMO_PROPOSAL_GATE
+# 11. Report
+
+Create:
+
+```text
+docs/task8b3_p1d11_manifest_normalization.md
+```
+
+Required sections:
+
+1. task / starting HEAD
+2. reason for normalization
+3. reproduced 93 / 4 / 38 / 0 classification
+4. sync-helper consumer semantics
+5. selected identity convention
+6. manifest metadata change
+7. exactly 38 normalized entry identities
+8. 135/135 Git-canonical post-check
+9. no source/runtime/test change
+10. external delivery untouched
+11. implications for P1D11 supported-domain policy
+12. exact next gate.
+
+Do NOT dump all 135 rows into the report.
+
+List the 38 changed paths OR store their path list in the report.
+For each changed path, full SHA is optional; aggregate identity check is authoritative.
+
+# 12. Outcome
+
+Choose exactly ONE.
+
+## A — `RC1_SOURCE_MANIFEST_GIT_IDENTITY_NORMALIZED`
+
+Require all gates above pass.
+
+Then:
+
+```text
+NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION_RETRY
+```
+
+## B — `RC1_SOURCE_MANIFEST_NORMALIZATION_BLOCKED`
+
+Use for any failed gate.
+
+Then:
+
+```text
+NEXT = RC1_SOURCE_MANIFEST_EVIDENCE_RECOVERY
 ```
 
 Do NOT execute next gate.
 
-# 16. FROM_DSH
+# 13. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D11A-R1
+Task: 8B.3-P1D11M1
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 9f91d953b9ef5bb3993be4b7434b174de9856648
+Starting HEAD: ca0e9f4217f0abfb58bffe36ac297c46206fe016
 Model/test execution: NONE
 Functional runtime files modified: NO
+Tests modified: NO
 External delivery modified: NO
-Original P1D11A STOP root cause: WORKTREE_EOL_FALSE_POSITIVE / REAL_MANIFEST_DRIFT / OTHER
-Four flagged Git-canonical entries: 4/4 MATCH / other
-Git-canonical pre-edit manifest: 135/135 PASS / FAIL
-Post-edit staged/index manifest: 135/135 PASS / FAIL / NOT RUN
-Manifest entry count: 135 / other
-Runtime/test manifest entries modified: NO
-README manifest entry updated: YES / NO
-model_card manifest entry updated: YES / NO
-Canonical policy doc: docs/task8b3_p1d11_supported_domain_policy.md
-Canonical README policy: UPDATED / NOT UPDATED
-Canonical model card policy: UPDATED / NOT UPDATED
-A2 domain classification: NOT ESTABLISHED
-A2 policy status: DOCUMENTED_PERSISTENT_NON_DETECTION
+Pre-normalization both/Git-only/disk-only/neither: 93 / 4 / 38 / 0
+Manifest entry count: 135
+Sync helper uses manifest bytes/hash for source-destination validation: NO
+source_manifest self-listed: NO
+Identity basis: GIT_CANONICAL_BLOB_BYTES
+Changed entry identities: 38
+Unchanged entry identities: 97
+Post-normalization Git-canonical manifest: 135/135 PASS / FAIL
+Missing paths: 0 / other
+Duplicate paths: 0 / other
+Outcome: <exact enum>
+PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
+Supported-domain policy: NOT YET IMPLEMENTED
 Locked candidate status: FINAL_METADATA_LOCK
 Locked candidate runtime status: NOT YET RUN
-Supported-domain policy: IMPLEMENTED_IN_CANONICAL_RC1_DOCS / NOT IMPLEMENTED
-PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-Scientific freeze preserved: YES / NO
-External read-only sync check: <result / NOT RUN>
+Scientific freeze preserved: YES
 Next gate: <exact enum>
-RC1-DEMO-MEM-01: CLOSED
-RC1-DEMO-PROP-01: OPEN
-RC1-DEMO-REF-01: OPEN
-RC1-DEMO-MASK-01: OPEN
-Next action: Awaiting ChatGPT audit; do not run candidates or sync external.
+Report: docs/task8b3_p1d11_manifest_normalization.md
+Next action: Awaiting ChatGPT audit; do not implement policy or sync external.
 ```
 
-# 17. Commit / push
+# 14. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): implement prop01 supported-domain policy
+chore(rc1): normalize canonical source manifest identity
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record prop01 policy recovery stop
+docs(rc1): record source-manifest normalization stop
 ```
 
-Push normally.
+Push current branch normally.
 No force push.
 
-# 18. COMPLETE definition
+# 15. COMPLETE definition
 
 COMPLETE only if:
+
 - exact starting HEAD;
 - no model/test execution;
-- no functional/runtime/test modification;
-- four false mismatches are proven EOL-only against Git canonical bytes;
-- Git canonical preflight = 135/135;
-- policy document is created;
-- README/model_card are evidence-bounded;
-- only their two manifest entries change;
-- post-edit INDEX-aware manifest check = 135/135;
-- A2 remains provenance/domain NOT ESTABLISHED;
-- four locks remain immutable and NOT YET RUN;
-- external delivery untouched;
+- mixed convention reproduced exactly as 93/4/38/0;
+- sync-helper semantics confirmed;
+- source_manifest is not self-listed;
+- schema remains v1;
+- identity basis metadata added;
+- exactly 38 entry identities normalized to Git canonical bytes;
+- all 135 paths/order preserved;
+- post-normalization Git-canonical check = 135/135;
+- no runtime/test/README/model_card/external change;
 - PROP-01 remains OPEN;
-- next gate not executed;
-- only authorized paths committed;
+- policy remains not yet implemented;
+- next gate recorded but not executed;
 - commit/push succeeds;
 - STOP.
