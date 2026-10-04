@@ -17,31 +17,34 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R1 Report
+# FROM_DSH — Task 8B.3-REF01-F1-R2 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R1` |
-| Status | **STOP** (canonical GT reference masks reconstructed; detector pass still unused) |
+| Task | `8B.3-REF01-F1-R2` |
+| Status | **STOP** (forensic script executed but failed; no classification asserted) |
 | Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `95f4403837bd7057fc331462503875fa847f43c8` |
-| GT-reference masks reconstructed | 4/4 non-empty · area == `clipped_area_px` for all four = True |
-| Per-candidate GT mask pixels | right=2478, left=3512, above=5013, below=2606 |
-| Geometry cache / label key | right:label_map(uint8), left:label_map(uint8), above:label_map(uint8), below:label_map(uint8) |
-| Frozen detector passes used | 0 (the one-per-image allowance is untouched) |
-| Qwen / SAM2 / D-B1 / target segmentation | NOT EXECUTED |
-| Candidate replacement / repair / visual judgement | NONE / NONE / NONE |
+| Starting HEAD | `141af9cfd943dd13366947ea3a31637a3f8c7bc9` |
+| Proposal mask source | RERUN_GLOBALPROPOSAL_MASK_CROP (per the instruction) |
+| proposals.json role | METADATA_REPRODUCTION_ONLY |
+| Coverage threshold | 0.50 (TASK7F_FROZEN) |
+| Forensic script | `scripts/task8b3_ref01_locked_reference_forensics.py` (written, executed, failed) |
+| Evidence json | NOT PRODUCED |
+| Detector calls consumed | NOT DETERMINISTICALLY ESTABLISHED (0–4 possible); treat the allowance as exhausted and re-run all four in one invocation |
+| Failure text | captured on a UTF-8 re-execution and recorded in report §10 |
+| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NOT EXECUTED |
+| Manual visual inspection / candidate replacement / repair | NO / NO / NO |
 | External delivery / canonical RC1 modified | NO / NO |
-| Forensic classification / outcome enum | NOT ASSERTED |
+| Classification / outcome enum | NOT ASSERTED |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| REF-01 status | FORENSICS_INCOMPLETE |
 | Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
-| STOP reason | the canonical GT side is complete, but the IoU comparison needs two frozen facts that are not yet pinned down in my evidence (how a proposal mask is reconstructed from `proposals.json`, and the fixed Task 7F coverage threshold); running the authorised detector pass without them would yield uninterpretable diagnostics |
-| Next action | Awaiting ChatGPT audit — please confirm the proposal-mask reconstruction route and the Task 7F threshold so the §12–§18 chain can run in one turn |
+| STOP reason | the forensic script failed before producing evidence, and my runner's first error-capture attempt crashed on the GBK console; the underlying failure text is now recorded in the report for the next attempt |
+| Next action | Awaiting ChatGPT audit; the next task should re-run the script (allowance treated as exhausted) after the recorded failure is addressed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1-R2 (no downloads, no transfers).
 
-No model, detector, Qwen, SAM2 or D-B1 execution occurred; no delivery file was modified; only this report and the
-handoff changed.
+No delivery file was modified and no Qwen/SAM2/D-B1/relation/target-segmentation stage ran.

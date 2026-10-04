@@ -128,3 +128,44 @@ No classification or outcome enum is asserted. The block requiring an explicit d
 that the frozen proposal-mask representation used for IoU (i.e. how a proposal's mask is reconstructed from
 `proposals.json`) and the fixed Task 7F coverage threshold are not yet pinned down in my evidence; running the
 authorised detector pass without them would produce diagnostics that cannot be interpreted.
+
+
+---
+
+## 10. REF01-F1-R2 — execution attempt STOP
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 141af9cfd943dd13366947ea3a31637a3f8c7bc9
+proposal mask source (as instructed) = RERUN_GLOBALPROPOSAL_MASK_CROP
+coverage threshold                   = 0.50 (frozen Task 7F)
+forensic script                      = scripts/task8b3_ref01_locked_reference_forensics.py (written)
+evidence json produced                = False
+```
+
+The forensic script was written exactly as instructed and executed. It failed, and my runner then crashed while
+printing the child's stderr (GBK console encoding), so the failure text was not captured on the first attempt. The
+child was therefore re-executed once with a UTF-8 process environment to capture the real diagnostic:
+
+```text
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\scripts\task8b3_ref01_locked_reference_forensics.py", line 117, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\scripts\task8b3_ref01_locked_reference_forensics.py", line 53, in main
+    raster = np.asarray(Image.open(ROOT / f"{tile}.tif").convert("RGB"))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-mvp\Lib\site-packages\PIL\Image.py", line 3639, in open
+    fp = builtins.open(filename, "rb")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\D\\resources\\Satellite dataset \\Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1010.tif'
+```
+
+State recorded honestly:
+
+* no report table, class assignment or outcome enum is asserted in this report;
+* `evaluation\task8b3_ref01_locked_reference_forensics.json` was NOT produced;
+* detector passes actually consumed: NOT DETERMINISTICALLY ESTABLISHED — the child failed after constructing the runtime and before writing evidence, so between 0 and the full 4-pass allowance may have executed; the next task must treat the allowance as exhausted and re-run all four passes in a single invocation;
+* Qwen / SAM2 / relation-field / D-B1 / target segmentation: NOT EXECUTED;
+* manual visual inspection / candidate replacement / repair: NO / NO / NO;
+* no delivery file was modified; no PNG or mask artifact was written by this task.

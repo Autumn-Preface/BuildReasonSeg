@@ -1,467 +1,28 @@
-# TO_DSH — Task 8B.3-REF01-F1-R1: Continue Locked Demo Reference Forensics
+# TO_DSH — Task 8B.3-REF01-F1-R2: Execute the Frozen Reference IoU Classification
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-reference-forensics`
-> Required starting HEAD: `95f4403837bd7057fc331462503875fa847f43c8`
+> Required starting HEAD: `141af9cfd943dd13366947ea3a31637a3f8c7bc9`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 > RC1 Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 
-# 0. ChatGPT audit disposition
+# 0. ChatGPT audit decision
 
-The previous Task 8B.3-REF01-F1 STOP is accepted as a compliant STOP.
+Task 8B.3-REF01-F1-R1 STOP is accepted as a safe STOP.
 
-Verified entering facts:
+The two items DSH said were "not pinned down" were already explicitly frozen in the prior task book. This R2 removes all ambiguity.
 
-```text
-branch = fix/task8b3-ref01-reference-forensics
-STOP commit = 95f4403837bd7057fc331462503875fa847f43c8
-parent = e00396c85e0fb0ac966f72fa7216b34c72b94cb7
-commit message = docs(rc1): record reference forensics stop
-detector passes used = 0
-Qwen / SAM2 / D-B1 / target segmentation = NONE
-candidate replacement = NONE
-manual visual judgement = NONE
-external / canonical RC1 modification = NONE
-main unchanged = 57b368d5647e842d8f31d6d1a9997bf1df3cc0fb
-```
+## Frozen fact A — proposal mask source
 
-The prior turn established only:
-- 135/135 external manifest-listed-file integrity;
-- the four immutable v0.2 TEST records resolve uniquely;
-- their native-vector reference IDs match the stored reference provenance.
+DO NOT reconstruct proposal masks from `proposals.json`.
 
-It did **not** complete the GT-mask / detector / IoU classification procedure.
+`proposals.json` is metadata-only and is used only for deterministic reproduction checks.
 
-Therefore:
+The proposal mask used for IoU is the **in-memory `GlobalProposal.mask_crop` returned by the one authorised detector rerun**.
 
-```text
-REF01-F1 = NOT COMPLETE
-forensic classification = NOT YET ESTABLISHED
-```
-
-This continuation completes the same frozen task. It is not a new experiment and does not change the four candidates.
-
-# 1. Scientific-use disclosure — mandatory
-
-The final report MUST contain this exact English sentence:
-
-> The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
-
-Also include a faithful Chinese disclosure.
-
-This is engineering forensics using TEST-ground-truth metadata after Task 7J final-test consumption.
-
-Do not call the TEST split untouched.
-
-# 2. Git gate
-
-Require exactly:
-
-```text
-branch = fix/task8b3-ref01-reference-forensics
-HEAD = 95f4403837bd7057fc331462503875fa847f43c8
-```
-
-Allowed initial tracked tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
-
-Do not create another branch.
-Do not merge/rebase/reset/stash/clean/cherry-pick.
-
-If branch or HEAD differs:
-- STOP before any detector execution.
-
-# 3. Strict prohibitions
-
-Do NOT:
-- modify canonical RC1 source/config/model;
-- modify external RC1 source/config/model;
-- run write sync;
-- run `predict.py`;
-- run Qwen / ProgramHead;
-- run SAM2;
-- run relation fields;
-- run D-B1;
-- run target segmentation;
-- run training/fine-tuning/export/download;
-- change detector weights/config/thresholds;
-- change `FROZEN_THRESHOLD=0.5`;
-- change detector `imgsz/conf/max_det/tiling/NMS`;
-- change merge IoU;
-- change eligibility rules;
-- change reference selector;
-- change the 0.50 reference-coverage diagnostic threshold;
-- inspect source images or proposal previews visually;
-- make any subjective judgement;
-- replace any locked candidate;
-- regenerate BuildSpatialReason v0.2;
-- regenerate WHU native-vector annotations/caches;
-- compute any Task 7J performance metric;
-- update `main`;
-- force push.
-
-GT may be accessed only for the canonical **reference** of the four locked records.
-
-# 4. Allowed tracked changes
-
-Only:
-
-```text
-scripts/task8b3_ref01_locked_reference_forensics.py
-evaluation/task8b3_ref01_locked_reference_forensics.json
-docs/task8b3_ref01_locked_reference_forensics.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
-```
-
-No runtime/test/config/model file may change.
-
-# 5. Re-establish read-only preflight
-
-Do not rely only on the previous STOP report.
-
-Run:
-
-```text
-python scripts/sync_advisor_rc1_delivery.py ^
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
-  --check
-```
-
-Require:
-
-```text
-checked = 135
-match = 135
-missing = 0
-mismatch = 0
-exit = 0
-```
-
-Then from the external RC1 root run:
-
-```text
-<RC1_PYTHON> check_setup.py
-```
-
-Require:
-
-```text
-exit = 0
-BuildReasonSeg environment: READY
-```
-
-If either fails:
-- detector passes used remain 0;
-- STOP.
-
-# 6. Frozen v0.2 TEST identity gate
-
-Require local file:
-
-```text
-datasets/build_spatial_reason/v0.2/test.jsonl
-```
-
-Exact frozen identity:
-
-```text
-bytes = 14415287
-sha256 = 72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc
-records = 6219
-```
-
-Require manifest:
-
-```text
-dataset_version = v0.2
-split_view = scene_disjoint_v1
-source_component_representation_version = whu-native-vector-v1.0
-```
-
-If missing/mismatched:
-- do NOT regenerate;
-- STOP.
-
-# 7. Immutable locked records
-
-Exactly:
-
-```text
-right:
-buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
-tile = 1010
-query = largest_to_right_of_to_nearest
-
-left:
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
-tile = 1003
-query = largest_to_left_of_to_nearest
-
-above:
-buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
-tile = 1008
-query = largest_to_above_to_nearest
-
-below:
-buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
-tile = 1009
-query = largest_to_below_to_nearest
-```
-
-Read `test.jsonl` once.
-
-Each must resolve exactly once and require:
-
-```text
-split = test
-level = 3
-image_id = exact tile
-query_type = exact query
-len(reference_component_ids) = 1
-len(native_vector.references) = 1
-reasoning_steps[0].operation = argmax_area
-reasoning_steps[0].output_component_id = reference_component_ids[0]
-native_vector.references[0].tile_instance_id = reference_component_ids[0]
-```
-
-Instantiate existing `NativeVectorDataset()` and require:
-
-```python
-validate_reasoning_record(record, dataset) == []
-```
-
-Require:
-
-```text
-dataset.get_source_feature_id(tile, reference_id)
-=
-native_vector.references[0].source_feature_id
-```
-
-Any mismatch:
-- STOP.
-
-# 8. Exact source rasters
-
-Use exactly these local source rasters:
-
-```text
-right:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1010.tif
-SHA256 = 1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2
-
-left:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1003.tif
-SHA256 = eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38
-
-above:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1008.tif
-SHA256 = 0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd
-
-below:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1009.tif
-SHA256 = c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7
-```
-
-Require every SHA exactly matches before detector execution.
-
-Require every image decodes as RGB 512×512.
-
-If not:
-- STOP.
-
-# 9. Canonical GT reference masks
-
-For each record:
-
-```python
-gt_reference_id = record["reference_component_ids"][0]
-label_map = dataset.label_map(tile_id)
-gt_reference_mask = (label_map == gt_reference_id)
-```
-
-Require:
-- label_map exists;
-- shape = `(512, 512)`;
-- GT reference mask non-empty;
-- the per-tile native-vector cache already exists;
-- no cache regeneration is performed.
-
-From `dataset.list_instances(tile_id)`, find the exact reference row.
-
-Require:
-
-```text
-int(gt_reference_mask.sum()) = clipped_area_px
-```
-
-Record:
-
-```text
-gt_reference_id
-gt_source_feature_id
-gt_area_px
-gt_bbox_xyxy_px
-gt_centroid_px
-gt_touches_tile_border
-```
-
-No target mask/target GT metric in this task.
-
-If cache is missing:
-- STOP.
-
-# 10. Existing P1D12 diagnostics gate
-
-Read only these existing external files:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1003\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1008\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1009\proposals.json
-```
-
-Frozen counts:
-
-```text
-1010 raw=6  merged=6  eligible=4
-1003 raw=66 merged=53 eligible=42
-1008 raw=9  merged=9  eligible=4
-1009 raw=7  merged=6  eligible=3
-```
-
-Do not modify those files.
-
-If their recorded counts disagree:
-- STOP before detector execution.
-
-# 11. External implementation identity gate
-
-The forensic script must import these from the **external RC1**:
-
-```python
-from buildreasonseg.runtime.detector import (
-    DetectorRuntime,
-    eligible_proposals,
-    select_reference,
-)
-from buildreasonseg.runtime.imageio import load_image
-```
-
-Before inference, inspect module `__file__`.
-
-Require both module paths resolve underneath exactly:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-If repository/canonical modules are imported:
-- STOP before detector execution.
-
-Also record detector constants from the imported external module:
-
-```text
-TILE_SIZE = 512
-TILE_OVERLAP = 128
-TILE_STRIDE = 384
-IMGSZ = 640
-CONF = 0.05
-MAX_DET = 300
-DUPLICATE_IOU = 0.50
-MERGE_BBOX_EXTENT_RATIO_MAX = 0.20
-FROZEN_THRESHOLD = 0.5
-```
-
-Any mismatch:
-- STOP.
-
-# 12. Detector execution — exact allowance
-
-Previous STOP used zero detector passes.
-
-Remaining allowance:
-
-```text
-right: 1 pass
-left: 1 pass
-above: 1 pass
-below: 1 pass
-```
-
-Run exactly once per candidate, in this order:
-
-```text
-1010
-1003
-1008
-1009
-```
-
-Use one default `DetectorRuntime()` object.
-
-For each image exactly:
-
-```python
-loaded = load_image(exact_source_path)
-detection = detector.detect_global(loaded.rgb)
-```
-
-Do not call `detect_global` twice for any candidate.
-Do not call `predict.py`.
-Do not retry a mismatch.
-Do not write any external diagnostic.
-
-# 13. Deterministic reproduction gate
-
-Before using proposal masks for GT analysis, require detector rerun metadata reproduces P1D12.
-
-For each candidate require exact:
-
-```text
-raw_count
-len(merged)
-eligible_count
-```
-
-Expected:
-
-```text
-right  = 6 / 6 / 4
-left   = 66 / 53 / 42
-above  = 9 / 9 / 4
-below  = 7 / 6 / 3
-```
-
-Match rerun `merged` against frozen P1D12 `proposals.json` by `proposal_id`.
-
-Require exact:
-- `proposal_id`
-- `source_tile_id`
-- `mask_area`
-- `global_bbox`
-- `touches_image_border`
-- `raw_index`
-
-Require absolute difference ≤ `1e-6`:
-- `confidence`
-- each `centroid` coordinate
-- `border_clearance`
-- `bbox_extent_ratio`
-
-If any mismatch:
-- STOP immediately;
-- no IoU classification;
-- no second detector call.
-
-# 14. Reconstruct proposal masks
-
-For each merged proposal:
+For each rerun proposal:
 
 ```python
 full = np.zeros((512, 512), dtype=bool)
@@ -476,41 +37,382 @@ assert proposal.mask_crop.shape == (
 full[top:bottom + 1, left:right + 1] = proposal.mask_crop
 ```
 
-No resize/morphology/dilation/erosion/union/refinement.
+No resize, morphology, dilation, erosion, union, SAM2 refinement or threshold change is permitted.
 
-IoU:
+## Frozen fact B — diagnostic coverage threshold
+
+The reference coverage threshold is exactly:
+
+```text
+IoU >= 0.50
+```
+
+This is the already frozen Task 7F threshold.
+
+It is NOT tuned, selected or changed in this task.
+
+No further decision is needed before detector execution.
+
+# 1. Entering evidence — already accepted, do not redo unless required for script input
+
+The previous two STOP commits already establish:
+
+```text
+external RC1 manifest-listed source/config = 135/135 PASS
+four immutable v0.2 TEST records = UNIQUE and provenance-valid
+canonical GT reference masks = 4/4 reconstructed
+GT mask non-empty = 4/4
+GT mask area == clipped_area_px = 4/4
+detector passes used so far = 0
+Qwen / SAM2 / D-B1 / target segmentation = NONE
+candidate replacement / repair / visual judgement = NONE
+external / canonical RC1 modified = NO / NO
+```
+
+Frozen GT reference facts:
+
+```text
+right:
+tile = 1010
+reference tile_instance_id = 4
+GT area = 2478
+
+left:
+tile = 1003
+reference tile_instance_id = 26
+GT area = 3512
+
+above:
+tile = 1008
+reference tile_instance_id = 4
+GT area = 5013
+
+below:
+tile = 1009
+reference tile_instance_id = 3
+GT area = 2606
+```
+
+Do not spend this task repeating large preflight prose. The forensic script may load the same records/caches as inputs, but do not stop for a new technical decision unless an actual contradiction occurs.
+
+# 2. Git gate
+
+Require exactly:
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD = 141af9cfd943dd13366947ea3a31637a3f8c7bc9
+```
+
+Allowed initial tracked tree:
+- clean; or
+- only `M handoff/TO_DSH.md`.
+
+No new branch.
+No merge/rebase/reset/stash/clean/cherry-pick.
+
+If branch/HEAD differs:
+- detector passes remain 0;
+- STOP.
+
+# 3. Strict prohibitions
+
+Do NOT:
+- run `predict.py`;
+- run Qwen / ProgramHead;
+- run SAM2;
+- run relation fields;
+- run D-B1;
+- run target segmentation;
+- modify canonical RC1;
+- modify external RC1;
+- run sync write;
+- change any detector threshold/config/weight;
+- change selector/eligibility;
+- change `IoU >= 0.50`;
+- inspect source images/proposal PNGs visually;
+- use subjective visual judgement;
+- replace any locked candidate;
+- regenerate dataset records or native-vector caches;
+- compute Task 7J metrics;
+- design or implement a repair;
+- update `main`;
+- force push.
+
+# 4. Allowed tracked changes
+
+Only:
+
+```text
+scripts/task8b3_ref01_locked_reference_forensics.py
+evaluation/task8b3_ref01_locked_reference_forensics.json
+docs/task8b3_ref01_locked_reference_forensics.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+# 5. Scientific-use disclosure
+
+The final report MUST contain exactly:
+
+> The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
+
+Also include a faithful Chinese disclosure.
+
+# 6. Immutable candidates and source rasters
+
+Use exactly:
+
+```text
+right:
+sample_id = buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
+tile = 1010
+image = C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1010.tif
+image_sha256 = 1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2
+
+left:
+sample_id = buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+tile = 1003
+image = C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1003.tif
+image_sha256 = eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38
+
+above:
+sample_id = buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
+tile = 1008
+image = C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1008.tif
+image_sha256 = 0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd
+
+below:
+sample_id = buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+tile = 1009
+image = C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1009.tif
+image_sha256 = c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7
+```
+
+Before detector execution:
+- require each SHA match exactly;
+- require each image = RGB-readable 512×512.
+
+Any mismatch:
+- STOP;
+- no candidate substitution.
+
+# 7. Existing P1D12 proposal metadata
+
+Read only existing:
+
+```text
+external\inference\output\diagnostics\1010\proposals.json
+external\inference\output\diagnostics\1003\proposals.json
+external\inference\output\diagnostics\1008\proposals.json
+external\inference\output\diagnostics\1009\proposals.json
+```
+
+Frozen expected counts:
+
+```text
+right  = raw 6  / merged 6  / eligible 4
+left   = raw 66 / merged 53 / eligible 42
+above  = raw 9  / merged 9  / eligible 4
+below  = raw 7  / merged 6  / eligible 3
+```
+
+`proposals.json` is ONLY the metadata reference for §10.
+It is NOT the proposal-mask source.
+
+# 8. External detector implementation gate
+
+The forensic script must force/import the implementation from external RC1.
+
+Use:
 
 ```python
-intersection = np.logical_and(full, gt_reference_mask).sum()
-union = np.logical_or(full, gt_reference_mask).sum()
+from buildreasonseg.runtime.detector import (
+    DetectorRuntime,
+    eligible_proposals,
+    select_reference,
+)
+from buildreasonseg.runtime.imageio import load_image
+```
+
+Require the imported `detector.py` and `imageio.py` resolve under:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
+
+Record and require:
+
+```text
+TILE_SIZE = 512
+TILE_OVERLAP = 128
+TILE_STRIDE = 384
+IMGSZ = 640
+CONF = 0.05
+MAX_DET = 300
+DUPLICATE_IOU = 0.50
+MERGE_BBOX_EXTENT_RATIO_MAX = 0.20
+FROZEN_THRESHOLD = 0.5
+```
+
+If any mismatch:
+- STOP before detector execution.
+
+# 9. GT reference masks
+
+Use the already validated native-vector source:
+
+```python
+dataset = NativeVectorDataset()
+label_map = dataset.label_map(tile_id)
+gt_mask = label_map == gt_reference_id
+```
+
+Expected reference IDs:
+
+```text
+1010 -> 4
+1003 -> 26
+1008 -> 4
+1009 -> 3
+```
+
+Expected GT areas:
+
+```text
+1010 -> 2478
+1003 -> 3512
+1008 -> 5013
+1009 -> 2606
+```
+
+Require exact.
+
+Do not regenerate missing caches.
+
+# 10. Detector execution — exactly four calls total
+
+Run in this exact order:
+
+```text
+1010
+1003
+1008
+1009
+```
+
+Create one default:
+
+```python
+detector = DetectorRuntime()
+```
+
+For each candidate exactly once:
+
+```python
+loaded = load_image(source_path)
+detection = detector.detect_global(loaded.rgb)
+```
+
+Maximum authorised detector calls in this task:
+
+```text
+4
+```
+
+No retry.
+No second call for any candidate.
+
+If a detector call errors:
+- STOP;
+- do not retry.
+
+# 11. Mandatory reproduction gate before any GT classification
+
+For each rerun require exact:
+
+```text
+raw_count
+merged count
+eligible count
+```
+
+Expected:
+
+```text
+1010 = 6 / 6 / 4
+1003 = 66 / 53 / 42
+1008 = 9 / 9 / 4
+1009 = 7 / 6 / 3
+```
+
+Compare every rerun merged proposal to its existing `proposals.json` item by `proposal_id`.
+
+Require exact:
+- proposal_id
+- source_tile_id
+- mask_area
+- global_bbox
+- touches_image_border
+- raw_index
+
+Tolerance ≤ `1e-6`:
+- confidence
+- centroid row/col
+- border_clearance
+- bbox_extent_ratio
+
+If any mismatch:
+- STOP;
+- do not classify;
+- do not rerun.
+
+# 12. Proposal-mask source — explicit and final
+
+For IoU, use each rerun `GlobalProposal.mask_crop`.
+
+Do NOT use a mask from `proposals.json`.
+
+For each proposal:
+
+```python
+top, left, bottom, right = proposal.global_bbox
+
+assert proposal.mask_crop.dtype == bool
+assert proposal.mask_crop.shape == (
+    bottom - top + 1,
+    right - left + 1,
+)
+
+proposal_mask = np.zeros((512, 512), dtype=bool)
+proposal_mask[top:bottom + 1, left:right + 1] = proposal.mask_crop
+```
+
+Compute:
+
+```python
+intersection = np.logical_and(proposal_mask, gt_mask).sum()
+union = np.logical_or(proposal_mask, gt_mask).sum()
+assert union > 0
 iou = float(intersection / union)
 ```
 
-Require `union > 0`.
+No other mask transformation is authorized.
 
-Centroid error:
+# 13. Production selected reference
 
-```text
-Euclidean distance in pixels:
-proposal.centroid ↔ GT reference centroid
-```
-
-# 15. Production selected reference
-
-Use exact frozen function:
+Use exactly:
 
 ```python
-selected = select_reference(merged, family="largest")
+selected = select_reference(detection["merged"], family="largest")
 ```
 
-Do not reimplement selection.
-
-Require selected is not `None`.
+Require not None.
 
 Record:
 
 ```text
-selected_proposal_id
+selected_id
 selected_mask_area
 selected_confidence
 selected_bbox
@@ -519,23 +421,21 @@ selected_centroid_error_px
 selected_area_to_gt_ratio
 ```
 
-# 16. Diagnostic oracle proposals
+# 14. Best eligible / best any diagnostic
 
-Coverage threshold remains frozen from Task 7F:
-
-```text
-REFERENCE_COVERAGE_IOU_THRESHOLD = 0.50
-```
-
-This is diagnostic only, not tuned here.
-
-Eligible set:
+Use exactly:
 
 ```python
-eligible = eligible_proposals(merged, family="largest")
+eligible = eligible_proposals(detection["merged"], family="largest")
 ```
 
-Define `best_eligible` by ascending tuple:
+Coverage threshold:
+
+```text
+0.50
+```
+
+Rank both eligible proposals and all merged proposals by:
 
 ```python
 (
@@ -544,10 +444,6 @@ Define `best_eligible` by ascending tuple:
     proposal_id,
 )
 ```
-
-over eligible proposals.
-
-Define `best_any_merged` with the same tuple over all merged proposals.
 
 Record:
 
@@ -562,50 +458,45 @@ best_any_is_eligible
 selected_to_best_eligible_iou_gap
 ```
 
-No production decision is changed.
+# 15. Exclusive classification — mechanical only
 
-# 17. Exclusive per-candidate classification
-
-Exactly one class.
-
-## `REFERENCE_SELECTED_CORRECT`
+Exactly one per candidate.
 
 ```text
-selected_iou_to_gt >= 0.50
+REFERENCE_SELECTED_CORRECT
+if selected_iou_to_gt >= 0.50
 ```
-
-## `REFERENCE_SELECTION_WRONG_COVERED`
 
 ```text
-selected_iou_to_gt < 0.50
-AND
-best_eligible_iou >= 0.50
+REFERENCE_SELECTION_WRONG_COVERED
+if selected_iou_to_gt < 0.50
+and best_eligible_iou >= 0.50
 ```
-
-## `REFERENCE_ELIGIBILITY_BLOCKED`
 
 ```text
-selected_iou_to_gt < 0.50
-AND
-best_eligible_iou < 0.50
-AND
-best_any_iou >= 0.50
+REFERENCE_ELIGIBILITY_BLOCKED
+if selected_iou_to_gt < 0.50
+and best_eligible_iou < 0.50
+and best_any_iou >= 0.50
 ```
-
-## `REFERENCE_COVERAGE_MISSING`
 
 ```text
-best_any_iou < 0.50
+REFERENCE_COVERAGE_MISSING
+if best_any_iou < 0.50
 ```
 
+No visual override.
 No fifth class.
-No subjective override.
 
-# 18. Overall outcome / next gate
+# 16. Overall outcome — exact priority
 
-Priority is fixed:
+If ANY candidate is:
 
-## If any candidate = `REFERENCE_COVERAGE_MISSING`
+```text
+REFERENCE_COVERAGE_MISSING
+```
+
+then:
 
 ```text
 Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
@@ -613,7 +504,13 @@ Dominant next blocker = COVERAGE
 NEXT = REF01_COVERAGE_FRAGMENTATION_FORENSICS
 ```
 
-## Else if any = `REFERENCE_ELIGIBILITY_BLOCKED`
+Else if ANY candidate is:
+
+```text
+REFERENCE_ELIGIBILITY_BLOCKED
+```
+
+then:
 
 ```text
 Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
@@ -621,7 +518,13 @@ Dominant next blocker = ELIGIBILITY
 NEXT = REF01_ELIGIBILITY_FORENSICS
 ```
 
-## Else if any = `REFERENCE_SELECTION_WRONG_COVERED`
+Else if ANY candidate is:
+
+```text
+REFERENCE_SELECTION_WRONG_COVERED
+```
+
+then:
 
 ```text
 Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
@@ -629,7 +532,13 @@ Dominant next blocker = SELECTION
 NEXT = REF01_SELECTION_REPAIR_DESIGN
 ```
 
-## Else all four = `REFERENCE_SELECTED_CORRECT`
+Else all four are:
+
+```text
+REFERENCE_SELECTED_CORRECT
+```
+
+then:
 
 ```text
 Outcome = REF01_LOCKED_DEMO_REFERENCE_GATE_PASS
@@ -639,129 +548,85 @@ NEXT = MASK01_LOCKED_DEMO_END_TO_END_FORENSICS
 
 Do not execute NEXT.
 
-# 19. Forensic script
+# 17. Script output
 
-Create:
+Create/update:
 
 ```text
 scripts/task8b3_ref01_locked_reference_forensics.py
 ```
 
-Requirements:
-- read-only toward external RC1 and dataset;
-- implements §§5–18 exactly;
-- one detector call per candidate maximum;
-- no image/PNG/mask/checkpoint output;
-- writes only:
-  `evaluation/task8b3_ref01_locked_reference_forensics.json`;
-- non-zero exit on any gate failure.
-
-Evidence JSON required top-level keys:
+It may write only:
 
 ```text
-task
-continuation_of
-starting_head
-external_root
-external_integrity
-external_setup
-test_jsonl_sha256
-test_jsonl_bytes
-test_record_count
-scientific_reuse_disclosure
-coverage_threshold
-detector_config
-candidates
-overall_outcome
-dominant_next_blocker
-next_gate
+evaluation/task8b3_ref01_locked_reference_forensics.json
 ```
 
-Each candidate must contain:
-- immutable sample ID/tile/query;
-- exact raster SHA;
-- canonical GT reference facts;
-- detector reproduction facts;
-- selected proposal facts;
-- best eligible facts;
-- best any facts;
-- exact exclusive class.
+No PNGs.
+No masks.
+No external outputs.
+No checkpoints.
 
-# 20. Canonical report
+Evidence JSON must contain:
+- starting HEAD;
+- exact scientific reuse disclosure;
+- detector module paths/config;
+- detector call count;
+- coverage threshold = 0.50;
+- candidate records;
+- GT facts;
+- reproduction facts;
+- selected/best eligible/best any facts;
+- exact exclusive classifications;
+- overall outcome;
+- dominant next blocker;
+- NEXT.
 
-Update the existing:
+# 18. Report
+
+Update:
 
 ```text
 docs/task8b3_ref01_locked_reference_forensics.md
 ```
 
-Do not erase the fact that the prior turn STOPPED at preflight.
+Preserve both prior STOP histories.
 
-Make the report clearly state:
-
-```text
-prior STOP commit = 95f4403837bd7057fc331462503875fa847f43c8
-continuation = Task 8B.3-REF01-F1-R1
-detector passes before continuation = 0
-```
-
-Required final sections:
-1. prior STOP and continuation;
-2. exact English + Chinese TEST-reuse disclosure;
-3. external 135/135 + setup READY;
-4. v0.2 TEST identity;
-5. four immutable record/reference identities;
-6. exact four raster identities;
-7. GT reference-mask integrity;
-8. detector reproduction gate;
-9. proposal-to-GT measurements;
-10. exclusive classifications;
-11. aggregate class counts;
-12. dominant next blocker;
-13. nonclaims;
-14. exact Outcome;
-15. exact NEXT.
+Add final R2 section containing:
+- explicit clarification that `proposals.json` was metadata-only;
+- in-memory rerun `GlobalProposal.mask_crop` was the mask source;
+- threshold = frozen Task 7F IoU 0.50;
+- detector calls exactly 4;
+- reproduction table;
+- GT comparison table;
+- class counts;
+- outcome/NEXT.
 
 Required table:
 
 ```text
-relation | GT_ref_id | selected_id | selected_IoU | best_eligible_id | best_eligible_IoU | best_any_IoU | class
+relation | GT_ref | selected_id | selected_IoU | best_eligible_id | best_eligible_IoU | best_any_IoU | class
 ```
 
-# 21. No claim inflation
+# 19. FROM_DSH
 
-Do not claim:
-- REF-01 globally fixed;
-- detector generally solved;
-- historical A2 fixed;
-- cross-city generalization;
-- arbitrary aerial-image robustness;
-- final Demo success;
-- target segmentation success;
-- Task 7J metrics improved;
-- untouched TEST.
+Preserve ARTIFACT-FACTS exactly.
 
-# 22. FROM_DSH
-
-Preserve `ARTIFACT-FACTS` exactly.
-
-Required fields:
+Required:
 
 ```text
-Task: 8B.3-REF01-F1-R1
+Task: 8B.3-REF01-F1-R2
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-ref01-reference-forensics
-Starting HEAD: 95f4403837bd7057fc331462503875fa847f43c8
-Prior STOP detector passes: 0
-External sync check: 135/135 PASS / FAIL
-External setup: READY / NOT READY
-BuildSpatialReason v0.2 test identity: PASS / FAIL
-v0.2 test records: 6219 / other
-Locked record resolution: 4/4 UNIQUE / other
-Native-vector provenance validation: 4/4 PASS / other
+Starting HEAD: 141af9cfd943dd13366947ea3a31637a3f8c7bc9
+Prior detector passes: 0
+Proposal mask source: RERUN_GLOBALPROPOSAL_MASK_CROP
+proposals.json role: METADATA_REPRODUCTION_ONLY
+Coverage threshold: 0.50_TASK7F_FROZEN
+Locked raster SHA identities: 4/4 PASS / other
 GT reference-mask integrity: 4/4 PASS / other
-Locked raster SHA identity: 4/4 PASS / other
-Detector inference: 4 locked rasters × 1 pass / other
+External detector module identity: PASS / FAIL
+Detector calls: 4 / other
 Detector reproduction right: 6/6 eligible4 MATCH / other
 Detector reproduction left: 66/53 eligible42 MATCH / other
 Detector reproduction above: 9/9 eligible4 MATCH / other
@@ -773,7 +638,10 @@ D-B1 execution: NONE
 Target segmentation: NONE
 Manual visual inspection: NO
 Candidate replacement: NO
-Task7J metric/model/seed/threshold/architecture changed: NO
+right selected_IoU / bestEligible_IoU / bestAny_IoU: <values>
+left selected_IoU / bestEligible_IoU / bestAny_IoU: <values>
+above selected_IoU / bestEligible_IoU / bestAny_IoU: <values>
+below selected_IoU / bestEligible_IoU / bestAny_IoU: <values>
 right class: <exact class>
 left class: <exact class>
 above class: <exact class>
@@ -781,7 +649,7 @@ below class: <exact class>
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
 REF-01 status: FORENSICS_COMPLETE / GATE_PASS / other
 Outcome: <exact enum>
-Dominant next blocker: <exact enum>
+Dominant next blocker: <exact value>
 Next gate: <exact enum>
 Evidence: evaluation/task8b3_ref01_locked_reference_forensics.json
 Report: docs/task8b3_ref01_locked_reference_forensics.md
@@ -789,18 +657,18 @@ External/canonical product files modified: NO / NO
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-# 23. Commit / push / STOP
+# 20. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): complete locked demo reference forensics
+docs(rc1): complete locked reference IoU forensics
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record reference forensics continuation stop
+docs(rc1): record locked reference IoU stop
 ```
 
 Push only:
@@ -810,37 +678,28 @@ fix/task8b3-ref01-reference-forensics
 ```
 
 No force push.
-Do not update old PROP-01 branch.
 Do not update main.
+After push: STOP.
 
-After push:
-- STOP;
-- wait for ChatGPT audit.
+# 21. COMPLETE definition
 
-# 24. COMPLETE definition
-
-COMPLETE only if all are true:
+COMPLETE only if:
 
 ```text
-required branch/head exact
-only five allowed tracked paths changed
-external integrity 135/135 PASS
-external setup READY
-v0.2 TEST exact bytes/SHA/count
-four immutable records 4/4 unique
-native-vector provenance 4/4 valid
-four GT reference masks 4/4 valid
+branch/head exact
+only allowed tracked files changed
 four raster SHA identities exact
-exactly one detector pass per candidate
-detector rerun reproduces P1D12 exactly
-no Qwen/SAM2/relation/D-B1/target segmentation
-no external write
-no manual visual judgement
-no candidate replacement
-0.50 diagnostic threshold unchanged
-one exclusive class per candidate
-Outcome/NEXT chosen mechanically
-evidence JSON + canonical report + FROM_DSH committed
-branch pushed
+four GT reference masks exact
+external detector module identity exact
+detector calls exactly 4
+P1D12 reproduction exact for all four
+proposal IoU uses rerun in-memory GlobalProposal.mask_crop
+coverage threshold exactly 0.50
+Qwen/SAM2/relation/D-B1/target segmentation not run
+manual visual judgement none
+candidate replacement none
+exactly one class per candidate
+mechanical overall Outcome/NEXT
+evidence JSON/report/FROM_DSH committed and pushed
 STOP
 ```
