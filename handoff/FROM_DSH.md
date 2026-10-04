@@ -17,35 +17,43 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R3 Report
+# FROM_DSH — Task 8B.3-REF01-F1-R4 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R3` |
-| Status | **STOP** (harness import-time failure; single run consumed; no classification asserted) |
+| Task | `8B.3-REF01-F1-R4` |
+| Status | **COMPLETE** |
 | Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `ac1e4a9f8f452581c509ab0d73024c44c5de1be0` |
-| STATIC_HARNESS_GATE | PASS |
-| Harness runs consumed | 1 |
-| Detector calls executed | 0 |
-| Evidence json | NOT PRODUCED |
-| Blocking defect | one-line operator-precedence bug in the harness raster-root construction (`Path / str + str`); the fix is to parenthesise the concatenation |
-| Proposal mask source (as implemented) | RERUN_GLOBALPROPOSAL_MASK_CROP |
-| proposals.json role | METADATA_REPRODUCTION_ONLY |
-| Coverage threshold | 0.50 (TASK7F_FROZEN) |
-| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NOT EXECUTED |
-| Manual visual inspection / candidate replacement / repair | NO / NO / NO |
-| External delivery / canonical RC1 modified | NO / NO |
-| Classification / outcome enum | NOT ASSERTED |
+| Starting HEAD | `35105fb8b4255375923ff3174d3efd2356717333` |
+| Preflight 1/3 compile | PASS |
+| Preflight 2/3 import-only | PASS (detector calls 0) |
+| Preflight 3/3 contract | PASS (external RC1 default `DetectorRuntime`, `eligible_proposals`, `select_reference`) |
+| Runtime construction | external RC1 default `DetectorRuntime()` |
+| Prior detector passes | 0 |
+| Detector calls | 4 |
+| P1D12 metadata reproduction | right 6/6 eligible4 MATCH · left 66/53 eligible42 MATCH · above 9/9 eligible4 MATCH · below 7/6 eligible3 MATCH |
+| right selected/bestEligible/bestAny IoU | 0.5589 / 0.5589 / 0.5589 |
+| left selected/bestEligible/bestAny IoU | 0.0000 / 0.6501 / 0.6501 |
+| above selected/bestEligible/bestAny IoU | 0.0000 / 0.0000 / 0.9033 |
+| below selected/bestEligible/bestAny IoU | 0.0000 / 0.6165 / 0.6165 |
+| right / left / above / below class | REFERENCE_SELECTED_CORRECT · REFERENCE_SELECTION_WRONG_COVERED · REFERENCE_ELIGIBILITY_BLOCKED · REFERENCE_SELECTION_WRONG_COVERED |
+| Class counts | {"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1} |
+| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE / NONE / NONE / NONE / NONE |
+| Manual visual inspection / candidate replacement / product repair | NO / NO / NO |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| REF-01 status | FORENSICS_INCOMPLETE |
+| REF-01 status | FORENSICS_COMPLETE |
+| Outcome | **REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE** |
+| Dominant next blocker | ELIGIBILITY |
+| Next gate | `NEXT = REF01_ELIGIBILITY_FORENSICS` (not executed) |
+| Evidence | `evaluation\task8b3_ref01_locked_reference_forensics.json` |
 | Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
-| STOP reason | the repaired harness passed the static gate but crashed at import on the parenthesisation bug, consuming the single allowed execution; per the task book the harness may not be run again in this task |
-| Next action | Awaiting ChatGPT audit — next task should apply the one-line fix and grant one fresh harness execution |
+| Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R3 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1-R4 (no downloads, no transfers).
 
-No detector pass executed, no delivery file was modified, and no Qwen/SAM2/D-B1/relation/target-segmentation stage ran.
+Exactly one detector pass per locked candidate ran through the external RC1 default `DetectorRuntime()`; no Qwen, SAM2,
+relation-field, D-B1 or target-segmentation stage executed, no mask/PNG artifact was written, and no delivery file was
+modified.

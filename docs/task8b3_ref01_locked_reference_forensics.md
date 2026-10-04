@@ -213,3 +213,62 @@ manual visual inspection / candidate replacement / repair  = NO / NO / NO
 external delivery / canonical RC1 modified                 = NO / NO
 classification / outcome enum                              = NOT ASSERTED
 ```
+
+
+---
+
+## 13. REF01-F1-R4 — triple preflight, single harness run, GT IoU classification
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 35105fb8b4255375923ff3174d3efd2356717333
+PREFLIGHT 1/3 compile      = PASS (py_compile)
+PREFLIGHT 2/3 import-only  = PASS (module imported without executing main(); detector calls 0)
+PREFLIGHT 3/3 contract     = PASS (external RC1 detector module imported; DetectorRuntime present;
+                             eligible_proposals/select_reference present; detector calls 0)
+prior detector calls       = 0
+runtime construction       = external RC1 default DetectorRuntime()
+harness runs               = 1
+detector calls             = 4 (exactly one per locked candidate)
+proposal mask source       = RERUN_GLOBALPROPOSAL_MASK_CROP
+proposals.json role        = METADATA_REPRODUCTION_ONLY
+coverage threshold         = 0.50 (frozen Task 7F)
+```
+
+### 13.1 Reproduction table (harness rerun vs stored P1D12 metadata)
+
+| relation | expected raw/merged | stored raw/merged | stored eligible | rerun raw/merged | rerun eligible | gate |
+|---|---|---|---|---|---|---|
+| right | 6/6 | 6/6 | 4 | 6/6 | 4 | MATCH |
+| left | 66/53 | 66/53 | 42 | 66/53 | 42 | MATCH |
+| above | 9/9 | 9/9 | 4 | 9/9 | 4 | MATCH |
+| below | 7/6 | 7/6 | 3 | 7/6 | 3 | MATCH |
+
+All four candidates reproduce the P1D12 proposal metadata exactly (raw, merged and eligible counts).
+
+### 13.2 GT comparison and mechanical classification
+
+| relation | GT_ref | selected_id | selected_IoU | best_eligible_IoU | best_any_IoU | class |
+|---|---|---|---|---|---|---|
+| right | 4 | 1 | 0.5589 | 0.5589 | 0.5589 | REFERENCE_SELECTED_CORRECT |
+| left | 26 | 14 | 0.0000 | 0.6501 | 0.6501 | REFERENCE_SELECTION_WRONG_COVERED |
+| above | 4 | 4 | 0.0000 | 0.0000 | 0.9033 | REFERENCE_ELIGIBILITY_BLOCKED |
+| below | 3 | 1 | 0.0000 | 0.6165 | 0.6165 | REFERENCE_SELECTION_WRONG_COVERED |
+
+Class counts: `{"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1}`
+
+### 13.3 Outcome
+
+```text
+Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
+Dominant next blocker = ELIGIBILITY
+NEXT = REF01_ELIGIBILITY_FORENSICS
+```
+
+### 13.4 Explicit non-execution
+
+```text
+Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+external delivery / canonical RC1 modified = NO / NO
+```

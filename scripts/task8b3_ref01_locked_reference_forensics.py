@@ -18,7 +18,7 @@ EXTERNAL = Path(r"C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1")
 CACHE = REPO / "artifacts" / "whu_native_vector" / "instances"
 DIAG = EXTERNAL / "inference" / "output" / "diagnostics"
 EVIDENCE = REPO / "evaluation" / "task8b3_ref01_locked_reference_forensics.json"
-RASTER_ROOT = (Path(r"C:\D\resources") / "Satellite dataset " + chr(0x2161) + " (East Asia)"
+RASTER_ROOT = (Path(r"C:\D\resources") / ("Satellite dataset " + chr(0x2161) + " (East Asia)")
                / "1. The cropped image data and raster labels" / "test" / "image")
 THRESHOLD = 0.50
 CASES = [("right", "1010", 4, 6, 6, 4), ("left", "1003", 26, 66, 53, 42),
@@ -49,8 +49,7 @@ def iou(first: np.ndarray, second: np.ndarray) -> float:
 
 
 def main() -> int:
-    runtime = DetectorRuntime(checkpoint=str(EXTERNAL / "model" / "buildreasonseg_advisor" / "detector.pt"),
-                              device="cpu")
+    runtime = DetectorRuntime()  # external RC1 default runtime/checkpoint
     detector_calls = 0
     records = []
     reproduction = []
