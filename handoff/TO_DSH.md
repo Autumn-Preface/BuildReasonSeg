@@ -1,47 +1,44 @@
-# TO_DSH — Task 8B.3-P1D2: Controlled A2 Detector Result Probe
+# TO_DSH — Task 8B.3-P1D3: A2 Full-Frame Context Probe
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `dfc66e5a97639074149ce66e6cd4a6f0180e3e71`
+> Required starting HEAD: `54fd6f4c8bf94f893a8c48cf4c0ce5f2132cf386`
 > External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
 # 0. Purpose
 
-Resolve the one remaining ambiguity in `RC1-DEMO-PROP-01`:
+P1D2 formally established:
 
 ```text
-historical A2:
-1024×1024
-9 tiles
-raw=0
-merged=0
-E401
-one "WARNING NMS time limit 2.050s exceeded"
+A2 = 1024×1024
+frozen tiled path = 9 tiles
+all 9 tiles:
+    boxes_count = 0
+    masks_count = 0
+    wrapper_output_count = 0
+historical NMS warning did not reproduce
+outcome = PROP01_MODEL_ZERO_AT_FROZEN_CONF_CONFIRMED
 ```
 
-P1D1 established:
-- NMS time-limit warning is emitted after current-image NMS output is stored;
-- the warning itself does not erase the current tile output;
-- wrapper has no confidence/class/size post-filter;
-- BUT `DetectorRuntime.detect_tile()` returns [] when `result.masks is None` even if boxes may exist.
-
-Therefore ChatGPT supersedes the P1D1 primary classification:
+This does NOT yet distinguish:
 
 ```text
-PROP01_MODEL_ZERO_DETECTION_SUSPECT  →  PROP01_INSUFFICIENT_EVIDENCE
+A. detector cannot detect A2 at conf=0.05 even with global image context
+B. 512-px tiling removes enough context that every tile becomes zero-detection
 ```
 
-This task performs exactly ONE controlled detector-only A2 probe to distinguish:
+This task changes exactly one diagnostic variable:
 
 ```text
-A. post-NMS boxes really zero
-B. boxes nonzero but segmentation masks missing
-C. current frozen detector no longer reproduces historical raw=0
+512-px tiled input
+→ one full A2 frame
 ```
 
-No fix is allowed.
+Everything else remains frozen.
+
+No fix is authorized.
 
 # 1. Git gate
 
@@ -49,134 +46,128 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = dfc66e5a97639074149ce66e6cd4a6f0180e3e71
+HEAD = 54fd6f4c8bf94f893a8c48cf4c0ce5f2132cf386
 ```
 
-Allowed initial tracked tree:
+Allowed tracked tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
-Do not rebase/reset/stash/clean/merge.
+No reset/rebase/stash/clean/merge.
 
 # 2. Strict prohibitions
 
 Do NOT:
-- modify detector.py or any runtime source;
-- modify tests;
-- modify manifests;
-- modify external delivery source/model assets;
-- change TILE_SIZE / overlap / stride;
-- change imgsz / conf / max_det / NMS IoU;
-- lower confidence threshold;
+- modify detector/runtime source;
+- modify tests/manifests;
+- modify external delivery/model assets;
+- change detector checkpoint;
+- change `imgsz=640`;
+- change `conf=0.05`;
+- change `max_det=300`;
 - enable TTA;
-- change `retina_masks`;
-- run full `predict.py`;
+- change NMS IoU/config;
+- change device away from the P1D2 device (`cpu`);
+- run tiled A2 again;
+- call `DetectorRuntime.detect_tile()`;
+- call `DetectorRuntime.detect_global()`;
+- run `predict.py`;
 - run `--inspect-proposals`;
-- run Qwen / SAM2 / D-B1;
+- run Qwen/SAM2/D-B1;
 - run A1/A3/A4/B1/B2;
 - run pytest/check_setup;
-- rerun A2 after the one probe;
+- lower threshold;
+- run any second A2 inference;
 - fix PROP-01;
-- touch REF-01 / MASK-01;
-- enter Task 8B.4 / 8C.
+- enter REF-01/MASK-01/Task 8B.4/8C.
 
 # 3. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_p1d2_a2_detector_result_probe.md
-docs/task8b3_p1d1_a2_zero_proposal_forensics.md
+docs/task8b3_p1d3_a2_fullframe_context_probe.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-A temporary diagnostic script/transcript may be created OUTSIDE the repository or under external runtime logs.
-It must not be committed.
+Temporary diagnostic script/transcript must remain outside the repository or in external runtime logs and must not be committed.
 
 # 4. Preflight integrity
 
-Before any model load, verify external manifest:
+Before model execution verify:
 
 ```text
-135/135 PASS
+external manifest = 135/135 PASS
+external source_manifest byte-identical to canonical = YES
 ```
 
-Verify external `source_manifest.json` byte-identical to canonical.
-
-Verify:
+Verify frozen A2:
 
 ```text
-inference/input/A2.png
-size = 1024×1024
+path = inference/input/A2.png
+dimensions = 1024×1024
+mode = RGB
 sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
 ```
 
-If mismatch:
-- do not run model;
+If any mismatch:
+- no model run;
 - STOP.
 
-# 5. Frozen detector parameters
+# 5. Frozen detector setup
 
-The diagnostic MUST use exactly the runtime constants from the synchronized external code:
+Use the exact external detector checkpoint:
 
 ```text
-TILE_SIZE = 512
-TILE_OVERLAP = 128
-TILE_STRIDE = 384
-IMGSZ = 640
-CONF = 0.05
-MAX_DET = 300
-FROZEN_THRESHOLD = 0.5
+model/buildreasonseg_advisor/detector.pt
+```
+
+Use exactly:
+
+```text
+source = full 1024×1024 A2 RGB image
+imgsz = 640
+conf = 0.05
+max_det = 300
+verbose = False
 retina_masks = False
+device = cpu
 TTA = disabled
 ```
 
-Use the same detector checkpoint and resolved device as the external RC1.
+No preprocessing crop/tiling.
 
-Do not override any of these.
+Do not manually resize the image; pass the original full RGB array to the existing YOLO model exactly once.
 
-# 6. One diagnostic process only
+# 6. One diagnostic process / one model call
 
-Create a one-off diagnostic script OUTSIDE the repository.
+Create a one-off script outside the repo.
 
-Run that script exactly ONCE.
+Run the script exactly once.
 
-Inside this single process:
-
+Inside it:
 1. load A2 RGB once;
-2. import the existing external:
-   - `plan_tiles`
-   - `extract_tile`
-   - `DetectorRuntime`
-   - frozen constants;
-3. instantiate/load the existing detector once;
-4. generate the normal 9 A2 tile windows;
-5. for each tile, call the underlying loaded YOLO model exactly once using the same arguments as `detect_tile()`:
+2. load the same detector checkpoint once;
+3. execute exactly ONE:
 
 ```python
 model.predict(
-    source=tile_rgb,
-    imgsz=detector.imgsz,
-    conf=detector.conf,
-    max_det=detector.max_det,
+    source=full_a2_rgb,
+    imgsz=640,
+    conf=0.05,
+    max_det=300,
     verbose=False,
     retina_masks=False,
-    device=<same resolved device>
+    device="cpu",
 )
 ```
 
-Do NOT call `DetectorRuntime.detect_tile()` afterward because that would perform a second inference.
+Do not run any second detector call.
 
-# 7. Required per-tile instrumentation
+# 7. Required result capture
 
-Immediately before each `model.predict()` print:
-
-```text
-BEGIN_TILE <source_tile_id>
-```
-
-Immediately after it returns, record:
+Record:
 
 ```text
 results_len
@@ -186,186 +177,175 @@ masks_is_none
 masks_count
 boxes_conf_min
 boxes_conf_max
-boxes_conf_top5
+boxes_conf_top10
+NMS warning count
+runtime exception, if any
 ```
 
 Rules:
-- `boxes_count = len(result.boxes)` when boxes exists;
-- `masks_count = len(result.masks.data)` when masks exists;
-- confidence fields = `NONE` if no boxes;
-- do not save/change predictions;
-- do not apply another threshold.
+- boxes_count = len(result.boxes) when available;
+- masks_count = len(result.masks.data) when available;
+- confidence values = NONE if no boxes;
+- no new thresholding;
+- no merge/proposal eligibility/reference logic.
 
-Then compute, WITHOUT another model call, the count that the frozen wrapper would return:
+Also calculate the frozen wrapper-equivalent count:
 
 ```text
-wrapper_output_count =
+wrapper_equivalent_count =
 0 if:
-    not results
+    no results
     OR result.masks is None
     OR result.boxes is None
     OR len(result.boxes) == 0
 else:
-    number of masks returned by result.masks.data
+    len(result.masks.data)
 ```
 
-Record this per tile.
+# 8. Outcome classification
 
-Also print:
+Choose exactly ONE.
 
-```text
-END_TILE <source_tile_id>
-```
-
-This brackets any Ultralytics NMS warning so the warning can be attributed to a specific tile.
-
-# 8. Aggregate required facts
-
-After all 9 tiles, record:
-
-```text
-tile_count = 9
-sum_boxes_count
-sum_masks_count
-sum_wrapper_output_count
-tiles_boxes_nonzero
-tiles_masks_none
-tiles_boxes_zero
-tiles_wrapper_nonzero
-NMS warning count
-NMS warning tile ids
-```
-
-Do not call merge_proposals; this gate ends at detector-result structure.
-
-# 9. Outcome classification
-
-Choose exactly ONE:
-
-## A — `PROP01_MODEL_ZERO_AT_FROZEN_CONF_CONFIRMED`
+## A — `PROP01_TILING_CONTEXT_LOSS_CONFIRMED`
 
 Only if:
 
 ```text
-all 9 tiles:
-boxes_count = 0
-wrapper_output_count = 0
+full-frame boxes_count > 0
+full-frame masks_count > 0
+wrapper_equivalent_count > 0
+```
+
+combined with frozen P1D2 fact:
+
+```text
+all 9 tiled calls boxes_count = 0
 ```
 
 Interpretation:
-the frozen detector currently returns no post-NMS boxes at conf=0.05.
+at the same checkpoint/conf/imgsz/device, the detector can detect A2 with full-image context but fails when A2 is decomposed into 512-px tiles.
 
-Do NOT infer anything about boxes below 0.05 because no lower-threshold run is allowed.
+This identifies tiling/context as the key causal layer.
 
-## B — `PROP01_MASK_OUTPUT_MISSING_CONFIRMED`
+## B — `PROP01_GLOBAL_ZERO_AT_FROZEN_CONF_CONFIRMED`
 
 Only if:
-- at least one tile has `boxes_count > 0`;
-- that tile has `masks_is_none = True` or zero usable mask output;
-- aggregate `sum_wrapper_output_count = 0`.
-
-Interpretation:
-historical `raw=0` is structurally explainable by wrapper requiring segmentation masks despite nonzero boxes.
-
-## C — `PROP01_HISTORICAL_ZERO_NOT_REPRODUCED`
-
-If:
 
 ```text
-sum_wrapper_output_count > 0
+full-frame boxes_count = 0
+wrapper_equivalent_count = 0
 ```
 
 Interpretation:
-with frozen current assets/settings, A2 now produces raw wrapper proposals and the historical zero-proposal symptom does not reproduce.
+the detector remains zero-detection at conf=0.05 even with full-image context.
 
-Do NOT call the defect fixed.
+Do NOT infer whether sub-0.05 detections exist.
 
-## D — `PROP01_DIAGNOSTIC_INCONCLUSIVE`
+## C — `PROP01_FULLFRAME_MASK_OUTPUT_MISSING`
 
-For any other state or runtime error.
-
-# 10. NMS warning interpretation
-
-Record whether the warning reproduced.
-
-Do NOT use warning presence alone to select A/B/C/D.
-
-If a warning occurs, the BEGIN/END tile markers must identify which tile emitted it.
-
-# 11. Post-run integrity
-
-After the single probe:
-- verify external manifest 135/135 PASS;
-- verify external `source_manifest.json` byte-identical to canonical.
-
-No second model run.
-
-# 12. Normalize P1D1 report
-
-In:
+Only if:
 
 ```text
-docs/task8b3_p1d1_a2_zero_proposal_forensics.md
+full-frame boxes_count > 0
+but masks_is_none = True or masks_count = 0
 ```
 
-append a short ChatGPT-audit correction:
+Interpretation:
+full-frame detection has boxes but segmentation-mask output is unavailable.
+
+## D — `PROP01_FULLFRAME_DIAGNOSTIC_INCONCLUSIVE`
+
+For runtime errors or any other state.
+
+# 9. Next-gate recommendation — do not execute
+
+Record exactly one recommendation based on outcome:
+
+If A:
+```text
+NEXT = DESIGN_ZERO_PROPOSAL_GLOBAL_CONTEXT_RESCUE
+```
+
+If B:
+```text
+NEXT = CONTROLLED_SUBTHRESHOLD_A2_PROBE
+```
+
+If C:
+```text
+NEXT = SEGMENTATION_OUTPUT_PATH_FORENSICS
+```
+
+If D:
+```text
+NEXT = DIAGNOSTIC_RECOVERY_REQUIRED
+```
+
+Do NOT execute the recommendation.
+
+# 10. Post-run integrity
+
+After the single detector call verify again:
 
 ```text
-P1D1 primary classification `PROP01_MODEL_ZERO_DETECTION_SUSPECT`
-was superseded before P1D2 because `result.masks is None` is an independent
-detect_tile empty-return condition. The authoritative pre-P1D2 classification
-is `PROP01_INSUFFICIENT_EVIDENCE`.
+external manifest = 135/135 PASS
+external source_manifest byte-identical = YES
 ```
 
-Do not rewrite historical evidence.
+No second model call.
 
-# 13. P1D2 report
+# 11. Report
 
 Create:
 
 ```text
-docs/task8b3_p1d2_a2_detector_result_probe.md
+docs/task8b3_p1d3_a2_fullframe_context_probe.md
 ```
 
-Required:
-1. scope / starting HEAD
-2. preflight manifest/hash
-3. exact detector settings
-4. exact diagnostic script path
-5. process invocation count = 1
-6. per-tile 9-row table with all §7 fields
-7. aggregate §8 facts
-8. NMS warnings and tile attribution
-9. outcome classification
-10. post-run manifest/byte identity
-11. no functional modifications
-12. `RC1-DEMO-PROP-01 = OPEN`
-13. MEM-01 CLOSED; REF/MASK OPEN untouched
-14. next action = awaiting ChatGPT audit; no fix yet.
+Required sections:
+1. Scope / starting HEAD
+2. P1D2 frozen facts
+3. Preflight integrity
+4. A2 identity
+5. Exact full-frame detector configuration
+6. Diagnostic process invocation count = 1
+7. Detector model.predict call count = 1
+8. Full-frame result structure
+9. NMS warning evidence
+10. Outcome classification
+11. Causal interpretation
+12. Next-gate recommendation
+13. Post-run integrity
+14. Functional files modified = NO
+15. `RC1-DEMO-PROP-01 = OPEN`
+16. MEM-01 CLOSED; REF/MASK OPEN untouched
+17. no fix performed.
 
-# 14. FROM_DSH
+# 12. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
-UTF-8 no BOM.
+UTF-8 without BOM.
 
 Required:
 
 ```text
-Task: 8B.3-P1D2
+Task: 8B.3-P1D3
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: dfc66e5a97639074149ce66e6cd4a6f0180e3e71
+Starting HEAD: 54fd6f4c8bf94f893a8c48cf4c0ce5f2132cf386
 Functional files modified: NO
 Diagnostic process invocation count: 1 / 0
+Detector model.predict call count: 1 / 0
 A2 dimensions/hash: 1024x1024 / MATCH
-Tile count: 9
-sum_boxes_count: <n>
-sum_masks_count: <n>
-sum_wrapper_output_count: <n>
-tiles_boxes_nonzero: <n>
-tiles_masks_none: <n>
+Device: cpu
+imgsz/conf/max_det: 640 / 0.05 / 300
+Full-frame boxes_count: <n>
+Full-frame masks_count: <n>
+Full-frame masks_is_none: YES / NO
+Full-frame wrapper_equivalent_count: <n>
 NMS warning count: <n>
 Outcome: <one enum>
+Next gate: <one enum>
 Pre-run external manifest: 135/135 PASS / FAIL
 Post-run external manifest: 135/135 PASS / FAIL / NOT RUN
 source_manifest byte-identical: YES / NO
@@ -373,46 +353,48 @@ RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
-Report: docs/task8b3_p1d2_a2_detector_result_probe.md
+Report: docs/task8b3_p1d3_a2_fullframe_context_probe.md
 Next action: Awaiting ChatGPT audit; no fix authorized.
 ```
 
-# 15. Commit / push
+# 13. Commit / push
 
 If COMPLETE:
 
 ```text
-test(rc1): probe a2 detector result structure
+test(rc1): probe a2 full-frame detector context
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record a2 detector probe stop
+docs(rc1): record a2 full-frame probe stop
 ```
 
 Push current branch normally, no force.
 
-# 16. COMPLETE definition
+# 14. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- one diagnostic process only;
-- exactly one detector inference per each of 9 tiles;
-- no second inference through detect_tile/predict;
-- exact frozen detector settings;
-- per-tile boxes/masks/wrapper counts captured;
-- one outcome enum selected exactly;
-- post-run manifest intact;
-- no functional code/test/manifest change;
-- reports/handoff committed and pushed;
-- tracked tree clean;
+- preflight intact;
+- exactly one diagnostic process;
+- exactly one full-frame model.predict call;
+- same checkpoint/imgsz/conf/max_det/device as P1D2;
+- no tiled call;
+- no threshold change;
+- no functional code/test/manifest modification;
+- one outcome enum chosen;
+- one next gate recommended but not run;
+- post-run integrity PASS;
+- report/handoff committed and pushed;
+- clean tracked tree;
 - STOP.
 
-# 17. Final response
+# 15. Final response
 
 ```text
-TASK 8B.3-P1D2 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D3 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -420,22 +402,23 @@ Commit:
 Push:
 PASS / FAIL
 
-Diagnostic process invocations:
-1 / 0
+Diagnostic process:
+1
 
-A2:
-1024x1024
-tiles = 9
+model.predict calls:
+1
 
-Aggregate:
-sum_boxes_count = <n>
-sum_masks_count = <n>
-sum_wrapper_output_count = <n>
-tiles_boxes_nonzero = <n>
-tiles_masks_none = <n>
+A2 full-frame:
+boxes_count = <n>
+masks_count = <n>
+masks_is_none = YES / NO
+wrapper_equivalent_count = <n>
 NMS warnings = <n>
 
 Outcome:
+<enum>
+
+Next gate:
 <enum>
 
 Pre/post external manifest:
@@ -444,11 +427,11 @@ Pre/post external manifest:
 Functional files modified:
 NO
 
-PROP-01:
-OPEN
-
 MEM-01:
 CLOSED
+
+PROP-01:
+OPEN
 
 REF-01 / MASK-01:
 OPEN / OPEN
@@ -456,5 +439,5 @@ OPEN / OPEN
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得修改 detector、不得降低阈值、不得重跑 A2、不得进入 REF-01/MASK-01/Task 8B.4/8C。
+等待 ChatGPT 审核；不得执行下一诊断、不得修改 detector、不得降低阈值、不得进入 REF-01/MASK-01/Task 8B.4/8C。
 ```
