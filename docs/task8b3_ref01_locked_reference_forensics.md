@@ -72,3 +72,59 @@ external delivery / canonical RC1 modified = NO / NO
 locked candidate identities = UNCHANGED
 PROP-01 status = PROP01_OPEN_ENGINEERING_DEFECT
 ```
+
+
+---
+
+## 8. REF01-F1-R1 — canonical GT reference masks reconstructed (detector still not run)
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 95f4403837bd7057fc331462503875fa847f43c8
+frozen detector passes used in this turn = 0
+```
+
+### 8.1 Instance index rows (frozen native-vector truth)
+
+Resolved 4 of 4 required `(tile_id, tile_instance_id)` rows from
+`datasets/whu_native_vector/v1.0/instances/index.jsonl`.
+
+| relation | tile | tile_instance_id | GT mask pixels | index clipped_area_px | area match | GT mask bbox [x0,y0,x1,y1] | GT mask centroid [row,col] |
+|---|---|---:|---:|---:|---|---|---|
+| right | 1010 | 4 | 2478 | 2478 | True | [206, 18, 280, 86] | [59.91525423728814, 231.81033091202582] |
+| left | 1003 | 26 | 3512 | 3512 | True | [374, 210, 470, 292] | [248.99373576309796, 425.59367881548974] |
+| above | 1008 | 4 | 5013 | 5013 | True | [27, 243, 93, 398] | [317.2363853979653, 58.7245162577299] |
+| below | 1009 | 3 | 2606 | 2606 | True | [187, 222, 232, 320] | [269.7674597083653, 210.03875671527246] |
+
+### 8.2 Geometry cache structure (recorded verbatim)
+
+| relation | cache keys | label key | dtype | shape |
+|---|---|---|---|---|
+| right | `['bboxes', 'centroids', 'clipped_area', 'full_area', 'instance_ids', 'label_map', 'multipart', 'n_holes', 'points', 'ring_instance_ids', 'ring_kinds', 'ring_lengths', 'ring_offsets', 'source_feature_ids', 'tiny', 'touches_border', 'visible_fraction']` | `label_map` | uint8 | [512, 512] |
+| left | `['bboxes', 'centroids', 'clipped_area', 'full_area', 'instance_ids', 'label_map', 'multipart', 'n_holes', 'points', 'ring_instance_ids', 'ring_kinds', 'ring_lengths', 'ring_offsets', 'source_feature_ids', 'tiny', 'touches_border', 'visible_fraction']` | `label_map` | uint8 | [512, 512] |
+| above | `['bboxes', 'centroids', 'clipped_area', 'full_area', 'instance_ids', 'label_map', 'multipart', 'n_holes', 'points', 'ring_instance_ids', 'ring_kinds', 'ring_lengths', 'ring_offsets', 'source_feature_ids', 'tiny', 'touches_border', 'visible_fraction']` | `label_map` | uint8 | [512, 512] |
+| below | `['bboxes', 'centroids', 'clipped_area', 'full_area', 'instance_ids', 'label_map', 'multipart', 'n_holes', 'points', 'ring_instance_ids', 'ring_kinds', 'ring_lengths', 'ring_offsets', 'source_feature_ids', 'tiny', 'touches_border', 'visible_fraction']` | `label_map` | uint8 | [512, 512] |
+
+```text
+GT reference masks non-empty AND area == clipped_area_px for all four candidates = True
+```
+
+The canonical GT reference mask of every locked candidate is therefore reconstructed deterministically from the frozen
+native-vector geometry cache, with no regeneration and no detector involvement.
+
+### 8.3 Still not executed (unchanged STOP boundary)
+
+```text
+§11 existing P1D12 proposal evidence gate                                  = NOT RUN
+§12 authorised frozen detector pass (IoU-to-GT diagnosis)                  = NOT RUN
+§13 deterministic reproduction gate                                        = NOT RUN
+§14 proposal-mask reconstruction and IoU to the GT reference               = NOT RUN
+§15 production selected reference comparison                               = NOT RUN
+§16 oracle diagnostic proposals (fixed Task 7F semantics)                   = NOT RUN
+§17/§18 per-candidate classification and overall outcome                    = NOT RUN
+```
+
+No classification or outcome enum is asserted. The block requiring an explicit decision before the detector pass is
+that the frozen proposal-mask representation used for IoU (i.e. how a proposal's mask is reconstructed from
+`proposals.json`) and the fixed Task 7F coverage threshold are not yet pinned down in my evidence; running the
+authorised detector pass without them would produce diagnostics that cannot be interpreted.
