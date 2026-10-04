@@ -1,46 +1,55 @@
-# TO_DSH — Task 8B.3-P1D7: Isolated YOLOv8m-WHU Baseline A2 Probe
+# TO_DSH — Task 8B.3-P1D8: A2 Input Photometric / Domain Audit
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `48ea366e95fdfa022fd6e922f0d5656ad673941b`
+> Required starting HEAD: `5f52338b7507cc377190cacb33611c644f223a88`
 > External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
 # 0. Purpose
 
-P1D6 is accepted by ChatGPT.
-
-Frozen evidence now includes:
+P1D2–P1D7 have established:
 
 ```text
-active continued YOLO26m-seg @ A2:
-9 normal tiles, conf=0.05 → 9/9 boxes=0
+active continued YOLO26m-seg:
+  A2 tiled @ conf=0.05  → 9/9 boxes=0
+  A2 full-frame @ 0.05  → boxes=0
+  A2 tiled @ conf=0.001 → 9/9 boxes=0
 
-same-lineage epoch-18 YOLO26m-seg @ A2:
-9 normal tiles, conf=0.05 → 9/9 boxes=0
+same-lineage epoch-18 YOLO26m-seg:
+  A2 tiled @ 0.05 → 9/9 boxes=0
 
-epoch-18 outcome:
-PROP01_EPOCH18_ALSO_ZERO
+independent WHU-trained YOLOv8m-seg baseline:
+  A2 tiled @ 0.05 → 9/9 boxes=0
 ```
 
-Therefore a continuation-specific regression is no longer the leading explanation.
-
-P1D5-R1 established an independently trained, quantitatively validated historical WHU building baseline:
+P1D7 outcome:
 
 ```text
-family = YOLOv8m-seg
-training domain = WHU Building Dataset
-class = building
-historical validation evidence = PRESENT
-relation to active detector = SEPARATE_HISTORICAL_BASELINE
-historical checkpoint sha256 =
-d9a6a65b7e0819ce4ecbbd9d44a5c8f9dcd2e60ea78203ba8fdf90ba6aaa1f91
+PROP01_YOLOV8M_ALSO_ZERO
 ```
 
-This task performs ONE isolated A2 diagnostic with that baseline checkpoint.
+This materially weakens checkpoint-specific explanations.
 
-No RC1 adoption/replacement is authorized.
+P1D5-R1 also established A2 descriptive facts:
+
+```text
+1024x1024 RGB uint8
+R mean/std = 60.0654 / 6.3738
+G mean/std = 68.4044 / 6.4936
+B mean/std = 66.4532 / 6.9203
+no pixels at 0 or 255
+A2 source/domain = NOT ESTABLISHED
+```
+
+The remaining question is whether A2 is a strong *input photometric/texture outlier* relative to:
+1. the detector's actual WHU training/validation image domain; and
+2. the successful 1024×1024 Demo controls A1/A3/A4.
+
+This task is NON-MODEL forensic analysis only.
+
+No detector inference or image correction is authorized.
 
 # 1. Git gate
 
@@ -48,7 +57,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 48ea366e95fdfa022fd6e922f0d5656ad673941b
+HEAD = 5f52338b7507cc377190cacb33611c644f223a88
 ```
 
 Allowed initial tracked tree:
@@ -60,414 +69,461 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- modify external delivery;
-- copy/replace external `detector.pt`;
-- modify runtime/tests/manifests/config/model package;
-- modify any checkpoint;
-- train/fine-tune/resume/export/download anything;
-- run active YOLO26 continued checkpoint again;
-- run epoch-18 YOLO26 checkpoint again;
-- run any other alternate checkpoint;
-- run full-frame A2;
-- change tile geometry;
-- change `imgsz=640`;
-- change `conf=0.05`;
-- change `max_det=300`;
-- enable TTA;
-- change `retina_masks=False`;
-- use the historical mutable external Ultralytics source tree as runtime;
-- run normal `predict.py`;
-- run `--inspect-proposals`;
+- run any detector or model;
+- call YOLO `.predict()` or forward;
 - run Qwen/SAM2/D-B1;
-- run A1/A3/A4/B1/B2;
+- run normal `predict.py` or `--inspect-proposals`;
 - run pytest/check_setup;
-- merge/save alternate predictions into RC1 output directories;
-- implement fallback/adoption logic;
+- train/fine-tune/download/export;
+- modify any image;
+- overwrite A2/A1/A3/A4;
+- create a corrected A2;
+- run histogram equalization/CLAHE/gamma/contrast stretch as a product action;
+- test any normalization through a detector;
+- change RC1 source/config/model/checkpoint;
+- modify external delivery;
+- modify manifests/tests/runtime;
+- remove or replace A2 from the Demo;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - update main;
 - force push.
+
+Read-only image decoding and arithmetic image statistics are allowed.
 
 # 3. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_p1d7_yolov8m_whu_a2_probe.md
+docs/task8b3_p1d8_a2_input_domain_audit.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Temporary diagnostic script/transcript may remain outside the repo or in non-tracked diagnostic logs.
+Temporary CSV/JSON/statistics scripts must remain outside the repo or under ignored diagnostic storage.
+Do not commit a dataset-sized statistics dump.
 
-# 4. Preflight RC1 integrity
+# 4. Input identity gate
 
-Before alternate model load verify:
+Verify frozen Demo inputs before analysis.
 
-```text
-external manifest = 135/135 PASS
-external source_manifest byte-identical to canonical = YES
-```
-
-Verify A2:
+Require A2:
 
 ```text
-1024×1024
-RGB
+A2.png
+1024x1024 RGB
 sha256 =
 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
 ```
 
-If mismatch:
-- do not load alternate model;
+Locate A1/A3/A4 used by Task 8B.3 R4B and record:
+
+```text
+path
+dimensions
+mode
+file bytes
+SHA256
+```
+
+Do not use a replacement or similarly named copy.
+
+If A2 identity mismatches:
 - STOP.
 
-# 5. Baseline checkpoint identity gate
+If one of A1/A3/A4 cannot be uniquely identified:
+- record that control as unavailable;
+- continue only if at least TWO of A1/A3/A4 are available.
+Otherwise STOP.
 
-Use exactly the frozen legacy checkpoint identified in the P1D5-R1 provenance:
+# 5. Training-domain image source gate
 
-```text
-C:\D\resources\project\WHU_Building_Segment\runs\segment\logs\whu_building_v1\weights\best.pt
-```
-
-Before model load record:
-
-```text
-exists
-bytes
-full SHA256
-```
-
-Require full SHA256 exactly:
+Inspect:
 
 ```text
-d9a6a65b7e0819ce4ecbbd9d44a5c8f9dcd2e60ea78203ba8fdf90ba6aaa1f91
+artifacts/task6m_yolo_native/data.yaml
 ```
 
-Verify through read-only records:
-
-```text
-family = YOLOv8m-seg
-task = instance segmentation
-class count = 1
-class = building
-training dataset = WHU Building Dataset
-historical training epochs = 100
-```
-
-If path/hash/family/task mismatch:
-- no model inference;
-- STOP.
-
-# 6. Runtime isolation rule
-
-Historical baseline records mention a legacy/mutable Ultralytics environment.
-
-Do NOT use that environment/fork.
-
-Load the YOLOv8m checkpoint using the SAME pinned/current diagnostic Python + Ultralytics runtime that was used for P1D6 / current RC1 detector probes, so the comparison is:
-
-```text
-same A2
-same runtime
-same tile geometry
-same imgsz/conf/max_det/device
-different trained model family/checkpoint only
-```
+Resolve the exact train/val/test image roots used by the active YOLO26 training lineage.
 
 Record:
 
 ```text
-Python executable
-Ultralytics version
-PyTorch version
+train image root
+val image root
+test image root
+file counts
+image formats
+native dimensions distribution
 ```
 
-Expected current Ultralytics version is the RC1 pinned version:
+Do not silently substitute `baseline/yolo_whu` image paths if the active task6m dataset is available.
+
+If the active training images are unavailable locally:
+- do NOT use a different dataset as if equivalent;
+- classify training-domain statistics as unavailable;
+- continue with Demo-control comparison only;
+- final outcome must not claim a WHU training-domain outlier.
+
+# 6. Exact-match provenance search
+
+Without modifying files, compute/compare SHA256 for image files in the active task6m train/val/test image roots.
+
+Search for exact byte/hash match to A2.
+
+Record exactly one:
 
 ```text
-8.4.164
+A2_EXACT_MATCH_TRAIN
+A2_EXACT_MATCH_VAL
+A2_EXACT_MATCH_TEST
+A2_NO_EXACT_MATCH
+TRAINING_IMAGES_UNAVAILABLE
 ```
 
-If the checkpoint cannot load safely under the current pinned runtime:
-- do not switch to legacy runtime;
-- classify diagnostic INCONCLUSIVE;
-- document and STOP.
+If exact match exists:
+- record exact path and split;
+- do not infer more than exact file identity.
 
-# 7. Frozen geometry and inference settings
+Also search exact SHA256 for A1/A3/A4 and record matches if any.
 
-Use exactly the real A2 tile geometry:
+# 7. Frozen metric definitions
+
+Use these exact non-model metrics for every decoded RGB image/tile.
+
+Let luminance:
 
 ```text
-TILE_SIZE = 512
-TILE_OVERLAP = 128
-TILE_STRIDE = 384
+Y = 0.299*R + 0.587*G + 0.114*B
+```
 
+For each image/tile calculate:
+
+```text
+R_mean, G_mean, B_mean
+R_std,  G_std,  B_std
+
+Y_mean
+Y_std
+Y_p01
+Y_p50
+Y_p99
+Y_dynamic_98 = Y_p99 - Y_p01
+
+mean_abs_dx =
+mean(abs(Y[:,1:] - Y[:,:-1]))
+
+mean_abs_dy =
+mean(abs(Y[1:,:] - Y[:-1,:]))
+
+gradient_mean =
+(mean_abs_dx + mean_abs_dy) / 2
+
+dark_fraction =
+fraction(Y < 64)
+
+very_dark_fraction =
+fraction(Y < 32)
+
+bright_fraction =
+fraction(Y > 192)
+```
+
+Use decoded uint8 RGB values converted to float only for arithmetic.
+Do not normalize before measuring.
+
+Report calculations to at least 4 decimal places for means/std/gradient/fractions.
+
+# 8. Active training-domain distribution
+
+If active task6m train/val/test images are available:
+
+Process ALL readable images in the resolved active training dataset.
+
+Do not random-sample unless full processing is impossible due a documented execution failure.
+If full processing fails:
+- STOP before drawing a training-domain percentile conclusion.
+
+For each metric below construct distributions:
+
+```text
+Y_mean
+Y_std
+Y_dynamic_98
+gradient_mean
+dark_fraction
+very_dark_fraction
+```
+
+Report for each split individually AND for the combined dataset:
+
+```text
+N
+min
+p01
+p05
+p25
+p50
+p75
+p95
+p99
+max
+mean
+std
+```
+
+Record unreadable-image count.
+
+No model execution.
+
+# 9. Demo-case whole-image comparison
+
+Compute the same frozen metrics for whole images:
+
+```text
+A1
+A2
+A3
+A4
+```
+
+Build one comparison table.
+
+For A2 and each available control, if training-domain stats exist, report percentile rank within the COMBINED active
+training image distribution for:
+
+```text
+Y_mean
+Y_std
+Y_dynamic_98
+gradient_mean
+dark_fraction
+very_dark_fraction
+```
+
+Percentile-rank method must be stated and deterministic.
+
+# 10. Demo-case tile comparison
+
+Using the existing 1024×1024 9-tile geometry:
+
+```text
+tile size = 512
 tops  = [0, 384, 512]
 lefts = [0, 384, 512]
-tile_count = 9
 ```
 
-Use exactly:
+compute the same metrics for all 9 tiles of:
 
 ```text
-checkpoint = frozen YOLOv8m-seg WHU baseline
-imgsz = 640
-conf = 0.05
-max_det = 300
-verbose = False
-retina_masks = False
-device = cpu
-TTA = disabled
+A1
+A2
+A3
+A4
 ```
 
-No other detector variable may be changed.
+No detector call.
 
-# 8. One diagnostic process only
-
-Create one temporary script outside the repository.
-
-Run it exactly ONCE.
-
-Inside the process:
-
-1. load A2 RGB once;
-2. create the normal 9 windows;
-3. load the exact YOLOv8m checkpoint once using current pinned Ultralytics;
-4. for each tile call:
-
-```python
-model.predict(
-    source=tile_rgb,
-    imgsz=640,
-    conf=0.05,
-    max_det=300,
-    verbose=False,
-    retina_masks=False,
-    device="cpu",
-)
-```
-
-exactly once.
-
-Require:
+For each case report:
 
 ```text
-diagnostic process count = 1
-model.predict count = 9
+median tile Y_mean
+median tile Y_std
+median tile Y_dynamic_98
+median tile gradient_mean
+
+min/max tile Y_mean
+min/max tile Y_std
+min/max tile gradient_mean
 ```
 
-No second checkpoint/model.
-
-# 9. Required per-tile evidence
-
-Bracket every call:
+If training distribution exists, report for A2:
 
 ```text
-BEGIN_TILE <tile_id>
-...
-END_TILE <tile_id>
+number of its 9 tiles below training p01 / p05 for:
+Y_mean
+Y_std
+Y_dynamic_98
+gradient_mean
+
+number above training p95 / p99 for:
+dark_fraction
+very_dark_fraction
 ```
 
-Record per tile:
+If the active training source consists of 512×512 tiles, compare A2 tile metrics directly to that distribution and
+state that geometry alignment.
+
+# 11. Compare with successful controls
+
+Historical detector evidence:
 
 ```text
-boxes_is_none
-boxes_count
-masks_is_none
-masks_count
-wrapper_equivalent_count
-boxes_conf_min
-boxes_conf_max
-boxes_conf_top10
-NMS warning = YES / NO
+A1 raw = 133
+A3 raw = 7
+A4 raw = 216
+A2 raw = 0
 ```
 
-For up to top 10 detections:
+These counts are historical evidence only; do not rerun models.
+
+For each core metric:
 
 ```text
-rank
-confidence
-xyxy
-mask_area if mask exists
+Y_mean
+Y_std
+Y_dynamic_98
+gradient_mean
 ```
 
-Do not perform manual semantic judgments in this task.
+determine whether A2 is lower than ALL available successful controls.
 
-Do not save masks/overlays into RC1 outputs.
-
-# 10. Aggregate
-
-Record:
+Also record the ratio:
 
 ```text
-sum_boxes_count
-sum_masks_count
-sum_wrapper_equivalent_count
-tiles_with_boxes
-tiles_with_masks
-tiles_wrapper_nonzero
-global_max_confidence
-global_top20_confidences
-NMS warning count
-NMS warning tile ids
+A2 value / median(A1,A3,A4)
 ```
 
-Do not run merge/reference/downstream stages.
+for the whole-image metric and median-tile metric.
 
-# 11. Outcome classification
+Do not call this causal proof.
+
+# 12. PNG / encoding metadata audit
+
+Read non-model metadata for A2 and controls:
+
+```text
+format
+mode
+bit depth if available
+ICC profile present?
+gamma/chromaticity metadata if available?
+transparency/alpha?
+EXIF present?
+PNG textual metadata?
+```
+
+Record only what is actually present.
+
+Specifically check whether A2 has an obvious encoding anomaly relative to A1/A3/A4.
+
+Choose one:
+
+```text
+A2_ENCODING_ANOMALY_FOUND
+A2_ENCODING_ANOMALY_NOT_FOUND
+A2_ENCODING_METADATA_INCONCLUSIVE
+```
+
+Do NOT edit metadata.
+
+# 13. Outcome classification
 
 Choose exactly ONE.
 
-## A — `PROP01_YOLOV8M_RECOVERS_A2_SIGNAL`
+## A — `PROP01_A2_PHOTOMETRIC_OUTLIER_STRONGLY_SUPPORTED`
 
-Require:
+Use only if:
+- active training-domain statistics are available;
+- A2 is a strong outlier in at least TWO of:
+  - Y_std
+  - Y_dynamic_98
+  - gradient_mean
+- for each qualifying metric, A2 whole-image OR at least 7/9 A2 tiles lies below the active training p01;
+- and A2 is lower than all available successful controls on the same metrics.
 
-```text
-sum_wrapper_equivalent_count > 0
-```
+This supports photometric/texture incompatibility as a major suspect.
+It does NOT prove geographic domain mismatch.
 
-and at least one tile has usable segmentation masks.
+## B — `PROP01_A2_DARKNESS_OUTLIER_ONLY`
 
-Interpretation:
-
-```text
-an independently trained WHU building instance-segmentation detector produces usable
-A2 proposal signal under the same runtime/geometry/conf/imgsz/device where both YOLO26
-checkpoints produced zero.
-```
-
-This supports a YOLO26-lineage/model-specific A2 blind-spot hypothesis.
-
-It does NOT authorize adopting YOLOv8m into RC1.
-
-## B — `PROP01_YOLOV8M_ALSO_ZERO`
-
-Require:
-
-```text
-sum_boxes_count = 0
-sum_wrapper_equivalent_count = 0
-```
+Use if:
+- A2 Y_mean/dark_fraction is extreme versus training,
+- but contrast/texture metrics do NOT satisfy outcome A.
 
 Interpretation:
+brightness is unusual, but low information/contrast is not strongly established.
+
+## C — `PROP01_A2_NOT_PHOTOMETRIC_OUTLIER`
+
+Use only if:
+- training-domain statistics exist;
+- A2 lies at or above p05 for at least 3 of the 4 core metrics:
+  Y_mean, Y_std, Y_dynamic_98, gradient_mean;
+- and no encoding anomaly is found.
+
+## D — `PROP01_A2_INPUT_DOMAIN_INCONCLUSIVE`
+
+Use if:
+- training images are unavailable;
+- control evidence is contradictory;
+- or criteria A/B/C are not met.
+
+# 14. Next-gate recommendation — DO NOT EXECUTE
+
+If outcome A:
 
 ```text
-two independent WHU-trained detector lineages both produce zero A2 boxes under the
-same product-like diagnostic settings.
+NEXT = CONTROLLED_A2_PHOTOMETRIC_RESCUE_DESIGN
 ```
 
-This materially strengthens the hypothesis that A2 is outside the effective detector domain
-or otherwise has severe input/domain incompatibility, while still not proving geographic provenance.
+Future task designs one deterministic, training-domain-derived normalization transform.
+No model run in this task.
 
-## C — `PROP01_YOLOV8M_BOXES_WITHOUT_MASKS`
-
-Require:
+If outcome B:
 
 ```text
-sum_boxes_count > 0
-sum_wrapper_equivalent_count = 0
+NEXT = A2_BRIGHTNESS_RESCUE_DESIGN
 ```
 
-because usable masks are absent.
-
-## D — `PROP01_YOLOV8M_DIAGNOSTIC_INCONCLUSIVE`
-
-Use for:
-- checkpoint load incompatibility under pinned runtime;
-- runtime error;
-- identity mismatch;
-- unexpected result structure;
-- any state not fitting A/B/C.
-
-# 12. Next-gate recommendation — do NOT execute
-
-Choose exactly one.
-
-If A:
+If outcome C:
 
 ```text
-NEXT = YOLOV8M_RESCUE_POLICY_DESIGN
+NEXT = DETECTOR_ADAPTATION_OR_DEMO_POLICY_DECISION
 ```
 
-Purpose:
-design the minimum scientifically honest zero-proposal rescue/adaptation strategy and the required re-validation burden.
-No adoption yet.
-
-If B:
+If outcome D:
 
 ```text
-NEXT = A2_INPUT_DOMAIN_DECISION
+NEXT = A2_INPUT_DOMAIN_POLICY_DECISION
 ```
 
-Purpose:
-decide whether A2 should remain a formal RC1 success case, become an explicit unsupported-domain failure case,
-or require a detector adaptation data phase.
+Do not execute next gate.
 
-If C:
-
-```text
-NEXT = YOLOV8M_SEGMENTATION_OUTPUT_FORENSICS
-```
-
-If D:
-
-```text
-NEXT = YOLOV8M_PROBE_RECOVERY
-```
-
-Do not execute the recommendation.
-
-# 13. Post-run integrity
-
-After the one process verify:
-
-```text
-external manifest = 135/135 PASS
-external source_manifest byte-identical to canonical = YES
-```
-
-Also confirm:
-
-```text
-active RC1 detector unchanged = YES
-YOLOv8m checkpoint unchanged = YES
-alternate adopted into RC1 = NO
-```
-
-# 14. Report
+# 15. Report
 
 Create:
 
 ```text
-docs/task8b3_p1d7_yolov8m_whu_a2_probe.md
+docs/task8b3_p1d8_a2_input_domain_audit.md
 ```
 
 Required sections:
 
 1. scope / starting HEAD
-2. P1D2–P1D6 frozen evidence
-3. RC1 preflight integrity
-4. A2 identity
-5. YOLOv8m checkpoint path/bytes/full SHA256
-6. historical provenance/validation facts
-7. current pinned runtime identity
-8. exact detector settings
-9. diagnostic process count = 1
-10. model.predict calls = 9
-11. 9-row tile table
-12. aggregate facts including sum_masks_count
-13. warning/error evidence
+2. P1D2–P1D7 frozen detector facts
+3. Demo image identity table
+4. active task6m dataset roots/counts/dimensions
+5. exact-match SHA provenance search
+6. metric definitions
+7. full active training-domain statistics
+8. whole-image A1/A2/A3/A4 comparison
+9. percentile-rank table
+10. 9-tile comparison
+11. A2 vs successful controls ratios
+12. PNG/encoding metadata audit
+13. exact encoding enum
 14. exact outcome enum
-15. causal interpretation and limits
+15. causal interpretation and explicit limits
 16. exact next gate
-17. post-run integrity
-18. no RC1 detector modification/adoption
-19. no functional repository modification
+17. model inference = NONE
+18. image modifications = NONE
+19. functional files modified = NO
 20. MEM-01 CLOSED
 21. PROP-01 OPEN
-22. REF-01 / MASK-01 OPEN untouched.
+22. REF-01/MASK-01 OPEN untouched.
 
-# 15. FROM_DSH
+# 16. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 UTF-8 without BOM.
@@ -475,85 +531,83 @@ UTF-8 without BOM.
 Required:
 
 ```text
-Task: 8B.3-P1D7
+Task: 8B.3-P1D8
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 48ea366e95fdfa022fd6e922f0d5656ad673941b
+Starting HEAD: 5f52338b7507cc377190cacb33611c644f223a88
+Model inference: NONE
+Image modifications: NONE
 Functional files modified: NO
-Active RC1 detector modified/replaced: NO
-Alternate adopted into RC1: NO
-Diagnostic process invocation count: 1 / 0
-Detector model.predict call count: 9 / other
-A2 dimensions/hash: 1024x1024 / MATCH
-Alternate checkpoint path: <path>
-Alternate checkpoint bytes: <n>
-Alternate checkpoint SHA256: <full sha>
-Alternate family/task: YOLOv8m-seg / instance segmentation
-Runtime Ultralytics: <version>
-Geometry: 9 x 512 tiles, overlap 128, stride 384
-Device: cpu
-imgsz/conf/max_det: 640 / 0.05 / 300
-sum_boxes_count: <n>
-sum_masks_count: <n>
-sum_wrapper_equivalent_count: <n>
-tiles_with_boxes: <n or ids>
-tiles_with_masks: <n or ids>
-global_max_confidence: <value / NONE>
-NMS warning count: <n>
+A2 identity: MATCH / MISMATCH
+Available successful controls: <A1/A3/A4 subset>
+Active training images: AVAILABLE / UNAVAILABLE
+Training image count: <n / NOT ESTABLISHED>
+A2 exact-match provenance: <enum>
+A2 whole Y_mean: <value>
+A2 whole Y_std: <value>
+A2 whole Y_dynamic_98: <value>
+A2 whole gradient_mean: <value>
+A2 training percentile Y_mean: <value / NA>
+A2 training percentile Y_std: <value / NA>
+A2 training percentile Y_dynamic_98: <value / NA>
+A2 training percentile gradient_mean: <value / NA>
+A2 tiles below p01 Y_std: <n / NA>
+A2 tiles below p01 Y_dynamic_98: <n / NA>
+A2 tiles below p01 gradient_mean: <n / NA>
+Encoding audit: <exact enum>
 Outcome: <exact enum>
 Next gate: <exact enum>
-Pre-run external manifest: 135/135 PASS / FAIL
-Post-run external manifest: 135/135 PASS / FAIL / NOT RUN
-source_manifest byte-identical: YES / NO
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
-Report: docs/task8b3_p1d7_yolov8m_whu_a2_probe.md
-Next action: Awaiting ChatGPT audit; no detector adoption authorized.
+Report: docs/task8b3_p1d8_a2_input_domain_audit.md
+Next action: Awaiting ChatGPT audit; no rescue or detector change authorized.
 ```
 
-# 16. Commit / push
+# 17. Commit / push
 
 If COMPLETE:
 
 ```text
-test(rc1): probe yolov8m whu detector on a2
+docs(rc1): audit a2 input photometric domain
 ```
 
 If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record yolov8m a2 probe stop
+docs(rc1): record a2 input-domain audit stop
 ```
 
 Push current branch normally.
 No force push.
 
-# 17. COMPLETE definition
+# 18. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- RC1 preflight PASS;
-- exact baseline checkpoint identity/hash proven;
-- current pinned runtime used;
-- no legacy mutable Ultralytics runtime used;
-- one diagnostic process only;
-- exactly 9 YOLOv8m calls, one per A2 tile;
-- no active/epoch18/other detector calls;
-- no product/runtime/checkpoint modification;
-- exact outcome enum selected;
-- exact next gate recommended but NOT executed;
-- post-run RC1 integrity PASS;
+- no model execution;
+- A2 identity matches;
+- at least two successful controls are available;
+- active task6m image roots are resolved or explicitly unavailable;
+- exact-match provenance search performed;
+- all frozen metrics computed for A2 and controls;
+- if active images are available, ALL readable training-domain images are processed;
+- split and combined distribution quantiles recorded;
+- A2 whole/tile percentile comparison recorded;
+- encoding metadata audited;
+- one exact outcome chosen;
+- one exact next gate recommended but not executed;
+- no image/product/runtime modification;
 - only allowed docs/handoff files changed;
-- commit/push succeed;
+- commit/push succeeds;
 - tracked tree clean;
 - STOP.
 
-# 18. Final response
+# 19. Final response
 
 ```text
-TASK 8B.3-P1D7 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D8 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -561,26 +615,34 @@ Commit:
 Push:
 PASS / FAIL
 
-Diagnostic process:
-1
+Model inference:
+NONE
 
-model.predict calls:
-9
+A2 exact-match provenance:
+<enum>
 
-YOLOv8m checkpoint:
-<full SHA256>
+Training images:
+<AVAILABLE/UNAVAILABLE> · N=<...>
 
-Runtime Ultralytics:
-<version>
+A2:
+Y_mean = <...>
+Y_std = <...>
+Y_dynamic_98 = <...>
+gradient_mean = <...>
 
-A2 aggregate:
-boxes = <n>
-masks = <n>
-wrapper usable proposals = <n>
-tiles_with_boxes = <...>
-tiles_with_masks = <...>
-global_max_conf = <...>
-NMS warnings = <n>
+Training percentiles:
+Y_mean = <...>
+Y_std = <...>
+Y_dynamic_98 = <...>
+gradient_mean = <...>
+
+A2 tiles below p01:
+Y_std = <n>
+Y_dynamic_98 = <n>
+gradient_mean = <n>
+
+Encoding audit:
+<enum>
 
 Outcome:
 <enum>
@@ -588,14 +650,8 @@ Outcome:
 Next gate:
 <enum>
 
-Active RC1 detector modified/replaced:
-NO
-
-Alternate adopted:
-NO
-
-Pre/post external manifest:
-135/135 PASS / 135/135 PASS
+Image modifications:
+NONE
 
 Functional files modified:
 NO
@@ -612,5 +668,5 @@ OPEN / OPEN
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得采用 YOLOv8m，不得执行 next gate。
+等待 ChatGPT 审核；不得做图像增强、不得重跑 detector、不得执行 next gate。
 ```
