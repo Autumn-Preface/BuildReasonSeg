@@ -17,43 +17,39 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R4 Report
+# FROM_DSH — Task 8B.3-REF01-F1-R5 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R4` |
-| Status | **COMPLETE** |
+| Task | `8B.3-REF01-F1-R5` |
+| Status | **COMPLETE** (deterministic verification) |
 | Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `35105fb8b4255375923ff3174d3efd2356717333` |
-| Preflight 1/3 compile | PASS |
-| Preflight 2/3 import-only | PASS (detector calls 0) |
-| Preflight 3/3 contract | PASS (external RC1 default `DetectorRuntime`, `eligible_proposals`, `select_reference`) |
-| Runtime construction | external RC1 default `DetectorRuntime()` |
-| Prior detector passes | 0 |
-| Detector calls | 4 |
-| P1D12 metadata reproduction | right 6/6 eligible4 MATCH · left 66/53 eligible42 MATCH · above 9/9 eligible4 MATCH · below 7/6 eligible3 MATCH |
-| right selected/bestEligible/bestAny IoU | 0.5589 / 0.5589 / 0.5589 |
-| left selected/bestEligible/bestAny IoU | 0.0000 / 0.6501 / 0.6501 |
-| above selected/bestEligible/bestAny IoU | 0.0000 / 0.0000 / 0.9033 |
-| below selected/bestEligible/bestAny IoU | 0.0000 / 0.6165 / 0.6165 |
-| right / left / above / below class | REFERENCE_SELECTED_CORRECT · REFERENCE_SELECTION_WRONG_COVERED · REFERENCE_ELIGIBILITY_BLOCKED · REFERENCE_SELECTION_WRONG_COVERED |
-| Class counts | {"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1} |
-| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE / NONE / NONE / NONE / NONE |
-| Manual visual inspection / candidate replacement / product repair | NO / NO / NO |
-| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| REF-01 status | FORENSICS_COMPLETE |
-| Outcome | **REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE** |
+| Starting HEAD | `d1c7f6374f325fec71bce6a350609b2d23865c0a` |
+| Detector calls | 4 (one additional pass per locked candidate) |
+| Raster SHA identity | 4/4 PASS |
+| External detector identity | identical to canonical = False |
+| imageio / pillow / numpy | IMPORT_FAILED: No module named 'imageio' / 12.3.0 / 2.4.6 |
+| Runtime | external RC1 default `DetectorRuntime()` |
+| Frozen constants | TILE_SIZE 512 · TILE_OVERLAP 128 · stride 384 · IMGSZ 640 · CONF 0.05 · MAX_DET 300 · DUPLICATE_IOU 0.50 · MERGE_BBOX_EXTENT_RATIO_MAX 0.20 · FROZEN_THRESHOLD 0.5 |
+| P1D12 metadata reproduction | counts 4/4 MATCH · per-proposal metadata 4/4 MATCH |
+| R5 vs R4 IoU | within 1e-6 for all four candidates = True |
+| DETERMINISTIC_VERIFICATION | **PASS** |
+| Outcome (unchanged from R4) | REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE |
 | Dominant next blocker | ELIGIBILITY |
 | Next gate | `NEXT = REF01_ELIGIBILITY_FORENSICS` (not executed) |
-| Evidence | `evaluation\task8b3_ref01_locked_reference_forensics.json` |
+| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE / NONE / NONE / NONE / NONE |
+| Manual visual inspection / candidate replacement / repair | NO / NO / NO |
+| External delivery / canonical RC1 modified | NO / NO |
+| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| REF-01 status | FORENSICS_COMPLETE |
+| Evidence | `evaluation\task8b3_ref01_locked_reference_forensics_r5.json` |
 | Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R4 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1-R5 (no downloads, no transfers).
 
-Exactly one detector pass per locked candidate ran through the external RC1 default `DetectorRuntime()`; no Qwen, SAM2,
-relation-field, D-B1 or target-segmentation stage executed, no mask/PNG artifact was written, and no delivery file was
-modified.
+Only the harness's authorised additional pass per locked candidate ran; no Qwen/SAM2/D-B1/relation/target-segmentation
+stage executed and no delivery file was modified.

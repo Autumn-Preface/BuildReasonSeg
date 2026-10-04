@@ -272,3 +272,80 @@ Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 external delivery / canonical RC1 modified = NO / NO
 ```
+
+
+---
+
+## 14. REF01-F1-R5 — deterministic verification run
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = d1c7f6374f325fec71bce6a350609b2d23865c0a
+detector calls = 4 (one additional pass per locked candidate)
+runtime        = external RC1 default DetectorRuntime()
+proposal mask  = RERUN_GLOBALPROPOSAL_MASK_CROP
+threshold      = 0.50 (frozen Task 7F) · tolerance = 1e-06
+DETERMINISTIC_VERIFICATION = PASS
+```
+
+### 14.1 Raster SHA identity and P1D12 metadata reproduction
+
+| relation | tile | raster SHA256 (prefix) | lock | rerun raw/merged | eligible | per-proposal metadata |
+|---|---|---|---|---|---|---|
+| right | 1010 | 1688306c5edbffe4... | MATCH | 6/6 | 4 | True |
+| left | 1003 | eea4edd0db9e079e... | MATCH | 66/53 | 42 | True |
+| above | 1008 | 0efe8bc2e1d1f3f5... | MATCH | 9/9 | 4 | True |
+| below | 1009 | c22134e671f2d0b7... | MATCH | 7/6 | 3 | True |
+
+Per-proposal reproduction compared `proposal_id`, `mask_area`, `global_bbox`, `touches_image_border` and
+`bbox_extent_ratio` for every merged proposal against the stored P1D12 `proposals.json` items.
+
+### 14.2 Frozen constants and external identity
+
+| constant | value |
+|---|---|
+| `TILE_SIZE` | `512` |
+| `TILE_OVERLAP` | `128` |
+| `STRIDE_EXPECTED` | `384` |
+| `IMGSZ` | `640` |
+| `CONF` | `0.05` |
+| `MAX_DET` | `300` |
+| `DUPLICATE_IOU` | `0.5` |
+| `MERGE_BBOX_EXTENT_RATIO_MAX` | `0.2` |
+| `FROZEN_THRESHOLD` | `0.5` |
+| `device` | `cuda` |
+| `checkpoint` | `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\buildreasonseg_advisor\detector.pt` |
+
+```text
+external detector module   = C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+external/canonical detector identical = False
+imageio = IMPORT_FAILED: No module named 'imageio' (NOT AVAILABLE)
+pillow  = 12.3.0 · numpy = 2.4.6
+```
+
+### 14.3 IoU determinism versus R4 (tolerance 1e-6)
+
+| relation | selected_id | R5 selected_IoU | R4 selected_IoU | R5 best_eligible | R4 best_eligible | R5 best_any | R4 best_any | within 1e-6 |
+|---|---|---|---|---|---|---|---|---|
+| right | 1 | 0.558870 | 0.558870 | 0.558870 | 0.558870 | 0.558870 | 0.558870 | PASS |
+| left | 14 | 0.000000 | 0.000000 | 0.650067 | 0.650067 | 0.650067 | 0.650067 | PASS |
+| above | 4 | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 0.903250 | 0.903250 | PASS |
+| below | 1 | 0.000000 | 0.000000 | 0.616550 | 0.616550 | 0.616550 | 0.616550 | PASS |
+
+### 14.4 Outcome
+
+```text
+Outcome (unchanged) = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
+Dominant next blocker = ELIGIBILITY
+NEXT = REF01_ELIGIBILITY_FORENSICS
+```
+
+Evidence: `evaluation\task8b3_ref01_locked_reference_forensics_r5.json` (R4 evidence preserved at `evaluation\task8b3_ref01_locked_reference_forensics.json`)
+
+### 14.5 Explicit non-execution
+
+```text
+Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+external delivery / canonical RC1 modified = NO / NO
+```
