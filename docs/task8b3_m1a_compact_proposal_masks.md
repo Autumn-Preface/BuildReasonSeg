@@ -391,14 +391,15 @@ complete delivery; **C** = compact-runtime regression candidate; **D** = other c
 | `tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code` | D |
 | `tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim` | D |
 
-Class counts: A=7, B=10, C=0, D=6, E=0.
+Class counts (superseded by the frozen Task 8B.3-M1A.2C-D1.1 classification, see
+`docs/task8b3_m1a2c_canonical_suite_forensics.md`): A=10, B=13, C=0, D=0, E=0.
 
 **`tests/test_task8b_runtime.py` failing nodes: none**
 
 ### Conclusion
 
 ```text
-MIXED_FAILURES_REQUIRE_CODE_AUDIT
+CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE
 ```
 
 Rationale: the canonical snapshot intentionally excludes model weights and downloaded assets (only 135 lightweight
@@ -406,3 +407,12 @@ source/config files are tracked), so every failing node that requires those asse
 canonical ROOT behaves like the complete external delivery — cannot pass inside the canonical tree regardless of the
 compact-proposal refactor. `tests/test_task8b_runtime.py` (the compact-proposal contract suite) has **no** failing
 node in this cache, and no class-D node was detected.
+
+### D1.1 normalization note
+
+The class counts and gate conclusion recorded above by Task 8B.3-M1A.2C-D1 (A=7, B=10, C=0, D=6, E=0 and
+`MIXED_FAILURES_REQUIRE_CODE_AUDIT`) are **superseded**: the six former class-D nodes were reclassified as three
+class-A nodes (missing delivery assets) and three class-B nodes (fixture assumes a complete delivery), giving the
+frozen distribution **A=10, B=13, C=0, D=0, E=0** and the frozen gate conclusion
+**CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE**, as frozen in
+`docs/task8b3_m1a2c_canonical_suite_forensics.md`.
