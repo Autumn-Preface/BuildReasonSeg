@@ -1,48 +1,35 @@
-# TO_DSH — Task 8B.3-P1D10: PROP-01 Resolution Decision — Detector Adaptation vs Demo Policy
+# TO_DSH — Task 8B.3-P1D10-R1: Correct PROP-01 Resolution Logic and Demo-Pool Readiness
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `70e2e2361e9e16cca891138de5d2712318282b2b`
+> Required starting HEAD: `2edee1af99d89740cf5e75c99b08fe872b0bcef1`
 
-# 0. Purpose
+# 0. Audit disposition
 
-P1D1–P1D9 have exhausted the bounded diagnostic tree for A2 without modifying the product.
+P1D10 is NOT YET APPROVED.
 
-Frozen evidence:
+Accepted facts:
+- no model/test execution;
+- no functional modifications;
+- `DETECTOR_ADAPTATION_NOT_READY` is supported;
+- detector replacement/fine-tuning touches frozen research claims;
+- a policy-only path can in principle preserve the frozen architecture;
+- bounded P1D1–P1D9 diagnostics did not find a simple repair for A2.
 
-```text
-active continued YOLO26m-seg:
-  tiled conf=0.05     -> zero
-  full-frame conf=0.05 -> zero
-  tiled conf=0.001    -> zero
+Two conclusions require correction:
 
-same-lineage epoch-18 YOLO26m-seg:
-  tiled conf=0.05 -> zero
+1. `A2 source/domain = NOT ESTABLISHED` cannot support the statement
+   `A2 is outside the detector's effective domain`.
+   Detector failure alone must not define the domain boundary.
 
-independent validated WHU YOLOv8m-seg:
-  tiled conf=0.05 -> zero
+2. `artifacts/task6m_yolo_native/images/val` was declared a READY replacement-success pool without establishing:
+   - executable Reference→Relation→Target metadata for candidate selection;
+   - whether using the detector validation split creates avoidable Demo/model-selection leakage;
+   - whether a better pre-existing frozen relation-annotated pool exists.
 
-A2 encoding:
-  no anomaly found
-
-A2 photometric audit:
-  original combined rule -> not a strong photometric outlier
-  split robustness -> sensitive to split composition
-  low contrast relative to val/test and successful controls
-
-single predeclared validation-moment affine rescue:
-  transformed Y_mean ≈ 91.59
-  transformed Y_std  ≈ 26.86
-  active detector still -> zero
-```
-
-Therefore no further ad-hoc threshold, checkpoint, or image-enhancement experiments are authorized.
-
-This task decides the scientifically honest resolution path for `RC1-DEMO-PROP-01`.
-
-It is a READ-ONLY / DOCS-ONLY decision audit.
+This R1 repairs only the decision logic and pool-readiness evidence.
 
 # 1. Git gate
 
@@ -50,7 +37,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 70e2e2361e9e16cca891138de5d2712318282b2b
+HEAD = 2edee1af99d89740cf5e75c99b08fe872b0bcef1
 ```
 
 Allowed initial tracked tree:
@@ -62,17 +49,14 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- run any model, detector, `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1, pytest or setup check;
-- modify A2 or any Demo input;
+- run any detector/model/inference;
+- run `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1, pytest, check_setup;
+- train/fine-tune/export/download;
 - modify detector/runtime/config/tests/manifests/checkpoints;
-- train/fine-tune/download/export;
-- implement a fallback proposal source;
-- replace A2;
-- remove A2;
-- adopt the P1D9 transform;
-- lower thresholds;
-- enter REF-01 or MASK-01;
-- enter Task 8B.4 or 8C;
+- modify or replace Demo inputs;
+- select an actual replacement image;
+- inspect detector outputs for any replacement candidate;
+- enter REF-01/MASK-01/Task 8B.4/8C;
 - modify main;
 - force push.
 
@@ -86,113 +70,115 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-# 4. Recover Demo-suite policy and provenance
+# 4. Correct the A2 domain statement
 
-Search the available repository/history for Task 8B.3 / R4B / RC1 Demo documentation.
-
-Establish:
+Retain:
 
 ```text
-why A1/A2/A3/A4/B1/B2 were selected
-whether they were pre-registered as a fixed acceptance suite
-whether each case was intended as:
-  success case
-  stress case
-  negative/failure case
-whether replacing/removing A2 is currently allowed by an existing rule
-whether Demo success was ever defined as 6/6 runtime success
-whether manual semantic correctness was an explicit release gate
+A2 source/domain provenance = NOT ESTABLISHED
+A2 exact membership in active train/val/test = NOT ESTABLISHED
+A2 repeatedly yields zero proposals under P1D2–P1D9
 ```
 
-For unsupported facts write:
+Forbidden conclusion:
 
 ```text
-NOT ESTABLISHED
+A2 is proven outside the detector's effective domain
 ```
 
-Do not infer intent from filenames alone.
-
-# 5. Separate scientific freeze from RC1 engineering
-
-Using Task 7J and RC1 metadata/docs, establish separately:
+Replace with an evidence-bounded statement:
 
 ```text
-A. frozen research architecture/evaluation
-B. post-freeze RC1 engineering/demo packaging
+A2 is a persistent documented failure/stress case whose provenance is unknown;
+the current evidence does not establish whether it is in-domain or out-of-domain.
 ```
 
-For each candidate intervention below, classify its effect:
+The supported-input policy, if chosen, must be defined by positive provenance/asset criteria,
+not retrospectively by whether the detector succeeds.
+
+# 5. Audit candidate Demo pools
+
+Read local frozen assets and documentation only.
+
+Audit at least these possible pools if present:
 
 ```text
-1. retrain/fine-tune current YOLO26 detector
-2. replace YOLO26 with another trained detector
-3. add a second proposal-source fallback
-4. add image preprocessing before detector
-5. keep detector unchanged but define an explicit supported-input/domain policy
-6. replace A2 in a future Demo success suite while retaining A2 as a documented stress/failure case
+A. artifacts/task6m_yolo_native/images/val
+B. artifacts/task6m_yolo_native/images/test
+C. frozen BuildSpatialReason validation split
+D. frozen BuildSpatialReason test split
+E. any pre-existing RC1/Demo candidate pool documented before PROP-01 diagnostics
 ```
 
-Use exactly one impact enum per intervention:
+For each record:
 
 ```text
-TOUCHES_FROZEN_RESEARCH_ARCHITECTURE
-ENGINEERING_ONLY_IF_SEPARATELY_VERSIONED_AND_REVALIDATED
-POLICY_ONLY_NO_ARCHITECTURE_CHANGE
-IMPACT_NOT_ESTABLISHED
+exists
+frozen before P1D10? YES / NO / NOT ESTABLISHED
+image identity available? YES / NO
+Reference→Relation→Target metadata available? YES / NO
+program labels available? YES / NO
+reference/target instance identity available? YES / NO
+scene/split identity available? YES / NO
+used for detector training? YES / NO
+used for detector validation/model selection? YES / NO
+used for final research test? YES / NO
+candidate selection can be performed without detector output? YES / NO
 ```
 
-If an intervention can belong to two categories depending on use, state the conditions explicitly.
+Do not run models.
 
-# 6. Adaptation feasibility audit
+# 6. Leakage / credibility classification
 
-Without training or inference, assess whether detector adaptation is presently executable from available assets.
-
-Record:
+For each candidate pool choose exactly one:
 
 ```text
-A2 ground-truth building masks available? YES / NO / NOT ESTABLISHED
-A2-like labeled images available? YES / NO / NOT ESTABLISHED
-A2 source/domain provenance available? YES / NO
-existing adaptation dataset specification? YES / NO
-existing held-out adaptation validation set? YES / NO
-existing acceptance metric/threshold for adapted detector? YES / NO
+CLEAN_DEMO_SELECTION_POOL
+USABLE_WITH_DISCLOSURE
+MODEL_SELECTION_LEAKAGE_RISK
+MISSING_RELATION_METADATA
+POOL_NOT_AVAILABLE
+POOL_STATUS_INCOMPLETE
 ```
 
-A detector adaptation path is `READY` only if there is enough labeled data and a held-out validation protocol to
-avoid tuning to A2 alone.
+Rules:
 
-Choose exactly one:
+- A detector validation split must NOT be called clean merely because it is not training data.
+- A final research test split may be `USABLE_WITH_DISCLOSURE` for demonstration examples only if:
+  - selection is deterministic and outcome-independent;
+  - no new metric/model selection is performed;
+  - reuse is explicitly disclosed.
+- A pool without executable relation/reference/target metadata cannot be READY for the intended relation Demo.
+
+# 7. Define a valid replacement-selection contract
+
+Only if at least one pool is `CLEAN_DEMO_SELECTION_POOL` or `USABLE_WITH_DISCLOSURE`, define BEFORE selection:
 
 ```text
-DETECTOR_ADAPTATION_READY
-DETECTOR_ADAPTATION_NOT_READY
-DETECTOR_ADAPTATION_STATUS_INCOMPLETE
+exact pool
+exact split/version
+eligible program/relation set
+required reference/target validity
+image-format/size rule
+scene-disjoint/no-train rule
+deterministic ordering
+number of cases k
+tie-breaking
+whether model/detector outputs may be consulted = NO
+whether manual visual quality may be consulted = NO before selection
 ```
 
-# 7. Demo-policy feasibility audit
+The rule must be executable from metadata alone.
 
-Determine whether a supported-domain Demo policy can be stated transparently without falsifying claims.
-
-Audit whether existing project scope already limits inputs to:
+If no such pool exists:
 
 ```text
-overhead/aerial building imagery
-WHU-like building instance domain
-specific image sizes/formats
+REPLACEMENT_SELECTION_POLICY_NOT_READY
 ```
 
-Do not create a new limitation unless supported by existing training/product facts.
+Do not select any image in this task.
 
-Assess whether A2 can honestly be retained as:
-
-```text
-documented unsupported/stress failure case
-```
-
-without being counted as a successful Demo case.
-
-Also assess whether a future replacement success case could be selected from a predeclared supported-domain pool
-without cherry-picking.
+# 8. Re-evaluate Demo-policy feasibility
 
 Choose exactly one:
 
@@ -202,104 +188,31 @@ DEMO_POLICY_PATH_NOT_READY
 DEMO_POLICY_STATUS_INCOMPLETE
 ```
 
-# 8. Anti-cherry-picking requirement
+`READY` requires both:
+- a support scope that can be defined by positive, pre-existing provenance/asset criteria;
+- a replacement selection policy that is executable without detector/manual outcome consultation.
 
-If a future Demo success-case replacement is considered permissible, define BEFORE any replacement is selected:
+# 9. Re-evaluate primary resolution
 
-```text
-eligible source pool
-selection rule
-required relation type
-required image constraints
-required no-leakage condition
-required detector precheck policy
-whether detector outcome may be consulted during selection
-```
-
-Critical rule:
+Choose exactly one:
 
 ```text
-The replacement case MUST NOT be selected by trying images until one succeeds.
+PROP01_RESOLUTION_DEMO_POLICY
+PROP01_RESOLUTION_DETECTOR_ADAPTATION
+PROP01_RESOLUTION_ENGINEERING_FALLBACK_DESIGN
+PROP01_RESOLUTION_BLOCKED
 ```
 
-A valid future selection rule must be independent of detector outcome.
+Guidance:
 
-If no such rule can be grounded in existing assets, record:
+- Do not choose DEMO_POLICY merely because A2 fails.
+- DEMO_POLICY is allowed if a transparent positive support scope and non-cherry-picked Demo selection contract are ready.
+- DETECTOR_ADAPTATION remains disallowed unless readiness facts changed without new execution.
+- If no honest pool/policy can be made ready, choose BLOCKED.
 
-```text
-REPLACEMENT_SELECTION_POLICY_NOT_READY
-```
+# 10. Re-evaluate PROP-01 status
 
-# 9. PROP-01 resolution options
-
-Evaluate exactly these options:
-
-## Option A — Immediate detector adaptation
-
-Description:
-retrain/fine-tune or replace proposal detector now.
-
-## Option B — Engineering fallback proposal source
-
-Description:
-add a fallback proposal source for zero-proposal cases while preserving the frozen research implementation as a
-separate baseline/version.
-
-## Option C — Supported-domain Demo policy
-
-Description:
-keep the frozen detector unchanged, document the supported input domain, retain A2 as a stress/failure case, and
-construct any future success suite using a predeclared outcome-independent selection rule.
-
-## Option D — Keep A2 as mandatory 6/6 success and block release
-
-Description:
-do not change architecture or policy until the current frozen detector succeeds on A2.
-
-For each option record:
-
-```text
-scientific honesty
-engineering feasibility now
-required new data/code
-revalidation burden
-risk of overfitting/cherry-picking
-effect on Challenge Cup Demo credibility
-```
-
-# 10. Decision rule
-
-Choose exactly ONE primary resolution.
-
-## `PROP01_RESOLUTION_DEMO_POLICY`
-
-Use only if:
-- detector adaptation is NOT READY;
-- current bounded diagnostics give strong evidence A2 is a persistent unsupported/blind-spot case;
-- a transparent supported-domain/stress-case policy is feasible;
-- no claim requires arbitrary-image robustness.
-
-## `PROP01_RESOLUTION_DETECTOR_ADAPTATION`
-
-Use only if:
-- adaptation is READY with labeled data + held-out validation;
-- the project requirement genuinely requires A2-like inputs to succeed;
-- scientific/versioning impact is explicitly manageable.
-
-## `PROP01_RESOLUTION_ENGINEERING_FALLBACK_DESIGN`
-
-Use only if:
-- a fallback proposal source is justified by existing project scope;
-- adaptation is not the preferred path;
-- a separately versioned engineering fork can be validated without silently rewriting frozen research results.
-
-## `PROP01_RESOLUTION_BLOCKED`
-
-Use if evidence is insufficient to select an honest resolution.
-
-# 11. PROP-01 defect status decision
-
-Choose exactly ONE:
+Choose exactly one:
 
 ```text
 PROP01_OPEN_ENGINEERING_DEFECT
@@ -307,104 +220,113 @@ PROP01_RECLASSIFIED_SUPPORTED_DOMAIN_FAILURE
 PROP01_BLOCKING_RELEASE_DEFECT
 ```
 
-Important:
-- do NOT mark PROP-01 CLOSED in this task;
-- reclassification is not closure;
-- implementation/policy documentation still requires a later task.
+Rules:
 
-# 12. Required release-language draft
+- `PROP01_RECLASSIFIED_SUPPORTED_DOMAIN_FAILURE` is NOT allowed unless evidence establishes that A2 violates an independently defined supported-domain contract.
+- Unknown provenance is not proof of domain violation.
+- PROP-01 must not be marked CLOSED.
 
-Write exact proposed user-facing wording for the chosen resolution, max 120 Chinese characters, suitable for README /
-Demo documentation.
+# 11. Correct release wording
 
-It must not claim:
-- arbitrary aerial-image robustness;
-- that A2 was fixed if it was not;
-- that frozen scientific results used a new detector if they did not.
+Write ≤120 Chinese characters.
 
-# 13. Required next gate
+It must:
+- state the actual verified support scope positively;
+- call A2 a documented failure/stress case if appropriate;
+- NOT say A2 is "域外" unless independently established;
+- NOT imply arbitrary aerial-image robustness;
+- NOT imply A2 was fixed.
 
-Choose exactly ONE based on the primary resolution:
+# 12. Scientific freeze
 
-If `PROP01_RESOLUTION_DEMO_POLICY`:
+Reconfirm:
+
+```text
+scientific freeze preserved = YES / NO / NOT ESTABLISHED
+```
+
+Policy documentation and deterministic Demo-case selection must remain separate from frozen research metrics and architecture.
+
+# 13. Next gate
+
+If resolution = DEMO_POLICY:
 
 ```text
 NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION
 ```
 
-If `PROP01_RESOLUTION_DETECTOR_ADAPTATION`:
-
-```text
-NEXT = PROP01_ADAPTATION_PROTOCOL_DESIGN
-```
-
-If `PROP01_RESOLUTION_ENGINEERING_FALLBACK_DESIGN`:
-
-```text
-NEXT = PROP01_FALLBACK_PROPOSAL_DESIGN
-```
-
-If blocked:
+If BLOCKED:
 
 ```text
 NEXT = PROP01_DECISION_EVIDENCE_RECOVERY
 ```
 
-Do not execute it.
+If ADAPTATION:
 
-# 14. Report
+```text
+NEXT = PROP01_ADAPTATION_PROTOCOL_DESIGN
+```
 
-Create:
+If FALLBACK:
+
+```text
+NEXT = PROP01_FALLBACK_PROPOSAL_DESIGN
+```
+
+Do NOT execute it.
+
+# 14. Report repair
+
+Update:
 
 ```text
 docs/task8b3_p1d10_prop01_resolution_decision.md
 ```
 
-Required sections:
+Append an R1 audit section containing:
 
-1. scope / starting HEAD
-2. frozen P1D1–P1D9 evidence table
-3. Demo-suite provenance/policy
-4. scientific freeze vs RC1 engineering separation
-5. six intervention impact classifications
-6. adaptation feasibility
-7. Demo-policy feasibility
-8. anti-cherry-picking replacement rule readiness
-9. four-option comparison
-10. exact primary resolution
-11. exact PROP-01 defect status
-12. rationale
-13. release-language draft
-14. exact next gate
-15. no model execution
-16. no functional modification
-17. MEM-01 CLOSED
-18. REF-01/MASK-01 OPEN untouched.
+1. ChatGPT audit correction
+2. corrected A2 domain statement
+3. candidate-pool audit table
+4. leakage/credibility enum for each pool
+5. executable metadata-only selection contract OR NOT READY
+6. corrected Demo-policy feasibility enum
+7. corrected primary resolution
+8. corrected PROP-01 status
+9. corrected release-language draft
+10. scientific-freeze statement
+11. exact next gate
+12. no model/test execution
+13. no functional modification.
+
+Do not delete historical P1D10 text; mark superseded statements explicitly.
 
 # 15. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
-UTF-8 without BOM.
 
 Required:
 
 ```text
-Task: 8B.3-P1D10
+Task: 8B.3-P1D10-R1
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 70e2e2361e9e16cca891138de5d2712318282b2b
+Starting HEAD: 2edee1af99d89740cf5e75c99b08fe872b0bcef1
 Model/test execution: NONE
 Functional files modified: NO
-Demo suite policy provenance: ESTABLISHED / PARTIAL / NOT ESTABLISHED
-Detector adaptation feasibility: <enum>
-Demo policy feasibility: <enum>
-Replacement selection policy: READY / NOT READY / NOT APPLICABLE
+A2 domain provenance: NOT ESTABLISHED
+A2 domain classification: IN_DOMAIN / OUT_OF_DOMAIN / NOT ESTABLISHED
+Best Demo candidate pool: <path/version / NONE>
+Best pool classification: <exact enum>
+Replacement selection policy: READY / NOT READY
+Detector adaptation feasibility: DETECTOR_ADAPTATION_NOT_READY
+Demo policy feasibility: <exact enum>
 Primary resolution: <exact enum>
 PROP-01 status: <exact enum>
 Scientific freeze preserved: YES / NO / NOT ESTABLISHED
 Next gate: <exact enum>
 RC1-DEMO-MEM-01: CLOSED
-RC1-DEMO-PROP-01: OPEN / RECLASSIFIED (not closed)
+RC1-DEMO-PROP-01: OPEN / RECLASSIFIED / BLOCKING (not closed)
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
 Report: docs/task8b3_p1d10_prop01_resolution_decision.md
@@ -416,17 +338,16 @@ Next action: Awaiting ChatGPT audit; do not execute next gate.
 If COMPLETE:
 
 ```text
-docs(rc1): decide prop01 resolution path
+docs(rc1): correct prop01 resolution decision
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record prop01 resolution decision stop
+docs(rc1): record prop01 decision correction stop
 ```
 
-Push current branch normally.
-No force push.
+Push normally. No force push.
 
 # 17. COMPLETE definition
 
@@ -434,14 +355,10 @@ COMPLETE only if:
 - exact starting HEAD;
 - no model/test execution;
 - no functional modification;
-- Demo policy/provenance audited;
-- scientific vs engineering effects separated;
-- adaptation readiness assessed;
-- Demo-policy readiness assessed;
-- anti-cherry-picking rule readiness assessed;
-- four options compared;
-- one exact primary resolution chosen;
-- one exact PROP-01 status chosen;
-- one exact next gate chosen but not executed;
+- A2 is not circularly classified as out-of-domain;
+- candidate Demo pools are audited for relation metadata and leakage;
+- replacement rule is metadata-only and outcome-independent, or explicitly NOT READY;
+- primary resolution/status are re-evaluated;
+- superseded P1D10 claims are marked;
 - report/handoff committed and pushed;
 - STOP.

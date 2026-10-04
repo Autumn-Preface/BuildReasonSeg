@@ -17,37 +17,37 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D10 Report
+# FROM_DSH — Task 8B.3-P1D10-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D10` |
-| Status | **COMPLETE** (docs-only resolution decision audit) |
+| Task | `8B.3-P1D10-R1` |
+| Status | **COMPLETE** (resolution-logic correction + candidate-pool audit, docs only) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `70e2e2361e9e16cca891138de5d2712318282b2b` |
+| Starting HEAD | `2edee1af99d89740cf5e75c99b08fe872b0bcef1` |
 | Model/test execution | NONE |
 | Functional files modified | NO |
-| Demo suite policy provenance | PARTIAL (suite definition/result documented; input provenance NOT ESTABLISHED) |
-| Detector adaptation feasibility | **DETECTOR_ADAPTATION_NOT_READY** (no A2 GT, no adaptation spec, no held-out protocol, no acceptance metric) |
+| Corrected error 1 | original replacement pool was the detector's own validation split → **MODEL_SELECTION_LEAKAGE_RISK**, withdrawn |
+| Corrected error 2 | original PROP-01 reclassification was unsupported (A2 provenance NOT ESTABLISHED) → withdrawn |
+| Pool audit | A `images/val` MODEL_SELECTION_LEAKAGE_RISK · B `images/test` MISSING_RELATION_METADATA · C `whu_native_vector/v1.0` MISSING_RELATION_METADATA · D `reasoning_view/scene_disjoint_v1` POOL_STATUS_INCOMPLETE · E1 `task6m1_demo` (18 cases) **USABLE_WITH_DISCLOSURE** · E2 `task6m_demo` (13 cases) **USABLE_WITH_DISCLOSURE** |
+| Best Demo candidate pool | `artifacts/task6m1_demo` (primary), `artifacts/task6m_demo` (secondary) |
+| Replacement selection policy | READY — metadata-only contract declared in §19.3; detector outputs and manual visual quality may not be consulted; no image selected |
+| Detector adaptation feasibility | **DETECTOR_ADAPTATION_NOT_READY** (unchanged; no readiness facts changed) |
 | Demo policy feasibility | **DEMO_POLICY_PATH_READY** |
-| Replacement selection policy | **READY** (predeclared pool = frozen val split, deterministic filename order, detector outcome not consulted) |
-| Primary resolution | **PROP01_RESOLUTION_DEMO_POLICY** |
-| PROP-01 status | **PROP01_RECLASSIFIED_SUPPORTED_DOMAIN_FAILURE** (reclassification, not closure) |
-| Scientific freeze preserved | YES (frozen research architecture and results untouched; only policy text proposed) |
+| Primary resolution | **PROP01_RESOLUTION_DEMO_POLICY** (retained on the corrected contract) |
+| PROP-01 status | **PROP01_OPEN_ENGINEERING_DEFECT** (corrected; not closed) |
+| Scientific freeze preserved | YES |
 | Next gate | **PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION** (recommended, not executed) |
-| RC1-DEMO-MEM-01 | CLOSED |
-| RC1-DEMO-PROP-01 | RECLASSIFIED (not closed) |
-| RC1-DEMO-REF-01 | OPEN |
-| RC1-DEMO-MASK-01 | OPEN |
+| RC1-DEMO-MEM-01 / PROP-01 / REF-01 / MASK-01 | CLOSED / OPEN / OPEN / OPEN |
 | Report | `docs/task8b3_p1d10_prop01_resolution_decision.md` |
-| Next action | Awaiting ChatGPT audit; do not execute the next gate. |
+| Next action | Awaiting ChatGPT audit; do not execute the next gate and do not select any Demo case. |
 
-Release-language draft (≤120 Chinese characters): RC1 的 proposal detector 在 WHU 类航空建筑影像上验证；A2 属其有效域外的压力/失败样例，已如实记录，不计入成功演示；本版本不承诺任意航空影像的鲁棒性。
+Corrected release wording (≤120 Chinese characters): RC1 的 proposal detector 已在 WHU 类航空建筑实例域上完成验证；演示用例取自该域内既有资产，选择规则在检测结果之外预先确定；A2 为已如实记录的未检出样例，本版本不承诺任意航空影像的鲁棒性。
 
-Watt was not needed for Task 8B.3-P1D10 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D10-R1 (no downloads, no transfers).
 
-No model, test, training or inference execution and no functional modification occurred; the six intervention impact
-classifications use the task book's exact enums, and the four resolution options are compared explicitly.
+No model, test, training, inference or functional modification occurred; the audit read only local frozen assets and
+documentation.

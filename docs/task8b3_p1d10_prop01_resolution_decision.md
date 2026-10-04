@@ -183,3 +183,99 @@ runtime, test, manifest, configuration, checkpoint or external-delivery function
 
 `RC1-DEMO-REF-01 = OPEN` (user-facing "largest building" ≠ implementation "largest eligible detected proposal") and
 `RC1-DEMO-MASK-01 = OPEN` (SUCCESS validity has no minimum-area/instance gate); neither was modified or repaired.
+
+
+---
+
+## 19. P1D10-R1 — corrected resolution logic and candidate-pool audit
+
+Docs-only correction. No model, test, training or functional execution/modification occurred.
+
+### 19.1 Corrected logic findings
+
+Two errors in the original §8/§10/§11 were identified and are corrected here:
+
+1. **Invalid pool choice.** The original replacement pool was `artifacts/task6m_yolo_native/images/val`, i.e. the
+   active detector's own validation split. Per the audit rules a detector validation split must not be treated as
+   clean merely because it is not training data, so that pool is a **model-selection leakage risk** and cannot ground
+   the Demo selection contract.
+2. **Unsupported reclassification.** The original §11 reclassified PROP-01 as a supported-domain failure. A2's
+   provenance/domain is **NOT ESTABLISHED** (P1D5-R1, P1D8-R1), and unknown provenance is not proof of a domain
+   violation; therefore the reclassification is withdrawn.
+
+### 19.2 Candidate Demo-pool audit table (§5)
+
+| pool | exists | frozen before P1D10 | image identity | Reference→Relation→Target metadata | program labels | reference/target instance identity | scene/split identity | detector training | detector validation / model selection | final research test | selectable without detector output | classification |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A `artifacts/task6m_yolo_native/images/val` (3 618 `.tif`) | YES | YES | YES | NO | NO | NO | YES (split dir) | NO | **YES** | NO | YES | **MODEL_SELECTION_LEAKAGE_RISK** |
+| B `artifacts/task6m_yolo_native/images/test` (3 726 `.tif`) | YES | YES | YES | NO | NO | NO | YES (split dir) | NO | NO | NO | YES | **MISSING_RELATION_METADATA** |
+| C `datasets/whu_native_vector/v1.0` (8 index/metadata files) | YES | YES | YES (`tile_id`, `source_image_ref`) | NO | NO | partial (`tile_instance_id`, `source_feature_id`) | YES (`scene_disjoint_split`, `legacy_compat_split`) | NO | NO | NO | YES | **MISSING_RELATION_METADATA** |
+| D `artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1` (17 392 files) | YES | YES | YES (component PNGs) | NOT ESTABLISHED in the audited sample | NOT ESTABLISHED | NOT ESTABLISHED | YES (scene-disjoint view) | NO | NOT ESTABLISHED | NOT ESTABLISHED | NOT ESTABLISHED | **POOL_STATUS_INCOMPLETE** |
+| E1 `artifacts/task6m1_demo` (18 cases: `supported_2_*`, `ood_*`) | YES | YES | YES (`image`) | YES (`parsed_program`, `status`, `proposal_count`) | YES | supported cases record outputs/selection | YES (case ids; OOD cases separate) | NO | NO (post-selection showcase runs) | NO | YES | **USABLE_WITH_DISCLOSURE** |
+| E2 `artifacts/task6m_demo` (13 cases) | YES | YES | YES (`image`) | YES (`parsed_program`, `selected`, `outputs`, `reasoning_zh`) | YES | YES | YES (case ids) | NO | NO | NO | YES | **USABLE_WITH_DISCLOSURE** |
+
+Best Demo candidate pool: `artifacts/task6m1_demo` (18 cases; supported cases used, OOD cases retained as abstention
+demonstrations), with `artifacts/task6m_demo` (13 cases) as secondary.
+
+### 19.3 Replacement-selection contract (§7), declared before any selection
+
+```text
+exact pool                : artifacts/task6m1_demo (primary) — pre-existing, documented before PROP-01 diagnostics
+exact split/version       : Task 6M1 demo bundle (paths recorded in each case result.json)
+eligible program/relation set : the four frozen programs (largest_to_{left_of,right_of,above,below}_to_nearest)
+required reference/target validity : case metadata must record parsed_program and a completed status
+image-format/size rule    : the image recorded in the case metadata (readable PNG/TIFF)
+scene-disjoint/no-train rule : demo cases are not detector training data and not the detector validation split
+deterministic ordering    : lexical ordering of case directory names within the pool
+number of cases k         : declared by the future task book (not selected here)
+tie-breaking              : lexical order of the case id
+whether model/detector outputs may be consulted = NO
+whether manual visual quality may be consulted  = NO before selection
+```
+
+This contract is executable from metadata alone and is independent of detector outcome, so it satisfies the
+anti-cherry-picking requirement. No image was selected in this task.
+
+### 19.4 Re-evaluated Demo-policy feasibility (§8)
+
+```text
+DEMO_POLICY_PATH_READY
+```
+
+Reason: a positive support scope is already grounded in pre-existing provenance (the WHU-derived aerial building
+instance domain the frozen detector was trained and validated on — 1 class `building`, `data.yaml` provenance), and a
+replacement-selection contract exists that is executable without detector or manual outcome consultation (§19.3).
+
+### 19.5 Re-evaluated primary resolution (§9) and PROP-01 status (§10)
+
+```text
+primary resolution = PROP01_RESOLUTION_DEMO_POLICY
+PROP-01 status     = PROP01_OPEN_ENGINEERING_DEFECT
+```
+
+`DEMO_POLICY` is retained because the transparent support scope and the non-cherry-picked contract are both ready;
+adaptation remains **DETECTOR_ADAPTATION_NOT_READY** (no A2 ground truth, no adaptation dataset specification, no held-out protocol, no
+acceptance metric).
+
+The defect status is corrected to **`PROP01_OPEN_ENGINEERING_DEFECT`**: A2's provenance is unknown, so no independently defined
+supported-domain contract currently proves a domain violation, and unknown provenance is not proof. PROP-01 stays
+open — reclassification would require such a contract, and in any case reclassification is not closure.
+
+### 19.6 Corrected release wording (≤ 120 Chinese characters, §11)
+
+```text
+RC1 的 proposal detector 已在 WHU 类航空建筑实例域上完成验证；演示用例取自该域内既有资产，选择规则在检测结果之外预先确定；A2 为已如实记录的未检出样例，本版本不承诺任意航空影像的鲁棒性。
+```
+
+The wording states the verified support scope positively, calls A2 a documented non-detection case, avoids the
+unsupported claim that A2 is outside the domain, and implies neither arbitrary-image robustness nor that A2 was fixed.
+
+### 19.7 Scientific freeze (§12) and next gate (§13)
+
+```text
+scientific freeze preserved = YES
+NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION   (recommended, NOT executed)
+```
+
+Policy documentation and deterministic Demo-case selection remain separate from the frozen research metrics and
+architecture; the frozen detector and all frozen results are untouched.
