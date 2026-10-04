@@ -1,37 +1,66 @@
-# TO_DSH — Task 8B.3-P1D5: Detector Provenance and A2 Domain-Gap Forensics
+# TO_DSH — Task 8B.3-P1D5-R1: Complete Detector Provenance Evidence Contract
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `15a90ec11ad66c8f365284bf53eb320661a1e73f`
+> Required starting HEAD: `d17517b53b1cb9b82cbecc0432a5023eaa756278`
 > External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. Purpose
+# 0. Audit disposition
 
-P1D1–P1D4 have excluded these explanations for A2 zero proposals:
-
-```text
-NMS warning erasing returned detections             = EXCLUDED
-wrapper masks=None hiding returned boxes             = EXCLUDED by direct P1D2 measurement
-512-px tiling/context loss at conf=0.05              = EXCLUDED by P1D3
-product threshold merely being slightly too high     = EXCLUDED down to conf=0.001
-```
-
-Frozen evidence:
+P1D5 commit:
 
 ```text
-A2 = 1024×1024 RGB
-P1D2: 9 tiled calls @ conf=0.05 → 9/9 boxes_count=0
-P1D3: one full-frame call @ conf=0.05 → boxes_count=0
-P1D4: 9 tiled calls @ conf=0.001 → 9/9 boxes_count=0
-P1D4 outcome = PROP01_NO_MEANINGFUL_SUBTHRESHOLD_SIGNAL
+d17517b53b1cb9b82cbecc0432a5023eaa756278
+docs(rc1): audit detector provenance for a2
 ```
 
-Before any detector replacement, retraining, fine-tuning, ensemble, preprocessing rescue, or fallback proposal source
-is authorized, establish the provenance and validated scope of the actual RC1 `detector.pt`.
+has the correct parent and modifies only the three authorized documentation/handoff paths.
 
-This task is READ-ONLY FORENSICS. No detector/model inference is allowed.
+Its central evidence is plausible and currently retained:
+
+```text
+active detector:
+  YOLO26m-seg
+  54,480,241 B
+  sha256 ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
+  documented source = task6m1 continued best.pt
+
+training lineage:
+  WHU building dataset
+
+A2 source/domain:
+  NOT ESTABLISHED
+
+scientific-freeze classification:
+  DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
+
+primary diagnosis:
+  PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE
+
+recommended next gate:
+  DOMAIN_EVIDENCE_RECOVERY
+```
+
+However P1D5 is NOT YET APPROVED because the required evidence contract was incomplete.
+
+The missing/insufficient items are:
+
+```text
+1. no exact baseline/yolo_whu relation enum was reported;
+2. no active detector class names/count were established or explicitly marked NOT ESTABLISHED;
+3. the task required direct A2 dtype/bit-depth/channel statistics, but they were omitted;
+4. the required training-domain-vs-A2 comparison table was omitted;
+5. stage-1/stage-2 args were identified but not actually parsed for available training settings;
+6. alternate candidates were labeled VALIDATED_ALTERNATE_AVAILABLE, but validation evidence was not normalized
+   candidate-by-candidate; pretrained/smoke-only artifacts must not be conflated with validated alternatives;
+7. FROM_DSH omitted several exact required fields from the P1D5 task contract.
+```
+
+This task only repairs those evidence/reporting gaps.
+
+No new scientific or engineering intervention is authorized.
 
 # 1. Git gate
 
@@ -39,10 +68,10 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 15a90ec11ad66c8f365284bf53eb320661a1e73f
+HEAD = d17517b53b1cb9b82cbecc0432a5023eaa756278
 ```
 
-Allowed tracked tree:
+Allowed initial tracked tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
@@ -51,24 +80,27 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- run `predict.py` or `--inspect-proposals`;
-- call YOLO/model forward/predict;
-- run Qwen/SAM2/D-B1;
+- run any model inference or forward call;
+- call YOLO `.predict()` or detector runtime methods;
+- run `predict.py`;
+- run `--inspect-proposals`;
 - run A1/A2/A3/A4/B1/B2 inference;
+- run Qwen/SAM2/D-B1;
 - run pytest/check_setup;
-- lower/change thresholds;
-- alter detector runtime/config/checkpoint/model package;
-- train/fine-tune/resume/export/download a model;
-- replace `detector.pt`;
-- copy an alternate checkpoint into the external package;
-- modify tests/manifests/external delivery;
-- implement fallback proposal logic;
+- train/fine-tune/resume/export;
+- download anything;
+- replace/copy/modify any checkpoint;
+- modify external delivery;
+- modify runtime/tests/manifests/config/model package;
+- change thresholds;
+- implement a detector fallback;
+- run an alternate detector;
+- enter DOMAIN_EVIDENCE_RECOVERY beyond this report repair;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - update main;
 - force push.
 
-Checkpoint METADATA inspection is allowed only if it performs no forward/inference/training/export and writes nothing
-back to the checkpoint.
+Reading text/YAML/JSON/CSV, hashing files, and reading image pixels for non-model descriptive statistics are allowed.
 
 # 3. Allowed repository changes
 
@@ -80,82 +112,112 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No functional file may change.
+No functional path may change.
 
-# 4. Establish exact active detector identity
+# 4. Freeze already-accepted P1D5 facts unless contradicted by direct evidence
 
-For:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\buildreasonseg_advisor\detector.pt
-```
-
-record:
+Retain these unless a directly inspected artifact proves them wrong:
 
 ```text
-exists
-file size
-SHA256
-```
+active checkpoint bytes =
+54480241
 
-Find corresponding canonical/source model reference, manifest entry, model-package metadata, model card, or build record.
+active checkpoint sha256 =
+ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
 
-Record every authoritative source path that identifies:
-- model family/version;
-- task type;
-- class names/count;
-- checkpoint origin;
-- expected hash/size if recorded.
-
-Do not infer provenance from filename alone.
-
-# 5. Recover U-C1 detector decision history
-
-Search repository/history and local workspace artifacts for:
-
-```text
-U-C1
-YOLO26m
+active detector family =
 YOLO26m-seg
-detector.pt
-proposal detector
-proposal quality
-proposal baseline
-WHU
-WHU-EA
-WHU-EA-NativeVector
-checkpoint selection
-model selection
-proposal recall
-proposal coverage
+
+active task =
+instance segmentation
+
+documented source =
+artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/weights/best.pt
+
+A2 source/domain =
+NOT ESTABLISHED
+
+MEM-01 =
+CLOSED
+
+PROP-01 =
+OPEN
+
+REF-01 =
+OPEN
+
+MASK-01 =
+OPEN
 ```
 
-At minimum inspect relevant `docs/`, `handoff/`, `evaluation/`, `baseline/`, model-package metadata/configs/manifests,
-and available git history/prior task reports.
+Do not rerun P1D1–P1D4.
 
-Recover, if supported:
+# 5. Establish active detector class names/count
+
+Inspect authoritative local evidence in this order:
+
+1. `artifacts/task6m_yolo_native/data.yaml`;
+2. stage-1/stage-2 training args;
+3. model/package metadata;
+4. safe checkpoint metadata only if still necessary.
+
+Record:
 
 ```text
-task/commit where U-C1 was selected
-candidate models compared
-selection metrics
-validation split/domain
-detector evaluation result
-training/fine-tuning dataset
-training image/tile size
-class definition
-pretrained initialization
-epoch/checkpoint selection
-whether active external detector.pt is byte-identical to selected checkpoint
+class_count = <integer or NOT ESTABLISHED>
+class_names = <exact list/mapping or NOT ESTABLISHED>
 ```
 
-Unsupported items = `NOT ESTABLISHED`. Do not reconstruct missing facts from memory.
+If the data YAML says one class named `building`, record that exact fact and cite the source path in the report.
 
-# 6. Separate baseline/yolo_whu from active detector
+Do not infer class count only from the general phrase "WHU building dataset".
 
-Inspect `baseline/yolo_whu/` README, args/config/manifest and checkpoint identity/history evidence.
+# 6. Parse available stage-1 / stage-2 training settings
 
-Classify relation to active `detector.pt` exactly as:
+Inspect these if present:
+
+```text
+artifacts/checkpoints/task6m/runs/m1_yolo26m_seg/args.yaml
+artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/args.yaml
+```
+
+and any directly referenced frozen run record needed to interpret them.
+
+Record separately for stage 1 and stage 2, when present:
+
+```text
+model/source checkpoint
+data
+epochs
+imgsz
+batch
+device
+seed
+resume
+pretrained
+optimizer
+close_mosaic
+patience
+save_dir/run identity
+```
+
+For each unavailable field write `NOT ESTABLISHED`.
+
+Do NOT leave a present readable field unparsed merely because it is not central to the final diagnosis.
+
+# 7. Classify baseline/yolo_whu relation exactly
+
+Inspect:
+
+```text
+baseline/yolo_whu/README.md
+baseline/yolo_whu/manifest.json
+baseline/yolo_whu/run_record/args.yaml
+```
+
+and the active detector provenance.
+
+Choose exactly one:
 
 ```text
 SAME_CHECKPOINT
@@ -164,102 +226,117 @@ SEPARATE_HISTORICAL_BASELINE
 RELATION_NOT_ESTABLISHED
 ```
 
-Require hash/metadata/history evidence for the first two.
+Rules:
 
-# 7. Read-only checkpoint metadata inspection
+- Different family + different checkpoint hash + no direct training ancestry evidence => cannot be SAME_CHECKPOINT.
+- `DIRECT_ANCESTOR_OR_FINETUNE_SOURCE` requires explicit lineage evidence, not both being trained on WHU.
+- If the record is the independent YOLOv8m-seg WHU baseline and active is YOLO26m-seg with separate lineage, use
+  `SEPARATE_HISTORICAL_BASELINE`.
 
-Only if docs/history do not establish needed fields, inspect active checkpoint metadata without inference.
+Record the exact evidence.
 
-Allowed fields:
-- embedded model YAML/name;
-- `names`;
-- task;
-- train args;
-- epoch/date;
-- source/pretrained metadata.
+# 8. Compute the required non-model A2 descriptive statistics
 
-Do NOT call `.predict()`, model forward, train/resume/export, or save checkpoint.
-
-Record method and confirm:
+Using the frozen:
 
 ```text
-forward/inference calls = 0
-checkpoint writes = 0
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\input\A2.png
 ```
 
-If safe extraction is uncertain, SKIP and record `NOT ESTABLISHED`.
-
-# 8. Recover A2 provenance and input-domain facts
-
-Search Demo/R4B artifacts and file metadata for A2 provenance.
-
-Record if supported:
-
-```text
-source/origin
-whether from WHU / WHU-EA / another aerial dataset / external user-selected image
-GSD/spatial resolution
-sensor/source
-bit depth
-original dimensions before demo preparation
-whether resized/cropped/compressed
-```
-
-Unsupported fields = `NOT ESTABLISHED`.
-
-Record directly measurable frozen A2 facts:
+First re-confirm:
 
 ```text
 1024×1024
 RGB
-file size
-SHA256
-dtype / bit depth
-per-channel min/max/mean/std
-fraction of exactly 0 and 255 pixels per channel
+sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
 ```
 
-These statistics are diagnostic facts only; do not call them domain-gap proof.
+Then read pixels only; no model call.
 
-# 9. Training-domain vs A2 comparison
-
-Build a table:
+Record:
 
 ```text
-property                         active detector training/validation domain    A2
-dataset/source
-task/class definition
-native image size
-training crop/tile size
-RGB/bit depth
-known spatial resolution/GSD
-known augmentation/resizing
-building morphology/context
+file bytes
+array dtype
+bit depth / channel representation if directly established
+R min / max / mean / std
+G min / max / mean / std
+B min / max / mean / std
+R fraction == 0
+G fraction == 0
+B fraction == 0
+R fraction == 255
+G fraction == 255
+B fraction == 255
 ```
 
-Unavailable fields = `NOT ESTABLISHED`.
-For morphology/context use only documented descriptions; do not invent visual interpretation.
+Use a stated numeric precision and keep it consistent.
 
-# 10. Search for existing alternate detector candidates
+These are descriptive facts only.
 
-Search workspace/repository/external-support directories for detector checkpoints/model packages already created or
-evaluated earlier in this project. Do NOT download or run them.
+Do NOT interpret ordinary pixel-statistic differences as proof of domain gap.
 
-For each plausible candidate record:
+# 9. Add the required training-domain vs A2 table
+
+The report MUST contain this table with no omitted rows:
+
+| property | active detector training/validation domain | A2 |
+|---|---|---|
+| dataset/source | | |
+| task/class definition | | |
+| native image size | | |
+| training crop/tile size | | |
+| RGB/bit depth | | |
+| known spatial resolution/GSD | | |
+| known augmentation/resizing | | |
+| building morphology/context | | |
+
+Rules:
+- use only documented facts;
+- use `NOT ESTABLISHED` for unknowns;
+- distinguish detector training `imgsz` from source/native tile dimensions;
+- do not fabricate GSD;
+- do not visually invent morphology/context.
+
+# 10. Normalize alternate-candidate validation status
+
+Re-audit each previously listed candidate separately:
 
 ```text
-path
-file size
-SHA256
-model family/task if documented
-origin task/report
-validation evidence
-why it is/is not a legitimate already-validated candidate
+A. YOLO26m-seg epoch-18 / task6m best.pt
+B. YOLOv8m-seg WHU baseline best.pt
+C. YOLO26m-seg pretrained base
+D. YOLO26s-seg pretrained/smoke artifact
 ```
 
-Exclude arbitrary unvalidated snapshots, optimizer checkpoints without evaluation, and incompatible tasks/classes.
+For each record:
 
-Classify availability:
+```text
+candidate path
+family/task
+hash if available
+training/fine-tuning status
+quantitative validation evidence = exact metric/report OR NONE
+prior pipeline/demo-use evidence = exact artifact/report OR NONE
+A2 validation = YES/NO
+RC1-path validation = YES/NO
+candidate status =
+    VALIDATED_PROJECT_ALTERNATE
+    USED_BUT_NOT_QUANTITATIVELY_VALIDATED
+    PRETRAINED_BASE_ONLY
+    SMOKE_ONLY
+    INCOMPATIBLE_OR_OTHER
+```
+
+Important:
+- being a pretrained base is NOT project validation;
+- being used in a smoke run is NOT project validation;
+- being referenced by a script is NOT quantitative validation;
+- the frozen YOLOv8m baseline's validation-split metrics may count as project validation if the frozen record actually
+  contains those metrics;
+- A2/RC1 validation must be reported separately from generic WHU validation.
+
+Then choose the overall enum exactly:
 
 ```text
 VALIDATED_ALTERNATE_AVAILABLE
@@ -267,9 +344,12 @@ NO_VALIDATED_ALTERNATE_FOUND
 ALTERNATE_STATUS_NOT_ESTABLISHED
 ```
 
-# 11. Scientific-freeze compatibility audit
+`VALIDATED_ALTERNATE_AVAILABLE` is allowed if at least one non-active candidate has real prior project validation
+evidence, even if it has never been run on A2/RC1. That does NOT authorize adopting it into RC1.
 
-From Task7/RC1 documentation classify detector change impact exactly as:
+# 11. Clarify scientific-freeze impact vs diagnostic use
+
+Retain or revise the exact enum:
 
 ```text
 DETECTOR_CHANGE_ENGINEERING_ONLY_IF_REVALIDATED
@@ -277,118 +357,128 @@ DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
 SCIENTIFIC_FREEZE_IMPACT_NOT_ESTABLISHED
 ```
 
-Do NOT actually change detector.
+Then add two separate statements:
 
-# 12. Primary diagnosis classification
-
-Choose exactly ONE:
-
-`PROP01_DETECTOR_DOMAIN_GAP_STRONGLY_SUPPORTED`
-- only if detector training/validation domain and A2 source/domain are established and materially mismatched.
-
-`PROP01_SINGLE_IMAGE_BLINDSPOT_WITHIN_EXPECTED_DOMAIN`
-- only if A2 is established to belong to the expected detector domain and still fails through P1D4.
-
-`PROP01_CHECKPOINT_PROVENANCE_INCOMPLETE`
-- if active checkpoint training/selection provenance cannot be established sufficiently.
-
-`PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE`
-- if checkpoint provenance exists but A2 provenance/domain is too incomplete to distinguish mismatch from in-domain blind spot.
-
-Do not choose a stronger classification than evidence supports.
-
-# 13. Next-gate decision — recommend only
-
-Use exactly:
-
-If `VALIDATED_ALTERNATE_AVAILABLE` and scientifically compatible:
 ```text
-NEXT = CONTROLLED_ALTERNATE_DETECTOR_A2_PROBE
+A. adopting/replacing the RC1 proposal detector would:
+   <effect on frozen claims>
+
+B. merely running a future isolated alternate-detector A2 diagnostic, without changing RC1 or research claims, would:
+   <ALLOWED_AS_SEPARATE_DIAGNOSTIC / NOT_ALLOWED_BY_FREEZE / NOT_ESTABLISHED>
 ```
 
-Else if `PROP01_DETECTOR_DOMAIN_GAP_STRONGLY_SUPPORTED`:
+This distinction is mandatory.
+
+Do not run such a diagnostic in this task.
+
+# 12. Re-evaluate primary diagnosis
+
+Choose exactly one again:
+
 ```text
-NEXT = DETECTOR_ADAPTATION_DESIGN
+PROP01_DETECTOR_DOMAIN_GAP_STRONGLY_SUPPORTED
+PROP01_SINGLE_IMAGE_BLINDSPOT_WITHIN_EXPECTED_DOMAIN
+PROP01_CHECKPOINT_PROVENANCE_INCOMPLETE
+PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE
 ```
 
-Else if `PROP01_SINGLE_IMAGE_BLINDSPOT_WITHIN_EXPECTED_DOMAIN`:
+Given the currently known evidence, do NOT strengthen beyond `PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE` unless new
+direct provenance evidence establishes A2's domain.
+
+# 13. Re-evaluate next gate
+
+Apply the original decision logic only after sections 5–12 are complete.
+
+Record exactly one:
+
 ```text
-NEXT = DETECTOR_ROBUSTNESS_DECISION
+CONTROLLED_ALTERNATE_DETECTOR_A2_PROBE
+DETECTOR_ADAPTATION_DESIGN
+DETECTOR_ROBUSTNESS_DECISION
+CHECKPOINT_PROVENANCE_RECOVERY
+DOMAIN_EVIDENCE_RECOVERY
 ```
 
-Else if `PROP01_CHECKPOINT_PROVENANCE_INCOMPLETE`:
-```text
-NEXT = CHECKPOINT_PROVENANCE_RECOVERY
-```
+Important interpretation:
 
-Else:
-```text
-NEXT = DOMAIN_EVIDENCE_RECOVERY
-```
+- a validated alternate existing does NOT automatically authorize a product swap;
+- if a separate diagnostic probe is scientifically permissible but the original P1D5 rule still routes to
+  `DOMAIN_EVIDENCE_RECOVERY`, preserve the original rule outcome and explicitly state that the diagnostic candidate
+  remains available for a later ChatGPT decision;
+- do not execute any gate.
 
-Do NOT execute the next gate.
+# 14. Repair the report
 
-# 14. Report
-
-Create:
+Update:
 
 ```text
 docs/task8b3_p1d5_detector_provenance_domain_gap.md
 ```
 
-Required sections:
-1. scope/starting HEAD
+It must now include all of:
+
+1. Task/scope/starting HEAD of original P1D5 and R1
 2. P1D1–P1D4 frozen evidence
-3. active detector identity
-4. active model family/task/classes
+3. active detector path/bytes/SHA256
+4. active family/task/classes
 5. U-C1 selection history
-6. training/fine-tuning provenance
+6. stage-1/stage-2 training provenance and parsed args
 7. validation/selection evidence
-8. baseline/yolo_whu relationship
+8. exact `baseline/yolo_whu` relation enum
 9. checkpoint metadata method/evidence
-10. A2 provenance and measurable facts
-11. training-domain vs A2 comparison
-12. alternate detector candidates
-13. alternate availability enum
-14. scientific-freeze impact enum
-15. primary diagnosis enum
-16. evidence gaps
-17. exact next gate
-18. `RC1-DEMO-PROP-01 = OPEN`
-19. `MEM-01 = CLOSED`
-20. REF-01/MASK-01 OPEN untouched
-21. model inference/training = NONE
-22. functional modifications = NONE.
+10. A2 provenance
+11. A2 required pixel statistics
+12. exact training-domain-vs-A2 comparison table
+13. alternate candidates with normalized status
+14. overall alternate availability enum
+15. scientific-freeze enum
+16. adoption-vs-diagnostic distinction
+17. primary diagnosis enum
+18. evidence gaps
+19. exact next gate
+20. `RC1-DEMO-PROP-01 = OPEN`
+21. `RC1-DEMO-MEM-01 = CLOSED`
+22. REF-01/MASK-01 OPEN untouched
+23. model inference/training = NONE
+24. functional modifications = NONE.
 
-# 15. FROM_DSH
+# 15. Repair FROM_DSH
 
-Preserve ARTIFACT-FACTS exactly. UTF-8 without BOM.
+Preserve ARTIFACT-FACTS byte-for-byte.
+UTF-8 without BOM.
 
-Required:
+Required exact fields:
 
 ```text
-Task: 8B.3-P1D5
+Task: 8B.3-P1D5-R1
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 15a90ec11ad66c8f365284bf53eb320661a1e73f
+Starting HEAD: d17517b53b1cb9b82cbecc0432a5023eaa756278
+Original P1D5 HEAD: 15a90ec11ad66c8f365284bf53eb320661a1e73f
 Model inference/training: NONE
 Functional files modified: NO
-Active detector SHA256: <sha>
-Active detector family/task: <value / NOT ESTABLISHED>
+Active detector SHA256: ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
+Active detector family/task: <value>
+Active detector classes: <value / NOT ESTABLISHED>
 Training/fine-tuning dataset: <value / NOT ESTABLISHED>
+Stage-1 args: <summary>
+Stage-2 args: <summary>
 U-C1 selection evidence: ESTABLISHED / PARTIAL / NOT ESTABLISHED
-baseline/yolo_whu relation: <enum>
+baseline/yolo_whu relation: <exact enum>
 A2 source/domain: <value / NOT ESTABLISHED>
-Validated alternate candidate: <enum>
-Scientific-freeze impact: <enum>
-Primary diagnosis: <enum>
-Next gate: <enum>
+A2 descriptive stats: RECORDED / NOT RECORDED
+Training-vs-A2 comparison table: RECORDED / NOT RECORDED
+Validated alternate candidate: <overall enum>
+Alternate diagnostic use under freeze: <ALLOWED_AS_SEPARATE_DIAGNOSTIC / NOT_ALLOWED_BY_FREEZE / NOT_ESTABLISHED>
+Scientific-freeze impact: <exact enum>
+Primary diagnosis: <exact enum>
+Next gate: <exact enum>
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
 Report: docs/task8b3_p1d5_detector_provenance_domain_gap.md
-Next action: Awaiting ChatGPT audit; no detector change authorized.
+Next action: Awaiting ChatGPT audit; no detector change or next gate authorized.
 ```
 
 # 16. Commit / push
@@ -396,39 +486,42 @@ Next action: Awaiting ChatGPT audit; no detector change authorized.
 If COMPLETE:
 
 ```text
-docs(rc1): audit detector provenance for a2
+docs(rc1): complete detector provenance audit
 ```
 
 If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record detector provenance forensic stop
+docs(rc1): record detector provenance audit correction stop
 ```
 
-Push current branch normally, no force.
+Push current branch normally.
+No force push.
 
 # 17. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- no inference/training/test execution;
-- no functional/external modification;
-- active detector identity/hash recorded;
-- provenance searched exhaustively in available local evidence;
-- baseline/yolo_whu relation classified without assumption;
-- A2 provenance searched and unknowns retained;
-- validated alternate candidates audited;
-- scientific-freeze impact classified;
-- exactly one primary diagnosis selected;
-- exactly one next gate recommended but NOT executed;
-- report/FROM_DSH committed/pushed;
-- clean tracked tree;
+- no model inference/training/tests;
+- no external/functional modifications;
+- all missing P1D5 evidence items are repaired;
+- baseline relation has one exact enum;
+- detector classes are established or explicitly NOT ESTABLISHED;
+- readable active training args are parsed;
+- A2 required pixel statistics are recorded;
+- the full training-vs-A2 table is present;
+- alternate validation status is normalized candidate-by-candidate;
+- adoption vs separate diagnostic is distinguished;
+- primary diagnosis and next gate are explicitly re-evaluated;
+- report and FROM_DSH are updated;
+- commit and push succeed;
+- tracked tree is clean;
 - STOP.
 
 # 18. Final response
 
 ```text
-TASK 8B.3-P1D5 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D5-R1 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -442,21 +535,22 @@ NONE
 Functional files modified:
 NO
 
-Active detector:
-SHA256 = <...>
-family/task = <...>
-training dataset = <...>
-
-U-C1 provenance:
-<ESTABLISHED / PARTIAL / NOT ESTABLISHED>
-
-baseline/yolo_whu:
-<relation enum>
-
-A2 source/domain:
+Active detector classes:
 <...>
 
-Validated alternate candidate:
+baseline/yolo_whu:
+<exact relation enum>
+
+A2 descriptive stats:
+RECORDED / NOT RECORDED
+
+Training-vs-A2 table:
+RECORDED / NOT RECORDED
+
+Validated alternate:
+<overall enum>
+
+Alternate diagnostic use:
 <enum>
 
 Scientific-freeze impact:
@@ -480,5 +574,5 @@ OPEN / OPEN
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得更换/训练 detector，不得运行新模型诊断，不得进入 REF-01/MASK-01/Task 8B.4/8C。
+等待 ChatGPT 审核；不得运行任何 detector，不得替换 checkpoint，不得执行 next gate。
 ```

@@ -70,7 +70,7 @@ cannot be decided from the available evidence.
 ## 6. Locally available alternative detectors
 
 ```text
-classification = VALIDATED_ALTERNATE_AVAILABLE
+classification = VALIDATED_ALTERNATE_AVAILABLE (evidence normalized in §12.6)
 ```
 
 | candidate | path | bytes | sha256 prefix | prior use evidence |
@@ -134,3 +134,142 @@ whether A2 was ever part of the WHU training/validation splits       : NOT ESTAB
 No inference, pytest, `predict.py`, training, fine-tuning, download, checkpoint substitution or functional edit
 occurred; the `.pt` files were hashed, not loaded; `RC1-DEMO-PROP-01` remains open; REF-01 / MASK-01 / Task 8B.4 /
 Task 8C were not entered.
+
+
+---
+
+## 12. P1D5-R1 — evidence completion (docs only)
+
+This section completes the evidence contract flagged by the P1D5 audit. No model inference, pytest, `predict.py`,
+training, fine-tuning, alternate-detector run or checkpoint load occurred; only the report and handoff changed.
+
+### 12.1 Active detector class names / count
+
+```text
+class_count = 1
+class_names = {0: building}
+source      = artifacts/task6m_yolo_native/data.yaml (name: task6m_yolo_native,
+              path: artifacts/task6m_yolo_native, train: images/train, val: images/val, test: images/test,
+              names: 0: building)
+```
+
+The run-local `data.yaml` copies are **NOT PRESENT** in the run directories, so the dataset YAML above is the exact
+class definition source.
+
+### 12.2 Stage-1 / stage-2 training settings (parsed)
+
+| field | stage 1 (`task6m/runs/m1_yolo26m_seg`) | stage 2 (`task6m1/runs/m1_yolo26m_seg_continued`) |
+|---|---|---|
+| model / source checkpoint | `artifacts/checkpoints/task6m/pretrained/yolo26m-seg.pt` | `…/m1_yolo26m_seg_continued/weights/last_resume.pt` |
+| data | `artifacts/task6m_yolo_native/data.yaml` | `artifacts/task6m_yolo_native/data.yaml` |
+| epochs | 80 | 80 |
+| imgsz | 640 | 640 |
+| batch | 16 | 16 |
+| device | `0` (CUDA) | `0` (CUDA) |
+| seed | 20260812 | 20260812 |
+| resume | false | `…/weights/last_resume.pt` |
+| pretrained | true | true |
+| optimizer | auto | auto |
+| close_mosaic | 10 | 10 |
+| patience | 15 | 15 |
+| name / save_dir | `m1_yolo26m_seg` | `m1_yolo26m_seg_continued` |
+
+Run metrics present in both runs (`results.csv`): stage 1 stopped after **18** logged epochs with final
+`metrics/mAP50(B)=0.69842`, `mAP50-95(B)=0.39715`, `mAP50(M)=0.68266`, `mAP50-95(M)=0.35437`; stage 2 logged **55**
+epochs with final `mAP50(B)=0.73888`, `mAP50-95(B)=0.44319`, `mAP50(M)=0.72415`, `mAP50-95(M)=0.39172`. These are
+quantitative validation-split results of the **active** lineage (not of any alternate).
+
+### 12.3 `baseline/yolo_whu` exact relation
+
+```text
+SEPARATE_HISTORICAL_BASELINE
+```
+
+Evidence: `baseline/yolo_whu/README.md` — "Baseline: YOLOv8m-seg on WHU Building Dataset", "**Status: FROZEN.
+Read-only reference. Not part of the proposed method.**", "is NOT … an inference-time component of the proposed
+pipeline", "The proposed method must not import any YOLO code"; `artifacts/task6j_yolo_proposals/provenance.json` —
+`model_sha256 = d9a6a65b7e0819ce4ecbbd9d44a5c8f9dcd2e60ea78203ba8fdf90ba6aaa1f91`, trained **100 epochs** on the
+legacy WHU YOLO dataset, invoked read-only with ultralytics 8.4.67 from a separate legacy project
+(`C:\D\resources\project\WHU_Building_Segment`). The active detector is YOLO26m-seg
+(`ef852b58…`) with its own lineage (pretrained `yolo26m-seg.pt` → `task6m` → `task6m1`). Different family, different
+checkpoint hash and no lineage evidence ⇒ neither `SAME_CHECKPOINT` nor `DIRECT_ANCESTOR_OR_FINETUNE_SOURCE`.
+
+### 12.4 A2 non-model pixel statistics
+
+```text
+file            = inference/input/A2.png · 1 677 040 bytes · PNG · RGB · 1024x1024
+sha256          = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+array dtype     = uint8 (8-bit unsigned per channel, mode RGB)
+R: min 23  max 148  mean 60.0654  std 6.3738  frac_eq_0 0.000000  frac_eq_255 0.000000
+G: min 29  max 159  mean 68.4044  std 6.4936  frac_eq_0 0.000000  frac_eq_255 0.000000
+B: min 30  max 151  mean 66.4532  std 6.9203  frac_eq_0 0.000000  frac_eq_255 0.000000
+unique RGB colours = 15 211
+luminance       = mean 64.9744  std 6.3520  frac<16 0.000000  frac>240 0.000000
+```
+
+(Statistics at 4-decimal precision, computed with numpy on the decoded uint8 array; no model call.)
+
+### 12.5 Training domain vs A2 — comparison table
+
+| dimension | training/validation domain (active detector) | A2 |
+|---|---|---|
+| detector family/task | YOLO26m-seg instance segmentation | same detector applied |
+| dataset | `artifacts/task6m_yolo_native/data.yaml` (WHU building lineage, `datasets/whu`) | NOT ESTABLISHED |
+| classes | 1 class `building` | unknown building content distribution |
+| training tile geometry | WHU native tiles, training `imgsz=640`, batch 16 | 1024×1024 RGB PNG |
+| radiometry | NOT ESTABLISHED (no dataset pixel statistics recorded) | mean RGB ≈ (60.1, 68.4, 66.5), per-channel std ≈ 6.4–6.9, no saturated pixels, 15 211 unique colours |
+| geographic/sensor provenance | NOT ESTABLISHED | NOT ESTABLISHED |
+| A2 membership in training/val/test splits | — | NOT ESTABLISHED |
+| validation metrics | mAP50(B) 0.73888 / mAP50-95(B) 0.44319 / mAP50(M) 0.72415 / mAP50-95(M) 0.39172 (active lineage) | not measured (no A2/RC1 validation exists) |
+
+The comparison cannot establish either a domain mismatch or in-domain membership, because the dataset's radiometric
+and geographic descriptors are not recorded and A2's provenance is unknown.
+
+### 12.6 Alternate detector validation status (normalized)
+
+| candidate | family | bytes / sha256 prefix | normalized validation status |
+|---|---|---:|---|
+| epoch-18 YOLO26m-seg (`task6m/runs/m1_yolo26m_seg/weights/best.pt` = `task6m1/source_epoch18_snapshot/weights/best.pt`) | YOLO26m-seg | 162 481 487 / `fd407db634a8a7ef…` | **project validation evidence**: full `results.csv` metrics on the WHU validation split (final mAP50(M) 0.68266), and the run that the active continuation resumed from; **not** validated on A2/RC1 |
+| YOLOv8m-seg WHU baseline (`WHU_Building_Segment/runs/segment/logs/whu_building_v1/weights/best.pt`, recorded as `baseline/yolo_whu/`) | YOLOv8m-seg | 54 835 548 / `d9a6a65b7e0819ce…` | **project validation evidence present in the frozen record** (`baseline/yolo_whu/run_record/results.csv`, 17 463 bytes of 100-epoch metrics) plus Task 6J read-only proposal-count runs; **not** validated on A2/RC1; README keeps it reference-only |
+| pretrained base `task6m/pretrained/yolo26m-seg.pt` | YOLO26m-seg | 54 750 385 / `16b636f04e8fb6a3…` | **NOT project validation** — pretrained base only |
+| pretrained base `task6m/pretrained/yolo26s-seg.pt` | YOLO26s-seg | 23 467 933 / `3da1d83e31caec96…` | **NOT project validation** — used only in smoke runs |
+
+Overall enum (unchanged, now evidence-normalized):
+
+```text
+VALIDATED_ALTERNATE_AVAILABLE
+```
+
+Per the task book, this does **not** authorize adopting any alternate into RC1.
+
+### 12.7 Scientific-freeze impact and permitted diagnostic use
+
+```text
+DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
+```
+
+A. adopting/replacing the RC1 proposal detector would: contradict `model/buildreasonseg_advisor/metadata.json`, which
+lists the detector as frozen RC1 architecture ("YOLO26m-seg (frozen U-C1 proposal model)") under a research baseline
+whose `task7j_test_status = FINAL_TEST_CONSUMED`; it would also change the proposal source underlying the frozen
+Task 6M/6M1/7 results, so the frozen research claims would need documented re-validation and a re-freeze before any
+adoption.
+
+```text
+B. merely running a future isolated alternate-detector A2 diagnostic, without changing RC1 or research claims, would:
+   ALLOWED_AS_SEPARATE_DIAGNOSTIC
+```
+
+B is permitted because such a one-off diagnostic leaves the delivered detector, the product configuration and the
+frozen research artifacts untouched; it produces diagnostic evidence only and authorizes no adoption.
+
+### 12.8 Re-evaluated primary diagnosis and next gate
+
+```text
+primary diagnosis = PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE
+NEXT              = DOMAIN_EVIDENCE_RECOVERY
+```
+
+Unchanged: no new direct evidence establishes A2's domain (§12.4–§12.5), so the classification is not strengthened;
+the next-gate logic then falls through the alternate branch (available but not scientifically compatible without
+re-validation, §12.7A) and the domain-gap / in-domain-blind-spot / provenance-incomplete branches, leaving
+`DOMAIN_EVIDENCE_RECOVERY`. Neither is executed here.
