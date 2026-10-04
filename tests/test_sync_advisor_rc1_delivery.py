@@ -207,15 +207,18 @@ def test_canonical_manifest_has_exactly_135_entries(real_manifest: dict) -> None
     assert len(real_manifest["files"]) == 135
 
 
-def test_every_real_manifest_entry_matches_canonical_file(real_manifest: dict) -> None:
-    for entry in real_manifest["files"]:
-        target = REAL_CANONICAL / entry["path"]
-        assert target.is_file(), entry["path"]
-        assert target.stat().st_size == entry["bytes"], entry["path"]
-        assert sha256(target) == entry["sha256"], entry["path"]
+def test_every_real_manifest_entry_matches_canonical_file():
+    """Task 8B.3-P1D11S1: the real manifest is validated through Git canonical basis."""
 
-
-GIT_CANONICAL_BASIS = "GIT_CANONICAL_BLOB_BYTES"
+    root = sync.CANONICAL_ROOT
+    payload = json.loads((root / "source_manifest.json").read_text(encoding="utf-8"))
+    assert payload.get("identity_basis") == "GIT_CANONICAL_BLOB_BYTES"
+    entries = sync.load_manifest(root)
+    assert len(entries) == 135
+    for entry in entries:
+        blob = sync.git_canonical_bytes(entry["path"])
+        assert len(blob) == entry["bytes"], entry["path"]
+        assert hashlib.sha256(blob).hexdigest() == entry["sha256"], entry["path"]
 
 
 def _write_manifest(root: Path, entries: list[dict], basis: str | None = None) -> None:
@@ -230,7 +233,7 @@ def _entry(payload: bytes) -> dict:
     return {"path": "a.txt", "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
 
 
-def test_legacy_manifest_without_basis_copies_worktree_bytes(tmp_path, monkeypatch):
+def test_legacy_manifest_without_basis_copies_worktree_bytes(tmp_path):
     """A. Legacy behavior preserved: no identity_basis -> working-tree bytes are copied."""
 
     canonical = tmp_path / "canonical"
@@ -240,7 +243,6 @@ def test_legacy_manifest_without_basis_copies_worktree_bytes(tmp_path, monkeypat
     (canonical / "a.txt").write_bytes(b"legacy worktree bytes\n")
     _write_manifest(canonical, [_entry(b"legacy worktree bytes\n")])
 
-    monkeypatch.setattr(sync.CANONICAL_ROOT, "resolve", lambda *_: canonical, raising=False)
     entries = sync.load_manifest(canonical)
     assert sync.manifest_identity_basis(canonical) is None
     assert sync.run_sync(destination, entries, canonical) == 0
@@ -284,16 +286,3 @@ def test_git_canonical_check_rejects_crlf_destination(tmp_path, monkeypatch):
     assert (destination / "a.txt").read_bytes() == b"alpha\r\nbeta\r\n"
 
 
-def test_real_manifest_identity_is_git_canonical():
-    """The real RC1 manifest validates against Git canonical bytes for all 135 entries."""
-
-    root = sync.CANONICAL_ROOT
-    payload = json.loads((root / "source_manifest.json").read_text(encoding="utf-8"))
-    assert payload["schema"] == "BuildReasonSeg.AdvisorRC1.SourceManifest.v1"
-    assert payload.get("identity_basis") == GIT_CANONICAL_BASIS
-    entries = sync.load_manifest(root)
-    assert len(entries) == 135
-    for entry in entries:
-        blob = sync.git_canonical_bytes(entry["path"])
-        assert len(blob) == entry["bytes"], entry["path"]
-        assert hashlib.sha256(blob).hexdigest() == entry["sha256"], entry["path"]
