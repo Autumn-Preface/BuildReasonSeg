@@ -1,34 +1,58 @@
-# TO_DSH — Task 8B.3-P1D10-R2: Audit BuildSpatialReason v0.2 and Lock Outcome-Independent Demo Candidates
+# TO_DSH — Task 8B.3-P1D10-R3: Recover Canonical Raster Paths and Finalize Locked Demo Pool
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48`
+> Required starting HEAD: `cbde8755f1cae0593274746f128760e13ebe86a1`
 
-# 0. Audit disposition
+# 0. Purpose
 
-P1D10-R1 corrected the circular A2 domain claim, but is NOT YET APPROVED.
+P1D10-R2 correctly STOPPED after discovering that the four metadata-locked BuildSpatialReason v0.2 TEST candidates
+had not yet been proven to resolve to their original RGB raster tiles.
 
-Two remaining issues:
+The four provisional metadata locks are:
 
-1. The R1 audit did not actually audit the canonical relation dataset requested by the task:
-   `datasets/build_spatial_reason/v0.2/{val,test}.jsonl`.
-   The tracked v0.2 manifest/statistics already establish:
-   - 28,108 samples;
-   - `scene_disjoint_v1`;
-   - 20 programs;
-   - explicit reference/target provenance;
-   - all four frozen level-3 programs are present in val/test.
+```text
+right:
+buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
 
-2. R1 selected `artifacts/task6m1_demo` as the primary pool, but its metadata includes prior model outputs
-   (`parsed_program`, `status`, `proposal_count`, outputs/selection). A selection contract that requires a completed
-   status or parsed model output is not cleanly outcome-independent.
+left:
+buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
 
-This R2 must audit the canonical BuildSpatialReason v0.2 records and, if valid, lock the future Demo candidates
-BEFORE any detector/manual result is observed.
+above:
+buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
 
-This is DOCS-ONLY / METADATA-ONLY. No model or image-quality selection is allowed.
+below:
+buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+```
+
+Their `image_id`s are:
+
+```text
+1010
+1003
+1008
+1009
+```
+
+R2 proved their component maps exist, but the v0.2 record's `image_path` field is not a directly usable filesystem
+path.
+
+The repository already defines the canonical WHU source-root contract:
+
+```text
+buildreasonseg_mvp/whu_vector_audit.py:
+ORIGINAL_ROOT = C:\D\resources\Satellite dataset Ⅱ (East Asia)
+
+buildreasonseg_mvp/whu_native_vector.py:
+TileRecord.source_image_ref is a logical path relative to ORIGINAL_ROOT/source_root
+datasets/whu_native_vector/v1.0/tiles/index.jsonl is the canonical tile index
+```
+
+This task closes ONLY that raster-resolution gap.
+
+No model may run.
 
 # 1. Git gate
 
@@ -36,7 +60,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48
+HEAD = cbde8755f1cae0593274746f128760e13ebe86a1
 ```
 
 Allowed initial tracked tree:
@@ -52,17 +76,17 @@ Do NOT:
 - run `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1;
 - run pytest/check_setup;
 - train/fine-tune/export/download;
-- modify runtime/tests/manifests/checkpoints/config;
-- modify/copy/replace Demo inputs;
-- inspect any detector output, proposal count, success/failure status, mask, overlay or manual visual quality when
-  selecting candidates;
-- use `task6m1_demo` / `task6m_demo` model outcome fields as eligibility criteria;
-- change frozen research metrics;
+- inspect detector outputs or historical Demo outputs;
+- inspect/manual-rank image visual quality;
+- change any locked candidate ID;
+- substitute another candidate if a raster is missing;
+- copy any candidate into RC1;
+- modify runtime/tests/config/manifests/checkpoints;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - modify main;
 - force push.
 
-Reading JSON/JSONL/YAML/metadata and checking that referenced image files exist/read correctly is allowed.
+Read-only file lookup, hashing and image decoding are allowed.
 
 # 3. Allowed repository changes
 
@@ -74,56 +98,61 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Do not commit copied images or a new dataset.
+# 4. Correct the handoff typo first
 
-# 4. Canonical v0.2 provenance gate
+The final R2 `FROM_DSH` contains a typo in the LEFT locked candidate:
 
-Inspect and record:
-
+incorrect:
 ```text
-datasets/build_spatial_reason/v0.2/manifest.json
-datasets/build_spatial_reason/v0.2/statistics.json
-configs/build_spatial_reason_v0.2.yaml
-scripts/task6l_build_v0_2.py
+buildsr_test_1003_3_largest_to_left_of_nearest_f3fcb14e14c3
 ```
 
-Require evidence consistent with:
-
+canonical locked ID from the R2 report:
 ```text
-dataset = BuildSpatialReason v0.2
-source = WHU Building Dataset / Satellite dataset II (East Asia)
-source representation = whu-native-vector-v1.0
-split_view = scene_disjoint_v1
-total samples = 28108
-train / val / test = 12778 / 9111 / 6219
-program_count = 20
+buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
 ```
 
-Record the four relevant query counts in both val and test:
+Use the canonical ID with `_left_of_to_nearest_`.
+
+Do not alter any of the four locked records otherwise.
+
+# 5. Canonical source-root evidence
+
+Read, do not modify:
 
 ```text
-largest_to_right_of_to_nearest
-largest_to_left_of_to_nearest
-largest_to_above_to_nearest
-largest_to_below_to_nearest
+buildreasonseg_mvp/whu_vector_audit.py
+buildreasonseg_mvp/whu_native_vector.py
 ```
 
-If the canonical evidence disagrees materially:
-- do not lock candidates;
+Record exact evidence for:
+
+```text
+ORIGINAL_ROOT
+CROPPED_ROOT
+source_root_default()
+TileRecord.source_image_ref semantics
+SCENE_DISJOINT_SPLITS
+```
+
+Required expected root:
+
+```text
+C:\D\resources\Satellite dataset Ⅱ (East Asia)
+```
+
+If the code on this exact branch disagrees with this root/contract:
 - STOP.
 
-# 5. Locate actual v0.2 sample records
+# 6. Canonical tile-index gate
 
-Require local availability of:
+Require local file:
 
 ```text
-datasets/build_spatial_reason/v0.2/val.jsonl
-datasets/build_spatial_reason/v0.2/test.jsonl
+datasets/whu_native_vector/v1.0/tiles/index.jsonl
 ```
 
-These files may be intentionally untracked large artifacts; local read-only use is allowed.
-
-Record for each:
+Record:
 
 ```text
 exists
@@ -133,445 +162,357 @@ line count
 JSON parse failures
 ```
 
-Required line counts:
+Do NOT regenerate it.
+
+For each locked `image_id`:
 
 ```text
-val = 9111
-test = 6219
+1010
+1003
+1008
+1009
 ```
 
-If `test.jsonl` is absent, corrupt, or count-mismatched:
-- no candidate lock;
-- `REPLACEMENT_SELECTION_POLICY_NOT_READY`;
-- document and STOP after commit/push.
-
-Do NOT regenerate the dataset in this task.
-
-# 6. Establish v0.2 record schema
-
-From metadata only, record the field names and types necessary for selection.
-
-At minimum establish whether records contain:
+find exactly one canonical tile-index row where:
 
 ```text
-split
-image_id
-query_type
-level
-target_component_id
-reference_component_ids
-target_mask
-trivial_selection
-native_vector.dataset_name
-native_vector.dataset_version
-native_vector.tile_id
-native_vector.target
-native_vector.references
-target_geometry_ref
-image metadata/path reference
+tile_id == image_id
 ```
-
-For one record of each of the four target query types from the TEST split, record only:
-- stable identity fields;
-- program/query fields;
-- reference/target metadata fields;
-- image-path resolution fields.
-
-Do NOT record or consult detector/model results.
-
-# 7. Resolve source images without model output
-
-Using the v0.2 record and its frozen reasoning-view/native-vector metadata, prove that the underlying source tile can
-be resolved deterministically.
-
-For the TEST split record pool establish:
-
-```text
-image root / metadata path
-image dimensions
-image format
-readable count for candidate-bearing images
-missing/unreadable count
-```
-
-Do not inspect visual quality.
-
-A candidate is eligible only if its referenced source image exists and decodes successfully.
-
-# 8. Historical-use / leakage audit
-
-Audit documentation for historical use of:
-
-```text
-BuildSpatialReason v0.2 val
-BuildSpatialReason v0.2 test
-```
-
-Record whether each was used for:
-
-```text
-training
-model/architecture/threshold selection
-validation
-final frozen Task7J evaluation
-post-test rescue/tuning
-```
-
-Choose exactly one per split:
-
-```text
-CLEAN_DEMO_SELECTION_POOL
-USABLE_WITH_DISCLOSURE
-MODEL_SELECTION_LEAKAGE_RISK
-POOL_STATUS_INCOMPLETE
-```
-
-Expected decision logic:
-- a split used for model selection cannot be called clean;
-- a frozen final-test split may be `USABLE_WITH_DISCLOSURE` for qualitative Demo selection only if candidate locking is
-  metadata-only, deterministic, and does not change any reported test result.
-
-# 9. Reclassify historical demo-output pools
-
-For:
-
-```text
-artifacts/task6m1_demo
-artifacts/task6m_demo
-```
-
-record whether eligibility fields such as these exist:
-
-```text
-parsed_program
-status
-proposal_count
-selected
-outputs
-```
-
-Classify each exactly as one:
-
-```text
-MODEL_OUTPUT_CONTAMINATED_POOL
-METADATA_ONLY_POOL
-POOL_STATUS_INCOMPLETE
-```
-
-These pools MUST NOT be the primary replacement source if model-output-contaminated.
-
-# 10. Preferred pool
-
-Choose the preferred future success-Demo pool using this priority:
-
-1. BuildSpatialReason v0.2 TEST if `CLEAN_DEMO_SELECTION_POOL` or `USABLE_WITH_DISCLOSURE`;
-2. BuildSpatialReason v0.2 VAL only if test is unusable and val is not outcome-contaminated;
-3. otherwise no pool.
 
 Record:
 
 ```text
-BEST_POOL = <exact path/split or NONE>
-BEST_POOL_CLASSIFICATION = <enum>
+tile_id
+grid_id
+legacy_category
+source_raster
+grid_row
+grid_column
+source_image_ref
+source_label_ref
+width
+height
+scene_disjoint_split
+legacy_compat_split
 ```
 
-No candidate may be chosen from a model-output-contaminated demo bundle.
-
-# 11. Exact metadata-only candidate-lock rule
-
-If BEST_POOL exists, use exactly this relation order:
+Require:
 
 ```text
-1. largest_to_right_of_to_nearest
-2. largest_to_left_of_to_nearest
-3. largest_to_above_to_nearest
-4. largest_to_below_to_nearest
+scene_disjoint_split == test
+legacy_category == test
+width == 512
+height == 512
 ```
 
-Eligibility uses ONLY canonical ground-truth/generator metadata:
-
-```text
-split == chosen split
-query_type == required query
-level == 3
-target_component_id is present
-reference_component_ids is non-empty
-native_vector.target is present
-native_vector.references are present
-target_geometry_ref is present
-referenced source image exists and decodes
-```
-
-Forbidden eligibility fields:
-
-```text
-detector output
-proposal count
-parser output
-runtime status
-predicted mask
-manual visual quality
-historical Demo success/failure
-confidence
-```
-
-Do NOT require a prior model `status == completed`.
-
-# 12. Deterministic ordering
-
-Prefer an existing immutable `sample_id` if present.
-
-If no `sample_id` exists, define canonical sort key exactly as:
-
-```text
-(
-  str(image_id),
-  str(query_type),
-  int(target_component_id),
-  tuple(int(x) for x in reference_component_ids)
-)
-```
-
-For each relation in the fixed order:
-- sort all eligible records by the canonical key;
-- choose the first record whose `image_id` has not already been locked for another relation.
-
-No retries based on model outcome are ever allowed.
-
-If a relation has no eligible distinct-image record:
-- do not loosen criteria;
-- selection policy = NOT READY;
+Any zero/multiple row or mismatch:
+- do not change candidate;
 - STOP.
 
-# 13. Lock exactly four candidate records
+# 7. Resolve the original raster paths
 
-Metadata-only candidate locking IS AUTHORIZED in this R2.
-
-For each locked candidate record:
+For each row define ONLY:
 
 ```text
-relation/program
-stable key / sample_id
-split
-image_id
-resolved source image path
-image bytes
-image SHA256
-dimensions
-format
-target_component_id
-reference_component_ids
-native-vector target identity
-native-vector reference identities
-trivial_selection
+resolved_source_image =
+Path(r"C:\D\resources\Satellite dataset Ⅱ (East Asia)") / source_image_ref
 ```
 
-Do NOT:
-- copy it into RC1;
-- run the detector;
-- inspect prediction outputs;
-- inspect manual visual quality.
+No repository-relative interpretation is allowed.
 
-Once recorded and committed, these four candidate IDs are frozen for the next gate. They may not be replaced after
-future runtime results without a new ChatGPT decision that explicitly acknowledges the failed locked candidate.
+Expected logical shape:
 
-# 14. Support-scope wording
+```text
+1. The cropped image data and raster labels/test/image/<image_id>.tif
+```
 
-Define support positively from canonical provenance, not from A2 failure.
+Record exact resolved absolute paths.
 
-Allowed scope basis:
+For every locked raster require:
+
+```text
+exists = YES
+is_file = YES
+```
+
+If one fails:
+- no fallback path search;
+- no candidate substitution;
+- STOP.
+
+# 8. Decode and identity-check the original raster
+
+Read-only decode each resolved TIFF.
+
+Record:
+
+```text
+bytes
+SHA256
+format
+mode
+width
+height
+dtype if directly available
+bands/channel count if directly available
+```
+
+Require:
+
+```text
+width = 512
+height = 512
+```
+
+Do not reject based on brightness, contrast, content or appearance.
+
+Do not visually rank or manually inspect semantic quality.
+
+# 9. Cross-check against canonical reasoning metadata
+
+For each of the four provisional sample records in:
+
+```text
+datasets/build_spatial_reason/v0.2/test.jsonl
+```
+
+re-confirm:
+
+```text
+sample_id
+image_id
+query_type
+target_component_id
+reference_component_ids
+native_vector.target.tile_instance_id
+native_vector.references[*].tile_instance_id
+split == test
+```
+
+Require exact agreement with the R2 lock.
+
+Also resolve its `image_metadata_ref` row and confirm that it refers to the same `image_id` / tile identity.
+
+Do NOT use model output fields.
+
+# 10. Optional non-authoritative mirror check
+
+Only if this exact path already exists:
+
+```text
+artifacts/task6m_yolo_native/images/test/<image_id>.tif
+```
+
+or an equivalent documented frozen mirror path,
+
+record:
+
+```text
+exists
+SHA256
+byte-identical to canonical ORIGINAL_ROOT raster? YES / NO
+```
+
+This check is diagnostic only.
+
+The canonical source identity remains:
+
+```text
+ORIGINAL_ROOT / source_image_ref
+```
+
+Do not STOP merely because an optional mirror is absent.
+
+# 11. Raster-resolution outcome
+
+Choose exactly ONE.
+
+## A — `PROP01_LOCKED_DEMO_RASTERS_RESOLVED`
+
+Require all four:
+- unique tile-index row;
+- `scene_disjoint_split=test`;
+- canonical source raster exists;
+- 512×512 decode succeeds;
+- v0.2 sample identity matches the R2 lock.
+
+Then:
+
+```text
+replacement selection policy = READY
+locked candidate status = FINAL_METADATA_LOCK
+Demo policy feasibility = DEMO_POLICY_PATH_READY
+primary resolution = PROP01_RESOLUTION_DEMO_POLICY
+PROP-01 status = PROP01_OPEN_ENGINEERING_DEFECT
+NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION
+```
+
+No candidate is run yet.
+
+## B — `PROP01_LOCKED_DEMO_RASTER_RESOLUTION_FAILED`
+
+If any required raster/index/identity check fails.
+
+Then:
+
+```text
+replacement selection policy = NOT READY
+Demo policy feasibility = DEMO_POLICY_PATH_NOT_READY
+primary resolution = PROP01_RESOLUTION_BLOCKED
+PROP-01 status = PROP01_OPEN_ENGINEERING_DEFECT
+NEXT = PROP01_DECISION_EVIDENCE_RECOVERY
+```
+
+Do NOT substitute candidates.
+
+# 12. Candidate immutability
+
+If outcome A, freeze exactly these IDs:
+
+```text
+right = buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
+left  = buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+above = buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
+below = buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+```
+
+Future runtime failure does NOT authorize replacing one.
+
+Any replacement requires a new ChatGPT decision that explicitly records the failed locked candidate.
+
+# 13. Support-scope wording
+
+Retain evidence-bounded scope:
 
 ```text
 WHU Building Dataset — Satellite dataset II (East Asia)
 native-vector building instances
-scene-disjoint_v1
+scene_disjoint_v1
 tile-relative spatial reasoning
 ```
 
-Explicit limitation from v0.2 manifest:
+Retain limitation:
 
 ```text
 scene separation does not establish cross-city or broad geographic generalization
 ```
 
-A2 statement must remain:
+Retain:
 
 ```text
 A2 provenance/domain = NOT ESTABLISHED
 A2 = documented persistent non-detection/stress case
 ```
 
-Do NOT call A2 proven out-of-domain.
+Do not call A2 out-of-domain.
 
-# 15. Re-evaluate policy decision
+# 14. Report update
 
-Choose exactly:
-
-```text
-DEMO_POLICY_PATH_READY
-DEMO_POLICY_PATH_NOT_READY
-DEMO_POLICY_STATUS_INCOMPLETE
-```
-
-`READY` requires:
-- canonical relation metadata;
-- a non-output-contaminated usable pool;
-- four locked candidates selected only by §11–§12;
-- positive support scope;
-- disclosure of test reuse if TEST is chosen.
-
-Then choose:
-
-```text
-PROP01_RESOLUTION_DEMO_POLICY
-PROP01_RESOLUTION_BLOCKED
-```
-
-Detector adaptation remains `DETECTOR_ADAPTATION_NOT_READY`.
-
-PROP status remains:
-
-```text
-PROP01_OPEN_ENGINEERING_DEFECT
-```
-
-Do NOT mark it closed or reclassified as out-of-domain in this task.
-
-# 16. Release wording
-
-Write ≤120 Chinese characters.
-
-Must state:
-- positive verified support scope;
-- A2 is a documented non-detection case with unknown provenance;
-- no arbitrary aerial-image robustness claim.
-
-If TEST is the chosen Demo pool, also add a separate disclosure sentence in the report:
-
-```text
-The qualitative Demo cases are deterministically selected from the frozen v0.2 test split after final test metrics
-were already consumed; they do not alter or replace the reported Task7J metrics.
-```
-
-# 17. Next gate
-
-If ready:
-
-```text
-NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION
-```
-
-If not ready:
-
-```text
-NEXT = PROP01_DECISION_EVIDENCE_RECOVERY
-```
-
-Do not execute it.
-
-# 18. Report update
-
-Append `P1D10-R2` to:
+Append `P1D10-R3` to:
 
 ```text
 docs/task8b3_p1d10_prop01_resolution_decision.md
 ```
 
-Required sections:
+Required:
 
-1. ChatGPT R2 audit reason
-2. canonical v0.2 provenance
-3. val/test JSONL identity/counts
-4. sample schema
-5. source-image resolution
-6. val/test historical-use classifications
-7. historical demo-pool contamination classifications
-8. chosen BEST_POOL
-9. exact metadata-only selection rule
-10. four locked candidate records
-11. positive support scope and limitation
+1. R2 STOP reason
+2. canonical source-root evidence
+3. tile-index identity
+4. four tile-index rows
+5. four canonical resolved raster absolute paths
+6. four raster bytes/SHA256/format/mode/dimensions
+7. v0.2 record cross-check
+8. optional mirror check if available
+9. exact outcome
+10. final/provisional candidate-lock status
+11. replacement policy readiness
 12. Demo-policy feasibility
 13. primary resolution
 14. PROP-01 status
-15. corrected release wording
-16. test-reuse disclosure if applicable
-17. exact next gate
-18. no model/test execution
-19. no functional modification.
+15. exact next gate
+16. support scope / limitations
+17. no model/test execution
+18. no functional modification.
 
-Mark the R1 `task6m1_demo` primary-pool statement as SUPERSEDED if it is model-output-contaminated.
+Mark R2 §20.8 raster gap as:
+- RESOLVED if outcome A;
+- STILL OPEN if outcome B.
 
-# 19. FROM_DSH
+# 15. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D10-R2
-Status: COMPLETE / PARTIAL / STOP / FAILED
+Task: 8B.3-P1D10-R3
+Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48
+Starting HEAD: cbde8755f1cae0593274746f128760e13ebe86a1
 Model/test execution: NONE
 Functional files modified: NO
-v0.2 test JSONL: AVAILABLE / UNAVAILABLE
-v0.2 test records: <n>
-v0.2 test classification: <enum>
-v0.2 val classification: <enum>
-task6m1_demo classification: <enum>
-task6m_demo classification: <enum>
-Best Demo pool: <path/split / NONE>
+Canonical source root: C:\D\resources\Satellite dataset Ⅱ (East Asia)
+Tile index: <path>
+Tile index identity: MATCH / MISMATCH
+Right raster: <absolute path / NONE> | <sha / NONE>
+Left raster: <absolute path / NONE> | <sha / NONE>
+Above raster: <absolute path / NONE> | <sha / NONE>
+Below raster: <absolute path / NONE> | <sha / NONE>
+All four raster dimensions: 512x512 / other
+Locked candidate count: 4
+Locked right candidate: buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
+Locked left candidate: buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+Locked above candidate: buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
+Locked below candidate: buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+Locked candidate status: FINAL_METADATA_LOCK / PROVISIONAL_ONLY
+Outcome: <exact enum>
 Replacement selection policy: READY / NOT READY
-Locked candidate count: 4 / other
-Locked right candidate: <stable id / NONE>
-Locked left candidate: <stable id / NONE>
-Locked above candidate: <stable id / NONE>
-Locked below candidate: <stable id / NONE>
-A2 domain classification: NOT ESTABLISHED
 Detector adaptation feasibility: DETECTOR_ADAPTATION_NOT_READY
-Demo policy feasibility: <enum>
-Primary resolution: <enum>
+Demo policy feasibility: <exact enum>
+Primary resolution: <exact enum>
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-Scientific freeze preserved: YES / NO / NOT ESTABLISHED
-Next gate: <enum>
+A2 domain classification: NOT ESTABLISHED
+Scientific freeze preserved: YES
+Next gate: <exact enum>
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
 Report: docs/task8b3_p1d10_prop01_resolution_decision.md
-Next action: Awaiting ChatGPT audit; locked candidates must not be run or replaced.
+Next action: Awaiting ChatGPT audit; do not run or copy locked candidates.
 ```
 
-# 20. Commit / push
+# 16. Commit / push
 
-If COMPLETE:
+If outcome A / COMPLETE:
 
 ```text
-docs(rc1): lock outcome-independent prop01 demo pool
+docs(rc1): resolve locked prop01 demo rasters
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record prop01 demo-pool audit stop
+docs(rc1): record locked raster resolution stop
 ```
 
-Push normally. No force push.
+Push normally.
+No force push.
 
-# 21. COMPLETE definition
+# 17. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
 - no model/test execution;
 - no functional modification;
-- canonical v0.2 val/test are actually audited;
-- actual test records are present and count-correct;
-- source images resolve;
-- historical split use is classified;
-- model-output-contaminated historical demo pools are not used as primary pool;
-- selection eligibility contains no model/manual outcome field;
-- exactly four candidates are locked before any model execution;
-- support scope is positive and evidence-based;
-- A2 remains NOT ESTABLISHED rather than declared out-of-domain;
-- report/handoff committed/pushed;
+- handoff left-candidate typo corrected;
+- canonical source-root contract proven from repository code;
+- tile-index row uniquely resolves each of the four image IDs;
+- all four source rasters exist and decode as 512×512;
+- all four SHA256 values recorded;
+- v0.2 sample identities still match the R2 locks;
+- no candidate is substituted or selected using runtime/manual output;
+- exact outcome and next gate recorded;
+- report/FROM_DSH committed/pushed;
 - STOP.

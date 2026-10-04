@@ -405,3 +405,38 @@ pool until the raster-resolution gap is closed by a new task book. §20.7's prev
 
 No retry, no criteria loosening, no model execution and no functional modification were performed in producing this
 correction.
+
+
+### 20.9 P1D10-R3 — canonical raster resolution for the four locked candidates
+
+Read-only recovery of the canonical RGB rasters; **no model, test, candidate substitution or functional change**.
+`resolved_source_image = Path(r"C:\D\resources\Satellite dataset Ⅱ (East Asia)") / source_image_ref` with `source_image_ref` taken from the
+canonical tile index `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\whu_native_vector\v1.0\tiles\index.jsonl` (no repository-relative interpretation).
+
+| relation | sample_id | tile_id | source_image_ref | resolved absolute path | exists | dimensions | format | mode | bytes | sha256 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| largest_to_right_of_to_nearest | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` | 1010 | `1. The cropped image data and raster labels/test/image/1010.tif` | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1010.tif` | True | 512×512 | TIFF | RGB | 791306 | `1688306c5edbffe4…` |
+| largest_to_left_of_to_nearest | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` | 1003 | `1. The cropped image data and raster labels/test/image/1003.tif` | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1003.tif` | True | 512×512 | TIFF | RGB | 791846 | `eea4edd0db9e079e…` |
+| largest_to_above_to_nearest | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` | 1008 | `1. The cropped image data and raster labels/test/image/1008.tif` | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1008.tif` | True | 512×512 | TIFF | RGB | 791534 | `0efe8bc2e1d1f3f5…` |
+| largest_to_below_to_nearest | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` | 1009 | `1. The cropped image data and raster labels/test/image/1009.tif` | `C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1009.tif` | True | 512×512 | TIFF | RGB | 792202 | `c22134e671f2d0b7…` |
+
+| relation | v0.2 cross-check all match | tile-index identity | mirror exists | mirror byte-identical |
+|---|---|---|---|---|
+| largest_to_right_of_to_nearest | True | True | True | True |
+| largest_to_left_of_to_nearest | True | True | True | True |
+| largest_to_above_to_nearest | True | True | True | True |
+| largest_to_below_to_nearest | True | True | True | True |
+
+The mirror check (`artifacts/task6m_yolo_native/images/test/<tile_id>.tif`) is diagnostic only; the canonical source
+identity remains `ORIGINAL_ROOT / source_image_ref`.
+
+```text
+outcome = RESOLVED
+```
+
+R2 §20.8 raster-resolution gap: **RESOLVED** — all four canonical rasters exist, decode as 512×512 and match the locked v0.2 identities.
+
+Primary resolution and PROP-01 status are unchanged (`PROP01_RESOLUTION_DEMO_POLICY` /
+`PROP01_OPEN_ENGINEERING_DEFECT`); the four locked `sample_id`s remain frozen and must not be replaced without a new
+ChatGPT decision that explicitly acknowledges a failed locked candidate. The next gate
+(`PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION`) is still **not executed**.
