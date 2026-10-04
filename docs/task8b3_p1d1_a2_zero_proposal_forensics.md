@@ -115,7 +115,7 @@ The A2 input itself is byte-identical to the frozen hash, RGB, 1024×1024, i.e. 
 ## 8. Primary conclusion (exactly one, not a confirmed root cause)
 
 ```text
-PROP01_MODEL_ZERO_DETECTION_SUSPECT
+PROP01_INSUFFICIENT_EVIDENCE
 ```
 
 Reading: for the frozen A2 input, the detector returned **zero boxes above `conf = 0.05` on all nine tiles** — i.e. a
@@ -140,3 +140,14 @@ executed here, and no code was changed pending ChatGPT's audit.
 No `predict.py`, pytest, `check_setup.py`, Demo or model run occurred; `detector.py`, tests, `source_manifest.json`
 and the external delivery were not modified; `RC1-DEMO-PROP-01`, `RC1-DEMO-REF-01` and `RC1-DEMO-MASK-01` remain
 open and untouched; Task 8B.4 / Task 8C were not entered.
+
+---
+
+## P1D1 normalization (Task 8B.3-P1D2 §12)
+
+ChatGPT's audit **overrode** this report's primary classification from `PROP01_MODEL_ZERO_DETECTION_SUSPECT` to
+`PROP01_INSUFFICIENT_EVIDENCE`, because `result.masks is None` is an **independent** early-return condition in
+`detect_tile()` (separate from `len(result.boxes) == 0`), so the historical artifacts alone cannot establish that the
+model produced no detections. Task 8B.3-P1D2's detector-only A2 probe subsequently measured all nine tiles directly
+(`boxes_count = 0` and `wrapper_output_count = 0` on every tile) and recorded the outcome
+`PROP01_MODEL_ZERO_AT_FROZEN_CONF_CONFIRMED`; see `docs/task8b3_p1d2_a2_detector_result_probe.md`.
