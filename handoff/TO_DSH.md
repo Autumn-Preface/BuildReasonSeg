@@ -1,52 +1,71 @@
-# TO_DSH — Task 8B.3-M1A.2B-R3: Fix Final Large-Image Guard Test
+# TO_DSH — Task 8B.3-M1A.2C: Full Canonical Regression Gate
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-mem01-compact-proposals`
-> Required starting HEAD: `872d45b3ad6adee3b3d9f0fa5bdfa95fd058a37c`
+> Required starting HEAD: `c432ec41f2d8bad9ddc67d65d0dbc033724e482a`
+> Canonical RC1: `delivery_src/BuildReasonSeg_Advisor_RC1`
 
 # 0. Purpose
 
-Fix the last remaining dedicated-test defect only.
+Close the canonical validation phase for the MEM-01 compact-proposal refactor.
 
-Current dedicated result:
-
-```text
-1 failed, 31 passed
-```
-
-The only failing test is:
+Frozen status entering this task:
 
 ```text
-test_large_image_path_never_allocates_full_frame_bool
+compact proposal runtime implemented
+reference crop correction implemented
+dedicated runtime tests = 32 passed
+5000×5000 fake-shape allocation guard = PASS
+pairwise proposal_iou exercised exactly once in guard
+source_manifest = 135/135 verified
+external delivery = unchanged
+real inference = not run
 ```
 
-Frozen audit conclusion:
-- runtime is not authorized to change;
-- the failure is still test-side;
-- merge-equivalence test is now accepted;
-- only the 5000×5000 guard must be corrected.
+This task does exactly:
+
+```text
+correct one stale report sentence
+→ run the full canonical test suite exactly once
+→ record result
+→ commit/push documentation only
+```
+
+No runtime/test/manifest modification is authorized.
 
 # 1. Strict prohibitions
 
 Do NOT modify:
 
 ```text
-buildreasonseg/runtime/detector.py
-buildreasonseg/runtime/core.py
-buildreasonseg/runtime/outputs.py
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/**
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/**
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 ```
 
-Do NOT modify external delivery, model/config/threshold/tiling/merge/reference policy.
+Do NOT modify external delivery.
 
-Do NOT run real inference or full canonical suite.
+Do NOT:
+- run real `predict.py`;
+- run A1–B2 Demo;
+- run YOLO/Qwen/SAM2/D-B1 inference;
+- change any model/checkpoint/config/threshold/tiling;
+- change compact representation;
+- change merge/Reference/SUCCESS semantics;
+- fix PROP-01 / REF-01 / MASK-01;
+- enter Task 8B.4 or Task 8C;
+- install packages;
+- train/download;
+- access final test.
 
-If the single dedicated rerun fails:
-- no runtime patch;
-- no second rerun;
-- no manifest update;
-- record exact failure, commit/push PARTIAL, STOP.
+If the full canonical suite fails:
+- do NOT patch code/tests;
+- do NOT rerun;
+- record exact failure;
+- commit/push PARTIAL;
+- STOP.
 
 # 2. Git gate
 
@@ -54,267 +73,201 @@ Require:
 
 ```text
 branch = fix/task8b3-mem01-compact-proposals
-HEAD = 872d45b3ad6adee3b3d9f0fa5bdfa95fd058a37c
+HEAD = c432ec41f2d8bad9ddc67d65d0dbc033724e482a
 ```
 
 Allowed initial tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
+Do not reset/rebase/stash/clean/merge.
+
 # 3. Allowed changed paths
 
+Only:
+
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 docs/task8b3_m1a_compact_proposal_masks.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No other path may change.
+No canonical product/test/manifest file may change in this task.
 
-# 4. Keep the accepted merge-equivalence test unchanged
-
-Do not edit `test_merge_equivalence_with_compact_masks()` except formatting-only changes if unavoidable.
-
-It is now accepted:
-- two independent equal-area 40×40 masks;
-- one disjoint equal-area mask;
-- duplicate winner confidence assertion valid.
-
-# 5. Replace the 5000×5000 guard with one clean single-pass scenario
+# 4. Correct one stale R3 report sentence
 
 In:
 
-```python
-test_large_image_path_never_allocates_full_frame_bool
+```text
+docs/task8b3_m1a_compact_proposal_masks.md
 ```
 
-use exactly one fake tile window and exactly two synthetic detections returned by `detect_tile()`.
-
-Preferred masks:
-
-```python
-mask1 = np.zeros((512,512), dtype=bool)
-mask1[100:150, 200:260] = True      # 50×60 = 3000
-
-mask2 = np.zeros((512,512), dtype=bool)
-mask2[104:154, 204:264] = True      # 50×60 = 3000, IoU > 0.50
-```
-
-Use:
+the R3 section currently ends with stale text equivalent to:
 
 ```text
-plan_tiles() -> [one FakeWindow]
-extract_tile() -> one 512×512 tile
-detect_tile() -> [detection1, detection2]
+Per the task book, a failing single run is recorded here and the task stops without runtime changes,
+without a rerun and without a manifest update.
 ```
 
-Expected:
-- raw_count == 2;
-- proposal_iou is called exactly once;
-- merged count == 1;
-- retained proposal mask_area == 3000;
-- retained proposal mask_crop.shape == (50,60).
-
-Do NOT use two windows in this guard.
-
-# 6. Guard only what can be safely monkeypatched
-
-Keep the full-frame allocation guard:
-
-```python
-real_zeros = detector.np.zeros
-
-def zero_guard(shape, *args, **kwargs):
-    dtype = kwargs.get("dtype")
-    if tuple(shape) == (5000,5000) and dtype is bool:
-        raise AssertionError(...)
-    return real_zeros(shape, *args, **kwargs)
-
-monkeypatch.setattr(detector.np, "zeros", zero_guard)
-```
-
-Do NOT monkeypatch:
+That sentence contradicts the same R3 section, which correctly records:
 
 ```text
-detector.np.logical_and
-detector.np.logical_or
+32 passed in 0.30s
+manifest 135/135 verified
 ```
 
-Reason:
-`detector.np` and the test module's `np` refer to the same imported NumPy module object. Replacing the ufunc with a Python wrapper removes ufunc methods such as `.reduce` and can break NumPy internals, which caused the observed `fromnumeric.py:99 AttributeError`.
-
-# 7. Verify pairwise compact operands safely
-
-Instead of monkeypatching NumPy logical ufuncs, wrap only the product function:
-
-```python
-real_iou = detector.proposal_iou
-pairwise_shapes = []
-
-def guarded_iou(first, second):
-    pairwise_shapes.append((first.mask_crop.shape, second.mask_crop.shape))
-    assert first.mask_crop.shape != (5000,5000)
-    assert second.mask_crop.shape != (5000,5000)
-    return real_iou(first, second)
-
-monkeypatch.setattr(detector, "proposal_iou", guarded_iou)
-```
-
-After `detect_global(fake_rgb)` assert:
+Replace only that stale R3 closing sentence with:
 
 ```text
-len(pairwise_shapes) == 1
-both recorded shapes are small compact crops
+The single dedicated run passed. The manifest was then refreshed and verified at 135/135.
+Runtime files and external delivery remained unchanged, and no real inference or full canonical suite was run in R3.
 ```
 
-This proves the actual duplicate-merge call receives compact operands without corrupting NumPy itself.
+Do not rewrite historical R2 failure text.
 
-# 8. No real 5000×5000 arrays
+# 5. Full canonical suite — exactly once
 
-The fake RGB object may expose only:
-
-```python
-shape = (5000,5000,3)
-```
-
-Do not allocate:
-- real 5000×5000 RGB;
-- real 5000×5000 bool mask;
-- legacy full-frame 5000×5000 oracle.
-
-# 9. Dedicated test gate — exactly once
-
-After editing the test, run exactly once:
+Run exactly once:
 
 ```bat
 cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1
-ENV_PYTHON -m pytest tests/test_task8b_runtime.py -q
-```
-
-Record exact result and exit code.
-
-No rerun.
-
-If FAIL:
-- runtime unchanged;
-- manifest unchanged;
-- PARTIAL/STOP;
-- commit/push and stop.
-
-# 10. Manifest only if PASS
-
-If dedicated PASS:
-- update manifest hashes/sizes for all changed manifest-listed files since the last valid manifest.
-
-Expected changed entries:
-
-```text
-buildreasonseg/runtime/detector.py
-buildreasonseg/runtime/core.py
-buildreasonseg/runtime/outputs.py
-tests/test_task8b_runtime.py
-```
-
-Verify:
-
-```text
-entry count = 135
-path set unchanged
-all 135 files exist
-all 135 hash/size values match current canonical files
+ENV_PYTHON -m pytest tests -q
 ```
 
 Record:
+- exact command;
+- invocation count = 1;
+- exact passed/failed/skipped count;
+- runtime duration if printed;
+- exit code.
 
-```text
-135/135 PASS
+No rerun.
+
+# 6. Post-test file-integrity gate
+
+After the test run:
+
+```bat
+cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
+git status --short
+git diff --check
 ```
 
-# 11. Report / handoff
+Only these paths may be modified:
+
+```text
+docs/task8b3_m1a_compact_proposal_masks.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+If pytest modified/created tracked canonical files -> STOP and report exact paths.
+
+Untracked normal pytest caches are not to be committed; do not use `git clean`.
+
+# 7. Report
 
 Append:
 
 ```text
-## Task 8B.3-M1A.2B-R3 — Final Large-Image Guard Correction
+## Task 8B.3-M1A.2C — Full Canonical Regression Gate
 ```
 
-Record:
-- starting HEAD;
-- old NumPy monkeypatch problem;
-- one-window/two-detection guard;
-- both masks 50×60, area 3000;
-- proposal_iou wrapper call count;
-- dedicated invocation count = 1;
-- exact test result;
-- manifest result;
-- runtime unchanged;
-- external delivery unchanged;
-- real inference/full suite not run.
+Required content:
 
-`handoff/FROM_DSH.md`:
-- UTF-8 without BOM;
-- ARTIFACT-FACTS preserved exactly.
+```text
+starting HEAD = c432ec41f2d8bad9ddc67d65d0dbc033724e482a
+full canonical invocation count = 1
+command = ENV_PYTHON -m pytest tests -q
+exact result = <pytest result>
+exit code = <code>
+runtime/test/manifest files modified in this task = NO
+source_manifest entering gate = 135/135 verified
+external delivery = UNCHANGED
+real inference = NOT RUN
+PROP-01 / REF-01 / MASK-01 = UNCHANGED
+```
+
+If PASS, state:
+
+```text
+M1A canonical validation gate = PASS
+Next gate = ChatGPT audit before canonical → external delivery sync
+```
+
+Do not claim MEM-01 is closed in external delivery yet.
+
+# 8. FROM_DSH
+
+Preserve ARTIFACT-FACTS exactly.
+Save UTF-8 without BOM.
 
 Required fields:
 
 ```text
-Task: 8B.3-M1A.2B-R3
+Task: 8B.3-M1A.2C
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-mem01-compact-proposals
-Starting HEAD: 872d45b3ad6adee3b3d9f0fa5bdfa95fd058a37c
+Starting HEAD: c432ec41f2d8bad9ddc67d65d0dbc033724e482a
 Runtime files modified: NO
-5000x5000 zero-allocation guard: PASS / FAIL
-Pairwise proposal_iou call count: 1 / other
-Pairwise operands compact: PASS / FAIL
-Dedicated invocation count: 1
-Dedicated tests: <exact result>
-Manifest: 135/135 PASS / UNCHANGED DUE FAIL / other
+Test files modified: NO
+Manifest modified: NO
+Full canonical invocation count: 1
+Full canonical suite: <exact result>
+Manifest entering gate: 135/135 VERIFIED
 External delivery modified: NO
-Real inference: NO
-Full canonical suite: NOT RUN BY DESIGN
-Next action: Awaiting ChatGPT audit.
+Real inference executed: NO
+PROP-01 / REF-01 / MASK-01: UNCHANGED / UNCHANGED / UNCHANGED
+M1A canonical validation gate: PASS / FAIL
+Report: docs/task8b3_m1a_compact_proposal_masks.md
+STOP reason: <none/exact>
+Next action: Awaiting ChatGPT audit; do not sync delivery.
 ```
 
-# 12. Commit / push
+# 9. Commit / push
+
+Allowed changed paths remain only report/FROM_DSH/TO_DSH.
 
 If COMPLETE:
 
 ```text
-test(rc1): validate compact proposal runtime
+test(rc1): pass compact proposal canonical regression
 ```
 
 If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record final large-image guard stop
+docs(rc1): record compact proposal canonical regression stop
 ```
 
-Push current branch, no force.
+Push:
 
-# 13. COMPLETE
+```bat
+git push origin fix/task8b3-mem01-compact-proposals
+```
+
+No force push.
+
+# 10. COMPLETE definition
 
 COMPLETE only if:
-- runtime files untouched;
-- guard uses one window + two overlapping 50×60 detections;
-- no real 5000×5000 arrays allocated;
-- no NumPy logical ufunc monkeypatch remains;
-- proposal_iou called exactly once;
-- operands confirmed compact;
-- dedicated test file invoked exactly once and PASS;
-- manifest 135/135 PASS;
-- delivery untouched;
+- exact starting HEAD;
+- stale R3 sentence corrected;
+- no product/test/manifest modification;
+- full canonical suite invoked exactly once;
+- full canonical suite PASS;
+- external delivery untouched;
 - real inference not run;
-- full canonical suite not run;
+- report/FROM_DSH complete;
+- ARTIFACT-FACTS preserved;
 - commit/push succeed;
-- clean tree;
-- stop.
+- working tree clean;
+- DSH stops.
 
-# 14. Final response
+# 11. Final response
 
 ```text
-TASK 8B.3-M1A.2B-R3 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-M1A.2C COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -325,23 +278,20 @@ PASS / FAIL
 Runtime files modified:
 NO
 
-5000x5000 zero-allocation guard:
-PASS / FAIL
+Test files modified:
+NO
 
-Pairwise proposal_iou call count:
-1 / other
+Manifest modified:
+NO
 
-Pairwise operands compact:
-PASS / FAIL
-
-Dedicated invocation count:
+Full canonical invocation count:
 1
 
-Dedicated tests:
+Full canonical suite:
 <exact result>
 
-Manifest:
-135/135 PASS / other
+Manifest entering gate:
+135/135 VERIFIED
 
 External delivery:
 UNCHANGED
@@ -349,8 +299,8 @@ UNCHANGED
 Real inference:
 NOT RUN
 
-Full canonical suite:
-NOT RUN BY DESIGN
+M1A canonical validation gate:
+PASS / FAIL
 
 STOP reason:
 <none or exact>

@@ -331,5 +331,22 @@ and without a manifest update.
 | manifest | 135/135 verified (path/size/sha256) |
 | external delivery / real inference / full suite | NOT touched / NOT RUN / NOT RUN |
 
-Per the task book, a failing single run is recorded here and the task stops without runtime changes, without a rerun
-and without a manifest update.
+This section records the successful single run: 32 dedicated tests passed and the canonical manifest was refreshed to
+135/135 verified (path/size/sha256).
+
+---
+
+## Task 8B.3-M1A.2C — full canonical suite (single run)
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `c432ec41f2d8bad9ddc67d65d0dbc033724e482a` |
+| files changed | `docs/task8b3_m1a_compact_proposal_masks.md` only |
+| canonical product / tests / `source_manifest.json` | NOT modified |
+| stale R3 failure wording | corrected (the section now records the successful 32-passed run and the 135/135 manifest refresh) |
+| canonical suite | `ENV_PYTHON -m pytest tests -q` run exactly once → **FAIL (STOP)** |
+| tail | ERROR tests/test_setup_checker.py::test_missing_sam2_nonzero - FileNotFoundEr... | ERROR tests/test_setup_checker.py::test_invalid_model_yaml_nonzero - FileNotF... | 17 failed, 93 passed, 6 errors in 29.67s |
+| external delivery / real Demo / Task 8B.4 | NOT touched / NOT RUN / NOT entered |
+
+Per the task book, a failing single run would be recorded here and the task would stop without code/test edits and
+without a rerun.

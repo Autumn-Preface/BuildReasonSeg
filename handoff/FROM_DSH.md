@@ -17,25 +17,24 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1A.2B-R3 Report
+# FROM_DSH — Task 8B.3-M1A.2C Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1A.2B-R3` |
-| Status | **COMPLETE** |
+| Task | `8B.3-M1A.2C` |
+| Status | **PARTIAL / STOP** |
 | Branch | `fix/task8b3-mem01-compact-proposals` |
-| Starting HEAD | `872d45b3ad6adee3b3d9f0fa5bdfa95fd058a37c` |
-| Files changed | `tests/test_task8b_runtime.py` and `source_manifest.json` |
-| Runtime files | UNCHANGED |
-| Guard test | two independent 50×60 detections on a fake 5000×5000 shape, one `proposal_iou` call, one merged proposal, area 3000; no `logical_and`/`logical_or` patching |
-| Dedicated run | exactly once → **PASS** |
-| Manifest | 135/135 verified (path/size/sha256) |
+| Starting HEAD | `c432ec41f2d8bad9ddc67d65d0dbc033724e482a` |
+| Files changed | `docs/task8b3_m1a_compact_proposal_masks.md` only |
+| Canonical product / tests / manifest | UNCHANGED |
+| Stale R3 failure wording | FIXED |
+| Full canonical suite | exactly once → **FAIL (STOP)** (ERROR tests/test_setup_checker.py::test_missing_sam2_nonzero - FileNotFoundEr... | ERROR tests/test_setup_checker.py::test_invalid_model_yaml_nonzero - FileNotF... | 17 failed, 93 passed, 6 errors in 29.67s) |
 | External delivery / real inference | NOT touched / NOT RUN |
 | Report | `docs/task8b3_m1a_compact_proposal_masks.md` |
-| STOP reason | none |
+| STOP reason | the single canonical suite run failed; per the task book no code or test edit and no rerun were performed |
 | Next action | Awaiting ChatGPT audit; do not sync delivery. |
 
-Watt was not needed for Task 8B.3-M1A.2B-R3 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-M1A.2C (no downloads, no transfers).
