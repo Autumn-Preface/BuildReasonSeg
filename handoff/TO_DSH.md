@@ -1,258 +1,354 @@
-# TO_DSH — Task 8B.3-M1B.3-R1: Post-run Integrity Evidence Only
+# TO_DSH — Task 8B.3-M1C: Integrate Closed MEM-01 Fix into main
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Branch: `fix/task8b3-mem01-compact-proposals`
-> Required starting HEAD: `ccaeb09c27744f9087557a6dace6e4262da5db9e`
-> External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
-> Canonical RC1: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1`
+> Source branch: `fix/task8b3-mem01-compact-proposals`
+> Required starting HEAD: `509ed5ea6c712da0d65d31c499fa40cec16e94cc`
+> Required origin/main before integration: `c45ecbec7fd293c454ccced22310db32c1542be4`
 
 # 0. Purpose
 
-Fill exactly one missing evidence item from M1B.3:
+Formally integrate the fully validated `RC1-DEMO-MEM-01` repair into `main` by fast-forward only.
+
+Frozen ChatGPT audit:
 
 ```text
-post-run external manifest integrity
-+
-external/source_manifest.json byte-identity to canonical
-```
-
-Do NOT rerun B1 or B2.
-Do NOT run pytest.
-Do NOT run any model.
-
-The real memory gate evidence is already frozen:
-
-```text
-B1: 5000×5000, 1 invocation, SUCCESS, tiles=169, raw=6578, merged=3066,
-    old allocation signature absent, E502 absent
-B2: 5000×5000, 1 invocation, SUCCESS, tiles=169, raw=7864, merged=3740,
-    old allocation signature absent, E502 absent
+M1A dedicated compact tests = 32 passed
+synthetic 5000×5000 detect_global guard = PASS
+canonical manifest = 135/135 VERIFIED
+controlled canonical → external sync = PASS
+external full regression = 116 passed
+B1 real 5000×5000 = SUCCESS, proposal stage complete, old memory signature absent
+B2 real 5000×5000 = SUCCESS, proposal stage complete, old memory signature absent
+post-run external manifest = 135/135 PASS
+post-run source_manifest byte-identical = YES
 MEM01_REAL_GATE_PASS
-RC1-DEMO-MEM-01 = CLOSED subject to post-run integrity confirmation
+RC1-DEMO-MEM-01 = CLOSED
+M1B.3 formal gate = PASS
 ```
+
+Remote ancestry audited by ChatGPT:
+
+```text
+origin/main = c45ecbec7fd293c454ccced22310db32c1542be4
+fix branch = 509ed5ea6c712da0d65d31c499fa40cec16e94cc
+merge-base = origin/main
+ahead = 25
+behind = 0
+```
+
+This task performs documentation closure plus a fast-forward integration only.
 
 # 1. Strict prohibitions
 
 Do NOT:
-- run B1 or B2 again;
-- run A1–A4;
+- modify runtime code;
+- modify tests;
+- modify canonical or external `source_manifest.json`;
+- modify external delivery;
 - run pytest;
 - run check_setup.py;
 - run predict.py;
-- run any detector/Qwen/SAM2/D-B1 model;
-- modify canonical product/tests/manifest;
-- modify external product/tests/manifest;
-- modify model assets;
-- sync files;
-- delete outputs/caches;
+- run any model or Demo;
+- change thresholds/config/tiling/merge/reference/validity policy;
 - fix PROP-01 / REF-01 / MASK-01;
-- enter Task 8B.4 / 8C;
-- update main;
-- force push.
+- enter Task 8B.4 / Task 8C;
+- rebase;
+- squash;
+- cherry-pick;
+- create a merge commit;
+- force push;
+- delete the MEM fix branch.
 
-# 2. Git gate
+If a clean fast-forward cannot be proven, STOP.
+
+# 2. Starting Git gate
+
+Require exactly:
+
+```text
+current branch = fix/task8b3-mem01-compact-proposals
+HEAD = 509ed5ea6c712da0d65d31c499fa40cec16e94cc
+```
+
+Allowed tracked working tree initially:
+- clean; or
+- only `M handoff/TO_DSH.md`.
+
+Run:
+
+```bat
+git fetch origin
+```
+
+Then verify:
+
+```text
+origin/main = c45ecbec7fd293c454ccced22310db32c1542be4
+```
+
+Verify ancestry mechanically:
+
+```bat
+git merge-base origin/main HEAD
+git rev-list --left-right --count origin/main...HEAD
+```
 
 Require:
 
 ```text
-branch = fix/task8b3-mem01-compact-proposals
-HEAD = ccaeb09c27744f9087557a6dace6e4262da5db9e
+merge-base = c45ecbec7fd293c454ccced22310db32c1542be4
+left/right count = 0 25
 ```
 
-Allowed initial tracked tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
+If not exact:
+- no integration;
+- record STOP;
+- commit/push documentation on fix branch only if Git remains safe;
+- STOP.
 
-# 3. Allowed repository changes
+# 3. Allowed repository changes before integration
 
 Only:
 
 ```text
-docs/task8b3_m1b3_large_image_memory_gate.md
+docs/task8b3_m1c_mem01_main_integration.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
 No functional file may change.
 
-# 4. Read-only external manifest verification
+# 4. Closure report
 
-Read:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\source_manifest.json
-```
-
-Require:
-- schema is `BuildReasonSeg.AdvisorRC1.SourceManifest.v1`;
-- exactly 135 entries;
-- every listed external path exists;
-- every listed path byte size matches;
-- every listed path SHA256 matches.
-
-Record exactly:
+Create:
 
 ```text
-Post-run external manifest: 135/135 PASS
-```
-
-If any mismatch:
-- record exact path;
-- do not repair;
-- mark STOP;
-- MEM-01 formal closure is withheld pending audit.
-
-# 5. source_manifest byte identity
-
-Compare bytes of:
-
-```text
-external:
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\source_manifest.json
-
-canonical:
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1\source_manifest.json
-```
-
-Require byte-identical.
-
-Record:
-
-```text
-Post-run source_manifest byte-identical: YES
-```
-
-If NO:
-- do not repair;
-- STOP.
-
-# 6. Normalize M1B.3 report
-
-Append a section to:
-
-```text
-docs/task8b3_m1b3_large_image_memory_gate.md
-```
-
-Title:
-
-```text
-## 12. Post-run integrity confirmation (M1B.3-R1)
+docs/task8b3_m1c_mem01_main_integration.md
 ```
 
 Record:
-- no inference/tests/model execution in R1;
-- external manifest = 135/135 PASS;
-- source_manifest byte-identical = YES;
-- no functional file modified;
-- therefore original M1B.3 runtime evidence + integrity evidence jointly satisfy the closure contract.
 
-If both checks pass, freeze:
+1. Task / scope
+2. Starting fix HEAD
+3. Pre-integration origin/main
+4. Ancestry proof:
+   - merge-base
+   - ahead/behind
+5. Frozen MEM evidence:
+   - 32 dedicated tests
+   - synthetic 5000 guard
+   - external 116-test regression
+   - B1/B2 real 5000×5000 SUCCESS
+   - post-run manifest 135/135
+   - source_manifest byte-identical
+6. Final defect state:
+   `RC1-DEMO-MEM-01 = CLOSED`
+7. No functional changes in M1C
+8. Integration policy = fast-forward only
+9. Final main SHA after push
+10. Next priority after audit = `RC1-DEMO-PROP-01`
+11. `REF-01 / MASK-01` remain OPEN and untouched
+12. Task 8B.4 / 8C not entered.
 
-```text
-MEM01_REAL_GATE_PASS
-RC1-DEMO-MEM-01 = CLOSED
-M1B.3 formal gate = PASS
-```
-
-# 7. FROM_DSH
+# 5. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 UTF-8 without BOM.
 
-Required:
+Required fields:
 
 ```text
-Task: 8B.3-M1B.3-R1
+Task: 8B.3-M1C
 Status: COMPLETE / PARTIAL / STOP / FAILED
-Branch: fix/task8b3-mem01-compact-proposals
-Starting HEAD: ccaeb09c27744f9087557a6dace6e4262da5db9e
-Inference/tests/model execution: NONE
-Post-run external manifest: 135/135 PASS / FAIL
-Post-run source_manifest byte-identical: YES / NO
+Source branch: fix/task8b3-mem01-compact-proposals
+Starting HEAD: 509ed5ea6c712da0d65d31c499fa40cec16e94cc
+Pre-integration origin/main: c45ecbec7fd293c454ccced22310db32c1542be4
+Merge-base: c45ecbec7fd293c454ccced22310db32c1542be4 / other
+Ahead/behind before doc commit: 25/0 / other
 Functional files modified: NO
-Historical B1 invocation count: 1
-Historical B2 invocation count: 1
-Historical B1/B2 proposal-memory signature: ABSENT / ABSENT
-MEM gate verdict: MEM01_REAL_GATE_PASS / other
-RC1-DEMO-MEM-01: CLOSED / OPEN
-M1B.3 formal gate: PASS / FAIL
-PROP-01 / REF-01 / MASK-01: UNCHANGED / UNCHANGED / UNCHANGED
-Report: docs/task8b3_m1b3_large_image_memory_gate.md
-Next action: Awaiting ChatGPT audit before main integration.
+Tests/inference executed: NO
+RC1-DEMO-MEM-01: CLOSED
+PROP-01 / REF-01 / MASK-01: OPEN / OPEN / OPEN
+Integration method: FAST-FORWARD ONLY / NOT RUN
+Final origin/main: <sha / unchanged>
+Report: docs/task8b3_m1c_mem01_main_integration.md
+Next action: Awaiting ChatGPT audit before PROP-01 work.
 ```
 
-# 8. Git / commit / push
+# 6. Documentation commit on fix branch
 
-Verify only §3 paths changed.
+Before touching `main`, verify:
 
-If COMPLETE:
+```bat
+git status --short
+git diff --check
+```
+
+Only §3 paths may differ.
+
+Commit exactly:
 
 ```text
-docs(rc1): confirm post-run mem01 integrity
+docs(rc1): record mem01 closure integration
 ```
 
-If STOP/FAILED:
+Let the resulting new fix-branch commit SHA be:
 
 ```text
-docs(rc1): record mem01 integrity stop
+INTEGRATION_TARGET
 ```
 
-Push current fix branch normally, no force.
+Push source branch:
 
-# 9. COMPLETE definition
+```bat
+git push origin fix/task8b3-mem01-compact-proposals
+```
+
+No force.
+
+If commit/push fails:
+- do not touch main;
+- STOP.
+
+# 7. Re-prove fast-forward after documentation commit
+
+Run:
+
+```bat
+git fetch origin
+git merge-base origin/main origin/fix/task8b3-mem01-compact-proposals
+git rev-list --left-right --count origin/main...origin/fix/task8b3-mem01-compact-proposals
+```
+
+Require:
+- merge-base still equals `c45ecbec7fd293c454ccced22310db32c1542be4`;
+- left count = 0;
+- right count = 26.
+
+If not:
+- do not touch main;
+- STOP.
+
+# 8. Fast-forward main
+
+Checkout local main:
+
+```bat
+git checkout main
+```
+
+Require clean tracked tree.
+
+Synchronize local main only by:
+
+```bat
+git fetch origin
+git reset --hard origin/main
+```
+
+This reset is authorized ONLY here, only on local `main`, to match verified `origin/main`.
+
+Then fast-forward only:
+
+```bat
+git merge --ff-only origin/fix/task8b3-mem01-compact-proposals
+```
+
+Require local main HEAD == `INTEGRATION_TARGET`.
+
+Push normally:
+
+```bat
+git push origin main
+```
+
+No force.
+
+# 9. Post-integration verification
+
+Run:
+
+```bat
+git fetch origin
+git rev-parse origin/main
+git rev-parse origin/fix/task8b3-mem01-compact-proposals
+```
+
+Require both equal `INTEGRATION_TARGET`.
+
+Verify:
+
+```bat
+git status --short
+```
+
+must be clean.
+
+Do not delete either branch.
+
+# 10. COMPLETE definition
 
 COMPLETE only if:
-- exact starting HEAD;
-- no inference/test/model execution;
-- external manifest 135/135 PASS;
-- external source_manifest byte-identical to canonical;
-- no functional modifications;
-- M1B.3 report normalized;
-- FROM_DSH complete;
-- commit/push succeed;
-- clean tracked tree;
+- exact starting source HEAD;
+- exact pre-integration origin/main;
+- ancestry is linear;
+- no functional changes;
+- no tests/inference;
+- closure report/handoff committed on fix branch;
+- source branch push PASS;
+- `main` advanced by `--ff-only`;
+- origin/main == origin/fix branch == integration target;
+- no merge commit/rebase/force push;
+- working tree clean;
+- MEM-01 remains CLOSED;
 - stop.
 
-# 10. Final response
+# 11. Final response
 
 ```text
-TASK 8B.3-M1B.3-R1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-M1C COMPLETE / PARTIAL / STOP / FAILED
 
-Commit:
+Documentation commit / integration target:
 <sha or NONE>
 
-Push:
+Source branch push:
 PASS / FAIL
 
-Inference/tests/model execution:
-NONE
+Pre-integration origin/main:
+c45ecbec7fd293c454ccced22310db32c1542be4 / other
 
-Post-run external manifest:
-135/135 PASS / other
+Pre-doc ancestry:
+merge-base = <sha>
+ahead/behind = 25/0 / other
 
-Post-run source_manifest byte-identical:
-YES / NO
+Post-doc ancestry:
+ahead/behind = 26/0 / other
 
 Functional files modified:
 NO
 
-Historical B1/B2 invocations:
-1 / 1
+Tests / inference:
+NOT RUN
 
-MEM gate verdict:
-MEM01_REAL_GATE_PASS / other
+Integration method:
+FAST-FORWARD ONLY / NOT RUN
+
+Final origin/main:
+<sha>
+
+Final origin/fix branch:
+<sha>
 
 RC1-DEMO-MEM-01:
-CLOSED / OPEN
+CLOSED
 
-M1B.3 formal gate:
-PASS / FAIL
+PROP-01 / REF-01 / MASK-01:
+OPEN / OPEN / OPEN
 
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得重跑 B1/B2、不得更新 main、不得进入 PROP-01/REF-01/MASK-01/Task 8B.4/8C。
+等待 ChatGPT 审核；不得开始 PROP-01、REF-01、MASK-01、Task 8B.4 或 Task 8C。
 ```
