@@ -17,37 +17,44 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D10-R1 Report
+# FROM_DSH — Task 8B.3-P1D10-R2 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D10-R1` |
-| Status | **COMPLETE** (resolution-logic correction + candidate-pool audit, docs only) |
+| Task | `8B.3-P1D10-R2` |
+| Status | **COMPLETE** (v0.2 audit + metadata-only candidate lock) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `2edee1af99d89740cf5e75c99b08fe872b0bcef1` |
+| Starting HEAD | `a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48` |
 | Model/test execution | NONE |
 | Functional files modified | NO |
-| Corrected error 1 | original replacement pool was the detector's own validation split → **MODEL_SELECTION_LEAKAGE_RISK**, withdrawn |
-| Corrected error 2 | original PROP-01 reclassification was unsupported (A2 provenance NOT ESTABLISHED) → withdrawn |
-| Pool audit | A `images/val` MODEL_SELECTION_LEAKAGE_RISK · B `images/test` MISSING_RELATION_METADATA · C `whu_native_vector/v1.0` MISSING_RELATION_METADATA · D `reasoning_view/scene_disjoint_v1` POOL_STATUS_INCOMPLETE · E1 `task6m1_demo` (18 cases) **USABLE_WITH_DISCLOSURE** · E2 `task6m_demo` (13 cases) **USABLE_WITH_DISCLOSURE** |
-| Best Demo candidate pool | `artifacts/task6m1_demo` (primary), `artifacts/task6m_demo` (secondary) |
-| Replacement selection policy | READY — metadata-only contract declared in §19.3; detector outputs and manual visual quality may not be consulted; no image selected |
-| Detector adaptation feasibility | **DETECTOR_ADAPTATION_NOT_READY** (unchanged; no readiness facts changed) |
-| Demo policy feasibility | **DEMO_POLICY_PATH_READY** |
-| Primary resolution | **PROP01_RESOLUTION_DEMO_POLICY** (retained on the corrected contract) |
-| PROP-01 status | **PROP01_OPEN_ENGINEERING_DEFECT** (corrected; not closed) |
+| v0.2 test JSONL | AVAILABLE (14 415 287 bytes, 6 219 records) |
+| v0.2 test classification | **USABLE_WITH_DISCLOSURE** (frozen final-test split; metadata-only deterministic locking, no reported result changed) |
+| v0.2 val classification | **MODEL_SELECTION_LEAKAGE_RISK** |
+| Best Demo pool | `datasets/build_spatial_reason/v0.2` (TEST split) |
+| R1 `task6m1_demo` primary-pool statement | **SUPERSEDED** (pool is model-output-contaminated) |
+| Locked candidate count | **4** |
+| Locked right candidate | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` |
+| Locked left candidate | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
+| Locked above candidate | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` |
+| Locked below candidate | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` |
+| Eligibility fields used | canonical generator metadata only (`level`, `target_component_id`, `reference_component_ids`, `native_vector.target/references`, `target_geometry_ref`) |
+| Forbidden fields consulted | NONE (no detector/parser/runtime/mask/visual/confidence/historical-success field) |
+| Deterministic ordering | immutable `sample_id`; distinct `image_id` enforced across relations |
+| Source image resolution | via frozen `image_metadata_ref` component maps (the v0.2 `image_path` field is a placeholder sentence) |
+| Image copied into RC1 / detector run / visual inspection | NO / NO / NO |
+| Primary resolution (from R1, unchanged) | `PROP01_RESOLUTION_DEMO_POLICY` |
+| PROP-01 status (from R1, unchanged) | `PROP01_OPEN_ENGINEERING_DEFECT` |
 | Scientific freeze preserved | YES |
-| Next gate | **PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION** (recommended, not executed) |
-| RC1-DEMO-MEM-01 / PROP-01 / REF-01 / MASK-01 | CLOSED / OPEN / OPEN / OPEN |
+| Next gate | `PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION` (recommended, not executed) |
 | Report | `docs/task8b3_p1d10_prop01_resolution_decision.md` |
-| Next action | Awaiting ChatGPT audit; do not execute the next gate and do not select any Demo case. |
+| Next action | Awaiting ChatGPT audit; locked candidates must not be run or replaced. |
 
-Corrected release wording (≤120 Chinese characters): RC1 的 proposal detector 已在 WHU 类航空建筑实例域上完成验证；演示用例取自该域内既有资产，选择规则在检测结果之外预先确定；A2 为已如实记录的未检出样例，本版本不承诺任意航空影像的鲁棒性。
+Locked candidate IDs are frozen on commit and may not be replaced after future runtime results without a new ChatGPT
+decision that explicitly acknowledges the failed locked candidate.
 
-Watt was not needed for Task 8B.3-P1D10-R1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D10-R2 (no downloads, no transfers).
 
-No model, test, training, inference or functional modification occurred; the audit read only local frozen assets and
-documentation.
+No model, test, training or inference execution occurred; only metadata and frozen documentation were read.

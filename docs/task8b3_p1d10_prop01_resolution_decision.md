@@ -279,3 +279,102 @@ NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION   (recommended, NOT execute
 
 Policy documentation and deterministic Demo-case selection remain separate from the frozen research metrics and
 architecture; the frozen detector and all frozen results are untouched.
+
+
+---
+
+## 20. P1D10-R2 — canonical BuildSpatialReason v0.2 audit and four locked Demo candidates
+
+Metadata-only audit and locking. **No model, test, training or functional execution/modification occurred and no
+image was copied into RC1.**
+
+### 20.1 Canonical v0.2 provenance gate
+
+```text
+datasets/build_spatial_reason/v0.2/manifest.json    exists (6 551 bytes)
+datasets/build_spatial_reason/v0.2/statistics.json  exists (5 988 bytes)
+configs/build_spatial_reason_v0.2.yaml              exists
+dataset_name = BuildSpatialReason · dataset_version = v0.2
+val.jsonl  = 21 084 930 bytes · test.jsonl = 14 415 287 bytes
+test records = 6 219
+by_split_query_type = {"test": {"bottommost": 877, "largest": 548, "largest_to_above": 111, "largest_to_above_to_nearest": 174, "largest_to_below": 100, "largest_to_below_to_nearest": 194, "largest_to_left_of": 107, "largest_to_left_of_to_nearest": 190, "largest_to_nearest": 373, "largest_to_right_of": 114, "largest_to_right_of_to_nearest": 178, "leftmost": 886, "rightmost": 877, "smallest": 234, "smallest_to_above": 5
+```
+
+All four frozen level-3 programs are present in both val and test per the tracked statistics, so the canonical
+dataset supports every required relation.
+
+### 20.2 v0.2 record schema (TEST split)
+
+Record fields (types as observed): `sample_id` str, `dataset_name`/`dataset_version` str, `split` str, `image_id` str,
+`query_type` str, `level` int (3), `template_id` str, `instruction_en`/`instruction_zh` str,
+`candidate_component_ids` list, `distractor_component_ids` list, `target_component_id` int,
+`reference_component_ids` list[int], `target_mask` object, `trivial_selection` bool, `target_geometry_ref` object,
+`component_map_path` str, `image_metadata_ref` str, `image_path` str (sentinel-like, **not** a real path),
+`native_vector` object with `target` and `references`.
+
+### 20.3 Eligibility and locking rule applied (§11/§12)
+
+Eligibility used canonical generator metadata only (`level == 3`, `target_component_id` present,
+`reference_component_ids` non-empty, `native_vector.target`/`references` present, `target_geometry_ref` present).
+Forbidden fields (detector output, proposal count, parser output, runtime status, predicted mask, manual visual
+quality, historical Demo success/failure, confidence) were **not** consulted. Deterministic ordering used the
+immutable `sample_id`; the distinct-image rule was enforced across the four relations.
+
+```text
+eligible metadata-only records in TEST = 736
+  largest_to_right_of_to_nearest = 178 · largest_to_left_of_to_nearest = 190
+  largest_to_above_to_nearest    = 174 · largest_to_below_to_nearest = 194
+locked candidates = 4
+selection policy  = READY
+```
+
+### 20.4 Four locked candidate records (frozen once committed)
+
+| relation | sample_id | split | image_id | target | references | native-vector target | native-vector references | trivial_selection |
+|---|---|---|---|---|---|---|---|---|
+| largest_to_right_of_to_nearest | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` | test | 1010 | 3 | [4] | `{"source_feature_id": 25806, "tile_instance_id": 3}` | `[{"source_feature_id": 25833, "tile_instance_id": 4}]` | False |
+| largest_to_left_of_to_nearest | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` | test | 1003 | 24 | [26] | `{"source_feature_id": 25414, "tile_instance_id": 24}` | `[{"source_feature_id": 25456, "tile_instance_id": 26}]` | False |
+| largest_to_above_to_nearest | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` | test | 1008 | 6 | [4] | `{"source_feature_id": 25664, "tile_instance_id": 6}` | `[{"source_feature_id": 25394, "tile_instance_id": 4}]` | True |
+| largest_to_below_to_nearest | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` | test | 1009 | 2 | [3] | `{"source_feature_id": 25144, "tile_instance_id": 2}` | `[{"source_feature_id": 25431, "tile_instance_id": 3}]` | True |
+
+### 20.5 Source-image resolution without model output (§7)
+
+| sample_id | image_id | component map | exists | component size | resolved source image | exists | dimensions | format | bytes | sha256 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91 | 1010 | `artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1/components/test/1010.png` | True | [512, 512] | `1. The cropped image data and raster labels/test/image/1010.tif` | False | None | None | None |  |
+| buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3 | 1003 | `artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1/components/test/1003.png` | True | [512, 512] | `1. The cropped image data and raster labels/test/image/1003.tif` | False | None | None | None |  |
+| buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314 | 1008 | `artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1/components/test/1008.png` | True | [512, 512] | `1. The cropped image data and raster labels/test/image/1008.tif` | False | None | None | None |  |
+| buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450 | 1009 | `artifacts/whu_native_vector/reasoning_view/scene_disjoint_v1/components/test/1009.png` | True | [512, 512] | `1. The cropped image data and raster labels/test/image/1009.tif` | False | None | None | None |  |
+
+The v0.2 `image_path` field is a place-holder sentence rather than a filesystem path, so resolution was performed
+through the frozen `image_metadata_ref` (`…/reasoning_view/scene_disjoint_v1/metadata/test.jsonl`) and the frozen
+component map; the component-map image for each locked candidate exists and decodes.
+
+### 20.6 Historical-use / leakage audit and pool classification (§8/§9)
+
+```text
+documentation hits for v0.2 val/test historical use = 94
+BuildSpatialReason v0.2 test : final frozen Task 7J evaluation split → USABLE_WITH_DISCLOSURE
+                               (qualitative Demo selection only; locking is metadata-only, deterministic and changes
+                               no reported test result)
+BuildSpatialReason v0.2 val  : used for validation/model selection in the frozen research lineage →
+                               MODEL_SELECTION_LEAKAGE_RISK (not eligible as the Demo pool)
+artifacts/task6m1_demo and artifacts/task6m_demo : their result.json records prior model outputs (parsed_program,
+                               proposal_count, status, selected/outputs) → MODEL_OUTPUT_CONTAMINATED →
+                               the R1 statement naming task6m1_demo as the primary pool is SUPERSEDED
+```
+
+### 20.7 Preferred pool, disclosure and support scope
+
+```text
+preferred future Demo pool = datasets/build_spatial_reason/v0.2 (TEST split)
+locked candidates = 4 (one per frozen relation), frozen on commit
+disclosure: The qualitative Demo cases are deterministically selected from the frozen v0.2 test split after final
+            test metrics were produced; no metric, threshold or model selection uses them, and reuse is disclosed.
+support scope: the frozen proposal detector and this Demo pool share the canonical WHU-derived aerial building
+            instance domain recorded in the v0.2 and native-vector provenance; the scope statement derives from that
+            positive provenance, not from A2's failure.
+```
+
+No candidate may be replaced after future runtime results without a new ChatGPT decision that explicitly
+acknowledges the failed locked candidate. No image was copied into RC1 and no detector was run.

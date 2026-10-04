@@ -1,35 +1,34 @@
-# TO_DSH — Task 8B.3-P1D10-R1: Correct PROP-01 Resolution Logic and Demo-Pool Readiness
+# TO_DSH — Task 8B.3-P1D10-R2: Audit BuildSpatialReason v0.2 and Lock Outcome-Independent Demo Candidates
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `2edee1af99d89740cf5e75c99b08fe872b0bcef1`
+> Required starting HEAD: `a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48`
 
 # 0. Audit disposition
 
-P1D10 is NOT YET APPROVED.
+P1D10-R1 corrected the circular A2 domain claim, but is NOT YET APPROVED.
 
-Accepted facts:
-- no model/test execution;
-- no functional modifications;
-- `DETECTOR_ADAPTATION_NOT_READY` is supported;
-- detector replacement/fine-tuning touches frozen research claims;
-- a policy-only path can in principle preserve the frozen architecture;
-- bounded P1D1–P1D9 diagnostics did not find a simple repair for A2.
+Two remaining issues:
 
-Two conclusions require correction:
+1. The R1 audit did not actually audit the canonical relation dataset requested by the task:
+   `datasets/build_spatial_reason/v0.2/{val,test}.jsonl`.
+   The tracked v0.2 manifest/statistics already establish:
+   - 28,108 samples;
+   - `scene_disjoint_v1`;
+   - 20 programs;
+   - explicit reference/target provenance;
+   - all four frozen level-3 programs are present in val/test.
 
-1. `A2 source/domain = NOT ESTABLISHED` cannot support the statement
-   `A2 is outside the detector's effective domain`.
-   Detector failure alone must not define the domain boundary.
+2. R1 selected `artifacts/task6m1_demo` as the primary pool, but its metadata includes prior model outputs
+   (`parsed_program`, `status`, `proposal_count`, outputs/selection). A selection contract that requires a completed
+   status or parsed model output is not cleanly outcome-independent.
 
-2. `artifacts/task6m_yolo_native/images/val` was declared a READY replacement-success pool without establishing:
-   - executable Reference→Relation→Target metadata for candidate selection;
-   - whether using the detector validation split creates avoidable Demo/model-selection leakage;
-   - whether a better pre-existing frozen relation-annotated pool exists.
+This R2 must audit the canonical BuildSpatialReason v0.2 records and, if valid, lock the future Demo candidates
+BEFORE any detector/manual result is observed.
 
-This R1 repairs only the decision logic and pool-readiness evidence.
+This is DOCS-ONLY / METADATA-ONLY. No model or image-quality selection is allowed.
 
 # 1. Git gate
 
@@ -37,7 +36,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 2edee1af99d89740cf5e75c99b08fe872b0bcef1
+HEAD = a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48
 ```
 
 Allowed initial tracked tree:
@@ -50,15 +49,20 @@ No reset/rebase/stash/clean/merge.
 
 Do NOT:
 - run any detector/model/inference;
-- run `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1, pytest, check_setup;
+- run `predict.py`, `--inspect-proposals`, Qwen, SAM2, D-B1;
+- run pytest/check_setup;
 - train/fine-tune/export/download;
-- modify detector/runtime/config/tests/manifests/checkpoints;
-- modify or replace Demo inputs;
-- select an actual replacement image;
-- inspect detector outputs for any replacement candidate;
+- modify runtime/tests/manifests/checkpoints/config;
+- modify/copy/replace Demo inputs;
+- inspect any detector output, proposal count, success/failure status, mask, overlay or manual visual quality when
+  selecting candidates;
+- use `task6m1_demo` / `task6m_demo` model outcome fields as eligibility criteria;
+- change frozen research metrics;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - modify main;
 - force push.
+
+Reading JSON/JSONL/YAML/metadata and checking that referenced image files exist/read correctly is allowed.
 
 # 3. Allowed repository changes
 
@@ -70,117 +74,338 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-# 4. Correct the A2 domain statement
+Do not commit copied images or a new dataset.
 
-Retain:
+# 4. Canonical v0.2 provenance gate
 
-```text
-A2 source/domain provenance = NOT ESTABLISHED
-A2 exact membership in active train/val/test = NOT ESTABLISHED
-A2 repeatedly yields zero proposals under P1D2–P1D9
-```
-
-Forbidden conclusion:
+Inspect and record:
 
 ```text
-A2 is proven outside the detector's effective domain
+datasets/build_spatial_reason/v0.2/manifest.json
+datasets/build_spatial_reason/v0.2/statistics.json
+configs/build_spatial_reason_v0.2.yaml
+scripts/task6l_build_v0_2.py
 ```
 
-Replace with an evidence-bounded statement:
+Require evidence consistent with:
 
 ```text
-A2 is a persistent documented failure/stress case whose provenance is unknown;
-the current evidence does not establish whether it is in-domain or out-of-domain.
+dataset = BuildSpatialReason v0.2
+source = WHU Building Dataset / Satellite dataset II (East Asia)
+source representation = whu-native-vector-v1.0
+split_view = scene_disjoint_v1
+total samples = 28108
+train / val / test = 12778 / 9111 / 6219
+program_count = 20
 ```
 
-The supported-input policy, if chosen, must be defined by positive provenance/asset criteria,
-not retrospectively by whether the detector succeeds.
-
-# 5. Audit candidate Demo pools
-
-Read local frozen assets and documentation only.
-
-Audit at least these possible pools if present:
+Record the four relevant query counts in both val and test:
 
 ```text
-A. artifacts/task6m_yolo_native/images/val
-B. artifacts/task6m_yolo_native/images/test
-C. frozen BuildSpatialReason validation split
-D. frozen BuildSpatialReason test split
-E. any pre-existing RC1/Demo candidate pool documented before PROP-01 diagnostics
+largest_to_right_of_to_nearest
+largest_to_left_of_to_nearest
+largest_to_above_to_nearest
+largest_to_below_to_nearest
 ```
 
-For each record:
+If the canonical evidence disagrees materially:
+- do not lock candidates;
+- STOP.
+
+# 5. Locate actual v0.2 sample records
+
+Require local availability of:
+
+```text
+datasets/build_spatial_reason/v0.2/val.jsonl
+datasets/build_spatial_reason/v0.2/test.jsonl
+```
+
+These files may be intentionally untracked large artifacts; local read-only use is allowed.
+
+Record for each:
 
 ```text
 exists
-frozen before P1D10? YES / NO / NOT ESTABLISHED
-image identity available? YES / NO
-Reference→Relation→Target metadata available? YES / NO
-program labels available? YES / NO
-reference/target instance identity available? YES / NO
-scene/split identity available? YES / NO
-used for detector training? YES / NO
-used for detector validation/model selection? YES / NO
-used for final research test? YES / NO
-candidate selection can be performed without detector output? YES / NO
+bytes
+SHA256
+line count
+JSON parse failures
 ```
 
-Do not run models.
+Required line counts:
 
-# 6. Leakage / credibility classification
+```text
+val = 9111
+test = 6219
+```
 
-For each candidate pool choose exactly one:
+If `test.jsonl` is absent, corrupt, or count-mismatched:
+- no candidate lock;
+- `REPLACEMENT_SELECTION_POLICY_NOT_READY`;
+- document and STOP after commit/push.
+
+Do NOT regenerate the dataset in this task.
+
+# 6. Establish v0.2 record schema
+
+From metadata only, record the field names and types necessary for selection.
+
+At minimum establish whether records contain:
+
+```text
+split
+image_id
+query_type
+level
+target_component_id
+reference_component_ids
+target_mask
+trivial_selection
+native_vector.dataset_name
+native_vector.dataset_version
+native_vector.tile_id
+native_vector.target
+native_vector.references
+target_geometry_ref
+image metadata/path reference
+```
+
+For one record of each of the four target query types from the TEST split, record only:
+- stable identity fields;
+- program/query fields;
+- reference/target metadata fields;
+- image-path resolution fields.
+
+Do NOT record or consult detector/model results.
+
+# 7. Resolve source images without model output
+
+Using the v0.2 record and its frozen reasoning-view/native-vector metadata, prove that the underlying source tile can
+be resolved deterministically.
+
+For the TEST split record pool establish:
+
+```text
+image root / metadata path
+image dimensions
+image format
+readable count for candidate-bearing images
+missing/unreadable count
+```
+
+Do not inspect visual quality.
+
+A candidate is eligible only if its referenced source image exists and decodes successfully.
+
+# 8. Historical-use / leakage audit
+
+Audit documentation for historical use of:
+
+```text
+BuildSpatialReason v0.2 val
+BuildSpatialReason v0.2 test
+```
+
+Record whether each was used for:
+
+```text
+training
+model/architecture/threshold selection
+validation
+final frozen Task7J evaluation
+post-test rescue/tuning
+```
+
+Choose exactly one per split:
 
 ```text
 CLEAN_DEMO_SELECTION_POOL
 USABLE_WITH_DISCLOSURE
 MODEL_SELECTION_LEAKAGE_RISK
-MISSING_RELATION_METADATA
-POOL_NOT_AVAILABLE
 POOL_STATUS_INCOMPLETE
 ```
 
-Rules:
+Expected decision logic:
+- a split used for model selection cannot be called clean;
+- a frozen final-test split may be `USABLE_WITH_DISCLOSURE` for qualitative Demo selection only if candidate locking is
+  metadata-only, deterministic, and does not change any reported test result.
 
-- A detector validation split must NOT be called clean merely because it is not training data.
-- A final research test split may be `USABLE_WITH_DISCLOSURE` for demonstration examples only if:
-  - selection is deterministic and outcome-independent;
-  - no new metric/model selection is performed;
-  - reuse is explicitly disclosed.
-- A pool without executable relation/reference/target metadata cannot be READY for the intended relation Demo.
+# 9. Reclassify historical demo-output pools
 
-# 7. Define a valid replacement-selection contract
-
-Only if at least one pool is `CLEAN_DEMO_SELECTION_POOL` or `USABLE_WITH_DISCLOSURE`, define BEFORE selection:
+For:
 
 ```text
-exact pool
-exact split/version
-eligible program/relation set
-required reference/target validity
-image-format/size rule
-scene-disjoint/no-train rule
-deterministic ordering
-number of cases k
-tie-breaking
-whether model/detector outputs may be consulted = NO
-whether manual visual quality may be consulted = NO before selection
+artifacts/task6m1_demo
+artifacts/task6m_demo
 ```
 
-The rule must be executable from metadata alone.
-
-If no such pool exists:
+record whether eligibility fields such as these exist:
 
 ```text
-REPLACEMENT_SELECTION_POLICY_NOT_READY
+parsed_program
+status
+proposal_count
+selected
+outputs
 ```
 
-Do not select any image in this task.
+Classify each exactly as one:
 
-# 8. Re-evaluate Demo-policy feasibility
+```text
+MODEL_OUTPUT_CONTAMINATED_POOL
+METADATA_ONLY_POOL
+POOL_STATUS_INCOMPLETE
+```
 
-Choose exactly one:
+These pools MUST NOT be the primary replacement source if model-output-contaminated.
+
+# 10. Preferred pool
+
+Choose the preferred future success-Demo pool using this priority:
+
+1. BuildSpatialReason v0.2 TEST if `CLEAN_DEMO_SELECTION_POOL` or `USABLE_WITH_DISCLOSURE`;
+2. BuildSpatialReason v0.2 VAL only if test is unusable and val is not outcome-contaminated;
+3. otherwise no pool.
+
+Record:
+
+```text
+BEST_POOL = <exact path/split or NONE>
+BEST_POOL_CLASSIFICATION = <enum>
+```
+
+No candidate may be chosen from a model-output-contaminated demo bundle.
+
+# 11. Exact metadata-only candidate-lock rule
+
+If BEST_POOL exists, use exactly this relation order:
+
+```text
+1. largest_to_right_of_to_nearest
+2. largest_to_left_of_to_nearest
+3. largest_to_above_to_nearest
+4. largest_to_below_to_nearest
+```
+
+Eligibility uses ONLY canonical ground-truth/generator metadata:
+
+```text
+split == chosen split
+query_type == required query
+level == 3
+target_component_id is present
+reference_component_ids is non-empty
+native_vector.target is present
+native_vector.references are present
+target_geometry_ref is present
+referenced source image exists and decodes
+```
+
+Forbidden eligibility fields:
+
+```text
+detector output
+proposal count
+parser output
+runtime status
+predicted mask
+manual visual quality
+historical Demo success/failure
+confidence
+```
+
+Do NOT require a prior model `status == completed`.
+
+# 12. Deterministic ordering
+
+Prefer an existing immutable `sample_id` if present.
+
+If no `sample_id` exists, define canonical sort key exactly as:
+
+```text
+(
+  str(image_id),
+  str(query_type),
+  int(target_component_id),
+  tuple(int(x) for x in reference_component_ids)
+)
+```
+
+For each relation in the fixed order:
+- sort all eligible records by the canonical key;
+- choose the first record whose `image_id` has not already been locked for another relation.
+
+No retries based on model outcome are ever allowed.
+
+If a relation has no eligible distinct-image record:
+- do not loosen criteria;
+- selection policy = NOT READY;
+- STOP.
+
+# 13. Lock exactly four candidate records
+
+Metadata-only candidate locking IS AUTHORIZED in this R2.
+
+For each locked candidate record:
+
+```text
+relation/program
+stable key / sample_id
+split
+image_id
+resolved source image path
+image bytes
+image SHA256
+dimensions
+format
+target_component_id
+reference_component_ids
+native-vector target identity
+native-vector reference identities
+trivial_selection
+```
+
+Do NOT:
+- copy it into RC1;
+- run the detector;
+- inspect prediction outputs;
+- inspect manual visual quality.
+
+Once recorded and committed, these four candidate IDs are frozen for the next gate. They may not be replaced after
+future runtime results without a new ChatGPT decision that explicitly acknowledges the failed locked candidate.
+
+# 14. Support-scope wording
+
+Define support positively from canonical provenance, not from A2 failure.
+
+Allowed scope basis:
+
+```text
+WHU Building Dataset — Satellite dataset II (East Asia)
+native-vector building instances
+scene-disjoint_v1
+tile-relative spatial reasoning
+```
+
+Explicit limitation from v0.2 manifest:
+
+```text
+scene separation does not establish cross-city or broad geographic generalization
+```
+
+A2 statement must remain:
+
+```text
+A2 provenance/domain = NOT ESTABLISHED
+A2 = documented persistent non-detection/stress case
+```
+
+Do NOT call A2 proven out-of-domain.
+
+# 15. Re-evaluate policy decision
+
+Choose exactly:
 
 ```text
 DEMO_POLICY_PATH_READY
@@ -188,177 +413,165 @@ DEMO_POLICY_PATH_NOT_READY
 DEMO_POLICY_STATUS_INCOMPLETE
 ```
 
-`READY` requires both:
-- a support scope that can be defined by positive, pre-existing provenance/asset criteria;
-- a replacement selection policy that is executable without detector/manual outcome consultation.
+`READY` requires:
+- canonical relation metadata;
+- a non-output-contaminated usable pool;
+- four locked candidates selected only by §11–§12;
+- positive support scope;
+- disclosure of test reuse if TEST is chosen.
 
-# 9. Re-evaluate primary resolution
-
-Choose exactly one:
+Then choose:
 
 ```text
 PROP01_RESOLUTION_DEMO_POLICY
-PROP01_RESOLUTION_DETECTOR_ADAPTATION
-PROP01_RESOLUTION_ENGINEERING_FALLBACK_DESIGN
 PROP01_RESOLUTION_BLOCKED
 ```
 
-Guidance:
+Detector adaptation remains `DETECTOR_ADAPTATION_NOT_READY`.
 
-- Do not choose DEMO_POLICY merely because A2 fails.
-- DEMO_POLICY is allowed if a transparent positive support scope and non-cherry-picked Demo selection contract are ready.
-- DETECTOR_ADAPTATION remains disallowed unless readiness facts changed without new execution.
-- If no honest pool/policy can be made ready, choose BLOCKED.
-
-# 10. Re-evaluate PROP-01 status
-
-Choose exactly one:
+PROP status remains:
 
 ```text
 PROP01_OPEN_ENGINEERING_DEFECT
-PROP01_RECLASSIFIED_SUPPORTED_DOMAIN_FAILURE
-PROP01_BLOCKING_RELEASE_DEFECT
 ```
 
-Rules:
+Do NOT mark it closed or reclassified as out-of-domain in this task.
 
-- `PROP01_RECLASSIFIED_SUPPORTED_DOMAIN_FAILURE` is NOT allowed unless evidence establishes that A2 violates an independently defined supported-domain contract.
-- Unknown provenance is not proof of domain violation.
-- PROP-01 must not be marked CLOSED.
-
-# 11. Correct release wording
+# 16. Release wording
 
 Write ≤120 Chinese characters.
 
-It must:
-- state the actual verified support scope positively;
-- call A2 a documented failure/stress case if appropriate;
-- NOT say A2 is "域外" unless independently established;
-- NOT imply arbitrary aerial-image robustness;
-- NOT imply A2 was fixed.
+Must state:
+- positive verified support scope;
+- A2 is a documented non-detection case with unknown provenance;
+- no arbitrary aerial-image robustness claim.
 
-# 12. Scientific freeze
-
-Reconfirm:
+If TEST is the chosen Demo pool, also add a separate disclosure sentence in the report:
 
 ```text
-scientific freeze preserved = YES / NO / NOT ESTABLISHED
+The qualitative Demo cases are deterministically selected from the frozen v0.2 test split after final test metrics
+were already consumed; they do not alter or replace the reported Task7J metrics.
 ```
 
-Policy documentation and deterministic Demo-case selection must remain separate from frozen research metrics and architecture.
+# 17. Next gate
 
-# 13. Next gate
-
-If resolution = DEMO_POLICY:
+If ready:
 
 ```text
 NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION
 ```
 
-If BLOCKED:
+If not ready:
 
 ```text
 NEXT = PROP01_DECISION_EVIDENCE_RECOVERY
 ```
 
-If ADAPTATION:
+Do not execute it.
 
-```text
-NEXT = PROP01_ADAPTATION_PROTOCOL_DESIGN
-```
+# 18. Report update
 
-If FALLBACK:
-
-```text
-NEXT = PROP01_FALLBACK_PROPOSAL_DESIGN
-```
-
-Do NOT execute it.
-
-# 14. Report repair
-
-Update:
+Append `P1D10-R2` to:
 
 ```text
 docs/task8b3_p1d10_prop01_resolution_decision.md
 ```
 
-Append an R1 audit section containing:
+Required sections:
 
-1. ChatGPT audit correction
-2. corrected A2 domain statement
-3. candidate-pool audit table
-4. leakage/credibility enum for each pool
-5. executable metadata-only selection contract OR NOT READY
-6. corrected Demo-policy feasibility enum
-7. corrected primary resolution
-8. corrected PROP-01 status
-9. corrected release-language draft
-10. scientific-freeze statement
-11. exact next gate
-12. no model/test execution
-13. no functional modification.
+1. ChatGPT R2 audit reason
+2. canonical v0.2 provenance
+3. val/test JSONL identity/counts
+4. sample schema
+5. source-image resolution
+6. val/test historical-use classifications
+7. historical demo-pool contamination classifications
+8. chosen BEST_POOL
+9. exact metadata-only selection rule
+10. four locked candidate records
+11. positive support scope and limitation
+12. Demo-policy feasibility
+13. primary resolution
+14. PROP-01 status
+15. corrected release wording
+16. test-reuse disclosure if applicable
+17. exact next gate
+18. no model/test execution
+19. no functional modification.
 
-Do not delete historical P1D10 text; mark superseded statements explicitly.
+Mark the R1 `task6m1_demo` primary-pool statement as SUPERSEDED if it is model-output-contaminated.
 
-# 15. FROM_DSH
+# 19. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D10-R1
+Task: 8B.3-P1D10-R2
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 2edee1af99d89740cf5e75c99b08fe872b0bcef1
+Starting HEAD: a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48
 Model/test execution: NONE
 Functional files modified: NO
-A2 domain provenance: NOT ESTABLISHED
-A2 domain classification: IN_DOMAIN / OUT_OF_DOMAIN / NOT ESTABLISHED
-Best Demo candidate pool: <path/version / NONE>
-Best pool classification: <exact enum>
+v0.2 test JSONL: AVAILABLE / UNAVAILABLE
+v0.2 test records: <n>
+v0.2 test classification: <enum>
+v0.2 val classification: <enum>
+task6m1_demo classification: <enum>
+task6m_demo classification: <enum>
+Best Demo pool: <path/split / NONE>
 Replacement selection policy: READY / NOT READY
+Locked candidate count: 4 / other
+Locked right candidate: <stable id / NONE>
+Locked left candidate: <stable id / NONE>
+Locked above candidate: <stable id / NONE>
+Locked below candidate: <stable id / NONE>
+A2 domain classification: NOT ESTABLISHED
 Detector adaptation feasibility: DETECTOR_ADAPTATION_NOT_READY
-Demo policy feasibility: <exact enum>
-Primary resolution: <exact enum>
-PROP-01 status: <exact enum>
+Demo policy feasibility: <enum>
+Primary resolution: <enum>
+PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
 Scientific freeze preserved: YES / NO / NOT ESTABLISHED
-Next gate: <exact enum>
+Next gate: <enum>
 RC1-DEMO-MEM-01: CLOSED
-RC1-DEMO-PROP-01: OPEN / RECLASSIFIED / BLOCKING (not closed)
+RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
 Report: docs/task8b3_p1d10_prop01_resolution_decision.md
-Next action: Awaiting ChatGPT audit; do not execute next gate.
+Next action: Awaiting ChatGPT audit; locked candidates must not be run or replaced.
 ```
 
-# 16. Commit / push
+# 20. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): correct prop01 resolution decision
+docs(rc1): lock outcome-independent prop01 demo pool
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record prop01 decision correction stop
+docs(rc1): record prop01 demo-pool audit stop
 ```
 
 Push normally. No force push.
 
-# 17. COMPLETE definition
+# 21. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
 - no model/test execution;
 - no functional modification;
-- A2 is not circularly classified as out-of-domain;
-- candidate Demo pools are audited for relation metadata and leakage;
-- replacement rule is metadata-only and outcome-independent, or explicitly NOT READY;
-- primary resolution/status are re-evaluated;
-- superseded P1D10 claims are marked;
-- report/handoff committed and pushed;
+- canonical v0.2 val/test are actually audited;
+- actual test records are present and count-correct;
+- source images resolve;
+- historical split use is classified;
+- model-output-contaminated historical demo pools are not used as primary pool;
+- selection eligibility contains no model/manual outcome field;
+- exactly four candidates are locked before any model execution;
+- support scope is positive and evidence-based;
+- A2 remains NOT ESTABLISHED rather than declared out-of-domain;
+- report/handoff committed/pushed;
 - STOP.
