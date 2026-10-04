@@ -17,24 +17,30 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1A.2C Report
+# FROM_DSH — Task 8B.3-M1A.2C-D1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1A.2C` |
-| Status | **PARTIAL / STOP** |
+| Task | `8B.3-M1A.2C-D1` |
+| Status | **COMPLETE** (read-only forensics) |
 | Branch | `fix/task8b3-mem01-compact-proposals` |
-| Starting HEAD | `c432ec41f2d8bad9ddc67d65d0dbc033724e482a` |
-| Files changed | `docs/task8b3_m1a_compact_proposal_masks.md` only |
-| Canonical product / tests / manifest | UNCHANGED |
-| Stale R3 failure wording | FIXED |
-| Full canonical suite | exactly once → **FAIL (STOP)** (ERROR tests/test_setup_checker.py::test_missing_sam2_nonzero - FileNotFoundEr... | ERROR tests/test_setup_checker.py::test_invalid_model_yaml_nonzero - FileNotF... | 17 failed, 93 passed, 6 errors in 29.67s) |
-| External delivery / real inference | NOT touched / NOT RUN |
+| Starting HEAD | `9bb955eebd9f7351a71631da88113d46672f3beb` |
+| pytest / check_setup / predict / model runs | NONE |
+| Nodes recovered from `lastfailed` | 23 |
+| Class counts | A=7 (missing delivery assets) · B=10 (fixture assumes complete delivery) · C=0 (compact-runtime candidate) · D=6 (other code-regression candidate) · E=0 (insufficient) |
+| `tests/test_task8b_runtime.py` failing nodes | none |
+| Conclusion | **MIXED_FAILURES_REQUIRE_CODE_AUDIT** |
+| Canonical product / tests / manifest / external delivery | NOT modified |
+| Real inference / Demo / Task 8B.4 | NOT RUN / NOT RUN / NOT entered |
 | Report | `docs/task8b3_m1a_compact_proposal_masks.md` |
-| STOP reason | the single canonical suite run failed; per the task book no code or test edit and no rerun were performed |
+| STOP reason | none |
 | Next action | Awaiting ChatGPT audit; do not sync delivery. |
 
-Watt was not needed for Task 8B.3-M1A.2C (no downloads, no transfers).
+Implication for the canonical gate: the canonical tree cannot serve as a full delivery-readiness gate, because it
+deliberately omits model weights and downloaded assets; the compact-proposal contract suite itself has no failing
+node.
+
+Watt was not needed for Task 8B.3-M1A.2C-D1 (no downloads, no transfers).

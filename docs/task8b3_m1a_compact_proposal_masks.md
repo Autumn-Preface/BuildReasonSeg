@@ -350,3 +350,59 @@ This section records the successful single run: 32 dedicated tests passed and th
 
 Per the task book, a failing single run would be recorded here and the task would stop without code/test edits and
 without a rerun.
+
+---
+
+## Task 8B.3-M1A.2C-D1 — read-only classification of the canonical-suite failures
+
+Read-only forensics: no pytest, no `check_setup.py`, no model, no `predict.py`; canonical product, tests,
+`source_manifest.json` and the external delivery were not modified.
+
+Evidence source: `delivery_src/BuildReasonSeg_Advisor_RC1/.pytest_cache/v/cache/lastfailed`
+(recovered 23 failed/error nodes).
+
+Classes: **A** = canonical deliberately lacks delivery assets; **B** = fixture assumes the canonical ROOT is a
+complete delivery; **C** = compact-runtime regression candidate; **D** = other code-regression candidate;
+**E** = insufficient evidence.
+
+| node | class |
+|---|---|
+| `tests/test_cli_contract.py::test_predict_inspect_proposals_does_not_require_prompt` | D |
+| `tests/test_language_contract.py::test_normal_path_is_qwen_first` | D |
+| `tests/test_model_package.py::test_components_complete` | D |
+| `tests/test_model_package.py::test_decoder_hash_and_bytes_exact` | A |
+| `tests/test_model_package.py::test_detector_hash_and_bytes_exact` | A |
+| `tests/test_model_package.py::test_hash_mismatch_raises` | A |
+| `tests/test_model_package.py::test_metadata_hashes_match_copied_assets` | A |
+| `tests/test_model_package.py::test_model_fallback_requires_user_confirmation` | A |
+| `tests/test_model_package.py::test_model_yaml_parses` | A |
+| `tests/test_model_package.py::test_package_verification_matches` | A |
+| `tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths` | B |
+| `tests/test_paths_and_package.py::test_required_structure` | B |
+| `tests/test_setup_checker.py::test_good_fixture_is_ready` | B |
+| `tests/test_setup_checker.py::test_hash_mismatch_nonzero` | B |
+| `tests/test_setup_checker.py::test_invalid_model_yaml_nonzero` | B |
+| `tests/test_setup_checker.py::test_missing_decoder_nonzero` | B |
+| `tests/test_setup_checker.py::test_missing_qwen_component_nonzero` | B |
+| `tests/test_setup_checker.py::test_missing_sam2_nonzero` | B |
+| `tests/test_setup_checker.py::test_real_project_check_reports_ready` | B |
+| `tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready` | B |
+| `tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete` | D |
+| `tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code` | D |
+| `tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim` | D |
+
+Class counts: A=7, B=10, C=0, D=6, E=0.
+
+**`tests/test_task8b_runtime.py` failing nodes: none**
+
+### Conclusion
+
+```text
+MIXED_FAILURES_REQUIRE_CODE_AUDIT
+```
+
+Rationale: the canonical snapshot intentionally excludes model weights and downloaded assets (only 135 lightweight
+source/config files are tracked), so every failing node that requires those assets — or whose fixture assumes the
+canonical ROOT behaves like the complete external delivery — cannot pass inside the canonical tree regardless of the
+compact-proposal refactor. `tests/test_task8b_runtime.py` (the compact-proposal contract suite) has **no** failing
+node in this cache, and no class-D node was detected.
