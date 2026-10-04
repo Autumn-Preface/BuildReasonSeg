@@ -17,28 +17,27 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R9 Report
+# FROM_DSH — Task 8B.3-REF01-F1-R10 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R9` |
+| Task | `8B.3-REF01-F1-R10` |
 | Status | **COMPLETE** |
 | Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `f268d03a9a70b494b7134c6b2f2647ed3468caa3` |
+| Starting HEAD | `367144990e510aaacbae2b545a08d99aff91776a` |
 | Detector / model calls | 0 |
-| Verification mode | READ_ONLY_HISTORICAL_EVIDENCE_REPLAY |
-| Source identity basis | GIT_CANONICAL_BLOB_BYTES |
-| External detector identity | `buildreasonseg/runtime/detector.py` · manifest = external = `82531dc3b758cd8a...` · match True |
-| External imageio identity | `buildreasonseg/runtime/imageio.py` · manifest = external = `b6223be7cb2ab0e0...` · match True |
-| Live P1D12 metadata replay | YES (read from the external diagnostics `proposals.json` for all four tiles) |
-| Tie-break | `(-IoU, -confidence, proposal_id)` for best_eligible and best_any |
-| Verifier result | REPLAY_VERIFIER: PASS |
-| Canonical evidence schema replaced | YES (final schema, obsolete imageio structures removed) |
-| Exact scientific reuse disclosure present | YES (English verbatim + Chinese translation) |
-| Coverage threshold | 0.50 |
+| Canonical evidence modified | NO (sha256 `f7495796577cb26a...` unchanged) |
+| Tracked verifier | standalone read-only verifier checking identity, R6 history, live metadata and replay |
+| Verifier result | detector_or_model_calls = 0 �� canonical evidence untouched = true |
+| Git-canonical detector identity | PASS (`82531dc3b758cd8a...`) |
+| Git-canonical imageio identity | PASS (`b6223be7cb2ab0e0...`) |
+| Standalone third-party `import imageio` | ABSENT |
+| Historical R6 ten-field evidence | PASS (all four candidates) |
+| R4=R5=R6 IoU consistency (1e-6) | PASS |
+| Live P1D12 metadata replay | PASS (IDs, IoUs and classes all reproduced) |
 | Class counts | {"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1} |
 | Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE |
 | Manual visual inspection / candidate replacement / repair | NO / NO / NO |
@@ -51,6 +50,7 @@ history._
 | Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R9 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1-R10 (no downloads, no transfers).
 
-No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; no delivery file was modified.
+No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; the canonical evidence and the external
+delivery were not modified.

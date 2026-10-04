@@ -587,3 +587,56 @@ detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = 
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 external delivery / canonical RC1 modified = NO / NO
 ```
+
+
+---
+
+## 19. REF01-F1-R10 — standalone tracked verifier
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 367144990e510aaacbae2b545a08d99aff91776a
+detector / model calls = 0
+canonical evidence modified = NO (sha256 unchanged: f7495796577cb26a...)
+tracked verifier = scripts/task8b3_ref01_locked_reference_forensics.py (standalone, read-only)
+```
+
+The verifier now independently checks four things and exits non-zero on any mismatch:
+
+1. **Git-canonical module identity** — `buildreasonseg/runtime/detector.py` and `buildreasonseg/runtime/imageio.py`
+   must satisfy manifest entry == Git blob == external file, and the evidence record must agree; a standalone
+   third-party `import imageio` line must not exist in `predict.py`;
+2. **historical R6 evidence** — the ten-field reproduction flags and the R4=R5=R6 IoU consistency (tolerance 1e-6) must
+   be asserted in the evidence, together with the exact Task 7J disclosure;
+3. **live P1D12 metadata** — proposal metadata is re-read from the external diagnostics directories;
+4. **mechanical replay** — `selected` / `bestEligible` / `bestAny` are recomputed with the frozen tie-break
+   `(-IoU, -confidence, proposal_id)` and the classification is re-derived and compared with the evidence.
+
+Verifier output:
+
+```text
+== 1. Git-canonical module identity ==
+  buildreasonseg/runtime/detector.py: manifest==git==external=True evidence_record_consistent=True
+  buildreasonseg/runtime/imageio.py: manifest==git==external=True evidence_record_consistent=True
+  standalone third-party 'import imageio' lines = 0 �� delivery module referenced = False
+== 2. schema, disclosure and historical R6 evidence ==
+  required top-level keys present = True (missing [])
+  disclosure verbatim present = True �� chinese translation = True
+  R6 ten-field reproduction = True �� R4=R5=R6 within 1e-06 = True
+== 3. live P1D12 metadata + 4. mechanical replay ==
+  right: live_proposals=6 eligible=4 ids_match=True iou_match=True class_match=True (REFERENCE_SELECTED_CORRECT)
+  left: live_proposals=53 eligible=42 ids_match=True iou_match=True class_match=True (REFERENCE_SELECTION_WRONG_COVERED)
+  above: live_proposals=9 eligible=4 ids_match=True iou_match=True class_match=True (REFERENCE_ELIGIBILITY_BLOCKED)
+  below: live_proposals=6 eligible=3 ids_match=True iou_match=True class_match=True (REFERENCE_SELECTION_WRONG_COVERED)
+  class counts recomputed = {"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1} �� matches evidence = True
+STANDALONE_VERIFIER: PASS
+detector_or_model_calls = 0 �� canonical evidence untouched = true
+```
+
+### 19.1 Explicit non-execution
+
+```text
+detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = NONE
+canonical evidence / external delivery / canonical RC1 modified = NO / NO / NO
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+```
