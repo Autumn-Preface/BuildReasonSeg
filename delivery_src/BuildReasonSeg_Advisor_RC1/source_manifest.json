@@ -477,13 +477,13 @@
     },
     {
       "path": "buildreasonseg/runtime/core.py",
-      "bytes": 10828,
-      "sha256": "7ec173b91f2838b4524d999ca7ba0e7104f6787c85afcf4bfa175235a0768c06"
+      "bytes": 11064,
+      "sha256": "37c38ba4acd1bb0f77533674333172991fd91c7dba37342be208f445b1d65a15"
     },
     {
       "path": "buildreasonseg/runtime/detector.py",
-      "bytes": 16764,
-      "sha256": "a89f65dfbc4e2364c0ffeacafa593261d84c8c0ba551be3370252363d8fc6a8c"
+      "bytes": 20300,
+      "sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738"
     },
     {
       "path": "buildreasonseg/runtime/frozen_paths.py",
@@ -502,8 +502,8 @@
     },
     {
       "path": "buildreasonseg/runtime/outputs.py",
-      "bytes": 8896,
-      "sha256": "9bc62beb10f606ceba10ba6e70a4257c2576dc3cffd2e22af2b6f8d49ffbda98"
+      "bytes": 9166,
+      "sha256": "f12f86cfcc04339bfcf21728643b66b9d0d3cd63cf6faa5a16b4a5f7a3fbfc9c"
     },
     {
       "path": "buildreasonseg/runtime/pipeline.py",
@@ -672,8 +672,8 @@
     },
     {
       "path": "tests/test_task8b_runtime.py",
-      "bytes": 16248,
-      "sha256": "029b074183f95b92448ea244db49d826f4d425b2c23cacab182539fbb0bc02c6"
+      "bytes": 24983,
+      "sha256": "6cac7e9320f2088835c51efce335b0d0391fd68884d853be63b47b4343cafecd"
     },
     {
       "path": "train.py",

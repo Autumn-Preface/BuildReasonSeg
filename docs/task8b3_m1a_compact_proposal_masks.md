@@ -314,3 +314,22 @@ rerun and without a manifest update.
 
 Per the task book, a failing single run is recorded here and the task stops without runtime changes, without a rerun
 and without a manifest update.
+
+---
+
+## Task 8B.3-M1A.2B-R3 — final guard-test fix (single run)
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `872d45b3ad6adee3b3d9f0fa5bdfa95fd058a37c` |
+| files changed | `tests/test_task8b_runtime.py` and `source_manifest.json` |
+| runtime files | NOT modified (no `logical_and`/`logical_or` monkeypatching either) |
+| guard test | fake `(5000, 5000, 3)` image shape, one tile window, two independent 50×60 detections; `np.zeros` guard kept for full-frame bool; `detector.proposal_iou()` wrapped to assert both inputs' `mask_crop` are not full-frame and that it is called **exactly once** |
+| expected assertions | `raw_count == 2`, one `proposal_iou` call, one merged proposal, `mask_area == 3000` |
+| dedicated run | exactly once → **PASS** |
+| tail | ................................                                         [100%] | 32 passed in 0.30s |
+| manifest | 135/135 verified (path/size/sha256) |
+| external delivery / real inference / full suite | NOT touched / NOT RUN / NOT RUN |
+
+Per the task book, a failing single run is recorded here and the task stops without runtime changes, without a rerun
+and without a manifest update.

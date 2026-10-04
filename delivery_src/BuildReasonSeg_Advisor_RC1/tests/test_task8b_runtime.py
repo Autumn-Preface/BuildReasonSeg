@@ -508,33 +508,19 @@ def test_serialization_contract_has_no_mask_payload() -> None:
 
 
 def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
-    """Real `DetectorRuntime.detect_global()` on a fake 5000x5000 shape with two overlapping 50x60 detections.
+    """Fake (5000,5000,3) image, one tile window, two independent overlapping 50x60 detections.
 
-    `np.zeros`, `np.logical_and` and `np.logical_or` are guarded through the detector module so that any
-    full-frame 5000x5000 boolean allocation or full-frame pairwise comparison would fail the test.
+    Keeps a 5000x5000 bool `np.zeros` guard, does **not** monkeypatch `logical_and`/`logical_or`, and instead wraps
+    `detector.proposal_iou()` to assert that neither input carries a full-frame crop.
     """
 
     real_zeros = np.zeros
-    real_and = np.logical_and
-    real_or = np.logical_or
 
-    def zero_guard(shape, *args, **kwargs):
-        if tuple(shape) == (5000, 5000) and kwargs.get("dtype") is bool:
+    def zero_guard(*args, **kwargs):
+        shape = args[0] if args else kwargs.get("shape")
+        if shape is not None and tuple(shape) == (5000, 5000) and kwargs.get("dtype") is bool:
             raise AssertionError("full-frame 5000x5000 bool allocation attempted")
-        return real_zeros(shape, *args, **kwargs)
-
-    def _frame_operand(value) -> bool:
-        return hasattr(value, "shape") and tuple(value.shape) == (5000, 5000)
-
-    def and_guard(first, second, *args, **kwargs):
-        if _frame_operand(first) or _frame_operand(second):
-            raise AssertionError("full-frame 5000x5000 logical_and attempted")
-        return real_and(first, second, *args, **kwargs)
-
-    def or_guard(first, second, *args, **kwargs):
-        if _frame_operand(first) or _frame_operand(second):
-            raise AssertionError("full-frame 5000x5000 logical_or attempted")
-        return real_or(first, second, *args, **kwargs)
+        return real_zeros(*args, **kwargs)
 
     class FakeRgb:
         shape = (5000, 5000, 3)
@@ -543,54 +529,41 @@ def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
         source_tile_id = "tile_0000_r000_c000"
         top, left, size = 0, 0, 512
 
-    tile_mask = np.zeros((512, 512), dtype=bool)
-    tile_mask[100:150, 200:280] = True                    # 50 x 80 block
-    detections = [{"index": 0, "confidence": 0.9, "mask": tile_mask,
-                   "box": [200, 100, 280, 150]}]
+    block = real_zeros((512, 512), dtype=bool)
+    block[100:150, 200:260] = True                      # 50 x 60 = 3000
+    detections = [{"index": 0, "confidence": 0.9, "mask": block, "box": [200, 100, 260, 150]},
+                  {"index": 1, "confidence": 0.8, "mask": block.copy(),
+                   "box": [200, 100, 260, 150]}]
 
     monkeypatch.setattr(detector, "plan_tiles", lambda width, height, **kwargs: [FakeWindow()])
     monkeypatch.setattr(detector, "extract_tile",
                         lambda rgb, window: (real_zeros((512, 512, 3), dtype=np.uint8),
                                              {"applied": False}))
+    monkeypatch.setattr(detector.DetectorRuntime, "detect_tile", lambda self, tile_rgb: detections)
 
-    def fake_detect_tile(self, tile_rgb):                 # noqa: ANN001 - test double
-        return detections
-
-    monkeypatch.setattr(detector.DetectorRuntime, "detect_tile", fake_detect_tile)
-    monkeypatch.setattr(detector.np, "zeros", zero_guard)
-    monkeypatch.setattr(detector.np, "logical_and", and_guard)
-    monkeypatch.setattr(detector.np, "logical_or", or_guard)
-
-    pairwise_calls: list[tuple[int, int]] = []
+    calls: list[tuple] = []
     real_iou = detector.proposal_iou
 
-    def counting_iou(first, second):                       # noqa: ANN001 - test double
-        pairwise_calls.append((first.global_bbox[0], second.global_bbox[0]))
+    def counting_iou(first, second):                    # noqa: ANN001 - test double
+        for proposal in (first, second):
+            assert tuple(proposal.mask_crop.shape) != (5000, 5000)
+            assert proposal.mask_crop.size < 5000 * 5000
+            assert proposal.mask_area == 3000
+        calls.append((first.global_bbox, second.global_bbox))
         return real_iou(first, second)
 
     monkeypatch.setattr(detector, "proposal_iou", counting_iou)
+    monkeypatch.setattr(detector.np, "zeros", zero_guard)
 
     runtime = detector.DetectorRuntime.__new__(detector.DetectorRuntime)
     runtime.device, runtime.imgsz, runtime.conf, runtime.max_det = "cpu", 640, 0.05, 300
     runtime.checkpoint, runtime._model, runtime.load_seconds = Path("unused.pt"), None, None
 
+    assert zero_guard((10, 10), dtype=bool).shape == (10, 10)      # guard delegates correctly
     result = runtime.detect_global(FakeRgb())
-    assert result["raw_count"] == 1
+    assert result["raw_count"] == 2
+    assert len(calls) == 1, calls
     assert len(result["merged"]) == 1
-    proposal = result["merged"][0]
-    assert proposal.mask_area == 3000                     # 50 x 60 retained block
-    assert proposal.mask_crop.shape == (50, 80)
-    assert pairwise_calls == [], "a single retained proposal needs no pairwise comparison"
-
-    # now the same detection arriving from two tiles must trigger proposal_iou()
-    two = [detections[0], dict(detections[0], index=1)]
-    monkeypatch.setattr(detector.DetectorRuntime, "detect_tile",
-                        lambda self, tile_rgb: two)
-    monkeypatch.setattr(detector, "plan_tiles",
-                        lambda width, height, **kwargs: [FakeWindow(), FakeWindow()])
-    pairwise_calls.clear()
-    result_two = runtime.detect_global(FakeRgb())
-    assert len(pairwise_calls) == 1, pairwise_calls
-    assert result_two["raw_count"] == 2
-    assert len(result_two["merged"]) == 1
-    assert result_two["merged"][0].mask_area == 3000
+    assert result["merged"][0].mask_area == 3000
+    assert result["merged"][0].mask_crop.shape == (50, 60)
+    assert tuple(result["merged"][0].mask_crop.shape) != (5000, 5000)
