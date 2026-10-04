@@ -16,6 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import sync_advisor_rc1_delivery as sync  # noqa: E402
+GIT_CANONICAL_BASIS = sync.GIT_CANONICAL_BASIS
 
 
 def sha256(path: Path) -> str:
@@ -286,3 +287,35 @@ def test_git_canonical_check_rejects_crlf_destination(tmp_path, monkeypatch):
     assert (destination / "a.txt").read_bytes() == b"alpha\r\nbeta\r\n"
 
 
+def test_git_canonical_manifest_identity_mismatch_blocks_write(tmp_path, monkeypatch):
+    canonical = tmp_path / "canonical"
+    destination = tmp_path / "destination"
+    canonical.mkdir()
+    destination.mkdir()
+
+    good_bytes = b"good\n"
+    bad_bytes = b"bad\n"
+    _write_manifest(canonical, [_entry(good_bytes)], basis=GIT_CANONICAL_BASIS)
+
+    monkeypatch.setattr(sync, "git_canonical_bytes", lambda relative: bad_bytes)
+    entries = sync.load_manifest(canonical)
+
+    with pytest.raises(SystemExit):
+        sync.run_sync(destination, entries, canonical)
+
+    assert not (destination / "a.txt").exists()
+
+
+def test_unsupported_identity_basis_rejected(tmp_path):
+    canonical = tmp_path / "canonical"
+    destination = tmp_path / "destination"
+    canonical.mkdir()
+    destination.mkdir()
+
+    (canonical / "a.txt").write_bytes(b"value\n")
+    _write_manifest(canonical, [_entry(b"value\n")], basis="UNKNOWN_BASIS")
+
+    with pytest.raises(SystemExit):
+        sync.manifest_identity_basis(canonical)
+
+    assert list(destination.iterdir()) == []
