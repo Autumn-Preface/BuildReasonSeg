@@ -83,3 +83,27 @@ visual/semantic judgement of the B1/B2 outputs is expressed here.
 ## 11. Next action
 
 Awaiting ChatGPT audit before any further task; Task 8B.4 / Task 8C not entered.
+
+
+## 12. Post-run integrity confirmation (M1B.3-R1)
+
+Read-only verification performed after the M1B.3 real B1/B2 runs; no pytest, `check_setup.py`, `predict.py`, A1–A4,
+B1/B2 rerun or model execution occurred, and no canonical/external product, test, manifest or model asset was
+modified.
+
+```text
+Post-run external manifest: 135/135 PASS  (135 entries, mismatches: none)
+Post-run source_manifest byte-identical: YES
+```
+
+Freeze:
+
+```text
+MEM01_REAL_GATE_PASS
+RC1-DEMO-MEM-01 = CLOSED
+M1B.3 formal gate = PASS
+```
+
+The 135 manifest-listed external files still match their frozen sizes and SHA256 after the real 5000×5000 runs, and
+the external `source_manifest.json` remains byte-identical to the canonical control file, so the M1B.3 result is
+frozen as recorded in §9/§10.
