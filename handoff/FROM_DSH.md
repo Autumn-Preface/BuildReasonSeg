@@ -17,41 +17,38 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R6 Report
+# FROM_DSH — Task 8B.3-REF01-F1-R7 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R6` |
-| Status | **COMPLETE** (authoritative closure) |
+| Task | `8B.3-REF01-F1-R7` |
+| Status | **COMPLETE** (zero-call authoritative replay) |
 | Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `53de75ae4f5246b4e18685b78bd5a9f913447984` |
-| Detector calls | 4 (final deterministic pass, one per locked candidate) |
-| Manifest basis / entries | GIT_CANONICAL_BLOB_BYTES / 135 |
-| External detector == Git canonical blob == manifest identity | True |
-| External control manifest == Git canonical control | True |
-| imageio / pillow / numpy | IMPORT_FAILED: No module named 'imageio' / 12.3.0 / 2.4.6 |
-| Runtime | external RC1 default `DetectorRuntime()` |
-| Frozen constants | TILE_SIZE 512 · TILE_OVERLAP 128 · stride 384 · IMGSZ 640 · CONF 0.05 · MAX_DET 300 · DUPLICATE_IOU 0.50 · MERGE 0.20 · FROZEN_THRESHOLD 0.5 |
-| Raster SHA identity | 4/4 PASS |
-| 10-field proposal reproduction | 4/4 all ten fields match for every merged proposal = True |
-| R6 vs R4 vs R5 IoU | within 1e-6 for all four candidates = True |
-| AUTHORITATIVE_CLOSURE | **PASS** |
-| Outcome | **REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE** |
-| Dominant next blocker | ELIGIBILITY |
-| Next gate | `NEXT = REF01_ELIGIBILITY_FORENSICS` (not executed) |
-| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE / NONE / NONE / NONE / NONE |
+| Starting HEAD | `12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c` |
+| Detector / model calls | 0 (no `DetectorRuntime()` instantiation, no `detect_global`, no predict) |
+| `buildreasonseg.runtime.detector` Git-canonical identity | manifest = Git blob = external = `82531dc3b758cd8a...` (all three agree = True) |
+| imageio Git-canonical identity | not declared in the manifest/requirements and not importable; delivery I/O = Pillow/ultralytics; `requirements.txt` Git-canonical sha256 `adfdd3b481a0fd21...` verified |
+| Replay inputs | R4 canonical records · R5 verification · R6 closure · P1D12 diagnostics metadata |
+| Classification reproduction | 4/4 reproduced mechanically from stored IoUs |
+| R4 = R5 = R6 IoU agreement | 4/4 within 1e-6 |
+| Canonical evidence | overwritten with the consolidated authoritative record |
+| Temporary evidence `_r5` / `_r6` | DELETED |
+| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE |
 | Manual visual inspection / candidate replacement / repair | NO / NO / NO |
 | External delivery / canonical RC1 modified | NO / NO |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
 | REF-01 status | FORENSICS_COMPLETE |
-| Evidence | `evaluation\task8b3_ref01_locked_reference_forensics_r6.json` |
+| Outcome | **REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE** |
+| Dominant next blocker | ELIGIBILITY |
+| Next gate | `NEXT = REF01_ELIGIBILITY_FORENSICS` (not executed) |
 | Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R6 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1-R7 (no downloads, no transfers).
 
-Only the authorised final pass per locked candidate ran; no Qwen/SAM2/D-B1/relation/target-segmentation stage executed
-and no delivery file was modified.
+No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; no delivery file was modified; the only
+repository changes are the consolidated canonical evidence, the removal of the superseded temporary evidence files,
+this report and the handoff.

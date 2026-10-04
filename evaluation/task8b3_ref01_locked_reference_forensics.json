@@ -1,62 +1,84 @@
 {
- "starting_head": "ac1e4a9f8f452581c509ab0d73024c44c5de1be0",
+ "task": "8B.3-REF01-F1 canonical evidence (authoritative, consolidated in R7)",
+ "starting_head": "12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c",
+ "branch": "fix/task8b3-ref01-reference-forensics",
+ "detector_calls": {
+  "r4": 4,
+  "r5": 4,
+  "r6": 4,
+  "r7": 0
+ },
+ "r7_zero_call_guarantee": "no DetectorRuntime instantiation, no detect_global, no predict in R7",
  "scientific_reuse_disclosure": "GT access purpose: REFERENCE_FORENSICS_ONLY (native-vector annotations used only to measure whether the frozen proposal set covers the canonical GT reference; no target GT metric, no repair, no candidate replacement, no manual visual judgement)",
- "detector_module": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\detector.py",
- "detector_config": {
+ "detector_identity": {
+  "manifest_basis": "GIT_CANONICAL_BLOB_BYTES",
+  "manifest_entry_count": 135,
+  "manifest_bytes": 20300,
+  "manifest_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "git_blob_bytes": 20300,
+  "git_blob_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "external_bytes": 20300,
+  "external_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "all_three_agree": true
+ },
+ "imageio_identity": {
+  "manifest_declares_imageio_entry": false,
+  "requirements_imageio_lines": [],
+  "requirements_git_canonical_sha256": "adfdd3b481a0fd213fea4dde32df0d9601552d044c3139abd7e614c6b5fabce4",
+  "requirements_git_blob_sha256": "adfdd3b481a0fd213fea4dde32df0d9601552d044c3139abd7e614c6b5fabce4",
+  "requirements_external_sha256": "adfdd3b481a0fd213fea4dde32df0d9601552d044c3139abd7e614c6b5fabce4",
+  "installed_modules": {
+   "imageio": {
+    "available": false,
+    "error": "No module named 'imageio'"
+   },
+   "imageio_ffmpeg": {
+    "available": false,
+    "error": "No module named 'imageio_ffmpeg'"
+   },
+   "PIL": {
+    "available": true,
+    "version": "12.3.0",
+    "module_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\PIL\\__init__.py"
+   },
+   "cv2": {
+    "available": true,
+    "version": "5.0.0",
+    "module_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\cv2\\__init__.py"
+   }
+  },
+  "conclusion": "imageio is NOT declared as a runtime requirement and NOT importable in the delivery environment; image I/O is performed by Pillow/ultralytics"
+ },
+ "frozen_constants": {
   "TILE_SIZE": 512,
   "TILE_OVERLAP": 128,
+  "STRIDE_EXPECTED": 384,
   "IMGSZ": 640,
   "CONF": 0.05,
   "MAX_DET": 300,
-  "FROZEN_THRESHOLD": 0.5
+  "DUPLICATE_IOU": 0.5,
+  "MERGE_BBOX_EXTENT_RATIO_MAX": 0.2,
+  "FROZEN_THRESHOLD": 0.5,
+  "device": "cuda",
+  "checkpoint": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\model\\buildreasonseg_advisor\\detector.pt"
  },
- "detector_call_count": 4,
  "coverage_threshold": 0.5,
+ "tolerance": 1e-06,
  "proposal_mask_source": "RERUN_GLOBALPROPOSAL_MASK_CROP",
  "proposals_json_role": "METADATA_REPRODUCTION_ONLY",
- "reproduction": [
-  {
-   "relation": "right",
-   "rerun_raw": 6,
-   "rerun_merged": 6,
-   "rerun_eligible": 4,
-   "stored_raw": 6,
-   "stored_merged": 6,
-   "stored_eligible": 4,
-   "match": true
-  },
-  {
-   "relation": "left",
-   "rerun_raw": 66,
-   "rerun_merged": 53,
-   "rerun_eligible": 42,
-   "stored_raw": 66,
-   "stored_merged": 53,
-   "stored_eligible": 42,
-   "match": true
-  },
-  {
-   "relation": "above",
-   "rerun_raw": 9,
-   "rerun_merged": 9,
-   "rerun_eligible": 4,
-   "stored_raw": 9,
-   "stored_merged": 9,
-   "stored_eligible": 4,
-   "match": true
-  },
-  {
-   "relation": "below",
-   "rerun_raw": 7,
-   "rerun_merged": 6,
-   "rerun_eligible": 3,
-   "stored_raw": 7,
-   "stored_merged": 6,
-   "stored_eligible": 3,
-   "match": true
-  }
+ "proposal_fields_compared": [
+  "proposal_id",
+  "source_tile_id",
+  "confidence",
+  "mask_area",
+  "global_bbox",
+  "centroid",
+  "touches_image_border",
+  "border_clearance",
+  "bbox_extent_ratio",
+  "raw_index"
  ],
- "records": [
+ "r4_records": [
   {
    "relation": "right",
    "tile": "1010",
@@ -652,6 +674,104 @@
    ]
   }
  ],
+ "replay": [
+  {
+   "relation": "right",
+   "stored_class": "REFERENCE_SELECTED_CORRECT",
+   "recomputed_class": "REFERENCE_SELECTED_CORRECT",
+   "class_reproduced": true,
+   "ious": {
+    "r4": [
+     0.5588697017268446,
+     0.5588697017268446,
+     0.5588697017268446
+    ],
+    "r5": [
+     0.5588697017268446,
+     0.5588697017268446,
+     0.5588697017268446
+    ],
+    "r6": [
+     0.5588697017268446,
+     0.5588697017268446,
+     0.5588697017268446
+    ]
+   },
+   "r4_r5_r6_agree_within_1e-6": true
+  },
+  {
+   "relation": "left",
+   "stored_class": "REFERENCE_SELECTION_WRONG_COVERED",
+   "recomputed_class": "REFERENCE_SELECTION_WRONG_COVERED",
+   "class_reproduced": true,
+   "ious": {
+    "r4": [
+     0.0,
+     0.6500672947510094,
+     0.6500672947510094
+    ],
+    "r5": [
+     0.0,
+     0.6500672947510094,
+     0.6500672947510094
+    ],
+    "r6": [
+     0.0,
+     0.6500672947510094,
+     0.6500672947510094
+    ]
+   },
+   "r4_r5_r6_agree_within_1e-6": true
+  },
+  {
+   "relation": "above",
+   "stored_class": "REFERENCE_ELIGIBILITY_BLOCKED",
+   "recomputed_class": "REFERENCE_ELIGIBILITY_BLOCKED",
+   "class_reproduced": true,
+   "ious": {
+    "r4": [
+     0.0,
+     0.0,
+     0.9032501889644747
+    ],
+    "r5": [
+     0.0,
+     0.0,
+     0.9032501889644747
+    ],
+    "r6": [
+     0.0,
+     0.0,
+     0.9032501889644747
+    ]
+   },
+   "r4_r5_r6_agree_within_1e-6": true
+  },
+  {
+   "relation": "below",
+   "stored_class": "REFERENCE_SELECTION_WRONG_COVERED",
+   "recomputed_class": "REFERENCE_SELECTION_WRONG_COVERED",
+   "class_reproduced": true,
+   "ious": {
+    "r4": [
+     0.0,
+     0.6165496859992612,
+     0.6165496859992612
+    ],
+    "r5": [
+     0.0,
+     0.6165496859992612,
+     0.6165496859992612
+    ],
+    "r6": [
+     0.0,
+     0.6165496859992612,
+     0.6165496859992612
+    ]
+   },
+   "r4_r5_r6_agree_within_1e-6": true
+  }
+ ],
  "class_counts": {
   "REFERENCE_SELECTED_CORRECT": 1,
   "REFERENCE_SELECTION_WRONG_COVERED": 2,
@@ -659,5 +779,9 @@
  },
  "outcome": "REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE",
  "dominant_next_blocker": "ELIGIBILITY",
- "next": "REF01_ELIGIBILITY_FORENSICS"
+ "next": "REF01_ELIGIBILITY_FORENSICS",
+ "superseded_temporary_evidence": [
+  "evaluation\\task8b3_ref01_locked_reference_forensics_r5.json",
+  "evaluation\\task8b3_ref01_locked_reference_forensics_r6.json"
+ ]
 }

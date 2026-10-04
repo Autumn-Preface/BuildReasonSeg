@@ -413,3 +413,67 @@ Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 external delivery / canonical RC1 modified = NO / NO
 ```
+
+
+---
+
+## 16. REF01-F1-R7 — zero-call authoritative replay and canonical evidence consolidation
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c
+detector / model calls in R7 = 0 (no DetectorRuntime instantiation, no predict)
+sources replayed = R4 canonical records, R5 verification, R6 closure, P1D12 diagnostics metadata
+```
+
+### 16.1 Git-canonical identity of `buildreasonseg.runtime.detector`
+
+```text
+manifest basis / entries      = GIT_CANONICAL_BLOB_BYTES / 135
+manifest bytes / sha256       = 20300 / 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+Git blob bytes / sha256       = 20300 / 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+external bytes / sha256       = 20300 / 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+all three identities agree    = True
+```
+
+### 16.2 Git-canonical identity of imageio
+
+```text
+manifest declares an imageio entry        = False
+requirements.txt imageio lines            = NONE
+requirements.txt Git-canonical sha256     = adfdd3b481a0fd213fea4dde32df0d9601552d044c3139abd7e614c6b5fabce4
+requirements.txt Git-blob sha256          = adfdd3b481a0fd213fea4dde32df0d9601552d044c3139abd7e614c6b5fabce4
+requirements.txt external sha256          = adfdd3b481a0fd213fea4dde32df0d9601552d044c3139abd7e614c6b5fabce4
+installed modules                         = {"imageio": false, "imageio_ffmpeg": false, "PIL": true, "cv2": true}
+conclusion                                = imageio is NOT declared as a runtime requirement and NOT importable in the delivery environment; image I/O is performed by Pillow/ultralytics
+```
+
+The delivery's dependency declaration is verified by its Git-canonical identity, and the runtime fact is recorded:
+`imageio` is neither declared nor importable, so image I/O runs through Pillow/ultralytics. No imageio identity is
+invented and no substitution is performed.
+
+### 16.3 Read-only replay of the classification
+
+| relation | stored class (R4) | recomputed class | reproduced | R4 IoU (selected/best_eligible/best_any) | R4=R5=R6 within 1e-6 |
+|---|---|---|---|---|---|
+| right | REFERENCE_SELECTED_CORRECT | REFERENCE_SELECTED_CORRECT | True | 0.558870 / 0.558870 / 0.558870 | True |
+| left | REFERENCE_SELECTION_WRONG_COVERED | REFERENCE_SELECTION_WRONG_COVERED | True | 0.000000 / 0.650067 / 0.650067 | True |
+| above | REFERENCE_ELIGIBILITY_BLOCKED | REFERENCE_ELIGIBILITY_BLOCKED | True | 0.000000 / 0.000000 / 0.903250 | True |
+| below | REFERENCE_SELECTION_WRONG_COVERED | REFERENCE_SELECTION_WRONG_COVERED | True | 0.000000 / 0.616550 / 0.616550 | True |
+
+Class counts: `{"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1}` · Outcome `REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE` · blocker `ELIGIBILITY` · `NEXT = REF01_ELIGIBILITY_FORENSICS`
+
+### 16.4 Evidence consolidation
+
+```text
+canonical evidence overwritten = evaluation\task8b3_ref01_locked_reference_forensics.json (now the consolidated authoritative record)
+temporary evidence removed     = ['task8b3_ref01_locked_reference_forensics_r5.json', 'task8b3_ref01_locked_reference_forensics_r6.json']
+```
+
+### 16.5 Explicit non-execution
+
+```text
+detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = NONE
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+external delivery / canonical RC1 modified = NO / NO
+```
