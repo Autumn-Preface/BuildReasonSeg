@@ -1,22 +1,26 @@
-# TO_DSH — Task 8B.3-M1A.2B-R1: Correct Dedicated Tests and Re-run Once
+# TO_DSH — Task 8B.3-M1A.2B-R2: Fix Final Two Test Defects
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-mem01-compact-proposals`
-> Required starting HEAD: `e5229d60a869c1fc02536d41a039229f2936090b`
+> Required starting HEAD: `66d00a95231fb516e4f137dd812077b985f21df4`
 
 # 0. Purpose
 
-Correct test-adaptation defects found in Task 8B.3-M1A.2B.
+Fix exactly the two remaining dedicated-test defects from M1A.2B-R1.
 
-Frozen audit conclusion:
-- runtime files are NOT authorized to change;
-- prior dedicated run failed mainly because old tests still supplied legacy `{"mask": ...}` entries to the new compact `merge_proposals()`;
-- one new merge-equivalence test had an incorrect area assumption;
-- the 5000×5000 guard did not actually exercise `DetectorRuntime.detect_global()` and allocated a real 5000×5000 bool oracle.
+Current dedicated result:
 
-This task edits tests only, re-runs the dedicated file exactly once, then updates manifest only if PASS.
+```text
+2 failed, 30 passed
+```
+
+Audit says both failures are test defects:
+1. merge-equivalence test still uses an expanded copied mask while asserting area 1600;
+2. large-image guard uses a 50×60 mask (area 3000) but asserts 1500, and currently does not force pairwise IoU.
+
+Runtime is frozen and must not change.
 
 # 1. Strict prohibitions
 
@@ -28,16 +32,14 @@ buildreasonseg/runtime/core.py
 buildreasonseg/runtime/outputs.py
 ```
 
-Do NOT modify external delivery or any model/config/threshold/policy.
+Do NOT modify external delivery, models, thresholds, tiling, merge/reference policies.
 
-Do NOT run real inference, full canonical suite, Task 8B.4, or Task 8C.
+Do NOT run real inference or full canonical suite.
 
-If the corrected dedicated run still fails:
-- do NOT patch runtime;
-- do NOT rerun;
-- record exact failures;
-- commit/push PARTIAL;
-- STOP.
+If the single dedicated rerun fails:
+- no runtime patch;
+- no second rerun;
+- record exact failure and STOP.
 
 # 2. Git gate
 
@@ -45,7 +47,7 @@ Require:
 
 ```text
 branch = fix/task8b3-mem01-compact-proposals
-HEAD = e5229d60a869c1fc02536d41a039229f2936090b
+HEAD = 66d00a95231fb516e4f137dd812077b985f21df4
 ```
 
 Allowed initial tree: clean or only `M handoff/TO_DSH.md`.
@@ -62,130 +64,103 @@ handoff/TO_DSH.md
 
 No other path may change.
 
-# 4. Add one compact-entry test helper
+# 4. Fix merge-equivalence test
 
-In `test_task8b_runtime.py`, add a test-only helper equivalent to:
-
-```python
-def _entry(mask, confidence, tile, raw_index, tile_index):
-    compact = detector._compact_mask(mask, top=0, left=0)
-    assert compact is not None
-    crop, bbox = compact
-    return {
-        "mask_crop": crop,
-        "global_bbox": bbox,
-        "image_size": mask.shape,
-        "confidence": confidence,
-        "source_tile_id": tile,
-        "tile_index": tile_index,
-        "raw_index": raw_index,
-    }
-```
-
-Use this helper wherever `merge_proposals()` is called in existing tests.
-
-# 5. Repair all remaining legacy merge calls
-
-At minimum update these existing tests so they no longer pass `{"mask": ...}`:
-
-```text
-test_merge_duplicate_iou_threshold_and_no_union
-test_merge_priority_prefers_non_border_then_area
-test_stable_ids_by_centroid_then_area
-test_select_reference_tie_break
-```
-
-Search the entire test file for every call to:
+In:
 
 ```python
-merge_proposals(...)
+test_merge_equivalence_with_compact_masks()
 ```
 
-Every entry passed to product `merge_proposals()` must use the compact entry contract.
+replace the bad construction:
 
-Legacy full-frame masks may remain only as test oracles.
+```python
+b = a.copy()
+b[104:144, 104:144] = True
+```
 
-# 6. Correct duplicate/confidence test geometry
+with an independently allocated equal-area block:
 
-Where the test claims equal-area duplicate masks and expects confidence tie-break, construct genuinely equal-area masks.
+```python
+b = np.zeros((512, 512), dtype=bool)
+b[104:144, 104:144] = True
+```
+
+Now:
+- area(a) = 1600;
+- area(b) = 1600;
+- IoU > 0.50;
+- confidence tie-break remains meaningful;
+- existing `[1600,1600]` and `<=1600` assertions are valid.
+
+Do not weaken those assertions.
+
+# 5. Fix and strengthen 5000×5000 detect_global guard
+
+Current 50×60 block area is 3000, not 1500.
+
+Use two overlapping synthetic detections so product pairwise merge is actually exercised.
 
 Preferred:
 
 ```python
-first = zeros
-first[100:140,100:140] = True
-second = zeros
-second[104:144,104:144] = True
+mask1 = np.zeros((512,512), dtype=bool)
+mask1[100:150, 200:260] = True      # 3000 px
+
+mask2 = np.zeros((512,512), dtype=bool)
+mask2[104:154, 204:264] = True      # 3000 px, overlap > 0.50
 ```
 
-Both area = 1600; IoU > 0.50.
+Monkeypatched `detect_tile()` returns both, with different confidence values.
 
-Do not use `second = first.copy(); second[104:144,...] = True` while asserting area 1600.
+Expected:
+- raw_count == 2;
+- duplicate merge executes;
+- merged count == 1;
+- retained proposal mask_area == 3000;
+- winner confidence follows frozen priority if all earlier priority keys tie appropriately.
 
-If a test specifically isolates confidence tie-break, use geometry with equal border-clearance/area or exact-identical masks so confidence is the first differing priority key.
-
-# 7. Strengthen required test coverage
-
-Keep/repair the required groups:
-
-1. compact geometry equivalence;
-2. proposal_iou equivalence;
-3. merge equivalence;
-4. reference-context equivalence;
-5. preview smoke;
-6. serialization contract;
-7. 5000×5000 detect_global allocation guard.
-
-Do not weaken assertions merely to pass.
-
-# 8. Replace the 5000×5000 guard with the frozen contract
-
-The guard must mechanically call:
-
-```python
-DetectorRuntime.detect_global(fake_rgb)
-```
-
-Do NOT allocate:
-- a real 5000×5000 RGB image;
-- a real 5000×5000 bool proposal oracle.
-
-Use a minimal fake object whose only required property is:
-
-```python
-shape = (5000, 5000, 3)
-```
-
-Monkeypatch:
+Keep fake RGB:
 
 ```text
-plan_tiles() -> tiny fixed window list
-extract_tile() -> fixed 512×512 RGB tile + no-padding dict
-DetectorRuntime.detect_tile() -> several small 512×512 bool detections
+shape = (5000,5000,3)
 ```
 
-Include at least two overlapping detections so pairwise duplicate merge executes.
+No real 5000×5000 RGB or bool array.
 
-Monkeypatch detector-module `np.zeros`:
-- if shape `(5000,5000)` and dtype bool -> raise sentinel;
-- otherwise delegate to original.
+# 6. Guard full-frame logical operations
 
-Wrap detector-module `np.logical_and` and `np.logical_or`:
-- raise if either operand has shape `(5000,5000)`.
+In addition to `np.zeros` guard, wrap detector-module NumPy logical operations.
+
+Save originals before monkeypatch:
+
+```python
+real_and = np.logical_and
+real_or = np.logical_or
+```
+
+Wrappers must raise if any operand has shape `(5000,5000)`.
+
+Then monkeypatch:
+
+```python
+detector.np.logical_and
+detector.np.logical_or
+```
+
+with wrappers.
+
+Small overlap-crop operands are allowed.
 
 Expected:
 - `detect_global(fake_rgb)` completes;
-- sentinel never fires;
-- merged proposals exist;
-- every merged proposal has `mask_crop`;
-- none has `global_mask`;
-- all proposal crops are far smaller than full-frame dimensions.
+- no 5000×5000 bool zeros allocation;
+- no 5000×5000 operand reaches logical_and/or;
+- pairwise duplicate merge occurs.
 
-This test must exercise the product `detect_global → merge_proposals → proposal_iou` path.
+# 7. Dedicated test gate — exactly once
 
-# 9. Dedicated test gate — exactly once in R1
-
-After all test edits, run exactly once:
+After edits, run exactly once:
 
 ```bat
 cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1
@@ -196,15 +171,17 @@ Record exact result and exit code.
 
 No rerun.
 
-If FAIL -> PARTIAL/STOP, no manifest update, no runtime edit.
+If FAIL:
+- runtime unchanged;
+- manifest unchanged;
+- PARTIAL/STOP;
+- commit/push and stop.
 
-# 10. Manifest — only if dedicated PASS
+# 8. Manifest only if PASS
 
-If PASS:
-- update hashes/sizes for all manifest-listed files changed since last valid manifest;
-- this includes prior runtime changes plus current test change.
-
-Expected affected manifest-listed paths:
+If dedicated PASS:
+- update manifest hashes/sizes for all changed manifest-listed files since last valid manifest;
+- expected changed entries:
 
 ```text
 buildreasonseg/runtime/detector.py
@@ -213,66 +190,42 @@ buildreasonseg/runtime/outputs.py
 tests/test_task8b_runtime.py
 ```
 
-Manifest requirements:
+Verify:
+- 135 entries;
+- identical path set;
+- all 135 files exist;
+- all hash/size values match current canonical files.
+
+Record:
 
 ```text
-entry count = 135
-path set unchanged
-all 135 files exist
-all 135 hashes/sizes match current canonical content
+135/135 PASS
 ```
 
-If any unexpected manifest-listed changed path appears -> STOP.
-
-# 11. Report
+# 9. Report / FROM_DSH
 
 Append:
 
 ```text
-## Task 8B.3-M1A.2B-R1 — Dedicated Test Correction
+## Task 8B.3-M1A.2B-R2 — Final Dedicated-Test Corrections
 ```
 
 Record:
 - starting HEAD;
-- why prior 5 failures were test-adaptation defects;
-- all repaired legacy merge calls;
-- corrected equal-area geometry;
-- real detect_global guard design;
+- merge test corrected to two independent 40×40 blocks;
+- guard now uses two overlapping 50×60 detections;
+- expected mask area = 3000;
+- logical_and/or full-frame operand guards;
 - dedicated invocation count = 1;
-- exact result;
-- manifest status;
-- runtime files unchanged;
-- external delivery unchanged;
-- real inference not run;
-- full canonical suite not run.
+- exact test result;
+- manifest result;
+- runtime unchanged;
+- delivery unchanged;
+- real inference/full suite not run.
 
-# 12. FROM_DSH
+FROM_DSH must be UTF-8 without BOM and preserve ARTIFACT-FACTS exactly.
 
-Preserve ARTIFACT-FACTS exactly; UTF-8 without BOM.
-
-Required fields:
-
-```text
-Task: 8B.3-M1A.2B-R1
-Status: COMPLETE / PARTIAL / STOP / FAILED
-Branch: fix/task8b3-mem01-compact-proposals
-Starting HEAD: e5229d60a869c1fc02536d41a039229f2936090b
-Runtime files modified: NO
-Legacy merge-call adaptation: PASS / FAIL
-Equal-area duplicate test: PASS / FAIL
-5000x5000 detect_global guard: PASS / FAIL
-Dedicated invocation count: 1
-Dedicated tests: <exact result>
-Manifest: 135/135 PASS / UNCHANGED DUE FAIL / other
-External delivery modified: NO
-Real inference: NO
-Full canonical suite: NOT RUN BY DESIGN
-Next action: Awaiting ChatGPT audit.
-```
-
-# 13. Git / commit / push
-
-Allowed paths only §3.
+# 10. Commit / push
 
 If COMPLETE:
 
@@ -283,32 +236,32 @@ test(rc1): validate compact proposal runtime
 If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record compact proposal retest stop
+docs(rc1): record final compact proposal test stop
 ```
 
 Push current branch, no force.
 
-# 14. COMPLETE
+# 11. COMPLETE
 
 COMPLETE only if:
 - runtime files untouched;
-- all legacy merge calls adapted;
-- duplicate-area logic corrected;
-- guard truly calls detect_global on fake 5000×5000 shape;
-- dedicated test run exactly once;
-- dedicated tests PASS;
+- merge-equivalence test fixed;
+- 5000 guard uses 2 overlapping detections;
+- pairwise proposal_iou path exercised;
+- full-frame zeros and logical operands guarded;
+- dedicated test invoked exactly once and PASS;
 - manifest 135/135 PASS;
-- external delivery untouched;
+- delivery untouched;
 - real inference not run;
 - full canonical suite not run;
 - commit/push succeed;
 - clean tree;
 - stop.
 
-# 15. Final response
+# 12. Final response
 
 ```text
-TASK 8B.3-M1A.2B-R1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-M1A.2B-R2 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -319,11 +272,14 @@ PASS / FAIL
 Runtime files modified:
 NO
 
-Legacy merge-call adaptation:
+Merge-equivalence correction:
 PASS / FAIL
 
 5000x5000 detect_global guard:
 PASS / FAIL
+
+Pairwise proposal_iou exercised:
+YES / NO
 
 Dedicated invocation count:
 1

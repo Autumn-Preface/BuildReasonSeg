@@ -295,3 +295,22 @@ full-frame bool allocation while exercising compaction, merge, the reference cro
 
 Per the task book, a failing single run is recorded here and the task stops without any runtime change, without a
 rerun and without a manifest update.
+
+---
+
+## Task 8B.3-M1A.2B-R2 — last two test defects fixed (single run)
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `66d00a95231fb516e4f137dd812077b985f21df4` |
+| files changed | `tests/test_task8b_runtime.py` only |
+| runtime files | NOT modified |
+| merge-equivalence test | now uses two **independent** equal-area 40×40 masks (`first[100:140,100:140]`, `second[104:144,104:144]`, both area 1600, IoU ≈ 0.78) plus a disjoint equal-area third mask; no `b = a.copy()` expansion |
+| 5000×5000 guard | fake `(5000, 5000, 3)` shape; guards on `detector.np.zeros`, `detector.np.logical_and`, `detector.np.logical_or`; a single 50×80 tile detection yielding a retained 50×60 block (area 3000) with **no** pairwise call, then the same detection from two tiles to真正触发 `detector.proposal_iou()` (counted via a wrapper), asserting merged count 1 and area 3000 |
+| dedicated run | exactly once → **FAIL (STOP)** |
+| tail | ..\..\.conda\buildreasonseg-mvp\Lib\site-packages\numpy\_core\fromnumeric.py:99: AttributeError | =========================== short test summary info =========================== | FAILED tests/test_task8b_runtime.py::test_large_image_path_never_allocates_full_frame_bool | 1 failed, 31 passed in 0.37s |
+| manifest | UNCHANGED (dedicated gate failed) |
+| external delivery / real inference / full suite | NOT touched / NOT RUN / NOT RUN |
+
+Per the task book, a failing single run is recorded here and the task stops without runtime changes, without a rerun
+and without a manifest update.
