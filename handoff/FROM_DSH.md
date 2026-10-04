@@ -17,26 +17,28 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R11 Report
+# FROM_DSH — Task 8B.3-REF01-F1-R12 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R11` |
+| Task | `8B.3-REF01-F1-R12` |
 | Status | **COMPLETE** |
 | Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `7d9492fa7628c4b4cc379a3c4ba976c3bd1fe228` |
+| Starting HEAD | `d5341c5e45915e5b0877ebbd1ddbb48f467e7eeb` |
 | Detector / model calls | 0 |
 | Canonical evidence modified | NO (sha256 `f7495796577cb26a...` unchanged) |
-| Module `__file__` identity | PASS for `buildreasonseg.runtime.detector` and `.imageio` (external files, manifest SHA match) |
-| Historical R6 ten-field evidence via `git show` | PASS (recovered from Git history, all flags true) |
+| Exact disclosure asserted | YES (English verbatim + Chinese translation) |
+| Dual manifest identity | PASS (Git-canonical == external == working, 135 entries, `GIT_CANONICAL_BLOB_BYTES`) |
+| Module `__file__` identity | PASS (detector + imageio imported from the external delivery) |
+| Pinned R6 `git show` ten-field evidence | PASS (revision `12d5fd9a92a5`, four candidates, four detector calls) |
 | Live P1D12 counts | PASS (6/6/4, 66/53/42, 9/9/4, 7/6/3) |
-| Production `selected` replay | PASS (identical across recovered R4/R5/R6 evidence, anchored to Git-canonical detector) |
-| `bestEligible` / `bestAny` replay | PASS with tie-break `(-IoU, -confidence, proposal_id)` |
-| 12/12 role facts | PASS |
-| Verifier result | STANDALONE_VERIFIER: PASS |
+| Live production selected replay | PASS (selected id present in live metadata with matching six fields) |
+| bestEligible / bestAny replay | PASS (frozen tie-break `(-IoU, -confidence, proposal_id)`) |
+| Six-field role facts | CHECKS 53/53 passed |
+| Final verifier verdict | FINAL_INDEPENDENT_VERIFIER: PASS |
 | Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE |
 | Manual visual inspection / candidate replacement / repair | NO / NO / NO |
 | External delivery / canonical RC1 modified | NO / NO |
@@ -48,7 +50,7 @@ history._
 | Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R11 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1-R12 (no downloads, no transfers).
 
 No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; the canonical evidence and the external
 delivery were not modified.

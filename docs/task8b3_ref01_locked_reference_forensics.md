@@ -705,3 +705,39 @@ detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = 
 canonical evidence / external delivery / canonical RC1 modified = NO / NO / NO
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 ```
+
+
+---
+
+## 21. REF01-F1-R12 — final independent verifier
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = d5341c5e45915e5b0877ebbd1ddbb48f467e7eeb
+detector / model calls = 0
+canonical evidence modified = NO (sha256 unchanged: f7495796577cb26a...)
+pinned R6 evidence revision = 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c
+```
+
+The verifier asserts, item by item, the exact English disclosure (verbatim) plus a non-empty Chinese translation, the
+evidence header values, the **dual manifest** identity (Git-canonical control manifest == external control manifest ==
+working-tree control manifest, 135 entries, `GIT_CANONICAL_BLOB_BYTES`), the imported module `__file__` identity of
+`buildreasonseg.runtime.detector` and `.imageio`, the **pinned R6 `git show`** ten-field evidence (four candidates, all
+true, four detector calls), the live P1D12 counts and production-selected presence/metadata, the
+`bestEligible`/`bestAny` tie-break replay, the **complete six-field role facts** for all three roles across the four
+candidates, and the aggregate outcome / blocker / NEXT.
+
+Result:
+
+```text
+CHECKS 53/53 passed
+FINAL_INDEPENDENT_VERIFIER: PASS
+```
+
+### 21.1 Explicit non-execution
+
+```text
+detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = NONE
+canonical evidence / external delivery / canonical RC1 modified = NO / NO / NO
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+```
