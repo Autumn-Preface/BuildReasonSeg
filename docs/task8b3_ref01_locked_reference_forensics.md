@@ -349,3 +349,67 @@ Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 external delivery / canonical RC1 modified = NO / NO
 ```
+
+
+---
+
+## 15. REF01-F1-R6 — authoritative closure
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 53de75ae4f5246b4e18685b78bd5a9f913447984
+detector calls = 4 (final pass, one per locked candidate)
+runtime        = external RC1 default DetectorRuntime()
+manifest basis = GIT_CANONICAL_BLOB_BYTES · entries = 135
+external detector == Git canonical blob == manifest identity = True
+external control manifest == Git canonical control   = True
+imageio        = IMPORT_FAILED: No module named 'imageio' (NOT AVAILABLE)
+pillow/numpy   = 12.3.0 / 2.4.6
+AUTHORITATIVE_CLOSURE = PASS
+```
+
+### 15.1 Raster identity and proposal reproduction
+
+| relation | tile | raster SHA256 | lock | raw/merged | eligible | 10-field reproduction |
+|---|---|---|---|---|---|---|
+| right | 1010 | 1688306c5edbffe4... | MATCH | 6/6 | 4 | True |
+| left | 1003 | eea4edd0db9e079e... | MATCH | 66/53 | 42 | True |
+| above | 1008 | 0efe8bc2e1d1f3f5... | MATCH | 9/9 | 4 | True |
+| below | 1009 | c22134e671f2d0b7... | MATCH | 7/6 | 3 | True |
+
+Per-proposal field agreement (matched/total) over the ten frozen fields
+`proposal_id`, `source_tile_id`, `confidence`, `mask_area`, `global_bbox`, `centroid`, `touches_image_border`, `border_clearance`, `bbox_extent_ratio`, `raw_index`:
+
+| relation | proposal_id | source_tile_id | confidence | mask_area | global_bbox | centroid | touches_image_border | border_clearance | bbox_extent_ratio | raw_index |
+|---|---|---|---|---|---|---|---|---|---|---|
+| right | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 |
+| left | 53/53 | 53/53 | 53/53 | 53/53 | 53/53 | 53/53 | 53/53 | 53/53 | 53/53 | 53/53 |
+| above | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 | 9/9 |
+| below | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 | 6/6 |
+
+### 15.2 IoU determinism versus R4 and R5 (tolerance 1e-6)
+
+| relation | R6 selected | R4 selected | R5 selected | R6 best_eligible | R4 best_eligible | R6 best_any | R4 best_any | within 1e-6 |
+|---|---|---|---|---|---|---|---|---|
+| right | 0.558870 | 0.558870 | 0.558870 | 0.558870 | 0.558870 | 0.558870 | 0.558870 | PASS |
+| left | 0.000000 | 0.000000 | 0.000000 | 0.650067 | 0.650067 | 0.650067 | 0.650067 | PASS |
+| above | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 0.000000 | 0.903250 | 0.903250 | PASS |
+| below | 0.000000 | 0.000000 | 0.000000 | 0.616550 | 0.616550 | 0.616550 | 0.616550 | PASS |
+
+### 15.3 Outcome
+
+```text
+Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
+Dominant next blocker = ELIGIBILITY
+NEXT = REF01_ELIGIBILITY_FORENSICS
+```
+
+Evidence: `evaluation\task8b3_ref01_locked_reference_forensics_r6.json` (R4/R5 evidence preserved)
+
+### 15.4 Explicit non-execution
+
+```text
+Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+external delivery / canonical RC1 modified = NO / NO
+```

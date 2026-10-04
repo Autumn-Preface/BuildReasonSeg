@@ -1,0 +1,216 @@
+{
+ "starting_head": "53de75ae4f5246b4e18685b78bd5a9f913447984",
+ "branch": "fix/task8b3-ref01-reference-forensics",
+ "detector_calls": 4,
+ "identity": {
+  "manifest_identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+  "manifest_entry_count": 135,
+  "detector_manifest_bytes": 20300,
+  "detector_manifest_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "git_blob_bytes": 20300,
+  "git_blob_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "external_detector_bytes": 20300,
+  "external_detector_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "external_control_manifest_sha256": "c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604",
+  "git_control_manifest_sha256": "c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604",
+  "detector_matches_git_canonical": true,
+  "control_manifest_matches_git_canonical": true,
+  "imageio_module": "NOT AVAILABLE",
+  "imageio_version": "IMPORT_FAILED: No module named 'imageio'",
+  "pillow_version": "12.3.0",
+  "numpy_version": "2.4.6",
+  "python": "3.11.16",
+  "executable": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\python.exe",
+  "imageio_in_running_env": false
+ },
+ "frozen_constants": {
+  "TILE_SIZE": 512,
+  "TILE_OVERLAP": 128,
+  "STRIDE_EXPECTED": 384,
+  "IMGSZ": 640,
+  "CONF": 0.05,
+  "MAX_DET": 300,
+  "DUPLICATE_IOU": 0.5,
+  "MERGE_BBOX_EXTENT_RATIO_MAX": 0.2,
+  "FROZEN_THRESHOLD": 0.5,
+  "device": "cuda",
+  "checkpoint": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\model\\buildreasonseg_advisor\\detector.pt"
+ },
+ "coverage_threshold": 0.5,
+ "tolerance": 1e-06,
+ "proposal_mask_source": "RERUN_GLOBALPROPOSAL_MASK_CROP",
+ "proposal_fields_compared": [
+  "proposal_id",
+  "source_tile_id",
+  "confidence",
+  "mask_area",
+  "global_bbox",
+  "centroid",
+  "touches_image_border",
+  "border_clearance",
+  "bbox_extent_ratio",
+  "raw_index"
+ ],
+ "results": [
+  {
+   "relation": "right",
+   "tile": "1010",
+   "raster_sha256": "1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2",
+   "raster_lock_match": true,
+   "raw": 6,
+   "merged": 6,
+   "eligible": 4,
+   "field_match_counts": {
+    "proposal_id": "6/6",
+    "source_tile_id": "6/6",
+    "confidence": "6/6",
+    "mask_area": "6/6",
+    "global_bbox": "6/6",
+    "centroid": "6/6",
+    "touches_image_border": "6/6",
+    "border_clearance": "6/6",
+    "bbox_extent_ratio": "6/6",
+    "raw_index": "6/6"
+   },
+   "ten_field_all_match": true,
+   "selected_id": 1,
+   "selected_iou": 0.5588697017268446,
+   "best_eligible_iou": 0.5588697017268446,
+   "best_any_iou": 0.5588697017268446,
+   "deltas": {
+    "vs_r4": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    },
+    "vs_r5": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    }
+   },
+   "within_tolerance": true
+  },
+  {
+   "relation": "left",
+   "tile": "1003",
+   "raster_sha256": "eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38",
+   "raster_lock_match": true,
+   "raw": 66,
+   "merged": 53,
+   "eligible": 42,
+   "field_match_counts": {
+    "proposal_id": "53/53",
+    "source_tile_id": "53/53",
+    "confidence": "53/53",
+    "mask_area": "53/53",
+    "global_bbox": "53/53",
+    "centroid": "53/53",
+    "touches_image_border": "53/53",
+    "border_clearance": "53/53",
+    "bbox_extent_ratio": "53/53",
+    "raw_index": "53/53"
+   },
+   "ten_field_all_match": true,
+   "selected_id": 14,
+   "selected_iou": 0.0,
+   "best_eligible_iou": 0.6500672947510094,
+   "best_any_iou": 0.6500672947510094,
+   "deltas": {
+    "vs_r4": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    },
+    "vs_r5": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    }
+   },
+   "within_tolerance": true
+  },
+  {
+   "relation": "above",
+   "tile": "1008",
+   "raster_sha256": "0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd",
+   "raster_lock_match": true,
+   "raw": 9,
+   "merged": 9,
+   "eligible": 4,
+   "field_match_counts": {
+    "proposal_id": "9/9",
+    "source_tile_id": "9/9",
+    "confidence": "9/9",
+    "mask_area": "9/9",
+    "global_bbox": "9/9",
+    "centroid": "9/9",
+    "touches_image_border": "9/9",
+    "border_clearance": "9/9",
+    "bbox_extent_ratio": "9/9",
+    "raw_index": "9/9"
+   },
+   "ten_field_all_match": true,
+   "selected_id": 4,
+   "selected_iou": 0.0,
+   "best_eligible_iou": 0.0,
+   "best_any_iou": 0.9032501889644747,
+   "deltas": {
+    "vs_r4": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    },
+    "vs_r5": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    }
+   },
+   "within_tolerance": true
+  },
+  {
+   "relation": "below",
+   "tile": "1009",
+   "raster_sha256": "c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7",
+   "raster_lock_match": true,
+   "raw": 7,
+   "merged": 6,
+   "eligible": 3,
+   "field_match_counts": {
+    "proposal_id": "6/6",
+    "source_tile_id": "6/6",
+    "confidence": "6/6",
+    "mask_area": "6/6",
+    "global_bbox": "6/6",
+    "centroid": "6/6",
+    "touches_image_border": "6/6",
+    "border_clearance": "6/6",
+    "bbox_extent_ratio": "6/6",
+    "raw_index": "6/6"
+   },
+   "ten_field_all_match": true,
+   "selected_id": 1,
+   "selected_iou": 0.0,
+   "best_eligible_iou": 0.6165496859992612,
+   "best_any_iou": 0.6165496859992612,
+   "deltas": {
+    "vs_r4": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    },
+    "vs_r5": {
+     "selected_iou": 0.0,
+     "best_eligible_iou": 0.0,
+     "best_any_iou": 0.0
+    }
+   },
+   "within_tolerance": true
+  }
+ ],
+ "authoritative_closure": "PASS",
+ "outcome": "REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE",
+ "dominant_next_blocker": "ELIGIBILITY",
+ "next": "REF01_ELIGIBILITY_FORENSICS"
+}
