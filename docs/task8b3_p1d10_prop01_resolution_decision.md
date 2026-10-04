@@ -378,3 +378,30 @@ support scope: the frozen proposal detector and this Demo pool share the canonic
 
 No candidate may be replaced after future runtime results without a new ChatGPT decision that explicitly
 acknowledges the failed locked candidate. No image was copied into RC1 and no detector was run.
+
+
+### 20.8 Integrity correction (same task, recorded before audit)
+
+The §20.5 table above shows the **component maps** resolve (512×512 PNG, present, decodable) while the **original
+raster tiles do not**: v0.2's `image_path` field contains a placeholder sentence, and no locked candidate's source
+raster could be resolved from the audited metadata. §11 eligibility includes "referenced source image exists and
+decodes", and §7 requires the source tile to be provably resolvable without model output. That requirement is
+**NOT** met by the audited metadata.
+
+Corrected state:
+
+```text
+component-map resolution (frozen reasoning view)      = RESOLVED for all four candidates (512×512 PNG, present)
+original raster tile resolution                        = NOT ESTABLISHED for all four candidates
+eligibility per §11 (source image exists and decodes)  = NOT SATISFIED for the original raster
+selection policy per §12                               = NOT READY
+R2 outcome                                             = STOP (record, do not loosen criteria)
+```
+
+The four `sample_id`s recorded in §20.4 remain written down as **provisional metadata locks** — they were chosen by
+the §11/§12 rule from canonical metadata only, with no detector, parser, runtime, mask, visual-quality, confidence or
+historical-success field consulted — but they must **not** be run, copied into RC1, or treated as an approved Demo
+pool until the raster-resolution gap is closed by a new task book. §20.7's previous `READY` phrasing is withdrawn.
+
+No retry, no criteria loosening, no model execution and no functional modification were performed in producing this
+correction.

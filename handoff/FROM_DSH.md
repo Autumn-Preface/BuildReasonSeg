@@ -25,36 +25,34 @@ history._
 | item | value |
 |---|---|
 | Task | `8B.3-P1D10-R2` |
-| Status | **COMPLETE** (v0.2 audit + metadata-only candidate lock) |
+| Status | **STOP** — v0.2 audited, four candidates locked by metadata, but §7 raster-resolution proof is incomplete |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `a3a0d01f5f3f49f249c4a56b45d47fc42d6cbd48` |
+| Starting HEAD | `b36407862477565f1cf228df54b1aac648347bcc` |
 | Model/test execution | NONE |
 | Functional files modified | NO |
 | v0.2 test JSONL | AVAILABLE (14 415 287 bytes, 6 219 records) |
 | v0.2 test classification | **USABLE_WITH_DISCLOSURE** (frozen final-test split; metadata-only deterministic locking, no reported result changed) |
 | v0.2 val classification | **MODEL_SELECTION_LEAKAGE_RISK** |
-| Best Demo pool | `datasets/build_spatial_reason/v0.2` (TEST split) |
-| R1 `task6m1_demo` primary-pool statement | **SUPERSEDED** (pool is model-output-contaminated) |
-| Locked candidate count | **4** |
+| Best Demo pool | `datasets/build_spatial_reason/v0.2` (TEST split) — pending raster resolution |
+| R1 `task6m1_demo` primary-pool statement | **SUPERSEDED** (model-output-contaminated) |
+| Locked candidate count | 4 (provisional metadata locks; not approved for running) |
 | Locked right candidate | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` |
-| Locked left candidate | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
+| Locked left candidate | `buildsr_test_1003_3_largest_to_left_of_nearest_f3fcb14e14c3` |
 | Locked above candidate | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` |
 | Locked below candidate | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` |
-| Eligibility fields used | canonical generator metadata only (`level`, `target_component_id`, `reference_component_ids`, `native_vector.target/references`, `target_geometry_ref`) |
-| Forbidden fields consulted | NONE (no detector/parser/runtime/mask/visual/confidence/historical-success field) |
-| Deterministic ordering | immutable `sample_id`; distinct `image_id` enforced across relations |
-| Source image resolution | via frozen `image_metadata_ref` component maps (the v0.2 `image_path` field is a placeholder sentence) |
+| Eligibility fields used | canonical generator metadata only; no forbidden field consulted |
+| Component-map resolution | RESOLVED (512×512 PNG present and decodable for all four) |
+| Original raster resolution | **NOT ESTABLISHED** (v0.2 `image_path` is a placeholder sentence) |
+| Selection policy | **NOT READY** (§11 source-image clause unsatisfied) |
 | Image copied into RC1 / detector run / visual inspection | NO / NO / NO |
-| Primary resolution (from R1, unchanged) | `PROP01_RESOLUTION_DEMO_POLICY` |
-| PROP-01 status (from R1, unchanged) | `PROP01_OPEN_ENGINEERING_DEFECT` |
+| Primary resolution / PROP-01 status (from R1) | `PROP01_RESOLUTION_DEMO_POLICY` / `PROP01_OPEN_ENGINEERING_DEFECT` (unchanged) |
 | Scientific freeze preserved | YES |
-| Next gate | `PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION` (recommended, not executed) |
+| Next gate | none executed; `PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION` remains recommended but blocked by the raster-resolution gap |
 | Report | `docs/task8b3_p1d10_prop01_resolution_decision.md` |
+| STOP reason | §11 eligibility requires the referenced source image to exist and decode; the frozen v0.2 metadata resolves only component maps, not the original rasters, and §12 forbids loosening criteria |
 | Next action | Awaiting ChatGPT audit; locked candidates must not be run or replaced. |
-
-Locked candidate IDs are frozen on commit and may not be replaced after future runtime results without a new ChatGPT
-decision that explicitly acknowledges the failed locked candidate.
 
 Watt was not needed for Task 8B.3-P1D10-R2 (no downloads, no transfers).
 
-No model, test, training or inference execution occurred; only metadata and frozen documentation were read.
+No model, test, training or inference execution occurred; no image was copied into RC1 and no detector or parser
+output was consulted.
