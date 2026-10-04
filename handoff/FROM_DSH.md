@@ -17,36 +17,33 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1B.1 Report
+# FROM_DSH — Task 8B.3-M1B.2 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1B.1` |
+| Task | `8B.3-M1B.2` |
 | Status | **COMPLETE** |
 | Branch | `fix/task8b3-mem01-compact-proposals` |
-| Starting HEAD | `a215db142caec155e2f6787804378e442fbb55d5` |
-| Canonical manifest | 135/135 PASS |
-| Canonical `source_manifest.json` SHA256 | `1135d8b44d882e5462ed9cfb627322a5b2895c4874ec97fcdd61d6f2e6567497` |
-| Pre-sync external setup | READY |
-| Manifest-listed files copied | 135 / 135 |
-| External manifest match | 135/135 PASS |
-| `source_manifest` byte-identical | YES |
-| Protected external assets changed | NO |
-| Post-sync external setup | READY |
-| Pytest | NOT RUN BY DESIGN |
+| Starting HEAD | `25d879845ef1508228067d4faa45e98266ed6aa5` |
+| External preflight manifest | 135/135 PASS |
+| `source_manifest` byte-identical before pytest | YES |
+| External full pytest invocation count | 1 |
+| External full suite | 116 passed in 65.12s (0:01:05) |
+| Pytest exit code | 0 |
+| Post-pytest external manifest | 135/135 PASS |
+| Canonical product/tests/manifest modified | NO |
+| External product/tests/manifest manually modified | NO |
 | Real inference | NOT RUN |
-| External delivery modified | YES — CONTROLLED MANIFEST SYNC ONLY |
 | PROP-01 / REF-01 / MASK-01 | UNCHANGED / UNCHANGED / UNCHANGED |
-| Report | `docs/task8b3_m1b1_external_delivery_sync.md` |
-| STOP reason | none |
-| Next action | Awaiting ChatGPT audit before M1B.2 external full regression. |
+| Gate result | **M1B_EXTERNAL_FULL_REGRESSION_PASS** |
+| Report | `docs/task8b3_m1b2_external_full_regression.md` |
+| Next action | Awaiting ChatGPT audit; do not run B1/B2. |
 
-Watt was not needed for Task 8B.3-M1B.1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-M1B.2 (no downloads, no transfers).
 
-The external delivery was modified **only** by the controlled 135-entry manifest sync plus the separately copied
-`source_manifest.json`; no model binary, component asset, user/runtime output, log or dataset was touched, and no
-file was deleted. No pytest, predict, Demo or model inference was executed, and no PROP-01/REF-01/MASK-01 repair was
-attempted.
+No canonical functional file and no external product/test/manifest file was modified; the external delivery changed
+only through pytest's own transient cache files. No predict, Demo, model inference or PROP-01/REF-01/MASK-01 repair
+was attempted.
