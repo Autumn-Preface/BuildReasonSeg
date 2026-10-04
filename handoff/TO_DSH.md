@@ -1,65 +1,59 @@
-# TO_DSH — Task 8B.3-P1D11S1-R1: Complete Git-Canonical Sync-Helper Alignment
+# TO_DSH — Task 8B.3-P1D11S1-R2: Finish Git-Canonical Sync-Helper Recovery
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `5842efd69d7066932b306e342baa81add06e626b`
+> Required starting HEAD: `c49f342792dcc2a4d60a4a2e23dfa6f0854fdeda`
 
 # 0. ChatGPT audit disposition
 
-P1D11S1 STOP is ACCEPTED.
+P1D11S1-R1 STOP is ACCEPTED.
 
-The design direction is retained:
-
-```text
-real RC1 manifest identity basis = GIT_CANONICAL_BLOB_BYTES
-legacy manifest without identity_basis = working-tree source bytes
-```
-
-Three concrete defects must be repaired.
-
-## Defect 1 — missing subprocess import
-
-Current helper defines:
-
-```python
-subprocess.run(...)
-```
-
-but does not import `subprocess`.
-
-This blocks every real Git-canonical read.
-
-## Defect 2 — obsolete real-manifest test remains
-
-The old test:
+The helper design remains frozen and correct:
 
 ```text
+real RC1 manifest basis:
+GIT_CANONICAL_BLOB_BYTES
+
+legacy manifest without identity_basis:
+working-tree source bytes
+```
+
+R1 failed because the required implementation/test cleanup was incomplete.
+
+Confirmed remote defects at `c49f342...`:
+
+```text
+D1:
+scripts/sync_advisor_rc1_delivery.py calls subprocess.run(...)
+but still does not import subprocess.
+
+D2:
+tests/test_sync_advisor_rc1_delivery.py uses bare:
+GIT_CANONICAL_BASIS
+in two tests, but no such test-module symbol is defined.
+
+D3:
+required test proving manifest-identity mismatch blocks destination writes is absent.
+
+D4:
+required unsupported identity-basis failure test is absent.
+```
+
+Observed dedicated pytest:
+
+```text
+23 passed
+3 failed
+
+failed:
 test_every_real_manifest_entry_matches_canonical_file
+test_git_canonical_mode_ignores_crlf_worktree
+test_git_canonical_check_rejects_crlf_destination
 ```
 
-still compares the Windows working-tree file bytes directly against the manifest.
-
-That assertion is incompatible with:
-
-```text
-identity_basis = GIT_CANONICAL_BLOB_BYTES
-```
-
-and must be replaced/re-written to validate Git canonical bytes.
-
-## Defect 3 — required identity-mismatch blocking test is missing
-
-P1D11S1 required an explicit test proving that a Git-canonical blob whose length/hash disagrees with the manifest:
-- causes a non-zero/failure;
-- is not written to destination.
-
-Add it.
-
-A fourth cleanup is authorized:
-- remove the unnecessary attempt to monkeypatch `Path.resolve` on `sync.CANONICAL_ROOT` in the legacy fixture test.
-  The explicit `canonical_root` argument already provides isolation.
+No external read-only check was authorized after the failed pytest.
 
 # 1. Git gate
 
@@ -67,7 +61,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 5842efd69d7066932b306e342baa81add06e626b
+HEAD = c49f342792dcc2a4d60a4a2e23dfa6f0854fdeda
 ```
 
 Allowed initial tracked tree:
@@ -79,7 +73,7 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- modify any file under `delivery_src/BuildReasonSeg_Advisor_RC1/**`;
+- modify anything under `delivery_src/BuildReasonSeg_Advisor_RC1/**`;
 - modify external RC1;
 - run write sync;
 - run full project pytest;
@@ -88,6 +82,7 @@ Do NOT:
 - modify `.gitattributes`;
 - modify Git config;
 - normalize line endings;
+- redesign helper semantics;
 - change PROP/REF/MASK behavior;
 - update main;
 - force push.
@@ -104,7 +99,7 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-# 4. Repair helper import
+# 4. Fix helper import — mandatory
 
 In:
 
@@ -112,135 +107,141 @@ In:
 scripts/sync_advisor_rc1_delivery.py
 ```
 
-add the required standard-library import:
+add exactly the required standard-library import:
 
 ```python
 import subprocess
 ```
 
-Do not otherwise redesign the already implemented source-basis logic unless a dedicated test proves another defect.
+Do not alter the established source-basis design unless a test demonstrates another concrete defect.
 
-Retain all existing requirements:
+Retain:
 
 ```text
 identity_basis missing
--> legacy working-tree bytes
+-> working-tree bytes
 
 identity_basis == GIT_CANONICAL_BLOB_BYTES
--> Git HEAD canonical bytes
+-> Git HEAD canonical blob bytes
 
 unsupported non-empty identity_basis
 -> explicit failure
 ```
 
-Retain:
-- argument-list subprocess invocation;
-- `shell=False` behavior;
-- binary stdout;
-- manifest length/SHA validation;
-- Git-canonical check;
-- Git-canonical write/verification.
+Retain manifest length/SHA validation before Git-canonical source bytes are used.
 
-# 5. Repair dedicated tests
+# 5. Fix the test-module basis symbol
 
-Modify only:
+In:
 
 ```text
 tests/test_sync_advisor_rc1_delivery.py
 ```
 
-## 5.1 Legacy test cleanup
+define one authoritative test symbol after importing the helper:
 
-In:
-
-```text
-test_legacy_manifest_without_basis_copies_worktree_bytes
+```python
+GIT_CANONICAL_BASIS = sync.GIT_CANONICAL_BASIS
 ```
 
-remove the unnecessary instance-level monkeypatch of:
+Do NOT hardcode a second independent string if this module symbol can be reused.
+
+The following existing tests must then use that symbol successfully:
 
 ```text
-sync.CANONICAL_ROOT.resolve
+test_git_canonical_mode_ignores_crlf_worktree
+test_git_canonical_check_rejects_crlf_destination
 ```
 
-The test must use the explicitly supplied `canonical` root to `load_manifest`, `run_sync`, and `run_check`.
+# 6. Confirm obsolete real-manifest assertion remains corrected
 
-Require:
-- destination gets exact working-tree bytes;
-- subsequent check passes.
-
-## 5.2 Replace obsolete real-manifest working-tree assertion
-
-The test currently named:
+Keep the rewritten:
 
 ```text
 test_every_real_manifest_entry_matches_canonical_file
 ```
 
-must no longer assert that:
+with Git-canonical semantics only.
+
+It must require:
 
 ```text
-REAL_CANONICAL / path
-```
+payload["identity_basis"] == sync.GIT_CANONICAL_BASIS
+len(entries) == 135
 
-working-tree size/hash equals the manifest.
-
-Either delete it and rely on the new Git-canonical real-manifest test, or rewrite it.
-
-Authoritative real-manifest test must establish:
-
-```text
-schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
-identity_basis = GIT_CANONICAL_BLOB_BYTES
-entry count = 135
 for every entry:
-    git_canonical_bytes(path) length == manifest bytes
-    sha256(git_canonical_bytes(path)) == manifest sha256
+    blob = sync.git_canonical_bytes(entry["path"])
+    len(blob) == entry["bytes"]
+    sha256(blob) == entry["sha256"]
 ```
 
-Do not normalize or reinterpret working-tree bytes.
+It must NOT compare the Windows working-tree file bytes against manifest identity.
 
-## 5.3 Add required manifest-identity-mismatch blocking test
+# 7. Add mandatory identity-mismatch write-block test
 
-Add a deterministic temporary test.
-
-Setup:
-
-```text
-identity_basis = GIT_CANONICAL_BLOB_BYTES
-manifest identity describes GOOD_BYTES
-mocked git_canonical_bytes returns BAD_BYTES
-destination target initially absent
-```
-
-Call the Git-canonical sync path.
-
-Require:
-- explicit failure (`SystemExit` is acceptable under current helper contract);
-- destination target remains absent;
-- BAD_BYTES are not written.
-
-If using a pre-existing destination target instead, require it remains byte-identical to its pre-test content.
-
-Test name should clearly describe the contract, e.g.:
+Add exactly one deterministic test with a clear name such as:
 
 ```text
 test_git_canonical_manifest_identity_mismatch_blocks_write
 ```
 
-## 5.4 Unsupported basis test
-
-Add one small deterministic test:
+Required setup:
 
 ```text
-identity_basis = "UNKNOWN_BASIS"
+temporary canonical root
+temporary destination
+manifest:
+    identity_basis = GIT_CANONICAL_BLOB_BYTES
+    entry identity = GOOD_BYTES
+mock sync.git_canonical_bytes(...)
+    returns BAD_BYTES
+destination target:
+    absent
 ```
 
-Require the helper to fail explicitly before copying/checking.
+Call:
 
-This freezes the already implemented behavior.
+```text
+sync.run_sync(destination, entries, canonical)
+```
 
-# 6. Dedicated pytest gate
+Current helper contract may raise `SystemExit`.
+
+Require:
+
+```text
+failure is raised/returned
+destination/a.txt DOES NOT EXIST
+BAD_BYTES are not written
+```
+
+The test must explicitly prove write prevention.
+
+# 8. Add mandatory unsupported-basis test
+
+Add one deterministic test with a clear name such as:
+
+```text
+test_unsupported_identity_basis_rejected
+```
+
+Manifest:
+
+```json
+"identity_basis": "UNKNOWN_BASIS"
+```
+
+Require an explicit failure from:
+
+```text
+sync.manifest_identity_basis(canonical)
+```
+
+or the normal sync/check call before any destination write.
+
+Also require destination remains unmodified.
+
+# 9. Dedicated pytest — exactly one run
 
 Run exactly:
 
@@ -248,28 +249,29 @@ Run exactly:
 python -m pytest tests/test_sync_advisor_rc1_delivery.py -q
 ```
 
-Do not run any other pytest target.
+Do NOT run any other pytest target.
 
 Require:
 
 ```text
-exit code = 0
-all tests passed
+exit = 0
 failed = 0
-error = 0
+errors = 0
+all tests passed
 ```
 
-Record exact passed count.
+Record exact pass count.
 
-If this fails:
+If §9 fails:
 - do NOT run the real external check;
-- record STOP;
+- STOP;
+- record exact failed nodes;
 - commit/push safe evidence;
-- STOP.
+- wait for ChatGPT.
 
-# 7. Real external read-only check
+# 10. Real external read-only check — only after pytest PASS
 
-Only after §6 PASS, run exactly one:
+Run exactly once:
 
 ```text
 python scripts/sync_advisor_rc1_delivery.py ^
@@ -277,7 +279,7 @@ python scripts/sync_advisor_rc1_delivery.py ^
   --check
 ```
 
-This is read-only.
+No write sync.
 
 Require exactly:
 
@@ -295,7 +297,7 @@ README.md
 docs/model_card.md
 ```
 
-Require previous four EOL-only mismatches absent:
+Require these four old EOL-only mismatches are absent:
 
 ```text
 buildreasonseg/runtime/core.py
@@ -304,34 +306,35 @@ buildreasonseg/runtime/outputs.py
 tests/test_task8b_runtime.py
 ```
 
-If result differs:
-- no external write;
-- STOP.
+If not exact:
+- STOP;
+- no external write.
 
-# 8. Immutability gate
+# 11. Immutability gate
 
 Require:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/** = UNCHANGED
-external BuildReasonSeg_Advisor_RC1/** = UNCHANGED
+canonical RC1 files = UNCHANGED
+external RC1 files = UNCHANGED
+model/inference = NONE
+locked candidate execution = NONE
 ```
 
-No model/inference/candidate execution.
-
-# 9. Outcome
+# 12. Outcome
 
 Choose exactly one.
 
 ## A — `RC1_SYNC_HELPER_GIT_CANONICAL_ALIGNED`
 
 Require:
-- missing import repaired;
-- obsolete worktree-based real-manifest assertion removed/re-written;
-- identity-mismatch write-block test present and passing;
-- unsupported-basis test present and passing;
-- dedicated pytest all pass;
-- real external read-only check = 133/135 with only README/model_card mismatch;
+- `import subprocess` present;
+- test basis constant fixed;
+- real-manifest test is Git-canonical only;
+- identity-mismatch write-block test PASS;
+- unsupported-basis test PASS;
+- dedicated pytest all PASS;
+- real external read-only check exactly 133/135 with only README/model_card mismatch;
 - canonical/external RC1 unchanged.
 
 Then:
@@ -352,46 +355,46 @@ NEXT = RC1_SYNC_HELPER_ALIGNMENT_RECOVERY
 
 Do not execute next gate.
 
-# 10. Report
+# 13. Report
 
-Update:
+Append `P1D11S1-R2` to:
 
 ```text
 docs/task8b3_p1d11s1_git_canonical_sync_helper.md
 ```
 
-Append an R1 section with:
+Required:
 
-1. ChatGPT audit findings
-2. missing `subprocess` import correction
-3. legacy-test cleanup
-4. obsolete working-tree real-manifest test correction
-5. manifest-identity mismatch blocking test
+1. R1 STOP audit findings
+2. subprocess import fix
+3. test-basis symbol fix
+4. Git-canonical real-manifest assertion
+5. identity-mismatch write-block test
 6. unsupported-basis test
 7. exact dedicated pytest result
-8. exact real external read-only check
-9. canonical RC1 unchanged
-10. external RC1 unchanged
+8. exact external read-only check
+9. previous four EOL mismatches status
+10. canonical/external RC1 immutability
 11. model/inference/locked candidates = NONE
 12. exact outcome
 13. exact next gate.
 
-Do not erase the original STOP history.
+Preserve prior STOP history.
 
-# 11. FROM_DSH
+# 14. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D11S1-R1
+Task: 8B.3-P1D11S1-R2
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 5842efd69d7066932b306e342baa81add06e626b
-Missing subprocess import: FIXED / NOT FIXED
-Legacy no-basis behavior preserved: YES / NO
-Obsolete worktree real-manifest assertion: REMOVED_OR_REWRITTEN / PRESENT
+Starting HEAD: c49f342792dcc2a4d60a4a2e23dfa6f0854fdeda
+subprocess import: PRESENT / MISSING
+Test GIT_CANONICAL_BASIS symbol: FIXED / NOT FIXED
+Real-manifest assertion basis: GIT_CANONICAL_BLOB_BYTES / other
 Manifest identity mismatch blocks write test: PASS / FAIL / NOT RUN
 Unsupported identity basis test: PASS / FAIL / NOT RUN
 Dedicated pytest: <n> passed / FAILED
@@ -408,12 +411,12 @@ Report: docs/task8b3_p1d11s1_git_canonical_sync_helper.md
 Next action: Awaiting ChatGPT audit; do not sync external.
 ```
 
-# 12. Commit / push
+# 15. Commit / push
 
 If COMPLETE:
 
 ```text
-fix(rc1): complete git canonical sync helper
+fix(rc1): finish git canonical sync helper
 ```
 
 If STOP/FAILED:
@@ -425,19 +428,19 @@ docs(rc1): record sync-helper recovery stop
 Push normally.
 No force push.
 
-# 13. COMPLETE definition
+# 16. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
 - only allowed tracked files changed;
-- `subprocess` import present;
-- legacy no-basis behavior passes;
-- no real-manifest test assumes working-tree bytes equal Git identity;
-- manifest identity mismatch is proven to block writing;
-- unsupported basis is proven to fail explicitly;
-- dedicated sync-helper pytest fully passes;
-- real external check is exactly 133/135 with only README/model_card mismatch;
-- canonical/external RC1 unchanged;
+- helper imports subprocess;
+- test basis symbol is valid;
+- no real-manifest test assumes working-tree identity;
+- identity-mismatch source is proven unable to write;
+- unsupported basis is proven to fail;
+- dedicated test file fully passes;
+- real external read-only check is exactly 133/135 with only README/model_card mismatch;
+- canonical/external RC1 untouched;
 - no model/inference/locked candidate run;
 - PROP-01 remains OPEN;
 - next gate not executed;

@@ -52,3 +52,26 @@ NEXT = RC1_SYNC_HELPER_ALIGNMENT_RECOVERY
 ```
 
 The next gate is not executed here.
+
+
+---
+
+## 7. P1D11S1-R2 — import completion, dedicated run and read-only check
+
+```text
+imports added to the dedicated test file : none (already present)
+dedicated pytest                          : exit 1 · 23 passed · failed nodes ['tests/test_sync_advisor_rc1_delivery.py::test_every_real_manifest_entry_matches_canonical_file', 'tests/test_sync_advisor_rc1_delivery.py::test_git_canonical_mode_ignores_crlf_worktree', 'tests/test_sync_advisor_rc1_delivery.py::test_git_canonical_check_rejects_crlf_destination']
+read-only external check                  : exit None · NOT RUN
+mismatches                                : NOT RUN
+canonical RC1 / external RC1 written      : NO / NO
+model inference / locked candidate runs   : NONE / NONE
+```
+
+```text
+RC1_SYNC_HELPER_ALIGNMENT_BLOCKED
+NEXT = RC1_SYNC_HELPER_ALIGNMENT_RECOVERY
+```
+
+The read-only external check confirms that, under Git canonical identity, only `README.md` and `docs/model_card.md`
+differ between canonical and the external delivery (the two documents changed in P1D11A-R2/R3 and not yet synced);
+the four earlier runtime/test EOL mismatches no longer appear.
