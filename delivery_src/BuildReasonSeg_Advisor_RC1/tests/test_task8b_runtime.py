@@ -171,19 +171,28 @@ def _to_full(proposal, size: int = 512) -> np.ndarray:
     return full
 
 
+def _entry(mask: np.ndarray, confidence: float, tile: str, tile_index: int, raw_index: int,
+           image_size: tuple[int, int] = (512, 512)) -> dict:
+    """Compact accumulated-entry builder used by the merge tests (test-local)."""
+
+    compact = detector._compact_mask(mask, top=0, left=0)
+    assert compact is not None
+    mask_crop, global_bbox = compact
+    return {"source_tile_id": tile, "tile_index": tile_index, "confidence": confidence,
+            "mask_crop": mask_crop, "global_bbox": global_bbox, "image_size": image_size,
+            "raw_index": raw_index}
+
+
 def test_merge_duplicate_iou_threshold_and_no_union() -> None:
     first = np.zeros((512, 512), dtype=bool)
-    first[100:140, 100:140] = True
-    second = first.copy()
-    second[104:144, 104:144] = True          # IoU well above 0.50 → duplicate
+    first[100:140, 100:140] = True           # area 1600
+    second = np.zeros((512, 512), dtype=bool)
+    second[104:144, 104:144] = True          # same area 1600, IoU ≈ 0.78 → duplicate
     third = np.zeros((512, 512), dtype=bool)
-    third[300:340, 300:340] = True           # far away → separate
-    entries = [{"mask": first, "confidence": 0.5, "source_tile_id": "t1", "tile_index": 0,
-                "raw_index": 0},
-               {"mask": second, "confidence": 0.9, "source_tile_id": "t2", "tile_index": 1,
-                "raw_index": 1},
-               {"mask": third, "confidence": 0.7, "source_tile_id": "t3", "tile_index": 2,
-                "raw_index": 2}]
+    third[300:340, 300:340] = True           # area 1600 but far away → separate
+    entries = [_entry(first, 0.5, "t1", 0, 0),
+               _entry(second, 0.9, "t2", 1, 1),
+               _entry(third, 0.7, "t3", 2, 2)]
     merged, groups = merge_proposals(entries)
     assert len(merged) == 2
     assert detector.iou_of(first, second) >= detector.DUPLICATE_IOU
@@ -207,12 +216,9 @@ def test_merge_priority_prefers_non_border_then_area() -> None:
     inner[250:290, 250:290] = True           # no border, smaller
     overlapped = inner.copy()
     overlapped[252:292, 252:292] = True
-    entries = [{"mask": border, "confidence": 0.9, "source_tile_id": "t1", "tile_index": 0,
-                "raw_index": 0},
-               {"mask": inner, "confidence": 0.4, "source_tile_id": "t2", "tile_index": 1,
-                "raw_index": 1},
-               {"mask": overlapped, "confidence": 0.6, "source_tile_id": "t3", "tile_index": 2,
-                "raw_index": 2}]
+    entries = [_entry(border, 0.9, "t1", 0, 0),
+               _entry(inner, 0.4, "t2", 1, 1),
+               _entry(overlapped, 0.6, "t3", 2, 2)]
     merged, _groups = merge_proposals(entries)
     ids = {proposal.source_tile_id for proposal in merged}
     assert "t2" in ids or "t3" in ids            # the non-border duplicate wins its group
@@ -225,9 +231,8 @@ def test_stable_ids_by_centroid_then_area() -> None:
     top[10:30, 10:30] = True
     bottom = np.zeros((512, 512), dtype=bool)
     bottom[400:440, 400:440] = True
-    entries = [{"mask": bottom, "confidence": 0.5, "source_tile_id": "t2", "tile_index": 1,
-                "raw_index": 0},
-               {"mask": top, "confidence": 0.5, "source_tile_id": "t1", "tile_index": 0, "raw_index": 0}]
+    entries = [_entry(bottom, 0.5, "t2", 1, 0),
+               _entry(top, 0.5, "t1", 0, 0)]
     merged, _ = merge_proposals(entries)
     assert merged[0].centroid[0] < merged[1].centroid[0]
     assert [proposal.proposal_id for proposal in merged] == [0, 1]
@@ -257,10 +262,8 @@ def test_select_reference_tie_break() -> None:
     first = np.zeros((512, 512), dtype=bool)
     first[100:130, 100:130] = True
     second = first.copy()
-    entries = [{"mask": first, "confidence": 0.5, "source_tile_id": "t1", "tile_index": 0,
-                "raw_index": 0},
-               {"mask": second, "confidence": 0.9, "source_tile_id": "t9", "tile_index": 1,
-                "raw_index": 0}]
+    entries = [_entry(first, 0.5, "t1", 0, 0),
+               _entry(second, 0.9, "t9", 1, 0)]
     merged, _ = merge_proposals(entries)
     selected = select_reference(merged)
     assert selected is not None
@@ -504,6 +507,8 @@ def test_serialization_contract_has_no_mask_payload() -> None:
 
 
 def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
+    """Call the real DetectorRuntime.detect_global() on a fake 5000x5000 image shape."""
+
     real_zeros = np.zeros
 
     def guard(shape, *args, **kwargs):
@@ -511,13 +516,32 @@ def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
             raise AssertionError("full-frame 5000x5000 bool allocation attempted")
         return real_zeros(shape, *args, **kwargs)
 
+    class FakeRgb:
+        shape = (5000, 5000, 3)
+
+    class FakeWindow:
+        source_tile_id = "tile_0000_r000_c000"
+        top, left, size = 0, 0, 512
+
+    tile_mask = np.zeros((512, 512), dtype=bool)
+    tile_mask[100:150, 200:260] = True
+
+    monkeypatch.setattr(detector, "plan_tiles", lambda width, height, **kwargs: [FakeWindow()])
+    monkeypatch.setattr(detector, "extract_tile",
+                        lambda rgb, window: (real_zeros((512, 512, 3), dtype=np.uint8),
+                                             {"applied": False}))
+    monkeypatch.setattr(detector.DetectorRuntime, "detect_tile",
+                        lambda self, tile_rgb: [{"index": 0, "confidence": 0.9,
+                                                 "mask": tile_mask, "box": [200, 100, 260, 150]}])
     monkeypatch.setattr(np, "zeros", guard)
-    big = real_zeros((5000, 5000), dtype=bool)
-    big[100:200, 300:400] = True
-    proposal = _compact_proposal(big, top=0, left=0, image_size=(5000, 5000))
-    assert proposal.mask_area == 10000
-    entries = [{"source_tile_id": "a", "tile_index": 0, "confidence": 0.5,
-                "mask_crop": proposal.mask_crop, "global_bbox": proposal.global_bbox,
-                "image_size": (5000, 5000), "raw_index": 0}]
-    merged, _groups = detector.merge_proposals(entries + [dict(entries[0], source_tile_id="b")])
-    assert len(merged) == 1 and merged[0].mask_area == 10000
+
+    runtime = detector.DetectorRuntime.__new__(detector.DetectorRuntime)
+    runtime.device, runtime.imgsz, runtime.conf, runtime.max_det = "cpu", 640, 0.05, 300
+    runtime.checkpoint, runtime._model, runtime.load_seconds = Path("unused.pt"), None, None
+    result = runtime.detect_global(FakeRgb())
+    assert result["raw_count"] == 1
+    assert len(result["merged"]) == 1
+    proposal = result["merged"][0]
+    assert proposal.mask_area == 1500
+    assert proposal.global_bbox == (100, 200, 149, 259)
+    assert proposal.mask_crop.shape == (50, 60)

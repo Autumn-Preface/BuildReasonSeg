@@ -275,3 +275,23 @@ stable ids, no union); Reference-context equivalence against a locally re-implem
 over four context placements; preview built from the crop (bbox window touched, outside untouched); serialization
 contract (`to_dict()` carries no mask payload); and a 5000×5000 guard that monkeypatches `np.zeros` to raise on any
 full-frame bool allocation while exercising compaction, merge, the reference crop and the preview.
+
+---
+
+## Task 8B.3-M1A.2B-R1 — complete compact-contract test adaptation (single run)
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `e5229d60a869c1fc02536d41a039229f2936090b` |
+| files changed | `tests/test_task8b_runtime.py` only |
+| runtime files | NOT modified |
+| legacy entry literals converted to `mask_crop`/`global_bbox`/`image_size` | 10 |
+| equal-area duplicate construction | corrected (two equal 40×40 blocks, IoU ≈ 0.78) |
+| 5000×5000 guard | real `DetectorRuntime.detect_global()` on a fake `(5000, 5000, 3)` shape with monkeypatched `plan_tiles` / `extract_tile` / `detect_tile` and a `np.zeros` guard; no real 5000×5000 RGB or bool oracle allocated |
+| dedicated run | exactly once → **FAIL (STOP)** |
+| tail | =========================== short test summary info =========================== | FAILED tests/test_task8b_runtime.py::test_merge_equivalence_with_compact_masks | FAILED tests/test_task8b_runtime.py::test_large_image_path_never_allocates_full_frame_bool | 2 failed, 30 passed in 0.40s |
+| manifest | UNCHANGED (dedicated gate failed) |
+| external delivery / real inference / full suite | NOT touched / NOT RUN / NOT RUN |
+
+Per the task book, a failing single run is recorded here and the task stops without any runtime change, without a
+rerun and without a manifest update.
