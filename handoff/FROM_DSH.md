@@ -17,27 +17,36 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1A.2C-D1.1 Report
+# FROM_DSH — Task 8B.3-M1B.1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1A.2C-D1.1` |
-| Status | **COMPLETE** (documentation normalization only) |
+| Task | `8B.3-M1B.1` |
+| Status | **COMPLETE** |
 | Branch | `fix/task8b3-mem01-compact-proposals` |
-| Starting HEAD | `6405c64c7bba40c398b16bd9f3050c3c95cc7db8` |
-| New report | `docs/task8b3_m1a2c_canonical_suite_forensics.md` |
-| Nodes listed | 23 (all recovered from `.pytest_cache/v/cache/lastfailed`) |
-| Frozen classification | **A=10, B=13, C=0, D=0, E=0** |
-| `tests/test_task8b_runtime.py` failing nodes | NONE |
-| Frozen gate conclusion | **CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE** |
-| Old M1A report | A=7/B=10/D=6 and `MIXED_FAILURES_REQUIRE_CODE_AUDIT` marked superseded |
-| pytest / check_setup / predict / model runs | NONE |
-| Canonical product / tests / manifest / external delivery | NOT modified |
-| Report | `docs/task8b3_m1a2c_canonical_suite_forensics.md` |
+| Starting HEAD | `a215db142caec155e2f6787804378e442fbb55d5` |
+| Canonical manifest | 135/135 PASS |
+| Canonical `source_manifest.json` SHA256 | `1135d8b44d882e5462ed9cfb627322a5b2895c4874ec97fcdd61d6f2e6567497` |
+| Pre-sync external setup | READY |
+| Manifest-listed files copied | 135 / 135 |
+| External manifest match | 135/135 PASS |
+| `source_manifest` byte-identical | YES |
+| Protected external assets changed | NO |
+| Post-sync external setup | READY |
+| Pytest | NOT RUN BY DESIGN |
+| Real inference | NOT RUN |
+| External delivery modified | YES — CONTROLLED MANIFEST SYNC ONLY |
+| PROP-01 / REF-01 / MASK-01 | UNCHANGED / UNCHANGED / UNCHANGED |
+| Report | `docs/task8b3_m1b1_external_delivery_sync.md` |
 | STOP reason | none |
-| Next action | Awaiting ChatGPT audit; do not sync delivery. |
+| Next action | Awaiting ChatGPT audit before M1B.2 external full regression. |
 
-Watt was not needed for Task 8B.3-M1A.2C-D1.1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-M1B.1 (no downloads, no transfers).
+
+The external delivery was modified **only** by the controlled 135-entry manifest sync plus the separately copied
+`source_manifest.json`; no model binary, component asset, user/runtime output, log or dataset was touched, and no
+file was deleted. No pytest, predict, Demo or model inference was executed, and no PROP-01/REF-01/MASK-01 repair was
+attempted.

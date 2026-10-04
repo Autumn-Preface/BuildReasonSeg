@@ -1,212 +1,367 @@
-# TO_DSH — Task 8B.3-M1A.2C-D1.1: Normalize Canonical Suite Forensics
+# TO_DSH — Task 8B.3-M1B.1: Controlled Canonical → External Delivery Sync
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-mem01-compact-proposals`
-> Required starting HEAD: `6405c64c7bba40c398b16bd9f3050c3c95cc7db8`
+> Required starting HEAD: `a215db142caec155e2f6787804378e442fbb55d5`
+> Canonical RC1: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1`
+> External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
 # 0. Purpose
 
-Correct the D1 forensic classification and normalize the report.
+M1A canonical compact-proposal implementation/forensics are frozen.
 
-Frozen ChatGPT audit result:
+This task performs only the controlled source/config synchronization into the existing runnable external RC1 delivery,
+then verifies delivery source integrity and setup readiness.
 
-```text
-Recovered nodes = 23
-A = 10
-B = 13
-C = 0
-D = 0
-E = 0
-tests/test_task8b_runtime.py failing nodes = none
-Gate conclusion = CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE
-```
+Do NOT run pytest or real inference in this task.
 
-# 1. Why D1 needs correction
-
-D1 currently contradicts itself: it records `A=7, B=10, C=0, D=6, E=0` and
-`MIXED_FAILURES_REQUIRE_CODE_AUDIT`, but its rationale also says no class-D node was detected.
-
-The six D-labelled nodes must be reclassified as follows.
-
-# 2. Frozen six-node reclassification
-
-A:
-- `tests/test_cli_contract.py::test_predict_inspect_proposals_does_not_require_prompt`
-  - `predict.py` performs model-package resolution/verification before image loading; canonical lacks decoder/detector weights.
-- `tests/test_language_contract.py::test_normal_path_is_qwen_first`
-  - `QwenProgramHeadFrontend.available()` requires ProgramHead checkpoint + `Qwen3-VL-2B-Instruct/`; canonical lacks both.
-- `tests/test_model_package.py::test_components_complete`
-  - explicitly requires a complete default model/component package.
-
-B:
-- `tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete`
-- `tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code`
-- `tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim`
-  - these depend on `ROOT/logs/task8b1_prompt_suite.json` and/or `ROOT/logs/task8b_gates.json`;
-    the sanitized canonical tree has no tracked `logs/` delivery-artifact directory.
-
-# 3. Final authoritative classification
+# 1. Frozen entering facts
 
 ```text
-A — CANONICAL_ASSET_ABSENCE: 10
-B — FIXTURE_ASSUMES_FULL_DELIVERY: 13
-C — COMPACT_RUNTIME_REGRESSION_CANDIDATE: 0
-D — UNRELATED_CODE_REGRESSION_CANDIDATE: 0
-E — INSUFFICIENT_EVIDENCE: 0
-TOTAL: 23
+compact proposal runtime dedicated tests: 32 passed
+5000×5000 fake-shape guard: PASS
+canonical source_manifest: 135/135 VERIFIED
+canonical full delivery-oriented suite: invalid as a canonical gate
+23 canonical failures classified A=10/B=13/C=0/D=0/E=0
+external delivery: not yet synchronized with compact proposal runtime
 ```
 
-No failing node belongs to `tests/test_task8b_runtime.py`.
-
-Historical compact gate remains:
-- dedicated runtime tests: 32 passed
-- 5000×5000 fake-shape guard: PASS
-- manifest: 135/135 VERIFIED
-
-Do not rerun any of these.
-
-# 4. Correct gate conclusion
-
-Use exactly:
+Forensic conclusion:
 
 ```text
 CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE
 ```
 
-Meaning:
-- sanitized canonical source is not a valid place for the complete delivery-oriented suite;
-- no recovered M1A.2C failure is evidence of compact-mask runtime regression;
-- the full delivery regression gate belongs after controlled canonical → external delivery sync;
-- this task does NOT authorize that sync.
+# 2. Git gate
 
-# 5. Strict prohibitions
+Require exactly:
+
+```text
+branch = fix/task8b3-mem01-compact-proposals
+HEAD = a215db142caec155e2f6787804378e442fbb55d5
+```
+
+Allowed initial tracked tree:
+- clean; or
+- only `M handoff/TO_DSH.md`.
+
+Do not reset/rebase/stash/clean/merge.
+
+# 3. Strict prohibitions
 
 Do NOT:
-- run pytest, check_setup.py, predict.py, or any model;
-- modify product code, tests, or `source_manifest.json`;
-- modify external delivery;
-- copy/download/install assets;
-- sync delivery;
+- modify canonical product/test/manifest files;
+- modify model binaries/checkpoints in external delivery;
+- delete any external delivery file or directory;
+- overwrite external user/runtime outputs except the manifest-listed controlled source/config targets;
+- run pytest;
+- run predict.py;
+- run six-image Demo;
+- run YOLO/Qwen/SAM2/D-B1 inference;
+- modify thresholds/models/tiling/merge/reference policies;
 - fix PROP-01 / REF-01 / MASK-01;
-- enter Task 8B.4 or Task 8C.
+- enter Task 8B.4 / 8C;
+- update `main`;
+- force-push.
 
-# 6. Allowed paths
+# 4. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_m1a2c_canonical_suite_forensics.md
-docs/task8b3_m1a_compact_proposal_masks.md
+docs/task8b3_m1b1_external_delivery_sync.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-# 7. Create dedicated forensic report
+The external delivery itself is intentionally modified by controlled sync.
+
+# 5. Pre-sync canonical manifest gate
+
+Read:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+Verify before any external write:
+
+```text
+schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
+file entry count = 135
+all 135 canonical paths exist
+every canonical path size equals manifest bytes
+every canonical path sha256 equals manifest sha256
+```
+
+If not 135/135 PASS:
+- do not sync;
+- report STOP;
+- commit/push documentation only;
+- stop.
+
+Record SHA256 of the canonical `source_manifest.json` file itself separately.
+
+# 6. Pre-sync external delivery readiness gate
+
+Require external root exists:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
+
+Before copying anything, run exactly once:
+
+```bat
+cd /d C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+ENV_PYTHON check_setup.py
+```
+
+Record exit code and READY / NOT READY.
+
+If pre-sync check is NOT READY:
+- do not sync;
+- report the exact setup failure;
+- STOP.
+
+This command is allowed; it is a setup/integrity checker, not model inference.
+
+# 7. Protected external asset snapshot
+
+Before sync, record size + SHA256 for these files if present:
+
+```text
+model/buildreasonseg_advisor/decoder.pt
+model/buildreasonseg_advisor/detector.pt
+model/components/sam2/sam2.1_hiera_base_plus.pt
+model/components/sam2/sam2.1_hiera_b+.yaml
+model/components/program_head/program_parser_l3_rehearsal_v1.pt
+model/components/program_head/qwen_asset_manifest.json
+```
+
+For the Qwen base directory:
+
+```text
+model/components/program_head/Qwen3-VL-2B-Instruct
+```
+
+record:
+- existence;
+- recursive regular-file count;
+- sorted relative file-name list;
+- total bytes.
+
+Do not hash the multi-GB Qwen model solely for this task unless the existing checker already does so.
+
+Also record that the following external runtime/user trees are not sync targets:
+
+```text
+inference/input
+inference/output
+logs
+runs
+datasets
+model binary/component asset files not present in the 135-entry source manifest
+```
+
+# 8. Controlled 135-entry sync
+
+Implement a one-off local sync script or equivalent mechanical copy operation.
+
+For every entry in canonical `source_manifest.json`:
+
+```text
+source = canonical_root / entry.path
+destination = external_root / entry.path
+```
+
+Before copying each file:
+- verify source bytes and SHA256 equal the manifest entry.
+
+Then:
+- create destination parent directories as needed;
+- copy the file bytes from canonical to the same relative path in external;
+- overwrite only that exact manifest-listed destination path.
+
+Do NOT:
+- recursively copy the whole canonical directory;
+- delete external files;
+- synchronize by directory mirroring;
+- touch an unlisted external file.
+
+After the 135 files are copied, separately copy:
+
+```text
+canonical/source_manifest.json
+→ external/source_manifest.json
+```
+
+This control file is not required to self-hash inside its own file list.
+
+No sync helper/script may remain committed in the repository.
+
+# 9. Post-sync external integrity gate
+
+Verify:
+
+```text
+external manifest-listed files = 135/135 matching canonical manifest bytes + sha256
+external/source_manifest.json byte-identical to canonical/source_manifest.json
+```
+
+Then compare protected asset snapshot:
+
+- each protected file from §7 must still exist;
+- size + SHA256 must be identical pre/post;
+- Qwen directory file count, names and total bytes must be identical pre/post.
+
+If any protected asset changes:
+- STOP immediately;
+- do not attempt repair;
+- report exact changed path(s).
+
+# 10. Post-sync setup checker
+
+Only after §9 PASS, run exactly once:
+
+```bat
+cd /d C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+ENV_PYTHON check_setup.py
+```
+
+Require:
+- exit code 0;
+- `BuildReasonSeg environment: READY`.
+
+If FAIL:
+- do not edit product;
+- do not rollback autonomously;
+- report exact output;
+- STOP.
+
+# 11. No pytest / no inference
+
+Explicitly do NOT run:
+
+```text
+pytest
+predict.py
+A1/A2/A3/A4/B1/B2
+```
+
+The external full regression suite is Task M1B.2 after ChatGPT audits this sync.
+
+# 12. Report
 
 Create:
 
 ```text
-docs/task8b3_m1a2c_canonical_suite_forensics.md
+docs/task8b3_m1b1_external_delivery_sync.md
 ```
 
-Required sections:
+Required content:
+
 1. Task/scope
 2. Starting HEAD
-3. Observed M1A.2C result: `17 failed, 93 passed, 6 errors in 29.67s`
-4. Exact 23-node list
-5. Canonical asset/artifact inventory
-6. Final classification table for all 23 nodes
-7. Explicit corrected six-node reclassification
-8. `tests/test_task8b_runtime.py failing nodes = none`
-9. Historical dedicated compact gate: `32 passed`, fake-5000 guard PASS, manifest 135/135
-10. Final counts: `A=10 B=13 C=0 D=0 E=0`
-11. Gate conclusion: `CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE`
-12. Next gate: awaiting ChatGPT audit before controlled canonical → external delivery sync.
+3. canonical manifest gate result
+4. canonical source_manifest SHA256
+5. pre-sync external `check_setup.py` result
+6. protected asset pre-sync snapshot
+7. sync policy:
+   - 135 exact manifest-listed relative paths
+   - no deletion
+   - source_manifest copied separately
+8. post-sync external 135/135 result
+9. protected asset post-sync comparison
+10. post-sync `check_setup.py` result
+11. pytest = NOT RUN
+12. real inference = NOT RUN
+13. PROP-01 / REF-01 / MASK-01 unchanged
+14. next action = awaiting ChatGPT audit before M1B.2 external full suite
 
-Each row must include a concise direct dependency reason.
+# 13. FROM_DSH
 
-# 8. Normalize existing M1A report
-
-In `docs/task8b3_m1a_compact_proposal_masks.md`, remove the active authoritative
-`A=7 B=10 D=6` / `MIXED_FAILURES_REQUIRE_CODE_AUDIT` conclusion.
-
-Replace it with a short pointer to the dedicated forensic report and:
-
-```text
-A=10 B=13 C=0 D=0 E=0
-CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE
-```
-
-The original D1 misclassification may be mentioned only as audit history.
-
-# 9. FROM_DSH
-
-Preserve `ARTIFACT-FACTS` exactly and save UTF-8 without BOM.
+Preserve ARTIFACT-FACTS exactly.
+UTF-8 without BOM.
 
 Required:
 
 ```text
-Task: 8B.3-M1A.2C-D1.1
+Task: 8B.3-M1B.1
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-mem01-compact-proposals
-Starting HEAD: 6405c64c7bba40c398b16bd9f3050c3c95cc7db8
-Pytest/check_setup/predict/model runs: NONE
-Product/tests/manifest modified: NO
-External delivery modified: NO
-Exact node recovery: 23/23
-Class A: 10
-Class B: 13
-Class C: 0
-Class D: 0
-Class E: 0
-Task8b runtime failures: NONE
-Dedicated compact gate: 32 PASSED (historical, not rerun)
-Manifest: 135/135 VERIFIED (historical, not rerun)
-Gate conclusion: CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE
-Report: docs/task8b3_m1a2c_canonical_suite_forensics.md
-Next action: Awaiting ChatGPT audit before controlled canonical → external delivery sync.
+Starting HEAD: a215db142caec155e2f6787804378e442fbb55d5
+Canonical manifest: 135/135 PASS / FAIL
+Pre-sync external setup: READY / NOT READY
+Manifest-listed files copied: 135 / other
+External manifest match: 135/135 PASS / FAIL
+source_manifest byte-identical: YES / NO
+Protected external assets changed: NO / YES
+Post-sync external setup: READY / NOT READY
+Pytest: NOT RUN BY DESIGN
+Real inference: NOT RUN
+External delivery modified: YES — CONTROLLED MANIFEST SYNC ONLY
+PROP-01 / REF-01 / MASK-01: UNCHANGED / UNCHANGED / UNCHANGED
+Report: docs/task8b3_m1b1_external_delivery_sync.md
+Next action: Awaiting ChatGPT audit before M1B.2 external full regression.
 ```
 
-# 10. Commit / push
+# 14. Git / commit / push
 
-Verify only allowed paths changed.
+After external sync and verification, repository tracked changes may only be:
+
+```text
+docs/task8b3_m1b1_external_delivery_sync.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+Run:
+
+```bat
+git status --short
+git diff --check
+```
 
 If COMPLETE, exact commit:
 
 ```text
-docs(rc1): normalize canonical suite forensics
+docs(rc1): record controlled external sync
 ```
 
 Otherwise:
 
 ```text
-docs(rc1): record canonical forensic normalization stop
+docs(rc1): record external sync stop
 ```
 
-Push current branch, no force.
+Push current fix branch, no force.
 
-# 11. COMPLETE definition
+# 15. COMPLETE definition
 
 COMPLETE only if:
-- no test/tool/model execution;
-- no product/test/manifest/delivery modification;
-- dedicated report exists;
-- all 23 nodes listed;
-- final counts exactly A10/B13/C0/D0/E0;
-- six previous D nodes reclassified exactly as frozen;
-- no active contradictory D=6/MIXED conclusion remains;
-- task8b runtime failures explicitly NONE;
-- gate conclusion exact;
+- exact starting branch/HEAD;
+- canonical manifest 135/135 PASS;
+- pre-sync external setup READY;
+- exactly 135 manifest-listed files copied by relative path;
+- external source_manifest copied separately and byte-identical;
+- no unlisted external file deleted/overwritten;
+- protected assets unchanged;
+- external manifest verification 135/135 PASS;
+- post-sync setup READY;
+- no pytest;
+- no real inference;
+- no PROP/REF/MASK repair;
 - report/handoff committed and pushed;
-- clean tree;
+- repository tree clean;
 - stop.
 
-# 12. Final response
+# 16. Final response
 
 ```text
-TASK 8B.3-M1A.2C-D1.1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-M1B.1 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -214,32 +369,38 @@ Commit:
 Push:
 PASS / FAIL
 
-Test/model execution:
-NONE
+Canonical manifest:
+135/135 PASS / other
 
-Product/tests/manifest modified:
-NO
+Pre-sync external setup:
+READY / NOT READY
+
+Manifest-listed files copied:
+135 / other
+
+External manifest match:
+135/135 PASS / other
+
+source_manifest byte-identical:
+YES / NO
+
+Protected external assets changed:
+NO / YES
+
+Post-sync external setup:
+READY / NOT READY
+
+Pytest:
+NOT RUN BY DESIGN
+
+Real inference:
+NOT RUN
 
 External delivery:
-UNCHANGED
-
-Exact node recovery:
-23/23
-
-Failure classes:
-A=10 B=13 C=0 D=0 E=0
-
-Task8b runtime failures:
-NONE
-
-Gate conclusion:
-CANONICAL_FULL_SUITE_INVALID_AS_DELIVERY_GATE
-
-Report:
-docs/task8b3_m1a2c_canonical_suite_forensics.md
+CONTROLLED MANIFEST SYNC ONLY / other
 
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得同步 delivery、不得运行 pytest/真实 Demo、不得进入 Task 8B.4 或 Task 8C。
+等待 ChatGPT 审核；不得运行 external pytest、不得运行真实 Demo、不得进入 Task 8B.4 或 Task 8C。
 ```
