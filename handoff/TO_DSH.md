@@ -1,51 +1,46 @@
-# TO_DSH — Task 8B.3-P1D12-R1: Proposal-Gate Evidence Closure (NO RERUN)
+# TO_DSH — Task 8B.3-P1D12-R2: Close Final Inspect-Only Evidence Gaps
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `75e01defde3ad6e9f8a247481028536e68ef4ee4`
+> Required starting HEAD: `728932094a9f86f7c1607abc6a2beff12d2d2d70`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
-> RC1 Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 
 # 0. ChatGPT audit disposition
 
-P1D12 result is **PROVISIONAL PASS — evidence closure required**.
-
-Already accepted from the committed report:
+P1D12-R1 is accepted for:
 
 ```text
-right raw/merged/eligible = 6/6/4
-left  raw/merged/eligible = 66/53/42
-above raw/merged/eligible = 9/9/4
-below raw/merged/eligible = 7/6/3
-all four exits = 0
-all four status = SUCCESS
+locked raster SHA identities = 4/4 PASS
+locked raster dimensions = 4/4 512x512
+locked raster RGB readability = 4/4 PASS
+external source/config integrity = 135/135 PASS
+external setup = READY
+existing proposal counts = reproduced
+eligible counts = right 4 / left 42 / above 4 / below 3
+candidate rerun = NO
 candidate replacement = NO
-manual visual inspection = NO
-GT access = NO
+GT / visual inspection = NO
 ```
 
-However, the committed report did not record all task-book evidence needed for final approval:
+Two final evidence gaps remain:
 
 ```text
-1. exact source-raster SHA256 / 512x512 / RGB identity;
-2. current external setup + 135/135 source/config integrity;
-3. frozen detector constants;
-4. exact inspect-only timing fields showing SAM2 / relation-fields / D-B1 = 0;
-5. candidate diagnostics contents proving no core-chain artifacts;
-6. no newly created candidate mask/overlay;
+GAP 1:
+R1 detector-constant table omitted:
+FROZEN_THRESHOLD = 0.5
+
+GAP 2:
+R1 did not directly record the nested result.json timing values:
+timings.sam2
+timings.relation_fields
+timings.db1
+
+The task contract requires each to equal 0.0 for all four candidates.
 ```
 
-Additionally, the executed source paths include:
-
-```text
-...\1. The cropped image data and raster labels\test\image\<tile>.tif
-```
-
-while the earlier task book used a shortened dataset path.
-
-This task does **not** rerun any candidate. Exact raster bytes (SHA256) are authoritative.
+No candidate rerun is authorized.
 
 # 1. Git gate
 
@@ -53,7 +48,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 75e01defde3ad6e9f8a247481028536e68ef4ee4
+HEAD = 728932094a9f86f7c1607abc6a2beff12d2d2d70
 ```
 
 Allowed initial tracked tree:
@@ -65,139 +60,50 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- rerun `predict.py`;
-- rerun `--inspect-proposals`;
-- run any model/detector inference;
-- run Qwen / ProgramHead;
-- run SAM2;
-- run D-B1;
+- execute `predict.py`;
+- execute `--inspect-proposals`;
+- execute detector/model inference;
+- run Qwen / SAM2 / D-B1;
 - run reference selection;
 - run pytest;
+- run sync write;
 - modify canonical RC1;
-- modify external RC1 source/config/model assets;
-- modify or delete candidate diagnostics;
-- inspect `global_proposals.png` visually;
-- inspect source images visually for quality;
-- access GT masks/polygons;
-- compute GT IoU;
-- replace any candidate;
-- change thresholds/config/model;
-- run write sync;
+- modify external RC1;
+- modify/delete existing diagnostics;
+- inspect preview images visually;
+- access GT;
+- replace candidates;
 - update main;
 - force push.
 
-Only read existing files plus the setup/integrity checks explicitly authorized below.
+This task is read-only except for repository docs/handoff.
 
 # 3. Allowed tracked changes
 
 Only:
 
 ```text
-docs/task8b3_p1d12_locked_demo_proposal_gate.md
 docs/task8b3_p1d12_r1_evidence_closure.md
+docs/task8b3_p1d12_r2_final_evidence_closure.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No source/test/config/model tracked file may change.
+# 4. Verify frozen detector threshold
 
-# 4. Current external integrity check
-
-Run the approved sync helper in read-only mode:
+Read only:
 
 ```text
-python scripts/sync_advisor_rc1_delivery.py ^
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
-  --check
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
 ```
 
-Require:
+Require exact effective value:
 
 ```text
-checked = 135
-match = 135
-missing = 0
-mismatch = 0
-exit code = 0
+FROZEN_THRESHOLD = 0.5
 ```
 
-Then run from the external RC1 root with the specified RC1 Python:
-
-```text
-python check_setup.py
-```
-
-Require:
-
-```text
-exit code = 0
-BuildReasonSeg environment: READY
-```
-
-This is an integrity check only. No candidate execution.
-
-If either gate fails:
-- do not continue;
-- STOP.
-
-# 5. Exact locked raster identity — authoritative bytes
-
-For the exact four source paths recorded in the P1D12 report, read metadata only.
-
-Expected authoritative identities:
-
-```text
-right / 1010.tif
-SHA256 = 1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2
-
-left / 1003.tif
-SHA256 = eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38
-
-above / 1008.tif
-SHA256 = 0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd
-
-below / 1009.tif
-SHA256 = c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7
-```
-
-For each record:
-
-```text
-absolute path
-exists
-byte size
-SHA256
-width
-height
-PIL/image mode
-channel count
-```
-
-Require all:
-
-```text
-SHA256 = exact expected value
-width = 512
-height = 512
-RGB-readable = YES
-```
-
-Path spelling/subdirectory may differ from the shortened task-book path **only if the exact SHA256 lock matches**.
-
-If any SHA differs:
-- outcome = EVIDENCE_FAILED;
-- do not substitute another raster;
-- STOP.
-
-# 6. Frozen detector constants — read only
-
-Read current external:
-
-```text
-buildreasonseg/runtime/detector.py
-```
-
-Require exactly:
+Also reconfirm, read-only:
 
 ```text
 TILE_SIZE = 512
@@ -208,7 +114,6 @@ CONF = 0.05
 MAX_DET = 300
 DUPLICATE_IOU = 0.50
 MERGE_BBOX_EXTENT_RATIO_MAX = 0.20
-FROZEN_THRESHOLD = 0.5
 ```
 
 Record:
@@ -217,85 +122,35 @@ Record:
 DETECTOR_CONSTANTS = MATCH
 ```
 
-If not exact:
+If `FROZEN_THRESHOLD != 0.5` or any other constant differs:
+- outcome = EVIDENCE_FAILED;
 - STOP.
 
-# 7. Existing diagnostics — NO rerun
+# 5. Read exact existing result.json timing evidence
 
-Read only these already-created directories:
-
-```text
-external/inference/output/diagnostics/1010
-external/inference/output/diagnostics/1003
-external/inference/output/diagnostics/1008
-external/inference/output/diagnostics/1009
-```
-
-For each directory require it exists and contains exactly the inspect-mode artifacts already reported:
+Read only the four existing files:
 
 ```text
-global_proposals.png
-parsed_program.json
-prompt.txt
-proposals.json
-result.json
+inference/output/diagnostics/1010/result.json
+inference/output/diagnostics/1003/result.json
+inference/output/diagnostics/1008/result.json
+inference/output/diagnostics/1009/result.json
 ```
 
-No need to hash/read `global_proposals.png` image content.
+Do not regenerate them.
 
-Require absence of:
-
-```text
-selected_reference.png
-reasoning_context.png
-reference_context_mask.png
-direction_field.png
-nearest_field.png
-relation_weight.png
-prototype_similarity.png
-maps.npz
-```
-
-Do not delete anything.
-
-# 8. Re-read result/proposal evidence
-
-For each candidate, read only:
-
-```text
-result.json
-proposals.json
-```
-
-Recompute and record:
+For each candidate, record exact JSON values:
 
 ```text
 status
 mode
-raw_proposal_count
-merged_proposal_count
-proposals.count
-number of proposals.items
-tile_count
-tile_size
-overlap
+timings.language
 timings.detector
+timings.merge
 timings.sam2
 timings.relation_fields
 timings.db1
-prompt field value / presence
-parsed field value / presence
-result.json SHA256
-proposals.json SHA256
-```
-
-Expected P1D12 counts:
-
-```text
-right = raw 6 / merged 6 / eligible 4
-left  = raw 66 / merged 53 / eligible 42
-above = raw 9 / merged 9 / eligible 4
-below = raw 7 / merged 6 / eligible 3
+timings.total
 ```
 
 Require for all four:
@@ -303,114 +158,72 @@ Require for all four:
 ```text
 status = SUCCESS
 mode = inspect
-merged_proposal_count = proposals.count = len(items)
-tile_count = 1
-tile_size = 512
-overlap = 128
 timings.sam2 = 0.0
 timings.relation_fields = 0.0
 timings.db1 = 0.0
-prompt absent or ""
-parsed absent, null, or {}
 ```
 
-# 9. Recompute mechanical eligible count
+No inference or interpretation from missing fields is allowed.
+The values must be read directly from the existing JSON.
 
-From `proposals.json` only, recompute:
+Also record exact SHA256 of each `result.json` and require they match P1D12:
 
 ```text
-eligible_largest =
-    mask_area > 0
-    AND touches_image_border == false
-    AND bbox_extent_ratio <= 0.20
+1010:
+54c964933fca667ff9c55593439d3059c2f8ec18d30951d16a417eac880cc518
+
+1003:
+d2cef24ea3b15a528a8f2dec29faeb9fa1992bb9385633cdb2e419ea9039ad8e
+
+1008:
+bf70127106e5798b5be40a2aa317ac8921abe99b1e5015c9945a912e4657184c
+
+1009:
+ab75dd17e082c171e0b0f92eb9586329216bb32a1eafb317bcb2eab323e91507
 ```
 
-Require exact:
-
-```text
-right = 4
-left = 42
-above = 4
-below = 3
-```
-
-No ranking. No reference selection. No visual judgement.
-
-# 10. Mask / overlay non-production evidence
-
-For the four stems:
-
-```text
-1010
-1003
-1008
-1009
-```
-
-Check external:
-
-```text
-inference/output/masks
-inference/output/overlays
-```
-
-The P1D12 inspect-only run must not have created candidate-specific mask/overlay files.
-
-Because prior unrelated files could theoretically exist, use timestamps only if needed to distinguish pre-existing files.
-Do not delete/modify anything.
-
-Record one of:
-
-```text
-P1D12 candidate mask/overlay produced = NO
-```
-
-or, if attribution cannot be established:
-
-```text
-P1D12 candidate mask/overlay attribution = NOT ESTABLISHED
-```
-
-If there is affirmative evidence that P1D12 produced a candidate mask/overlay:
+If any SHA differs:
+- do not rerun;
 - outcome = EVIDENCE_FAILED;
 - STOP.
 
-# 11. No re-execution evidence
+# 6. Confirm no task execution occurred
 
 Record explicitly:
 
 ```text
-candidate inference invocations in R1 = 0
-predict.py invocations in R1 = 0
-detector inference in R1 = 0
-candidate diagnostics rewritten = NO
+predict.py invocations = 0
+--inspect-proposals invocations = 0
+detector inference invocations = 0
+model inference invocations = 0
+diagnostics rewritten = NO
+external delivery modified = NO
 ```
 
-# 12. Final classification
+# 7. Outcome
 
 ## A — `PROP01_LOCKED_DEMO_PROPOSAL_GATE_EVIDENCE_CLOSED`
 
-Require all:
+Require:
 
 ```text
-external source/config integrity = 135/135
-external setup = READY
-4/4 locked raster SHA = exact match
-4/4 raster dimensions = 512x512
-detector constants = MATCH
-existing result/proposals evidence reproduces P1D12 counts
-eligible counts = 4 / 42 / 4 / 3
-inspect-only timing proof = PASS
-core-chain artifacts = NONE
-no affirmative candidate mask/overlay production
-no candidate rerun
+FROZEN_THRESHOLD = 0.5
+all frozen detector constants = MATCH
+4/4 result.json SHA = unchanged
+4/4 status = SUCCESS
+4/4 mode = inspect
+4/4 timings.sam2 = 0.0
+4/4 timings.relation_fields = 0.0
+4/4 timings.db1 = 0.0
+no candidate/model rerun
+external delivery unchanged
 ```
 
 Then freeze:
 
 ```text
-P1D12 = APPROVABLE
-PROP01_LOCKED_DEMO_PROPOSAL_GATE_PASS
+Task 8B.3-P1D12 = APPROVED
+Proposal gate = PROP01_LOCKED_DEMO_PROPOSAL_GATE_PASS
 PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
 NEXT = REF01_LOCKED_DEMO_REFERENCE_FORENSICS
 ```
@@ -419,9 +232,7 @@ Do not execute NEXT.
 
 ## B — `PROP01_LOCKED_DEMO_PROPOSAL_GATE_EVIDENCE_FAILED`
 
-For any contradiction in immutable raster identity, counts, inspect-only proof, or integrity.
-
-Then:
+For any contradiction.
 
 ```text
 NEXT = PROP01_LOCKED_DEMO_PROPOSAL_EVIDENCE_RECOVERY
@@ -429,110 +240,95 @@ NEXT = PROP01_LOCKED_DEMO_PROPOSAL_EVIDENCE_RECOVERY
 
 Do not execute NEXT.
 
-# 13. Report
+# 8. Report
 
 Create:
+
+```text
+docs/task8b3_p1d12_r2_final_evidence_closure.md
+```
+
+Append a short R2 section to:
 
 ```text
 docs/task8b3_p1d12_r1_evidence_closure.md
 ```
 
-Append a short R1 evidence-closure section to:
+Required report table:
 
 ```text
-docs/task8b3_p1d12_locked_demo_proposal_gate.md
+candidate | result.json SHA match | status | mode | sam2 | relation_fields | db1
 ```
 
-Required sections:
+Also record:
 
-1. starting HEAD
-2. no-rerun declaration
-3. external 135/135 + setup READY
-4. exact four raster paths + SHA/size/dimensions/mode
-5. detector constants
-6. per-candidate existing diagnostics file set
-7. per-candidate result/proposals fields
-8. recomputed eligible counts
-9. SAM2/relation/D-B1 zero-timing proof
-10. no core artifacts
-11. mask/overlay attribution
-12. exact outcome
-13. exact NEXT.
+```text
+FROZEN_THRESHOLD
+DETECTOR_CONSTANTS
+no-rerun declaration
+Outcome
+NEXT
+```
 
-# 14. FROM_DSH
+# 9. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D12-R1
+Task: 8B.3-P1D12-R2
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 75e01defde3ad6e9f8a247481028536e68ef4ee4
+Starting HEAD: 728932094a9f86f7c1607abc6a2beff12d2d2d70
 Candidate rerun: NO
 predict.py executed: NO
-Detector inference executed: NO
-External sync check: 135/135 PASS / FAIL
-External setup: READY / NOT READY
-Locked raster SHA identities: 4/4 PASS / other
-Locked raster dimensions: 4/4 512x512 / other
-Locked raster RGB readability: 4/4 PASS / other
+Detector/model inference executed: NO
+External delivery modified: NO
+FROZEN_THRESHOLD: 0.5 / other
 Detector constants: MATCH / other
-Existing diagnostics dirs: 4/4 PRESENT / other
-Existing diagnostics inspect-only file set: 4/4 PASS / other
-Core-chain artifacts present: NO / YES
-SAM2/relation/DB1 timings: 0/0/0 for all four / other
-right raw/merged/eligible: 6/6/4 / other
-left raw/merged/eligible: 66/53/42 / other
-above raw/merged/eligible: 9/9/4 / other
-below raw/merged/eligible: 7/6/3 / other
-Candidate mask/overlay produced by P1D12: NO / YES / NOT ESTABLISHED
-Candidate replacement: NO
-Visual inspection: NO
-Ground-truth access: NO
+1010 result SHA: MATCH / other
+1003 result SHA: MATCH / other
+1008 result SHA: MATCH / other
+1009 result SHA: MATCH / other
+1010 sam2/relation/db1: 0.0/0.0/0.0 / other
+1003 sam2/relation/db1: 0.0/0.0/0.0 / other
+1008 sam2/relation/db1: 0.0/0.0/0.0 / other
+1009 sam2/relation/db1: 0.0/0.0/0.0 / other
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
 Outcome: <exact enum>
 Next gate: <exact enum>
-Report: docs/task8b3_p1d12_r1_evidence_closure.md
+Report: docs/task8b3_p1d12_r2_final_evidence_closure.md
 Next action: Awaiting ChatGPT audit; do not run reference selection or full inference.
 ```
 
-# 15. Commit / push
+# 10. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): close locked demo proposal evidence
+docs(rc1): finalize locked demo proposal evidence
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record locked demo proposal evidence stop
+docs(rc1): record final proposal evidence stop
 ```
 
 Push normally.
 No force push.
 
-# 16. COMPLETE definition
+# 11. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- no candidate rerun;
-- no model inference;
-- no source/config/model external modification;
-- current external integrity is 135/135 and setup READY;
-- all four exact raster hashes match immutable locks;
-- dimensions/RGB status match;
-- detector constants match;
-- existing diagnostics reproduce all P1D12 counts;
-- eligible counts reproduce exactly;
-- inspect-only timings prove no SAM2/relation/D-B1 execution;
-- no core-chain diagnostics exist;
-- no affirmative mask/overlay creation by P1D12;
-- exact outcome assigned;
-- next gate not executed;
-- only allowed tracked docs/handoff committed;
-- push succeeds;
+- no candidate/model rerun;
+- no external modification;
+- `FROZEN_THRESHOLD = 0.5`;
+- all frozen detector constants match;
+- all four existing `result.json` SHA values match P1D12;
+- all four existing JSONs directly report `sam2/relation_fields/db1 = 0.0`;
+- only allowed docs/handoff change;
+- commit/push succeeds;
 - STOP.
