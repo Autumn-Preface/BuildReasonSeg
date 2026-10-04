@@ -167,3 +167,57 @@ the 5000×5000 synthetic guard. Each is independently verifiable and keeps the d
 **Scope compliance:** no detector parameter/tiling/IoU-threshold/winner/stable-ID/Reference/context/language/SAM2/
 D-B1/validity change; no PROP-01/REF-01/MASK-01 fix; no manifest update; no canonical suite; no external delivery
 sync or edit; no real predict or six-image Demo; no package change.
+
+---
+
+## Task 8B.3-M1A.2A — compact proposal representation implemented (canonical runtime only)
+
+| item | value |
+|---|---|
+| branch | fix/task8b3-mem01-compact-proposals |
+| starting HEAD | 2c51c48252fcc705da5d9ee914299775d985a725 |
+| files changed | buildreasonseg/runtime/detector.py, buildreasonseg/runtime/core.py, buildreasonseg/runtime/outputs.py |
+| tests / source_manifest / external delivery | NOT modified |
+| py_compile gate | PASS (detector.py, core.py, outputs.py) |
+| synthetic smoke gate | PASS — no model loading, SMOKE_FAILURES empty |
+| real predict / six-image Demo | NOT RUN |
+
+### What changed
+
+1. GlobalProposal now carries `mask_crop` (tight bbox-local bool crop) + `global_bbox` (inclusive) instead of a
+   full-frame `global_mask`; `image_size` was added as an optional field (default None) so existing constructor
+   calls without it still work. `to_dict()` is unchanged and never serialises `mask_crop`.
+2. `_compact_mask(mask, top, left)` computes the tight bbox via the existing `bbox_of`, slices the crop, and returns
+   `(mask_crop, global_bbox)` or None for an empty mask.
+3. `detect_global()` no longer allocates a full-frame bool array: each detection is compacted in source-pixel space
+   and the accumulated entry stores `mask_crop`, `global_bbox`, `image_size`, tile/confidence/raw-index fields.
+4. `proposal_iou(first, second)` computes duplicate IoU **only inside the two inclusive bboxes' intersection**:
+   0.0 when they do not overlap, otherwise AND/OR counts over the intersection slices with
+   `union = area1 + area2 - intersection`. `DUPLICATE_IOU = 0.50` is unchanged, and the legacy full-frame
+   `iou_of()` is retained untouched for reference/comparison.
+5. `merge_proposals()` builds proposals from `mask_crop`/`global_bbox`; `mask_area`, centroid, image-border touch
+   and border clearance are computed in crop coordinates mapped to global pixels through the bbox and `image_size`
+   (semantics identical to the previous full-frame computation). Winner priority, stable-ID ordering and the
+   no-union rule are unchanged. Duplicate grouping now calls `proposal_iou`.
+6. `eligible()` uses `proposal.mask_crop.any()`; `MERGE_BBOX_EXTENT_RATIO_MAX`, the eligibility rule and
+   `select_reference()` are unchanged.
+7. `core.reference_mask_from_proposal()` still allocates only the 512x512 context mask and pastes the crop slice
+   corresponding to bbox intersect context; it reads `image_size` instead of the removed `global_mask.shape`.
+8. `outputs.proposals_preview_image()` computes the magenta outline with `_erode()` in crop coordinates and writes
+   only the affected global pixel indices; bbox/centroid drawing is unchanged.
+
+### Evidence from the synthetic smoke
+
+* compactness: 40x40 mask with a 10x10 block at (10,5) produced bbox (110, 205, 119, 214) and a 10x10 all-True crop;
+* IoU equivalence: `proposal_iou` equals the legacy full-frame `iou_of` to within 1e-12 on overlapping masks;
+* merge equivalence: grouping, retained count, mask areas, stable IDs and centroid ordering matched expectations;
+* large-image guard: with `np.zeros` monkeypatched to raise on any bool array of shape (5000, 5000), the compact
+  path (compaction + merge + core context crop + preview) completed with no such allocation and correct mask area;
+* no model, checkpoint, dataset or delivery file was touched.
+
+### Scope compliance
+
+Detector parameters (TILE_SIZE/overlap/stride/IMGSZ/CONF/MAX_DET), `DUPLICATE_IOU`, winner priority, stable-ID
+ordering, Reference eligibility/`MERGE_BBOX_EXTENT_RATIO_MAX`/selection, reasoning context, ProgramHead, SAM2, D-B1
+and post-inference SUCCESS validity are unchanged; PROP-01, REF-01 and MASK-01 are untouched. No test file,
+`source_manifest.json`, external delivery, pytest run, predict run or six-image Demo was involved.

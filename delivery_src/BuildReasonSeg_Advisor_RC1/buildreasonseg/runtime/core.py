@@ -187,11 +187,15 @@ def reference_mask_from_proposal(proposal, context) -> np.ndarray:
     top, left, bottom, right = proposal.global_bbox
     valid_top = max(0, context.top)
     valid_left = max(0, context.left)
-    valid_bottom = min(proposal.global_mask.shape[0], context.top + CONTEXT_SIZE)
-    valid_right = min(proposal.global_mask.shape[1], context.left + CONTEXT_SIZE)
+    image_height, image_width = proposal.image_size or (bottom + 1, right + 1)
+    valid_bottom = min(image_height, context.top + CONTEXT_SIZE)
+    valid_right = min(image_width, context.left + CONTEXT_SIZE)
     if valid_bottom <= valid_top or valid_right <= valid_left:
         return reference
-    crop = proposal.global_mask[valid_top:valid_bottom, valid_left:valid_right]
+    crop_top = valid_top - top
+    crop_left = valid_left - left
+    crop = proposal.mask_crop[crop_top:crop_top + (valid_bottom - valid_top),
+                              crop_left:crop_left + (valid_right - valid_left)]
     offset_top = valid_top - context.top
     offset_left = valid_left - context.left
     reference[offset_top:offset_top + crop.shape[0], offset_left:offset_left + crop.shape[1]] = crop

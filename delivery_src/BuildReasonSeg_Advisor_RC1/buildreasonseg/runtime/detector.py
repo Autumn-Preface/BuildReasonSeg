@@ -127,7 +127,7 @@ class GlobalProposal:
     source_tile_id: str
     tile_index: int
     confidence: float
-    global_mask: np.ndarray
+    mask_crop: np.ndarray
     global_bbox: tuple[int, int, int, int]
     mask_area: int
     touches_image_border: bool
@@ -135,6 +135,7 @@ class GlobalProposal:
     centroid: tuple[float, float]
     raw_index: int
     pad_mask_empty: bool = False
+    image_size: tuple[int, int] | None = None
 
     @property
     def bbox_extent_ratio(self) -> float:
@@ -262,19 +263,21 @@ class DetectorRuntime:
                                 keep_left:keep_left + window.size - padding["left"] - padding["right"]]
                     if mask.size == 0:
                         continue
-                global_mask = np.zeros((height_px, width_px), dtype=bool)
                 top = max(0, window.top)
                 left = max(0, window.left)
                 bottom = min(height_px, top + mask.shape[0])
                 right = min(width_px, left + mask.shape[1])
                 if bottom <= top or right <= left:
                     continue
-                global_mask[top:bottom, left:right] = mask[:bottom - top, :right - left]
-                if not global_mask.any():
+                compact = _compact_mask(mask[:bottom - top, :right - left], top=top, left=left)
+                if compact is None:
                     continue
+                mask_crop, global_bbox = compact
                 accumulated.append({"source_tile_id": window.source_tile_id, "tile_index": window.top
                                     * 10000 + window.left, "confidence": detection["confidence"],
-                                    "mask": global_mask, "raw_index": detection["index"],
+                                    "mask_crop": mask_crop, "global_bbox": global_bbox,
+                                    "image_size": (height_px, width_px),
+                                    "raw_index": detection["index"],
                                     "tile_top": window.top, "tile_left": window.left})
         merged, groups = merge_proposals(accumulated)
         return {"windows": windows, "raw_count": raw_count, "merged": merged, "groups": groups,
@@ -291,21 +294,98 @@ def _resize_bool(mask: np.ndarray, size: int) -> np.ndarray:
     return np.asarray(resized) > 127
 
 
+def _compact_mask(mask: np.ndarray, *, top: int, left: int
+                  ) -> tuple[np.ndarray, tuple[int, int, int, int]] | None:
+    """Tight bbox-local bool crop: `mask_crop.shape == (bottom-top+1, right-left+1)` (inclusive bbox)."""
+
+    box = bbox_of(mask)
+    if box is None:
+        return None
+    local_top, local_left, local_bottom, local_right = box
+    crop = np.ascontiguousarray(mask[local_top:local_bottom + 1, local_left:local_right + 1], dtype=bool)
+    if not crop.any():
+        return None
+    global_bbox = (int(local_top) + int(top), int(local_left) + int(left),
+                   int(local_bottom) + int(top), int(local_right) + int(left))
+    return crop, global_bbox
+
+
+def proposal_iou(first: "GlobalProposal", second: "GlobalProposal") -> float:
+    """Duplicate IoU computed **only** inside the two proposals' bbox intersection (no full-frame arrays)."""
+
+    first_top, first_left, first_bottom, first_right = first.global_bbox
+    second_top, second_left, second_bottom, second_right = second.global_bbox
+    top = max(first_top, second_top)
+    left = max(first_left, second_left)
+    bottom = min(first_bottom, second_bottom)
+    right = min(first_right, second_right)
+    if bottom < top or right < left:
+        return 0.0
+    first_crop = first.mask_crop[top - first_top:bottom - first_top + 1,
+                                 left - first_left:right - first_left + 1]
+    second_crop = second.mask_crop[top - second_top:bottom - second_top + 1,
+                                   left - second_left:right - second_left + 1]
+    intersection = float(np.logical_and(first_crop, second_crop).sum())
+    if intersection <= 0.0:
+        return 0.0
+    union = float(first.mask_area + second.mask_area - intersection)
+    if union <= 0:
+        return 0.0
+    return intersection / union
+
+
+def _crop_touches_image_border(mask_crop: np.ndarray, global_bbox: tuple[int, int, int, int],
+                               image_size: tuple[int, int]) -> bool:
+    top, left, bottom, right = global_bbox
+    image_height, image_width = image_size
+    if top == 0 and mask_crop[0, :].any():
+        return True
+    if bottom == image_height - 1 and mask_crop[-1, :].any():
+        return True
+    if left == 0 and mask_crop[:, 0].any():
+        return True
+    if right == image_width - 1 and mask_crop[:, -1].any():
+        return True
+    return False
+
+
+def _crop_border_clearance(mask_crop: np.ndarray, global_bbox: tuple[int, int, int, int],
+                           image_size: tuple[int, int]) -> float:
+    rows, cols = np.nonzero(mask_crop)
+    if rows.size == 0:
+        return 0.0
+    top, left, _bottom, _right = global_bbox
+    image_height, image_width = image_size
+    global_rows = rows + top
+    global_cols = cols + left
+    return float(min(global_rows.min(), global_cols.min(),
+                     image_height - 1 - global_rows.max(), image_width - 1 - global_cols.max()))
+
+
+def _crop_centroid(mask_crop: np.ndarray, global_bbox: tuple[int, int, int, int]) -> tuple[float, float]:
+    rows, cols = np.nonzero(mask_crop)
+    if rows.size == 0:
+        return (0.0, 0.0)
+    top, left, _bottom, _right = global_bbox
+    return (float(rows.mean()) + top, float(cols.mean()) + left)
+
+
 def merge_proposals(entries: list[dict]) -> tuple[list[GlobalProposal], list[list[int]]]:
     """Duplicate groups at global-mask IoU >= 0.50; keep exactly one proposal per group (no union)."""
 
     proposals: list[GlobalProposal] = []
     for entry in entries:
-        mask = entry["mask"]
-        box = bbox_of(mask)
-        if box is None:
-            continue
+        mask_crop = entry["mask_crop"]
+        box = entry["global_bbox"]
+        image_size = entry.get("image_size") or (box[2] + 1, box[3] + 1)
         proposals.append(GlobalProposal(
             proposal_id=-1, source_tile_id=entry["source_tile_id"], tile_index=entry["tile_index"],
-            confidence=float(entry["confidence"]), global_mask=mask, global_bbox=box,
-            mask_area=int(mask.sum()), touches_image_border=touches_original_border(mask),
-            border_clearance=border_clearance(mask), centroid=centroid_of(mask),
-            raw_index=int(entry["raw_index"])))
+            confidence=float(entry["confidence"]), mask_crop=mask_crop, global_bbox=box,
+            mask_area=int(mask_crop.sum()),
+            touches_image_border=_crop_touches_image_border(mask_crop, box, image_size),
+            border_clearance=_crop_border_clearance(mask_crop, box, image_size),
+            centroid=_crop_centroid(mask_crop, box), raw_index=int(entry["raw_index"]),
+            image_size=image_size))
 
     parent = list(range(len(proposals)))
 
@@ -322,7 +402,7 @@ def merge_proposals(entries: list[dict]) -> tuple[list[GlobalProposal], list[lis
 
     for first in range(len(proposals)):
         for second in range(first + 1, len(proposals)):
-            if iou_of(proposals[first].global_mask, proposals[second].global_mask) >= DUPLICATE_IOU:
+            if proposal_iou(proposals[first], proposals[second]) >= DUPLICATE_IOU:
                 union(first, second)
 
     groups: dict[int, list[int]] = {}
@@ -352,7 +432,7 @@ def merge_proposals(entries: list[dict]) -> tuple[list[GlobalProposal], list[lis
 def eligible(proposal: GlobalProposal, *, family: str = "largest") -> bool:
     """Frozen U-C1 eligibility: non-empty, not touching the original image border, extent <= 0.20."""
 
-    if proposal.mask_area <= 0 or not proposal.global_mask.any():
+    if proposal.mask_area <= 0 or not proposal.mask_crop.any():
         return False
     if proposal.touches_image_border:
         return False

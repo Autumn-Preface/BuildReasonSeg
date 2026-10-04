@@ -178,8 +178,12 @@ def proposals_preview_image(rgb: np.ndarray, proposals, *, selected_id: int | No
             preview[row, max(0, left):min(rgb.shape[1], right + 1)] = colour
         for column in (max(0, left), min(rgb.shape[1] - 1, right)):
             preview[max(0, top):min(rgb.shape[0], bottom + 1), column] = colour
-        outline = proposal.global_mask & ~_erode(proposal.global_mask)
-        preview[outline] = (255, 0, 255)
+        outline_crop = proposal.mask_crop & ~_erode(proposal.mask_crop)
+        if outline_crop.any():
+            outline_rows, outline_cols = np.nonzero(outline_crop)
+            global_rows = np.clip(outline_rows + top, 0, rgb.shape[0] - 1)
+            global_cols = np.clip(outline_cols + left, 0, rgb.shape[1] - 1)
+            preview[global_rows, global_cols] = (255, 0, 255)
         row = int(np.clip(proposal.centroid[0], 0, rgb.shape[0] - 1))
         column = int(np.clip(proposal.centroid[1], 0, rgb.shape[1] - 1))
         preview[max(0, row - 3):row + 4, max(0, column - 3):column + 4] = (0, 0, 255)
