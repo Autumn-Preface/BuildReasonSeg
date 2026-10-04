@@ -248,3 +248,30 @@ Legacy equivalence: for all three geometries the new function returns arrays ide
 full-frame computation (`np.array_equal` true), which is the expected behaviour wherever the legacy result was
 already inside the bbox; the fix additionally removes the out-of-bbox offsets that the legacy code only avoided
 incidentally.
+
+---
+
+## Task 8B.3-M1A.2B — dedicated runtime-test adaptation (single run)
+
+| item | value |
+|---|---|
+| branch | `fix/task8b3-mem01-compact-proposals` @ `39b36031294f1ec1ddab3f5e9681170af687af5a` |
+| files changed | `tests/test_task8b_runtime.py` only |
+| runtime files | NOT modified (`detector.py`, `core.py`, `outputs.py` untouched) |
+| dedicated run | exactly once: `pytest tests/test_task8b_runtime.py -q` → **FAIL (STOP)** |
+| tail | FAILED tests/test_task8b_runtime.py::test_select_reference_tie_break - KeyErr... | FAILED tests/test_task8b_runtime.py::test_merge_equivalence_with_compact_masks | 5 failed, 27 passed in 0.44s |
+| manifest | UNCHANGED (dedicated gate failed) |
+| external delivery / real inference | NOT touched / NOT RUN |
+
+Adaptation: the test-local `_proposal()` helper now builds the compact representation
+(`mask_crop` = tight crop of the supplied full-frame mask over its own bbox, `global_bbox`, `image_size`), a
+`_to_full()` test-only reconstruction helper supports the legacy full-frame comparisons, and the two duplicate-winner
+assertions use the reconstructed masks. The legacy full-frame `detector.iou_of()` is deliberately kept as the
+comparison oracle for the new compact `detector.proposal_iou()`.
+
+Added coverage (six groups): compact geometry tightness/global offsets; `proposal_iou` equivalence with the legacy
+full-frame IoU plus the disjoint and identical cases; merge equivalence (grouping, count, areas, winner identity,
+stable ids, no union); Reference-context equivalence against a locally re-implemented legacy full-frame computation
+over four context placements; preview built from the crop (bbox window touched, outside untouched); serialization
+contract (`to_dict()` carries no mask payload); and a 5000×5000 guard that monkeypatches `np.zeros` to raise on any
+full-frame bool allocation while exercising compaction, merge, the reference crop and the preview.

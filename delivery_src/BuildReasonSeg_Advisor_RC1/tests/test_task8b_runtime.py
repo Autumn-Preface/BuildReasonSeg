@@ -153,11 +153,22 @@ def _proposal(mask: np.ndarray, confidence: float, tile: str, raw_index: int, ti
               proposal_id: int = -1) -> GlobalProposal:
     box = detector.bbox_of(mask)
     return GlobalProposal(proposal_id=proposal_id, source_tile_id=tile, tile_index=tile_index,
-                          confidence=confidence, global_mask=mask, global_bbox=box,
+                          confidence=confidence, mask_crop=np.ascontiguousarray(mask[box[0]:box[2] + 1, box[1]:box[3] + 1], dtype=bool),
+                          global_bbox=box,
                           mask_area=int(mask.sum()),
                           touches_image_border=detector.touches_original_border(mask),
                           border_clearance=detector.border_clearance(mask),
-                          centroid=detector.centroid_of(mask), raw_index=raw_index)
+                          centroid=detector.centroid_of(mask), raw_index=raw_index,
+                          image_size=mask.shape)
+
+
+def _to_full(proposal, size: int = 512) -> np.ndarray:
+    """Rebuild the full-frame mask from the compact representation (test-only helper)."""
+
+    full = np.zeros((size, size), dtype=bool)
+    top, left, bottom, right = proposal.global_bbox
+    full[top:bottom + 1, left:right + 1] = proposal.mask_crop
+    return full
 
 
 def test_merge_duplicate_iou_threshold_and_no_union() -> None:
@@ -178,8 +189,8 @@ def test_merge_duplicate_iou_threshold_and_no_union() -> None:
     assert detector.iou_of(first, second) >= detector.DUPLICATE_IOU
     # the winner is one of the originals (equal area → higher confidence), never a union
     duplicate_group = [proposal for proposal in merged
-                       if np.array_equal(proposal.global_mask, first)
-                       or np.array_equal(proposal.global_mask, second)]
+                       if np.array_equal(_to_full(proposal), first)
+                       or np.array_equal(_to_full(proposal), second)]
     assert len(duplicate_group) == 1
     assert duplicate_group[0].confidence == pytest.approx(0.9)
     # "no union" means the kept mask is bit-identical to one of the raw inputs
@@ -370,3 +381,143 @@ def test_diagnostics_required_fields(tmp_path: Path) -> None:
     assert saved["status"] == "FAILED"
     with np.load(directory / "maps.npz") as arrays:
         assert "P_dir" in arrays
+
+
+# ------------------------------------------------- Task 8B.3-M1A.2B compact-proposal contract
+
+
+def _compact_proposal(mask: np.ndarray, *, top: int, left: int, image_size: tuple[int, int],
+                      confidence: float = 0.5, tile: str = "t", raw_index: int = 0,
+                      proposal_id: int = -1) -> detector.GlobalProposal:
+    compact = detector._compact_mask(mask, top=top, left=left)
+    assert compact is not None
+    crop, bbox = compact
+    return detector.GlobalProposal(
+        proposal_id=proposal_id, source_tile_id=tile, tile_index=0, confidence=confidence,
+        mask_crop=crop, global_bbox=bbox, mask_area=int(crop.sum()),
+        touches_image_border=detector._crop_touches_image_border(crop, bbox, image_size),
+        border_clearance=detector._crop_border_clearance(crop, bbox, image_size),
+        centroid=detector._crop_centroid(crop, bbox), raw_index=raw_index, image_size=image_size)
+
+
+def test_compact_geometry_is_tight_and_global() -> None:
+    mask = np.zeros((60, 80), dtype=bool)
+    mask[10:20, 5:15] = True
+    proposal = _compact_proposal(mask, top=100, left=200, image_size=(400, 500))
+    top, left, bottom, right = proposal.global_bbox
+    assert (top, left, bottom, right) == (110, 205, 119, 214)
+    assert proposal.mask_crop.shape == (10, 10)
+    assert proposal.mask_crop.all()
+    assert proposal.mask_area == 100
+    assert proposal.centroid == (114.5, 209.5)
+    assert np.array_equal(_to_full(proposal, 400)[110:120, 205:215], proposal.mask_crop)
+
+
+def test_proposal_iou_equals_legacy_full_frame_iou() -> None:
+    first = np.zeros((200, 200), dtype=bool)
+    first[20:60, 20:60] = True
+    second = np.zeros((200, 200), dtype=bool)
+    second[40:80, 40:80] = True
+    disjoint = np.zeros((200, 200), dtype=bool)
+    disjoint[150:170, 150:170] = True
+    a = _compact_proposal(first, top=0, left=0, image_size=(200, 200))
+    b = _compact_proposal(second, top=0, left=0, image_size=(200, 200))
+    c = _compact_proposal(disjoint, top=0, left=0, image_size=(200, 200))
+    assert detector.proposal_iou(a, b) == pytest.approx(detector.iou_of(first, second), abs=1e-12)
+    assert detector.proposal_iou(a, c) == 0.0
+    assert detector.proposal_iou(a, a) == pytest.approx(1.0, abs=1e-12)
+
+
+def test_merge_equivalence_with_compact_masks() -> None:
+    a = np.zeros((512, 512), dtype=bool)
+    a[100:140, 100:140] = True
+    b = a.copy()
+    b[104:144, 104:144] = True
+    far = np.zeros((512, 512), dtype=bool)
+    far[300:340, 300:340] = True
+    entries = []
+    for index, (mask, confidence, tile) in enumerate(((a, 0.5, "t1"), (b, 0.9, "t2"),
+                                                     (far, 0.7, "t3"))):
+        compact = detector._compact_mask(mask, top=0, left=0)
+        crop, bbox = compact
+        entries.append({"source_tile_id": tile, "tile_index": index, "confidence": confidence,
+                        "mask_crop": crop, "global_bbox": bbox, "image_size": (512, 512),
+                        "raw_index": index})
+    merged, _groups = detector.merge_proposals(entries)
+    assert [p.proposal_id for p in merged] == [0, 1]
+    assert len(merged) == 2
+    assert sorted(p.mask_area for p in merged) == [1600, 1600]
+    duplicate = [p for p in merged if np.array_equal(_to_full(p), a) or np.array_equal(_to_full(p), b)]
+    assert len(duplicate) == 1 and duplicate[0].confidence == pytest.approx(0.9)
+    assert not any(p.mask_area > 1600 for p in merged)
+
+
+def test_reference_context_equivalence_with_legacy_full_frame() -> None:
+    from buildreasonseg.runtime.context import CONTEXT_SIZE
+    from buildreasonseg.runtime.core import reference_mask_from_proposal
+
+    size = (300, 320)
+    full = np.zeros(size, dtype=bool)
+    full[40:70, 50:90] = True
+    proposal = _compact_proposal(full, top=0, left=0, image_size=size)
+
+    class Ctx:
+        def __init__(self, top: int, left: int) -> None:
+            self.top, self.left, self.size = top, left, CONTEXT_SIZE
+
+    for context_top, context_left in ((40, 50), (-20, -15), (10, 10), (250, 270)):
+        context = Ctx(context_top, context_left)
+        expected = np.zeros((CONTEXT_SIZE, CONTEXT_SIZE), dtype=bool)
+        valid_top = max(0, context_top)
+        valid_left = max(0, context_left)
+        valid_bottom = min(size[0], context_top + CONTEXT_SIZE)
+        valid_right = min(size[1], context_left + CONTEXT_SIZE)
+        if valid_bottom > valid_top and valid_right > valid_left:
+            expected[valid_top - context_top:valid_top - context_top + (valid_bottom - valid_top),
+                     valid_left - context_left:valid_left - context_left + (valid_right - valid_left)] = \
+                full[valid_top:valid_bottom, valid_left:valid_right]
+        assert np.array_equal(reference_mask_from_proposal(proposal, context), expected)
+
+
+def test_preview_uses_crop_not_full_frame_mask() -> None:
+    from buildreasonseg.runtime import outputs as outputs_module
+
+    rgb = np.zeros((256, 256, 3), dtype=np.uint8)
+    mask = np.zeros((60, 60), dtype=bool)
+    mask[10:30, 10:30] = True
+    proposal = _compact_proposal(mask, top=100, left=120, image_size=(256, 256), proposal_id=3)
+    preview = outputs_module.proposals_preview_image(rgb, [proposal], selected_id=3)
+    assert preview.shape == (256, 256, 3)
+    assert preview[100:160, 120:180].sum() > 0
+    assert preview[:100, :120].sum() == 0
+
+
+def test_serialization_contract_has_no_mask_payload() -> None:
+    mask = np.zeros((40, 40), dtype=bool)
+    mask[5:15, 5:15] = True
+    proposal = _compact_proposal(mask, top=10, left=20, image_size=(100, 100))
+    payload = proposal.to_dict()
+    assert "mask_crop" not in payload and "global_mask" not in payload
+    assert payload["global_bbox"] == [15, 25, 24, 34]
+    assert payload["mask_area"] == 100
+    assert isinstance(payload["bbox_extent_ratio"], float)
+
+
+def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
+    real_zeros = np.zeros
+
+    def guard(shape, *args, **kwargs):
+        if tuple(shape) == (5000, 5000) and kwargs.get("dtype") is bool:
+            raise AssertionError("full-frame 5000x5000 bool allocation attempted")
+        return real_zeros(shape, *args, **kwargs)
+
+    monkeypatch.setattr(np, "zeros", guard)
+    big = real_zeros((5000, 5000), dtype=bool)
+    big[100:200, 300:400] = True
+    proposal = _compact_proposal(big, top=0, left=0, image_size=(5000, 5000))
+    assert proposal.mask_area == 10000
+    entries = [{"source_tile_id": "a", "tile_index": 0, "confidence": 0.5,
+                "mask_crop": proposal.mask_crop, "global_bbox": proposal.global_bbox,
+                "image_size": (5000, 5000), "raw_index": 0}]
+    merged, _groups = detector.merge_proposals(entries + [dict(entries[0], source_tile_id="b")])
+    assert len(merged) == 1 and merged[0].mask_area == 10000

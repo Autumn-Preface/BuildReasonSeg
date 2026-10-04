@@ -1,151 +1,273 @@
-# TO_DSH — Task 8B.3-M1A.2A-R1: Fix Reference Crop Intersection + Handoff BOM
+# TO_DSH — Task 8B.3-M1A.2B: Dedicated Compact-Mask Tests + Manifest
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-mem01-compact-proposals`
-> Required starting HEAD: `10d36117993f128c9a3d6bd2bea114dc63120121`
+> Required starting HEAD: `39b36031294f1ec1ddab3f5e9681170af687af5a`
+> Canonical RC1: `delivery_src/BuildReasonSeg_Advisor_RC1`
 
-# 0. Why this correction exists
+## 0. Purpose
 
-ChatGPT re-read GitHub after propagation and found M1A.2A commit:
-`10d36117993f128c9a3d6bd2bea114dc63120121` (`fix(rc1): store compact proposal masks in canonical runtime`).
+Validate the already-implemented compact-proposal runtime without changing runtime code.
 
-The compact detector implementation is present, but `core.reference_mask_from_proposal()`
-computes crop bounds against the image/context only, not against `proposal.global_bbox`.
-When the 512 context begins before the proposal bbox, this yields negative offsets into
-`proposal.mask_crop` and can return an empty/misaligned reference mask.
-
-Also `handoff/FROM_DSH.md` again has a UTF-8 BOM before
-`<!-- ARTIFACT-FACTS:BEGIN -->`.
-
-This task fixes only those two issues.
-
-# 1. Strict prohibitions
-
-Do NOT modify detector.py, outputs.py, tests, source_manifest.json, external delivery,
-model/config/threshold/tiling/merge/reference policy, PROP-01, REF-01, MASK-01,
-Task 8B.4, or Task 8C.
-
-Do NOT run pytest, real predict, six-image Demo, YOLO, Qwen, SAM2, or D-B1.
-
-Allowed changed paths only:
+This task does only:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
-docs/task8b3_m1a_compact_proposal_masks.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
+adapt/add dedicated tests
+→ run tests/test_task8b_runtime.py exactly once
+→ update source_manifest.json
+→ verify manifest 135/135
+→ commit/push
 ```
 
-# 2. Git gate
+No runtime implementation edit, no external-delivery sync, no real inference.
+
+## 1. Strict prohibitions
+
+Do NOT modify:
+
+```text
+buildreasonseg/runtime/detector.py
+buildreasonseg/runtime/core.py
+buildreasonseg/runtime/outputs.py
+```
+
+Do NOT modify detector/model parameters, tiling/overlap/imgsz/conf/max_det, `DUPLICATE_IOU`, merge winner policy, stable-ID policy, Reference eligibility/selection, reasoning context, ProgramHead/SAM2/D-B1/SUCCESS validity, PROP-01, REF-01, MASK-01, or external delivery.
+
+Do NOT run `predict.py`, the six-image Demo, real YOLO/Qwen/SAM2/D-B1, or the full canonical suite `pytest tests -q`.
+
+If dedicated tests expose a runtime bug, do NOT patch runtime in this task: record exact failure, commit/push PARTIAL, STOP.
+
+## 2. Git gate
 
 Require:
 
 ```text
 branch = fix/task8b3-mem01-compact-proposals
-HEAD = 10d36117993f128c9a3d6bd2bea114dc63120121
+HEAD = 39b36031294f1ec1ddab3f5e9681170af687af5a
 ```
 
-Allowed initial tree: clean or only `M handoff/TO_DSH.md`.
+Allowed initial tree: clean, or only `M handoff/TO_DSH.md`.
 
-# 3. Fix `reference_mask_from_proposal()`
-
-The valid global rectangle must be:
+## 3. Allowed changed paths
 
 ```text
-original image ∩ 512 reasoning context ∩ proposal.global_bbox
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+docs/task8b3_m1a_compact_proposal_masks.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
 ```
 
-With inclusive proposal bbox `(top,left,bottom,right)`, use:
+No other path may change.
 
-```python
-valid_top = max(0, context.top, top)
-valid_left = max(0, context.left, left)
-valid_bottom = min(image_height, context.top + CONTEXT_SIZE, bottom + 1)
-valid_right = min(image_width, context.left + CONTEXT_SIZE, right + 1)
-```
+## 4. Adapt test helpers
 
-If empty, return the all-false 512 context mask.
+Update synthetic proposal helpers so tests construct `GlobalProposal(mask_crop=..., global_bbox=..., image_size=...)` instead of `global_mask`.
 
-Then slice `proposal.mask_crop` using offsets from proposal `top,left` and paste using
-offsets from `context.top,context.left`.
+A test-only conversion helper may reconstruct compact representation from a synthetic full mask. Product code must not change.
 
-Do not allocate a full-image proposal mask.
+## 5. Required test groups
 
-# 4. Minimal smoke
+### 5.1 Geometry equivalence
 
-Do NOT edit tests.
+Use interior, top-border, right-border, and irregular masks. Compare compact proposal against test-only legacy full-mask calculations for bbox, tight crop shape, area, centroid, border touch, border clearance, bbox extent ratio.
 
-Run `py_compile` for core.py.
+### 5.2 `proposal_iou()` equivalence
 
-Then run one ephemeral Python smoke with exactly:
-1. context begins above/left of proposal bbox;
-2. context clips proposal at top/left;
-3. context clips proposal at bottom/right.
+Compare new `proposal_iou()` to legacy `iou_of()` for:
+1. identical masks;
+2. partial overlap;
+3. disjoint bboxes;
+4. overlapping bboxes but disjoint foreground;
+5. one bbox contained inside the other.
 
-For each, compare compact `reference_mask_from_proposal()` with a test-only legacy
-full-image reconstruction sliced into the same context. Require bit-identical output.
+Require `pytest.approx` equality.
 
-No model loading.
+### 5.3 Merge equivalence
 
-# 5. Fix BOM
+Build deterministic synthetic proposals containing duplicate IoU >= 0.50, nonduplicate IoU < 0.50, border vs non-border duplicate, confidence tie-break, and distinct centroids.
 
-Rewrite `handoff/FROM_DSH.md` as UTF-8 without BOM.
+Implement a test-only legacy full-frame merge oracle. Assert identical duplicate grouping, winner source/raw identity, proposal count, area, bbox, centroid, confidence, and stable proposal IDs.
 
-First bytes must not be `EF BB BF`.
+### 5.4 Reference-context equivalence
 
-`ARTIFACT-FACTS` contents, ordering and values must remain unchanged.
+Compare compact `reference_mask_from_proposal()` against test-only legacy full-image behavior for:
+- fully inside context;
+- context begins above/left of proposal;
+- clipped top/left;
+- clipped bottom/right;
+- no intersection.
 
-# 6. Report / handoff
+Require bit-identical 512×512 results.
 
-Append report section:
+### 5.5 Preview smoke
+
+Construct compact proposals and call `proposals_preview_image()`. Assert output size matches input, bbox/centroid/outline execution succeeds, and no `global_mask` attribute is required.
+
+### 5.6 Serialization contract
+
+`GlobalProposal.to_dict()` must expose exactly the pre-existing public keys:
 
 ```text
-## Task 8B.3-M1A.2A-R1 — Reference Crop Intersection Correction
+proposal_id
+source_tile_id
+confidence
+mask_area
+global_bbox
+centroid
+touches_image_border
+border_clearance
+bbox_extent_ratio
+raw_index
 ```
 
-Record starting HEAD, bug, corrected 3-way intersection, 3-case smoke result,
-BOM removal, tests/manifest not changed, external delivery unchanged, real inference not run.
+Assert no `mask_crop`, `image_size`, or `global_mask` key.
 
-Update FROM_DSH fields:
+### 5.7 5000×5000 detector allocation guard
+
+No real image/model.
+
+Mechanically exercise `DetectorRuntime.detect_global()` with:
+- fake RGB object exposing `shape=(5000,5000,3)`;
+- monkeypatched `plan_tiles()` returning a tiny fixed list;
+- monkeypatched `extract_tile()` returning a fixed 512×512 RGB tile with no padding;
+- monkeypatched `DetectorRuntime.detect_tile()` returning several small synthetic bool masks, including overlapping masks that force duplicate merge.
+
+Monkeypatch detector-module `np.zeros` so a request for `(5000,5000)` bool raises a sentinel; otherwise delegate to real zeros.
+
+Wrap `np.logical_and`/`np.logical_or` so the test fails if an operand has shape `(5000,5000)`.
+
+Expected:
+- `detect_global()` completes;
+- sentinel never fires;
+- merged proposals exist;
+- every proposal has `mask_crop`;
+- no proposal has `global_mask`;
+- all crop extents are small relative to 5000×5000.
+
+Do not allocate a real 5000×5000 RGB array.
+
+## 6. Legacy helper policy
+
+Product `iou_of(first, second)` may remain for test/reference compatibility. Normal `detect_global → merge_proposals` must use `proposal_iou()`. Tests may call `iou_of()` only as an oracle.
+
+## 7. Dedicated test gate — exactly once
+
+Run exactly once:
+
+```bat
+cd /d C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1
+ENV_PYTHON -m pytest tests/test_task8b_runtime.py -q
+```
+
+Record exact pass/fail count and exit code.
+
+If FAIL:
+- no runtime patch;
+- no rerun;
+- mark PARTIAL;
+- record failure;
+- commit/push and STOP.
+
+If PASS, continue.
+
+## 8. Manifest update
+
+Only after dedicated tests PASS.
+
+Starting manifest must have exactly 135 entries and unchanged path set.
+
+Update hash/size for all manifest-listed canonical files changed since the last valid manifest. At minimum:
 
 ```text
-Task: 8B.3-M1A.2A-R1
+buildreasonseg/runtime/detector.py
+buildreasonseg/runtime/core.py
+buildreasonseg/runtime/outputs.py
+tests/test_task8b_runtime.py
+```
+
+If verification finds another changed manifest-listed path, STOP rather than broadening scope.
+
+Verify:
+
+```text
+entry count = 135
+path set unchanged
+all 135 files exist
+all 135 size/hash values match current canonical files
+```
+
+Record `135/135 PASS`.
+
+## 9. No full canonical suite
+
+Do NOT run `pytest tests -q`. That is reserved for M1A.2C after ChatGPT audit.
+
+## 10. Report
+
+Append `## Task 8B.3-M1A.2B — Dedicated Tests + Manifest` to `docs/task8b3_m1a_compact_proposal_masks.md`.
+
+Record starting HEAD, test groups, dedicated test exact result, invocation count=1, 5000×5000 guard result, manifest result, runtime files unchanged, external delivery unchanged, real inference not run, full canonical suite NOT RUN BY DESIGN, PROP/REF/MASK unchanged.
+
+## 11. FROM_DSH
+
+Preserve `ARTIFACT-FACTS` exactly and save UTF-8 without BOM.
+
+Required fields:
+
+```text
+Task: 8B.3-M1A.2B
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-mem01-compact-proposals
-Starting HEAD: 10d36117993f128c9a3d6bd2bea114dc63120121
-Reference crop 3-way intersection: PASS / FAIL
-Legacy-equivalence smoke: PASS / FAIL
-FROM_DSH encoding: UTF-8 WITHOUT BOM / FAIL
-ARTIFACT-FACTS: PRESERVED / FAIL
-Tests: NOT RUN BY DESIGN
-Manifest: NOT UPDATED BY DESIGN
+Starting HEAD: 39b36031294f1ec1ddab3f5e9681170af687af5a
+Runtime files modified in this task: NO
+Dedicated test invocation count: 1
+Dedicated tests: <exact result>
+Geometry equivalence: PASS / FAIL
+IoU equivalence: PASS / FAIL
+Merge equivalence: PASS / FAIL
+Reference-context equivalence: PASS / FAIL
+Preview smoke: PASS / FAIL
+Serialization contract: PASS / FAIL
+5000x5000 guard: PASS / FAIL
+Manifest: 135/135 PASS / ...
 External delivery modified: NO
-Real inference: NO
+Real inference executed: NO
+Full canonical suite: NOT RUN BY DESIGN
+PROP-01 / REF-01 / MASK-01: UNCHANGED / UNCHANGED / UNCHANGED
 Next action: Awaiting ChatGPT audit.
 ```
 
-# 7. Commit / push
+## 12. Git / commit / push
+
+Allowed changed paths only those in §3.
+
+Run `git status --short`, `git diff --check`, `git diff`. Stage individually.
 
 If COMPLETE:
 
 ```text
-fix(rc1): correct compact reference crop
+test(rc1): validate compact proposal runtime
 ```
 
-Otherwise:
+If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record reference crop correction stop
+docs(rc1): record compact proposal test stop
 ```
 
 Push current branch, no force.
 
-# 8. Final response
+## 13. COMPLETE definition
+
+COMPLETE only if runtime files were not modified in this task; all required test groups exist; dedicated test file was invoked exactly once and passes; 5000×5000 guard passes; manifest 135/135 passes; external delivery remains untouched; no real inference/full canonical suite; report/FROM_DSH complete; commit/push succeed; clean tree; stop.
+
+## 14. Final response
 
 ```text
-TASK 8B.3-M1A.2A-R1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-M1A.2B COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -153,23 +275,20 @@ Commit:
 Push:
 PASS / FAIL
 
-Reference crop intersection:
+Runtime files modified:
+NO
+
+Dedicated test invocation count:
+1
+
+Dedicated tests:
+<exact result>
+
+5000x5000 guard:
 PASS / FAIL
 
-Legacy-equivalence smoke:
-PASS / FAIL / NOT RUN
-
-FROM_DSH encoding:
-UTF-8 WITHOUT BOM / FAIL
-
-ARTIFACT-FACTS:
-PRESERVED / FAIL
-
-Tests:
-NOT RUN BY DESIGN
-
 Manifest:
-NOT UPDATED BY DESIGN
+135/135 PASS / other
 
 External delivery:
 UNCHANGED
@@ -177,8 +296,11 @@ UNCHANGED
 Real inference:
 NOT RUN
 
+Full canonical suite:
+NOT RUN BY DESIGN
+
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得编辑 tests/manifest、不得同步 delivery、不得运行真实 Demo。
+等待 ChatGPT 审核；不得同步 delivery、不得运行真实 Demo、不得进入 Task 8B.4 或 Task 8C。
 ```

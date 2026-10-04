@@ -17,30 +17,28 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1A.2A-R1 Report
+# FROM_DSH — Task 8B.3-M1A.2B Report
 
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in
-git history._
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
+history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1A.2A-R1` |
-| Status | **COMPLETE** |
+| Task | `8B.3-M1A.2B` |
+| Status | **PARTIAL / STOP** |
 | Branch | `fix/task8b3-mem01-compact-proposals` |
-| Starting HEAD | `10d36117993f128c9a3d6bd2bea114dc63120121` |
-| Fix | `core.reference_mask_from_proposal()` now uses original image ∩ 512 reasoning context ∩ `proposal.global_bbox` |
-| Files changed | `buildreasonseg/runtime/core.py` only |
-| py_compile gate | PASS |
-| legacy-equivalence smokes | 3/3 PASS (context at proposal top-left; proposal clipped top-left; proposal clipped bottom-right) |
-| `detector.py` / `outputs.py` / tests / manifest / external delivery | NOT modified |
+| Starting HEAD | `39b36031294f1ec1ddab3f5e9681170af687af5a` |
+| Files changed | `tests/test_task8b_runtime.py` only |
+| Runtime files | UNCHANGED |
+| Dedicated test run | exactly once → **FAIL (STOP)** |
+| Manifest | UNCHANGED (dedicated gate failed) |
+| External delivery modified | NO |
 | Real inference executed | NO |
-| Scientific model/checkpoint changed | NO |
-| PROP-01 / REF-01 / MASK-01 | UNCHANGED / UNCHANGED / UNCHANGED |
 | Report | `docs/task8b3_m1a_compact_proposal_masks.md` |
-| STOP reason | none |
+| STOP reason | dedicated test file failed on its single allowed run; no runtime change and no rerun performed |
 | Next action | Awaiting ChatGPT audit; do not sync delivery. |
 
-Watt was not needed for Task 8B.3-M1A.2A-R1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-M1A.2B (no downloads, no transfers).
 
-No detector/outputs/test/manifest/external-delivery file, package, threshold, merge rule, Reference semantic,
-ProgramHead, SAM2, D-B1 or SUCCESS-validity code was modified; no pytest suite, predict run or Demo was executed.
+No runtime file, external-delivery file, package, threshold, merge rule, Reference semantic or checkpoint was
+modified; no full canonical suite, predict run or six-image Demo was executed.
