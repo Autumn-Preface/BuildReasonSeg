@@ -1,66 +1,61 @@
-# TO_DSH — Task 8B.3-P1D5-R1: Complete Detector Provenance Evidence Contract
+# TO_DSH — Task 8B.3-P1D6: Isolated Epoch-18 Alternate Detector A2 Probe
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `d17517b53b1cb9b82cbecc0432a5023eaa756278`
+> Required starting HEAD: `ede134cf2fea622c1e3ea2229ea6417a8633c8c1`
 > External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. Audit disposition
+# 0. Purpose
 
-P1D5 commit:
+P1D5-R1 is accepted by ChatGPT as completing the detector-provenance evidence contract.
 
-```text
-d17517b53b1cb9b82cbecc0432a5023eaa756278
-docs(rc1): audit detector provenance for a2
-```
-
-has the correct parent and modifies only the three authorized documentation/handoff paths.
-
-Its central evidence is plausible and currently retained:
+Frozen facts:
 
 ```text
-active detector:
-  YOLO26m-seg
-  54,480,241 B
-  sha256 ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
-  documented source = task6m1 continued best.pt
+active detector =
+YOLO26m-seg continued checkpoint
+sha256 ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
 
-training lineage:
-  WHU building dataset
+active training lineage =
+WHU building dataset
+1 class: building
 
-A2 source/domain:
-  NOT ESTABLISHED
+P1D2 = active checkpoint, 9 normal A2 tiles, conf=0.05 → 9/9 boxes=0
+P1D3 = active checkpoint, full A2, conf=0.05 → boxes=0
+P1D4 = active checkpoint, 9 normal A2 tiles, conf=0.001 → 9/9 boxes=0
 
-scientific-freeze classification:
-  DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
+A2 source/domain = NOT ESTABLISHED
 
-primary diagnosis:
-  PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE
-
-recommended next gate:
-  DOMAIN_EVIDENCE_RECOVERY
+validated alternate available =
+YOLO26m-seg epoch-18 checkpoint
+artifacts/checkpoints/task6m/runs/m1_yolo26m_seg/weights/best.pt
+sha256 prefix fd407db634a8a7ef…
 ```
 
-However P1D5 is NOT YET APPROVED because the required evidence contract was incomplete.
-
-The missing/insufficient items are:
+R1 also established:
 
 ```text
-1. no exact baseline/yolo_whu relation enum was reported;
-2. no active detector class names/count were established or explicitly marked NOT ESTABLISHED;
-3. the task required direct A2 dtype/bit-depth/channel statistics, but they were omitted;
-4. the required training-domain-vs-A2 comparison table was omitted;
-5. stage-1/stage-2 args were identified but not actually parsed for available training settings;
-6. alternate candidates were labeled VALIDATED_ALTERNATE_AVAILABLE, but validation evidence was not normalized
-   candidate-by-candidate; pretrained/smoke-only artifacts must not be conflated with validated alternatives;
-7. FROM_DSH omitted several exact required fields from the P1D5 task contract.
+formal replacement/adoption of the RC1 detector:
+DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
+
+isolated alternate-detector A2 diagnostic only:
+ALLOWED_AS_SEPARATE_DIAGNOSTIC
 ```
 
-This task only repairs those evidence/reporting gaps.
+Therefore this task performs ONE isolated diagnostic with the closest available alternate: the earlier epoch-18
+YOLO26m-seg checkpoint from the same training lineage.
 
-No new scientific or engineering intervention is authorized.
+The only intended causal variable relative to P1D2 is:
+
+```text
+checkpoint:
+active continued best.pt
+→ epoch-18 best.pt
+```
+
+No product change or detector adoption is authorized.
 
 # 1. Git gate
 
@@ -68,460 +63,345 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = d17517b53b1cb9b82cbecc0432a5023eaa756278
+HEAD = ede134cf2fea622c1e3ea2229ea6417a8633c8c1
 ```
 
-Allowed initial tracked tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
+Allowed initial tracked tree: clean; or only `M handoff/TO_DSH.md`.
 
 No reset/rebase/stash/clean/merge.
 
 # 2. Strict prohibitions
 
 Do NOT:
-- run any model inference or forward call;
-- call YOLO `.predict()` or detector runtime methods;
-- run `predict.py`;
-- run `--inspect-proposals`;
-- run A1/A2/A3/A4/B1/B2 inference;
-- run Qwen/SAM2/D-B1;
-- run pytest/check_setup;
-- train/fine-tune/resume/export;
-- download anything;
-- replace/copy/modify any checkpoint;
 - modify external delivery;
+- replace/copy `detector.pt`;
 - modify runtime/tests/manifests/config/model package;
-- change thresholds;
-- implement a detector fallback;
-- run an alternate detector;
-- enter DOMAIN_EVIDENCE_RECOVERY beyond this report repair;
+- modify the active detector checkpoint;
+- train/fine-tune/resume/export/download anything;
+- run the active continued detector again;
+- run full-frame A2;
+- run YOLOv8m baseline or any third checkpoint;
+- change tile geometry, `imgsz=640`, `conf=0.05`, `max_det=300`, CPU device, TTA, or `retina_masks=False`;
+- run normal `predict.py`, `--inspect-proposals`, Qwen/SAM2/D-B1, A1/A3/A4/B1/B2, pytest/check_setup;
+- merge alternate outputs into RC1;
+- implement a fallback;
 - enter REF-01/MASK-01/Task 8B.4/8C;
-- update main;
-- force push.
-
-Reading text/YAML/JSON/CSV, hashing files, and reading image pixels for non-model descriptive statistics are allowed.
+- update main or force push.
 
 # 3. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_p1d5_detector_provenance_domain_gap.md
+docs/task8b3_p1d6_epoch18_alternate_a2_probe.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No functional path may change.
+Temporary diagnostic scripts/transcripts must remain outside the repository or under non-tracked runtime logs.
 
-# 4. Freeze already-accepted P1D5 facts unless contradicted by direct evidence
+# 4. Preflight — active RC1 integrity
 
-Retain these unless a directly inspected artifact proves them wrong:
+Before loading the alternate checkpoint verify:
 
 ```text
-active checkpoint bytes =
-54480241
-
-active checkpoint sha256 =
-ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
-
-active detector family =
-YOLO26m-seg
-
-active task =
-instance segmentation
-
-documented source =
-artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/weights/best.pt
-
-A2 source/domain =
-NOT ESTABLISHED
-
-MEM-01 =
-CLOSED
-
-PROP-01 =
-OPEN
-
-REF-01 =
-OPEN
-
-MASK-01 =
-OPEN
+external source manifest = 135/135 PASS
+external source_manifest byte-identical to canonical = YES
 ```
 
-Do not rerun P1D1–P1D4.
-
-# 5. Establish active detector class names/count
-
-Inspect authoritative local evidence in this order:
-
-1. `artifacts/task6m_yolo_native/data.yaml`;
-2. stage-1/stage-2 training args;
-3. model/package metadata;
-4. safe checkpoint metadata only if still necessary.
-
-Record:
+Verify frozen A2:
 
 ```text
-class_count = <integer or NOT ESTABLISHED>
-class_names = <exact list/mapping or NOT ESTABLISHED>
-```
-
-If the data YAML says one class named `building`, record that exact fact and cite the source path in the report.
-
-Do not infer class count only from the general phrase "WHU building dataset".
-
-# 6. Parse available stage-1 / stage-2 training settings
-
-Inspect these if present:
-
-```text
-artifacts/checkpoints/task6m/runs/m1_yolo26m_seg/args.yaml
-artifacts/checkpoints/task6m1/runs/m1_yolo26m_seg_continued/args.yaml
-```
-
-and any directly referenced frozen run record needed to interpret them.
-
-Record separately for stage 1 and stage 2, when present:
-
-```text
-model/source checkpoint
-data
-epochs
-imgsz
-batch
-device
-seed
-resume
-pretrained
-optimizer
-close_mosaic
-patience
-save_dir/run identity
-```
-
-For each unavailable field write `NOT ESTABLISHED`.
-
-Do NOT leave a present readable field unparsed merely because it is not central to the final diagnosis.
-
-# 7. Classify baseline/yolo_whu relation exactly
-
-Inspect:
-
-```text
-baseline/yolo_whu/README.md
-baseline/yolo_whu/manifest.json
-baseline/yolo_whu/run_record/args.yaml
-```
-
-and the active detector provenance.
-
-Choose exactly one:
-
-```text
-SAME_CHECKPOINT
-DIRECT_ANCESTOR_OR_FINETUNE_SOURCE
-SEPARATE_HISTORICAL_BASELINE
-RELATION_NOT_ESTABLISHED
-```
-
-Rules:
-
-- Different family + different checkpoint hash + no direct training ancestry evidence => cannot be SAME_CHECKPOINT.
-- `DIRECT_ANCESTOR_OR_FINETUNE_SOURCE` requires explicit lineage evidence, not both being trained on WHU.
-- If the record is the independent YOLOv8m-seg WHU baseline and active is YOLO26m-seg with separate lineage, use
-  `SEPARATE_HISTORICAL_BASELINE`.
-
-Record the exact evidence.
-
-# 8. Compute the required non-model A2 descriptive statistics
-
-Using the frozen:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\input\A2.png
-```
-
-First re-confirm:
-
-```text
-1024×1024
+path = external inference/input/A2.png
+dimensions = 1024×1024
 RGB
 sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
 ```
 
-Then read pixels only; no model call.
+If mismatch: no model call; STOP.
+
+# 5. Alternate checkpoint identity gate
+
+Use exactly:
+
+```text
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\runs\m1_yolo26m_seg\weights\best.pt
+```
+
+Before loading it record `exists`, bytes, and full SHA256.
+
+Require that it matches the P1D5-R1 epoch-18 artifact identity:
+
+```text
+bytes = 162481487
+sha256 starts with fd407db634a8a7ef
+family = YOLO26m-seg
+training dataset = artifacts/task6m_yolo_native/data.yaml
+class = building
+```
+
+If identity/provenance does not match: no inference; STOP.
+
+# 6. Frozen geometry/settings
+
+Use the same real tiled geometry as P1D2:
+
+```text
+TILE_SIZE = 512
+TILE_OVERLAP = 128
+TILE_STRIDE = 384
+tops  = [0, 384, 512]
+lefts = [0, 384, 512]
+tile_count = 9
+```
+
+Use exactly:
+
+```text
+checkpoint = epoch-18 alternate
+imgsz = 640
+conf = 0.05
+max_det = 300
+verbose = False
+retina_masks = False
+device = cpu
+TTA = disabled
+```
+
+The checkpoint is the only intended changed detector variable relative to P1D2.
+
+# 7. One diagnostic process only
+
+Create one temporary script outside the repo and run it exactly ONCE.
+
+Inside the single process:
+1. load A2 RGB once;
+2. create the normal 9 windows;
+3. load the epoch-18 YOLO26m-seg checkpoint once;
+4. for each tile call underlying `model.predict()` exactly once with the frozen settings.
+
+Total `model.predict` calls must be exactly 9. Do NOT invoke any second model/checkpoint in the process.
+
+# 8. Required per-tile evidence
+
+Bracket each call with `BEGIN_TILE <tile_id>` / `END_TILE <tile_id>`.
+
+For each tile record:
+
+```text
+boxes_is_none
+boxes_count
+masks_is_none
+masks_count
+wrapper_equivalent_count
+boxes_conf_min
+boxes_conf_max
+boxes_conf_top10
+NMS warning inside tile bracket = YES/NO
+```
+
+For up to top 10 returned detections record rank, confidence, xyxy, and mask_area if available.
+
+Do NOT make semantic/manual visual judgments and do NOT save predictions into RC1 output directories.
+
+# 9. Aggregate facts
 
 Record:
 
 ```text
-file bytes
-array dtype
-bit depth / channel representation if directly established
-R min / max / mean / std
-G min / max / mean / std
-B min / max / mean / std
-R fraction == 0
-G fraction == 0
-B fraction == 0
-R fraction == 255
-G fraction == 255
-B fraction == 255
+sum_boxes_count
+sum_masks_count
+sum_wrapper_equivalent_count
+tiles_with_boxes
+tiles_with_masks
+tiles_wrapper_nonzero
+global_max_confidence
+global_top20_confidences
+NMS warning count
+NMS warning tile ids
 ```
 
-Use a stated numeric precision and keep it consistent.
+No merge/reference/downstream reasoning is run.
 
-These are descriptive facts only.
+# 10. Outcome classification
 
-Do NOT interpret ordinary pixel-statistic differences as proof of domain gap.
+Choose exactly ONE.
 
-# 9. Add the required training-domain vs A2 table
+## A — `PROP01_EPOCH18_RECOVERS_A2_SIGNAL`
 
-The report MUST contain this table with no omitted rows:
+Require `sum_wrapper_equivalent_count > 0` and at least one tile has usable masks.
 
-| property | active detector training/validation domain | A2 |
-|---|---|---|
-| dataset/source | | |
-| task/class definition | | |
-| native image size | | |
-| training crop/tile size | | |
-| RGB/bit depth | | |
-| known spatial resolution/GSD | | |
-| known augmentation/resizing | | |
-| building morphology/context | | |
+Interpretation: the earlier same-lineage YOLO26m-seg checkpoint produces usable A2 proposal signal under the same
+geometry/conf/imgsz/device where the active continued checkpoint produced zero. This supports a checkpoint-specific
+regression/blind-spot hypothesis. It does NOT authorize replacing the RC1 detector.
 
-Rules:
-- use only documented facts;
-- use `NOT ESTABLISHED` for unknowns;
-- distinguish detector training `imgsz` from source/native tile dimensions;
-- do not fabricate GSD;
-- do not visually invent morphology/context.
+## B — `PROP01_EPOCH18_ALSO_ZERO`
 
-# 10. Normalize alternate-candidate validation status
-
-Re-audit each previously listed candidate separately:
+Require:
 
 ```text
-A. YOLO26m-seg epoch-18 / task6m best.pt
-B. YOLOv8m-seg WHU baseline best.pt
-C. YOLO26m-seg pretrained base
-D. YOLO26s-seg pretrained/smoke artifact
+sum_boxes_count = 0
+sum_wrapper_equivalent_count = 0
 ```
 
-For each record:
+Interpretation: the closest same-lineage earlier checkpoint also fails on A2, weakening a continuation-specific
+regression hypothesis.
 
+## C — `PROP01_EPOCH18_BOXES_WITHOUT_MASKS`
+
+Require `sum_boxes_count > 0` but `sum_wrapper_equivalent_count = 0` because boxes lack usable segmentation masks.
+
+## D — `PROP01_EPOCH18_DIAGNOSTIC_INCONCLUSIVE`
+
+For runtime/identity/result-structure errors or any other state.
+
+# 11. Next-gate recommendation — do NOT execute
+
+If A:
 ```text
-candidate path
-family/task
-hash if available
-training/fine-tuning status
-quantitative validation evidence = exact metric/report OR NONE
-prior pipeline/demo-use evidence = exact artifact/report OR NONE
-A2 validation = YES/NO
-RC1-path validation = YES/NO
-candidate status =
-    VALIDATED_PROJECT_ALTERNATE
-    USED_BUT_NOT_QUANTITATIVELY_VALIDATED
-    PRETRAINED_BASE_ONLY
-    SMOKE_ONLY
-    INCOMPATIBLE_OR_OTHER
+NEXT = EPOCH18_ZERO_PROPOSAL_RESCUE_DESIGN
 ```
 
-Important:
-- being a pretrained base is NOT project validation;
-- being used in a smoke run is NOT project validation;
-- being referenced by a script is NOT quantitative validation;
-- the frozen YOLOv8m baseline's validation-split metrics may count as project validation if the frozen record actually
-  contains those metrics;
-- A2/RC1 validation must be reported separately from generic WHU validation.
-
-Then choose the overall enum exactly:
-
+If B:
 ```text
-VALIDATED_ALTERNATE_AVAILABLE
-NO_VALIDATED_ALTERNATE_FOUND
-ALTERNATE_STATUS_NOT_ESTABLISHED
+NEXT = CONTROLLED_YOLOV8M_A2_PROBE
 ```
 
-`VALIDATED_ALTERNATE_AVAILABLE` is allowed if at least one non-active candidate has real prior project validation
-evidence, even if it has never been run on A2/RC1. That does NOT authorize adopting it into RC1.
-
-# 11. Clarify scientific-freeze impact vs diagnostic use
-
-Retain or revise the exact enum:
-
+If C:
 ```text
-DETECTOR_CHANGE_ENGINEERING_ONLY_IF_REVALIDATED
-DETECTOR_CHANGE_TOUCHES_FROZEN_RESEARCH_CLAIMS
-SCIENTIFIC_FREEZE_IMPACT_NOT_ESTABLISHED
+NEXT = EPOCH18_SEGMENTATION_OUTPUT_FORENSICS
 ```
 
-Then add two separate statements:
-
+If D:
 ```text
-A. adopting/replacing the RC1 proposal detector would:
-   <effect on frozen claims>
-
-B. merely running a future isolated alternate-detector A2 diagnostic, without changing RC1 or research claims, would:
-   <ALLOWED_AS_SEPARATE_DIAGNOSTIC / NOT_ALLOWED_BY_FREEZE / NOT_ESTABLISHED>
+NEXT = ALTERNATE_PROBE_RECOVERY
 ```
 
-This distinction is mandatory.
+Do NOT execute it.
 
-Do not run such a diagnostic in this task.
+# 12. Post-run integrity
 
-# 12. Re-evaluate primary diagnosis
-
-Choose exactly one again:
+After the one diagnostic process verify again:
 
 ```text
-PROP01_DETECTOR_DOMAIN_GAP_STRONGLY_SUPPORTED
-PROP01_SINGLE_IMAGE_BLINDSPOT_WITHIN_EXPECTED_DOMAIN
-PROP01_CHECKPOINT_PROVENANCE_INCOMPLETE
-PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE
+external source manifest = 135/135 PASS
+external source_manifest byte-identical to canonical = YES
 ```
 
-Given the currently known evidence, do NOT strengthen beyond `PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE` unless new
-direct provenance evidence establishes A2's domain.
+No external source/model file may have changed.
 
-# 13. Re-evaluate next gate
+# 13. Report
 
-Apply the original decision logic only after sections 5–12 are complete.
-
-Record exactly one:
+Create:
 
 ```text
-CONTROLLED_ALTERNATE_DETECTOR_A2_PROBE
-DETECTOR_ADAPTATION_DESIGN
-DETECTOR_ROBUSTNESS_DECISION
-CHECKPOINT_PROVENANCE_RECOVERY
-DOMAIN_EVIDENCE_RECOVERY
+docs/task8b3_p1d6_epoch18_alternate_a2_probe.md
 ```
 
-Important interpretation:
+Required sections:
+1. scope / starting HEAD
+2. P1D2–P1D5-R1 frozen facts
+3. active RC1 integrity preflight
+4. A2 identity
+5. alternate checkpoint path/bytes/full SHA256/provenance
+6. exact settings and statement that checkpoint is the only detector variable changed
+7. diagnostic process count = 1
+8. model.predict count = 9
+9. 9-row per-tile results
+10. aggregate facts
+11. NMS warning evidence
+12. exact outcome enum
+13. causal interpretation and limits
+14. exact next gate
+15. post-run RC1 integrity
+16. no active RC1 detector modification
+17. no functional repository modification
+18. `RC1-DEMO-PROP-01 = OPEN`
+19. `RC1-DEMO-MEM-01 = CLOSED`
+20. REF-01/MASK-01 OPEN untouched
+21. no adoption/replacement authorized.
 
-- a validated alternate existing does NOT automatically authorize a product swap;
-- if a separate diagnostic probe is scientifically permissible but the original P1D5 rule still routes to
-  `DOMAIN_EVIDENCE_RECOVERY`, preserve the original rule outcome and explicitly state that the diagnostic candidate
-  remains available for a later ChatGPT decision;
-- do not execute any gate.
+# 14. FROM_DSH
 
-# 14. Repair the report
+Preserve ARTIFACT-FACTS exactly. UTF-8 without BOM.
 
-Update:
-
-```text
-docs/task8b3_p1d5_detector_provenance_domain_gap.md
-```
-
-It must now include all of:
-
-1. Task/scope/starting HEAD of original P1D5 and R1
-2. P1D1–P1D4 frozen evidence
-3. active detector path/bytes/SHA256
-4. active family/task/classes
-5. U-C1 selection history
-6. stage-1/stage-2 training provenance and parsed args
-7. validation/selection evidence
-8. exact `baseline/yolo_whu` relation enum
-9. checkpoint metadata method/evidence
-10. A2 provenance
-11. A2 required pixel statistics
-12. exact training-domain-vs-A2 comparison table
-13. alternate candidates with normalized status
-14. overall alternate availability enum
-15. scientific-freeze enum
-16. adoption-vs-diagnostic distinction
-17. primary diagnosis enum
-18. evidence gaps
-19. exact next gate
-20. `RC1-DEMO-PROP-01 = OPEN`
-21. `RC1-DEMO-MEM-01 = CLOSED`
-22. REF-01/MASK-01 OPEN untouched
-23. model inference/training = NONE
-24. functional modifications = NONE.
-
-# 15. Repair FROM_DSH
-
-Preserve ARTIFACT-FACTS byte-for-byte.
-UTF-8 without BOM.
-
-Required exact fields:
+Required:
 
 ```text
-Task: 8B.3-P1D5-R1
+Task: 8B.3-P1D6
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: d17517b53b1cb9b82cbecc0432a5023eaa756278
-Original P1D5 HEAD: 15a90ec11ad66c8f365284bf53eb320661a1e73f
-Model inference/training: NONE
+Starting HEAD: ede134cf2fea622c1e3ea2229ea6417a8633c8c1
 Functional files modified: NO
-Active detector SHA256: ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
-Active detector family/task: <value>
-Active detector classes: <value / NOT ESTABLISHED>
-Training/fine-tuning dataset: <value / NOT ESTABLISHED>
-Stage-1 args: <summary>
-Stage-2 args: <summary>
-U-C1 selection evidence: ESTABLISHED / PARTIAL / NOT ESTABLISHED
-baseline/yolo_whu relation: <exact enum>
-A2 source/domain: <value / NOT ESTABLISHED>
-A2 descriptive stats: RECORDED / NOT RECORDED
-Training-vs-A2 comparison table: RECORDED / NOT RECORDED
-Validated alternate candidate: <overall enum>
-Alternate diagnostic use under freeze: <ALLOWED_AS_SEPARATE_DIAGNOSTIC / NOT_ALLOWED_BY_FREEZE / NOT_ESTABLISHED>
-Scientific-freeze impact: <exact enum>
-Primary diagnosis: <exact enum>
+Active RC1 detector modified/replaced: NO
+Diagnostic process invocation count: 1 / 0
+Detector model.predict call count: 9 / other
+A2 dimensions/hash: 1024x1024 / MATCH
+Alternate checkpoint: <path>
+Alternate checkpoint bytes: <n>
+Alternate checkpoint SHA256: <full sha>
+Alternate family/task: YOLO26m-seg / instance segmentation
+Geometry: 9 x 512 tiles, overlap 128, stride 384
+Device: cpu
+imgsz/conf/max_det: 640 / 0.05 / 300
+sum_boxes_count: <n>
+sum_masks_count: <n>
+sum_wrapper_equivalent_count: <n>
+tiles_with_boxes: <n>
+tiles_with_masks: <n>
+global_max_confidence: <value / NONE>
+NMS warning count: <n>
+Outcome: <exact enum>
 Next gate: <exact enum>
+Pre-run external manifest: 135/135 PASS / FAIL
+Post-run external manifest: 135/135 PASS / FAIL / NOT RUN
+source_manifest byte-identical: YES / NO
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
-Report: docs/task8b3_p1d5_detector_provenance_domain_gap.md
-Next action: Awaiting ChatGPT audit; no detector change or next gate authorized.
+Report: docs/task8b3_p1d6_epoch18_alternate_a2_probe.md
+Next action: Awaiting ChatGPT audit; no detector adoption authorized.
 ```
 
-# 16. Commit / push
+# 15. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): complete detector provenance audit
+test(rc1): probe epoch18 detector on a2
 ```
 
 If PARTIAL/STOP/FAILED:
 
 ```text
-docs(rc1): record detector provenance audit correction stop
+docs(rc1): record epoch18 a2 probe stop
 ```
 
-Push current branch normally.
-No force push.
+Push current branch normally. No force push.
 
-# 17. COMPLETE definition
+# 16. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- no model inference/training/tests;
-- no external/functional modifications;
-- all missing P1D5 evidence items are repaired;
-- baseline relation has one exact enum;
-- detector classes are established or explicitly NOT ESTABLISHED;
-- readable active training args are parsed;
-- A2 required pixel statistics are recorded;
-- the full training-vs-A2 table is present;
-- alternate validation status is normalized candidate-by-candidate;
-- adoption vs separate diagnostic is distinguished;
-- primary diagnosis and next gate are explicitly re-evaluated;
-- report and FROM_DSH are updated;
+- active RC1 integrity preflight PASS;
+- alternate checkpoint identity/provenance verified;
+- one diagnostic process only;
+- exactly 9 epoch-18 detector calls, one per normal A2 tile;
+- no active detector call and no second alternate;
+- no product/runtime modification;
+- one outcome enum selected;
+- one next gate recommended but not executed;
+- post-run RC1 integrity PASS;
+- only allowed docs/handoff files changed;
 - commit and push succeed;
-- tracked tree is clean;
+- tracked tree clean;
 - STOP.
 
-# 18. Final response
+# 17. Final response
 
 ```text
-TASK 8B.3-P1D5-R1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D6 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -529,38 +409,38 @@ Commit:
 Push:
 PASS / FAIL
 
-Model inference/training:
-NONE
+Diagnostic process:
+1
 
-Functional files modified:
-NO
+model.predict calls:
+9
 
-Active detector classes:
-<...>
+Alternate checkpoint:
+<full SHA256>
 
-baseline/yolo_whu:
-<exact relation enum>
+A2 aggregate:
+boxes = <n>
+masks = <n>
+wrapper usable proposals = <n>
+tiles_with_boxes = <n>
+tiles_with_masks = <n>
+global_max_conf = <...>
+NMS warnings = <n>
 
-A2 descriptive stats:
-RECORDED / NOT RECORDED
-
-Training-vs-A2 table:
-RECORDED / NOT RECORDED
-
-Validated alternate:
-<overall enum>
-
-Alternate diagnostic use:
-<enum>
-
-Scientific-freeze impact:
-<enum>
-
-Primary diagnosis:
+Outcome:
 <enum>
 
 Next gate:
 <enum>
+
+Active RC1 detector modified/replaced:
+NO
+
+Pre/post external manifest:
+135/135 PASS / 135/135 PASS
+
+Functional files modified:
+NO
 
 MEM-01:
 CLOSED
@@ -574,5 +454,5 @@ OPEN / OPEN
 STOP reason:
 <none or exact>
 
-等待 ChatGPT 审核；不得运行任何 detector，不得替换 checkpoint，不得执行 next gate。
+等待 ChatGPT 审核；不得采用 alternate detector，不得执行 next gate。
 ```
