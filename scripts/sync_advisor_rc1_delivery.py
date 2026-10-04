@@ -31,6 +31,55 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+GIT_CANONICAL_BASIS = "GIT_CANONICAL_BLOB_BYTES"
+CANONICAL_PREFIX = "delivery_src/BuildReasonSeg_Advisor_RC1/"
+
+
+def sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
+def manifest_identity_basis(root: Path | None = None) -> str | None:
+    """Return the manifest identity basis, or None for legacy manifests without one."""
+
+    root = CANONICAL_ROOT if root is None else root
+    manifest_path = root / MANIFEST_NAME
+    if not manifest_path.is_file():
+        raise SystemExit(f"[ERROR] canonical manifest missing: {manifest_path}")
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    basis = payload.get("identity_basis")
+    if basis in (None, ""):
+        return None
+    if basis != GIT_CANONICAL_BASIS:
+        raise SystemExit(f"[ERROR] unsupported identity_basis: {basis!r}")
+    return basis
+
+
+def git_canonical_bytes(relative: str) -> bytes:
+    """Exact binary Git canonical bytes for a manifest-listed canonical-relative path."""
+
+    spec = f"HEAD:{CANONICAL_PREFIX}{relative}"
+    result = subprocess.run(["git", "-C", str(REPO_ROOT), "show", spec], capture_output=True)
+    if result.returncode != 0:
+        raise SystemExit(f"[ERROR] git canonical read failed for {relative}: "
+                         f"{result.stderr.decode('utf-8', 'replace').strip()}")
+    return result.stdout
+
+
+def entry_source_bytes(entry: dict, basis: str | None, root: Path) -> bytes | None:
+    """Source bytes for one entry: Git canonical blob bytes, or working-tree bytes in legacy mode."""
+
+    if basis == GIT_CANONICAL_BASIS:
+        payload = git_canonical_bytes(entry["path"])
+        if len(payload) != entry.get("bytes") or sha256_bytes(payload) != entry.get("sha256"):
+            raise SystemExit(f"[ERROR] manifest identity mismatch: {entry['path']}")
+        return payload
+    source = root / entry["path"]
+    if not source.is_file():
+        return None
+    return source.read_bytes()
+
+
 def load_manifest(root: Path | None = None) -> list[dict]:
     """Load and validate the manifest; every listed path must be a safe, unique relative path."""
 
@@ -74,11 +123,12 @@ def guard_destination(destination: Path, canonical_root: Path | None = None) -> 
 def run_check(destination: Path, entries: list[dict], canonical_root: Path | None = None) -> int:
     root = CANONICAL_ROOT if canonical_root is None else canonical_root
     matches = missing = mismatched = 0
+    basis = manifest_identity_basis(root)
     for entry in entries:
         relative = entry["path"]
-        source = root / relative
         target = destination / relative
-        if not source.is_file():
+        payload = entry_source_bytes(entry, basis, root)
+        if payload is None:
             print(f"MISSING  (source) {relative}")
             missing += 1
             continue
@@ -86,7 +136,8 @@ def run_check(destination: Path, entries: list[dict], canonical_root: Path | Non
             print(f"MISSING  (destination) {relative}")
             missing += 1
             continue
-        if source.stat().st_size != target.stat().st_size or sha256_file(source) != sha256_file(target):
+        destination_bytes = target.read_bytes()
+        if len(payload) != len(destination_bytes) or sha256_bytes(payload) != sha256_bytes(destination_bytes):
             print(f"MISMATCH {relative}")
             mismatched += 1
             continue
@@ -99,22 +150,20 @@ def run_sync(destination: Path, entries: list[dict], canonical_root: Path | None
     root = CANONICAL_ROOT if canonical_root is None else canonical_root
     copied = verified = 0
     failures: list[str] = []
+    basis = manifest_identity_basis(root)
     for entry in entries:
         relative = entry["path"]
-        source = root / relative
         target = destination / relative
-        if not source.is_file():
+        payload = entry_source_bytes(entry, basis, root)
+        if payload is None:
             failures.append(f"missing canonical source: {relative}")
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
-        with source.open("rb") as reader, target.open("wb") as writer:
-            while True:
-                block = reader.read(1 << 20)
-                if not block:
-                    break
-                writer.write(block)
+        with target.open("wb") as writer:
+            writer.write(payload)
         copied += 1
-        if sha256_file(target) == sha256_file(source) and target.stat().st_size == source.stat().st_size:
+        check_bytes = target.read_bytes()
+        if len(check_bytes) == len(payload) and sha256_bytes(check_bytes) == sha256_bytes(payload):
             verified += 1
         else:
             failures.append(f"verification failed: {relative}")

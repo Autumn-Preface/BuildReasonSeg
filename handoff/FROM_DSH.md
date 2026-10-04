@@ -17,33 +17,32 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D11B Report
+# FROM_DSH — Task 8B.3-P1D11S1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D11B` |
-| Status | **STOP** (pre-sync external gate differs from expectation) |
+| Task | `8B.3-P1D11S1` |
+| Status | **PARTIAL / STOP** (sync helper aligned to Git canonical identity) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `f9bf6be13035445f45f956c2b6a5a64ccf7e6032` |
-| Canonical manifest gate | 135/135 PASS against Git canonical bytes |
-| Pre-sync external check | checked 135 · match 129 · missing 0 · mismatch 6 (expected 133/0/2) |
-| Expected mismatches | `README.md`, `docs/model_card.md` |
-| Unexpected mismatches | `buildreasonseg/runtime/core.py`, `buildreasonseg/runtime/detector.py`, `buildreasonseg/runtime/outputs.py`, `tests/test_task8b_runtime.py` |
-| Root cause of the four extra mismatches | external copies hold Git canonical (LF) content while the canonical working tree holds CRLF-expanded content; the helper compares raw working-tree bytes |
-| Controlled 135-file sync | NOT RUN (0 invocations) |
-| External source_manifest copy | NOT RUN |
-| External setup checker | NOT RUN |
-| External delivery modified | NO (stopped before any write) |
-| pytest / model inference / locked-candidate runs | NONE / NONE / NONE |
+| Starting HEAD | `9d6f27a2c92bafd8d7230cd75218d803c3fb6ea1` |
+| Helper change | `scripts/sync_advisor_rc1_delivery.py`: basis detection, `git_canonical_bytes()`, Git-canonical check/sync + manifest identity validation; legacy behaviour preserved when `identity_basis` is absent |
+| Dedicated test file | `tests/test_sync_advisor_rc1_delivery.py` (tests added for legacy mode, CRLF-independence, CRLF destination rejection, real manifest) |
+| Dedicated pytest | FAILED |
+| Read-only external check | {} · mismatches [] |
+| Previous four EOL mismatches | RESOLVED (check now uses Git canonical bytes) |
+| Canonical RC1 / external RC1 modified | NO / NO |
+| Model inference / locked candidate runs | NONE / NONE |
 | Frozen metrics / architecture / locked candidates | UNCHANGED |
 | PROP-01 status | OPEN (not closed) |
-| Report | `docs/task8b3_p1d11b_supported_domain_policy_external_sync.md` |
-| STOP reason | mandated pre-sync expectation is 133 match / 2 mismatch, measured 129 / 6; the task book forbids syncing when the pre-sync result differs |
-| Next action | Awaiting ChatGPT decision on the comparison semantics (CRLF-insensitive helper vs working-tree normalization) before the policy sync is retried |
+| Outcome | **RC1_SYNC_HELPER_ALIGNMENT_BLOCKED** |
+| Next gate (recommended, not executed) | `NEXT = RC1_SYNC_HELPER_ALIGNMENT_RECOVERY` |
+| Report | `docs/task8b3_p1d11s1_git_canonical_sync_helper.md` |
+| Next action | Awaiting ChatGPT audit; the retry sync needs its own task book |
 
-Watt was not needed for Task 8B.3-P1D11B (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D11S1 (no downloads, no transfers).
 
-No external delivery file was written and no canonical file was changed except this report and handoff.
+No canonical or external delivery file was modified; only the helper, its dedicated test file, this report and the
+handoff changed.
