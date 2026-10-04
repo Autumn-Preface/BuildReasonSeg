@@ -17,35 +17,37 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D9 Report
+# FROM_DSH — Task 8B.3-P1D10 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D9` |
-| Status | **COMPLETE** (isolated validation-moment rescue probe) |
+| Task | `8B.3-P1D10` |
+| Status | **COMPLETE** (docs-only resolution decision audit) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `a220faf0dd9872829ee2bd7b7be859bbd90db7bb` |
-| Pre-declared transform | `y = clip(4.259966488571338 * x + -188.2294346811672, 0, 255)` (single transform, not adopted) |
-| Transform effect | source Y_mean 65.6886/Y_std 6.3262 → transformed Y_mean 91.5928/Y_std 26.8645 |
-| Clipping | below 0: 0.001974 · above 255: 0.000095 · either: 0.002070 |
-| Temporary file | `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs\task8b3_p1d9\A2_validation_moment.png` (outside `inference/input`) |
-| Detector / settings | active RC1 detector · 512/128/384 → 9 tiles · imgsz 640 · conf 0.05 · max_det 300 · retina_masks False · device cpu |
-| Probe processes / predict calls | 1 / 9 (one per tile) |
-| Per-tile result | all 9 tiles: boxes_count = 0 · masks_is_none = True · masks_count = 0 · wrapper_equivalent_count = 0 |
-| Aggregates | sum_boxes_count = 0 · sum_wrapper_equivalent_count = 0 · global_max_confidence = None |
-| Outcome | **PROP01_VALIDATION_MOMENT_RESCUE_REMAINS_ZERO** |
-| Recommendation (not executed) | `NEXT = DETECTOR_ADAPTATION_OR_DEMO_POLICY_DECISION` |
-| Integrity | original A2 unchanged = YES · active detector unchanged = YES · manifest 135/135 PASS · byte-identical YES |
-| Transform adoption / other detectors / other enhancements | NONE / NONE / NONE |
-| PROP-01 | open, not fixed; REF-01 / MASK-01 / Task 8B.4 / 8C not entered |
-| Report | `docs/task8b3_p1d9_validation_moment_rescue_probe.md` |
-| Next action | Awaiting ChatGPT audit; do not execute the recommended gate without a new task book. |
+| Starting HEAD | `70e2e2361e9e16cca891138de5d2712318282b2b` |
+| Model/test execution | NONE |
+| Functional files modified | NO |
+| Demo suite policy provenance | PARTIAL (suite definition/result documented; input provenance NOT ESTABLISHED) |
+| Detector adaptation feasibility | **DETECTOR_ADAPTATION_NOT_READY** (no A2 GT, no adaptation spec, no held-out protocol, no acceptance metric) |
+| Demo policy feasibility | **DEMO_POLICY_PATH_READY** |
+| Replacement selection policy | **READY** (predeclared pool = frozen val split, deterministic filename order, detector outcome not consulted) |
+| Primary resolution | **PROP01_RESOLUTION_DEMO_POLICY** |
+| PROP-01 status | **PROP01_RECLASSIFIED_SUPPORTED_DOMAIN_FAILURE** (reclassification, not closure) |
+| Scientific freeze preserved | YES (frozen research architecture and results untouched; only policy text proposed) |
+| Next gate | **PROP01_SUPPORTED_DOMAIN_POLICY_IMPLEMENTATION** (recommended, not executed) |
+| RC1-DEMO-MEM-01 | CLOSED |
+| RC1-DEMO-PROP-01 | RECLASSIFIED (not closed) |
+| RC1-DEMO-REF-01 | OPEN |
+| RC1-DEMO-MASK-01 | OPEN |
+| Report | `docs/task8b3_p1d10_prop01_resolution_decision.md` |
+| Next action | Awaiting ChatGPT audit; do not execute the next gate. |
 
-Watt was not needed for Task 8B.3-P1D9 (no downloads, no transfers).
+Release-language draft (≤120 Chinese characters): RC1 的 proposal detector 在 WHU 类航空建筑影像上验证；A2 属其有效域外的压力/失败样例，已如实记录，不计入成功演示；本版本不承诺任意航空影像的鲁棒性。
 
-No original-A2 run, no epoch-18/YOLOv8m run, no second enhancement, no CLAHE/gamma/equalisation, no full predict,
-Qwen, SAM2, D-B1 or pytest; the RC1 input tree and all manifest-listed files are unchanged.
-`RC1-DEMO-MEM-01` remains CLOSED.
+Watt was not needed for Task 8B.3-P1D10 (no downloads, no transfers).
+
+No model, test, training or inference execution and no functional modification occurred; the six intervention impact
+classifications use the task book's exact enums, and the four resolution options are compared explicitly.
