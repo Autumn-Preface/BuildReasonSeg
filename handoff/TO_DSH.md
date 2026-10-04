@@ -1,55 +1,43 @@
-# TO_DSH — Task 8B.3-P1D8: A2 Input Photometric / Domain Audit
+# TO_DSH — Task 8B.3-P1D8-R1: Complete A2 Input-Domain Evidence Contract
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `5f52338b7507cc377190cacb33611c644f223a88`
-> External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
+> Required starting HEAD: `b4dc1967cdc6734d35315d29eed11eb284b50244`
 
-# 0. Purpose
+# 0. Audit disposition
 
-P1D2–P1D7 have established:
-
-```text
-active continued YOLO26m-seg:
-  A2 tiled @ conf=0.05  → 9/9 boxes=0
-  A2 full-frame @ 0.05  → boxes=0
-  A2 tiled @ conf=0.001 → 9/9 boxes=0
-
-same-lineage epoch-18 YOLO26m-seg:
-  A2 tiled @ 0.05 → 9/9 boxes=0
-
-independent WHU-trained YOLOv8m-seg baseline:
-  A2 tiled @ 0.05 → 9/9 boxes=0
-```
-
-P1D7 outcome:
+P1D8 commit:
 
 ```text
-PROP01_YOLOV8M_ALSO_ZERO
+b4dc1967cdc6734d35315d29eed11eb284b50244
+docs(rc1): audit a2 input photometric domain
 ```
 
-This materially weakens checkpoint-specific explanations.
+has the correct parent and only documentation/handoff changes.
 
-P1D5-R1 also established A2 descriptive facts:
+The current P1D8 conclusion is provisionally supported:
 
 ```text
-1024x1024 RGB uint8
-R mean/std = 60.0654 / 6.3738
-G mean/std = 68.4044 / 6.4936
-B mean/std = 66.4532 / 6.9203
-no pixels at 0 or 255
-A2 source/domain = NOT ESTABLISHED
+PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
 ```
 
-The remaining question is whether A2 is a strong *input photometric/texture outlier* relative to:
-1. the detector's actual WHU training/validation image domain; and
-2. the successful 1024×1024 Demo controls A1/A3/A4.
+because the committed report records, against the combined active task6m image distribution:
 
-This task is NON-MODEL forensic analysis only.
+```text
+A2 whole:
+Y_mean         percentile = 25.18
+Y_std          percentile = 7.83
+Y_dynamic_98   percentile = 7.91
+gradient_mean  percentile = 58.63
+```
 
-No detector inference or image correction is authorized.
+and no obvious PNG encoding anomaly.
+
+However P1D8 is NOT YET APPROVED because required evidence was left only in an untracked JSON or omitted from the report.
+
+This R1 is evidence completion only.
 
 # 1. Git gate
 
@@ -57,7 +45,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 5f52338b7507cc377190cacb33611c644f223a88
+HEAD = b4dc1967cdc6734d35315d29eed11eb284b50244
 ```
 
 Allowed initial tracked tree:
@@ -69,26 +57,22 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- run any detector or model;
-- call YOLO `.predict()` or forward;
+- run any detector/model/forward/predict;
 - run Qwen/SAM2/D-B1;
-- run normal `predict.py` or `--inspect-proposals`;
 - run pytest/check_setup;
-- train/fine-tune/download/export;
-- modify any image;
-- overwrite A2/A1/A3/A4;
-- create a corrected A2;
-- run histogram equalization/CLAHE/gamma/contrast stretch as a product action;
-- test any normalization through a detector;
-- change RC1 source/config/model/checkpoint;
-- modify external delivery;
-- modify manifests/tests/runtime;
-- remove or replace A2 from the Demo;
+- modify any input image;
+- perform photometric rescue;
+- run CLAHE/gamma/equalization/contrast correction through a detector;
+- modify RC1 source/runtime/tests/manifests/checkpoints;
+- enter PROP-01 fix implementation;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - update main;
 - force push.
 
-Read-only image decoding and arithmetic image statistics are allowed.
+Reading the existing P1D8 JSON/statistics is preferred.
+
+If the untracked statistics JSON no longer exists, recomputing the SAME non-model metrics from the SAME frozen images is allowed.
+Do not change metric definitions.
 
 # 3. Allowed repository changes
 
@@ -100,108 +84,14 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Temporary CSV/JSON/statistics scripts must remain outside the repo or under ignored diagnostic storage.
-Do not commit a dataset-sized statistics dump.
+Do not commit the dataset-sized raw JSON.
 
-# 4. Input identity gate
+# 4. Preserve frozen metric definitions
 
-Verify frozen Demo inputs before analysis.
-
-Require A2:
-
-```text
-A2.png
-1024x1024 RGB
-sha256 =
-10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
-```
-
-Locate A1/A3/A4 used by Task 8B.3 R4B and record:
-
-```text
-path
-dimensions
-mode
-file bytes
-SHA256
-```
-
-Do not use a replacement or similarly named copy.
-
-If A2 identity mismatches:
-- STOP.
-
-If one of A1/A3/A4 cannot be uniquely identified:
-- record that control as unavailable;
-- continue only if at least TWO of A1/A3/A4 are available.
-Otherwise STOP.
-
-# 5. Training-domain image source gate
-
-Inspect:
-
-```text
-artifacts/task6m_yolo_native/data.yaml
-```
-
-Resolve the exact train/val/test image roots used by the active YOLO26 training lineage.
-
-Record:
-
-```text
-train image root
-val image root
-test image root
-file counts
-image formats
-native dimensions distribution
-```
-
-Do not silently substitute `baseline/yolo_whu` image paths if the active task6m dataset is available.
-
-If the active training images are unavailable locally:
-- do NOT use a different dataset as if equivalent;
-- classify training-domain statistics as unavailable;
-- continue with Demo-control comparison only;
-- final outcome must not claim a WHU training-domain outlier.
-
-# 6. Exact-match provenance search
-
-Without modifying files, compute/compare SHA256 for image files in the active task6m train/val/test image roots.
-
-Search for exact byte/hash match to A2.
-
-Record exactly one:
-
-```text
-A2_EXACT_MATCH_TRAIN
-A2_EXACT_MATCH_VAL
-A2_EXACT_MATCH_TEST
-A2_NO_EXACT_MATCH
-TRAINING_IMAGES_UNAVAILABLE
-```
-
-If exact match exists:
-- record exact path and split;
-- do not infer more than exact file identity.
-
-Also search exact SHA256 for A1/A3/A4 and record matches if any.
-
-# 7. Frozen metric definitions
-
-Use these exact non-model metrics for every decoded RGB image/tile.
-
-Let luminance:
+Use exactly the P1D8 definitions:
 
 ```text
 Y = 0.299*R + 0.587*G + 0.114*B
-```
-
-For each image/tile calculate:
-
-```text
-R_mean, G_mean, B_mean
-R_std,  G_std,  B_std
 
 Y_mean
 Y_std
@@ -209,42 +99,19 @@ Y_p01
 Y_p50
 Y_p99
 Y_dynamic_98 = Y_p99 - Y_p01
-
-mean_abs_dx =
-mean(abs(Y[:,1:] - Y[:,:-1]))
-
-mean_abs_dy =
-mean(abs(Y[1:,:] - Y[:-1,:]))
-
-gradient_mean =
-(mean_abs_dx + mean_abs_dy) / 2
-
-dark_fraction =
-fraction(Y < 64)
-
-very_dark_fraction =
-fraction(Y < 32)
-
-bright_fraction =
-fraction(Y > 192)
+mean_abs_dx
+mean_abs_dy
+gradient_mean = (mean_abs_dx + mean_abs_dy)/2
+dark_fraction = fraction(Y < 64)
+very_dark_fraction = fraction(Y < 32)
+bright_fraction = fraction(Y > 192)
 ```
 
-Use decoded uint8 RGB values converted to float only for arithmetic.
-Do not normalize before measuring.
+No normalization before measuring.
 
-Report calculations to at least 4 decimal places for means/std/gradient/fractions.
+# 5. Commit the full training-domain summary tables
 
-# 8. Active training-domain distribution
-
-If active task6m train/val/test images are available:
-
-Process ALL readable images in the resolved active training dataset.
-
-Do not random-sample unless full processing is impossible due a documented execution failure.
-If full processing fails:
-- STOP before drawing a training-domain percentile conclusion.
-
-For each metric below construct distributions:
+The report MUST contain, not merely reference an untracked file, complete tables for:
 
 ```text
 Y_mean
@@ -255,7 +122,16 @@ dark_fraction
 very_dark_fraction
 ```
 
-Report for each split individually AND for the combined dataset:
+For each metric include these four rows:
+
+```text
+train
+val
+test
+combined
+```
+
+and all columns:
 
 ```text
 N
@@ -272,25 +148,66 @@ mean
 std
 ```
 
-Record unreadable-image count.
-
-No model execution.
-
-# 9. Demo-case whole-image comparison
-
-Compute the same frozen metrics for whole images:
+Use the already processed population:
 
 ```text
-A1
-A2
-A3
-A4
+train = 10044
+val   = 3618
+test  = 3726
+combined = 17388
+unreadable = 0
 ```
 
-Build one comparison table.
+If those counts cannot be reproduced from existing evidence, STOP.
 
-For A2 and each available control, if training-domain stats exist, report percentile rank within the COMBINED active
-training image distribution for:
+# 6. Audit the zero-valued training tail
+
+The current report shows:
+
+```text
+train Y_mean p01 = 0
+train Y_mean p05 = 0
+combined Y_mean p01 = 0
+combined Y_mean p05 = 0
+```
+
+This must be characterized because it can materially affect percentile interpretation.
+
+For each split record:
+
+```text
+count images with Y_mean == 0
+count images with Y_std == 0
+count images that are exactly all-black RGB
+fraction of split exactly all-black RGB
+```
+
+If label files are trivially resolvable by matching stem, also record for exactly-all-black images:
+
+```text
+label file exists count
+empty label count
+non-empty label count
+```
+
+Do not perform a semantic visual review.
+
+Do not exclude these images from any pre-registered distribution.
+
+State explicitly whether the combined percentile results include these images: YES.
+
+# 7. Split-specific A2 percentile robustness
+
+For A2 whole-image metrics compute deterministic percentile rank separately within:
+
+```text
+train
+val
+test
+combined
+```
+
+for:
 
 ```text
 Y_mean
@@ -301,30 +218,15 @@ dark_fraction
 very_dark_fraction
 ```
 
-Percentile-rank method must be stated and deterministic.
+Add one table.
 
-# 10. Demo-case tile comparison
+This is a robustness audit only.
 
-Using the existing 1024×1024 9-tile geometry:
+Do NOT change the original pre-registered P1D8 outcome rule, which used the combined active distribution.
 
-```text
-tile size = 512
-tops  = [0, 384, 512]
-lefts = [0, 384, 512]
-```
+# 8. Required A1/A2/A3/A4 tile summaries
 
-compute the same metrics for all 9 tiles of:
-
-```text
-A1
-A2
-A3
-A4
-```
-
-No detector call.
-
-For each case report:
+For each case A1/A2/A3/A4, using the same frozen 9-tile geometry, report:
 
 ```text
 median tile Y_mean
@@ -332,40 +234,51 @@ median tile Y_std
 median tile Y_dynamic_98
 median tile gradient_mean
 
-min/max tile Y_mean
-min/max tile Y_std
-min/max tile gradient_mean
+min tile Y_mean
+max tile Y_mean
+min tile Y_std
+max tile Y_std
+min tile gradient_mean
+max tile gradient_mean
 ```
 
-If training distribution exists, report for A2:
+One table with four case rows is sufficient.
+
+No model run.
+
+# 9. Required A2 p01/p05 tile counts
+
+Against the COMBINED active training distribution, record A2's 9-tile counts:
 
 ```text
-number of its 9 tiles below training p01 / p05 for:
-Y_mean
-Y_std
-Y_dynamic_98
-gradient_mean
+tiles below p01 Y_mean
+tiles below p05 Y_mean
 
-number above training p95 / p99 for:
-dark_fraction
-very_dark_fraction
+tiles below p01 Y_std
+tiles below p05 Y_std
+
+tiles below p01 Y_dynamic_98
+tiles below p05 Y_dynamic_98
+
+tiles below p01 gradient_mean
+tiles below p05 gradient_mean
+
+tiles above p95 dark_fraction
+tiles above p99 dark_fraction
+
+tiles above p95 very_dark_fraction
+tiles above p99 very_dark_fraction
 ```
 
-If the active training source consists of 512×512 tiles, compare A2 tile metrics directly to that distribution and
-state that geometry alignment.
+These are required even if all counts are zero.
 
-# 11. Compare with successful controls
+# 10. Required successful-control ratios
 
-Historical detector evidence:
+Let successful controls be:
 
 ```text
-A1 raw = 133
-A3 raw = 7
-A4 raw = 216
-A2 raw = 0
+A1, A3, A4
 ```
-
-These counts are historical evidence only; do not rerun models.
 
 For each core metric:
 
@@ -376,38 +289,32 @@ Y_dynamic_98
 gradient_mean
 ```
 
-determine whether A2 is lower than ALL available successful controls.
-
-Also record the ratio:
+record:
 
 ```text
-A2 value / median(A1,A3,A4)
+whole_ratio =
+A2 whole value / median(A1 whole, A3 whole, A4 whole)
+
+tile_ratio =
+A2 median-tile value /
+median(A1 median-tile, A3 median-tile, A4 median-tile)
 ```
 
-for the whole-image metric and median-tile metric.
+Also record whether A2 is lower than ALL THREE successful controls for each metric at:
+- whole-image level;
+- median-tile level.
 
-Do not call this causal proof.
+Do not interpret ratio as causal proof.
 
-# 12. PNG / encoding metadata audit
+# 11. Normalize the encoding enum
 
-Read non-model metadata for A2 and controls:
+Replace/augment the informal:
 
 ```text
-format
-mode
-bit depth if available
-ICC profile present?
-gamma/chromaticity metadata if available?
-transparency/alpha?
-EXIF present?
-PNG textual metadata?
+encoding anomaly found = NONE
 ```
 
-Record only what is actually present.
-
-Specifically check whether A2 has an obvious encoding anomaly relative to A1/A3/A4.
-
-Choose one:
+with exactly one required enum:
 
 ```text
 A2_ENCODING_ANOMALY_FOUND
@@ -415,199 +322,186 @@ A2_ENCODING_ANOMALY_NOT_FOUND
 A2_ENCODING_METADATA_INCONCLUSIVE
 ```
 
-Do NOT edit metadata.
-
-# 13. Outcome classification
-
-Choose exactly ONE.
-
-## A — `PROP01_A2_PHOTOMETRIC_OUTLIER_STRONGLY_SUPPORTED`
-
-Use only if:
-- active training-domain statistics are available;
-- A2 is a strong outlier in at least TWO of:
-  - Y_std
-  - Y_dynamic_98
-  - gradient_mean
-- for each qualifying metric, A2 whole-image OR at least 7/9 A2 tiles lies below the active training p01;
-- and A2 is lower than all available successful controls on the same metrics.
-
-This supports photometric/texture incompatibility as a major suspect.
-It does NOT prove geographic domain mismatch.
-
-## B — `PROP01_A2_DARKNESS_OUTLIER_ONLY`
-
-Use if:
-- A2 Y_mean/dark_fraction is extreme versus training,
-- but contrast/texture metrics do NOT satisfy outcome A.
-
-Interpretation:
-brightness is unusual, but low information/contrast is not strongly established.
-
-## C — `PROP01_A2_NOT_PHOTOMETRIC_OUTLIER`
-
-Use only if:
-- training-domain statistics exist;
-- A2 lies at or above p05 for at least 3 of the 4 core metrics:
-  Y_mean, Y_std, Y_dynamic_98, gradient_mean;
-- and no encoding anomaly is found.
-
-## D — `PROP01_A2_INPUT_DOMAIN_INCONCLUSIVE`
-
-Use if:
-- training images are unavailable;
-- control evidence is contradictory;
-- or criteria A/B/C are not met.
-
-# 14. Next-gate recommendation — DO NOT EXECUTE
-
-If outcome A:
+If existing evidence remains:
 
 ```text
-NEXT = CONTROLLED_A2_PHOTOMETRIC_RESCUE_DESIGN
+all A1/A2/A3/A4:
+PNG
+8-bit RGB
+no alpha
+same core PNG chunk structure
+no anomalous ancillary profile/gamma/EXIF/text metadata
 ```
 
-Future task designs one deterministic, training-domain-derived normalization transform.
-No model run in this task.
-
-If outcome B:
+then use:
 
 ```text
-NEXT = A2_BRIGHTNESS_RESCUE_DESIGN
+A2_ENCODING_ANOMALY_NOT_FOUND
 ```
 
-If outcome C:
+only if those facts are actually supported.
+
+# 12. Re-evaluate the P1D8 outcome without changing its rule
+
+Choose exactly one again:
+
+```text
+PROP01_A2_PHOTOMETRIC_OUTLIER_STRONGLY_SUPPORTED
+PROP01_A2_DARKNESS_OUTLIER_ONLY
+PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
+PROP01_A2_INPUT_DOMAIN_INCONCLUSIVE
+```
+
+Apply the ORIGINAL P1D8 criteria exactly.
+
+Do NOT create a new threshold or use split-specific robustness tables to retroactively redefine the rule.
+
+If the original combined-distribution criterion still gives:
+
+```text
+PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
+```
+
+retain it.
+
+Separately state whether split-specific analysis makes the interpretation:
+
+```text
+ROBUST_ACROSS_SPLITS
+SENSITIVE_TO_SPLIT_COMPOSITION
+INCONCLUSIVE_ACROSS_SPLITS
+```
+
+This robustness enum does not replace the primary outcome.
+
+# 13. Re-evaluate next gate
+
+If primary outcome remains:
+
+```text
+PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
+```
+
+then keep:
 
 ```text
 NEXT = DETECTOR_ADAPTATION_OR_DEMO_POLICY_DECISION
 ```
 
-If outcome D:
+Otherwise follow the original P1D8 decision table.
 
-```text
-NEXT = A2_INPUT_DOMAIN_POLICY_DECISION
-```
+Do NOT execute it.
 
-Do not execute next gate.
+# 14. Repair report
 
-# 15. Report
-
-Create:
+Update:
 
 ```text
 docs/task8b3_p1d8_a2_input_domain_audit.md
 ```
 
-Required sections:
+The committed report must now contain:
 
-1. scope / starting HEAD
-2. P1D2–P1D7 frozen detector facts
-3. Demo image identity table
-4. active task6m dataset roots/counts/dimensions
-5. exact-match SHA provenance search
-6. metric definitions
-7. full active training-domain statistics
-8. whole-image A1/A2/A3/A4 comparison
-9. percentile-rank table
-10. 9-tile comparison
-11. A2 vs successful controls ratios
-12. PNG/encoding metadata audit
-13. exact encoding enum
-14. exact outcome enum
-15. causal interpretation and explicit limits
-16. exact next gate
-17. model inference = NONE
-18. image modifications = NONE
-19. functional files modified = NO
-20. MEM-01 CLOSED
-21. PROP-01 OPEN
-22. REF-01/MASK-01 OPEN untouched.
+1. original task scope and HEAD
+2. P1D2–P1D7 frozen detector evidence
+3. input identities
+4. dataset roots/counts/dimensions
+5. exact hash search
+6. fixed metric definitions
+7. full six-metric × four-split distribution tables
+8. all-black-tail audit
+9. A2 split-specific percentile table
+10. whole A1/A2/A3/A4 metrics
+11. 9-tile summary table for all four cases
+12. A2 p01/p05 tile-count table
+13. successful-control ratio table
+14. encoding metadata evidence
+15. exact encoding enum
+16. exact primary outcome
+17. split robustness enum
+18. explicit limits
+19. exact next gate
+20. model inference = NONE
+21. image modification = NONE
+22. MEM-01 CLOSED
+23. PROP-01 OPEN
+24. REF-01/MASK-01 OPEN untouched.
 
-# 16. FROM_DSH
+# 15. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 UTF-8 without BOM.
 
-Required:
+Required fields:
 
 ```text
-Task: 8B.3-P1D8
+Task: 8B.3-P1D8-R1
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 5f52338b7507cc377190cacb33611c644f223a88
+Starting HEAD: b4dc1967cdc6734d35315d29eed11eb284b50244
+Original P1D8 starting HEAD: 5f52338b7507cc377190cacb33611c644f223a88
 Model inference: NONE
 Image modifications: NONE
 Functional files modified: NO
-A2 identity: MATCH / MISMATCH
-Available successful controls: <A1/A3/A4 subset>
-Active training images: AVAILABLE / UNAVAILABLE
-Training image count: <n / NOT ESTABLISHED>
-A2 exact-match provenance: <enum>
-A2 whole Y_mean: <value>
-A2 whole Y_std: <value>
-A2 whole Y_dynamic_98: <value>
-A2 whole gradient_mean: <value>
-A2 training percentile Y_mean: <value / NA>
-A2 training percentile Y_std: <value / NA>
-A2 training percentile Y_dynamic_98: <value / NA>
-A2 training percentile gradient_mean: <value / NA>
-A2 tiles below p01 Y_std: <n / NA>
-A2 tiles below p01 Y_dynamic_98: <n / NA>
-A2 tiles below p01 gradient_mean: <n / NA>
+Training image counts: 10044 / 3618 / 3726 / 17388
+Full training distribution tables: RECORDED / NOT RECORDED
+All-black-tail audit: RECORDED / NOT RECORDED
+A2 split-specific percentiles: RECORDED / NOT RECORDED
+All-control tile summary: RECORDED / NOT RECORDED
+A2 p01/p05 tile counts: RECORDED / NOT RECORDED
+Successful-control ratios: RECORDED / NOT RECORDED
 Encoding audit: <exact enum>
-Outcome: <exact enum>
+Primary outcome: <exact enum>
+Split robustness: <exact enum>
 Next gate: <exact enum>
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
 Report: docs/task8b3_p1d8_a2_input_domain_audit.md
-Next action: Awaiting ChatGPT audit; no rescue or detector change authorized.
+Next action: Awaiting ChatGPT audit; no rescue/detector change authorized.
 ```
 
-# 17. Commit / push
+# 16. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): audit a2 input photometric domain
+docs(rc1): complete a2 input-domain audit
 ```
 
-If PARTIAL/STOP/FAILED:
+If STOP/FAILED:
 
 ```text
-docs(rc1): record a2 input-domain audit stop
+docs(rc1): record a2 input-domain audit correction stop
 ```
 
-Push current branch normally.
-No force push.
+Push normally. No force push.
 
-# 18. COMPLETE definition
+# 17. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
 - no model execution;
-- A2 identity matches;
-- at least two successful controls are available;
-- active task6m image roots are resolved or explicitly unavailable;
-- exact-match provenance search performed;
-- all frozen metrics computed for A2 and controls;
-- if active images are available, ALL readable training-domain images are processed;
-- split and combined distribution quantiles recorded;
-- A2 whole/tile percentile comparison recorded;
-- encoding metadata audited;
-- one exact outcome chosen;
-- one exact next gate recommended but not executed;
-- no image/product/runtime modification;
-- only allowed docs/handoff files changed;
+- no image modification;
+- all six training-domain distribution tables are committed in the report;
+- zero-valued training tail is quantified;
+- split-specific A2 percentile robustness is recorded;
+- all four Demo cases have tile summaries;
+- A2 p01/p05 tile counts are explicit;
+- successful-control ratios are explicit;
+- encoding enum is exact;
+- original P1D8 outcome is re-evaluated without changing the rule;
+- split robustness enum is reported separately;
+- next gate is recommended but not run;
+- only allowed files changed;
 - commit/push succeeds;
-- tracked tree clean;
 - STOP.
 
-# 19. Final response
+# 18. Final response
 
 ```text
-TASK 8B.3-P1D8 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D8-R1 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -618,33 +512,25 @@ PASS / FAIL
 Model inference:
 NONE
 
-A2 exact-match provenance:
+Full distribution tables:
+RECORDED / NOT RECORDED
+
+All-black tail:
+RECORDED / NOT RECORDED
+
+Split robustness:
 <enum>
 
-Training images:
-<AVAILABLE/UNAVAILABLE> · N=<...>
+A2 p01/p05 tile counts:
+RECORDED / NOT RECORDED
 
-A2:
-Y_mean = <...>
-Y_std = <...>
-Y_dynamic_98 = <...>
-gradient_mean = <...>
+Control ratios:
+RECORDED / NOT RECORDED
 
-Training percentiles:
-Y_mean = <...>
-Y_std = <...>
-Y_dynamic_98 = <...>
-gradient_mean = <...>
-
-A2 tiles below p01:
-Y_std = <n>
-Y_dynamic_98 = <n>
-gradient_mean = <n>
-
-Encoding audit:
+Encoding:
 <enum>
 
-Outcome:
+Primary outcome:
 <enum>
 
 Next gate:
@@ -664,9 +550,6 @@ OPEN
 
 REF-01 / MASK-01:
 OPEN / OPEN
-
-STOP reason:
-<none or exact>
 
 等待 ChatGPT 审核；不得做图像增强、不得重跑 detector、不得执行 next gate。
 ```

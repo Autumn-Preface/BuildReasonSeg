@@ -17,35 +17,37 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D8 Report
+# FROM_DSH — Task 8B.3-P1D8-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D8` |
-| Status | **COMPLETE** (non-model A2 input-domain audit) |
+| Task | `8B.3-P1D8-R1` |
+| Status | **COMPLETE** (evidence completion, docs only) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `5f52338b7507cc377190cacb33611c644f223a88` |
-| Model runs | NONE (no detector/predict/pytest; no model at all) |
-| Training-domain source | `artifacts/task6m_yolo_native/data.yaml` → train 10044 · val 3618 · test 3726 files; processed **17388** readable images (0 unreadable) |
-| A2 identity | 1024×1024 RGB · 1 677 040 B · sha256 `10286b1e…` (matches frozen) |
-| A2 Y_mean / Y_std / Y_dynamic_98 / gradient_mean | 65.6886 / 6.3262 / 31.2880 / 4.1943 |
-| A2 percentile ranks (whole) | Y_mean 25.18 · Y_std 7.83 · Y_dynamic_98 7.91 · gradient_mean 58.63 |
-| A2 percentile ranks (mean of 9 tiles) | Y_mean 25.09 · Y_std 7.83 · Y_dynamic_98 7.90 · gradient_mean 63.29 |
-| Successful controls | A1 Y_std pct 86.31 · A3 67.02 · A4 53.07 (all inside the training distribution) |
-| Exact-match search | `A2_NO_EXACT_MATCH` (no hash match for A1/A2/A3/A4) |
-| PNG/encoding audit | 8-bit truecolour RGB, no interlace, IHDR+IDAT+IEND only, no sRGB/gAMA/iCCP/tEXt/pHYs chunks → no anomaly |
-| Outcome | **PROP01_A2_NOT_PHOTOMETRIC_OUTLIER** (4/4 core metrics ≥ p05; no encoding anomaly) |
+| Starting HEAD | `b4dc1967cdc6734d35315d29eed11eb284b50244` |
+| Model runs / enhancement / detector rerun | NONE (read-only arithmetic only) |
+| Full distributions | six metrics × train/val/test/combined (N, min, p01, p05, p25, p50, p75, p95, p99, max) written into the report §13.1 |
+| Split file counts | train 10044 · val 3618 · test 3726 · total 17388 |
+| Zero tail | train: Y_mean==0 1302, Y_std==0 1302, all-black 1302 (12.9630%), labels existing/empty/non-empty 1302/1302/0; val and test: 0 |
+| Combined percentiles include all-black images | YES |
+| A2 split-specific ranks | train Y_mean 38.88 / Y_std 13.45 · val Y_mean 11.22 / Y_std 0.00 · test Y_mean 1.83 / Y_std 0.27 · combined Y_mean 25.18 / Y_std 7.83 |
+| A1/A2/A3/A4 tile summaries | recorded (report §13.4); A2 median tile Y_std 6.9624 vs A1 35.9739 / A3 34.1799 / A4 28.8475 |
+| A2 p01/p05 tile counts | all twelve required counts = 0 (recorded) |
+| Control ratios | Y_mean whole 0.8030 / tile 0.7834 · Y_std 0.1973 / 0.2037 · Y_dynamic_98 0.1746 / 0.2258 · gradient_mean 0.8457 / 0.9097 (A2 not lower than all three for gradient_mean) |
+| Encoding enum | **A2_ENCODING_ANOMALY_NOT_FOUND** |
+| Primary outcome | **PROP01_A2_NOT_PHOTOMETRIC_OUTLIER** (original rule retained; 4/4 core metrics ≥ p05 in the combined distribution) |
+| Split robustness | **SENSITIVE_TO_SPLIT_COMPOSITION** |
 | Recommendation (not executed) | `NEXT = DETECTOR_ADAPTATION_OR_DEMO_POLICY_DECISION` |
 | A2 provenance/membership | NOT ESTABLISHED |
-| Image modification / rescue | NONE (no CLAHE/gamma/equalisation, no rescue design) |
 | PROP-01 | open, not fixed; REF-01 / MASK-01 / Task 8B.4 / 8C not entered |
 | Report | `docs/task8b3_p1d8_a2_input_domain_audit.md` |
 | Next action | Awaiting ChatGPT audit; do not execute the recommended gate without a new task book. |
 
-Watt was not needed for Task 8B.3-P1D8 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D8-R1 (no downloads, no transfers).
 
-Statistics were computed read-only from decoded pixels; the machine-readable dump lives outside the tracked tree
-(`logs/task8b3_p1d8_domain_audit.json`) and no dataset-sized artefact was committed. `RC1-DEMO-MEM-01` remains CLOSED.
+No image was modified, enhanced, resized or normalised; no detector, Qwen, SAM2, D-B1, `predict.py` or pytest ran; the
+machine-readable completion dump lives outside the tracked tree (`logs/task8b3_p1d8r1_completion.json`).
+`RC1-DEMO-MEM-01` remains CLOSED.
