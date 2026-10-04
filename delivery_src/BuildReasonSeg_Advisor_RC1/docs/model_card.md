@@ -17,6 +17,12 @@
 - 输入域：**RGB 光学遥感影像**（不支持 SAR / 红外 / 原始多光谱）；
 - 正式语义：**largest → direction → nearest**（四个 L3 program）。
 
+- 已验证域：WHU East Asia（Satellite dataset II (East Asia)）上的 native-vector 标注
+  （WHU-EA-NativeVector v1.0），切分视图 `scene_disjoint_v1`。
+- 推理设定：tile 相对（tile-relative）空间关系推理。
+- 正式 L3 程序：`largest_to_left_of_to_nearest`、`largest_to_right_of_to_nearest`、
+  `largest_to_above_to_nearest`、`largest_to_below_to_nearest`。
+
 ## 3. 指标（均为已完成的正式结果，未在 RC1 重新计算）
 
 ### 3.1 Task 7I validation（936 条，oracle reference）
@@ -95,3 +101,12 @@ RGB 输入 → 512 px tiled detector（U-C1, imgsz 640 / conf 0.05 / max_det 300
 等价性证据（Task 8B section 18/19）：4 条 validation fixture 上 delivery 与 research 实现的
 `P_dir / P_near / W / A / C / logits` **全部 bit-exact（max abs diff = 0.00e+00）**、binary mask 完全一致；
 detector 与 research 冻结路径**检测数、置信度、mask 完全一致**（9 vs 9，diff 0.0）。
+
+### Demo policy
+
+- 历史 A1–B2 诊断套件保留（含失败与人工结论），不改写为 6/6 成功。
+- 锁定候选来自 BuildSpatialReason v0.2 **TEST**，按确定性、仅元数据规则选出。
+- 定性复用已披露：不改变任何 Task 7J 指标、模型、阈值、种子或架构。
+- 锁定候选**尚未**被声称成功；未来失败不得在无新 ChatGPT 决定的情况下替换。
+- `scene_disjoint_v1` 的场景分离 ≠ 跨城市泛化证据；任意航空/跨传感器鲁棒性 **NOT ESTABLISHED**。
+- A2 为持续未检出样例，来源/域 **NOT ESTABLISHED**；**不得**判定为已证实的域外样本。

@@ -1,65 +1,57 @@
-# Task 8B.3-P1D11A-R1 — Supported-Domain Policy (STOP: mixed-convention canonical manifest)
+# Task 8B.3-P1D11A-R2 — Supported-Domain Policy Implemented (canonical)
 
 ## 1. Task and scope
 
-The task asks to re-verify the canonical manifest against Git canonical/index bytes, confirm the previous STOP was a
-CRLF false positive, and then implement the supported-domain policy. The re-verification succeeded **only for the four
-previously flagged entries**; the full 135-entry manifest cannot be verified under a single byte convention, so the
-policy implementation remains blocked and the task stops.
+Policy implementation in canonical RC1 documentation with manifest identities maintained under the frozen
+`GIT_CANONICAL_BLOB_BYTES` convention. No model, runtime or test change and **no external write sync**.
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD   = 9f91d953b9ef5bb3993be4b7434b174de9856648
-policy documents edited = NONE
-external write sync    = NONE
-model / test runs      = NONE
+HEAD   = 581f91de8145a5b680d510b185b38b6e9878aa1d
+pre-edit gate (Git canonical HEAD blobs)  = 135/135 PASS
+post-edit gate (Git canonical index blobs) = 135/135 PASS · 135 entries · path list identical
 ```
 
-## 2. Confirmed part — the four previously flagged entries are a CRLF false positive
+## 2. Manifest entries updated (exactly two, canonical identities)
 
-| entry | manifest bytes / sha256 | Git index bytes / sha256 | match | disk bytes / sha256 | match |
-|---|---|---|---|---|---|
-| `buildreasonseg/runtime/core.py` | 11064 / `37c38ba4acd1…` | 11064 / `37c38ba4acd1…` | YES | 11310 / `8913071d578d…` | NO |
-| `buildreasonseg/runtime/detector.py` | 20300 / `82531dc3b758…` | 20300 / `82531dc3b758…` | YES | 20772 / `a6fa4bdd76db…` | NO |
-| `buildreasonseg/runtime/outputs.py` | 9166 / `f12f86cfcc04…` | 9166 / `f12f86cfcc04…` | YES | 9367 / `9c0e3a59c317…` | NO |
-| `tests/test_task8b_runtime.py` | 24983 / `6cac7e9320f2…` | 24983 / `6cac7e9320f2…` | YES | 25552 / `02fef130459f…` | NO |
+| entry | bytes before | bytes after | sha256 after |
+|---|---:|---:|---|
+| `README.md` | 9335 | 10411 | `8615537af6448321…` |
+| `docs/model_card.md` | 5900 | 6945 | `1c190ad3c260cdd0…` |
 
-So the previous STOP was indeed a line-ending/checkout artifact **for those four entries**.
+`schema` stays `BuildReasonSeg.AdvisorRC1.SourceManifest.v1`, `identity_basis` stays `GIT_CANONICAL_BLOB_BYTES`, no
+entry was added or removed, no unrelated identity changed and no per-entry metadata was introduced.
 
-## 3. New finding — the manifest mixes two byte conventions
+## 3. Policy document created
 
-Verifying all 135 entries under both conventions (Git index blob vs working-tree bytes):
+`docs/task8b3_p1d11_supported_domain_policy.md` — positively verified scope (§5.1), explicit non-claims plus the
+preserved scene-disjoint limitation (§5.2), the A2 policy `DOCUMENTED_PERSISTENT_NON_DETECTION` with bounded evidence
+only (§5.3), the two distinct Demo sets with the four immutable locked sample IDs (§5.4), and the verbatim English plus
+faithful Chinese test-reuse disclosure (§5.5).
+
+## 4. Canonical RC1 documents updated
+
+| document | change |
+|---|---|
+| `README.md` | `## 输入` distinguishes accepted software input modality from the verified research/evaluation domain; new `### 已验证数据域与 Demo 边界` subsection records the domain, the scene-disjoint caveat, the no-guarantee statement, the A2 policy, the untouched six-case suite, the four locked qualitative candidates and the disclosed deterministic reuse |
+| `docs/model_card.md` | `## 2. 数据` states the verified domain explicitly; new `### Demo policy` subsection records the retained historical suite, the metadata-only locked candidates, the disclosure, the non-established robustness claims and the A2 policy |
+
+## 5. Unchanged by this task
 
 ```text
-match index AND disk      = 93
-match Git index only      = 4
-match disk only           = 38
-match neither             = 0
+runtime / tests / .gitattributes / external delivery = UNCHANGED
+model runs / inference                               = NONE
+frozen metrics / architecture / locked candidates    = UNCHANGED
+PROP-01 status                                       = OPEN (not closed)
 ```
 
-Examples of index-only entries: `buildreasonseg/runtime/core.py`, `buildreasonseg/runtime/detector.py`, `buildreasonseg/runtime/outputs.py`, `tests/test_task8b_runtime.py`
-Examples of disk-only entries: `README.md`, `buildreasonseg/runtime/_frozen/PORT_PROVENANCE.md`, `buildreasonseg/runtime/_frozen/__init__.py`, `buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py`
-
-Consequences: the four runtime/test entries were recorded from **Git index (LF) bytes**, while most other entries were
-recorded from **working-tree (CRLF) bytes**. No single byte convention can therefore satisfy the mandated
-"exactly 135/135 PASS" gate, and the manifest is internally inconsistent about line endings rather than demonstrating
-any functional file change.
-
-## 4. Actions not taken
+## 6. Status fields
 
 ```text
-docs/task8b3_p1d11_supported_domain_policy.md   = NOT CREATED
-delivery_src/.../README.md                      = NOT MODIFIED
-delivery_src/.../docs/model_card.md             = NOT MODIFIED
-delivery_src/.../source_manifest.json           = NOT MODIFIED
+supported-domain policy     = IMPLEMENTED_IN_CANONICAL_RC1_DOCS
+A2 policy status            = DOCUMENTED_PERSISTENT_NON_DETECTION
+canonical README policy     = UPDATED
+canonical model card policy = UPDATED
+canonical manifest          = 135/135 PASS under GIT_CANONICAL_BLOB_BYTES
+next gate                   = canonical → external controlled sync (separate task, NOT executed here)
 ```
-
-The task book forbids policy/manifest edits while the pre-edit self-check is not 135/135, and forbids repairing
-unrelated manifest entries inside this task.
-
-## 5. STOP reason and required follow-up
-
-The canonical manifest cannot be verified 135/135 under either the Git-index convention or the working-tree
-convention because it mixes both. A dedicated manifest-normalisation task (choose one convention — recommended: Git
-index/LF blob bytes, i.e. `.gitattributes`-independent canonical content — and refresh all 135 entries, then re-run
-the self-check) is required before the supported-domain policy can be implemented.

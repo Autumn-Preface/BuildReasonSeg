@@ -40,6 +40,18 @@ python predict.py --input-dir inference/input --prompt "分割最大建筑物右
 - **任意尺寸可读 ≠ 跨尺度泛化已验证**（跨城市/跨传感器/跨尺度泛化未建立）；
 - GeoTIFF 输出为 PNG，**不保留 georeference**。
 
+### 已验证数据域与 Demo 边界
+
+- **软件接受的输入模态**：PNG / JPEG / TIFF，支持大图分块；这只是格式/尺寸支持。
+- **已验证的研究/评测域**：WHU East Asia（Satellite dataset II (East Asia)）之上的 BuildSpatialReason v0.2 与
+  WHU-EA-NativeVector v1.0，切分视图 `scene_disjoint_v1`，tile 相对空间关系推理。
+- `scene_disjoint_v1` 的场景分离**不**等同于跨城市泛化证据。
+- 任意航空影像的鲁棒性**未**得到保证；SAR / 红外 / 原始多光谱不在支持范围内。
+- **A2 是已记录的持续未检出（persistent non-detection）压力样例，其来源/域为 NOT ESTABLISHED，且不得声称其“域外”。**
+- 历史六案例诊断套件（A1/A2/A3/A4/B1/B2）保留原样，**不**改写为 6/6 成功套件。
+- 四个锁定的 v0.2 TEST 用例仅为**定性候选**，**尚未**作为新的验收 Demo 运行。
+- 定性候选的选择为确定性、仅基于元数据；其复用已披露，且不改变任何已报告的 Task 7J 指标/模型/阈值/种子/架构。
+
 ## 当前已验证语义
 
 RC1 正式开放的空间语义**只有四类**（用“语义类型 / 命令示例”表述，不称“标准命令”）：

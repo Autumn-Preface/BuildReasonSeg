@@ -17,31 +17,34 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D11M1 Report
+# FROM_DSH — Task 8B.3-P1D11A-R2 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D11M1` |
-| Status | **COMPLETE** (canonical manifest identity normalized) |
+| Task | `8B.3-P1D11A-R2` |
+| Status | **COMPLETE** (canonical supported-domain policy implemented) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `ca0e9f4217f0abfb58bffe36ac297c46206fe016` |
-| Pre-normalization classification | both 93 / Git-only 4 / disk-only 38 / neither 0 (reproduced exactly) |
-| Consumer semantics | sync helper enumerates by `path` and compares actual content; manifest `bytes`/`sha256` are not used for validation; `source_manifest.json` is not self-listed → normalization safe |
-| Identity convention | **GIT_CANONICAL_BLOB_BYTES** (`identity_basis` + `identity_basis_note` added; schema/task/source_delivery/canonical_root/copy_policy unchanged) |
-| Entry identities changed / unchanged | **38 / 97** |
-| Entry count / order / paths | 135 / preserved / 0 additions-removals |
-| Post-normalization Git-canonical check | **135/135 PASS** |
-| Runtime / tests / README / model card / `.gitattributes` | UNCHANGED |
+| Starting HEAD | `581f91de8145a5b680d510b185b38b6e9878aa1d` |
+| Pre-edit canonical manifest | **135/135 PASS** (Git canonical HEAD blobs) |
+| Post-edit canonical manifest | **135/135 PASS** (Git canonical index blobs; 135 entries; path list identical) |
+| Identity convention | `GIT_CANONICAL_BLOB_BYTES` (unchanged) |
+| Manifest entries updated | exactly two: `README.md`, `docs/model_card.md` (canonical blob identities) |
+| Canonical policy doc | `docs/task8b3_p1d11_supported_domain_policy.md` (created) |
+| Canonical README policy | UPDATED |
+| Canonical model card policy | UPDATED |
+| A2 policy status | `DOCUMENTED_PERSISTENT_NON_DETECTION` |
+| Supported-domain policy | **IMPLEMENTED_IN_CANONICAL_RC1_DOCS** |
+| Runtime / tests / `.gitattributes` | UNCHANGED |
 | External write sync / model runs | NONE / NONE |
+| Frozen metrics / architecture / locked candidates | UNCHANGED |
 | PROP-01 status | OPEN (not closed) |
-| Locked candidates | 4 immutable v0.2 TEST sample IDs (unchanged) |
-| Report | `docs/task8b3_p1d11_manifest_normalization.md` |
-| STOP reason | none |
-| Next action | Awaiting ChatGPT audit; the P1D11A policy implementation retry and any canonical → external sync need their own task books |
+| Report | `docs/task8b3_p1d11_supported_domain_policy.md`, `docs/task8b3_p1d11a_policy_implementation.md` |
+| Next action | Awaiting ChatGPT audit; the canonical → external controlled sync needs its own task book |
 
-Watt was not needed for Task 8B.3-P1D11M1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D11A-R2 (no downloads, no transfers).
 
-Only `delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json`, this report and the handoff changed.
+Only the policy document, the two canonical documentation files, their two manifest identities and this handoff
+changed; nothing was written to the external delivery.
