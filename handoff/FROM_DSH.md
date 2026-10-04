@@ -17,30 +17,32 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D12-R2 Report
+# FROM_DSH — Task 8B.3-REF01-F1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D12-R2` |
-| Status | **COMPLETE** (read-only threshold + timing evidence) |
-| Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `728932094a9f86f7c1607abc6a2beff12d2d2d70` |
-| Candidate / predict / detector / model re-runs | NONE |
-| `FROZEN_THRESHOLD` (canonical detector source) | `0.5  # ultralytics mask binarisation for the frozen U-C1 detector` |
-| Sam2 / relation / D-B1 timing entries in the four result.json | NONE (key sets recorded per candidate in the report) |
-| Inspect-only conclusion | SAM2 = 0 · relation fields = 0 · D-B1 = 0 — explicit zero-valued `timings.sam2` / `timings.relation_fields` / `timings.db1` entries in all four result.json files |
+| Task | `8B.3-REF01-F1` |
+| Status | **STOP** (preflight gates only; forensic procedure not executed) |
+| Base branch @ HEAD | `fix/task8b3-prop01-a2-zero-proposals` @ `e00396c85e0fb0ac966f72fa7216b34c72b94cb7` |
+| Task branch | `fix/task8b3-ref01-reference-forensics` (created at the same HEAD) |
+| External RC1 integrity | 135/135 PASS · control manifest identical |
+| v0.2 TEST identity gate | PASS — four immutable records resolve uniquely; `dataset_version v0.2`; `whu-native-vector-v1.0`; one native-vector reference each matching `reference_component_ids[0]` |
+| GT access purpose | REFERENCE_FORENSICS_ONLY |
+| Frozen detector passes used | 0 |
+| Qwen / SAM2 / D-B1 / target segmentation | NOT EXECUTED |
+| Candidate replacement / repair / visual judgement | NONE / NONE / NONE |
 | External delivery / canonical RC1 modified | NO / NO |
+| Forensic classification / outcome enum | NOT ASSERTED (inputs unavailable) |
 | Locked candidate identities | UNCHANGED |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| Outcome | **PROP01_LOCKED_DEMO_PROPOSAL_GATE_EVIDENCE_CLOSED** (retained) |
-| Next gate (recommended, not executed) | `NEXT = REF01_LOCKED_DEMO_REFERENCE_FORENSICS` |
-| Report | `docs\task8b3_p1d12_r2_final_evidence_closure.md` |
-| Next action | Awaiting ChatGPT audit; the next gate needs its own task book |
+| Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
+| STOP reason | execution budget exhausted after branch creation and the read-only preflight gates (§7–§9), before §10 GT-mask reconstruction, the single authorised detector pass and the §14–§18 IoU classification; nothing was partially implemented |
+| Next action | Awaiting ChatGPT audit; restart the forensics from §10 on the same branch and HEAD |
 
-Watt was not needed for Task 8B.3-P1D12-R2 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-F1 (no downloads, no transfers).
 
-No model, detector or candidate was executed and no delivery file was modified; only this report and the handoff
-changed.
+No model, detector, Qwen, SAM2 or D-B1 execution occurred; no delivery file was modified; no GT-derived metric was
+computed or claimed.
