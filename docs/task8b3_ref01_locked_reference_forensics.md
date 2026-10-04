@@ -529,3 +529,61 @@ detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = 
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 external delivery / canonical RC1 modified = NO / NO
 ```
+
+
+---
+
+## 18. REF01-F1-R9 — live-metadata replay and final schema closure
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = f268d03a9a70b494b7134c6b2f2647ed3468caa3
+detector / model calls in R9 = 0
+verification_mode = READ_ONLY_HISTORICAL_EVIDENCE_REPLAY
+tie-break = (-IoU, -confidence, proposal_id) over live P1D12 proposal metadata
+canonical evidence schema = REPLACED (not appended)
+obsolete imageio false-claim structures = REMOVED
+```
+
+### 18.1 Exact scientific reuse disclosure (mandatory)
+
+> The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
+
+中文对照：
+
+> 这些定性 Demo 候选是在 Task 7J 最终冻结架构测试指标**已被消耗之后**，从冻结的 BuildSpatialReason v0.2 测试划分中**确定性**选取的。其定性复用**不会**改变、替换或重新选择任何已报告的 Task 7J 指标、模型、阈值、随机种子或架构。
+
+### 18.2 Module identity (manifest / Git-canonical / external)
+
+| module | manifest bytes | manifest sha256 | external bytes | external sha256 | manifest_match |
+|---|---:|---|---:|---|---|
+| `buildreasonseg/runtime/detector.py` | 20300 | `82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738` | 20300 | `82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738` | True |
+| `buildreasonseg/runtime/imageio.py` | 7978 | `b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878` | 7978 | `b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878` | True |
+
+`buildreasonseg.runtime.imageio` is the delivery's own module (imported for identity only, never executed); there is no
+third-party `imageio` package check and no contradictory imageio structure remains in the evidence.
+
+### 18.3 Replayed selection with the full frozen tie-break
+
+| relation | selected_id | selected_IoU | best_eligible_id | best_eligible_IoU | best_any_id | best_any_IoU | gap | classification |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| right | 1 | 0.558870 | 1 | 0.558870 | 1 | 0.558870 | 0.000000 | REFERENCE_SELECTED_CORRECT |
+| left | 14 | 0.000000 | 30 | 0.650067 | 30 | 0.650067 | 0.650067 | REFERENCE_SELECTION_WRONG_COVERED |
+| above | 4 | 0.000000 | 4 | 0.000000 | 5 | 0.903250 | 0.000000 | REFERENCE_ELIGIBILITY_BLOCKED |
+| below | 1 | 0.000000 | 2 | 0.616550 | 2 | 0.616550 | 0.616550 | REFERENCE_SELECTION_WRONG_COVERED |
+
+Class counts: `{"REFERENCE_SELECTED_CORRECT": 1, "REFERENCE_SELECTION_WRONG_COVERED": 2, "REFERENCE_ELIGIBILITY_BLOCKED": 1}` · Outcome `REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE` · blocker `ELIGIBILITY` · `NEXT = REF01_ELIGIBILITY_FORENSICS`
+
+### 18.4 Verifier result
+
+```text
+REPLAY_VERIFIER: PASS
+```
+
+### 18.5 Explicit non-execution
+
+```text
+detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = NONE
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+external delivery / canonical RC1 modified = NO / NO
+```
