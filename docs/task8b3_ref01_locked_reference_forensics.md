@@ -477,3 +477,55 @@ detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = 
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 external delivery / canonical RC1 modified = NO / NO
 ```
+
+
+---
+
+## 17. REF01-F1-R8 — manifest identity for detector.py / imageio.py, read-only verifier, ID completion
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 65643f802a0a187b93160155f976689c0b50b8c6
+detector / model calls in R8 = 0
+tracked script rewritten as = pure read-only replay verifier (no DetectorRuntime, no detect_global, no predict)
+```
+
+### 17.1 Manifest / Git / external identity of the two runtime modules
+
+| module | in manifest | manifest sha256 | Git blob sha256 | external sha256 | all agree |
+|---|---|---|---|---|---|
+| detector | True | 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738 | 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738 | 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738 | True |
+| imageio | True | b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878 | b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878 | b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878 | True |
+
+`buildreasonseg/runtime/detector.py` is a manifest entry whose manifest, Git-canonical and external identities are
+identical. `buildreasonseg/runtime/imageio.py` is **a manifest entry**;
+its Git blob presence = True and external file presence =
+True. Whatever the state is, it is recorded verbatim rather than assumed, and no
+imageio identity is claimed that the manifest does not support.
+
+### 17.2 Completed proposal IDs (read-only replay)
+
+| relation | selected_id | best_eligible_id | best_any_id | classification |
+|---|---|---|---|---|
+| right | 1 | 1 | 1 | REFERENCE_SELECTED_CORRECT |
+| left | 14 | 30 | 30 | REFERENCE_SELECTION_WRONG_COVERED |
+| above | 4 | 2 | 5 | REFERENCE_ELIGIBILITY_BLOCKED |
+| below | 1 | 2 | 2 | REFERENCE_SELECTION_WRONG_COVERED |
+
+The IDs were derived by replaying the stored per-proposal `iou_to_gt` values under the frozen eligibility rule
+(`mask_area > 0` and not touching the image border and `bbox_extent_ratio <= 0.20`) and the frozen Task 7F coverage
+threshold 0.50, with **no detector call**.
+
+### 17.3 Verifier result
+
+```text
+REPLAY_VERIFIER: PASS
+```
+
+### 17.4 Explicit non-execution
+
+```text
+detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = NONE
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+external delivery / canonical RC1 modified = NO / NO
+```

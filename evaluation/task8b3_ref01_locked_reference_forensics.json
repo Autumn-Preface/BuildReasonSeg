@@ -11,15 +11,16 @@
  "r7_zero_call_guarantee": "no DetectorRuntime instantiation, no detect_global, no predict in R7",
  "scientific_reuse_disclosure": "GT access purpose: REFERENCE_FORENSICS_ONLY (native-vector annotations used only to measure whether the frozen proposal set covers the canonical GT reference; no target GT metric, no repair, no candidate replacement, no manual visual judgement)",
  "detector_identity": {
-  "manifest_basis": "GIT_CANONICAL_BLOB_BYTES",
-  "manifest_entry_count": 135,
+  "manifest_path": "buildreasonseg/runtime/detector.py",
+  "in_manifest": true,
   "manifest_bytes": 20300,
   "manifest_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
   "git_blob_bytes": 20300,
   "git_blob_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
+  "external_exists": true,
   "external_bytes": 20300,
   "external_sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
-  "all_three_agree": true
+  "all_agree": true
  },
  "imageio_identity": {
   "manifest_declares_imageio_entry": false,
@@ -138,7 +139,12 @@
      "bbox_extent_ratio": 0.029296875,
      "iou_to_gt": 0.0
     }
-   ]
+   ],
+   "best_eligible_id": 1,
+   "best_eligible_iou_recomputed": 0.5588697017268446,
+   "best_any_id": 1,
+   "best_any_iou_recomputed": 0.5588697017268446,
+   "readonly_replay_class": "REFERENCE_SELECTED_CORRECT"
   },
   {
    "relation": "left",
@@ -528,7 +534,12 @@
      "bbox_extent_ratio": 0.119140625,
      "iou_to_gt": 0.0
     }
-   ]
+   ],
+   "best_eligible_id": 30,
+   "best_eligible_iou_recomputed": 0.6500672947510094,
+   "best_any_id": 30,
+   "best_any_iou_recomputed": 0.6500672947510094,
+   "readonly_replay_class": "REFERENCE_SELECTION_WRONG_COVERED"
   },
   {
    "relation": "above",
@@ -610,7 +621,12 @@
      "bbox_extent_ratio": 0.134765625,
      "iou_to_gt": 0.0
     }
-   ]
+   ],
+   "best_eligible_id": 2,
+   "best_eligible_iou_recomputed": 0.0,
+   "best_any_id": 5,
+   "best_any_iou_recomputed": 0.9032501889644747,
+   "readonly_replay_class": "REFERENCE_ELIGIBILITY_BLOCKED"
   },
   {
    "relation": "below",
@@ -671,7 +687,12 @@
      "bbox_extent_ratio": 0.09375,
      "iou_to_gt": 0.0
     }
-   ]
+   ],
+   "best_eligible_id": 2,
+   "best_eligible_iou_recomputed": 0.6165496859992612,
+   "best_any_id": 2,
+   "best_any_iou_recomputed": 0.6165496859992612,
+   "readonly_replay_class": "REFERENCE_SELECTION_WRONG_COVERED"
   }
  ],
  "replay": [
@@ -783,5 +804,47 @@
  "superseded_temporary_evidence": [
   "evaluation\\task8b3_ref01_locked_reference_forensics_r5.json",
   "evaluation\\task8b3_ref01_locked_reference_forensics_r6.json"
- ]
+ ],
+ "r8_id_completion": {
+  "method": "read-only replay of stored per-proposal iou_to_gt values; no detector call",
+  "ids": {
+   "right": {
+    "selected_id": 1,
+    "best_eligible_id": 1,
+    "best_any_id": 1,
+    "classification": "REFERENCE_SELECTED_CORRECT"
+   },
+   "left": {
+    "selected_id": 14,
+    "best_eligible_id": 30,
+    "best_any_id": 30,
+    "classification": "REFERENCE_SELECTION_WRONG_COVERED"
+   },
+   "above": {
+    "selected_id": 4,
+    "best_eligible_id": 2,
+    "best_any_id": 5,
+    "classification": "REFERENCE_ELIGIBILITY_BLOCKED"
+   },
+   "below": {
+    "selected_id": 1,
+    "best_eligible_id": 2,
+    "best_any_id": 2,
+    "classification": "REFERENCE_SELECTION_WRONG_COVERED"
+   }
+  },
+  "verifier": "scripts/task8b3_ref01_locked_reference_forensics.py (pure read-only replay, no model calls)"
+ },
+ "imageio_module_identity": {
+  "manifest_path": "buildreasonseg/runtime/imageio.py",
+  "in_manifest": true,
+  "manifest_bytes": 7978,
+  "manifest_sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878",
+  "git_blob_bytes": 7978,
+  "git_blob_sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878",
+  "external_exists": true,
+  "external_bytes": 7978,
+  "external_sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878",
+  "all_agree": true
+ }
 }

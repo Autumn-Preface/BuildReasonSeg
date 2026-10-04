@@ -1,92 +1,84 @@
-# TO_DSH — Task 8B.3-REF01-F1-R7: Read-Only Authoritative Evidence Normalization
+# TO_DSH — Task 8B.3-REF01-F1-R8: Final Zero-Call Reference Evidence Closure
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes mechanically.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-reference-forensics`
-> Required starting HEAD: `12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c`
+> Required starting HEAD: `65643f802a0a187b93160155f976689c0b50b8c6`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 
 # 0. ChatGPT audit disposition
 
-R6 is **NOT formally approved as a task artifact closure**, but its numerical/metadata observations are retained as historical evidence.
+R7 is **NOT APPROVED**, but it is a safe zero-call run.
 
-Accepted R6 observations:
-
-```text
-detector calls = 4
-raster SHA locks = 4/4 MATCH
-10-field reproduction summary = 4/4 FULL MATCH
-R4/R5/R6 selected/bestEligible/bestAny IoU deltas = 0.0 for all four
-external detector Git-canonical identity = PASS
-```
-
-R6 formal defects:
+Accepted R7 facts:
 
 ```text
-1. `buildreasonseg.runtime.imageio` was not actually verified; the evidence again checked third-party `imageio`.
-2. The canonical evidence file was NOT overwritten.
-3. A second unauthorized temporary evidence file `_r6.json` was created.
-4. `_r5.json` was not removed.
-5. The tracked forensic script was not updated to the R6 contract.
-6. Best-eligible / best-any proposal IDs and full proposal facts were still absent.
-7. Exact mandatory scientific-reuse disclosure was absent from canonical evidence.
+detector/model calls = 0
+temporary _r5.json deleted
+temporary _r6.json deleted
+canonical evidence file was edited
+R4/R5/R6 IoUs remained numerically identical
+historical technical classes remained stable
 ```
 
-## Critical decision
-
-NO MORE DETECTOR RERUNS are authorized for REF01-F1.
-
-The technical reference-forensics result has already reproduced identically across R4, R5 and R6.
-R7 is a **read-only evidence normalization and independent replay from stored metadata only**.
-
-# 1. Frozen technical result entering R7
-
-Historical detector-run evidence:
+R7 formal defects:
 
 ```text
-R4 = preliminary detector run
-R5 = deterministic verification detector run
-R6 = final detector verification run
+D1. R7 incorrectly asserted that source_manifest.json had no
+    buildreasonseg/runtime/imageio.py entry.
 
-R4/R5/R6 IoUs = identical within 1e-6 (actual recorded deltas = 0.0)
+D2. R7 inspected/imported the unrelated third-party package name `imageio`
+    instead of `buildreasonseg.runtime.imageio`.
+
+D3. The tracked verifier script was NOT rewritten; it still contains:
+    DetectorRuntime()
+    detect_global()
+    inference logic.
+
+D4. The canonical evidence still contains the old non-mandatory disclosure:
+    "GT access purpose: REFERENCE_FORENSICS_ONLY ..."
+    instead of the exact frozen scientific-reuse sentence.
+
+D5. Canonical evidence still does not contain the required replayed
+    selected / best_eligible / best_any proposal IDs and facts in the final
+    normalized candidate records.
 ```
 
-Frozen values:
+No more detector/model inference is authorized.
+
+# 1. Immutable technical result
+
+The following result is already established by three historical detector runs and MUST NOT be changed:
 
 ```text
 right:
-selected     = 0.5588697017268446
-bestEligible = 0.5588697017268446
-bestAny      = 0.5588697017268446
+selected IoU     = 0.5588697017268446
+bestEligible IoU = 0.5588697017268446
+bestAny IoU      = 0.5588697017268446
+class            = REFERENCE_SELECTED_CORRECT
 
 left:
-selected     = 0.0
-bestEligible = 0.6500672947510094
-bestAny      = 0.6500672947510094
+selected IoU     = 0.0
+bestEligible IoU = 0.6500672947510094
+bestAny IoU      = 0.6500672947510094
+class            = REFERENCE_SELECTION_WRONG_COVERED
 
 above:
-selected     = 0.0
-bestEligible = 0.0
-bestAny      = 0.9032501889644747
+selected IoU     = 0.0
+bestEligible IoU = 0.0
+bestAny IoU      = 0.9032501889644747
+class            = REFERENCE_ELIGIBILITY_BLOCKED
 
 below:
-selected     = 0.0
-bestEligible = 0.6165496859992612
-bestAny      = 0.6165496859992612
+selected IoU     = 0.0
+bestEligible IoU = 0.6165496859992612
+bestAny IoU      = 0.6165496859992612
+class            = REFERENCE_SELECTION_WRONG_COVERED
 ```
 
-Frozen classes:
-
-```text
-right = REFERENCE_SELECTED_CORRECT
-left  = REFERENCE_SELECTION_WRONG_COVERED
-above = REFERENCE_ELIGIBILITY_BLOCKED
-below = REFERENCE_SELECTION_WRONG_COVERED
-```
-
-Frozen overall:
+Mechanical overall:
 
 ```text
 Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
@@ -94,7 +86,7 @@ Dominant next blocker = ELIGIBILITY
 NEXT = REF01_ELIGIBILITY_FORENSICS
 ```
 
-R7 must independently replay/verify those facts using only existing evidence + P1D12 stored proposal metadata.
+R8 only fixes the evidence package and independently replays proposal IDs/facts from stored metadata.
 
 # 2. Git gate
 
@@ -102,42 +94,40 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-ref01-reference-forensics
-HEAD = 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c
+HEAD = 65643f802a0a187b93160155f976689c0b50b8c6
 ```
 
 Allowed initial tracked tree:
 - clean; or
 - only `M handoff/TO_DSH.md`.
 
-No branch creation.
+No new branch.
 No reset/rebase/stash/clean/merge/cherry-pick.
 
 # 3. Absolute prohibitions
 
 Do NOT:
-- instantiate `DetectorRuntime`;
-- call `detect_global`;
+- instantiate DetectorRuntime;
+- call detect_global;
 - call any detector/model inference;
-- run `predict.py`;
+- run predict.py;
 - run Qwen / ProgramHead;
 - run SAM2;
 - run relation fields;
 - run D-B1;
 - run target segmentation;
-- run training/export/download;
 - modify canonical RC1;
 - modify external RC1;
 - run sync write;
-- visually inspect images/proposal PNGs;
+- visually inspect images;
 - replace candidates;
-- regenerate datasets/caches;
-- recompute GT masks from model outputs;
-- change threshold 0.50;
-- implement any product repair;
+- regenerate dataset/cache;
+- change IoU threshold 0.50;
+- implement product repair;
 - update main;
 - force push.
 
-R7 model/detector call count must be exactly:
+Required detector/model call count:
 
 ```text
 0
@@ -148,29 +138,30 @@ R7 model/detector call count must be exactly:
 ```text
 scripts/task8b3_ref01_locked_reference_forensics.py
 evaluation/task8b3_ref01_locked_reference_forensics.json
-evaluation/task8b3_ref01_locked_reference_forensics_r5.json   # DELETE ONLY
-evaluation/task8b3_ref01_locked_reference_forensics_r6.json   # DELETE ONLY
 docs/task8b3_ref01_locked_reference_forensics.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No other tracked path may change.
+No new evaluation file is allowed.
+
+`_r5.json` and `_r6.json` must remain absent.
 
 # 5. Exact scientific-reuse disclosure
 
-The final canonical evidence and report MUST contain exactly:
+The canonical evidence and report MUST contain exactly:
 
 > The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
 
-Also include a faithful Chinese translation in the report.
+The report must also contain a faithful Chinese translation.
 
-# 6. Correct Git-canonical external identity gate
+# 6. Correct source_manifest contract
 
-Read external:
+Read BOTH:
 
 ```text
-source_manifest.json
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\source_manifest.json
 ```
 
 Require:
@@ -178,10 +169,10 @@ Require:
 ```text
 schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
 identity_basis = GIT_CANONICAL_BLOB_BYTES
-entry count = 135
+len(files) = 135
 ```
 
-Require manifest entries:
+The canonical manifest MUST contain exactly one entry each for:
 
 ```text
 buildreasonseg/runtime/detector.py
@@ -193,11 +184,34 @@ bytes = 7978
 sha256 = b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878
 ```
 
-Hash the actual external files.
+The external manifest must contain the same two entries.
 
-Require actual external bytes/sha equal the manifest entries.
+If either imageio entry is missing:
+- Status = STOP
+- do not substitute requirements.txt
+- do not discuss third-party `imageio`
+- STOP.
 
-Do NOT compare either file against the Windows working-tree copy.
+# 7. Correct external file identity
+
+Hash actual external files:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\imageio.py
+```
+
+Require:
+
+```text
+detector:
+bytes = 20300
+sha256 = 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+
+imageio:
+bytes = 7978
+sha256 = b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878
+```
 
 Record:
 
@@ -206,9 +220,11 @@ EXTERNAL_DETECTOR_GIT_IDENTITY = PASS
 EXTERNAL_IMAGEIO_GIT_IDENTITY = PASS
 ```
 
-# 7. Correct external module import gate
+Do NOT compare Windows working-tree bytes.
 
-The read-only verifier script must set:
+# 8. Correct package-module identity
+
+The verifier script must set:
 
 ```python
 REPO = Path(r"C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg")
@@ -218,7 +234,7 @@ sys.path.insert(0, str(EXTERNAL))
 sys.path.insert(1, str(REPO))
 ```
 
-Then:
+Import exactly:
 
 ```python
 import buildreasonseg.runtime.detector as detector_module
@@ -228,64 +244,76 @@ import buildreasonseg.runtime.imageio as imageio_module
 Require:
 
 ```text
-Path(detector_module.__file__).resolve() under EXTERNAL
-Path(imageio_module.__file__).resolve() under EXTERNAL
+Path(detector_module.__file__).resolve()
+under EXTERNAL
+
+Path(imageio_module.__file__).resolve()
+under EXTERNAL
 ```
 
-This task MUST NOT import the third-party package named `imageio`.
+Record the exact paths.
 
-Record exact resolved paths.
+Do NOT import:
 
-# 8. Historical evidence inputs
-
-Before deleting temporary files, read:
-
-```text
-evaluation/task8b3_ref01_locked_reference_forensics.json      # R4 canonical evidence
-evaluation/task8b3_ref01_locked_reference_forensics_r5.json   # R5 temporary evidence
-evaluation/task8b3_ref01_locked_reference_forensics_r6.json   # R6 temporary evidence
+```python
+import imageio
 ```
 
-Require R6:
+and do not inspect the third-party package namespace.
+
+# 9. Historical R6 evidence must be read from Git history
+
+R6 temporary evidence is deleted from the current tree by R7.
+
+Read it without restoring it:
 
 ```text
-manifest_identity_basis = GIT_CANONICAL_BLOB_BYTES
-detector_matches_git_canonical = true
+git show 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c:evaluation/task8b3_ref01_locked_reference_forensics_r6.json
+```
+
+Require:
+
+```text
 detector_calls = 4
-proposal_fields_compared =
-[
- proposal_id,
- source_tile_id,
- confidence,
- mask_area,
- global_bbox,
- centroid,
- touches_image_border,
- border_clearance,
- bbox_extent_ratio,
- raw_index
-]
+identity.manifest_identity_basis = GIT_CANONICAL_BLOB_BYTES
+identity.detector_matches_git_canonical = true
+proposal_fields_compared contains exactly the 10 frozen fields
 ```
 
-Require all four R6 records:
+For all four candidates require:
 
 ```text
-raster_lock_match = true
 ten_field_all_match = true
 within_tolerance = true
 ```
 
-Require all 10 field-match counts equal total proposal count for every candidate.
+Use this only as historical evidence.
+Do NOT restore `_r6.json`.
 
-Require R4, R5 and R6 IoU triples agree to <= 1e-6 with the frozen values in §1.
+# 10. R4 per-proposal IoU source
 
-Any contradiction:
-- STOP;
-- do not normalize evidence.
+Use the CURRENT canonical evidence's historical:
 
-# 9. Existing P1D12 proposal metadata — read only
+```text
+r4_records[]
+```
 
-Read external:
+For each proposal obtain:
+
+```text
+relation
+proposal_id
+iou_to_gt
+```
+
+This is the historical proposal-to-GT IoU table from R4.
+
+Do NOT recompute masks.
+Do NOT run detector.
+
+# 11. P1D12 proposal metadata source
+
+Read external, read-only:
 
 ```text
 inference/output/diagnostics/1010/proposals.json
@@ -294,16 +322,7 @@ inference/output/diagnostics/1008/proposals.json
 inference/output/diagnostics/1009/proposals.json
 ```
 
-Expected:
-
-```text
-1010 raw=6  merged=6  eligible=4
-1003 raw=66 merged=53 eligible=42
-1008 raw=9  merged=9  eligible=4
-1009 raw=7  merged=6  eligible=3
-```
-
-For every proposal item require:
+Every item must provide:
 
 ```text
 proposal_id
@@ -318,235 +337,106 @@ bbox_extent_ratio
 raw_index
 ```
 
-No external file is modified.
-
-# 10. Read-only independent selection replay
-
-The frozen largest-reference policy is:
+Expected raw / merged / eligible counts:
 
 ```text
-eligible if:
+1010 = 6 / 6 / 4
+1003 = 66 / 53 / 42
+1008 = 9 / 9 / 4
+1009 = 7 / 6 / 3
+```
+
+# 12. Read-only replay of production selected proposal
+
+Frozen eligibility:
+
+```text
 mask_area > 0
 AND touches_image_border == false
 AND bbox_extent_ratio <= 0.20
 ```
 
-Production selected ordering:
+Production largest ordering:
 
 ```python
 (-mask_area, -confidence, proposal_id)
 ```
 
-For each candidate, recompute the selected proposal ID from P1D12 stored metadata only.
+Recompute selected ID from P1D12 metadata only.
 
-Require exact historical selected IDs:
+Require:
 
 ```text
-right = 1
-left = 14
-above = 4
-below = 1
+right selected_id = 1
+left selected_id = 14
+above selected_id = 4
+below selected_id = 1
 ```
 
-If any differs:
-- STOP.
+# 13. Read-only replay of best eligible / best any
 
-# 11. Read-only IoU table replay
+Join:
 
-Use the per-proposal `iou_to_gt` table stored in the R4 canonical evidence.
+```text
+R4 per-proposal IoU
++
+P1D12 proposal metadata
+```
 
-Map by:
+by:
 
 ```text
 relation + proposal_id
 ```
 
-Join it with the corresponding P1D12 stored proposal metadata.
+For each joined proposal retain:
 
-Do NOT recompute proposal masks.
-Do NOT run detector.
+```text
+proposal_id
+iou
+confidence
+mask_area
+global_bbox
+eligible
+```
 
-For each proposal, the joined record contains:
-- proposal_id;
-- IoU from R4;
-- confidence from P1D12;
-- mask_area from P1D12;
-- eligibility from P1D12.
-
-Compute `best_eligible` over eligible proposals by:
+Rank `best_eligible` among eligible proposals by:
 
 ```python
-(-iou_to_gt, -confidence, proposal_id)
+(-iou, -confidence, proposal_id)
 ```
 
-Compute `best_any` over all proposals by the same ranking.
+Rank `best_any` among all merged proposals by the same tuple.
 
-Record IDs and facts.
+Do NOT hard-code their IDs.
 
-Require the replayed IoUs exactly match §1 within 1e-6.
+Record all required facts.
 
-# 12. Mechanical final classification
+Require replayed IoUs match the immutable values in §1 within `1e-6`.
 
-Coverage threshold remains:
+# 14. Final candidate facts
 
-```text
-0.50
-```
+Canonical evidence must have exactly four final candidate objects.
 
-Classification:
+Each must contain:
 
 ```text
-REFERENCE_SELECTED_CORRECT
-if selected_iou >= 0.50
+sample_id
+relation
+tile
+raster_sha256
 
-REFERENCE_SELECTION_WRONG_COVERED
-if selected_iou < 0.50 and best_eligible_iou >= 0.50
+historical_reproduction:
+  r6_ten_field_all_match = true
+  r4_r5_r6_iou_consistent = true
 
-REFERENCE_ELIGIBILITY_BLOCKED
-if selected_iou < 0.50
-and best_eligible_iou < 0.50
-and best_any_iou >= 0.50
-
-REFERENCE_COVERAGE_MISSING
-if best_any_iou < 0.50
-```
-
-Require exact:
-
-```text
-right = REFERENCE_SELECTED_CORRECT
-left  = REFERENCE_SELECTION_WRONG_COVERED
-above = REFERENCE_ELIGIBILITY_BLOCKED
-below = REFERENCE_SELECTION_WRONG_COVERED
-```
-
-Then mechanically:
-
-```text
-Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
-Dominant next blocker = ELIGIBILITY
-NEXT = REF01_ELIGIBILITY_FORENSICS
-```
-
-Do not execute NEXT.
-
-# 13. Rewrite the tracked forensic script as a READ-ONLY evidence verifier
-
-Update:
-
-```text
-scripts/task8b3_ref01_locked_reference_forensics.py
-```
-
-The final tracked script must implement §§6–12 using existing evidence/metadata only.
-
-It MUST NOT contain or call:
-
-```text
-DetectorRuntime(
-detect_global(
-model.predict(
-predict.py
-```
-
-It may import `buildreasonseg.runtime.detector` and `.imageio` only to establish module identity and to record frozen
-constant values.
-
-The script writes only:
-
-```text
-evaluation/task8b3_ref01_locked_reference_forensics.json
-```
-
-No external write.
-
-# 14. Static no-inference gate
-
-Before executing the verifier, run:
-
-```text
-<REQUIRED_PYTHON> -m py_compile scripts/task8b3_ref01_locked_reference_forensics.py
-```
-
-Require PASS.
-
-Then inspect source text and require:
-
-```text
-"DetectorRuntime(" NOT present
-"detect_global(" NOT present
-"model.predict(" NOT present
-"import imageio" NOT present
-"buildreasonseg.runtime.imageio" present
-"GIT_CANONICAL_BLOB_BYTES" present
-"REFERENCE_ELIGIBILITY_BLOCKED" present
-```
-
-Record:
-
-```text
-NO_INFERENCE_STATIC_GATE = PASS
-```
-
-# 15. Execute read-only verifier exactly once
-
-Run exactly once:
-
-```text
-<REQUIRED_PYTHON> scripts/task8b3_ref01_locked_reference_forensics.py
-```
-
-Require:
-
-```text
-exit = 0
-detector/model calls = 0
-```
-
-# 16. Final canonical evidence
-
-Overwrite only:
-
-```text
-evaluation/task8b3_ref01_locked_reference_forensics.json
-```
-
-Required top-level:
-
-```text
-task = 8B.3-REF01-F1-R7
-starting_head
-scientific_reuse_disclosure
-verification_mode = READ_ONLY_HISTORICAL_EVIDENCE_REPLAY
-detector_calls_this_task = 0
-source_identity_basis = GIT_CANONICAL_BLOB_BYTES
-external_detector_module_path
-external_detector_sha256
-external_imageio_module_path
-external_imageio_sha256
-coverage_threshold = 0.50
-historical_runs_consistency
-proposal_reproduction_evidence
-candidates
-class_counts
-overall_outcome
-dominant_next_blocker
-next_gate
-```
-
-For each candidate require:
-
-```text
-sample_id / relation / tile
-raster SHA
-historical R4/R5/R6 IoUs
-historical 10-field reproduction PASS
 selected:
   proposal_id
   iou
   confidence
   mask_area
   global_bbox
+  eligible
 
 best_eligible:
   proposal_id
@@ -565,20 +455,170 @@ selected_to_best_eligible_iou_gap
 classification
 ```
 
-# 17. Delete temporary evidence artifacts
+# 15. Final classification
 
-After the canonical verifier succeeds and canonical evidence has been written, delete:
+Coverage threshold:
 
 ```text
-evaluation/task8b3_ref01_locked_reference_forensics_r5.json
-evaluation/task8b3_ref01_locked_reference_forensics_r6.json
+0.50
 ```
 
-Require both absent from final tree.
+Exactly:
 
-Do NOT delete their Git history.
+```text
+right = REFERENCE_SELECTED_CORRECT
+left = REFERENCE_SELECTION_WRONG_COVERED
+above = REFERENCE_ELIGIBILITY_BLOCKED
+below = REFERENCE_SELECTION_WRONG_COVERED
+```
 
-# 18. Report
+Then:
+
+```text
+class_counts:
+REFERENCE_SELECTED_CORRECT = 1
+REFERENCE_SELECTION_WRONG_COVERED = 2
+REFERENCE_ELIGIBILITY_BLOCKED = 1
+REFERENCE_COVERAGE_MISSING = 0
+
+Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
+Dominant next blocker = ELIGIBILITY
+NEXT = REF01_ELIGIBILITY_FORENSICS
+```
+
+Do not execute NEXT.
+
+# 16. Rewrite tracked script into true zero-call verifier
+
+Replace:
+
+```text
+scripts/task8b3_ref01_locked_reference_forensics.py
+```
+
+with the read-only verifier implementing §§6–15.
+
+The final tracked script MUST NOT contain:
+
+```text
+DetectorRuntime(
+detect_global(
+model.predict(
+YOLO(
+```
+
+It MUST contain:
+
+```text
+buildreasonseg.runtime.detector
+buildreasonseg.runtime.imageio
+GIT_CANONICAL_BLOB_BYTES
+task8b3_ref01_locked_reference_forensics_r6.json
+REF01_ELIGIBILITY_FORENSICS
+```
+
+The historical R6 evidence path may appear only inside the `git show` command/ref logic; the file must not be recreated.
+
+# 17. Static no-inference gate
+
+Run:
+
+```text
+<REQUIRED_PYTHON> -m py_compile scripts/task8b3_ref01_locked_reference_forensics.py
+```
+
+Require PASS.
+
+Then source-text assertions:
+
+```text
+"DetectorRuntime(" absent
+"detect_global(" absent
+"model.predict(" absent
+"YOLO(" absent
+"import imageio" absent
+"buildreasonseg.runtime.imageio" present
+"buildreasonseg/runtime/imageio.py" present
+"GIT_CANONICAL_BLOB_BYTES" present
+```
+
+Require:
+
+```text
+NO_INFERENCE_STATIC_GATE = PASS
+```
+
+# 18. Execute verifier once
+
+Run exactly once:
+
+```text
+<REQUIRED_PYTHON> scripts/task8b3_ref01_locked_reference_forensics.py
+```
+
+Require:
+
+```text
+exit = 0
+detector/model calls = 0
+```
+
+# 19. Canonical evidence schema
+
+Overwrite only:
+
+```text
+evaluation/task8b3_ref01_locked_reference_forensics.json
+```
+
+Top-level required:
+
+```text
+task = 8B.3-REF01-F1-R8
+starting_head
+scientific_reuse_disclosure
+verification_mode = READ_ONLY_HISTORICAL_EVIDENCE_REPLAY
+detector_model_calls_this_task = 0
+source_identity_basis = GIT_CANONICAL_BLOB_BYTES
+
+external_identity:
+  detector:
+    module_path
+    bytes
+    sha256
+    manifest_match = true
+  imageio:
+    module_path
+    bytes
+    sha256
+    manifest_match = true
+
+coverage_threshold = 0.50
+proposal_mask_source = HISTORICAL_R4_RERUN_GLOBALPROPOSAL_MASK_CROP
+proposal_metadata_source = P1D12_PROPOSALS_JSON
+historical_r6_ten_field_reproduction = 4/4 PASS
+historical_r4_r5_r6_iou_consistency = 4/4 PASS
+candidates
+class_counts
+overall_outcome
+dominant_next_blocker
+next_gate
+```
+
+The old `imageio_identity.manifest_declares_imageio_entry=false` structure must not remain.
+
+# 20. Temporary evidence files
+
+Require final tree:
+
+```text
+evaluation/task8b3_ref01_locked_reference_forensics_r5.json = ABSENT
+evaluation/task8b3_ref01_locked_reference_forensics_r6.json = ABSENT
+```
+
+Do not recreate either.
+
+# 21. Report
 
 Update:
 
@@ -586,15 +626,16 @@ Update:
 docs/task8b3_ref01_locked_reference_forensics.md
 ```
 
-Preserve R4/R5/R6 history.
+Preserve previous history.
 
-Append R7 authoritative normalization section stating clearly:
+Append R8 final closure section and explicitly correct R7:
 
 ```text
-R4 = preliminary detector evidence
-R5 = stable deterministic evidence but contract-incomplete
-R6 = full 10-field historical reproduction evidence but artifact/import packaging incomplete
-R7 = no-inference authoritative evidence replay and normalization
+R7 statement "manifest declares imageio entry = False" = INCORRECT
+Correct entry:
+buildreasonseg/runtime/imageio.py
+7978 bytes
+b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878
 ```
 
 Required final table:
@@ -604,33 +645,36 @@ relation | selected_id | selected_IoU | best_eligible_id | best_eligible_IoU | b
 ```
 
 State:
-- external detector/imageio identity verified against Git-canonical source_manifest;
-- no Windows working-tree identity comparison;
-- R7 ran zero detector/model calls.
 
-# 19. FROM_DSH
+```text
+R8 detector/model calls = 0
+R8 = authoritative evidence closure
+```
+
+# 22. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-REF01-F1-R7
+Task: 8B.3-REF01-F1-R8
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-ref01-reference-forensics
-Starting HEAD: 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c
+Starting HEAD: 65643f802a0a187b93160155f976689c0b50b8c6
 Verification mode: READ_ONLY_HISTORICAL_EVIDENCE_REPLAY
 Detector/model calls this task: 0
 PY_COMPILE_GATE: PASS / FAIL
 NO_INFERENCE_STATIC_GATE: PASS / FAIL
 Source identity basis: GIT_CANONICAL_BLOB_BYTES
+source_manifest imageio entry: PRESENT / MISSING
 External detector Git identity: PASS / FAIL
 External imageio Git identity: PASS / FAIL
 External detector module path: <path>
 External imageio module path: <path>
-R6 10-field reproduction evidence: 4/4 PASS / other
+Historical R6 10-field reproduction: 4/4 PASS / other
 R4/R5/R6 IoU consistency: 4/4 PASS / other
-Read-only selected replay right/left/above/below: 1/14/4/1 / other
+Selected replay right/left/above/below: 1/14/4/1 / other
 right selected/bestEligible/bestAny: <id,iou> / <id,iou> / <id,iou>
 left selected/bestEligible/bestAny: <id,iou> / <id,iou> / <id,iou>
 above selected/bestEligible/bestAny: <id,iou> / <id,iou> / <id,iou>
@@ -642,6 +686,7 @@ below class: REFERENCE_SELECTION_WRONG_COVERED / other
 Temporary _r5 evidence remaining: NO / YES
 Temporary _r6 evidence remaining: NO / YES
 Canonical evidence updated: YES / NO
+Tracked verifier is zero-inference replay: YES / NO
 Qwen/SAM2/relation/D-B1/target: NONE/NONE/NONE/NONE/NONE
 Manual visual inspection: NO
 Candidate replacement: NO
@@ -655,42 +700,44 @@ External/canonical product files modified: NO / NO
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-# 20. Commit / push
+# 23. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): normalize authoritative reference evidence
+docs(rc1): finalize reference evidence replay
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record reference evidence normalization stop
+docs(rc1): record reference evidence replay stop
 ```
 
-Push only current branch.
+Push only current task branch.
 No force push.
 Do not update main.
 
 Then STOP.
 
-# 21. COMPLETE definition
+# 24. COMPLETE definition
 
 COMPLETE only if:
 - exact branch/head;
-- only allowed tracked paths changed;
-- zero detector/model calls;
-- tracked verifier contains no detector inference path;
-- detector and `buildreasonseg.runtime.imageio` identities PASS against Git-canonical manifest;
-- R6 10-field evidence structurally validates 4/4;
-- R4/R5/R6 IoUs replay consistently 4/4;
-- production selected IDs replay mechanically from P1D12 metadata;
-- best eligible/best any IDs and facts replay mechanically;
-- final four classes/outcome/NEXT exact;
-- exact scientific disclosure present;
+- only five allowed tracked paths changed;
+- detector/model calls = 0;
+- tracked verifier contains no inference path;
+- source_manifest correctly resolves imageio entry;
+- actual external detector identity PASS;
+- actual external buildreasonseg.runtime.imageio identity PASS;
+- historical R6 ten-field evidence = 4/4 PASS;
+- R4/R5/R6 IoUs = 4/4 consistent;
+- production selected IDs replay correctly;
+- best eligible / best any IDs and facts are actually present;
+- exact scientific disclosure is present;
 - canonical evidence overwritten;
-- temporary `_r5.json` and `_r6.json` deleted;
+- `_r5.json` and `_r6.json` remain absent;
+- final classes/outcome/NEXT exact;
 - report/handoff committed and pushed;
 - NEXT not executed;
 - STOP.
