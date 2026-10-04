@@ -17,35 +17,33 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D11A-R3 Report
+# FROM_DSH — Task 8B.3-P1D11B Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D11A-R3` |
-| Status | **COMPLETE** (candidate-ID and input-domain wording corrections) |
+| Task | `8B.3-P1D11B` |
+| Status | **STOP** (pre-sync external gate differs from expectation) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `e0e0a74760d619db3cdd6be62c4ea42520f802ec` |
-| Left candidate ID typo | **CORRECTED** → `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
-| Locked right candidate | `buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91` |
-| Locked left candidate | `buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3` |
-| Locked above candidate | `buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314` |
-| Locked below candidate | `buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450` |
-| Other candidate identities | UNCHANGED |
-| README input wording | `正式输入域` removed; now `软件接受的输入模态：RGB 光学影像` |
-| Model-card input wording | **SOFTWARE_INPUT_MODALITY** (`- 软件输入模态：**RGB 光学遥感影像** …`) |
-| A2 wording | unchanged and evidence-bounded (NOT ESTABLISHED · documented persistent non-detection · not claimed out-of-domain) |
-| Pre-edit canonical manifest | **135/135 PASS** |
-| Post-edit canonical manifest | **135/135 PASS** (135 entries, path list identical) |
-| Manifest entries updated | exactly two: `README.md`, `docs/model_card.md` (canonical blob identities) |
-| Model / runtime / tests / external changes | NONE |
+| Starting HEAD | `f9bf6be13035445f45f956c2b6a5a64ccf7e6032` |
+| Canonical manifest gate | 135/135 PASS against Git canonical bytes |
+| Pre-sync external check | checked 135 · match 129 · missing 0 · mismatch 6 (expected 133/0/2) |
+| Expected mismatches | `README.md`, `docs/model_card.md` |
+| Unexpected mismatches | `buildreasonseg/runtime/core.py`, `buildreasonseg/runtime/detector.py`, `buildreasonseg/runtime/outputs.py`, `tests/test_task8b_runtime.py` |
+| Root cause of the four extra mismatches | external copies hold Git canonical (LF) content while the canonical working tree holds CRLF-expanded content; the helper compares raw working-tree bytes |
+| Controlled 135-file sync | NOT RUN (0 invocations) |
+| External source_manifest copy | NOT RUN |
+| External setup checker | NOT RUN |
+| External delivery modified | NO (stopped before any write) |
+| pytest / model inference / locked-candidate runs | NONE / NONE / NONE |
 | Frozen metrics / architecture / locked candidates | UNCHANGED |
 | PROP-01 status | OPEN (not closed) |
-| Report | `docs/task8b3_p1d11a_policy_implementation.md` (also `docs/task8b3_p1d11_supported_domain_policy.md`) |
-| Next action | Awaiting ChatGPT audit; do not sync external or run locked candidates |
+| Report | `docs/task8b3_p1d11b_supported_domain_policy_external_sync.md` |
+| STOP reason | mandated pre-sync expectation is 133 match / 2 mismatch, measured 129 / 6; the task book forbids syncing when the pre-sync result differs |
+| Next action | Awaiting ChatGPT decision on the comparison semantics (CRLF-insensitive helper vs working-tree normalization) before the policy sync is retried |
 
-Watt was not needed for Task 8B.3-P1D11A-R3 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D11B (no downloads, no transfers).
 
-Only documentation, the two canonical manifest identities and this handoff changed.
+No external delivery file was written and no canonical file was changed except this report and handoff.

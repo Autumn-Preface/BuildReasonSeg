@@ -1,66 +1,52 @@
-# TO_DSH — Task 8B.3-P1D11A-R3: Correct Policy Lock Identity and Input-Domain Wording
+# TO_DSH — Task 8B.3-P1D11B: Controlled Supported-Domain Policy Sync to External RC1
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `e0e0a74760d619db3cdd6be62c4ea42520f802ec`
+> Required starting HEAD: `f9bf6be13035445f45f956c2b6a5a64ccf7e6032`
+> Canonical RC1: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1`
+> External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. ChatGPT audit disposition
+# 0. Frozen entering state
 
-P1D11A-R2 is NOT YET APPROVED.
+ChatGPT approves P1D11A-R3.
 
-Accepted:
-- correct starting parent;
-- only authorized files changed;
-- pre-edit Git-canonical manifest = 135/135;
-- post-edit staged/index manifest = 135/135;
-- only README.md and docs/model_card.md manifest identities changed;
-- A2 remained `NOT ESTABLISHED`;
-- external delivery was not modified;
-- no model/test/runtime execution.
-
-Two policy defects require correction.
-
-## Defect A — immutable left candidate ID typo
-
-Authoritative frozen ID from P1D10-R3:
+Freeze:
 
 ```text
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+supported-domain policy =
+IMPLEMENTED_IN_CANONICAL_RC1_DOCS_CORRECTED
+
+source-manifest identity basis =
+GIT_CANONICAL_BLOB_BYTES
+
+canonical manifest =
+135 entries
+
+canonical manifest integrity =
+135/135 PASS
+
+locked candidates =
+FINAL_METADATA_LOCK
+
+locked candidate runtime status =
+NOT YET RUN
+
+A2 provenance/domain =
+NOT ESTABLISHED
+
+A2 policy =
+DOCUMENTED_PERSISTENT_NON_DETECTION
+
+PROP-01 =
+PROP01_OPEN_ENGINEERING_DEFECT
 ```
 
-P1D11A-R2 policy incorrectly wrote:
+This task performs only the controlled canonical → external policy/document synchronization and verifies external
+delivery integrity.
 
-```text
-buildsr_test_1003_3_largest_to_left_of_nearest_f3fcb14e14c3
-```
-
-The missing `_to_` must be corrected. No candidate substitution is authorized.
-
-## Defect B — ambiguous input-domain wording remains
-
-README still contains:
-
-```text
-RGB 光学遥感影像（正式输入域）
-```
-
-and model card contains:
-
-```text
-输入域：RGB 光学遥感影像
-```
-
-These phrases can still be read as a generalization-domain claim.
-
-They must instead distinguish:
-
-```text
-software-readable input modality
-vs
-verified research/evaluation domain
-```
+No locked candidate may run in this task.
 
 # 1. Git gate
 
@@ -68,7 +54,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = e0e0a74760d619db3cdd6be62c4ea42520f802ec
+HEAD = f9bf6be13035445f45f956c2b6a5a64ccf7e6032
 ```
 
 Allowed initial tracked tree:
@@ -80,46 +66,53 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- run any model/detector/inference;
-- run pytest/check_setup;
-- modify runtime/tests/config/checkpoints/model assets;
-- change any frozen metric;
-- copy/run/inspect locked candidates;
-- replace any locked candidate;
-- modify A1/A2/A3/A4/B1/B2;
-- modify external delivery;
-- run external write sync;
-- modify `.gitattributes` or Git config;
-- mark PROP-01 closed;
-- call A2 proven out-of-domain;
+- modify canonical README/model_card/policy/runtime/tests/config/checkpoints;
+- modify `source_manifest.json`;
+- modify model binaries/checkpoints in external delivery;
+- delete any external file or directory;
+- run pytest;
+- run `predict.py`;
+- run detector/Qwen/SAM2/D-B1 inference;
+- copy/run/inspect the four locked Demo candidates;
+- modify or replace A1/A2/A3/A4/B1/B2;
+- change thresholds/models/tiling/merge/reference policies;
+- modify user/runtime outputs under `inference/input`, `inference/output`, `logs`, `runs`, `datasets`;
+- fix REF-01 or MASK-01;
+- enter Task 8B.4 / 8C;
 - update main;
 - force push.
 
-# 3. Allowed tracked changes
+`check_setup.py` is authorized before and after sync.
+
+# 3. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_p1d11_supported_domain_policy.md
-docs/task8b3_p1d11a_policy_implementation.md
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+docs/task8b3_p1d11b_supported_domain_policy_external_sync.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-# 4. Pre-edit manifest gate
+External delivery is intentionally modified by the controlled sync defined below.
+
+# 4. Canonical manifest preflight — Git identity
+
+Read:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
 
 Require:
 
 ```text
 schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
 identity_basis = GIT_CANONICAL_BLOB_BYTES
-entries = 135
+entry count = 135
 ```
 
-Verify all 135 entries against:
+For all 135 entries, verify manifest `bytes/sha256` against exact binary Git canonical bytes:
 
 ```text
 git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<path>
@@ -128,324 +121,435 @@ git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<path>
 Require:
 
 ```text
-pre-edit Git-canonical manifest = 135/135 PASS
+canonical Git identity = 135/135 PASS
+missing = 0
+duplicates = 0
 ```
 
-Otherwise STOP before edits.
-
-# 5. Correct immutable candidate identity
-
-In:
+Also record SHA256 of the Git canonical `source_manifest.json` blob itself:
 
 ```text
-docs/task8b3_p1d11_supported_domain_policy.md
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 ```
 
-replace only the incorrect left sample ID with exactly:
+If any gate fails:
+- do not write external;
+- record STOP;
+- commit/push report/handoff;
+- STOP.
+
+# 5. Pre-sync external controlled check
+
+Run exactly:
 
 ```text
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+python scripts/sync_advisor_rc1_delivery.py ^
+  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
+  --check
 ```
 
-Reconfirm all four immutable IDs exactly:
+This helper compares actual canonical working-tree files to actual external files for the 135 manifest-listed paths.
+
+Expected pre-sync state:
 
 ```text
-right =
-buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
-
-left =
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
-
-above =
-buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
-
-below =
-buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+checked = 135
+match = 133
+missing = 0
+mismatch = 2
 ```
 
-No other candidate identity is permitted.
-
-# 6. Correct README wording
-
-Modify:
+Expected mismatches exactly:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-```
-
-In `## 输入`, replace:
-
-```text
-- **RGB 光学遥感影像**（正式输入域）；支持 ...
-```
-
-with wording whose meaning is exactly:
-
-```text
-- **软件接受的输入模态：RGB 光学影像**；支持 ...
-```
-
-or an equally explicit wording that does NOT use `正式输入域`.
-
-The nearby `### 已验证数据域与 Demo 边界` section remains authoritative for demonstrated domain.
-
-Require the README to contain NO phrase equivalent to:
-
-```text
-RGB 光学遥感影像（正式输入域）
-```
-
-Do not change runtime behavior documentation.
-
-# 7. Correct model-card wording
-
-Modify:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
-```
-
-In `## 2. 数据`, replace:
-
-```text
-- 输入域：**RGB 光学遥感影像** ...
-```
-
-with wording whose meaning is exactly:
-
-```text
-- 软件输入模态：**RGB 光学遥感影像** ...
-```
-
-or an equally explicit wording separating accepted modality from verified domain.
-
-Keep the following separate positive domain statement:
-
-```text
-已验证域：WHU East Asia ...
-```
-
-No frozen metric may change.
-
-# 8. Reconfirm A2 wording
-
-Across:
-- policy doc;
-- README;
-- model card;
-
-require:
-
-```text
-A2 provenance/domain = NOT ESTABLISHED
-A2 = documented persistent non-detection/stress case
-A2 != proven out-of-domain
-A2 != fixed
-```
-
-No contradictory wording allowed.
-
-# 9. Reconfirm test-reuse disclosure
-
-The policy doc must still contain the exact English sentence:
-
-```text
-The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
-```
-
-Faithful Chinese equivalent must remain.
-
-# 10. Update implementation report
-
-Update:
-
-```text
-docs/task8b3_p1d11a_policy_implementation.md
-```
-
-Append/replace with an R3 correction section recording:
-
-```text
-left candidate ID typo = CORRECTED
-README ambiguous "正式输入域" = REMOVED
-model-card generic "输入域" = replaced by software-input-modality wording
-A2 wording = unchanged and evidence-bounded
-locked candidates = unchanged
-```
-
-Correct the next gate to:
-
-```text
-NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC
+README.md
+docs/model_card.md
 ```
 
 Rationale:
+- P1D11A changed only those two manifest-listed delivery files;
+- `source_manifest.json` is not itself one of the 135 entries.
+
+If pre-sync result differs:
+- do not sync;
+- record exact unexpected paths/counts;
+- STOP.
+
+# 6. Pre-sync external setup readiness
+
+Use the existing RC1 environment Python:
 
 ```text
-formal RC1 product/document changes follow canonical -> audit -> controlled external sync
-before the next external-delivery diagnostic phase.
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe
 ```
 
-Also record the subsequent gate, not yet authorized:
+Run from external RC1 root:
 
 ```text
-AFTER_SYNC = PROP01_LOCKED_DEMO_PROPOSAL_GATE
+python check_setup.py
 ```
 
-Do NOT execute either.
-
-# 11. Manifest update
-
-Stage only:
+Require:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
+exit code = 0
+BuildReasonSeg environment: READY
 ```
 
-Compute Git-index canonical bytes/hashes using binary:
+If not READY:
+- do not sync;
+- STOP.
+
+No inference is authorized.
+
+# 7. Protected external asset snapshot
+
+Before sync record existence, bytes and SHA256 for:
 
 ```text
-git show :delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-git show :delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
+model/buildreasonseg_advisor/decoder.pt
+model/buildreasonseg_advisor/detector.pt
+model/components/sam2/sam2.1_hiera_base_plus.pt
+model/components/sam2/sam2.1_hiera_b+.yaml
+model/components/program_head/program_parser_l3_rehearsal_v1.pt
 ```
 
-Update exactly the manifest entries:
+Also record for:
 
 ```text
-README.md
-docs/model_card.md
+model/components/program_head/Qwen3-VL-2B-Instruct
 ```
 
-Do NOT change any other identity or top-level metadata.
-
-Stage source_manifest.json.
-
-# 12. Post-edit manifest gate
-
-Using staged/index bytes for staged files and HEAD blobs for unchanged files, require:
+at minimum:
 
 ```text
-post-edit Git-canonical/index manifest = 135/135 PASS
-entry count = 135
+exists
+regular file count
+sorted file names
+total bytes
+```
+
+Record existence/state only for protected runtime/user directories:
+
+```text
+inference/input
+inference/output
+logs
+runs
+datasets
+```
+
+Do not modify them.
+
+# 8. Controlled 135-file sync
+
+Run exactly once:
+
+```text
+python scripts/sync_advisor_rc1_delivery.py ^
+  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
+
+Require:
+
+```text
+copied = 135
+verified = 135
+failures = 0
+```
+
+The helper may overwrite all 135 listed source/config targets even when 133 were already identical.
+
+It must not touch:
+- model binaries;
+- downloaded Qwen assets;
+- input/output/log/run/dataset content;
+- unlisted external files.
+
+Any sync failure:
+- STOP;
+- do not rerun automatically.
+
+# 9. Synchronize source_manifest.json separately
+
+`source_manifest.json` is intentionally not self-listed among the 135 entries.
+
+After the 135-file helper sync succeeds, update exactly:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\source_manifest.json
+```
+
+using the exact **Git canonical blob bytes** from:
+
+```text
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+Important:
+- binary capture/write only;
+- do not pass through text newline conversion;
+- do not regenerate JSON;
+- do not use the CRLF-expanded working-tree file as the authoritative bytes.
+
+Require:
+
+```text
+external source_manifest SHA256
+==
+Git canonical source_manifest SHA256
+```
+
+Interpretation:
+
+```text
+external source_manifest records Git canonical source identities.
+It is provenance metadata and is NOT a claim that CRLF-expanded external working files byte-match those per-entry Git identities.
+Actual external delivery equality is checked by the sync helper directly against canonical working-tree files.
+```
+
+# 10. Post-sync external 135-file gate
+
+Run exactly once:
+
+```text
+python scripts/sync_advisor_rc1_delivery.py ^
+  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
+  --check
+```
+
+Require:
+
+```text
+checked = 135
+match = 135
 missing = 0
-duplicates = 0
-identity_basis = GIT_CANONICAL_BLOB_BYTES
+mismatch = 0
+exit code = 0
 ```
 
-Require exactly two manifest entry identities changed from starting HEAD:
+Also require:
+
+```text
+external source_manifest Git-canonical SHA = MATCH
+```
+
+# 11. Policy-content spot check in external delivery
+
+Read only the synchronized external:
 
 ```text
 README.md
 docs/model_card.md
+source_manifest.json
 ```
 
-# 13. External boundary
+Require:
 
-External delivery:
+README:
+```text
+contains "软件接受的输入模态"
+does NOT contain "正式输入域"
+contains "已验证数据域与 Demo 边界"
+contains A2 provenance/domain NOT ESTABLISHED meaning
+contains locked candidates NOT YET RUN meaning
+```
+
+Model card:
+```text
+contains "软件输入模态"
+contains separate "已验证域"
+contains A2 NOT ESTABLISHED meaning
+contains Demo policy
+```
+
+External source manifest:
+```text
+identity_basis = GIT_CANONICAL_BLOB_BYTES
+entry count = 135
+```
+
+Do not inspect the locked candidate images.
+
+# 12. Protected asset post-sync comparison
+
+Recompute the §7 protected snapshot.
+
+Require:
 
 ```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+all protected file SHA256/bytes unchanged = YES
+Qwen directory file names/count/total bytes unchanged = YES
+protected runtime/user directory content was not intentionally modified = YES
 ```
 
-must remain untouched.
+If a protected asset changed:
+- STOP immediately;
+- record exact fact;
+- do not attempt repair without ChatGPT.
 
-Do NOT write sync.
+# 13. Post-sync external setup readiness
 
-# 14. Final status
-
-If COMPLETE:
+Run external:
 
 ```text
-supported-domain policy =
-IMPLEMENTED_IN_CANONICAL_RC1_DOCS_CORRECTED
-
-locked candidate identity =
-4/4 EXACT MATCH
-
-A2 domain =
-NOT ESTABLISHED
-
-PROP-01 =
-PROP01_OPEN_ENGINEERING_DEFECT
-
-scientific freeze =
-PRESERVED
-
-NEXT =
-PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC
-
-AFTER_SYNC =
-PROP01_LOCKED_DEMO_PROPOSAL_GATE
+python check_setup.py
 ```
 
-# 15. FROM_DSH
+with the same environment Python as §6.
+
+Require:
+
+```text
+exit code = 0
+BuildReasonSeg environment: READY
+```
+
+Do not run pytest or inference.
+
+# 14. Final task outcome
+
+Choose exactly ONE.
+
+## A — `PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_COMPLETE`
+
+Require all gates pass.
+
+Freeze:
+
+```text
+external policy docs = SYNCHRONIZED
+external manifest-listed source/config = 135/135 MATCH
+external source_manifest Git canonical identity = MATCH
+protected assets = UNCHANGED
+external setup = READY
+locked candidates = NOT YET RUN
+PROP-01 = OPEN
+```
+
+Next:
+
+```text
+NEXT = PROP01_LOCKED_DEMO_PROPOSAL_GATE
+```
+
+Do not execute.
+
+## B — `PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_STOP`
+
+Use for any failed gate.
+
+Next:
+
+```text
+NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_RECOVERY
+```
+
+Do not execute.
+
+# 15. Report
+
+Create:
+
+```text
+docs/task8b3_p1d11b_supported_domain_policy_external_sync.md
+```
+
+Required sections:
+
+1. task / starting HEAD
+2. canonical Git-manifest 135/135 gate
+3. canonical source_manifest SHA256
+4. pre-sync external helper check
+5. pre-sync setup READY
+6. protected asset pre-snapshot
+7. controlled 135-file sync result
+8. separate Git-canonical source_manifest copy
+9. post-sync helper check 135/135
+10. external policy spot-check
+11. protected asset post comparison
+12. post-sync setup READY
+13. model/inference/pytest = NOT RUN
+14. locked candidates = NOT YET RUN
+15. PROP-01 = OPEN
+16. exact outcome
+17. exact next gate.
+
+# 16. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-P1D11A-R3
+Task: 8B.3-P1D11B
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: e0e0a74760d619db3cdd6be62c4ea42520f802ec
-Model/test execution: NONE
-Functional runtime files modified: NO
-Tests modified: NO
-External delivery modified: NO
-Pre-edit Git-canonical manifest: 135/135 PASS / FAIL
-Post-edit staged/index manifest: 135/135 PASS / FAIL / NOT RUN
-Manifest entry count: 135 / other
-Manifest entry identities changed: 2 / other
-Changed manifest entries: README.md; docs/model_card.md / other
-Locked candidate exact identities: 4/4 MATCH / other
-Locked left candidate: buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
-README ambiguous formal-input-domain phrase: REMOVED / PRESENT
-Model-card input wording: SOFTWARE_INPUT_MODALITY / other
+Starting HEAD: f9bf6be13035445f45f956c2b6a5a64ccf7e6032
+Model/inference execution: NONE
+Pytest: NOT RUN
+Functional canonical files modified: NO
+External delivery modified: YES — CONTROLLED POLICY/SOURCE SYNC ONLY / NO
+Canonical Git manifest: 135/135 PASS / FAIL
+Canonical source_manifest Git SHA256: <sha>
+Pre-sync external check: 133/135 with only README.md + docs/model_card.md mismatched / other
+Pre-sync external setup: READY / NOT READY
+Manifest-listed files copied/verified: 135/135 / other
+External source_manifest Git SHA match: YES / NO / NOT RUN
+Post-sync external check: 135/135 PASS / FAIL / NOT RUN
+External README policy: VERIFIED / NOT VERIFIED
+External model-card policy: VERIFIED / NOT VERIFIED
+Protected model/component assets changed: NO / YES / NOT CHECKED
+Qwen asset directory changed: NO / YES / NOT CHECKED
+Post-sync external setup: READY / NOT READY / NOT RUN
 A2 domain classification: NOT ESTABLISHED
 A2 policy status: DOCUMENTED_PERSISTENT_NON_DETECTION
-Supported-domain policy: IMPLEMENTED_IN_CANONICAL_RC1_DOCS_CORRECTED / NOT IMPLEMENTED
+Locked candidate status: FINAL_METADATA_LOCK
+Locked candidate runtime status: NOT YET RUN
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-Scientific freeze preserved: YES / NO
-External write sync: NOT RUN
-Next gate: PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC
-After sync: PROP01_LOCKED_DEMO_PROPOSAL_GATE
-Next action: Awaiting ChatGPT audit; do not sync external or run locked candidates.
+REF-01 status: OPEN
+MASK-01 status: OPEN
+Outcome: <exact enum>
+Next gate: <exact enum>
+Report: docs/task8b3_p1d11b_supported_domain_policy_external_sync.md
+Next action: Awaiting ChatGPT audit; do not run locked candidates.
 ```
 
-# 16. Commit / push
+# 17. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): correct prop01 supported-domain policy
+docs(rc1): record prop01 policy external sync
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record prop01 policy correction stop
+docs(rc1): record prop01 policy sync stop
 ```
 
-Push normally.
+Push current branch normally.
 No force push.
 
-# 17. COMPLETE definition
+# 18. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- no model/test/runtime/external changes;
-- pre-edit manifest = 135/135;
-- left candidate ID exactly corrected;
-- all 4 candidate IDs exact;
-- README no longer calls RGB modality "正式输入域";
-- model card distinguishes software input modality from verified domain;
-- A2 remains NOT ESTABLISHED;
-- required reuse disclosure remains;
-- exactly README/model_card manifest entries update;
-- post-edit manifest = 135/135;
-- next gate is controlled external policy sync;
+- canonical Git manifest = 135/135;
+- pre-sync external helper check is exactly 133/135 with only README/model_card mismatch;
+- pre-sync setup READY;
+- protected asset snapshot recorded;
+- exactly one controlled 135-file helper sync succeeds;
+- source_manifest separately written from Git canonical bytes;
+- post-sync helper check = 135/135;
+- external source_manifest Git SHA matches;
+- external README/model-card policy spot-check passes;
+- protected model/Qwen assets unchanged;
+- post-sync setup READY;
+- no pytest/inference/candidate run;
+- no canonical functional modification;
 - PROP-01 remains OPEN;
-- commit/push succeeds;
+- next gate not executed;
+- report/handoff committed and pushed;
 - STOP.
