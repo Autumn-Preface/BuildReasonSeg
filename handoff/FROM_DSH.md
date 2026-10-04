@@ -17,35 +17,33 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-P1D11B-R2 Report
+# FROM_DSH — Task 8B.3-P1D12 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-P1D11B-R2` |
-| Status | **COMPLETE** (external Git-canonical migration + policy sync executed) |
+| Task | `8B.3-P1D12` |
+| Status | **COMPLETE** (locked-candidate proposal-only gate) |
 | Branch | `fix/task8b3-prop01-a2-zero-proposals` |
-| Starting HEAD | `1f5641a0c0a1f43956f55da8f6a28262d52ee574` |
-| Canonical Git manifest | 135/135 PASS · Git SHA256 `c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604` |
-| Pre-sync external check | {"checked": 135, "match": 97, "missing": 0, "mismatch": 38} — authorised 97/38 gate SATISFIED |
-| Pre-sync external setup | READY |
-| Manifest-listed files copied/verified | 135/135 · failures 0 |
-| External source_manifest Git SHA match | YES |
-| Post-sync external check | {"checked": 135, "match": 135, "missing": 0, "mismatch": 0} → **135/135 PASS** |
-| Protected assets / Qwen / runtime dirs changed | NO / NO / NO |
-| Post-sync external setup | READY |
-| Extra CRLF-derived gates applied | NONE (authorised 97/38 gate only) |
-| pytest / model inference / locked candidate runs | NONE / NONE / NONE |
-| Canonical RC1 written | NO (read-only Git blob access) |
-| Frozen metrics / architecture / locked candidates | UNCHANGED |
-| PROP-01 status | OPEN (not closed) |
-| Report | `docs/task8b3_p1d11b_git_canonical_external_sync.md` |
-| Next action | Awaiting ChatGPT audit; locked-candidate evaluation needs its own task book |
+| Starting HEAD | `6651c4bf89663e5fff3e7854c9e2115d084ae003` |
+| Locked candidate status | FINAL_METADATA_LOCK (unchanged) |
+| Locked candidate runtime status | RUN (4 of 4, once each, order right → left → above → below) |
+| Per-candidate raw/merged/eligible | right=6/6/4, left=66/53/42, above=9/9/4, below=7/6/3 |
+| Exit codes | 0, 0, 0, 0 |
+| Diagnostics produced | `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\{1010,1003,1008,1009}` (authorised inspect-mode output) |
+| Internal consistency | status SUCCESS · merged == proposals.count · tile_count 1 · tile_size 512 · overlap 128 (all four) |
+| Pre-existing candidate diagnostics | NONE |
+| Core chain (Qwen / SAM2 / D-B1 / reference selection / GT / visual) | NOT EXECUTED |
+| Candidate replacement | NONE |
+| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| Outcome | **PROP01_LOCKED_DEMO_PROPOSAL_GATE_PASS** |
+| Next gate (recommended, not executed) | `NEXT = REF01_LOCKED_DEMO_REFERENCE_FORENSICS` |
+| Report | `docs/task8b3_p1d12_locked_demo_proposal_gate.md` |
+| Next action | Awaiting ChatGPT audit; the next gate needs its own task book |
 
-Watt was not needed for Task 8B.3-P1D11B-R2 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D12 (no downloads, no transfers).
 
-The external delivery was modified only through the controlled 135-file Git-canonical helper sync plus the separately
-written `source_manifest.json`; no model binary, Qwen asset, input/output/log/run/dataset content or unlisted file was
-touched, and no canonical RC1 file was modified.
+Only the authorised `--inspect-proposals` diagnostics were created under the external delivery; the canonical tree, the
+external source/config files, the locked candidates and all model assets were untouched.
