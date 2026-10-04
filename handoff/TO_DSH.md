@@ -1,43 +1,60 @@
-# TO_DSH — Task 8B.3-P1D8-R1: Complete A2 Input-Domain Evidence Contract
+# TO_DSH — Task 8B.3-P1D9: Isolated Validation-Moment Photometric Rescue Probe
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `b4dc1967cdc6734d35315d29eed11eb284b50244`
+> Required starting HEAD: `a220faf0dd9872829ee2bd7b7be859bbd90db7bb`
+> External delivery: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. Audit disposition
+# 0. Purpose
 
-P1D8 commit:
+P1D8-R1 is accepted by ChatGPT.
+
+Frozen evidence:
 
 ```text
-b4dc1967cdc6734d35315d29eed11eb284b50244
-docs(rc1): audit a2 input photometric domain
+active continued YOLO26m-seg:
+  A2 tiled @ conf=0.05  -> 9/9 boxes=0
+  A2 full-frame @ 0.05  -> boxes=0
+  A2 tiled @ 0.001      -> 9/9 boxes=0
+
+same-lineage epoch-18 YOLO26m-seg:
+  A2 tiled @ 0.05 -> 9/9 boxes=0
+
+independent WHU YOLOv8m-seg:
+  A2 tiled @ 0.05 -> 9/9 boxes=0
+
+A2 encoding anomaly:
+  NOT FOUND
 ```
 
-has the correct parent and only documentation/handoff changes.
-
-The current P1D8 conclusion is provisionally supported:
+P1D8-R1 also established:
 
 ```text
+combined-distribution primary outcome:
 PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
+
+split robustness:
+SENSITIVE_TO_SPLIT_COMPOSITION
+
+A2 split-specific percentile:
+                    train     val      test     combined
+Y_mean              38.88    11.22     1.83      25.18
+Y_std               13.45     0.00     0.27       7.83
+Y_dynamic_98        13.60     0.00     0.27       7.91
+gradient_mean       46.00    69.18    82.45      58.63
+
+train all-black tiles:
+1302 / 10044 = 12.9630%, all with empty labels
 ```
 
-because the committed report records, against the combined active task6m image distribution:
+Thus A2 is not an extreme outlier under the original combined rule, but it is extremely low-contrast relative to
+the active validation/test distributions and to successful controls.
 
-```text
-A2 whole:
-Y_mean         percentile = 25.18
-Y_std          percentile = 7.83
-Y_dynamic_98   percentile = 7.91
-gradient_mean  percentile = 58.63
-```
+This task performs ONE isolated diagnostic of ONE predeclared deterministic transform.
 
-and no obvious PNG encoding anomaly.
-
-However P1D8 is NOT YET APPROVED because required evidence was left only in an untracked JSON or omitted from the report.
-
-This R1 is evidence completion only.
+No product adoption is authorized.
 
 # 1. Git gate
 
@@ -45,7 +62,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = b4dc1967cdc6734d35315d29eed11eb284b50244
+HEAD = a220faf0dd9872829ee2bd7b7be859bbd90db7bb
 ```
 
 Allowed initial tracked tree:
@@ -57,451 +74,530 @@ No reset/rebase/stash/clean/merge.
 # 2. Strict prohibitions
 
 Do NOT:
-- run any detector/model/forward/predict;
+- modify the frozen A2 file;
+- modify A1/A3/A4/B1/B2;
+- modify external RC1 source/config/model/checkpoint;
+- replace the active detector;
+- train/fine-tune/resume/export/download anything;
+- run epoch-18 YOLO26;
+- run YOLOv8m;
+- run any checkpoint except the active RC1 detector;
+- run original/untransformed A2 again;
+- run full-frame A2;
+- run more than one photometric transform;
+- tune transform parameters after seeing detector output;
+- use CLAHE;
+- use histogram equalization;
+- use gamma correction;
+- use per-tile normalization;
+- change detector checkpoint/settings;
+- change tile geometry;
+- change `imgsz=640`;
+- change `conf=0.05`;
+- change `max_det=300`;
+- change `retina_masks=False`;
+- change device from CPU;
+- enable TTA;
+- run normal `predict.py`;
+- run `--inspect-proposals`;
 - run Qwen/SAM2/D-B1;
+- run A1/A3/A4/B1/B2 detector inference;
 - run pytest/check_setup;
-- modify any input image;
-- perform photometric rescue;
-- run CLAHE/gamma/equalization/contrast correction through a detector;
-- modify RC1 source/runtime/tests/manifests/checkpoints;
-- enter PROP-01 fix implementation;
+- save transformed image into RC1 `inference/input`;
+- save alternate outputs into RC1 normal output directories;
+- implement fallback logic;
 - enter REF-01/MASK-01/Task 8B.4/8C;
 - update main;
 - force push.
-
-Reading the existing P1D8 JSON/statistics is preferred.
-
-If the untracked statistics JSON no longer exists, recomputing the SAME non-model metrics from the SAME frozen images is allowed.
-Do not change metric definitions.
 
 # 3. Allowed repository changes
 
 Only:
 
 ```text
-docs/task8b3_p1d8_a2_input_domain_audit.md
+docs/task8b3_p1d9_validation_moment_rescue_probe.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Do not commit the dataset-sized raw JSON.
+Temporary transformed A2 and diagnostic transcript must remain outside the repository and outside external RC1 normal
+input/output paths.
 
-# 4. Preserve frozen metric definitions
+# 4. Preflight integrity
 
-Use exactly the P1D8 definitions:
-
-```text
-Y = 0.299*R + 0.587*G + 0.114*B
-
-Y_mean
-Y_std
-Y_p01
-Y_p50
-Y_p99
-Y_dynamic_98 = Y_p99 - Y_p01
-mean_abs_dx
-mean_abs_dy
-gradient_mean = (mean_abs_dx + mean_abs_dy)/2
-dark_fraction = fraction(Y < 64)
-very_dark_fraction = fraction(Y < 32)
-bright_fraction = fraction(Y > 192)
-```
-
-No normalization before measuring.
-
-# 5. Commit the full training-domain summary tables
-
-The report MUST contain, not merely reference an untracked file, complete tables for:
+Before creating any transformed image verify:
 
 ```text
-Y_mean
-Y_std
-Y_dynamic_98
-gradient_mean
-dark_fraction
-very_dark_fraction
+external manifest = 135/135 PASS
+external source_manifest byte-identical to canonical = YES
 ```
 
-For each metric include these four rows:
+Verify frozen A2:
 
 ```text
-train
-val
-test
-combined
+path = external inference/input/A2.png
+1024x1024
+RGB
+sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
 ```
 
-and all columns:
+Verify active detector identity:
 
 ```text
-N
-min
-p01
-p05
-p25
-p50
-p75
-p95
-p99
-max
-mean
-std
+external model/buildreasonseg_advisor/detector.pt
+sha256 = ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474
 ```
 
-Use the already processed population:
+Mismatch -> STOP before model call.
+
+# 5. Frozen transform
+
+Use exactly these PREDECLARED constants from the accepted P1D8-R1 evidence:
 
 ```text
-train = 10044
-val   = 3618
-test  = 3726
-combined = 17388
-unreadable = 0
+A2 source luminance mean = 65.6886
+A2 source luminance std  = 6.3262
+
+active validation median Y_mean = 91.6018
+active validation median Y_std  = 26.9494
 ```
 
-If those counts cannot be reproduced from existing evidence, STOP.
-
-# 6. Audit the zero-valued training tail
-
-The current report shows:
+Define exactly:
 
 ```text
-train Y_mean p01 = 0
-train Y_mean p05 = 0
-combined Y_mean p01 = 0
-combined Y_mean p05 = 0
+alpha = 26.9494 / 6.3262
+      = 4.259966488571338
+
+beta  = 91.6018 - alpha * 65.6886
+      = -188.2294346811672
 ```
 
-This must be characterized because it can materially affect percentile interpretation.
+For each original RGB uint8 pixel, independently on R/G/B:
 
-For each split record:
+```python
+x = original_rgb.astype(float64)
+y = clip(alpha * x + beta, 0.0, 255.0)
+rescued_rgb = round(y).astype(uint8)
+```
+
+Rounding rule MUST be:
 
 ```text
-count images with Y_mean == 0
-count images with Y_std == 0
-count images that are exactly all-black RGB
-fraction of split exactly all-black RGB
+numpy.rint / round-to-nearest-even semantics before uint8 cast
 ```
 
-If label files are trivially resolvable by matching stem, also record for exactly-all-black images:
+No per-channel statistics.
+No per-tile transform.
+No adaptive second pass.
+No other transform.
+
+The transform is applied once to the WHOLE 1024x1024 A2 image, then the normal 9 detector tiles are extracted from
+that transformed whole image.
+
+# 6. Temporary transformed-image guard
+
+Write the transformed image only to a temporary non-repository, non-delivery-input path, for example:
 
 ```text
-label file exists count
-empty label count
-non-empty label count
+C:\D\DeepSeekHarness\scratch\task8b3_p1d9\A2_validation_moment_affine.png
 ```
 
-Do not perform a semantic visual review.
-
-Do not exclude these images from any pre-registered distribution.
-
-State explicitly whether the combined percentile results include these images: YES.
-
-# 7. Split-specific A2 percentile robustness
-
-For A2 whole-image metrics compute deterministic percentile rank separately within:
+Record:
 
 ```text
-train
-val
-test
-combined
+temporary path
+SHA256
+bytes
+dimensions
+mode
 ```
 
-for:
+Do NOT overwrite A2.
+
+Before detector inference calculate transformed whole-image:
 
 ```text
 Y_mean
 Y_std
 Y_dynamic_98
 gradient_mean
-dark_fraction
-very_dark_fraction
+fraction any RGB channel == 0
+fraction any RGB channel == 255
+fraction all RGB channels == 0
+fraction all RGB channels == 255
 ```
 
-Add one table.
+Also calculate per-channel min/max/mean/std.
 
-This is a robustness audit only.
+These are diagnostic facts only.
 
-Do NOT change the original pre-registered P1D8 outcome rule, which used the combined active distribution.
+# 7. Transform sanity gate
 
-# 8. Required A1/A2/A3/A4 tile summaries
-
-For each case A1/A2/A3/A4, using the same frozen 9-tile geometry, report:
+Require:
 
 ```text
-median tile Y_mean
-median tile Y_std
-median tile Y_dynamic_98
-median tile gradient_mean
-
-min tile Y_mean
-max tile Y_mean
-min tile Y_std
-max tile Y_std
-min tile gradient_mean
-max tile gradient_mean
+dimensions = 1024x1024
+mode = RGB
+dtype = uint8
+original A2 sha256 still unchanged
 ```
 
-One table with four case rows is sufficient.
+No hard clipping threshold is used to tune/abort based on appearance.
 
-No model run.
+Only STOP if:
+- transform implementation does not exactly match §5;
+- output cannot be decoded as 1024x1024 RGB uint8;
+- original A2 changed.
 
-# 9. Required A2 p01/p05 tile counts
+# 8. Detector runtime
 
-Against the COMBINED active training distribution, record A2's 9-tile counts:
+Use the SAME active RC1 detector and pinned runtime as P1D2.
+
+Record:
 
 ```text
-tiles below p01 Y_mean
-tiles below p05 Y_mean
-
-tiles below p01 Y_std
-tiles below p05 Y_std
-
-tiles below p01 Y_dynamic_98
-tiles below p05 Y_dynamic_98
-
-tiles below p01 gradient_mean
-tiles below p05 gradient_mean
-
-tiles above p95 dark_fraction
-tiles above p99 dark_fraction
-
-tiles above p95 very_dark_fraction
-tiles above p99 very_dark_fraction
+Python executable
+Python version
+PyTorch version
+Ultralytics version
+active detector SHA256
 ```
 
-These are required even if all counts are zero.
-
-# 10. Required successful-control ratios
-
-Let successful controls be:
+Expected Ultralytics:
 
 ```text
-A1, A3, A4
+8.4.164
 ```
 
-For each core metric:
+# 9. Frozen detector geometry/settings
+
+Use exactly:
 
 ```text
-Y_mean
-Y_std
-Y_dynamic_98
-gradient_mean
+TILE_SIZE = 512
+TILE_OVERLAP = 128
+TILE_STRIDE = 384
+
+tops  = [0, 384, 512]
+lefts = [0, 384, 512]
+tile_count = 9
+
+imgsz = 640
+conf = 0.05
+max_det = 300
+verbose = False
+retina_masks = False
+device = cpu
+TTA = disabled
 ```
 
-record:
+Extract tiles from the transformed WHOLE image.
+
+# 10. One diagnostic process / nine calls
+
+Create one temporary diagnostic script outside the repository.
+
+Run it exactly ONCE.
+
+Inside:
+1. load original A2 once;
+2. verify hash;
+3. create transformed whole image once using §5;
+4. load active detector once;
+5. extract normal 9 tiles from transformed image;
+6. call active `model.predict()` once per tile.
+
+Exactly:
 
 ```text
-whole_ratio =
-A2 whole value / median(A1 whole, A3 whole, A4 whole)
-
-tile_ratio =
-A2 median-tile value /
-median(A1 median-tile, A3 median-tile, A4 median-tile)
+diagnostic process count = 1
+active model.predict count = 9
 ```
 
-Also record whether A2 is lower than ALL THREE successful controls for each metric at:
-- whole-image level;
-- median-tile level.
+Do NOT call detector on original A2.
 
-Do not interpret ratio as causal proof.
+# 11. Required per-tile evidence
 
-# 11. Normalize the encoding enum
-
-Replace/augment the informal:
+Bracket each call:
 
 ```text
-encoding anomaly found = NONE
+BEGIN_TILE <tile_id>
+...
+END_TILE <tile_id>
 ```
 
-with exactly one required enum:
+Record:
 
 ```text
-A2_ENCODING_ANOMALY_FOUND
-A2_ENCODING_ANOMALY_NOT_FOUND
-A2_ENCODING_METADATA_INCONCLUSIVE
+boxes_is_none
+boxes_count
+masks_is_none
+masks_count
+wrapper_equivalent_count
+boxes_conf_min
+boxes_conf_max
+boxes_conf_top10
+NMS warning = YES / NO
 ```
 
-If existing evidence remains:
+For up to top 10 detections:
 
 ```text
-all A1/A2/A3/A4:
-PNG
-8-bit RGB
-no alpha
-same core PNG chunk structure
-no anomalous ancillary profile/gamma/EXIF/text metadata
+rank
+confidence
+xyxy
+mask_area if mask exists
 ```
 
-then use:
+Do not perform downstream merge/reference/reasoning.
+
+# 12. Aggregate
+
+Record:
 
 ```text
-A2_ENCODING_ANOMALY_NOT_FOUND
+sum_boxes_count
+sum_masks_count
+sum_wrapper_equivalent_count
+tiles_with_boxes
+tiles_with_masks
+tiles_wrapper_nonzero
+global_max_confidence
+global_top20_confidences
+NMS warning count
+NMS warning tile ids
 ```
 
-only if those facts are actually supported.
+# 13. Outcome classification
 
-# 12. Re-evaluate the P1D8 outcome without changing its rule
+Choose exactly ONE.
 
-Choose exactly one again:
+## A — `PROP01_VALIDATION_MOMENT_RESCUE_RECOVERS_SIGNAL`
+
+Require:
 
 ```text
-PROP01_A2_PHOTOMETRIC_OUTLIER_STRONGLY_SUPPORTED
-PROP01_A2_DARKNESS_OUTLIER_ONLY
-PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
-PROP01_A2_INPUT_DOMAIN_INCONCLUSIVE
+sum_wrapper_equivalent_count > 0
 ```
 
-Apply the ORIGINAL P1D8 criteria exactly.
+and at least one tile has usable segmentation masks.
 
-Do NOT create a new threshold or use split-specific robustness tables to retroactively redefine the rule.
-
-If the original combined-distribution criterion still gives:
+Interpretation:
 
 ```text
-PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
+a single predeclared validation-derived global affine photometric transform restores usable active-detector A2
+proposal signal under otherwise frozen detector settings.
 ```
 
-retain it.
+This makes photometric sensitivity actionable as an engineering rescue hypothesis.
 
-Separately state whether split-specific analysis makes the interpretation:
+It does NOT authorize adoption.
+
+## B — `PROP01_VALIDATION_MOMENT_RESCUE_REMAINS_ZERO`
+
+Require:
 
 ```text
-ROBUST_ACROSS_SPLITS
-SENSITIVE_TO_SPLIT_COMPOSITION
-INCONCLUSIVE_ACROSS_SPLITS
+sum_boxes_count = 0
+sum_wrapper_equivalent_count = 0
 ```
 
-This robustness enum does not replace the primary outcome.
-
-# 13. Re-evaluate next gate
-
-If primary outcome remains:
+Interpretation:
 
 ```text
-PROP01_A2_NOT_PHOTOMETRIC_OUTLIER
+even a strong predeclared validation-moment normalization fails to recover active-detector signal.
 ```
 
-then keep:
+This materially weakens a simple photometric-rescue strategy.
+
+## C — `PROP01_VALIDATION_MOMENT_BOXES_WITHOUT_MASKS`
+
+Require:
+
+```text
+sum_boxes_count > 0
+sum_wrapper_equivalent_count = 0
+```
+
+because masks are unavailable.
+
+## D — `PROP01_VALIDATION_MOMENT_DIAGNOSTIC_INCONCLUSIVE`
+
+For implementation/runtime/result-structure errors or any other state.
+
+# 14. Next-gate recommendation — DO NOT EXECUTE
+
+If A:
+
+```text
+NEXT = PHOTOMETRIC_RESCUE_QUALITY_AND_POLICY_GATE
+```
+
+Future task will inspect whether recovered proposals are semantically plausible and define the re-validation burden
+before any product adoption.
+
+If B:
 
 ```text
 NEXT = DETECTOR_ADAPTATION_OR_DEMO_POLICY_DECISION
 ```
 
-Otherwise follow the original P1D8 decision table.
-
-Do NOT execute it.
-
-# 14. Repair report
-
-Update:
+If C:
 
 ```text
-docs/task8b3_p1d8_a2_input_domain_audit.md
+NEXT = PHOTOMETRIC_RESCUE_MASK_OUTPUT_FORENSICS
 ```
 
-The committed report must now contain:
+If D:
 
-1. original task scope and HEAD
-2. P1D2–P1D7 frozen detector evidence
-3. input identities
-4. dataset roots/counts/dimensions
-5. exact hash search
-6. fixed metric definitions
-7. full six-metric × four-split distribution tables
-8. all-black-tail audit
-9. A2 split-specific percentile table
-10. whole A1/A2/A3/A4 metrics
-11. 9-tile summary table for all four cases
-12. A2 p01/p05 tile-count table
-13. successful-control ratio table
-14. encoding metadata evidence
-15. exact encoding enum
-16. exact primary outcome
-17. split robustness enum
-18. explicit limits
-19. exact next gate
-20. model inference = NONE
-21. image modification = NONE
-22. MEM-01 CLOSED
-23. PROP-01 OPEN
-24. REF-01/MASK-01 OPEN untouched.
+```text
+NEXT = PHOTOMETRIC_PROBE_RECOVERY
+```
 
-# 15. FROM_DSH
+Do NOT execute the next gate.
+
+# 15. Post-run integrity
+
+After the one process verify again:
+
+```text
+original A2 SHA256 unchanged = YES
+active detector SHA256 unchanged = YES
+external manifest = 135/135 PASS
+external source_manifest byte-identical to canonical = YES
+```
+
+Delete is optional for the temporary transformed image.
+Do not copy it into RC1.
+
+# 16. Report
+
+Create:
+
+```text
+docs/task8b3_p1d9_validation_moment_rescue_probe.md
+```
+
+Required sections:
+
+1. task/scope/starting HEAD
+2. P1D2–P1D8-R1 frozen facts
+3. preflight integrity
+4. exact transform formula/constants
+5. temporary transformed-image identity
+6. transformed-image diagnostic statistics
+7. clipping fractions
+8. runtime identity
+9. frozen detector settings
+10. process count = 1
+11. model.predict count = 9
+12. 9-row per-tile table
+13. aggregate facts
+14. warning/error evidence
+15. exact outcome enum
+16. causal interpretation and limits
+17. exact next gate
+18. post-run integrity
+19. original A2 unchanged
+20. active RC1 detector unchanged
+21. transformed image NOT adopted into RC1
+22. functional files modified = NO
+23. MEM-01 CLOSED
+24. PROP-01 OPEN
+25. REF-01/MASK-01 OPEN untouched.
+
+# 17. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 UTF-8 without BOM.
 
-Required fields:
+Required:
 
 ```text
-Task: 8B.3-P1D8-R1
+Task: 8B.3-P1D9
 Status: COMPLETE / PARTIAL / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: b4dc1967cdc6734d35315d29eed11eb284b50244
-Original P1D8 starting HEAD: 5f52338b7507cc377190cacb33611c644f223a88
-Model inference: NONE
-Image modifications: NONE
+Starting HEAD: a220faf0dd9872829ee2bd7b7be859bbd90db7bb
 Functional files modified: NO
-Training image counts: 10044 / 3618 / 3726 / 17388
-Full training distribution tables: RECORDED / NOT RECORDED
-All-black-tail audit: RECORDED / NOT RECORDED
-A2 split-specific percentiles: RECORDED / NOT RECORDED
-All-control tile summary: RECORDED / NOT RECORDED
-A2 p01/p05 tile counts: RECORDED / NOT RECORDED
-Successful-control ratios: RECORDED / NOT RECORDED
-Encoding audit: <exact enum>
-Primary outcome: <exact enum>
-Split robustness: <exact enum>
+Original A2 modified: NO
+Active RC1 detector modified/replaced: NO
+Transform adopted into RC1: NO
+Diagnostic process invocation count: 1 / 0
+Active detector model.predict call count: 9 / other
+Transform alpha: 4.259966488571338
+Transform beta: -188.2294346811672
+Temporary transformed image SHA256: <sha>
+Transformed Y_mean: <value>
+Transformed Y_std: <value>
+Transformed Y_dynamic_98: <value>
+Transformed gradient_mean: <value>
+Any-channel zero fraction: <value>
+Any-channel 255 fraction: <value>
+Geometry: 9 x 512 tiles, overlap 128, stride 384
+Device: cpu
+imgsz/conf/max_det: 640 / 0.05 / 300
+sum_boxes_count: <n>
+sum_masks_count: <n>
+sum_wrapper_equivalent_count: <n>
+tiles_with_boxes: <...>
+tiles_with_masks: <...>
+global_max_confidence: <value / NONE>
+NMS warning count: <n>
+Outcome: <exact enum>
 Next gate: <exact enum>
+Pre-run external manifest: 135/135 PASS / FAIL
+Post-run external manifest: 135/135 PASS / FAIL / NOT RUN
+source_manifest byte-identical: YES / NO
 RC1-DEMO-MEM-01: CLOSED
 RC1-DEMO-PROP-01: OPEN
 RC1-DEMO-REF-01: OPEN
 RC1-DEMO-MASK-01: OPEN
-Report: docs/task8b3_p1d8_a2_input_domain_audit.md
-Next action: Awaiting ChatGPT audit; no rescue/detector change authorized.
+Report: docs/task8b3_p1d9_validation_moment_rescue_probe.md
+Next action: Awaiting ChatGPT audit; no rescue adoption authorized.
 ```
 
-# 16. Commit / push
+# 18. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): complete a2 input-domain audit
+test(rc1): probe validation-moment rescue on a2
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record a2 input-domain audit correction stop
+docs(rc1): record validation-moment rescue probe stop
 ```
 
-Push normally. No force push.
+Push current branch normally.
+No force push.
 
-# 17. COMPLETE definition
+# 19. COMPLETE definition
 
 COMPLETE only if:
 - exact starting HEAD;
-- no model execution;
-- no image modification;
-- all six training-domain distribution tables are committed in the report;
-- zero-valued training tail is quantified;
-- split-specific A2 percentile robustness is recorded;
-- all four Demo cases have tile summaries;
-- A2 p01/p05 tile counts are explicit;
-- successful-control ratios are explicit;
-- encoding enum is exact;
-- original P1D8 outcome is re-evaluated without changing the rule;
-- split robustness enum is reported separately;
-- next gate is recommended but not run;
-- only allowed files changed;
+- original A2 and detector identity verified;
+- exact single transform used;
+- no other transform attempted;
+- original A2 never modified;
+- one diagnostic process;
+- exactly 9 active-detector calls on transformed tiles only;
+- no original-A2 detector rerun;
+- no alternate detector;
+- no downstream stages;
+- one exact outcome selected;
+- one next gate recommended but not executed;
+- RC1 integrity remains intact;
+- only allowed docs/handoff files changed;
 - commit/push succeeds;
+- tracked tree clean;
 - STOP.
 
-# 18. Final response
+# 20. Final response
 
 ```text
-TASK 8B.3-P1D8-R1 COMPLETE / PARTIAL / STOP / FAILED
+TASK 8B.3-P1D9 COMPLETE / PARTIAL / STOP / FAILED
 
 Commit:
 <sha or NONE>
@@ -509,35 +605,49 @@ Commit:
 Push:
 PASS / FAIL
 
-Model inference:
-NONE
+Transform:
+alpha = 4.259966488571338
+beta = -188.2294346811672
 
-Full distribution tables:
-RECORDED / NOT RECORDED
+Diagnostic process:
+1
 
-All-black tail:
-RECORDED / NOT RECORDED
+model.predict calls:
+9
 
-Split robustness:
-<enum>
+A2 transformed:
+Y_mean = <...>
+Y_std = <...>
+Y_dynamic_98 = <...>
+gradient_mean = <...>
+any-channel zero fraction = <...>
+any-channel 255 fraction = <...>
 
-A2 p01/p05 tile counts:
-RECORDED / NOT RECORDED
+Detector aggregate:
+boxes = <n>
+masks = <n>
+wrapper usable proposals = <n>
+tiles_with_boxes = <...>
+tiles_with_masks = <...>
+global_max_conf = <...>
 
-Control ratios:
-RECORDED / NOT RECORDED
-
-Encoding:
-<enum>
-
-Primary outcome:
+Outcome:
 <enum>
 
 Next gate:
 <enum>
 
-Image modifications:
-NONE
+Original A2 modified:
+NO
+
+Active detector modified:
+NO
+
+Transform adopted:
+NO
+
+Pre/post external manifest:
+135/135 PASS / 135/135 PASS
 
 Functional files modified:
 NO
@@ -551,5 +661,5 @@ OPEN
 REF-01 / MASK-01:
 OPEN / OPEN
 
-等待 ChatGPT 审核；不得做图像增强、不得重跑 detector、不得执行 next gate。
+等待 ChatGPT 审核；不得采用该变换、不得执行 next gate。
 ```
