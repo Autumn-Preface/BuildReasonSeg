@@ -169,3 +169,47 @@ State recorded honestly:
 * Qwen / SAM2 / relation-field / D-B1 / target segmentation: NOT EXECUTED;
 * manual visual inspection / candidate replacement / repair: NO / NO / NO;
 * no delivery file was modified; no PNG or mask artifact was written by this task.
+
+
+---
+
+## 12. REF01-F1-R3 — harness repair attempt STOP
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = ac1e4a9f8f452581c509ab0d73024c44c5de1be0
+STATIC_HARNESS_GATE = PASS (data path root verified to exist, external RC1 detector module located,
+                      DetectorRuntime construction present, reproduction gate present)
+harness runs consumed = 1
+detector calls executed = 0
+evidence json produced   = False
+```
+
+The repaired harness passed the static gate but failed at **module import time** on a Python operator-precedence
+mistake in the raster-root construction:
+
+```text
+RASTER_ROOT = (Path(r"C:\D\resources") / "Satellite dataset " + chr(0x2161) + " (East Asia)" ...
+TypeError: unsupported operand type(s) for +: 'WindowsPath' and 'str'
+```
+
+The correct form parenthesises the concatenation before the `/` operator:
+
+```text
+RASTER_ROOT = (Path(r"C:\D\resources") / ("Satellite dataset " + chr(0x2161) + " (East Asia)") ...
+```
+
+Because the failure occurred before `main()` ran, **no detector call was made** and no measurement, class or outcome was
+produced. The task book allows the harness exactly one execution, and that execution has now been consumed by this
+import-time failure, so this task stops without re-running and without asserting any classification.
+
+The single blocking defect for the next attempt is the one-line parenthesisation above; everything else in the harness
+(static gate, external RC1 import, default `DetectorRuntime`, reproduction gate, GT mask reconstruction, IoU
+classification and outcome priority) was already verified by the static gate and remains in place.
+
+```text
+Qwen / SAM2 / relation fields / D-B1 / target segmentation = NOT EXECUTED
+manual visual inspection / candidate replacement / repair  = NO / NO / NO
+external delivery / canonical RC1 modified                 = NO / NO
+classification / outcome enum                              = NOT ASSERTED
+```
