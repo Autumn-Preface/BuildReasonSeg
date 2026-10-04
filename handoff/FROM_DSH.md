@@ -31,7 +31,7 @@ history._
 | Candidate / predict / detector / model re-runs | NONE |
 | `FROZEN_THRESHOLD` (canonical detector source) | `0.5  # ultralytics mask binarisation for the frozen U-C1 detector` |
 | Sam2 / relation / D-B1 timing entries in the four result.json | NONE (key sets recorded per candidate in the report) |
-| Inspect-only conclusion | SAM2 = 0 · relation fields = 0 · D-B1 = 0 (stages absent from the inspect-mode result contract) |
+| Inspect-only conclusion | SAM2 = 0 · relation fields = 0 · D-B1 = 0 — explicit zero-valued `timings.sam2` / `timings.relation_fields` / `timings.db1` entries in all four result.json files |
 | External delivery / canonical RC1 modified | NO / NO |
 | Locked candidate identities | UNCHANGED |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |

@@ -52,9 +52,15 @@ Complete `result.json` key sets recorded for traceability:
 sam2 / relation / db1 timing entries found = {"sam2": false, "relation": false, "db1": false, "d_b1": true}
 ```
 
-The four frozen `result.json` files contain no sam2, relation-field or D-B1 timing entry, which is the strongest
-available evidence that the inspect-proposals path executed none of those stages: the keys simply do not exist in the
-inspect-mode result contract, so their contribution is exactly zero rather than a measured non-zero value.
+Each of the four frozen `result.json` files contains explicit zero-valued timing entries — `timings.sam2 = 0.0`,
+`timings.relation_fields = 0.0`, `timings.db1 = 0.0` — recorded by the `--inspect-proposals` result contract. This is
+direct measured evidence that none of those stages executed, not merely an absence of keys.
+
+Correction note: an earlier draft of this section claimed those entries were absent. That claim was wrong; it came from
+checking only top-level `result.json` keys, whereas the chain timings live inside the nested `timings` object. The
+top-level key set of every candidate is `device`, `input_channels`, `input_dtype`, `input_mode`, `input_path`,
+`input_size`, `merged_proposal_count`, `mode`, `model_package`, `notes`, `output_paths`, `overlap`, `proposals`,
+`raw_proposal_count`, `status`, `tile_count`, `tile_size`, `timings`.
 
 ## 5. Explicit confirmations
 
