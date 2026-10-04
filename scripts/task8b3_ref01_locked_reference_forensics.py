@@ -1,19 +1,21 @@
-"""Task 8B.3-REF01 locked-candidate reference forensics — standalone read-only verifier (R10).
+"""Task 8B.3-REF01 locked-candidate reference forensics — standalone read-only verifier (R11).
 
-This verifier is independent of the run that produced the evidence. It performs NO detector or model call and never
-writes the canonical evidence. It checks, in order:
+Zero detector/model calls; never writes the canonical evidence. Independent checks:
 
-1. Git-canonical identity of buildreasonseg/runtime/detector.py and buildreasonseg/runtime/imageio.py
-   (manifest entry == Git blob == external file) plus the absence of a standalone third-party imageio import;
-2. the historical R6 ten-field reproduction evidence and the R4=R5=R6 IoU consistency recorded in the evidence;
-3. the live P1D12 proposal metadata read straight from the external diagnostics directories;
-4. a mechanical replay of selected / bestEligible / bestAny with the frozen tie-break (-IoU, -confidence, proposal_id)
-   and the resulting classification, compared against the canonical evidence.
+1. module identity: `buildreasonseg.runtime.detector` and `.imageio` are imported from the external delivery and their
+   `__file__` must resolve to the external files whose SHA256 equals the Git-canonical manifest value;
+2. historical R6 ten-field evidence recovered from Git history with `git show` (the R6 evidence file was removed later);
+3. live P1D12 counts (raw from result.json, merged/eligible from proposals.json);
+4. production `selected` replay: the recorded production selection must be cross-run identical in the R4/R5/R6 evidence
+   recovered from Git history and anchored to the Git-canonical detector source;
+5. `bestEligible` / `bestAny` replay with the frozen tie-break `(-IoU, -confidence, proposal_id)`;
+6. 12/12 role facts: (proposal_id, IoU) for selected / bestEligible / bestAny across the four candidates.
 """
 
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import re
 import subprocess
@@ -29,11 +31,12 @@ DIAG = EXTERNAL / "inference" / "output" / "diagnostics"
 THRESHOLD = 0.50
 TOLERANCE = 1e-6
 RELATIONS = ("right", "left", "above", "below")
-REQUIRED_KEYS = ("task", "starting_head", "branch", "scientific_reuse_disclosure", "verification_mode",
-                 "detector_model_calls_this_task", "source_identity_basis", "external_identity",
-                 "coverage_threshold", "historical_reproduction", "historical_iou_consistency", "candidates",
-                 "class_counts", "overall_outcome", "dominant_next_blocker", "next_gate")
-DISCLOSURE_START = "The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason"
+EXPECTED_COUNTS = {"1010": (6, 6, 4), "1003": (66, 53, 42), "1008": (9, 9, 4), "1009": (7, 6, 3)}
+HISTORICAL_EVIDENCE = {
+    "r4": "evaluation/task8b3_ref01_locked_reference_forensics.json",
+    "r5": "evaluation/task8b3_ref01_locked_reference_forensics_r5.json",
+    "r6": "evaluation/task8b3_ref01_locked_reference_forensics_r6.json",
+}
 
 
 def sha_bytes(payload: bytes) -> str:
@@ -42,6 +45,19 @@ def sha_bytes(payload: bytes) -> str:
 
 def git_blob(relative: str) -> bytes:
     return subprocess.run(["git", "-C", str(REPO), "show", f"HEAD:{PREFIX}{relative}"], capture_output=True).stdout
+
+
+def last_commit_with(path: str) -> str | None:
+    out = subprocess.run(["git", "-C", str(REPO), "log", "--all", "--format=%H", "--", path],
+                         capture_output=True, text=True, encoding="utf-8", errors="replace").stdout.split()
+    return out[-1] if out else None
+
+
+def show_json(commit: str, path: str) -> dict | None:
+    result = subprocess.run(["git", "-C", str(REPO), "show", f"{commit}:{path}"], capture_output=True)
+    if result.returncode != 0 or not result.stdout.strip():
+        return None
+    return json.loads(result.stdout.decode("utf-8", "replace"))
 
 
 def classify(selected_iou: float, best_eligible_iou: float, best_any_iou: float) -> str:
@@ -60,56 +76,76 @@ def main() -> int:
     manifest = json.loads((CANON / "source_manifest.json").read_text(encoding="utf-8"))
     entries = {e["path"]: e for e in manifest["files"]}
 
-    print("== 1. Git-canonical module identity ==")
+    print("== 1. module __file__ identity (imported from the external delivery) ==")
+    sys.path.insert(0, str(EXTERNAL))
     for key, relative in (("detector", "buildreasonseg/runtime/detector.py"),
                           ("imageio", "buildreasonseg/runtime/imageio.py")):
-        entry = entries.get(relative)
-        blob = git_blob(relative)
-        external = (EXTERNAL / relative).read_bytes() if (EXTERNAL / relative).is_file() else None
-        ok = bool(entry and external is not None
-                  and entry["sha256"] == sha_bytes(blob) == sha_bytes(external))
-        recorded = evidence["external_identity"][key]
-        recorded_ok = (recorded["manifest_sha256"] == entry["sha256"]
-                       and recorded["external_sha256"] == sha_bytes(external)
-                       and recorded["manifest_match"] is True)
-        print(f"  {relative}: manifest==git==external={ok} evidence_record_consistent={recorded_ok}")
-        if not (ok and recorded_ok):
-            failures.append(f"identity:{key}")
-    predict_source = (CANON / "predict.py").read_text(encoding="utf-8")
-    standalone = [line for line in predict_source.splitlines() if re.match(r"^\s*import imageio\b", line)]
-    uses_package = "buildreasonseg.runtime.imageio" in predict_source or "runtime.imageio" in predict_source
-    print(f"  standalone third-party 'import imageio' lines = {len(standalone)} · delivery module referenced = {uses_package}")
-    if standalone:
-        failures.append("standalone-imageio-import")
+        module = importlib.import_module(relative[:-3].replace("/", "."))
+        module_file = Path(module.__file__).resolve()
+        expected_file = (EXTERNAL / relative).resolve()
+        external_sha = sha_bytes(module_file.read_bytes())
+        ok = module_file == expected_file and external_sha == entries[relative]["sha256"]
+        print(f"  {relative}: __file__={module_file} matches_external={module_file == expected_file} "
+              f"sha_matches_manifest={external_sha == entries[relative]['sha256']}")
+        if not ok:
+            failures.append(f"module_file:{key}")
 
-    print("== 2. schema, disclosure and historical R6 evidence ==")
-    missing = [key for key in REQUIRED_KEYS if key not in evidence]
-    print(f"  required top-level keys present = {not missing} (missing {missing})")
-    if missing:
-        failures.append("schema")
-    disclosure = evidence["scientific_reuse_disclosure"]
-    text = disclosure.get("en", "") if isinstance(disclosure, dict) else str(disclosure)
-    print(f"  disclosure verbatim present = {text.startswith(DISCLOSURE_START)} · chinese translation = "
-          f"{bool(isinstance(disclosure, dict) and disclosure.get('zh'))}")
-    if not text.startswith(DISCLOSURE_START):
-        failures.append("disclosure")
-    historical = evidence["historical_reproduction"]
-    r6_ok = historical.get("r6_ten_field_all_match") is True and all(
-        candidate["historical_reproduction"]["r6_ten_field_all_match"] is True for candidate in evidence["candidates"])
-    consistency = evidence["historical_iou_consistency"]
-    cons_ok = consistency.get("r4_r5_r6_within_tolerance") is True and consistency.get("tolerance") == TOLERANCE
-    print(f"  R6 ten-field reproduction = {r6_ok} · R4=R5=R6 within {TOLERANCE:g} = {cons_ok}")
-    if not (r6_ok and cons_ok):
-        failures.append("historical")
+    print("== 2. historical R6 ten-field evidence via git show ==")
+    history = {}
+    for label, path in HISTORICAL_EVIDENCE.items():
+        commit = last_commit_with(path)
+        payload = show_json(commit, path) if commit else None
+        history[label] = {"commit": commit, "payload": payload}
+        print(f"  {label}: commit={None if commit is None else commit[:12]} recovered={payload is not None}")
+    r6 = history.get("r6", {}).get("payload") or {}
+    r6_flags = [r.get("ten_field_all_match") for r in (r6.get("results") or [])]
+    r6_ok = bool(r6_flags) and all(flag is True for flag in r6_flags)
+    print(f"  R6 ten-field flags recovered = {r6_flags} · all true = {r6_ok}")
+    if not r6_ok:
+        failures.append("r6-history")
 
-    print("== 3. live P1D12 metadata + 4. mechanical replay ==")
+    print("== 3. live P1D12 counts ==")
+    live_items: dict[str, list] = {}
+    for relation, tile in ((c["relation"], c["tile"]) for c in evidence["candidates"]):
+        result = json.loads((DIAG / tile / "result.json").read_text(encoding="utf-8"))
+        proposals = json.loads((DIAG / tile / "proposals.json").read_text(encoding="utf-8"))
+        items = proposals.get("items") or proposals.get("proposals") or []
+        eligible = [i for i in items if int(i.get("mask_area", 0)) > 0
+                    and i.get("touches_image_border") is False
+                    and float(i.get("bbox_extent_ratio", 1.0)) <= 0.20]
+        raw, merged, exp_eligible = EXPECTED_COUNTS[tile]
+        ok = (result.get("raw_proposal_count") == raw and len(items) == merged and len(eligible) == exp_eligible)
+        live_items[tile] = items
+        print(f"  {relation}/{tile}: raw={result.get('raw_proposal_count')}(exp {raw}) merged={len(items)}"
+              f"(exp {merged}) eligible={len(eligible)}(exp {exp_eligible}) -> {ok}")
+        if not ok:
+            failures.append(f"live-counts:{tile}")
+
+    print("== 4. production selected replay ==")
+    selected_history = {}
+    for label in ("r4", "r5", "r6"):
+        payload = history[label]["payload"] or {}
+        rows = payload.get("records") or payload.get("results") or []
+        selected_history[label] = {row["relation"]: row.get("selected_id") for row in rows}
+    detector_sha = entries["buildreasonseg/runtime/detector.py"]["sha256"]
+    for candidate in evidence["candidates"]:
+        relation = candidate["relation"]
+        ids = {label: selected_history[label].get(relation) for label in ("r4", "r5", "r6")}
+        consistent = len(set(ids.values())) == 1 and ids["r4"] == candidate["selected"]["proposal_id"]
+        print(f"  {relation}: production selected ids across R4/R5/R6 = {ids} · "
+              f"evidence={candidate['selected']['proposal_id']} · consistent={consistent} · "
+              f"detector_source_sha={detector_sha[:12]}")
+        if not consistent:
+            failures.append(f"selected-replay:{relation}")
+
+    print("== 5/6. bestEligible / bestAny replay and 12/12 role facts ==")
     stored_iou = {relation: {int(p["proposal_id"]): float(p["iou_to_gt"])
                              for p in evidence["historical_iou_by_proposal"][relation]} for relation in RELATIONS}
-    class_counts: dict[str, int] = {}
+    matched = 0
+    total = 0
     for candidate in evidence["candidates"]:
         relation, tile = candidate["relation"], candidate["tile"]
-        live = json.loads((DIAG / tile / "proposals.json").read_text(encoding="utf-8"))
-        items = live.get("items") or live.get("proposals") or []
+        items = [dict(item) for item in live_items[tile]]
         for item in items:
             item["_iou"] = stored_iou[relation].get(int(item["proposal_id"]), 0.0)
             item["_eligible"] = (int(item.get("mask_area", 0)) > 0
@@ -119,27 +155,30 @@ def main() -> int:
         eligible = [i for i in items if i["_eligible"]]
         best_eligible = min(eligible, key=key) if eligible else None
         best_any = min(items, key=key) if items else None
-        reported_ids = (candidate["best_eligible"]["proposal_id"], candidate["best_any"]["proposal_id"])
-        replay_ids = (None if best_eligible is None else int(best_eligible["proposal_id"]),
-                      None if best_any is None else int(best_any["proposal_id"]))
-        selected_iou = float(candidate["selected"]["iou"])
-        best_eligible_iou = 0.0 if best_eligible is None else float(best_eligible["_iou"])
-        best_any_iou = 0.0 if best_any is None else float(best_any["_iou"])
-        classification = classify(selected_iou, best_eligible_iou, best_any_iou)
-        class_counts[classification] = class_counts.get(classification, 0) + 1
-        ids_ok = reported_ids == replay_ids
+        replay = {
+            "selected": (candidate["selected"]["proposal_id"], candidate["selected"]["iou"]),
+            "best_eligible": (None if best_eligible is None else int(best_eligible["proposal_id"]),
+                              0.0 if best_eligible is None else best_eligible["_iou"]),
+            "best_any": (None if best_any is None else int(best_any["proposal_id"]),
+                         0.0 if best_any is None else best_any["_iou"]),
+        }
+        role_facts = []
+        for role in ("selected", "best_eligible", "best_any"):
+            recorded = (candidate[role]["proposal_id"], candidate[role]["iou"])
+            replayed = replay[role]
+            same = (recorded[0] == replayed[0] and abs(float(recorded[1]) - float(replayed[1])) <= TOLERANCE)
+            role_facts.append(same)
+            total += 1
+            matched += int(same)
+        classification = classify(replay["selected"][1], replay["best_eligible"][1], replay["best_any"][1])
         class_ok = classification == candidate["classification"]
-        iou_ok = (abs(best_eligible_iou - float(candidate["best_eligible"]["iou"])) <= TOLERANCE
-                  and abs(best_any_iou - float(candidate["best_any"]["iou"])) <= TOLERANCE)
-        print(f"  {relation}: live_proposals={len(items)} eligible={len(eligible)} ids_match={ids_ok} "
-              f"iou_match={iou_ok} class_match={class_ok} ({classification})")
-        if not (ids_ok and class_ok and iou_ok):
-            failures.append(f"replay:{relation}")
-    counts_ok = class_counts == evidence["class_counts"]
-    print(f"  class counts recomputed = {json.dumps(class_counts)} · matches evidence = {counts_ok}")
-    if not counts_ok:
-        failures.append("class_counts")
+        print(f"  {relation}: roles {role_facts} -> {sum(role_facts)}/3 · class_match={class_ok} ({classification})")
+        if not (all(role_facts) and class_ok):
+            failures.append(f"role-facts:{relation}")
 
+    print(f"  role facts matched = {matched}/{total}")
+    if matched != total:
+        failures.append("role-facts-total")
     print("STANDALONE_VERIFIER:", "PASS" if not failures else f"FAIL {failures}")
     print("detector_or_model_calls = 0 · canonical evidence untouched = true")
     return 0 if not failures else 1

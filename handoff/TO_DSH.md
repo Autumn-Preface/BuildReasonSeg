@@ -1,38 +1,62 @@
-# TO_DSH — Task 8B.3-REF01-F1-R10: Final Independent Zero-Call Verifier
+# TO_DSH — Task 8B.3-REF01-F1-R11: Strict Independent Reference Closure Verifier
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes mechanically.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-reference-forensics`
-> Required starting HEAD: `367144990e510aaacbae2b545a08d99aff91776a`
+> Required starting HEAD: `7d9492fa7628c4b4cc379a3c4ba976c3bd1fe228`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 
 # 0. ChatGPT audit disposition
 
-R9 materially improved the evidence package and its technical conclusions remain accepted.
+R10 is a safe zero-call verification attempt, but it is NOT yet a complete independent verifier.
 
-R9 still is NOT the final formal closure because the tracked verifier does not independently verify all facts it reports.
+Accepted R10 facts:
 
-The current R9 verifier:
-- reads live P1D12 metadata for best_eligible / best_any;
-- uses the correct `(-IoU, -confidence, proposal_id)` tie-break;
-- contains no detector/model inference;
+```text
+branch/head chain = correct
+detector/model calls = 0
+canonical evidence was not modified
+main remained unchanged
+tracked verifier contains no DetectorRuntime/detect_global inference path
+bestEligible/bestAny live metadata replay still matches the canonical evidence
+```
 
-but it does NOT independently verify:
-- source_manifest identity basis / detector.py / imageio.py hashes;
-- actual `buildreasonseg.runtime.detector` / `.imageio` module paths;
-- historical R6 ten-field reproduction via `git show`;
-- production `selected_id` by replaying `(-mask_area, -confidence, proposal_id)`;
-- all selected / best_eligible / best_any facts against canonical evidence.
+R10 formal defects:
 
-R10 fixes only the verifier and records the verifier PASS.
+```text
+D1. It does not import buildreasonseg.runtime.detector and
+    buildreasonseg.runtime.imageio and therefore does not verify their actual
+    __file__ paths resolve under the external RC1 root.
 
-NO detector/model rerun is authorized.
+D2. It does not read the historical R6 evidence with `git show`.
+    It only trusts the already-normalized canonical evidence boolean:
+    historical_reproduction.r6_ten_field_all_match.
+
+D3. It does not replay production selected_id from live P1D12 metadata using:
+    (-mask_area, -confidence, proposal_id).
+    It takes selected_iou and selected role facts directly from canonical evidence.
+
+D4. It does not compare the complete 12 role records
+    (selected / best_eligible / best_any × 4 candidates)
+    against live metadata field-by-field.
+
+D5. It does not independently validate the required P1D12 raw/merged/eligible
+    counts against the frozen values.
+
+D6. It does not independently replay/verify the aggregate:
+    overall_outcome / dominant_next_blocker / next_gate.
+
+D7. It checks only a disclosure prefix (`startswith`) rather than the exact frozen
+    English sentence required by the contract.
+```
+
+No detector/model run is authorized in R11.
 
 # 1. Frozen technical result
 
-The following is immutable:
+Do not change:
 
 ```text
 right:
@@ -69,7 +93,7 @@ above  = 0.0 / 0.0 / 0.9032501889644747
 below  = 0.0 / 0.6165496859992612 / 0.6165496859992612
 ```
 
-Overall:
+Frozen aggregate:
 
 ```text
 Outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
@@ -83,7 +107,7 @@ Require exactly:
 
 ```text
 branch = fix/task8b3-ref01-reference-forensics
-HEAD = 367144990e510aaacbae2b545a08d99aff91776a
+HEAD = 7d9492fa7628c4b4cc379a3c4ba976c3bd1fe228
 ```
 
 Allowed initial tracked tree:
@@ -96,22 +120,26 @@ No merge/rebase/reset/stash/clean/cherry-pick.
 # 3. Absolute prohibitions
 
 Do NOT:
-- instantiate `DetectorRuntime`;
-- call `detect_global`;
-- run any model inference;
-- run `predict.py`;
-- run Qwen / SAM2 / relation fields / D-B1 / target segmentation;
+- instantiate DetectorRuntime;
+- call detect_global;
+- call any model inference;
+- run predict.py;
+- run Qwen / ProgramHead;
+- run SAM2;
+- run relation fields;
+- run D-B1;
+- run target segmentation;
+- modify canonical evidence;
 - modify external RC1;
 - modify canonical delivery source;
 - run sync write;
 - change candidate set;
 - change threshold 0.50;
-- change canonical technical measurements;
-- implement product repair;
+- change any frozen technical result;
 - update main;
 - force push.
 
-Detector/model calls this task:
+Detector/model calls:
 
 ```text
 0
@@ -132,84 +160,88 @@ Do NOT modify:
 evaluation/task8b3_ref01_locked_reference_forensics.json
 ```
 
-unless the verifier discovers a contradiction, in which case STOP instead of editing it.
-
-Do not recreate `_r5.json` or `_r6.json`.
-
-# 5. Final verifier responsibilities
-
-Rewrite:
+Do NOT recreate:
 
 ```text
-scripts/task8b3_ref01_locked_reference_forensics.py
+evaluation/task8b3_ref01_locked_reference_forensics_r5.json
+evaluation/task8b3_ref01_locked_reference_forensics_r6.json
 ```
 
-into a pure read-only independent verifier.
+# 5. Exact disclosure contract
 
-It must independently verify all §§6–11 and return non-zero on any mismatch.
-
-# 6. Source manifest and external module identity
-
-Read:
+The verifier must require exact equality to:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\source_manifest.json
+The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
 ```
 
-Require both:
+Do NOT use startswith/substring/prefix matching.
 
-```text
-schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
-identity_basis = GIT_CANONICAL_BLOB_BYTES
-len(files) = 135
-```
+# 6. Independent source identity + module-path verification
 
-Require exact single entries:
+The verifier must:
+
+1. read canonical `delivery_src/.../source_manifest.json`;
+2. read external `source_manifest.json`;
+3. require:
+   - schema exact;
+   - identity_basis = `GIT_CANONICAL_BLOB_BYTES`;
+   - 135 entries;
+4. resolve exactly one entry each:
 
 ```text
 buildreasonseg/runtime/detector.py
-bytes = 20300
-sha256 = 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+20300 bytes
+82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
 
 buildreasonseg/runtime/imageio.py
-bytes = 7978
-sha256 = b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878
+7978 bytes
+b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878
 ```
 
-Hash actual external files and require exact match.
-
-Then set:
+5. hash actual external files and require exact match;
+6. before importing package modules:
 
 ```python
 sys.path.insert(0, str(EXTERNAL))
 sys.path.insert(1, str(REPO))
 ```
 
-Import only for identity:
+7. import only for identity:
 
 ```python
 import buildreasonseg.runtime.detector as detector_module
 import buildreasonseg.runtime.imageio as imageio_module
 ```
 
-Require both `__file__` paths under EXTERNAL.
-
-Do NOT instantiate any runtime object.
-
-# 7. Historical R6 ten-field verification from Git history
-
-Read without restoring:
+8. require:
 
 ```text
-git show 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c:evaluation/task8b3_ref01_locked_reference_forensics_r6.json
+Path(detector_module.__file__).resolve() under EXTERNAL
+Path(imageio_module.__file__).resolve() under EXTERNAL
 ```
+
+No runtime class construction.
+
+# 7. Independent historical R6 verification
+
+The verifier must execute:
+
+```text
+git -C <REPO> show 12d5fd9a92a5c6bdfbec8e681efb6ea55cf7de2c:evaluation/task8b3_ref01_locked_reference_forensics_r6.json
+```
+
+Parse stdout as JSON.
 
 Require:
 
 ```text
 detector_calls = 4
-proposal_fields_compared exactly =
+```
+
+Require `proposal_fields_compared` is exactly the 10-field set:
+
+```text
 proposal_id
 source_tile_id
 confidence
@@ -222,16 +254,18 @@ bbox_extent_ratio
 raw_index
 ```
 
-For all four candidates require:
+For each of the four candidates require:
 
 ```text
 ten_field_all_match = true
 within_tolerance = true
 ```
 
-# 8. Canonical evidence contract
+Do NOT infer R6 PASS only from canonical evidence booleans.
 
-Read only:
+# 8. Canonical evidence read-only verification
+
+Read:
 
 ```text
 evaluation/task8b3_ref01_locked_reference_forensics.json
@@ -247,27 +281,19 @@ source_identity_basis = GIT_CANONICAL_BLOB_BYTES
 coverage_threshold = 0.50
 ```
 
-Require exact English disclosure:
+Require exact English disclosure per §5.
+
+Require external identity entries match §6.
+
+Require exactly four candidates:
 
 ```text
-The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
+right / left / above / below
 ```
 
-Require obsolete keys absent from the entire parsed object:
+# 9. Live P1D12 metadata verification
 
-```text
-manifest_declares_imageio_entry
-requirements_imageio_lines
-installed_modules
-r7_zero_call_guarantee
-r8_id_completion
-```
-
-Require external detector/imageio identities match §6.
-
-# 9. Live P1D12 metadata replay
-
-Read, read-only:
+Read these read-only files:
 
 ```text
 external\inference\output\diagnostics\1010\proposals.json
@@ -276,16 +302,18 @@ external\inference\output\diagnostics\1008\proposals.json
 external\inference\output\diagnostics\1009\proposals.json
 ```
 
-Require counts:
+Require expected counts:
 
 ```text
-1010 = raw6 / merged6 / eligible4
-1003 = raw66 / merged53 / eligible42
-1008 = raw9 / merged9 / eligible4
-1009 = raw7 / merged6 / eligible3
+1010 raw=6  merged=6  eligible=4
+1003 raw=66 merged=53 eligible=42
+1008 raw=9  merged=9  eligible=4
+1009 raw=7  merged=6  eligible=3
 ```
 
-Require every item contains:
+Require exact proposal ID set lengths = merged count.
+
+Every proposal must contain:
 
 ```text
 proposal_id
@@ -300,17 +328,9 @@ bbox_extent_ratio
 raw_index
 ```
 
-# 10. Replay selected / best eligible / best any
+# 10. Independent production selected replay
 
-Join canonical:
-
-```text
-historical_iou_by_proposal[relation]
-```
-
-to live P1D12 metadata by `proposal_id`.
-
-Frozen eligibility:
+Eligibility:
 
 ```text
 mask_area > 0
@@ -318,59 +338,120 @@ AND touches_image_border == false
 AND bbox_extent_ratio <= 0.20
 ```
 
-Production selected ordering:
+For each candidate:
 
 ```python
-(-mask_area, -confidence, proposal_id)
+eligible = ...
+selected = min(
+    eligible,
+    key=lambda p: (-mask_area, -confidence, proposal_id)
+)
 ```
 
-Best eligible / best any ordering:
+Require selected IDs:
+
+```text
+right=1
+left=14
+above=4
+below=1
+```
+
+This selected ID must be computed from LIVE P1D12 metadata, not copied from canonical evidence.
+
+# 11. Independent best_eligible / best_any replay
+
+Read canonical historical per-proposal IoU table:
+
+```text
+historical_iou_by_proposal[relation]
+```
+
+Require exact proposal ID set equality with live P1D12 metadata.
+
+Join by proposal_id.
+
+Rank:
 
 ```python
 (-iou_to_gt, -confidence, proposal_id)
 ```
 
-Require exact IDs:
+Require:
 
 ```text
-right: selected 1 / bestEligible 1 / bestAny 1
-left:  selected 14 / bestEligible 30 / bestAny 30
-above: selected 4 / bestEligible 4 / bestAny 5
-below: selected 1 / bestEligible 2 / bestAny 2
+right bestEligible=1 bestAny=1
+left  bestEligible=30 bestAny=30
+above bestEligible=4 bestAny=5
+below bestEligible=2 bestAny=2
 ```
 
-For each of all 12 proposal-role records, compare canonical evidence against live metadata for:
+# 12. Full 12-role fact comparison
+
+For each of 4 candidates and each role:
 
 ```text
-proposal_id
-confidence
-mask_area
-global_bbox
-eligible
+selected
+best_eligible
+best_any
 ```
 
-and compare IoU against historical IoU table within `1e-12`.
+Compare canonical evidence against independently replayed/live facts.
 
-Any mismatch = FAIL.
+Required exact:
+- proposal_id
+- mask_area
+- global_bbox
+- eligible
 
-# 11. Classification / aggregate replay
+Required tolerance <= 1e-12:
+- confidence
+- iou
 
-Using threshold 0.50 require:
+Total comparisons:
+
+```text
+4 candidates × 3 roles = 12 role records
+```
+
+Require:
+
+```text
+12/12 PASS
+```
+
+# 13. Classification replay
+
+Threshold = 0.50.
+
+Require exact:
 
 ```text
 right = REFERENCE_SELECTED_CORRECT
-left = REFERENCE_SELECTION_WRONG_COVERED
+left  = REFERENCE_SELECTION_WRONG_COVERED
 above = REFERENCE_ELIGIBILITY_BLOCKED
 below = REFERENCE_SELECTION_WRONG_COVERED
 ```
 
-Require canonical class counts:
+Require canonical evidence class values match.
+
+Require class counts exactly:
 
 ```text
 REFERENCE_SELECTED_CORRECT = 1
 REFERENCE_SELECTION_WRONG_COVERED = 2
 REFERENCE_ELIGIBILITY_BLOCKED = 1
 REFERENCE_COVERAGE_MISSING = 0
+```
+
+If canonical evidence omits explicit zero-count coverage key, treat missing as zero only for comparison; do not modify evidence.
+
+# 14. Aggregate replay
+
+Mechanically derive priority:
+
+```text
+coverage missing > eligibility blocked > selection wrong > all correct
 ```
 
 Require:
@@ -381,7 +462,7 @@ dominant_next_blocker = ELIGIBILITY
 next_gate = REF01_ELIGIBILITY_FORENSICS
 ```
 
-# 12. Static zero-inference gate
+# 15. Static zero-inference gate
 
 Run:
 
@@ -391,7 +472,7 @@ Run:
 
 Require PASS.
 
-Source-text require absent:
+Source text must NOT contain executable inference use:
 
 ```text
 DetectorRuntime(
@@ -400,26 +481,24 @@ model.predict(
 YOLO(
 ```
 
-Require present:
+Source MUST contain:
 
 ```text
 buildreasonseg.runtime.detector
 buildreasonseg.runtime.imageio
-source_manifest.json
-git show
+git
+show
+proposal_fields_compared
 proposals.json
+mask_area
 confidence
 border_clearance
-GIT_CANONICAL_BLOB_BYTES
+overall_outcome
+dominant_next_blocker
+next_gate
 ```
 
-Require:
-
-```text
-NO_INFERENCE_STATIC_GATE = PASS
-```
-
-# 13. Execute verifier exactly once
+# 16. Execute verifier exactly once
 
 Run:
 
@@ -429,69 +508,70 @@ Run:
 
 Require exit 0.
 
-Required stdout summary:
+Required stdout terminal lines:
 
 ```text
 SOURCE_IDENTITY: PASS
-R6_TEN_FIELD_HISTORY: PASS
-P1D12_METADATA: PASS
-ROLE_REPLAY: PASS
+MODULE_PATH_IDENTITY: PASS
+R6_HISTORY: PASS
+P1D12_COUNTS: PASS
+SELECTED_REPLAY: PASS
+BEST_ROLE_REPLAY: PASS
+ROLE_FACTS_12_OF_12: PASS
 CLASSIFICATION_REPLAY: PASS
+AGGREGATE_REPLAY: PASS
 FINAL_VERIFIER: PASS
+detector_or_model_calls = 0
+canonical_evidence_modified = false
 ```
 
-No second run unless process never started.
+No retry after a logic/data failure.
 
-# 14. Report
+# 17. Report update
 
-Update:
+Update only:
 
 ```text
 docs/task8b3_ref01_locked_reference_forensics.md
 ```
 
-Append R10 section only.
+Append R11 section stating:
+- R10 was safe but verifier-incomplete;
+- R11 is a zero-call independent verifier;
+- exact module paths verified;
+- historical R6 loaded from Git history;
+- selected IDs replayed from production ordering;
+- 12/12 role facts independently matched;
+- classification and aggregate replay PASS;
+- canonical evidence unchanged.
 
-State:
-
-```text
-R9 canonical evidence is unchanged.
-R10 independently verifies the R9 evidence from:
-- Git-canonical manifests and external files;
-- historical R6 evidence via git show;
-- live P1D12 proposals.json metadata;
-- historical R4 per-proposal IoU table.
-
-R10 detector/model calls = 0.
-FINAL_VERIFIER = PASS.
-```
-
-# 15. FROM_DSH
+# 18. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required:
 
 ```text
-Task: 8B.3-REF01-F1-R10
+Task: 8B.3-REF01-F1-R11
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-ref01-reference-forensics
-Starting HEAD: 367144990e510aaacbae2b545a08d99aff91776a
+Starting HEAD: 7d9492fa7628c4b4cc379a3c4ba976c3bd1fe228
 Detector/model calls this task: 0
+Canonical evidence modified: NO / YES
 PY_COMPILE_GATE: PASS / FAIL
 NO_INFERENCE_STATIC_GATE: PASS / FAIL
-Source identity verification: PASS / FAIL
-External detector module identity: PASS / FAIL
-External imageio module identity: PASS / FAIL
-Historical R6 ten-field verification: PASS / FAIL
-Live P1D12 metadata verification: 4/4 PASS / other
+Source manifest identity: PASS / FAIL
+External detector module __file__: PASS / FAIL
+External imageio module __file__: PASS / FAIL
+Historical R6 git-show verification: 4/4 PASS / other
+P1D12 counts: 4/4 PASS / other
 Selected replay right/left/above/below: 1/14/4/1 / other
 Best eligible replay right/left/above/below: 1/30/4/2 / other
 Best any replay right/left/above/below: 1/30/5/2 / other
-12 role-record fact comparisons: PASS / FAIL
+Role fact comparisons: 12/12 PASS / other
 Classification replay: 4/4 PASS / other
-Aggregate outcome replay: PASS / FAIL
-Canonical evidence modified this task: NO / YES
+Aggregate replay: PASS / FAIL
+Exact disclosure equality: PASS / FAIL
 Temporary _r5/_r6 files remaining: NO / YES
 FINAL_VERIFIER: PASS / FAIL
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
@@ -503,18 +583,18 @@ External/canonical product files modified: NO / NO
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-# 16. Commit / push
+# 19. Commit / push
 
 If COMPLETE:
 
 ```text
-docs(rc1): verify final reference evidence
+docs(rc1): independently verify reference closure
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record final reference verifier stop
+docs(rc1): record strict reference verifier stop
 ```
 
 Push only current branch.
@@ -523,20 +603,23 @@ Do not update main.
 
 Then STOP.
 
-# 17. COMPLETE definition
+# 20. COMPLETE definition
 
 COMPLETE only if:
 - exact branch/head;
-- only four allowed tracked paths changed;
+- only four allowed tracked files changed;
 - detector/model calls = 0;
-- verifier contains no inference path;
-- source identities verified independently;
-- historical R6 ten-field evidence verified independently;
-- live P1D12 metadata read 4/4;
-- selected/bestEligible/bestAny all independently replayed with exact frozen ranking;
-- all 12 role-record facts match canonical evidence;
-- classifications and aggregate outcome replay;
 - canonical evidence unchanged;
+- source manifest identities independently verified;
+- module __file__ identities independently verified;
+- R6 JSON independently loaded via git show and verified;
+- P1D12 counts independently verified;
+- selected IDs independently replayed from production ordering;
+- best eligible / best any independently replayed with full frozen tie-break;
+- all 12 role records matched field-by-field;
+- exact disclosure equality PASS;
+- classification replay PASS;
+- aggregate outcome replay PASS;
 - temporary evidence files absent;
 - report/handoff committed and pushed;
 - NEXT not executed;

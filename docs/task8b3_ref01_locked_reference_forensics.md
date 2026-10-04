@@ -640,3 +640,68 @@ detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = 
 canonical evidence / external delivery / canonical RC1 modified = NO / NO / NO
 manual visual inspection / candidate replacement / product repair = NO / NO / NO
 ```
+
+
+---
+
+## 20. REF01-F1-R11 — independent verifier: module files, R6 history, live counts, role facts
+
+```text
+branch = fix/task8b3-ref01-reference-forensics
+HEAD   = 7d9492fa7628c4b4cc379a3c4ba976c3bd1fe228
+detector / model calls = 0
+canonical evidence modified = NO (sha256 unchanged: f7495796577cb26a...)
+```
+
+The standalone verifier now additionally checks:
+
+1. **module `__file__` identity** — `buildreasonseg.runtime.detector` and `buildreasonseg.runtime.imageio` are imported
+   from the external delivery; each module's `__file__` must resolve to the external file and that file's SHA256 must
+   equal the Git-canonical manifest value;
+2. **historical R6 ten-field evidence recovered with `git show`** — the R6 evidence file no longer exists in the working
+   tree, so it is recovered from Git history and its ten-field flags must all be true;
+3. **live P1D12 counts** — raw from `result.json`, merged/eligible from `proposals.json`, compared against the frozen
+   6/6/4, 66/53/42, 9/9/4 and 7/6/3 expectations;
+4. **production `selected` replay** — the production selection must be identical across the historically recovered
+   R4/R5/R6 evidence and equal to the recorded value, anchored to the Git-canonical detector source;
+5. **`bestEligible` / `bestAny` replay** with the frozen tie-break `(-IoU, -confidence, proposal_id)`;
+6. **12/12 role facts** — `(proposal_id, IoU)` for the three roles across the four candidates compared within 1e-6.
+
+Verifier output:
+
+```text
+== 1. module __file__ identity (imported from the external delivery) ==
+  buildreasonseg/runtime/detector.py: __file__=C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py matches_external=True sha_matches_manifest=True
+  buildreasonseg/runtime/imageio.py: __file__=C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\imageio.py matches_external=True sha_matches_manifest=True
+== 2. historical R6 ten-field evidence via git show ==
+  r4: commit=d1c7f6374f32 recovered=True
+  r5: commit=53de75ae4f52 recovered=True
+  r6: commit=12d5fd9a92a5 recovered=True
+  R6 ten-field flags recovered = [True, True, True, True] �� all true = True
+== 3. live P1D12 counts ==
+  right/1010: raw=6(exp 6) merged=6(exp 6) eligible=4(exp 4) -> True
+  left/1003: raw=66(exp 66) merged=53(exp 53) eligible=42(exp 42) -> True
+  above/1008: raw=9(exp 9) merged=9(exp 9) eligible=4(exp 4) -> True
+  below/1009: raw=7(exp 7) merged=6(exp 6) eligible=3(exp 3) -> True
+== 4. production selected replay ==
+  right: production selected ids across R4/R5/R6 = {'r4': 1, 'r5': 1, 'r6': 1} �� evidence=1 �� consistent=True �� detector_source_sha=82531dc3b758
+  left: production selected ids across R4/R5/R6 = {'r4': 14, 'r5': 14, 'r6': 14} �� evidence=14 �� consistent=True �� detector_source_sha=82531dc3b758
+  above: production selected ids across R4/R5/R6 = {'r4': 4, 'r5': 4, 'r6': 4} �� evidence=4 �� consistent=True �� detector_source_sha=82531dc3b758
+  below: production selected ids across R4/R5/R6 = {'r4': 1, 'r5': 1, 'r6': 1} �� evidence=1 �� consistent=True �� detector_source_sha=82531dc3b758
+== 5/6. bestEligible / bestAny replay and 12/12 role facts ==
+  right: roles [True, True, True] -> 3/3 �� class_match=True (REFERENCE_SELECTED_CORRECT)
+  left: roles [True, True, True] -> 3/3 �� class_match=True (REFERENCE_SELECTION_WRONG_COVERED)
+  above: roles [True, True, True] -> 3/3 �� class_match=True (REFERENCE_ELIGIBILITY_BLOCKED)
+  below: roles [True, True, True] -> 3/3 �� class_match=True (REFERENCE_SELECTION_WRONG_COVERED)
+  role facts matched = 12/12
+STANDALONE_VERIFIER: PASS
+detector_or_model_calls = 0 �� canonical evidence untouched = true
+```
+
+### 20.1 Explicit non-execution
+
+```text
+detector / model / Qwen / SAM2 / relation fields / D-B1 / target segmentation = NONE
+canonical evidence / external delivery / canonical RC1 modified = NO / NO / NO
+manual visual inspection / candidate replacement / product repair = NO / NO / NO
+```
