@@ -17,30 +17,32 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-M1C Report
+# FROM_DSH — Task 8B.3-P1D1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-M1C` |
-| Status | **COMPLETE** (main integrated by fast-forward only) |
-| Branch integrated | `fix/task8b3-mem01-compact-proposals` |
-| Starting HEAD | `509ed5ea6c712da0d65d31c499fa40cec16e94cc` |
-| Pre-integration origin/main | `c45ecbec7fd293c454ccced22310db32c1542be4` |
-| merge-base | `c45ecbec7fd293c454ccced22310db32c1542be4` |
-| Ahead/behind before doc commit | 25/0 |
-| Ahead/behind after doc commit | 26/0 (re-proved before touching main) |
-| Integration method | `git merge --ff-only` on local `main` after `git reset --hard origin/main` (no rebase/squash/cherry-pick/merge commit/force push) |
-| Final origin/main | == origin/`fix/task8b3-mem01-compact-proposals` == INTEGRATION_TARGET (documentation commit HEAD) |
-| `RC1-DEMO-MEM-01` | CLOSED |
-| MEM gate verdict | MEM01_REAL_GATE_PASS |
-| External manifest / regression | 135/135 PASS · 116 passed (single invocation) |
-| Functional files modified | NONE |
-| pytest / check_setup / predict / Demo / model | NOT RUN |
+| Task | `8B.3-P1D1` |
+| Status | **COMPLETE** (read-only A2 zero-proposal forensics) |
+| Base | `main` @ `57b368d5647e842d8f31d6d1a9997bf1df3cc0fb` |
+| Branch | `fix/task8b3-prop01-a2-zero-proposals` |
+| A2 historical evidence | recovered: `raw=0`, `merged=0`, `tile_count=9`, `E401`, transcript contains exactly **1** `WARNING NMS time limit 2.050s exceeded` |
+| A2 input identity | 1024×1024 RGB, sha256 `10286b1e…` = frozen hash |
+| Frozen detector config | TILE_SIZE 512 / overlap 128 / stride 384 / IMGSZ 640 / CONF 0.05 / MAX_DET 300 / DUPLICATE_IOU 0.50 |
+| Wrapper drop path | none — every returned mask is appended; empty only when ultralytics reports zero boxes |
+| Ultralytics NMS semantics | `output[xi] = x[i]` before the time check; `break` leaves only the batch loop → with batch size 1 the tile's detections are returned (warning is a ~50 ms-budget timing symptom) |
+| Cross-case | A1 133/52 · **A2 0/0** · A3 7/6 · A4 216/77 (identical frozen settings) |
+| Primary conclusion | **PROP01_MODEL_ZERO_DETECTION_SUSPECT** |
+| Recommended next gate (not executed) | **CONTROLLED_A2_INSPECT_PROPOSALS_RUN** |
+| pytest / check_setup / predict / model | NOT RUN |
+| detector.py / tests / manifest / external delivery | NOT modified |
 | PROP-01 / REF-01 / MASK-01 | UNCHANGED / UNCHANGED / UNCHANGED |
-| Report | `docs/task8b3_m1c_mem01_main_integration.md` |
-| Next action | Awaiting ChatGPT audit; PROP-01/REF-01/MASK-01 and Task 8B.4 / 8C not started. |
+| Report | `docs/task8b3_p1d1_a2_zero_proposal_forensics.md` |
+| Next action | Awaiting ChatGPT audit; do not execute the recommended gate without a new task book. |
 
-Watt was not needed for Task 8B.3-M1C (no downloads, no transfers).
+Watt was not needed for Task 8B.3-P1D1 (no downloads, no transfers).
+
+No inference, no test run and no functional change occurred; `RC1-DEMO-MEM-01` remains CLOSED on `main`, and Task 8B.4
+/ Task 8C were not entered.
