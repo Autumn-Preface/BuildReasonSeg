@@ -1,32 +1,18 @@
-# TO_DSH — Task 8B.3-P1D11B-R1: Controlled External Git-Canonical Migration and Policy Sync
+# TO_DSH — Task 8B.3-P1D11B-R2: Execute the Authorized External Git-Canonical Migration
 
 > Status: ACTIVE
 > Role boundary: ChatGPT decides; DSH executes only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Branch: `fix/task8b3-prop01-a2-zero-proposals`
-> Required starting HEAD: `894163a082e332de377bab8635e4257bfb956326`
+> Required starting HEAD: `1f5641a0c0a1f43956f55da8f6a28262d52ee574`
 > Canonical RC1: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
 # 0. ChatGPT audit decision
 
-P1D11S1-R3 is approved as the sync-helper implementation.
+P1D11B-R1 STOP is accepted.
 
-Frozen helper evidence:
-
-```text
-STATIC_PATCH_GATE = PASS
-PATCH_DIFF_GATE = PASS
-dedicated pytest = 28 passed
-helper source basis = GIT_CANONICAL_BLOB_BYTES
-legacy no-basis behavior = preserved
-manifest identity mismatch blocks write = tested
-unsupported basis = tested
-canonical RC1 modified by helper task = NO
-external RC1 modified by helper task = NO
-```
-
-The R3 task itself STOPPED because the real external read-only check was:
+R1 satisfied the task-book pre-sync gate:
 
 ```text
 checked = 135
@@ -35,137 +21,7 @@ missing = 0
 mismatch = 38
 ```
 
-ChatGPT independently compared those 38 mismatch paths with the exact 38 identities normalized in P1D11M1.
-
-They match exactly.
-
-Therefore:
-
-```text
-97/38 is the EXPECTED pre-migration state.
-
-The 38 mismatches are not new source drift.
-They are the external delivery's historical CRLF-era copies of the exact 38 entries
-whose manifest identities were migrated from working-tree bytes to Git-canonical bytes.
-
-No further sync-helper redesign is authorized.
-```
-
-This task performs the one-time controlled migration of all 135 manifest-listed external source/config files to the
-now-authoritative Git-canonical bytes, while also transferring the already-approved README/model-card policy updates.
-
-No model inference or locked Demo candidate execution is allowed.
-
-# 1. Git gate
-
-Require exactly:
-
-```text
-branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD = 894163a082e332de377bab8635e4257bfb956326
-```
-
-Allowed initial tracked tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
-
-No reset/rebase/stash/clean/merge.
-
-# 2. Strict prohibitions
-
-Do NOT:
-- modify canonical RC1 content;
-- modify canonical `source_manifest.json`;
-- modify sync-helper code/tests;
-- modify model weights/checkpoints;
-- delete any external file or directory;
-- modify unlisted external runtime/user content;
-- run pytest;
-- run `predict.py`;
-- run detector/Qwen/SAM2/D-B1 inference;
-- run/copy/inspect the four locked Demo candidates;
-- modify or replace A1/A2/A3/A4/B1/B2;
-- change thresholds/models/tiling/merge/reference policies;
-- fix REF-01 or MASK-01;
-- enter Task 8B.4 / 8C;
-- update main;
-- force push.
-
-`check_setup.py` is authorized before and after sync.
-
-# 3. Allowed repository changes
-
-Only:
-
-```text
-docs/task8b3_p1d11b_r1_external_git_identity_migration.md
-docs/task8b3_p1d11b_supported_domain_policy_external_sync.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
-```
-
-The external RC1 delivery is intentionally modified only through the controlled sync defined below.
-
-# 4. Canonical integrity preflight
-
-Read:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-```
-
-Require:
-
-```text
-schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
-identity_basis = GIT_CANONICAL_BLOB_BYTES
-entry count = 135
-```
-
-For all 135 entries, verify manifest identity against exact Git HEAD canonical bytes:
-
-```text
-git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<path>
-```
-
-Require:
-
-```text
-canonical Git identity = 135/135 PASS
-missing paths = 0
-duplicate paths = 0
-```
-
-Also compute and record the SHA256 of the exact Git blob bytes for:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-```
-
-If any canonical gate fails:
-- do not write external;
-- STOP.
-
-# 5. Reproduce and classify the pre-sync external state
-
-Run exactly once:
-
-```text
-python scripts/sync_advisor_rc1_delivery.py ^
-  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
-  --check
-```
-
-Require exactly:
-
-```text
-checked = 135
-match = 97
-missing = 0
-mismatch = 38
-```
-
-The exact 38 mismatch paths MUST equal the P1D11M1 normalized-entry set below, with no extra and no missing path:
+ChatGPT independently verified that the 38 mismatches are exactly the P1D11M1 normalized-entry set:
 
 ```text
 README.md
@@ -208,18 +64,154 @@ tests/test_setup_checker.py
 tests/test_task8b1_fallback_ux.py
 ```
 
-Classify:
+The four paths below are NOT mismatches and MUST NOT be added to the migration gate:
 
 ```text
-PRE_SYNC_EXTERNAL_STATE =
-EXPECTED_GIT_IDENTITY_MIGRATION_38
+buildreasonseg/runtime/core.py
+buildreasonseg/runtime/detector.py
+buildreasonseg/runtime/outputs.py
+tests/test_task8b_runtime.py
 ```
 
-If counts or path set differ at all:
-- do not sync;
-- STOP.
+They already match Git-canonical bytes in external delivery.
 
-# 6. Pre-sync external setup readiness
+## Critical execution rule
+
+Do NOT invent any additional CRLF/worktree-derived gate.
+
+The only authorized pre-sync content gate is:
+
+```text
+97 match / 38 mismatch
+AND exact mismatch path set above
+```
+
+If that exact gate passes, proceed.
+
+# 1. Git gate
+
+Require exactly:
+
+```text
+branch = fix/task8b3-prop01-a2-zero-proposals
+HEAD = 1f5641a0c0a1f43956f55da8f6a28262d52ee574
+```
+
+Allowed initial tracked tree:
+- clean; or
+- only `M handoff/TO_DSH.md`.
+
+No reset/rebase/stash/clean/merge.
+
+# 2. Strict prohibitions
+
+Do NOT:
+- modify canonical RC1;
+- modify canonical source_manifest.json;
+- modify sync helper or its tests;
+- run pytest;
+- run predict.py;
+- run detector/Qwen/SAM2/D-B1 inference;
+- run/copy/inspect locked Demo candidates;
+- replace any locked candidate;
+- modify A1/A2/A3/A4/B1/B2;
+- change thresholds/models/tiling/merge/reference policy;
+- delete external files/directories;
+- modify model weights/checkpoints;
+- modify main;
+- force push;
+- add any extra pre-sync gate not explicitly written here.
+
+# 3. Allowed tracked repository changes
+
+Only:
+
+```text
+docs/task8b3_p1d11b_git_canonical_external_sync.md
+docs/task8b3_p1d11b_r2_external_git_identity_migration.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+External RC1 is intentionally modified by the controlled sync in this task.
+
+# 4. Canonical Git-identity preflight
+
+Require canonical manifest:
+
+```text
+schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
+identity_basis = GIT_CANONICAL_BLOB_BYTES
+entry count = 135
+```
+
+Verify every manifest entry against exact binary Git HEAD bytes:
+
+```text
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/<path>
+```
+
+Require:
+
+```text
+canonical Git identity = 135/135 PASS
+missing = 0
+duplicate paths = 0
+```
+
+Record exact SHA256 of:
+
+```text
+git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+Expected historical value from R1:
+
+```text
+c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604
+```
+
+If actual Git blob SHA differs from this historical value, do not assume failure solely from that.
+Require only that the value is recorded and the 135-entry Git-identity gate passes.
+
+# 5. Pre-sync helper gate — ONLY authorized mismatch gate
+
+Run exactly once:
+
+```text
+python scripts/sync_advisor_rc1_delivery.py ^
+  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 ^
+  --check
+```
+
+Require:
+
+```text
+checked = 135
+match = 97
+missing = 0
+mismatch = 38
+```
+
+Require exact mismatch path set = the 38 paths listed in §0.
+
+Do NOT compare this set against:
+- current working-tree CRLF-expanded paths;
+- all paths where worktree differs from Git;
+- any derived EOL set;
+- any other self-created set.
+
+If 97/38 and the exact §0 path set hold:
+
+```text
+PRE_SYNC_GATE = PASS
+```
+
+and proceed.
+
+Otherwise STOP.
+
+# 6. Pre-sync external setup
 
 Use:
 
@@ -227,7 +219,7 @@ Use:
 C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe
 ```
 
-From external RC1 root, run:
+From external RC1 root run exactly:
 
 ```text
 python check_setup.py
@@ -246,9 +238,9 @@ If not READY:
 
 No inference.
 
-# 7. Protected external state snapshot
+# 7. Protected external snapshot
 
-Before sync record exact existence, bytes and SHA256 for:
+Before sync record existence, bytes and SHA256 for:
 
 ```text
 model/buildreasonseg_advisor/decoder.pt
@@ -268,12 +260,12 @@ record:
 
 ```text
 exists
-regular file count
+recursive regular-file count
 sorted relative file names
 total bytes
 ```
 
-Also snapshot directory state for protected unlisted runtime/user locations:
+For protected user/runtime directories:
 
 ```text
 inference/input
@@ -283,25 +275,27 @@ runs
 datasets
 ```
 
-At minimum record:
-- exists;
-- recursive file count;
-- total bytes.
+record:
 
-Do not hash every runtime/user file unless already cheap.
-Do not modify them.
+```text
+exists
+recursive regular-file count
+total bytes
+```
 
-# 8. Controlled Git-canonical 135-file migration
+`qwen_integrity_cache.json`, if created/updated by `check_setup.py`, is generated cache state and is NOT a model-weight
+identity. Record it separately if it changes; do not confuse it with Qwen downloaded model files.
 
-Run the approved helper exactly once:
+# 8. Authorized one-time 135-file write sync
+
+Run exactly once:
 
 ```text
 python scripts/sync_advisor_rc1_delivery.py ^
   --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
 ```
 
-Because the real manifest basis is `GIT_CANONICAL_BLOB_BYTES`, the helper must source exact Git HEAD canonical blobs,
-not Windows working-tree CRLF bytes.
+No second attempt.
 
 Require:
 
@@ -312,11 +306,13 @@ failures = 0
 exit code = 0
 ```
 
-Do not rerun automatically if this fails.
+The helper is already approved to source Git HEAD canonical blob bytes for the real RC1 manifest.
 
-# 9. Synchronize source_manifest.json separately
+If sync fails:
+- STOP;
+- do not rerun automatically.
 
-`source_manifest.json` is intentionally not one of the 135 entries.
+# 9. Separate source_manifest.json synchronization
 
 After §8 succeeds, overwrite exactly:
 
@@ -324,27 +320,29 @@ After §8 succeeds, overwrite exactly:
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\source_manifest.json
 ```
 
-with the exact binary bytes from:
+with exact binary bytes from:
 
 ```text
 git show HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 ```
 
 Requirements:
-- binary capture/write;
-- no JSON regeneration;
-- no text-mode newline conversion;
-- no working-tree source.
+
+```text
+binary capture
+binary write
+no JSON regeneration
+no text newline conversion
+no working-tree source
+```
 
 Require:
 
 ```text
-external source_manifest SHA256
-==
-canonical Git source_manifest SHA256
+external source_manifest SHA256 == canonical Git source_manifest SHA256
 ```
 
-# 10. Post-sync helper integrity gate
+# 10. Post-sync helper gate
 
 Run exactly once:
 
@@ -370,9 +368,9 @@ Also require:
 external source_manifest Git SHA match = YES
 ```
 
-# 11. External policy spot-check
+# 11. External policy verification
 
-Read only:
+Read only external:
 
 ```text
 README.md
@@ -380,61 +378,71 @@ docs/model_card.md
 source_manifest.json
 ```
 
-Require README:
+Require README meaning:
+
+```text
+software input modality is distinguished from verified domain
+"正式输入域" is absent
+"已验证数据域与 Demo 边界" is present
+A2 provenance/domain = NOT ESTABLISHED
+A2 = persistent non-detection/stress case
+locked candidates = NOT YET RUN
+```
+
+Require model card meaning:
+
 ```text
 contains software-input-modality wording
-does NOT contain "正式输入域"
-contains "已验证数据域与 Demo 边界"
-A2 provenance/domain meaning = NOT ESTABLISHED
-locked candidates meaning = NOT YET RUN
-```
-
-Require model card:
-```text
-contains "软件输入模态"
 contains separate verified-domain wording
-A2 = persistent non-detection / provenance NOT ESTABLISHED
+A2 provenance/domain = NOT ESTABLISHED
 contains Demo policy
+locked candidates not claimed successful
 ```
 
-Require source manifest:
+Require external source manifest:
+
 ```text
 identity_basis = GIT_CANONICAL_BLOB_BYTES
 entry count = 135
 ```
 
-No candidate images may be inspected.
+Do not inspect candidate images.
 
-# 12. Protected-state post comparison
+# 12. Protected post-sync comparison
 
 Repeat §7 snapshot.
 
 Require:
 
 ```text
-protected model/component files unchanged = YES
-Qwen directory names/count/total bytes unchanged = YES
+decoder.pt unchanged = YES
+detector.pt unchanged = YES
+SAM2 checkpoint unchanged = YES
+SAM2 YAML unchanged = YES
+ProgramHead checkpoint unchanged = YES
+Qwen downloaded asset file names/count/total bytes unchanged = YES
 inference/input unchanged = YES
 inference/output unchanged = YES
-logs unchanged = YES
+logs unchanged except explicitly documented setup-generated log/cache behavior = YES
 runs unchanged = YES
 datasets unchanged = YES
 ```
 
-If anything protected changes unexpectedly:
-- STOP immediately;
-- record exact difference;
-- do not attempt ad-hoc repair.
+If a protected model/downloaded asset changed:
+- STOP;
+- no ad-hoc repair.
 
-# 13. Post-sync external setup readiness
+Generated `qwen_integrity_cache.json` may be recorded separately and does not by itself fail this gate.
 
-Run external:
+# 13. Post-sync external setup
+
+Run exactly:
 
 ```text
 python check_setup.py
 ```
 
-with the same environment Python.
+from external RC1 using the same environment Python.
 
 Require:
 
@@ -443,97 +451,81 @@ exit code = 0
 BuildReasonSeg environment: READY
 ```
 
-Do NOT run pytest or inference.
+Do not run pytest or inference.
 
-# 14. One-time migration interpretation
+# 14. Scientific/product state
 
-If all gates pass, record explicitly:
+If all gates pass, record:
 
 ```text
-The 38 pre-sync mismatches were the exact historical entries whose manifest identities
-were normalized from Windows working-tree bytes to Git-canonical blob bytes in P1D11M1.
-
-This task migrated the external copies of those source/config files to the same Git-canonical identity.
-No research/runtime algorithm was changed by the migration itself.
+external source/config identity = GIT_CANONICAL 135/135
+supported-domain policy external sync = COMPLETE
+A2 domain = NOT ESTABLISHED
+A2 = DOCUMENTED_PERSISTENT_NON_DETECTION
+locked candidates = FINAL_METADATA_LOCK
+locked candidate runtime status = NOT YET RUN
+PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
+REF-01 = OPEN
+MASK-01 = OPEN
+scientific freeze = PRESERVED
 ```
 
-Do NOT describe this as a detector/model fix.
+This task does NOT claim PROP-01 fixed.
 
 # 15. Outcome
 
 Choose exactly one.
 
-## A — `PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_COMPLETE`
-
-Require all gates pass.
-
-Freeze:
+If all gates pass:
 
 ```text
-external manifest-listed source/config = 135/135 Git-canonical match
-external source_manifest = Git-canonical match
-external supported-domain policy = SYNCHRONIZED
-protected external assets = UNCHANGED
-external setup = READY
-locked candidates = FINAL_METADATA_LOCK / NOT YET RUN
-PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
-```
-
-Next:
-
-```text
+Outcome = PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_COMPLETE
 NEXT = PROP01_LOCKED_DEMO_PROPOSAL_GATE
 ```
 
-Do not execute.
-
-## B — `PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_STOP`
-
-For any failed gate.
-
-Next:
+Otherwise:
 
 ```text
+Outcome = PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_STOP
 NEXT = PROP01_SUPPORTED_DOMAIN_POLICY_EXTERNAL_SYNC_RECOVERY
 ```
 
-Do not execute.
+Do not execute NEXT.
 
 # 16. Reports
 
 Create:
 
 ```text
-docs/task8b3_p1d11b_r1_external_git_identity_migration.md
+docs/task8b3_p1d11b_r2_external_git_identity_migration.md
 ```
 
-Also append a short R1 correction/result section to:
+Append a short R2 section to existing:
 
 ```text
-docs/task8b3_p1d11b_supported_domain_policy_external_sync.md
+docs/task8b3_p1d11b_git_canonical_external_sync.md
 ```
 
-The original P1D11B STOP history must remain.
+Preserve R1 STOP history.
 
 Required report facts:
 
 1. starting HEAD
-2. ChatGPT correction of the old 133/2 expectation
-3. 38-path equivalence with P1D11M1 normalized set
-4. canonical 135/135 Git identity
-5. pre-sync 97/38 exact gate
-6. pre-sync setup
-7. protected pre-snapshot
-8. one controlled 135-file migration result
-9. separate Git-canonical source_manifest write
-10. post-sync 135/135
-11. external policy spot-check
-12. protected post comparison
-13. post-sync setup
-14. pytest/inference/locked candidates = NOT RUN
-15. PROP-01 remains OPEN
-16. exact outcome
-17. exact next gate.
+2. R1 self-invented cross-check explicitly superseded
+3. canonical Git 135/135
+4. PRE_SYNC_GATE exact 97/38 + exact path-set PASS
+5. pre-sync setup
+6. protected pre-snapshot
+7. one write-sync invocation result
+8. separate source_manifest copy result
+9. post-sync 135/135
+10. external policy verification
+11. protected post comparison
+12. post-sync setup
+13. pytest/model/inference/locked candidates = NOT RUN
+14. PROP/REF/MASK states
+15. exact outcome
+16. exact NEXT.
 
 # 17. FROM_DSH
 
@@ -542,26 +534,27 @@ Preserve ARTIFACT-FACTS exactly.
 Required:
 
 ```text
-Task: 8B.3-P1D11B-R1
+Task: 8B.3-P1D11B-R2
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-prop01-a2-zero-proposals
-Starting HEAD: 894163a082e332de377bab8635e4257bfb956326
+Starting HEAD: 1f5641a0c0a1f43956f55da8f6a28262d52ee574
 Model/inference execution: NONE
 Pytest: NOT RUN
 Canonical RC1 modified: NO
 External delivery modified: YES — CONTROLLED GIT-CANONICAL MIGRATION/SYNC ONLY / NO
 Canonical Git manifest: 135/135 PASS / FAIL
-Canonical source_manifest Git SHA256: <sha>
-Pre-sync external check: 97/135; mismatch exact P1D11M1 normalized 38 / other
-Pre-sync mismatch-set classification: EXPECTED_GIT_IDENTITY_MIGRATION_38 / other
+Pre-sync helper gate: 97/135; exact authorized 38 mismatch paths / other
+Self-invented CRLF cross-check: NOT USED
 Pre-sync external setup: READY / NOT READY
+Protected pre-snapshot: RECORDED / NOT RECORDED
+Write sync invocations: 1 / other
 Manifest-listed files copied/verified: 135/135 / other
 External source_manifest Git SHA match: YES / NO / NOT RUN
 Post-sync external check: 135/135 PASS / FAIL / NOT RUN
 External README policy: VERIFIED / NOT VERIFIED
 External model-card policy: VERIFIED / NOT VERIFIED
 Protected model/component assets changed: NO / YES / NOT CHECKED
-Qwen asset directory changed: NO / YES / NOT CHECKED
+Qwen downloaded asset directory changed: NO / YES / NOT CHECKED
 Protected runtime/user dirs changed: NO / YES / NOT CHECKED
 Post-sync external setup: READY / NOT READY / NOT RUN
 A2 domain classification: NOT ESTABLISHED
@@ -571,9 +564,10 @@ Locked candidate runtime status: NOT YET RUN
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
 REF-01 status: OPEN
 MASK-01 status: OPEN
+Scientific freeze preserved: YES / NO
 Outcome: <exact enum>
 Next gate: <exact enum>
-Report: docs/task8b3_p1d11b_r1_external_git_identity_migration.md
+Report: docs/task8b3_p1d11b_r2_external_git_identity_migration.md
 Next action: Awaiting ChatGPT audit; do not run locked candidates.
 ```
 
@@ -582,16 +576,16 @@ Next action: Awaiting ChatGPT audit; do not run locked candidates.
 If COMPLETE:
 
 ```text
-docs(rc1): record git canonical external policy sync
+docs(rc1): record completed external git identity sync
 ```
 
 If STOP/FAILED:
 
 ```text
-docs(rc1): record external git identity migration stop
+docs(rc1): record external git identity sync stop
 ```
 
-Push current branch normally.
+Push normally.
 No force push.
 
 # 19. COMPLETE definition
@@ -599,16 +593,18 @@ No force push.
 COMPLETE only if:
 - exact starting HEAD;
 - no canonical RC1 modification;
-- pre-sync mismatch set is exactly the 38 P1D11M1-normalized paths;
+- exact authorized 97/38 pre-sync gate passes;
+- NO additional CRLF/worktree-derived gate is used;
 - pre-sync setup READY;
-- protected snapshot recorded;
-- exactly one controlled helper write sync succeeds 135/135;
-- source_manifest separately copied from Git canonical bytes;
+- protected pre-snapshot recorded;
+- exactly one helper write sync invocation;
+- copied/verified = 135/135;
+- source_manifest separately synchronized from Git blob bytes;
 - post-sync helper check = 135/135;
-- policy spot-check passes;
-- protected model/Qwen/runtime-user state unchanged;
+- external policy spot-check passes;
+- protected model/Qwen/runtime-user state preserved;
 - post-sync setup READY;
-- no pytest/model/inference/locked candidate execution;
+- no pytest/model/inference/locked candidate run;
 - PROP-01 remains OPEN;
 - next gate not executed;
 - report/handoff committed and pushed;

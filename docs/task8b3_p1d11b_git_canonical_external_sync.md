@@ -1,17 +1,17 @@
-# Task 8B.3-P1D11B-R1 — External Git-Canonical Migration (STOP before sync)
+# Task 8B.3-P1D11B-R2 — External Git-Canonical Migration + Policy Sync (executed)
 
 ## 1. Task and scope
 
-One controlled migration of the 135 external source/config files to Git canonical identity. The pre-sync helper gate
-was measured; the migration itself was **not** executed because an additional cross-check in my runner did not hold,
-so the runner aborted before any write.
+One controlled migration of all 135 manifest-listed external source/config files to Git canonical identity, plus the
+separate Git-canonical `source_manifest.json` write, executed strictly against the authorised pre-sync gate
+`checked 135 · match 97 · missing 0 · mismatch 38` with **no additional CRLF-derived gate**. No pytest, no model
+inference, no locked-candidate run.
 
 ```text
 branch = fix/task8b3-prop01-a2-zero-proposals
-HEAD   = 894163a082e332de377bab8635e4257bfb956326
-helper invocations: 1 check (pre) · 0 sync · 0 check (post)
-setup checker: 0 (pre) · 0 (post)
-external delivery written: NO
+HEAD   = 1f5641a0c0a1f43956f55da8f6a28262d52ee574
+helper invocations: 1 check (pre) · 1 sync · 1 check (post)
+setup checker: 1 (pre) · 1 (post)
 ```
 
 ## 2. Canonical Git identity gate
@@ -21,35 +21,18 @@ entries = 135 · identity mismatches = none
 canonical source_manifest Git SHA256 = c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604
 ```
 
-## 3. Measured pre-sync helper gate
+## 3. Pre-sync external check (authorised gate)
 
 ```text
-checked = 135 · match = 97 · missing = 0 · mismatch = 38   (exactly the task book's expected gate)
-first mismatch list entries: README.md, buildreasonseg/runtime/_frozen/PORT_PROVENANCE.md, …
+exit = 1 · counts = {"checked": 135, "match": 97, "missing": 0, "mismatch": 38}
+expected exactly: checked 135 · match 97 · missing 0 · mismatch 38  → SATISFIED
 ```
 
-This matches the task book's §5 expectation (`97/38`) and the mismatch list begins with `README.md` as specified.
+Measured pre-sync mismatch paths (recorded, not used as an extra gate):
 
-## 4. Why the runner stopped
-
-My runner added an **extra, self-invented** cross-check that the helper's 38 mismatches must equal *every* path whose
-Git canonical bytes differ from the canonical working-tree bytes. The derived sets are:
-
-```text
-CRLF-expanded canonical paths              = 40
-external files already equal to Git bytes  = 97
-derived helper-mismatch set                = 36
-CRLF-expanded but already matching external = ['buildreasonseg/runtime/core.py', 'buildreasonseg/runtime/detector.py', 'buildreasonseg/runtime/outputs.py', 'tests/test_task8b_runtime.py']
-```
-
-so 4 path(s) are CRLF-expanded in the canonical working tree yet already hold Git
-canonical bytes in the external delivery. The helper's own gate (97/38) is unaffected; only my extra equality
-assertion failed, and the runner correctly refused to write anything.
-
-## 5. Derived 38-path mismatch set
-
-| path |
+| pre-sync mismatch path |
 |---|
+| `README.md` |
 | `buildreasonseg/runtime/_frozen/PORT_PROVENANCE.md` |
 | `buildreasonseg/runtime/_frozen/__init__.py` |
 | `buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py` |
@@ -74,6 +57,7 @@ assertion failed, and the runner correctly refused to write anything.
 | `buildreasonseg/runtime/pipeline.py` |
 | `check_setup.py` |
 | `docs/command_grammar.md` |
+| `docs/model_card.md` |
 | `docs/runtime_mapping.md` |
 | `environment.yml` |
 | `model/buildreasonseg_advisor/metadata.json` |
@@ -87,32 +71,63 @@ assertion failed, and the runner correctly refused to write anything.
 | `tests/test_setup_checker.py` |
 | `tests/test_task8b1_fallback_ux.py` |
 
-CRLF-expanded but already matching externally:
-
-| path |
-|---|
-| `buildreasonseg/runtime/core.py` |
-| `buildreasonseg/runtime/detector.py` |
-| `buildreasonseg/runtime/outputs.py` |
-| `tests/test_task8b_runtime.py` |
-
-## 6. Not executed
+## 4. Pre-sync setup and protected asset snapshot
 
 ```text
-controlled 135-file helper sync          = NOT RUN
-external source_manifest write           = NOT RUN
-pre/post setup checker                   = NOT RUN
-pytest / model inference / locked runs   = NONE / NONE / NONE
-canonical RC1 written                    = NO
-external RC1 written                     = NO
+pre-sync setup: exit 0 · READY True · python C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe
 ```
 
-## 7. STOP reason and next step
+| protected asset | bytes |
+|---|---:|
+| `model/buildreasonseg_advisor/decoder.pt` | 1117495 |
+| `model/buildreasonseg_advisor/detector.pt` | 54480241 |
+| `model/components/sam2/sam2.1_hiera_base_plus.pt` | 323606802 |
+| `model/components/sam2/sam2.1_hiera_b+.yaml` | 3766 |
+| `model/components/program_head/program_parser_l3_rehearsal_v1.pt` | 70090713 |
 
-STOP reason: my runner's extra cross-check (CRLF-expansion set == helper mismatch set) failed, so the migration was not
-performed; the task book's own pre-sync gate (`97/38`, mismatch list starting with `README.md`) was nevertheless
-satisfied by the measurement.
+Qwen directory: exists=True · regular files=10 ·
+total bytes=4266640306
 
-Next step (needs a new task book): run the approved helper sync **once** using only the task book's gate (97/38), then
-write `source_manifest.json` from Git canonical bytes, then the post-sync check (expected 135/135) and the pre/post
-setup checks — all of which remain unexecuted.
+## 5. Controlled 135-file migration
+
+```text
+exit = 0 · counts = {"copied": 135, "verified": 135, "failures": 0}
+expected: copied 135 · verified 135 · failures 0  → SATISFIED
+```
+
+## 6. Separate Git-canonical source_manifest write
+
+```text
+external SHA256 = c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604
+canonical Git SHA256 = c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604
+match = YES
+```
+
+## 7. Post-sync external check
+
+```text
+exit = 0 · counts = {"checked": 135, "match": 135, "missing": 0, "mismatch": 0} → 135/135 PASS
+```
+
+## 8. Protected assets and post-sync setup
+
+```text
+protected files changed = NONE
+Qwen directory changed  = False
+runtime/user dirs changed = NONE
+post-sync setup: exit 0 · READY True
+```
+
+## 9. Unchanged by this task
+
+```text
+canonical RC1 source/config (read-only Git blob access) = UNCHANGED
+pytest / model inference / locked-candidate runs        = NONE / NONE / NONE
+frozen metrics / architecture / locked candidates       = UNCHANGED
+PROP-01 status                                          = OPEN (not closed)
+```
+
+## 10. Next step (not executed)
+
+The external delivery now carries Git canonical identity for all 135 manifest-listed files and its control manifest.
+Evaluating the four locked v0.2 TEST qualitative candidates requires a separate authorised task.
