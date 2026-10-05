@@ -270,6 +270,70 @@ def test_select_reference_tie_break() -> None:
     assert selected.mask_area == int(first.sum())
 
 
+def _reference_rect(height: int, width: int, confidence: float, proposal_id: int,
+                    *, top: int = 100, left: int = 100) -> GlobalProposal:
+    mask = np.zeros((512, 512), dtype=bool)
+    mask[top:top + height, left:left + width] = True
+    return _proposal(mask, confidence, f"r{proposal_id}", proposal_id, proposal_id,
+                     proposal_id=proposal_id)
+
+
+def test_largest_extent_dominance_exception_selects_strictly_dominant_candidate() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    dominant = _reference_rect(120, 120, 0.61, 2, top=250, left=250)
+    assert eligible(baseline, family="largest") is True
+    assert eligible(dominant, family="largest") is False
+    assert detector.eligible_proposals([baseline, dominant], family="largest") == [baseline]
+    assert select_reference([baseline, dominant], family="largest") is dominant
+
+
+def test_largest_extent_exception_rejects_lower_confidence_candidate() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    candidate = _reference_rect(120, 120, 0.59, 2, top=250, left=250)
+    assert select_reference([baseline, candidate], family="largest") is baseline
+
+
+def test_largest_extent_exception_requires_strict_confidence_gain() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    candidate = _reference_rect(120, 120, 0.60, 2, top=250, left=250)
+    assert select_reference([baseline, candidate], family="largest") is baseline
+
+
+def test_largest_extent_exception_requires_strict_area_gain() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    same_area = _reference_rect(40, 160, 0.95, 2, top=250, left=250)
+    assert baseline.mask_area == same_area.mask_area
+    assert eligible(same_area, family="largest") is False
+    assert select_reference([baseline, same_area], family="largest") is baseline
+
+
+def test_largest_extent_exception_never_admits_border_proposal() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    border = _reference_rect(120, 120, 0.95, 2, top=0, left=250)
+    assert border.touches_image_border is True
+    assert select_reference([baseline, border], family="largest") is baseline
+
+
+def test_largest_extent_exception_requires_frozen_baseline() -> None:
+    only_extent_violation = _reference_rect(120, 120, 0.95, 1)
+    assert eligible(only_extent_violation, family="largest") is False
+    assert select_reference([only_extent_violation], family="largest") is None
+
+
+def test_largest_extent_exception_keeps_production_area_order() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    exception_a = _reference_rect(120, 120, 0.70, 2, top=250, left=50)
+    exception_b = _reference_rect(130, 130, 0.61, 3, top=250, left=250)
+    assert select_reference([baseline, exception_a, exception_b], family="largest") is exception_b
+
+
+def test_largest_extent_exception_does_not_change_smallest_family() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    extent_violation = _reference_rect(120, 120, 0.95, 2, top=250, left=250)
+    assert eligible(extent_violation, family="smallest") is False
+    assert select_reference([baseline, extent_violation], family="smallest") is baseline
+
+
 # ---------------------------------------------------------------- reasoning context
 
 

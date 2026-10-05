@@ -1,71 +1,210 @@
-# TO_DSH — Task 8B.3-REF01-E3A-R4: Self-Extracting Zero-Discretion Canonical Implementation
+# TO_DSH — Task 8B.3-REF01-E3A-R5: Attachment-Driven Canonical Implementation
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
-> Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-eligibility-repair-impl`
-> Required starting HEAD: `11c30a236bc56905d8314928fca07ddeef5c4421`
+> Required starting HEAD: `34d1a263ac91ada6ef517fc54a99c19463e9ddd3`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
-> Repo-external temporary patcher: `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r4_apply.py`
+> Required attached patcher filename: `E3A_R5_apply_exact.py`
+> Required attached patcher SHA256: `1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f`
+> Fixed execution copy: `C:\D\DeepSeekHarness\E3A_R5_apply_exact.py`
 
-# 0. R3 AUDIT DISPOSITION
+# 0. R4 AUDIT DISPOSITION
 
-R3 product safety is accepted, but R3 is NOT an approved execution.
+R4 is a safe STOP but not an approved implementation.
 
-Accepted facts:
-- canonical detector/test were not modified;
-- external RC1 and source_manifest were not modified;
-- no detector/model inference was executed;
-- no manual product-code repair was attempted.
+Accepted:
+- exactly one final task commit;
+- no product source change;
+- no source_manifest/external sync;
+- no detector/model inference;
+- no intermediate commit/push.
 
-R3 execution defects:
-1. Base64 was manually parsed and the Markdown fence language token was accidentally consumed.
-2. R3 created an intermediate commit before the final STOP commit. R4 permits exactly one final task commit only.
+R4 failure:
+- DSH did not execute the required Python `-c` extraction command directly.
+- It materialised the command and attempted to launch it through a host shell, producing WinError 2.
+
+R5 removes all Markdown/code extraction. The executable patcher is a separate ChatGPT-provided attachment.
 
 # 1. EXECUTION CONTRACT
 
-Execute ONLY the numbered operations below.
+You receive TWO attachments:
+1. this taskbook;
+2. `E3A_R5_apply_exact.py`.
 
-Forbidden:
-- manual Base64 extraction;
-- alternate extraction command;
-- patcher compile/check gate;
-- intermediate commit or push;
-- manual detector/test edits;
-- patcher edits;
-- retries after patcher/test failure;
-- source_manifest update;
-- external sync;
-- detector/model inference;
-- NEXT.
+DSH MUST NOT recreate, transcribe, regenerate, reformat, or edit the patcher.
 
-Any required failure => STOP and proceed directly to §12.
+Allowed sequence only:
+1. verify Git branch/HEAD;
+2. locate the attached file `E3A_R5_apply_exact.py`;
+3. calculate SHA256 of the attached bytes;
+4. copy those exact bytes to `C:\D\DeepSeekHarness\E3A_R5_apply_exact.py`;
+5. calculate SHA256 of the copied file;
+6. execute copied patcher exactly once with REQUIRED_PYTHON;
+7. delete copied patcher after PASS;
+8. compile modified PRODUCT files only;
+9. run targeted pytest;
+10. run canonical full pytest;
+11. write evidence/report/FROM_DSH;
+12. make exactly one final commit;
+13. push exactly once;
+14. STOP.
 
-# 2. GIT / HISTORY GATE
+No other execution gate or method is permitted.
 
-Require:
+Any required step impossible or failing => STOP. No self-repair.
+
+# 2. GIT GATE
+
+Require exactly:
 
 ```text
 branch = fix/task8b3-ref01-eligibility-repair-impl
-HEAD = 11c30a236bc56905d8314928fca07ddeef5c4421
+HEAD = 34d1a263ac91ada6ef517fc54a99c19463e9ddd3
 ```
 
-Require repo path absent:
+Allowed initial repo status:
+- clean; or
+- only `M handoff/TO_DSH.md`.
 
+Require:
 ```text
 scripts/task8b3_ref01_eligibility_repair_patcher.py
 ```
+absent.
 
-Allowed initial status: clean or only `M handoff/TO_DSH.md`.
-
-Until §12:
+Before final commit:
 ```text
 NO git commit
 NO git push
 ```
 
-# 3. ALLOWED FINAL TRACKED DIFF
+# 3. PATCHER ATTACHMENT IDENTITY GATE
+
+Locate the attached file whose filename is exactly:
+
+```text
+E3A_R5_apply_exact.py
+```
+
+If DSH cannot access this attachment as raw bytes => STOP.
+
+Do NOT use taskbook text as a substitute.
+
+Attached-file SHA256 must be exactly:
+
+```text
+1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f
+```
+
+Mismatch => STOP.
+
+Copy attached bytes exactly to:
+
+```text
+C:\D\DeepSeekHarness\E3A_R5_apply_exact.py
+```
+
+Copied-file SHA256 must again equal:
+
+```text
+1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f
+```
+
+Mismatch => STOP.
+
+Prohibited:
+- no patcher py_compile;
+- no patcher edit;
+- no repo copy;
+- no alternate destination path.
+
+# 4. EXECUTE PATCHER EXACTLY ONCE
+
+Run exactly:
+
+```text
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3A_R5_apply_exact.py
+```
+
+Require exit 0 and:
+
+```text
+PATCHER_BRANCH_HEAD: PASS
+EXTERNAL_DETECTOR_IDENTITY: PASS
+DETECTOR_BOUNDARY_REPLACEMENT: PASS
+TEST_MARKER_INSERTION: PASS
+NEW_TEST_COUNT: 8
+PATCHER_RESULT: PASS
+```
+
+Failure => STOP; no retry.
+
+After PASS delete exactly:
+
+```text
+C:\D\DeepSeekHarness\E3A_R5_apply_exact.py
+```
+
+# 5. PRODUCT STATIC GATE
+
+Run only:
+
+```text
+<REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+<REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py
+```
+
+Require both exit 0.
+
+# 6. TARGETED TEST
+
+Run exactly once:
+
+```text
+<REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py -q
+```
+
+Require exit 0.
+
+Failure => STOP. No code/test edit.
+
+# 7. CANONICAL FULL TEST
+
+Only after targeted PASS:
+
+```text
+<REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests -q
+```
+
+Require exit 0.
+
+Failure => STOP.
+
+# 8. EXTERNAL / MANIFEST GATES
+
+Do NOT sync external RC1.
+
+Actual external detector SHA must remain:
+
+```text
+82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+```
+
+Canonical:
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+must remain unchanged.
+
+Record:
+```text
+manifest_status = INTENTIONALLY_STALE_PENDING_E3B
+detector_model_calls = 0
+```
+
+# 9. ALLOWED FINAL TRACKED DIFF
 
 Only:
 ```text
@@ -84,117 +223,18 @@ delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
 scripts/sync_advisor_rc1_delivery.py
 ```
 
-# 4. PATCHER PAYLOAD
+# 10. COMPLETE EVIDENCE
 
-There is exactly ONE line in this taskbook beginning with `PATCHER_BASE64=`.
-
-Do NOT manually copy, parse, or edit it.
-
-PATCHER_BASE64=ZnJvbSBfX2Z1dHVyZV9fIGltcG9ydCBhbm5vdGF0aW9ucwoKaW1wb3J0IGJhc2U2NAppbXBvcnQgaGFzaGxpYgppbXBvcnQgc3VicHJvY2VzcwppbXBvcnQgc3lzCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKUkVQTyA9IFBhdGgociJDOlxEXERlZXBTZWVrSGFybmVzc1x3b3Jrc3BhY2VccHJvamVjdFxCdWlsZFJlYXNvblNlZyIpCkVYVEVSTkFMID0gUGF0aChyIkM6XERcRGVlcFNlZWtIYXJuZXNzXGRlbGl2ZXJ5XEJ1aWxkUmVhc29uU2VnX0Fkdmlzb3JfUkMxIikKREVURUNUT1IgPSBSRVBPIC8gImRlbGl2ZXJ5X3NyYyIgLyAiQnVpbGRSZWFzb25TZWdfQWR2aXNvcl9SQzEiIC8gImJ1aWxkcmVhc29uc2VnIiAvICJydW50aW1lIiAvICJkZXRlY3Rvci5weSIKVEVTVCA9IFJFUE8gLyAiZGVsaXZlcnlfc3JjIiAvICJCdWlsZFJlYXNvblNlZ19BZHZpc29yX1JDMSIgLyAidGVzdHMiIC8gInRlc3RfdGFzazhiX3J1bnRpbWUucHkiCkVYVEVSTkFMX0RFVEVDVE9SID0gRVhURVJOQUwgLyAiYnVpbGRyZWFzb25zZWciIC8gInJ1bnRpbWUiIC8gImRldGVjdG9yLnB5IgoKRVhQRUNURURfQlJBTkNIID0gImZpeC90YXNrOGIzLXJlZjAxLWVsaWdpYmlsaXR5LXJlcGFpci1pbXBsIgpFWFBFQ1RFRF9IRUFEID0gIjExYzMwYTIzNmJjNTY5MDVkODMxNDkyOGZjYTA3ZGRlZWY1YzQ0MjEiCkVYUEVDVEVEX0VYVEVSTkFMX1NIQSA9ICI4MjUzMWRjM2I3NThjZDhhODY0Zjc3ZDBmYTk3ZTQxMzIxMTNjYjQ2ZWI1YTMzYTExZjQ4M2JmNTFiYzBhNzM4IgoKREVURUNUT1JfUkVQTEFDRU1FTlRfQjY0ID0gIlpHVm1JR1ZzYVdkcFlteGxYM0J5YjNCdmMyRnNjeWh3Y205d2IzTmhiSE02SUd4cGMzUmJSMnh2WW1Gc1VISnZjRzl6WVd4ZExDQXFMQ0JtWVcxcGJIazZJSE4wY2lBOUlDSnNZWEpuWlhOMElnb2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNrZ0xUNGdiR2x6ZEZ0SGJHOWlZV3hRY205d2IzTmhiRjA2Q2lBZ0lDQnlaWFIxY200Z1czQnliM0J2YzJGc0lHWnZjaUJ3Y205d2IzTmhiQ0JwYmlCd2NtOXdiM05oYkhNZ2FXWWdaV3hwWjJsaWJHVW9jSEp2Y0c5ellXd3NJR1poYldsc2VUMW1ZVzFwYkhrcFhRb0tDbVJsWmlCZmNtVm1aWEpsYm1ObFgzSmhibXNvY0hKdmNHOXpZV3c2SUVkc2IySmhiRkJ5YjNCdmMyRnNLU0F0UGlCMGRYQnNaVnRwYm5Rc0lHWnNiMkYwTENCcGJuUmRPZ29nSUNBZ2NtVjBkWEp1SUNndGNISnZjRzl6WVd3dWJXRnphMTloY21WaExDQXRjSEp2Y0c5ellXd3VZMjl1Wm1sa1pXNWpaU3dnY0hKdmNHOXpZV3d1Y0hKdmNHOXpZV3hmYVdRcENnb0taR1ZtSUY5c1lYSm5aWE4wWDNKbFptVnlaVzVqWlY5allXNWthV1JoZEdWelgzZHBkR2hmWlhoMFpXNTBYMlY0WTJWd2RHbHZiaWdLSUNBZ0lDQWdJQ0J3Y205d2IzTmhiSE02SUd4cGMzUmJSMnh2WW1Gc1VISnZjRzl6WVd4ZEtTQXRQaUJzYVhOMFcwZHNiMkpoYkZCeWIzQnZjMkZzWFRvS0lDQWdJQ0lpSWtaeWIzcGxiaUJpWVhObElHTmhibVJwWkdGMFpYTWdjR3gxY3lCMGFHVWdVa014SUd4aGNtZGxjM1F0YjI1c2VTQmxlSFJsYm5RdFpHOXRhVzVoYm1ObElHVjRZMlZ3ZEdsdmJpNGlJaUlLQ2lBZ0lDQmlZWE5sWDJOaGJtUnBaR0YwWlhNZ1BTQmxiR2xuYVdKc1pWOXdjbTl3YjNOaGJITW9jSEp2Y0c5ellXeHpMQ0JtWVcxcGJIazlJbXhoY21kbGMzUWlLUW9nSUNBZ2FXWWdibTkwSUdKaGMyVmZZMkZ1Wkdsa1lYUmxjem9LSUNBZ0lDQWdJQ0J5WlhSMWNtNGdXMTBLQ2lBZ0lDQmlZWE5sYkdsdVpTQTlJSE52Y25SbFpDaGlZWE5sWDJOaGJtUnBaR0YwWlhNc0lHdGxlVDFmY21WbVpYSmxibU5sWDNKaGJtc3BXekJkQ2lBZ0lDQmxlR05sY0hScGIyNXpJRDBnV3dvZ0lDQWdJQ0FnSUhCeWIzQnZjMkZzSUdadmNpQndjbTl3YjNOaGJDQnBiaUJ3Y205d2IzTmhiSE1LSUNBZ0lDQWdJQ0JwWmlCd2NtOXdiM05oYkM1dFlYTnJYMkZ5WldFZ1BpQXdDaUFnSUNBZ0lDQWdZVzVrSUhCeWIzQnZjMkZzTG0xaGMydGZZM0p2Y0M1aGJua29LUW9nSUNBZ0lDQWdJR0Z1WkNCdWIzUWdjSEp2Y0c5ellXd3VkRzkxWTJobGMxOXBiV0ZuWlY5aWIzSmtaWElLSUNBZ0lDQWdJQ0JoYm1RZ2NISnZjRzl6WVd3dVltSnZlRjlsZUhSbGJuUmZjbUYwYVc4Z1BpQk5SVkpIUlY5Q1FrOVlYMFZZVkVWT1ZGOVNRVlJKVDE5TlFWZ0tJQ0FnSUNBZ0lDQmhibVFnY0hKdmNHOXpZV3d1YldGemExOWhjbVZoSUQ0Z1ltRnpaV3hwYm1VdWJXRnphMTloY21WaENpQWdJQ0FnSUNBZ1lXNWtJSEJ5YjNCdmMyRnNMbU52Ym1acFpHVnVZMlVnUGlCaVlYTmxiR2x1WlM1amIyNW1hV1JsYm1ObENpQWdJQ0JkQ2lBZ0lDQnlaWFIxY200Z1ltRnpaVjlqWVc1a2FXUmhkR1Z6SUNzZ1pYaGpaWEIwYVc5dWN3b0tDbVJsWmlCelpXeGxZM1JmY21WbVpYSmxibU5sS0hCeWIzQnZjMkZzY3pvZ2JHbHpkRnRIYkc5aVlXeFFjbTl3YjNOaGJGMHNJQ29zSUdaaGJXbHNlVG9nYzNSeUlEMGdJbXhoY21kbGMzUWlLU0F0UGlCSGJHOWlZV3hRY205d2IzTmhiQ0I4SUU1dmJtVTZDaUFnSUNBaUlpSlRaV3hsWTNRZ1lTQnlaV1psY21WdVkyVWdkMmwwYUNCMGFHVWdabkp2ZW1WdUlHSmhjMlVnY25Wc1pTQmhibVFnZEdobElHeGhjbWRsYzNRdGIyNXNlU0JTUXpFZ1pYaGpaWEIwYVc5dUxpSWlJZ29LSUNBZ0lHbG1JR1poYldsc2VTQTlQU0FpYkdGeVoyVnpkQ0k2Q2lBZ0lDQWdJQ0FnWTJGdVpHbGtZWFJsY3lBOUlGOXNZWEpuWlhOMFgzSmxabVZ5Wlc1alpWOWpZVzVrYVdSaGRHVnpYM2RwZEdoZlpYaDBaVzUwWDJWNFkyVndkR2x2Ymlod2NtOXdiM05oYkhNcENpQWdJQ0JsYkhObE9nb2dJQ0FnSUNBZ0lHTmhibVJwWkdGMFpYTWdQU0JsYkdsbmFXSnNaVjl3Y205d2IzTmhiSE1vY0hKdmNHOXpZV3h6TENCbVlXMXBiSGs5Wm1GdGFXeDVLUW9nSUNBZ2FXWWdibTkwSUdOaGJtUnBaR0YwWlhNNkNpQWdJQ0FnSUNBZ2NtVjBkWEp1SUU1dmJtVUtJQ0FnSUhKbGRIVnliaUJ6YjNKMFpXUW9ZMkZ1Wkdsa1lYUmxjeXdnYTJWNVBWOXlaV1psY21WdVkyVmZjbUZ1YXlsYk1GMEtDZ289IgpURVNUX0lOU0VSVF9CNjQgPSAiWkdWbUlGOXlaV1psY21WdVkyVmZjbVZqZENob1pXbG5hSFE2SUdsdWRDd2dkMmxrZEdnNklHbHVkQ3dnWTI5dVptbGtaVzVqWlRvZ1pteHZZWFFzSUhCeWIzQnZjMkZzWDJsa09pQnBiblFzQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0tpd2dkRzl3T2lCcGJuUWdQU0F4TURBc0lHeGxablE2SUdsdWRDQTlJREV3TUNrZ0xUNGdSMnh2WW1Gc1VISnZjRzl6WVd3NkNpQWdJQ0J0WVhOcklEMGdibkF1ZW1WeWIzTW9LRFV4TWl3Z05URXlLU3dnWkhSNWNHVTlZbTl2YkNrS0lDQWdJRzFoYzJ0YmRHOXdPblJ2Y0NBcklHaGxhV2RvZEN3Z2JHVm1kRHBzWldaMElDc2dkMmxrZEdoZElEMGdWSEoxWlFvZ0lDQWdjbVYwZFhKdUlGOXdjbTl3YjNOaGJDaHRZWE5yTENCamIyNW1hV1JsYm1ObExDQm1Jbko3Y0hKdmNHOXpZV3hmYVdSOUlpd2djSEp2Y0c5ellXeGZhV1FzSUhCeWIzQnZjMkZzWDJsa0xBb2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0J3Y205d2IzTmhiRjlwWkQxd2NtOXdiM05oYkY5cFpDa0tDZ3BrWldZZ2RHVnpkRjlzWVhKblpYTjBYMlY0ZEdWdWRGOWtiMjFwYm1GdVkyVmZaWGhqWlhCMGFXOXVYM05sYkdWamRITmZjM1J5YVdOMGJIbGZaRzl0YVc1aGJuUmZZMkZ1Wkdsa1lYUmxLQ2tnTFQ0Z1RtOXVaVG9LSUNBZ0lHSmhjMlZzYVc1bElEMGdYM0psWm1WeVpXNWpaVjl5WldOMEtEZ3dMQ0E0TUN3Z01DNDJNQ3dnTVNrS0lDQWdJR1J2YldsdVlXNTBJRDBnWDNKbFptVnlaVzVqWlY5eVpXTjBLREV5TUN3Z01USXdMQ0F3TGpZeExDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCbGJHbG5hV0pzWlNoaVlYTmxiR2x1WlN3Z1ptRnRhV3g1UFNKc1lYSm5aWE4wSWlrZ2FYTWdWSEoxWlFvZ0lDQWdZWE56WlhKMElHVnNhV2RwWW14bEtHUnZiV2x1WVc1MExDQm1ZVzFwYkhrOUlteGhjbWRsYzNRaUtTQnBjeUJHWVd4elpRb2dJQ0FnWVhOelpYSjBJR1JsZEdWamRHOXlMbVZzYVdkcFlteGxYM0J5YjNCdmMyRnNjeWhiWW1GelpXeHBibVVzSUdSdmJXbHVZVzUwWFN3Z1ptRnRhV3g1UFNKc1lYSm5aWE4wSWlrZ1BUMGdXMkpoYzJWc2FXNWxYUW9nSUNBZ1lYTnpaWEowSUhObGJHVmpkRjl5WldabGNtVnVZMlVvVzJKaGMyVnNhVzVsTENCa2IyMXBibUZ1ZEYwc0lHWmhiV2xzZVQwaWJHRnlaMlZ6ZENJcElHbHpJR1J2YldsdVlXNTBDZ29LWkdWbUlIUmxjM1JmYkdGeVoyVnpkRjlsZUhSbGJuUmZaWGhqWlhCMGFXOXVYM0psYW1WamRITmZiRzkzWlhKZlkyOXVabWxrWlc1alpWOWpZVzVrYVdSaGRHVW9LU0F0UGlCT2IyNWxPZ29nSUNBZ1ltRnpaV3hwYm1VZ1BTQmZjbVZtWlhKbGJtTmxYM0psWTNRb09EQXNJRGd3TENBd0xqWXdMQ0F4S1FvZ0lDQWdZMkZ1Wkdsa1lYUmxJRDBnWDNKbFptVnlaVzVqWlY5eVpXTjBLREV5TUN3Z01USXdMQ0F3TGpVNUxDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCelpXeGxZM1JmY21WbVpYSmxibU5sS0Z0aVlYTmxiR2x1WlN3Z1kyRnVaR2xrWVhSbFhTd2dabUZ0YVd4NVBTSnNZWEpuWlhOMElpa2dhWE1nWW1GelpXeHBibVVLQ2dwa1pXWWdkR1Z6ZEY5c1lYSm5aWE4wWDJWNGRHVnVkRjlsZUdObGNIUnBiMjVmY21WeGRXbHlaWE5mYzNSeWFXTjBYMk52Ym1acFpHVnVZMlZmWjJGcGJpZ3BJQzArSUU1dmJtVTZDaUFnSUNCaVlYTmxiR2x1WlNBOUlGOXlaV1psY21WdVkyVmZjbVZqZENnNE1Dd2dPREFzSURBdU5qQXNJREVwQ2lBZ0lDQmpZVzVrYVdSaGRHVWdQU0JmY21WbVpYSmxibU5sWDNKbFkzUW9NVEl3TENBeE1qQXNJREF1TmpBc0lESXNJSFJ2Y0QweU5UQXNJR3hsWm5ROU1qVXdLUW9nSUNBZ1lYTnpaWEowSUhObGJHVmpkRjl5WldabGNtVnVZMlVvVzJKaGMyVnNhVzVsTENCallXNWthV1JoZEdWZExDQm1ZVzFwYkhrOUlteGhjbWRsYzNRaUtTQnBjeUJpWVhObGJHbHVaUW9LQ21SbFppQjBaWE4wWDJ4aGNtZGxjM1JmWlhoMFpXNTBYMlY0WTJWd2RHbHZibDl5WlhGMWFYSmxjMTl6ZEhKcFkzUmZZWEpsWVY5bllXbHVLQ2tnTFQ0Z1RtOXVaVG9LSUNBZ0lHSmhjMlZzYVc1bElEMGdYM0psWm1WeVpXNWpaVjl5WldOMEtEZ3dMQ0E0TUN3Z01DNDJNQ3dnTVNrS0lDQWdJSE5oYldWZllYSmxZU0E5SUY5eVpXWmxjbVZ1WTJWZmNtVmpkQ2cwTUN3Z01UWXdMQ0F3TGprMUxDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCaVlYTmxiR2x1WlM1dFlYTnJYMkZ5WldFZ1BUMGdjMkZ0WlY5aGNtVmhMbTFoYzJ0ZllYSmxZUW9nSUNBZ1lYTnpaWEowSUdWc2FXZHBZbXhsS0hOaGJXVmZZWEpsWVN3Z1ptRnRhV3g1UFNKc1lYSm5aWE4wSWlrZ2FYTWdSbUZzYzJVS0lDQWdJR0Z6YzJWeWRDQnpaV3hsWTNSZmNtVm1aWEpsYm1ObEtGdGlZWE5sYkdsdVpTd2djMkZ0WlY5aGNtVmhYU3dnWm1GdGFXeDVQU0pzWVhKblpYTjBJaWtnYVhNZ1ltRnpaV3hwYm1VS0NncGtaV1lnZEdWemRGOXNZWEpuWlhOMFgyVjRkR1Z1ZEY5bGVHTmxjSFJwYjI1ZmJtVjJaWEpmWVdSdGFYUnpYMkp2Y21SbGNsOXdjbTl3YjNOaGJDZ3BJQzArSUU1dmJtVTZDaUFnSUNCaVlYTmxiR2x1WlNBOUlGOXlaV1psY21WdVkyVmZjbVZqZENnNE1Dd2dPREFzSURBdU5qQXNJREVwQ2lBZ0lDQmliM0prWlhJZ1BTQmZjbVZtWlhKbGJtTmxYM0psWTNRb01USXdMQ0F4TWpBc0lEQXVPVFVzSURJc0lIUnZjRDB3TENCc1pXWjBQVEkxTUNrS0lDQWdJR0Z6YzJWeWRDQmliM0prWlhJdWRHOTFZMmhsYzE5cGJXRm5aVjlpYjNKa1pYSWdhWE1nVkhKMVpRb2dJQ0FnWVhOelpYSjBJSE5sYkdWamRGOXlaV1psY21WdVkyVW9XMkpoYzJWc2FXNWxMQ0JpYjNKa1pYSmRMQ0JtWVcxcGJIazlJbXhoY21kbGMzUWlLU0JwY3lCaVlYTmxiR2x1WlFvS0NtUmxaaUIwWlhOMFgyeGhjbWRsYzNSZlpYaDBaVzUwWDJWNFkyVndkR2x2Ymw5eVpYRjFhWEpsYzE5bWNtOTZaVzVmWW1GelpXeHBibVVvS1NBdFBpQk9iMjVsT2dvZ0lDQWdiMjVzZVY5bGVIUmxiblJmZG1sdmJHRjBhVzl1SUQwZ1gzSmxabVZ5Wlc1alpWOXlaV04wS0RFeU1Dd2dNVEl3TENBd0xqazFMQ0F4S1FvZ0lDQWdZWE56WlhKMElHVnNhV2RwWW14bEtHOXViSGxmWlhoMFpXNTBYM1pwYjJ4aGRHbHZiaXdnWm1GdGFXeDVQU0pzWVhKblpYTjBJaWtnYVhNZ1JtRnNjMlVLSUNBZ0lHRnpjMlZ5ZENCelpXeGxZM1JmY21WbVpYSmxibU5sS0Z0dmJteDVYMlY0ZEdWdWRGOTJhVzlzWVhScGIyNWRMQ0JtWVcxcGJIazlJbXhoY21kbGMzUWlLU0JwY3lCT2IyNWxDZ29LWkdWbUlIUmxjM1JmYkdGeVoyVnpkRjlsZUhSbGJuUmZaWGhqWlhCMGFXOXVYMnRsWlhCelgzQnliMlIxWTNScGIyNWZZWEpsWVY5dmNtUmxjaWdwSUMwK0lFNXZibVU2Q2lBZ0lDQmlZWE5sYkdsdVpTQTlJRjl5WldabGNtVnVZMlZmY21WamRDZzRNQ3dnT0RBc0lEQXVOakFzSURFcENpQWdJQ0JsZUdObGNIUnBiMjVmWVNBOUlGOXlaV1psY21WdVkyVmZjbVZqZENneE1qQXNJREV5TUN3Z01DNDNNQ3dnTWl3Z2RHOXdQVEkxTUN3Z2JHVm1kRDAxTUNrS0lDQWdJR1Y0WTJWd2RHbHZibDlpSUQwZ1gzSmxabVZ5Wlc1alpWOXlaV04wS0RFek1Dd2dNVE13TENBd0xqWXhMQ0F6TENCMGIzQTlNalV3TENCc1pXWjBQVEkxTUNrS0lDQWdJR0Z6YzJWeWRDQnpaV3hsWTNSZmNtVm1aWEpsYm1ObEtGdGlZWE5sYkdsdVpTd2daWGhqWlhCMGFXOXVYMkVzSUdWNFkyVndkR2x2Ymw5aVhTd2dabUZ0YVd4NVBTSnNZWEpuWlhOMElpa2dhWE1nWlhoalpYQjBhVzl1WDJJS0NncGtaV1lnZEdWemRGOXNZWEpuWlhOMFgyVjRkR1Z1ZEY5bGVHTmxjSFJwYjI1ZlpHOWxjMTl1YjNSZlkyaGhibWRsWDNOdFlXeHNaWE4wWDJaaGJXbHNlU2dwSUMwK0lFNXZibVU2Q2lBZ0lDQmlZWE5sYkdsdVpTQTlJRjl5WldabGNtVnVZMlZmY21WamRDZzRNQ3dnT0RBc0lEQXVOakFzSURFcENpQWdJQ0JsZUhSbGJuUmZkbWx2YkdGMGFXOXVJRDBnWDNKbFptVnlaVzVqWlY5eVpXTjBLREV5TUN3Z01USXdMQ0F3TGprMUxDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCbGJHbG5hV0pzWlNobGVIUmxiblJmZG1sdmJHRjBhVzl1TENCbVlXMXBiSGs5SW5OdFlXeHNaWE4wSWlrZ2FYTWdSbUZzYzJVS0lDQWdJR0Z6YzJWeWRDQnpaV3hsWTNSZmNtVm1aWEpsYm1ObEtGdGlZWE5sYkdsdVpTd2daWGgwWlc1MFgzWnBiMnhoZEdsdmJsMHNJR1poYldsc2VUMGljMjFoYkd4bGMzUWlLU0JwY3lCaVlYTmxiR2x1WlFvS0NnPT0iCgpTVEFSVF9TRU5USU5FTCA9IGInZGVmIGVsaWdpYmxlX3Byb3Bvc2FscygnCkVORF9TRU5USU5FTCA9IGInZGVmIHByb3Bvc2FsX2J5X2lkKCcKVEVTVF9NQVJLRVIgPSBiJyMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSByZWFzb25pbmcgY29udGV4dCcKVEVTVF9TRU5USU5FTCA9IGInZGVmIHRlc3RfbGFyZ2VzdF9leHRlbnRfZG9taW5hbmNlX2V4Y2VwdGlvbl9zZWxlY3RzX3N0cmljdGx5X2RvbWluYW50X2NhbmRpZGF0ZScKCgpkZWYgc2hhMjU2KHBhdGg6IFBhdGgpIC0+IHN0cjoKICAgIGggPSBoYXNobGliLnNoYTI1NigpCiAgICB3aXRoIHBhdGgub3BlbigicmIiKSBhcyBoYW5kbGU6CiAgICAgICAgZm9yIGNodW5rIGluIGl0ZXIobGFtYmRhOiBoYW5kbGUucmVhZCgxIDw8IDIwKSwgYiIiKToKICAgICAgICAgICAgaC51cGRhdGUoY2h1bmspCiAgICByZXR1cm4gaC5oZXhkaWdlc3QoKQoKCmRlZiBnaXRfdGV4dCgqYXJnczogc3RyKSAtPiBzdHI6CiAgICByZXN1bHQgPSBzdWJwcm9jZXNzLnJ1bigKICAgICAgICBbImdpdCIsICItQyIsIHN0cihSRVBPKSwgKmFyZ3NdLAogICAgICAgIGNoZWNrPVRydWUsCiAgICAgICAgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSwKICAgICAgICB0ZXh0PVRydWUsCiAgICApCiAgICByZXR1cm4gcmVzdWx0LnN0ZG91dC5zdHJpcCgpCgoKZGVmIG5ld2xpbmUocmF3OiBieXRlcykgLT4gYnl0ZXM6CiAgICBjcmxmID0gcmF3LmNvdW50KGIiXHJcbiIpCiAgICBsZiA9IHJhdy5jb3VudChiIlxuIikKICAgIGlmIGNybGYgYW5kIGNybGYgPT0gbGY6CiAgICAgICAgcmV0dXJuIGIiXHJcbiIKICAgIGlmIG5vdCBjcmxmIGFuZCBsZjoKICAgICAgICByZXR1cm4gYiJcbiIKICAgIHJhaXNlIEFzc2VydGlvbkVycm9yKGYidW5zdXBwb3J0ZWQgbWl4ZWQgbmV3bGluZSBzdGF0ZTogQ1JMRj17Y3JsZn0sIExGPXtsZn0iKQoKCmRlZiBhZGFwdF9wYXlsb2FkKHBheWxvYWRfYjY0OiBzdHIsIG5sOiBieXRlcykgLT4gYnl0ZXM6CiAgICBwYXlsb2FkID0gYmFzZTY0LmI2NGRlY29kZShwYXlsb2FkX2I2NCkKICAgIGFzc2VydCBiIlxyIiBub3QgaW4gcGF5bG9hZAogICAgcmV0dXJuIHBheWxvYWQucmVwbGFjZShiIlxuIiwgbmwpCgoKZGVmIG1haW4oKSAtPiBpbnQ6CiAgICBhc3NlcnQgZ2l0X3RleHQoImJyYW5jaCIsICItLXNob3ctY3VycmVudCIpID09IEVYUEVDVEVEX0JSQU5DSAogICAgYXNzZXJ0IGdpdF90ZXh0KCJyZXYtcGFyc2UiLCAiSEVBRCIpID09IEVYUEVDVEVEX0hFQUQKICAgIGFzc2VydCBzaGEyNTYoRVhURVJOQUxfREVURUNUT1IpID09IEVYUEVDVEVEX0VYVEVSTkFMX1NIQQoKICAgIGRldGVjdG9yX3JhdyA9IERFVEVDVE9SLnJlYWRfYnl0ZXMoKQogICAgdGVzdF9yYXcgPSBURVNULnJlYWRfYnl0ZXMoKQogICAgZG5sID0gbmV3bGluZShkZXRlY3Rvcl9yYXcpCiAgICB0bmwgPSBuZXdsaW5lKHRlc3RfcmF3KQoKICAgIGFzc2VydCBkZXRlY3Rvcl9yYXcuY291bnQoU1RBUlRfU0VOVElORUwpID09IDEKICAgIGFzc2VydCBkZXRlY3Rvcl9yYXcuY291bnQoRU5EX1NFTlRJTkVMKSA9PSAxCiAgICBhc3NlcnQgZGV0ZWN0b3JfcmF3LmNvdW50KGInZGVmIHNlbGVjdF9yZWZlcmVuY2UoJykgPT0gMQogICAgYXNzZXJ0IGRldGVjdG9yX3Jhdy5jb3VudChiJ2RlZiBfcmVmZXJlbmNlX3JhbmsoJykgPT0gMAogICAgYXNzZXJ0IGRldGVjdG9yX3Jhdy5jb3VudChiJ2RlZiBfbGFyZ2VzdF9yZWZlcmVuY2VfY2FuZGlkYXRlc193aXRoX2V4dGVudF9leGNlcHRpb24oJykgPT0gMAoKICAgIHN0YXJ0ID0gZGV0ZWN0b3JfcmF3LmluZGV4KFNUQVJUX1NFTlRJTkVMKQogICAgZW5kID0gZGV0ZWN0b3JfcmF3LmluZGV4KEVORF9TRU5USU5FTCkKICAgIGFzc2VydCBzdGFydCA8IGVuZAogICAgb2xkX3NsaWNlID0gZGV0ZWN0b3JfcmF3W3N0YXJ0OmVuZF0KICAgIGFzc2VydCBiJ2NhbmRpZGF0ZXMgPSBlbGlnaWJsZV9wcm9wb3NhbHMocHJvcG9zYWxzLCBmYW1pbHk9ZmFtaWx5KScgaW4gb2xkX3NsaWNlCgogICAgZGV0ZWN0b3JfYWZ0ZXIgPSBkZXRlY3Rvcl9yYXdbOnN0YXJ0XSArIGFkYXB0X3BheWxvYWQoREVURUNUT1JfUkVQTEFDRU1FTlRfQjY0LCBkbmwpICsgZGV0ZWN0b3JfcmF3W2VuZDpdCgogICAgYXNzZXJ0IGRldGVjdG9yX2FmdGVyLmNvdW50KGInZGVmIF9yZWZlcmVuY2VfcmFuaygnKSA9PSAxCiAgICBhc3NlcnQgZGV0ZWN0b3JfYWZ0ZXIuY291bnQoYidkZWYgX2xhcmdlc3RfcmVmZXJlbmNlX2NhbmRpZGF0ZXNfd2l0aF9leHRlbnRfZXhjZXB0aW9uKCcpID09IDEKICAgIGFzc2VydCBkZXRlY3Rvcl9hZnRlci5jb3VudChiJ3Byb3Bvc2FsLm1hc2tfYXJlYSA+IGJhc2VsaW5lLm1hc2tfYXJlYScpID09IDEKICAgIGFzc2VydCBkZXRlY3Rvcl9hZnRlci5jb3VudChiJ3Byb3Bvc2FsLmNvbmZpZGVuY2UgPiBiYXNlbGluZS5jb25maWRlbmNlJykgPT0gMQoKICAgIGFzc2VydCB0ZXN0X3Jhdy5jb3VudChURVNUX01BUktFUikgPT0gMQogICAgYXNzZXJ0IHRlc3RfcmF3LmNvdW50KFRFU1RfU0VOVElORUwpID09IDAKICAgIG1hcmtlcl9wb3MgPSB0ZXN0X3Jhdy5pbmRleChURVNUX01BUktFUikKICAgIHRlc3RfYWZ0ZXIgPSB0ZXN0X3Jhd1s6bWFya2VyX3Bvc10gKyBhZGFwdF9wYXlsb2FkKFRFU1RfSU5TRVJUX0I2NCwgdG5sKSArIHRlc3RfcmF3W21hcmtlcl9wb3M6XQogICAgYXNzZXJ0IHRlc3RfYWZ0ZXIuY291bnQoYidkZWYgdGVzdF9sYXJnZXN0X2V4dGVudF8nKSA9PSA4CgogICAgREVURUNUT1Iud3JpdGVfYnl0ZXMoZGV0ZWN0b3JfYWZ0ZXIpCiAgICBURVNULndyaXRlX2J5dGVzKHRlc3RfYWZ0ZXIpCgogICAgcHJpbnQoIlBBVENIRVJfQlJBTkNIX0hFQUQ6IFBBU1MiKQogICAgcHJpbnQoIkVYVEVSTkFMX0RFVEVDVE9SX0lERU5USVRZOiBQQVNTIikKICAgIHByaW50KCJERVRFQ1RPUl9CT1VOREFSWV9SRVBMQUNFTUVOVDogUEFTUyIpCiAgICBwcmludCgiVEVTVF9NQVJLRVJfSU5TRVJUSU9OOiBQQVNTIikKICAgIHByaW50KCJORVdfVEVTVF9DT1VOVDogOCIpCiAgICBwcmludCgiUEFUQ0hFUl9SRVNVTFQ6IFBBU1MiKQogICAgcmV0dXJuIDAKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgc3lzLmV4aXQobWFpbigpKQo=
-
-# 5. GENERATE PATCHER — EXACT COMMAND ONLY
-
-Run exactly:
-
-```text
-<REQUIRED_PYTHON> -c "import base64,pathlib; src=pathlib.Path(r'C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\handoff\TO_DSH.md'); dst=pathlib.Path(r'C:\D\DeepSeekHarness\task8b3_ref01_e3a_r4_apply.py'); lines=[x for x in src.read_text(encoding='utf-8').splitlines() if x.startswith('PATCHER_BASE64=')]; assert len(lines)==1; dst.write_bytes(base64.b64decode(lines[0].split('=',1)[1], validate=True))"
-```
-
-Then hash the generated patcher.
-
-Required SHA256:
-```text
-3b2401f69ca71028165c2aa6529b5457c75ddc5a29654454c42e8ef79306be1a
-```
-
-Mismatch => STOP.
-
-Do NOT py_compile or edit the patcher.
-
-# 6. EXECUTE PATCHER EXACTLY ONCE
-
-Run exactly:
-```text
-<REQUIRED_PYTHON> C:\D\DeepSeekHarness\task8b3_ref01_e3a_r4_apply.py
-```
-
-Require exit 0 and:
-```text
-PATCHER_BRANCH_HEAD: PASS
-EXTERNAL_DETECTOR_IDENTITY: PASS
-DETECTOR_BOUNDARY_REPLACEMENT: PASS
-TEST_MARKER_INSERTION: PASS
-NEW_TEST_COUNT: 8
-PATCHER_RESULT: PASS
-```
-
-Failure => STOP, no retry.
-
-After PASS delete exactly:
-```text
-C:\D\DeepSeekHarness\task8b3_ref01_e3a_r4_apply.py
-```
-
-# 7. PRODUCT STATIC GATE
-
-Only after patcher PASS:
-
-```text
-<REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
-<REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py
-```
-
-Require both exit 0.
-
-No other compile command is authorized.
-
-# 8. TARGETED TEST
-
-Run exactly once:
-```text
-<REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py -q
-```
-
-Require exit 0. Failure => STOP, no repair.
-
-# 9. CANONICAL FULL TEST
-
-Only after targeted PASS:
-```text
-<REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests -q
-```
-
-Require exit 0. Failure => STOP.
-
-# 10. EXTERNAL / MANIFEST GATES
-
-Do NOT sync external RC1.
-
-Actual external detector SHA must remain:
-```text
-82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
-```
-
-`delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json` must be unchanged relative to `11c30a236bc56905d8314928fca07ddeef5c4421`.
-
-Record:
-```text
-manifest_status = INTENTIONALLY_STALE_PENDING_E3B
-detector_model_calls = 0
-```
-
-# 11. COMPLETE EVIDENCE / REPORT
-
-Only if §§5–10 PASS, write `evaluation/task8b3_ref01_eligibility_repair_impl.json` exactly:
+If all gates PASS, write exactly:
 
 ```json
 {
-  "task": "8B.3-REF01-E3A-R4",
-  "starting_head": "11c30a236bc56905d8314928fca07ddeef5c4421",
+  "task": "8B.3-REF01-E3A-R5",
+  "starting_head": "34d1a263ac91ada6ef517fc54a99c19463e9ddd3",
   "branch": "fix/task8b3-ref01-eligibility-repair-impl",
   "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
-  "patch_method": "SELF_EXTRACTED_BASE64_BOUNDARY_PATCHER",
-  "patcher_sha256": "3b2401f69ca71028165c2aa6529b5457c75ddc5a29654454c42e8ef79306be1a",
+  "patch_method": "ATTACHMENT_VERIFIED_BOUNDARY_PATCHER",
+  "patcher_sha256": "1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f",
   "detector_model_calls": 0,
   "eligible_function_changed": false,
   "eligible_proposals_function_changed": false,
@@ -216,24 +256,29 @@ Only if §§5–10 PASS, write `evaluation/task8b3_ref01_eligibility_repair_impl
 }
 ```
 
-Append authoritative E3A-R4 section to `docs/task8b3_ref01_eligibility_repair_impl.md`.
+# 11. REPORT / FROM_DSH
 
-For COMPLETE, it must state:
+Append authoritative R5 section to:
 ```text
-Task = 8B.3-REF01-E3A-R4
+docs/task8b3_ref01_eligibility_repair_impl.md
+```
+
+For COMPLETE require:
+```text
+Task = 8B.3-REF01-E3A-R5
 Status = COMPLETE
-Design selected by = ChatGPT
-DSH algorithm choice = NONE
-Patch method = SELF_EXTRACTED_BASE64_BOUNDARY_PATCHER
-Patcher SHA256 = 3b2401f69ca71028165c2aa6529b5457c75ddc5a29654454c42e8ef79306be1a
+Design selected by = CHATGPT
+DSH algorithm choice = NO
+Patch method = ATTACHMENT_VERIFIED_BOUNDARY_PATCHER
+Attached patcher SHA = 1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f
+Copied patcher SHA = 1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f
 Patcher runs = 1
-Patcher manual extraction = NO
 Patcher compile gate = NONE
 Detector/model calls = 0
 eligible() changed = NO
 eligible_proposals() changed = NO
-Largest-only exception implemented = YES
-Strict area/confidence operators = > / >
+Largest-only exception = YES
+Strict area/confidence = > / >
 Border bypass = NO
 No-baseline exception = NO
 Smallest family changed = NO
@@ -251,54 +296,44 @@ left/below reference-selection defects = UNRESOLVED
 final Demo inference = NOT RUN
 ```
 
-Preserve ARTIFACT-FACTS exactly in FROM_DSH.
+Preserve ARTIFACT-FACTS exactly.
 
-# 12. SINGLE FINAL STATUS / COMMIT / PUSH
+# 12. SINGLE FINAL COMMIT / PUSH GATE
 
-Before any task commit require:
+Before commit require:
 ```text
-git rev-list --count 11c30a236bc56905d8314928fca07ddeef5c4421..HEAD
+git rev-list --count 34d1a263ac91ada6ef517fc54a99c19463e9ddd3..HEAD
 = 0
 ```
 
-Inspect:
-```text
-git status --porcelain
-git diff --name-only 11c30a236bc56905d8314928fca07ddeef5c4421
-```
-
-COMPLETE only if all required gates passed, repo-external patcher is deleted, external detector unchanged, source_manifest unchanged, only six allowed tracked paths differ, and no untracked repo file exists.
+COMPLETE iff every required gate passed, copied patcher is deleted, external detector/source_manifest unchanged, and only six allowed tracked paths differ.
 
 If COMPLETE:
 ```text
 Status: COMPLETE
-commit message:
+commit:
 fix(rc1): implement largest extent dominance exception
 ```
 
-If any gate failed:
+Otherwise:
 ```text
 Status: STOP
-commit message:
+commit:
 fix(rc1): record extent dominance implementation stop
 ```
 
-Commit exactly ONCE.
+Commit exactly once.
 
 After commit require:
 ```text
-git rev-list --count 11c30a236bc56905d8314928fca07ddeef5c4421..HEAD
+git rev-list --count 34d1a263ac91ada6ef517fc54a99c19463e9ddd3..HEAD
 = 1
 ```
 
-Then push current branch exactly once.
+Push current branch exactly once.
 
 No force push.
 Do not update main.
 Do not execute NEXT.
 
 After push: STOP.
-
-# 13. COMPLETE DEFINITION
-
-COMPLETE requires every prescribed gate to pass and exactly one task commit after the starting HEAD.

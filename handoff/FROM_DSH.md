@@ -17,103 +17,39 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3A-R2 Report
+# FROM_DSH — Task 8B.3-REF01-E3A-R5 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E3A-R2` |
-| Status | **STOP** (prescribed patcher failed `py_compile`; no repair attempted) |
+| Task | `8B.3-REF01-E3A-R5` |
+| Status | **COMPLETE** |
 | Branch | `fix/task8b3-ref01-eligibility-repair-impl` |
-| Starting HEAD | `fc2a33325eacf6ce5f366d6574abed3694431f5b` |
-| Prescribed patcher SHA256 | `2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5` |
-| Verified patcher SHA256 | `2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5` (byte-identical to the published text) |
-| Patcher path / lines | `scripts\task8b3_ref01_eligibility_repair_patcher.py` / 223 |
-| py_compile | FAILED (SyntaxError at line 29) |
-| Patcher execution | NONE (compile gate) |
-| pytest | NOT RUN |
-| detector.py sha256 | `a6fa4bdd76db6f50...` (unchanged) |
+| Starting HEAD | `34d1a263ac91ada6ef517fc54a99c19463e9ddd3` |
+| Attachment | `handoff/E3A_R5_apply_exact.py` (10418 bytes) |
+| Prescribed / attachment SHA256 | `1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f` / `1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f` |
+| Copied verbatim to (outside repo) | `C:\D\DeepSeekHarness\E3A_R5_apply_exact.py` |
+| Destination SHA256 | `1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f` |
+| Patcher reconstructed from the task book | NO |
+| Patcher compile gate | NONE |
+| Patcher runs / exit | 1 / 0 |
+| detector.py before / after | `a6fa4bdd76db6f50` / `bc5aed885aa5f27b` |
+| Changed entries | ['??', 'M', 'delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py', 'delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py', 'handoff/E3A_R5_apply_exact.py', 'handoff/TO_DSH.md'] |
 | source_manifest updated (canonical / external) | NO / NO |
 | External RC1 synced | NO |
 | Detector / model inference | NONE |
-| Manual editing of detector or test files | NONE |
-| Self-repair | NONE |
-| Manual visual inspection / candidate replacement | NO / NO |
-| NEXT executed | NO |
-| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| Report | `docs\task8b3_ref01_eligibility_repair_impl.md` |
-| Next action | Awaiting ChatGPT audit — the published patcher text needs a compile-clean revision before it can be executed |
-
-Watt was not needed for Task 8B.3-REF01-E3A-R2 (no downloads, no transfers).
-
-The patcher was verified against its published SHA256 before use and never executed; no product code, manifest or
-external file was modified and no inference was performed.
-
-# FROM_DSH — Task 8B.3-REF01-E3A-R3 Report
-
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
-
-| item | value |
-|---|---|
-| Task | `8B.3-REF01-E3A-R3` |
-| Status | **STOP** (Base64 patcher SHA256 verification failed on my extraction; nothing executed) |
-| Branch | `fix/task8b3-ref01-eligibility-repair-impl` |
-| Starting HEAD | `9304b89e325ed2b0ecdbef4fd58790730d234c85` |
-| Step 1 R2 in-repo patcher deleted | YES (`scripts/task8b3_ref01_eligibility_repair_patcher.py`) |
-| Step 2 .b64 input named by the book | `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64` |
-| Step 2 apply target named by the book | `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py` |
-| My decoded bytes / sha256 | 10466 bytes / `44b826696fcb974e...` |
-| Prescribed SHA256 | `9d89c86fc914b1e00454870bbf974e6fedbbde43196d8c5be5588d7ab3c16648` |
-| Patcher runs | 0 |
-| Self-compile performed | NO (forbidden) |
-| detector.py sha256 | `a6fa4bdd76db6f50` (unchanged) |
-| source_manifest updated (canonical / external) | NO / NO |
-| External RC1 synced | NO |
-| Detector / model inference | NONE |
-| Manual editing of detector or tests | NONE |
-| Self-repair | NONE |
-| NEXT executed | NO |
-| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
-| Next action | Awaiting ChatGPT audit — the published payload needs to be delimited so the base64 text alone is captured |
-
-Watt was not needed for Task 8B.3-REF01-E3A-R3 (no downloads, no transfers).
-
-The R2 in-repo patcher was removed as instructed; no product code, manifest or external file was modified and no
-inference was executed.
-
-
-# FROM_DSH — Task 8B.3-REF01-E3A-R4 Report
-
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
-
-| item | value |
-|---|---|
-| Task | `8B.3-REF01-E3A-R4` |
-| Status | **STOP** (prescribed extraction command could not be launched; nothing executed) |
-| Branch | `fix/task8b3-ref01-eligibility_repair-impl` |
-| Starting HEAD | `11c30a236bc56905d8314928fca07ddeef5c4421` |
-| Prescribed extraction command | `handoff/TO_DSH.md` lines 100-... (language `text`, 410 chars, carries PATCHER_BASE64=) |
-| Manual base64 extraction | NONE |
-| Patcher compile gate added | NONE |
-| Patcher runs | 0 |
-| Patcher SHA256 verification | NOT REACHED |
-| Launch result | FileNotFoundError [WinError 2] — the host shell interpreter is not resolvable from the child process |
-| detector.py sha256 | `a6fa4bdd76db6f50` (unchanged) |
-| source_manifest updated (canonical / external) | NO / NO |
-| External RC1 synced | NO |
-| Detector / model inference | NONE |
-| Manual editing of detector or tests | NONE |
+| Manual code modification | NONE |
 | Retry / self-repair | NONE |
 | Intermediate commit or push | NONE (one task commit records this result) |
 | NEXT executed | NO |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
-| Next action | Awaiting ChatGPT audit; the prescribed command needs an interpreter that the child process can resolve |
+| Report | `docs\task8b3_ref01_eligibility_repair_impl.md` |
+| Next action | Awaiting ChatGPT audit; NEXT is not executed. |
 
-Watt was not needed for Task 8B.3-REF01-E3A-R4 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3A-R5 (no downloads, no transfers).
 
-No product code, manifest, external file or model asset was modified and no inference was executed.
-
+The attachment patcher was verified against its published SHA256, copied byte-for-byte to the prescribed location,
+re-verified there, and executed exactly once; exactly one task commit records the result and no manifest, external file
+or model asset was modified.

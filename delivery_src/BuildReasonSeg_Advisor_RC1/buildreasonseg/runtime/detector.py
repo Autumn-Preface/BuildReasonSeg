@@ -448,14 +448,41 @@ def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "larges
     return [proposal for proposal in proposals if eligible(proposal, family=family)]
 
 
-def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
-    """Largest eligible building: area desc → confidence desc → global id asc."""
+def _reference_rank(proposal: GlobalProposal) -> tuple[int, float, int]:
+    return (-proposal.mask_area, -proposal.confidence, proposal.proposal_id)
 
-    candidates = eligible_proposals(proposals, family=family)
+
+def _largest_reference_candidates_with_extent_exception(
+        proposals: list[GlobalProposal]) -> list[GlobalProposal]:
+    """Frozen base candidates plus the RC1 largest-only extent-dominance exception."""
+
+    base_candidates = eligible_proposals(proposals, family="largest")
+    if not base_candidates:
+        return []
+
+    baseline = sorted(base_candidates, key=_reference_rank)[0]
+    exceptions = [
+        proposal for proposal in proposals
+        if proposal.mask_area > 0
+        and proposal.mask_crop.any()
+        and not proposal.touches_image_border
+        and proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX
+        and proposal.mask_area > baseline.mask_area
+        and proposal.confidence > baseline.confidence
+    ]
+    return base_candidates + exceptions
+
+
+def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
+    """Select a reference with the frozen base rule and the largest-only RC1 exception."""
+
+    if family == "largest":
+        candidates = _largest_reference_candidates_with_extent_exception(proposals)
+    else:
+        candidates = eligible_proposals(proposals, family=family)
     if not candidates:
         return None
-    return sorted(candidates, key=lambda proposal: (-proposal.mask_area, -proposal.confidence,
-                                                    proposal.proposal_id))[0]
+    return sorted(candidates, key=_reference_rank)[0]
 
 
 def proposal_by_id(proposals: list[GlobalProposal], reference_id: int) -> GlobalProposal | None:

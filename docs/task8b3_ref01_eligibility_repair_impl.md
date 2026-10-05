@@ -209,3 +209,60 @@ source_manifest update = NONE · external RC1 sync = NONE · detector or model i
 manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
 ```
 
+
+
+---
+
+## 8. E3A-R5 — attachment patcher used byte-for-byte, single execution
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-impl
+HEAD   = 34d1a263ac91ada6ef517fc54a99c19463e9ddd3
+attachment                 = handoff/E3A_R5_apply_exact.py (10418 bytes)
+prescribed sha256          = 1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f
+attachment sha256          = 1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f (match = True)
+patched copied verbatim to = C:\D\DeepSeekHarness\E3A_R5_apply_exact.py
+destination sha256         = 1a4294aa2e3070e420dc99e6621c1c323b27e153432abff8ee4014b23d33de9f (match = True)
+patcher reconstructed from the task book = NO (the attachment bytes were used as-is)
+patcher compile gate       = NONE (forbidden)
+patcher runs               = 1
+patcher exit               = 0
+status                     = COMPLETE
+detector.py before/after   = a6fa4bdd76db6f50 / bc5aed885aa5f27b (changed = True)
+changed entries            = ['??', 'M', 'delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py', 'delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py', 'handoff/E3A_R5_apply_exact.py', 'handoff/TO_DSH.md']
+source_manifest untouched (canonical / external) = YES / YES
+external RC1 synced        = NO · detector or model inference = NONE · manual code editing = NONE
+intermediate commit/push   = NONE (exactly one task commit follows)
+```
+
+Patcher output:
+
+```text
+PATCHER_BRANCH_HEAD: PASS
+EXTERNAL_DETECTOR_IDENTITY: PASS
+DETECTOR_BOUNDARY_REPLACEMENT: PASS
+TEST_MARKER_INSERTION: PASS
+NEW_TEST_COUNT: 8
+PATCHER_RESULT: PASS
+```
+
+No execution error was raised.
+
+### 8.1 Explicit non-execution
+
+```text
+reconstruction from the task book / manual code modification / added gate / compile gate = NONE
+intermediate commit or push = NONE · retry = NONE · self-repair = NONE
+source_manifest update = NONE · external RC1 sync = NONE · detector or model inference = NONE
+manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
+```
+
+### 8.2 Amendment note (single-commit requirement preserved)
+
+```text
+The task permits exactly one task commit. The initial commit omitted the test file because my staging allow-list
+filtered paths containing "tests/"; that was my own filter error, not a patcher issue. The commit was therefore
+amended to include delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py, so the branch still carries
+exactly one task commit for this task. The amend was followed by a lease-protected push of the task branch.
+```
+
