@@ -1,136 +1,153 @@
 请先读取 `handoff/TO_DSH.md`，并严格以该文件作为本轮唯一任务书。
 
-本次任务名称：**Task 8B.3-REF01-E3C2 — Selection Scalar Forensics**
+本次任务名称：**Task 8B.3-REF01-E3C3 — Selection Repair Decision Freeze**
 
-# TO_DSH — Task 8B.3-REF01-E3C2: Selection Scalar Forensics
+# TO_DSH — Task 8B.3-REF01-E3C3: Selection Repair Decision Freeze
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `audit/task8b3-ref01-locked-replay-artifacts`
-> Required starting HEAD: `b5be1d4e7b02d93f91c3f08c8e90014e590ea21e`
+> Required starting HEAD: `6e33b88ecf9c78ef9fc62a9c79ec0a8f0c55c1bd`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
-> Required script: `C:\D\DeepSeekHarness\E3C2_selection_scalar_forensics.py`
-> Required SHA256: `a4e22aabc2439343ee213c1a4941daa9d9deecd385894e362dbb33524c96e869`
+> Required script: `C:\D\DeepSeekHarness\E3C3_selection_repair_decision.py`
+> Required SHA256: `5cfcc5189afe624fe13bf8c618fc3c292fb58268e54091b66e6708204ec44c35`
 
 # 0. CHATGPT AUDIT DISPOSITION
 
-Task `8B.3-REF01-E3C1` is APPROVED.
+Task `8B.3-REF01-E3C2` is APPROVED.
 
-Locked record-level replay established:
-
-```text
-right:  1 -> 1   correct / stable
-left:  14 -> 14  wrong-covered remains
-above:  4 -> 5   eligibility blocker resolved
-below:  1 -> 1   wrong-covered remains
-```
-
-Therefore:
+Verified E3C2 facts:
 
 ```text
-eligibility repair validation = PASS
-REF-01 = ACTIVE
-dominant remaining blocker = SELECTION / RANKING
-remaining cases = left, below
+commit:
+docs(rc1): characterize remaining reference selection blocker
+
+predeclared rank rules:
+6
+
+globally perfect locked-four rules:
+NONE
+
+scalar rule selected:
+NO
+
+product change:
+NO
+
+inference:
+NONE
 ```
 
-Do NOT modify rank yet.
+ChatGPT now makes the technical decision.
 
-E3C2 is a read-only scalar-forensics task used by ChatGPT to decide whether a simple, threshold-free scalar ranking repair is technically supportable.
+# 1. CHATGPT TECHNICAL DECISION
 
-# 1. PREDECLARED DIAGNOSTIC RULE FAMILY
-
-The exact script evaluates ONLY these six threshold-free ranking families:
+Freeze exactly:
 
 ```text
-AREA_FIRST
-CONFIDENCE_FIRST
-BBOX_AREA_FIRST
-FILL_RATIO_FIRST
-AREA_X_CONF
-BBOX_AREA_X_CONF
+REJECT_FURTHER_SCALAR_RANK_REPAIR
 ```
 
-They are diagnostic hypotheses only.
+Reasons:
 
-DSH MUST NOT:
-- add a rule;
-- remove a rule;
-- tune a threshold;
-- choose a winner;
-- recommend implementation.
+1. `left`:
+   - current = 14
+   - locked best-covered = 30
+   - none of the six predeclared threshold-free rules selects 30.
 
-The task records their behavior on the four locked cases and returns control to ChatGPT.
+2. `below`:
+   - current = 1
+   - locked best-covered = 2
+   - proposal 1 dominates proposal 2 in `(mask_area, confidence)`;
+   - proposal 1 also dominates proposal 2 in `(bbox_area, confidence)`;
+   - all six predeclared scalar rules still select 1.
 
-# 2. REQUIRED FORENSICS
+3. Therefore new weights, thresholds, location priors, or further scalar-rule search would be post-hoc tuning to already-consumed locked qualitative cases.
 
-For each locked case compute from the repaired candidate set:
+4. RC1 scientific architecture is frozen. Do NOT add a new reference-refinement model branch.
+
+# 2. FROZEN REF-01 DISPOSITION
+
+Automatic behavior remains:
 
 ```text
-current repaired selected ID
-best-IoU ID
-best IoU
-extent-exception IDs
-
-selected features:
-mask_area
-confidence
-bbox_area
-fill_ratio
-bbox_extent_ratio
-centroid
-
-best-IoU features:
-same fields
-
-selected-minus-best deltas
-
-best-IoU Pareto dominators in:
-(mask_area, confidence)
-(bbox_area, confidence)
-
-for each predeclared rule:
-selected ID
-rank position of best-IoU proposal
-whether selected == best-IoU
+right:  1 -> 1  correct stable
+left:  14 -> 14 residual selection limitation
+above:  4 -> 5  eligibility blocker resolved
+below:  1 -> 1  residual selection limitation
 ```
 
-Also compute:
+The only validated automatic repair retained is:
 
 ```text
-globally_perfect_rules_on_locked_four
+LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
 ```
 
-This is diagnostic only and MUST NOT automatically become a repair rule.
+REF-01 is NOT marked fully closed.
 
-# 3. EXECUTOR CONTRACT
+Freeze status:
+
+```text
+REF-01 =
+ACTIVE_RESIDUAL_SELECTION_LIMITATION
+```
+
+# 3. ENGINEERING FALLBACK
+
+Use the already-existing RC1 assisted reference path:
+
+```text
+ASSISTED_REFERENCE_OVERRIDE
+```
+
+Existing pipeline parameter:
+
+```text
+reference_id
+```
+
+No new product code is authorized in E3C3.
+
+This fallback must NOT be described as automatic success.
+
+# 4. NEXT
+
+After this decision is recorded:
+
+```text
+NEXT =
+MASK01_VALIDITY_FORENSICS_DESIGN
+```
+
+Do NOT execute MASK-01 in this task.
+
+# 5. EXECUTOR CONTRACT
 
 Allowed ONLY:
 
 1. verify exact branch/head;
-2. verify script SHA;
+2. verify supplied script SHA;
 3. run supplied script exactly ONCE;
 4. inspect stdout;
-5. inspect generated evidence/report/FROM_DSH;
-6. verify only four allowed repo paths changed;
-7. stage exactly four paths;
-8. commit exactly once;
-9. push once;
-10. STOP.
+5. verify only the four allowed paths changed;
+6. stage exactly those four paths;
+7. commit exactly once;
+8. push once;
+9. STOP.
 
 Forbidden:
 
 - NO detector/model inference;
 - NO proposal regeneration;
+- NO selector replay;
 - NO selector repair implementation;
-- NO product/test/manifest/helper edit;
-- NO external write;
-- NO broad search;
-- NO new rank rule;
+- NO source/test/manifest/helper edit;
+- NO scalar rule experiment;
 - NO threshold tuning;
 - NO architecture change;
+- NO external write;
 - NO final Demo;
 - NO script edit/rebuild/rerun;
 - NO pytest/py_compile;
@@ -139,33 +156,29 @@ Forbidden:
 - NO force push;
 - NO NEXT execution.
 
-# 4. EXACT SCIENTIFIC INPUTS
+# 6. SCRIPT GATE
 
-Read only:
+Place exactly:
 
 ```text
-four locked proposals.json:
-1010
-1003
-1008
-1009
-
-evaluation/task8b3_ref01_locked_reference_forensics.json
+C:\D\DeepSeekHarness\E3C3_selection_repair_decision.py
 ```
 
-Exact proposal and forensics SHA256 values are embedded in the supplied script.
+Require SHA256:
 
-No result.json is needed.
-No product source execution is needed.
-No broad discovery is allowed.
+```text
+5cfcc5189afe624fe13bf8c618fc3c292fb58268e54091b66e6708204ec44c35
+```
 
-# 5. GIT PRE-FLIGHT
+Do not modify/reconstruct.
+
+# 7. GIT PRE-FLIGHT
 
 Require:
 
 ```text
 branch = audit/task8b3-ref01-locked-replay-artifacts
-HEAD = b5be1d4e7b02d93f91c3f08c8e90014e590ea21e
+HEAD = 6e33b88ecf9c78ef9fc62a9c79ec0a8f0c55c1bd
 ```
 
 Allowed `git status --short`:
@@ -175,77 +188,58 @@ Allowed `git status --short`:
 
 No other path/status.
 
-# 6. SCRIPT GATE
-
-Place exactly:
-
-```text
-C:\D\DeepSeekHarness\E3C2_selection_scalar_forensics.py
-```
-
-SHA256 must equal:
-
-```text
-a4e22aabc2439343ee213c1a4941daa9d9deecd385894e362dbb33524c96e869
-```
-
-Do not modify/reconstruct.
-
-# 7. RUN ONCE
+# 8. RUN ONCE
 
 Run exactly once:
 
 ```text
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3C2_selection_scalar_forensics.py
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3C3_selection_repair_decision.py
 ```
 
 Require exit 0.
 
-Require stdout contains:
+Require stdout:
 
 ```text
-E3C2_SELECTION_SCALAR_FORENSICS: COMPLETE
-NEXT_GATE=CHATGPT_SELECTION_REPAIR_DECISION
+E3C3_SELECTION_REPAIR_DECISION: COMPLETE
+DECISION=REJECT_FURTHER_SCALAR_RANK_REPAIR
+FALLBACK=ASSISTED_REFERENCE_OVERRIDE
+NEXT_GATE=MASK01_VALIDITY_FORENSICS_DESIGN
 ```
 
-`GLOBALLY_PERFECT_RULES=` may be `NONE` or a comma-separated subset of the six predeclared rules. Record it exactly; do not interpret it.
+No rerun.
 
-# 8. GENERATED OUTPUTS
+# 9. REQUIRED OUTPUTS
 
-Required new files:
+New:
 
 ```text
-evaluation/task8b3_ref01_e3c2_selection_scalar_forensics.json
-docs/task8b3_ref01_e3c2_selection_scalar_forensics.md
+evaluation/task8b3_ref01_e3c3_selection_repair_decision.json
+docs/task8b3_ref01_e3c3_selection_repair_decision.md
 ```
 
-Required modified:
+Modified:
 
 ```text
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Evidence must contain:
+No other path.
 
-```text
-task = 8B.3-REF01-E3C2
-scope = LOCKED_SELECTION_SCALAR_FORENSICS
-detector_model_calls = 0
-proposal_regeneration_performed = false
-actual_selector_repair_implementation_performed = false
-external_write_performed = false
-product_source_changed = false
-scalar_rule_design_selected = false
-ref01_status = ACTIVE
-prop01_status = PROP01_OPEN_ENGINEERING_DEFECT
-overall_outcome = REF01_SELECTION_SCALAR_FORENSICS_COMPLETE
-next_gate = CHATGPT_SELECTION_REPAIR_DECISION
-```
+Evidence must contain exactly the frozen decision:
+- `decision = REJECT_FURTHER_SCALAR_RANK_REPAIR`
+- `selector_repair_implementation_performed = false`
+- `engineering_fallback.mode = ASSISTED_REFERENCE_OVERRIDE`
+- `engineering_fallback.existing_pipeline_parameter = reference_id`
+- `ref01_status = ACTIVE_RESIDUAL_SELECTION_LIMITATION`
+- `prop01_status = PROP01_OPEN_ENGINEERING_DEFECT`
+- `overall_outcome = REF01_SCALAR_REPAIR_REJECTED_ASSISTED_FALLBACK_FROZEN`
+- `next_gate = MASK01_VALIDITY_FORENSICS_DESIGN`
 
-# 9. DIFF / STAGING GATE
+# 10. DIFF / STAGING GATE
 
-After successful script run:
+Run:
 
 ```text
 git status --porcelain=v1 --untracked-files=all
@@ -254,22 +248,22 @@ git status --porcelain=v1 --untracked-files=all
 Only these paths may appear:
 
 ```text
-docs/task8b3_ref01_e3c2_selection_scalar_forensics.md
-evaluation/task8b3_ref01_e3c2_selection_scalar_forensics.json
+docs/task8b3_ref01_e3c3_selection_repair_decision.md
+evaluation/task8b3_ref01_e3c3_selection_repair_decision.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
 Stage exactly those four.
 
-Require `git diff --cached --name-only` contains exactly those four paths.
+Require `git diff --cached --name-only` contains exactly the same four paths.
 
-# 10. COMPLETE COMMIT
+# 11. COMPLETE COMMIT
 
-If every gate passes:
+If all gates pass:
 
 ```text
-git commit -m "docs(rc1): characterize remaining reference selection blocker"
+git commit -m "docs(rc1): freeze residual reference selection limitation"
 ```
 
 Exactly one commit.
@@ -277,29 +271,28 @@ Push current branch once.
 No force push.
 STOP.
 
-# 11. STOP PROTOCOL
+# 12. STOP PROTOCOL
 
 If any gate fails:
 - do not rerun;
 - do not self-repair;
-- preserve factual outputs;
-- record exact failure in FROM_DSH;
-- commit once with:
-  `docs(rc1): record reference selection forensics stop`
+- record factual failure only;
+- commit exactly once:
+  `docs(rc1): record reference selection decision stop`
 - push once;
 - STOP.
 
-# 12. COMPLETE DEFINITION
+# 13. COMPLETE DEFINITION
 
 COMPLETE requires:
-- exact head / script SHA;
+- exact head/script SHA;
 - one script run;
-- six and only six predeclared rank rules;
-- no threshold tuning;
-- no repair implementation;
-- four locked cases characterized;
-- exact four output paths;
-- zero inference/regeneration/external write/product changes;
-- one commit;
+- decision exactly frozen by ChatGPT;
+- no new algorithm/rank/threshold;
+- assisted fallback only;
+- no product changes;
+- exact four paths;
+- exact commit message;
 - push once;
+- NEXT not executed;
 - STOP.

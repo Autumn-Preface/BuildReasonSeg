@@ -1,0 +1,57 @@
+{
+  "task": "8B.3-REF01-E3C3",
+  "starting_head": "6e33b88ecf9c78ef9fc62a9c79ec0a8f0c55c1bd",
+  "branch": "audit/task8b3-ref01-locked-replay-artifacts",
+  "scope": "CHATGPT_SELECTION_REPAIR_DECISION_FREEZE",
+  "decision_owner": "CHATGPT",
+  "decision": "REJECT_FURTHER_SCALAR_RANK_REPAIR",
+  "decision_basis": {
+    "predeclared_scalar_rules_evaluated": 6,
+    "globally_perfect_rules_on_locked_four": [],
+    "left": {
+      "current_selected_id": 14,
+      "best_iou_id": 30,
+      "best_selected_by_any_predeclared_rule": false,
+      "interpretation": "No predeclared threshold-free scalar rule selects the locked best-covered reference."
+    },
+    "below": {
+      "current_selected_id": 1,
+      "best_iou_id": 2,
+      "best_selected_by_any_predeclared_rule": false,
+      "selected_dominates_best_in_area_confidence": true,
+      "selected_dominates_best_in_bbox_area_confidence": true,
+      "all_six_predeclared_rules_select_current_wrong_id": true,
+      "interpretation": "Available proposal scalars do not contain a monotone ranking signal that separates the locked correct reference from the current wrong selection."
+    }
+  },
+  "rejected_actions": [
+    "new scalar weight fitting",
+    "new scalar threshold tuning",
+    "relation-specific centroid/location prior",
+    "post-hoc locked-four rule search",
+    "new SAM/SAM2 proposal-refinement branch",
+    "new model or architecture branch for RC1 reference selection"
+  ],
+  "frozen_automatic_behavior": {
+    "eligibility_repair": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
+    "right": "1->1 correct stable",
+    "left": "14->14 residual selection limitation",
+    "above": "4->5 eligibility blocker resolved",
+    "below": "1->1 residual selection limitation"
+  },
+  "engineering_fallback": {
+    "mode": "ASSISTED_REFERENCE_OVERRIDE",
+    "existing_pipeline_parameter": "reference_id",
+    "new_product_code_required": false,
+    "claim": "Existing RC1 assisted mode may override the automatic reference when the operator identifies the intended proposal."
+  },
+  "detector_model_calls": 0,
+  "proposal_regeneration_performed": false,
+  "selector_repair_implementation_performed": false,
+  "product_source_changed": false,
+  "external_write_performed": false,
+  "ref01_status": "ACTIVE_RESIDUAL_SELECTION_LIMITATION",
+  "prop01_status": "PROP01_OPEN_ENGINEERING_DEFECT",
+  "overall_outcome": "REF01_SCALAR_REPAIR_REJECTED_ASSISTED_FALLBACK_FROZEN",
+  "next_gate": "MASK01_VALIDITY_FORENSICS_DESIGN"
+}
