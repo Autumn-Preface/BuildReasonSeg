@@ -1,945 +1,534 @@
-# TO_DSH — Task 8B.3-REF01-E2: Freeze Largest Extent-Dominance Repair Design
+# TO_DSH — Task 8B.3-REF01-E3A: Implement Largest Extent-Dominance Repair in Canonical RC1
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required base branch: `fix/task8b3-ref01-eligibility-forensics`
-> Required base HEAD: `8d86e7b77f9423834a4a15117009c5a1e3f79e5d`
-> New task branch: `fix/task8b3-ref01-eligibility-repair-design`
+> Required base branch: `fix/task8b3-ref01-eligibility-repair-design`
+> Required base HEAD: `14f252e4cd70c8d62d0ceba9a389665dcb66ea68`
+> New task branch: `fix/task8b3-ref01-eligibility-repair-impl`
+> Canonical RC1: `delivery_src\BuildReasonSeg_Advisor_RC1`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
+> Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 
 # 0. EXECUTOR CONTRACT
 
-DSH has NO authority to choose or alter the repair design.
+ChatGPT has already made the implementation decision. DSH MUST NOT redesign it.
 
-The repair design is already decided in this task book.
+DSH may only verify preconditions, apply the exact source/test patches below, run the exact tests, write the required evidence/report, commit/push with the status-matched message, and STOP.
 
-DSH may only:
-1. reproduce the declared inputs;
-2. execute the exact fixed validation script in this task book;
-3. record its outputs;
-4. commit/push the corresponding COMPLETE or STOP result.
+Any unexpected condition => STOP. Do not self-repair.
 
-DSH MUST NOT:
-- invent an alternative rule;
-- compare several repair designs and select one;
-- tune any threshold;
-- add a confidence threshold;
-- add a new size threshold;
-- change strict `>` to `>=`;
-- change the baseline definition;
-- change the family scope;
-- modify product code;
-- interpret a failed assertion and repair it.
-
-Any unexpected result or failed assertion => STOP.
-
-# 1. CHATGPT DECISION
-
-The simple policy `P2_EXTENT_RELAXED_ONLY` is NOT selected as the production repair.
-
-Reason:
-- it fixes `above`;
-- but it admits every non-border extent-violating proposal;
-- this changes `left` production selection from id 14 to id 27;
-- global safety is not established.
-
-The selected repair design candidate is fixed as:
+# 1. APPROVED DESIGN
 
 ```text
-LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+Task 8B.3-REF01-E2: APPROVED
+Design: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+
+right 1 -> 1
+left 14 -> 14
+above 4 -> 5
+below 1 -> 1
+
+Synthetic contract: 8/8 PASS
+No new numeric threshold.
+Border exclusion mandatory.
+Smallest-family behavior unchanged.
 ```
 
-This is a parameter-free, largest-family-only exception.
+# 2. FIXED IMPLEMENTATION ARCHITECTURE
 
-# 2. EXACT DESIGN
+`eligible()` and `eligible_proposals()` remain the frozen base eligibility API and MUST NOT change.
 
-Let:
+The exception is implemented only inside reference selection through two private helpers:
 
 ```text
-base_candidates =
-current frozen largest-family candidates:
+_reference_rank()
+_largest_reference_candidates_with_extent_exception()
+```
+
+`select_reference()` uses the new helper only for `family == "largest"`. Other families continue to use `eligible_proposals()`.
+
+# 3. EXACT RULE
+
+Base:
+```text
+eligible_proposals(proposals, family="largest")
+```
+
+No base candidate => no exception => `None`.
+
+Exception requires ALL:
+```text
 mask_area > 0
-AND mask_crop non-empty
-AND touches_image_border == False
-AND bbox_extent_ratio <= 0.20
-```
-
-Let:
-
-```text
-baseline =
-production-largest selection over base_candidates:
-mask_area descending
-confidence descending
-proposal_id ascending
-```
-
-If `base_candidates` is empty:
-
-```text
-final_candidates = []
-selected = None
-```
-
-No exception is allowed when no frozen baseline exists.
-
-If a baseline exists, an otherwise extent-blocked proposal `p` is an exception candidate if and only if ALL are true:
-
-```text
-p.mask_area > 0
-p.mask_crop / metadata represents a non-empty proposal
-p.touches_image_border == False
-p.bbox_extent_ratio > 0.20
-p.mask_area > baseline.mask_area
-p.confidence > baseline.confidence
-```
-
-Note the strict operators:
-
-```text
+mask_crop.any() == True
+touches_image_border == False
+bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX
 mask_area > baseline.mask_area
 confidence > baseline.confidence
 ```
 
-They MUST NOT be changed to `>=`.
-
-Final largest-family candidates:
-
+Selection ranking:
 ```text
-final_candidates =
-base_candidates
-UNION
-dominance_exception_candidates
+(-mask_area, -confidence, proposal_id)
 ```
 
-Final selection:
+Area/confidence operators are strict `>`.
 
-```text
-mask_area descending
-confidence descending
-proposal_id ascending
-```
-
-# 3. SCOPE
-
-This design applies ONLY to:
-
-```text
-family = "largest"
-```
-
-It does NOT change:
-- `family="smallest"`;
-- border exclusion;
-- non-empty requirement;
-- the frozen 0.20 cap as the ordinary/base rule;
-- detector threshold/confidence;
-- proposal generation;
-- merge;
-- model weights.
-
-This task is DESIGN VALIDATION ONLY.
-
-No product implementation is allowed.
-
-# 4. SCIENTIFIC / ENGINEERING NONCLAIM
-
-Preserve exactly:
-
-> The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
-
-This repair design is an RC1 engineering rule. It is not a new scientific model-selection result.
-
-# 5. GIT GATE
+# 4. GIT GATE
 
 Require:
-
 ```text
-branch = fix/task8b3-ref01-eligibility-forensics
-HEAD = 8d86e7b77f9423834a4a15117009c5a1e3f79e5d
+branch = fix/task8b3-ref01-eligibility-repair-design
+HEAD = 14f252e4cd70c8d62d0ceba9a389665dcb66ea68
 ```
 
 Then create exactly:
-
 ```text
-fix/task8b3-ref01-eligibility-repair-design
+fix/task8b3-ref01-eligibility-repair-impl
 ```
 
-No other branch name.
+No merge/rebase/reset/stash/clean/cherry-pick/force-push.
 
-No merge/rebase/reset/stash/clean/cherry-pick.
+# 5. EXTERNAL IMMUTABILITY GATE
+
+Before edits hash:
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+```
+
+Require exactly:
+```text
+82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+```
+
+Do not write external RC1 in E3A.
 
 # 6. ALLOWED TRACKED CHANGES ONLY
 
 ```text
-scripts/task8b3_ref01_eligibility_repair_design.py
-evaluation/task8b3_ref01_eligibility_repair_design.json
-docs/task8b3_ref01_eligibility_repair_design.md
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+evaluation/task8b3_ref01_eligibility_repair_impl.json
+docs/task8b3_ref01_eligibility_repair_impl.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No product source file may change.
+Must NOT change:
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+scripts/sync_advisor_rc1_delivery.py
+main
+```
 
 # 7. ABSOLUTE PROHIBITIONS
 
 Do NOT:
-- modify `buildreasonseg/runtime/detector.py`;
-- modify canonical/external RC1;
-- run sync write;
-- instantiate DetectorRuntime;
+- sync external RC1;
+- edit source_manifest;
+- edit pipeline.py;
 - run detector/model inference;
-- run Qwen/SAM2/relation/D-B1/target segmentation;
-- inspect source images visually;
-- replace candidates;
-- test a new numeric threshold;
-- implement the repair;
-- execute NEXT;
-- update main;
-- force push.
+- instantiate DetectorRuntime;
+- run Qwen/SAM2/D-B1/target segmentation;
+- change MERGE_BBOX_EXTENT_RATIO_MAX;
+- change SMALLEST_MIN_AREA_PX;
+- modify eligible();
+- modify eligible_proposals();
+- add public API;
+- update __all__;
+- execute NEXT.
 
 Detector/model calls = 0.
 
-# 8. INPUT EVIDENCE
+# 8. EXACT DETECTOR PATCH
 
-Use read-only:
-
+Target:
 ```text
-evaluation/task8b3_ref01_eligibility_forensics.json
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
 ```
 
-Require:
-
-```text
-task = 8B.3-REF01-E1-R2
-overall_outcome = REF01_ELIGIBILITY_FORENSICS_COMPLETE
-eligibility_blocker_subtype = BBOX_EXTENT_CAP
-ref01_status = FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED
-next_gate = REF01_ELIGIBILITY_REPAIR_DESIGN
-```
-
-Use `candidate_results.*.proposal_predicates`.
-
-No detector run.
-
-# 9. LOCKED-CANDIDATE DESIGN GATES
-
-Apply the exact design from §2 to the four candidate proposal tables.
-
-The following are SUCCESS requirements.
-
-## right
-
-Require:
-
-```text
-baseline selected id = 1
-final selected id = 1
-final selected IoU >= 0.50
-```
-
-No regression.
-
-## left
-
-Require:
-
-```text
-baseline selected id = 14
-final selected id = 14
-```
-
-The low-confidence extent-violating proposal that caused the unconditional P2 selection change must NOT replace baseline.
-
-If final selected id is not 14:
-- STOP.
-
-## above
-
-Require:
-
-```text
-baseline selected id = 4
-final selected id = 5
-final selected IoU = 0.9032501889644747
-```
-
-Require proposal 5:
-
-```text
-mask_area = 5059
-confidence = 0.7026934027671814
-bbox_extent_ratio = 0.296875
-touches_image_border = False
-```
-
-Require baseline proposal 4:
-
-```text
-mask_area = 3012
-confidence = 0.6411488056182861
-```
-
-Therefore require both:
-
-```text
-5059 > 3012
-0.7026934027671814 > 0.6411488056182861
-```
-
-## below
-
-Require:
-
-```text
-baseline selected id = 1
-final selected id = 1
-```
-
-# 10. BORDER SAFETY GATE
-
-For every candidate:
-
-Any proposal with:
-
-```text
-touches_image_border == True
-```
-
-MUST NOT appear in:
-
-```text
-dominance_exception_candidates
-```
-
-In particular `above` proposal 3:
-
-```text
-proposal_id = 3
-mask_area = 11474
-touches_image_border = True
-```
-
-MUST remain excluded.
-
-Require:
-
-```text
-above final selected != 3
-```
-
-# 11. SYNTHETIC CONTRACT CASES
-
-The fixed validation script must also validate these exact synthetic cases.
-
-## S1 — no baseline
-
-Input:
-- only one non-border, extent>0.20 proposal;
-- area 5000;
-- confidence 0.90.
-
-Expected:
-
-```text
-baseline = None
-exception_candidates = []
-selected = None
-```
-
-## S2 — border candidate cannot bypass
-
-Baseline:
-```text
-area=1000 confidence=0.60 extent=0.10 border=False
-```
-
-Large candidate:
-```text
-area=5000 confidence=0.95 extent=0.30 border=True
-```
-
-Expected selected = baseline.
-
-## S3 — larger but lower confidence cannot bypass
-
-Baseline:
-```text
-area=1000 confidence=0.60
-```
-
-Large candidate:
-```text
-area=5000 confidence=0.59 extent=0.30 border=False
-```
-
-Expected selected = baseline.
-
-## S4 — higher confidence but not larger cannot bypass
-
-Baseline:
-```text
-area=1000 confidence=0.60
-```
-
-Candidate:
-```text
-area=999 confidence=0.95 extent=0.30 border=False
-```
-
-Expected selected = baseline.
-
-## S5 — strict dominance admits
-
-Baseline:
-```text
-area=1000 confidence=0.60
-```
-
-Candidate:
-```text
-area=5000 confidence=0.61 extent=0.30 border=False
-```
-
-Expected selected = candidate.
-
-## S6 — equality is not enough
-
-Two subcases:
-
-```text
-area=1000 confidence=0.61
-```
-against baseline area 1000 => not admitted.
-
-```text
-area=5000 confidence=0.60
-```
-against baseline confidence 0.60 => not admitted.
-
-## S7 — multiple admitted exceptions retain production ordering
-
-Baseline:
-```text
-id=1 area=1000 confidence=0.60
-```
-
-Exception A:
-```text
-id=2 area=3000 confidence=0.70
-```
-
-Exception B:
-```text
-id=3 area=4000 confidence=0.61
-```
-
-Both admitted.
-
-Expected final selected:
-
-```text
-id=3
-```
-
-because area remains the primary production ranking key.
-
-## S8 — smallest family unchanged
-
-The design validator must report:
-
-```text
-smallest_family_policy = UNCHANGED
-```
-
-No simulation that alters smallest semantics is permitted.
-
-# 12. FIXED VALIDATION SCRIPT
-
-Create exactly:
-
-```text
-scripts/task8b3_ref01_eligibility_repair_design.py
-```
-
-with this code:
+Replace this exact OLD block:
 
 ```python
-from __future__ import annotations
-
-import json
-import sys
-from pathlib import Path
-
-REPO = Path(__file__).resolve().parents[1]
-SOURCE = REPO / "evaluation" / "task8b3_ref01_eligibility_forensics.json"
-OUT = REPO / "evaluation" / "task8b3_ref01_eligibility_repair_design.json"
-
-TASK = "8B.3-REF01-E2"
-START_HEAD = "8d86e7b77f9423834a4a15117009c5a1e3f79e5d"
-BRANCH = "fix/task8b3-ref01-eligibility-repair-design"
-CAP = 0.20
-
-DISCLOSURE = (
-    "The qualitative Demo candidates are deterministically selected from the frozen "
-    "BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture "
-    "test metrics were already consumed. Their qualitative reuse does not alter, "
-    "replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture."
-)
+def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "largest"
+                       ) -> list[GlobalProposal]:
+    return [proposal for proposal in proposals if eligible(proposal, family=family)]
 
 
-def rank(p):
-    return (-int(p["mask_area"]), -float(p["confidence"]), int(p["proposal_id"]))
+def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
+    """Largest eligible building: area desc → confidence desc → global id asc."""
 
-
-def base_ok(p):
-    return (
-        int(p["mask_area"]) > 0
-        and p["touches_image_border"] is False
-        and float(p["bbox_extent_ratio"]) <= CAP
-    )
-
-
-def design_select(proposals):
-    base = [p for p in proposals if base_ok(p)]
-    if not base:
-        return {
-            "baseline": None,
-            "exceptions": [],
-            "final_selected": None,
-        }
-
-    baseline = min(base, key=rank)
-
-    exceptions = [
-        p for p in proposals
-        if int(p["mask_area"]) > 0
-        and p["touches_image_border"] is False
-        and float(p["bbox_extent_ratio"]) > CAP
-        and int(p["mask_area"]) > int(baseline["mask_area"])
-        and float(p["confidence"]) > float(baseline["confidence"])
-    ]
-
-    final = base + exceptions
-    selected = min(final, key=rank)
-
-    return {
-        "baseline": baseline,
-        "exceptions": sorted(exceptions, key=lambda p: int(p["proposal_id"])),
-        "final_selected": selected,
-    }
-
-
-def synth(pid, area, conf, extent, border=False, iou=0.0):
-    return {
-        "proposal_id": pid,
-        "mask_area": area,
-        "confidence": conf,
-        "bbox_extent_ratio": extent,
-        "touches_image_border": border,
-        "iou_to_gt": iou,
-    }
-
-
-def compact(p):
-    if p is None:
+    candidates = eligible_proposals(proposals, family=family)
+    if not candidates:
         return None
-    return {
-        "proposal_id": int(p["proposal_id"]),
-        "mask_area": int(p["mask_area"]),
-        "confidence": float(p["confidence"]),
-        "bbox_extent_ratio": float(p["bbox_extent_ratio"]),
-        "touches_image_border": bool(p["touches_image_border"]),
-        "iou_to_gt": float(p.get("iou_to_gt", 0.0)),
-    }
-
-
-def main():
-    source = json.loads(SOURCE.read_text(encoding="utf-8"))
-
-    assert source["task"] == "8B.3-REF01-E1-R2"
-    assert source["overall_outcome"] == "REF01_ELIGIBILITY_FORENSICS_COMPLETE"
-    assert source["eligibility_blocker_subtype"] == "BBOX_EXTENT_CAP"
-    assert source["ref01_status"] == "FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED"
-    assert source["next_gate"] == "REF01_ELIGIBILITY_REPAIR_DESIGN"
-
-    expected = {
-        "right": (1, 1),
-        "left": (14, 14),
-        "above": (4, 5),
-        "below": (1, 1),
-    }
-
-    locked = {}
-
-    for relation, (baseline_id, final_id) in expected.items():
-        proposals = source["candidate_results"][relation]["proposal_predicates"]
-        result = design_select(proposals)
-
-        assert result["baseline"] is not None
-        assert int(result["baseline"]["proposal_id"]) == baseline_id
-        assert result["final_selected"] is not None
-        assert int(result["final_selected"]["proposal_id"]) == final_id
-
-        assert all(
-            p["touches_image_border"] is False
-            for p in result["exceptions"]
-        )
-
-        locked[relation] = {
-            "baseline": compact(result["baseline"]),
-            "exception_candidates": [compact(p) for p in result["exceptions"]],
-            "final_selected": compact(result["final_selected"]),
-        }
-
-    assert locked["right"]["final_selected"]["iou_to_gt"] >= 0.50
-
-    above = locked["above"]
-    assert above["baseline"]["proposal_id"] == 4
-    assert above["baseline"]["mask_area"] == 3012
-    assert abs(above["baseline"]["confidence"] - 0.6411488056182861) <= 1e-12
-
-    above5 = next(
-        p for p in above["exception_candidates"]
-        if p["proposal_id"] == 5
-    )
-    assert above5["mask_area"] == 5059
-    assert abs(above5["confidence"] - 0.7026934027671814) <= 1e-12
-    assert abs(above5["bbox_extent_ratio"] - 0.296875) <= 1e-12
-    assert above5["touches_image_border"] is False
-    assert abs(above5["iou_to_gt"] - 0.9032501889644747) <= 1e-12
-    assert above5["mask_area"] > above["baseline"]["mask_area"]
-    assert above5["confidence"] > above["baseline"]["confidence"]
-    assert above["final_selected"]["proposal_id"] == 5
-    assert abs(above["final_selected"]["iou_to_gt"] - 0.9032501889644747) <= 1e-12
-
-    # Border giant must remain excluded.
-    above_all = source["candidate_results"]["above"]["proposal_predicates"]
-    above3 = next(p for p in above_all if int(p["proposal_id"]) == 3)
-    assert above3["touches_image_border"] is True
-    assert int(above3["mask_area"]) == 11474
-    assert all(p["proposal_id"] != 3 for p in above["exception_candidates"])
-    assert above["final_selected"]["proposal_id"] != 3
-
-    synthetic = {}
-
-    # S1
-    s1 = design_select([synth(1, 5000, 0.90, 0.30, False)])
-    assert s1["baseline"] is None
-    assert s1["exceptions"] == []
-    assert s1["final_selected"] is None
-    synthetic["S1_no_baseline"] = "PASS"
-
-    # S2
-    s2 = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 5000, 0.95, 0.30, True),
-    ])
-    assert s2["final_selected"]["proposal_id"] == 1
-    synthetic["S2_border_cannot_bypass"] = "PASS"
-
-    # S3
-    s3 = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 5000, 0.59, 0.30, False),
-    ])
-    assert s3["final_selected"]["proposal_id"] == 1
-    synthetic["S3_lower_confidence_cannot_bypass"] = "PASS"
-
-    # S4
-    s4 = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 999, 0.95, 0.30, False),
-    ])
-    assert s4["final_selected"]["proposal_id"] == 1
-    synthetic["S4_not_larger_cannot_bypass"] = "PASS"
-
-    # S5
-    s5 = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 5000, 0.61, 0.30, False),
-    ])
-    assert s5["final_selected"]["proposal_id"] == 2
-    synthetic["S5_strict_dominance_admits"] = "PASS"
-
-    # S6
-    s6a = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 1000, 0.61, 0.30, False),
-    ])
-    s6b = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 5000, 0.60, 0.30, False),
-    ])
-    assert s6a["final_selected"]["proposal_id"] == 1
-    assert s6b["final_selected"]["proposal_id"] == 1
-    synthetic["S6_strict_inequality_required"] = "PASS"
-
-    # S7
-    s7 = design_select([
-        synth(1, 1000, 0.60, 0.10, False),
-        synth(2, 3000, 0.70, 0.30, False),
-        synth(3, 4000, 0.61, 0.30, False),
-    ])
-    assert {p["proposal_id"] for p in s7["exceptions"]} == {2, 3}
-    assert s7["final_selected"]["proposal_id"] == 3
-    synthetic["S7_multiple_exceptions_keep_production_order"] = "PASS"
-
-    synthetic["S8_smallest_family_unchanged"] = "PASS"
-
-    evidence = {
-        "task": TASK,
-        "starting_head": START_HEAD,
-        "branch": BRANCH,
-        "verification_mode": "READ_ONLY_REPAIR_DESIGN_VALIDATION",
-        "detector_model_calls": 0,
-        "scientific_reuse_disclosure": DISCLOSURE,
-        "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
-        "design_scope": "largest_family_only",
-        "base_extent_cap": CAP,
-        "new_numeric_thresholds": [],
-        "strict_dominance": {
-            "area": "candidate.mask_area > baseline.mask_area",
-            "confidence": "candidate.confidence > baseline.confidence",
-        },
-        "no_baseline_behavior": "NO_EXCEPTION_SAFE_FAILURE",
-        "border_behavior": "ALWAYS_REJECT_FROM_EXCEPTION",
-        "smallest_family_policy": "UNCHANGED",
-        "locked_candidates": locked,
-        "synthetic_contract": synthetic,
-        "overall_outcome": "REF01_ELIGIBILITY_REPAIR_DESIGN_VALIDATED",
-        "next_gate": "REF01_ELIGIBILITY_REPAIR_IMPLEMENTATION",
-    }
-
-    OUT.write_text(
-        json.dumps(evidence, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-
-    print("DESIGN_ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1")
-    print("LOCKED_CANDIDATES: 4/4 PASS")
-    print("RIGHT_FINAL: 1")
-    print("LEFT_FINAL: 14")
-    print("ABOVE_FINAL: 5")
-    print("BELOW_FINAL: 1")
-    print("ABOVE_BORDER_GIANT_EXCLUDED: PASS")
-    print("SYNTHETIC_CONTRACT: 8/8 PASS")
-    print("NEW_NUMERIC_THRESHOLDS: NONE")
-    print("SMALLEST_FAMILY: UNCHANGED")
-    print("OUTCOME: REF01_ELIGIBILITY_REPAIR_DESIGN_VALIDATED")
-    print("NEXT: REF01_ELIGIBILITY_REPAIR_IMPLEMENTATION")
-    print("DETECTOR_MODEL_CALLS: 0")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+    return sorted(candidates, key=lambda proposal: (-proposal.mask_area, -proposal.confidence,
+                                                    proposal.proposal_id))[0]
 ```
 
-# 13. STATIC GATE
+with exactly:
 
-Compile:
+```python
+def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "largest"
+                       ) -> list[GlobalProposal]:
+    return [proposal for proposal in proposals if eligible(proposal, family=family)]
 
+
+def _reference_rank(proposal: GlobalProposal) -> tuple[int, float, int]:
+    return (-proposal.mask_area, -proposal.confidence, proposal.proposal_id)
+
+
+def _largest_reference_candidates_with_extent_exception(
+        proposals: list[GlobalProposal]) -> list[GlobalProposal]:
+    """Frozen base candidates plus the RC1 largest-only extent-dominance exception."""
+
+    base_candidates = eligible_proposals(proposals, family="largest")
+    if not base_candidates:
+        return []
+
+    baseline = sorted(base_candidates, key=_reference_rank)[0]
+    exceptions = [
+        proposal for proposal in proposals
+        if proposal.mask_area > 0
+        and proposal.mask_crop.any()
+        and not proposal.touches_image_border
+        and proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX
+        and proposal.mask_area > baseline.mask_area
+        and proposal.confidence > baseline.confidence
+    ]
+    return base_candidates + exceptions
+
+
+def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
+    """Select a reference with the frozen base rule and the largest-only RC1 exception."""
+
+    if family == "largest":
+        candidates = _largest_reference_candidates_with_extent_exception(proposals)
+    else:
+        candidates = eligible_proposals(proposals, family=family)
+    if not candidates:
+        return None
+    return sorted(candidates, key=_reference_rank)[0]
+```
+
+If OLD occurrence != 1 => STOP.
+
+# 9. BASE ELIGIBILITY MUST REMAIN UNCHANGED
+
+Require this exact fragment still exists after patch:
+
+```python
+def eligible(proposal: GlobalProposal, *, family: str = "largest") -> bool:
+    """Frozen U-C1 eligibility: non-empty, not touching the original image border, extent <= 0.20."""
+
+    if proposal.mask_area <= 0 or not proposal.mask_crop.any():
+        return False
+    if proposal.touches_image_border:
+        return False
+    if proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX:
+        return False
+    if family == "smallest" and proposal.mask_area < SMALLEST_MIN_AREA_PX:
+        return False
+    return True
+```
+
+And `eligible_proposals()` must still be exactly the original one-line filter.
+
+Any difference => STOP.
+
+# 10. EXACT TEST PATCH
+
+Target:
 ```text
-<proposal env python> -m py_compile scripts/task8b3_ref01_eligibility_repair_design.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
 ```
 
-Require exit 0.
+Insert immediately BEFORE the unique marker:
+```python
+# ---------------------------------------------------------------- reasoning context
+```
 
-Source must NOT contain:
+Insert exactly:
 
+```python
+def _reference_rect(height: int, width: int, confidence: float, proposal_id: int,
+                    *, top: int = 100, left: int = 100) -> GlobalProposal:
+    mask = np.zeros((512, 512), dtype=bool)
+    mask[top:top + height, left:left + width] = True
+    return _proposal(mask, confidence, f"r{proposal_id}", proposal_id, proposal_id,
+                     proposal_id=proposal_id)
+
+
+def test_largest_extent_dominance_exception_selects_strictly_dominant_candidate() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    dominant = _reference_rect(120, 120, 0.61, 2, top=250, left=250)
+
+    assert eligible(baseline, family="largest") is True
+    assert eligible(dominant, family="largest") is False
+    assert detector.eligible_proposals([baseline, dominant], family="largest") == [baseline]
+    assert select_reference([baseline, dominant], family="largest") is dominant
+
+
+def test_largest_extent_exception_rejects_lower_confidence_candidate() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    candidate = _reference_rect(120, 120, 0.59, 2, top=250, left=250)
+    assert select_reference([baseline, candidate], family="largest") is baseline
+
+
+def test_largest_extent_exception_requires_strict_confidence_gain() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    candidate = _reference_rect(120, 120, 0.60, 2, top=250, left=250)
+    assert select_reference([baseline, candidate], family="largest") is baseline
+
+
+def test_largest_extent_exception_requires_strict_area_gain() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    same_area = _reference_rect(40, 160, 0.95, 2, top=250, left=250)
+
+    assert baseline.mask_area == same_area.mask_area
+    assert eligible(same_area, family="largest") is False
+    assert select_reference([baseline, same_area], family="largest") is baseline
+
+
+def test_largest_extent_exception_never_admits_border_proposal() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    border = _reference_rect(120, 120, 0.95, 2, top=0, left=250)
+
+    assert border.touches_image_border is True
+    assert select_reference([baseline, border], family="largest") is baseline
+
+
+def test_largest_extent_exception_requires_frozen_baseline() -> None:
+    only_extent_violation = _reference_rect(120, 120, 0.95, 1)
+
+    assert eligible(only_extent_violation, family="largest") is False
+    assert select_reference([only_extent_violation], family="largest") is None
+
+
+def test_largest_extent_exception_keeps_production_area_order() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    exception_a = _reference_rect(120, 120, 0.70, 2, top=250, left=50)
+    exception_b = _reference_rect(130, 130, 0.61, 3, top=250, left=250)
+
+    assert select_reference([baseline, exception_a, exception_b], family="largest") is exception_b
+
+
+def test_largest_extent_exception_does_not_change_smallest_family() -> None:
+    baseline = _reference_rect(80, 80, 0.60, 1)
+    extent_violation = _reference_rect(120, 120, 0.95, 2, top=250, left=250)
+
+    assert eligible(extent_violation, family="smallest") is False
+    assert select_reference([baseline, extent_violation], family="smallest") is baseline
+```
+
+Do not add any other test.
+
+# 11. STATIC GATE
+
+Compile both files with REQUIRED_PYTHON. Both exit 0.
+
+Require:
 ```text
-DetectorRuntime(
-detect_global(
-model.predict(
-YOLO(
+_reference_rank definition count = 1
+_largest_reference_candidates_with_extent_exception definition count = 1
+proposal.mask_area > baseline.mask_area count = 1
+proposal.confidence > baseline.confidence count = 1
+8 new tests present
+eligible() unchanged
+eligible_proposals() unchanged
 ```
 
-If fail => STOP.
+Any failure => STOP.
 
-# 14. EXECUTE EXACTLY ONCE
+# 12. TARGETED TEST
 
-Run:
-
+Run exactly:
 ```text
-<proposal env python> scripts/task8b3_ref01_eligibility_repair_design.py
+<REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py -q
 ```
 
-No retry after assertion failure.
+Require exit 0. Non-zero => STOP, no self-repair.
 
-Required stdout:
+# 13. CANONICAL FULL TEST
 
+Only after targeted PASS:
 ```text
-DESIGN_ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-LOCKED_CANDIDATES: 4/4 PASS
-RIGHT_FINAL: 1
-LEFT_FINAL: 14
-ABOVE_FINAL: 5
-BELOW_FINAL: 1
-ABOVE_BORDER_GIANT_EXCLUDED: PASS
-SYNTHETIC_CONTRACT: 8/8 PASS
-NEW_NUMERIC_THRESHOLDS: NONE
-SMALLEST_FAMILY: UNCHANGED
-OUTCOME: REF01_ELIGIBILITY_REPAIR_DESIGN_VALIDATED
-NEXT: REF01_ELIGIBILITY_REPAIR_IMPLEMENTATION
-DETECTOR_MODEL_CALLS: 0
+<REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests -q
 ```
 
-Any mismatch => STOP.
+Require exit 0. Non-zero => STOP.
 
-# 15. REPORT
+# 14. MANIFEST / SYNC POLICY
+
+Do NOT update:
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+Do NOT sync external RC1.
+
+Record:
+```text
+manifest_status = INTENTIONALLY_STALE_PENDING_E3B
+```
+
+# 15. EXTERNAL POST-GATE
+
+External detector SHA must still equal:
+```text
+82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+```
+
+Otherwise STOP.
+
+# 16. EVIDENCE FILE
 
 Create:
-
 ```text
-docs/task8b3_ref01_eligibility_repair_design.md
+evaluation/task8b3_ref01_eligibility_repair_impl.json
 ```
 
-The report must state that ChatGPT preselected the design and DSH did not choose among alternatives.
+Required exact fields:
 
-Required sections:
-1. frozen E1-R2 evidence;
-2. selected design;
-3. exact decision rule;
-4. four locked-candidate results;
-5. eight synthetic contract results;
-6. risks/nonclaims;
-7. next gate.
+```text
+task = 8B.3-REF01-E3A
+starting_head = 14f252e4cd70c8d62d0ceba9a389665dcb66ea68
+branch = fix/task8b3-ref01-eligibility-repair-impl
+design_id = LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+implementation_scope = CANONICAL_ONLY_NO_SYNC
+detector_model_calls = 0
+eligible_function_changed = false
+eligible_proposals_function_changed = false
+largest_only_exception = true
+strict_area_operator = >
+strict_confidence_operator = >
+no_baseline_behavior = NO_EXCEPTION_SAFE_FAILURE
+border_exception_allowed = false
+smallest_family_changed = false
+new_numeric_thresholds = []
+targeted_test_exit = 0
+canonical_full_test_exit = 0
+external_detector_before = 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+external_detector_after = 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+external_detector_unchanged = true
+manifest_status = INTENTIONALLY_STALE_PENDING_E3B
+overall_outcome = REF01_ELIGIBILITY_REPAIR_CANONICAL_IMPLEMENTED
+next_gate = REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC
+```
+
+# 17. REPORT
+
+Create:
+```text
+docs/task8b3_ref01_eligibility_repair_impl.md
+```
 
 Required nonclaims:
 
 ```text
-This task does not implement the repair.
-This task does not select a new numeric threshold.
-This task does not prove global generalization.
-The four locked candidates are engineering evidence only.
-The border exclusion remains mandatory.
+The external RC1 delivery was not modified.
+The source manifest was not updated in E3A.
+No detector/model inference was executed.
+No new numeric threshold was introduced.
+The repair applies only to largest-family automatic reference selection.
 The smallest-family behavior remains unchanged.
-The left and below reference-selection defects remain unresolved.
 PROP-01 remains PROP01_OPEN_ENGINEERING_DEFECT.
+The left and below reference-selection defects remain unresolved.
+This task does not claim final Demo success.
 ```
 
-# 16. FROM_DSH
+# 18. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
 Required fields:
 
 ```text
-Task: 8B.3-REF01-E2
+Task: 8B.3-REF01-E3A
 Status: COMPLETE / STOP / FAILED
-Branch: fix/task8b3-ref01-eligibility-repair-design
-Starting HEAD: 8d86e7b77f9423834a4a15117009c5a1e3f79e5d
-Detector/model calls: 0
+Branch: fix/task8b3-ref01-eligibility-repair-impl
+Starting HEAD: 14f252e4cd70c8d62d0ceba9a389665dcb66ea68
 Design selected by: CHATGPT
-DSH design choice performed: NO
 Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-New numeric threshold selected: NO
-Right baseline/final: 1/1
-Left baseline/final: 14/14
-Above baseline/final: 4/5
-Below baseline/final: 1/1
-Above proposal 3 border giant excluded: YES
-Synthetic contract: 8/8 PASS
-Smallest family: UNCHANGED
-Outcome: REF01_ELIGIBILITY_REPAIR_DESIGN_VALIDATED / other
-Next gate: REF01_ELIGIBILITY_REPAIR_IMPLEMENTATION / other
-External/canonical product files modified: NO / NO
+DSH algorithm choice performed: NO
+Detector/model calls: 0
+Canonical detector modified: YES / NO
+Canonical test file modified: YES / NO
+eligible() changed: NO / YES
+eligible_proposals() changed: NO / YES
+Largest-only private helper added: YES / NO
+Strict area operator: >
+Strict confidence operator: >
+Border bypass allowed: NO
+No-baseline exception allowed: NO
+Smallest family changed: NO
+New numeric threshold: NO
+Targeted test: PASS / FAIL
+Canonical full tests: PASS / FAIL
+External detector before SHA: <full sha>
+External detector after SHA: <full sha>
+External detector unchanged: YES / NO
+Source manifest updated: NO
+Manifest status: INTENTIONALLY_STALE_PENDING_E3B
+Outcome: REF01_ELIGIBILITY_REPAIR_CANONICAL_IMPLEMENTED / other
+Next gate: REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC / other
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
+External/canonical product files modified: NO / YES
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-# 17. STATUS → COMMIT MESSAGE CONSISTENCY GATE
+# 19. FINAL DIFF GATE
 
-This gate exists because E1-R2 had a COMPLETE/commit-message mismatch.
+Allowed ONLY the six paths in §6.
 
-Before commit, determine status mechanically:
+If source_manifest appears => STOP.
 
+# 20. STATUS → COMMIT MESSAGE
+
+If all gates pass:
 ```text
-If:
-script exit = 0
-AND all required stdout matches
-AND evidence assertions pass
-AND final diff contains only allowed paths
-
-then:
 STATUS = COMPLETE
-COMMIT_MESSAGE = docs(rc1): freeze eligibility repair design
+COMMIT_MESSAGE = fix(rc1): implement largest extent dominance exception
 ```
 
 Otherwise:
-
 ```text
 STATUS = STOP
-COMMIT_MESSAGE = docs(rc1): record eligibility repair design stop
+COMMIT_MESSAGE = fix(rc1): record extent dominance implementation stop
 ```
 
-Write both values into `handoff/FROM_DSH.md`.
+Write Status first, then use the matching message exactly.
 
-Then assert:
-
-```text
-STATUS == COMPLETE
-=> commit message MUST equal:
-docs(rc1): freeze eligibility repair design
-
-STATUS == STOP
-=> commit message MUST equal:
-docs(rc1): record eligibility repair design stop
-```
-
-Do not use the wrong message for the status.
-
-# 18. FINAL DIFF GATE
-
-Allowed only:
-
-```text
-scripts/task8b3_ref01_eligibility_repair_design.py
-evaluation/task8b3_ref01_eligibility_repair_design.json
-docs/task8b3_ref01_eligibility_repair_design.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
-```
-
-Any other path => STOP.
-
-# 19. COMMIT / PUSH
-
-Use the mechanically selected message from §17.
+# 21. COMMIT / PUSH
 
 Push only:
-
 ```text
-fix/task8b3-ref01-eligibility-repair-design
+fix/task8b3-ref01-eligibility-repair-impl
 ```
 
-No force push.
-Do not update main.
+No force push. Do not update main. Then STOP.
 
-Then STOP and wait for ChatGPT.
-
-# 20. COMPLETE DEFINITION
+# 22. COMPLETE DEFINITION
 
 COMPLETE only if:
-- exact base head and branch creation;
-- only five allowed paths changed;
-- detector/model calls 0;
-- exact fixed validator used;
-- design was not altered by DSH;
-- locked candidates 4/4 pass;
-- right 1→1;
-- left 14→14;
-- above 4→5;
-- below 1→1;
-- above border giant excluded;
-- synthetic contract 8/8 pass;
-- no new numeric threshold;
+- exact branch/start HEAD;
+- only six allowed paths changed;
+- external delivery unchanged;
+- source_manifest unchanged;
+- exact implementation architecture used;
+- eligible() unchanged;
+- eligible_proposals() unchanged;
+- exception only largest family;
+- no baseline => no exception;
+- border cannot bypass;
+- strict area/confidence dominance;
 - smallest unchanged;
-- no product code changed;
-- status/commit-message consistency gate passes;
+- exactly 8 new tests;
+- targeted test PASS;
+- canonical full test PASS;
+- detector/model calls 0;
+- manifest intentionally stale pending E3B;
+- status/commit-message consistency PASS;
 - evidence/report/FROM_DSH committed/pushed;
 - NEXT not executed;
 - STOP.
