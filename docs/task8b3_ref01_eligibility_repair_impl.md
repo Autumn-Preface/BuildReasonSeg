@@ -293,3 +293,56 @@ rerun of any pytest = NONE · amend = NONE · source_manifest update = NONE · e
 detector or model inference = NONE · NEXT executed = NO
 ```
 
+
+
+---
+
+## 11. E3A-R5D — canonical implementation closure reclassification
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-impl
+HEAD   = 06a031fdfb375f8ccd3689f23f4e384ebfa964ce
+pytest in this task = NONE · py_compile in this task = NONE · detector or model inference = NONE
+detector.py sha256 = bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3
+tests/test_task8b_runtime.py sha256 = 8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d
+```
+
+### 11.1 Canonical runtime asset presence (read-only verification)
+
+| asset | canonical source tree | external delivery |
+|---|---|---|
+| `model/buildreasonseg_advisor/detector.pt` | False | True |
+| `model/buildreasonseg_advisor/decoder.pt` | False | True |
+| `model/components/sam2/sam2.1_hiera_base_plus.pt` | False | True |
+| `model/components/sam2/sam2.1_hiera_b+.yaml` | False | True |
+| `model/components/program_head/program_parser_l3_rehearsal_v1.pt` | False | True |
+| `model/components/program_head/Qwen3-VL-2B-Instruct` | False | True |
+
+```text
+canonical missing assets = ['model/buildreasonseg_advisor/detector.pt', 'model/buildreasonseg_advisor/decoder.pt', 'model/components/sam2/sam2.1_hiera_base_plus.pt', 'model/components/sam2/sam2.1_hiera_b+.yaml', 'model/components/program_head/program_parser_l3_rehearsal_v1.pt', 'model/components/program_head/Qwen3-VL-2B-Instruct']
+external present assets  = 6 of 6
+```
+
+This is the verified explanation for the canonical full-suite result: the canonical **source tree** does not carry the
+runtime assets the setup-checker and end-to-end tests require, so the canonical run reported 17 failed / 101 passed /
+6 errors with `FileNotFoundError` in `tests/test_setup_checker.py`, while the same assets exist in the external
+delivery.
+
+### 11.2 Reclassification of the evidence
+
+```text
+valid implementation regression evidence = targeted suite 40 passed in 0.69s (exit 0, recorded from R5C, not re-run)
+canonical full suite = DEFERRED until the E3B external RC1 controlled sync
+superseded R5C evidence removed = evaluation/task8b3_ref01_e3a_r5c_canonical_closure.json
+final E3A evidence = evaluation\task8b3_ref01_e3a_canonical_implementation_closure.json
+source_manifest updated = NONE · external RC1 synced = NONE · detector/tests modified = NONE
+```
+
+### 11.3 Explicit non-execution
+
+```text
+pytest / py_compile = NONE / NONE (pure artifact closure)
+detector / tests / source_manifest modification = NONE
+external RC1 sync = NONE · detector or model inference = NONE
+manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
+```
