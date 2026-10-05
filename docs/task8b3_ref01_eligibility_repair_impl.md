@@ -451,3 +451,31 @@ manifest / detector / tests / pipeline / sync helper modified = NONE
 overall outcome = REF01_ELIGIBILITY_REPAIR_MANIFEST_CANONICALIZED
 NEXT = REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_AND_FULL_SUITE (not executed)
 ```
+
+
+---
+
+## 15. E3B2 — controlled external sync and full delivery suite
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-sync
+HEAD   = 300cdad5629b945ffe10480351081f9c8befe7f4
+sync policy audit: 135 entries · weights/runs/logs/inference outputs excluded = True
+pre-sync external check  = exit 1 · {'checked': 135, 'match': 133, 'missing': 0, 'mismatch': 2} · mismatch paths ['buildreasonseg/runtime/detector.py', 'tests/test_task8b_runtime.py']
+controlled sync (once)   = exit 0 · {'copied': 135, 'verified': 135, 'failures': 0}
+post-sync external check = exit 0 · {'checked': 135, 'match': 135, 'missing': 0, 'mismatch': 0} · mismatch paths []
+canonical source_manifest git-object bytes copied to external = YES (sha256 5c175a9ced591210...)
+external check_setup.py  = exit 0 · READY True
+targeted regression      = exit 0 · 40 passed in 1.13s
+external full suite      = exit 0 · 124 passed in 112.81s (0:01:52)
+canonical product/manifest/helper modified = NO · dependency installation = NONE · model inference = NONE
+status = COMPLETE
+```
+
+### 15.1 Explicit non-execution
+
+```text
+canonical product / manifest / sync helper modification = NONE
+dependency installation = NONE · model inference = NONE
+rerun of any failing suite = NONE · self-repair = NONE · NEXT executed = NO
+```

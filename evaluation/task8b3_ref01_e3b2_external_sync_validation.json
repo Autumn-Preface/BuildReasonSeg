@@ -1,0 +1,61 @@
+{
+  "task": "8B.3-REF01-E3B2",
+  "branch": "fix/task8b3-ref01-eligibility-repair-sync",
+  "starting_head": "300cdad5629b945ffe10480351081f9c8befe7f4",
+  "sync_policy": {
+    "entry_count": 135,
+    "excludes_weights_runs_logs_outputs": true,
+    "violations": []
+  },
+  "pre_sync": {
+    "exit": 1,
+    "counts": {
+      "checked": 135,
+      "match": 133,
+      "missing": 0,
+      "mismatch": 2
+    },
+    "mismatch_paths": [
+      "buildreasonseg/runtime/detector.py",
+      "tests/test_task8b_runtime.py"
+    ]
+  },
+  "controlled_sync": {
+    "exit": 0,
+    "counts": {
+      "copied": 135,
+      "verified": 135,
+      "failures": 0
+    }
+  },
+  "post_sync": {
+    "exit": 0,
+    "counts": {
+      "checked": 135,
+      "match": 135,
+      "missing": 0,
+      "mismatch": 0
+    },
+    "mismatch_paths": []
+  },
+  "manifest_git_object_sync": {
+    "sha256": "5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c",
+    "identical_to_git_object": true
+  },
+  "check_setup": {
+    "exit": 0,
+    "ready": true
+  },
+  "targeted_regression": {
+    "exit": 0,
+    "summary": "40 passed in 1.13s"
+  },
+  "external_full_suite": {
+    "exit": 0,
+    "summary": "124 passed in 112.81s (0:01:52)"
+  },
+  "canonical_product_manifest_helper_modified": false,
+  "dependencies_installed": false,
+  "model_inference": "NONE",
+  "status": "COMPLETE"
+}
