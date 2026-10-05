@@ -1,87 +1,49 @@
 请先读取 `handoff/TO_DSH.md`，并严格以该文件作为本轮唯一任务书。
 
-本次任务名称：**Task 8B.3-REF01-E3C0 — Locked Replay Saved-Artifact Audit**
+本次任务名称：**Task 8B.3-REF01-E3C0-R1 — Bounded Artifact Audit Correction**
 
-# TO_DSH — Task 8B.3-REF01-E3C0: Locked Replay Saved-Artifact Audit
+# TO_DSH — Task 8B.3-REF01-E3C0-R1: Bounded Artifact Audit Correction
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required base branch: `fix/task8b3-ref01-eligibility-repair-sync`
-> Required base HEAD: `1197d860b8b1a3503c6cba730eda33ccbff4e1c5`
-> New audit branch: `audit/task8b3-ref01-locked-replay-artifacts`
+> Required branch: `audit/task8b3-ref01-locked-replay-artifacts`
+> Required starting HEAD: `bde13bd15bbab3e455ea1d3ef10b3f6740fc110d`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. CHATGPT DECISION
+# 0. CHATGPT AUDIT DISPOSITION
 
-Task 8B.3-REF01-E3B2 is formally CLOSED.
+E3C0 is **NOT APPROVED**.
 
-The next technical gate is:
+The prior commit is preserved in history. Do NOT rewrite or amend it.
 
-```text
-REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
-```
+Observed defects that R1 must correct:
 
-However, ChatGPT has NOT yet established that the exact saved proposal artifacts needed for a zero-detector replay are still present and sufficiently complete.
+1. The previous audit searched forbidden repository roots:
+   - `...\BuildReasonSeg\artifacts`
+   - `...\BuildReasonSeg\inference`
 
-Therefore E3C0 is a **read-only saved-artifact audit**.
+2. The previous audit searched forbidden external root:
+   - `...\BuildReasonSeg_Advisor_RC1\logs`
 
-It MUST NOT execute the replay itself.
-It MUST NOT rerun detector/model inference.
-It MUST NOT regenerate proposals.
+3. The evidence schema did not follow the prescribed E3C0 schema.
 
-The sole purpose is to answer:
+4. The previous audit invented unapproved readiness/outcome enums such as:
+   - `SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU`
+   - `REFERENCE_IOU_REPLAY_READY_END_TO_END_NOT_READY`
+   - `REF01_LOCKED_REPLAY_ARTIFACT_COMPLETION`
 
-```text
-Do exact saved artifacts exist that allow the four locked cases
-(right/left/above/below)
-to be replayed deterministically without any detector/model call?
-```
+5. The report path was wrong:
+   - created: `docs/task8b3_ref01_locked_replay_artifact_audit.md`
+   - required: `docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md`
 
-# 1. FROZEN LOCKED CASES / HISTORICAL FACTS
+6. The report and FROM_DSH discussed end-to-end replay gaps that were outside this audit decision tree.
 
-The only four cases in scope are:
+R1 must discard all conclusions derived from forbidden roots and redo the audit using ONLY the roots and classification rules in this taskbook.
 
-```text
-right:
-tile = 1010
-historical raw / merged / eligible = 6 / 6 / 4
-historical production largest selection = proposal 1
-historical classification = REFERENCE_SELECTED_CORRECT
-
-left:
-tile = 1003
-historical raw / merged / eligible = 66 / 53 / 42
-historical production largest selection = proposal 14
-historical best-covered reference proposal = 30
-historical classification = REFERENCE_SELECTION_WRONG_COVERED
-
-above:
-tile = 1008
-historical raw / merged / eligible = 9 / 9 / 4
-historical production largest selection = proposal 4
-historical best-covered reference proposal = 5
-proposal 5:
-  mask_area = 5059
-  confidence = 0.7026934027671814
-  touches_image_border = false
-  bbox_extent_ratio = 0.296875
-  IoU_to_GT_reference = 0.9032501889644747
-proposal 3:
-  mask_area = 11474
-  touches_image_border = true
-  bbox_extent_ratio = 0.39453125
-historical classification = REFERENCE_ELIGIBILITY_BLOCKED
-
-below:
-tile = 1009
-historical raw / merged / eligible = 7 / 6 / 3
-historical production largest selection = proposal 1
-historical best-covered reference proposal = 2
-historical classification = REFERENCE_SELECTION_WRONG_COVERED
-```
+# 1. SCIENTIFIC / ENGINEERING STATE
 
 Frozen repair design:
 
@@ -89,431 +51,16 @@ Frozen repair design:
 LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
 ```
 
-Locked expected post-repair reference selection, for a later task only:
+Locked cases:
 
 ```text
-right: 1 -> 1
-left: 14 -> 14
-above: 4 -> 5
-below: 1 -> 1
+right  -> tile 1010
+left   -> tile 1003
+above  -> tile 1008
+below  -> tile 1009
 ```
 
-E3C0 MUST NOT claim these post-repair results have been replay-validated.
-They are only the frozen expected result for the future replay.
-
-# 2. EXECUTOR CONTRACT
-
-DSH has ZERO algorithm/design discretion.
-
-Allowed operations ONLY:
-
-1. verify exact base branch/head and working-tree state;
-2. create the exact new audit branch;
-3. perform the exact bounded read-only searches in §§4–8;
-4. inspect only candidate artifact files allowed by §3;
-5. hash candidate artifact files;
-6. classify artifact readiness mechanically using §9;
-7. create exact evidence/report/FROM_DSH;
-8. make exactly one audit commit;
-9. push the audit branch once;
-10. STOP.
-
-Forbidden:
-- NO detector call;
-- NO YOLO/Ultralytics inference;
-- NO SAM/SAM2 inference;
-- NO Qwen/MLLM inference;
-- NO `predict.py`;
-- NO pipeline inference;
-- NO proposal regeneration;
-- NO image inference;
-- NO final Demo run;
-- NO threshold tuning;
-- NO source/test/manifest/helper modification;
-- NO external RC1 write;
-- NO dataset scan outside the explicitly allowed roots;
-- NO opening/reading model weights;
-- NO `.pt/.pth/.ckpt/.safetensors/.bin` load;
-- NO pickle execution / unpickle;
-- NO package install/update;
-- NO environment change;
-- NO rebase/reset/amend/stash/clean;
-- NO force push;
-- NO intermediate commit/push;
-- NO actual production replay;
-- NO NEXT.
-
-If a search root does not exist, record `ROOT_MISSING` and continue.
-If a candidate file cannot be safely inspected under these rules, record metadata/hash only.
-Do NOT invent a workaround.
-
-# 3. EXACT ALLOWED SEARCH ROOTS / FILE TYPES
-
-## 3.1 Repository roots
-
-Read-only search is allowed under exactly:
-
-```text
-evaluation\
-docs\
-handoff\
-scripts\
-```
-
-This includes tracked and untracked local files under those roots.
-
-Do NOT recursively search:
-- datasets;
-- model directories;
-- `.conda`;
-- `.git`;
-- delivery model assets;
-- arbitrary workspace parent directories.
-
-## 3.2 External RC1 roots
-
-Read-only search is allowed under exactly:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\docs
-```
-
-Also allowed at external RC1 root level ONLY:
-- `*.json`
-- `*.md`
-- `*.txt`
-- `*.csv`
-
-Do NOT recurse into external:
-- `model\`
-- `datasets\`
-- `runs\`
-- `logs\`
-
-## 3.3 Inspectable formats
-
-Text inspection allowed only for files <= 20 MiB with extensions:
-
-```text
-.json
-.jsonl
-.md
-.txt
-.csv
-.yaml
-.yml
-```
-
-Structured binary metadata inspection allowed only for:
-
-```text
-.npy
-.npz
-```
-
-Rules:
-- `.npy/.npz` may be inspected ONLY with NumPy `allow_pickle=False`;
-- no object-array loading;
-- record keys/shapes/dtypes only unless scalar numeric arrays are clearly proposal records;
-- no image/model execution.
-
-For these extensions, metadata/hash only; DO NOT deserialize:
-
-```text
-.pkl
-.pickle
-.joblib
-.pt
-.pth
-.ckpt
-.safetensors
-.bin
-```
-
-# 4. GIT / BRANCH GATE
-
-Require exactly:
-
-```text
-git branch --show-current
-= fix/task8b3-ref01-eligibility-repair-sync
-
-git rev-parse HEAD
-= 1197d860b8b1a3503c6cba730eda33ccbff4e1c5
-```
-
-Allowed initial working tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
-
-Anything else => STOP.
-
-Create exactly:
-
-```text
-audit/task8b3-ref01-locked-replay-artifacts
-```
-
-After branch creation require:
-
-```text
-git branch --show-current
-= audit/task8b3-ref01-locked-replay-artifacts
-
-git rev-parse HEAD
-= 1197d860b8b1a3503c6cba730eda33ccbff4e1c5
-```
-
-No other branch operation.
-
-# 5. TRACKED-REPOSITORY EXACT TEXT SEARCH
-
-From repository root run these commands exactly, in this order.
-
-## 5.1 Filename inventory anchors
-
-```text
-git ls-files evaluation docs handoff scripts
-```
-
-Capture the complete output for audit analysis.
-
-## 5.2 Tile-anchor grep
-
-Run:
-
-```text
-git grep -n -I -E "tile.?1010|tile.?1003|tile.?1008|tile.?1009|tile_id.?1010|tile_id.?1003|tile_id.?1008|tile_id.?1009" -- evaluation docs handoff scripts
-```
-
-Exit 0 or 1 is allowed.
-- exit 0 = matches found;
-- exit 1 = no matches;
-- any other exit => STOP.
-
-## 5.3 Task/provenance-anchor grep
-
-Run:
-
-```text
-git grep -n -I -E "P1D12|P1D11|REF01|REF-01|eligibility.forensics|locked.demo.proposal|proposal.gate|REFERENCE_ELIGIBILITY_BLOCKED|REFERENCE_SELECTION_WRONG_COVERED" -- evaluation docs handoff scripts
-```
-
-Exit 0 or 1 allowed only.
-
-## 5.4 Known-proposal-value grep
-
-Run:
-
-```text
-git grep -n -I -E "0\.9032501889644747|0\.7026934027671814|0\.296875|5059|11474|0\.39453125" -- evaluation docs handoff scripts
-```
-
-Exit 0 or 1 allowed only.
-
-Do NOT broaden grep to the whole repository.
-
-# 6. LOCAL REPOSITORY ALLOWED-ROOT FILESYSTEM SEARCH
-
-Use PowerShell from repository root.
-
-Run exactly:
-
-```powershell
-$roots = @("evaluation","docs","handoff","scripts")
-$patterns = @("1010","1003","1008","1009","P1D12","REF01","REF-01","proposal","eligibility","locked")
-Get-ChildItem $roots -Recurse -File -ErrorAction SilentlyContinue |
-  Where-Object {
-    $n = $_.Name
-    ($patterns | Where-Object { $n -match [regex]::Escape($_) }).Count -gt 0
-  } |
-  Select-Object FullName,Length,LastWriteTime |
-  Sort-Object FullName
-```
-
-Capture all output.
-
-Then run text search exactly:
-
-```powershell
-Get-ChildItem $roots -Recurse -File -Include *.json,*.jsonl,*.md,*.txt,*.csv,*.yaml,*.yml -ErrorAction SilentlyContinue |
-  Where-Object { $_.Length -le 20MB } |
-  Select-String -Pattern 'tile.?1010|tile.?1003|tile.?1008|tile.?1009|P1D12|REF01|REF-01|0\.9032501889644747|0\.7026934027671814|0\.296875|5059|11474|0\.39453125' |
-  Select-Object Path,LineNumber,Line
-```
-
-Capture all output.
-
-Do NOT edit any found file.
-
-# 7. EXTERNAL RC1 BOUNDED READ-ONLY SEARCH
-
-## 7.1 Root existence
-
-Check only:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\docs
-```
-
-Record `PRESENT` or `ROOT_MISSING`.
-
-## 7.2 Allowed recursive filename search
-
-For each PRESENT root, run PowerShell:
-
-```powershell
-$patterns = @("1010","1003","1008","1009","P1D12","REF01","REF-01","proposal","eligibility","locked")
-Get-ChildItem "<ROOT>" -Recurse -File -ErrorAction SilentlyContinue |
-  Where-Object {
-    $n = $_.Name
-    ($patterns | Where-Object { $n -match [regex]::Escape($_) }).Count -gt 0
-  } |
-  Select-Object FullName,Length,LastWriteTime |
-  Sort-Object FullName
-```
-
-Replace `<ROOT>` with the exact root, one command per PRESENT root.
-
-## 7.3 External root-level files only
-
-At:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-list ONLY non-recursive:
-
-```powershell
-Get-ChildItem "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1" -File -Include *.json,*.md,*.txt,*.csv -ErrorAction SilentlyContinue |
-  Select-Object FullName,Length,LastWriteTime |
-  Sort-Object FullName
-```
-
-## 7.4 Text anchor search
-
-For each PRESENT recursive root:
-
-```powershell
-Get-ChildItem "<ROOT>" -Recurse -File -Include *.json,*.jsonl,*.md,*.txt,*.csv,*.yaml,*.yml -ErrorAction SilentlyContinue |
-  Where-Object { $_.Length -le 20MB } |
-  Select-String -Pattern 'tile.?1010|tile.?1003|tile.?1008|tile.?1009|P1D12|REF01|REF-01|0\.9032501889644747|0\.7026934027671814|0\.296875|5059|11474|0\.39453125' |
-  Select-Object Path,LineNumber,Line
-```
-
-No external write is allowed.
-
-# 8. CANDIDATE ARTIFACT INSPECTION CONTRACT
-
-A file becomes a **candidate artifact** only if at least one of the bounded searches above matches one of these locked anchors:
-
-```text
-tile 1010 / 1003 / 1008 / 1009
-P1D12
-REF01 / REF-01
-known above proposal values
-```
-
-For EVERY candidate artifact:
-
-1. record absolute or repo-relative path;
-2. record bytes;
-3. compute SHA256 using read-only hashing;
-4. record whether tracked by Git;
-5. record file type;
-6. record which locked case(s) it supports;
-7. record which required replay fields are actually present.
-
-For text files, read only the relevant sections/records needed to inventory schema.
-
-For `.npy/.npz`, use `allow_pickle=False` and record:
-- keys;
-- shapes;
-- dtypes;
-- scalar field names if visible.
-
-DO NOT infer missing fields from names.
-DO NOT deserialize pickle-like formats.
-
-# 9. MECHANICAL REPLAY-READINESS CLASSIFICATION
-
-For each locked case separately, inventory whether the saved artifacts contain these exact categories.
-
-## A. Proposal identity/list
-
-Required:
-- stable `proposal_id`;
-- complete merged proposal list for the case, not only the winning proposal.
-
-## B. Production-selection scalar fields
-
-Required for every merged proposal:
-- `mask_area`;
-- `confidence`;
-- `touches_image_border`;
-- `bbox_extent_ratio`;
-- nonempty-mask fact, OR exact saved mask allowing nonempty to be read.
-
-## C. Exact mask/object replay material
-
-For `FULL_PRODUCTION_REPLAY_READY`, also require for every merged proposal:
-- exact saved mask / mask_crop / reconstructable serialized data sufficient to instantiate the production proposal object without detector regeneration;
-- any additional constructor fields actually required by current `GlobalProposal`.
-
-## D. Forensic correctness linkage
-
-Required to classify semantic correctness:
-- saved per-proposal IoU to the locked GT reference, OR
-- exact GT-reference mask/linkage plus proposal masks sufficient to recompute IoU with no detector/model call.
-
-Historical prose summaries alone may support provenance comparison, but do NOT satisfy C.
-
-## Overall readiness enum
-
-Set exactly one:
-
-### `FULL_PRODUCTION_REPLAY_READY`
-
-Only if ALL FOUR cases satisfy A+B+C+D.
-
-Meaning:
-- future task may invoke the current production selector on exact saved proposal objects/records;
-- detector/model calls remain zero.
-
-### `RECORD_LEVEL_REPLAY_READY`
-
-Only if ALL FOUR cases satisfy A+B+D, but at least one case lacks C.
-
-Meaning:
-- a deterministic locked proposal-record replay is possible;
-- actual production-object replay is NOT yet proven possible.
-
-### `LOCKED_REPLAY_ARTIFACTS_PARTIAL`
-
-If at least one relevant artifact exists, but one or more cases fail A or B or D.
-
-### `LOCKED_REPLAY_ARTIFACTS_NOT_FOUND`
-
-If no relevant candidate artifact is found beyond prose/task summaries that do not contain replay records.
-
-DSH MUST NOT choose a different enum.
-
-# 10. REQUIRED CASE CONSISTENCY CHECKS
-
-Where the saved artifact contains the relevant facts, compare them to the frozen historical facts.
-
-Record each as:
-
-```text
-MATCH
-MISMATCH
-NOT_AVAILABLE
-```
-
-Required checks:
+Frozen historical facts:
 
 ```text
 right:
@@ -535,14 +82,16 @@ merged=9
 eligible=4
 pre_selected=4
 best_covered=5
-proposal5 area=5059
-proposal5 confidence=0.7026934027671814
-proposal5 border=false
-proposal5 extent=0.296875
-proposal5 IoU=0.9032501889644747
-proposal3 area=11474
-proposal3 border=true
-proposal3 extent=0.39453125
+proposal5:
+  mask_area=5059
+  confidence=0.7026934027671814
+  touches_image_border=false
+  bbox_extent_ratio=0.296875
+  IoU=0.9032501889644747
+proposal3:
+  mask_area=11474
+  touches_image_border=true
+  bbox_extent_ratio=0.39453125
 
 below:
 raw=7
@@ -552,29 +101,502 @@ pre_selected=1
 best_covered=2
 ```
 
-A MISMATCH does NOT authorize correction or detector rerun.
-It must be reported as a fact.
+Frozen expected later replay result:
 
-# 11. EVIDENCE JSON
+```text
+right: 1 -> 1
+left: 14 -> 14
+above: 4 -> 5
+below: 1 -> 1
+```
 
-Create exactly:
+R1 MUST NOT claim this post-repair result has been replay-validated.
+
+# 2. EXECUTOR CONTRACT
+
+DSH has ZERO technical/design discretion.
+
+Allowed operations ONLY:
+
+1. verify exact branch/head and working-tree state;
+2. perform the exact bounded read-only searches in §§5–7;
+3. inspect only candidate files allowed by §4;
+4. hash those candidate files;
+5. classify readiness mechanically using §8;
+6. compare only the frozen facts in §1;
+7. delete the wrong prior report path;
+8. overwrite the E3C0 evidence JSON with the corrected exact schema;
+9. create the correct E3C0 report path;
+10. overwrite FROM_DSH with the corrected result while preserving ARTIFACT-FACTS exactly;
+11. leave this taskbook as `handoff/TO_DSH.md`;
+12. make exactly one R1 commit;
+13. push once;
+14. STOP.
+
+Forbidden:
+- NO detector call;
+- NO YOLO/Ultralytics inference;
+- NO SAM/SAM2 inference;
+- NO Qwen/MLLM inference;
+- NO `predict.py`;
+- NO proposal regeneration;
+- NO image inference;
+- NO actual replay;
+- NO final Demo;
+- NO threshold tuning;
+- NO source/test/manifest/helper edit;
+- NO external RC1 write;
+- NO search under repository `artifacts\`;
+- NO search under repository `inference\`;
+- NO search under external `logs\`;
+- NO search under datasets/model/runs;
+- NO arbitrary workspace-parent search;
+- NO `.pt/.pth/.ckpt/.safetensors/.bin` load;
+- NO pickle/unpickle;
+- NO package/environment change;
+- NO rebase/reset/amend/stash/clean;
+- NO force push;
+- NO intermediate commit/push;
+- NO NEXT.
+
+Any uncovered condition => STOP and report facts. Do not invent a workaround.
+
+# 3. CURRENT PRODUCTION OBJECT CONTRACT — READ ONLY
+
+For deciding whether full production-object replay is possible, use the current committed `GlobalProposal` constructor contract only.
+
+The current constructor fields are:
+
+```text
+proposal_id
+source_tile_id
+tile_index
+confidence
+mask_crop
+global_bbox
+mask_area
+touches_image_border
+border_clearance
+centroid
+raw_index
+pad_mask_empty
+image_size
+```
+
+The `bbox_extent_ratio` is derived from `global_bbox`.
+
+For `FULL_PRODUCTION_REPLAY_READY`, saved artifacts must be sufficient to reconstruct every merged proposal for all four cases with all constructor fields required by the current code, including exact `mask_crop`, without detector/model regeneration.
+
+A visualization PNG is NOT an exact proposal mask serialization.
+A prose statement is NOT mask material.
+
+# 4. EXACT ALLOWED ROOTS / FORMATS
+
+## 4.1 Repository roots
+
+Read-only search is allowed ONLY under:
+
+```text
+evaluation\
+docs\
+handoff\
+scripts\
+```
+
+Repository paths explicitly forbidden:
+
+```text
+artifacts\
+inference\
+datasets\
+model\
+.conda\
+.git\
+```
+
+## 4.2 External RC1
+
+Recursive read-only search is allowed ONLY under:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\docs
+```
+
+At the external RC1 root itself, only a NON-RECURSIVE listing/inspection of:
+
+```text
+*.json
+*.md
+*.txt
+*.csv
+```
+
+is allowed.
+
+Explicitly forbidden external recursion:
+
+```text
+logs\
+model\
+datasets\
+runs\
+```
+
+## 4.3 Safe inspectable types
+
+Text content inspection only for files <=20 MiB:
+
+```text
+.json
+.jsonl
+.md
+.txt
+.csv
+.yaml
+.yml
+```
+
+For `.npy/.npz`:
+- inspect only with NumPy `allow_pickle=False`;
+- no object arrays;
+- record keys/shapes/dtypes;
+- numeric/scalar record values may be read only if clearly part of the candidate proposal/GT artifact.
+
+For:
+```text
+.png
+.jpg
+.jpeg
+.tif
+.tiff
+```
+metadata/hash only. Do NOT treat a visualization image as proposal mask/object replay material unless the file is explicitly documented by an allowed text artifact as a machine-readable exact mask AND this exact fact is recorded. Otherwise C=false.
+
+For:
+```text
+.pkl
+.pickle
+.joblib
+.pt
+.pth
+.ckpt
+.safetensors
+.bin
+```
+metadata/hash only; do not deserialize/load.
+
+# 5. GIT GATE
+
+Require:
+
+```text
+git branch --show-current
+= audit/task8b3-ref01-locked-replay-artifacts
+
+git rev-parse HEAD
+= bde13bd15bbab3e455ea1d3ef10b3f6740fc110d
+```
+
+Allowed initial working tree:
+- clean; or
+- only `M handoff/TO_DSH.md`.
+
+Anything else => STOP.
+
+No branch creation/switching.
+
+Require before final commit:
+
+```text
+git rev-list --count bde13bd15bbab3e455ea1d3ef10b3f6740fc110d..HEAD
+= 0
+```
+
+# 6. REPOSITORY BOUNDED SEARCH — EXACT
+
+From repository root run exactly:
+
+```text
+git ls-files evaluation docs handoff scripts
+```
+
+Then:
+
+```text
+git grep -n -I -E "tile.?1010|tile.?1003|tile.?1008|tile.?1009|tile_id.?1010|tile_id.?1003|tile_id.?1008|tile_id.?1009" -- evaluation docs handoff scripts
+```
+
+Then:
+
+```text
+git grep -n -I -E "P1D12|P1D11|REF01|REF-01|eligibility.forensics|locked.demo.proposal|proposal.gate|REFERENCE_ELIGIBILITY_BLOCKED|REFERENCE_SELECTION_WRONG_COVERED" -- evaluation docs handoff scripts
+```
+
+Then:
+
+```text
+git grep -n -I -E "0\.9032501889644747|0\.7026934027671814|0\.296875|5059|11474|0\.39453125" -- evaluation docs handoff scripts
+```
+
+For each grep, exit 0 or 1 is allowed; any other exit => STOP.
+
+Local untracked search ONLY under these same roots:
+
+```powershell
+$roots = @("evaluation","docs","handoff","scripts")
+$patterns = @("1010","1003","1008","1009","P1D12","REF01","REF-01","proposal","eligibility","locked")
+Get-ChildItem $roots -Recurse -File -ErrorAction SilentlyContinue |
+  Where-Object {
+    $n = $_.Name
+    ($patterns | Where-Object { $n -match [regex]::Escape($_) }).Count -gt 0
+  } |
+  Select-Object FullName,Length,LastWriteTime |
+  Sort-Object FullName
+```
+
+Then:
+
+```powershell
+Get-ChildItem $roots -Recurse -File -Include *.json,*.jsonl,*.md,*.txt,*.csv,*.yaml,*.yml -ErrorAction SilentlyContinue |
+  Where-Object { $_.Length -le 20MB } |
+  Select-String -Pattern 'tile.?1010|tile.?1003|tile.?1008|tile.?1009|P1D12|REF01|REF-01|0\.9032501889644747|0\.7026934027671814|0\.296875|5059|11474|0\.39453125' |
+  Select-Object Path,LineNumber,Line
+```
+
+Do NOT search any other repository root.
+
+# 7. EXTERNAL BOUNDED SEARCH — EXACT
+
+Check existence ONLY for:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\docs
+```
+
+Record `PRESENT` or `ROOT_MISSING`.
+
+For each PRESENT root run:
+
+```powershell
+$patterns = @("1010","1003","1008","1009","P1D12","REF01","REF-01","proposal","eligibility","locked")
+Get-ChildItem "<ROOT>" -Recurse -File -ErrorAction SilentlyContinue |
+  Where-Object {
+    $n = $_.Name
+    ($patterns | Where-Object { $n -match [regex]::Escape($_) }).Count -gt 0
+  } |
+  Select-Object FullName,Length,LastWriteTime |
+  Sort-Object FullName
+```
+
+Then for each PRESENT root:
+
+```powershell
+Get-ChildItem "<ROOT>" -Recurse -File -Include *.json,*.jsonl,*.md,*.txt,*.csv,*.yaml,*.yml -ErrorAction SilentlyContinue |
+  Where-Object { $_.Length -le 20MB } |
+  Select-String -Pattern 'tile.?1010|tile.?1003|tile.?1008|tile.?1009|P1D12|REF01|REF-01|0\.9032501889644747|0\.7026934027671814|0\.296875|5059|11474|0\.39453125' |
+  Select-Object Path,LineNumber,Line
+```
+
+External root-level NON-RECURSIVE command only:
+
+```powershell
+Get-ChildItem "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1" -File -ErrorAction SilentlyContinue |
+  Where-Object { $_.Extension -in ".json",".md",".txt",".csv" } |
+  Select-Object FullName,Length,LastWriteTime |
+  Sort-Object FullName
+```
+
+Do NOT run any command against external `logs`.
+
+# 8. MECHANICAL READINESS RULE
+
+For each case, determine A/B/C/D independently.
+
+## A — complete proposal list
+
+A=true only if an allowed artifact establishes:
+- stable `proposal_id`;
+- complete merged proposal list;
+- record count equals frozen merged count:
+  - right 6
+  - left 53
+  - above 9
+  - below 6
+
+Otherwise A=false.
+
+## B — production selection scalars
+
+B=true only if EVERY merged proposal record for the case contains:
+- `proposal_id`;
+- `mask_area`;
+- `confidence`;
+- `touches_image_border`;
+- `bbox_extent_ratio` OR `global_bbox` sufficient to derive it exactly;
+- explicit nonempty-mask fact OR exact saved mask material from which nonempty is directly readable.
+
+Do NOT assume `mask_area > 0` is equivalent to `mask_crop.any()` unless an allowed artifact explicitly records nonempty or exact mask material exists.
+
+Otherwise B=false.
+
+## C — exact production object/mask material
+
+C=true only if EVERY merged proposal can be reconstructed as current `GlobalProposal` without detector/model inference, including exact `mask_crop` and required constructor fields.
+
+`global_proposals.png` alone never satisfies C.
+
+Otherwise C=false.
+
+## D — forensic correctness linkage
+
+D=true only if, for every merged proposal needed to establish selected/best-covered reference correctness, allowed artifacts contain either:
+- saved per-proposal IoU to the locked GT reference; OR
+- exact proposal mask + exact GT-reference mask/linkage sufficient to recompute IoU with zero model calls.
+
+Historical prose summaries do not satisfy D by themselves.
+
+Otherwise D=false.
+
+## Overall enum — EXACTLY ONE
+
+```text
+FULL_PRODUCTION_REPLAY_READY
+```
+iff A+B+C+D are true for all four cases.
+
+```text
+RECORD_LEVEL_REPLAY_READY
+```
+iff A+B+D are true for all four cases and C is false for at least one case.
+
+```text
+LOCKED_REPLAY_ARTIFACTS_PARTIAL
+```
+iff at least one relevant allowed artifact exists but at least one case fails A or B or D.
+
+```text
+LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
+```
+iff no relevant candidate replay artifact exists beyond prose summaries.
+
+NO OTHER ENUM IS PERMITTED.
+
+Boolean mapping:
+
+```text
+production_object_replay_possible_without_detector =
+true only for FULL_PRODUCTION_REPLAY_READY
+
+record_level_replay_possible_without_detector =
+true for FULL_PRODUCTION_REPLAY_READY or RECORD_LEVEL_REPLAY_READY
+false otherwise
+```
+
+# 9. CANDIDATE ARTIFACT RECORDING
+
+A candidate artifact is only a file found from the allowed searches in §§6–7 that materially supports A/B/C/D or a frozen consistency check.
+
+For every candidate record exactly:
+
+```json
+{
+  "path": "...",
+  "bytes": 0,
+  "sha256": "...",
+  "tracked_by_git": true,
+  "format": "...",
+  "supports_cases": [],
+  "fields_present": [],
+  "inspection_status": "INSPECTED"
+}
+```
+
+Use `"METADATA_ONLY"` instead of `"INSPECTED"` if content was not safely inspected.
+
+For external files:
+```text
+tracked_by_git = false
+```
+
+Do NOT include files discovered only through the forbidden prior searches.
+
+# 10. CONSISTENCY CHECKS — EXACT KEYS
+
+For each case use only:
+`MATCH`, `MISMATCH`, `NOT_AVAILABLE`.
+
+right:
+```text
+raw_count
+merged_count
+eligible_count
+pre_selected
+```
+
+left:
+```text
+raw_count
+merged_count
+eligible_count
+pre_selected
+best_covered
+```
+
+above:
+```text
+raw_count
+merged_count
+eligible_count
+pre_selected
+best_covered
+proposal5_mask_area
+proposal5_confidence
+proposal5_touches_image_border
+proposal5_bbox_extent_ratio
+proposal5_iou
+proposal3_mask_area
+proposal3_touches_image_border
+proposal3_bbox_extent_ratio
+```
+
+below:
+```text
+raw_count
+merged_count
+eligible_count
+pre_selected
+best_covered
+```
+
+No extra interpretation.
+
+# 11. CORRECTED EVIDENCE JSON — EXACT TOP LEVEL
+
+Overwrite exactly:
 
 ```text
 evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
 ```
 
-Required top-level schema:
+Use exactly these top-level keys:
 
 ```json
 {
-  "task": "8B.3-REF01-E3C0",
-  "base_head": "1197d860b8b1a3503c6cba730eda33ccbff4e1c5",
+  "task": "8B.3-REF01-E3C0-R1",
+  "base_head": "bde13bd15bbab3e455ea1d3ef10b3f6740fc110d",
   "branch": "audit/task8b3-ref01-locked-replay-artifacts",
-  "scope": "READ_ONLY_LOCKED_REPLAY_SAVED_ARTIFACT_AUDIT",
+  "scope": "READ_ONLY_LOCKED_REPLAY_SAVED_ARTIFACT_AUDIT_CORRECTION",
   "detector_model_calls": 0,
   "proposal_regeneration_performed": false,
   "product_source_changed": false,
   "external_write_performed": false,
+  "forbidden_prior_roots_discarded": [
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts",
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\inference",
+    "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs"
+  ],
   "search_roots": {
     "repo": [
       "evaluation",
@@ -595,33 +617,16 @@ Required top-level schema:
     "above": {},
     "below": {}
   },
-  "overall_readiness": "<ONE ENUM FROM SECTION 9>",
-  "production_object_replay_possible_without_detector": "<true or false>",
-  "record_level_replay_possible_without_detector": "<true or false>",
+  "overall_readiness": "<EXACT ENUM>",
+  "production_object_replay_possible_without_detector": false,
+  "record_level_replay_possible_without_detector": false,
   "historical_consistency_mismatches": [],
-  "overall_outcome": "REF01_LOCKED_REPLAY_ARTIFACT_AUDIT_COMPLETE",
-  "next_gate": "<VALUE FROM SECTION 12>"
+  "overall_outcome": "REF01_LOCKED_REPLAY_ARTIFACT_AUDIT_CORRECTED",
+  "next_gate": "<EXACT MAPPED VALUE>"
 }
 ```
 
-Populate `candidate_artifacts` with factual discovered records only.
-
-Each candidate record must contain exactly:
-
-```json
-{
-  "path": "...",
-  "bytes": 0,
-  "sha256": "...",
-  "tracked_by_git": true,
-  "format": "...",
-  "supports_cases": [],
-  "fields_present": [],
-  "inspection_status": "INSPECTED|METADATA_ONLY"
-}
-```
-
-Each `cases.<case>` object must contain:
+Each `cases.<case>` object must contain exactly:
 
 ```json
 {
@@ -636,63 +641,67 @@ Each `cases.<case>` object must contain:
 }
 ```
 
-Use tile IDs:
+Tile IDs:
 - right 1010
 - left 1003
 - above 1008
 - below 1009
 
-Do not add technical conclusions outside this schema.
+No alternate schema.
 
-# 12. NEXT GATE MAPPING
+# 12. NEXT GATE — EXACT MAPPING
 
 If:
 
 ```text
-overall_readiness =
 FULL_PRODUCTION_REPLAY_READY
 ```
 
 then:
 
 ```text
-next_gate =
 REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
 ```
 
 If:
 
 ```text
-overall_readiness =
 RECORD_LEVEL_REPLAY_READY
 ```
 
 then:
 
 ```text
-next_gate =
 REF01_LOCKED_RECORD_REPLAY_DESIGN
 ```
 
 If:
 
 ```text
-overall_readiness =
 LOCKED_REPLAY_ARTIFACTS_PARTIAL
-or
+```
+
+or:
+
+```text
 LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
 ```
 
 then:
 
 ```text
-next_gate =
 REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
 ```
 
 No other next gate.
 
-# 13. REPORT
+# 13. REPORT PATH CORRECTION
+
+Delete exactly:
+
+```text
+docs/task8b3_ref01_locked_replay_artifact_audit.md
+```
 
 Create exactly:
 
@@ -700,10 +709,10 @@ Create exactly:
 docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
 ```
 
-Required sections:
+Required headings exactly:
 
 ```text
-# Task 8B.3-REF01-E3C0 — Locked Replay Saved-Artifact Audit
+# Task 8B.3-REF01-E3C0-R1 — Locked Replay Saved-Artifact Audit Correction
 
 ## Scope
 ## Search roots
@@ -715,38 +724,44 @@ Required sections:
 ## Outcome / NEXT
 ```
 
-Required conclusions must explicitly state:
+Required explicit statements:
 - detector/model calls = 0;
 - proposal regeneration = NO;
+- actual replay = NO;
 - product modification = NO;
 - external write = NO;
-- no final Demo run;
+- forbidden prior-root findings were discarded;
+- no final Demo;
 - exact overall readiness enum;
-- exact next gate;
+- exact mapped next gate;
 - PROP-01 remains `PROP01_OPEN_ENGINEERING_DEFECT`;
 - REF-01 remains ACTIVE;
-- no claim that the repair is replay-validated yet.
+- post-repair `right1/left14/above5/below1` has NOT been replay-validated.
+
+Do NOT discuss generic end-to-end language/SAM2/D-B1/final-mask gaps unless such a fact is directly required to classify A/B/C/D. This audit is about locked reference-selection replay inputs only.
 
 # 14. FROM_DSH
 
-Preserve ARTIFACT-FACTS exactly.
+Preserve the ARTIFACT-FACTS block byte-for-byte.
 
-Active handoff must contain:
+Replace the active handoff with this exact field format:
 
 ```text
-Task: 8B.3-REF01-E3C0
+Task: 8B.3-REF01-E3C0-R1
 Status: COMPLETE
 Branch: audit/task8b3-ref01-locked-replay-artifacts
-Starting HEAD: 1197d860b8b1a3503c6cba730eda33ccbff4e1c5
+Starting HEAD: bde13bd15bbab3e455ea1d3ef10b3f6740fc110d
 Design selected by: CHATGPT
 DSH algorithm choice performed: NO
 Detector/model calls: 0
 Proposal regeneration performed: NO
+Actual replay performed: NO
 Product source changed: NO
 External write performed: NO
+Forbidden prior-root findings discarded: YES
 Locked cases audited: right/1010; left/1003; above/1008; below/1009
 Candidate artifact count: <observed integer>
-Overall replay readiness: <ENUM>
+Overall replay readiness: <EXACT ENUM>
 Production-object replay possible without detector: YES / NO
 Record-level replay possible without detector: YES / NO
 Historical consistency mismatch count: <observed integer>
@@ -754,99 +769,117 @@ Evidence: evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
 Report: docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
 REF-01 status: ACTIVE
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-Next gate: <SECTION 12 VALUE>
+Next gate: <EXACT MAPPED VALUE>
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-# 15. FINAL DIFF GATE
+# 15. PROTECTED FILE GATE
 
-Before commit:
+Require no R1 change to:
 
 ```text
-git diff --name-only 1197d860b8b1a3503c6cba730eda33ccbff4e1c5
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+scripts/sync_advisor_rc1_delivery.py
+docs/task8b3_ref01_eligibility_repair_impl.md
+evaluation/task8b3_ref01_e3b2_external_sync_full_suite.json
+docs/task8b3_ref01_e3b2_external_sync_full_suite.md
 ```
 
-Allowed ONLY:
+No external RC1 file may be written.
+
+# 16. FINAL DIFF GATE
+
+Before commit, relative to R1 starting HEAD:
 
 ```text
-evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
+git diff --name-only bde13bd15bbab3e455ea1d3ef10b3f6740fc110d
+```
+
+Allowed ONLY these five paths:
+
+```text
+docs/task8b3_ref01_locked_replay_artifact_audit.md
 docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
+evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No other path allowed.
+The first path MUST be DELETED.
+The second path MUST be ADDED.
+The remaining three may be MODIFIED.
 
-Require:
+No other path.
+
+Require before commit:
 
 ```text
-git rev-list --count 1197d860b8b1a3503c6cba730eda33ccbff4e1c5..HEAD
+git rev-list --count bde13bd15bbab3e455ea1d3ef10b3f6740fc110d..HEAD
 = 0
 ```
 
-before final commit.
+# 17. COMMIT / PUSH / STOP
 
-# 16. STATUS / COMMIT / PUSH
-
-This task is an audit. A finding of PARTIAL or NOT_FOUND is still a successful audit completion if all searches were executed correctly.
-
-If §§4–15 execute correctly:
+If all audit procedure gates PASS, regardless of which allowed readiness enum is observed:
 
 ```text
 Status = COMPLETE
 Commit message EXACTLY:
-docs(rc1): audit locked replay artifacts
+docs(rc1): correct locked replay artifact audit
 ```
 
-Only use STOP if the audit procedure itself could not be completed safely.
-
-STOP commit message:
+If the correction audit itself cannot be completed safely:
 
 ```text
-docs(rc1): record locked replay artifact audit stop
+Status = STOP
+Commit message EXACTLY:
+docs(rc1): record locked replay artifact audit correction stop
 ```
 
-Commit exactly once.
+Exactly one commit.
 NO amend.
 NO intermediate commit/push.
 
 After commit require:
 
 ```text
-git rev-list --count 1197d860b8b1a3503c6cba730eda33ccbff4e1c5..HEAD
+git rev-list --count bde13bd15bbab3e455ea1d3ef10b3f6740fc110d..HEAD
 = 1
 ```
 
-Push exactly:
+Push current branch once:
 
 ```text
 audit/task8b3-ref01-locked-replay-artifacts
 ```
 
-once.
-
 No force push.
-Do not update main.
 Do not execute NEXT.
-
 Then STOP.
 
-# 17. COMPLETE DEFINITION
+# 18. COMPLETE DEFINITION
 
-COMPLETE means:
-- exact base branch/head;
-- exact audit branch;
-- bounded searches only;
+COMPLETE only if:
+- exact branch/start HEAD;
+- no forbidden root search in R1;
+- forbidden prior-root findings excluded from corrected evidence;
 - zero detector/model calls;
 - zero proposal regeneration;
+- zero actual replay;
 - zero external writes;
-- no product/test/manifest/helper changes;
-- candidate files hashed and schema-inventoried;
-- four locked cases mechanically classified;
-- readiness enum chosen only by §9;
-- exact evidence/report/FROM_DSH created;
-- only four allowed repo paths changed;
-- exactly one audit commit with exact message;
-- audit branch pushed;
-- no replay/NEXT executed;
+- zero product/test/manifest/helper changes;
+- candidate artifacts come only from allowed roots;
+- A/B/C/D evaluated mechanically for all four cases;
+- exact readiness enum used;
+- exact next-gate mapping used;
+- exact evidence schema used;
+- wrong report path deleted;
+- correct report path created;
+- FROM_DSH uses exact field format;
+- only five allowed paths differ;
+- exactly one R1 commit with exact message;
+- push succeeds;
+- NEXT not executed;
 - STOP.
