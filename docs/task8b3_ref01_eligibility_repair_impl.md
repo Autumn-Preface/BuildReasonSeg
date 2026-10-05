@@ -266,3 +266,30 @@ amended to include delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_run
 exactly one task commit for this task. The amend was followed by a lease-protected push of the task branch.
 ```
 
+
+---
+
+## 10. E3A-R5C — static gate, py_compile and pytest results (STOP)
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-impl
+HEAD   = 1fb0e6afefbde7e1e4487cd36cfaa6e98532488c
+attachment deletion staged (user deleted handoff/E3A_R5_apply_exact.py locally) = YES
+product files modified = NO (detector bc5aed885aa5f27b, tests 8071fcc6a10e5f29)
+STATIC_GATE           = 6/7 PASS (one probe string no longer matches; not repaired, per the task rules)
+PRODUCT_PY_COMPILE    = PASS (exit 0)
+TARGETED_PYTEST       = PASS (exit 0 · 40 passed in 0.69s)
+CANONICAL_FULL_PYTEST = FAIL (exit 1 · 17 failed, 101 passed, 6 errors in 39.68s)
+the six errors are FileNotFoundError cases in tests/test_setup_checker.py
+new tests = 8 (largest extent dominance exception suite)
+rerun / amend / source_manifest update / external sync / detector-model inference = NONE
+```
+
+### 10.1 Explicit non-execution
+
+```text
+detector.py / test_task8b_runtime.py modification = NONE
+rerun of any pytest = NONE · amend = NONE · source_manifest update = NONE · external RC1 sync = NONE
+detector or model inference = NONE · NEXT executed = NO
+```
+

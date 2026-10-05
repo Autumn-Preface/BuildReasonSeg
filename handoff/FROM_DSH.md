@@ -53,3 +53,29 @@ Watt was not needed for Task 8B.3-REF01-E3A-R5 (no downloads, no transfers).
 The attachment patcher was verified against its published SHA256, copied byte-for-byte to the prescribed location,
 re-verified there, and executed exactly once; exactly one task commit records the result and no manifest, external file
 or model asset was modified.
+
+# FROM_DSH — Task 8B.3-REF01-E3A-R5C Report
+
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
+
+| item | value |
+|---|---|
+| Task | `8B.3-REF01-E3A-R5C` |
+| Status | **STOP** (static gate 6/7 and canonical full pytest failed) |
+| Branch | `fix/task8b3-ref01-eligibility-repair-impl` |
+| Starting HEAD | `1fb0e6afefbde7e1e4487cd36cfaa6e98532488c` |
+| Attachment deletion staged | YES (`handoff/E3A_R5_apply_exact.py`) |
+| detector.py / test file modified | NO / NO |
+| STATIC_GATE | 6/7 PASS (one probe string for the pre-patch ordering line no longer matches; not repaired) |
+| PRODUCT_PY_COMPILE | PASS (exit 0) |
+| TARGETED_PYTEST | PASS (exit 0 · 40 passed) |
+| CANONICAL_FULL_PYTEST | FAIL (exit 1 · 17 failed, 101 passed, 6 errors) |
+| Rerun / amend | NONE / NONE |
+| source_manifest updated | NO |
+| External RC1 synced | NO |
+| Detector / model inference | NONE |
+| Evidence | `evaluation/task8b3_ref01_e3a_r5c_canonical_closure.json` |
+| Next action | Awaiting ChatGPT audit; the failing canonical suite and the stale static probe need a follow-up task book |
+
+Watt was not needed for Task 8B.3-REF01-E3A-R5C (no downloads, no transfers).
+
