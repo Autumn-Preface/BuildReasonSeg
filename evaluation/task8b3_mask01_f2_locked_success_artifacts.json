@@ -1,0 +1,456 @@
+{
+  "task_id": "MASK01_F2_LOCKED_SUCCESS_ARTIFACT_FORENSICS",
+  "task_status": "COMPLETE",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "audit/task8b3-mask01-f1-r1-corrective-forensics",
+    "starting_head": "e8f1315c9afdaac818126db6a2ac76b758027f70",
+    "task_branch": "audit/task8b3-mask01-f2-locked-success-artifacts",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "historical_cases": [
+    "A1",
+    "A3",
+    "A4"
+  ],
+  "full_final_mask_evidence": {
+    "availability": "FOUND",
+    "cases_with_mask_png": [
+      "A1",
+      "A3",
+      "A4"
+    ],
+    "foreground_count_matches_result_mask_area": [
+      "A1",
+      "A3",
+      "A4"
+    ]
+  },
+  "cases": {
+    "A1": {
+      "artifact_identity": {
+        "mask": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\masks\\A1_mask_001.png",
+          "exists": true,
+          "bytes": 1189,
+          "sha256": "5a11af94b9761b100febbf8f6faa2f8c5d33a5934f4b1f7d6a153dc2953bb9b7"
+        },
+        "overlay": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\overlays\\A1_overlay_001.png",
+          "exists": true,
+          "bytes": 1671077,
+          "sha256": "e5caccda937966825052d22baa84456d7265181c59f3611f115290a44e160287"
+        },
+        "maps_npz": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A1_001\\maps.npz",
+          "exists": true,
+          "bytes": 1488186,
+          "sha256": "e4eb42b3f9157a93f76b1629921427c6d1e141f5d0efbf6af7d4ab9a2f50b584"
+        },
+        "result_json": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A1_001\\result.json",
+          "exists": true,
+          "bytes": 24657,
+          "sha256": "d61a6193791039adcaddf7d9a6659f15c6c896deb4278cfc77b9d419f91e00c4"
+        },
+        "diagnostics_children": [
+          "direction_field.png",
+          "global_proposals.png",
+          "maps.npz",
+          "nearest_field.png",
+          "parsed_program.json",
+          "prompt.txt",
+          "proposals.json",
+          "prototype_similarity.png",
+          "reasoning_context.png",
+          "reference_context_mask.png",
+          "relation_weight.png",
+          "result.json",
+          "selected_reference.png"
+        ]
+      },
+      "result_json_facts": {
+        "status": "SUCCESS",
+        "prompt": "找出最大的建筑，然后把它右边离它最近的那栋分割出来",
+        "language_mode": "qwen",
+        "reference_mode": "automatic",
+        "reference_id": 48,
+        "effective_reference_id": 48,
+        "reference_override": false,
+        "reference_area": 4853,
+        "mask_area": 101,
+        "target_centroid": [
+          839.6237623762377,
+          287.1188118811881
+        ],
+        "input_mode": "RGB",
+        "input_size": [
+          1024,
+          1024
+        ],
+        "tile_count": 9,
+        "tile_size": 512,
+        "overlap": 128,
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\masks\\A1_mask_001.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\overlays\\A1_overlay_001.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A1_001"
+        },
+        "notes": []
+      },
+      "mask_statistics": {
+        "image_shape": [
+          1024,
+          1024,
+          1
+        ],
+        "mode": "L",
+        "unique_values": [
+          0,
+          255
+        ],
+        "foreground_pixel_count": 101,
+        "foreground_fraction_of_full_image": 9.6321106e-05,
+        "foreground_bbox": [
+          829,
+          285,
+          852,
+          290
+        ],
+        "foreground_bbox_height": 24,
+        "foreground_bbox_width": 6,
+        "foreground_bbox_area": 144,
+        "bbox_fill_ratio": 0.701388888889,
+        "centroid_row": 839.623762,
+        "centroid_col": 287.118812,
+        "touches_image_border": false,
+        "connected_component_count": 1,
+        "connected_component_areas": [
+          101
+        ],
+        "largest_component_area": 101,
+        "largest_component_fraction_of_mask": 1.0
+      },
+      "consistency_checks": {
+        "foreground_pixel_count_vs_result_mask_area": "MATCH",
+        "centroid_vs_result_target_centroid": "MATCH"
+      },
+      "runtime_status": "SUCCESS",
+      "recorded_mask_area": 101,
+      "expected_mask_area_from_taskbook": 101
+    },
+    "A3": {
+      "artifact_identity": {
+        "mask": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\masks\\A3_mask.png",
+          "exists": true,
+          "bytes": 1406,
+          "sha256": "2e7b41e76c8bc4a49263414457662b5257c42b948dc88c7e24db5fa6fe5a7019"
+        },
+        "overlay": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\overlays\\A3_overlay.png",
+          "exists": true,
+          "bytes": 1840427,
+          "sha256": "55916bd9a0f03f9124238fe6bb137d5e92226a47e8bab77017600251be999fbd"
+        },
+        "maps_npz": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A3\\maps.npz",
+          "exists": true,
+          "bytes": 1531805,
+          "sha256": "81f2e0757ebe1279a36cd5abfca1ad3c1ada5d9f49ac2a73659fb3e5ac41d833"
+        },
+        "result_json": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A3\\result.json",
+          "exists": true,
+          "bytes": 5297,
+          "sha256": "2e453a8c0da2878bfbf8d9a93688022bbd5193a83bb68fa4e74fbdf9f6496620"
+        },
+        "diagnostics_children": [
+          "direction_field.png",
+          "global_proposals.png",
+          "maps.npz",
+          "nearest_field.png",
+          "parsed_program.json",
+          "prompt.txt",
+          "proposals.json",
+          "prototype_similarity.png",
+          "reasoning_context.png",
+          "reference_context_mask.png",
+          "relation_weight.png",
+          "result.json",
+          "selected_reference.png"
+        ]
+      },
+      "result_json_facts": {
+        "status": "SUCCESS",
+        "prompt": "以最大建筑为准，分割位于其上方且距离最近的建筑",
+        "language_mode": "qwen",
+        "reference_mode": "automatic",
+        "reference_id": 1,
+        "effective_reference_id": 1,
+        "reference_override": false,
+        "reference_area": 680,
+        "mask_area": 1439,
+        "target_centroid": [
+          304.4662960389159,
+          883.4419735927728
+        ],
+        "input_mode": "RGB",
+        "input_size": [
+          1024,
+          1024
+        ],
+        "tile_count": 9,
+        "tile_size": 512,
+        "overlap": 128,
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\masks\\A3_mask.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\overlays\\A3_overlay.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A3"
+        },
+        "notes": []
+      },
+      "mask_statistics": {
+        "image_shape": [
+          1024,
+          1024,
+          1
+        ],
+        "mode": "L",
+        "unique_values": [
+          0,
+          255
+        ],
+        "foreground_pixel_count": 1439,
+        "foreground_fraction_of_full_image": 0.001372337341,
+        "foreground_bbox": [
+          275,
+          822,
+          365,
+          927
+        ],
+        "foreground_bbox_height": 91,
+        "foreground_bbox_width": 106,
+        "foreground_bbox_area": 9646,
+        "bbox_fill_ratio": 0.149181007672,
+        "centroid_row": 304.466296,
+        "centroid_col": 883.441974,
+        "touches_image_border": false,
+        "connected_component_count": 4,
+        "connected_component_areas": [
+          1426,
+          8,
+          4,
+          1
+        ],
+        "largest_component_area": 1426,
+        "largest_component_fraction_of_mask": 0.990965948575
+      },
+      "consistency_checks": {
+        "foreground_pixel_count_vs_result_mask_area": "MATCH",
+        "centroid_vs_result_target_centroid": "MATCH"
+      },
+      "runtime_status": "SUCCESS",
+      "recorded_mask_area": 1439,
+      "expected_mask_area_from_taskbook": 1439
+    },
+    "A4": {
+      "artifact_identity": {
+        "mask": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\masks\\A4_mask.png",
+          "exists": true,
+          "bytes": 1192,
+          "sha256": "e0736de64cfa282d7cbbfab1413789afa833b0704730cc934ac41f1f3c66dee0"
+        },
+        "overlay": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\overlays\\A4_overlay.png",
+          "exists": true,
+          "bytes": 1628390,
+          "sha256": "16cf91297867a8d7413cd69aa686c77bc6218a7ec27e850497c0500867cfc2f6"
+        },
+        "maps_npz": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A4\\maps.npz",
+          "exists": true,
+          "bytes": 1497662,
+          "sha256": "8395d5645d8203ca27815d4f6dd85c83f87e5cf694dfdc578e281e5aa45ad939"
+        },
+        "result_json": {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A4\\result.json",
+          "exists": true,
+          "bytes": 35484,
+          "sha256": "1d01d464a6607cf26005c3d6b86caf44d860b3a158be17b24dd73beaa2a34304"
+        },
+        "diagnostics_children": [
+          "direction_field.png",
+          "global_proposals.png",
+          "maps.npz",
+          "nearest_field.png",
+          "parsed_program.json",
+          "prompt.txt",
+          "proposals.json",
+          "prototype_similarity.png",
+          "reasoning_context.png",
+          "reference_context_mask.png",
+          "relation_weight.png",
+          "result.json",
+          "selected_reference.png"
+        ]
+      },
+      "result_json_facts": {
+        "status": "SUCCESS",
+        "prompt": "请分割最大建筑下方距离最近的一栋建筑",
+        "language_mode": "qwen",
+        "reference_mode": "automatic",
+        "reference_id": 30,
+        "effective_reference_id": 30,
+        "reference_override": false,
+        "reference_area": 3622,
+        "mask_area": 359,
+        "target_centroid": [
+          753.1030640668523,
+          119.20055710306407
+        ],
+        "input_mode": "RGB",
+        "input_size": [
+          1024,
+          1024
+        ],
+        "tile_count": 9,
+        "tile_size": 512,
+        "overlap": 128,
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\masks\\A4_mask.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\overlays\\A4_overlay.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A4"
+        },
+        "notes": []
+      },
+      "mask_statistics": {
+        "image_shape": [
+          1024,
+          1024,
+          1
+        ],
+        "mode": "L",
+        "unique_values": [
+          0,
+          255
+        ],
+        "foreground_pixel_count": 359,
+        "foreground_fraction_of_full_image": 0.00034236908,
+        "foreground_bbox": [
+          746,
+          105,
+          761,
+          132
+        ],
+        "foreground_bbox_height": 16,
+        "foreground_bbox_width": 28,
+        "foreground_bbox_area": 448,
+        "bbox_fill_ratio": 0.801339285714,
+        "centroid_row": 753.103064,
+        "centroid_col": 119.200557,
+        "touches_image_border": false,
+        "connected_component_count": 1,
+        "connected_component_areas": [
+          359
+        ],
+        "largest_component_area": 359,
+        "largest_component_fraction_of_mask": 1.0
+      },
+      "consistency_checks": {
+        "foreground_pixel_count_vs_result_mask_area": "MATCH",
+        "centroid_vs_result_target_centroid": "MATCH"
+      },
+      "runtime_status": "SUCCESS",
+      "recorded_mask_area": 359,
+      "expected_mask_area_from_taskbook": 359
+    }
+  },
+  "failure_taxonomy": {
+    "A1": {
+      "primary": "TAX_SEMANTIC_TARGET_MISMATCH",
+      "additional": [
+        "TAX_RUNTIME_VALID_QUALITY_POOR"
+      ],
+      "runtime_status": "SUCCESS",
+      "recorded_mask_area": 101,
+      "reference_id": 48,
+      "note": "historical D1 characterises A1/A4 as tiny/incomplete target fragments"
+    },
+    "A3": {
+      "primary": "TAX_SEMANTIC_TARGET_MISMATCH",
+      "additional": [],
+      "runtime_status": "SUCCESS",
+      "recorded_mask_area": 1439,
+      "reference_id": 1,
+      "note": "historical D1 characterises A1/A4 as tiny/incomplete target fragments"
+    },
+    "A4": {
+      "primary": "TAX_SEMANTIC_TARGET_MISMATCH",
+      "additional": [
+        "TAX_RUNTIME_VALID_QUALITY_POOR"
+      ],
+      "runtime_status": "SUCCESS",
+      "recorded_mask_area": 359,
+      "reference_id": 30,
+      "note": "historical D1 characterises A1/A4 as tiny/incomplete target fragments"
+    }
+  },
+  "observable_signals": {
+    "signals": {
+      "mask_full nonempty": {
+        "present_in_A1": true,
+        "present_in_A3": true,
+        "present_in_A4": true
+      },
+      "mask_area": {
+        "present_in_A1": true,
+        "present_in_A3": true,
+        "present_in_A4": true
+      },
+      "mask fraction": {
+        "present_in_A1": true,
+        "present_in_A3": true,
+        "present_in_A4": true
+      },
+      "mask bbox": {
+        "present_in_A1": true,
+        "present_in_A3": true,
+        "present_in_A4": true
+      },
+      "mask bbox fill ratio": {
+        "present_in_A1": true,
+        "present_in_A3": true,
+        "present_in_A4": true
+      },
+      "mask connected components": {
+        "present_in_A1": true,
+        "present_in_A3": true,
+        "present_in_A4": true
+      }
+    },
+    "connected_component_signals": {
+      "status": "NOT_CURRENTLY_AVAILABLE",
+      "note": "DERIVABLE_FROM_RUNTIME_MASK"
+    }
+  },
+  "answers": {
+    "final_mask_pngs_exist": true,
+    "saved_pixel_counts_match_mask_area": true,
+    "structurally_non_empty_and_direction_valid": true,
+    "mask_statistics_available_without_gt": "descriptive threshold-free statistics computed; connected-component metrics derivable from the runtime mask",
+    "numeric_threshold_justified_by_three_cases": false
+  },
+  "evidence_gaps": [],
+  "mask_regenerated": false,
+  "product_source_modified": false,
+  "inference_executed": false,
+  "repair_implemented": false,
+  "repair_decision": "DEFER_TO_CHATGPT",
+  "next_gate": "CHATGPT_MASK01_F2_REVIEW",
+  "commands_executed": [
+    "git branch/rev-parse/status",
+    "read-only PIL/numpy measurement of A1/A3/A4 artifacts"
+  ]
+}

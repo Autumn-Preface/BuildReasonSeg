@@ -1,60 +1,73 @@
-# TO_DSH — MASK01_F1_R1_CORRECTIVE_FORENSICS
+# TO_DSH — MASK01_F2_LOCKED_SUCCESS_ARTIFACT_FORENSICS
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `audit/task8b3-mask01-validity-forensics`
-> Required starting HEAD: `590d080648ef5ae1fc6891dd18b97972c643c3cc`
-> New task branch: `audit/task8b3-mask01-f1-r1-corrective-forensics`
+> Required starting branch: `audit/task8b3-mask01-f1-r1-corrective-forensics`
+> Required starting HEAD: `e8f1315c9afdaac818126db6a2ac76b758027f70`
+> New task branch: `audit/task8b3-mask01-f2-locked-success-artifacts`
 
-## 0. CHATGPT AUDIT DISPOSITION OF F1
+## 0. CHATGPT AUDIT DISPOSITION
 
-Previous task:
+Task `MASK01_F1_R1_CORRECTIVE_FORENSICS` is PARTIALLY ACCEPTED.
 
-```text
-MASK01_F1_VALIDITY_FORENSICS
-```
-
-is NOT accepted as a completed forensic gate.
-
-Freeze:
+Freeze as accepted:
 
 ```text
-F1_DISPOSITION = REJECTED_INCOMPLETE_FORENSICS
+SOURCE_SUCCESS_CONTRACT = ACCEPTED
+PADDING_FORENSICS = ACCEPTED
+
+POST_INFERENCE_GATES = 3
+1. empty_target_mask
+2. mask_only_in_padding
+3. direction_constraint_violated
+
+PADDING_GATE_CONCLUSION = PADDING_GATE_INEFFECTIVE
+PADDING_LEAKAGE_ESTABLISHED = false
+
+min_mask_pixels = NOT_IMPLEMENTED
+min_mask_frac   = NOT_IMPLEMENTED
 ```
 
-Reasons established by ChatGPT's independent GitHub audit:
+ChatGPT independently verified that:
 
-1. Git/diff safety was acceptable:
-   - one commit on the expected parent;
-   - only the four allowed report/handoff paths changed;
-   - no product source/test/model modification.
-2. The forensic content was incomplete/non-conforming:
-   - no required three-way padding-gate conclusion was produced;
-   - current `predict_one` post-inference SUCCESS contract was not correctly reconstructed;
-   - failure taxonomy was not mapped to the predeclared categories;
-   - observable-signal inventory was not actually built;
-   - historical search expanded across large amounts of unrelated Task 6/7 evidence;
-   - known Task 8B.3 explicit diagnostic paths were discovered but not correctly followed as the primary historical evidence;
-   - the report conflated proposal/reference validity evidence with final-mask validity evidence.
-3. The F1 JSON recorded a `final_head` that differs from the actual pushed commit.
-   This is partly caused by a self-referential reporting requirement: a file committed in a single commit cannot
-   truthfully contain the SHA of that same not-yet-created commit.
+```text
+context_to_global()
+```
 
-This R1 task corrects the forensic evidence only.
+crops context padding before the original-image `mask_full` is produced, while:
 
-NO MASK-01 product repair is authorized.
+```text
+_non_padding_mask()
+```
+
+returns an all-True original-image mask. Therefore `mask_only_in_padding` is not an effective independent gate
+after the preceding empty-mask check. This does NOT establish successful padding leakage.
+
+Not accepted from F1-R1:
+
+```text
+HISTORICAL_FINAL_MASK_EVIDENCE
+FAILURE_TAXONOMY
+OBSERVABLE_SIGNAL_INVENTORY
+```
+
+The previous report did not inspect the actual R4B final-mask files and left the taxonomy effectively empty.
+
+This task closes only that remaining evidence gap.
+
+NO product repair is authorized.
 
 ---
 
 ## 1. GIT PRE-FLIGHT
 
-Before any write, verify exactly:
+Before any write verify exactly:
 
 ```text
-branch = audit/task8b3-mask01-validity-forensics
-HEAD   = 590d080648ef5ae1fc6891dd18b97972c643c3cc
+branch = audit/task8b3-mask01-f1-r1-corrective-forensics
+HEAD   = e8f1315c9afdaac818126db6a2ac76b758027f70
 ```
 
 Allowed initial worktree state:
@@ -82,398 +95,311 @@ Do not reset, rebase, amend, stash, clean, force-push, or discard unknown work.
 After preflight create:
 
 ```text
-audit/task8b3-mask01-f1-r1-corrective-forensics
+audit/task8b3-mask01-f2-locked-success-artifacts
 ```
 
 directly from the required starting HEAD.
 
 ---
 
-## 2. TASK SCOPE
+## 2. TASK PURPOSE
 
-This is a narrow corrective read-only forensic task.
-
-Required objectives:
+Read-only forensic characterization of the three frozen Task 8B.3-R4B full-pipeline runtime-success cases:
 
 ```text
-A. Recover the exact production `predict_one` SUCCESS/failure validity contract.
-B. Resolve the padding-gate semantics correctly.
-C. Inspect the actual known Task 8B.3 diagnostic artifacts.
-D. Perform a strictly Task-8B.3-bounded search for any additional saved final-mask artifacts.
-E. Build the required failure taxonomy and observable-signal inventory.
-F. Return evidence to ChatGPT.
+A1
+A3
+A4
 ```
+
+The questions are:
+
+```text
+What final-mask material was actually saved?
+What exact descriptive properties do those masks have?
+Which current runtime-observable signals distinguish runtime validity from semantic correctness?
+What evidence exists, and what evidence is still missing, before ChatGPT can decide a MASK-01 repair?
+```
+
+Do NOT design or implement a repair.
+
+---
+
+## 3. FROZEN HISTORICAL FACTS
+
+Use these versioned files as the authoritative provenance sources:
+
+```text
+docs/task8b3_six_image_demo_suite.md
+docs/task8b3_d1_demo_failure_forensics.md
+```
+
+Frozen R4B runtime results:
+
+```text
+A1 = SUCCESS, reference_id=48, mask_area=101
+A3 = SUCCESS, reference_id=1,  mask_area=1439
+A4 = SUCCESS, reference_id=30, mask_area=359
+```
+
+Frozen visual/manual semantic audit:
+
+```text
+A1 = semantic FAIL
+A3 = semantic FAIL
+A4 = semantic FAIL
+```
+
+Do NOT reinterpret or replace those verdicts.
+
+D1 additionally characterizes A1/A4 as tiny/incomplete target fragments under the frozen visual audit.
+
+No GT identity is to be invented.
+
+---
+
+## 4. EXACT EXTERNAL ARTIFACTS
+
+Inspect these exact paths READ ONLY.
+
+### A1
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A1_mask_001.png
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A1_overlay_001.png
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A1_001
+```
+
+### A3
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A3_mask.png
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A3_overlay.png
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A3
+```
+
+### A4
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A4_mask.png
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A4_overlay.png
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A4
+```
+
+For each diagnostics directory:
+
+```text
+list immediate children only
+```
+
+Then inspect only these existing files if present:
+
+```text
+result.json
+maps.npz
+```
+
+Do not inspect unrelated diagnostics directories.
+
+Do not recursively search `inference/output`.
+
+Do not modify any external file.
+
+---
+
+## 5. ARTIFACT IDENTITY
+
+For each exact mask, overlay, result.json and maps.npz that exists, record:
+
+```text
+path
+exists
+bytes
+sha256
+```
+
+For diagnostics directories record immediate child filenames only.
+
+If an expected file is missing, record:
+
+```text
+MISSING
+```
+
+and continue.
+
+Do not regenerate it.
+
+---
+
+## 6. FINAL MASK EXACT CHARACTERIZATION
+
+For each existing final mask PNG:
+
+1. load it read-only;
+2. record image shape and dtype;
+3. record unique pixel values;
+4. define foreground exactly as:
+
+```text
+pixel_value != 0
+```
+
+5. compute only descriptive, threshold-free statistics:
+
+```text
+foreground_pixel_count
+foreground_fraction_of_full_image
+foreground_bbox = [top, left, bottom, right]
+foreground_bbox_height
+foreground_bbox_width
+foreground_bbox_area
+bbox_fill_ratio = foreground_pixel_count / foreground_bbox_area
+centroid_row
+centroid_col
+touches_image_border
+connected_component_count using 8-connectivity
+connected_component_areas sorted descending
+largest_component_area
+largest_component_fraction_of_mask
+```
+
+These are forensic measurements only.
+
+Do NOT propose cutoffs.
+
+Do NOT classify a mask as valid/invalid from any newly computed numeric value.
+
+Verify:
+
+```text
+foreground_pixel_count == result.json.mask_area
+```
+
+when both values exist.
+
+Verify computed centroid against `result.json.target_centroid` within exact/rounding tolerance appropriate to the stored float.
+
+Record MATCH/MISMATCH.
+
+No morphology operation may modify the mask.
+
+---
+
+## 7. RESULT.JSON FACTS
+
+For each A1/A3/A4 `result.json`, record exactly if present:
+
+```text
+status
+error_code
+reason
+prompt
+parsed.program
+language_mode
+reference_mode
+reference_id
+effective_reference_id
+reference_override
+reference_area
+reference_confidence
+reference_bbox
+direction
+target_centroid
+mask_area
+context_padding
+directional_guard
+raw_proposal_count
+merged_proposal_count
+field_mass
+output_paths
+timings
+```
+
+If absent:
+
+```text
+NOT_PRESENT
+```
+
+Do not infer absent values.
+
+Explicitly verify that each case reached:
+
+```text
+status = SUCCESS
+```
+
+and had no runtime failure reason.
+
+---
+
+## 8. MAPS.NPZ — READ-ONLY INVENTORY
+
+If `maps.npz` exists for a case:
+
+record:
+
+```text
+keys
+shape per key
+dtype per key
+finite/nonfinite counts
+min
+max
+mean
+```
+
+for numeric arrays.
+
+If keys include likely decoder confidence/probability/logit material, report those statistics descriptively.
 
 Do NOT:
 
 ```text
-modify product source
-modify tests
-modify configs
-run model inference
-run detector
-run training
-regenerate proposals
-change thresholds
-design a new mask validity rule
-implement a repair
-sync/write external RC1
+fit thresholds
+search cutoffs
+compare candidate thresholds
+alter masks
+reconstruct a new mask
 ```
 
-No pytest is required or authorized.
+The purpose is only to know what evidence is currently persisted.
 
 ---
 
-## 3. TARGETED SOURCE AUDIT ONLY
+## 9. FROZEN SEMANTIC LABEL LINKAGE
 
-Do not re-scan the full package.
-
-Read only these canonical RC1 files unless a directly imported symbol requires one additional file:
+Link each artifact to the frozen D1/manual verdict:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/context.py
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/imageio.py
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
-delivery_src/BuildReasonSeg_Advisor_RC1/configs/inference.yaml
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+A1 -> TAX_SEMANTIC_TARGET_MISMATCH
+A3 -> TAX_SEMANTIC_TARGET_MISMATCH
+A4 -> TAX_SEMANTIC_TARGET_MISMATCH
 ```
 
-If one additional directly referenced file is necessary, record why.
+Additionally, because D1 explicitly characterizes A1 and A4 as tiny/incomplete target fragments:
 
-Do not read unrelated `_frozen/mvp` files merely because they contain words such as `padding`, `mask`, or `SUCCESS`.
+```text
+A1 -> TAX_RUNTIME_VALID_QUALITY_POOR
+A4 -> TAX_RUNTIME_VALID_QUALITY_POOR
+```
+
+For A3:
+
+```text
+TAX_RUNTIME_VALID_QUALITY_POOR
+```
+
+must NOT be assigned unless a versioned source explicitly supports that same characterization.
+
+Do not invent GT.
+
+Do not convert the frozen visual verdict into IoU or other numeric truth.
 
 ---
 
-## 4. EXACT CURRENT `predict_one` CONTRACT
-
-Trace the actual `predict_one` control flow, not regex counts.
-
-The report must identify, in execution order:
-
-### Pre-core / upstream failures relevant to final segmentation
-
-At minimum determine the actual current paths for:
-
-```text
-no proposals
-invalid/missing assisted reference
-automatic reference selection failure
-reference too large for RC1 context
-all directional candidates outside context
-reference mask empty in context
-core-chain engineering failure propagation
-```
-
-Record exact error code/reason where the source provides one.
-
-### Post-inference validity gates
-
-ChatGPT's source audit at starting HEAD found this sequence:
-
-```text
-mask_full, map_padding = context_to_global(...)
-
-1. if not mask_full.any():
-      E404 / empty_target_mask
-
-2. if not (mask_full & _non_padding_mask(...)).any():
-      E404 / mask_only_in_padding
-
-3. target_centroid = _centroid(mask_full)
-
-4. if not direction_satisfied(...):
-      E404 / direction_constraint_violated
-
-5. save outputs
-6. payload status = SUCCESS
-7. PipelineResult(status="SUCCESS", ...)
-```
-
-Verify this exact sequence against the local source.
-
-If the local source contradicts the above at required HEAD, STOP and report the contradiction.
-
-Do not call detector eligibility checks the final mask-validity contract.
-
-The final report must explicitly state:
-
-```text
-POST_INFERENCE_GATES = 3
-```
-
-with their exact semantics.
-
----
-
-## 5. `min_mask_pixels` / `min_mask_frac`
-
-Perform only an exact, scoped identifier search under:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1
-```
-
-for:
-
-```text
-min_mask_pixels
-min_mask_frac
-```
-
-Also inspect `configs/inference.yaml`.
-
-If absent, report exactly:
-
-```text
-min_mask_pixels = NOT_IMPLEMENTED
-min_mask_frac   = NOT_IMPLEMENTED
-```
-
-Do not invent defaults.
-
-Do not propose adding them in this task.
-
----
-
-## 6. PADDING FORENSICS — REQUIRED RESOLUTION
-
-Inspect together:
-
-```text
-pipeline.py::_context_rgb
-pipeline.py::_non_padding_mask
-context.py::context_to_global
-imageio.py::crop_with_reflection
-test_task8b_runtime.py::test_context_out_of_image_uses_reflection_and_maps_back
-```
-
-ChatGPT's current source interpretation is:
-
-1. the reasoning context may contain reflected padding;
-2. `context_to_global()` maps only the valid original-image subregion back to `mask_full`;
-3. context pixels outside the original image are cropped away before `mask_full` exists;
-4. `_non_padding_mask()` currently returns an all-True mask of original image size and does not use `padding`;
-5. therefore `_non_padding_mask()` is not an effective independent padding classifier;
-6. after the preceding `if not mask_full.any()` gate, the `mask_only_in_padding` condition cannot independently become true under the current `context_to_global` semantics;
-7. an all-padding `mask_context` should be converted to an empty `mask_full` and fail as `empty_target_mask` before reaching the second branch;
-8. this does NOT by itself establish padding leakage into successful output, because `context_to_global()` already crops padding away.
-
-Verify each point from source/tests.
-
-If all are confirmed, freeze:
-
-```text
-PADDING_GATE_CONCLUSION = PADDING_GATE_INEFFECTIVE
-PADDING_LEAKAGE_ESTABLISHED = false
-MASK_ONLY_IN_PADDING_BRANCH = LOGICALLY_REDUNDANT_OR_UNREACHABLE_AFTER_EMPTY_GATE
-```
-
-If any point is contradicted by the required source, do not silently choose another interpretation:
-
-```text
-STOP
-```
-
-and report the exact contradiction for ChatGPT.
-
-Important:
-
-```text
-PADDING_GATE_INEFFECTIVE
-```
-
-means the `_non_padding_mask` gate is ineffective as an independent gate.
-
-It does NOT mean successful masks are proven to contain padded pixels.
-
-No repair is authorized.
-
----
-
-## 7. TEST-COVERAGE FACTS
-
-Read existing tests only.
-
-At minimum report whether current tests cover:
-
-```text
-context outside image
-reflection padding metadata
-context_to_global valid-region mapping
-all-padding mask_context
-_non_padding_mask behavior
-mask_only_in_padding reason
-empty_target_mask reason
-direction_constraint_violated reason
-full predict_one SUCCESS validity chain
-```
-
-For each item use exactly:
-
-```text
-COVERED
-NOT_COVERED
-PARTIAL
-```
-
-Include the relevant test name(s).
-
-Do not run pytest.
-
----
-
-## 8. KNOWN TASK 8B.3 HISTORICAL ARTIFACTS — INSPECT FIRST
-
-The previous F1 itself discovered versioned evidence that points to these exact external diagnostic files:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\result.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\proposals.json
-
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1003\result.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1003\proposals.json
-
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1008\result.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1008\proposals.json
-
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1009\result.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1009\proposals.json
-```
-
-The authoritative versioned references include:
-
-```text
-evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
-evaluation/task8b3_ref01_locked_reference_forensics.json
-evaluation/task8b3_ref01_e3c1_locked_record_replay.json
-```
-
-Inspect the exact external files READ ONLY if they still exist.
-
-For each `result.json`, record:
-
-```text
-exists
-sha256
-mode
-status
-reason/error fields if any
-reference_mode if present
-reference_id/effective_reference_id if present
-direction if present
-mask_area if present
-target_centroid if present
-context_padding if present
-output_paths
-whether it represents inspect-proposals mode or full predict_one mode
-whether it contains evidence about a final target mask
-```
-
-For each `proposals.json`, record only what is relevant to provenance/reference context.
-
-Do not treat proposal records as final-mask evidence.
-
-Do not write to the external RC1.
-
----
-
-## 9. STRICTLY BOUNDED ADDITIONAL TASK-8B.3 SEARCH
-
-The previous F1's broad scan is rejected.
-
-Use a two-stage bounded search only.
-
-### Stage A — select versioned Task-8B.3 files
-
-Enumerate tracked paths only under:
-
-```text
-docs/
-evaluation/
-handoff/
-```
-
-Filter filenames/paths to those containing:
-
-```text
-task8b3
-8b3
-```
-
-Do not inspect unrelated Task 6/7 files.
-
-### Stage B — inspect only those Task-8B.3 versioned files
-
-Search inside that filtered set only for explicit references containing terms such as:
-
-```text
-inference/output
-diagnostics
-masks
-overlays
-result.json
-A1
-A2
-A3
-A4
-B1
-B2
-1010
-1003
-1008
-1009
-```
-
-Follow only exact referenced local file paths.
-
-If an exact referenced directory is given, list immediate children only.
-
-Do not recursively walk:
-
-```text
-workspace
-artifacts
-logs
-inference
-delivery
-```
-
-unless the exact child path is explicitly referenced by a Task-8B.3 versioned file.
-
-Record every followed path and its authorizing versioned source.
-
----
-
-## 10. FINAL-MASK ARTIFACT CLASSIFICATION
-
-For every historical artifact found, classify it as exactly one:
-
-```text
-FULL_FINAL_MASK_EVIDENCE
-FULL_RESULT_METADATA_ONLY
-PROPOSAL_REFERENCE_EVIDENCE_ONLY
-NON_MASK_DIAGNOSTIC
-MISSING
-```
-
-Only `FULL_FINAL_MASK_EVIDENCE` may be used to compute descriptive final-mask properties.
-
-Do not regenerate missing masks.
-
-Do not infer a saved final mask from the existence of proposals or a `SUCCESS` string.
-
-If no `FULL_FINAL_MASK_EVIDENCE` is found, explicitly freeze:
-
-```text
-HISTORICAL_FINAL_MASK_EVIDENCE = NOT_FOUND
-```
-
-This is an acceptable R1 result.
-
----
-
-## 11. FAILURE TAXONOMY — MUST USE PREDECLARED CATEGORIES
+## 10. FAILURE TAXONOMY
 
 Use only:
 
@@ -486,51 +412,42 @@ TAX_RUNTIME_VALID_QUALITY_POOR
 TAX_UNKNOWN_EVIDENCE_GAP
 ```
 
-Do not fill this section with a list of generic exceptions.
-
-For every actual observation/case, write:
+For each A1/A3/A4 produce a structured record:
 
 ```text
-case_or_observation
+case
+runtime_status
+semantic_verdict
 taxonomy
-evidence
-what_is_established
-what_is_not_established
+supporting_versioned_source
+supporting_saved_artifact
+established_facts
+not_established
 ```
 
-Important evidence already frozen from prior REF work may be cited:
+Important distinction:
 
-```text
-right  -> automatic reference correct/stable
-left   -> residual wrong automatic reference selection
-above  -> eligibility blocker repaired in current selector
-below  -> residual wrong automatic reference selection
-```
-
-But distinguish historical artifact state from current selector state.
-
-A wrong reference may support:
-
-```text
-TAX_UPSTREAM_REFERENCE_RELATION
-```
-
-It does NOT by itself prove a specific final target mask was semantically wrong unless final-mask/manual/GT evidence links them.
+- historical D1 says A1/A3/A4 had reference semantic/proposal-quality issues in the R4B run;
+- later REF-01 work used a different locked supported-domain four-case set and must not be retroactively substituted for A1/A3/A4;
+- do not claim later REF repairs would have fixed these R4B masks without evidence.
 
 ---
 
-## 12. OBSERVABLE-SIGNAL INVENTORY
+## 11. OBSERVABLE-SIGNAL INVENTORY
 
-Build a real inventory.
+Create a complete inventory for future ChatGPT design.
 
-For each signal, record:
+For each signal record:
 
 ```text
 signal
-source
+current_runtime_source_or_artifact
 availability
-persisted_where
-can_detect_runtime_structural_failure
+present_in_A1
+present_in_A3
+present_in_A4
+raw_value_or_summary
+can_establish_runtime_validity
 can_establish_semantic_target_correctness
 notes
 ```
@@ -545,76 +462,135 @@ REQUIRES_GT_OR_MANUAL_REVIEW
 NOT_CURRENTLY_AVAILABLE
 ```
 
-At minimum inspect and classify, where actually present:
+At minimum classify:
 
 ```text
 mask_full nonempty
 mask_area
-target_centroid
-direction_satisfied result/reason
+mask fraction
+mask bbox
+mask bbox fill ratio
+mask connected components
+largest component fraction
+target centroid
+direction hard-check result
 reference_mode
 reference_id
 reference_area
 reference_confidence
 reference_bbox
 direction
-reasoning_context
 context_padding
 directional_guard
-proposal count
-proposal metadata
+raw proposal count
+merged proposal count
 field_mass
-diagnostic probability/logit maps
-saved mask path
+saved decoder probability/logit maps
 GT IoU
 manual semantic correctness
 ```
 
-Do not add new runtime fields.
+Rules:
 
-Do not invent unavailable fields.
-
----
-
-## 13. REQUIRED INTERPRETATION BOUNDARY
-
-The report must explicitly separate:
-
-```text
-RUNTIME_VALIDITY
-SEMANTIC_TARGET_CORRECTNESS
-```
-
-Freeze the following principle:
-
-```text
-Passing current runtime validity gates is NOT evidence that the predicted mask
-corresponds to the intended semantic target.
-```
-
-Also distinguish:
-
-```text
-padding-gate redundancy
-```
-
-from:
-
-```text
-False SUCCESS root cause
-```
-
-Do not claim the padding helper is the root cause of false SUCCESS unless evidence establishes that.
+- `mask_area`, target centroid, direction, reference fields that are in `result.json` are persisted runtime facts.
+- connected-component metrics are derivable from `mask_full`, but if they are not currently computed by the product, mark the signal itself `NOT_CURRENTLY_AVAILABLE` and note `DERIVABLE_FROM_RUNTIME_MASK`.
+- manual semantic correctness is `REQUIRES_GT_OR_MANUAL_REVIEW`.
+- do not claim any runtime signal establishes semantic correctness unless evidence truly supports it.
 
 ---
 
-## 14. OUTPUTS
+## 12. CROSS-CASE TABLE
+
+Create one compact A1/A3/A4 table containing at least:
+
+```text
+case
+status
+semantic_verdict
+image_size
+mask_area
+mask_fraction
+bbox_size
+bbox_fill_ratio
+component_count
+largest_component_fraction
+target_centroid
+direction
+reference_id
+reference_area
+reference_confidence
+context_padding.applied
+raw_proposals
+merged_proposals
+```
+
+Missing fields must be `NOT_PRESENT`.
+
+This table is descriptive only.
+
+---
+
+## 13. NO THRESHOLD / NO REPAIR SEARCH
+
+Absolutely forbidden:
+
+```text
+best threshold
+candidate threshold
+area cutoff
+relative-area cutoff
+component cutoff
+probability cutoff
+confidence cutoff
+weighted score
+heuristic search
+rule fitting
+case-specific repair
+```
+
+There are only three frozen runtime-success cases and all three have a frozen semantic FAIL verdict.
+
+This task MUST explicitly state:
+
+```text
+NO_POSITIVE_SEMANTIC_SUCCESS_CONTROL_IN_R4B_SUCCESS_SET = true
+```
+
+Therefore these three cases alone cannot justify a discriminative numeric validity threshold.
+
+---
+
+## 14. REQUIRED INTERPRETATION QUESTIONS
+
+The report must answer factually:
+
+1. Do A1/A3/A4 final mask PNGs actually exist?
+2. Do their saved pixel counts match R4B/D1 `mask_area`?
+3. Are the final masks structurally non-empty and direction-valid according to the stored runtime result?
+4. Which mask morphology/statistics are currently available or derivable without GT?
+5. Which evidence of semantic failure comes only from the frozen manual/visual audit?
+6. Is there any positive semantic-success R4B runtime-success case available as a control?
+7. Can the current three-case evidence justify a numeric threshold that separates good from bad masks?
+
+For question 7, unless contrary evidence exists in the exact authorized sources, expected factual answer:
+
+```text
+NO
+```
+
+because all three R4B runtime-success samples are frozen semantic FAIL cases and no positive control is present.
+
+DSH must not choose the next repair.
+
+---
+
+## 15. REQUIRED OUTPUTS
 
 Create exactly:
 
 ```text
-docs/task8b3_mask01_f1_r1_corrective_forensics.md
-evaluation/task8b3_mask01_f1_r1_corrective_forensics.json
+docs/task8b3_mask01_f2_locked_success_artifacts.md
+evaluation/task8b3_mask01_f2_locked_success_artifacts.json
 ```
 
 Modify exactly:
@@ -626,59 +602,45 @@ handoff/TO_DSH.md
 
 No other repository path may change.
 
+No external path may be written.
+
 ---
 
-## 15. REQUIRED REPORT CONTENT
+## 16. REQUIRED TERMINAL FIELDS
 
-The Markdown report must contain:
-
-```text
-1. Git starting identity
-2. Why F1 was rejected
-3. Exact predict_one SUCCESS contract
-4. Upstream and post-inference failure paths
-5. min_mask_* exact search result
-6. Padding semantics proof
-7. Test coverage matrix
-8. Known 8B.3 external artifact inspection
-9. Additional bounded Task-8B.3 search
-10. Final-mask artifact classification
-11. Failure taxonomy
-12. Observable-signal inventory
-13. Runtime validity vs semantic correctness
-14. Evidence gaps
-15. R1 disposition
-```
-
-The JSON must represent the same facts structurally.
-
-Required terminal fields:
+The evidence JSON and FROM_DSH summary must contain:
 
 ```text
-task_id = MASK01_F1_R1_CORRECTIVE_FORENSICS
+task_id = MASK01_F2_LOCKED_SUCCESS_ARTIFACT_FORENSICS
 
-previous_f1_disposition =
-REJECTED_INCOMPLETE_FORENSICS
+source_contract_reaudit = NOT_PERFORMED
+padding_reaudit = NOT_PERFORMED
 
-padding_gate_conclusion =
-PADDING_GATE_INEFFECTIVE
-```
+historical_cases = [A1, A3, A4]
 
-only after the source verification in Section 6 succeeds.
+full_final_mask_evidence =
+FOUND
+or
+PARTIAL
+or
+NOT_FOUND
 
-Also record:
+no_positive_semantic_success_control_in_r4b_success_set = true
 
-```text
-padding_leakage_established = false
-repair_implemented = false
+numeric_threshold_design_justified =
+false
+
 product_source_modified = false
+tests_modified = false
 inference_executed = false
 training_executed = false
+external_write_performed = false
+
 repair_decision = DEFER_TO_CHATGPT
-next_gate = CHATGPT_MASK01_F1_R1_REVIEW
+next_gate = CHATGPT_MASK01_F2_DESIGN_REVIEW
 ```
 
-Task status must be one of:
+Task status must be exactly one of:
 
 ```text
 COMPLETE
@@ -689,43 +651,42 @@ FAILED
 
 ---
 
-## 16. COMMIT SHA REPORTING RULE — CORRECTED
+## 17. COMMIT SHA RULE
 
-Do NOT attempt to write the final commit SHA into files that are themselves part of that same commit.
-
-Inside the committed report record only:
+Inside files committed in this task record:
 
 ```text
-starting_head = 590d080648ef5ae1fc6891dd18b97972c643c3cc
-report_base_head = 590d080648ef5ae1fc6891dd18b97972c643c3cc
+starting_head = e8f1315c9afdaac818126db6a2ac76b758027f70
 final_commit_sha = POST_COMMIT_EXTERNAL_FACT
 ```
 
-After committing and pushing, print to terminal:
+Do not attempt self-referential final-SHA insertion.
+
+After push print:
 
 ```text
-LOCAL_FINAL_HEAD=<actual sha>
-REMOTE_FINAL_HEAD=<actual sha>
-FINAL_PARENT=<actual parent sha>
+LOCAL_FINAL_HEAD=<sha>
+REMOTE_FINAL_HEAD=<sha>
+FINAL_PARENT=<sha>
 ```
 
-ChatGPT will independently retrieve these values from GitHub.
+ChatGPT will independently audit GitHub.
 
-Do not create a second commit merely to insert the first commit's SHA.
+Do not create a second commit.
 
 Do not amend.
 
 ---
 
-## 17. DIFF / COMMIT / PUSH
+## 18. DIFF / COMMIT / PUSH
 
-Before staging verify only the four authorized paths changed.
+Before staging verify only the four authorized repository paths changed.
 
 For `COMPLETE` or `COMPLETE_WITH_EVIDENCE_GAPS`, stage exactly:
 
 ```text
-docs/task8b3_mask01_f1_r1_corrective_forensics.md
-evaluation/task8b3_mask01_f1_r1_corrective_forensics.json
+docs/task8b3_mask01_f2_locked_success_artifacts.md
+evaluation/task8b3_mask01_f2_locked_success_artifacts.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
@@ -733,64 +694,71 @@ handoff/TO_DSH.md
 Commit exactly once:
 
 ```text
-git commit -m "docs(rc1): correct mask validity forensics"
+git commit -m "docs(rc1): characterize locked successful masks"
 ```
 
 Push:
 
 ```text
-audit/task8b3-mask01-f1-r1-corrective-forensics
+audit/task8b3-mask01-f2-locked-success-artifacts
 ```
 
 No force push.
 
-Verify remote HEAD equals local HEAD and working tree is clean.
+Verify remote/local HEAD match and worktree is clean.
 
 Then STOP.
 
 ---
 
-## 18. STOP / SAFETY
+## 19. ABSOLUTE PROHIBITIONS
 
-If any source fact at the required starting HEAD contradicts ChatGPT's frozen source interpretation in Section 4 or 6:
-
-```text
-STOP
-```
-
-Record the exact source contradiction only.
-
-Do not repair it.
-
-If a historical artifact is missing:
+Do NOT:
 
 ```text
-record MISSING / evidence gap
-continue within bounded scope
+modify product source
+modify tests
+modify configs
+modify manifests
+run predict.py
+run detector
+run Qwen
+run SAM/SAM2
+run D-B1
+run model inference
+run training
+regenerate proposals
+regenerate masks
+edit external delivery
+rerun Demo
+use Assisted Mode
+tune thresholds
+design a repair
+implement a repair
+enter Task 8B.4
+reset
+rebase
+amend
+stash
+clean
+force push
 ```
-
-Do not broaden the search.
 
 ---
 
-## 19. SUCCESS DEFINITION
+## 20. SUCCESS DEFINITION
 
-R1 is complete only if ChatGPT can answer, from its evidence:
+This task is complete only when ChatGPT has trustworthy saved-mask evidence for A1/A3/A4 and can decide whether:
 
 ```text
-What exactly makes predict_one return SUCCESS?
-Which runtime validity gates are real?
-What is the exact role and reachability of mask_only_in_padding?
-Does current code permit padding leakage, or merely contain a redundant gate?
-Which Task-8B.3 artifacts actually contain final target masks?
-Which failures are runtime-detectable?
-Which failures require upstream correctness, GT, or manual semantic review?
-What evidence is still missing before any MASK-01 repair can be designed?
+MASK-01 should receive an automatic runtime validity repair,
+a status/semantic-contract repair,
+or no threshold-based repair at all.
 ```
 
-No new validity rule is authorized.
+DSH must not make that decision.
 
-After report + commit + push:
+After commit + push:
 
 ```text
 STOP
