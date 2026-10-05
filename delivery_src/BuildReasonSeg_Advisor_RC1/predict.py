@@ -263,14 +263,13 @@ def _run_batch(runtime: PredictRuntime, args: argparse.Namespace, package_name: 
         request.parsed_info = language_info
         result = predict_one(runtime, request)
         if result.ok:
-            successes += 1
-            print(f"[{index}/{len(files)}] {path.name} ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]")
+            print(f"[{index}/{len(files)}] {path.name} ... SUCCESS")
         else:
             failures += 1
             print(f"[{index}/{len(files)}] {path.name} ... {result.error_code} "
                   f"{result.error_reason or ''}".rstrip())
     print("Batch complete")
-    print(f"Success: {successes}")
+    print(batch_success_line(successes))
     print(f"Failed : {failures}")
     print(f"Total  : {round(time.time() - started, 2)}s")
     if failures == 0:
@@ -278,11 +277,29 @@ def _run_batch(runtime: PredictRuntime, args: argparse.Namespace, package_name: 
     return EXIT_BATCH_ALL_FAILED if successes == 0 else EXIT_BATCH_PARTIAL
 
 
+SUCCESS_REPORT_LABELS = ("validity_scope", "semantic_status")
+
+
+def success_report_lines(payload: dict) -> list[str]:
+    """Return the exact report lines for a result payload (single pure formatting unit)."""
+    if payload.get("status") != "SUCCESS":
+        return [f"Result       : {payload.get('status')}"]
+    return [
+        "Result       : SUCCESS",
+        f"Validity     : {payload.get('validity_scope')}",
+        f"Semantic     : {payload.get('semantic_status')}",
+        "Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.",
+    ]
+
+
+def batch_success_line(count: int) -> str:
+    return f"Runtime success: {count}"
+
+
 def _report_single(result, args: argparse.Namespace) -> None:
     payload = result.result_payload
-    print(f"Result       : {payload['status']}")
-    if payload.get("status") == "SUCCESS":
-        print(f"Result       : SUCCESS [runtime-only; semantic=NOT_EVALUATED]")
+    for _line in success_report_lines(payload):
+        print(_line)
         print(f"Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.")
     if result.ok:
         print()

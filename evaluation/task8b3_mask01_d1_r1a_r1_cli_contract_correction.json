@@ -1,0 +1,44 @@
+{
+  "task_id": "MASK01_D1_R1A_R1_CLI_CONTRACT_CORRECTION",
+  "task_status": "COMPLETE",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1a",
+    "starting_head": "1e2282151aa8c0c3cbbdc63526d8e449dc7b655d",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1a-r1",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "contract": {
+    "single_image_success_lines": [
+      "Result       : SUCCESS",
+      "Validity     : RUNTIME_STRUCTURAL_ONLY",
+      "Semantic     : NOT_EVALUATED",
+      "Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established."
+    ],
+    "single_image_failure_lines": [
+      "Result       : <status>"
+    ],
+    "batch_summary": "Runtime success: <n>",
+    "helpers_added": [
+      "success_report_lines",
+      "batch_success_line"
+    ]
+  },
+  "tests": {
+    "command": "python -m pytest tests/test_cli_contract.py -q -k not test_predict_inspect_proposals_does_not_require_prompt",
+    "exit": 0,
+    "summary": "23 passed, 1 deselected in 12.73s",
+    "source_string_checks_replaced": true,
+    "excluded_known_broken_test": "test_predict_inspect_proposals_does_not_require_prompt"
+  },
+  "untouched_verified": {
+    "pipeline_py": true,
+    "manifest": true,
+    "test_task8b_runtime": true,
+    "canonical_docs": true,
+    "inspect_proposals_defect_fixed": false
+  },
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false
+}

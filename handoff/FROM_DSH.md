@@ -17,27 +17,29 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1A_STATE_PERSISTENCE Report
+# FROM_DSH — Task MASK01_D1_R1A_R1_CLI_CONTRACT_CORRECTION Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1A_STATE_PERSISTENCE` |
-| Status | **STOP** (R1-A gate not green; real state now persisted for independent review) |
-| Branch | `fix/task8b3-mask01-success-semantics-r1a` |
-| predict.py implemented | single-image annotation True · note line True · batch annotation True |
-| tests/test_cli_contract.py | weak D1 test removed True · 19 real contract tests |
-| R1-A gate | `pytest tests/test_cli_contract.py -q` → exit 1 · 1 failed, 22 passed |
-| Failing test | `test_predict_inspect_proposals_does_not_require_prompt` (30 != 20, E202 missing) |
-| Attribution | PRE_EXISTING, not introduced by R1-A |
-| pipeline.py / test_task8b_runtime.py / source_manifest.json / docs | UNCHANGED |
-| Model inference / training / external sync / full suite | NONE / NONE / NONE / NOT RUN |
-| Evidence | `evaluation\task8b3_mask01_d1_r1a_state_persistence.json` |
-| Report | `docs\task8b3_mask01_d1_r1a_state_persistence.md` |
-| Next action | Awaiting ChatGPT independent review; next task not entered |
+| Task | `MASK01_D1_R1A_R1_CLI_CONTRACT_CORRECTION` |
+| Status | **COMPLETE** |
+| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1a` / `1e2282151aa8c0c3cbbdc63526d8e449dc7b655d` |
+| Task branch | `fix/task8b3-mask01-success-semantics-r1a-r1` |
+| Single-image SUCCESS lines | Result / Validity / Semantic / Note (four exact lines) |
+| Single-image failure lines | only `Result       : <status>` |
+| Batch summary | `Runtime success: <n>` |
+| Tests | `pytest tests/test_cli_contract.py -q -k "not test_predict_inspect_proposals_does_not_require_prompt"` → exit 0 · 23 passed, 1 deselected in 12.73s |
+| Source-string checks replaced | YES (behaviour tests over fake payloads) |
+| pipeline.py / manifest / test_task8b_runtime.py / docs | UNCHANGED |
+| inspect-proposals 30-vs-20 defect | NOT fixed (out of scope) |
+| Model inference / training / external sync | NONE |
+| Evidence | `evaluation\task8b3_mask01_d1_r1a_r1_cli_contract_correction.json` |
+| Report | `docs\task8b3_mask01_d1_r1a_r1_cli_contract_correction.md` |
+| Next action | Awaiting ChatGPT review; next task not entered |
 
-Watt was not needed for Task MASK01_D1_R1A_STATE_PERSISTENCE (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1A_R1_CLI_CONTRACT_CORRECTION (no downloads, no transfers).
 
-The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; the local and remote heads are printed after the push.
+The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.
