@@ -17,35 +17,50 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3B2 Report
+# FROM_DSH — Task 8B.3-REF01-E3B2-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
-| item | value |
-|---|---|
-| Task | `8B.3-REF01-E3B2` |
-| Status | **COMPLETE** |
-| Branch | `fix/task8b3-ref01-eligibility-repair-sync` |
-| Starting HEAD | `300cdad5629b945ffe10480351081f9c8befe7f4` |
-| Sync policy audit | 135 entries · weights/runs/logs/inference outputs excluded = True |
-| Pre-sync external check | exit 1 · {'checked': 135, 'match': 133, 'missing': 0, 'mismatch': 2} · mismatch paths ['buildreasonseg/runtime/detector.py', 'tests/test_task8b_runtime.py'] |
-| Controlled sync (exactly once) | exit 0 · copied 135 · verified 135 · failures 0 |
-| Post-sync external check | exit 0 · checked 135 · match 135 · missing 0 · mismatch 0 |
-| Canonical manifest Git-object sync | YES (`5c175a9ced591210...`) |
-| External `check_setup.py` | exit 0 · READY True |
-| Targeted regression | exit 0 · 40 passed in 1.13s |
-| External full delivery suite | exit 0 · 124 passed in 112.81s (0:01:52) |
-| Canonical product / manifest / helper modified | NO |
-| Dependencies installed / model inference | NONE / NONE |
-| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| left/below reference-selection defects | UNRESOLVED |
-| Evidence | `evaluation\task8b3_ref01_e3b2_external_sync_validation.json` |
-| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
-| Next action | Awaiting ChatGPT audit; NEXT is not executed |
+```text
+Task: 8B.3-REF01-E3B2-R1
+Status: COMPLETE / STOP / FAILED
+Branch: fix/task8b3-ref01-eligibility-repair-sync
+Starting HEAD: 5b8edd742981f1128c851c262ec576665fa0aa1f
+Technical source task: 8B.3-REF01-E3B2
+Technical execution starting HEAD: 300cdad5629b945ffe10480351081f9c8befe7f4
+Design selected by: CHATGPT
+Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+DSH algorithm choice performed: NO
+Detector/model calls: 0
+Canonical source changed in R1: NO
+Canonical manifest changed in R1: NO
+External pre-sync: 133 match / 0 missing / 2 mismatch
+External mismatch paths: buildreasonseg/runtime/detector.py; tests/test_task8b_runtime.py
+External sync runs: 1
+External sync: 135 copied / 135 verified / 0 failures
+External post-sync: 135 match / 0 missing / 0 mismatch
+External source_manifest copied from Git object: YES
+External source_manifest identity rechecked in R1: YES
+External source_manifest bytes: <observed §4 integer>
+External source_manifest SHA256: 5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c
+Setup checker runs: 1
+Setup checker: BuildReasonSeg environment: READY
+External targeted test runs: 1
+External targeted regression: 40 passed in 1.13s
+External full suite runs: 1
+External full suite: 124 passed in 112.81s (0:01:52)
+External technical commands rerun in R1: NO
+External write performed in R1: NO
+Model inference performed: NO
+Wrong E3B2 evidence removed: YES
+Evidence: evaluation/task8b3_ref01_e3b2_external_sync_full_suite.json
+Report: docs/task8b3_ref01_e3b2_external_sync_full_suite.md
+Outcome: REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_VALIDATED
+Next gate: REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
+PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
+left/below reference-selection defects: UNRESOLVED
+Next action: Awaiting ChatGPT audit; do not execute NEXT/E3C.
+```
 
-Watt was not needed for Task 8B.3-REF01-E3B2 (no downloads, no transfers).
-
-The external delivery received exactly the 135 manifest-listed source/config files plus the canonical control manifest;
-no model weight, run, log or inference output was copied into it, and the external suites ran without installing
-anything or performing model inference.
+Watt was not needed for Task 8B.3-REF01-E3B2-R1 (no downloads, no transfers).

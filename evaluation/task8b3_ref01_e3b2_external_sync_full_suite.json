@@ -1,0 +1,66 @@
+{
+  "task": "8B.3-REF01-E3B2-R1",
+  "source_task": "8B.3-REF01-E3B2",
+  "starting_head": "5b8edd742981f1128c851c262ec576665fa0aa1f",
+  "technical_execution_starting_head": "300cdad5629b945ffe10480351081f9c8befe7f4",
+  "branch": "fix/task8b3-ref01-eligibility-repair-sync",
+  "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
+  "scope": "EXTERNAL_SYNC_VALIDATION_ARTIFACT_CLOSURE_NO_RERUN",
+  "detector_model_calls": 0,
+  "canonical_source_changed_in_r1": false,
+  "canonical_manifest_changed_in_r1": false,
+  "sync_policy_entries": 135,
+  "sync_policy_runtime_weights_included": false,
+  "external_presync": {
+    "exit": 1,
+    "match": 133,
+    "missing": 0,
+    "mismatch": 2,
+    "mismatch_paths": [
+      "buildreasonseg/runtime/detector.py",
+      "tests/test_task8b_runtime.py"
+    ]
+  },
+  "external_sync": {
+    "runs": 1,
+    "exit": 0,
+    "copied": 135,
+    "verified": 135,
+    "failures": 0
+  },
+  "external_postsync": {
+    "exit": 0,
+    "match": 135,
+    "missing": 0,
+    "mismatch": 0
+  },
+  "external_source_manifest": {
+    "copied_from_git_object": true,
+    "identity_rechecked_in_r1": true,
+    "bytes": 24375,
+    "sha256": "5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c"
+  },
+  "setup_checker": {
+    "runs": 1,
+    "exit": 0,
+    "final_status": "BuildReasonSeg environment: READY"
+  },
+  "external_targeted_test": {
+    "runs": 1,
+    "exit": 0,
+    "summary": "40 passed in 1.13s"
+  },
+  "external_full_suite": {
+    "runs": 1,
+    "exit": 0,
+    "summary": "124 passed in 112.81s (0:01:52)",
+    "expected_pass_count": 124
+  },
+  "external_write_performed_in_source_task": true,
+  "external_write_performed_in_r1": false,
+  "model_inference_performed": false,
+  "wrong_e3b2_evidence_path_removed": true,
+  "dedicated_report_created": true,
+  "overall_outcome": "REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_VALIDATED",
+  "next_gate": "REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY"
+}

@@ -479,3 +479,23 @@ canonical product / manifest / sync helper modification = NONE
 dependency installation = NONE · model inference = NONE
 rerun of any failing suite = NONE · self-repair = NONE · NEXT executed = NO
 ```
+
+
+---
+
+## 16. E3B2-R1 — external sync validation artifact closure
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-sync
+HEAD   = 5b8edd742981f1128c851c262ec576665fa0aa1f
+read-only source-manifest identity command = the single published command (exit 0)
+observed source_manifest bytes = 24375 · sha256 = 5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c
+wrong E3B2 evidence removed = evaluation/task8b3_ref01_e3b2_external_sync_validation.json
+authoritative evidence = evaluation/task8b3_ref01_e3b2_external_sync_full_suite.json
+dedicated report = docs/task8b3_ref01_e3b2_external_sync_full_suite.md
+external pre-sync 133/0/2 · sync copied 135/verified 135 · post-sync 135/0/0 · check_setup READY ·
+targeted 40 passed in 1.13s · external full 124 passed in 112.81s (all recorded, none re-run)
+external write in R1 = NONE · sync helper / --check / check_setup / pytest / py_compile / inference = NONE
+overall outcome = REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_VALIDATED
+NEXT = REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY (not executed)
+```
