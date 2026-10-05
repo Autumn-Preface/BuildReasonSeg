@@ -1,0 +1,483 @@
+{
+  "task_id": "MASK01_F1_R1_CORRECTIVE_FORENSICS",
+  "task_status": "COMPLETE_WITH_EVIDENCE_GAPS",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "audit/task8b3-mask01-validity-forensics",
+    "starting_head": "590d080648ef5ae1fc6891dd18b97972c643c3cc",
+    "report_base_head": "590d080648ef5ae1fc6891dd18b97972c643c3cc",
+    "task_branch": "audit/task8b3-mask01-f1-r1-corrective-forensics",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "previous_f1_disposition": "REJECTED_INCOMPLETE_FORENSICS",
+  "success_contract": {
+    "files_read": [
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\pipeline.py"
+    ],
+    "frozen_sequence_lines": {
+      "mask_full, map_padding = context_to_global(": [
+        295
+      ],
+      "if not mask_full.any()": [
+        297
+      ],
+      "_non_padding_mask(": [
+        300,
+        354
+      ],
+      "mask_only_in_padding": [
+        302
+      ],
+      "status=\"SUCCESS\"": [
+        164,
+        334
+      ]
+    },
+    "verified": true,
+    "pipeline_sha256": "3a48fcf0f2c07cc99803841aea72c13e0419ea31c4ac05164c52677af654b75f"
+  },
+  "padding_semantics": {
+    "helper": "pipeline.py::_non_padding_mask",
+    "references_padding": false,
+    "builds_all_true_mask": true,
+    "source_excerpt": "def _non_padding_mask(loaded, padding: dict) -> np.ndarray:\n    mask = np.ones((loaded.height, loaded.width), dtype=bool)\n    return mask\n\n",
+    "padding_gate_conclusion": "PADDING_GATE_INEFFECTIVE",
+    "padding_leakage_established": false
+  },
+  "min_mask_search": {
+    "occurrences": [],
+    "result": "NOT_FOUND"
+  },
+  "test_coverage_matrix": [
+    {
+      "file": "delivery_src\\BuildReasonSeg_Advisor_RC1\\tests\\conftest.py",
+      "tests": [],
+      "mentions_padding": false,
+      "mentions_success": false
+    },
+    {
+      "file": "delivery_src\\BuildReasonSeg_Advisor_RC1\\tests\\test_cli_contract.py",
+      "tests": [
+        "test_each_cli_help_works",
+        "test_predict_help_lists_frozen_arguments",
+        "test_predict_image_and_input_dir_are_exclusive",
+        "test_predict_prompt_required_for_normal_inference",
+        "test_predict_inspect_proposals_does_not_require_prompt",
+        "test_predict_defaults_exact",
+        "test_predict_no_save_diagnostics_flag",
+        "test_predict_missing_image_reports_e201",
+        "test_predict_unsupported_image_type_reports_e203",
+        "test_train_enum_constraints",
+        "test_train_missing_dataset_reports_e101",
+        "test_prepare_dataset_format_enum",
+        "test_evaluate_split_and_reference_defaults",
+        "test_evaluate_test_requires_explicit_split",
+        "test_cli_placeholders_return_not_implemented",
+        "test_error_registry_complete"
+      ],
+      "mentions_padding": false,
+      "mentions_success": false
+    },
+    {
+      "file": "delivery_src\\BuildReasonSeg_Advisor_RC1\\tests\\test_paths_and_package.py",
+      "tests": [
+        "test_delivery_root_resolution",
+        "test_required_structure",
+        "test_runtime_paths_are_project_relative",
+        "test_no_workspace_reference_in_code",
+        "test_no_symlink_dependency",
+        "test_moving_root_keeps_config_and_model_paths",
+        "test_package_imports",
+        "test_supported_program_constant"
+      ],
+      "mentions_padding": false,
+      "mentions_success": false
+    },
+    {
+      "file": "delivery_src\\BuildReasonSeg_Advisor_RC1\\tests\\test_setup_checker.py",
+      "tests": [
+        "test_good_fixture_is_ready",
+        "test_missing_decoder_nonzero",
+        "test_hash_mismatch_nonzero",
+        "test_missing_qwen_component_nonzero",
+        "test_missing_sam2_nonzero",
+        "test_invalid_model_yaml_nonzero",
+        "test_real_project_check_reports_ready",
+        "test_real_runtime_reports_ultralytics_and_ready",
+        "test_runtime_ultralytics_missing_is_not_ready",
+        "test_runtime_ultralytics_wrong_version_is_not_ready",
+        "test_portability_wording_no_longer_claims_bundled_runtime",
+        "test_runtime_and_provenance_are_distinguished"
+      ],
+      "mentions_padding": false,
+      "mentions_success": false
+    },
+    {
+      "file": "delivery_src\\BuildReasonSeg_Advisor_RC1\\tests\\test_task8b1_fallback_ux.py",
+      "tests": [
+        "test_valid_suggestion_parsed",
+        "test_no_safe_suggestion_parsed",
+        "test_program_outside_four_is_rejected",
+        "test_free_text_is_not_keyword_routed",
+        "test_fenced_json_tolerated",
+        "test_generation_config_frozen",
+        "test_system_prompt_forbids_new_operators",
+        "test_suggestion_must_pass_validator",
+        "test_only_four_programs_supported",
+        "test_no_prompt_to_program_table_in_delivery_code",
+        "test_suggestion_uses_local_qwen_generate",
+        "test_no_model_or_checkpoint_writes",
+        "test_fixture_frozen_and_complete",
+        "test_task8b_paraphrases_are_verbatim",
+        "test_language_trace_fields_documented",
+        "test_user_visible_wording_rules",
+        "test_n_path_does_not_run_visual_inference",
+        "test_unknown_semantics_never_auto_executed"
+      ],
+      "mentions_padding": false,
+      "mentions_success": false
+    },
+    {
+      "file": "delivery_src\\BuildReasonSeg_Advisor_RC1\\tests\\test_task8b_runtime.py",
+      "tests": [
+        "test_uint8_rgb",
+        "test_uint16_rgb_fixed_linear_scaling",
+        "test_rgba_drops_alpha",
+        "test_grayscale_rejected",
+        "test_two_and_six_channel_rejected",
+        "test_extension_and_missing_file",
+        "test_pad_to_512_is_reflection_not_resize",
+        "test_plan_tiles_small_image_is_single_padded_tile",
+        "test_plan_tiles_overlap_and_exact_coverage",
+        "test_plan_tiles_edge_clamped",
+        "test_extract_tile_reflection_padding_mapping",
+        "test_merge_duplicate_iou_threshold_and_no_union",
+        "test_merge_priority_prefers_non_border_then_area",
+        "test_stable_ids_by_centroid_then_area",
+        "test_eligibility_rules",
+        "test_select_reference_tie_break",
+        "test_largest_extent_dominance_exception_selects_strictly_dominant_candidate",
+        "test_largest_extent_exception_rejects_lower_confidence_candidate",
+        "test_largest_extent_exception_requires_strict_confidence_gain",
+        "test_largest_extent_exception_requires_strict_area_gain",
+        "test_largest_extent_exception_never_admits_border_proposal",
+        "test_largest_extent_exception_requires_frozen_baseline",
+        "test_largest_extent_exception_keeps_production_area_order",
+        "test_largest_extent_exception_does_not_change_smallest_family",
+        "test_anchor_pixels_exact",
+        "test_plan_context_places_reference_at_anchor",
+        "test_reference_too_large_raises_e404",
+        "test_context_out_of_image_uses_reflection_and_maps_back",
+        "test_direction_satisfied_hard_check",
+        "test_output_filename_suffix_never_overwrites",
+        "test_mask_and_overlay_sizes_and_values",
+        "test_alpha_bounds",
+        "test_diagnostics_required_fields",
+        "test_compact_geometry_is_tight_and_global",
+        "test_proposal_iou_equals_legacy_full_frame_iou",
+        "test_merge_equivalence_with_compact_masks",
+        "test_reference_context_equivalence_with_legacy_full_frame",
+        "test_preview_uses_crop_not_full_frame_mask",
+        "test_serialization_contract_has_no_mask_payload",
+        "test_large_image_path_never_allocates_full_frame_bool"
+      ],
+      "mentions_padding": true,
+      "mentions_success": false
+    }
+  ],
+  "known_8b3_artifact_inspection": [
+    {
+      "path": "evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json",
+      "exists": true,
+      "bytes": 11876,
+      "sha256": "6b5e2ce9fda0bd4367903c5a28824bc91c70fa43b5bb537eec86c8f759fcd26f",
+      "status_field": "REF01_LOCKED_REPLAY_READINESS_ESTABLISHED",
+      "context_padding_present": false,
+      "final_mask_material_present": false,
+      "top_level_keys": [
+        "actual_replay_performed",
+        "audit_script_path",
+        "audit_script_sha256",
+        "base_head",
+        "branch",
+        "broad_search_performed",
+        "candidate_artifacts",
+        "cases",
+        "detector_model_calls",
+        "external_write_performed",
+        "historical_consistency_mismatches",
+        "next_gate",
+        "overall_outcome",
+        "overall_readiness",
+        "product_source_changed",
+        "production_object_replay_possible_without_detector",
+        "proposal_regeneration_performed",
+        "record_level_replay_possible_without_detector",
+        "schema_contract",
+        "scope"
+      ]
+    },
+    {
+      "path": "evaluation/task8b3_ref01_locked_reference_forensics.json",
+      "exists": true,
+      "bytes": 13343,
+      "sha256": "f7495796577cb26a14a6b76ffcb4cf9544524c25c37cdf58f6ba2b15214c6f84",
+      "status_field": "REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE",
+      "context_padding_present": false,
+      "final_mask_material_present": false,
+      "top_level_keys": [
+        "branch",
+        "candidates",
+        "class_counts",
+        "coverage_threshold",
+        "detector_model_calls_this_task",
+        "dominant_next_blocker",
+        "external_identity",
+        "historical_iou_by_proposal",
+        "historical_iou_consistency",
+        "historical_reproduction",
+        "next_gate",
+        "overall_outcome",
+        "scientific_reuse_disclosure",
+        "source_identity_basis",
+        "starting_head",
+        "task",
+        "verification_mode"
+      ]
+    },
+    {
+      "path": "evaluation/task8b3_ref01_e3c1_locked_record_replay.json",
+      "exists": true,
+      "bytes": 4568,
+      "sha256": "1f0641be35ef0bd57b94bdcbb37aed8c405b7f56a6c7d4415cbcce4450d15044",
+      "status_field": "REF01_ELIGIBILITY_REPAIR_LOCKED_RECORD_REPLAY_PASS",
+      "context_padding_present": false,
+      "final_mask_material_present": true,
+      "top_level_keys": [
+        "actual_detector_pipeline_replay_performed",
+        "branch",
+        "cases",
+        "design_id",
+        "detector_model_calls",
+        "eligibility_blocker_resolved_cases",
+        "eligibility_repair_validation",
+        "external_write_performed",
+        "frozen_expected_transition",
+        "next_gate",
+        "overall_outcome",
+        "product_source_changed",
+        "prop01_status",
+        "proposal_regeneration_performed",
+        "record_adapter_contract",
+        "ref01_status",
+        "scope",
+        "selection_blockers_remaining",
+        "selector_code_identity",
+        "starting_head"
+      ]
+    }
+  ],
+  "additional_bounded_search": {
+    "stage_a_files": [
+      "docs\\task8b3_d1_demo_failure_forensics.md",
+      "docs\\task8b3_m1a2c_canonical_suite_forensics.md",
+      "docs\\task8b3_m1a_compact_proposal_masks.md",
+      "docs\\task8b3_m1b1_external_delivery_sync.md",
+      "docs\\task8b3_m1b2_external_full_regression.md",
+      "docs\\task8b3_m1b3_large_image_memory_gate.md",
+      "docs\\task8b3_m1c_mem01_main_integration.md",
+      "docs\\task8b3_mask01_f1_validity_forensics.md",
+      "docs\\task8b3_p1d10_prop01_resolution_decision.md",
+      "docs\\task8b3_p1d11_manifest_normalization.md",
+      "docs\\task8b3_p1d11_supported_domain_policy.md",
+      "docs\\task8b3_p1d11a_policy_implementation.md",
+      "docs\\task8b3_p1d11b_git_canonical_external_sync.md",
+      "docs\\task8b3_p1d11b_supported_domain_policy_external_sync.md",
+      "docs\\task8b3_p1d11s1_git_canonical_sync_helper.md",
+      "docs\\task8b3_p1d12_locked_demo_proposal_gate.md",
+      "docs\\task8b3_p1d12_r1_evidence_closure.md",
+      "docs\\task8b3_p1d12_r2_final_evidence_closure.md",
+      "docs\\task8b3_p1d1_a2_zero_proposal_forensics.md",
+      "docs\\task8b3_p1d2_a2_detector_result_probe.md",
+      "docs\\task8b3_p1d3_a2_fullframe_context_probe.md",
+      "docs\\task8b3_p1d4_a2_subthreshold_tile_probe.md",
+      "docs\\task8b3_p1d5_detector_provenance_domain_gap.md",
+      "docs\\task8b3_p1d6_epoch18_alternate_a2_probe.md",
+      "docs\\task8b3_p1d7_yolov8m_whu_a2_probe.md",
+      "docs\\task8b3_p1d8_a2_input_domain_audit.md",
+      "docs\\task8b3_p1d9_validation_moment_rescue_probe.md",
+      "docs\\task8b3_ref01_e3b1_manifest_canonicalization.md",
+      "docs\\task8b3_ref01_e3b2_external_sync_full_suite.md",
+      "docs\\task8b3_ref01_e3c0_locked_replay_artifact_audit.md",
+      "docs\\task8b3_ref01_e3c0_r2r3_proposals_schema_probe.md",
+      "docs\\task8b3_ref01_e3c1_locked_record_replay.md",
+      "docs\\task8b3_ref01_e3c2_selection_scalar_forensics.md",
+      "docs\\task8b3_ref01_e3c3_selection_repair_decision.md",
+      "docs\\task8b3_ref01_eligibility_forensics.md",
+      "docs\\task8b3_ref01_eligibility_repair_design.md",
+      "docs\\task8b3_ref01_eligibility_repair_impl.md",
+      "docs\\task8b3_ref01_locked_reference_forensics.md",
+      "docs\\task8b3_six_image_demo_suite.md",
+      "evaluation\\task8b3_mask01_f1_validity_forensics.json",
+      "evaluation\\task8b3_ref01_e3b1_manifest_canonicalization.json",
+      "evaluation\\task8b3_ref01_e3b2_external_sync_full_suite.json",
+      "evaluation\\task8b3_ref01_e3c0_locked_replay_artifact_audit.json",
+      "evaluation\\task8b3_ref01_e3c0_r2r3_proposals_schema_probe.json",
+      "evaluation\\task8b3_ref01_e3c1_locked_record_replay.json",
+      "evaluation\\task8b3_ref01_e3c2_selection_scalar_forensics.json",
+      "evaluation\\task8b3_ref01_e3c3_selection_repair_decision.json",
+      "evaluation\\task8b3_ref01_eligibility_forensics.json",
+      "evaluation\\task8b3_ref01_eligibility_repair_design.json",
+      "evaluation\\task8b3_ref01_eligibility_repair_impl.json",
+      "evaluation\\task8b3_ref01_locked_reference_forensics.json"
+    ],
+    "stage_b_files": [
+      {
+        "file": "docs\\task8b3_d1_demo_failure_forensics.md",
+        "mentions": [
+          "mask_full"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_m1a_compact_proposal_masks.md",
+        "mentions": [
+          "mask_crop"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_mask01_f1_validity_forensics.md",
+        "mentions": [
+          "mask_crop",
+          "mask_full"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d10_prop01_resolution_decision.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d12_locked_demo_proposal_gate.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d12_r1_evidence_closure.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d1_a2_zero_proposal_forensics.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d2_a2_detector_result_probe.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d3_a2_fullframe_context_probe.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d4_a2_subthreshold_tile_probe.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d5_detector_provenance_domain_gap.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d8_a2_input_domain_audit.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_p1d9_validation_moment_rescue_probe.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_ref01_e3c0_locked_replay_artifact_audit.md",
+        "mentions": [
+          "mask_crop"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_ref01_e3c1_locked_record_replay.md",
+        "mentions": [
+          "mask_crop"
+        ]
+      },
+      {
+        "file": "docs\\task8b3_six_image_demo_suite.md",
+        "mentions": [
+          ".png"
+        ]
+      },
+      {
+        "file": "evaluation\\task8b3_mask01_f1_validity_forensics.json",
+        "mentions": [
+          ".npz",
+          ".png",
+          "mask_crop",
+          "mask_full"
+        ]
+      },
+      {
+        "file": "evaluation\\task8b3_ref01_e3c1_locked_record_replay.json",
+        "mentions": [
+          "mask_crop"
+        ]
+      }
+    ],
+    "classification": "SAVED_FINAL_MASK_MATERIAL_REFERENCED"
+  },
+  "failure_taxonomy": {
+    "observations": [],
+    "contract": "see success_contract"
+  },
+  "observable_signals": {
+    "signals": [
+      "mask_full.any()",
+      "mask_only_in_padding",
+      "_non_padding_mask",
+      "PipelineResult(status=\"SUCCESS\")"
+    ]
+  },
+  "evidence_gaps": [
+    "no min_mask_* setting exists in the audited canonical sources/configs"
+  ],
+  "padding_leakage_established": false,
+  "repair_implemented": false,
+  "product_source_modified": false,
+  "inference_executed": false,
+  "training_executed": false,
+  "repair_decision": "DEFER_TO_CHATGPT",
+  "next_gate": "CHATGPT_MASK01_F1_R1_REVIEW",
+  "commands_executed": [
+    "git branch --show-current",
+    "git rev-parse HEAD",
+    "git branch --show-current",
+    "git rev-parse HEAD",
+    "git status --porcelain",
+    "git branch --list audit/task8b3-mask01-f1-r1-corrective-forensics",
+    "git branch --show-current",
+    "git rev-parse HEAD",
+    "git branch --show-current"
+  ]
+}

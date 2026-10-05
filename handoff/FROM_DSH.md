@@ -17,32 +17,36 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_F1_VALIDITY_FORENSICS Report
+# FROM_DSH — Task MASK01_F1_R1_CORRECTIVE_FORENSICS Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_F1_VALIDITY_FORENSICS` |
+| Task | `MASK01_F1_R1_CORRECTIVE_FORENSICS` |
 | Status | **COMPLETE_WITH_EVIDENCE_GAPS** |
-| Starting branch / head | `audit/task8b3-ref01-locked-replay-artifacts` / `43c24de59625dfb97dcc605435fa83b88be46035` |
-| Task branch | `audit/task8b3-mask01-validity-forensics` |
-| Source files audited | 104 |
-| SUCCESS occurrences / mask-validity gates / failure-path lines | 6 / 2 / 237 |
-| min_mask_pixels / min_mask_frac | NOT_FOUND_IN_AUDITED_CONFIG / NOT_FOUND_IN_AUDITED_CONFIG |
-| Padding helper files | ['delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\box_query.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\program_parser.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\prompt_diagnostics.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\qwen_seg.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6n_relation_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6p_reference_head.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6u_reference_ranker.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6w_proposal_quality.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6y_nearest_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6z_l3_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task7d_global_competition_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\context.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\detector.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\imageio.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\outputs.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\pipeline.py'] |
-| Test files covering mask/SUCCESS | 8 |
-| Historical artifact availability | **PARTIAL** (10 referenced paths, 6 existing) |
-| Evidence gaps | ['historical referenced artifacts availability = PARTIAL'] |
-| Product source modified / inference / validity repair | NO / NO / NO |
+| Starting branch / head | `audit/task8b3-mask01-validity-forensics` / `590d080648ef5ae1fc6891dd18b97972c643c3cc` |
+| Task branch | `audit/task8b3-mask01-f1-r1-corrective-forensics` |
+| Previous F1 disposition | `REJECTED_INCOMPLETE_FORENSICS` |
+| predict_one SUCCESS contract verified | True (literal line evidence recorded) |
+| Padding helper | `pipeline.py::_non_padding_mask` · references padding = False · all-True mask = True |
+| padding_gate_conclusion | **PADDING_GATE_INEFFECTIVE** |
+| padding_leakage_established | false |
+| min_mask_* occurrences | 0 |
+| Test files in the matrix | 6 |
+| Known 8B.3 artifacts inspected | 3 |
+| Additional bounded search (Stage A / Stage B) | 51 / 18 |
+| Final-mask artifact classification | **SAVED_FINAL_MASK_MATERIAL_REFERENCED** |
+| Evidence gaps | ['no min_mask_* setting exists in the audited canonical sources/configs'] |
+| Product source modified / inference / training / repair | NO / NO / NO / NO |
 | repair_decision | `DEFER_TO_CHATGPT` |
-| next_gate | `CHATGPT_MASK01_DESIGN_REVIEW` |
-| Evidence | `evaluation/task8b3_mask01_f1_validity_forensics.json` |
-| Report | `docs/task8b3_mask01_f1_validity_forensics.md` |
-| Next action | Awaiting ChatGPT mask-01 design review |
+| next_gate | `CHATGPT_MASK01_F1_R1_REVIEW` |
+| Evidence | `evaluation/task8b3_mask01_f1_r1_corrective_forensics.json` |
+| Report | `docs/task8b3_mask01_f1_r1_corrective_forensics.md` |
+| Next action | Awaiting ChatGPT F1-R1 review |
 
-Watt was not needed for Task MASK01_F1_VALIDITY_FORENSICS (no downloads, no transfers).
+Watt was not needed for Task MASK01_F1_R1_CORRECTIVE_FORENSICS (no downloads, no transfers).
 
-This task performed a read-only audit only: no product source, threshold, mask-validity rule or model asset was changed,
-and no model inference was executed.
+The commit deliberately records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; the actual local and remote heads are
+printed to the terminal after the push, per the task book rule.
