@@ -17,40 +17,39 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E1 Report
+# FROM_DSH — Task 8B.3-REF01-E1-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E1` |
-| Status | **COMPLETE** |
-| Base branch / head | `fix/task8b3-ref01-reference-forensics` / `798a2fcb50054a67b8101581c5007cbbfa46c36a` |
-| New task branch | `fix/task8b3-ref01-eligibility-forensics` |
+| Task | `8B.3-REF01-E1-R1` |
+| Status | **COMPLETE** (E1 selection-rule defect corrected) |
+| Branch | `fix/task8b3-ref01-eligibility-forensics` |
+| Starting HEAD | `3c497bf3d427366e00b5890fdcfab1a35e68b28c` |
 | Detector / model calls | 0 |
-| Proposal metadata source | EXISTING_P1D12_JSON_ONLY |
-| above best-any id | 5 |
-| above best-any IoU | 0.903250 |
-| above best-any border flag | False |
-| above best-any extent ratio | 0.296875 |
-| above best-any fail reason | BBOX_EXTENT_CAP |
-| above P0 selected/id IoU | 4 / 0.000000 |
-| above P1 selected/id IoU | 4 / 0.000000 |
-| above P2 selected/id IoU | 5 / 0.903250 |
-| above P3 selected/id IoU | 5 / 0.903250 |
-| right / left / below GT-best fail reasons | right:['NONE'], left:['NONE'], below:['NONE'] |
+| Production selection rule | `argmin(-mask_area, -confidence, proposal_id)` over each policy eligible set |
+| GT coverage | recorded separately as `argmin(-iou_to_gt, -confidence, proposal_id)` |
+| Fail-reason enum | `MASK_AREA_ZERO` / `TOUCHES_IMAGE_BORDER` / `BBOX_EXTENT_CAP` (empty = `ELIGIBLE`) |
+| Tracked replay script | `scripts/task8b3_ref01_eligibility_forensics.py` |
+| above GT-best id / IoU | 5 / 0.903250 |
+| above GT-best border / extent / margin | False / 0.296875 / 0.096875 |
+| above GT-best fail reason | BBOX_EXTENT_CAP |
+| above P0/P1/P2/P3 production selected | P0_FROZEN:4 / P1_BORDER_RELAXED_ONLY:4 / P2_EXTENT_RELAXED_ONLY:5 / P3_BOTH_RELAXED:3 |
+| above P0/P1/P2/P3 selected IoU | 0.0 / 0.0 / 0.90325 / 0.0 |
+| bbox-extent-cap isolation | True |
+| right / left / below GT-best fail reasons | right:['ELIGIBLE'], left:['ELIGIBLE'], below:['ELIGIBLE'] |
 | Threshold / rules / repair changed | NO / NO / NO |
 | Manual visual inspection / candidate replacement | NO / NO |
 | Outcome | **REF01_ELIGIBILITY_BLOCKER_ISOLATED_BBOX_EXTENT_CAP** |
 | Next gate | `NEXT = REF01_ELIGIBILITY_REPAIR_DESIGN` (not executed) |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| REF-01 status | FORENSICS_COMPLETE (eligibility attribution added) |
 | Evidence | `evaluation\task8b3_ref01_eligibility_forensics.json` |
 | Report | `docs/task8b3_ref01_eligibility_forensics.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-E1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E1-R1 (no downloads, no transfers).
 
-No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; the canonical REF01 evidence and the
-external delivery were read only and not modified.
+The canonical REF01 evidence and the external delivery were read only and not modified; no model, detector, Qwen, SAM2,
+D-B1 or target-segmentation execution occurred.

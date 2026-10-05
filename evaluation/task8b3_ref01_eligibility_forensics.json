@@ -1,21 +1,29 @@
 {
- "task": "8B.3-REF01-E1",
+ "task": "8B.3-REF01-E1-R1",
  "base_branch": "fix/task8b3-ref01-reference-forensics",
  "base_head": "798a2fcb50054a67b8101581c5007cbbfa46c36a",
  "branch": "fix/task8b3-ref01-eligibility-forensics",
+ "starting_head": "3c497bf3d427366e00b5890fdcfab1a35e68b28c",
  "detector_model_calls_this_task": 0,
  "proposal_metadata_source": "EXISTING_P1D12_JSON_ONLY",
  "ref01_evidence": "evaluation\\task8b3_ref01_locked_reference_forensics.json",
  "ref01_evidence_sha256": "f7495796577cb26a14a6b76ffcb4cf9544524c25c37cdf58f6ba2b15214c6f84",
  "coverage_threshold": 0.5,
- "tolerance": 1e-06,
+ "extent_cap": 0.2,
+ "selection_rule": "production_selected = argmin(-mask_area, -confidence, proposal_id) over the policy eligible set",
+ "gt_coverage_rule": "gt_best = argmin(-iou_to_gt, -confidence, proposal_id) over all proposals (recorded separately)",
+ "fail_reason_enum": [
+  "MASK_AREA_ZERO",
+  "TOUCHES_IMAGE_BORDER",
+  "BBOX_EXTENT_CAP"
+ ],
  "policy_definitions": {
   "P0_FROZEN": "mask_area>0 AND not touches_border AND extent<=0.20",
   "P1_BORDER_RELAXED_ONLY": "mask_area>0 AND extent<=0.20",
   "P2_EXTENT_RELAXED_ONLY": "mask_area>0 AND not touches_border",
   "P3_BOTH_RELAXED": "mask_area>0"
  },
- "policy_selected_definition": "argmin (-IoU, -confidence, proposal_id) over the policy's eligible set",
+ "correction_note": "E1 (commit 3c497bf) ranked the policy 'selected' proposal by GT IoU and therefore mislabelled GT coverage as production selection. E1-R1 replays production selection with the frozen production ranking (-mask_area, -confidence, proposal_id) and records GT-best coverage separately.",
  "results": {
   "right": {
    "tile": "1010",
@@ -24,30 +32,42 @@
     "P0_FROZEN": {
      "eligible_count": 4,
      "selected_id": 1,
+     "selected_mask_area": 1494,
+     "selected_confidence": 0.6712952852249146,
      "selected_iou": 0.5588697017268446
     },
     "P1_BORDER_RELAXED_ONLY": {
      "eligible_count": 6,
      "selected_id": 1,
+     "selected_mask_area": 1494,
+     "selected_confidence": 0.6712952852249146,
      "selected_iou": 0.5588697017268446
     },
     "P2_EXTENT_RELAXED_ONLY": {
      "eligible_count": 4,
      "selected_id": 1,
+     "selected_mask_area": 1494,
+     "selected_confidence": 0.6712952852249146,
      "selected_iou": 0.5588697017268446
     },
     "P3_BOTH_RELAXED": {
      "eligible_count": 6,
      "selected_id": 1,
+     "selected_mask_area": 1494,
+     "selected_confidence": 0.6712952852249146,
      "selected_iou": 0.5588697017268446
     }
    },
-   "gt_best_id": 1,
-   "gt_best_iou": 0.5588697017268446,
-   "gt_best_border": false,
-   "gt_best_extent_ratio": 0.123046875,
-   "gt_best_mask_area": 1494,
-   "gt_best_fail_reasons": [],
+   "gt_best": {
+    "proposal_id": 1,
+    "iou": 0.5588697017268446,
+    "mask_area": 1494,
+    "confidence": 0.6712952852249146,
+    "border": false,
+    "extent_ratio": 0.123046875,
+    "extent_margin": -0.076953125,
+    "fail_reasons": []
+   },
    "classification": "REFERENCE_SELECTED_CORRECT"
   },
   "left": {
@@ -56,31 +76,43 @@
    "policies": {
     "P0_FROZEN": {
      "eligible_count": 42,
-     "selected_id": 30,
-     "selected_iou": 0.6500672947510094
+     "selected_id": 14,
+     "selected_mask_area": 3361,
+     "selected_confidence": 0.6941945552825928,
+     "selected_iou": 0.0
     },
     "P1_BORDER_RELAXED_ONLY": {
      "eligible_count": 51,
-     "selected_id": 30,
-     "selected_iou": 0.6500672947510094
+     "selected_id": 14,
+     "selected_mask_area": 3361,
+     "selected_confidence": 0.6941945552825928,
+     "selected_iou": 0.0
     },
     "P2_EXTENT_RELAXED_ONLY": {
      "eligible_count": 44,
-     "selected_id": 30,
-     "selected_iou": 0.6500672947510094
+     "selected_id": 27,
+     "selected_mask_area": 4684,
+     "selected_confidence": 0.05701248347759247,
+     "selected_iou": 0.0
     },
     "P3_BOTH_RELAXED": {
      "eligible_count": 53,
-     "selected_id": 30,
-     "selected_iou": 0.6500672947510094
+     "selected_id": 27,
+     "selected_mask_area": 4684,
+     "selected_confidence": 0.05701248347759247,
+     "selected_iou": 0.0
     }
    },
-   "gt_best_id": 30,
-   "gt_best_iou": 0.6500672947510094,
-   "gt_best_border": false,
-   "gt_best_extent_ratio": 0.146484375,
-   "gt_best_mask_area": 2618,
-   "gt_best_fail_reasons": [],
+   "gt_best": {
+    "proposal_id": 30,
+    "iou": 0.6500672947510094,
+    "mask_area": 2618,
+    "confidence": 0.6951187252998352,
+    "border": false,
+    "extent_ratio": 0.146484375,
+    "extent_margin": -0.053515625,
+    "fail_reasons": []
+   },
    "classification": "REFERENCE_SELECTION_WRONG_COVERED"
   },
   "above": {
@@ -90,32 +122,44 @@
     "P0_FROZEN": {
      "eligible_count": 4,
      "selected_id": 4,
+     "selected_mask_area": 3012,
+     "selected_confidence": 0.6411488056182861,
      "selected_iou": 0.0
     },
     "P1_BORDER_RELAXED_ONLY": {
      "eligible_count": 5,
      "selected_id": 4,
+     "selected_mask_area": 3012,
+     "selected_confidence": 0.6411488056182861,
      "selected_iou": 0.0
     },
     "P2_EXTENT_RELAXED_ONLY": {
      "eligible_count": 7,
      "selected_id": 5,
+     "selected_mask_area": 5059,
+     "selected_confidence": 0.7026934027671814,
      "selected_iou": 0.9032501889644747
     },
     "P3_BOTH_RELAXED": {
      "eligible_count": 9,
-     "selected_id": 5,
-     "selected_iou": 0.9032501889644747
+     "selected_id": 3,
+     "selected_mask_area": 11474,
+     "selected_confidence": 0.17512750625610352,
+     "selected_iou": 0.0
     }
    },
-   "gt_best_id": 5,
-   "gt_best_iou": 0.9032501889644747,
-   "gt_best_border": false,
-   "gt_best_extent_ratio": 0.296875,
-   "gt_best_mask_area": 5059,
-   "gt_best_fail_reasons": [
-    "BBOX_EXTENT_CAP"
-   ],
+   "gt_best": {
+    "proposal_id": 5,
+    "iou": 0.9032501889644747,
+    "mask_area": 5059,
+    "confidence": 0.7026934027671814,
+    "border": false,
+    "extent_ratio": 0.296875,
+    "extent_margin": 0.096875,
+    "fail_reasons": [
+     "BBOX_EXTENT_CAP"
+    ]
+   },
    "classification": "REFERENCE_ELIGIBILITY_BLOCKED"
   },
   "below": {
@@ -124,31 +168,43 @@
    "policies": {
     "P0_FROZEN": {
      "eligible_count": 3,
-     "selected_id": 2,
-     "selected_iou": 0.6165496859992612
+     "selected_id": 1,
+     "selected_mask_area": 2082,
+     "selected_confidence": 0.6108331084251404,
+     "selected_iou": 0.0
     },
     "P1_BORDER_RELAXED_ONLY": {
      "eligible_count": 6,
-     "selected_id": 2,
-     "selected_iou": 0.6165496859992612
+     "selected_id": 1,
+     "selected_mask_area": 2082,
+     "selected_confidence": 0.6108331084251404,
+     "selected_iou": 0.0
     },
     "P2_EXTENT_RELAXED_ONLY": {
      "eligible_count": 3,
-     "selected_id": 2,
-     "selected_iou": 0.6165496859992612
+     "selected_id": 1,
+     "selected_mask_area": 2082,
+     "selected_confidence": 0.6108331084251404,
+     "selected_iou": 0.0
     },
     "P3_BOTH_RELAXED": {
      "eligible_count": 6,
-     "selected_id": 2,
-     "selected_iou": 0.6165496859992612
+     "selected_id": 1,
+     "selected_mask_area": 2082,
+     "selected_confidence": 0.6108331084251404,
+     "selected_iou": 0.0
     }
    },
-   "gt_best_id": 2,
-   "gt_best_iou": 0.6165496859992612,
-   "gt_best_border": false,
-   "gt_best_extent_ratio": 0.138671875,
-   "gt_best_mask_area": 1770,
-   "gt_best_fail_reasons": [],
+   "gt_best": {
+    "proposal_id": 2,
+    "iou": 0.6165496859992612,
+    "mask_area": 1770,
+    "confidence": 0.5965109467506409,
+    "border": false,
+    "extent_ratio": 0.138671875,
+    "extent_margin": -0.061328125,
+    "fail_reasons": []
+   },
    "classification": "REFERENCE_SELECTION_WRONG_COVERED"
   }
  },
@@ -157,13 +213,23 @@
   "gt_best_iou": 0.9032501889644747,
   "border": false,
   "extent_ratio": 0.296875,
+  "extent_margin": 0.096875,
   "fail_reasons": [
    "BBOX_EXTENT_CAP"
   ],
-  "bbox_cap_isolated": true,
-  "shared_with": [
-   "above"
-  ]
+  "production_selected_ids": {
+   "P0_FROZEN": 4,
+   "P1_BORDER_RELAXED_ONLY": 4,
+   "P2_EXTENT_RELAXED_ONLY": 5,
+   "P3_BOTH_RELAXED": 3
+  },
+  "production_selected_ious": {
+   "P0_FROZEN": 0.0,
+   "P1_BORDER_RELAXED_ONLY": 0.0,
+   "P2_EXTENT_RELAXED_ONLY": 0.9032501889644747,
+   "P3_BOTH_RELAXED": 0.0
+  },
+  "bbox_cap_isolated": true
  },
  "overall_outcome": "REF01_ELIGIBILITY_BLOCKER_ISOLATED_BBOX_EXTENT_CAP",
  "next_gate": "REF01_ELIGIBILITY_REPAIR_DESIGN"
