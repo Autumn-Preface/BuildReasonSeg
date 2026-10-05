@@ -346,3 +346,30 @@ detector / tests / source_manifest modification = NONE
 external RC1 sync = NONE · detector or model inference = NONE
 manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
 ```
+
+
+## E3A-R5E — final artifact normalization
+
+```text
+Task = 8B.3-REF01-E3A-R5E
+Status = COMPLETE
+Product/test/source_manifest changes in R5E = NONE
+Wrong R5D evidence path = REMOVED (evaluation/task8b3_ref01_e3a_canonical_implementation_closure.json)
+Final E3A evidence path = evaluation/task8b3_ref01_eligibility_repair_impl.json
+R5D commit-message mismatch = RECORDED, NOT HISTORY-REWRITTEN
+Accepted targeted evidence = 40 passed in 0.69s
+Canonical full-suite disposition = NOT_APPLICABLE_PRE_SYNC_SOURCE_TREE_MISSING_RUNTIME_ASSETS
+R5C static probe disposition = INVALID_OBSOLETE_PRE_REPAIR_PROBE
+Canonical implementation = CLOSED
+Source manifest status = INTENTIONALLY_STALE_PENDING_E3B
+
+design = LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+variant = R5E (final artifact normalization, no sync)
+detector.py sha256 = bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3
+tests/test_task8b_runtime.py sha256 = 8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d
+source_manifest sha256 (canonical / external) = e1596f99946b985df290b705a037519ffa93ab9e1cae9855418c346dcd0ff570 / c72c8ed88b9b62ec49ca7f29f44a2a2b68af820a27b29441a5e7876c9aab9604
+pytest / py_compile / detector-or-model inference in R5E = NONE / NONE / NONE
+external RC1 sync in R5E = NONE
+external full suite required after sync = YES
+NEXT = REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC (not executed)
+```
