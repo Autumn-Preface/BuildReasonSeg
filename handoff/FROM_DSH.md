@@ -17,33 +17,32 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3C3 Report
+# FROM_DSH — Task MASK01_F1_VALIDITY_FORENSICS Report
 
-```text
-Task: 8B.3-REF01-E3C3
-Status: COMPLETE
-Branch: audit/task8b3-ref01-locked-replay-artifacts
-Starting HEAD: 6e33b88ecf9c78ef9fc62a9c79ec0a8f0c55c1bd
-Decision owner: CHATGPT
-Decision: REJECT_FURTHER_SCALAR_RANK_REPAIR
-Detector/model calls: 0
-Proposal regeneration performed: NO
-Selector repair implementation performed: NO
-Product source changed: NO
-External write performed: NO
-Frozen automatic selector repair: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-Right: 1->1 correct stable
-Left: 14->14 residual selection limitation
-Above: 4->5 eligibility blocker resolved
-Below: 1->1 residual selection limitation
-Engineering fallback: ASSISTED_REFERENCE_OVERRIDE
-Fallback pipeline parameter: reference_id
-REF-01 status: ACTIVE_RESIDUAL_SELECTION_LIMITATION
-PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-Evidence: evaluation/task8b3_ref01_e3c3_selection_repair_decision.json
-Report: docs/task8b3_ref01_e3c3_selection_repair_decision.md
-Outcome: REF01_SCALAR_REPAIR_REJECTED_ASSISTED_FALLBACK_FROZEN
-Next gate: MASK01_VALIDITY_FORENSICS_DESIGN
-Next executed: NO
-Next action: Awaiting ChatGPT audit; do not execute NEXT.
-```
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
+history._
+
+| item | value |
+|---|---|
+| Task | `MASK01_F1_VALIDITY_FORENSICS` |
+| Status | **COMPLETE_WITH_EVIDENCE_GAPS** |
+| Starting branch / head | `audit/task8b3-ref01-locked-replay-artifacts` / `43c24de59625dfb97dcc605435fa83b88be46035` |
+| Task branch | `audit/task8b3-mask01-validity-forensics` |
+| Source files audited | 104 |
+| SUCCESS occurrences / mask-validity gates / failure-path lines | 6 / 2 / 237 |
+| min_mask_pixels / min_mask_frac | NOT_FOUND_IN_AUDITED_CONFIG / NOT_FOUND_IN_AUDITED_CONFIG |
+| Padding helper files | ['delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\box_query.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\program_parser.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\prompt_diagnostics.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\qwen_seg.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6n_relation_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6p_reference_head.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6u_reference_ranker.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6w_proposal_quality.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6y_nearest_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task6z_l3_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\_frozen\\mvp\\task7d_global_competition_decoder.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\context.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\detector.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\imageio.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\outputs.py', 'delivery_src\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\pipeline.py'] |
+| Test files covering mask/SUCCESS | 8 |
+| Historical artifact availability | **PARTIAL** (10 referenced paths, 6 existing) |
+| Evidence gaps | ['historical referenced artifacts availability = PARTIAL'] |
+| Product source modified / inference / validity repair | NO / NO / NO |
+| repair_decision | `DEFER_TO_CHATGPT` |
+| next_gate | `CHATGPT_MASK01_DESIGN_REVIEW` |
+| Evidence | `evaluation/task8b3_mask01_f1_validity_forensics.json` |
+| Report | `docs/task8b3_mask01_f1_validity_forensics.md` |
+| Next action | Awaiting ChatGPT mask-01 design review |
+
+Watt was not needed for Task MASK01_F1_VALIDITY_FORENSICS (no downloads, no transfers).
+
+This task performed a read-only audit only: no product source, threshold, mask-validity rule or model asset was changed,
+and no model inference was executed.
