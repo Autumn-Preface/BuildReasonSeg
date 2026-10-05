@@ -17,37 +17,37 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3C0-R1 Report
+# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E3C0-R1` |
-| Status | **COMPLETE** (bounded read-only audit correction) |
+| Task | `8B.3-REF01-E3C0-R2-R1` |
+| Status | **STOP** (provided recovery script failed its own gate; nothing repaired or re-run) |
 | Branch | `audit/task8b3-ref01-locked-replay-artifacts` |
-| Starting HEAD | `bde13bd15bbab3e455ea1d3ef10b3f6740fc110d` |
-| Discarded forbidden roots | `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts`, `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\inference`, `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs` |
-| Allowed search roots | repo `evaluation/docs/handoff/scripts` · external `inference/output`, `docs`, root-level text files |
-| Candidate artifacts | 16 |
-| Detector / model inference | NONE |
-| Proposal regeneration / actual replay | NO / NO |
-| External write / product change | NO / NO |
-| Per-case scalar fields complete | right:True, left:True, above:True, below:True |
-| Per-case exact mask material present | right:False, left:False, above:False, below:False |
-| Overall readiness (frozen enum) | **LOCKED_REPLAY_ARTIFACTS_PARTIAL** |
-| Production object replay possible | False |
-| Record-level replay possible | False |
-| Historical consistency mismatches | [{'relation': 'right', 'tile': '1010', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}, {'relation': 'left', 'tile': '1003', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}, {'relation': 'above', 'tile': '1008', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}, {'relation': 'below', 'tile': '1009', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}] |
-| Evidence | `evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json` |
-| Report | `docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md` |
-| Wrong report path removed | YES (`docs/task8b3_ref01_locked_replay_artifact_audit.md`) |
-| Overall outcome | **REF01_LOCKED_REPLAY_ARTIFACT_AUDIT_CORRECTED** |
-| Next gate | `REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN` (not executed) |
-| Next action | Awaiting ChatGPT audit |
+| Starting HEAD | `9e06b9e231be34d32983bfc12e394d629ed59366` |
+| Provided script | `C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py` |
+| Prescribed / observed SHA256 | `c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c` / `c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c` (match = True) |
+| Script runs | 1 |
+| Script exit | 1 |
+| Readyness / NEXT determination | NONE (the script did not produce a verdict) |
+| Broad search / inference / proposal regeneration / actual replay | NONE |
+| External write / product modification | NO / NO |
+| Changed paths in this commit | ['handoff/TO_DSH.md'] |
+| Next action | Awaiting ChatGPT audit; no rerun and no self-repair was attempted |
 
-Watt was not needed for Task 8B.3-REF01-E3C0-R1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3C0-R2-R1 (no downloads, no transfers).
 
-The corrected audit read, hashed and inventoried saved artifacts only inside the allowed roots; no forbidden root was
-consulted, nothing was regenerated or replayed, and no file outside the repository was written.
+Failure tail reported by the provided script:
+
+```text
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py", line 744, in <module>
+    main()
+  File "C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py", line 215, in main
+    assert all(line in allowed_status for line in status_lines), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: UNEXPECTED_WORKTREE: ['M handoff/TO_DSH.md']
+```

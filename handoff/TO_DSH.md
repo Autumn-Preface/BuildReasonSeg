@@ -1,148 +1,170 @@
 请先读取 `handoff/TO_DSH.md`，并严格以该文件作为本轮唯一任务书。
 
-本次任务名称：**Task 8B.3-REF01-E3C0-R2 — Locked Replay Readiness Audit Finalization**
+本次任务名称：**Task 8B.3-REF01-E3C0-R2-R1 — Recover Missing Locked Replay Audit Outputs**
 
-# TO_DSH — Task 8B.3-REF01-E3C0-R2: Locked Replay Readiness Audit Finalization
+# TO_DSH — Task 8B.3-REF01-E3C0-R2-R1: Recover Missing Locked Replay Audit Outputs
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `audit/task8b3-ref01-locked-replay-artifacts`
-> Required starting HEAD: `95c2a8b6ee86e4835909e82e5d58d372246f0ec3`
+> Required starting HEAD: `9e06b9e231be34d32983bfc12e394d629ed59366`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
-> Required exact audit script local path: `C:\D\DeepSeekHarness\E3C0_R2_audit_exact.py`
-> Required audit script SHA256: `955d589643b1eec141ec3eb8ea181b2ba4b41577e4e96d0431d3698fe3ac958d`
+> Required exact audit script local path: `C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py`
+> Required exact audit script SHA256: `c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c`
 
 # 0. CHATGPT AUDIT DISPOSITION
 
-E3C0-R1 is **NOT FORMALLY APPROVED**.
+The prior R2 commit is **NOT APPROVED**.
 
-R1 successfully corrected the forbidden-root problem, but two issues remain:
-
-1. artifact/evidence schema still deviated from the frozen contract:
-   - `candidate_artifacts` omitted required fields;
-   - `consistency_checks` used self-invented keys rather than the exact frozen keys;
-   - FROM_DSH did not use the required exact field contract.
-
-2. R1 classified the artifacts as `LOCKED_REPLAY_ARTIFACTS_PARTIAL`, but this is not yet supported:
-   - all four saved `proposals.json` files have record counts exactly equal to the frozen merged counts: 6 / 53 / 9 / 6;
-   - R1 itself reported scalar fields complete;
-   - the allowed Git-tracked forensics artifact stores per-proposal IoU for all proposal IDs in all four cases;
-   - therefore A/B/D require one narrow deterministic re-audit before readiness can be frozen.
-
-R2 performs **NO broad search**. It inspects only nine already-known artifacts.
-
-# 1. CHATGPT READINESS RULE REFINEMENT
-
-For this R2 and future **record-level** replay only:
+Verified remote facts:
 
 ```text
-persisted mask_area > 0
+R2 HEAD:
+9e06b9e231be34d32983bfc12e394d629ed59366
+
+R2 parent:
+95c2a8b6ee86e4835909e82e5d58d372246f0ec3
+
+R2 commit message:
+docs(rc1): finalize locked replay readiness audit
 ```
 
-is accepted as the nonempty witness for a serialized merged proposal record.
-
-Reason:
-- record-level replay does not instantiate `GlobalProposal`;
-- `mask_area` is the persisted production scalar used for the same merged proposal;
-- this rule is used only to decide whether the saved scalar record is sufficient for deterministic selector replay.
-
-This does **NOT** satisfy exact production-object replay.
-
-For C / `FULL_PRODUCTION_REPLAY_READY`, exact `mask_crop` and current `GlobalProposal` reconstruction material remain mandatory.
-
-Therefore:
+But the R2 commit changed ONLY:
 
 ```text
-A = complete stable proposal list
-B = complete selector scalars + mask_area>0 record-level nonempty witness
-C = exact GlobalProposal/mask reconstruction material
-D = complete per-proposal forensic IoU linkage
+handoff/TO_DSH.md
 ```
 
-The exact four allowed readiness enums remain unchanged.
+The required R2 outputs were NOT updated.
+
+At `9e06b9e231be34d32983bfc12e394d629ed59366` the following files are still R1 content:
+
+```text
+evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
+docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
+handoff/FROM_DSH.md
+```
+
+Therefore the prior R2 `COMPLETE` claim is invalid.
+
+This R2-R1 does NOT rewrite history.
+It performs one fresh exact correction commit from `9e06b9e231be34d32983bfc12e394d629ed59366`.
+
+# 1. EXECUTOR CONTRACT
+
+DSH has ZERO technical discretion.
+
+Allowed operations ONLY:
+
+1. verify branch / starting HEAD;
+2. verify working tree is clean except the user-replaced `handoff/TO_DSH.md`;
+3. verify exact audit script exists and SHA256 matches;
+4. run the exact script ONCE;
+5. require script exit code 0;
+6. require exact stdout gates below;
+7. inspect generated repo diff only;
+8. make exactly one correction commit;
+9. push once;
+10. STOP.
+
+Forbidden:
+
+- NO broad search;
+- NO repo `artifacts/` access;
+- NO repo `inference/` access;
+- NO external `logs/` access;
+- NO detector / YOLO / SAM / Qwen / MLLM inference;
+- NO proposal regeneration;
+- NO actual selector replay;
+- NO production replay;
+- NO final Demo;
+- NO external write;
+- NO source / test / manifest / sync-helper modification;
+- NO manual edit of evidence/report/FROM_DSH after script execution;
+- NO script modification;
+- NO script reconstruction;
+- NO script rerun;
+- NO pytest;
+- NO py_compile;
+- NO package/environment change;
+- NO amend;
+- NO rebase;
+- NO reset;
+- NO stash;
+- NO clean;
+- NO force push;
+- NO intermediate commit;
+- NO intermediate push;
+- NO NEXT execution.
+
+If any required condition fails:
+- do NOT invent a workaround;
+- do NOT claim COMPLETE;
+- follow §12 STOP protocol.
 
 # 2. USER-SUPPLIED EXACT SCRIPT
 
-The user will provide the accompanying file:
+The user will provide:
 
 ```text
-E3C0_R2_audit_exact.py
+E3C0_R2_R1_audit_exact.py
 ```
 
 Place/copy it at exactly:
 
 ```text
-C:\D\DeepSeekHarness\E3C0_R2_audit_exact.py
+C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py
 ```
 
-DSH MUST NOT reconstruct, edit, reformat, patch, or replace it.
+DSH MUST NOT modify, regenerate, reformat, or patch this file.
 
-Before running it, compute SHA256 and require exactly:
+Before execution compute SHA256.
+
+Require exactly:
 
 ```text
-955d589643b1eec141ec3eb8ea181b2ba4b41577e4e96d0431d3698fe3ac958d
+c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c
 ```
 
-If the script is missing or SHA mismatches => STOP.
+If missing/mismatch => STOP.
 
-# 3. EXECUTOR CONTRACT
+# 3. GIT PRE-FLIGHT
 
-Allowed operations ONLY:
-
-1. verify exact branch/head;
-2. verify working tree is clean except `handoff/TO_DSH.md`;
-3. verify exact external audit-script SHA;
-4. run that exact script ONCE;
-5. inspect its stdout and generated repo diff;
-6. verify the exact gates below;
-7. make exactly one R2 commit;
-8. push once;
-9. STOP.
-
-Forbidden:
-- NO broad file search;
-- NO repo `artifacts/` or repo `inference/` access;
-- NO external `logs/` access;
-- NO detector/model inference;
-- NO proposal regeneration;
-- NO production replay;
-- NO final Demo;
-- NO external write;
-- NO product/test/manifest/helper edit;
-- NO manual evidence/report/FROM_DSH editing;
-- NO script modification;
-- NO script rerun;
-- NO pytest / py_compile;
-- NO package/environment change;
-- NO amend/rebase/reset/stash/clean;
-- NO intermediate commit/push;
-- NO NEXT.
-
-Any script assertion failure => STOP. Do not repair it.
-
-# 4. GIT GATE
-
-Require:
+From repo root require:
 
 ```text
 git branch --show-current
 = audit/task8b3-ref01-locked-replay-artifacts
 
 git rev-parse HEAD
-= 95c2a8b6ee86e4835909e82e5d58d372246f0ec3
+= 9e06b9e231be34d32983bfc12e394d629ed59366
 ```
 
-Allowed initial status:
-- clean; or
-- only `M handoff/TO_DSH.md`.
+Run:
+
+```text
+git status --short
+```
+
+Allowed result:
+- no lines; or
+- exactly one line:
+  ` M handoff/TO_DSH.md`
 
 Anything else => STOP.
 
-# 5. EXACT ARTIFACT SCOPE
+Require:
 
-The audit script is authorized to READ only:
+```text
+git rev-list --count 9e06b9e231be34d32983bfc12e394d629ed59366..HEAD
+= 0
+```
+
+# 4. EXACT READ SCOPE
+
+The exact script may READ ONLY these nine scientific artifacts:
 
 ```text
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\proposals.json
@@ -160,74 +182,181 @@ C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagno
 evaluation/task8b3_ref01_locked_reference_forensics.json
 ```
 
-No other discovery/search is authorized.
+It also reads the four repo control files needed for:
+- branch/head/status/diff;
+- preserving `ARTIFACT-FACTS`;
+- verifying its own generated outputs.
+
+NO discovery/search is authorized.
+
+# 5. READINESS RULE — FROZEN
+
+For record-level selector replay:
+
+```text
+persisted mask_area > 0
+```
+
+is accepted as the nonempty witness for the serialized merged proposal record.
+
+This is ONLY for record-level replay.
+
+For full production-object replay, exact `mask_crop` / `GlobalProposal` reconstruction material remains mandatory.
+
+Definitions:
+
+```text
+A = complete stable proposal list
+B = complete selector scalars + mask_area>0
+C = exact production object / mask material
+D = complete per-proposal forensic IoU linkage
+```
+
+Allowed readiness enum ONLY:
+
+```text
+FULL_PRODUCTION_REPLAY_READY
+RECORD_LEVEL_REPLAY_READY
+LOCKED_REPLAY_ARTIFACTS_PARTIAL
+LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
+```
+
+Mechanical mapping:
+
+```text
+A+B+C+D all four cases
+→ FULL_PRODUCTION_REPLAY_READY
+
+A+B+D all four cases and C false for >=1 case
+→ RECORD_LEVEL_REPLAY_READY
+
+known artifacts exist but A/B/D incomplete
+→ LOCKED_REPLAY_ARTIFACTS_PARTIAL
+
+no candidate artifact
+→ LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
+```
+
+NEXT mapping ONLY:
+
+```text
+FULL_PRODUCTION_REPLAY_READY
+→ REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
+
+RECORD_LEVEL_REPLAY_READY
+→ REF01_LOCKED_RECORD_REPLAY_DESIGN
+
+LOCKED_REPLAY_ARTIFACTS_PARTIAL
+→ REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
+
+LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
+→ REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
+```
 
 # 6. RUN EXACT SCRIPT ONCE
 
-From repository root run exactly once:
+Run exactly once:
 
 ```text
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3C0_R2_audit_exact.py
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py
 ```
 
-Require exit 0.
+Do NOT redirect into a repo file.
 
-Capture stdout exactly.
+Require exit code 0.
 
-Expected first line:
+Require stdout contains:
 
 ```text
-E3C0_R2_AUDIT: COMPLETE
+E3C0_R2_R1_AUDIT: COMPLETE
+SCRIPT_SHA256= c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c
+CANDIDATE_ARTIFACTS= 9
 ```
 
-The observed `READINESS=` and `NEXT_GATE=` are determined mechanically by the exact script. DSH MUST NOT override them.
+`READINESS=` and `NEXT_GATE=` must be accepted exactly as produced by the script.
+DSH must not reinterpret them.
 
-Do NOT rerun.
-
-# 7. GENERATED ARTIFACT CONTRACT
-
-The script must modify exactly:
+Require stdout `DIFF_PATHS=` contains exactly these four paths:
 
 ```text
-evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
 docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
+evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
 handoff/FROM_DSH.md
-```
-
-Together with the user-provided taskbook:
-
-```text
 handoff/TO_DSH.md
 ```
 
-no other repo path may differ from starting HEAD.
+If the script exits nonzero or any stdout gate fails => STOP.
+DO NOT rerun.
 
-## Evidence requirements
+# 7. EVIDENCE GATE
 
-Require:
-- `task = 8B.3-REF01-E3C0-R2`;
-- `candidate_artifacts` contains exactly 9 records;
-- every candidate record contains exactly the required semantic fields:
-  - `path`
-  - `bytes`
-  - `sha256`
-  - `tracked_by_git`
-  - `format`
-  - `supports_cases`
-  - `fields_present`
-  - `inspection_status`;
-- four case objects use only the frozen case schema;
-- every consistency value is exactly one of:
-  - `MATCH`
-  - `MISMATCH`
-  - `NOT_AVAILABLE`;
-- no custom readiness enum exists.
+After successful script execution, inspect:
 
-## Exact consistency keys
+```text
+evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
+```
 
 Require:
+
+```text
+task = 8B.3-REF01-E3C0-R2-R1
+base_head = 9e06b9e231be34d32983bfc12e394d629ed59366
+branch = audit/task8b3-ref01-locked-replay-artifacts
+audit_script_sha256 = c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c
+
+detector_model_calls = 0
+proposal_regeneration_performed = false
+actual_replay_performed = false
+product_source_changed = false
+external_write_performed = false
+broad_search_performed = false
+```
+
+Require exactly 9 `candidate_artifacts`.
+
+Each candidate artifact object must contain exactly:
+
+```text
+path
+bytes
+sha256
+tracked_by_git
+format
+supports_cases
+fields_present
+inspection_status
+```
+
+No `root` field.
+
+Require four cases exactly:
+
+```text
+right
+left
+above
+below
+```
+
+Each case must contain exactly:
+
+```text
+tile_id
+artifact_paths
+complete_proposal_list_present
+proposal_scalar_fields_complete
+exact_mask_or_object_material_present
+forensic_correctness_linkage_present
+replay_record_count
+consistency_checks
+```
+
+# 8. CONSISTENCY KEY GATE
+
+Require exact keys.
 
 right:
+
 ```text
 raw_count
 merged_count
@@ -236,6 +365,7 @@ pre_selected
 ```
 
 left:
+
 ```text
 raw_count
 merged_count
@@ -245,6 +375,7 @@ best_covered
 ```
 
 above:
+
 ```text
 raw_count
 merged_count
@@ -262,6 +393,7 @@ proposal3_bbox_extent_ratio
 ```
 
 below:
+
 ```text
 raw_count
 merged_count
@@ -270,59 +402,74 @@ pre_selected
 best_covered
 ```
 
-# 8. READINESS MAPPING — NO DSH CHOICE
-
-The exact script chooses mechanically:
+Every consistency value must be exactly one of:
 
 ```text
-FULL_PRODUCTION_REPLAY_READY
+MATCH
+MISMATCH
+NOT_AVAILABLE
 ```
-iff A+B+C+D all true for all cases.
+
+# 9. REPORT / FROM_DSH GATE
+
+Require report path:
 
 ```text
-RECORD_LEVEL_REPLAY_READY
+docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
 ```
-iff A+B+D all true for all cases and C false for at least one case.
+
+It must identify:
 
 ```text
-LOCKED_REPLAY_ARTIFACTS_PARTIAL
+Task 8B.3-REF01-E3C0-R2-R1
+starting HEAD = 9e06b9e231be34d32983bfc12e394d629ed59366
 ```
-iff known artifacts exist but A/B/D are incomplete for at least one case.
+
+Require `handoff/FROM_DSH.md` current report identifies:
 
 ```text
-LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
-```
-only if no candidate artifacts exist.
-
-NEXT is mechanically mapped:
-
-```text
-FULL_PRODUCTION_REPLAY_READY
-→ REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
-
-RECORD_LEVEL_REPLAY_READY
-→ REF01_LOCKED_RECORD_REPLAY_DESIGN
-
-PARTIAL / NOT_FOUND
-→ REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
+Task: 8B.3-REF01-E3C0-R2-R1
+Status: COMPLETE
+Starting HEAD: 9e06b9e231be34d32983bfc12e394d629ed59366
+Known artifacts inspected: 9
 ```
 
-No other enum/NEXT is allowed.
+Require the original `ARTIFACT-FACTS` block is preserved.
 
-# 9. SCIENTIFIC NON-CLAIMS
+# 10. SCIENTIFIC NON-CLAIMS
 
 Regardless of readiness:
 
-- actual repaired selector replay has NOT occurred;
-- do NOT claim `right1 / left14 / above5 / below1` validated;
-- REF-01 remains ACTIVE;
-- PROP-01 remains `PROP01_OPEN_ENGINEERING_DEFECT`;
-- no final Demo has run;
-- no detector/model call occurred.
+```text
+actual repaired-selector replay = NOT PERFORMED
+right1 / left14 / above5 / below1 = NOT YET REPLAY-VALIDATED
+REF-01 = ACTIVE
+PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
+final Demo = NOT RUN
+```
 
-# 10. PROTECTED FILE GATE
+Do not strengthen these claims.
 
-Require no diff for:
+# 11. FINAL DIFF GATE
+
+Run:
+
+```text
+git diff --name-only 9e06b9e231be34d32983bfc12e394d629ed59366
+```
+
+Require exactly:
+
+```text
+docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
+evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+No other path.
+
+Protected paths must have no diff:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
@@ -334,85 +481,90 @@ evaluation/task8b3_ref01_e3b2_external_sync_full_suite.json
 docs/task8b3_ref01_e3b2_external_sync_full_suite.md
 ```
 
-No external file may be written.
-
-# 11. FINAL DIFF GATE
-
-Before commit:
+Before final commit require:
 
 ```text
-git diff --name-only 95c2a8b6ee86e4835909e82e5d58d372246f0ec3
+git rev-list --count 9e06b9e231be34d32983bfc12e394d629ed59366..HEAD
+= 0
 ```
 
-Allowed ONLY:
+# 12. COMMIT / STOP PROTOCOL
+
+## COMPLETE
+
+Only if §§2–11 all pass:
 
 ```text
-evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
-docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
+Status = COMPLETE
+Commit message EXACTLY:
+docs(rc1): recover locked replay readiness audit outputs
+```
+
+Then:
+
+```text
+git add docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
+git add evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
+git add handoff/FROM_DSH.md
+git add handoff/TO_DSH.md
+git commit -m "docs(rc1): recover locked replay readiness audit outputs"
 ```
 
 Require:
 
 ```text
-git rev-list --count 95c2a8b6ee86e4835909e82e5d58d372246f0ec3..HEAD
-= 0
-```
-
-before commit.
-
-# 12. COMMIT / PUSH
-
-If the exact script exits 0 and every gate passes:
-
-```text
-Status = COMPLETE
-Commit message EXACTLY:
-docs(rc1): finalize locked replay readiness audit
-```
-
-If procedure cannot be completed safely:
-
-```text
-Status = STOP
-Commit message EXACTLY:
-docs(rc1): record locked replay readiness audit stop
-```
-
-Exactly one commit.
-NO amend.
-NO intermediate commit/push.
-
-After commit require:
-
-```text
-git rev-list --count 95c2a8b6ee86e4835909e82e5d58d372246f0ec3..HEAD
+git rev-list --count 9e06b9e231be34d32983bfc12e394d629ed59366..HEAD
 = 1
 ```
 
 Push current branch exactly once.
 
 No force push.
-Do not execute NEXT.
 
 Then STOP.
+
+## STOP
+
+If anything fails before the exact script completes:
+- do not fabricate evidence;
+- do not manually repair generated artifacts;
+- write a minimal STOP reason only into `handoff/FROM_DSH.md`;
+- preserve `ARTIFACT-FACTS`;
+- commit exactly once with:
+
+```text
+docs(rc1): record locked replay readiness audit recovery stop
+```
+
+If the exact script already modified the three generated outputs and then a later gate fails:
+- do not rerun the script;
+- keep those outputs as factual partial evidence;
+- append only the STOP reason to `handoff/FROM_DSH.md`;
+- commit exactly once with the same STOP message.
+
+Push once, then STOP.
+
+Under no circumstance may a failed gate use the COMPLETE commit message.
 
 # 13. COMPLETE DEFINITION
 
 COMPLETE only if:
-- exact branch/start HEAD;
-- exact user-supplied script SHA verified;
+
+- branch/head exactly correct;
+- script SHA exactly correct;
 - script runs exactly once;
-- no broad search;
-- zero inference/regeneration/replay/external writes;
-- exact nine known artifacts only;
+- script exit = 0;
+- generated evidence is R2-R1, not R1/R2;
+- exact nine artifacts;
 - exact candidate schema;
-- exact consistency keys/status values;
-- exact allowed readiness enum;
-- exact NEXT mapping;
-- only four allowed repo paths differ;
-- exactly one commit with exact message;
+- exact case schema;
+- exact consistency keys;
+- readiness/NEXT only from frozen mapping;
+- zero inference/regeneration/replay/external write;
+- exact four-path diff;
+- no protected-path diff;
+- exactly one correction commit;
+- exact COMPLETE commit message;
 - push succeeds;
 - NEXT not executed;
-- STOP.
+- STOP after push.
