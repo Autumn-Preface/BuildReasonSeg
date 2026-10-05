@@ -170,3 +170,11 @@ def test_error_registry_complete() -> None:
                  "E402", "E403", "E404", "E501", "E502", "E900", "E901"):
         assert code in codes, code
         assert codes[code]["message"] and codes[code]["suggestion"]
+
+def test_success_semantics_contract_present():
+    """SUCCESS is a runtime/structural status; semantic correctness is explicitly not established."""
+    from buildreasonseg.runtime.pipeline import SUCCESS_SEMANTIC_NOTE, SUCCESS_SEMANTIC_STATUS, SUCCESS_VALIDITY_SCOPE
+    assert SUCCESS_VALIDITY_SCOPE == "RUNTIME_STRUCTURAL_ONLY"
+    assert SUCCESS_SEMANTIC_STATUS == "NOT_EVALUATED"
+    assert "semantic target correctness is not established" in SUCCESS_SEMANTIC_NOTE
+    assert "runtime-only; semantic=" in ("semantic_status", "runtime-only; semantic=")

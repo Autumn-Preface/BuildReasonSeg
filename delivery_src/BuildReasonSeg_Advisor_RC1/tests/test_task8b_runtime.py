@@ -631,3 +631,11 @@ def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
     assert result["merged"][0].mask_area == 3000
     assert result["merged"][0].mask_crop.shape == (50, 60)
     assert tuple(result["merged"][0].mask_crop.shape) != (5000, 5000)
+
+def test_success_semantics_contract_present():
+    """SUCCESS is a runtime/structural status; semantic correctness is explicitly not established."""
+    from buildreasonseg.runtime.pipeline import SUCCESS_SEMANTIC_NOTE, SUCCESS_SEMANTIC_STATUS, SUCCESS_VALIDITY_SCOPE
+    assert SUCCESS_VALIDITY_SCOPE == "RUNTIME_STRUCTURAL_ONLY"
+    assert SUCCESS_SEMANTIC_STATUS == "NOT_EVALUATED"
+    assert "semantic target correctness is not established" in SUCCESS_SEMANTIC_NOTE
+    assert "semantic_status" in ("semantic_status", "runtime-only; semantic=")

@@ -1,646 +1,729 @@
-# TO_DSH — MASK01_F2_LOCKED_SUCCESS_ARTIFACT_FORENSICS
+# TO_DSH — MASK01_D1_SUCCESS_SEMANTICS_HARDENING
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `audit/task8b3-mask01-f1-r1-corrective-forensics`
-> Required starting HEAD: `e8f1315c9afdaac818126db6a2ac76b758027f70`
-> New task branch: `audit/task8b3-mask01-f2-locked-success-artifacts`
+> Required starting branch: `audit/task8b3-mask01-f2-locked-success-artifacts`
+> Required starting HEAD: `a98ccecce20585dc37520523cd32b49b0a684248`
+> New task branch: `fix/task8b3-mask01-success-semantics`
 
-## 0. CHATGPT AUDIT DISPOSITION
+## 0. CHATGPT F2 AUDIT / FROZEN DECISION
 
-Task `MASK01_F1_R1_CORRECTIVE_FORENSICS` is PARTIALLY ACCEPTED.
-
-Freeze as accepted:
+Task:
 
 ```text
-SOURCE_SUCCESS_CONTRACT = ACCEPTED
-PADDING_FORENSICS = ACCEPTED
+MASK01_F2_LOCKED_SUCCESS_ARTIFACT_FORENSICS
+```
 
-POST_INFERENCE_GATES = 3
-1. empty_target_mask
-2. mask_only_in_padding
-3. direction_constraint_violated
+is accepted for the engineering decision:
 
+```text
+MASK01_F2 = ACCEPTED_FOR_DECISION
+```
+
+Git facts independently verified by ChatGPT:
+
+```text
+branch = audit/task8b3-mask01-f2-locked-success-artifacts
+HEAD   = a98ccecce20585dc37520523cd32b49b0a684248
+parent = e8f1315c9afdaac818126db6a2ac76b758027f70
+commit = docs(rc1): characterize locked successful masks
+diff   = only the four authorized F2 report/handoff files
+```
+
+Frozen evidence:
+
+```text
+A1 status = SUCCESS
+A1 frozen semantic verdict = FAIL
+A1 mask_area = 101
+
+A3 status = SUCCESS
+A3 frozen semantic verdict = FAIL
+A3 mask_area = 1439
+
+A4 status = SUCCESS
+A4 frozen semantic verdict = FAIL
+A4 mask_area = 359
+```
+
+All three saved final mask PNGs exist and their pixel counts match the stored `result.json.mask_area`.
+
+Current normal-predict post-inference runtime gates remain:
+
+```text
+1. non-empty mask
+2. mask_only_in_padding branch
+3. direction-centroid hard constraint
+```
+
+Frozen padding interpretation:
+
+```text
 PADDING_GATE_CONCLUSION = PADDING_GATE_INEFFECTIVE
 PADDING_LEAKAGE_ESTABLISHED = false
-
-min_mask_pixels = NOT_IMPLEMENTED
-min_mask_frac   = NOT_IMPLEMENTED
 ```
 
-ChatGPT independently verified that:
+Frozen design decision:
 
 ```text
-context_to_global()
+REJECT_THRESHOLD_BASED_MASK_VALIDITY_REPAIR
 ```
 
-crops context padding before the original-image `mask_full` is produced, while:
+No mask area, fraction, connected-component, confidence, probability, logit, IoU, or other scalar threshold may be introduced from the three R4B cases.
+
+Reason:
 
 ```text
-_non_padding_mask()
+NO_POSITIVE_SEMANTIC_SUCCESS_CONTROL_IN_R4B_SUCCESS_SET = true
 ```
 
-returns an all-True original-image mask. Therefore `mask_only_in_padding` is not an effective independent gate
-after the preceding empty-mask check. This does NOT establish successful padding leakage.
+A1/A4 being small does not justify an area cutoff; A3 is substantially larger and is still a frozen semantic FAIL.
 
-Not accepted from F1-R1:
+The accepted repair direction is:
 
 ```text
-HISTORICAL_FINAL_MASK_EVIDENCE
-FAILURE_TAXONOMY
-OBSERVABLE_SIGNAL_INVENTORY
+SUCCESS_SEMANTICS_HARDENING_V1
 ```
 
-The previous report did not inspect the actual R4B final-mask files and left the taxonomy effectively empty.
-
-This task closes only that remaining evidence gap.
-
-NO product repair is authorized.
+This task implements that design exactly.
 
 ---
 
-## 1. GIT PRE-FLIGHT
+## 1. PURPOSE
+
+The existing normal inference `SUCCESS` status is retained as an engineering/process status for compatibility.
+
+It MUST no longer be presented as if it established semantic target correctness.
+
+The product contract after this task must be:
+
+```text
+status = SUCCESS
+```
+
+means:
+
+```text
+the RC1 normal inference pipeline completed and passed its current runtime structural checks
+```
+
+and does NOT mean:
+
+```text
+the final mask has been verified to correspond to the user's intended semantic target
+```
+
+The machine-readable result and CLI must communicate this explicitly.
+
+This is a status/semantic-contract hardening task.
+
+It is NOT:
+
+```text
+a model repair
+a segmentation-quality repair
+a threshold repair
+a reference repair
+a detector repair
+an architecture change
+```
+
+---
+
+## 2. GIT PRE-FLIGHT
 
 Before any write verify exactly:
 
 ```text
-branch = audit/task8b3-mask01-f1-r1-corrective-forensics
-HEAD   = e8f1315c9afdaac818126db6a2ac76b758027f70
+current branch =
+audit/task8b3-mask01-f2-locked-success-artifacts
+
+HEAD =
+a98ccecce20585dc37520523cd32b49b0a684248
 ```
 
-Allowed initial worktree state:
+Allowed initial worktree:
 
 ```text
 clean
 ```
 
-or only the user replacement of:
+or only:
 
 ```text
-handoff/TO_DSH.md
+M handoff/TO_DSH.md
 ```
 
-No other change is allowed.
+from the user replacing the task book.
 
-If incompatible:
+Any other mutation:
 
 ```text
 STOP
 ```
 
-Do not reset, rebase, amend, stash, clean, force-push, or discard unknown work.
-
-After preflight create:
+Do not:
 
 ```text
-audit/task8b3-mask01-f2-locked-success-artifacts
+reset
+rebase
+amend
+stash
+clean
+force-push
+discard unknown work
+```
+
+After successful preflight create:
+
+```text
+fix/task8b3-mask01-success-semantics
 ```
 
 directly from the required starting HEAD.
 
 ---
 
-## 2. TASK PURPOSE
+## 3. DESIGN — EXACT MACHINE-READABLE SUCCESS SEMANTICS
 
-Read-only forensic characterization of the three frozen Task 8B.3-R4B full-pipeline runtime-success cases:
-
-```text
-A1
-A3
-A4
-```
-
-The questions are:
+In canonical:
 
 ```text
-What final-mask material was actually saved?
-What exact descriptive properties do those masks have?
-Which current runtime-observable signals distinguish runtime validity from semantic correctness?
-What evidence exists, and what evidence is still missing, before ChatGPT can decide a MASK-01 repair?
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
 ```
 
-Do NOT design or implement a repair.
+define one stable, centralized normal-success semantics contract.
+
+Use exactly these values:
+
+```text
+validity_scope = "RUNTIME_STRUCTURAL_ONLY"
+semantic_status = "NOT_EVALUATED"
+```
+
+Use this exact English semantic note:
+
+```text
+SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.
+```
+
+Preferred implementation:
+
+```python
+SUCCESS_VALIDITY_SCOPE = "RUNTIME_STRUCTURAL_ONLY"
+SUCCESS_SEMANTIC_STATUS = "NOT_EVALUATED"
+SUCCESS_SEMANTIC_NOTE = (
+    "SUCCESS means the RC1 runtime completed and passed its current structural checks; "
+    "semantic target correctness is not established."
+)
+
+def success_semantics() -> dict:
+    return {
+        "validity_scope": SUCCESS_VALIDITY_SCOPE,
+        "semantic_status": SUCCESS_SEMANTIC_STATUS,
+        "semantic_note": SUCCESS_SEMANTIC_NOTE,
+    }
+```
+
+Equivalent formatting is allowed, but the keys and exact string values above are frozen.
+
+For the NORMAL `predict_one()` success payload, before diagnostics/result finalization, the saved payload MUST contain:
+
+```json
+{
+  "status": "SUCCESS",
+  "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+  "semantic_status": "NOT_EVALUATED",
+  "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established."
+}
+```
+
+These fields must therefore be present in the normal-success `result.json`.
+
+Do not add these fields to a FAILED result as if semantic validation had been performed.
+
+Do not change error codes.
 
 ---
 
-## 3. FROZEN HISTORICAL FACTS
+## 4. COMPATIBILITY — STATUS MUST NOT CHANGE
 
-Use these versioned files as the authoritative provenance sources:
-
-```text
-docs/task8b3_six_image_demo_suite.md
-docs/task8b3_d1_demo_failure_forensics.md
-```
-
-Frozen R4B runtime results:
-
-```text
-A1 = SUCCESS, reference_id=48, mask_area=101
-A3 = SUCCESS, reference_id=1,  mask_area=1439
-A4 = SUCCESS, reference_id=30, mask_area=359
-```
-
-Frozen visual/manual semantic audit:
-
-```text
-A1 = semantic FAIL
-A3 = semantic FAIL
-A4 = semantic FAIL
-```
-
-Do NOT reinterpret or replace those verdicts.
-
-D1 additionally characterizes A1/A4 as tiny/incomplete target fragments under the frozen visual audit.
-
-No GT identity is to be invented.
-
----
-
-## 4. EXACT EXTERNAL ARTIFACTS
-
-Inspect these exact paths READ ONLY.
-
-### A1
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A1_mask_001.png
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A1_overlay_001.png
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A1_001
-```
-
-### A3
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A3_mask.png
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A3_overlay.png
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A3
-```
-
-### A4
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\masks\A4_mask.png
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\A4_overlay.png
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\A4
-```
-
-For each diagnostics directory:
-
-```text
-list immediate children only
-```
-
-Then inspect only these existing files if present:
-
-```text
-result.json
-maps.npz
-```
-
-Do not inspect unrelated diagnostics directories.
-
-Do not recursively search `inference/output`.
-
-Do not modify any external file.
-
----
-
-## 5. ARTIFACT IDENTITY
-
-For each exact mask, overlay, result.json and maps.npz that exists, record:
-
-```text
-path
-exists
-bytes
-sha256
-```
-
-For diagnostics directories record immediate child filenames only.
-
-If an expected file is missing, record:
-
-```text
-MISSING
-```
-
-and continue.
-
-Do not regenerate it.
-
----
-
-## 6. FINAL MASK EXACT CHARACTERIZATION
-
-For each existing final mask PNG:
-
-1. load it read-only;
-2. record image shape and dtype;
-3. record unique pixel values;
-4. define foreground exactly as:
-
-```text
-pixel_value != 0
-```
-
-5. compute only descriptive, threshold-free statistics:
-
-```text
-foreground_pixel_count
-foreground_fraction_of_full_image
-foreground_bbox = [top, left, bottom, right]
-foreground_bbox_height
-foreground_bbox_width
-foreground_bbox_area
-bbox_fill_ratio = foreground_pixel_count / foreground_bbox_area
-centroid_row
-centroid_col
-touches_image_border
-connected_component_count using 8-connectivity
-connected_component_areas sorted descending
-largest_component_area
-largest_component_fraction_of_mask
-```
-
-These are forensic measurements only.
-
-Do NOT propose cutoffs.
-
-Do NOT classify a mask as valid/invalid from any newly computed numeric value.
-
-Verify:
-
-```text
-foreground_pixel_count == result.json.mask_area
-```
-
-when both values exist.
-
-Verify computed centroid against `result.json.target_centroid` within exact/rounding tolerance appropriate to the stored float.
-
-Record MATCH/MISMATCH.
-
-No morphology operation may modify the mask.
-
----
-
-## 7. RESULT.JSON FACTS
-
-For each A1/A3/A4 `result.json`, record exactly if present:
-
-```text
-status
-error_code
-reason
-prompt
-parsed.program
-language_mode
-reference_mode
-reference_id
-effective_reference_id
-reference_override
-reference_area
-reference_confidence
-reference_bbox
-direction
-target_centroid
-mask_area
-context_padding
-directional_guard
-raw_proposal_count
-merged_proposal_count
-field_mass
-output_paths
-timings
-```
-
-If absent:
-
-```text
-NOT_PRESENT
-```
-
-Do not infer absent values.
-
-Explicitly verify that each case reached:
+Do NOT replace:
 
 ```text
 status = SUCCESS
 ```
 
-and had no runtime failure reason.
+with a new status enum/string.
+
+Do NOT change:
+
+```text
+PipelineResult.ok
+```
+
+semantics.
+
+Do NOT change successful exit code behavior.
+
+The following compatibility contract is frozen:
+
+```text
+PipelineResult.status == "SUCCESS"
+PipelineResult.ok == True
+normal single-image successful process exit code == 0
+batch success accounting still uses result.ok
+```
+
+This task hardens the meaning around SUCCESS without breaking existing machine status consumers.
 
 ---
 
-## 8. MAPS.NPZ — READ-ONLY INVENTORY
+## 5. INSPECT-PROPOSALS MODE
 
-If `maps.npz` exists for a case:
+`--inspect-proposals` is not a final target segmentation result.
 
-record:
+Do not reinterpret it as a semantic mask result.
 
-```text
-keys
-shape per key
-dtype per key
-finite/nonfinite counts
-min
-max
-mean
-```
-
-for numeric arrays.
-
-If keys include likely decoder confidence/probability/logit material, report those statistics descriptively.
-
-Do NOT:
+For this task:
 
 ```text
-fit thresholds
-search cutoffs
-compare candidate thresholds
-alter masks
-reconstruct a new mask
+inspect_proposals status behavior = UNCHANGED
 ```
 
-The purpose is only to know what evidence is currently persisted.
+Do not add normal target semantic fields to inspect mode.
+
+No inspect-mode redesign.
 
 ---
 
-## 9. FROZEN SEMANTIC LABEL LINKAGE
+## 6. CLI — SINGLE IMAGE
 
-Link each artifact to the frozen D1/manual verdict:
-
-```text
-A1 -> TAX_SEMANTIC_TARGET_MISMATCH
-A3 -> TAX_SEMANTIC_TARGET_MISMATCH
-A4 -> TAX_SEMANTIC_TARGET_MISMATCH
-```
-
-Additionally, because D1 explicitly characterizes A1 and A4 as tiny/incomplete target fragments:
+Modify canonical:
 
 ```text
-A1 -> TAX_RUNTIME_VALID_QUALITY_POOR
-A4 -> TAX_RUNTIME_VALID_QUALITY_POOR
+delivery_src/BuildReasonSeg_Advisor_RC1/predict.py
 ```
 
-For A3:
+For a successful NORMAL single-image inference, retain the existing first status line:
 
 ```text
-TAX_RUNTIME_VALID_QUALITY_POOR
+Result       : SUCCESS
 ```
 
-must NOT be assigned unless a versioned source explicitly supports that same characterization.
+Immediately after it print exactly:
 
-Do not invent GT.
+```text
+Validity     : RUNTIME_STRUCTURAL_ONLY
+Semantic     : NOT_EVALUATED
+```
 
-Do not convert the frozen visual verdict into IoU or other numeric truth.
+Also print exactly this user-facing note:
+
+```text
+Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
+```
+
+Then retain the existing mask / overlay / diagnostics / reference / mask-area output.
+
+Do not print this normal-target note for `--inspect-proposals`.
+
+Do not change failure reporting.
 
 ---
 
-## 10. FAILURE TAXONOMY
+## 7. CLI — BATCH MODE
 
-Use only:
-
-```text
-TAX_RUNTIME_STRUCTURAL
-TAX_CONTEXT_PADDING_COORDINATE
-TAX_UPSTREAM_REFERENCE_RELATION
-TAX_SEMANTIC_TARGET_MISMATCH
-TAX_RUNTIME_VALID_QUALITY_POOR
-TAX_UNKNOWN_EVIDENCE_GAP
-```
-
-For each A1/A3/A4 produce a structured record:
+For each successful batch item, replace the bare presentation:
 
 ```text
-case
-runtime_status
-semantic_verdict
-taxonomy
-supporting_versioned_source
-supporting_saved_artifact
-established_facts
-not_established
+... SUCCESS
 ```
 
-Important distinction:
+with:
 
-- historical D1 says A1/A3/A4 had reference semantic/proposal-quality issues in the R4B run;
-- later REF-01 work used a different locked supported-domain four-case set and must not be retroactively substituted for A1/A3/A4;
-- do not claim later REF repairs would have fixed these R4B masks without evidence.
+```text
+... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
+```
+
+Do not change the actual `result.ok` logic.
+
+At batch summary, change the label:
+
+```text
+Success:
+```
+
+to:
+
+```text
+Runtime success:
+```
+
+Keep:
+
+```text
+Failed:
+Total:
+```
+
+and exit-code logic unchanged.
+
+This is presentation semantics only.
 
 ---
 
-## 11. OBSERVABLE-SIGNAL INVENTORY
+## 8. ABSOLUTELY NO NEW VALIDITY HEURISTIC
 
-Create a complete inventory for future ChatGPT design.
-
-For each signal record:
+Do NOT add:
 
 ```text
-signal
-current_runtime_source_or_artifact
-availability
-present_in_A1
-present_in_A3
-present_in_A4
-raw_value_or_summary
-can_establish_runtime_validity
-can_establish_semantic_target_correctness
-notes
-```
-
-Availability must be exactly one of:
-
-```text
-RUNTIME_ALWAYS_AVAILABLE
-RUNTIME_CONDITIONALLY_AVAILABLE
-PERSISTED_ARTIFACT_AVAILABLE
-REQUIRES_GT_OR_MANUAL_REVIEW
-NOT_CURRENTLY_AVAILABLE
-```
-
-At minimum classify:
-
-```text
-mask_full nonempty
-mask_area
-mask fraction
-mask bbox
-mask bbox fill ratio
-mask connected components
-largest component fraction
-target centroid
-direction hard-check result
-reference_mode
-reference_id
-reference_area
-reference_confidence
-reference_bbox
-direction
-context_padding
-directional_guard
-raw proposal count
-merged proposal count
-field_mass
-saved decoder probability/logit maps
-GT IoU
-manual semantic correctness
-```
-
-Rules:
-
-- `mask_area`, target centroid, direction, reference fields that are in `result.json` are persisted runtime facts.
-- connected-component metrics are derivable from `mask_full`, but if they are not currently computed by the product, mark the signal itself `NOT_CURRENTLY_AVAILABLE` and note `DERIVABLE_FROM_RUNTIME_MASK`.
-- manual semantic correctness is `REQUIRES_GT_OR_MANUAL_REVIEW`.
-- do not claim any runtime signal establishes semantic correctness unless evidence truly supports it.
-
----
-
-## 12. CROSS-CASE TABLE
-
-Create one compact A1/A3/A4 table containing at least:
-
-```text
-case
-status
-semantic_verdict
-image_size
-mask_area
-mask_fraction
-bbox_size
-bbox_fill_ratio
-component_count
-largest_component_fraction
-target_centroid
-direction
-reference_id
-reference_area
-reference_confidence
-context_padding.applied
-raw_proposals
-merged_proposals
-```
-
-Missing fields must be `NOT_PRESENT`.
-
-This table is descriptive only.
-
----
-
-## 13. NO THRESHOLD / NO REPAIR SEARCH
-
-Absolutely forbidden:
-
-```text
-best threshold
-candidate threshold
-area cutoff
+min_mask_pixels
+min_mask_frac
+mask_area cutoff
 relative-area cutoff
-component cutoff
-probability cutoff
+connected-component cutoff
+bbox-fill cutoff
 confidence cutoff
-weighted score
-heuristic search
-rule fitting
-case-specific repair
+probability cutoff
+logit cutoff
+IoU cutoff
+field-mass cutoff
+weighted quality score
+learned quality head
+proposal-overlap gate
+target-proposal matching gate
 ```
 
-There are only three frozen runtime-success cases and all three have a frozen semantic FAIL verdict.
-
-This task MUST explicitly state:
+Do NOT change:
 
 ```text
-NO_POSITIVE_SEMANTIC_SUCCESS_CONTROL_IN_R4B_SUCCESS_SET = true
+empty_target_mask
+mask_only_in_padding
+direction_constraint_violated
 ```
 
-Therefore these three cases alone cannot justify a discriminative numeric validity threshold.
+behavior in this task.
+
+Do NOT remove `_non_padding_mask()` or the `mask_only_in_padding` branch in this task.
+
+The padding redundancy is already documented and is not the scope of D1.
 
 ---
 
-## 14. REQUIRED INTERPRETATION QUESTIONS
+## 9. NO ALGORITHM / MODEL CHANGES
 
-The report must answer factually:
-
-1. Do A1/A3/A4 final mask PNGs actually exist?
-2. Do their saved pixel counts match R4B/D1 `mask_area`?
-3. Are the final masks structurally non-empty and direction-valid according to the stored runtime result?
-4. Which mask morphology/statistics are currently available or derivable without GT?
-5. Which evidence of semantic failure comes only from the frozen manual/visual audit?
-6. Is there any positive semantic-success R4B runtime-success case available as a control?
-7. Can the current three-case evidence justify a numeric threshold that separates good from bad masks?
-
-For question 7, unless contrary evidence exists in the exact authorized sources, expected factual answer:
+Do not modify:
 
 ```text
-NO
+detector.py
+context.py
+imageio.py
+core.py
+ProgramHead/Qwen
+SAM/SAM2
+D-B1
+GRF/relation fields
+reference selection
+LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+proposal configuration
+model weights
+configs/inference.yaml thresholds/settings
 ```
 
-because all three R4B runtime-success samples are frozen semantic FAIL cases and no positive control is present.
-
-DSH must not choose the next repair.
+Do not execute inference or training.
 
 ---
 
-## 15. REQUIRED OUTPUTS
+## 10. DOCUMENTATION HARDENING
 
-Create exactly:
+Update these canonical delivery documents only as needed to make the normal-success semantics explicit:
 
 ```text
-docs/task8b3_mask01_f2_locked_success_artifacts.md
-evaluation/task8b3_mask01_f2_locked_success_artifacts.json
+delivery_src/BuildReasonSeg_Advisor_RC1/README.md
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md
+delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
 ```
 
-Modify exactly:
+The docs must consistently state:
+
+```text
+SUCCESS = runtime structural success
+semantic target correctness = NOT_EVALUATED by RC1 runtime
+```
+
+They must NOT state or imply that:
+
+```text
+SUCCESS proves the requested building was correctly identified/segmented
+```
+
+Do not rewrite unrelated sections.
+
+Do not change scientific metrics.
+
+Do not change final-test interpretation.
+
+---
+
+## 11. TESTS — REQUIRED
+
+Authorized test files:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
+```
+
+Add focused CPU-only/no-model tests that prove the frozen contract.
+
+At minimum test:
+
+### A. centralized semantics contract
+
+Verify exact machine values:
+
+```text
+RUNTIME_STRUCTURAL_ONLY
+NOT_EVALUATED
+exact semantic_note string
+```
+
+### B. normal-success payload contract
+
+Without model inference, unit-test the pure semantics helper/constant path used by normal success.
+
+If direct `predict_one()` construction would require model runtimes, do NOT mock the full model chain merely for this test. Test the centralized helper/contract directly and verify source call/use in the smallest deterministic way.
+
+### C. single-result CLI presentation
+
+Using a synthetic/fake successful result object and direct call of the reporting helper, verify output contains exactly:
+
+```text
+Result       : SUCCESS
+Validity     : RUNTIME_STRUCTURAL_ONLY
+Semantic     : NOT_EVALUATED
+Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
+```
+
+No model loading.
+
+### D. failure presentation does not claim semantic success
+
+Synthetic failed result must not print the success semantics block.
+
+### E. inspect mode contract remains unchanged
+
+Existing inspect behavior must not acquire the normal-target semantic fields/output.
+
+### F. compatibility
+
+Verify:
+
+```text
+PipelineResult(status="SUCCESS", ...).ok is True
+```
+
+No new success enum is introduced.
+
+Tests must not encode A1/A3/A4 mask areas as acceptance thresholds.
+
+---
+
+## 12. TEST EXECUTION — CANONICAL ONLY
+
+After implementation, from canonical delivery root run targeted tests:
+
+```text
+python -m pytest tests/test_task8b_runtime.py tests/test_cli_contract.py -q
+```
+
+Then run the full canonical delivery suite:
+
+```text
+python -m pytest tests/ -q
+```
+
+No root/research test suite is required.
+
+No model inference.
+
+No training.
+
+If a test fails because of this task's changes, fix only within authorized scope.
+
+If an unrelated pre-existing failure appears, STOP and report; do not broaden scope.
+
+---
+
+## 13. SOURCE MANIFEST — GIT CANONICAL BYTES ONLY
+
+Because canonical delivery files change, update:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+Identity basis MUST remain:
+
+```text
+GIT_CANONICAL_BLOB_BYTES
+```
+
+Do not use Windows working-tree byte counts/hashes as canonical identity.
+
+Required workflow:
+
+1. finish code/docs/tests edits;
+2. run tests;
+3. stage all changed files under:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/
+```
+
+except `source_manifest.json`;
+4. compute bytes + SHA256 for the manifest-listed changed canonical paths from the GIT INDEX / canonical staged bytes, not working-tree CRLF-expanded bytes;
+5. update only the corresponding manifest entries;
+6. stage `source_manifest.json`;
+7. perform an all-entry staged-manifest validation.
+
+For staged canonical identity, a valid basis is equivalent to:
+
+```text
+git show :delivery_src/BuildReasonSeg_Advisor_RC1/<relative path>
+```
+
+The all-entry validation must prove:
+
+```text
+manifest entries = unchanged file-count policy
+every manifest path exists in staged/index canonical state
+every bytes value matches canonical staged blob bytes
+every sha256 matches canonical staged blob bytes
+identity_basis = GIT_CANONICAL_BLOB_BYTES
+```
+
+Do not add runtime output files to the manifest.
+
+Do not add model weights.
+
+Do not change the copy policy.
+
+Record the final manifest file count and validation result.
+
+---
+
+## 14. EXTERNAL RC1 — NO WRITE IN D1
+
+This task must NOT synchronize or modify:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
+
+After the new canonical commit is created, a read-only external comparison is allowed:
+
+```text
+python scripts/sync_advisor_rc1_delivery.py \
+  --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 \
+  --check
+```
+
+Expected outcome is that changed manifest-listed files may be reported as mismatched.
+
+This read-only comparison is optional but preferred.
+
+Do NOT run sync without `--check`.
+
+External controlled sync belongs to the next gate.
+
+---
+
+## 15. REQUIRED ENGINEERING REPORTS
+
+Create:
+
+```text
+docs/task8b3_mask01_d1_success_semantics_hardening.md
+evaluation/task8b3_mask01_d1_success_semantics_hardening.json
+```
+
+Update:
 
 ```text
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No other repository path may change.
-
-No external path may be written.
-
----
-
-## 16. REQUIRED TERMINAL FIELDS
-
-The evidence JSON and FROM_DSH summary must contain:
+Report at minimum:
 
 ```text
-task_id = MASK01_F2_LOCKED_SUCCESS_ARTIFACT_FORENSICS
+task
+status
+starting branch/head
+task branch
 
-source_contract_reaudit = NOT_PERFORMED
-padding_reaudit = NOT_PERFORMED
+design =
+SUCCESS_SEMANTICS_HARDENING_V1
 
-historical_cases = [A1, A3, A4]
+threshold_based_repair =
+REJECTED
 
-full_final_mask_evidence =
-FOUND
-or
-PARTIAL
-or
-NOT_FOUND
+product files changed
+test files changed
+docs changed
 
-no_positive_semantic_success_control_in_r4b_success_set = true
+normal success status changed =
+NO
 
-numeric_threshold_design_justified =
-false
+PipelineResult.ok changed =
+NO
 
-product_source_modified = false
-tests_modified = false
-inference_executed = false
-training_executed = false
-external_write_performed = false
+exit-code semantics changed =
+NO
 
-repair_decision = DEFER_TO_CHATGPT
-next_gate = CHATGPT_MASK01_F2_DESIGN_REVIEW
+machine fields:
+validity_scope = RUNTIME_STRUCTURAL_ONLY
+semantic_status = NOT_EVALUATED
+semantic_note = exact frozen string
+
+single CLI wording
+batch CLI wording
+
+targeted tests
+full canonical delivery suite
+
+manifest identity basis
+manifest file count
+manifest all-entry validation
+
+external write =
+NO
+
+inference executed =
+NO
+
+training executed =
+NO
 ```
 
-Task status must be exactly one of:
+The JSON must structurally contain the same facts.
+
+Use:
+
+```text
+repair_decision =
+IMPLEMENTED_PENDING_EXTERNAL_SYNC
+
+next_gate =
+MASK01_D2_EXTERNAL_SYNC_AND_REGRESSION
+```
+
+Task status exactly one of:
 
 ```text
 COMPLETE
@@ -651,16 +734,83 @@ FAILED
 
 ---
 
-## 17. COMMIT SHA RULE
+## 16. ALLOWED REPOSITORY CHANGES — EXACT SET
 
-Inside files committed in this task record:
+Only these paths may change:
 
 ```text
-starting_head = e8f1315c9afdaac818126db6a2ac76b758027f70
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
+delivery_src/BuildReasonSeg_Advisor_RC1/predict.py
+
+delivery_src/BuildReasonSeg_Advisor_RC1/README.md
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md
+delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
+
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
+
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+
+docs/task8b3_mask01_d1_success_semantics_hardening.md
+evaluation/task8b3_mask01_d1_success_semantics_hardening.json
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+A listed documentation path does not need to change if no edit is required, but no path outside this set may change.
+
+No dependency files may change.
+
+---
+
+## 17. DIFF GATE
+
+Before commit run:
+
+```text
+git status --porcelain=v1 --untracked-files=all
+git diff --name-only
+git diff --cached --name-only
+```
+
+Every changed/staged path must be in the exact allowlist above.
+
+Any unexpected path:
+
+```text
+STOP
+```
+
+Do not clean/discard it.
+
+---
+
+## 18. COMMIT / PUSH
+
+For `COMPLETE` or `COMPLETE_WITH_EVIDENCE_GAPS`:
+
+Commit exactly once:
+
+```text
+git commit -m "fix(rc1): harden runtime success semantics"
+```
+
+Push exactly:
+
+```text
+fix/task8b3-mask01-success-semantics
+```
+
+No force push.
+
+The committed reports must use:
+
+```text
 final_commit_sha = POST_COMMIT_EXTERNAL_FACT
 ```
 
-Do not attempt self-referential final-SHA insertion.
+Do not self-reference the commit SHA.
 
 After push print:
 
@@ -670,44 +820,11 @@ REMOTE_FINAL_HEAD=<sha>
 FINAL_PARENT=<sha>
 ```
 
-ChatGPT will independently audit GitHub.
-
-Do not create a second commit.
-
-Do not amend.
-
----
-
-## 18. DIFF / COMMIT / PUSH
-
-Before staging verify only the four authorized repository paths changed.
-
-For `COMPLETE` or `COMPLETE_WITH_EVIDENCE_GAPS`, stage exactly:
-
-```text
-docs/task8b3_mask01_f2_locked_success_artifacts.md
-evaluation/task8b3_mask01_f2_locked_success_artifacts.json
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
-```
-
-Commit exactly once:
-
-```text
-git commit -m "docs(rc1): characterize locked successful masks"
-```
-
-Push:
-
-```text
-audit/task8b3-mask01-f2-locked-success-artifacts
-```
-
-No force push.
-
-Verify remote/local HEAD match and worktree is clean.
+Verify local/remote HEAD equal and worktree clean.
 
 Then STOP.
+
+Do not execute D2.
 
 ---
 
@@ -716,50 +833,64 @@ Then STOP.
 Do NOT:
 
 ```text
-modify product source
-modify tests
-modify configs
-modify manifests
-run predict.py
-run detector
-run Qwen
-run SAM/SAM2
-run D-B1
-run model inference
+change status SUCCESS to another enum/string
+change PipelineResult.ok
+change success exit codes
+add mask thresholds
+add quality thresholds
+add connected-component gates
+add probability/logit gates
+add confidence gates
+change current post-inference gates
+fix/remove padding gate
+modify detector/reference/model architecture
+run inference
 run training
-regenerate proposals
-regenerate masks
-edit external delivery
-rerun Demo
-use Assisted Mode
-tune thresholds
-design a repair
-implement a repair
-enter Task 8B.4
+rerun A1/A3/A4
+rerun fixed Demo
+write external RC1
+sync external RC1
+modify weights
+modify generated inference outputs
+modify dependencies
+merge to main
 reset
 rebase
 amend
 stash
 clean
 force push
+execute D2
 ```
 
 ---
 
 ## 20. SUCCESS DEFINITION
 
-This task is complete only when ChatGPT has trustworthy saved-mask evidence for A1/A3/A4 and can decide whether:
+D1 succeeds only if canonical RC1 now makes this distinction explicit and test-protected:
 
 ```text
-MASK-01 should receive an automatic runtime validity repair,
-a status/semantic-contract repair,
-or no threshold-based repair at all.
+PROCESS/RUNTIME:
+status = SUCCESS
+validity_scope = RUNTIME_STRUCTURAL_ONLY
+
+SEMANTIC:
+semantic_status = NOT_EVALUATED
+semantic target correctness is not established
 ```
 
-DSH must not make that decision.
+while preserving all existing algorithm/model behavior.
 
-After commit + push:
+Required terminal state:
 
 ```text
-STOP
+THRESHOLD REPAIR = REJECTED
+SEMANTICS HARDENING = IMPLEMENTED
+ALGORITHM CHANGE = NONE
+MASK CHANGE = NONE
+MODEL CHANGE = NONE
+EXTERNAL RC1 WRITE = NONE
+NEXT = MASK01_D2_EXTERNAL_SYNC_AND_REGRESSION
 ```
+
+Then STOP.

@@ -1,0 +1,45 @@
+{
+  "task_id": "MASK01_D1_SUCCESS_SEMANTICS_HARDENING",
+  "task_status": "STOP",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "audit/task8b3-mask01-f2-locked-success-artifacts",
+    "starting_head": "a98ccecce20585dc37520523cd32b49b0a684248",
+    "task_branch": "fix/task8b3-mask01-success-semantics",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "design_id": "SUCCESS_SEMANTICS_HARDENING_V1",
+  "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+  "semantic_status": "NOT_EVALUATED",
+  "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
+  "normal_success_status_changed": false,
+  "pipeline_result_ok_changed": false,
+  "exit_code_changed": false,
+  "inspect_proposals_mode_changed": false,
+  "mask_only_in_padding_branch_retained": true,
+  "new_numeric_thresholds": [],
+  "changed_files": [
+    "delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py",
+    "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py",
+    "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py",
+    "handoff/TO_DSH.md"
+  ],
+  "manifest": {
+    "identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+    "file_count": 135,
+    "updated_entries": [],
+    "all_entry_validation": "FAIL ['buildreasonseg/runtime/pipeline.py', 'tests/test_cli_contract.py', 'tests/test_task8b_runtime.py']"
+  },
+  "tests": {
+    "targeted_command": "python -m pytest tests/test_task8b_runtime.py tests/test_cli_contract.py -q",
+    "targeted_exit": 1,
+    "targeted_summary": "1 failed, 61 passed in 17.60s",
+    "full_command": "python -m pytest tests/ -q",
+    "full_exit": 1,
+    "full_summary": "17 failed, 103 passed, 6 errors in 38.42s"
+  },
+  "external_write_performed": false,
+  "inference_executed": false,
+  "repair_decision": "DEFER_TO_CHATGPT",
+  "next_gate": "MASK01_D2_EXTERNAL_SYNC_AND_REGRESSION"
+}

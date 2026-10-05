@@ -165,6 +165,22 @@ def inspect_proposals(runtime: PredictRuntime, request: PipelineRequest) -> Pipe
                           outputs=outputs)
 
 
+SUCCESS_VALIDITY_SCOPE = "RUNTIME_STRUCTURAL_ONLY"
+SUCCESS_SEMANTIC_STATUS = "NOT_EVALUATED"
+SUCCESS_SEMANTIC_NOTE = (
+    "SUCCESS means the RC1 runtime completed and passed its current structural checks; "
+    "semantic target correctness is not established."
+)
+
+
+def success_semantics() -> dict:
+    return {
+        "validity_scope": SUCCESS_VALIDITY_SCOPE,
+        "semantic_status": SUCCESS_SEMANTIC_STATUS,
+        "semantic_note": SUCCESS_SEMANTIC_NOTE,
+    }
+
+
 def predict_one(runtime: PredictRuntime, request: PipelineRequest) -> PipelineResult:
     """Run the full chain for one image; never fabricates a mask when the algorithm stage fails."""
 
@@ -310,6 +326,7 @@ def predict_one(runtime: PredictRuntime, request: PipelineRequest) -> PipelineRe
         # ---- outputs
         info = outputs_module.save_final_outputs(outputs, loaded.rgb, mask_full, alpha=request.alpha)
         payload.update({"mask_area": int(mask_full.sum()), "status": "SUCCESS",
+        **success_semantics(),
                         "target_centroid": [float(target_centroid[0]), float(target_centroid[1])],
                         "context_padding": map_padding,
                         "output_paths": {"mask": info["mask"], "overlay": info["overlay"],
