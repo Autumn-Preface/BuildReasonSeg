@@ -17,37 +17,37 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R1 Report
+# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R2 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E3C0-R2-R1` |
-| Status | **STOP** (provided recovery script failed its own gate; nothing repaired or re-run) |
+| Task | `8B.3-REF01-E3C0-R2-R2` |
+| Status | **STOP** (provided corrected script failed its own gate; nothing repaired or re-run) |
 | Branch | `audit/task8b3-ref01-locked-replay-artifacts` |
-| Starting HEAD | `9e06b9e231be34d32983bfc12e394d629ed59366` |
-| Provided script | `C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py` |
-| Prescribed / observed SHA256 | `c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c` / `c761aa126e31756d8d4dadb64ef728df3a60047dea31b9a60c9ca65d8a0e5c0c` (match = True) |
-| Script runs | 1 |
-| Script exit | 1 |
-| Readyness / NEXT determination | NONE (the script did not produce a verdict) |
+| Starting HEAD | `9faaf37552a39cab241623fb24b911b8706dfc5c` |
+| Provided script | `C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py` |
+| Prescribed / observed SHA256 | `6edfb02cd97b7204ad9995a5af2dc4566a05d69cdb463a9cb62ca9a7213d3425` / `6edfb02cd97b7204ad9995a5af2dc4566a05d69cdb463a9cb62ca9a7213d3425` (match = True) |
+| Script runs / exit | 1 / 1 |
+| Readiness / NEXT determination | NONE (the script produced no verdict) |
 | Broad search / inference / proposal regeneration / actual replay | NONE |
 | External write / product modification | NO / NO |
 | Changed paths in this commit | ['handoff/TO_DSH.md'] |
 | Next action | Awaiting ChatGPT audit; no rerun and no self-repair was attempted |
 
-Watt was not needed for Task 8B.3-REF01-E3C0-R2-R1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3C0-R2-R2 (no downloads, no transfers).
 
 Failure tail reported by the provided script:
 
 ```text
-Traceback (most recent call last):
-  File "C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py", line 744, in <module>
+  File "C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py", line 747, in <module>
     main()
-  File "C:\D\DeepSeekHarness\E3C0_R2_R1_audit_exact.py", line 215, in main
-    assert all(line in allowed_status for line in status_lines), (
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: UNEXPECTED_WORKTREE: ['M handoff/TO_DSH.md']
+  File "C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py", line 263, in main
+    records = normalize_proposals(proposals_obj)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py", line 84, in normalize_proposals
+    raise AssertionError(
+AssertionError: AMBIGUOUS_PROPOSALS_TOP_LEVEL: keys=[]
 ```
