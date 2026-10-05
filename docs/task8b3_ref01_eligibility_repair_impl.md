@@ -430,3 +430,24 @@ external RC1 write / real sync = NONE / NONE
 pytest / py_compile / detector or model inference = NONE / NONE / NONE
 files changed beyond the two identity entries = NONE · NEXT executed = NO
 ```
+
+
+---
+
+## 14. E3B1-R2 — manifest audit artifact closure
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-sync
+HEAD   = aa9da72ac840d04e5fe668a44935127dc4c1f1f0
+canonical base = f50404843f5189986f97633cd0edb6140b1d8034
+authoritative evidence = evaluation/task8b3_ref01_e3b1_manifest_canonicalization.json
+authoritative dedicated report = docs/task8b3_ref01_e3b1_manifest_canonicalization.md
+wrongly named R1 evidence removed = evaluation/task8b3_ref01_eligibility_repair_manifest_correction.json
+manifest semantic correction = PASS · Git-canonical validation = PASS_135_OF_135
+external pre-sync check (recorded from R1) = exit 1 · match 133 · missing 0 · mismatch 2 (the two corrected paths)
+external write / real sync = NO / NO
+helper rerun / external --check rerun / pytest / py_compile / inference = NONE / NONE / NONE / NONE / NONE
+manifest / detector / tests / pipeline / sync helper modified = NONE
+overall outcome = REF01_ELIGIBILITY_REPAIR_MANIFEST_CANONICALIZED
+NEXT = REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_AND_FULL_SUITE (not executed)
+```

@@ -1,0 +1,39 @@
+{
+  "task": "8B.3-REF01-E3B1-R2",
+  "starting_head": "aa9da72ac840d04e5fe668a44935127dc4c1f1f0",
+  "canonical_base": "f50404843f5189986f97633cd0edb6140b1d8034",
+  "branch": "fix/task8b3-ref01-eligibility-repair-sync",
+  "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
+  "scope": "MANIFEST_AUDIT_ARTIFACT_CLOSURE_PRE_SYNC",
+  "detector_model_calls": 0,
+  "manifest_schema": "BuildReasonSeg.AdvisorRC1.SourceManifest.v1",
+  "identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+  "manifest_file_count": 135,
+  "superseded_e3b1_error": "WINDOWS_WORKING_TREE_BYTE_COUNT_USED_WITH_GIT_CANONICAL_BASIS",
+  "corrected_entries": {
+    "buildreasonseg/runtime/detector.py": {
+      "bytes": 21257,
+      "sha256": "934bbb9c3fbdbd5465fdd3e074a6ffa4721df9e77918970bfae2e88a6a91f883"
+    },
+    "tests/test_task8b_runtime.py": {
+      "bytes": 28128,
+      "sha256": "71915e8abfbe96b328736c2c84a8773640ec58cd01f847f6b58aa33edf6ec46b"
+    }
+  },
+  "manifest_semantic_correction": "PASS",
+  "manifest_git_canonical_validation": "PASS_135_OF_135",
+  "external_presync_check_exit": 1,
+  "external_presync_match": 133,
+  "external_presync_missing": 0,
+  "external_presync_mismatch": 2,
+  "external_presync_mismatch_paths": [
+    "buildreasonseg/runtime/detector.py",
+    "tests/test_task8b_runtime.py"
+  ],
+  "external_write_performed": false,
+  "source_sync_performed": false,
+  "r1_wrong_evidence_path_removed": true,
+  "dedicated_report_created": true,
+  "overall_outcome": "REF01_ELIGIBILITY_REPAIR_MANIFEST_CANONICALIZED",
+  "next_gate": "REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_AND_FULL_SUITE"
+}
