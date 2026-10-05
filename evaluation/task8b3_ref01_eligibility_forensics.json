@@ -1,0 +1,170 @@
+{
+ "task": "8B.3-REF01-E1",
+ "base_branch": "fix/task8b3-ref01-reference-forensics",
+ "base_head": "798a2fcb50054a67b8101581c5007cbbfa46c36a",
+ "branch": "fix/task8b3-ref01-eligibility-forensics",
+ "detector_model_calls_this_task": 0,
+ "proposal_metadata_source": "EXISTING_P1D12_JSON_ONLY",
+ "ref01_evidence": "evaluation\\task8b3_ref01_locked_reference_forensics.json",
+ "ref01_evidence_sha256": "f7495796577cb26a14a6b76ffcb4cf9544524c25c37cdf58f6ba2b15214c6f84",
+ "coverage_threshold": 0.5,
+ "tolerance": 1e-06,
+ "policy_definitions": {
+  "P0_FROZEN": "mask_area>0 AND not touches_border AND extent<=0.20",
+  "P1_BORDER_RELAXED_ONLY": "mask_area>0 AND extent<=0.20",
+  "P2_EXTENT_RELAXED_ONLY": "mask_area>0 AND not touches_border",
+  "P3_BOTH_RELAXED": "mask_area>0"
+ },
+ "policy_selected_definition": "argmin (-IoU, -confidence, proposal_id) over the policy's eligible set",
+ "results": {
+  "right": {
+   "tile": "1010",
+   "proposal_count": 6,
+   "policies": {
+    "P0_FROZEN": {
+     "eligible_count": 4,
+     "selected_id": 1,
+     "selected_iou": 0.5588697017268446
+    },
+    "P1_BORDER_RELAXED_ONLY": {
+     "eligible_count": 6,
+     "selected_id": 1,
+     "selected_iou": 0.5588697017268446
+    },
+    "P2_EXTENT_RELAXED_ONLY": {
+     "eligible_count": 4,
+     "selected_id": 1,
+     "selected_iou": 0.5588697017268446
+    },
+    "P3_BOTH_RELAXED": {
+     "eligible_count": 6,
+     "selected_id": 1,
+     "selected_iou": 0.5588697017268446
+    }
+   },
+   "gt_best_id": 1,
+   "gt_best_iou": 0.5588697017268446,
+   "gt_best_border": false,
+   "gt_best_extent_ratio": 0.123046875,
+   "gt_best_mask_area": 1494,
+   "gt_best_fail_reasons": [],
+   "classification": "REFERENCE_SELECTED_CORRECT"
+  },
+  "left": {
+   "tile": "1003",
+   "proposal_count": 53,
+   "policies": {
+    "P0_FROZEN": {
+     "eligible_count": 42,
+     "selected_id": 30,
+     "selected_iou": 0.6500672947510094
+    },
+    "P1_BORDER_RELAXED_ONLY": {
+     "eligible_count": 51,
+     "selected_id": 30,
+     "selected_iou": 0.6500672947510094
+    },
+    "P2_EXTENT_RELAXED_ONLY": {
+     "eligible_count": 44,
+     "selected_id": 30,
+     "selected_iou": 0.6500672947510094
+    },
+    "P3_BOTH_RELAXED": {
+     "eligible_count": 53,
+     "selected_id": 30,
+     "selected_iou": 0.6500672947510094
+    }
+   },
+   "gt_best_id": 30,
+   "gt_best_iou": 0.6500672947510094,
+   "gt_best_border": false,
+   "gt_best_extent_ratio": 0.146484375,
+   "gt_best_mask_area": 2618,
+   "gt_best_fail_reasons": [],
+   "classification": "REFERENCE_SELECTION_WRONG_COVERED"
+  },
+  "above": {
+   "tile": "1008",
+   "proposal_count": 9,
+   "policies": {
+    "P0_FROZEN": {
+     "eligible_count": 4,
+     "selected_id": 4,
+     "selected_iou": 0.0
+    },
+    "P1_BORDER_RELAXED_ONLY": {
+     "eligible_count": 5,
+     "selected_id": 4,
+     "selected_iou": 0.0
+    },
+    "P2_EXTENT_RELAXED_ONLY": {
+     "eligible_count": 7,
+     "selected_id": 5,
+     "selected_iou": 0.9032501889644747
+    },
+    "P3_BOTH_RELAXED": {
+     "eligible_count": 9,
+     "selected_id": 5,
+     "selected_iou": 0.9032501889644747
+    }
+   },
+   "gt_best_id": 5,
+   "gt_best_iou": 0.9032501889644747,
+   "gt_best_border": false,
+   "gt_best_extent_ratio": 0.296875,
+   "gt_best_mask_area": 5059,
+   "gt_best_fail_reasons": [
+    "BBOX_EXTENT_CAP"
+   ],
+   "classification": "REFERENCE_ELIGIBILITY_BLOCKED"
+  },
+  "below": {
+   "tile": "1009",
+   "proposal_count": 6,
+   "policies": {
+    "P0_FROZEN": {
+     "eligible_count": 3,
+     "selected_id": 2,
+     "selected_iou": 0.6165496859992612
+    },
+    "P1_BORDER_RELAXED_ONLY": {
+     "eligible_count": 6,
+     "selected_id": 2,
+     "selected_iou": 0.6165496859992612
+    },
+    "P2_EXTENT_RELAXED_ONLY": {
+     "eligible_count": 3,
+     "selected_id": 2,
+     "selected_iou": 0.6165496859992612
+    },
+    "P3_BOTH_RELAXED": {
+     "eligible_count": 6,
+     "selected_id": 2,
+     "selected_iou": 0.6165496859992612
+    }
+   },
+   "gt_best_id": 2,
+   "gt_best_iou": 0.6165496859992612,
+   "gt_best_border": false,
+   "gt_best_extent_ratio": 0.138671875,
+   "gt_best_mask_area": 1770,
+   "gt_best_fail_reasons": [],
+   "classification": "REFERENCE_SELECTION_WRONG_COVERED"
+  }
+ },
+ "above_isolation": {
+  "gt_best_id": 5,
+  "gt_best_iou": 0.9032501889644747,
+  "border": false,
+  "extent_ratio": 0.296875,
+  "fail_reasons": [
+   "BBOX_EXTENT_CAP"
+  ],
+  "bbox_cap_isolated": true,
+  "shared_with": [
+   "above"
+  ]
+ },
+ "overall_outcome": "REF01_ELIGIBILITY_BLOCKER_ISOLATED_BBOX_EXTENT_CAP",
+ "next_gate": "REF01_ELIGIBILITY_REPAIR_DESIGN"
+}

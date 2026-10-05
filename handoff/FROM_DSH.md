@@ -17,40 +17,40 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-F1-R12 Report
+# FROM_DSH — Task 8B.3-REF01-E1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-F1-R12` |
+| Task | `8B.3-REF01-E1` |
 | Status | **COMPLETE** |
-| Branch | `fix/task8b3-ref01-reference-forensics` |
-| Starting HEAD | `d5341c5e45915e5b0877ebbd1ddbb48f467e7eeb` |
+| Base branch / head | `fix/task8b3-ref01-reference-forensics` / `798a2fcb50054a67b8101581c5007cbbfa46c36a` |
+| New task branch | `fix/task8b3-ref01-eligibility-forensics` |
 | Detector / model calls | 0 |
-| Canonical evidence modified | NO (sha256 `f7495796577cb26a...` unchanged) |
-| Exact disclosure asserted | YES (English verbatim + Chinese translation) |
-| Dual manifest identity | PASS (Git-canonical == external == working, 135 entries, `GIT_CANONICAL_BLOB_BYTES`) |
-| Module `__file__` identity | PASS (detector + imageio imported from the external delivery) |
-| Pinned R6 `git show` ten-field evidence | PASS (revision `12d5fd9a92a5`, four candidates, four detector calls) |
-| Live P1D12 counts | PASS (6/6/4, 66/53/42, 9/9/4, 7/6/3) |
-| Live production selected replay | PASS (selected id present in live metadata with matching six fields) |
-| bestEligible / bestAny replay | PASS (frozen tie-break `(-IoU, -confidence, proposal_id)`) |
-| Six-field role facts | CHECKS 53/53 passed |
-| Final verifier verdict | FINAL_INDEPENDENT_VERIFIER: PASS |
-| Qwen / SAM2 / relation fields / D-B1 / target segmentation | NONE |
-| Manual visual inspection / candidate replacement / repair | NO / NO / NO |
-| External delivery / canonical RC1 modified | NO / NO |
+| Proposal metadata source | EXISTING_P1D12_JSON_ONLY |
+| above best-any id | 5 |
+| above best-any IoU | 0.903250 |
+| above best-any border flag | False |
+| above best-any extent ratio | 0.296875 |
+| above best-any fail reason | BBOX_EXTENT_CAP |
+| above P0 selected/id IoU | 4 / 0.000000 |
+| above P1 selected/id IoU | 4 / 0.000000 |
+| above P2 selected/id IoU | 5 / 0.903250 |
+| above P3 selected/id IoU | 5 / 0.903250 |
+| right / left / below GT-best fail reasons | right:['NONE'], left:['NONE'], below:['NONE'] |
+| Threshold / rules / repair changed | NO / NO / NO |
+| Manual visual inspection / candidate replacement | NO / NO |
+| Outcome | **REF01_ELIGIBILITY_BLOCKER_ISOLATED_BBOX_EXTENT_CAP** |
+| Next gate | `NEXT = REF01_ELIGIBILITY_REPAIR_DESIGN` (not executed) |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
-| REF-01 status | FORENSICS_COMPLETE |
-| Overall outcome | **REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE** |
-| Dominant next blocker | ELIGIBILITY |
-| Next gate | `NEXT = REF01_ELIGIBILITY_FORENSICS` (not executed) |
-| Report | `docs/task8b3_ref01_locked_reference_forensics.md` |
+| REF-01 status | FORENSICS_COMPLETE (eligibility attribution added) |
+| Evidence | `evaluation\task8b3_ref01_eligibility_forensics.json` |
+| Report | `docs/task8b3_ref01_eligibility_forensics.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed |
 
-Watt was not needed for Task 8B.3-REF01-F1-R12 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E1 (no downloads, no transfers).
 
-No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; the canonical evidence and the external
-delivery were not modified.
+No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; the canonical REF01 evidence and the
+external delivery were read only and not modified.
