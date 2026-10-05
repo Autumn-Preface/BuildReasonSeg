@@ -17,35 +17,27 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3C1 Report
+# FROM_DSH — Task 8B.3-REF01-E3C2 Report
 
 ```text
-Task: 8B.3-REF01-E3C1
+Task: 8B.3-REF01-E3C2
 Status: COMPLETE
 Branch: audit/task8b3-ref01-locked-replay-artifacts
-Starting HEAD: 6d1e8d1e69f3adefb4301948cae8918d4aec7ee1
-Design selected by: CHATGPT
-Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+Starting HEAD: b5be1d4e7b02d93f91c3f08c8e90014e590ea21e
 Detector/model calls: 0
 Proposal regeneration performed: NO
-Detector pipeline replay performed: NO
-Full production-object replay performed: NO
-Record-level selector replay performed: YES
+Selector repair implementation performed: NO
 External write performed: NO
 Product source changed: NO
-Frozen transition right: 1->1
-Frozen transition left: 14->14
-Frozen transition above: 4->5
-Frozen transition below: 1->1
-Eligibility repair validation: PASS
-Eligibility blocker resolved cases: above
-Selection blockers remaining: left; below
-Evidence: evaluation/task8b3_ref01_e3c1_locked_record_replay.json
-Report: docs/task8b3_ref01_e3c1_locked_record_replay.md
+Predeclared scalar rank rules evaluated: 6
+Globally perfect locked-four rules: NONE
+Scalar rule selected: NO
+Evidence: evaluation/task8b3_ref01_e3c2_selection_scalar_forensics.json
+Report: docs/task8b3_ref01_e3c2_selection_scalar_forensics.md
 REF-01 status: ACTIVE
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-Outcome: REF01_ELIGIBILITY_REPAIR_LOCKED_RECORD_REPLAY_PASS
-Next gate: REF01_SELECTION_REPAIR_DESIGN
+Outcome: REF01_SELECTION_SCALAR_FORENSICS_COMPLETE
+Next gate: CHATGPT_SELECTION_REPAIR_DECISION
 Next executed: NO
-Next action: Awaiting ChatGPT audit.
+Next action: Awaiting ChatGPT technical decision.
 ```

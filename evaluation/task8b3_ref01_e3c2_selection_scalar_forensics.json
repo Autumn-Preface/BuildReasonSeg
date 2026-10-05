@@ -1,0 +1,392 @@
+{
+  "task": "8B.3-REF01-E3C2",
+  "starting_head": "b5be1d4e7b02d93f91c3f08c8e90014e590ea21e",
+  "branch": "audit/task8b3-ref01-locked-replay-artifacts",
+  "scope": "LOCKED_SELECTION_SCALAR_FORENSICS",
+  "detector_model_calls": 0,
+  "proposal_regeneration_performed": false,
+  "actual_selector_repair_implementation_performed": false,
+  "external_write_performed": false,
+  "product_source_changed": false,
+  "predeclared_rank_rules": [
+    "AREA_FIRST",
+    "CONFIDENCE_FIRST",
+    "BBOX_AREA_FIRST",
+    "FILL_RATIO_FIRST",
+    "AREA_X_CONF",
+    "BBOX_AREA_X_CONF"
+  ],
+  "cases": {
+    "right": {
+      "tile_id": 1010,
+      "candidate_count_after_repair": 4,
+      "base_baseline_id": 1,
+      "extent_exception_ids": [],
+      "current_repaired_selected_id": 1,
+      "best_iou_id": 1,
+      "best_iou": 0.5588697017268446,
+      "current_repaired_iou": 0.5588697017268446,
+      "selected_features": {
+        "proposal_id": 1,
+        "confidence": 0.6712952852249146,
+        "mask_area": 1494,
+        "global_bbox": [
+          17,
+          207,
+          79,
+          233
+        ],
+        "bbox_area": 1701,
+        "fill_ratio": 0.8783068783068783,
+        "bbox_extent_ratio": 0.123046875,
+        "touches_image_border": false,
+        "centroid": [
+          48.16867469879518,
+          219.49866131191433
+        ]
+      },
+      "best_iou_features": {
+        "proposal_id": 1,
+        "confidence": 0.6712952852249146,
+        "mask_area": 1494,
+        "global_bbox": [
+          17,
+          207,
+          79,
+          233
+        ],
+        "bbox_area": 1701,
+        "fill_ratio": 0.8783068783068783,
+        "bbox_extent_ratio": 0.123046875,
+        "touches_image_border": false,
+        "centroid": [
+          48.16867469879518,
+          219.49866131191433
+        ]
+      },
+      "selected_minus_best": {
+        "mask_area": 0,
+        "confidence": 0.0,
+        "bbox_area": 0,
+        "fill_ratio": 0.0,
+        "bbox_extent_ratio": 0.0
+      },
+      "best_iou_pareto_dominators_area_conf": [],
+      "best_iou_pareto_dominators_bbox_conf": [
+        2
+      ],
+      "ranking_rule_outputs": {
+        "AREA_FIRST": {
+          "selected_id": 1,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "CONFIDENCE_FIRST": {
+          "selected_id": 2,
+          "matches_best_iou": false,
+          "best_iou_rank": 3
+        },
+        "BBOX_AREA_FIRST": {
+          "selected_id": 2,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "FILL_RATIO_FIRST": {
+          "selected_id": 1,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "AREA_X_CONF": {
+          "selected_id": 1,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "BBOX_AREA_X_CONF": {
+          "selected_id": 2,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        }
+      }
+    },
+    "left": {
+      "tile_id": 1003,
+      "candidate_count_after_repair": 42,
+      "base_baseline_id": 14,
+      "extent_exception_ids": [],
+      "current_repaired_selected_id": 14,
+      "best_iou_id": 30,
+      "best_iou": 0.6500672947510094,
+      "current_repaired_iou": 0.0,
+      "selected_features": {
+        "proposal_id": 14,
+        "confidence": 0.6941945552825928,
+        "mask_area": 3361,
+        "global_bbox": [
+          18,
+          299,
+          93,
+          381
+        ],
+        "bbox_area": 6308,
+        "fill_ratio": 0.5328154724159797,
+        "bbox_extent_ratio": 0.162109375,
+        "touches_image_border": false,
+        "centroid": [
+          54.07021719726272,
+          340.14787265694736
+        ]
+      },
+      "best_iou_features": {
+        "proposal_id": 30,
+        "confidence": 0.6951187252998352,
+        "mask_area": 2618,
+        "global_bbox": [
+          211,
+          406,
+          285,
+          471
+        ],
+        "bbox_area": 4950,
+        "fill_ratio": 0.5288888888888889,
+        "bbox_extent_ratio": 0.146484375,
+        "touches_image_border": false,
+        "centroid": [
+          249.37700534759358,
+          437.5668449197861
+        ]
+      },
+      "selected_minus_best": {
+        "mask_area": 743,
+        "confidence": -0.0009241700172424316,
+        "bbox_area": 1358,
+        "fill_ratio": 0.0039265835270908545,
+        "bbox_extent_ratio": 0.015625
+      },
+      "best_iou_pareto_dominators_area_conf": [],
+      "best_iou_pareto_dominators_bbox_conf": [],
+      "ranking_rule_outputs": {
+        "AREA_FIRST": {
+          "selected_id": 14,
+          "matches_best_iou": false,
+          "best_iou_rank": 3
+        },
+        "CONFIDENCE_FIRST": {
+          "selected_id": 21,
+          "matches_best_iou": false,
+          "best_iou_rank": 3
+        },
+        "BBOX_AREA_FIRST": {
+          "selected_id": 43,
+          "matches_best_iou": false,
+          "best_iou_rank": 4
+        },
+        "FILL_RATIO_FIRST": {
+          "selected_id": 2,
+          "matches_best_iou": false,
+          "best_iou_rank": 26
+        },
+        "AREA_X_CONF": {
+          "selected_id": 14,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "BBOX_AREA_X_CONF": {
+          "selected_id": 14,
+          "matches_best_iou": false,
+          "best_iou_rank": 3
+        }
+      }
+    },
+    "above": {
+      "tile_id": 1008,
+      "candidate_count_after_repair": 6,
+      "base_baseline_id": 4,
+      "extent_exception_ids": [
+        5,
+        6
+      ],
+      "current_repaired_selected_id": 5,
+      "best_iou_id": 5,
+      "best_iou": 0.9032501889644747,
+      "current_repaired_iou": 0.9032501889644747,
+      "selected_features": {
+        "proposal_id": 5,
+        "confidence": 0.7026934027671814,
+        "mask_area": 5059,
+        "global_bbox": [
+          242,
+          30,
+          393,
+          91
+        ],
+        "bbox_area": 9424,
+        "fill_ratio": 0.536820882852292,
+        "bbox_extent_ratio": 0.296875,
+        "touches_image_border": false,
+        "centroid": [
+          316.45463530341965,
+          59.51531923305001
+        ]
+      },
+      "best_iou_features": {
+        "proposal_id": 5,
+        "confidence": 0.7026934027671814,
+        "mask_area": 5059,
+        "global_bbox": [
+          242,
+          30,
+          393,
+          91
+        ],
+        "bbox_area": 9424,
+        "fill_ratio": 0.536820882852292,
+        "bbox_extent_ratio": 0.296875,
+        "touches_image_border": false,
+        "centroid": [
+          316.45463530341965,
+          59.51531923305001
+        ]
+      },
+      "selected_minus_best": {
+        "mask_area": 0,
+        "confidence": 0.0,
+        "bbox_area": 0,
+        "fill_ratio": 0.0,
+        "bbox_extent_ratio": 0.0
+      },
+      "best_iou_pareto_dominators_area_conf": [],
+      "best_iou_pareto_dominators_bbox_conf": [],
+      "ranking_rule_outputs": {
+        "AREA_FIRST": {
+          "selected_id": 5,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "CONFIDENCE_FIRST": {
+          "selected_id": 5,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "BBOX_AREA_FIRST": {
+          "selected_id": 5,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "FILL_RATIO_FIRST": {
+          "selected_id": 2,
+          "matches_best_iou": false,
+          "best_iou_rank": 6
+        },
+        "AREA_X_CONF": {
+          "selected_id": 5,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        },
+        "BBOX_AREA_X_CONF": {
+          "selected_id": 5,
+          "matches_best_iou": true,
+          "best_iou_rank": 1
+        }
+      }
+    },
+    "below": {
+      "tile_id": 1009,
+      "candidate_count_after_repair": 3,
+      "base_baseline_id": 1,
+      "extent_exception_ids": [],
+      "current_repaired_selected_id": 1,
+      "best_iou_id": 2,
+      "best_iou": 0.6165496859992612,
+      "current_repaired_iou": 0.0,
+      "selected_features": {
+        "proposal_id": 1,
+        "confidence": 0.6108331084251404,
+        "mask_area": 2082,
+        "global_bbox": [
+          126,
+          166,
+          198,
+          198
+        ],
+        "bbox_area": 2409,
+        "fill_ratio": 0.8642590286425903,
+        "bbox_extent_ratio": 0.142578125,
+        "touches_image_border": false,
+        "centroid": [
+          161.81412103746396,
+          181.6488952929875
+        ]
+      },
+      "best_iou_features": {
+        "proposal_id": 2,
+        "confidence": 0.5965109467506409,
+        "mask_area": 1770,
+        "global_bbox": [
+          222,
+          189,
+          292,
+          221
+        ],
+        "bbox_area": 2343,
+        "fill_ratio": 0.7554417413572343,
+        "bbox_extent_ratio": 0.138671875,
+        "touches_image_border": false,
+        "centroid": [
+          255.90169491525424,
+          205.22768361581922
+        ]
+      },
+      "selected_minus_best": {
+        "mask_area": 312,
+        "confidence": 0.014322161674499512,
+        "bbox_area": 66,
+        "fill_ratio": 0.108817287285356,
+        "bbox_extent_ratio": 0.00390625
+      },
+      "best_iou_pareto_dominators_area_conf": [
+        1
+      ],
+      "best_iou_pareto_dominators_bbox_conf": [
+        1
+      ],
+      "ranking_rule_outputs": {
+        "AREA_FIRST": {
+          "selected_id": 1,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "CONFIDENCE_FIRST": {
+          "selected_id": 1,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "BBOX_AREA_FIRST": {
+          "selected_id": 1,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "FILL_RATIO_FIRST": {
+          "selected_id": 1,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "AREA_X_CONF": {
+          "selected_id": 1,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        },
+        "BBOX_AREA_X_CONF": {
+          "selected_id": 1,
+          "matches_best_iou": false,
+          "best_iou_rank": 2
+        }
+      }
+    }
+  },
+  "globally_perfect_rules_on_locked_four": [],
+  "scalar_rule_design_selected": false,
+  "ref01_status": "ACTIVE",
+  "prop01_status": "PROP01_OPEN_ENGINEERING_DEFECT",
+  "overall_outcome": "REF01_SELECTION_SCALAR_FORENSICS_COMPLETE",
+  "next_gate": "CHATGPT_SELECTION_REPAIR_DECISION"
+}
