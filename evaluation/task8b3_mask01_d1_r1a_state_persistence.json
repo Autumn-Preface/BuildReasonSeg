@@ -1,0 +1,71 @@
+{
+  "task_id": "MASK01_D1_R1A_STATE_PERSISTENCE",
+  "task_status": "STOP",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "branch": "fix/task8b3-mask01-success-semantics-r1a",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "persisted_state": {
+    "predict_py": {
+      "sha256": "e45e868ab0236960fd401a42692db0d494723999a36b678a7f1023210ecc1487",
+      "bytes": 18215,
+      "single_image_annotation_present": true,
+      "note_line_present": true,
+      "batch_annotation_present": true
+    },
+    "test_cli_contract": {
+      "sha256": "43729375e9f3631bad16af1b20607959ca57cb1ae97f055b5959df57f8ce2083",
+      "bytes": 8707,
+      "weak_d1_test_removed": true,
+      "real_contract_tests": [
+        "test_cli_batch_success_prints_runtime_only_annotation",
+        "test_cli_placeholders_return_not_implemented",
+        "test_cli_single_image_success_prints_runtime_only_annotation",
+        "test_each_cli_help_works",
+        "test_error_registry_complete",
+        "test_evaluate_split_and_reference_defaults",
+        "test_evaluate_test_requires_explicit_split",
+        "test_predict_defaults_exact",
+        "test_predict_help_lists_frozen_arguments",
+        "test_predict_image_and_input_dir_are_exclusive",
+        "test_predict_inspect_proposals_does_not_require_prompt",
+        "test_predict_missing_image_reports_e201",
+        "test_predict_no_save_diagnostics_flag",
+        "test_predict_prompt_required_for_normal_inference",
+        "test_predict_unsupported_image_type_reports_e203",
+        "test_prepare_dataset_format_enum",
+        "test_success_status_and_ok_semantics_unchanged",
+        "test_train_enum_constraints",
+        "test_train_missing_dataset_reports_e101"
+      ]
+    },
+    "r1a_gate": {
+      "command": "python -m pytest tests/test_cli_contract.py -q",
+      "exit": 1,
+      "summary": "1 failed, 22 passed in 14.28s",
+      "failing_test": "tests/test_cli_contract.py::test_predict_inspect_proposals_does_not_require_prompt",
+      "assertion": "assert completed.returncode == 20 and 'E202' in completed.stderr -> assert (30 == 20)",
+      "attribution": "PRE_EXISTING_INSPECT_PROPOSALS_EXIT_CODE_DEFECT_NOT_INTRODUCED_BY_R1A"
+    },
+    "unchanged_verification": {
+      "pipeline_py_modified": false,
+      "test_task8b_runtime_modified": false,
+      "source_manifest_modified": false,
+      "canonical_docs_modified": false
+    },
+    "model_inference_executed": false,
+    "training_executed": false,
+    "external_sync_performed": false,
+    "full_suite_executed": false,
+    "next_task_entered": false
+  },
+  "authorized_paths": [
+    "delivery_src/BuildReasonSeg_Advisor_RC1/predict.py",
+    "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py",
+    "docs/task8b3_mask01_d1_r1a_state_persistence.md",
+    "evaluation/task8b3_mask01_d1_r1a_state_persistence.json",
+    "handoff/FROM_DSH.md",
+    "handoff/TO_DSH.md"
+  ]
+}

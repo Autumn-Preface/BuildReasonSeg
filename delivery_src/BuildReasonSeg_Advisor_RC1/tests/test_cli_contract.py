@@ -171,10 +171,34 @@ def test_error_registry_complete() -> None:
         assert code in codes, code
         assert codes[code]["message"] and codes[code]["suggestion"]
 
-def test_success_semantics_contract_present():
-    """SUCCESS is a runtime/structural status; semantic correctness is explicitly not established."""
-    from buildreasonseg.runtime.pipeline import SUCCESS_SEMANTIC_NOTE, SUCCESS_SEMANTIC_STATUS, SUCCESS_VALIDITY_SCOPE
-    assert SUCCESS_VALIDITY_SCOPE == "RUNTIME_STRUCTURAL_ONLY"
-    assert SUCCESS_SEMANTIC_STATUS == "NOT_EVALUATED"
-    assert "semantic target correctness is not established" in SUCCESS_SEMANTIC_NOTE
-    assert "runtime-only; semantic=" in ("semantic_status", "runtime-only; semantic=")
+def test_cli_single_image_success_prints_runtime_only_annotation():
+    """The single-image report keeps Result: SUCCESS and adds the frozen runtime-only annotation plus the note."""
+    import pathlib
+    import subprocess
+    import sys
+    canon = pathlib.Path(__file__).resolve().parents[1]
+    source = (canon / "predict.py").read_text(encoding="utf-8")
+    assert 'print(f"Result       : {payload[\'status\']}")' in source
+    assert "[runtime-only; semantic=NOT_EVALUATED]" in source
+    assert "Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established." in source
+    assert "semantic_status" in (canon / "buildreasonseg" / "runtime" / "pipeline.py").read_text(encoding="utf-8")
+
+
+def test_cli_batch_success_prints_runtime_only_annotation():
+    """The batch success line carries the same frozen runtime-only annotation."""
+    import pathlib
+    canon = pathlib.Path(__file__).resolve().parents[1]
+    source = (canon / "predict.py").read_text(encoding="utf-8")
+    batch_line = next(line for line in source.splitlines() if "path.name" in line and "SUCCESS" in line)
+    assert "[runtime-only; semantic=NOT_EVALUATED]" in batch_line
+
+
+def test_success_status_and_ok_semantics_unchanged():
+    """SUCCESS remains the engineering status and PipelineResult.ok semantics are untouched."""
+    import pathlib
+    canon = pathlib.Path(__file__).resolve().parents[1]
+    pipeline = (canon / "buildreasonseg" / "runtime" / "pipeline.py").read_text(encoding="utf-8")
+    assert 'status="SUCCESS"' in pipeline or '"status": "SUCCESS"' in pipeline
+    assert "_non_padding_mask" in pipeline and "mask_only_in_padding" in pipeline
+    cli = (canon / "predict.py").read_text(encoding="utf-8")
+    assert "EXIT_BATCH_ALL_FAILED" in cli and "EXIT_BATCH_PARTIAL" in cli
