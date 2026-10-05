@@ -17,33 +17,38 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3A Report
+# FROM_DSH — Task 8B.3-REF01-E3A-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E3A` |
+| Task | `8B.3-REF01-E3A-R1` |
 | Status | **STOP** |
-| Base branch / head | `fix/task8b3-ref01-eligibility-repair-design` / `14f252e4cd70c8d62d0ceba9a389665dcb66ea68` |
-| Task branch | `fix/task8b3-ref01-eligibility-repair-impl` |
-| Patch source | task book fixed diff block (UNCOVERED_PATCH_FORMAT) |
-| detector.py sha256 before / after | `a6fa4bdd76db6f50` / `a6fa4bdd76db6f50` |
+| Branch | `fix/task8b3-ref01-eligibility-repair-impl` |
+| Starting HEAD | `628e9dedefcce6e2cba8a832de882d1df2b714cf` |
+| Prescribed patcher SHA256 | `3c4323cb6e316c67238b9b775381faef9a6a474a56354afb550eb60c6db83604` |
+| Verified patcher SHA256 | `3c4323cb6e316c67238b9b775381faef9a6a474a56354afb550eb60c6db83604` |
+| Patcher path | `scripts\task8b3_ref01_eligibility_repair_patcher.py` |
+| py_compile exit | 0 |
+| Patcher runs | 1 |
+| Patcher exit | 1 |
+| detector.py before / after | `a6fa4bdd76db6f50` / `a6fa4bdd76db6f50` |
 | Changed files | ['handoff/TO_DSH.md'] |
-| Fixed tests | ['tests/test_task8b_runtime.py'] |
-| pytest exit | None |
-| Detector / model inference | NONE |
 | source_manifest updated (canonical / external) | NO / NO |
 | External RC1 synced | NO |
-| Implementation / algorithm / threshold / test / exception handling modified | NO |
+| Detector / model inference | NONE |
+| Manual editing of detector or test files | NONE |
+| Self-repair after failure | NONE |
 | Manual visual inspection / candidate replacement | NO / NO |
 | NEXT executed | NO |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
 | Report | `docs\task8b3_ref01_eligibility_repair_impl.md` |
 | Next action | Awaiting ChatGPT audit; the task book requires a stop without repair. |
 
-Watt was not needed for Task 8B.3-REF01-E3A (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3A-R1 (no downloads, no transfers).
 
-Only the canonical RC1 detector file named by the prescribed patch was touched; the source manifest, the external
-delivery and all model assets were left unchanged, and no inference was executed.
+The prescribed patcher was copied verbatim, verified against its published SHA256 before execution, and run exactly once;
+all repository changes originate from that patcher, and the source manifest, external delivery and model assets were
+left unchanged with no inference executed.
