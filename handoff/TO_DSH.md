@@ -1,56 +1,91 @@
-# TO_DSH — Task 8B.3-REF01-E3A-R1: Mechanical Canonical Implementation
+# TO_DSH — Task 8B.3-REF01-E3A-R2: Boundary-Based Mechanical Canonical Implementation
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-eligibility-repair-impl`
-> Required starting HEAD: `628e9dedefcce6e2cba8a832de882d1df2b714cf`
+> Required starting HEAD: `fc2a33325eacf6ce5f366d6574abed3694431f5b`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
-> Temporary patcher: `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r1_apply.py`
+> Temporary patcher path: `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py`
 
-# 0. E3A STOP DISPOSITION
+# 0. R1 AUDIT DISPOSITION
 
-E3A STOP was safe and correct:
-- no product source changed;
-- tests were not run;
-- source_manifest stayed unchanged;
-- external RC1 stayed unsynced;
-- no model/detector inference ran.
+E3A-R1 STOP is accepted.
 
-STOP reason: `UNCOVERED_PATCH_FORMAT`.
+R1 correctly:
+- verified the published patcher SHA256;
+- executed the patcher exactly once;
+- stopped on the first assertion failure;
+- did not manually edit detector.py or tests;
+- did not update source_manifest;
+- did not sync external RC1;
+- did not run detector/model inference;
+- committed/pushed a STOP result.
 
-R1 removes patch-format discretion by using the exact executable patcher below.
+R1 failed only because the patcher required an entire source block to be byte-for-byte identical.
 
-# 1. EXECUTION CONTRACT
+R2 replaces that fragile condition with a fixed unique-boundary replacement:
+- start boundary = `def eligible_proposals(`
+- end boundary = `def proposal_by_id(`
+- exact replacement contents remain fully prescribed by ChatGPT.
 
-DSH has zero implementation discretion.
+DSH does not choose any patch location or implementation.
+
+# 1. EXECUTOR CONTRACT
+
+DSH has ZERO technical discretion.
 
 Allowed sequence only:
-1. branch/head gate;
-2. copy the exact patcher below byte-for-byte;
+1. verify branch/head;
+2. copy §5 patcher byte-for-byte to the exact temporary path;
 3. verify patcher SHA256;
 4. execute patcher exactly once;
-5. run exact compile/tests;
-6. write fixed evidence/report/FROM_DSH;
-7. choose status/commit message by the fixed gate;
-8. push and STOP.
+5. delete temporary patcher after successful execution;
+6. run fixed static/pytest gates;
+7. write fixed evidence/report/FROM_DSH;
+8. choose status and commit message using §14 only;
+9. push current branch;
+10. STOP.
 
-No manual source edits. No patcher edits. No retry after patcher/test assertion failure. Any uncovered condition => STOP.
+Forbidden:
+- manual edits to detector.py;
+- manual edits to test_task8b_runtime.py;
+- modifying the patcher;
+- rerunning patcher after failure;
+- modifying tests after pytest failure;
+- changing algorithm/threshold/schema;
+- updating source_manifest;
+- syncing external RC1;
+- detector/model inference;
+- executing NEXT.
+
+Any uncovered condition => STOP.
 
 # 2. GIT GATE
 
-Require:
+Require exactly:
+
 ```text
-branch = fix/task8b3-ref01-eligibility-repair-impl
-HEAD = 628e9dedefcce6e2cba8a832de882d1df2b714cf
+git branch --show-current
+= fix/task8b3-ref01-eligibility-repair-impl
+
+git rev-parse HEAD
+= fc2a33325eacf6ce5f366d6574abed3694431f5b
 ```
 
-Initial repo status may be clean or only `M handoff/TO_DSH.md`. Anything else => STOP.
+Allowed initial repo status:
+- clean; or
+- only `M handoff/TO_DSH.md`.
+
+Anything else => STOP.
+
+No checkout/reset/rebase/merge/stash/clean/cherry-pick.
 
 # 3. ALLOWED TRACKED CHANGES
 
 Only:
+
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
 delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
@@ -61,25 +96,38 @@ handoff/TO_DSH.md
 ```
 
 Must remain unchanged:
+
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
 scripts/sync_advisor_rc1_delivery.py
 ```
 
-# 4. PROHIBITIONS
+# 4. ABSOLUTE PROHIBITIONS
 
-Do not sync external RC1; do not update source_manifest; do not run DetectorRuntime/Qwen/SAM2/D-B1/target inference; do not tune thresholds; do not execute NEXT; do not update main.
+Do NOT:
+- write external RC1;
+- run sync helper;
+- update source_manifest;
+- instantiate DetectorRuntime;
+- run detector/Qwen/SAM2/D-B1/target inference;
+- change `MERGE_BBOX_EXTENT_RATIO_MAX`;
+- change `SMALLEST_MIN_AREA_PX`;
+- execute NEXT;
+- update main;
+- force push.
 
 Detector/model calls = 0.
 
-# 5. EXACT PATCHER
+# 5. EXACT TEMPORARY PATCHER
 
-Write the following block byte-for-byte to:
+Create exactly:
 
 ```text
-C:\D\DeepSeekHarness\task8b3_ref01_e3a_r1_apply.py
+C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py
 ```
+
+with this content byte-for-byte:
 
 ```python
 from __future__ import annotations
@@ -96,25 +144,10 @@ TEST = REPO / "delivery_src" / "BuildReasonSeg_Advisor_RC1" / "tests" / "test_ta
 EXTERNAL_DETECTOR = EXTERNAL / "buildreasonseg" / "runtime" / "detector.py"
 
 EXPECTED_BRANCH = "fix/task8b3-ref01-eligibility-repair-impl"
-EXPECTED_HEAD = "628e9dedefcce6e2cba8a832de882d1df2b714cf"
+EXPECTED_HEAD = "fc2a33325eacf6ce5f366d6574abed3694431f5b"
 EXPECTED_EXTERNAL_SHA = "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738"
 
-OLD_LF = r"""def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "largest"
-                       ) -> list[GlobalProposal]:
-    return [proposal for proposal in proposals if eligible(proposal, family=family)]
-
-
-def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
-    \"\"\"Largest eligible building: area desc → confidence desc → global id asc.\"\"\"
-
-    candidates = eligible_proposals(proposals, family=family)
-    if not candidates:
-        return None
-    return sorted(candidates, key=lambda proposal: (-proposal.mask_area, -proposal.confidence,
-                                                    proposal.proposal_id))[0]
-"""
-
-NEW_LF = r"""def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "largest"
+NEW_BLOCK = r"""def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "largest"
                        ) -> list[GlobalProposal]:
     return [proposal for proposal in proposals if eligible(proposal, family=family)]
 
@@ -125,7 +158,7 @@ def _reference_rank(proposal: GlobalProposal) -> tuple[int, float, int]:
 
 def _largest_reference_candidates_with_extent_exception(
         proposals: list[GlobalProposal]) -> list[GlobalProposal]:
-    \"\"\"Frozen base candidates plus the RC1 largest-only extent-dominance exception.\"\"\"
+    """Frozen base candidates plus the RC1 largest-only extent-dominance exception."""
 
     base_candidates = eligible_proposals(proposals, family="largest")
     if not base_candidates:
@@ -145,7 +178,7 @@ def _largest_reference_candidates_with_extent_exception(
 
 
 def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
-    \"\"\"Select a reference with the frozen base rule and the largest-only RC1 exception.\"\"\"
+    """Select a reference with the frozen base rule and the largest-only RC1 exception."""
 
     if family == "largest":
         candidates = _largest_reference_candidates_with_extent_exception(proposals)
@@ -154,9 +187,11 @@ def select_reference(proposals: list[GlobalProposal], *, family: str = "largest"
     if not candidates:
         return None
     return sorted(candidates, key=_reference_rank)[0]
+
+
 """
 
-TEST_BLOCK_LF = r"""def _reference_rect(height: int, width: int, confidence: float, proposal_id: int,
+TEST_BLOCK = r"""def _reference_rect(height: int, width: int, confidence: float, proposal_id: int,
                     *, top: int = 100, left: int = 100) -> GlobalProposal:
     mask = np.zeros((512, 512), dtype=bool)
     mask[top:top + height, left:left + width] = True
@@ -167,6 +202,7 @@ TEST_BLOCK_LF = r"""def _reference_rect(height: int, width: int, confidence: flo
 def test_largest_extent_dominance_exception_selects_strictly_dominant_candidate() -> None:
     baseline = _reference_rect(80, 80, 0.60, 1)
     dominant = _reference_rect(120, 120, 0.61, 2, top=250, left=250)
+
     assert eligible(baseline, family="largest") is True
     assert eligible(dominant, family="largest") is False
     assert detector.eligible_proposals([baseline, dominant], family="largest") == [baseline]
@@ -188,6 +224,7 @@ def test_largest_extent_exception_requires_strict_confidence_gain() -> None:
 def test_largest_extent_exception_requires_strict_area_gain() -> None:
     baseline = _reference_rect(80, 80, 0.60, 1)
     same_area = _reference_rect(40, 160, 0.95, 2, top=250, left=250)
+
     assert baseline.mask_area == same_area.mask_area
     assert eligible(same_area, family="largest") is False
     assert select_reference([baseline, same_area], family="largest") is baseline
@@ -196,12 +233,14 @@ def test_largest_extent_exception_requires_strict_area_gain() -> None:
 def test_largest_extent_exception_never_admits_border_proposal() -> None:
     baseline = _reference_rect(80, 80, 0.60, 1)
     border = _reference_rect(120, 120, 0.95, 2, top=0, left=250)
+
     assert border.touches_image_border is True
     assert select_reference([baseline, border], family="largest") is baseline
 
 
 def test_largest_extent_exception_requires_frozen_baseline() -> None:
     only_extent_violation = _reference_rect(120, 120, 0.95, 1)
+
     assert eligible(only_extent_violation, family="largest") is False
     assert select_reference([only_extent_violation], family="largest") is None
 
@@ -210,17 +249,25 @@ def test_largest_extent_exception_keeps_production_area_order() -> None:
     baseline = _reference_rect(80, 80, 0.60, 1)
     exception_a = _reference_rect(120, 120, 0.70, 2, top=250, left=50)
     exception_b = _reference_rect(130, 130, 0.61, 3, top=250, left=250)
+
     assert select_reference([baseline, exception_a, exception_b], family="largest") is exception_b
 
 
 def test_largest_extent_exception_does_not_change_smallest_family() -> None:
     baseline = _reference_rect(80, 80, 0.60, 1)
     extent_violation = _reference_rect(120, 120, 0.95, 2, top=250, left=250)
+
     assert eligible(extent_violation, family="smallest") is False
     assert select_reference([baseline, extent_violation], family="smallest") is baseline
+
+
 """
 
-MARKER_LF = "# ---------------------------------------------------------------- reasoning context"
+START_SENTINEL = b'def eligible_proposals('
+END_SENTINEL = b'def proposal_by_id('
+TEST_MARKER = b'# ---------------------------------------------------------------- reasoning context'
+TEST_SENTINEL = b'def test_largest_extent_dominance_exception_selects_strictly_dominant_candidate'
+
 
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -229,19 +276,30 @@ def sha256(path: Path) -> str:
             h.update(chunk)
     return h.hexdigest()
 
-def git_text(*args: str) -> str:
-    result = subprocess.run(["git", "-C", str(REPO), *args], check=True, capture_output=True, text=True)
-    return result.stdout.strip()
 
-def newline_style(raw: bytes) -> bytes:
-    if b"\r\n" in raw:
-        assert b"\n" not in raw.replace(b"\r\n", b"")
+def git_text(*args: str) -> str:
+    p = subprocess.run(
+        ["git", "-C", str(REPO), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return p.stdout.strip()
+
+
+def newline(raw: bytes) -> bytes:
+    crlf = raw.count(b"\r\n")
+    lf = raw.count(b"\n")
+    if crlf and crlf == lf:
         return b"\r\n"
-    assert b"\n" in raw
-    return b"\n"
+    if not crlf and lf:
+        return b"\n"
+    raise AssertionError(f"unsupported mixed newline state: CRLF={crlf}, LF={lf}")
+
 
 def adapt(text: str, nl: bytes) -> bytes:
     return text.encode("utf-8").replace(b"\n", nl)
+
 
 def main() -> int:
     assert git_text("branch", "--show-current") == EXPECTED_BRANCH
@@ -250,38 +308,48 @@ def main() -> int:
 
     detector_raw = DETECTOR.read_bytes()
     test_raw = TEST.read_bytes()
-    detector_nl = newline_style(detector_raw)
-    test_nl = newline_style(test_raw)
+    dnl = newline(detector_raw)
+    tnl = newline(test_raw)
 
-    old = adapt(OLD_LF, detector_nl)
-    new = adapt(NEW_LF, detector_nl)
-    marker = adapt(MARKER_LF, test_nl)
-    test_block = adapt(TEST_BLOCK_LF, test_nl)
+    assert detector_raw.count(START_SENTINEL) == 1
+    assert detector_raw.count(END_SENTINEL) == 1
+    assert detector_raw.count(b'def select_reference(') == 1
+    assert detector_raw.count(b'def _reference_rank(') == 0
+    assert detector_raw.count(b'def _largest_reference_candidates_with_extent_exception(') == 0
 
-    assert detector_raw.count(old) == 1
-    assert detector_raw.count(b"_largest_reference_candidates_with_extent_exception") == 0
-    assert test_raw.count(marker) == 1
-    assert test_raw.count(b"test_largest_extent_dominance_exception_selects_strictly_dominant_candidate") == 0
+    start = detector_raw.index(START_SENTINEL)
+    end = detector_raw.index(END_SENTINEL)
+    assert start < end
+    old_slice = detector_raw[start:end]
+    assert b'candidates = eligible_proposals(proposals, family=family)' in old_slice
+    assert b'proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX' not in old_slice
 
-    detector_after = detector_raw.replace(old, new, 1)
-    test_after = test_raw.replace(marker, test_block + test_nl + test_nl + marker, 1)
+    new_slice = adapt(NEW_BLOCK, dnl)
+    detector_after = detector_raw[:start] + new_slice + detector_raw[end:]
 
-    assert detector_after.count(b"def _reference_rank(") == 1
-    assert detector_after.count(b"def _largest_reference_candidates_with_extent_exception(") == 1
-    assert detector_after.count(b"proposal.mask_area > baseline.mask_area") == 1
-    assert detector_after.count(b"proposal.confidence > baseline.confidence") == 1
-    assert test_after.count(b"def test_largest_extent_") == 8
+    assert detector_after.count(b'def _reference_rank(') == 1
+    assert detector_after.count(b'def _largest_reference_candidates_with_extent_exception(') == 1
+    assert detector_after.count(b'proposal.mask_area > baseline.mask_area') == 1
+    assert detector_after.count(b'proposal.confidence > baseline.confidence') == 1
+    assert detector_after.count(b'proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX') >= 2
+
+    assert test_raw.count(TEST_MARKER) == 1
+    assert test_raw.count(TEST_SENTINEL) == 0
+    marker_pos = test_raw.index(TEST_MARKER)
+    test_after = test_raw[:marker_pos] + adapt(TEST_BLOCK, tnl) + test_raw[marker_pos:]
+    assert test_after.count(b'def test_largest_extent_') == 8
 
     DETECTOR.write_bytes(detector_after)
     TEST.write_bytes(test_after)
 
     print("PATCHER_BRANCH_HEAD: PASS")
     print("EXTERNAL_DETECTOR_IDENTITY: PASS")
-    print("DETECTOR_EXACT_REPLACEMENT: PASS")
-    print("TEST_EXACT_INSERTION: PASS")
+    print("DETECTOR_BOUNDARY_REPLACEMENT: PASS")
+    print("TEST_MARKER_INSERTION: PASS")
     print("NEW_TEST_COUNT: 8")
     print("PATCHER_RESULT: PASS")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
@@ -289,100 +357,142 @@ if __name__ == "__main__":
 ```
 
 Required SHA256:
+
 ```text
-3c4323cb6e316c67238b9b775381faef9a6a474a56354afb550eb60c6db83604
+2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5
 ```
 
-If written file SHA differs => STOP.
+After writing the patcher:
+- calculate SHA256;
+- require exact equality;
+- mismatch => STOP, do not run.
 
 # 6. EXECUTE PATCHER EXACTLY ONCE
 
-Run:
+Run exactly:
+
 ```text
-<REQUIRED_PYTHON> C:\D\DeepSeekHarness\task8b3_ref01_e3a_r1_apply.py
+<REQUIRED_PYTHON> C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py
 ```
 
-Require exit 0 and:
+Require exit 0 and these stdout lines:
+
 ```text
 PATCHER_BRANCH_HEAD: PASS
 EXTERNAL_DETECTOR_IDENTITY: PASS
-DETECTOR_EXACT_REPLACEMENT: PASS
-TEST_EXACT_INSERTION: PASS
+DETECTOR_BOUNDARY_REPLACEMENT: PASS
+TEST_MARKER_INSERTION: PASS
 NEW_TEST_COUNT: 8
 PATCHER_RESULT: PASS
 ```
 
-Any failure => STOP. No manual edit, no rerun.
+Any failure:
+- STOP immediately;
+- no manual edits;
+- no rerun.
 
-On success delete the temporary patcher.
+On success delete:
+
+```text
+C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py
+```
 
 # 7. STATIC GATE
 
 Run exactly:
+
 ```text
 <REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
 <REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py
 ```
 
-Both exit 0 required.
+Require both exit 0.
 
-# 8. TARGETED TEST
+Then require mechanically:
 
-Run exactly:
+```text
+def _reference_rank( count = 1
+def _largest_reference_candidates_with_extent_exception( count = 1
+proposal.mask_area > baseline.mask_area count = 1
+proposal.confidence > baseline.confidence count = 1
+new largest-extent test definitions = 8
+source_manifest changed = NO
+pipeline.py changed = NO
+```
+
+Any failure => STOP.
+
+# 8. TARGETED PYTEST
+
+Run exactly once:
+
 ```text
 <REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py -q
 ```
 
-Exit 0 required. Failure => STOP, no self-repair.
+Require exit 0.
 
-# 9. CANONICAL FULL TEST
+Non-zero => STOP. Do not edit code/tests.
 
-Only after targeted PASS:
+# 9. CANONICAL FULL PYTEST
+
+Only if targeted PASS:
+
 ```text
 <REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests -q
 ```
 
-Exit 0 required. Failure => STOP.
+Require exit 0.
 
-# 10. EXTERNAL IDENTITY
+Non-zero => STOP.
 
-After tests hash actual external file:
+# 10. EXTERNAL IMMUTABILITY
+
+Hash actual external file after all test gates:
+
 ```text
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
 ```
 
 Require exactly:
+
 ```text
 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
 ```
 
-Do not compare canonical Windows working-tree bytes with Git-canonical manifest identity.
+No external sync/write is permitted.
 
 # 11. MANIFEST POLICY
 
-`source_manifest.json` intentionally stays unchanged in R1.
+Canonical `source_manifest.json` intentionally remains unchanged in R2.
 
 Record:
+
 ```text
-INTENTIONALLY_STALE_PENDING_E3B
+manifest_status = INTENTIONALLY_STALE_PENDING_E3B
 ```
 
-Do not run the sync helper, including `--check`.
+Do not run sync helper even in check mode.
 
 # 12. FIXED EVIDENCE
 
-Only if all implementation/test gates PASS, create:
-`evaluation/task8b3_ref01_eligibility_repair_impl.json`
+If and only if all previous gates PASS, overwrite/create:
+
+```text
+evaluation/task8b3_ref01_eligibility_repair_impl.json
+```
 
 with exactly:
 
 ```json
 {
-  "task": "8B.3-REF01-E3A-R1",
-  "starting_head": "628e9dedefcce6e2cba8a832de882d1df2b714cf",
+  "task": "8B.3-REF01-E3A-R2",
+  "starting_head": "fc2a33325eacf6ce5f366d6574abed3694431f5b",
   "branch": "fix/task8b3-ref01-eligibility-repair-impl",
   "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
   "implementation_scope": "CANONICAL_ONLY_NO_SYNC",
+  "patch_method": "UNIQUE_FUNCTION_BOUNDARY_PATCHER",
+  "patcher_sha256": "2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5",
   "detector_model_calls": 0,
   "eligible_function_changed": false,
   "eligible_proposals_function_changed": false,
@@ -393,7 +503,6 @@ with exactly:
   "border_exception_allowed": false,
   "smallest_family_changed": false,
   "new_numeric_thresholds": [],
-  "patcher_sha256": "3c4323cb6e316c67238b9b775381faef9a6a474a56354afb550eb60c6db83604",
   "patcher_exit": 0,
   "py_compile_detector_exit": 0,
   "py_compile_test_exit": 0,
@@ -408,21 +517,26 @@ with exactly:
 }
 ```
 
-No key changes.
+Do not add/remove/rename keys.
 
 # 13. REPORT / FROM_DSH
 
-Report must state:
+Update `docs/task8b3_ref01_eligibility_repair_impl.md` with a new authoritative E3A-R2 section.
+
+Required COMPLETE facts:
+
 ```text
-Task = 8B.3-REF01-E3A-R1
+Task = 8B.3-REF01-E3A-R2
+Status = COMPLETE
 Design = LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-Patch method = EXACT_TEMPORARY_PATCHER
-Patcher SHA256 = 3c4323cb6e316c67238b9b775381faef9a6a474a56354afb550eb60c6db83604
+Patch method = UNIQUE_FUNCTION_BOUNDARY_PATCHER
+Patcher SHA256 = 2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5
 Detector/model calls = 0
 eligible() changed = NO
 eligible_proposals() changed = NO
-Largest-only exception implemented = YES
-Strict area/confidence dominance = > / >
+Largest-only exception = YES
+Strict area operator = >
+Strict confidence operator = >
 Border bypass = NO
 No-baseline exception = NO
 Smallest family changed = NO
@@ -434,50 +548,111 @@ Source manifest updated = NO
 Manifest status = INTENTIONALLY_STALE_PENDING_E3B
 Outcome = REF01_ELIGIBILITY_REPAIR_CANONICAL_IMPLEMENTED
 NEXT = REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC
-PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
-left/below selection defects = UNRESOLVED
-final Demo inference = NOT RUN
 ```
 
-FROM_DSH must preserve ARTIFACT-FACTS exactly and record the same facts.
+Also state:
 
-# 14. FINAL DIFF / STATUS GATE
+```text
+PROP-01 remains PROP01_OPEN_ENGINEERING_DEFECT.
+The left and below reference-selection defects remain unresolved.
+No final Demo inference was executed.
+NEXT was not executed.
+```
+
+Preserve the ARTIFACT-FACTS block in `handoff/FROM_DSH.md` exactly.
+
+For COMPLETE, FROM_DSH must include:
+
+```text
+Task: 8B.3-REF01-E3A-R2
+Status: COMPLETE
+Branch: fix/task8b3-ref01-eligibility-repair-impl
+Starting HEAD: fc2a33325eacf6ce5f366d6574abed3694431f5b
+Design selected by: CHATGPT
+Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+DSH algorithm choice performed: NO
+Patch method: UNIQUE_FUNCTION_BOUNDARY_PATCHER
+Patcher SHA256: 2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5
+Patcher runs: 1
+Patcher exit: 0
+Detector/model calls: 0
+Canonical detector modified: YES
+Canonical test file modified: YES
+eligible() changed: NO
+eligible_proposals() changed: NO
+Largest-only private helper added: YES
+Strict area operator: >
+Strict confidence operator: >
+Border bypass allowed: NO
+No-baseline exception allowed: NO
+Smallest family changed: NO
+New numeric threshold: NO
+Targeted test: PASS
+Canonical full tests: PASS
+External detector after SHA: 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
+External detector unchanged: YES
+Source manifest updated: NO
+Manifest status: INTENTIONALLY_STALE_PENDING_E3B
+Outcome: REF01_ELIGIBILITY_REPAIR_CANONICAL_IMPLEMENTED
+Next gate: REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC
+PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
+External/canonical product files modified: NO / YES
+Next action: Awaiting ChatGPT audit; do not execute NEXT.
+```
+
+For STOP, report only failed gate + observed facts. Do not invent PASS values.
+
+# 14. FINAL STATUS / COMMIT MESSAGE GATE
 
 Run:
+
 ```text
 git status --porcelain
-git diff --name-only 628e9dedefcce6e2cba8a832de882d1df2b714cf
+git diff --name-only fc2a33325eacf6ce5f366d6574abed3694431f5b
 ```
 
-COMPLETE only if:
-- patcher PASS;
-- both py_compile PASS;
-- targeted/full pytest PASS;
+COMPLETE allowed only if:
+- patcher ran once and passed;
 - temporary patcher deleted;
-- external SHA exact;
+- both py_compile pass;
+- targeted pytest pass;
+- full canonical pytest pass;
+- external detector SHA exact;
 - source_manifest unchanged;
-- only six allowed paths changed;
-- no untracked repo files.
+- pipeline.py unchanged;
+- only six allowed tracked paths differ;
+- no untracked repo files remain.
 
-Then:
+If COMPLETE:
+
 ```text
 STATUS = COMPLETE
 COMMIT_MESSAGE = fix(rc1): implement largest extent dominance exception
 ```
 
 Otherwise:
+
 ```text
 STATUS = STOP
 COMMIT_MESSAGE = fix(rc1): record extent dominance implementation stop
 ```
 
-# 15. COMMIT / PUSH
+Write FROM_DSH Status first, then use exactly the matching message.
 
-Write status to FROM_DSH first. Use exactly the matching commit message.
+# 15. PUSH / STOP
 
 Push only current branch:
+
 ```text
 fix/task8b3-ref01-eligibility-repair-impl
 ```
 
-No force push. Do not update main. Then STOP.
+No force push.
+Do not update main.
+Do not execute NEXT.
+
+After push: STOP and wait for ChatGPT.
+
+# 16. COMPLETE DEFINITION
+
+COMPLETE only if every gate above passes exactly and no autonomous repair occurs.
