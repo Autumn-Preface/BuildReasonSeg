@@ -30,7 +30,7 @@ External post-sync =
 
 External source_manifest =
 identical to canonical Git object
-bytes = <observed §4 integer>
+bytes = 24375
 sha256 = 5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c
 
 Setup checker =

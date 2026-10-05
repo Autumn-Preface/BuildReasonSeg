@@ -42,7 +42,7 @@ External sync: 135 copied / 135 verified / 0 failures
 External post-sync: 135 match / 0 missing / 0 mismatch
 External source_manifest copied from Git object: YES
 External source_manifest identity rechecked in R1: YES
-External source_manifest bytes: <observed §4 integer>
+External source_manifest bytes: 24375
 External source_manifest SHA256: 5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c
 Setup checker runs: 1
 Setup checker: BuildReasonSeg environment: READY
