@@ -17,31 +17,31 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E1-R2 Report
+# FROM_DSH — Task 8B.3-REF01-E2 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E1-R2` |
+| Task | `8B.3-REF01-E2` |
 | Status | **COMPLETE** |
-| Branch | `fix/task8b3-ref01-eligibility-forensics` |
-| Starting HEAD | `1594f1ef96223264999d2c938dd5b2d2bb1b629c` |
+| Base branch / head | `fix/task8b3-ref01-eligibility-forensics` / `8d86e7b77f9423834a4a15117009c5a1e3f79e5d` |
+| Task branch | `fix/task8b3-ref01-eligibility-repair-design` |
+| Prescribed design | `LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1` (task-book decision, executed verbatim) |
+| Code source / verbatim sha256 | `handoff/TO_DSH.md` lines 470-738 / `a39e6f724fe78a10652e29898228fc7795392fca8de38c7eaa02809778a88592` |
+| py_compile / design run exit | 0 / 0 |
 | Detector / model calls | 0 |
-| Fixed code source | `handoff/TO_DSH.md` lines 309-663 (fenced python block, byte-for-byte) |
-| Verbatim code sha256 | `4c3c400700fcdfe482364d36dc1a0ee7fafbc96ced4a319519955da9580af3e7` |
-| py_compile exit | 0 |
-| Replay exit | 0 |
-| Algorithm / enum / schema / ordering / exception handling modified | NO |
-| Self-repair attempted | NO |
-| Evidence | `evaluation\task8b3_ref01_eligibility_forensics.json` |
-| Report | `docs/task8b3_ref01_eligibility_forensics.md` |
-| Prior E1-R1 evidence | preserved at sha256 7073cf355313579d when read before the replay |
+| Product code modified | NO |
+| Alternative designs compared/modified | NONE |
+| Manual visual inspection / candidate replacement | NO / NO |
+| NEXT executed | NO |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| Evidence | `evaluation\task8b3_ref01_eligibility_repair_design.json` |
+| Report | `docs\task8b3_ref01_eligibility_repair_design.md` |
 | Next action | Awaiting ChatGPT audit; NEXT is not executed. |
 
-Watt was not needed for Task 8B.3-REF01-E1-R2 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E2 (no downloads, no transfers).
 
-No model, detector, Qwen, SAM2, D-B1 or target-segmentation execution occurred; the canonical REF01 evidence and the
-external delivery were not modified by this task.
+The prescribed design was executed exactly as published; no product code, threshold or rule in the delivery was modified
+and the canonical REF01 evidence and external delivery were not altered by this task.

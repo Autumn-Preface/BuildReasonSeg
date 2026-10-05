@@ -1,0 +1,126 @@
+{
+  "task": "8B.3-REF01-E2",
+  "starting_head": "8d86e7b77f9423834a4a15117009c5a1e3f79e5d",
+  "branch": "fix/task8b3-ref01-eligibility-repair-design",
+  "verification_mode": "READ_ONLY_REPAIR_DESIGN_VALIDATION",
+  "detector_model_calls": 0,
+  "scientific_reuse_disclosure": "The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.",
+  "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
+  "design_scope": "largest_family_only",
+  "base_extent_cap": 0.2,
+  "new_numeric_thresholds": [],
+  "strict_dominance": {
+    "area": "candidate.mask_area > baseline.mask_area",
+    "confidence": "candidate.confidence > baseline.confidence"
+  },
+  "no_baseline_behavior": "NO_EXCEPTION_SAFE_FAILURE",
+  "border_behavior": "ALWAYS_REJECT_FROM_EXCEPTION",
+  "smallest_family_policy": "UNCHANGED",
+  "locked_candidates": {
+    "right": {
+      "baseline": {
+        "proposal_id": 1,
+        "mask_area": 1494,
+        "confidence": 0.6712952852249146,
+        "bbox_extent_ratio": 0.123046875,
+        "touches_image_border": false,
+        "iou_to_gt": 0.5588697017268446
+      },
+      "exception_candidates": [],
+      "final_selected": {
+        "proposal_id": 1,
+        "mask_area": 1494,
+        "confidence": 0.6712952852249146,
+        "bbox_extent_ratio": 0.123046875,
+        "touches_image_border": false,
+        "iou_to_gt": 0.5588697017268446
+      }
+    },
+    "left": {
+      "baseline": {
+        "proposal_id": 14,
+        "mask_area": 3361,
+        "confidence": 0.6941945552825928,
+        "bbox_extent_ratio": 0.162109375,
+        "touches_image_border": false,
+        "iou_to_gt": 0.0
+      },
+      "exception_candidates": [],
+      "final_selected": {
+        "proposal_id": 14,
+        "mask_area": 3361,
+        "confidence": 0.6941945552825928,
+        "bbox_extent_ratio": 0.162109375,
+        "touches_image_border": false,
+        "iou_to_gt": 0.0
+      }
+    },
+    "above": {
+      "baseline": {
+        "proposal_id": 4,
+        "mask_area": 3012,
+        "confidence": 0.6411488056182861,
+        "bbox_extent_ratio": 0.189453125,
+        "touches_image_border": false,
+        "iou_to_gt": 0.0
+      },
+      "exception_candidates": [
+        {
+          "proposal_id": 5,
+          "mask_area": 5059,
+          "confidence": 0.7026934027671814,
+          "bbox_extent_ratio": 0.296875,
+          "touches_image_border": false,
+          "iou_to_gt": 0.9032501889644747
+        },
+        {
+          "proposal_id": 6,
+          "mask_area": 4267,
+          "confidence": 0.6989181637763977,
+          "bbox_extent_ratio": 0.23046875,
+          "touches_image_border": false,
+          "iou_to_gt": 0.0
+        }
+      ],
+      "final_selected": {
+        "proposal_id": 5,
+        "mask_area": 5059,
+        "confidence": 0.7026934027671814,
+        "bbox_extent_ratio": 0.296875,
+        "touches_image_border": false,
+        "iou_to_gt": 0.9032501889644747
+      }
+    },
+    "below": {
+      "baseline": {
+        "proposal_id": 1,
+        "mask_area": 2082,
+        "confidence": 0.6108331084251404,
+        "bbox_extent_ratio": 0.142578125,
+        "touches_image_border": false,
+        "iou_to_gt": 0.0
+      },
+      "exception_candidates": [],
+      "final_selected": {
+        "proposal_id": 1,
+        "mask_area": 2082,
+        "confidence": 0.6108331084251404,
+        "bbox_extent_ratio": 0.142578125,
+        "touches_image_border": false,
+        "iou_to_gt": 0.0
+      }
+    }
+  },
+  "synthetic_contract": {
+    "S1_no_baseline": "PASS",
+    "S2_border_cannot_bypass": "PASS",
+    "S3_lower_confidence_cannot_bypass": "PASS",
+    "S4_not_larger_cannot_bypass": "PASS",
+    "S5_strict_dominance_admits": "PASS",
+    "S6_strict_inequality_required": "PASS",
+    "S7_multiple_exceptions_keep_production_order": "PASS",
+    "S8_smallest_family_unchanged": "PASS"
+  },
+  "overall_outcome": "REF01_ELIGIBILITY_REPAIR_DESIGN_VALIDATED",
+  "next_gate": "REF01_ELIGIBILITY_REPAIR_IMPLEMENTATION"
+}
