@@ -17,37 +17,36 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R2 Report
+# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R3 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E3C0-R2-R2` |
-| Status | **STOP** (provided corrected script failed its own gate; nothing repaired or re-run) |
+| Task | `8B.3-REF01-E3C0-R2-R3` |
+| Status | **STOP** (provided schema probe failed its own gate; nothing repaired or re-run) |
 | Branch | `audit/task8b3-ref01-locked-replay-artifacts` |
-| Starting HEAD | `9faaf37552a39cab241623fb24b911b8706dfc5c` |
-| Provided script | `C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py` |
-| Prescribed / observed SHA256 | `6edfb02cd97b7204ad9995a5af2dc4566a05d69cdb463a9cb62ca9a7213d3425` / `6edfb02cd97b7204ad9995a5af2dc4566a05d69cdb463a9cb62ca9a7213d3425` (match = True) |
+| Starting HEAD | `fa9ede22f9bee640a6211f0dfd807439d0e8bc57` |
+| Provided script | `C:\D\DeepSeekHarness\E3C0_R2_R3_schema_probe.py` |
+| Prescribed / observed SHA256 | `49e51459dd9bf218f42fc62021f2c15dd223991a2ede797e42c0519f44934873` / `49e51459dd9bf218f42fc62021f2c15dd223991a2ede797e42c0519f44934873` (match = True) |
 | Script runs / exit | 1 / 1 |
-| Readiness / NEXT determination | NONE (the script produced no verdict) |
-| Broad search / inference / proposal regeneration / actual replay | NONE |
+| Schema captured | NONE (the probe produced no output file) |
+| Broad search / inference / proposal regeneration / selector replay / readiness determination | NONE |
 | External write / product modification | NO / NO |
-| Changed paths in this commit | ['handoff/TO_DSH.md'] |
+| Changed paths in this commit | ['docs/task8b3_ref01_e3c0_r2r3_proposals_schema_probe.md', 'evaluation/task8b3_ref01_e3c0_r2r3_proposals_schema_probe.json', 'handoff/FROM_DSH.md', 'handoff/TO_DSH.md'] |
 | Next action | Awaiting ChatGPT audit; no rerun and no self-repair was attempted |
 
-Watt was not needed for Task 8B.3-REF01-E3C0-R2-R2 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3C0-R2-R3 (no downloads, no transfers).
 
-Failure tail reported by the provided script:
+Failure tail reported by the provided probe:
 
 ```text
-  File "C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py", line 747, in <module>
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\E3C0_R2_R3_schema_probe.py", line 254, in <module>
     main()
-  File "C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py", line 263, in main
-    records = normalize_proposals(proposals_obj)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\D\DeepSeekHarness\E3C0_R2_R2_audit_exact.py", line 84, in normalize_proposals
-    raise AssertionError(
-AssertionError: AMBIGUOUS_PROPOSALS_TOP_LEVEL: keys=[]
+  File "C:\D\DeepSeekHarness\E3C0_R2_R3_schema_probe.py", line 237, in main
+    assert changed == ALLOWED_DIFF, f"BAD_DIFF: {sorted(changed)}"
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BAD_DIFF: ['handoff/FROM_DSH.md', 'handoff/TO_DSH.md']
 ```
