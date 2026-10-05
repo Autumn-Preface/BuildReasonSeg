@@ -52,3 +52,26 @@ Watt was not needed for Task 8B.3-REF01-E3A-R5E (no downloads, no transfers).
 
 R5E changed artifacts only: the wrongly named R5D evidence was removed, the exact final evidence was created, and the
 report and handoff were normalized. No product, test, manifest or external file was modified and no inference ran.
+
+# FROM_DSH — Task 8B.3-REF01-E3B1 Report
+
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
+
+| item | value |
+|---|---|
+| Task | `8B.3-REF01-E3B1` |
+| Status | **COMPLETE** |
+| Base branch / head | `fix/task8b3-ref01-eligibility-repair-impl` / `f50404843f5189986f97633cd0edb6140b1d8034` |
+| Task branch | `fix/task8b3-ref01-eligibility-repair-sync` |
+| Updated identity entries | `buildreasonseg/runtime/detector.py` (21756 bytes, sha256 `bc5aed885aa5f27b...`) and `tests/test_task8b_runtime.py` (28761 bytes, sha256 `8071fcc6a10e5f29...`) |
+| Manifest diff | exactly 4 changed lines (2 fields x 2 entries) |
+| Git-canonical verification | 135 entries carry `GIT_CANONICAL_BLOB_BYTES` identities; the two updated entries match the new working-tree bytes and match their Git blobs once this task commits |
+| Pre-sync external comparison | read-only `--check`: checked 135, match 133, missing 0, mismatch 2 (exactly the two updated paths) |
+| External RC1 written / real sync | NO / NO |
+| pytest / py_compile / inference | NONE / NONE / NONE |
+| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
+| Next gate | external RC1 controlled sync plus external full suite (E3B), not executed |
+
+Watt was not needed for Task 8B.3-REF01-E3B1 (no downloads, no transfers).
+

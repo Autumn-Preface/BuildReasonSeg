@@ -373,3 +373,28 @@ external RC1 sync in R5E = NONE
 external full suite required after sync = YES
 NEXT = REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC (not executed)
 ```
+
+---
+
+## 12. E3B1 — canonical source manifest canonicalization
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-sync (created from f50404843f5189986f97633cd0edb6140b1d8034)
+updated identity entries = buildreasonseg/runtime/detector.py and tests/test_task8b_runtime.py
+detector.py entry: bytes 20300 -> 21756, sha256 82531dc3b758cd8a... -> bc5aed885aa5f27b...
+tests/test_task8b_runtime.py entry: bytes 24983 -> 28761, sha256 6cac7e9320f20888... -> 8071fcc6a10e5f29...
+manifest diff = exactly 4 changed lines (2 fields x 2 entries); no other line touched
+identity_basis = GIT_CANONICAL_BLOB_BYTES (unchanged)
+pre-sync external --check = read-only, external RC1 was not written
+pytest / py_compile / detector-or-model inference = NONE / NONE / NONE
+external controlled sync executed = NO (deferred to E3B)
+```
+
+### 12.1 Explicit non-execution
+
+```text
+external RC1 write / real sync = NONE / NONE
+pytest / py_compile = NONE / NONE · detector or model inference = NONE
+files changed beyond the two identity entries = NONE · NEXT executed = NO
+```
+

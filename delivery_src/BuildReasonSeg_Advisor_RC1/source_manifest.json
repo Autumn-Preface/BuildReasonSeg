@@ -482,8 +482,8 @@
     },
     {
       "path": "buildreasonseg/runtime/detector.py",
-      "bytes": 20300,
-      "sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738"
+      "bytes": 21756,
+      "sha256": "bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3"
     },
     {
       "path": "buildreasonseg/runtime/frozen_paths.py",
@@ -672,8 +672,8 @@
     },
     {
       "path": "tests/test_task8b_runtime.py",
-      "bytes": 24983,
-      "sha256": "6cac7e9320f2088835c51efce335b0d0391fd68884d853be63b47b4343cafecd"
+      "bytes": 28761,
+      "sha256": "8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d"
     },
     {
       "path": "train.py",
