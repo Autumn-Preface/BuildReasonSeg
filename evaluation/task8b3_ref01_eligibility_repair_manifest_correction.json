@@ -1,0 +1,46 @@
+{
+  "task": "8B.3-REF01-E3B1-R1",
+  "branch": "fix/task8b3-ref01-eligibility-repair-sync",
+  "starting_head": "8fdaf9c973af2b0b437d8892894e910c79cf2058",
+  "identity_source": "git object bytes of f50404843f5189986f97633cd0edb6140b1d8034",
+  "windows_worktree_bytes_used": false,
+  "forced_git_canonical_bytes": {
+    "buildreasonseg/runtime/detector.py": 21257,
+    "tests/test_task8b_runtime.py": 28128
+  },
+  "updated_entries": [
+    {
+      "path": "buildreasonseg/runtime/detector.py",
+      "git_object_bytes": 21257,
+      "git_object_sha256": "934bbb9c3fbdbd5465fdd3e074a6ffa4721df9e77918970bfae2e88a6a91f883",
+      "previous_bytes": 21756,
+      "previous_sha256": "bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3"
+    },
+    {
+      "path": "tests/test_task8b_runtime.py",
+      "git_object_bytes": 28128,
+      "git_object_sha256": "71915e8abfbe96b328736c2c84a8773640ec58cd01f847f6b58aa33edf6ec46b",
+      "previous_bytes": 28761,
+      "previous_sha256": "8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d"
+    }
+  ],
+  "manifest_changed_lines": 4,
+  "git_canonical_135_135": "PASS",
+  "helper_command": "python scripts/sync_advisor_rc1_delivery.py --destination <external> --check",
+  "helper_exit": 1,
+  "external_check_counts": {
+    "checked": 135,
+    "match": 133,
+    "missing": 0,
+    "mismatch": 2
+  },
+  "external_mismatch_paths": [
+    "buildreasonseg/runtime/detector.py",
+    "tests/test_task8b_runtime.py"
+  ],
+  "external_pre_sync_as_expected": true,
+  "external_written": false,
+  "real_sync_executed": false,
+  "pytest_py_compile_inference": "NONE",
+  "status": "COMPLETE"
+}

@@ -398,3 +398,35 @@ pytest / py_compile = NONE / NONE · detector or model inference = NONE
 files changed beyond the two identity entries = NONE · NEXT executed = NO
 ```
 
+
+
+---
+
+## 13. E3B1-R1 — corrected Git-canonical manifest identities
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-sync
+HEAD   = 8fdaf9c973af2b0b437d8892894e910c79cf2058
+identity source = git object bytes of f50404843f5189986f97633cd0edb6140b1d8034 (Windows working-tree byte counts NOT used)
+forced detector.py git-canonical bytes = 21257
+forced tests/test_task8b_runtime.py git-canonical bytes = 28128
+updated entries = [{'path': 'buildreasonseg/runtime/detector.py', 'git_object_bytes': 21257, 'git_object_sha256': '934bbb9c3fbdbd5465fdd3e074a6ffa4721df9e77918970bfae2e88a6a91f883', 'previous_bytes': 21756, 'previous_sha256': 'bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3'}, {'path': 'tests/test_task8b_runtime.py', 'git_object_bytes': 28128, 'git_object_sha256': '71915e8abfbe96b328736c2c84a8773640ec58cd01f847f6b58aa33edf6ec46b', 'previous_bytes': 28761, 'previous_sha256': '8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d'}]
+manifest changed lines = 4 (two fields x two entries)
+GIT_CANONICAL_135_135 = PASS
+helper --check exit = 1 · counts = {'checked': 135, 'match': 133, 'missing': 0, 'mismatch': 2} · mismatch paths = ['buildreasonseg/runtime/detector.py', 'tests/test_task8b_runtime.py']
+external pre-sync exactly 133 match / 0 missing / 2 mismatch on the two paths = True
+external RC1 written = NO · real sync executed = NO · pytest / py_compile / inference = NONE
+status = COMPLETE
+```
+
+This corrects the E3B1 record: the previous entries were derived from Windows working-tree bytes; the identities are now
+the Git object bytes of the repair commit, and the helper's canonical identity gate passes, yielding the required
+read-only external comparison.
+
+### 13.1 Explicit non-execution
+
+```text
+external RC1 write / real sync = NONE / NONE
+pytest / py_compile / detector or model inference = NONE / NONE / NONE
+files changed beyond the two identity entries = NONE · NEXT executed = NO
+```

@@ -17,61 +17,34 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3A-R5E Report
+# FROM_DSH — Task 8B.3-REF01-E3B1-R1 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `8B.3-REF01-E3A-R5E` |
+| Task | `8B.3-REF01-E3B1-R1` |
 | Status | **COMPLETE** |
-| Branch | `fix/task8b3-ref01-eligibility-repair-impl` |
-| Starting HEAD | `d105060732ff4092b7c2af6df06bfb17555cb55f` |
-| Design | `LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1` |
-| Product / test / source_manifest changes in R5E | NONE |
-| Wrong R5D evidence path | **REMOVED** (`evaluation/task8b3_ref01_e3a_canonical_implementation_closure.json`) |
-| Final E3A evidence path | `evaluation/task8b3_ref01_eligibility_repair_impl.json` |
-| R5D commit-message mismatch | RECORDED, NOT HISTORY-REWRITTEN |
-| Accepted targeted evidence | 40 passed in 0.69s (exit 0, from R5C) |
-| Canonical full-suite disposition | NOT_APPLICABLE_PRE_SYNC_SOURCE_TREE_MISSING_RUNTIME_ASSETS |
-| R5C static probe disposition | INVALID_OBSOLETE_PRE_REPAIR_PROBE |
-| Canonical implementation | CLOSED |
-| Source manifest status | INTENTIONALLY_STALE_PENDING_E3B |
-| External full suite required after sync | YES |
-| detector.py / tests sha256 | `bc5aed885aa5f27b` / `8071fcc6a10e5f29` (unchanged) |
-| Detector / model inference | NONE |
-| pytest / py_compile in R5E | NONE / NONE |
-| External RC1 synced in R5E | NO |
-| Evidence | `evaluation/task8b3_ref01_eligibility_repair_impl.json` |
-| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
-| Next gate | `REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC` (not executed) |
-| Next action | Awaiting ChatGPT audit; the external RC1 controlled sync and the external full suite follow in E3B |
-
-Watt was not needed for Task 8B.3-REF01-E3A-R5E (no downloads, no transfers).
-
-R5E changed artifacts only: the wrongly named R5D evidence was removed, the exact final evidence was created, and the
-report and handoff were normalized. No product, test, manifest or external file was modified and no inference ran.
-
-# FROM_DSH — Task 8B.3-REF01-E3B1 Report
-
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
-
-| item | value |
-|---|---|
-| Task | `8B.3-REF01-E3B1` |
-| Status | **COMPLETE** |
-| Base branch / head | `fix/task8b3-ref01-eligibility-repair-impl` / `f50404843f5189986f97633cd0edb6140b1d8034` |
-| Task branch | `fix/task8b3-ref01-eligibility-repair-sync` |
-| Updated identity entries | `buildreasonseg/runtime/detector.py` (21756 bytes, sha256 `bc5aed885aa5f27b...`) and `tests/test_task8b_runtime.py` (28761 bytes, sha256 `8071fcc6a10e5f29...`) |
-| Manifest diff | exactly 4 changed lines (2 fields x 2 entries) |
-| Git-canonical verification | 135 entries carry `GIT_CANONICAL_BLOB_BYTES` identities; the two updated entries match the new working-tree bytes and match their Git blobs once this task commits |
-| Pre-sync external comparison | read-only `--check`: checked 135, match 133, missing 0, mismatch 2 (exactly the two updated paths) |
+| Branch | `fix/task8b3-ref01-eligibility-repair-sync` |
+| Starting HEAD | `8fdaf9c973af2b0b437d8892894e910c79cf2058` |
+| Identity source | git object bytes of `f50404843f5189986f97633cd0edb6140b1d8034` (Windows working-tree bytes NOT used) |
+| detector.py identity | 21257 bytes · `934bbb9c3fbdbd54...` |
+| test_task8b_runtime.py identity | 28128 bytes · `71915e8abfbe96b3...` |
+| Manifest changed lines | 4 |
+| GIT_CANONICAL_135_135 | PASS |
+| Helper `--check` | exit 1 · checked 135 · match 133 · missing 0 · mismatch 2 |
+| External mismatch paths | ['buildreasonseg/runtime/detector.py', 'tests/test_task8b_runtime.py'] |
+| External pre-sync exactly as required | True |
 | External RC1 written / real sync | NO / NO |
 | pytest / py_compile / inference | NONE / NONE / NONE |
 | PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| Evidence | `evaluation\task8b3_ref01_eligibility_repair_manifest_correction.json` |
 | Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
 | Next gate | external RC1 controlled sync plus external full suite (E3B), not executed |
+| Next action | Awaiting ChatGPT audit |
 
-Watt was not needed for Task 8B.3-REF01-E3B1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3B1-R1 (no downloads, no transfers).
 
+Only the two identity entries in the canonical manifest were corrected; no external file was written and no inference
+ran.

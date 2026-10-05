@@ -1,92 +1,75 @@
 请先读取 `handoff/TO_DSH.md`，并严格以该文件作为本轮唯一任务书。
 
-本次任务名称：**Task 8B.3-REF01-E3B1 — Canonical Source Manifest Canonicalization**
+本次任务名称：**Task 8B.3-REF01-E3B1-R1 — Correct Git-Canonical Manifest Identities**
 
-# TO_DSH — Task 8B.3-REF01-E3B1: Canonical Source Manifest Canonicalization
+# TO_DSH — Task 8B.3-REF01-E3B1-R1: Correct Git-Canonical Manifest Identities
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required base branch: `fix/task8b3-ref01-eligibility-repair-impl`
-> Required base HEAD: `f50404843f5189986f97633cd0edb6140b1d8034`
-> New task branch: `fix/task8b3-ref01-eligibility-repair-sync`
+> Required branch: `fix/task8b3-ref01-eligibility-repair-sync`
+> Required starting HEAD: `8fdaf9c973af2b0b437d8892894e910c79cf2058`
+> Git-canonical implementation base: `f50404843f5189986f97633cd0edb6140b1d8034`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. CHATGPT DECISION
+# 0. CHATGPT AUDIT OF E3B1
 
-E3A canonical implementation is formally CLOSED.
+E3B1 is **NOT APPROVED**.
 
-Approved implementation:
+The branch/parent/commit-message discipline was correct, but the manifest canonicalization was not.
 
-```text
-Design:
-LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-
-Canonical implementation:
-CLOSED
-
-Accepted targeted regression:
-40 passed in 0.69s
-
-Canonical full delivery suite:
-DEFERRED until external RC1 controlled sync
-
-Current next gate:
-REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC
-```
-
-E3B is split into two separate tasks.
-
-This task, E3B1, performs ONLY:
+Observed E3B1 defects:
 
 ```text
-canonical source_manifest identity update
-+
-read-only validation
-+
-read-only external pre-sync delta check
+manifest identity_basis =
+GIT_CANONICAL_BLOB_BYTES
+
+GitHub Git-blob sizes at canonical implementation base f5040484... =
+buildreasonseg/runtime/detector.py = 21257 bytes
+tests/test_task8b_runtime.py       = 28128 bytes
+
+E3B1 manifest values =
+buildreasonseg/runtime/detector.py = 21756 bytes
+tests/test_task8b_runtime.py       = 28761 bytes
 ```
 
-It MUST NOT sync or write external RC1.
+The E3B1 byte counts are consistent with Windows working-tree line-ending expansion and are NOT acceptable for a manifest whose identity basis is `GIT_CANONICAL_BLOB_BYTES`.
 
-E3B2 will perform the controlled external sync and the full external delivery suite only after ChatGPT audits E3B1.
+E3B1 also failed the artifact contract:
+- required `evaluation/task8b3_ref01_e3b1_manifest_canonicalization.json` is absent;
+- required `docs/task8b3_ref01_e3b1_manifest_canonicalization.md` is absent;
+- the existing E3B1 section in `docs/task8b3_ref01_eligibility_repair_impl.md` contains the superseded working-tree byte counts.
+
+R1 corrects these issues deterministically.
 
 # 1. EXECUTOR CONTRACT
 
-DSH has NO technical design discretion.
+DSH has ZERO technical discretion.
 
-Allowed operations only:
-1. verify exact base branch/HEAD;
-2. create the exact new branch;
-3. update exactly two existing entries in canonical `source_manifest.json`;
-4. verify all 135 manifest identities against Git canonical HEAD bytes;
-5. run the sync helper in `--check` mode only against external RC1;
-6. require the external pre-sync delta to be exactly two mismatches;
-7. create exact evidence/report/FROM_DSH;
-8. make exactly one commit;
-9. push the new branch once;
-10. STOP.
+DSH MUST NOT choose byte counts or SHA256 values.
 
-Forbidden:
-- NO edit to detector.py;
-- NO edit to test_task8b_runtime.py;
-- NO edit to any other canonical source/config/test file;
-- NO external write;
-- NO sync without `--check`;
-- NO copy to external;
-- NO source_manifest copy to external;
-- NO pytest;
-- NO py_compile;
-- NO detector/model inference;
-- NO Qwen/SAM2/D-B1/target inference;
-- NO rebase/reset/amend/stash/clean;
-- NO force push;
-- NO intermediate commit/push;
-- NO NEXT/E3B2.
+The two identities MUST be computed from exact Git object bytes using:
 
-Any unexpected condition => STOP.
+```text
+git show f50404843f5189986f97633cd0edb6140b1d8034:delivery_src/BuildReasonSeg_Advisor_RC1/<relative path>
+```
+
+The following is forbidden:
+- working-tree `Path.read_bytes()` as the canonical identity source;
+- `os.path.getsize()` on the Windows working tree;
+- CRLF-expanded bytes as manifest identity;
+- editing detector.py or tests;
+- external write/sync;
+- pytest or py_compile;
+- detector/model inference;
+- self-selected validation logic;
+- amend/rebase/reset/force push;
+- intermediate commit/push;
+- executing E3B2/NEXT.
+
+Any uncovered condition => STOP.
 
 # 2. GIT GATE
 
@@ -94,10 +77,10 @@ Require exactly:
 
 ```text
 git branch --show-current
-= fix/task8b3-ref01-eligibility-repair-impl
+= fix/task8b3-ref01-eligibility-repair-sync
 
 git rev-parse HEAD
-= f50404843f5189986f97633cd0edb6140b1d8034
+= 8fdaf9c973af2b0b437d8892894e910c79cf2058
 ```
 
 Allowed initial working tree:
@@ -106,164 +89,96 @@ Allowed initial working tree:
 
 Anything else => STOP.
 
-Create exactly:
+Do not commit/push until §13.
+
+# 3. PRODUCT IMMUTABILITY GATE
+
+Require NO diff between canonical implementation base:
 
 ```text
-fix/task8b3-ref01-eligibility-repair-sync
+f50404843f5189986f97633cd0edb6140b1d8034
 ```
 
-After creation require:
+and current HEAD for:
 
 ```text
-git branch --show-current
-= fix/task8b3-ref01-eligibility-repair-sync
-
-git rev-parse HEAD
-= f50404843f5189986f97633cd0edb6140b1d8034
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
+scripts/sync_advisor_rc1_delivery.py
 ```
 
-No other branch operation.
+Any difference => STOP.
 
-# 3. FROZEN MANIFEST BASIS
+# 4. CURRENT BAD-MANIFEST PRECONDITION
 
-Canonical manifest:
+Open:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 ```
 
-Current manifest contract is frozen:
+Require:
 
 ```text
 schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
 identity_basis = GIT_CANONICAL_BLOB_BYTES
-manifest file count = 135
+len(files) = 135
 ```
 
-Do NOT alter:
-- schema;
-- task;
-- source_delivery;
-- canonical_root;
-- copy_policy;
-- identity_basis;
-- identity_basis_note;
-- path order;
-- file count.
-
-Only two `bytes` / `sha256` identity pairs may change.
-
-# 4. EXACT OLD → NEW IDENTITY REPLACEMENTS
-
-## 4.1 detector.py
-
-Path:
+Require current entries exactly:
 
 ```text
 buildreasonseg/runtime/detector.py
-```
+bytes = 21756
+sha256 = bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3
 
-Require CURRENT manifest entry exactly:
-
-```json
-{
-  "path": "buildreasonseg/runtime/detector.py",
-  "bytes": 20300,
-  "sha256": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738"
-}
-```
-
-Replace ONLY the identity values with:
-
-```json
-{
-  "path": "buildreasonseg/runtime/detector.py",
-  "bytes": 21257,
-  "sha256": "bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3"
-}
-```
-
-## 4.2 test_task8b_runtime.py
-
-Path:
-
-```text
 tests/test_task8b_runtime.py
+bytes = 28761
+sha256 = 8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d
 ```
 
-Require CURRENT manifest entry exactly:
+Any mismatch => STOP.
 
-```json
-{
-  "path": "tests/test_task8b_runtime.py",
-  "bytes": 24983,
-  "sha256": "6cac7e9320f2088835c51efce335b0d0391fd68884d853be63b47b4343cafecd"
-}
-```
+# 5. EXACT GIT-CANONICAL IDENTITY CORRECTION COMMAND
 
-Replace ONLY the identity values with:
-
-```json
-{
-  "path": "tests/test_task8b_runtime.py",
-  "bytes": 28128,
-  "sha256": "8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d"
-}
-```
-
-No other manifest entry may change.
-
-# 5. EXACT MANIFEST UPDATE COMMAND
-
-Use the REQUIRED_PYTHON directly.
-
-Run exactly this single command from repository root:
+From repository root, run exactly ONCE:
 
 ```text
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe -c "import json,pathlib; p=pathlib.Path(r'delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json'); x=json.loads(p.read_text(encoding='utf-8')); assert x['schema']=='BuildReasonSeg.AdvisorRC1.SourceManifest.v1'; assert x['identity_basis']=='GIT_CANONICAL_BLOB_BYTES'; assert len(x['files'])==135; m={e['path']:e for e in x['files']}; d=m['buildreasonseg/runtime/detector.py']; t=m['tests/test_task8b_runtime.py']; assert (d['bytes'],d['sha256'])==(20300,'82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738'); assert (t['bytes'],t['sha256'])==(24983,'6cac7e9320f2088835c51efce335b0d0391fd68884d853be63b47b4343cafecd'); d['bytes']=21257; d['sha256']='bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3'; t['bytes']=28128; t['sha256']='8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d'; p.write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')"
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe -c "import json,hashlib,subprocess,pathlib; B='f50404843f5189986f97633cd0edb6140b1d8034'; R='delivery_src/BuildReasonSeg_Advisor_RC1/'; g=lambda r: subprocess.run(['git','show',B+':'+R+r],check=True,stdout=subprocess.PIPE).stdout; db=g('buildreasonseg/runtime/detector.py'); tb=g('tests/test_task8b_runtime.py'); assert len(db)==21257,(len(db),'detector'); assert len(tb)==28128,(len(tb),'test'); ds=hashlib.sha256(db).hexdigest(); ts=hashlib.sha256(tb).hexdigest(); p=pathlib.Path(R+'source_manifest.json'); x=json.loads(p.read_text(encoding='utf-8')); assert x['schema']=='BuildReasonSeg.AdvisorRC1.SourceManifest.v1'; assert x['identity_basis']=='GIT_CANONICAL_BLOB_BYTES'; assert len(x['files'])==135; m={e['path']:e for e in x['files']}; d=m['buildreasonseg/runtime/detector.py']; t=m['tests/test_task8b_runtime.py']; assert (d['bytes'],d['sha256'])==(21756,'bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3'); assert (t['bytes'],t['sha256'])==(28761,'8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d'); d['bytes']=len(db); d['sha256']=ds; t['bytes']=len(tb); t['sha256']=ts; p.write_bytes((json.dumps(x,ensure_ascii=False,indent=2)+'\n').encode('utf-8')); print('DETECTOR_GIT_BYTES=',len(db)); print('DETECTOR_GIT_SHA256=',ds); print('TEST_GIT_BYTES=',len(tb)); print('TEST_GIT_SHA256=',ts)"
 ```
 
 Require exit 0.
 
-DO NOT substitute another edit method.
-DO NOT edit the JSON manually.
-DO NOT run the command twice.
-
-If the command fails => STOP.
-
-# 6. MANIFEST DIFF GATE
-
-Run:
+Required stdout numeric values:
 
 ```text
-git diff -- delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+DETECTOR_GIT_BYTES= 21257
+TEST_GIT_BYTES= 28128
 ```
 
-Require the semantic diff contains ONLY:
+The SHA256 strings are factual outputs derived by the fixed command.
+DSH MUST copy them verbatim into evidence/report/FROM_DSH.
+DSH MUST NOT substitute working-tree hashes.
+
+Do NOT run this command twice.
+
+# 6. SEMANTIC MANIFEST CORRECTION GATE
+
+Run this exact validation command:
 
 ```text
-detector bytes:
-20300 -> 21257
-
-detector sha256:
-82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
-->
-bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3
-
-test_task8b_runtime bytes:
-24983 -> 28128
-
-test_task8b_runtime sha256:
-6cac7e9320f2088835c51efce335b0d0391fd68884d853be63b47b4343cafecd
-->
-8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe -c "import json,hashlib,subprocess,pathlib; H='8fdaf9c973af2b0b437d8892894e910c79cf2058'; B='f50404843f5189986f97633cd0edb6140b1d8034'; R='delivery_src/BuildReasonSeg_Advisor_RC1/'; old=json.loads(subprocess.run(['git','show',H+':'+R+'source_manifest.json'],check=True,stdout=subprocess.PIPE).stdout.decode('utf-8')); cur=json.loads(pathlib.Path(R+'source_manifest.json').read_text(encoding='utf-8')); assert old['schema']==cur['schema']; assert old['identity_basis']==cur['identity_basis']=='GIT_CANONICAL_BLOB_BYTES'; assert len(old['files'])==len(cur['files'])==135; om={e['path']:e for e in old['files']}; cm={e['path']:e for e in cur['files']}; assert list(om)==list(cm); changed=[]; [(changed.append(p) if om[p]!=cm[p] else None) for p in om]; assert changed==['buildreasonseg/runtime/detector.py','tests/test_task8b_runtime.py'],changed; db=subprocess.run(['git','show',B+':'+R+'buildreasonseg/runtime/detector.py'],check=True,stdout=subprocess.PIPE).stdout; tb=subprocess.run(['git','show',B+':'+R+'tests/test_task8b_runtime.py'],check=True,stdout=subprocess.PIPE).stdout; assert cm['buildreasonseg/runtime/detector.py']=={'path':'buildreasonseg/runtime/detector.py','bytes':len(db),'sha256':hashlib.sha256(db).hexdigest()}; assert cm['tests/test_task8b_runtime.py']=={'path':'tests/test_task8b_runtime.py','bytes':len(tb),'sha256':hashlib.sha256(tb).hexdigest()}; print('MANIFEST_SEMANTIC_CORRECTION: PASS'); print('CHANGED_ENTRIES: detector.py; test_task8b_runtime.py')"
 ```
 
-No path/key/order/schema/policy/count change is allowed.
+Require exit 0 and:
 
-Any extra semantic diff => STOP.
+```text
+MANIFEST_SEMANTIC_CORRECTION: PASS
+CHANGED_ENTRIES: detector.py; test_task8b_runtime.py
+```
 
-# 7. 135/135 GIT-CANONICAL MANIFEST VALIDATION
+# 7. TRUE 135/135 GIT-CANONICAL VALIDATION
 
 Run exactly:
 
@@ -271,61 +186,54 @@ Run exactly:
 C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe -c "import scripts.sync_advisor_rc1_delivery as s; e=s.load_manifest(); assert len(e)==135; b=s.manifest_identity_basis(); assert b==s.GIT_CANONICAL_BASIS; [s.entry_source_bytes(x,b,s.CANONICAL_ROOT) for x in e]; print('MANIFEST_GIT_CANONICAL: PASS 135/135')"
 ```
 
-Require:
-- exit 0;
-- stdout contains exactly:
+Require exit 0 and exactly:
 
 ```text
 MANIFEST_GIT_CANONICAL: PASS 135/135
 ```
 
-This validates manifest identities against the existing Git HEAD canonical blobs.
+If this fails:
+- STOP;
+- do not change manifest again;
+- do not run external check.
 
-No file write is permitted by this command.
+# 8. READ-ONLY EXTERNAL PRE-SYNC CHECK
 
-# 8. READ-ONLY EXTERNAL PRE-SYNC DELTA CHECK
-
-Run exactly:
+Only after §7 PASS, run exactly:
 
 ```text
 C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe scripts\sync_advisor_rc1_delivery.py --destination C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 --check
 ```
 
-This is read-only.
-
-Expected exit code:
+Expected exit:
 
 ```text
 1
 ```
 
-Expected mismatches EXACTLY:
+Require exactly these two mismatch paths:
 
 ```text
 MISMATCH buildreasonseg/runtime/detector.py
 MISMATCH tests/test_task8b_runtime.py
 ```
 
-No other `MISMATCH`.
-No `MISSING`.
+Require:
+- no third MISMATCH;
+- no MISSING.
 
-Expected final summary exactly:
+Final summary exactly:
 
 ```text
 checked=135 match=133 missing=0 mismatch=2
 ```
 
-If:
-- exit is 0;
-- mismatch count is not 2;
-- any missing file exists;
-- any third mismatch exists;
+Anything else => STOP.
 
-then STOP.
+This command is READ-ONLY.
+Do NOT run the helper without `--check`.
 
-DO NOT run the helper without `--check`.
-
-# 9. EVIDENCE
+# 9. EVIDENCE — REQUIRED PATH
 
 Create exactly:
 
@@ -333,29 +241,34 @@ Create exactly:
 evaluation/task8b3_ref01_e3b1_manifest_canonicalization.json
 ```
 
-with exactly:
+Use the exact Git-canonical SHA256 strings printed by §5.
+
+Required schema:
 
 ```json
 {
-  "task": "8B.3-REF01-E3B1",
-  "starting_head": "f50404843f5189986f97633cd0edb6140b1d8034",
+  "task": "8B.3-REF01-E3B1-R1",
+  "starting_head": "8fdaf9c973af2b0b437d8892894e910c79cf2058",
+  "canonical_base": "f50404843f5189986f97633cd0edb6140b1d8034",
   "branch": "fix/task8b3-ref01-eligibility-repair-sync",
   "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
-  "scope": "CANONICAL_MANIFEST_ONLY_PRE_SYNC",
+  "scope": "CORRECT_GIT_CANONICAL_MANIFEST_IDENTITIES_PRE_SYNC",
   "detector_model_calls": 0,
   "manifest_schema": "BuildReasonSeg.AdvisorRC1.SourceManifest.v1",
   "identity_basis": "GIT_CANONICAL_BLOB_BYTES",
   "manifest_file_count": 135,
-  "updated_entries": {
+  "superseded_e3b1_identity_basis_error": "WINDOWS_WORKING_TREE_BYTE_COUNT_USED_WITH_GIT_CANONICAL_BASIS",
+  "corrected_entries": {
     "buildreasonseg/runtime/detector.py": {
       "bytes": 21257,
-      "sha256": "bc5aed885aa5f27b715de0ab53bf4abdcc55f5d8b930fb4076607a3071ec8ed3"
+      "sha256": "<EXACT DETECTOR_GIT_SHA256 FROM SECTION 5>"
     },
     "tests/test_task8b_runtime.py": {
       "bytes": 28128,
-      "sha256": "8071fcc6a10e5f299b58f692667508d47c3291b780442b661c0060f666b5ee7d"
+      "sha256": "<EXACT TEST_GIT_SHA256 FROM SECTION 5>"
     }
   },
+  "manifest_semantic_correction": "PASS",
   "manifest_git_canonical_validation": "PASS_135_OF_135",
   "external_presync_check_exit": 1,
   "external_presync_match": 133,
@@ -372,9 +285,11 @@ with exactly:
 }
 ```
 
-Do not add/remove/rename keys.
+Only the two SHA256 placeholder values may vary, and only from §5 stdout.
 
-# 10. REPORT
+No other key/value may vary.
+
+# 10. DEDICATED REPORT — REQUIRED PATH
 
 Create exactly:
 
@@ -385,61 +300,107 @@ docs/task8b3_ref01_e3b1_manifest_canonicalization.md
 Required conclusions:
 
 ```text
-Task = 8B.3-REF01-E3B1
+Task = 8B.3-REF01-E3B1-R1
 Status = COMPLETE
-Canonical implementation base = f50404843f5189986f97633cd0edb6140b1d8034
+Original E3B1 = NOT APPROVED
+Error = Windows working-tree byte count was mixed with GIT_CANONICAL_BLOB_BYTES
+Canonical base = f50404843f5189986f97633cd0edb6140b1d8034
 Manifest identity basis = GIT_CANONICAL_BLOB_BYTES
 Manifest files = 135
-Manifest identities validated = 135/135 PASS
-Updated manifest entries = detector.py + test_task8b_runtime.py ONLY
+Detector Git-canonical bytes = 21257
+Detector Git-canonical SHA256 = <exact §5 output>
+Test Git-canonical bytes = 28128
+Test Git-canonical SHA256 = <exact §5 output>
+Changed manifest entries = detector.py + test_task8b_runtime.py ONLY
+Manifest semantic correction = PASS
+Manifest Git-canonical validation = 135/135 PASS
 External pre-sync comparison = 133 match / 0 missing / 2 mismatch
-External mismatches = detector.py + test_task8b_runtime.py ONLY
+External mismatch paths = detector.py + test_task8b_runtime.py ONLY
 External write = NONE
 External sync = NONE
+pytest / py_compile = NONE / NONE
 Detector/model inference = NONE
-Canonical full suite = NOT RUN
 Outcome = REF01_ELIGIBILITY_REPAIR_MANIFEST_CANONICALIZED
 NEXT = REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_AND_FULL_SUITE
 PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
 left/below reference-selection defects = UNRESOLVED
 ```
 
-# 11. FROM_DSH
+# 11. SUPERSEDE THE BAD E3B1 SECTION IN EXISTING REPORT
+
+Append exactly one section to:
+
+```text
+docs/task8b3_ref01_eligibility_repair_impl.md
+```
+
+Title:
+
+```text
+## 13. E3B1-R1 — Git-canonical identity correction
+```
+
+It must state:
+
+```text
+The E3B1 byte counts 21756 / 28761 were Windows working-tree counts and are superseded.
+
+Authoritative identity basis:
+GIT_CANONICAL_BLOB_BYTES
+
+Authoritative byte counts:
+detector.py = 21257
+test_task8b_runtime.py = 28128
+
+Authoritative SHA256:
+use the exact §5 Git-object-derived values.
+
+E3B1-R1 is authoritative for manifest canonicalization.
+```
+
+Do NOT delete or rewrite the old historical E3B1 section.
+
+# 12. FROM_DSH
 
 Preserve ARTIFACT-FACTS exactly.
 
-Active fields:
+Active fields must include:
 
 ```text
-Task: 8B.3-REF01-E3B1
+Task: 8B.3-REF01-E3B1-R1
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-ref01-eligibility-repair-sync
-Starting HEAD: f50404843f5189986f97633cd0edb6140b1d8034
+Starting HEAD: 8fdaf9c973af2b0b437d8892894e910c79cf2058
+Canonical base: f50404843f5189986f97633cd0edb6140b1d8034
 Design selected by: CHATGPT
-Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
 DSH algorithm choice performed: NO
 Detector/model calls: 0
-Manifest schema: BuildReasonSeg.AdvisorRC1.SourceManifest.v1
 Identity basis: GIT_CANONICAL_BLOB_BYTES
+Detector Git-canonical bytes: 21257
+Detector Git-canonical SHA256: <exact §5 output>
+Test Git-canonical bytes: 28128
+Test Git-canonical SHA256: <exact §5 output>
 Manifest file count: 135
+Manifest semantic correction: PASS
 Manifest identities: PASS 135/135
-Updated manifest entries: buildreasonseg/runtime/detector.py; tests/test_task8b_runtime.py
 External pre-sync check: 133 match / 0 missing / 2 mismatch
 External mismatch paths: buildreasonseg/runtime/detector.py; tests/test_task8b_runtime.py
 External write performed: NO
 External sync performed: NO
+Evidence: evaluation/task8b3_ref01_e3b1_manifest_canonicalization.json
+Report: docs/task8b3_ref01_e3b1_manifest_canonicalization.md
 Outcome: REF01_ELIGIBILITY_REPAIR_MANIFEST_CANONICALIZED
 Next gate: REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_AND_FULL_SUITE
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
 Next action: Awaiting ChatGPT audit; do not execute E3B2/NEXT.
 ```
 
-# 12. FINAL DIFF GATE
+# 13. FINAL DIFF GATE
 
-Before commit run:
+Before commit:
 
 ```text
-git diff --name-only f50404843f5189986f97633cd0edb6140b1d8034
+git diff --name-only 8fdaf9c973af2b0b437d8892894e910c79cf2058
 ```
 
 Allowed ONLY:
@@ -448,6 +409,7 @@ Allowed ONLY:
 delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 evaluation/task8b3_ref01_e3b1_manifest_canonicalization.json
 docs/task8b3_ref01_e3b1_manifest_canonicalization.md
+docs/task8b3_ref01_eligibility_repair_impl.md
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
@@ -461,20 +423,20 @@ Require:
 Also require:
 
 ```text
-git rev-list --count f50404843f5189986f97633cd0edb6140b1d8034..HEAD
+git rev-list --count 8fdaf9c973af2b0b437d8892894e910c79cf2058..HEAD
 = 0
 ```
 
-Any mismatch => STOP.
+Anything else => STOP.
 
-# 13. STATUS → COMMIT MESSAGE
+# 14. STATUS → COMMIT MESSAGE
 
-If every gate PASS:
+If §§2–13 all PASS:
 
 ```text
 Status = COMPLETE
 Commit message EXACTLY:
-docs(rc1): canonicalize extent repair manifest
+docs(rc1): correct git-canonical extent manifest
 ```
 
 Otherwise:
@@ -482,26 +444,21 @@ Otherwise:
 ```text
 Status = STOP
 Commit message EXACTLY:
-docs(rc1): record extent repair manifest stop
+docs(rc1): record git-canonical manifest correction stop
 ```
 
 Commit exactly once.
 NO amend.
+NO intermediate commit/push.
 
 After commit require:
 
 ```text
-git rev-list --count f50404843f5189986f97633cd0edb6140b1d8034..HEAD
+git rev-list --count 8fdaf9c973af2b0b437d8892894e910c79cf2058..HEAD
 = 1
 ```
 
-Push only:
-
-```text
-fix/task8b3-ref01-eligibility-repair-sync
-```
-
-exactly once.
+Push current branch exactly once.
 
 No force push.
 Do not update main.
@@ -509,19 +466,21 @@ Do not execute E3B2/NEXT.
 
 Then STOP.
 
-# 14. COMPLETE DEFINITION
+# 15. COMPLETE DEFINITION
 
 COMPLETE only if:
-- exact base branch/head;
-- exact new branch;
-- only two manifest identity entries updated;
-- all 135 manifest identities validate against Git canonical HEAD;
-- read-only external pre-sync delta is exactly 133/0/2;
-- the only two mismatches are detector.py and test_task8b_runtime.py;
-- no external write/sync;
-- no pytest/compile/inference;
-- exact evidence/report/FROM_DSH;
-- exactly one commit with exact message;
-- push new branch;
+- exact branch/start HEAD;
+- product/test/sync-helper unchanged;
+- identities derived ONLY from Git object bytes at f5040484...;
+- exact Git-canonical sizes are 21257 / 28128;
+- manifest semantic diff affects only the two required entries;
+- true helper-based 135/135 validation passes;
+- external `--check` is exactly 133/0/2 and read-only;
+- required evidence path exists;
+- required dedicated report path exists;
+- old E3B1 report is superseded, not rewritten;
+- FROM_DSH is exact;
+- no sync/pytest/compile/inference;
+- exactly one correction commit with exact message;
 - E3B2 not executed;
 - STOP.
