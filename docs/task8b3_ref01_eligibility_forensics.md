@@ -143,3 +143,54 @@ threshold change / rule modification / repair implementation = NONE / NONE / NON
 manual visual inspection / candidate replacement            = NO / NO
 NEXT executed = NO
 ```
+
+
+---
+
+## 8. E1-R2 — verbatim execution of the task book's fixed replay code
+
+```text
+branch = fix/task8b3-ref01-eligibility-forensics
+HEAD   = 1594f1ef96223264999d2c938dd5b2d2bb1b629c
+detector / model calls = 0 (the fixed code performs no detection and no model inference)
+fixed code source = handoff/TO_DSH.md lines 309-663 (fenced python block, copied byte-for-byte)
+verbatim code sha256 = 4c3c400700fcdfe482364d36dc1a0ee7fafbc96ced4a319519955da9580af3e7
+script = scripts/task8b3_ref01_eligibility_forensics.py
+py_compile exit = 0
+replay exit     = 0
+status = COMPLETE
+evidence written by the fixed code = True
+```
+
+No algorithm, enum, schema, ordering or exception handling was modified; the block was extracted and executed exactly as
+published. 
+
+Replay output (tail):
+
+```text
+SOURCE_IDENTITY: PASS
+REF01_INPUT_CONTRACT: PASS
+PROPOSAL_ID_JOINS: 4/4 PASS
+P0_PRODUCTION_SELECTED: 1/14/4/1 PASS
+ABOVE_PROPOSAL5_FAIL_REASON: EXTENT_ONLY
+ABOVE_EXTENT_EXCESS_ABSOLUTE: 0.096875
+ABOVE_EXTENT_EXCESS_RELATIVE: 0.484375
+ABOVE_P0_PRODUCTION_SELECTED: 4 / 0.0
+ABOVE_P1_PRODUCTION_SELECTED: 4 / 0.0
+ABOVE_P2_PRODUCTION_SELECTED: 5 / 0.9032501889644747
+ABOVE_P3_PRODUCTION_SELECTED: 3 / 0.0
+ELIGIBILITY_BLOCKER_SUBTYPE: BBOX_EXTENT_CAP
+OUTCOME: REF01_ELIGIBILITY_FORENSICS_COMPLETE
+NEXT: REF01_ELIGIBILITY_REPAIR_DESIGN
+DETECTOR_MODEL_CALLS: 0
+```
+
+No execution error was raised.
+
+### 8.1 Explicit non-execution
+
+```text
+self-repair of the fixed code / algorithm change / enum change / schema change / ordering change = NONE
+manual visual inspection / threshold change / rule modification / repair implementation = NO / NONE / NONE / NONE
+NEXT executed = NO
+```

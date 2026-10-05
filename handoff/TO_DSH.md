@@ -1,50 +1,109 @@
-# TO_DSH — Task 8B.3-REF01-E1-R1: Correct Eligibility Counterfactual Replay
+# TO_DSH — Task 8B.3-REF01-E1-R2: Exact Eligibility Attribution Replay
 
 > Status: ACTIVE
-> Role boundary: ChatGPT decides; DSH executes mechanically.
+> Role boundary: ChatGPT is the decision maker. DSH is an executor only.
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-eligibility-forensics`
-> Required starting HEAD: `3c497bf3d427366e00b5890fdcfab1a35e68b28c`
+> Required starting HEAD: `1594f1ef96223264999d2c938dd5b2d2bb1b629c`
 > External RC1: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-# 0. ChatGPT audit disposition
+---
 
-Task 8B.3-REF01-E1 is NOT approved.
+# 0. EXECUTION CONTRACT — MANDATORY
 
-The E1 attempt is retained as historical evidence but its policy replay is invalid.
+This task book is intentionally prescriptive.
 
-Confirmed defects:
+DSH MUST NOT:
+- choose a different algorithm;
+- simplify a check;
+- replace an enum;
+- alter an output schema;
+- reinterpret an unexpected condition;
+- "fix" a data mismatch;
+- infer a missing value;
+- choose a different threshold;
+- introduce an alternate ranking;
+- change the task scope.
+
+If any step below cannot be executed exactly as written, DSH MUST:
+1. STOP immediately;
+2. record the exact observed fact;
+3. update `handoff/FROM_DSH.md`;
+4. commit/push the STOP result when Git is safe;
+5. wait for ChatGPT.
+
+No autonomous technical decision is permitted.
+
+---
+
+# 1. CHATGPT AUDIT OF E1-R1
+
+E1-R1 is NOT APPROVED.
+
+The following corrections from E1-R1 are accepted:
+- production selection now uses `(-mask_area, -confidence, proposal_id)`;
+- P0 production IDs are corrected to `1/14/4/1`;
+- `above` P2 production-selected proposal is id 5;
+- `above` P3 production-selected proposal is id 3;
+- tracked replay script now exists;
+- detector/model calls remained zero.
+
+However E1-R1 still violates the contract:
 
 ```text
-D1. Policy `selected` was ranked by:
-    (-IoU, -confidence, proposal_id)
+R1-D1
+The script does not verify detector source identity or frozen selector semantics.
 
-    This is GT-best diagnostic ranking, NOT frozen production selection.
+R1-D2
+The script does not write the evidence JSON it claims to reproduce; it only prints stdout.
 
-D2. Production policy selection must always be:
-    (-mask_area, -confidence, proposal_id)
+R1-D3
+The required proposal-level fail reason is a SINGLE enum:
+NONE
+ZERO_AREA_ONLY
+BORDER_ONLY
+EXTENT_ONLY
+BORDER_AND_EXTENT
+ZERO_AREA_PLUS_OTHER
 
-D3. The required tracked script
-    scripts/task8b3_ref01_eligibility_forensics.py
-    was not committed.
+E1-R1 instead stores lists such as ["BBOX_EXTENT_CAP"].
 
-D4. Proposal fail-reason enum was conflated with blocker subtype:
-    proposal fail reason must be EXTENT_ONLY / BORDER_ONLY / ...
-    blocker subtype may be BBOX_EXTENT_CAP.
+R1-D4
+Proposal fail reason and aggregate blocker subtype are still conflated.
 
-D5. E1 used the wrong overall outcome enum.
+R1-D5
+Per-policy `best_coverage` is absent.
 
-D6. Required extent-excess diagnostics and complete per-proposal predicate table
-    were not present.
+R1-D6
+The complete per-proposal predicate table is absent.
 
-D7. Required exact scientific-reuse disclosure was not preserved in the evidence.
+R1-D7
+The exact scientific reuse disclosure is absent.
+
+R1-D8
+The required extent relative excess 0.484375 is absent.
+
+R1-D9
+The required overall outcome enum is wrong.
+Current wrong value:
+REF01_ELIGIBILITY_BLOCKER_ISOLATED_BBOX_EXTENT_CAP
+
+Required:
+REF01_ELIGIBILITY_FORENSICS_COMPLETE
+
+R1-D10
+Required `ref01_status` is absent.
 ```
 
-No detector/model rerun is authorized.
+R2 fixes only these evidence/replay defects.
 
-# 1. Frozen prior REF01 result
+No detector/model inference is authorized.
 
-Do not alter:
+---
+
+# 2. FROZEN SCIENTIFIC RESULT ENTERING R2
+
+Do not change:
 
 ```text
 right = REFERENCE_SELECTED_CORRECT
@@ -52,56 +111,87 @@ left  = REFERENCE_SELECTION_WRONG_COVERED
 above = REFERENCE_ELIGIBILITY_BLOCKED
 below = REFERENCE_SELECTION_WRONG_COVERED
 
-REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
-Dominant next blocker = ELIGIBILITY
-
 PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
 ```
 
-# 2. Git gate
-
-Require exactly:
+Frozen coverage threshold:
 
 ```text
-branch = fix/task8b3-ref01-eligibility-forensics
-HEAD = 3c497bf3d427366e00b5890fdcfab1a35e68b28c
+IoU = 0.50
 ```
 
-Allowed initial tracked tree:
-- clean; or
-- only `M handoff/TO_DSH.md`.
+Frozen largest-family eligibility:
 
-No new branch.
-No merge/rebase/reset/stash/clean/cherry-pick.
+```text
+mask_area > 0
+AND touches_image_border == False
+AND bbox_extent_ratio <= 0.20
+```
 
-# 3. Strict prohibitions
+Frozen production largest ranking:
 
-Do NOT:
-- instantiate DetectorRuntime;
-- call detect_global;
-- run any detector/model inference;
-- run predict.py;
-- run Qwen / ProgramHead;
-- run SAM2;
-- run relation fields;
-- run D-B1;
-- run target segmentation;
-- alter detector source/config/weights;
-- change eligibility rules;
-- change extent cap 0.20;
-- select a replacement threshold;
-- modify external or canonical RC1;
-- run sync write;
-- replace candidates;
-- visually inspect images;
-- regenerate datasets/caches;
-- implement a repair;
-- update main;
+```text
+mask_area descending
+confidence descending
+proposal_id ascending
+```
+
+Equivalent Python rank tuple:
+
+```python
+(-mask_area, -confidence, proposal_id)
+```
+
+GT coverage diagnostic ranking:
+
+```python
+(-iou_to_gt, -confidence, proposal_id)
+```
+
+GT IoU MUST NEVER participate in production selection.
+
+---
+
+# 3. GIT GATE
+
+Before any work, require:
+
+```text
+git branch --show-current
+= fix/task8b3-ref01-eligibility-forensics
+
+git rev-parse HEAD
+= 1594f1ef96223264999d2c938dd5b2d2bb1b629c
+```
+
+Allowed initial tracked changes:
+
+```text
+clean
+OR
+only M handoff/TO_DSH.md
+```
+
+Any other tracked modification:
+- STOP.
+- Do not stash/reset/clean.
+
+Forbidden Git actions:
+- branch creation;
+- checkout to another branch;
+- merge;
+- rebase;
+- reset;
+- stash;
+- clean;
+- cherry-pick;
 - force push.
 
-Detector/model calls this task = exactly 0.
+---
 
-# 4. Allowed tracked changes ONLY
+# 4. ALLOWED TRACKED PATHS
+
+Only these may change:
 
 ```text
 scripts/task8b3_ref01_eligibility_forensics.py
@@ -111,413 +201,595 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No other tracked path may change.
+Any other tracked diff:
+- STOP before commit.
 
-# 5. Exact scientific reuse disclosure
+---
 
-Evidence and report MUST contain exactly:
+# 5. ABSOLUTE PROHIBITIONS
+
+Do NOT:
+- instantiate `DetectorRuntime`;
+- call `detect_global`;
+- call `model.predict`;
+- import/run YOLO for inference;
+- run `predict.py`;
+- run Qwen / ProgramHead;
+- run SAM2;
+- run relation fields;
+- run D-B1;
+- run target segmentation;
+- modify detector code/config/weights;
+- modify eligibility code;
+- modify extent cap `0.20`;
+- test a replacement threshold;
+- modify canonical RC1;
+- modify external RC1;
+- run sync write;
+- replace locked candidates;
+- regenerate datasets/caches;
+- visually inspect source images or proposal PNGs;
+- implement a product repair;
+- execute `REF01_ELIGIBILITY_REPAIR_DESIGN`;
+- update `main`.
+
+Detector/model call count must remain:
+
+```text
+0
+```
+
+---
+
+# 6. EXACT SCIENTIFIC REUSE DISCLOSURE
+
+The final evidence and report MUST contain this English sentence exactly:
 
 > The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
 
-Also include a faithful Chinese translation in the report.
+The report must also contain a faithful Chinese translation.
 
-# 6. Frozen source semantics gate
+Do not paraphrase the English sentence.
 
-Read external detector source only:
+---
+
+# 7. FIXED INPUT PATHS
+
+Repository:
+
+```text
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg
+```
+
+Canonical REF01 evidence:
+
+```text
+evaluation\task8b3_ref01_locked_reference_forensics.json
+```
+
+External proposal metadata:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\proposals.json
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1003\proposals.json
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1008\proposals.json
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1009\proposals.json
+```
+
+External detector source:
 
 ```text
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
 ```
 
-Require external source identity:
+Required detector source SHA256:
 
 ```text
-sha256 =
 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
 ```
 
-Require source constants/semantics:
+---
 
-```text
-MERGE_BBOX_EXTENT_RATIO_MAX = 0.20
+# 8. REPLACE THE REPLAY SCRIPT WITH THE EXACT CODE BELOW
 
-largest eligibility:
-mask_area > 0
-AND touches_image_border == False
-AND bbox_extent_ratio <= 0.20
-
-production largest ordering:
-mask_area descending
-confidence descending
-proposal_id ascending
-```
-
-Store source identity and frozen rule in evidence.
-
-# 7. Inputs
-
-Read only:
-
-```text
-evaluation/task8b3_ref01_locked_reference_forensics.json
-```
-
-Require:
-
-```text
-task = 8B.3-REF01-F1-R9
-overall_outcome = REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE
-dominant_next_blocker = ELIGIBILITY
-next_gate = REF01_ELIGIBILITY_FORENSICS
-```
-
-Read external existing P1D12 metadata only:
-
-```text
-...\diagnostics\1010\proposals.json
-...\diagnostics\1003\proposals.json
-...\diagnostics\1008\proposals.json
-...\diagnostics\1009\proposals.json
-```
-
-Join each live proposal to:
-
-```text
-historical_iou_by_proposal[relation]
-```
-
-by exact `proposal_id`.
-
-Require proposal ID set equality for each candidate.
-
-# 8. Per-proposal frozen predicate attribution
-
-For EVERY merged proposal compute:
-
-```text
-nonempty_pass = mask_area > 0
-border_pass = touches_image_border == False
-extent_pass = bbox_extent_ratio <= 0.20
-frozen_eligible = nonempty_pass AND border_pass AND extent_pass
-```
-
-Assign exactly one `fail_reason`:
-
-```text
-NONE
-ZERO_AREA_ONLY
-BORDER_ONLY
-EXTENT_ONLY
-BORDER_AND_EXTENT
-ZERO_AREA_PLUS_OTHER
-```
-
-Rules:
-
-```text
-NONE:
-nonempty_pass AND border_pass AND extent_pass
-
-ZERO_AREA_ONLY:
-NOT nonempty_pass AND border_pass AND extent_pass
-
-BORDER_ONLY:
-nonempty_pass AND NOT border_pass AND extent_pass
-
-EXTENT_ONLY:
-nonempty_pass AND border_pass AND NOT extent_pass
-
-BORDER_AND_EXTENT:
-nonempty_pass AND NOT border_pass AND NOT extent_pass
-
-ZERO_AREA_PLUS_OTHER:
-NOT nonempty_pass AND (NOT border_pass OR NOT extent_pass)
-```
-
-Record for every proposal:
-
-```text
-proposal_id
-mask_area
-confidence
-global_bbox
-touches_image_border
-bbox_extent_ratio
-iou_to_gt
-nonempty_pass
-border_pass
-extent_pass
-frozen_eligible
-fail_reason
-```
-
-# 9. Four diagnostic policies
-
-Counterfactual policies are diagnostic only:
-
-```text
-P0_FROZEN:
-nonempty AND border_pass AND extent_pass
-
-P1_BORDER_RELAXED_ONLY:
-nonempty AND extent_pass
-
-P2_EXTENT_RELAXED_ONLY:
-nonempty AND border_pass
-
-P3_BOTH_RELAXED:
-nonempty
-```
-
-# 10. IMPORTANT — production selection and GT-best must be separate
-
-For EACH policy compute TWO distinct outputs.
-
-## 10.1 `production_selected`
-
-Rank policy-eligible proposals by exactly:
-
-```python
-(
-    -mask_area,
-    -confidence,
-    proposal_id,
-)
-```
-
-Record:
-
-```text
-production_selected_id
-production_selected_mask_area
-production_selected_confidence
-production_selected_iou
-```
-
-GT IoU MUST NOT participate in production selection.
-
-## 10.2 `best_coverage`
-
-Diagnostic only.
-
-Rank policy-eligible proposals by:
-
-```python
-(
-    -iou_to_gt,
-    -confidence,
-    proposal_id,
-)
-```
-
-Record:
-
-```text
-best_coverage_id
-best_coverage_iou
-best_coverage_confidence
-```
-
-Never call `best_coverage` the policy `selected` proposal.
-
-# 11. Mandatory consistency with frozen P0 production behavior
-
-P0 production-selected IDs MUST reproduce the already closed reference forensics:
-
-```text
-right = 1
-left  = 14
-above = 4
-below = 1
-```
-
-If any P0 production-selected ID differs:
-- Status = STOP
-- do not classify eligibility blocker
-- no repair/tuning.
-
-This is the primary guard against repeating E1's GT-IoU-selection error.
-
-# 12. `above` isolated blocker mechanics
-
-From live metadata independently establish proposal 5:
-
-```text
-proposal_id = 5
-iou_to_gt = 0.9032501889644747
-touches_image_border = False
-bbox_extent_ratio = 0.296875
-mask_area = 5059
-```
-
-Its proposal-level fail reason MUST be mechanically computed.
-
-Expected if data agree:
-
-```text
-EXTENT_ONLY
-```
-
-Record:
-
-```text
-extent_excess_absolute =
-0.296875 - 0.20
-= 0.096875
-
-extent_excess_relative =
-0.296875 / 0.20 - 1
-= 0.484375
-```
-
-These are margins only, NOT new threshold proposals.
-
-# 13. `above` counterfactual isolation
-
-Use **production_selected_iou** for blocker isolation.
-
-Required mechanics:
-
-```text
-P0.production_selected_iou < 0.50
-P1.production_selected_iou < 0.50
-P2.production_selected_iou >= 0.50
-```
-
-Then require the covered best-any proposal:
-- has IoU >= 0.50;
-- has fail_reason = EXTENT_ONLY.
-
-If all true:
-
-```text
-eligibility_blocker_subtype = BBOX_EXTENT_CAP
-```
-
-P3 is NOT required to restore correctness.
-
-P3 must still be reported using production largest selection.
-
-Important:
-- If P3 selects a larger bad proposal, report it faithfully.
-- Do NOT overwrite it with the GT-best proposal.
-
-If isolation conditions fail:
-
-```text
-eligibility_blocker_subtype =
-ELIGIBILITY_FORENSICS_INCONSISTENT
-```
-
-and Status = STOP.
-
-# 14. Cross-candidate guard
-
-For all four candidates report, for P0/P1/P2/P3:
-
-```text
-eligible_count
-production_selected_id
-production_selected_iou
-best_coverage_id
-best_coverage_iou
-```
-
-This guard is diagnostic only.
-
-Also preserve frozen reference class:
-
-```text
-right = REFERENCE_SELECTED_CORRECT
-left = REFERENCE_SELECTION_WRONG_COVERED
-above = REFERENCE_ELIGIBILITY_BLOCKED
-below = REFERENCE_SELECTION_WRONG_COVERED
-```
-
-Do not claim left/below selection defects are fixed by E1-R1.
-
-# 15. Required corrected outcomes
-
-If §13 establishes `BBOX_EXTENT_CAP`, use exactly:
-
-```text
-overall_outcome =
-REF01_ELIGIBILITY_FORENSICS_COMPLETE
-
-eligibility_blocker_subtype =
-BBOX_EXTENT_CAP
-
-ref01_status =
-FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED
-
-next_gate =
-REF01_ELIGIBILITY_REPAIR_DESIGN
-```
-
-Do NOT use:
-
-```text
-REF01_ELIGIBILITY_BLOCKER_ISOLATED_BBOX_EXTENT_CAP
-```
-
-as the overall outcome enum.
-
-Do not execute NEXT.
-
-# 16. Script artifact — mandatory
-
-Create and COMMIT:
+DSH MUST replace the entire contents of:
 
 ```text
 scripts/task8b3_ref01_eligibility_forensics.py
 ```
 
-Requirements:
-- deterministic read-only replay;
-- zero detector/model inference;
-- reads canonical REF01 evidence + external proposals JSON;
-- checks external detector source identity/rules;
-- writes only:
-  `evaluation/task8b3_ref01_eligibility_forensics.json`.
+with the following code.
 
-If this tracked script is absent from the final commit:
-- task is NOT COMPLETE.
+Do NOT edit the algorithm.
+Do NOT rename keys.
+Do NOT replace enums.
+Do NOT add fallback logic.
 
-# 17. Corrected evidence JSON
+```python
+from __future__ import annotations
 
-Replace:
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[1]
+EXTERNAL = Path(r"C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1")
+DIAG = EXTERNAL / "inference" / "output" / "diagnostics"
+REF01 = REPO / "evaluation" / "task8b3_ref01_locked_reference_forensics.json"
+OUT = REPO / "evaluation" / "task8b3_ref01_eligibility_forensics.json"
+DETECTOR = EXTERNAL / "buildreasonseg" / "runtime" / "detector.py"
+
+TASK = "8B.3-REF01-E1-R2"
+STARTING_HEAD = "1594f1ef96223264999d2c938dd5b2d2bb1b629c"
+BRANCH = "fix/task8b3-ref01-eligibility-forensics"
+
+THRESHOLD = 0.50
+EXTENT_CAP = 0.20
+DETECTOR_SHA = "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738"
+
+DISCLOSURE = (
+    "The qualitative Demo candidates are deterministically selected from the frozen "
+    "BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture "
+    "test metrics were already consumed. Their qualitative reuse does not alter, "
+    "replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture."
+)
+
+RELATIONS = ("right", "left", "above", "below")
+
+EXPECTED_CLASSES = {
+    "right": "REFERENCE_SELECTED_CORRECT",
+    "left": "REFERENCE_SELECTION_WRONG_COVERED",
+    "above": "REFERENCE_ELIGIBILITY_BLOCKED",
+    "below": "REFERENCE_SELECTION_WRONG_COVERED",
+}
+
+EXPECTED_P0_SELECTED = {
+    "right": 1,
+    "left": 14,
+    "above": 4,
+    "below": 1,
+}
+
+POLICIES = {
+    "P0_FROZEN": {"require_border": True, "require_extent": True},
+    "P1_BORDER_RELAXED_ONLY": {"require_border": False, "require_extent": True},
+    "P2_EXTENT_RELAXED_ONLY": {"require_border": True, "require_extent": False},
+    "P3_BOTH_RELAXED": {"require_border": False, "require_extent": False},
+}
+
+
+def sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def close(a: float, b: float, tol: float = 1e-12) -> bool:
+    return abs(float(a) - float(b)) <= tol
+
+
+def production_rank(p: dict):
+    return (
+        -int(p["mask_area"]),
+        -float(p["confidence"]),
+        int(p["proposal_id"]),
+    )
+
+
+def coverage_rank(p: dict):
+    return (
+        -float(p["iou_to_gt"]),
+        -float(p["confidence"]),
+        int(p["proposal_id"]),
+    )
+
+
+def predicate_state(p: dict) -> dict:
+    nonempty = int(p["mask_area"]) > 0
+    border = p["touches_image_border"] is False
+    extent = float(p["bbox_extent_ratio"]) <= EXTENT_CAP
+
+    if nonempty and border and extent:
+        reason = "NONE"
+    elif (not nonempty) and border and extent:
+        reason = "ZERO_AREA_ONLY"
+    elif nonempty and (not border) and extent:
+        reason = "BORDER_ONLY"
+    elif nonempty and border and (not extent):
+        reason = "EXTENT_ONLY"
+    elif nonempty and (not border) and (not extent):
+        reason = "BORDER_AND_EXTENT"
+    else:
+        reason = "ZERO_AREA_PLUS_OTHER"
+
+    return {
+        "nonempty_pass": nonempty,
+        "border_pass": border,
+        "extent_pass": extent,
+        "frozen_eligible": nonempty and border and extent,
+        "fail_reason": reason,
+    }
+
+
+def allowed_by_policy(p: dict, policy: dict) -> bool:
+    state = p["_predicate"]
+    if not state["nonempty_pass"]:
+        return False
+    if policy["require_border"] and not state["border_pass"]:
+        return False
+    if policy["require_extent"] and not state["extent_pass"]:
+        return False
+    return True
+
+
+def proposal_record(p: dict) -> dict:
+    state = p["_predicate"]
+    return {
+        "proposal_id": int(p["proposal_id"]),
+        "mask_area": int(p["mask_area"]),
+        "confidence": float(p["confidence"]),
+        "global_bbox": p["global_bbox"],
+        "touches_image_border": bool(p["touches_image_border"]),
+        "bbox_extent_ratio": float(p["bbox_extent_ratio"]),
+        "iou_to_gt": float(p["iou_to_gt"]),
+        "nonempty_pass": state["nonempty_pass"],
+        "border_pass": state["border_pass"],
+        "extent_pass": state["extent_pass"],
+        "frozen_eligible": state["frozen_eligible"],
+        "fail_reason": state["fail_reason"],
+    }
+
+
+def role_record(p: dict | None) -> dict | None:
+    if p is None:
+        return None
+    return {
+        "proposal_id": int(p["proposal_id"]),
+        "mask_area": int(p["mask_area"]),
+        "confidence": float(p["confidence"]),
+        "iou": float(p["iou_to_gt"]),
+    }
+
+
+def main() -> int:
+    # Gate A — source identity.
+    assert DETECTOR.is_file()
+    actual_detector_sha = sha256(DETECTOR)
+    assert actual_detector_sha == DETECTOR_SHA
+
+    detector_text = DETECTOR.read_text(encoding="utf-8")
+    assert "MERGE_BBOX_EXTENT_RATIO_MAX = 0.20" in detector_text
+    assert "if proposal.mask_area <= 0 or not proposal.mask_crop.any():" in detector_text
+    assert "if proposal.touches_image_border:" in detector_text
+    assert "if proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX:" in detector_text
+    assert "return sorted(candidates, key=lambda proposal: (-proposal.mask_area, -proposal.confidence," in detector_text
+
+    # Gate B — canonical REF01 contract.
+    ref = json.loads(REF01.read_text(encoding="utf-8"))
+    assert ref["task"] == "8B.3-REF01-F1-R9"
+    assert ref["overall_outcome"] == "REF01_LOCKED_DEMO_REFERENCE_FORENSICS_COMPLETE"
+    assert ref["dominant_next_blocker"] == "ELIGIBILITY"
+    assert ref["next_gate"] == "REF01_ELIGIBILITY_FORENSICS"
+
+    candidate_by_relation = {c["relation"]: c for c in ref["candidates"]}
+    assert set(candidate_by_relation) == set(RELATIONS)
+
+    iou_by_relation = {
+        relation: {
+            int(row["proposal_id"]): float(row["iou_to_gt"])
+            for row in ref["historical_iou_by_proposal"][relation]
+        }
+        for relation in RELATIONS
+    }
+
+    results = {}
+
+    for relation in RELATIONS:
+        candidate = candidate_by_relation[relation]
+        assert candidate["classification"] == EXPECTED_CLASSES[relation]
+
+        tile = str(candidate["tile"])
+        proposal_path = DIAG / tile / "proposals.json"
+        assert proposal_path.is_file()
+
+        payload = json.loads(proposal_path.read_text(encoding="utf-8"))
+        items = payload.get("items") or payload.get("proposals") or []
+        assert items
+
+        ids_live = {int(item["proposal_id"]) for item in items}
+        ids_iou = set(iou_by_relation[relation])
+        assert ids_live == ids_iou
+        assert len(ids_live) == len(items)
+
+        prepared = []
+        for raw in items:
+            for required_key in (
+                "proposal_id",
+                "confidence",
+                "mask_area",
+                "global_bbox",
+                "touches_image_border",
+                "bbox_extent_ratio",
+            ):
+                assert required_key in raw
+
+            p = dict(raw)
+            p["proposal_id"] = int(p["proposal_id"])
+            p["confidence"] = float(p["confidence"])
+            p["mask_area"] = int(p["mask_area"])
+            p["bbox_extent_ratio"] = float(p["bbox_extent_ratio"])
+            p["iou_to_gt"] = float(iou_by_relation[relation][p["proposal_id"]])
+            p["_predicate"] = predicate_state(p)
+            prepared.append(p)
+
+        per_policy = {}
+
+        for policy_name, policy in POLICIES.items():
+            allowed = [p for p in prepared if allowed_by_policy(p, policy)]
+            assert allowed
+
+            production_selected = min(allowed, key=production_rank)
+            best_coverage = min(allowed, key=coverage_rank)
+
+            per_policy[policy_name] = {
+                "eligible_count": len(allowed),
+                "production_selected": role_record(production_selected),
+                "best_coverage": role_record(best_coverage),
+            }
+
+        assert per_policy["P0_FROZEN"]["production_selected"]["proposal_id"] == EXPECTED_P0_SELECTED[relation]
+
+        results[relation] = {
+            "tile": tile,
+            "frozen_reference_class": candidate["classification"],
+            "proposal_count": len(prepared),
+            "proposal_predicates": [proposal_record(p) for p in sorted(prepared, key=lambda x: x["proposal_id"])],
+            "policies": per_policy,
+        }
+
+    # Gate C — above blocker isolation.
+    above = results["above"]
+    proposal5 = next(
+        p for p in above["proposal_predicates"]
+        if p["proposal_id"] == 5
+    )
+
+    assert close(proposal5["iou_to_gt"], 0.9032501889644747)
+    assert proposal5["touches_image_border"] is False
+    assert close(proposal5["bbox_extent_ratio"], 0.296875)
+    assert proposal5["mask_area"] == 5059
+    assert proposal5["fail_reason"] == "EXTENT_ONLY"
+
+    extent_excess_absolute = proposal5["bbox_extent_ratio"] - EXTENT_CAP
+    extent_excess_relative = proposal5["bbox_extent_ratio"] / EXTENT_CAP - 1.0
+
+    assert close(extent_excess_absolute, 0.096875)
+    assert close(extent_excess_relative, 0.484375)
+
+    p0 = above["policies"]["P0_FROZEN"]["production_selected"]
+    p1 = above["policies"]["P1_BORDER_RELAXED_ONLY"]["production_selected"]
+    p2 = above["policies"]["P2_EXTENT_RELAXED_ONLY"]["production_selected"]
+    p3 = above["policies"]["P3_BOTH_RELAXED"]["production_selected"]
+
+    assert p0["proposal_id"] == 4
+    assert p1["proposal_id"] == 4
+    assert p2["proposal_id"] == 5
+    assert p3["proposal_id"] == 3
+
+    assert p0["iou"] < THRESHOLD
+    assert p1["iou"] < THRESHOLD
+    assert p2["iou"] >= THRESHOLD
+
+    best_any = min(
+        above["proposal_predicates"],
+        key=lambda p: (
+            -float(p["iou_to_gt"]),
+            -float(p["confidence"]),
+            int(p["proposal_id"]),
+        ),
+    )
+
+    assert best_any["proposal_id"] == 5
+    assert best_any["iou_to_gt"] >= THRESHOLD
+    assert best_any["fail_reason"] == "EXTENT_ONLY"
+
+    blocker_subtype = "BBOX_EXTENT_CAP"
+
+    evidence = {
+        "task": TASK,
+        "starting_head": STARTING_HEAD,
+        "branch": BRANCH,
+        "verification_mode": "READ_ONLY_ELIGIBILITY_COUNTERFACTUAL",
+        "detector_model_calls": 0,
+        "scientific_reuse_disclosure": DISCLOSURE,
+        "coverage_threshold": THRESHOLD,
+        "frozen_extent_cap": EXTENT_CAP,
+        "frozen_source_identity": {
+            "path": str(DETECTOR),
+            "sha256": actual_detector_sha,
+            "largest_eligibility": (
+                "mask_area>0 AND touches_image_border==False "
+                "AND bbox_extent_ratio<=0.20"
+            ),
+            "largest_selection_order": (
+                "mask_area desc, confidence desc, proposal_id asc"
+            ),
+        },
+        "candidate_results": results,
+        "above_isolation": {
+            "best_any_proposal_id": 5,
+            "best_any_iou": 0.9032501889644747,
+            "best_any_fail_reason": "EXTENT_ONLY",
+            "extent_excess_absolute": extent_excess_absolute,
+            "extent_excess_relative": extent_excess_relative,
+            "P0_production_selected": p0,
+            "P1_production_selected": p1,
+            "P2_production_selected": p2,
+            "P3_production_selected": p3,
+        },
+        "eligibility_blocker_subtype": blocker_subtype,
+        "overall_outcome": "REF01_ELIGIBILITY_FORENSICS_COMPLETE",
+        "ref01_status": "FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED",
+        "next_gate": "REF01_ELIGIBILITY_REPAIR_DESIGN",
+    }
+
+    OUT.write_text(
+        json.dumps(evidence, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    print("SOURCE_IDENTITY: PASS")
+    print("REF01_INPUT_CONTRACT: PASS")
+    print("PROPOSAL_ID_JOINS: 4/4 PASS")
+    print("P0_PRODUCTION_SELECTED: 1/14/4/1 PASS")
+    print("ABOVE_PROPOSAL5_FAIL_REASON: EXTENT_ONLY")
+    print("ABOVE_EXTENT_EXCESS_ABSOLUTE: 0.096875")
+    print("ABOVE_EXTENT_EXCESS_RELATIVE: 0.484375")
+    print("ABOVE_P0_PRODUCTION_SELECTED: 4 / 0.0")
+    print("ABOVE_P1_PRODUCTION_SELECTED: 4 / 0.0")
+    print("ABOVE_P2_PRODUCTION_SELECTED: 5 / 0.9032501889644747")
+    print("ABOVE_P3_PRODUCTION_SELECTED: 3 / 0.0")
+    print("ELIGIBILITY_BLOCKER_SUBTYPE: BBOX_EXTENT_CAP")
+    print("OUTCOME: REF01_ELIGIBILITY_FORENSICS_COMPLETE")
+    print("NEXT: REF01_ELIGIBILITY_REPAIR_DESIGN")
+    print("DETECTOR_MODEL_CALLS: 0")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+---
+
+# 9. STATIC GATE BEFORE RUNNING THE SCRIPT
+
+Run:
+
+```text
+<project proposal env python> -m py_compile scripts/task8b3_ref01_eligibility_forensics.py
+```
+
+Require exit code 0.
+
+Then inspect the source text and require:
+
+```text
+"DetectorRuntime(" absent
+"detect_global(" absent
+"model.predict(" absent
+"YOLO(" absent
+"production_rank" present
+"coverage_rank" present
+"EXTENT_ONLY" present
+"REF01_ELIGIBILITY_FORENSICS_COMPLETE" present
+```
+
+If any static condition fails:
+- STOP.
+- Do not run the script.
+
+---
+
+# 10. EXECUTE THE SCRIPT EXACTLY ONCE
+
+Run exactly once:
+
+```text
+<project proposal env python> scripts/task8b3_ref01_eligibility_forensics.py
+```
+
+No retry after a logic/data assertion failure.
+
+Required stdout lines:
+
+```text
+SOURCE_IDENTITY: PASS
+REF01_INPUT_CONTRACT: PASS
+PROPOSAL_ID_JOINS: 4/4 PASS
+P0_PRODUCTION_SELECTED: 1/14/4/1 PASS
+ABOVE_PROPOSAL5_FAIL_REASON: EXTENT_ONLY
+ABOVE_EXTENT_EXCESS_ABSOLUTE: 0.096875
+ABOVE_EXTENT_EXCESS_RELATIVE: 0.484375
+ABOVE_P0_PRODUCTION_SELECTED: 4 / 0.0
+ABOVE_P1_PRODUCTION_SELECTED: 4 / 0.0
+ABOVE_P2_PRODUCTION_SELECTED: 5 / 0.9032501889644747
+ABOVE_P3_PRODUCTION_SELECTED: 3 / 0.0
+ELIGIBILITY_BLOCKER_SUBTYPE: BBOX_EXTENT_CAP
+OUTCOME: REF01_ELIGIBILITY_FORENSICS_COMPLETE
+NEXT: REF01_ELIGIBILITY_REPAIR_DESIGN
+DETECTOR_MODEL_CALLS: 0
+```
+
+If script exits non-zero:
+- STOP.
+- Do not edit data or algorithm.
+- Do not rerun.
+
+---
+
+# 11. POST-RUN EVIDENCE ASSERTIONS
+
+Read:
 
 ```text
 evaluation/task8b3_ref01_eligibility_forensics.json
 ```
 
-Required top-level keys:
+Require exactly:
 
 ```text
-task = 8B.3-REF01-E1-R1
-starting_head
-branch
+task = 8B.3-REF01-E1-R2
+starting_head = 1594f1ef96223264999d2c938dd5b2d2bb1b629c
+branch = fix/task8b3-ref01-eligibility-forensics
 verification_mode = READ_ONLY_ELIGIBILITY_COUNTERFACTUAL
 detector_model_calls = 0
-scientific_reuse_disclosure
 coverage_threshold = 0.50
 frozen_extent_cap = 0.20
-frozen_source_identity
-candidate_results
-above_isolation
-eligibility_blocker_subtype
-overall_outcome
-ref01_status
-next_gate
+eligibility_blocker_subtype = BBOX_EXTENT_CAP
+overall_outcome = REF01_ELIGIBILITY_FORENSICS_COMPLETE
+ref01_status = FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED
+next_gate = REF01_ELIGIBILITY_REPAIR_DESIGN
 ```
 
-Each candidate must include:
-- frozen reference class;
-- complete per-proposal predicate table;
-- P0/P1/P2/P3;
-- production_selected and best_coverage as separate objects.
+Require exact disclosure equality to §6.
 
-# 18. Report
+Require:
+
+```text
+candidate_results.right.P0_FROZEN.production_selected.proposal_id = 1
+candidate_results.left.P0_FROZEN.production_selected.proposal_id = 14
+candidate_results.above.P0_FROZEN.production_selected.proposal_id = 4
+candidate_results.below.P0_FROZEN.production_selected.proposal_id = 1
+```
+
+Require above:
+
+```text
+proposal 5 fail_reason = EXTENT_ONLY
+extent_excess_absolute = 0.096875
+extent_excess_relative = 0.484375
+P0 prod selected = 4 / IoU 0.0
+P1 prod selected = 4 / IoU 0.0
+P2 prod selected = 5 / IoU 0.9032501889644747
+P3 prod selected = 3 / IoU 0.0
+```
+
+Require every candidate has:
+- full `proposal_predicates`;
+- all P0/P1/P2/P3;
+- both `production_selected`;
+- `best_coverage`.
+
+If any key is missing:
+- STOP.
+
+---
+
+# 12. REPORT — FIXED CONTENT REQUIREMENTS
 
 Update:
 
@@ -525,72 +797,104 @@ Update:
 docs/task8b3_ref01_eligibility_forensics.md
 ```
 
-Preserve E1 history, then add a clearly labeled R1 correction section:
+Do not delete E1/E1-R1 historical sections.
+
+Append:
 
 ```text
-E1 initial replay = INVALID because GT-IoU ranking was used as policy selection.
-E1-R1 = corrected production-selection counterfactual.
+## E1-R2 authoritative corrected replay
 ```
 
-Required table:
+The section MUST state:
 
 ```text
-relation | policy | eligible | prod-selected id/IoU | GT-best id/IoU
+E1 initial replay was invalid because GT-IoU ranking was used as production selection.
+
+E1-R1 fixed production ranking but still had incomplete evidence schema and fail-reason semantics.
+
+E1-R2 is the authoritative zero-call eligibility-forensics replay.
 ```
 
-Required `above` section:
-- proposal 5 predicate facts;
-- fail reason;
-- extent margins;
-- P0/P1/P2/P3 production results;
-- isolated subtype.
+Include table:
 
-# 19. Nonclaims
+```text
+relation | policy | eligible | production-selected id/IoU | best-coverage id/IoU
+```
 
-Report must explicitly state:
+Include all 16 relation×policy rows.
+
+Include an `above` subsection with exactly:
+- proposal 5 id;
+- IoU;
+- border flag;
+- extent ratio;
+- mask area;
+- fail reason = `EXTENT_ONLY`;
+- absolute extent excess = `0.096875`;
+- relative extent excess = `0.484375`;
+- P0/P1/P2/P3 production-selected IDs and IoUs.
+
+Required conclusion:
+
+```text
+Outcome = REF01_ELIGIBILITY_FORENSICS_COMPLETE
+Eligibility blocker subtype = BBOX_EXTENT_CAP
+REF-01 status = FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED
+NEXT = REF01_ELIGIBILITY_REPAIR_DESIGN
+```
+
+Do not execute NEXT.
+
+---
+
+# 13. NONCLAIMS — MUST APPEAR VERBATIM IN REPORT
 
 ```text
 No new threshold was selected.
 No eligibility rule was changed.
 No product repair was implemented.
 Counterfactual policies are diagnostic only.
-P2 success does NOT by itself establish that removing the 0.20 cap globally is safe.
-P3 behavior is diagnostic and may expose larger invalid proposals.
+P2 success does NOT establish that removing the 0.20 cap globally is safe.
+P3 demonstrates that removing both eligibility predicates can expose a larger wrong proposal.
 Border exclusion remains frozen.
-Task 7J metrics/model/threshold/seed/architecture are unchanged.
+Task 7J metrics, model, threshold, seed, and architecture are unchanged.
 PROP-01 remains PROP01_OPEN_ENGINEERING_DEFECT.
-left and below selection errors remain separate unresolved reference-selection issues.
+The left and below selection errors remain separate unresolved reference-selection issues.
 ```
 
-# 20. FROM_DSH
+---
 
-Preserve ARTIFACT-FACTS exactly.
+# 14. FROM_DSH — REQUIRED FIELDS
 
-Required:
+Preserve the ARTIFACT-FACTS block exactly.
+
+The active report must contain:
 
 ```text
-Task: 8B.3-REF01-E1-R1
+Task: 8B.3-REF01-E1-R2
 Status: COMPLETE / STOP / FAILED
 Branch: fix/task8b3-ref01-eligibility-forensics
-Starting HEAD: 3c497bf3d427366e00b5890fdcfab1a35e68b28c
+Starting HEAD: 1594f1ef96223264999d2c938dd5b2d2bb1b629c
 Detector/model calls: 0
 Tracked replay script committed: YES / NO
+Script executed exactly once: YES / NO
+Source identity: PASS / FAIL
 Frozen extent cap: 0.20
 Coverage threshold: 0.50_TASK7F_FROZEN
 P0 production selected right/left/above/below: 1/14/4/1 / other
-above best-any id: 5 / other
-above best-any IoU: 0.9032501889644747 / other
+above proposal 5 IoU: 0.9032501889644747 / other
 above proposal 5 border: False / other
 above proposal 5 extent: 0.296875 / other
+above proposal 5 mask area: 5059 / other
 above proposal 5 fail reason: EXTENT_ONLY / other
 above extent excess absolute: 0.096875 / other
 above extent excess relative: 0.484375 / other
-above P0 production selected: <id>/<iou>
-above P1 production selected: <id>/<iou>
-above P2 production selected: <id>/<iou>
-above P3 production selected: <id>/<iou>
-Eligibility blocker subtype: BBOX_EXTENT_CAP / other
+above P0 production selected: 4 / 0.0 / other
+above P1 production selected: 4 / 0.0 / other
+above P2 production selected: 5 / 0.9032501889644747 / other
+above P3 production selected: 3 / 0.0 / other
 GT IoU used in production selection: NO
+Eligibility blocker subtype: BBOX_EXTENT_CAP / other
 No production threshold change: YES
 No product repair: YES
 Qwen/SAM2/relation/D-B1/target: NONE/NONE/NONE/NONE/NONE
@@ -606,18 +910,44 @@ External/canonical product files modified: NO / NO
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-# 21. Commit / push
+---
 
-If COMPLETE:
+# 15. FINAL DIFF GATE
+
+Before commit:
 
 ```text
-docs(rc1): correct eligibility counterfactual replay
+git diff --name-only 1594f1ef96223264999d2c938dd5b2d2bb1b629c
 ```
 
-If STOP/FAILED:
+Allowed names ONLY:
 
 ```text
-docs(rc1): record eligibility replay correction stop
+scripts/task8b3_ref01_eligibility_forensics.py
+evaluation/task8b3_ref01_eligibility_forensics.json
+docs/task8b3_ref01_eligibility_forensics.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+Any other path:
+- STOP.
+- Do not commit.
+
+---
+
+# 16. COMMIT / PUSH
+
+If COMPLETE, commit exactly:
+
+```text
+docs(rc1): finalize eligibility forensics replay
+```
+
+If STOP/FAILED, commit exactly:
+
+```text
+docs(rc1): record eligibility forensics replay stop
 ```
 
 Push only:
@@ -627,28 +957,41 @@ fix/task8b3-ref01-eligibility-forensics
 ```
 
 No force push.
-Do not update main.
 
-Then STOP.
+Do not update `main`.
 
-# 22. COMPLETE definition
+After push:
+- STOP;
+- wait for ChatGPT.
 
-COMPLETE only if:
-- exact branch/head;
+---
+
+# 17. COMPLETE DEFINITION
+
+COMPLETE only if ALL are true:
+
+- exact branch/start HEAD;
 - only five allowed paths changed;
-- tracked replay script exists in commit;
 - detector/model calls = 0;
-- source eligibility semantics verified;
-- proposal-ID joins exact;
-- every proposal gets exact fail_reason enum;
-- P0 production IDs reproduce 1/14/4/1;
-- policy production selection never uses GT IoU;
-- best_coverage is reported separately;
-- all P0/P1/P2/P3 policies replayed for all four candidates;
-- above proposal 5 is mechanically attributed;
-- blocker subtype mechanically isolated;
-- corrected exact outcome/ref01/NEXT enums used;
-- no threshold/rule change or repair;
+- exact script in §8 is committed;
+- script py_compile PASS;
+- script executed exactly once;
+- detector source SHA PASS;
+- frozen eligibility semantics source snippets PASS;
+- exact proposal-ID joins 4/4;
+- every proposal has exactly one required fail-reason enum;
+- P0 production IDs = 1/14/4/1;
+- production selection uses no GT IoU;
+- per-policy best_coverage exists separately;
+- complete 16 policy rows exist;
+- above proposal 5 = EXTENT_ONLY;
+- extent margins = 0.096875 / 0.484375;
+- above P0/P1/P2/P3 production outputs = 4/4/5/3 with IoUs 0/0/0.903250.../0;
+- blocker subtype = BBOX_EXTENT_CAP;
+- overall outcome = REF01_ELIGIBILITY_FORENSICS_COMPLETE;
+- ref01_status = FORENSICS_COMPLETE_ELIGIBILITY_BLOCKER_ISOLATED;
+- NEXT = REF01_ELIGIBILITY_REPAIR_DESIGN;
+- no threshold/rule/repair change;
 - evidence/report/FROM_DSH committed and pushed;
 - NEXT not executed;
 - STOP.
