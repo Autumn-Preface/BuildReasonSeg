@@ -17,36 +17,29 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R3 Report
-
-_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
-history._
-
-| item | value |
-|---|---|
-| Task | `8B.3-REF01-E3C0-R2-R3` |
-| Status | **STOP** (provided schema probe failed its own gate; nothing repaired or re-run) |
-| Branch | `audit/task8b3-ref01-locked-replay-artifacts` |
-| Starting HEAD | `fa9ede22f9bee640a6211f0dfd807439d0e8bc57` |
-| Provided script | `C:\D\DeepSeekHarness\E3C0_R2_R3_schema_probe.py` |
-| Prescribed / observed SHA256 | `49e51459dd9bf218f42fc62021f2c15dd223991a2ede797e42c0519f44934873` / `49e51459dd9bf218f42fc62021f2c15dd223991a2ede797e42c0519f44934873` (match = True) |
-| Script runs / exit | 1 / 1 |
-| Schema captured | NONE (the probe produced no output file) |
-| Broad search / inference / proposal regeneration / selector replay / readiness determination | NONE |
-| External write / product modification | NO / NO |
-| Changed paths in this commit | ['docs/task8b3_ref01_e3c0_r2r3_proposals_schema_probe.md', 'evaluation/task8b3_ref01_e3c0_r2r3_proposals_schema_probe.json', 'handoff/FROM_DSH.md', 'handoff/TO_DSH.md'] |
-| Next action | Awaiting ChatGPT audit; no rerun and no self-repair was attempted |
-
-Watt was not needed for Task 8B.3-REF01-E3C0-R2-R3 (no downloads, no transfers).
-
-Failure tail reported by the provided probe:
+# FROM_DSH — Task 8B.3-REF01-E3C0-R2-R4 Report
 
 ```text
-Traceback (most recent call last):
-  File "C:\D\DeepSeekHarness\E3C0_R2_R3_schema_probe.py", line 254, in <module>
-    main()
-  File "C:\D\DeepSeekHarness\E3C0_R2_R3_schema_probe.py", line 237, in main
-    assert changed == ALLOWED_DIFF, f"BAD_DIFF: {sorted(changed)}"
-           ^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: BAD_DIFF: ['handoff/FROM_DSH.md', 'handoff/TO_DSH.md']
+Task: 8B.3-REF01-E3C0-R2-R4
+Status: COMPLETE
+Branch: audit/task8b3-ref01-locked-replay-artifacts
+Starting HEAD: 31006384fe65bb29247c67d3b504b53d9c1ae981
+Schema contract: PROPOSALS_JSON_COUNT_ITEMS_V1
+Known scientific artifacts inspected: 9
+Detector/model calls: 0
+Proposal regeneration performed: NO
+Actual replay performed: NO
+External write performed: NO
+Broad search performed: NO
+Overall replay readiness: RECORD_LEVEL_REPLAY_READY
+Production-object replay possible without detector: NO
+Record-level replay possible without detector: YES
+Historical consistency mismatch count: 0
+Evidence: evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
+Report: docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
+REF-01 status: ACTIVE
+PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
+Next gate: REF01_LOCKED_RECORD_REPLAY_DESIGN
+Next executed: NO
+Next action: Awaiting ChatGPT audit.
 ```

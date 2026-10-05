@@ -1,74 +1,72 @@
-# Task 8B.3-REF01-E3C0-R1 — Locked Replay Saved-Artifact Audit (Correction)
+# Task 8B.3-REF01-E3C0-R2-R4 — Final Locked Replay Readiness Audit
 
-## 1. Scope and correction
+## Scope
+- starting HEAD = `31006384fe65bb29247c67d3b504b53d9c1ae981`
+- schema = `{"count": N, "items": [...]}`
+- exact known scientific artifacts read = 9
+- broad search = NO
+- detector/model calls = 0
+- proposal regeneration = NO
+- actual replay = NO
+- external write = NO
 
-```text
-base head = bde13bd15bbab3e455ea1d3ef10b3f6740fc110d
-branch    = audit/task8b3-ref01-locked-replay-artifacts
-scope     = READ_ONLY_LOCKED_REPLAY_SAVED_ARTIFACT_AUDIT_CORRECTION
-detector_model_calls = 0 · proposal regeneration = NO · actual replay = NO · external write = NO · product change = NO
-```
+## A/B/C/D
+| case | tile | records | A complete list | B scalar replay | C exact object/mask | D forensic IoU |
+|---|---:|---:|---|---|---|---|
+| right | 1010 | 6 | True | True | False | True |
+| left | 1003 | 53 | True | True | False | True |
+| above | 1008 | 9 | True | True | False | True |
+| below | 1009 | 6 | True | True | False | True |
 
-The previous audit is discarded in full: it searched forbidden roots and used unapproved enums. Discarded roots:
+For record-level replay only, persisted `mask_area > 0` is accepted as the nonempty witness for each serialized merged proposal record. This does not satisfy C; exact `mask_crop` and full production-object reconstruction material remain mandatory for full production-object replay.
 
-```text
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\inference
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\logs
-```
+## Frozen historical consistency checks
+### right
+- `raw_count` = `MATCH`
+- `merged_count` = `MATCH`
+- `eligible_count` = `MATCH`
+- `pre_selected` = `MATCH`
+### left
+- `raw_count` = `MATCH`
+- `merged_count` = `MATCH`
+- `eligible_count` = `MATCH`
+- `pre_selected` = `MATCH`
+- `best_covered` = `MATCH`
+### above
+- `raw_count` = `MATCH`
+- `merged_count` = `MATCH`
+- `eligible_count` = `MATCH`
+- `pre_selected` = `MATCH`
+- `best_covered` = `MATCH`
+- `proposal5_mask_area` = `MATCH`
+- `proposal5_confidence` = `MATCH`
+- `proposal5_touches_image_border` = `MATCH`
+- `proposal5_bbox_extent_ratio` = `MATCH`
+- `proposal5_iou` = `MATCH`
+- `proposal3_mask_area` = `MATCH`
+- `proposal3_touches_image_border` = `MATCH`
+- `proposal3_bbox_extent_ratio` = `MATCH`
+### below
+- `raw_count` = `MATCH`
+- `merged_count` = `MATCH`
+- `eligible_count` = `MATCH`
+- `pre_selected` = `MATCH`
+- `best_covered` = `MATCH`
 
-## 2. Allowed search roots used by this audit
+## Readiness
+- overall readiness = `RECORD_LEVEL_REPLAY_READY`
+- production-object replay possible without detector = `False`
+- record-level replay possible without detector = `True`
+- historical consistency mismatch count = `0`
 
-```text
-repo     : evaluation, docs, handoff, scripts
-external : C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output · C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\docs · C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1 root-level text files only
-```
+## Non-claims
+- repaired selector replay has NOT been performed
+- `right1 / left14 / above5 / below1` are NOT replay-validated by this task
+- REF-01 remains `ACTIVE`
+- PROP-01 remains `PROP01_OPEN_ENGINEERING_DEFECT`
+- final Demo has NOT run
 
-## 3. Candidate artifacts found in the allowed roots
-
-| # | root | file | bytes | sha256 (prefix) |
-|---:|---|---|---:|---|
-| 1 | output | `parsed_program.json` | 2 | `44136fa355b3678a` |
-| 2 | output | `prompt.txt` | 0 | `e3b0c44298fc1c14` |
-| 3 | output | `proposals.json` | 21263 | `62865e42b4d92077` |
-| 4 | output | `result.json` | 23296 | `d2cef24ea3b15a52` |
-| 5 | output | `parsed_program.json` | 2 | `44136fa355b3678a` |
-| 6 | output | `prompt.txt` | 0 | `e3b0c44298fc1c14` |
-| 7 | output | `proposals.json` | 3631 | `257297112fb2fe35` |
-| 8 | output | `result.json` | 4782 | `bf70127106e5798b` |
-| 9 | output | `parsed_program.json` | 2 | `44136fa355b3678a` |
-| 10 | output | `prompt.txt` | 0 | `e3b0c44298fc1c14` |
-| 11 | output | `proposals.json` | 2412 | `7c1a45690c860910` |
-| 12 | output | `result.json` | 3503 | `ab75dd17e082c171` |
-| 13 | output | `parsed_program.json` | 2 | `44136fa355b3678a` |
-| 14 | output | `prompt.txt` | 0 | `e3b0c44298fc1c14` |
-| 15 | output | `proposals.json` | 2411 | `2b09041ee86d5e7d` |
-| 16 | output | `result.json` | 3502 | `54c964933fca667f` |
-
-## 4. Per-case readiness facts
-
-| relation | tile | complete proposal list | scalar fields complete | exact mask/object material | forensic linkage | replay records |
-|---|---|---|---|---|---|---|
-| right | 1010 | False | True | False | False | 6 |
-| left | 1003 | False | True | False | False | 53 |
-| above | 1008 | False | True | False | False | 9 |
-| below | 1009 | False | True | False | False | 6 |
-
-## 5. Determinations (frozen enums only)
-
-```text
-overall_readiness = LOCKED_REPLAY_ARTIFACTS_PARTIAL
-production_object_replay_possible_without_detector = False
-record_level_replay_possible_without_detector = False
-historical_consistency_mismatches = [{'relation': 'right', 'tile': '1010', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}, {'relation': 'left', 'tile': '1003', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}, {'relation': 'above', 'tile': '1008', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}, {'relation': 'below', 'tile': '1009', 'detail': {'counts_match_ref01_evidence': False, 'stored_counts_match_live': True}}]
-overall_outcome = REF01_LOCKED_REPLAY_ARTIFACT_AUDIT_CORRECTED
-next_gate = REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
-```
-
-## 6. Explicit non-execution
-
-```text
-detector / model inference = NONE · proposal regeneration = NONE · actual replay = NONE
-external write = NONE · product / test / manifest / helper modification = NONE
-manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
-```
+## Outcome / NEXT
+- outcome = `REF01_LOCKED_REPLAY_READINESS_ESTABLISHED`
+- NEXT = `REF01_LOCKED_RECORD_REPLAY_DESIGN`
+- NEXT was not executed

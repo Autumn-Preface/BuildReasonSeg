@@ -1,126 +1,259 @@
 {
-  "task": "8B.3-REF01-E3C0-R1",
-  "base_head": "bde13bd15bbab3e455ea1d3ef10b3f6740fc110d",
+  "task": "8B.3-REF01-E3C0-R2-R4",
+  "base_head": "31006384fe65bb29247c67d3b504b53d9c1ae981",
   "branch": "audit/task8b3-ref01-locked-replay-artifacts",
-  "scope": "READ_ONLY_LOCKED_REPLAY_SAVED_ARTIFACT_AUDIT_CORRECTION",
+  "scope": "FINAL_LOCKED_REPLAY_READINESS_AUDIT",
+  "schema_contract": "PROPOSALS_JSON_COUNT_ITEMS_V1",
+  "audit_script_path": "C:\\D\\DeepSeekHarness\\E3C0_R2_R4_final_readiness_audit.py",
+  "audit_script_sha256": "3865eefadb84a0de61f83198471765272bc6bc0b005ad4ff24f8ef4e58850f2c",
   "detector_model_calls": 0,
   "proposal_regeneration_performed": false,
+  "actual_replay_performed": false,
   "product_source_changed": false,
   "external_write_performed": false,
-  "forbidden_prior_roots_discarded": [
-    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts",
-    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\inference",
-    "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs"
-  ],
-  "search_roots": {
-    "repo": [
-      "evaluation",
-      "docs",
-      "handoff",
-      "scripts"
-    ],
-    "external": [
-      "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output",
-      "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\docs",
-      "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1 (root-level text files only)"
-    ]
-  },
+  "broad_search_performed": false,
   "candidate_artifacts": [
     {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\parsed_program.json",
-      "bytes": 2,
-      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\prompt.txt",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\proposals.json",
-      "bytes": 21263,
-      "sha256": "62865e42b4d92077ce336522b97f33931b351d46ab4ec7443fb1afe2dfd798a6",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\result.json",
-      "bytes": 23296,
-      "sha256": "d2cef24ea3b15a528a8f2dec29faeb9fa1992bb9385633cdb2e419ea9039ad8e",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\parsed_program.json",
-      "bytes": 2,
-      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\prompt.txt",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\proposals.json",
-      "bytes": 3631,
-      "sha256": "257297112fb2fe35f2225725e8c0a0e79338dcde10f9f4dbe20641c8fbb85e0b",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\result.json",
-      "bytes": 4782,
-      "sha256": "bf70127106e5798b5be40a2aa317ac8921abe99b1e5015c9945a912e4657184c",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\parsed_program.json",
-      "bytes": 2,
-      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\prompt.txt",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\proposals.json",
-      "bytes": 2412,
-      "sha256": "7c1a45690c860910b5626fc603fe942cc0497157bf6fc5d1645657029c167752",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\result.json",
-      "bytes": 3503,
-      "sha256": "ab75dd17e082c171e0b0f92eb9586329216bb32a1eafb317bcb2eab323e91507",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1010\\parsed_program.json",
-      "bytes": 2,
-      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
-    },
-    {
-      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1010\\prompt.txt",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
+      "path": "evaluation\\task8b3_ref01_locked_reference_forensics.json",
+      "bytes": 13343,
+      "sha256": "f7495796577cb26a14a6b76ffcb4cf9544524c25c37cdf58f6ba2b15214c6f84",
+      "tracked_by_git": true,
+      "format": "json",
+      "supports_cases": [
+        "right",
+        "left",
+        "above",
+        "below"
+      ],
+      "fields_present": [
+        "historical_iou_by_proposal",
+        "candidates"
+      ],
+      "inspection_status": "INSPECTED"
     },
     {
       "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1010\\proposals.json",
       "bytes": 2411,
       "sha256": "2b09041ee86d5e7d71c05c32f2cea8669bdfbb5b7f96cda33d5e12c99a0ac45b",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "right"
+      ],
+      "fields_present": [
+        "count",
+        "items",
+        "bbox_extent_ratio",
+        "border_clearance",
+        "centroid",
+        "confidence",
+        "global_bbox",
+        "mask_area",
+        "proposal_id",
+        "raw_index",
+        "source_tile_id",
+        "touches_image_border"
+      ],
+      "inspection_status": "INSPECTED"
     },
     {
       "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1010\\result.json",
       "bytes": 3502,
       "sha256": "54c964933fca667ff9c55593439d3059c2f8ec18d30951d16a417eac880cc518",
-      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output"
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "right"
+      ],
+      "fields_present": [
+        "device",
+        "input_channels",
+        "input_dtype",
+        "input_mode",
+        "input_path",
+        "input_size",
+        "merged_proposal_count",
+        "mode",
+        "model_package",
+        "notes",
+        "output_paths",
+        "overlap",
+        "proposals",
+        "raw_proposal_count",
+        "status",
+        "tile_count",
+        "tile_size",
+        "timings"
+      ],
+      "inspection_status": "INSPECTED"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\proposals.json",
+      "bytes": 21263,
+      "sha256": "62865e42b4d92077ce336522b97f33931b351d46ab4ec7443fb1afe2dfd798a6",
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "left"
+      ],
+      "fields_present": [
+        "count",
+        "items",
+        "bbox_extent_ratio",
+        "border_clearance",
+        "centroid",
+        "confidence",
+        "global_bbox",
+        "mask_area",
+        "proposal_id",
+        "raw_index",
+        "source_tile_id",
+        "touches_image_border"
+      ],
+      "inspection_status": "INSPECTED"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\result.json",
+      "bytes": 23296,
+      "sha256": "d2cef24ea3b15a528a8f2dec29faeb9fa1992bb9385633cdb2e419ea9039ad8e",
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "left"
+      ],
+      "fields_present": [
+        "device",
+        "input_channels",
+        "input_dtype",
+        "input_mode",
+        "input_path",
+        "input_size",
+        "merged_proposal_count",
+        "mode",
+        "model_package",
+        "notes",
+        "output_paths",
+        "overlap",
+        "proposals",
+        "raw_proposal_count",
+        "status",
+        "tile_count",
+        "tile_size",
+        "timings"
+      ],
+      "inspection_status": "INSPECTED"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\proposals.json",
+      "bytes": 3631,
+      "sha256": "257297112fb2fe35f2225725e8c0a0e79338dcde10f9f4dbe20641c8fbb85e0b",
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "above"
+      ],
+      "fields_present": [
+        "count",
+        "items",
+        "bbox_extent_ratio",
+        "border_clearance",
+        "centroid",
+        "confidence",
+        "global_bbox",
+        "mask_area",
+        "proposal_id",
+        "raw_index",
+        "source_tile_id",
+        "touches_image_border"
+      ],
+      "inspection_status": "INSPECTED"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\result.json",
+      "bytes": 4782,
+      "sha256": "bf70127106e5798b5be40a2aa317ac8921abe99b1e5015c9945a912e4657184c",
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "above"
+      ],
+      "fields_present": [
+        "device",
+        "input_channels",
+        "input_dtype",
+        "input_mode",
+        "input_path",
+        "input_size",
+        "merged_proposal_count",
+        "mode",
+        "model_package",
+        "notes",
+        "output_paths",
+        "overlap",
+        "proposals",
+        "raw_proposal_count",
+        "status",
+        "tile_count",
+        "tile_size",
+        "timings"
+      ],
+      "inspection_status": "INSPECTED"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\proposals.json",
+      "bytes": 2412,
+      "sha256": "7c1a45690c860910b5626fc603fe942cc0497157bf6fc5d1645657029c167752",
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "below"
+      ],
+      "fields_present": [
+        "count",
+        "items",
+        "bbox_extent_ratio",
+        "border_clearance",
+        "centroid",
+        "confidence",
+        "global_bbox",
+        "mask_area",
+        "proposal_id",
+        "raw_index",
+        "source_tile_id",
+        "touches_image_border"
+      ],
+      "inspection_status": "INSPECTED"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\result.json",
+      "bytes": 3503,
+      "sha256": "ab75dd17e082c171e0b0f92eb9586329216bb32a1eafb317bcb2eab323e91507",
+      "tracked_by_git": false,
+      "format": "json",
+      "supports_cases": [
+        "below"
+      ],
+      "fields_present": [
+        "device",
+        "input_channels",
+        "input_dtype",
+        "input_mode",
+        "input_path",
+        "input_size",
+        "merged_proposal_count",
+        "mode",
+        "model_package",
+        "notes",
+        "output_paths",
+        "overlap",
+        "proposals",
+        "raw_proposal_count",
+        "status",
+        "tile_count",
+        "tile_size",
+        "timings"
+      ],
+      "inspection_status": "INSPECTED"
     }
   ],
   "cases": {
@@ -131,14 +264,16 @@
         "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1010\\result.json",
         "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8b3_ref01_locked_reference_forensics.json"
       ],
-      "complete_proposal_list_present": false,
+      "complete_proposal_list_present": true,
       "proposal_scalar_fields_complete": true,
       "exact_mask_or_object_material_present": false,
-      "forensic_correctness_linkage_present": false,
+      "forensic_correctness_linkage_present": true,
       "replay_record_count": 6,
       "consistency_checks": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
+        "raw_count": "MATCH",
+        "merged_count": "MATCH",
+        "eligible_count": "MATCH",
+        "pre_selected": "MATCH"
       }
     },
     "left": {
@@ -148,14 +283,17 @@
         "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\result.json",
         "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8b3_ref01_locked_reference_forensics.json"
       ],
-      "complete_proposal_list_present": false,
+      "complete_proposal_list_present": true,
       "proposal_scalar_fields_complete": true,
       "exact_mask_or_object_material_present": false,
-      "forensic_correctness_linkage_present": false,
+      "forensic_correctness_linkage_present": true,
       "replay_record_count": 53,
       "consistency_checks": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
+        "raw_count": "MATCH",
+        "merged_count": "MATCH",
+        "eligible_count": "MATCH",
+        "pre_selected": "MATCH",
+        "best_covered": "MATCH"
       }
     },
     "above": {
@@ -165,14 +303,25 @@
         "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\result.json",
         "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8b3_ref01_locked_reference_forensics.json"
       ],
-      "complete_proposal_list_present": false,
+      "complete_proposal_list_present": true,
       "proposal_scalar_fields_complete": true,
       "exact_mask_or_object_material_present": false,
-      "forensic_correctness_linkage_present": false,
+      "forensic_correctness_linkage_present": true,
       "replay_record_count": 9,
       "consistency_checks": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
+        "raw_count": "MATCH",
+        "merged_count": "MATCH",
+        "eligible_count": "MATCH",
+        "pre_selected": "MATCH",
+        "best_covered": "MATCH",
+        "proposal5_mask_area": "MATCH",
+        "proposal5_confidence": "MATCH",
+        "proposal5_touches_image_border": "MATCH",
+        "proposal5_bbox_extent_ratio": "MATCH",
+        "proposal5_iou": "MATCH",
+        "proposal3_mask_area": "MATCH",
+        "proposal3_touches_image_border": "MATCH",
+        "proposal3_bbox_extent_ratio": "MATCH"
       }
     },
     "below": {
@@ -182,54 +331,24 @@
         "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\result.json",
         "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8b3_ref01_locked_reference_forensics.json"
       ],
-      "complete_proposal_list_present": false,
+      "complete_proposal_list_present": true,
       "proposal_scalar_fields_complete": true,
       "exact_mask_or_object_material_present": false,
-      "forensic_correctness_linkage_present": false,
+      "forensic_correctness_linkage_present": true,
       "replay_record_count": 6,
       "consistency_checks": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
+        "raw_count": "MATCH",
+        "merged_count": "MATCH",
+        "eligible_count": "MATCH",
+        "pre_selected": "MATCH",
+        "best_covered": "MATCH"
       }
     }
   },
-  "overall_readiness": "LOCKED_REPLAY_ARTIFACTS_PARTIAL",
+  "overall_readiness": "RECORD_LEVEL_REPLAY_READY",
   "production_object_replay_possible_without_detector": false,
-  "record_level_replay_possible_without_detector": false,
-  "historical_consistency_mismatches": [
-    {
-      "relation": "right",
-      "tile": "1010",
-      "detail": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
-      }
-    },
-    {
-      "relation": "left",
-      "tile": "1003",
-      "detail": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
-      }
-    },
-    {
-      "relation": "above",
-      "tile": "1008",
-      "detail": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
-      }
-    },
-    {
-      "relation": "below",
-      "tile": "1009",
-      "detail": {
-        "counts_match_ref01_evidence": false,
-        "stored_counts_match_live": true
-      }
-    }
-  ],
-  "overall_outcome": "REF01_LOCKED_REPLAY_ARTIFACT_AUDIT_CORRECTED",
-  "next_gate": "REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN"
+  "record_level_replay_possible_without_detector": true,
+  "historical_consistency_mismatches": [],
+  "overall_outcome": "REF01_LOCKED_REPLAY_READINESS_ESTABLISHED",
+  "next_gate": "REF01_LOCKED_RECORD_REPLAY_DESIGN"
 }
