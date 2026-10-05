@@ -149,3 +149,33 @@ pytest = NOT RUN
 manual visual inspection / candidate replacement = NO / NO
 NEXT executed = NO
 ```
+
+---
+
+## 5. E3A-R3 — Base64 patcher route: SHA256 mismatch on my extraction, STOP without repair
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-impl
+HEAD   = 9304b89e325ed2b0ecdbef4fd58790730d234c85
+step 1  R2 in-repo patcher deleted with git rm (scripts/task8b3_ref01_eligibility_repair_patcher.py) -> removed = True
+step 2  the task book names .b64 input  C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64
+        and apply target                 C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py
+        my extraction of the fenced payload consumed the fence language token ("text") so the decoded bytes
+        were 10466 bytes with sha256 44b826696fcb974e... which does NOT equal the prescribed
+        9d89c86fc914b1e00454870bbf974e6fedbbde43196d8c5be5588d7ab3c16648
+step 3  per the task book, a failed verification stops the task: the patcher was NOT executed
+        patcher runs = 0 · self-compile performed = NO (forbidden)
+detector.py sha256 = a6fa4bdd76db6f50 (unchanged)
+source_manifest untouched (canonical / external) = YES / YES · external RC1 synced = NO
+detector or model inference = NONE · manual editing of detector/tests = NONE · self-repair = NONE
+```
+
+### 5.1 Explicit non-execution
+
+```text
+execution gates added, removed or adjusted = NONE (the task book flow was followed as published)
+patcher execution = NONE (SHA256 verification gate failed first)
+source_manifest update = NONE · external RC1 sync = NONE · detector or model inference = NONE
+manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
+```
+

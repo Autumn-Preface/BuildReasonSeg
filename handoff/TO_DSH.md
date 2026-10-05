@@ -1,381 +1,104 @@
-# TO_DSH — Task 8B.3-REF01-E3A-R2: Boundary-Based Mechanical Canonical Implementation
+# TO_DSH — Task 8B.3-REF01-E3A-R3: Zero-Discretion Canonical Implementation
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
-> Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `fix/task8b3-ref01-eligibility-repair-impl`
-> Required starting HEAD: `fc2a33325eacf6ce5f366d6574abed3694431f5b`
+> Required starting HEAD: `9304b89e325ed2b0ecdbef4fd58790730d234c85`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
-> Temporary patcher path: `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py`
+> Temporary Base64 file: `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64`
+> Temporary patcher: `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py`
 
-# 0. R1 AUDIT DISPOSITION
+# 0. CHATGPT AUDIT OF R2
 
-E3A-R1 STOP is accepted.
+R2 STOP is NOT counted as a compliant execution.
 
-R1 correctly:
-- verified the published patcher SHA256;
-- executed the patcher exactly once;
-- stopped on the first assertion failure;
-- did not manually edit detector.py or tests;
-- did not update source_manifest;
-- did not sync external RC1;
-- did not run detector/model inference;
-- committed/pushed a STOP result.
+Facts:
+- product source was not modified;
+- external RC1/source_manifest were not modified;
+- no model/detector inference ran;
+- BUT DSH created and committed `scripts/task8b3_ref01_eligibility_repair_patcher.py`, although the task required a repo-external temporary patcher;
+- DSH also inserted an unauthorized patcher `py_compile` gate before execution.
 
-R1 failed only because the patcher required an entire source block to be byte-for-byte identical.
+R3 removes both choices.
 
-R2 replaces that fragile condition with a fixed unique-boundary replacement:
-- start boundary = `def eligible_proposals(`
-- end boundary = `def proposal_by_id(`
-- exact replacement contents remain fully prescribed by ChatGPT.
+# 1. EXECUTION CONTRACT
 
-DSH does not choose any patch location or implementation.
+DSH must execute exactly the numbered commands/operations below.
 
-# 1. EXECUTOR CONTRACT
+No extra gate is permitted.
+No skipped gate is permitted.
+No manual editing is permitted.
+No alternate temporary path is permitted.
+No additional repo file may be created.
 
-DSH has ZERO technical discretion.
-
-Allowed sequence only:
-1. verify branch/head;
-2. copy §5 patcher byte-for-byte to the exact temporary path;
-3. verify patcher SHA256;
-4. execute patcher exactly once;
-5. delete temporary patcher after successful execution;
-6. run fixed static/pytest gates;
-7. write fixed evidence/report/FROM_DSH;
-8. choose status and commit message using §14 only;
-9. push current branch;
-10. STOP.
-
-Forbidden:
-- manual edits to detector.py;
-- manual edits to test_task8b_runtime.py;
-- modifying the patcher;
-- rerunning patcher after failure;
-- modifying tests after pytest failure;
-- changing algorithm/threshold/schema;
-- updating source_manifest;
-- syncing external RC1;
-- detector/model inference;
-- executing NEXT.
-
-Any uncovered condition => STOP.
+Any command/gate failure => STOP immediately, record the observed failure, commit/push STOP when Git is safe, then wait for ChatGPT.
 
 # 2. GIT GATE
 
 Require exactly:
 
 ```text
-git branch --show-current
-= fix/task8b3-ref01-eligibility-repair-impl
-
-git rev-parse HEAD
-= fc2a33325eacf6ce5f366d6574abed3694431f5b
+branch = fix/task8b3-ref01-eligibility-repair-impl
+HEAD = 9304b89e325ed2b0ecdbef4fd58790730d234c85
 ```
 
-Allowed initial repo status:
-- clean; or
-- only `M handoff/TO_DSH.md`.
+Allowed initial working tree: clean or only `M handoff/TO_DSH.md`.
 
-Anything else => STOP.
-
-No checkout/reset/rebase/merge/stash/clean/cherry-pick.
-
-# 3. ALLOWED TRACKED CHANGES
-
-Only:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-evaluation/task8b3_ref01_eligibility_repair_impl.json
-docs/task8b3_ref01_eligibility_repair_impl.md
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
-```
-
-Must remain unchanged:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
-scripts/sync_advisor_rc1_delivery.py
-```
-
-# 4. ABSOLUTE PROHIBITIONS
-
-Do NOT:
-- write external RC1;
-- run sync helper;
-- update source_manifest;
-- instantiate DetectorRuntime;
-- run detector/Qwen/SAM2/D-B1/target inference;
-- change `MERGE_BBOX_EXTENT_RATIO_MAX`;
-- change `SMALLEST_MIN_AREA_PX`;
-- execute NEXT;
-- update main;
-- force push.
-
-Detector/model calls = 0.
-
-# 5. EXACT TEMPORARY PATCHER
-
-Create exactly:
-
-```text
-C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py
-```
-
-with this content byte-for-byte:
-
-```python
-from __future__ import annotations
-
-import hashlib
-import subprocess
-import sys
-from pathlib import Path
-
-REPO = Path(r"C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg")
-EXTERNAL = Path(r"C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1")
-DETECTOR = REPO / "delivery_src" / "BuildReasonSeg_Advisor_RC1" / "buildreasonseg" / "runtime" / "detector.py"
-TEST = REPO / "delivery_src" / "BuildReasonSeg_Advisor_RC1" / "tests" / "test_task8b_runtime.py"
-EXTERNAL_DETECTOR = EXTERNAL / "buildreasonseg" / "runtime" / "detector.py"
-
-EXPECTED_BRANCH = "fix/task8b3-ref01-eligibility-repair-impl"
-EXPECTED_HEAD = "fc2a33325eacf6ce5f366d6574abed3694431f5b"
-EXPECTED_EXTERNAL_SHA = "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738"
-
-NEW_BLOCK = r"""def eligible_proposals(proposals: list[GlobalProposal], *, family: str = "largest"
-                       ) -> list[GlobalProposal]:
-    return [proposal for proposal in proposals if eligible(proposal, family=family)]
-
-
-def _reference_rank(proposal: GlobalProposal) -> tuple[int, float, int]:
-    return (-proposal.mask_area, -proposal.confidence, proposal.proposal_id)
-
-
-def _largest_reference_candidates_with_extent_exception(
-        proposals: list[GlobalProposal]) -> list[GlobalProposal]:
-    """Frozen base candidates plus the RC1 largest-only extent-dominance exception."""
-
-    base_candidates = eligible_proposals(proposals, family="largest")
-    if not base_candidates:
-        return []
-
-    baseline = sorted(base_candidates, key=_reference_rank)[0]
-    exceptions = [
-        proposal for proposal in proposals
-        if proposal.mask_area > 0
-        and proposal.mask_crop.any()
-        and not proposal.touches_image_border
-        and proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX
-        and proposal.mask_area > baseline.mask_area
-        and proposal.confidence > baseline.confidence
-    ]
-    return base_candidates + exceptions
-
-
-def select_reference(proposals: list[GlobalProposal], *, family: str = "largest") -> GlobalProposal | None:
-    """Select a reference with the frozen base rule and the largest-only RC1 exception."""
-
-    if family == "largest":
-        candidates = _largest_reference_candidates_with_extent_exception(proposals)
-    else:
-        candidates = eligible_proposals(proposals, family=family)
-    if not candidates:
-        return None
-    return sorted(candidates, key=_reference_rank)[0]
-
-
-"""
-
-TEST_BLOCK = r"""def _reference_rect(height: int, width: int, confidence: float, proposal_id: int,
-                    *, top: int = 100, left: int = 100) -> GlobalProposal:
-    mask = np.zeros((512, 512), dtype=bool)
-    mask[top:top + height, left:left + width] = True
-    return _proposal(mask, confidence, f"r{proposal_id}", proposal_id, proposal_id,
-                     proposal_id=proposal_id)
-
-
-def test_largest_extent_dominance_exception_selects_strictly_dominant_candidate() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    dominant = _reference_rect(120, 120, 0.61, 2, top=250, left=250)
-
-    assert eligible(baseline, family="largest") is True
-    assert eligible(dominant, family="largest") is False
-    assert detector.eligible_proposals([baseline, dominant], family="largest") == [baseline]
-    assert select_reference([baseline, dominant], family="largest") is dominant
-
-
-def test_largest_extent_exception_rejects_lower_confidence_candidate() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    candidate = _reference_rect(120, 120, 0.59, 2, top=250, left=250)
-    assert select_reference([baseline, candidate], family="largest") is baseline
-
-
-def test_largest_extent_exception_requires_strict_confidence_gain() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    candidate = _reference_rect(120, 120, 0.60, 2, top=250, left=250)
-    assert select_reference([baseline, candidate], family="largest") is baseline
-
-
-def test_largest_extent_exception_requires_strict_area_gain() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    same_area = _reference_rect(40, 160, 0.95, 2, top=250, left=250)
-
-    assert baseline.mask_area == same_area.mask_area
-    assert eligible(same_area, family="largest") is False
-    assert select_reference([baseline, same_area], family="largest") is baseline
-
-
-def test_largest_extent_exception_never_admits_border_proposal() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    border = _reference_rect(120, 120, 0.95, 2, top=0, left=250)
-
-    assert border.touches_image_border is True
-    assert select_reference([baseline, border], family="largest") is baseline
-
-
-def test_largest_extent_exception_requires_frozen_baseline() -> None:
-    only_extent_violation = _reference_rect(120, 120, 0.95, 1)
-
-    assert eligible(only_extent_violation, family="largest") is False
-    assert select_reference([only_extent_violation], family="largest") is None
-
-
-def test_largest_extent_exception_keeps_production_area_order() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    exception_a = _reference_rect(120, 120, 0.70, 2, top=250, left=50)
-    exception_b = _reference_rect(130, 130, 0.61, 3, top=250, left=250)
-
-    assert select_reference([baseline, exception_a, exception_b], family="largest") is exception_b
-
-
-def test_largest_extent_exception_does_not_change_smallest_family() -> None:
-    baseline = _reference_rect(80, 80, 0.60, 1)
-    extent_violation = _reference_rect(120, 120, 0.95, 2, top=250, left=250)
-
-    assert eligible(extent_violation, family="smallest") is False
-    assert select_reference([baseline, extent_violation], family="smallest") is baseline
-
-
-"""
-
-START_SENTINEL = b'def eligible_proposals('
-END_SENTINEL = b'def proposal_by_id('
-TEST_MARKER = b'# ---------------------------------------------------------------- reasoning context'
-TEST_SENTINEL = b'def test_largest_extent_dominance_exception_selects_strictly_dominant_candidate'
-
-
-def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-def git_text(*args: str) -> str:
-    p = subprocess.run(
-        ["git", "-C", str(REPO), *args],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return p.stdout.strip()
-
-
-def newline(raw: bytes) -> bytes:
-    crlf = raw.count(b"\r\n")
-    lf = raw.count(b"\n")
-    if crlf and crlf == lf:
-        return b"\r\n"
-    if not crlf and lf:
-        return b"\n"
-    raise AssertionError(f"unsupported mixed newline state: CRLF={crlf}, LF={lf}")
-
-
-def adapt(text: str, nl: bytes) -> bytes:
-    return text.encode("utf-8").replace(b"\n", nl)
-
-
-def main() -> int:
-    assert git_text("branch", "--show-current") == EXPECTED_BRANCH
-    assert git_text("rev-parse", "HEAD") == EXPECTED_HEAD
-    assert sha256(EXTERNAL_DETECTOR) == EXPECTED_EXTERNAL_SHA
-
-    detector_raw = DETECTOR.read_bytes()
-    test_raw = TEST.read_bytes()
-    dnl = newline(detector_raw)
-    tnl = newline(test_raw)
-
-    assert detector_raw.count(START_SENTINEL) == 1
-    assert detector_raw.count(END_SENTINEL) == 1
-    assert detector_raw.count(b'def select_reference(') == 1
-    assert detector_raw.count(b'def _reference_rank(') == 0
-    assert detector_raw.count(b'def _largest_reference_candidates_with_extent_exception(') == 0
-
-    start = detector_raw.index(START_SENTINEL)
-    end = detector_raw.index(END_SENTINEL)
-    assert start < end
-    old_slice = detector_raw[start:end]
-    assert b'candidates = eligible_proposals(proposals, family=family)' in old_slice
-    assert b'proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX' not in old_slice
-
-    new_slice = adapt(NEW_BLOCK, dnl)
-    detector_after = detector_raw[:start] + new_slice + detector_raw[end:]
-
-    assert detector_after.count(b'def _reference_rank(') == 1
-    assert detector_after.count(b'def _largest_reference_candidates_with_extent_exception(') == 1
-    assert detector_after.count(b'proposal.mask_area > baseline.mask_area') == 1
-    assert detector_after.count(b'proposal.confidence > baseline.confidence') == 1
-    assert detector_after.count(b'proposal.bbox_extent_ratio > MERGE_BBOX_EXTENT_RATIO_MAX') >= 2
-
-    assert test_raw.count(TEST_MARKER) == 1
-    assert test_raw.count(TEST_SENTINEL) == 0
-    marker_pos = test_raw.index(TEST_MARKER)
-    test_after = test_raw[:marker_pos] + adapt(TEST_BLOCK, tnl) + test_raw[marker_pos:]
-    assert test_after.count(b'def test_largest_extent_') == 8
-
-    DETECTOR.write_bytes(detector_after)
-    TEST.write_bytes(test_after)
-
-    print("PATCHER_BRANCH_HEAD: PASS")
-    print("EXTERNAL_DETECTOR_IDENTITY: PASS")
-    print("DETECTOR_BOUNDARY_REPLACEMENT: PASS")
-    print("TEST_MARKER_INSERTION: PASS")
-    print("NEW_TEST_COUNT: 8")
-    print("PATCHER_RESULT: PASS")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-
-```
-
-Required SHA256:
-
-```text
-2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5
-```
-
-After writing the patcher:
-- calculate SHA256;
-- require exact equality;
-- mismatch => STOP, do not run.
-
-# 6. EXECUTE PATCHER EXACTLY ONCE
+# 3. FIRST OPERATION — DELETE THE R2 ROGUE TRACKED PATCHER
 
 Run exactly:
 
 ```text
-<REQUIRED_PYTHON> C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py
+git rm scripts/task8b3_ref01_eligibility_repair_patcher.py
 ```
 
-Require exit 0 and these stdout lines:
+Require success.
+
+Do not delete any other file.
+
+# 4. PATCHER PAYLOAD
+
+Create exactly:
+
+```text
+C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64
+```
+
+Its entire content must be this ONE base64 line, with no leading/trailing spaces:
+
+```text
+ZnJvbSBfX2Z1dHVyZV9fIGltcG9ydCBhbm5vdGF0aW9ucwoKaW1wb3J0IGJhc2U2NAppbXBvcnQgaGFzaGxpYgppbXBvcnQgc3VicHJvY2VzcwppbXBvcnQgc3lzCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKUkVQTyA9IFBhdGgociJDOlxEXERlZXBTZWVrSGFybmVzc1x3b3Jrc3BhY2VccHJvamVjdFxCdWlsZFJlYXNvblNlZyIpCkVYVEVSTkFMID0gUGF0aChyIkM6XERcRGVlcFNlZWtIYXJuZXNzXGRlbGl2ZXJ5XEJ1aWxkUmVhc29uU2VnX0Fkdmlzb3JfUkMxIikKREVURUNUT1IgPSBSRVBPIC8gImRlbGl2ZXJ5X3NyYyIgLyAiQnVpbGRSZWFzb25TZWdfQWR2aXNvcl9SQzEiIC8gImJ1aWxkcmVhc29uc2VnIiAvICJydW50aW1lIiAvICJkZXRlY3Rvci5weSIKVEVTVCA9IFJFUE8gLyAiZGVsaXZlcnlfc3JjIiAvICJCdWlsZFJlYXNvblNlZ19BZHZpc29yX1JDMSIgLyAidGVzdHMiIC8gInRlc3RfdGFzazhiX3J1bnRpbWUucHkiCkVYVEVSTkFMX0RFVEVDVE9SID0gRVhURVJOQUwgLyAiYnVpbGRyZWFzb25zZWciIC8gInJ1bnRpbWUiIC8gImRldGVjdG9yLnB5IgoKRVhQRUNURURfQlJBTkNIID0gImZpeC90YXNrOGIzLXJlZjAxLWVsaWdpYmlsaXR5LXJlcGFpci1pbXBsIgpFWFBFQ1RFRF9IRUFEID0gIjkzMDRiODllMzI1ZWQyYjBlY2RiZWY0ZmQ1ODc5MDczMGQyMzRjODUiCkVYUEVDVEVEX0VYVEVSTkFMX1NIQSA9ICI4MjUzMWRjM2I3NThjZDhhODY0Zjc3ZDBmYTk3ZTQxMzIxMTNjYjQ2ZWI1YTMzYTExZjQ4M2JmNTFiYzBhNzM4IgoKREVURUNUT1JfUkVQTEFDRU1FTlRfQjY0ID0gIlpHVm1JR1ZzYVdkcFlteGxYM0J5YjNCdmMyRnNjeWh3Y205d2IzTmhiSE02SUd4cGMzUmJSMnh2WW1Gc1VISnZjRzl6WVd4ZExDQXFMQ0JtWVcxcGJIazZJSE4wY2lBOUlDSnNZWEpuWlhOMElnb2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNrZ0xUNGdiR2x6ZEZ0SGJHOWlZV3hRY205d2IzTmhiRjA2Q2lBZ0lDQnlaWFIxY200Z1czQnliM0J2YzJGc0lHWnZjaUJ3Y205d2IzTmhiQ0JwYmlCd2NtOXdiM05oYkhNZ2FXWWdaV3hwWjJsaWJHVW9jSEp2Y0c5ellXd3NJR1poYldsc2VUMW1ZVzFwYkhrcFhRb0tDbVJsWmlCZmNtVm1aWEpsYm1ObFgzSmhibXNvY0hKdmNHOXpZV3c2SUVkc2IySmhiRkJ5YjNCdmMyRnNLU0F0UGlCMGRYQnNaVnRwYm5Rc0lHWnNiMkYwTENCcGJuUmRPZ29nSUNBZ2NtVjBkWEp1SUNndGNISnZjRzl6WVd3dWJXRnphMTloY21WaExDQXRjSEp2Y0c5ellXd3VZMjl1Wm1sa1pXNWpaU3dnY0hKdmNHOXpZV3d1Y0hKdmNHOXpZV3hmYVdRcENnb0taR1ZtSUY5c1lYSm5aWE4wWDNKbFptVnlaVzVqWlY5allXNWthV1JoZEdWelgzZHBkR2hmWlhoMFpXNTBYMlY0WTJWd2RHbHZiaWdLSUNBZ0lDQWdJQ0J3Y205d2IzTmhiSE02SUd4cGMzUmJSMnh2WW1Gc1VISnZjRzl6WVd4ZEtTQXRQaUJzYVhOMFcwZHNiMkpoYkZCeWIzQnZjMkZzWFRvS0lDQWdJQ0lpSWtaeWIzcGxiaUJpWVhObElHTmhibVJwWkdGMFpYTWdjR3gxY3lCMGFHVWdVa014SUd4aGNtZGxjM1F0YjI1c2VTQmxlSFJsYm5RdFpHOXRhVzVoYm1ObElHVjRZMlZ3ZEdsdmJpNGlJaUlLQ2lBZ0lDQmlZWE5sWDJOaGJtUnBaR0YwWlhNZ1BTQmxiR2xuYVdKc1pWOXdjbTl3YjNOaGJITW9jSEp2Y0c5ellXeHpMQ0JtWVcxcGJIazlJbXhoY21kbGMzUWlLUW9nSUNBZ2FXWWdibTkwSUdKaGMyVmZZMkZ1Wkdsa1lYUmxjem9LSUNBZ0lDQWdJQ0J5WlhSMWNtNGdXMTBLQ2lBZ0lDQmlZWE5sYkdsdVpTQTlJSE52Y25SbFpDaGlZWE5sWDJOaGJtUnBaR0YwWlhNc0lHdGxlVDFmY21WbVpYSmxibU5sWDNKaGJtc3BXekJkQ2lBZ0lDQmxlR05sY0hScGIyNXpJRDBnV3dvZ0lDQWdJQ0FnSUhCeWIzQnZjMkZzSUdadmNpQndjbTl3YjNOaGJDQnBiaUJ3Y205d2IzTmhiSE1LSUNBZ0lDQWdJQ0JwWmlCd2NtOXdiM05oYkM1dFlYTnJYMkZ5WldFZ1BpQXdDaUFnSUNBZ0lDQWdZVzVrSUhCeWIzQnZjMkZzTG0xaGMydGZZM0p2Y0M1aGJua29LUW9nSUNBZ0lDQWdJR0Z1WkNCdWIzUWdjSEp2Y0c5ellXd3VkRzkxWTJobGMxOXBiV0ZuWlY5aWIzSmtaWElLSUNBZ0lDQWdJQ0JoYm1RZ2NISnZjRzl6WVd3dVltSnZlRjlsZUhSbGJuUmZjbUYwYVc4Z1BpQk5SVkpIUlY5Q1FrOVlYMFZZVkVWT1ZGOVNRVlJKVDE5TlFWZ0tJQ0FnSUNBZ0lDQmhibVFnY0hKdmNHOXpZV3d1YldGemExOWhjbVZoSUQ0Z1ltRnpaV3hwYm1VdWJXRnphMTloY21WaENpQWdJQ0FnSUNBZ1lXNWtJSEJ5YjNCdmMyRnNMbU52Ym1acFpHVnVZMlVnUGlCaVlYTmxiR2x1WlM1amIyNW1hV1JsYm1ObENpQWdJQ0JkQ2lBZ0lDQnlaWFIxY200Z1ltRnpaVjlqWVc1a2FXUmhkR1Z6SUNzZ1pYaGpaWEIwYVc5dWN3b0tDbVJsWmlCelpXeGxZM1JmY21WbVpYSmxibU5sS0hCeWIzQnZjMkZzY3pvZ2JHbHpkRnRIYkc5aVlXeFFjbTl3YjNOaGJGMHNJQ29zSUdaaGJXbHNlVG9nYzNSeUlEMGdJbXhoY21kbGMzUWlLU0F0UGlCSGJHOWlZV3hRY205d2IzTmhiQ0I4SUU1dmJtVTZDaUFnSUNBaUlpSlRaV3hsWTNRZ1lTQnlaV1psY21WdVkyVWdkMmwwYUNCMGFHVWdabkp2ZW1WdUlHSmhjMlVnY25Wc1pTQmhibVFnZEdobElHeGhjbWRsYzNRdGIyNXNlU0JTUXpFZ1pYaGpaWEIwYVc5dUxpSWlJZ29LSUNBZ0lHbG1JR1poYldsc2VTQTlQU0FpYkdGeVoyVnpkQ0k2Q2lBZ0lDQWdJQ0FnWTJGdVpHbGtZWFJsY3lBOUlGOXNZWEpuWlhOMFgzSmxabVZ5Wlc1alpWOWpZVzVrYVdSaGRHVnpYM2RwZEdoZlpYaDBaVzUwWDJWNFkyVndkR2x2Ymlod2NtOXdiM05oYkhNcENpQWdJQ0JsYkhObE9nb2dJQ0FnSUNBZ0lHTmhibVJwWkdGMFpYTWdQU0JsYkdsbmFXSnNaVjl3Y205d2IzTmhiSE1vY0hKdmNHOXpZV3h6TENCbVlXMXBiSGs5Wm1GdGFXeDVLUW9nSUNBZ2FXWWdibTkwSUdOaGJtUnBaR0YwWlhNNkNpQWdJQ0FnSUNBZ2NtVjBkWEp1SUU1dmJtVUtJQ0FnSUhKbGRIVnliaUJ6YjNKMFpXUW9ZMkZ1Wkdsa1lYUmxjeXdnYTJWNVBWOXlaV1psY21WdVkyVmZjbUZ1YXlsYk1GMEtDZ289IgpURVNUX0lOU0VSVF9CNjQgPSAiWkdWbUlGOXlaV1psY21WdVkyVmZjbVZqZENob1pXbG5hSFE2SUdsdWRDd2dkMmxrZEdnNklHbHVkQ3dnWTI5dVptbGtaVzVqWlRvZ1pteHZZWFFzSUhCeWIzQnZjMkZzWDJsa09pQnBiblFzQ2lBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0tpd2dkRzl3T2lCcGJuUWdQU0F4TURBc0lHeGxablE2SUdsdWRDQTlJREV3TUNrZ0xUNGdSMnh2WW1Gc1VISnZjRzl6WVd3NkNpQWdJQ0J0WVhOcklEMGdibkF1ZW1WeWIzTW9LRFV4TWl3Z05URXlLU3dnWkhSNWNHVTlZbTl2YkNrS0lDQWdJRzFoYzJ0YmRHOXdPblJ2Y0NBcklHaGxhV2RvZEN3Z2JHVm1kRHBzWldaMElDc2dkMmxrZEdoZElEMGdWSEoxWlFvZ0lDQWdjbVYwZFhKdUlGOXdjbTl3YjNOaGJDaHRZWE5yTENCamIyNW1hV1JsYm1ObExDQm1Jbko3Y0hKdmNHOXpZV3hmYVdSOUlpd2djSEp2Y0c5ellXeGZhV1FzSUhCeWIzQnZjMkZzWDJsa0xBb2dJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0J3Y205d2IzTmhiRjlwWkQxd2NtOXdiM05oYkY5cFpDa0tDZ3BrWldZZ2RHVnpkRjlzWVhKblpYTjBYMlY0ZEdWdWRGOWtiMjFwYm1GdVkyVmZaWGhqWlhCMGFXOXVYM05sYkdWamRITmZjM1J5YVdOMGJIbGZaRzl0YVc1aGJuUmZZMkZ1Wkdsa1lYUmxLQ2tnTFQ0Z1RtOXVaVG9LSUNBZ0lHSmhjMlZzYVc1bElEMGdYM0psWm1WeVpXNWpaVjl5WldOMEtEZ3dMQ0E0TUN3Z01DNDJNQ3dnTVNrS0lDQWdJR1J2YldsdVlXNTBJRDBnWDNKbFptVnlaVzVqWlY5eVpXTjBLREV5TUN3Z01USXdMQ0F3TGpZeExDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCbGJHbG5hV0pzWlNoaVlYTmxiR2x1WlN3Z1ptRnRhV3g1UFNKc1lYSm5aWE4wSWlrZ2FYTWdWSEoxWlFvZ0lDQWdZWE56WlhKMElHVnNhV2RwWW14bEtHUnZiV2x1WVc1MExDQm1ZVzFwYkhrOUlteGhjbWRsYzNRaUtTQnBjeUJHWVd4elpRb2dJQ0FnWVhOelpYSjBJR1JsZEdWamRHOXlMbVZzYVdkcFlteGxYM0J5YjNCdmMyRnNjeWhiWW1GelpXeHBibVVzSUdSdmJXbHVZVzUwWFN3Z1ptRnRhV3g1UFNKc1lYSm5aWE4wSWlrZ1BUMGdXMkpoYzJWc2FXNWxYUW9nSUNBZ1lYTnpaWEowSUhObGJHVmpkRjl5WldabGNtVnVZMlVvVzJKaGMyVnNhVzVsTENCa2IyMXBibUZ1ZEYwc0lHWmhiV2xzZVQwaWJHRnlaMlZ6ZENJcElHbHpJR1J2YldsdVlXNTBDZ29LWkdWbUlIUmxjM1JmYkdGeVoyVnpkRjlsZUhSbGJuUmZaWGhqWlhCMGFXOXVYM0psYW1WamRITmZiRzkzWlhKZlkyOXVabWxrWlc1alpWOWpZVzVrYVdSaGRHVW9LU0F0UGlCT2IyNWxPZ29nSUNBZ1ltRnpaV3hwYm1VZ1BTQmZjbVZtWlhKbGJtTmxYM0psWTNRb09EQXNJRGd3TENBd0xqWXdMQ0F4S1FvZ0lDQWdZMkZ1Wkdsa1lYUmxJRDBnWDNKbFptVnlaVzVqWlY5eVpXTjBLREV5TUN3Z01USXdMQ0F3TGpVNUxDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCelpXeGxZM1JmY21WbVpYSmxibU5sS0Z0aVlYTmxiR2x1WlN3Z1kyRnVaR2xrWVhSbFhTd2dabUZ0YVd4NVBTSnNZWEpuWlhOMElpa2dhWE1nWW1GelpXeHBibVVLQ2dwa1pXWWdkR1Z6ZEY5c1lYSm5aWE4wWDJWNGRHVnVkRjlsZUdObGNIUnBiMjVmY21WeGRXbHlaWE5mYzNSeWFXTjBYMk52Ym1acFpHVnVZMlZmWjJGcGJpZ3BJQzArSUU1dmJtVTZDaUFnSUNCaVlYTmxiR2x1WlNBOUlGOXlaV1psY21WdVkyVmZjbVZqZENnNE1Dd2dPREFzSURBdU5qQXNJREVwQ2lBZ0lDQmpZVzVrYVdSaGRHVWdQU0JmY21WbVpYSmxibU5sWDNKbFkzUW9NVEl3TENBeE1qQXNJREF1TmpBc0lESXNJSFJ2Y0QweU5UQXNJR3hsWm5ROU1qVXdLUW9nSUNBZ1lYTnpaWEowSUhObGJHVmpkRjl5WldabGNtVnVZMlVvVzJKaGMyVnNhVzVsTENCallXNWthV1JoZEdWZExDQm1ZVzFwYkhrOUlteGhjbWRsYzNRaUtTQnBjeUJpWVhObGJHbHVaUW9LQ21SbFppQjBaWE4wWDJ4aGNtZGxjM1JmWlhoMFpXNTBYMlY0WTJWd2RHbHZibDl5WlhGMWFYSmxjMTl6ZEhKcFkzUmZZWEpsWVY5bllXbHVLQ2tnTFQ0Z1RtOXVaVG9LSUNBZ0lHSmhjMlZzYVc1bElEMGdYM0psWm1WeVpXNWpaVjl5WldOMEtEZ3dMQ0E0TUN3Z01DNDJNQ3dnTVNrS0lDQWdJSE5oYldWZllYSmxZU0E5SUY5eVpXWmxjbVZ1WTJWZmNtVmpkQ2cwTUN3Z01UWXdMQ0F3TGprMUxDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCaVlYTmxiR2x1WlM1dFlYTnJYMkZ5WldFZ1BUMGdjMkZ0WlY5aGNtVmhMbTFoYzJ0ZllYSmxZUW9nSUNBZ1lYTnpaWEowSUdWc2FXZHBZbXhsS0hOaGJXVmZZWEpsWVN3Z1ptRnRhV3g1UFNKc1lYSm5aWE4wSWlrZ2FYTWdSbUZzYzJVS0lDQWdJR0Z6YzJWeWRDQnpaV3hsWTNSZmNtVm1aWEpsYm1ObEtGdGlZWE5sYkdsdVpTd2djMkZ0WlY5aGNtVmhYU3dnWm1GdGFXeDVQU0pzWVhKblpYTjBJaWtnYVhNZ1ltRnpaV3hwYm1VS0NncGtaV1lnZEdWemRGOXNZWEpuWlhOMFgyVjRkR1Z1ZEY5bGVHTmxjSFJwYjI1ZmJtVjJaWEpmWVdSdGFYUnpYMkp2Y21SbGNsOXdjbTl3YjNOaGJDZ3BJQzArSUU1dmJtVTZDaUFnSUNCaVlYTmxiR2x1WlNBOUlGOXlaV1psY21WdVkyVmZjbVZqZENnNE1Dd2dPREFzSURBdU5qQXNJREVwQ2lBZ0lDQmliM0prWlhJZ1BTQmZjbVZtWlhKbGJtTmxYM0psWTNRb01USXdMQ0F4TWpBc0lEQXVPVFVzSURJc0lIUnZjRDB3TENCc1pXWjBQVEkxTUNrS0lDQWdJR0Z6YzJWeWRDQmliM0prWlhJdWRHOTFZMmhsYzE5cGJXRm5aVjlpYjNKa1pYSWdhWE1nVkhKMVpRb2dJQ0FnWVhOelpYSjBJSE5sYkdWamRGOXlaV1psY21WdVkyVW9XMkpoYzJWc2FXNWxMQ0JpYjNKa1pYSmRMQ0JtWVcxcGJIazlJbXhoY21kbGMzUWlLU0JwY3lCaVlYTmxiR2x1WlFvS0NtUmxaaUIwWlhOMFgyeGhjbWRsYzNSZlpYaDBaVzUwWDJWNFkyVndkR2x2Ymw5eVpYRjFhWEpsYzE5bWNtOTZaVzVmWW1GelpXeHBibVVvS1NBdFBpQk9iMjVsT2dvZ0lDQWdiMjVzZVY5bGVIUmxiblJmZG1sdmJHRjBhVzl1SUQwZ1gzSmxabVZ5Wlc1alpWOXlaV04wS0RFeU1Dd2dNVEl3TENBd0xqazFMQ0F4S1FvZ0lDQWdZWE56WlhKMElHVnNhV2RwWW14bEtHOXViSGxmWlhoMFpXNTBYM1pwYjJ4aGRHbHZiaXdnWm1GdGFXeDVQU0pzWVhKblpYTjBJaWtnYVhNZ1JtRnNjMlVLSUNBZ0lHRnpjMlZ5ZENCelpXeGxZM1JmY21WbVpYSmxibU5sS0Z0dmJteDVYMlY0ZEdWdWRGOTJhVzlzWVhScGIyNWRMQ0JtWVcxcGJIazlJbXhoY21kbGMzUWlLU0JwY3lCT2IyNWxDZ29LWkdWbUlIUmxjM1JmYkdGeVoyVnpkRjlsZUhSbGJuUmZaWGhqWlhCMGFXOXVYMnRsWlhCelgzQnliMlIxWTNScGIyNWZZWEpsWVY5dmNtUmxjaWdwSUMwK0lFNXZibVU2Q2lBZ0lDQmlZWE5sYkdsdVpTQTlJRjl5WldabGNtVnVZMlZmY21WamRDZzRNQ3dnT0RBc0lEQXVOakFzSURFcENpQWdJQ0JsZUdObGNIUnBiMjVmWVNBOUlGOXlaV1psY21WdVkyVmZjbVZqZENneE1qQXNJREV5TUN3Z01DNDNNQ3dnTWl3Z2RHOXdQVEkxTUN3Z2JHVm1kRDAxTUNrS0lDQWdJR1Y0WTJWd2RHbHZibDlpSUQwZ1gzSmxabVZ5Wlc1alpWOXlaV04wS0RFek1Dd2dNVE13TENBd0xqWXhMQ0F6TENCMGIzQTlNalV3TENCc1pXWjBQVEkxTUNrS0lDQWdJR0Z6YzJWeWRDQnpaV3hsWTNSZmNtVm1aWEpsYm1ObEtGdGlZWE5sYkdsdVpTd2daWGhqWlhCMGFXOXVYMkVzSUdWNFkyVndkR2x2Ymw5aVhTd2dabUZ0YVd4NVBTSnNZWEpuWlhOMElpa2dhWE1nWlhoalpYQjBhVzl1WDJJS0NncGtaV1lnZEdWemRGOXNZWEpuWlhOMFgyVjRkR1Z1ZEY5bGVHTmxjSFJwYjI1ZlpHOWxjMTl1YjNSZlkyaGhibWRsWDNOdFlXeHNaWE4wWDJaaGJXbHNlU2dwSUMwK0lFNXZibVU2Q2lBZ0lDQmlZWE5sYkdsdVpTQTlJRjl5WldabGNtVnVZMlZmY21WamRDZzRNQ3dnT0RBc0lEQXVOakFzSURFcENpQWdJQ0JsZUhSbGJuUmZkbWx2YkdGMGFXOXVJRDBnWDNKbFptVnlaVzVqWlY5eVpXTjBLREV5TUN3Z01USXdMQ0F3TGprMUxDQXlMQ0IwYjNBOU1qVXdMQ0JzWldaMFBUSTFNQ2tLSUNBZ0lHRnpjMlZ5ZENCbGJHbG5hV0pzWlNobGVIUmxiblJmZG1sdmJHRjBhVzl1TENCbVlXMXBiSGs5SW5OdFlXeHNaWE4wSWlrZ2FYTWdSbUZzYzJVS0lDQWdJR0Z6YzJWeWRDQnpaV3hsWTNSZmNtVm1aWEpsYm1ObEtGdGlZWE5sYkdsdVpTd2daWGgwWlc1MFgzWnBiMnhoZEdsdmJsMHNJR1poYldsc2VUMGljMjFoYkd4bGMzUWlLU0JwY3lCaVlYTmxiR2x1WlFvS0NnPT0iCgpTVEFSVF9TRU5USU5FTCA9IGInZGVmIGVsaWdpYmxlX3Byb3Bvc2FscygnCkVORF9TRU5USU5FTCA9IGInZGVmIHByb3Bvc2FsX2J5X2lkKCcKVEVTVF9NQVJLRVIgPSBiJyMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSByZWFzb25pbmcgY29udGV4dCcKVEVTVF9TRU5USU5FTCA9IGInZGVmIHRlc3RfbGFyZ2VzdF9leHRlbnRfZG9taW5hbmNlX2V4Y2VwdGlvbl9zZWxlY3RzX3N0cmljdGx5X2RvbWluYW50X2NhbmRpZGF0ZScKCgpkZWYgc2hhMjU2KHBhdGg6IFBhdGgpIC0+IHN0cjoKICAgIGggPSBoYXNobGliLnNoYTI1NigpCiAgICB3aXRoIHBhdGgub3BlbigicmIiKSBhcyBmOgogICAgICAgIGZvciBjaHVuayBpbiBpdGVyKGxhbWJkYTogZi5yZWFkKDEgPDwgMjApLCBiIiIpOgogICAgICAgICAgICBoLnVwZGF0ZShjaHVuaykKICAgIHJldHVybiBoLmhleGRpZ2VzdCgpCgoKZGVmIGdpdF90ZXh0KCphcmdzOiBzdHIpIC0+IHN0cjoKICAgIHAgPSBzdWJwcm9jZXNzLnJ1bigKICAgICAgICBbImdpdCIsICItQyIsIHN0cihSRVBPKSwgKmFyZ3NdLAogICAgICAgIGNoZWNrPVRydWUsCiAgICAgICAgY2FwdHVyZV9vdXRwdXQ9VHJ1ZSwKICAgICAgICB0ZXh0PVRydWUsCiAgICApCiAgICByZXR1cm4gcC5zdGRvdXQuc3RyaXAoKQoKCmRlZiBuZXdsaW5lKHJhdzogYnl0ZXMpIC0+IGJ5dGVzOgogICAgY3JsZiA9IHJhdy5jb3VudChiIlxyXG4iKQogICAgbGYgPSByYXcuY291bnQoYiJcbiIpCiAgICBpZiBjcmxmIGFuZCBjcmxmID09IGxmOgogICAgICAgIHJldHVybiBiIlxyXG4iCiAgICBpZiBub3QgY3JsZiBhbmQgbGY6CiAgICAgICAgcmV0dXJuIGIiXG4iCiAgICByYWlzZSBBc3NlcnRpb25FcnJvcihmInVuc3VwcG9ydGVkIG1peGVkIG5ld2xpbmUgc3RhdGU6IENSTEY9e2NybGZ9LCBMRj17bGZ9IikKCgpkZWYgYWRhcHRfbGZfcGF5bG9hZChwYXlsb2FkX2I2NDogc3RyLCBubDogYnl0ZXMpIC0+IGJ5dGVzOgogICAgcGF5bG9hZCA9IGJhc2U2NC5iNjRkZWNvZGUocGF5bG9hZF9iNjQpCiAgICBhc3NlcnQgYiJcciIgbm90IGluIHBheWxvYWQKICAgIHJldHVybiBwYXlsb2FkLnJlcGxhY2UoYiJcbiIsIG5sKQoKCmRlZiBtYWluKCkgLT4gaW50OgogICAgYXNzZXJ0IGdpdF90ZXh0KCJicmFuY2giLCAiLS1zaG93LWN1cnJlbnQiKSA9PSBFWFBFQ1RFRF9CUkFOQ0gKICAgIGFzc2VydCBnaXRfdGV4dCgicmV2LXBhcnNlIiwgIkhFQUQiKSA9PSBFWFBFQ1RFRF9IRUFECiAgICBhc3NlcnQgRVhURVJOQUxfREVURUNUT1IuaXNfZmlsZSgpCiAgICBhc3NlcnQgc2hhMjU2KEVYVEVSTkFMX0RFVEVDVE9SKSA9PSBFWFBFQ1RFRF9FWFRFUk5BTF9TSEEKCiAgICBkZXRlY3Rvcl9yYXcgPSBERVRFQ1RPUi5yZWFkX2J5dGVzKCkKICAgIHRlc3RfcmF3ID0gVEVTVC5yZWFkX2J5dGVzKCkKICAgIGRubCA9IG5ld2xpbmUoZGV0ZWN0b3JfcmF3KQogICAgdG5sID0gbmV3bGluZSh0ZXN0X3JhdykKCiAgICBhc3NlcnQgZGV0ZWN0b3JfcmF3LmNvdW50KFNUQVJUX1NFTlRJTkVMKSA9PSAxCiAgICBhc3NlcnQgZGV0ZWN0b3JfcmF3LmNvdW50KEVORF9TRU5USU5FTCkgPT0gMQogICAgYXNzZXJ0IGRldGVjdG9yX3Jhdy5jb3VudChiJ2RlZiBzZWxlY3RfcmVmZXJlbmNlKCcpID09IDEKICAgIGFzc2VydCBkZXRlY3Rvcl9yYXcuY291bnQoYidkZWYgX3JlZmVyZW5jZV9yYW5rKCcpID09IDAKICAgIGFzc2VydCBkZXRlY3Rvcl9yYXcuY291bnQoYidkZWYgX2xhcmdlc3RfcmVmZXJlbmNlX2NhbmRpZGF0ZXNfd2l0aF9leHRlbnRfZXhjZXB0aW9uKCcpID09IDAKCiAgICBzdGFydCA9IGRldGVjdG9yX3Jhdy5pbmRleChTVEFSVF9TRU5USU5FTCkKICAgIGVuZCA9IGRldGVjdG9yX3Jhdy5pbmRleChFTkRfU0VOVElORUwpCiAgICBhc3NlcnQgc3RhcnQgPCBlbmQKICAgIG9sZF9zbGljZSA9IGRldGVjdG9yX3Jhd1tzdGFydDplbmRdCiAgICBhc3NlcnQgYidjYW5kaWRhdGVzID0gZWxpZ2libGVfcHJvcG9zYWxzKHByb3Bvc2FscywgZmFtaWx5PWZhbWlseSknIGluIG9sZF9zbGljZQoKICAgIG5ld19zbGljZSA9IGFkYXB0X2xmX3BheWxvYWQoREVURUNUT1JfUkVQTEFDRU1FTlRfQjY0LCBkbmwpCiAgICBkZXRlY3Rvcl9hZnRlciA9IGRldGVjdG9yX3Jhd1s6c3RhcnRdICsgbmV3X3NsaWNlICsgZGV0ZWN0b3JfcmF3W2VuZDpdCgogICAgYXNzZXJ0IGRldGVjdG9yX2FmdGVyLmNvdW50KGInZGVmIF9yZWZlcmVuY2VfcmFuaygnKSA9PSAxCiAgICBhc3NlcnQgZGV0ZWN0b3JfYWZ0ZXIuY291bnQoYidkZWYgX2xhcmdlc3RfcmVmZXJlbmNlX2NhbmRpZGF0ZXNfd2l0aF9leHRlbnRfZXhjZXB0aW9uKCcpID09IDEKICAgIGFzc2VydCBkZXRlY3Rvcl9hZnRlci5jb3VudChiJ3Byb3Bvc2FsLm1hc2tfYXJlYSA+IGJhc2VsaW5lLm1hc2tfYXJlYScpID09IDEKICAgIGFzc2VydCBkZXRlY3Rvcl9hZnRlci5jb3VudChiJ3Byb3Bvc2FsLmNvbmZpZGVuY2UgPiBiYXNlbGluZS5jb25maWRlbmNlJykgPT0gMQoKICAgIGFzc2VydCB0ZXN0X3Jhdy5jb3VudChURVNUX01BUktFUikgPT0gMQogICAgYXNzZXJ0IHRlc3RfcmF3LmNvdW50KFRFU1RfU0VOVElORUwpID09IDAKICAgIG1hcmtlcl9wb3MgPSB0ZXN0X3Jhdy5pbmRleChURVNUX01BUktFUikKICAgIHRlc3RfaW5zZXJ0ID0gYWRhcHRfbGZfcGF5bG9hZChURVNUX0lOU0VSVF9CNjQsIHRubCkKICAgIHRlc3RfYWZ0ZXIgPSB0ZXN0X3Jhd1s6bWFya2VyX3Bvc10gKyB0ZXN0X2luc2VydCArIHRlc3RfcmF3W21hcmtlcl9wb3M6XQogICAgYXNzZXJ0IHRlc3RfYWZ0ZXIuY291bnQoYidkZWYgdGVzdF9sYXJnZXN0X2V4dGVudF8nKSA9PSA4CgogICAgREVURUNUT1Iud3JpdGVfYnl0ZXMoZGV0ZWN0b3JfYWZ0ZXIpCiAgICBURVNULndyaXRlX2J5dGVzKHRlc3RfYWZ0ZXIpCgogICAgcHJpbnQoIlBBVENIRVJfQlJBTkNIX0hFQUQ6IFBBU1MiKQogICAgcHJpbnQoIkVYVEVSTkFMX0RFVEVDVE9SX0lERU5USVRZOiBQQVNTIikKICAgIHByaW50KCJERVRFQ1RPUl9CT1VOREFSWV9SRVBMQUNFTUVOVDogUEFTUyIpCiAgICBwcmludCgiVEVTVF9NQVJLRVJfSU5TRVJUSU9OOiBQQVNTIikKICAgIHByaW50KCJORVdfVEVTVF9DT1VOVDogOCIpCiAgICBwcmludCgiUEFUQ0hFUl9SRVNVTFQ6IFBBU1MiKQogICAgcmV0dXJuIDAKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgc3lzLmV4aXQobWFpbigpKQo=
+```
+
+Then run exactly:
+
+```text
+<REQUIRED_PYTHON> -c "import base64,pathlib; p=pathlib.Path(r'C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64'); q=pathlib.Path(r'C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py'); q.write_bytes(base64.b64decode(p.read_text(encoding='ascii').strip()))"
+```
+
+Required patcher SHA256:
+
+```text
+9d89c86fc914b1e00454870bbf974e6fedbbde43196d8c5be5588d7ab3c16648
+```
+
+Calculate the SHA256 of the generated `.py`; mismatch => STOP.
+
+Important:
+- DO NOT `py_compile` the patcher.
+- DO NOT edit the patcher.
+- DO NOT create any copy under the repository.
+
+# 5. EXECUTE PATCHER EXACTLY ONCE
+
+Run exactly:
+
+```text
+<REQUIRED_PYTHON> C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py
+```
+
+Require exit 0 and:
 
 ```text
 PATCHER_BRANCH_HEAD: PASS
@@ -386,45 +109,31 @@ NEW_TEST_COUNT: 8
 PATCHER_RESULT: PASS
 ```
 
-Any failure:
-- STOP immediately;
-- no manual edits;
-- no rerun.
+Failure => STOP; no retry and no manual source/test edit.
 
-On success delete:
+After PASS, delete both repo-external temporary files:
 
 ```text
-C:\D\DeepSeekHarness\task8b3_ref01_e3a_r2_apply.py
+C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64
+C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py
 ```
 
-# 7. STATIC GATE
+# 6. PRODUCT STATIC GATE
 
-Run exactly:
+Now and only now run:
 
 ```text
 <REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
 <REQUIRED_PYTHON> -m py_compile delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py
 ```
 
-Require both exit 0.
+Both must exit 0.
 
-Then require mechanically:
+No patcher compile is authorized.
 
-```text
-def _reference_rank( count = 1
-def _largest_reference_candidates_with_extent_exception( count = 1
-proposal.mask_area > baseline.mask_area count = 1
-proposal.confidence > baseline.confidence count = 1
-new largest-extent test definitions = 8
-source_manifest changed = NO
-pipeline.py changed = NO
-```
+# 7. TARGETED TEST
 
-Any failure => STOP.
-
-# 8. TARGETED PYTEST
-
-Run exactly once:
+Run exactly:
 
 ```text
 <REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests\test_task8b_runtime.py -q
@@ -432,11 +141,9 @@ Run exactly once:
 
 Require exit 0.
 
-Non-zero => STOP. Do not edit code/tests.
+# 8. CANONICAL FULL TEST
 
-# 9. CANONICAL FULL PYTEST
-
-Only if targeted PASS:
+Only after targeted PASS:
 
 ```text
 <REQUIRED_PYTHON> -m pytest delivery_src\BuildReasonSeg_Advisor_RC1\tests -q
@@ -444,55 +151,59 @@ Only if targeted PASS:
 
 Require exit 0.
 
-Non-zero => STOP.
+Any pytest failure => STOP; do not edit code/tests.
 
-# 10. EXTERNAL IMMUTABILITY
+# 9. EXTERNAL / MANIFEST GATES
 
-Hash actual external file after all test gates:
+Do NOT run sync.
+
+Do NOT modify:
 
 ```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\buildreasonseg\runtime\detector.py
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 ```
 
-Require exactly:
+Actual external detector SHA after tests must remain:
 
 ```text
 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
 ```
 
-No external sync/write is permitted.
-
-# 11. MANIFEST POLICY
-
-Canonical `source_manifest.json` intentionally remains unchanged in R2.
-
 Record:
 
 ```text
 manifest_status = INTENTIONALLY_STALE_PENDING_E3B
+detector_model_calls = 0
 ```
 
-Do not run sync helper even in check mode.
+# 10. ALLOWED FINAL TRACKED DIFF
 
-# 12. FIXED EVIDENCE
-
-If and only if all previous gates PASS, overwrite/create:
+Relative to starting HEAD `9304b89e...`, the ONLY allowed changed paths are:
 
 ```text
+scripts/task8b3_ref01_eligibility_repair_patcher.py   [DELETED]
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
 evaluation/task8b3_ref01_eligibility_repair_impl.json
+docs/task8b3_ref01_eligibility_repair_impl.md
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
 ```
 
-with exactly:
+No other path is allowed.
+
+# 11. COMPLETE EVIDENCE
+
+If all previous gates PASS, write `evaluation/task8b3_ref01_eligibility_repair_impl.json` with:
 
 ```json
 {
-  "task": "8B.3-REF01-E3A-R2",
-  "starting_head": "fc2a33325eacf6ce5f366d6574abed3694431f5b",
+  "task": "8B.3-REF01-E3A-R3",
+  "starting_head": "9304b89e325ed2b0ecdbef4fd58790730d234c85",
   "branch": "fix/task8b3-ref01-eligibility-repair-impl",
   "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
-  "implementation_scope": "CANONICAL_ONLY_NO_SYNC",
-  "patch_method": "UNIQUE_FUNCTION_BOUNDARY_PATCHER",
-  "patcher_sha256": "2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5",
+  "patch_method": "BASE64_VERIFIED_BOUNDARY_PATCHER",
+  "patcher_sha256": "9d89c86fc914b1e00454870bbf974e6fedbbde43196d8c5be5588d7ab3c16648",
   "detector_model_calls": 0,
   "eligible_function_changed": false,
   "eligible_proposals_function_changed": false,
@@ -503,12 +214,9 @@ with exactly:
   "border_exception_allowed": false,
   "smallest_family_changed": false,
   "new_numeric_thresholds": [],
-  "patcher_exit": 0,
-  "py_compile_detector_exit": 0,
-  "py_compile_test_exit": 0,
+  "product_py_compile": "PASS",
   "targeted_test_exit": 0,
   "canonical_full_test_exit": 0,
-  "external_detector_after": "82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738",
   "external_detector_unchanged": true,
   "source_manifest_updated": false,
   "manifest_status": "INTENTIONALLY_STALE_PENDING_E3B",
@@ -517,64 +225,27 @@ with exactly:
 }
 ```
 
-Do not add/remove/rename keys.
+Do not add or remove keys.
 
-# 13. REPORT / FROM_DSH
+# 12. REPORT / FROM_DSH
 
-Update `docs/task8b3_ref01_eligibility_repair_impl.md` with a new authoritative E3A-R2 section.
+Append an authoritative `E3A-R3` section to `docs/task8b3_ref01_eligibility_repair_impl.md`.
 
-Required COMPLETE facts:
+Preserve ARTIFACT-FACTS exactly in FROM_DSH.
 
-```text
-Task = 8B.3-REF01-E3A-R2
-Status = COMPLETE
-Design = LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-Patch method = UNIQUE_FUNCTION_BOUNDARY_PATCHER
-Patcher SHA256 = 2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5
-Detector/model calls = 0
-eligible() changed = NO
-eligible_proposals() changed = NO
-Largest-only exception = YES
-Strict area operator = >
-Strict confidence operator = >
-Border bypass = NO
-No-baseline exception = NO
-Smallest family changed = NO
-New numeric threshold = NO
-Targeted pytest = PASS
-Canonical full pytest = PASS
-External RC1 modified = NO
-Source manifest updated = NO
-Manifest status = INTENTIONALLY_STALE_PENDING_E3B
-Outcome = REF01_ELIGIBILITY_REPAIR_CANONICAL_IMPLEMENTED
-NEXT = REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC
-```
-
-Also state:
+For COMPLETE, FROM_DSH must explicitly report:
 
 ```text
-PROP-01 remains PROP01_OPEN_ENGINEERING_DEFECT.
-The left and below reference-selection defects remain unresolved.
-No final Demo inference was executed.
-NEXT was not executed.
-```
-
-Preserve the ARTIFACT-FACTS block in `handoff/FROM_DSH.md` exactly.
-
-For COMPLETE, FROM_DSH must include:
-
-```text
-Task: 8B.3-REF01-E3A-R2
+Task: 8B.3-REF01-E3A-R3
 Status: COMPLETE
-Branch: fix/task8b3-ref01-eligibility-repair-impl
-Starting HEAD: fc2a33325eacf6ce5f366d6574abed3694431f5b
+Starting HEAD: 9304b89e325ed2b0ecdbef4fd58790730d234c85
 Design selected by: CHATGPT
-Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
 DSH algorithm choice performed: NO
-Patch method: UNIQUE_FUNCTION_BOUNDARY_PATCHER
-Patcher SHA256: 2fa5f9991dc6e4782d668229430544572e9664f266852d40881a9c3a97a323d5
+Patch method: BASE64_VERIFIED_BOUNDARY_PATCHER
+Patcher SHA256: 9d89c86fc914b1e00454870bbf974e6fedbbde43196d8c5be5588d7ab3c16648
 Patcher runs: 1
-Patcher exit: 0
+Unauthorized patcher compile performed: NO
+R2 rogue tracked patcher deleted: YES
 Detector/model calls: 0
 Canonical detector modified: YES
 Canonical test file modified: YES
@@ -587,72 +258,41 @@ Border bypass allowed: NO
 No-baseline exception allowed: NO
 Smallest family changed: NO
 New numeric threshold: NO
+Product py_compile: PASS
 Targeted test: PASS
 Canonical full tests: PASS
-External detector after SHA: 82531dc3b758cd8a864f77d0fa97e4132113cb46eb5a33a11f483bf51bc0a738
 External detector unchanged: YES
 Source manifest updated: NO
 Manifest status: INTENTIONALLY_STALE_PENDING_E3B
 Outcome: REF01_ELIGIBILITY_REPAIR_CANONICAL_IMPLEMENTED
 Next gate: REF01_ELIGIBILITY_REPAIR_CANONICALIZE_AND_SYNC
 PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-External/canonical product files modified: NO / YES
 Next action: Awaiting ChatGPT audit; do not execute NEXT.
 ```
 
-For STOP, report only failed gate + observed facts. Do not invent PASS values.
+# 13. STATUS → COMMIT MESSAGE
 
-# 14. FINAL STATUS / COMMIT MESSAGE GATE
-
-Run:
-
-```text
-git status --porcelain
-git diff --name-only fc2a33325eacf6ce5f366d6574abed3694431f5b
-```
-
-COMPLETE allowed only if:
-- patcher ran once and passed;
-- temporary patcher deleted;
-- both py_compile pass;
-- targeted pytest pass;
-- full canonical pytest pass;
-- external detector SHA exact;
-- source_manifest unchanged;
-- pipeline.py unchanged;
-- only six allowed tracked paths differ;
-- no untracked repo files remain.
+COMPLETE only if every preceding required gate passed.
 
 If COMPLETE:
 
 ```text
-STATUS = COMPLETE
-COMMIT_MESSAGE = fix(rc1): implement largest extent dominance exception
+fix(rc1): implement largest extent dominance exception
 ```
 
 Otherwise:
 
 ```text
-STATUS = STOP
-COMMIT_MESSAGE = fix(rc1): record extent dominance implementation stop
+fix(rc1): record extent dominance implementation stop
 ```
 
-Write FROM_DSH Status first, then use exactly the matching message.
+No other commit message is allowed.
 
-# 15. PUSH / STOP
+# 14. PUSH / STOP
 
-Push only current branch:
+Push only current branch.
 
-```text
-fix/task8b3-ref01-eligibility-repair-impl
-```
-
-No force push.
 Do not update main.
 Do not execute NEXT.
 
-After push: STOP and wait for ChatGPT.
-
-# 16. COMPLETE DEFINITION
-
-COMPLETE only if every gate above passes exactly and no autonomous repair occurs.
+After push: STOP.

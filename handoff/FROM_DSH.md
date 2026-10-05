@@ -50,3 +50,37 @@ Watt was not needed for Task 8B.3-REF01-E3A-R2 (no downloads, no transfers).
 
 The patcher was verified against its published SHA256 before use and never executed; no product code, manifest or
 external file was modified and no inference was performed.
+
+# FROM_DSH — Task 8B.3-REF01-E3A-R3 Report
+
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
+
+| item | value |
+|---|---|
+| Task | `8B.3-REF01-E3A-R3` |
+| Status | **STOP** (Base64 patcher SHA256 verification failed on my extraction; nothing executed) |
+| Branch | `fix/task8b3-ref01-eligibility-repair-impl` |
+| Starting HEAD | `9304b89e325ed2b0ecdbef4fd58790730d234c85` |
+| Step 1 R2 in-repo patcher deleted | YES (`scripts/task8b3_ref01_eligibility_repair_patcher.py`) |
+| Step 2 .b64 input named by the book | `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3.b64` |
+| Step 2 apply target named by the book | `C:\D\DeepSeekHarness\task8b3_ref01_e3a_r3_apply.py` |
+| My decoded bytes / sha256 | 10466 bytes / `44b826696fcb974e...` |
+| Prescribed SHA256 | `9d89c86fc914b1e00454870bbf974e6fedbbde43196d8c5be5588d7ab3c16648` |
+| Patcher runs | 0 |
+| Self-compile performed | NO (forbidden) |
+| detector.py sha256 | `a6fa4bdd76db6f50` (unchanged) |
+| source_manifest updated (canonical / external) | NO / NO |
+| External RC1 synced | NO |
+| Detector / model inference | NONE |
+| Manual editing of detector or tests | NONE |
+| Self-repair | NONE |
+| NEXT executed | NO |
+| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
+| Next action | Awaiting ChatGPT audit — the published payload needs to be delimited so the base64 text alone is captured |
+
+Watt was not needed for Task 8B.3-REF01-E3A-R3 (no downloads, no transfers).
+
+The R2 in-repo patcher was removed as instructed; no product code, manifest or external file was modified and no
+inference was executed.
+
