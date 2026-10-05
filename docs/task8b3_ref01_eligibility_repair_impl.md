@@ -179,3 +179,33 @@ source_manifest update = NONE · external RC1 sync = NONE · detector or model i
 manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
 ```
 
+
+---
+
+## 7. E3A-R4 — prescribed extraction command could not be launched; STOP without repair
+
+```text
+branch = fix/task8b3-ref01-eligibility-repair-impl
+HEAD   = 11c30a236bc56905d8314928fca07ddeef5c4421
+prescribed extraction command = handoff/TO_DSH.md lines 100-... (fence language "text", 410 chars)
+the command block carries PATCHER_BASE64= and was located as the only such block
+launch attempts = the command text was materialised outside the repo and invoked through the host shell
+launch result  = FileNotFoundError [WinError 2] (the shell interpreter is not resolvable from the child process)
+manual base64 extraction = NONE · patcher compile gate added = NONE · retry of the patcher = NONE
+patcher runs = 0 · patcher exit = not applicable
+generated patcher sha256 verification = NOT REACHED (nothing was produced)
+detector.py sha256 = a6fa4bdd76db6f50 (unchanged)
+source_manifest untouched (canonical / external) = YES / YES · external RC1 synced = NO
+detector or model inference = NONE · manual editing of detector/tests = NONE
+intermediate commit/push = NONE (exactly one task commit follows)
+```
+
+### 7.1 Explicit non-execution
+
+```text
+manual base64 extraction / added compile gate / intermediate commit or push = NONE
+retry after failure = NONE · self-repair = NONE · patcher execution = NONE
+source_manifest update = NONE · external RC1 sync = NONE · detector or model inference = NONE
+manual visual inspection / candidate replacement = NO / NO · NEXT executed = NO
+```
+

@@ -84,3 +84,36 @@ Watt was not needed for Task 8B.3-REF01-E3A-R3 (no downloads, no transfers).
 The R2 in-repo patcher was removed as instructed; no product code, manifest or external file was modified and no
 inference was executed.
 
+
+# FROM_DSH — Task 8B.3-REF01-E3A-R4 Report
+
+_This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git history._
+
+| item | value |
+|---|---|
+| Task | `8B.3-REF01-E3A-R4` |
+| Status | **STOP** (prescribed extraction command could not be launched; nothing executed) |
+| Branch | `fix/task8b3-ref01-eligibility_repair-impl` |
+| Starting HEAD | `11c30a236bc56905d8314928fca07ddeef5c4421` |
+| Prescribed extraction command | `handoff/TO_DSH.md` lines 100-... (language `text`, 410 chars, carries PATCHER_BASE64=) |
+| Manual base64 extraction | NONE |
+| Patcher compile gate added | NONE |
+| Patcher runs | 0 |
+| Patcher SHA256 verification | NOT REACHED |
+| Launch result | FileNotFoundError [WinError 2] — the host shell interpreter is not resolvable from the child process |
+| detector.py sha256 | `a6fa4bdd76db6f50` (unchanged) |
+| source_manifest updated (canonical / external) | NO / NO |
+| External RC1 synced | NO |
+| Detector / model inference | NONE |
+| Manual editing of detector or tests | NONE |
+| Retry / self-repair | NONE |
+| Intermediate commit or push | NONE (one task commit records this result) |
+| NEXT executed | NO |
+| PROP-01 status | PROP01_OPEN_ENGINEERING_DEFECT |
+| Report | `docs/task8b3_ref01_eligibility_repair_impl.md` |
+| Next action | Awaiting ChatGPT audit; the prescribed command needs an interpreter that the child process can resolve |
+
+Watt was not needed for Task 8B.3-REF01-E3A-R4 (no downloads, no transfers).
+
+No product code, manifest, external file or model asset was modified and no inference was executed.
+
