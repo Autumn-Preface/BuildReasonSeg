@@ -17,50 +17,32 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task 8B.3-REF01-E3B2-R1 Report
+# FROM_DSH — Task 8B.3-REF01-E3C0 Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
-```text
-Task: 8B.3-REF01-E3B2-R1
-Status: COMPLETE
-Branch: fix/task8b3-ref01-eligibility-repair-sync
-Starting HEAD: 5b8edd742981f1128c851c262ec576665fa0aa1f
-Technical source task: 8B.3-REF01-E3B2
-Technical execution starting HEAD: 300cdad5629b945ffe10480351081f9c8befe7f4
-Design selected by: CHATGPT
-Design ID: LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
-DSH algorithm choice performed: NO
-Detector/model calls: 0
-Canonical source changed in R1: NO
-Canonical manifest changed in R1: NO
-External pre-sync: 133 match / 0 missing / 2 mismatch
-External mismatch paths: buildreasonseg/runtime/detector.py; tests/test_task8b_runtime.py
-External sync runs: 1
-External sync: 135 copied / 135 verified / 0 failures
-External post-sync: 135 match / 0 missing / 0 mismatch
-External source_manifest copied from Git object: YES
-External source_manifest identity rechecked in R1: YES
-External source_manifest bytes: 24375
-External source_manifest SHA256: 5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c
-Setup checker runs: 1
-Setup checker: BuildReasonSeg environment: READY
-External targeted test runs: 1
-External targeted regression: 40 passed in 1.13s
-External full suite runs: 1
-External full suite: 124 passed in 112.81s (0:01:52)
-External technical commands rerun in R1: NO
-External write performed in R1: NO
-Model inference performed: NO
-Wrong E3B2 evidence removed: YES
-Evidence: evaluation/task8b3_ref01_e3b2_external_sync_full_suite.json
-Report: docs/task8b3_ref01_e3b2_external_sync_full_suite.md
-Outcome: REF01_ELIGIBILITY_REPAIR_EXTERNAL_SYNC_VALIDATED
-Next gate: REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
-PROP-01 status: PROP01_OPEN_ENGINEERING_DEFECT
-left/below reference-selection defects: UNRESOLVED
-Next action: Awaiting ChatGPT audit; do not execute NEXT/E3C.
-```
+| item | value |
+|---|---|
+| Task | `8B.3-REF01-E3C0` |
+| Status | **COMPLETE** (read-only saved-artifact audit) |
+| Base branch / head | `fix/task8b3-ref01-eligibility-repair-sync` / `1197d860b8b1a3503c6cba730eda33ccbff4e1c5` |
+| Audit branch | `audit/task8b3-ref01-locked-replay-artifacts` |
+| Detector / model inference | NONE |
+| Proposal regeneration / real replay | NONE / NONE |
+| External write | NONE |
+| Product / test / manifest / helper modified | NO |
+| Per-case verdicts | right: SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU, left: SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU, above: SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU, below: SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU |
+| Reference-IoU replay ready (4/4) | True |
+| End-to-end replay ready | False |
+| Replay gaps | language parse output, relation-field output, SAM2 reference mask, D-B1 decoder output, final composite mask |
+| Evidence | `evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json` |
+| Report | `docs/task8b3_ref01_locked_replay_artifact_audit.md` |
+| Overall outcome | **REFERENCE_IOU_REPLAY_READY_END_TO_END_NOT_READY** |
+| Next gate | `REF01_LOCKED_REPLAY_ARTIFACT_COMPLETION` (not executed) |
+| Next action | Awaiting ChatGPT audit |
 
-Watt was not needed for Task 8B.3-REF01-E3B2-R1 (no downloads, no transfers).
+Watt was not needed for Task 8B.3-REF01-E3C0 (no downloads, no transfers).
+
+The audit read, hashed and inventoried saved artifacts only; nothing was executed, regenerated, replayed or written
+outside the repository.

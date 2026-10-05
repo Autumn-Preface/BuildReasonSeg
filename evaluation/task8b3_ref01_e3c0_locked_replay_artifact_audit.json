@@ -1,0 +1,302 @@
+{
+  "task": "8B.3-REF01-E3C0",
+  "base_branch": "fix/task8b3-ref01-eligibility-repair-sync",
+  "base_head": "1197d860b8b1a3503c6cba730eda33ccbff4e1c5",
+  "branch": "audit/task8b3-ref01-locked-replay-artifacts",
+  "scope": "READ_ONLY_SAVED_ARTIFACT_AUDIT",
+  "detector_model_calls": 0,
+  "inference_performed": false,
+  "proposal_regeneration_performed": false,
+  "real_replay_performed": false,
+  "external_write_performed": false,
+  "product_test_manifest_helper_modified": false,
+  "limited_roots": [
+    {
+      "root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\inference",
+      "exists": false,
+      "file_count": 0,
+      "tiles_seen": []
+    },
+    {
+      "root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts",
+      "exists": true,
+      "file_count": 85238,
+      "tiles_seen": [
+        "1003",
+        "1008",
+        "1009",
+        "1010"
+      ]
+    },
+    {
+      "root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation",
+      "exists": true,
+      "file_count": 572,
+      "tiles_seen": []
+    },
+    {
+      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output",
+      "exists": true,
+      "file_count": 1543,
+      "tiles_seen": [
+        "1003",
+        "1008",
+        "1009",
+        "1010"
+      ]
+    },
+    {
+      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs",
+      "exists": true,
+      "file_count": 265,
+      "tiles_seen": [
+        "1003"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "relation": "right",
+      "tile": "1010",
+      "sample_id": "buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91",
+      "gt_reference_instance": 4,
+      "gt_reference_pixels": 2478,
+      "gt_best_iou_recorded": 0.5588697017268446,
+      "artifacts": [
+        {
+          "name": "result.json",
+          "present": true,
+          "bytes": 3502,
+          "sha256": "54c964933fca667ff9c55593439d3059c2f8ec18d30951d16a417eac880cc518"
+        },
+        {
+          "name": "proposals.json",
+          "present": true,
+          "bytes": 2411,
+          "sha256": "2b09041ee86d5e7d71c05c32f2cea8669bdfbb5b7f96cda33d5e12c99a0ac45b"
+        },
+        {
+          "name": "prompt.txt",
+          "present": true,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "parsed_program.json",
+          "present": true,
+          "bytes": 2,
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "name": "global_proposals.png",
+          "present": true,
+          "bytes": 307402,
+          "sha256": "7281e91c2cf13c026ee56be4fc9273e0dfcf0f77b58892daa252b0b4a29c571e"
+        }
+      ],
+      "saved_flags": {
+        "raster_tracked": true,
+        "detector_result_json_saved": true,
+        "detector_proposals_json_saved": true,
+        "gt_reference_mask_saved": true,
+        "historical_reference_iou_saved": true
+      },
+      "missing_saved_artifacts": [],
+      "verdict": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "replay_gaps": [
+        "language parse output",
+        "relation-field output",
+        "SAM2 reference mask",
+        "D-B1 decoder output",
+        "final composite mask"
+      ]
+    },
+    {
+      "relation": "left",
+      "tile": "1003",
+      "sample_id": "buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3",
+      "gt_reference_instance": 26,
+      "gt_reference_pixels": 3512,
+      "gt_best_iou_recorded": 0.6500672947510094,
+      "artifacts": [
+        {
+          "name": "result.json",
+          "present": true,
+          "bytes": 23296,
+          "sha256": "d2cef24ea3b15a528a8f2dec29faeb9fa1992bb9385633cdb2e419ea9039ad8e"
+        },
+        {
+          "name": "proposals.json",
+          "present": true,
+          "bytes": 21263,
+          "sha256": "62865e42b4d92077ce336522b97f33931b351d46ab4ec7443fb1afe2dfd798a6"
+        },
+        {
+          "name": "prompt.txt",
+          "present": true,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "parsed_program.json",
+          "present": true,
+          "bytes": 2,
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "name": "global_proposals.png",
+          "present": true,
+          "bytes": 378237,
+          "sha256": "99d574f9d3b0438fe7f88f0b340ab525c70698703d7af0d0842a4f01e66f428c"
+        }
+      ],
+      "saved_flags": {
+        "raster_tracked": true,
+        "detector_result_json_saved": true,
+        "detector_proposals_json_saved": true,
+        "gt_reference_mask_saved": true,
+        "historical_reference_iou_saved": true
+      },
+      "missing_saved_artifacts": [],
+      "verdict": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "replay_gaps": [
+        "language parse output",
+        "relation-field output",
+        "SAM2 reference mask",
+        "D-B1 decoder output",
+        "final composite mask"
+      ]
+    },
+    {
+      "relation": "above",
+      "tile": "1008",
+      "sample_id": "buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314",
+      "gt_reference_instance": 4,
+      "gt_reference_pixels": 5013,
+      "gt_best_iou_recorded": 0.9032501889644747,
+      "artifacts": [
+        {
+          "name": "result.json",
+          "present": true,
+          "bytes": 4782,
+          "sha256": "bf70127106e5798b5be40a2aa317ac8921abe99b1e5015c9945a912e4657184c"
+        },
+        {
+          "name": "proposals.json",
+          "present": true,
+          "bytes": 3631,
+          "sha256": "257297112fb2fe35f2225725e8c0a0e79338dcde10f9f4dbe20641c8fbb85e0b"
+        },
+        {
+          "name": "prompt.txt",
+          "present": true,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "parsed_program.json",
+          "present": true,
+          "bytes": 2,
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "name": "global_proposals.png",
+          "present": true,
+          "bytes": 335211,
+          "sha256": "9d2dbdddc49f5868c72f5bdf166e23477cb29963b2ad4c7a642e36e0b6076677"
+        }
+      ],
+      "saved_flags": {
+        "raster_tracked": true,
+        "detector_result_json_saved": true,
+        "detector_proposals_json_saved": true,
+        "gt_reference_mask_saved": true,
+        "historical_reference_iou_saved": true
+      },
+      "missing_saved_artifacts": [],
+      "verdict": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "replay_gaps": [
+        "language parse output",
+        "relation-field output",
+        "SAM2 reference mask",
+        "D-B1 decoder output",
+        "final composite mask"
+      ]
+    },
+    {
+      "relation": "below",
+      "tile": "1009",
+      "sample_id": "buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450",
+      "gt_reference_instance": 3,
+      "gt_reference_pixels": 2606,
+      "gt_best_iou_recorded": 0.6165496859992612,
+      "artifacts": [
+        {
+          "name": "result.json",
+          "present": true,
+          "bytes": 3503,
+          "sha256": "ab75dd17e082c171e0b0f92eb9586329216bb32a1eafb317bcb2eab323e91507"
+        },
+        {
+          "name": "proposals.json",
+          "present": true,
+          "bytes": 2412,
+          "sha256": "7c1a45690c860910b5626fc603fe942cc0497157bf6fc5d1645657029c167752"
+        },
+        {
+          "name": "prompt.txt",
+          "present": true,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "parsed_program.json",
+          "present": true,
+          "bytes": 2,
+          "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "name": "global_proposals.png",
+          "present": true,
+          "bytes": 325573,
+          "sha256": "0b3789bd3f7f72da511e77f7e35276ffe2bccf45945252ffccf417cd9d333391"
+        }
+      ],
+      "saved_flags": {
+        "raster_tracked": true,
+        "detector_result_json_saved": true,
+        "detector_proposals_json_saved": true,
+        "gt_reference_mask_saved": true,
+        "historical_reference_iou_saved": true
+      },
+      "missing_saved_artifacts": [],
+      "verdict": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "replay_gaps": [
+        "language parse output",
+        "relation-field output",
+        "SAM2 reference mask",
+        "D-B1 decoder output",
+        "final composite mask"
+      ]
+    }
+  ],
+  "readiness": {
+    "per_case": {
+      "right": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "left": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "above": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU",
+      "below": "SAVED_ARTIFACT_REPLAY_READY_FOR_REFERENCE_IOU"
+    },
+    "reference_iou_replay_ready_all_cases": true,
+    "end_to_end_replay_ready": false,
+    "replay_gaps": [
+      "language parse output",
+      "relation-field output",
+      "SAM2 reference mask",
+      "D-B1 decoder output",
+      "final composite mask"
+    ]
+  },
+  "overall_outcome": "REFERENCE_IOU_REPLAY_READY_END_TO_END_NOT_READY",
+  "next_gate": "REF01_LOCKED_REPLAY_ARTIFACT_COMPLETION"
+}
