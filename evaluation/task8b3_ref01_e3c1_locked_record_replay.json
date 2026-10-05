@@ -1,0 +1,115 @@
+{
+  "task": "8B.3-REF01-E3C1",
+  "starting_head": "6d1e8d1e69f3adefb4301948cae8918d4aec7ee1",
+  "branch": "audit/task8b3-ref01-locked-replay-artifacts",
+  "scope": "LOCKED_RECORD_LEVEL_REFERENCE_SELECTION_REPLAY",
+  "design_id": "LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1",
+  "selector_code_identity": {
+    "path": "delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py",
+    "git_canonical_bytes": 21257,
+    "git_canonical_sha256": "934bbb9c3fbdbd5465fdd3e074a6ffa4721df9e77918970bfae2e88a6a91f883"
+  },
+  "record_adapter_contract": {
+    "nonempty_witness": "mask_area>0 -> synthetic 1x1 True mask_crop",
+    "tile_index": "0 sentinel; selector-unused",
+    "exact_global_bbox_required": true,
+    "bbox_extent_ratio_exact_match_required": true,
+    "full_production_object_replay_claimed": false
+  },
+  "detector_model_calls": 0,
+  "proposal_regeneration_performed": false,
+  "actual_detector_pipeline_replay_performed": false,
+  "external_write_performed": false,
+  "product_source_changed": false,
+  "cases": {
+    "right": {
+      "tile_id": 1010,
+      "proposal_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1010\\proposals.json",
+      "proposal_sha256": "2b09041ee86d5e7d71c05c32f2cea8669bdfbb5b7f96cda33d5e12c99a0ac45b",
+      "record_count": 6,
+      "baseline_eligible_count": 4,
+      "baseline_selected_id": 1,
+      "extent_exception_ids": [],
+      "repaired_selected_id": 1,
+      "selection_changed": false,
+      "baseline_selected_iou": 0.5588697017268446,
+      "repaired_selected_iou": 0.5588697017268446,
+      "best_iou_id": 1,
+      "best_iou": 0.5588697017268446,
+      "repaired_is_best_iou": true,
+      "semantic_status": "REFERENCE_SELECTED_CORRECT_STABLE"
+    },
+    "left": {
+      "tile_id": 1003,
+      "proposal_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1003\\proposals.json",
+      "proposal_sha256": "62865e42b4d92077ce336522b97f33931b351d46ab4ec7443fb1afe2dfd798a6",
+      "record_count": 53,
+      "baseline_eligible_count": 42,
+      "baseline_selected_id": 14,
+      "extent_exception_ids": [],
+      "repaired_selected_id": 14,
+      "selection_changed": false,
+      "baseline_selected_iou": 0.0,
+      "repaired_selected_iou": 0.0,
+      "best_iou_id": 30,
+      "best_iou": 0.6500672947510094,
+      "repaired_is_best_iou": false,
+      "semantic_status": "REFERENCE_SELECTION_WRONG_COVERED_REMAINS"
+    },
+    "above": {
+      "tile_id": 1008,
+      "proposal_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1008\\proposals.json",
+      "proposal_sha256": "257297112fb2fe35f2225725e8c0a0e79338dcde10f9f4dbe20641c8fbb85e0b",
+      "record_count": 9,
+      "baseline_eligible_count": 4,
+      "baseline_selected_id": 4,
+      "extent_exception_ids": [
+        5,
+        6
+      ],
+      "repaired_selected_id": 5,
+      "selection_changed": true,
+      "baseline_selected_iou": 0.0,
+      "repaired_selected_iou": 0.9032501889644747,
+      "best_iou_id": 5,
+      "best_iou": 0.9032501889644747,
+      "repaired_is_best_iou": true,
+      "semantic_status": "REFERENCE_ELIGIBILITY_BLOCKER_RESOLVED"
+    },
+    "below": {
+      "tile_id": 1009,
+      "proposal_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\1009\\proposals.json",
+      "proposal_sha256": "7c1a45690c860910b5626fc603fe942cc0497157bf6fc5d1645657029c167752",
+      "record_count": 6,
+      "baseline_eligible_count": 3,
+      "baseline_selected_id": 1,
+      "extent_exception_ids": [],
+      "repaired_selected_id": 1,
+      "selection_changed": false,
+      "baseline_selected_iou": 0.0,
+      "repaired_selected_iou": 0.0,
+      "best_iou_id": 2,
+      "best_iou": 0.6165496859992612,
+      "repaired_is_best_iou": false,
+      "semantic_status": "REFERENCE_SELECTION_WRONG_COVERED_REMAINS"
+    }
+  },
+  "frozen_expected_transition": {
+    "right": "1->1",
+    "left": "14->14",
+    "above": "4->5",
+    "below": "1->1"
+  },
+  "eligibility_repair_validation": "PASS",
+  "eligibility_blocker_resolved_cases": [
+    "above"
+  ],
+  "selection_blockers_remaining": [
+    "left",
+    "below"
+  ],
+  "ref01_status": "ACTIVE",
+  "prop01_status": "PROP01_OPEN_ENGINEERING_DEFECT",
+  "overall_outcome": "REF01_ELIGIBILITY_REPAIR_LOCKED_RECORD_REPLAY_PASS",
+  "next_gate": "REF01_SELECTION_REPAIR_DESIGN"
+}

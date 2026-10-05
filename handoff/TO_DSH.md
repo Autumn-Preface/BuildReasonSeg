@@ -1,149 +1,229 @@
 请先读取 `handoff/TO_DSH.md`，并严格以该文件作为本轮唯一任务书。
 
-本次任务名称：**Task 8B.3-REF01-E3C0-R2-R4 — Final Locked Replay Readiness Audit**
+本次任务名称：**Task 8B.3-REF01-E3C1 — Locked Record-Level Reference Selection Replay**
 
-# TO_DSH — Task 8B.3-REF01-E3C0-R2-R4: Final Locked Replay Readiness Audit
+# TO_DSH — Task 8B.3-REF01-E3C1: Locked Record-Level Reference Selection Replay
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DSH
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
 > Required branch: `audit/task8b3-ref01-locked-replay-artifacts`
-> Required starting HEAD: `31006384fe65bb29247c67d3b504b53d9c1ae981`
+> Required starting HEAD: `6d1e8d1e69f3adefb4301948cae8918d4aec7ee1`
 > Required Python: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe`
-> Required exact script: `C:\D\DeepSeekHarness\E3C0_R2_R4_final_readiness_audit.py`
-> Required script SHA256: `3865eefadb84a0de61f83198471765272bc6bc0b005ad4ff24f8ef4e58850f2c`
+> Required script: `C:\D\DeepSeekHarness\E3C1_locked_record_replay.py`
+> Required SHA256: `45134e8f26de211805bcf9a0545400aa0e00e91e702c237a4a6cd5b7266743ed`
 
 # 0. CHATGPT AUDIT DISPOSITION
 
-R2-R3 is approved as a SAFE STOP with usable schema evidence.
+Task `8B.3-REF01-E3C0-R2-R4` is APPROVED.
 
-The schema probe successfully established the real frozen `proposals.json` format for all four locked cases:
-
-```json
-{
-  "count": N,
-  "items": [
-    {
-      "proposal_id": ...,
-      "source_tile_id": ...,
-      "confidence": ...,
-      "mask_area": ...,
-      "global_bbox": ...,
-      "centroid": ...,
-      "touches_image_border": ...,
-      "border_clearance": ...,
-      "bbox_extent_ratio": ...,
-      "raw_index": ...
-    }
-  ]
-}
-```
-
-Observed counts:
+Frozen readiness:
 
 ```text
-right / 1010 = 6
-left  / 1003 = 53
-above / 1008 = 9
-below / 1009 = 6
-```
+right: A=true B=true C=false D=true
+left:  A=true B=true C=false D=true
+above: A=true B=true C=false D=true
+below: A=true B=true C=false D=true
 
-The R2-R3 script's final STOP was caused only by another ChatGPT control-gate defect: it used `git diff --name-only` to expect newly created untracked evidence/report files before they had been added. Git does not list untracked files in that command.
-
-The STOP commit preserved the schema evidence/report, so NO additional schema probe is needed.
-
-R2-R4 is the final readiness audit.
-
-# 1. FROZEN READINESS RULE
-
-Use exactly:
-
-```text
-A = complete stable proposal list
-B = complete selector scalars + persisted mask_area > 0 as record-level nonempty witness
-C = exact production-object / mask reconstruction material
-D = complete per-proposal forensic IoU linkage
-```
-
-Important:
-
-```text
-mask_area > 0
-```
-
-is accepted only for record-level replay.
-
-It does NOT satisfy C.
-
-Allowed readiness enums ONLY:
-
-```text
-FULL_PRODUCTION_REPLAY_READY
+overall_readiness =
 RECORD_LEVEL_REPLAY_READY
-LOCKED_REPLAY_ARTIFACTS_PARTIAL
-LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
+
+production-object replay possible =
+NO
+
+record-level replay possible =
+YES
+
+historical consistency mismatches =
+0
+
+NEXT =
+REF01_LOCKED_RECORD_REPLAY_DESIGN
 ```
 
-Mechanical mapping:
+This taskbook is the ChatGPT-owned design and execution contract for that next gate.
+
+# 1. FROZEN REPLAY DESIGN
+
+Replay the same four persisted merged-proposal record sets:
 
 ```text
-A+B+C+D all four cases
-→ FULL_PRODUCTION_REPLAY_READY
-
-A+B+D all four cases and C false for >=1 case
-→ RECORD_LEVEL_REPLAY_READY
-
-known artifacts exist but A/B/D incomplete
-→ LOCKED_REPLAY_ARTIFACTS_PARTIAL
-
-no candidate artifacts
-→ LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
+right / 1010 / 6 records
+left  / 1003 / 53 records
+above / 1008 / 9 records
+below / 1009 / 6 records
 ```
 
-NEXT mapping ONLY:
+The record-level adapter is frozen as follows:
 
 ```text
-FULL_PRODUCTION_REPLAY_READY
-→ REF01_ELIGIBILITY_REPAIR_LOCKED_PRODUCTION_REPLAY
+proposal_id             = persisted exact value
+source_tile_id          = persisted exact value
+confidence              = persisted exact value
+mask_area               = persisted exact value
+global_bbox             = persisted exact value
+touches_image_border    = persisted exact value
+border_clearance        = persisted exact value
+centroid                = persisted exact value
+raw_index               = persisted exact value
 
-RECORD_LEVEL_REPLAY_READY
-→ REF01_LOCKED_RECORD_REPLAY_DESIGN
+mask_crop =
+1x1 True bool array,
+ONLY as the frozen mask_area>0 nonempty witness
 
-LOCKED_REPLAY_ARTIFACTS_PARTIAL
-→ REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
+tile_index =
+0 sentinel,
+because current reference eligibility/ranking/exception code does not use tile_index
 
-LOCKED_REPLAY_ARTIFACTS_NOT_FOUND
-→ REF01_LOCKED_REPLAY_INPUT_RECOVERY_DESIGN
+pad_mask_empty =
+False
+
+image_size =
+None
 ```
 
-DSH has no discretion.
+This is explicitly:
 
-# 2. EXECUTOR CONTRACT
+```text
+RECORD-LEVEL SELECTOR REPLAY
+```
+
+It is NOT:
+
+```text
+FULL PRODUCTION-OBJECT REPLAY
+```
+
+# 2. SELECTOR CODE TO EXECUTE
+
+Do NOT reimplement the repaired selector.
+
+The script must import and execute the current canonical:
+
+```text
+eligible_proposals()
+select_reference()
+GlobalProposal
+MERGE_BBOX_EXTENT_RATIO_MAX
+```
+
+from:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+```
+
+Canonical detector identity must be:
+
+```text
+Git-canonical bytes =
+21257
+
+Git-canonical SHA256 =
+934bbb9c3fbdbd5465fdd3e074a6ffa4721df9e77918970bfae2e88a6a91f883
+```
+
+The historical baseline is replayed using current unchanged base eligibility plus rank:
+
+```text
+(-mask_area, -confidence, proposal_id)
+```
+
+without the extent exception.
+
+The repaired selector is replayed by calling current:
+
+```text
+select_reference(..., family="largest")
+```
+
+# 3. REQUIRED LOCKED RESULT
+
+The exact result required for COMPLETE is:
+
+```text
+right:  1 -> 1
+left:  14 -> 14
+above:  4 -> 5
+below:  1 -> 1
+```
+
+Additionally:
+
+```text
+above proposal 5
+MUST be an extent-exception candidate
+
+above proposal 3
+MUST NOT be an extent-exception candidate
+because it touches the image border
+```
+
+Semantic linkage:
+
+```text
+right repaired id 1 =
+locked best-IoU reference
+
+above repaired id 5 =
+locked best-IoU reference
+
+left repaired id 14 !=
+locked best-IoU id 30
+
+below repaired id 1 !=
+locked best-IoU id 2
+```
+
+Therefore if the exact replay passes:
+
+```text
+eligibility repair validation =
+PASS
+
+eligibility blocker resolved =
+above
+
+selection blockers remaining =
+left, below
+
+REF-01 =
+ACTIVE
+
+NEXT =
+REF01_SELECTION_REPAIR_DESIGN
+```
+
+# 4. EXECUTOR CONTRACT
 
 Allowed ONLY:
 
-1. verify branch/head;
-2. verify exact supplied script SHA;
-3. run exact script ONCE;
-4. inspect stdout and generated tracked diff;
-5. verify generated evidence/report/FROM_DSH;
-6. commit exactly once;
-7. push once;
-8. STOP.
+1. verify exact branch/head;
+2. verify exact script SHA;
+3. run supplied script exactly ONCE;
+4. inspect stdout;
+5. inspect generated evidence/report/FROM_DSH;
+6. verify repo status contains only four allowed paths;
+7. stage exactly four paths;
+8. commit exactly once;
+9. push once;
+10. STOP.
 
 Forbidden:
 
-- NO broad search;
-- NO schema probe rerun;
-- NO detector/model inference;
+- NO detector/YOLO inference;
+- NO SAM/SAM2 inference;
+- NO Qwen/MLLM inference;
 - NO proposal regeneration;
-- NO actual selector replay;
-- NO production replay;
-- NO final Demo;
+- NO image inference;
+- NO detector pipeline replay;
+- NO full production-object replay claim;
 - NO external write;
-- NO product/test/manifest/helper edit;
-- NO manual evidence/report/FROM_DSH edit after script success;
+- NO product/test/manifest/helper modification;
+- NO threshold tuning;
+- NO algorithm modification;
+- NO manual edit of script output after successful execution;
 - NO script modification/reconstruction;
 - NO script rerun;
 - NO pytest;
@@ -153,282 +233,229 @@ Forbidden:
 - NO force push;
 - NO NEXT execution.
 
-# 3. EXACT SCIENTIFIC READ SCOPE
+# 5. EXACT SCIENTIFIC READ INPUTS
 
-The exact script may read ONLY these 9 scientific artifacts:
+The script may read ONLY these scientific inputs:
 
 ```text
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1010\result.json
-
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1003\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1003\result.json
-
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1008\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1008\result.json
-
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1009\proposals.json
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\1009\result.json
 
 evaluation/task8b3_ref01_locked_reference_forensics.json
+
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
 ```
 
-It may read Git state and FROM_DSH only for control/ARTIFACT-FACTS preservation.
+No broad search.
 
-No discovery/search.
+# 6. INPUT HASH GATE
 
-# 4. SCRIPT SHA GATE
+The supplied script verifies exactly:
+
+```text
+right proposals SHA256 =
+2b09041ee86d5e7d71c05c32f2cea8669bdfbb5b7f96cda33d5e12c99a0ac45b
+
+left proposals SHA256 =
+62865e42b4d92077ce336522b97f33931b351d46ab4ec7443fb1afe2dfd798a6
+
+above proposals SHA256 =
+257297112fb2fe35f2225725e8c0a0e79338dcde10f9f4dbe20641c8fbb85e0b
+
+below proposals SHA256 =
+7c1a45690c860910b5626fc603fe942cc0497157bf6fc5d1645657029c167752
+
+forensics SHA256 =
+f7495796577cb26a14a6b76ffcb4cf9544524c25c37cdf58f6ba2b15214c6f84
+```
+
+Any mismatch => STOP.
+
+# 7. SCRIPT GATE
 
 Place exactly:
 
 ```text
-C:\D\DeepSeekHarness\E3C0_R2_R4_final_readiness_audit.py
+C:\D\DeepSeekHarness\E3C1_locked_record_replay.py
 ```
 
 Require SHA256:
 
 ```text
-3865eefadb84a0de61f83198471765272bc6bc0b005ad4ff24f8ef4e58850f2c
+45134e8f26de211805bcf9a0545400aa0e00e91e702c237a4a6cd5b7266743ed
 ```
 
-Do not modify/rebuild.
+Do not edit/rebuild.
 
-# 5. GIT PRE-FLIGHT
+# 8. GIT PRE-FLIGHT
 
 Require:
 
 ```text
-branch = audit/task8b3-ref01-locked-replay-artifacts
-HEAD = 31006384fe65bb29247c67d3b504b53d9c1ae981
+branch =
+audit/task8b3-ref01-locked-replay-artifacts
+
+HEAD =
+6d1e8d1e69f3adefb4301948cae8918d4aec7ee1
 ```
 
-`git status --short` may be empty or contain exactly one TO_DSH modification:
-
-```text
- M handoff/TO_DSH.md
-```
-
-or:
-
-```text
-M  handoff/TO_DSH.md
-```
+`git status --short` may be:
+- empty;
+- ` M handoff/TO_DSH.md`;
+- `M  handoff/TO_DSH.md`.
 
 No other path/status.
 
-# 6. RUN EXACT SCRIPT ONCE
+# 9. RUN EXACT SCRIPT ONCE
 
-Run exactly once:
+Run:
 
 ```text
-C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3C0_R2_R4_final_readiness_audit.py
+C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python.exe C:\D\DeepSeekHarness\E3C1_locked_record_replay.py
 ```
 
 Require exit 0.
 
-Require stdout:
+Require stdout exactly contains:
 
 ```text
-E3C0_R2_R4_FINAL_AUDIT: COMPLETE
-SCRIPT_SHA256= 3865eefadb84a0de61f83198471765272bc6bc0b005ad4ff24f8ef4e58850f2c
-SCHEMA=PROPOSALS_JSON_COUNT_ITEMS_V1
-CANDIDATE_ARTIFACTS=9
+E3C1_LOCKED_RECORD_REPLAY: COMPLETE
+RIGHT=1->1
+LEFT=14->14
+ABOVE=4->5
+BELOW=1->1
+ELIGIBILITY_REPAIR_VALIDATION=PASS
+NEXT_GATE=REF01_SELECTION_REPAIR_DESIGN
 ```
 
-Accept the emitted:
+No rerun.
+
+# 10. GENERATED OUTPUTS
+
+Required new files:
 
 ```text
-READINESS=
-NEXT_GATE=
+evaluation/task8b3_ref01_e3c1_locked_record_replay.json
+docs/task8b3_ref01_e3c1_locked_record_replay.md
 ```
 
-exactly as produced.
-
-Do not reinterpret or rerun.
-
-# 7. EVIDENCE CONTRACT
-
-Require:
+Required modified:
 
 ```text
-evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
-```
-
-contains:
-
-```text
-task = 8B.3-REF01-E3C0-R2-R4
-base_head = 31006384fe65bb29247c67d3b504b53d9c1ae981
-schema_contract = PROPOSALS_JSON_COUNT_ITEMS_V1
-audit_script_sha256 = 3865eefadb84a0de61f83198471765272bc6bc0b005ad4ff24f8ef4e58850f2c
-
-detector_model_calls = 0
-proposal_regeneration_performed = false
-actual_replay_performed = false
-product_source_changed = false
-external_write_performed = false
-broad_search_performed = false
-```
-
-Require exactly 9 candidate artifacts.
-
-Each candidate object exactly:
-
-```text
-path
-bytes
-sha256
-tracked_by_git
-format
-supports_cases
-fields_present
-inspection_status
-```
-
-Require exactly four cases:
-- right
-- left
-- above
-- below
-
-Each case exactly:
-
-```text
-tile_id
-artifact_paths
-complete_proposal_list_present
-proposal_scalar_fields_complete
-exact_mask_or_object_material_present
-forensic_correctness_linkage_present
-replay_record_count
-consistency_checks
-```
-
-# 8. CONSISTENCY KEY CONTRACT
-
-right:
-
-```text
-raw_count
-merged_count
-eligible_count
-pre_selected
-```
-
-left:
-
-```text
-raw_count
-merged_count
-eligible_count
-pre_selected
-best_covered
-```
-
-above:
-
-```text
-raw_count
-merged_count
-eligible_count
-pre_selected
-best_covered
-proposal5_mask_area
-proposal5_confidence
-proposal5_touches_image_border
-proposal5_bbox_extent_ratio
-proposal5_iou
-proposal3_mask_area
-proposal3_touches_image_border
-proposal3_bbox_extent_ratio
-```
-
-below:
-
-```text
-raw_count
-merged_count
-eligible_count
-pre_selected
-best_covered
-```
-
-Every value must be exactly:
-
-```text
-MATCH
-MISMATCH
-NOT_AVAILABLE
-```
-
-# 9. NON-CLAIMS
-
-Regardless of readiness:
-
-```text
-repaired selector replay = NOT PERFORMED
-right1 / left14 / above5 / below1 = NOT YET REPLAY-VALIDATED
-REF-01 = ACTIVE
-PROP-01 = PROP01_OPEN_ENGINEERING_DEFECT
-final Demo = NOT RUN
-```
-
-# 10. FINAL DIFF GATE
-
-Require exactly these four changed paths relative to `31006384fe65bb29247c67d3b504b53d9c1ae981`:
-
-```text
-docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
-evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-No source/test/manifest/helper diff.
-
-# 11. COMPLETE COMMIT
-
-Only if every gate passes:
+Evidence must contain:
 
 ```text
-git add docs/task8b3_ref01_e3c0_locked_replay_artifact_audit.md
-git add evaluation/task8b3_ref01_e3c0_locked_replay_artifact_audit.json
-git add handoff/FROM_DSH.md
-git add handoff/TO_DSH.md
-
-git commit -m "docs(rc1): establish locked replay readiness"
+task = 8B.3-REF01-E3C1
+design_id = LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+detector_model_calls = 0
+proposal_regeneration_performed = false
+actual_detector_pipeline_replay_performed = false
+external_write_performed = false
+product_source_changed = false
+eligibility_repair_validation = PASS
+eligibility_blocker_resolved_cases = ["above"]
+selection_blockers_remaining = ["left","below"]
+ref01_status = ACTIVE
+prop01_status = PROP01_OPEN_ENGINEERING_DEFECT
+overall_outcome = REF01_ELIGIBILITY_REPAIR_LOCKED_RECORD_REPLAY_PASS
+next_gate = REF01_SELECTION_REPAIR_DESIGN
 ```
 
-Exactly one commit.
-Push current branch once.
-No force push.
-Then STOP.
+# 11. STATUS / DIFF GATE
 
-# 12. STOP PROTOCOL
+After script success, before staging, run:
+
+```text
+git status --porcelain=v1 --untracked-files=all
+```
+
+The only path names allowed are:
+
+```text
+docs/task8b3_ref01_e3c1_locked_record_replay.md
+evaluation/task8b3_ref01_e3c1_locked_record_replay.json
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+No other path.
+
+Then stage exactly:
+
+```text
+git add docs/task8b3_ref01_e3c1_locked_record_replay.md
+git add evaluation/task8b3_ref01_e3c1_locked_record_replay.json
+git add handoff/FROM_DSH.md
+git add handoff/TO_DSH.md
+```
+
+Require:
+
+```text
+git diff --cached --name-only
+```
+
+contains exactly the same four paths.
+
+# 12. COMPLETE COMMIT
+
+If every gate passes:
+
+```text
+git commit -m "docs(rc1): replay locked reference selection records"
+```
+
+Require exactly one new commit over `6d1e8d1e69f3adefb4301948cae8918d4aec7ee1`.
+
+Push current branch once.
+
+No force push.
+
+STOP immediately.
+Do not execute `REF01_SELECTION_REPAIR_DESIGN`.
+
+# 13. STOP PROTOCOL
 
 If any gate fails:
-- do not rerun;
-- do not manually fix generated evidence/report;
-- record exact factual failure in FROM_DSH;
-- commit exactly once with:
-  `docs(rc1): record final locked replay readiness stop`
-- push once;
-- STOP.
 
-# 13. COMPLETE DEFINITION
+- do not rerun the script;
+- do not self-repair;
+- preserve any factual generated output;
+- update only FROM_DSH with exact STOP facts if needed;
+- commit exactly once using:
+
+```text
+docs(rc1): record locked reference replay stop
+```
+
+Push once and STOP.
+
+# 14. COMPLETE DEFINITION
 
 COMPLETE only if:
-- exact head;
+- exact branch/head;
 - exact script SHA;
-- one script run / exit 0;
-- real `count/items` schema used;
-- exactly 9 artifacts;
-- exact A/B/C/D schema;
-- exact consistency keys;
-- legal readiness/NEXT only;
-- zero inference/regeneration/replay/external write;
-- exact four-path diff;
-- one commit;
-- push once;
+- exact frozen input hashes;
+- canonical detector identity exact;
+- script runs exactly once;
+- baseline replay = 1/14/4/1;
+- repaired replay = 1/14/5/1;
+- above 5 admitted by extent exception;
+- above 3 excluded by border;
+- right/above repaired selection equals locked best-IoU id;
+- left/below remain selection blockers;
+- zero detector/model calls;
+- zero proposal regeneration;
+- zero external writes;
+- no product changes;
+- exact four repo paths committed;
+- exact commit message;
+- push succeeds;
 - NEXT not executed;
 - STOP.
