@@ -1,272 +1,486 @@
-# CURRENT_TASK — A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
+# CURRENT_TASK — TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
 
 ## 0. Metadata
 
 Task ID:
-A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
+
+TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
 
 Status:
-READY_FOR_SUPERVISOR_AUDIT
+
+AUTHORIZED
 
 Decision owner:
+
 ChatGPT Supervisor
 
 Authorized executor:
+
 CODEX
 
-Required starting branch:
-fix/task8b3-detector-rgb-bgr-contract-v1
+Accepted predecessor task:
 
-Required starting remote HEAD:
-104bcde03ff8bedbd563a1c0eba6fe230f221dad
+A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
 
-Task branch:
+Accepted predecessor branch:
+
 audit/task8b3-a2-ground-truth-case-validity-v1
 
-Previous milestone:
-DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
+Accepted predecessor remote HEAD:
 
-Previous milestone disposition:
-ACCEPTED_BY_CHATGPT_SUPERVISOR
+c6d09e77d3c403771a92d096fe5977ebaa61db67
+
+Required task branch:
+
+fix/task8b4-run-isolated-output-layout-v1
+
+Project phase:
+
+RC1_ENGINEERING_RELIABILITY
 
 Next gate:
-CHATGPT_A2_GT_CASE_VALIDITY_REMOTE_AUDIT
+
+CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
 
 
 ## 1. Supervisor Disposition
 
-The ChatGPT Supervisor has independently audited and ACCEPTED:
+The previous A2 provenance / GT case-validity milestone is ACCEPTED.
 
-DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
+Accepted state:
 
-Accepted engineering conclusion:
+- RGB/BGR detector input contract is corrected.
+- A2 still returns zero proposals.
+- A2 exact source provenance remains NOT_ESTABLISHED.
+- A2 GT validity remains NOT_EVALUABLE_WITHOUT_PROVENANCE.
+- PROP-01 remains OPEN.
+- No further A2 forensic work is authorized by this task.
+- MEM-01 remains CLOSED.
+- MASK-01 engineering hardening remains CLOSED.
+- REF-01 residual limitation remains unchanged.
+- Task 8B.4 has not yet been implemented.
 
-DETECTOR_RGB_BGR_INPUT_CONTRACT = CORRECTED
+This milestone is purely a delivery-output isolation repair.
 
-Accepted scientific boundary:
+It MUST NOT modify scientific architecture, detector behaviour, relation semantics, target selection, segmentation behaviour, thresholds or acceptance semantics.
 
-- the RGB/BGR input-contract defect was real;
-- the corrected product now preserves the intended RGB network tensor;
-- the correction did NOT recover A2 proposals;
-- corrected A2 remains raw=0 / merged=0 / reference=None;
-- PROP-01 therefore remains OPEN;
-- A2 source provenance, GT availability and locked-case validity remain unresolved.
 
-This milestone is forensic only.
+## 2. Historical Task 8B.4 Requirement
 
-It MUST NOT perform another detector repair.
+Task 8B.3 repeatedly recorded the following accepted/deferred requirement:
 
+```text
+Each predict run should own one independent directory under inference/output,
+with subdirectories diagnostics/, masks/, overlays/.
+```
 
-## 2. Accepted Starting Facts
+Status was repeatedly:
 
-The following facts are accepted and MUST NOT be re-litigated unless contradictory new evidence is found.
+```text
+ACCEPTED / DEFERRED TO TASK 8B.4
+```
 
-### A2 locked identity
+This task implements that exact deferred requirement.
 
-External complete RC1 path:
 
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\input\A2.png
+## 3. Current Defect
 
-File SHA256:
+Current canonical RC1 implementation uses shared directories:
 
-10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+```text
+inference/output/masks/
+inference/output/overlays/
+inference/output/diagnostics/
+```
 
-Decoded RGB:
+Current allocation in:
 
-1024 × 1024
-RGB
-uint8
+```text
+buildreasonseg/runtime/outputs.py
+```
 
-Program:
+uses the existence of:
 
-largest_to_left_of_to_nearest
+```text
+<stem>_mask.png
+```
 
+inside the shared mask directory to choose the run suffix.
 
-### Detector result
+Therefore a failed run that creates:
 
-After the accepted RGB/BGR repair:
+```text
+diagnostics/<stem>/
+```
 
-raw proposals = 0
-merged proposals = 0
-reference = none
+but no mask does NOT reserve the suffix.
 
-Do NOT use proposal recovery as an acceptance criterion.
+A later run of the same image may reuse the same diagnostics location and overwrite previous forensic evidence.
 
+This is a delivery engineering defect.
 
-### Historical provenance state
+It is NOT a model-quality defect.
 
-Previous P1D8/P1D10-era audits established:
 
-- no exact file identity between A2 and the 17,388 active 512×512 detector-domain tiles;
-- A2 geographic/source provenance = NOT ESTABLISHED;
-- A2 train/val/test membership = NOT ESTABLISHED;
-- unknown provenance does NOT prove that A2 is outside the supported domain;
-- the earlier supported-domain reclassification based on unknown provenance was withdrawn;
-- PROP-01 remains OPEN_ENGINEERING_DEFECT in governance state.
+## 4. Frozen New Output Contract
 
-Previous detector/domain probes are historical evidence only.
-Do not repeat them.
+### 4.1 Run directory
 
+Every output-owning image run receives exactly one independent directory under:
 
-### Available GT infrastructure
+```text
+inference/output/
+```
 
-Existing repository evidence establishes:
+Run slug:
 
-- WHU whole-image ↔ 512-tile mapping has been validated;
-- native EA.shp polygons are the primary building-instance truth;
-- raster/vector alignment has already been validated at dataset level;
-- datasets/whu_native_vector/v1.0/tiles/index.jsonl is tracked;
-- native-vector stable source identity uses EA.shp record order;
-- BuildSpatialReason v0.2 carries frozen relation metadata and native-vector references.
+```text
+<stem>
+<stem>_001
+<stem>_002
+...
+```
 
-Therefore an A2 provenance/GT audit is technically meaningful if exact source provenance can be recovered.
+The first available run-directory name is allocated.
 
+Allocation MUST be based on existence of the run root itself.
 
-## 3. Goal
+It MUST NOT depend on mask existence, overlay existence or diagnostic-file existence.
 
-Answer the following questions using the strongest available exact evidence:
 
-1. Where did locked A2 originate?
-2. Can A2 be mapped exactly to a canonical source raster/window?
-3. If exact provenance is recovered, what ground-truth building instances exist in that exact window?
-4. Under the already-frozen spatial-relation semantics, is A2 genuinely a valid:
+### 4.2 Atomic reservation
 
-   largest_to_left_of_to_nearest
+Preferred implementation:
 
-   evaluation case?
-5. Which interpretation is supported:
+attempt to create the candidate run directory with filesystem exclusive/non-overwriting semantics.
 
-   - valid GT case where detector zero genuinely persists;
-   - invalid/misconstructed locked evaluation case;
-   - image/GT alignment defect;
-   - provenance-unresolved case that cannot yet be scientifically classified?
+If it already exists:
 
-This task does NOT repair PROP-01.
+try the next suffix.
 
-This task does NOT select a replacement Demo case.
+This avoids two runs choosing the same directory merely because no mask file exists yet.
 
+Do not introduce locking infrastructure beyond what is necessary for directory reservation.
 
-## 4. Allowed Scope
 
-Read-only inspection is allowed for:
+### 4.3 Required structure
 
-- repository source;
-- Git history;
-- repository docs;
-- evaluation evidence;
-- historical handoff/report files;
-- external complete RC1;
-- existing local project artifacts referenced by repository provenance;
-- existing WHU source archive, if present;
-- existing native-vector dataset metadata and geometry resources;
-- OS/task-local temporary scratch required for deterministic analysis.
+Every allocated run root contains:
 
-Important permitted roots include:
+```text
+<run_slug>/
+├─ diagnostics/
+├─ masks/
+└─ overlays/
+```
 
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+Example first run:
 
-C:\D\resources\Satellite dataset Ⅱ (East Asia)
+```text
+inference/output/A1/
+├─ diagnostics/
+├─ masks/
+│  └─ A1_mask.png
+└─ overlays/
+   └─ A1_overlay.png
+```
 
-datasets/whu_native_vector/v1.0/**
+Example second run:
 
-datasets/build_spatial_reason/v0.2/**
+```text
+inference/output/A1_001/
+├─ diagnostics/
+├─ masks/
+│  └─ A1_mask_001.png
+└─ overlays/
+   └─ A1_overlay_001.png
+```
 
-existing Task 6K.1 / 6L artifacts and scripts.
 
+### 4.4 Filename compatibility
 
-### Allowed repository writes
+Preserve the existing filename suffix convention.
 
-Only:
+For run index 0:
 
-scripts/diagnose_a2_ground_truth_case_validity.py
+```text
+mask     = <stem>_mask.png
+overlay  = <stem>_overlay.png
+```
 
-docs/task8b3_a2_ground_truth_case_validity_audit_v1.md
+For run index N:
 
-evaluation/task8b3_a2_ground_truth_case_validity_audit_v1.json
+```text
+mask     = <stem>_mask_<NNN>.png
+overlay  = <stem>_overlay_<NNN>.png
+```
 
-evaluation/task8b3_a2_ground_truth_case_validity_audit_v1_overlay.png
-ONLY when exact GT-backed provenance is established
+The suffix now appears both in the run slug and in mask/overlay filenames.
 
-handoff/CURRENT_TASK.md
+This preserves existing artifact filename semantics while adding run-level isolation.
 
-handoff/EXECUTOR_STATE.yaml
 
+### 4.5 Diagnostics filenames
 
-No other repository path is authorized.
+Existing diagnostics names remain unchanged:
 
+```text
+prompt.txt
+parsed_program.json
+global_proposals.png
+proposals.json
+selected_reference.png
+reasoning_context.png
+reference_context_mask.png
+direction_field.png
+nearest_field.png
+relation_weight.png
+prototype_similarity.png
+maps.npz
+result.json
+```
 
-## 5. Forbidden Scope
+They now live directly inside:
+
+```text
+<run_slug>/diagnostics/
+```
+
+There must NOT be a second nested `<stem>` directory.
+
+
+## 5. Output Path API Compatibility
+
+Existing payload keys MUST remain:
+
+```text
+output_paths.mask
+output_paths.overlay
+output_paths.diagnostics
+```
+
+Existing inspect-mode fields remain semantically equivalent.
+
+CLI labels remain:
+
+```text
+Mask         :
+Overlay      :
+Diagnostics  :
+```
+
+Only filesystem path values change.
+
+Do NOT introduce a new required CLI argument.
+
+Do NOT change exit codes.
+
+Do NOT change result status semantics.
+
+Do NOT change SUCCESS semantics.
+
+
+## 6. Allocation Timing
+
+Preserve current error-order behaviour as much as possible.
+
+For full prediction:
+
+```text
+load_image
+→ allocate run output directory
+→ remaining pipeline
+```
+
+is already the effective order and should remain so.
+
+For inspect-proposals mode, move output allocation immediately after successful image loading if necessary so that the image run owns its run directory before detector execution.
+
+Pre-image failures such as:
+
+- nonexistent input;
+- unsupported input path;
+- decode failure before successful image load;
+
+are NOT required to create an output run directory.
+
+Do not reorder model/package validation or other unrelated error contracts merely to create output folders.
+
+
+## 7. Failure Contract
+
+A failed run after output allocation still permanently owns its run directory.
+
+Example:
+
+```text
+output/A2/
+├─ diagnostics/
+│  └─ result.json
+├─ masks/
+└─ overlays/
+```
+
+If A2 is run again:
+
+```text
+output/A2_001/
+```
+
+MUST be allocated even though the first run produced no mask.
+
+No previous diagnostics may be silently overwritten.
+
+
+## 8. --no-save-diagnostics Contract
+
+`--no-save-diagnostics` continues to suppress diagnostic files.
+
+The run directory contract still applies.
+
+It is acceptable for:
+
+```text
+diagnostics/
+```
+
+to exist but remain empty.
+
+Do NOT reinterpret an empty directory as a saved diagnostic artifact.
+
+
+## 9. Inspect-Proposals Contract
+
+`--inspect-proposals` uses the same run-isolated directory allocator.
+
+Expected shape:
+
+```text
+output/<run_slug>/
+├─ diagnostics/
+│  ├─ global_proposals.png
+│  ├─ proposals.json
+│  ├─ result.json
+│  └─ ...
+├─ masks/
+└─ overlays/
+```
+
+Inspect mode MUST NOT create a fake mask or overlay.
+
+
+## 10. Legacy Output Preservation
+
+Existing historical layout may already contain:
+
+```text
+inference/output/masks/
+inference/output/overlays/
+inference/output/diagnostics/
+review_task8b3/
+...
+```
 
 Do NOT:
 
-- modify any delivery product/runtime source;
-- modify detector.py;
-- modify ProgramHead;
-- modify Qwen;
-- modify SAM/SAM2;
-- modify GRF;
-- modify reference ranking;
-- modify spatial executor semantics;
-- modify governance/PROJECT_STATE.yaml;
-- modify governance/DECISIONS.md;
-- change confidence threshold;
-- change NMS;
-- change imgsz;
-- change max_det;
-- change mask threshold;
-- change tile size;
-- change overlap/stride;
-- run any threshold sweep;
-- run detector inference;
-- run Qwen inference;
-- run SAM/SAM2 inference;
-- run D-B1;
-- run full predict CLI;
-- train/fine-tune any model;
-- install or update dependencies;
-- download data/models;
-- modify external RC1;
-- modify WHU source files;
-- replace A2;
-- alter existing P1D10 locked Demo candidates;
-- select a replacement case;
-- declare PROP-01 closed;
-- reclassify PROP-01 autonomously.
+- delete them;
+- migrate them;
+- rename them;
+- clean them;
+- overwrite them for compatibility;
+- reinterpret them as new run directories.
+
+They are historical evidence.
+
+New allocator uses only the new run-root contract.
+
+If an image stem happens to collide with an existing root entry such as:
+
+```text
+masks
+overlays
+diagnostics
+```
+
+that candidate is already occupied and the allocator must choose the next suffix.
 
 
-## 6. Decision Boundary
+## 11. Allowed Functional Scope
 
-### L0-L1 — Executor may decide
+Preferred changed delivery files:
 
-Inside the frozen audit contract, Codex may choose:
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/README.md
+delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
 
-- exact hashing implementation;
-- exact-pixel indexing implementation;
-- efficient chunked raster reads;
-- deterministic scratch layout;
-- deterministic evidence serialization;
-- existing geometry helper reuse;
-- performance-safe exact-search mechanics.
+Conditionally allowed only if mechanically required for the frozen path contract:
 
-### L2-L4 — STOP + Supervisor
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
+```
 
-Codex MUST NOT independently:
+Avoid modifying `predict.py` unless a concrete failing contract test proves it is necessary.
 
-- invent a new relation definition;
-- redefine "largest";
-- redefine "left_of";
-- redefine "nearest";
-- create a fuzzy similarity threshold;
-- use perceptual matching as provenance proof;
-- redefine case validity;
-- change GT acceptance rules;
-- invoke a model to resolve provenance;
-- modify scientific conclusions.
+Repository evidence/handoff files allowed:
+
+```text
+docs/task8b4_run_isolated_output_layout_v1.md
+evaluation/task8b4_run_isolated_output_layout_v1.json
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+```
+
+No other path is authorized without Supervisor escalation.
 
 
-## 7. Required Preflight
+## 12. Forbidden Scope
 
-First read, in order:
+Do NOT change:
+
+- detector implementation except already accepted RGB/BGR state;
+- detector threshold;
+- NMS;
+- tile size;
+- overlap;
+- imgsz;
+- max_det;
+- ProgramHead;
+- Qwen;
+- language fallback;
+- reference selection;
+- relation semantics;
+- SAM/SAM2;
+- D-B1;
+- GRF;
+- mask validity rules;
+- SUCCESS semantics;
+- model weights;
+- configs;
+- scientific metrics;
+- locked Demo candidate identities;
+- PROP-01 classification;
+- REF-01 classification;
+- MASK-01 classification;
+- governance/PROJECT_STATE.yaml;
+- governance/DECISIONS.md.
+
+Do NOT run real model inference in this milestone.
+
+Do NOT run the historical six-image suite.
+
+Do NOT run A2.
+
+Do NOT run the four locked Demo candidates.
+
+
+## 13. Required Preflight
+
+Read in order:
 
 1. AGENTS.md
 2. governance/PROJECT_STATE.yaml
@@ -274,728 +488,644 @@ First read, in order:
 4. handoff/CURRENT_TASK.md
 5. handoff/EXECUTOR_STATE.yaml
 
-Because CURRENT_TASK in the starting commit belongs to the accepted predecessor milestone, install THIS Supervisor task book byte-for-byte after Git preflight and task-branch creation.
+Then:
 
-Then verify:
+```text
+git fetch
+```
 
-git branch
+Verify actual remote predecessor branch:
 
-git HEAD
+```text
+audit/task8b3-a2-ground-truth-case-validity-v1
+```
 
-remote predecessor branch
+Required accepted predecessor HEAD:
 
-remote predecessor HEAD
+```text
+c6d09e77d3c403771a92d096fe5977ebaa61db67
+```
 
-git status
+If remote advanced:
 
-git diff
+do NOT reset/rebase/amend.
 
+Inspect the additional commits.
 
-Required starting remote state:
+If they are not clearly Supervisor authorization-only changes for this milestone:
 
-fix/task8b3-detector-rgb-bgr-contract-v1
+persist evidence and STOP.
 
-HEAD:
-
-104bcde03ff8bedbd563a1c0eba6fe230f221dad
-
-
-If the actual remote has advanced:
-
-DO NOT reset.
-
-Inspect the new commits read-only.
-
-If they are not obviously Supervisor task-install/governance-only commits for this exact milestone:
-
-update EXECUTOR_STATE with the facts and STOP.
-
-
-If the expected starting state is confirmed:
+If correct:
 
 create:
 
-audit/task8b3-a2-ground-truth-case-validity-v1
+```text
+fix/task8b4-run-isolated-output-layout-v1
+```
 
-from the verified starting HEAD.
+from the verified authorization point.
 
-Do not modify the accepted predecessor history.
 
+## 14. Required Pre-Implementation Inspection
 
-## 8. Provenance Evidence Levels
+Before editing, record:
 
-Use the following exact provenance levels.
+- current `outputs.py` SHA256 / Git blob;
+- all references to:
+  - `allocate_outputs`
+  - `allocate_run_suffix`
+  - `suffix_of`
+  - `SampleOutputs`
+  - `output_dirs`
+- current README output contract;
+- current `inference/README.md` output tree;
+- current relevant tests;
+- current source-manifest entries for every manifest-listed file expected to change.
 
+Also inspect existing external:
 
-### P0 — documentary exact provenance
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
 
-A pre-existing authoritative record identifies:
+read-only before implementation.
 
-- original source path/image;
-- exact crop/window coordinates or equivalent deterministic construction;
-- enough identity to reproduce A2.
+Record inventories for:
 
-P0 should still be pixel-verified when the source remains available.
+```text
+inference/input/
+inference/output/
+```
 
+and protected model assets.
 
-### P1 — full exact-pixel provenance
+Do not modify external delivery during this phase.
 
-A source raster/window is identified and:
 
-decoded RGB of complete reconstructed 1024×1024 source window
+## 15. Required Unit Contract Tests
 
-is byte-identical to:
+At minimum add/modify tests proving all of the following.
 
-decoded RGB of locked A2.
+### T1 — first run layout
 
-P1 is sufficient for GT mapping.
+For `example.png`, first allocation creates:
 
+```text
+output/example/
+output/example/diagnostics/
+output/example/masks/
+output/example/overlays/
+```
 
-### P2 — partial exact evidence
+and paths resolve to:
 
-Examples:
+```text
+output/example/masks/example_mask.png
+output/example/overlays/example_overlay.png
+output/example/diagnostics/
+```
 
-- one or more A2 quadrants exactly match canonical tiles;
-- an exact interior patch identifies a source scene;
-- a candidate source location exists;
-- but complete 1024×1024 equality cannot be established.
 
-P2 is NOT sufficient for final GT case-validity classification.
+### T2 — second run isolation
 
+A second allocation for the same stem creates:
 
-### P3 — approximate / perceptual similarity
+```text
+output/example_001/
+```
 
-P3 is NOT provenance proof.
+with filenames:
 
-Do not use it as the basis for this milestone's scientific result.
+```text
+example_mask_001.png
+example_overlay_001.png
+```
 
 
-## 9. Phase A — Historical Documentary Provenance
+### T3 — failed diagnostics-only run reserves suffix
 
-Search read-only through:
+First allocation:
 
-- Git history;
-- historical Task 8B.3 task books/reports;
-- six-case suite records;
-- external suite logs;
-- preserved diagnostics;
-- external file metadata;
-- previous A2 forensics;
-- any pre-existing copy/source records.
+```text
+output/example/
+```
 
-Determine, if possible:
+Write diagnostics only.
 
-- who/what introduced A2;
-- original source path;
-- source dataset;
-- crop/window coordinates;
-- transformation chain;
-- why A2 was selected into the six locked cases.
+Write NO mask.
 
-Every claim must be attached to an exact evidence source.
+Second allocation MUST be:
 
-Classify each finding as:
+```text
+output/example_001/
+```
 
-AUTHORITATIVE
+and MUST NOT reuse:
 
-DESCRIPTIVE_ONLY
+```text
+output/example/diagnostics/
+```
 
-INFERRED
 
-Only AUTHORITATIVE evidence may establish P0.
+### T4 — existing run directory is never reused
 
+Pre-create:
 
-## 10. Phase B — Locked A2 Identity
+```text
+output/example/
+output/example_001/
+```
 
-Re-verify current external A2:
+Next allocation must use:
 
-path
+```text
+output/example_002/
+```
 
-dimensions
 
-mode
+### T5 — legacy shared outputs preserved
 
-dtype
+Pre-create historical:
 
-file bytes
+```text
+output/masks/example_mask.png
+output/overlays/example_overlay.png
+output/diagnostics/example/result.json
+```
 
-SHA256
+Allocate a new run.
 
-decoded-RGB SHA256
+Assertions:
 
+- historical files remain byte-identical;
+- new run uses the new run-root layout;
+- no legacy file is deleted or overwritten.
 
-Required file SHA256:
 
-10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+### T6 — mask/overlay functional contract preserved
 
+Existing assertions remain true:
 
-Confirm:
+- original image dimensions;
+- mask uint8;
+- values subset `{0,255}`;
+- overlay original size;
+- configured alpha behaviour unchanged.
 
-runtime decode / Pillow RGB decode identity
 
-using read-only operations.
+### T7 — diagnostics required fields preserved
 
-No image rewrite or re-encoding.
+Existing diagnostics-file test remains valid under the new run-local diagnostics directory.
 
 
-## 11. Phase C — Exact Pixel Provenance Search
+### T8 — same run root
 
-Use exact-pixel evidence only.
+Assert:
 
+```text
+mask
+overlay
+diagnostics
+```
 
-### C1. 512×512 quadrant search
+belong to the same run root.
 
-Compute decoded RGB hashes for:
 
-A2[0:512, 0:512]
+### T9 — collision with reserved/legacy root name
 
-A2[0:512, 512:1024]
+If:
 
-A2[512:1024, 0:512]
+```text
+output/masks/
+```
 
-A2[512:1024, 512:1024]
+already exists and input stem is `masks`, allocator must not treat that legacy directory as a new run.
 
-Compare against the complete available canonical WHU 512×512 tile set.
+It must allocate a suffixed run slug.
 
-Do not assume that one match proves the whole image.
 
+### T10 — no-save-diagnostics semantics
 
-### C2. Deterministic interior windows
+No diagnostic files are produced when disabled.
 
-If quadrants do not resolve provenance, test a small predeclared deterministic set of additional exact 512×512 A2 windows.
+Do not weaken existing CLI contract.
 
-The locations MUST be written to evidence before the corpus search.
 
-No adaptive search based on "looks promising" results.
+## 16. Canonical Test Gates
 
+Use the established project Python environment.
 
-### C3. Bounded exact-patch search
+From canonical RC1 root, first run targeted tests:
 
-If required, perform a bounded exact-pixel patch search.
+```text
+python -m pytest tests/test_task8b_runtime.py -q
+python -m pytest tests/test_cli_contract.py -q
+```
 
-Requirements:
+If `test_cli_contract.py` is unchanged, it must still be run.
 
-- patch size/locations declared before search;
-- exact byte equality only;
-- no SSIM;
-- no feature matching threshold;
-- no histogram distance threshold;
-- no perceptual nearest-neighbour acceptance.
+Then run:
 
-An exact patch hit is only a candidate source position.
+```text
+python -m pytest tests/ -q
+```
 
+Record exact passed/failed count and exit code.
 
-### C4. Full-window verification
+Do not assume a fixed test count because this task adds tests.
 
-Any candidate source location MUST be verified by reconstructing the complete 1024×1024 source window.
+Any unexplained regression:
 
-P1 requires:
+STOP.
 
-reconstructed source-window decoded RGB
-==
-locked A2 decoded RGB
 
-for every pixel/channel.
+## 17. Source Manifest Contract
 
+Manifest remains:
 
-If full equality is not achieved:
+```text
+schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
+identity_basis = GIT_CANONICAL_BLOB_BYTES
+entries = 135
+```
 
-do not claim exact provenance.
+Do NOT add or remove manifest paths merely because this task changes contents.
 
+For every changed manifest-listed delivery file:
 
-### C5. Computational bound
+update:
 
-If an exact whole-source search becomes computationally unreasonable:
+```text
+bytes
+sha256
+```
 
-record the completed search coverage;
+from committed Git canonical blob bytes.
 
-set the strongest justified provenance status;
+Recommended sequence:
 
-do not invent a fuzzy rescue method.
+1. implement product/tests/docs;
+2. run targeted tests;
+3. commit checkpoint;
+4. calculate Git canonical blob identity from that commit;
+5. update only affected manifest entries;
+6. validate all 135 entries against Git canonical blob bytes;
+7. commit manifest checkpoint.
 
+Do NOT calculate canonical manifest identities from CRLF-expanded Windows working-tree bytes.
 
-## 12. Phase D — GT Recovery
 
-Execute ONLY if P0/P1 yields an exact GT-backed source window.
+## 18. External Sync Gate
 
-Resolve:
+External root:
 
-- whole source raster;
-- source pixel window;
-- corresponding raster label;
-- corresponding native EA.shp geometry;
-- native-vector archive identity.
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
 
-Use the existing validated WHU mapping.
+Before any write sync:
 
-Do not redefine it.
+run the existing Git-canonical helper in check mode.
 
+Expected principle:
 
-For every building intersecting the A2 window record:
+- mismatches must be limited to the exact manifest-listed files intentionally changed by Task 8B.4;
+- no unexplained unrelated mismatch may exist.
 
-- source_feature_id;
-- stable source UID;
-- clipped pixel area;
-- full area where available;
-- centroid in A2 coordinates;
-- bbox in A2 coordinates;
-- border-clipped state;
-- visible fraction if available.
+If unrelated mismatches appear:
 
+STOP before sync.
 
-Record:
 
-GT building instance count.
+## 19. Controlled External Sync
 
+Only after the pre-sync gate is clean and understood:
 
-## 13. Phase E — Image / GT Alignment
+use the existing:
 
-If exact source provenance exists:
+```text
+scripts/sync_advisor_rc1_delivery.py
+```
 
-validate the exact A2 window against existing raster/vector truth.
+for one controlled source/config sync.
 
-Reuse existing Task 6K.1 alignment machinery/definitions.
+Then separately write the exact Git-canonical:
 
-Do NOT invent a new IoU or offset acceptance threshold.
+```text
+source_manifest.json
+```
 
+to external RC1, matching the established P1D11B procedure.
 
-Record:
+Do NOT delete any external file.
 
-- source raster identity;
-- raster-label identity;
-- EA.shp identity;
-- crop/window coordinates;
-- applicable alignment metric;
-- any contradiction.
+Do NOT touch:
 
-If the recovered image/window and GT genuinely conflict:
+```text
+model weights
+Qwen assets
+SAM2 assets
+inference/input
+existing inference/output history
+logs except unavoidable test-generated logs
+```
 
-persist evidence
+Protected asset hashes must remain unchanged.
 
-set:
 
-gt_status = GT_ALIGNMENT_CONFLICT
-
-STOP for Supervisor review.
-
-
-## 14. Phase F — Frozen Relation Semantics
-
-Locate the canonical already-frozen implementation/definition of:
-
-largest_to_left_of_to_nearest
-
-from the BuildSpatialReason / spatial_reasoning lineage.
-
-Document the exact code/data source used.
-
-
-Do NOT invent special semantics for A2.
-
-
-First determine whether the frozen semantics are directly applicable to a 1024×1024 A2 GT window.
-
-If applying them would require a new interface/contract:
-
-set:
-
-case_validity = SEMANTICS_NOT_PORTABLE_TO_A2
-
-persist evidence
-
-STOP semantic classification.
-
-
-If directly applicable, derive from GT only:
-
-1. largest reference building;
-2. left_of eligible candidates;
-3. nearest target according to frozen semantics;
-4. tie/ambiguity state;
-5. complete:
-
-Reference
-→ Relation
-→ Target
-
-chain validity.
-
-
-No detector proposal may participate in this calculation.
-
-
-## 15. Required Result Enums
-
-Machine-readable evidence MUST keep these dimensions separate.
-
-
-### provenance_status
-
-Exactly one:
-
-EXACT_DOCUMENTARY_AND_PIXEL_CONFIRMED
-
-EXACT_PIXEL_CONFIRMED
-
-PARTIAL_EXACT_EVIDENCE
-
-NOT_ESTABLISHED
-
-CONFLICTING_PROVENANCE_EVIDENCE
-
-
-### gt_status
-
-Exactly one:
-
-GT_AVAILABLE_ALIGNED
-
-GT_ALIGNMENT_CONFLICT
-
-GT_UNAVAILABLE
-
-NOT_EVALUATED_NO_EXACT_PROVENANCE
-
-
-### case_validity
-
-Exactly one:
-
-VALID_REFERENCE_RELATION_TARGET_CHAIN
-
-INVALID_NO_BUILDING_INSTANCES
-
-INVALID_NO_VALID_REFERENCE
-
-INVALID_NO_LEFT_OF_TARGET
-
-INVALID_NO_NEAREST_TARGET
-
-AMBIGUOUS_GT_RELATION
-
-SEMANTICS_NOT_PORTABLE_TO_A2
-
-NOT_EVALUABLE_WITHOUT_PROVENANCE
-
-
-### prop01_interpretation_candidate
-
-Exactly one:
-
-VALID_GT_CASE_DETECTOR_ZERO_PERSISTS
-
-LOCKED_CASE_CONSTRUCTION_DEFECT_CANDIDATE
-
-IMAGE_GT_ALIGNMENT_DEFECT_CANDIDATE
-
-PROP01_ROOT_CAUSE_REMAINS_UNRESOLVED
-
-
-These are evidence classifications.
-
-They do NOT authorize the Executor to change governance state.
-
-
-## 16. Required Evidence
-
-Create:
-
-docs/task8b3_a2_ground_truth_case_validity_audit_v1.md
-
-evaluation/task8b3_a2_ground_truth_case_validity_audit_v1.json
-
-
-Preferred diagnostic implementation:
-
-scripts/diagnose_a2_ground_truth_case_validity.py
-
-
-If exact GT-backed provenance is established, also create:
-
-evaluation/task8b3_a2_ground_truth_case_validity_audit_v1_overlay.png
-
-
-Overlay requirements:
-
-- original A2 background;
-- GT building boundaries;
-- reference clearly identified;
-- target clearly identified;
-- evidence only;
-- must not influence the classification.
-
-
-## 17. Required JSON Fields
-
-At minimum:
-
-task_id
-
-status
-
-starting_branch
-
-starting_head
-
-task_branch
-
-locked_a2_path
-
-locked_a2_file_sha256
-
-locked_a2_decoded_rgb_sha256
-
-historical_sources_inspected
-
-source_roots_inspected
-
-exact_search_plan
-
-exact_search_anchors
-
-exact_matches
-
-full_window_verification
-
-provenance_status
-
-resolved_source_raster
-
-resolved_source_window
-
-gt_source_identities
-
-gt_building_instance_count
-
-gt_instances
-
-relation_semantics_source
-
-gt_reference
-
-gt_left_of_candidates
-
-gt_target
-
-gt_status
-
-case_validity
-
-prop01_interpretation_candidate
-
-no_model_inference = true
-
-no_threshold_sweep = true
-
-no_parameter_tuning = true
-
-no_product_change = true
-
-no_external_write = true
-
-no_candidate_replacement = true
-
-
-Unavailable fields must be null / empty with an explicit reason.
-
-Never fabricate completeness.
-
-
-## 18. Validation
+## 20. External Post-Sync Gates
 
 Required:
 
-- syntax check of any new diagnostic script;
-- import check;
-- JSON parse;
-- required-enum assertions;
-- deterministic saved-evidence finalize phase;
-- changed-path audit;
-- final Git diff audit;
-- exact A2 SHA256 re-check.
+### Gate A
 
-Preferred script interface:
+Git-canonical helper:
 
---phase provenance
+```text
+checked = 135
+match = 135
+missing = 0
+mismatch = 0
+```
 
---phase gt
+### Gate B
 
---phase finalize
+External `source_manifest.json`:
 
+byte/hash identical to Git canonical manifest.
 
-`--phase gt` must refuse to run unless saved evidence contains exact provenance sufficient for GT mapping.
+### Gate C
 
-`--phase finalize` must perform zero model inference and validate already-saved evidence.
+```text
+python check_setup.py
+```
 
-
-No full pytest suite required.
-
-No product regression suite required.
-
-No model inference allowed.
+must report READY.
 
 
-## 19. Checkpoint Rules
+### Gate D
+
+Run external targeted tests:
+
+```text
+python -m pytest tests/test_task8b_runtime.py -q
+python -m pytest tests/test_cli_contract.py -q
+```
+
+### Gate E
+
+Run external full suite:
+
+```text
+python -m pytest tests/ -q
+```
+
+All must exit 0.
+
+No model inference is authorized.
+
+
+## 21. External Historical Output Preservation Gate
+
+Compare pre/post inventory of:
+
+```text
+inference/output/
+```
+
+Because no real inference is authorized in this milestone, existing historical output contents must remain unchanged.
+
+No migration or cleanup is permitted.
+
+Also verify:
+
+```text
+inference/input/
+```
+
+is unchanged.
+
+
+## 22. Documentation Update
+
+Update canonical RC1 README to document the new run-isolated layout.
+
+Replace the old shared example with:
+
+```text
+inference/output/<run_slug>/
+├─ diagnostics/
+├─ masks/
+└─ overlays/
+```
+
+Document:
+
+```text
+first run  -> <stem>
+next runs -> <stem>_001, <stem>_002, ...
+```
+
+State explicitly:
+
+- failed runs reserve their run directory;
+- existing run outputs are never silently overwritten;
+- legacy pre-8B.4 shared output directories are preserved and are not migrated.
+
+
+Update:
+
+```text
+inference/README.md
+```
+
+to the same contract.
+
+Remove the stale claim that Task 8A has no real inference, since RC1 Task 8B runtime now exists.
+
+Do not change model-quality or scientific claims.
+
+
+## 23. Required Evidence
+
+Create:
+
+```text
+docs/task8b4_run_isolated_output_layout_v1.md
+evaluation/task8b4_run_isolated_output_layout_v1.json
+```
+
+JSON must include at least:
+
+```text
+task_id
+starting_branch
+starting_head
+task_branch
+
+historical_requirement
+old_layout
+new_layout
+
+changed_paths
+canonical_commits
+
+unit_test_results
+canonical_full_suite
+
+manifest_identity_basis
+manifest_entries
+manifest_changed_entries
+canonical_manifest_gate
+
+external_precheck
+external_sync
+external_manifest_identity
+external_postcheck
+external_setup
+external_targeted_tests
+external_full_suite
+
+legacy_output_inventory_before
+legacy_output_inventory_after
+legacy_output_unchanged
+
+input_inventory_before
+input_inventory_after
+input_unchanged
+
+protected_assets_before
+protected_assets_after
+protected_assets_unchanged
+
+no_model_inference
+no_threshold_change
+no_model_change
+no_scientific_contract_change
+no_historical_output_migration
+```
+
+
+## 24. Checkpoints
 
 ### Checkpoint 1
 
-Completed:
-
-historical documentary search
-
-+
-
-locked A2 identity verification
-
-
-Update EXECUTOR_STATE.
+Implementation + targeted canonical tests green.
 
 Commit + push.
 
 
 ### Checkpoint 2
 
-Completed:
-
-exact pixel provenance search
-
-
-If result is:
-
-NOT_ESTABLISHED
-
-or:
-
-PARTIAL_EXACT_EVIDENCE
-
-this is a VALID completion path.
-
-Do NOT rescue with fuzzy matching.
-
-Finalize evidence and proceed to READY_FOR_SUPERVISOR_AUDIT.
-
-
-If exact provenance is established:
-
-continue automatically to GT/alignment audit.
-
-
-### Checkpoint 3
-
-Completed:
-
-GT + relation validity audit
-
-
-Update EXECUTOR_STATE.
+Full canonical tests green + source manifest 135/135 Git-canonical validation.
 
 Commit + push.
 
 
-## 20. STOP / Escalation Conditions
+### Checkpoint 3
 
-STOP after preserving evidence if:
+External pre-sync check understood and limited exactly to authorized changed files.
 
-- documentary and pixel provenance conflict;
-- source/GT alignment contradicts the validated mapping;
-- relation semantics require a new L2 contract;
-- exact search would require an unsafe/unbounded destructive operation;
-- fuzzy/perceptual matching would be needed as proof;
-- model inference would be needed;
-- unknown workspace modifications exist;
-- Git state is unsafe;
-- an external source would have to be modified.
+Persist evidence before external write.
 
 
-Do NOT perform another repair.
+### Checkpoint 4
+
+Controlled external sync + manifest write complete.
+
+Post-sync:
+
+```text
+135/135
+check_setup READY
+targeted tests PASS
+full external tests PASS
+```
+
+Commit + push evidence.
 
 
-## 21. Scientific Claim Boundary
+## 25. STOP Conditions
 
-This milestone may establish only:
+STOP with evidence if:
 
-- exact or unresolved A2 source provenance;
-- GT availability/alignment when exact provenance permits;
-- locked A2 case validity under already-frozen semantics.
-
-
-It does NOT establish:
-
-- detector improvement;
-- segmentation semantic correctness;
-- new supported-domain boundary;
-- PROP-01 closure by itself;
-- replacement Demo case;
-- detector adaptation;
-- new relation semantics;
-- architecture improvement.
+- required starting Git state conflicts;
+- unknown workspace changes exist;
+- unrelated external manifest mismatches exist;
+- implementation would require changing CLI schema;
+- implementation would require changing status/exit semantics;
+- any model or scientific component would need modification;
+- manifest canonical identity cannot be established;
+- external protected assets change unexpectedly;
+- legacy inference/output content changes unexpectedly;
+- tests expose an unrelated regression;
+- destructive Git operation appears necessary.
 
 
-## 22. Git Safety
+## 26. Git Safety
 
 Forbidden:
 
+```text
 git reset --hard
-
 git rebase
-
 git commit --amend
-
 git stash
-
 git clean
-
 force push
-
 history rewrite
+autonomous revert
+```
 
-deleting unknown modifications
-
-
-Unknown work must be preserved.
-
-
-## 23. Final State
-
-A complete forensic result includes a legitimate:
-
-provenance_status = NOT_ESTABLISHED
-
-if exact evidence cannot recover A2's origin.
-
-Do not treat that as Executor failure.
+Preserve every real checkpoint and failure.
 
 
-On completion:
+## 27. Scientific Claim Boundary
 
+Task 8B.4 may establish only:
+
+```text
+RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED
+```
+
+and associated delivery integrity.
+
+It does NOT establish:
+
+- better detector quality;
+- improved segmentation quality;
+- PROP-01 closure;
+- REF-01 closure;
+- MASK semantic correctness;
+- final Demo success;
+- architecture improvement.
+
+
+## 28. Completion State
+
+On successful completion:
+
+```text
 handoff/CURRENT_TASK.md
-
 Status:
-
 READY_FOR_SUPERVISOR_AUDIT
+```
 
+and:
 
+```text
 handoff/EXECUTOR_STATE.yaml
-
 status:
-
 READY_FOR_SUPERVISOR_AUDIT
-
-
-Commit and push all authorized evidence.
-
-Then STOP.
-
+```
 
 Next gate:
 
-CHATGPT_A2_GT_CASE_VALIDITY_REMOTE_AUDIT
+```text
+CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
+```
 
+Then STOP.
 
-Do NOT automatically begin:
-
-- detector tuning;
-- detector adaptation;
-- Demo-case replacement;
-- Task 8B.4;
-- final Demo.
+Do NOT automatically start Final Demo.

@@ -1,49 +1,50 @@
 schema_version: 1
-task_id: A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
-status: READY_FOR_SUPERVISOR_AUDIT
+task_id: TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
+status: IN_PROGRESS
 executor: CODEX
-branch: audit/task8b3-a2-ground-truth-case-validity-v1
-head: 0d86adc8d7d81684f894f287135065251d358e7d
+branch: fix/task8b4-run-isolated-output-layout-v1
+head: c6d09e77d3c403771a92d096fe5977ebaa61db67
 completed:
-- Required startup and remote anchor verified; task book installed byte-for-byte.
-- Phase A historical documentary search complete; no authoritative source/window recovered.
-- Phase B locked SHA256 and runtime/Pillow RGB equality verified.
-- Exact-pixel plan predeclared before corpus search.
-- Phase C exact canonical tile and bounded whole-source patch search completed; coverage
-  saved.
-- Deterministic saved-evidence validation complete; STOP for Supervisor audit.
-current_step: STOP_FOR_SUPERVISOR_AUDIT
-next_action: CHATGPT_A2_GT_CASE_VALIDITY_REMOTE_AUDIT
+- Startup reads, clean Git state, exact remote predecessor and task book installation
+  verified.
+- Preimplementation sources, references, manifest entries, external inputs/output
+  history and model asset hashes recorded.
+- Implementation and targeted canonical runtime 62/62 plus CLI 24/24 passed without
+  model inference.
+current_step: CHECKPOINT_1_TARGETED_CANONICAL_GREEN
+next_action: Commit/push implementation; derive manifest identities from committed
+  Git blobs; run full canonical suite.
 tests_run:
-- Diagnostic syntax compile and module import PASS (-B; no bytecode writes).
-- Saved JSON parse, required fields/enums/guard assertions PASS.
-- Exact plan checkpoint predates search and all anchors remain frozen.
-- GT phase refuses saved non-exact provenance (no evidence changes).
-- Final allowed-path and whitespace diff audits PASS.
-- Locked A2 file and decoded RGB SHA256 rechecks PASS.
-- External RC1 and WHU path/size/mtime inventory unchanged; consulted identities unchanged.
-- Repeated finalize is deterministic and performs zero inference.
+- module: tests/test_task8b_runtime.py
+  exit_code: 1
+  counts:
+    failed: 2
+    passed: 60
+- module: tests/test_task8b_runtime.py
+  exit_code: 0
+  counts:
+    passed: 62
+- module: tests/test_cli_contract.py
+  exit_code: 0
+  counts:
+    passed: 24
 files_modified:
-- docs/task8b3_a2_ground_truth_case_validity_audit_v1.md
-- evaluation/task8b3_a2_ground_truth_case_validity_audit_v1.json
+- delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
+- delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
+- delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+- delivery_src/BuildReasonSeg_Advisor_RC1/README.md
+- delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
-- scripts/diagnose_a2_ground_truth_case_validity.py
-uncommitted_changes: false
+- docs/task8b4_run_isolated_output_layout_v1.md
+- evaluation/task8b4_run_isolated_output_layout_v1.json
+uncommitted_changes: true
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 0d86adc8d7d81684f894f287135065251d358e7d
-  pushed: true
-scientific_claim_scope: EXACT_OR_UNRESOLVED_A2_PROVENANCE_AND_CONDITIONAL_GT_CASE_VALIDITY_ONLY
+  commit: null
+  pushed: null
+scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_ONLY
 PROP01_status: OPEN
 no_model_inference: true
-no_product_change: true
-no_external_write: true
-provenance_status: NOT_ESTABLISHED
-gt_status: NOT_EVALUATED_NO_EXACT_PROVENANCE
-case_validity: NOT_EVALUABLE_WITHOUT_PROVENANCE
-no_threshold_sweep: true
-no_parameter_tuning: true
-no_candidate_replacement: true

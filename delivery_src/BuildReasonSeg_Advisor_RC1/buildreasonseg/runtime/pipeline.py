@@ -141,9 +141,9 @@ def inspect_proposals(runtime: PredictRuntime, request: PipelineRequest) -> Pipe
 
     started = time.time()
     loaded = load_image(request.image)
+    outputs = outputs_module.allocate_outputs(request.image)
     detection = runtime.detector.detect_global(loaded.rgb)
     proposals = detection["merged"]
-    outputs = outputs_module.allocate_outputs(request.image)
     preview = outputs_module.proposals_preview_image(loaded.rgb, proposals)
     payload = {
         "status": "SUCCESS", "mode": "inspect",
@@ -158,9 +158,11 @@ def inspect_proposals(runtime: PredictRuntime, request: PipelineRequest) -> Pipe
         "timings": StageTimings(total=time.time() - started,
                                 detector=detection["detector_seconds"]).to_dict(),
     }
-    outputs_module.save_diagnostics(outputs, payload, proposals_preview=preview)
+    if request.save_diagnostics:
+        outputs_module.save_diagnostics(outputs, payload, proposals_preview=preview)
     print(f"Detected {len(proposals)} merged building proposals.")
-    print(f"See: {Path(outputs.diagnostics_dir) / 'global_proposals.png'}")
+    if request.save_diagnostics:
+        print(f"See: {Path(outputs.diagnostics_dir) / 'global_proposals.png'}")
     return PipelineResult(status="SUCCESS", image=request.image, result_payload=payload,
                           outputs=outputs)
 

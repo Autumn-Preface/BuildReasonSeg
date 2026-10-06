@@ -2,11 +2,12 @@
 
 Frozen rules:
 
-* mask → `inference/output/masks/<stem>_mask.png`, original width×height, uint8, background 0, target 255;
-* overlay → `inference/output/overlays/<stem>_overlay.png`, original size, red `(255,0,0)`, alpha default 0.45;
-* diagnostics → `inference/output/diagnostics/<sample>/` with the frozen file names;
-* existing outputs are never overwritten silently: `_001`, `_002`, … suffixes are used and mask/overlay/
-  diagnostics share the same run suffix;
+* every run exclusively reserves `inference/output/<stem[_NNN]>/`, including failed runs;
+* mask / overlay / diagnostics live in that run's `masks/`, `overlays/`, `diagnostics/`;
+* mask and overlay retain `<stem>_mask[_NNN].png` / `<stem>_overlay[_NNN].png` filenames;
+* mask preserves original width×height, uint8, background 0, target 255; overlay preserves original size,
+  red `(255,0,0)`, alpha default 0.45;
+* legacy shared output history is preserved;
 * no ground truth is ever written.
 """
 
@@ -28,25 +29,30 @@ DIAGNOSTIC_NAMES = ("prompt.txt", "parsed_program.json", "global_proposals.png",
 PREVIEW_MAX_DIMENSION = 2048
 
 
-def output_dirs() -> dict:
-    base = paths.inference_dir()
-    return {"masks": base / "output" / "masks", "overlays": base / "output" / "overlays",
-            "diagnostics": base / "output" / "diagnostics"}
+def output_dirs(run_root: Path | None = None) -> dict:
+    """Directories within a reserved run; no-argument queries retain legacy locations."""
+
+    base = paths.inference_dir() / "output" if run_root is None else run_root
+    return {"masks": base / "masks", "overlays": base / "overlays",
+            "diagnostics": base / "diagnostics"}
 
 
 def sample_slug(image: Path) -> str:
     return image.stem
 
 
-def allocate_run_suffix(directory: Path, stem: str, suffix: str = "_mask") -> int:
-    """Return the first free `_NNN` index (0 means the unsuffixed name is free)."""
+def allocate_run_suffix(directory: Path, stem: str) -> int:
+    """Exclusively reserve the first available run root and return its suffix index."""
 
-    if not (directory / f"{stem}{suffix}.png").exists():
-        return 0
-    index = 1
-    while (directory / f"{stem}{suffix}_{index:03d}.png").exists():
-        index += 1
-    return index
+    directory.mkdir(parents=True, exist_ok=True)
+    index = 0
+    while True:
+        try:
+            (directory / f"{stem}{suffix_of(index)}").mkdir()
+        except FileExistsError:
+            index += 1
+        else:
+            return index
 
 
 def suffix_of(index: int) -> str:
@@ -79,16 +85,16 @@ class SampleOutputs:
 
 def allocate_outputs(image: Path) -> SampleOutputs:
     stem = sample_slug(image)
-    dirs = output_dirs()
-    for directory in dirs.values():
-        directory.mkdir(parents=True, exist_ok=True)
-    index = allocate_run_suffix(dirs["masks"], stem)
+    base = paths.inference_dir() / "output"
+    index = allocate_run_suffix(base, stem)
     suffix = suffix_of(index)
-    diagnostics = dirs["diagnostics"] / f"{stem}{suffix}"
+    dirs = output_dirs(base / f"{stem}{suffix}")
+    for directory in dirs.values():
+        directory.mkdir()
     return SampleOutputs(stem=stem, suffix_index=index,
                          mask_path=str(dirs["masks"] / f"{stem}_mask{suffix}.png"),
                          overlay_path=str(dirs["overlays"] / f"{stem}_overlay{suffix}.png"),
-                         diagnostics_dir=str(diagnostics))
+                         diagnostics_dir=str(dirs["diagnostics"]))
 
 
 def save_final_outputs(outputs: SampleOutputs, rgb: np.ndarray, mask: np.ndarray, *,

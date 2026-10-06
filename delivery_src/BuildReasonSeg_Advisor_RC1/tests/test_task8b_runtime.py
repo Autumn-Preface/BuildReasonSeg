@@ -464,12 +464,217 @@ def test_direction_satisfied_hard_check() -> None:
 
 def test_output_filename_suffix_never_overwrites(tmp_path: Path, monkeypatch) -> None:
     stem = "example"
-    mask_dir = tmp_path
-    assert allocate_run_suffix(mask_dir, stem) == 0
-    (mask_dir / f"{stem}_mask.png").write_bytes(b"x")
-    assert allocate_run_suffix(mask_dir, stem) == 1
-    (mask_dir / f"{stem}_mask_001.png").write_bytes(b"x")
-    assert allocate_run_suffix(mask_dir, stem) == 2
+    assert allocate_run_suffix(tmp_path, stem) == 0
+    assert (tmp_path / "example").is_dir()
+    assert allocate_run_suffix(tmp_path, stem) == 1
+    assert (tmp_path / "example_001").is_dir()
+    assert allocate_run_suffix(tmp_path, stem) == 2
+
+
+def test_run_output_first_and_second_layout(tmp_path: Path, monkeypatch) -> None:
+    from buildreasonseg import paths
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    first = allocate_outputs(Path("example.png"))
+    second = allocate_outputs(Path("example.png"))
+    assert first.to_dict() == {
+        "mask": str(tmp_path / "output/example/masks/example_mask.png"),
+        "overlay": str(tmp_path / "output/example/overlays/example_overlay.png"),
+        "diagnostics": str(tmp_path / "output/example/diagnostics"), "written": []}
+    assert second.to_dict() == {
+        "mask": str(tmp_path / "output/example_001/masks/example_mask_001.png"),
+        "overlay": str(tmp_path / "output/example_001/overlays/example_overlay_001.png"),
+        "diagnostics": str(tmp_path / "output/example_001/diagnostics"), "written": []}
+    for outputs, slug in ((first, "example"), (second, "example_001")):
+        run = tmp_path / "output" / slug
+        assert {p.name for p in run.iterdir()} == {"diagnostics", "masks", "overlays"}
+        assert all(p.is_dir() for p in run.iterdir())
+        assert Path(outputs.mask_path).parent.parent == run
+        assert Path(outputs.overlay_path).parent.parent == run
+        assert Path(outputs.diagnostics_dir).parent == run
+
+
+def test_diagnostics_only_failure_reserves_run_and_preserves_evidence(tmp_path: Path, monkeypatch) -> None:
+    from buildreasonseg import paths
+    from buildreasonseg.runtime.outputs import save_diagnostics
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    first = allocate_outputs(Path("example.png"))
+    save_diagnostics(first, {"status": "FAILED", "error_code": "E401", "prompt": "first"})
+    old_result = Path(first.diagnostics_dir) / "result.json"
+    before = old_result.read_bytes()
+    assert not Path(first.mask_path).exists()
+    second = allocate_outputs(Path("example.png"))
+    save_diagnostics(second, {"status": "FAILED", "error_code": "E401", "prompt": "second"})
+    assert Path(second.diagnostics_dir) == tmp_path / "output/example_001/diagnostics"
+    assert old_result.read_bytes() == before
+    assert Path(first.diagnostics_dir) != Path(second.diagnostics_dir)
+
+
+def test_existing_empty_run_roots_are_occupied(tmp_path: Path, monkeypatch) -> None:
+    from buildreasonseg import paths
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    (tmp_path / "output/example").mkdir(parents=True)
+    (tmp_path / "output/example_001").mkdir()
+    outputs = allocate_outputs(Path("example.png"))
+    assert outputs.suffix_index == 2
+    assert Path(outputs.mask_path) == tmp_path / "output/example_002/masks/example_mask_002.png"
+    assert list((tmp_path / "output/example").iterdir()) == []
+    assert list((tmp_path / "output/example_001").iterdir()) == []
+
+
+def test_legacy_shared_outputs_are_preserved(tmp_path: Path, monkeypatch) -> None:
+    from buildreasonseg import paths
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    legacy = {"masks/example_mask.png": b"historical-mask", "overlays/example_overlay.png": b"historical-overlay",
+              "diagnostics/example/result.json": b'{"status":"FAILED","historical":true}'}
+    for relative, content in legacy.items():
+        target = tmp_path / "output" / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+    outputs = allocate_outputs(Path("example.png"))
+    assert outputs.suffix_index == 0
+    assert Path(outputs.diagnostics_dir) == tmp_path / "output/example/diagnostics"
+    for relative, content in legacy.items():
+        assert (tmp_path / "output" / relative).read_bytes() == content
+
+
+@pytest.mark.parametrize("stem", ["masks", "overlays", "diagnostics"])
+def test_legacy_root_name_collision_gets_new_run(tmp_path: Path, monkeypatch, stem: str) -> None:
+    from buildreasonseg import paths
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    legacy = tmp_path / "output" / stem
+    legacy.mkdir(parents=True)
+    (legacy / "history.bin").write_bytes(b"keep")
+    outputs = allocate_outputs(Path(stem + ".png"))
+    assert Path(outputs.diagnostics_dir) == tmp_path / "output" / (stem + "_001") / "diagnostics"
+    assert sorted(p.name for p in legacy.iterdir()) == ["history.bin"]
+    assert (legacy / "history.bin").read_bytes() == b"keep"
+
+
+def test_existing_root_file_is_occupied(tmp_path: Path, monkeypatch) -> None:
+    from buildreasonseg import paths
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    (tmp_path / "output").mkdir()
+    occupied = tmp_path / "output/example"
+    occupied.write_bytes(b"existing-file")
+    outputs = allocate_outputs(Path("example.png"))
+    assert outputs.suffix_index == 1
+    assert occupied.read_bytes() == b"existing-file"
+
+
+def test_concurrent_allocations_reserve_distinct_run_roots(tmp_path: Path, monkeypatch) -> None:
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+    from buildreasonseg import paths
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    barrier = Barrier(8)
+
+    def allocate(_):
+        barrier.wait()
+        return allocate_outputs(Path("example.png"))
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        outputs = list(pool.map(allocate, range(8)))
+    assert {out.suffix_index for out in outputs} == set(range(8))
+    assert len({out.diagnostics_dir for out in outputs}) == 8
+    assert all(Path(out.diagnostics_dir).is_dir() for out in outputs)
+
+
+def _empty_detection_fixture() -> dict:
+    return {"merged": [], "raw_count": 0, "tile_size": 512, "overlap": 128,
+            "windows": [], "detector_seconds": 0.0}
+
+
+@pytest.mark.parametrize("save_diagnostics", [True, False])
+def test_failed_prediction_owns_run_without_mask(tmp_path: Path, monkeypatch, save_diagnostics: bool) -> None:
+    from types import SimpleNamespace
+    from buildreasonseg import paths
+    from buildreasonseg.language.registry import ParsedProgram
+    from buildreasonseg.runtime.pipeline import PipelineRequest, predict_one
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path / "inference")
+    image = _write(np.zeros((16, 16, 3), dtype=np.uint8), tmp_path / "example.png")
+    runtime = SimpleNamespace(device="cpu", detector=SimpleNamespace(detect_global=lambda rgb: _empty_detection_fixture()))
+    request = PipelineRequest(image=image, save_diagnostics=save_diagnostics,
+                              parsed=ParsedProgram(program="largest_to_right_of_to_nearest", source="user_supplied"))
+    first = predict_one(runtime, request)
+    diagnostics = Path(first.outputs.diagnostics_dir)
+    before = {p.name: p.read_bytes() for p in diagnostics.iterdir()}
+    second = predict_one(runtime, request)
+    assert first.error_code == second.error_code == "E401"
+    assert first.status == second.status == "FAILED"
+    assert diagnostics == tmp_path / "inference/output/example/diagnostics"
+    assert Path(second.outputs.diagnostics_dir) == tmp_path / "inference/output/example_001/diagnostics"
+    assert {p.name: p.read_bytes() for p in diagnostics.iterdir()} == before
+    for result in (first, second):
+        assert not Path(result.outputs.mask_path).exists()
+        assert not Path(result.outputs.overlay_path).exists()
+        if save_diagnostics:
+            assert (Path(result.outputs.diagnostics_dir) / "result.json").is_file()
+            assert result.result_payload["output_paths"] == {"diagnostics": result.outputs.diagnostics_dir}
+        else:
+            assert list(Path(result.outputs.diagnostics_dir).iterdir()) == []
+            assert result.outputs.written == []
+            assert result.result_payload["output_paths"] == {}
+
+
+@pytest.mark.parametrize("save_diagnostics", [True, False])
+def test_inspect_reserves_before_detector_and_uses_direct_diagnostics(tmp_path: Path, monkeypatch, save_diagnostics: bool) -> None:
+    from types import SimpleNamespace
+    from buildreasonseg import paths
+    from buildreasonseg.runtime.pipeline import PipelineRequest, inspect_proposals
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path / "inference")
+    image = _write(np.zeros((16, 16, 3), dtype=np.uint8), tmp_path / "example.png")
+    first_run = tmp_path / "inference/output/example"
+
+    def fail(rgb):
+        assert {p.name for p in first_run.iterdir()} == {"diagnostics", "masks", "overlays"}
+        raise BuildReasonSegError("E502", detail="synthetic detector failure")
+
+    runtime = SimpleNamespace(device="cpu", detector=SimpleNamespace(detect_global=fail))
+    request = PipelineRequest(image=image, inspect_proposals=True, save_diagnostics=save_diagnostics)
+    with pytest.raises(BuildReasonSegError) as error:
+        inspect_proposals(runtime, request)
+    assert error.value.code == "E502"
+    runtime.detector.detect_global = lambda rgb: _empty_detection_fixture()
+    result = inspect_proposals(runtime, request)
+    diagnostics = tmp_path / "inference/output/example_001/diagnostics"
+    assert result.status == "SUCCESS" and Path(result.outputs.diagnostics_dir) == diagnostics
+    assert result.result_payload["output_paths"] == {
+        "global_proposals": str(diagnostics / "global_proposals.png"),
+        "proposals": str(diagnostics / "proposals.json")}
+    assert list((first_run / "diagnostics").iterdir()) == []
+    assert list(diagnostics.parent.glob("masks/*")) == list(diagnostics.parent.glob("overlays/*")) == []
+    if save_diagnostics:
+        assert (diagnostics / "result.json").is_file()
+        assert (diagnostics / "global_proposals.png").is_file()
+        assert not (diagnostics / "example").exists()
+    else:
+        assert list(diagnostics.iterdir()) == []
+        assert result.outputs.written == []
+
+
+@pytest.mark.parametrize("mode", ["full", "inspect"])
+def test_preimage_decode_failure_does_not_allocate_run(tmp_path: Path, monkeypatch, mode: str) -> None:
+    from types import SimpleNamespace
+    from buildreasonseg import paths
+    from buildreasonseg.runtime.pipeline import PipelineRequest, inspect_proposals, predict_one
+
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path / "inference")
+    image = tmp_path / "example.png"
+    image.write_bytes(b"corrupt fixture")
+    run = predict_one if mode == "full" else inspect_proposals
+    with pytest.raises(BuildReasonSegError) as error:
+        run(SimpleNamespace(), PipelineRequest(image=image))
+    assert error.value.code == "E202"
+    assert not (tmp_path / "inference/output").exists()
 
 
 def test_mask_and_overlay_sizes_and_values(tmp_path: Path, monkeypatch) -> None:
@@ -485,11 +690,13 @@ def test_mask_and_overlay_sizes_and_values(tmp_path: Path, monkeypatch) -> None:
     with Image.open(info["mask"]) as handle:
         array = np.asarray(handle)
     assert array.shape == (40, 60)
+    assert array.dtype == np.uint8
     assert set(np.unique(array)).issubset({0, 255})
     with Image.open(info["overlay"]) as handle:
         overlay = np.asarray(handle)
     assert overlay.shape == (40, 60, 3)
     assert overlay[15, 15, 0] > rgb[15, 15, 0]          # red overlay applied
+    assert np.array_equal(overlay[15, 15], [178, 50, 50])  # unchanged alpha=0.5 blend
     assert np.array_equal(overlay[0, 0], rgb[0, 0])     # untouched outside the mask
 
 
@@ -502,15 +709,17 @@ def test_alpha_bounds() -> None:
     assert imageio.overlay(rgb, mask, alpha=1.0) is not None
 
 
-def test_diagnostics_required_fields(tmp_path: Path) -> None:
+def test_diagnostics_required_fields(tmp_path: Path, monkeypatch) -> None:
+    from buildreasonseg import paths
     from buildreasonseg.runtime import outputs as outputs_module
 
-    outputs = outputs_module.SampleOutputs(stem="s", suffix_index=0,
-                                           diagnostics_dir=str(tmp_path / "s"))
+    monkeypatch.setattr(paths, "inference_dir", lambda: tmp_path)
+    outputs = allocate_outputs(Path("s.png"))
     payload = {"prompt": "p", "parsed": {"program": "largest_to_left_of_to_nearest"},
                "proposals": {"count": 0}, "status": "FAILED"}
     outputs_module.save_diagnostics(outputs, payload, maps={"P_dir": np.zeros((4, 4), np.float32)})
     directory = Path(outputs.diagnostics_dir)
+    assert directory == tmp_path / "output/s/diagnostics"
     for name in ("prompt.txt", "parsed_program.json", "proposals.json", "result.json", "maps.npz"):
         assert (directory / name).is_file(), name
     saved = json.loads((directory / "result.json").read_text(encoding="utf-8"))

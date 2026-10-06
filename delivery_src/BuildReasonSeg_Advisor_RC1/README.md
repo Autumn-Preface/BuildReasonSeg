@@ -102,18 +102,23 @@ RC1 正式开放的空间语义**只有四类**（用“语义类型 / 命令示
 ## 输出
 
 ```text
-inference/output/masks/<stem>_mask.png          # 原图尺寸，uint8，背景 0 / 目标 255
-inference/output/overlays/<stem>_overlay.png    # 原图尺寸，红色 (255,0,0)，alpha 默认 0.45
-inference/output/diagnostics/<stem>/            # prompt.txt, parsed_program.json, global_proposals.png,
-                                                # proposals.json, selected_reference.png,
-                                                # reasoning_context.png, reference_context_mask.png,
-                                                # direction_field.png, nearest_field.png,
-                                                # relation_weight.png, prototype_similarity.png,
-                                                # maps.npz (P_dir/P_near/W/A/C/logits), result.json
+inference/output/<run_slug>/
+├─ diagnostics/                 # prompt.txt, parsed_program.json, global_proposals.png,
+│                               # proposals.json, selected_reference.png, reasoning_context.png,
+│                               # reference_context_mask.png, direction_field.png, nearest_field.png,
+│                               # relation_weight.png, prototype_similarity.png,
+│                               # maps.npz (P_dir/P_near/W/A/C/logits), result.json
+├─ masks/<stem>_mask[_NNN].png   # 原图尺寸，uint8，背景 0 / 目标 255
+└─ overlays/<stem>_overlay[_NNN].png  # 原图尺寸，红色 (255,0,0)，alpha 默认 0.45
 ```
 
-已存在的输出**不会被静默覆盖**：自动使用 `_001`、`_002`… 后缀，mask / overlay / diagnostics 共用同一后缀。
-`--no-save-diagnostics` 关闭诊断产物；`--alpha` 范围 `(0, 1]`。诊断图 `global_proposals.png` /
+首个可用 run 名为 `<stem>`，后续为 `<stem>_001`、`<stem>_002`…，按 run 根目录是否已占用分配，
+与 mask 是否存在无关。首个 run 的文件名为 `<stem>_mask.png` / `<stem>_overlay.png`；
+后续保留 `<stem>_mask_001.png` / `<stem>_overlay_001.png` 等 suffix 语义。
+失败 run 也永久占用自己的目录；已有 run 输出**不会被静默覆盖**。Task 8B.4 之前的 shared
+`masks/`、`overlays/`、`diagnostics/` 历史目录保留原样，不迁移、不清理。
+`--inspect-proposals` 同样使用独立 run 目录，只保存 diagnostics，不创建 mask 或 overlay。
+`--no-save-diagnostics` 关闭诊断文件，run 内的 diagnostics 目录可以为空；`--alpha` 范围 `(0, 1]`。诊断图 `global_proposals.png` /
 `selected_reference.png` 最长边限制为 2048（仅显示，不影响算法）。
 
 ## 模型包
