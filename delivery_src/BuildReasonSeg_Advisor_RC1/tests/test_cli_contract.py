@@ -172,22 +172,6 @@ def test_error_registry_complete() -> None:
         assert codes[code]["message"] and codes[code]["suggestion"]
 
 class _FakeResult:
-    def __init__(self, payload):
-        self.result_payload = payload
-
-class _FakeResult:
-    def __init__(self, payload, ok=True, error_code=None, error_reason=None):
-        self.result_payload = payload
-        self.ok = ok
-        self.error_code = error_code
-        self.error_reason = error_reason
-
-
-def _success_payload():
-    from buildreasonseg.runtime.pipeline import success_semantics
-    return {"status": "SUCCESS", **success_semantics()}
-
-class _FakeResult:
     """Minimal stand-in for a PipelineResult as consumed by predict.py."""
 
     def __init__(self, payload, ok=True, error_code=None, error_reason=None):
@@ -202,7 +186,7 @@ def _success_payload():
     return {
         "status": "SUCCESS",
         **success_semantics(),
-        "output_paths": {"mask": "m.png", "overlay": "o.png", "diagnostics": "d/"},
+        "output_paths": {"mask": "m.png", "overlay": "o.png", "diagnostics": "d"},
         "reference_id": 1,
         "mask_area": 7,
     }
@@ -216,15 +200,30 @@ def _args(**overrides):
     return argparse.Namespace(**base)
 
 
+def _expected_single_success_lines():
+    return [
+        "Result       : SUCCESS",
+        "Validity     : RUNTIME_STRUCTURAL_ONLY",
+        "Semantic     : NOT_EVALUATED",
+        "Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.",
+        "",
+        "Mask         : m.png",
+        "Overlay      : o.png",
+        "Diagnostics  : d",
+        "Reference ID : 1",
+        "Mask area    : 7",
+    ]
+
+
 def test_r1a_single_success_semantics_block(capsys):
-    """Single-image SUCCESS prints exactly the four frozen lines, one each."""
+    """Single-image SUCCESS prints the four frozen semantic lines plus the artifact lines, exactly once each."""
     import predict
     predict._report_single(_FakeResult(_success_payload()), _args())
     out = capsys.readouterr().out.splitlines()
-    assert out.count("Result       : SUCCESS") == 1
-    assert out.count("Validity     : RUNTIME_STRUCTURAL_ONLY") == 1
-    assert out.count("Semantic     : NOT_EVALUATED") == 1
-    assert out.count("Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.") == 1
+    expected = _expected_single_success_lines()
+    assert out == expected, out
+    for line in expected[:4]:
+        assert out.count(line) == 1, line
 
 
 def test_r1a_single_failure_omits_success_semantics(capsys):
@@ -234,24 +233,21 @@ def test_r1a_single_failure_omits_success_semantics(capsys):
                                       error_code="E404", error_reason="mask_only_in_padding"), _args())
     captured = capsys.readouterr()
     assert captured.out.count("Result       : FAILED") == 1
-    assert "Validity     :" not in captured.out
-    assert "Semantic     :" not in captured.out
-    assert "Note         :" not in captured.out
+    assert captured.out.count("Validity     :") == 0
+    assert captured.out.count("Semantic     :") == 0
+    assert captured.out.count("Note         :") == 0
 
 
 def test_r1a_batch_success_annotation_and_runtime_summary(capsys, tmp_path, monkeypatch):
-    """_run_batch annotates every success line and reports Runtime success using the success counter."""
+    """_run_batch uses the real _batch_files() discovery path; only predict_one is monkeypatched."""
     import time
     import predict
-    images = []
     for name in ("one.png", "two.png"):
-        path = tmp_path / name
-        path.write_bytes(b"x")
-        images.append(path)
-    monkeypatch.setattr(predict, "_batch_files", lambda directory: images, raising=True)
+        (tmp_path / name).write_bytes(b"x")
+    assert len(predict._batch_files(tmp_path)) == 2
     monkeypatch.setattr(predict, "predict_one", lambda runtime, request: _FakeResult(_success_payload()), raising=True)
     exit_code = predict._run_batch(None, _args(input_dir=str(tmp_path)), "pkg", object(), {}, time.time())
     out = capsys.readouterr().out
     assert out.count("SUCCESS [runtime-only; semantic=NOT_EVALUATED]") == 2, out
-    assert "Runtime success: 2" in out, out
+    assert out.count("Runtime success: 2") == 1, out
     assert exit_code == 0

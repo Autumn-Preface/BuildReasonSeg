@@ -1,0 +1,61 @@
+{
+  "task_id": "MASK01_D1_R1A_R5_TEST_CONTRACT_CLEANUP",
+  "task_status": "STOP",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1a-r4-tests",
+    "starting_head": "89c58e41d89770a02f0c7b8ff2271be41cd7c86a",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1a-r5-tests",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "helper_counts": {
+    "before": {
+      "_FakeResult": 3,
+      "_success_payload": 2,
+      "_args": 1
+    },
+    "after": {
+      "_FakeResult": 1,
+      "_success_payload": 1,
+      "_args": 1
+    },
+    "sanity_check_passed": true
+  },
+  "test_changes": {
+    "single_success_assertion": "full expected stdout block compared line by line",
+    "batch_test_uses_real_batch_files": true,
+    "only_predict_one_monkeypatched": true,
+    "image_suffixes": ".tif,.tiff,.png,.jpg,.jpeg,.bmp,.webp"
+  },
+  "gates": {
+    "gate_a_nodes": [
+      "tests/test_cli_contract.py::test_r1a_single_success_semantics_block",
+      "tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics",
+      "tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary"
+    ],
+    "gate_a_exit": 1,
+    "gate_a_summary": "1 failed, 2 passed in 1.35s",
+    "gate_b_nodes": [
+      "tests/test_cli_contract.py::test_predict_help_lists_frozen_arguments",
+      "tests/test_cli_contract.py::test_predict_prompt_required_for_normal_inference",
+      "tests/test_cli_contract.py::test_predict_missing_image_reports_e201",
+      "tests/test_cli_contract.py::test_predict_unsupported_image_type_reports_e203"
+    ],
+    "gate_b_exit": 0,
+    "gate_b_summary": "4 passed in 6.51s",
+    "k_substitution_used": false,
+    "full_suite_run": false,
+    "inspect_node_run": false
+  },
+  "untouched_verified": {
+    "predict_py": true,
+    "pipeline_py": true,
+    "manifest": true,
+    "test_task8b_runtime": true,
+    "canonical_docs": true,
+    "inspect_proposals_defect_fixed": false
+  },
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false
+}

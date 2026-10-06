@@ -1,31 +1,43 @@
-# TO_DSH — MASK01_D1_R1A_R4_TESTS_ONLY
+# TO_DSH — MASK01_D1_R1A_R5_TEST_CONTRACT_CLEANUP
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `fix/task8b3-mask01-success-semantics-r1a-r3-product`
-> Required starting HEAD: `37b9afe0bc674630c4f9f5040e0035ceeb809fc1`
-> New task branch: `fix/task8b3-mask01-success-semantics-r1a-r4-tests`
+> Required starting branch: `fix/task8b3-mask01-success-semantics-r1a-r4-tests`
+> Required starting HEAD: `89c58e41d89770a02f0c7b8ff2271be41cd7c86a`
+> New task branch: `fix/task8b3-mask01-success-semantics-r1a-r5-tests`
 
 ## 0. PURPOSE
 
-This is a tests-only task.
+This is a tests-only cleanup/correction task.
 
-ChatGPT has accepted the product-only R1-A-R3 state:
+ChatGPT independently audited R1-A-R4.
+
+Accepted facts:
 
 ```text
-batch successes += 1 = present
-batch success suffix = restored
-batch summary = Runtime success: <n>
-single-image Note duplication = fixed
+Gate A = 3 passed
+Gate B = 4 passed
+predict.py unchanged
+pipeline.py unchanged
+inspect-proposals issue untouched
 ```
 
-Do NOT modify `predict.py` in this task.
+However, R1-A-R4 tests are NOT accepted yet because the committed test file still contains:
 
-This task only repairs the three R1-A behavioral tests so they exercise the real existing functions correctly.
+```text
+3 x _FakeResult definitions
+2 x _success_payload definitions
+```
 
-Do NOT fix the separate inspect-proposals `30 vs 20` issue.
+and the batch test still monkeypatches `_batch_files`, so it does not verify the real file enumeration path required by the task.
+
+The single-success test also does not yet verify the existing Mask / Overlay / Diagnostics / Reference ID / Mask area output lines.
+
+This task fixes only those test-contract issues.
+
+Do NOT modify product code.
 
 ---
 
@@ -35,10 +47,10 @@ Verify exactly:
 
 ```text
 current branch =
-fix/task8b3-mask01-success-semantics-r1a-r3-product
+fix/task8b3-mask01-success-semantics-r1a-r4-tests
 
 HEAD =
-37b9afe0bc674630c4f9f5040e0035ceeb809fc1
+89c58e41d89770a02f0c7b8ff2271be41cd7c86a
 ```
 
 Allowed initial worktree:
@@ -61,7 +73,7 @@ Any other pre-existing mutation:
 Create:
 
 ```text
-fix/task8b3-mask01-success-semantics-r1a-r4-tests
+fix/task8b3-mask01-success-semantics-r1a-r5-tests
 ```
 
 No reset/rebase/amend/stash/clean/force-push.
@@ -79,8 +91,8 @@ delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
 plus task records:
 
 ```text
-docs/task8b3_mask01_d1_r1a_r4_tests_only.md
-evaluation/task8b3_mask01_d1_r1a_r4_tests_only.json
+docs/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.md
+evaluation/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
@@ -103,7 +115,7 @@ external RC1
 
 ---
 
-## 3. CLEAN UP TEST FIXTURES
+## 3. REMOVE DUPLICATE TEST HELPERS
 
 In:
 
@@ -111,14 +123,22 @@ In:
 tests/test_cli_contract.py
 ```
 
-there are currently duplicate `_FakeResult` class definitions.
+after `test_error_registry_complete`, there must be exactly:
 
-Remove the redundant earlier definition.
+```text
+1 x class _FakeResult
+1 x def _success_payload
+1 x def _args
+```
 
-Keep one fake result class equivalent to:
+Delete all redundant earlier duplicate definitions.
+
+Keep one `_FakeResult` equivalent to:
 
 ```python
 class _FakeResult:
+    """Minimal stand-in for a PipelineResult as consumed by predict.py."""
+
     def __init__(self, payload, ok=True, error_code=None, error_reason=None):
         self.result_payload = payload
         self.ok = ok
@@ -126,65 +146,59 @@ class _FakeResult:
         self.error_reason = error_reason
 ```
 
-No source-text scanning tests.
+Keep one `_success_payload()` returning a complete normal-success payload:
 
-No try/except that swallows failures.
+```python
+def _success_payload():
+    from buildreasonseg.runtime.pipeline import success_semantics
+
+    return {
+        "status": "SUCCESS",
+        **success_semantics(),
+        "output_paths": {
+            "mask": "mask.png",
+            "overlay": "overlay.png",
+            "diagnostics": "diag",
+        },
+        "reference_id": 7,
+        "mask_area": 123,
+    }
+```
+
+Keep one small `_args(**overrides)` helper if useful.
+
+Do not add source-code string scanning.
 
 ---
 
-## 4. EXACT TEST 1 — SINGLE SUCCESS
+## 4. SINGLE SUCCESS TEST — COMPLETE ASSERTIONS
 
-Test name must remain exactly:
+Test name:
 
 ```text
 test_r1a_single_success_semantics_block
 ```
 
-Use:
+Call real:
 
 ```python
-import predict as predict_module
+predict._report_single(_FakeResult(_success_payload()), _args())
 ```
 
-Construct a COMPLETE fake success payload:
+Capture stdout.
 
-```python
-payload = {
-    "status": "SUCCESS",
-    "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
-    "semantic_status": "NOT_EVALUATED",
-    "semantic_note": (
-        "SUCCESS means the RC1 runtime completed and passed its current structural checks; "
-        "semantic target correctness is not established."
-    ),
-    "output_paths": {
-        "mask": "mask.png",
-        "overlay": "overlay.png",
-        "diagnostics": "diag",
-    },
-    "reference_id": 7,
-    "mask_area": 123,
-}
-```
-
-Use:
-
-```python
-fake = _FakeResult(payload, ok=True)
-predict_module._report_single(fake, type("Args", (), {})())
-```
-
-Do NOT wrap in try/except.
-
-Capture stdout with `capsys`.
-
-Assert all of the following:
+Require exactly once:
 
 ```text
 Result       : SUCCESS
 Validity     : RUNTIME_STRUCTURAL_ONLY
 Semantic     : NOT_EVALUATED
 Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
+```
+
+Also require presence of:
+
+```text
 Mask         : mask.png
 Overlay      : overlay.png
 Diagnostics  : diag
@@ -192,58 +206,36 @@ Reference ID : 7
 Mask area    : 123
 ```
 
-Also assert:
+Assert:
 
-```text
-count("Result       : SUCCESS") == 1
-count("Note         : ...") == 1
+```python
+out.count("Result       : SUCCESS") == 1
+out.count("Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.") == 1
 ```
 
-This test must exercise `_report_single()` itself.
+No try/except.
 
 ---
 
-## 5. EXACT TEST 2 — SINGLE FAILURE
+## 5. SINGLE FAILURE TEST
 
-Test name must remain exactly:
+Test name:
 
 ```text
 test_r1a_single_failure_omits_success_semantics
 ```
 
-Construct:
+Keep direct call to `_report_single()` with fake FAILED result.
 
-```python
-payload = {
-    "status": "FAILED",
-    "error_code": "E404",
-    "detail": "synthetic failure",
-}
-fake = _FakeResult(
-    payload,
-    ok=False,
-    error_code="E404",
-    error_reason="synthetic failure",
-)
-```
+No try/except.
 
-Call:
-
-```python
-predict_module._report_single(fake, type("Args", (), {})())
-```
-
-Do NOT wrap in try/except.
-
-Capture stdout + stderr.
-
-Assert stdout contains:
+Assert stdout contains exactly one:
 
 ```text
 Result       : FAILED
 ```
 
-Assert stdout does NOT contain:
+and stdout does NOT contain:
 
 ```text
 Validity     :
@@ -251,135 +243,132 @@ Semantic     :
 Note         :
 ```
 
-Do not assert exact localized error-message wording on stderr unless required by existing contract.
-
-The purpose of this test is only to prove failed results do not receive SUCCESS semantic claims.
+Do not overconstrain localized stderr wording.
 
 ---
 
-## 6. EXACT TEST 3 — REAL `_run_batch()` BEHAVIOR
+## 6. BATCH TEST — USE REAL `_batch_files()`
 
-Test name must remain exactly:
+Test name:
 
 ```text
 test_r1a_batch_success_annotation_and_runtime_summary
 ```
 
-This test MUST call the real current signature:
+This test must use the real `_batch_files()` function.
 
-```python
-predict_module._run_batch(
-    runtime,
-    args,
-    package_name,
-    parsed,
-    language_info,
-    started,
-)
-```
+### 6.1 Files
 
-Do NOT use:
-- `_iter_images`;
-- `_collect_images`;
-- fake alternate `_run_batch(args)` signatures;
-- try/except TypeError fallback.
-
-### 6.1 Input files
-
-Create exactly two temporary supported image filenames, for example:
+Create:
 
 ```text
-one.png
-two.png
+tmp_path / "one.png"
+tmp_path / "two.png"
 ```
 
-Their bytes do not need to be valid images because `predict_one()` will be monkeypatched.
+with arbitrary bytes.
 
-Use the real `_batch_files()` behavior by setting:
+Do NOT monkeypatch:
 
-```python
-args.input_dir = tmp_path
+```text
+_batch_files
+_iter_images
+_collect_images
 ```
+
+The actual `_batch_files()` implementation must discover the two `.png` files.
 
 ### 6.2 Args
 
-Provide all fields read by current `_run_batch()`:
+Pass:
 
 ```python
-args = type(
-    "Args",
-    (),
-    {
-        "input_dir": tmp_path,
-        "prompt": "synthetic prompt",
-        "device": "cpu",
-        "alpha": 0.45,
-        "save_diagnostics": False,
-    },
-)()
+args = _args(input_dir=tmp_path)
 ```
 
-### 6.3 Other arguments
+Important:
 
-Use:
+```text
+input_dir must be Path, not str
+```
+
+The remaining required `_run_batch()` fields must exist:
+
+```text
+prompt
+device
+alpha
+save_diagnostics
+```
+
+### 6.3 Monkeypatch
+
+Monkeypatch ONLY:
 
 ```python
-runtime = object()
-package_name = "synthetic-model"
-parsed = object()
-language_info = {"language_mode": "synthetic"}
-started = time.time()
+predict.predict_one
 ```
 
-### 6.4 Monkeypatch
-
-Monkeypatch only:
+to return:
 
 ```python
-predict_module.predict_one
+_FakeResult(_success_payload(), ok=True)
 ```
 
-to return a successful fake result:
+Do not instantiate real model/runtime.
+
+### 6.4 Call real signature
+
+Call exactly:
 
 ```python
-_FakeResult({"status": "SUCCESS"}, ok=True)
+exit_code = predict._run_batch(
+    object(),
+    args,
+    "synthetic-model",
+    object(),
+    {"language_mode": "synthetic"},
+    time.time(),
+)
 ```
-
-The test must NOT instantiate real `PredictRuntime`.
 
 ### 6.5 Assertions
 
-Call `_run_batch(...)`.
+Require:
 
-Assert return code:
-
-```text
-0
+```python
+exit_code == 0
 ```
 
-Capture stdout and require:
-
-```text
-one.png ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
-two.png ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
-Runtime success: 2
-Failed : 0
-```
-
-Also assert:
+Require exact success suffix count:
 
 ```python
 out.count("SUCCESS [runtime-only; semantic=NOT_EVALUATED]") == 2
 ```
 
+Require both filenames appear on successful item lines:
+
+```text
+one.png ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
+two.png ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
+```
+
+Require:
+
+```text
+Runtime success: 2
+Failed : 0
+```
+
 This test must fail if:
-- batch suffix is removed;
+- `_batch_files()` stops discovering valid files;
+- success suffix is removed;
 - `successes += 1` is removed;
 - summary label changes.
 
 ---
 
-## 7. DO NOT TOUCH INSPECT-PROPOSALS TEST
+## 7. INSPECT-PROPOSALS TEST — UNCHANGED
 
 Do NOT modify:
 
@@ -388,23 +377,23 @@ test_predict_inspect_proposals_does_not_require_prompt
 ```
 
 Do NOT:
-- skip it;
-- xfail it;
-- weaken it;
-- change expected 20/E202;
-- modify inspect runtime behavior.
+- skip;
+- xfail;
+- weaken;
+- change expected return code/error code;
+- modify product behavior.
 
-Frozen classification remains:
+Frozen classification:
 
 ```text
 PREEXISTING_CANONICAL_CONTRACT_FAILURE_CANDIDATE
 ```
 
-It will be handled separately.
+Separate task later.
 
 ---
 
-## 8. TEST GATES — EXACT COMMANDS
+## 8. TEST GATES — EXACT
 
 From:
 
@@ -414,14 +403,10 @@ delivery_src/BuildReasonSeg_Advisor_RC1
 
 run exactly:
 
-### Gate A — R1-A behavioral tests
+### Gate A
 
 ```text
-python -m pytest \
-  tests/test_cli_contract.py::test_r1a_single_success_semantics_block \
-  tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics \
-  tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary \
-  -q
+python -m pytest   tests/test_cli_contract.py::test_r1a_single_success_semantics_block   tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics   tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary   -q
 ```
 
 Required:
@@ -431,15 +416,10 @@ Required:
 exit 0
 ```
 
-### Gate B — unaffected CLI smoke
+### Gate B
 
 ```text
-python -m pytest \
-  tests/test_cli_contract.py::test_predict_help_lists_frozen_arguments \
-  tests/test_cli_contract.py::test_predict_prompt_required_for_normal_inference \
-  tests/test_cli_contract.py::test_predict_missing_image_reports_e201 \
-  tests/test_cli_contract.py::test_predict_unsupported_image_type_reports_e203 \
-  -q
+python -m pytest   tests/test_cli_contract.py::test_predict_help_lists_frozen_arguments   tests/test_cli_contract.py::test_predict_prompt_required_for_normal_inference   tests/test_cli_contract.py::test_predict_missing_image_reports_e201   tests/test_cli_contract.py::test_predict_unsupported_image_type_reports_e203   -q
 ```
 
 Required:
@@ -449,31 +429,47 @@ Required:
 exit 0
 ```
 
-Do NOT replace these commands with `-k`.
+Do not replace with `-k`.
 
 Do NOT run:
-- full `test_cli_contract.py`;
 - inspect-proposals node;
+- full `test_cli_contract.py`;
 - full canonical suite.
 
 ---
 
-## 9. PRODUCT CODE MUST REMAIN BYTE-UNCHANGED
+## 9. STATIC TEST-HELPER SANITY CHECK
 
-This task is tests-only.
-
-Before commit, verify:
+Run a small deterministic source sanity check that verifies exact counts in the test file:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/predict.py = unchanged from starting HEAD
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py = unchanged
+_FakeResult definitions = 1
+_success_payload definitions = 1
+_args definitions = 1
 ```
 
-Do not “clean up” product code while editing tests.
+This check is only for duplicate-helper cleanup.
+
+Do NOT use source scanning as a substitute for the behavioral Gate A tests.
+
+Record its result in the task report.
 
 ---
 
-## 10. MANIFEST
+## 10. PRODUCT CODE MUST REMAIN UNCHANGED
+
+Verify before commit:
+
+```text
+predict.py = unchanged from starting HEAD
+pipeline.py = unchanged from starting HEAD
+```
+
+No product cleanup or formatting.
+
+---
+
+## 11. MANIFEST
 
 Do NOT update:
 
@@ -487,11 +483,9 @@ Record:
 manifest_update = DEFERRED_TO_R1_D
 ```
 
-Temporary manifest mismatch remains expected.
-
 ---
 
-## 11. EVERY OUTCOME MUST BE PUSHED
+## 12. EVERY OUTCOME MUST BE PUSHED
 
 Frozen project collaboration rule:
 
@@ -514,17 +508,15 @@ you must:
 - commit authorized state;
 - push task branch.
 
-Do not leave the real state only locally.
-
 ---
 
-## 12. REQUIRED REPORT
+## 13. REQUIRED REPORT
 
 Create:
 
 ```text
-docs/task8b3_mask01_d1_r1a_r4_tests_only.md
-evaluation/task8b3_mask01_d1_r1a_r4_tests_only.json
+docs/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.md
+evaluation/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.json
 ```
 
 Update:
@@ -537,21 +529,24 @@ handoff/TO_DSH.md
 Report:
 
 ```text
-task_id = MASK01_D1_R1A_R4_TESTS_ONLY
+task_id = MASK01_D1_R1A_R5_TEST_CONTRACT_CLEANUP
 status
 
 starting branch/head
 task branch
 
-product_files_changed = false
-duplicate_fake_result_removed = true
+fake_result_definition_count = 1
+success_payload_definition_count = 1
+args_definition_count = 1
 
-test_1_calls_report_single = true
-test_2_calls_report_single = true
-test_3_calls_real_run_batch_signature = true
+single_success_checks_output_paths = true
+batch_uses_real_batch_files = true
+batch_input_dir_is_path = true
+batch_only_monkeypatches_predict_one = true
 
 Gate A command/result
 Gate B command/result
+static helper-count check/result
 
 inspect_test_modified = false
 predict_py_modified = false
@@ -566,12 +561,12 @@ external_write = false
 manifest_update = DEFERRED_TO_R1_D
 github_persistence_policy = ALL_TASK_OUTCOMES_PUSHED
 
-next_gate = CHATGPT_R1A_R4_REMOTE_AUDIT
+next_gate = CHATGPT_R1A_R5_REMOTE_AUDIT
 ```
 
 ---
 
-## 13. DIFF GATE
+## 14. DIFF GATE
 
 Before commit:
 
@@ -585,31 +580,31 @@ Only these may be staged:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
-docs/task8b3_mask01_d1_r1a_r4_tests_only.md
-evaluation/task8b3_mask01_d1_r1a_r4_tests_only.json
+docs/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.md
+evaluation/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Unexpected files:
+Unexpected paths:
 - do not delete;
 - do not stage;
 - report them.
 
 ---
 
-## 14. COMMIT / PUSH
+## 15. COMMIT / PUSH
 
 Commit exactly once:
 
 ```text
-git commit -m "test(rc1): lock cli success semantics behavior"
+git commit -m "test(rc1): clean cli success contract tests"
 ```
 
 Push:
 
 ```text
-fix/task8b3-mask01-success-semantics-r1a-r4-tests
+fix/task8b3-mask01-success-semantics-r1a-r5-tests
 ```
 
 No force push.
@@ -632,7 +627,7 @@ Then STOP.
 
 ---
 
-## 15. ABSOLUTE PROHIBITIONS
+## 16. ABSOLUTE PROHIBITIONS
 
 Do NOT:
 
@@ -672,28 +667,45 @@ start D2
 
 ---
 
-## 16. SUCCESS DEFINITION
+## 17. SUCCESS DEFINITION
 
 Expected successful terminal state:
 
 ```text
-MASK01_D1_R1A_R4_TESTS_ONLY = COMPLETE
+MASK01_D1_R1A_R5_TEST_CONTRACT_CLEANUP = COMPLETE
 
-product code = unchanged
+helper definitions:
+_FakeResult = 1
+_success_payload = 1
+_args = 1
 
-behavioral tests:
-test_r1a_single_success_semantics_block = PASS
-test_r1a_single_failure_omits_success_semantics = PASS
-test_r1a_batch_success_annotation_and_runtime_summary = PASS
+single success test:
+real _report_single = exercised
+semantic lines = exact
+output-path/reference/mask-area lines = asserted
+
+single failure test:
+real _report_single = exercised
+no success semantics = asserted
+
+batch test:
+real _run_batch = exercised
+real _batch_files = exercised
+predict_one only = monkeypatched
+two PNG files discovered
+success suffix count = 2
+Runtime success: 2
+Failed : 0
+exit = 0
 
 Gate A = 3/3 PASS
 Gate B = 4/4 PASS
 
-inspect-proposals known issue = unchanged/deferred
+product code = unchanged
+inspect-proposals issue = unchanged/deferred
 manifest = deferred to R1-D
-external RC1 = unchanged
 
-NEXT = CHATGPT_R1A_R4_REMOTE_AUDIT
+NEXT = CHATGPT_R1A_R5_REMOTE_AUDIT
 ```
 
 Then STOP.
