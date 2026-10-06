@@ -1,0 +1,35 @@
+{
+  "task_id": "MASK01_D1_R1A_R3_PRODUCT_SUFFIX_ONLY",
+  "task_status": "COMPLETE",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1a-r2",
+    "starting_head": "aef9ff6fac3c9626130ddf96b3311eada601c9c3",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1a-r3-product",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "product_change": {
+    "file": "delivery_src/BuildReasonSeg_Advisor_RC1/predict.py",
+    "batch_line_before": "print(f\"[{index}/{len(files)}] {path.name} ... SUCCESS\")",
+    "batch_line_after": "print(f\"[{index}/{len(files)}] {path.name} ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]\")",
+    "suffix": "[runtime-only; semantic=NOT_EVALUATED]",
+    "suffix_was_already_present": false
+  },
+  "prescribed_command": {
+    "command": "python -m py_compile predict.py",
+    "exit": 0
+  },
+  "untouched_verified": {
+    "tests": true,
+    "pipeline_py": true,
+    "manifest": true,
+    "test_task8b_runtime": true,
+    "canonical_docs": true,
+    "inspect_proposals_touched": false
+  },
+  "other_commands_run": false,
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false,
+  "next_task_entered": false
+}

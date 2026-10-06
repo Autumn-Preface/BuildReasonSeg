@@ -264,7 +264,7 @@ def _run_batch(runtime: PredictRuntime, args: argparse.Namespace, package_name: 
         result = predict_one(runtime, request)
         if result.ok:
             successes += 1
-            print(f"[{index}/{len(files)}] {path.name} ... SUCCESS")
+            print(f"[{index}/{len(files)}] {path.name} ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]")
         else:
             failures += 1
             print(f"[{index}/{len(files)}] {path.name} ... {result.error_code} "
