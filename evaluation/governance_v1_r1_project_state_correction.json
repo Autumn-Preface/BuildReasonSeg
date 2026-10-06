@@ -1,0 +1,53 @@
+{
+  "task_id": "GOVERNANCE_V1_R1_PROJECT_STATE_CORRECTION",
+  "status": "COMPLETE",
+  "starting_branch": "docs/governance-v1-executor-neutral-handoff",
+  "starting_head": "a61daabdede77062f1156d316fdae5b9db654dbd",
+  "task_branch": "docs/governance-v1-r1-project-state-correction",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "file_modified": "governance/PROJECT_STATE.yaml",
+  "project_title_cn_before": "project_title_cn: \"基于遥感影像的建筑物提取与变化检测\"",
+  "project_title_cn_after": "project_title_cn: \"空间推理引导的建筑物结构MLLM相关推理分割方法\"",
+  "next_priority_before": "next_priority: GOVERNANCE_V1 migration first; then Supervisor chooses between PROP-01 continuation and 8B.4 sequencing",
+  "next_priority_after": "next_priority: AWAITING_SUPERVISOR_MILESTONE_SELECTION",
+  "next_priority_note_after": "Governance V1 migration is COMPLETE; PROP-01 remains OPEN (A2 zero proposals, blind threshold tuning prohibited); REF-01 still carries a residual selection limitation (left/below residual, further scalar rank repair rejected); 8B.4 and the final demo have NOT started; the next milestone must be authorized by the ChatGPT Supervisor.",
+  "field_checks": {
+    "title_exact": true,
+    "priority_exact": true,
+    "note_states_governance_complete": true,
+    "note_states_prop01_open": true,
+    "note_states_ref01_residual": true,
+    "note_states_8b4_and_demo_not_started": true,
+    "note_requires_supervisor_authorization": true
+  },
+  "yaml_parse_pass": true,
+  "yaml_title_ok": true,
+  "yaml_priority_ok": true,
+  "state_consistency": {
+    "yaml_title_matches_required": true,
+    "yaml_priority_matches_required": true,
+    "current_task_still_AWAITING_SUPERVISOR": true,
+    "executor_state_still_AWAITING_SUPERVISOR": true,
+    "MASK01_closed": true,
+    "PROP01_open": true,
+    "REF01_residual": true,
+    "8B4_not_started": true,
+    "final_demo_not_started": true,
+    "no_task_auto_authorized": true
+  },
+  "state_consistency_pass": true,
+  "untouched_files_verified": true,
+  "untouched_files": [
+    "AGENTS.md",
+    "governance/DECISIONS.md",
+    "handoff/CURRENT_TASK.md",
+    "handoff/EXECUTOR_STATE.yaml"
+  ],
+  "product_source_changed": false,
+  "tests_changed": false,
+  "scripts_changed": false,
+  "external_rc1_written": false,
+  "other_governance_files_changed": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_GOVERNANCE_V1_R1_FINAL_AUDIT"
+}

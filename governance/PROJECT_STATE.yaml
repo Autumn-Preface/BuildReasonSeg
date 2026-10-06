@@ -1,6 +1,6 @@
 schema_version: 1
 project: BuildReasonSeg
-project_title_cn: "基于遥感影像的建筑物提取与变化检测"
+project_title_cn: "空间推理引导的建筑物结构MLLM相关推理分割方法"
 phase: RC1_ENGINEERING_RELIABILITY
 supervisor: CHATGPT_PROJECT_CONVERSATION
 preferred_executor: CODEX
@@ -50,8 +50,8 @@ milestones:
   8B.4: NOT_STARTED
   final_demo: NOT_STARTED
 
-next_priority: GOVERNANCE_V1 migration first; then Supervisor chooses between PROP-01 continuation and 8B.4 sequencing
-next_priority_note: PROP-01 is not solved
+next_priority: AWAITING_SUPERVISOR_MILESTONE_SELECTION
+next_priority_note: Governance V1 migration is COMPLETE; PROP-01 remains OPEN (A2 zero proposals, blind threshold tuning prohibited); REF-01 still carries a residual selection limitation (left/below residual, further scalar rank repair rejected); 8B.4 and the final demo have NOT started; the next milestone must be authorized by the ChatGPT Supervisor.
 
 executor_protocol:
   current_task_file: handoff/CURRENT_TASK.md
