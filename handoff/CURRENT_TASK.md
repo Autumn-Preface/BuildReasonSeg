@@ -1,478 +1,293 @@
-# CURRENT_TASK — PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
+# CURRENT_TASK — PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
 
-## 0. Metadata
+## Metadata
 
-```text
-Task ID: PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
-Status: READY_FOR_SUPERVISOR_AUDIT
+Task ID:
+PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
 
-Decision owner: ChatGPT Supervisor
-Authorized executor: CODEX
+Status:
+AUTHORIZED
+
+Decision owner:
+ChatGPT Supervisor
+
+Authorized executor:
+CODEX
 
 Required starting branch:
-docs/governance-v1-1-idle-state-semantics
+audit/task8b3-prop01-a2-zero-proposals-forensics-v1
 
 Required starting HEAD:
-504268128b7a9b058580b7702c9429b27705c053
+59296d25195a656e6a75e303e3cbb43fa9df8b8b
 
 Task branch:
-audit/task8b3-prop01-a2-zero-proposals-forensics-v1
-```
+audit/task8b3-prop01-a2-channel-contract-causal-test-v1
 
-## 1. Supervisor Disposition
 
-PROP-01 remains:
+## 1. Accepted starting facts
 
-```text
-OPEN_ENGINEERING_DEFECT
-```
+Supervisor accepts the previous forensic milestone.
 
-Observed locked symptom:
+Established:
 
-```text
-case = A2
-program = left_of
-runtime = FAILED E401
-raw proposals = 0
-merged proposals = 0
-```
+- exact A2 provenance is known;
+- frozen baseline A2 raw proposals = 0;
+- all nine Ultralytics results are already zero;
+- no downstream BuildReasonSeg stage drops A2 proposals;
+- A1 positive control produces raw 133 / merged 52;
+- BuildReasonSeg supplies RGB NumPy arrays to model.predict;
+- installed Ultralytics interprets NumPy color input as BGR;
+- resulting A2 detector tensors have R/B channels reversed.
 
-The cause is NOT established.
+Not established:
 
-Prior investigation did not justify blind threshold tuning.
+- whether this channel-contract defect causes A2 zero proposals.
 
-Frozen detector policy:
+PROP-01 remains OPEN.
 
-```text
-TILE_SIZE = 512
-OVERLAP = 128
-STRIDE = 384
-IMGSZ = 640
-CONF = 0.05
-MAX_DET = 300
-FROZEN_THRESHOLD = 0.5
-DUPLICATE_IOU = 0.50
-```
-
-This milestone is forensic only.
-
-Do not repair PROP-01.
 
 ## 2. Goal
 
-Determine, with reproducible evidence, the earliest stage at which A2 becomes zero-proposal.
+Perform one controlled causal experiment.
 
-Required causal boundary:
+Compare:
 
-```text
-input/provenance
-→ tiling
-→ exact detector input
-→ raw Ultralytics result
-→ runtime detect_tile extraction
-→ global accumulation
-→ compact-mask filtering
-→ duplicate merge
-→ final merged proposals
-```
+BASELINE:
+BuildReasonSeg existing RGB NumPy input
+→ current Ultralytics preprocessing
 
-The milestone must answer:
+COUNTERFACTUAL:
+same exact RGB tile
+→ convert only API-facing NumPy representation to BGR
+→ unchanged Ultralytics preprocessing
+→ resulting network tensor must equal intended RGB tensor
 
-> **Does A2 already produce zero raw YOLO detections under the frozen detector policy, or are detections lost inside BuildReasonSeg preprocessing / adapter / accumulation / merge logic?**
+Everything except channel representation must remain frozen.
 
-Do not go beyond the evidence.
+Question:
 
-## 3. Allowed Scope
+Does correcting the RGB/BGR API contract change A2 from zero raw detector proposals to non-zero proposals?
 
-Read-only inspection is allowed across the repository.
 
-Repository writes are limited to:
+## 3. Allowed repository writes
 
-```text
+Only:
+
 handoff/CURRENT_TASK.md
 handoff/EXECUTOR_STATE.yaml
 
-docs/task8b3_prop01_a2_zero_proposals_forensics_v1.md
-evaluation/task8b3_prop01_a2_zero_proposals_forensics_v1.json
+docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
+evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
 
-scripts/diagnose_prop01_a2_zero_proposals.py
-```
+scripts/diagnose_prop01_a2_channel_contract_causal_test.py
 
-The diagnostic script may be created only if useful for reproducible evidence.
 
-No product runtime source may be modified.
+## 4. Forbidden
 
-## 4. External / Model Access
+Do NOT modify product runtime source.
 
-Read-only use of the complete external RC1 is allowed:
+Do NOT modify:
 
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-Allowed:
-
-```text
-read existing model weights
-read existing locked-case inputs / diagnostics / logs
-run detector inference
-run read-only diagnostics
-```
-
-Forbidden:
-
-```text
-modify external RC1
-sync external RC1
-download assets
-replace weights
-edit logs
-edit existing locked-case artifacts
-```
-
-Diagnostic outputs must be written only to the authorized repository evidence/report paths or temporary disposable locations.
-
-## 5. Frozen Scientific / Engineering Constraints
-
-Do NOT change or sweep:
-
-```text
-confidence threshold
-mask threshold
-imgsz
-tile size
-tile overlap / stride
-max_det
-duplicate IoU
-model weights
-model selection
-NMS policy
-TTA
-reference ranking
-architecture
-```
-
-Do NOT run:
-
-```text
-conf sweeps
-threshold sweeps
-alternative imgsz experiments
-alternative detector models
-TTA
-post-hoc rescue heuristics
-```
-
-This milestone is not a tuning task.
-
-## 6. Required Startup
-
-Read in order:
-
-```text
-AGENTS.md
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/**
+tests/**
+configs/**
+model/**
 governance/PROJECT_STATE.yaml
 governance/DECISIONS.md
-handoff/CURRENT_TASK.md
-handoff/EXECUTOR_STATE.yaml
-```
+external RC1
 
-Then verify actual Git:
+Do NOT perform:
 
-```text
-branch
-HEAD
-working tree
-```
+confidence sweep
+threshold sweep
+imgsz change
+max_det change
+NMS change
+TTA
+model replacement
+weight change
+ranking change
+architecture change
+product repair
+external sync
 
-Required start:
 
-```text
-branch =
-docs/governance-v1-1-idle-state-semantics
+## 5. Exact experiment
 
-HEAD =
-504268128b7a9b058580b7702c9429b27705c053
+Use exact locked A2:
 
-working tree = clean
-```
+inference/input/A2.png
 
-Mismatch:
+SHA256:
 
-```text
+10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+
+Use frozen detector:
+
+YOLO26m-seg
+
+Frozen parameters:
+
+tile = 512
+overlap = 128
+stride = 384
+imgsz = 640
+conf = 0.05
+max_det = 300
+duplicate_iou = 0.50
+
+For each of the 9 exact A2 tiles run a paired comparison.
+
+BASELINE:
+
+model.predict(source=RGB_tile, ...frozen args...)
+
+COUNTERFACTUAL:
+
+BGR_api_tile =
+np.ascontiguousarray(RGB_tile[..., ::-1])
+
+model.predict(source=BGR_api_tile, ...same frozen args...)
+
+No other difference is allowed.
+
+
+## 6. Tensor assertion
+
+Observe Ultralytics preprocessing.
+
+For baseline confirm:
+
+network tensor
+= source RGB with R/B reversed
+
+For counterfactual confirm:
+
+network tensor
+= intended source RGB
+
+If this assertion fails:
+
 STOP
-record actual state
-do not reset/rebase/stash/clean
-```
 
-## 7. Phase A — Recover Exact A2 Provenance
+classification =
+INPUT_CONTRACT_COUNTERFACTUAL_INVALID
 
-Locate the exact locked A2 artifact used for the recorded E401 result.
 
-Record at minimum:
+## 7. Baseline guard
 
-```text
-image path / provenance
-image filename
-image dimensions
-file size
-SHA-256
-program
-expected case identifier
-historical raw proposal count
-historical merged proposal count
-```
+The paired baseline must reproduce:
 
-Do not silently substitute another image.
+total raw boxes = 0
 
-If exact A2 cannot be established:
+If baseline becomes non-zero:
 
-```text
 STOP
-classification = A2_PROVENANCE_NOT_ESTABLISHED
-```
 
-Do not continue with a guessed sample.
+classification =
+BASELINE_NOT_REPRODUCIBLE
 
-## 8. Phase B — Reproduce Frozen A2 Result
+Do not interpret the counterfactual.
 
-Using the existing frozen detector and exact A2:
 
-run the current detector path without changing parameters.
+## 8. Required per-tile evidence
 
-Record:
+For every tile record:
 
-```text
-tile count
-raw_proposal_count
-merged_proposal_count
-detector parameters
-model path
-device
-runtime/library versions where relevant
-```
+tile_id
+top
+left
+tile RGB SHA256
 
-Required comparison with historical symptom:
+baseline:
+  network tensor SHA256
+  raw box count
+  masks present
+  confidences
 
-```text
-raw = 0
-merged = 0
-```
+corrected:
+  network tensor SHA256
+  raw box count
+  masks present
+  confidences
 
-If current result differs, do not “fix” it.
+All parameters and model identity must be identical between the pair.
 
-Classify:
 
-```text
-NON_REPRODUCIBLE_BASELINE
-```
+## 9. Required classification
 
-and investigate environment/model/input identity only.
+Use one:
 
-## 9. Phase C — Per-Tile Forensics
+C1_CHANNEL_CORRECTION_RECOVERS_PROPOSALS
 
-For every A2 tile, record:
+Meaning:
+baseline total raw = 0
+corrected total raw > 0
 
-```text
-tile id
-top / left
-shape
-padding
-tile SHA-256 or deterministic content hash
+Allowed conclusion:
+channel-contract defect has experimentally established causal contribution to A2 zero-proposal failure under the frozen setup.
 
-raw Ultralytics boxes count
-raw Ultralytics masks present?
-raw confidences
-runtime detect_tile proposal count
-```
+Do NOT claim it is the sole scientific root cause or that full pipeline correctness is established.
 
-Use exactly the frozen detector invocation.
 
-Important:
+C2_CHANNEL_CORRECTION_STILL_ZERO
 
-`raw Ultralytics boxes count` means the detector library's result before BuildReasonSeg proposal extraction / global merge.
+Meaning:
+baseline total raw = 0
+corrected total raw = 0
 
-Do not lower `conf=0.05` to “see what is underneath”.
+Allowed conclusion:
+channel-contract defect is real, but correcting it is not sufficient to recover A2 proposals.
 
-## 10. Phase D — Stage-Loss Localization
+The valid corrected A2 detector path still returns zero proposals.
 
-Establish counts through the pipeline:
+Do NOT tune threshold.
 
-```text
-Ultralytics result
-↓
-detect_tile output
-↓
-detect_global accumulated entries
-↓
-compact masks
-↓
-merge input
-↓
-merged proposals
-```
 
-If count changes at any transition, identify:
+C3_BASELINE_NOT_REPRODUCIBLE
 
-```text
-exact function
-exact condition
-number dropped
-reason
-```
+STOP.
 
-No repair.
 
-## 11. Phase E — Positive-Control Sanity Check
+C4_COUNTERFACTUAL_INVALID
 
-If the exact historical positive-control artifact can be established without guessing, run **one** known proposal-positive locked case under the exact same detector/model/environment.
+STOP.
 
-Prefer an existing case whose prior evidence recorded non-zero raw proposals.
 
-Purpose only:
+## 10. No repair
 
-```text
-verify model/runtime is capable of producing proposals in the same environment
-```
+Even if C1 is obtained:
 
-Do not use the control for threshold fitting or comparative tuning.
+DO NOT edit detector.py.
+DO NOT sync external RC1.
+DO NOT run full pipeline as a repaired product.
 
-If exact positive-control provenance cannot be established, record:
+Record the repair candidate only as:
 
-```text
-POSITIVE_CONTROL_NOT_AVAILABLE
-```
+API-compatible RGB→BGR conversion before passing NumPy tile to Ultralytics.
 
-and continue; this alone is not a failure.
+Actual product repair requires a new Supervisor task.
 
-## 12. Required Root-Cause Classification
 
-Use exactly one primary classification if evidence permits:
+## 11. External integrity
 
-```text
-P0_PROVENANCE_FAILURE
-exact A2 input cannot be established
+External complete RC1 is read-only.
 
-P1_INPUT_OR_PREPROCESSING_DEFECT
-wrong/corrupted/transformed pixels reach detector
+Before and after experiment verify relevant protected artifacts remain unchanged.
 
-P2_RAW_DETECTOR_ZERO
-valid exact A2 reaches frozen YOLO detector,
-but Ultralytics returns zero detections at frozen policy
+No image, log, cache, config or output may be written into external RC1.
 
-P3_RUNTIME_ADAPTER_LOSS
-Ultralytics returns detections,
-but detect_tile extraction loses them
 
-P4_GLOBAL_ACCUMULATION_LOSS
-detect_tile returns proposals,
-but detect_global accumulation/compact handling removes them
-
-P5_MERGE_LOSS
-valid accumulated proposals exist,
-but merge results in zero
-
-P6_MODEL_OR_ENVIRONMENT_MISMATCH
-weights/runtime/input identity differ from locked baseline
-
-P7_CAUSE_NOT_ESTABLISHED
-evidence insufficient or contradictory
-```
-
-Do not invent another classification unless necessary; if needed, STOP for Supervisor review.
-
-## 13. Scientific Claim Boundary
-
-Even if `P2_RAW_DETECTOR_ZERO` is established, do NOT automatically conclude:
-
-```text
-YOLO26m is bad
-domain gap is scientifically proven
-threshold should be lowered
-model should be replaced
-```
-
-The allowed conclusion is only the narrow observed causal fact.
-
-Likewise, finding a code-stage loss does not authorize repair.
-
-## 14. Checkpoints
-
-This is a longer Codex task.
-
-Use recoverable checkpoints after meaningful stages, especially after:
-
-```text
-A2 provenance established
-baseline reproduced
-per-tile raw detector evidence captured
-root-cause classification established
-```
-
-At checkpoints:
-
-```text
-update EXECUTOR_STATE
-commit + push when safe and useful
-```
-
-Do not leave the only copy of important evidence in the Codex conversation.
-
-Multiple commits on the task branch are allowed if they represent meaningful recoverable checkpoints.
-
-Do not amend/rewrite them.
-
-## 15. EXECUTOR_STATE During Work
-
-Maintain:
-
-```text
-task_id = PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
-status = IN_PROGRESS / STOPPED / READY_FOR_SUPERVISOR_AUDIT
-executor = CODEX
-
-completed
-current_step
-next_action
-hypotheses
-tests_run
-files_modified
-blocked_on_supervisor
-block_reason
-decision_level_required
-```
-
-Actual Git remains authoritative.
-
-## 16. Validation
-
-This task does not require the full pytest suite.
-
-Allowed:
-
-```text
-read-only detector inference
-diagnostic script
-targeted existing detector/runtime tests if directly informative
-Python syntax/import check for the diagnostic script
-JSON parse validation
-```
-
-Do not run unrelated full-suite regression merely for ceremony.
-
-## 17. Required Evidence
+## 12. Evidence
 
 Create:
 
-```text
-docs/task8b3_prop01_a2_zero_proposals_forensics_v1.md
+docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
 
-evaluation/task8b3_prop01_a2_zero_proposals_forensics_v1.json
-```
+evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
 
-JSON must record at least:
+JSON must include:
 
-```text
 task_id
 status
 
@@ -480,130 +295,57 @@ starting_branch
 starting_head
 task_branch
 
-A2 provenance
-A2 SHA-256
-image dimensions
-
-detector model identity/path
+A2 identity
+detector identity
 frozen parameters
 
-tile count
+baseline_total_raw
+corrected_total_raw
 
-per_tile:
-  tile id
-  tile position
-  raw ultralytics count
-  runtime detect_tile count
+per_tile paired results
 
-pipeline_counts:
-  raw_ultralytics
-  detect_tile
-  accumulated
-  compact_valid
-  merge_input
-  merged
+baseline_tensor_contract
+corrected_tensor_contract
 
-positive_control status/result
-
-primary_root_cause_classification
-
-root_cause_summary
+primary_classification
+causal_conclusion
 
 threshold_sweep_run = false
 parameter_tuning_run = false
 product_source_changed = false
 external_write = false
 
-next_gate = CHATGPT_PROP01_FORENSICS_V1_REMOTE_AUDIT
-```
+next_gate =
+CHATGPT_PROP01_CHANNEL_CAUSAL_TEST_REMOTE_AUDIT
 
-## 18. Forbidden Product Changes
 
-Absolutely no modifications under:
+## 13. Git/checkpoint
 
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/**
-buildreasonseg/**
-tests/**
-configs/**
-model/**
-```
+Git safety rules from AGENTS.md remain active.
 
-No product fix is authorized.
+No reset --hard
+No rebase
+No amend
+No stash
+No clean
+No force push
 
-If you identify a likely fix:
+At completion:
 
-```text
-record it as a hypothesis only
-do not implement it
-```
+CURRENT_TASK Status =
+READY_FOR_SUPERVISOR_AUDIT
 
-## 19. Git Safety
+EXECUTOR_STATE Status =
+READY_FOR_SUPERVISOR_AUDIT
 
-Forbidden:
-
-```text
-reset --hard
-rebase
-commit --amend
-stash
-clean
-force push
-history rewrite
-```
-
-Unknown changes:
-
-```text
-preserve
-do not stage
-STOP if they prevent safe work
-```
-
-## 20. Final State
-
-If investigation completes:
-
-```text
-CURRENT_TASK Status = READY_FOR_SUPERVISOR_AUDIT
-EXECUTOR_STATE Status = READY_FOR_SUPERVISOR_AUDIT
-```
-
-Do not change project defect status from OPEN.
-
-Commit/push all authorized evidence.
-
-Final response must report:
-
-```text
-task branch
-actual remote HEAD
-number of commits created
-primary classification
-one-sentence causal conclusion
-evidence paths
-whether any product code changed
-whether any tuning/sweep occurred
-```
+Commit and push task branch.
 
 Then STOP.
 
-Do not implement a repair.
 
-## 21. Success Definition
+## Success
 
-```text
-PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
+PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
 = READY_FOR_SUPERVISOR_AUDIT
 
-A2 exact provenance established
-frozen baseline reproduced or discrepancy explained
-zero-proposal stage localized
-primary classification evidence-backed
-no threshold tuning
-no product repair
-reproducible evidence persisted
-
-NEXT =
-CHATGPT_PROP01_FORENSICS_V1_REMOTE_AUDIT
-```
+No product repair is authorized.

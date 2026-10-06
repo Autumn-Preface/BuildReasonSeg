@@ -1,42 +1,31 @@
 schema_version: 1
-task_id: PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
-status: READY_FOR_SUPERVISOR_AUDIT
+task_id: PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
+status: IN_PROGRESS
 executor: CODEX
-branch: audit/task8b3-prop01-a2-zero-proposals-forensics-v1
-head: 471a93e8147166e3028a992d88be1a1677fffea3
+branch: audit/task8b3-prop01-a2-channel-contract-causal-test-v1
+head: 59296d25195a656e6a75e303e3cbb43fa9df8b8b
 completed:
-  - Required five-file startup read and exact clean Git anchor verified.
-  - Supervisor attachment copied verbatim and re-read; SHA256 matched.
-  - Exact A2 and historical proposal-positive A1 provenance established.
-  - Detector weights and 135 actual external source files verified against canonical Git blobs.
-  - Frozen CUDA A2 baseline reproduced; all nine raw-library and adapter counts zero.
-  - A2 accumulation/compact/merge counts zero; no downstream transition loses proposals.
-  - One locked A1 control reproduced raw 133 and merged 52.
-  - All 18 observed input tensors reverse source RGB channels; no altered-input inference executed.
-  - External 2094-file inventory and 144 protected content hashes unchanged.
-  - Primary P1_INPUT_OR_PREPROCESSING_DEFECT recorded under the task predicate; zero-count causal contribution remains NOT_ESTABLISHED.
-  - Final report/evidence/syntax/JSON/scope validation completed; no repair or parameter change.
-current_step: STOP_FOR_SUPERVISOR_AUDIT
-next_action: CHATGPT_PROP01_FORENSICS_V1_REMOTE_AUDIT. Executor must not automatically enter repair.
+  - Five canonical startup reads and exact clean Git anchor verified.
+  - Supervisor task installed verbatim, SHA256 checked, and re-read.
+  - Exact A2, detector, source, installed libraries, and prior evidence identities verified.
+  - Prepared nine paired tiles with frozen invocation and tensor/baseline guards; zero inference so far.
+current_step: PRE_EXPERIMENT_CHECKPOINT
+next_action: Run exactly one paired A2 experiment; change only API-facing RGB NumPy to contiguous BGR NumPy.
 hypotheses:
-  - Input channel contract mismatch is observed; its causal contribution to A2 zero remains untested. Any correction requires a separate Supervisor task.
-  - External source_manifest has eight stale entries, but actual source files match canonical; no repair authorized.
+  - Whether channel correction restores A2 raw proposals is untested in this task.
 tests_run:
-  - Provenance diagnostic PASS; exact inputs/model/source verified; external inventory and protected hashes unchanged.
-  - Initial provenance harness assertion assumed external manifest identity; inspected discrepancy and recorded stale entries.
-  - Frozen detector-only inference PASS; A2 raw 0 / merged 0, A1 raw 133 / merged 52, 18 predict calls total.
-  - Diagnostic syntax/import and saved-evidence finalize assertions PASS; finalize performs zero inference calls.
-  - JSON and YAML parse, Supervisor task text preservation, git diff whitespace and five-path scope checks PASS.
+  - Prepare diagnostic PASS; nine tile hashes match accepted forensics.
+  - External inventory and 144 protected hashes unchanged.
 files_modified:
   - handoff/CURRENT_TASK.md
   - handoff/EXECUTOR_STATE.yaml
-  - docs/task8b3_prop01_a2_zero_proposals_forensics_v1.md
-  - evaluation/task8b3_prop01_a2_zero_proposals_forensics_v1.json
-  - scripts/diagnose_prop01_a2_zero_proposals.py
-uncommitted_changes: false
+  - docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
+  - evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
+  - scripts/diagnose_prop01_a2_channel_contract_causal_test.py
+uncommitted_changes: true
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 471a93e8147166e3028a992d88be1a1677fffea3
-  pushed: true
+  commit: null
+  pushed: null
