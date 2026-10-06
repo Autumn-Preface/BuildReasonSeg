@@ -3,13 +3,15 @@ task_id: DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: fix/task8b3-detector-rgb-bgr-contract-v1
-head: 4e3019c77984dcb27c7a10651ccc7df631abf0da
+head: 8e9f5712f4edb79bb47f584d3b13774e2c3fafa7
 completed:
 - Startup reads, exact clean anchor, authorized branch and task installation verified.
 - Minimal canonical repair and 47/47 related runtime tests PASS, including 5 new boundary/extraction
   cases.
-current_step: COMMIT_CANONICAL_CHECKPOINT
-next_action: COMMIT_CANONICAL_CHECKPOINT
+- Controlled sync 135/135 verified; only two source content identities differ; all
+  non-source protected hashes unchanged.
+current_step: SIX_LOCKED_CASE_DETECTOR_REGRESSION
+next_action: SIX_LOCKED_CASE_DETECTOR_REGRESSION
 tests_run:
 - "47 passed in 6.00s\r"
 files_modified:
@@ -25,5 +27,5 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: null
-  pushed: false
+  commit: 8e9f5712f4edb79bb47f584d3b13774e2c3fafa7
+  pushed: true
