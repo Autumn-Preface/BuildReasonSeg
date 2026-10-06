@@ -1,91 +1,104 @@
-# TO_DSH — MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION
+# TO_DSH — MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation`
-> Required starting HEAD: `7251604686da5846d5bbef28048b8a7454bc4181`
-> New task branch: `audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation`
+> Required starting branch: `audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation`
+> Required starting HEAD: `8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03`
+> New task branch: `delivery/task8b3-mask01-d2-external-sync-regression`
+> External RC1 target: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
 
-## 0. CHATGPT CORRECTION
+## 0. CHATGPT FINAL R1-E DECISION
 
-R1-E2-R1 execution evidence is accepted, but its classification is rejected.
-
-Independent source audit of:
-
-```text
-buildreasonseg/models/package.py
-```
-
-establishes that all 9 R1-E2-R1 nodes fail because the lightweight canonical source tree intentionally lacks complete-delivery model assets.
-
-Corrected classification:
+R1-E2-R2 execution evidence is accepted, but two classifications are corrected by ChatGPT:
 
 ```text
-tests/test_language_contract.py::test_normal_path_is_qwen_first
-= A MISSING_FULL_DELIVERY_ASSET
-(reason: missing program_parser_l3_rehearsal_v1.pt + Qwen3-VL-2B-Instruct)
+tests/test_paths_and_package.py::test_required_structure
+= A MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
+(reason: `inference/input` is an empty delivery directory and is not represented by the
+135-file Git lightweight source manifest)
 
-tests/test_model_package.py::test_components_complete
-= A
+tests/test_setup_checker.py::test_real_project_check_reports_ready
+= A MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
+(reason: its own stdout reports missing `inference/input`, model package, SAM2 assets,
+and Qwen/ProgramHead assets)
 
-tests/test_model_package.py::test_decoder_hash_and_bytes_exact
-= A (decoder.pt absent)
-
-tests/test_model_package.py::test_detector_hash_and_bytes_exact
-= A (detector.pt absent)
-
-tests/test_model_package.py::test_hash_mismatch_raises
-= A (ModelPackage.load fails first because package assets absent)
-
-tests/test_model_package.py::test_metadata_hashes_match_copied_assets
-= A (metadata target decoder.pt absent)
-
-tests/test_model_package.py::test_model_fallback_requires_user_confirmation
-= A
-(reason: default_package_available() is false because default package assets are absent,
-so the user-confirmation fallback branch is not reachable)
-
-tests/test_model_package.py::test_model_yaml_parses
-= A (ModelPackage.load fails first because decoder/detector absent)
-
-tests/test_model_package.py::test_package_verification_matches
-= A
+tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready
+= A MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
+NOT C, because its own stdout shows:
+Ultralytics runtime = OK
+Transformers runtime = OK
+while the complete-delivery structure/assets are missing
 ```
 
-Therefore:
+Independent canonical-policy evidence:
 
 ```text
-R1E2_R1_TRUE_REGRESSION_COUNT = 0
-PREVIOUS_TRUE_REGRESSION_CLASSIFICATION = REFUTED_FOR_GROUPS_1_2
+source_manifest.copy_policy =
+Task 8B.2-R1 fixed lightweight source/config policy
 ```
 
-This task individually disambiguates the remaining REAL failing nodes from Groups 3–5.
+and `scripts/sync_advisor_rc1_delivery.py` explicitly states that it:
+- copies only manifest-listed lightweight source/config files;
+- never touches model weights, downloaded assets, images, logs or generated outputs;
+- never deletes destination content.
 
-No repair is authorized.
+The canonical source tree is therefore intentionally NOT a complete runnable delivery tree.
+
+Corrected aggregate conclusion:
+
+```text
+GROUPS_1_2:
+all 9 failures = complete-delivery asset prerequisites absent
+
+GROUPS_3_5:
+remaining failures = complete-delivery structure/assets or noncanonical frozen log fixtures
+no MASK-01 code regression established
+
+MASK01_FULL_SUITE_FAILURES_CAUSALLY_UNRELATED = true
+
+FULL_SUITE_GATE_PLACEMENT = EXTERNAL_COMPLETE_RC1
+```
+
+Canonical closure:
+
+```text
+SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_CANONICAL
+MASK01_CANONICAL_ENGINEERING_HARDENING = CLOSED
+
+runtime SUCCESS scope = RUNTIME_STRUCTURAL_ONLY
+semantic status = NOT_EVALUATED
+semantic target correctness = NOT ESTABLISHED by SUCCESS
+
+targeted canonical Gate A = 5/5 PASS
+targeted canonical Gate B = 2/2 PASS
+manifest Gate C = PASS
+```
+
+This task is D2: controlled canonical → external synchronization, then complete external RC1 regression.
 
 ---
 
 ## 1. GIT PREFLIGHT
 
-Verify:
+Verify exactly:
 
 ```text
 current branch =
-audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation
+audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation
 
 HEAD =
-7251604686da5846d5bbef28048b8a7454bc4181
+8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03
 ```
 
 Create:
 
 ```text
-audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation
+delivery/task8b3-mask01-d2-external-sync-regression
 ```
 
-Allowed initial worktree:
+Allowed initial working tree:
 - clean, or
 - only `M handoff/TO_DSH.md`.
 
@@ -93,360 +106,412 @@ No reset/rebase/amend/stash/clean/force-push.
 
 ---
 
-## 2. ALLOWED CHANGES
+## 2. REPOSITORY WRITE SCOPE
 
-Only:
+DO NOT modify any canonical source/test/doc/manifest file.
+
+Only repository task records may change:
 
 ```text
-docs/task8b3_mask01_d1_r1e2_r2_remaining_failure_disambiguation.md
-evaluation/task8b3_mask01_d1_r1e2_r2_remaining_failure_disambiguation.json
+docs/task8b3_mask01_d2_external_rc1_sync_and_full_regression.md
+evaluation/task8b3_mask01_d2_external_rc1_sync_and_full_regression.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-DO NOT modify anything under:
+Canonical tree remains frozen.
+
+The ONLY non-repository write authorized is the controlled sync to:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
 ```
 
-Do not create assets/fixtures/directories.
-Do not install dependencies.
-Do not write external RC1.
+through the existing sync script.
+
+Do NOT manually copy or edit external source files.
 
 ---
 
-## 3. CLASSIFICATION RULE
+## 3. EXTERNAL COMPLETE-DELIVERY PREFLIGHT
 
-For each real node choose exactly one:
-
-```text
-A = MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
-B = MISSING_NONCANONICAL_TEST_FIXTURE
-C = RUNTIME_DEPENDENCY_ENVIRONMENT
-D = TRUE_CANONICAL_CODE_REGRESSION
-E = OTHER
-PASS = TEST_PASSES_INDIVIDUALLY
-```
-
-Use `D` only when the node can reach its intended assertion using only files/environment that the lightweight canonical source tree is actually required to contain, and current canonical code violates that contract.
-
-Do NOT label:
-- missing empty delivery directory;
-- missing external model asset;
-- missing logs/task fixture;
-as D.
-
----
-
-## 4. EXECUTION METHOD
-
-Working directory:
+Before any sync, verify the external root exists:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
 ```
 
-Run EXACTLY ONE node per invocation:
+If the root does not exist:
+- STOP;
+- do not create it;
+- persist report and push.
+
+Before sync, inventory these complete-delivery prerequisites.
+
+### Required files / assets
 
 ```text
-python -m pytest <NODE_ID> -vv
+VERSION
+setup_env.bat
+
+model/buildreasonseg_advisor/decoder.pt
+model/buildreasonseg_advisor/detector.pt
+
+model/components/sam2/sam2.1_hiera_base_plus.pt
+model/components/sam2/sam2.1_hiera_b+.yaml
+
+model/components/program_head/program_parser_l3_rehearsal_v1.pt
+model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors
+
+logs/task8b1_prompt_suite.json
+logs/task8b_gates.json
 ```
 
-Never batch nodes.
-
-### Group 3 — Paths / delivery structure
-
-1.
-```text
-tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths
-```
-
-2.
-```text
-tests/test_paths_and_package.py::test_required_structure
-```
-
-### Group 4 — Setup checker
-
-3.
-```text
-tests/test_setup_checker.py::test_good_fixture_is_ready
-```
-
-4.
-```text
-tests/test_setup_checker.py::test_hash_mismatch_nonzero
-```
-
-5.
-```text
-tests/test_setup_checker.py::test_invalid_model_yaml_nonzero
-```
-
-6.
-```text
-tests/test_setup_checker.py::test_missing_decoder_nonzero
-```
-
-7.
-```text
-tests/test_setup_checker.py::test_missing_qwen_component_nonzero
-```
-
-8.
-```text
-tests/test_setup_checker.py::test_missing_sam2_nonzero
-```
-
-9.
-```text
-tests/test_setup_checker.py::test_real_project_check_reports_ready
-```
-
-10.
-```text
-tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready
-```
-
-### Group 5 — Task 8B.1 fixtures
-
-11.
-```text
-tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete
-```
-
-12.
-```text
-tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code
-```
-
-13.
-```text
-tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim
-```
-
-Exactly 13 nodes.
-
----
-
-## 5. REQUIRED PER-NODE EVIDENCE
-
-For each node record:
-
-```text
-node_id
-exit_code
-summary
-PASS_or_FAIL
-exception/assertion
-first_decisive_failure_line
-required_missing_path_or_dependency
-classification
-classification_reason
-```
-
-Evidence must come from that node's own invocation.
-
-No progress tokens.
-No cross-node reason reuse.
-
----
-
-## 6. SPECIAL INTERPRETATION RULES
-
-### `test_required_structure`
-
-If it fails only because a directory such as:
+### Required directories
 
 ```text
 inference/input
 inference/output/masks
+inference/output/overlays
+inference/output/diagnostics
 runs/train
 runs/eval
+logs
 ```
 
-is absent from the Git lightweight source snapshot, classify:
+Record for every item:
 
 ```text
-A
+exists
+bytes (for files where practical)
 ```
 
-because Git/source_manifest does not represent empty delivery directories.
+For these preserved external assets, also record pre-sync SHA256:
 
-### `test_moving_root_keeps_config_and_model_paths`
+```text
+model/buildreasonseg_advisor/decoder.pt
+model/buildreasonseg_advisor/detector.pt
+model/components/sam2/sam2.1_hiera_base_plus.pt
+model/components/program_head/program_parser_l3_rehearsal_v1.pt
+logs/task8b1_prompt_suite.json
+logs/task8b_gates.json
+```
 
-If it passes individually, classify PASS.
+For the Qwen `model.safetensors`, record:
 
-If it fails, record its own exact reason. Do not inherit `test_required_structure`'s reason.
+```text
+exists
+bytes
+mtime
+```
 
-### setup-checker fixture tests
+Do not hash multi-GB Qwen weights solely for this task.
 
-For each fixture test, distinguish:
-- fixture construction failure because source-side asset/fixture required for copying is absent;
-- checker logic assertion failure after fixture construction.
-
-If construction fails due omitted full-delivery asset/structure, classify A.
-
-If a Python package/version is actually missing, classify C.
-
-If fixture successfully constructs and checker behavior violates its intended synthetic contract, then and only then consider D.
-
-### real-project setup tests
-
-If they fail because the lightweight source tree is not a complete delivery package (missing model assets/components/directories), classify A.
-
-### Task 8B.1 fixture tests
-
-If `logs/task8b1_prompt_suite.json` or `logs/task8b_gates.json` is absent and not source-manifest-listed, classify B.
+If ANY required prerequisite above is missing:
+- status = STOP;
+- classification = EXTERNAL_DELIVERY_INCOMPLETE_PREEXISTING;
+- do NOT run sync;
+- do NOT create/download the missing item;
+- commit/push truthful evidence;
+- await ChatGPT.
 
 ---
 
-## 7. MASK-01 CAUSALITY CHECK
+## 4. GATE D2-A — PRE-SYNC SOURCE COMPARISON
 
-Use the frozen pre-MASK forensic base:
-
-```text
-a98ccecce20585dc37520523cd32b49b0a684248
-```
-
-For every node classified D, additionally identify the production/test dependency file whose current behavior causes the regression, then run a READ-ONLY Git diff check:
+From repository root, run:
 
 ```text
-git diff --name-only a98ccecce20585dc37520523cd32b49b0a684248..HEAD -- <dependency paths>
+python scripts/sync_advisor_rc1_delivery.py --destination "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1" --check
 ```
 
-Record:
+This is read-only.
+
+A non-zero result BEFORE sync is allowed and expected if external source/config is stale.
+
+Record exactly:
 
 ```text
-changed_since_pre_mask = true/false
-mask01_change_related = YES/NO/UNRESOLVED
+exit
+checked
+match
+missing
+mismatch
 ```
 
-A D node whose causal dependency is unchanged since the pre-MASK base cannot be attributed to this MASK repair chain; record:
-
-```text
-mask01_change_related = NO
-```
-
-Do not modify history.
+Do NOT classify a pre-sync mismatch as task failure.
 
 ---
 
-## 8. NO FULL SUITE
+## 5. GATE D2-B — CONTROLLED SYNC
 
-Do NOT run:
+Run exactly:
+
+```text
+python scripts/sync_advisor_rc1_delivery.py --destination "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1"
+```
+
+Required:
+
+```text
+copied = 135
+verified = 135
+failures = 0
+exit = 0
+```
+
+The script is the only authorized mechanism for source/config writes.
+
+If failure:
+- do not manually repair;
+- STOP after evidence persistence.
+
+---
+
+## 6. GATE D2-C — POST-SYNC SOURCE IDENTITY
+
+Run exactly:
+
+```text
+python scripts/sync_advisor_rc1_delivery.py --destination "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1" --check
+```
+
+Required:
+
+```text
+checked = 135
+match = 135
+missing = 0
+mismatch = 0
+exit = 0
+```
+
+This is the external source/config identity gate.
+
+---
+
+## 7. PRESERVED-ASSET INTEGRITY
+
+After sync, recompute the same SHA256 values for:
+
+```text
+decoder.pt
+detector.pt
+sam2.1_hiera_base_plus.pt
+program_parser_l3_rehearsal_v1.pt
+logs/task8b1_prompt_suite.json
+logs/task8b_gates.json
+```
+
+Required:
+
+```text
+pre_sha256 == post_sha256
+```
+
+For Qwen `model.safetensors`, required:
+
+```text
+exists after sync = true
+bytes after == bytes before
+mtime after == mtime before
+```
+
+This demonstrates that the lightweight sync did not touch preserved external assets/fixtures.
+
+Any unexpected mutation:
+- STOP;
+- no manual restoration;
+- report.
+
+---
+
+## 8. GATE D2-D — EXTERNAL SETUP READY
+
+Working directory:
+
+```text
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+```
+
+Run:
+
+```text
+python check_setup.py
+```
+
+Required:
+
+```text
+exit = 0
+BuildReasonSeg environment: READY
+```
+
+Also record lines for:
+
+```text
+model package
+SAM2 assets
+Qwen / ProgramHead assets
+Ultralytics runtime
+Transformers runtime
+```
+
+They must be READY/OK.
+
+If NOT READY:
+- do not repair/install/download;
+- STOP and report exact reason.
+
+---
+
+## 9. GATE D2-E — TARGETED MASK-01 CONTRACTS ON EXTERNAL
+
+From external RC1 root run exactly:
+
+```text
+python -m pytest tests/test_cli_contract.py::test_r1a_single_success_semantics_block tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary tests/test_task8b_runtime.py::test_success_semantics_contract_exact tests/test_task8b_runtime.py::test_pipeline_result_ok_is_status_compatibility -q
+```
+
+Required:
+
+```text
+5 passed
+exit 0
+```
+
+Then run:
+
+```text
+python -m pytest tests/test_cli_contract.py::test_predict_inspect_proposals_does_not_require_prompt tests/test_cli_contract.py::test_inspect_unreadable_image_precedes_model_resolution -q
+```
+
+Required:
+
+```text
+2 passed
+exit 0
+```
+
+No repairs if either fails.
+
+---
+
+## 10. GATE D2-F — COMPLETE EXTERNAL RC1 PYTEST SUITE
+
+Still in external RC1 root, run exactly:
 
 ```text
 python -m pytest -q
 ```
 
-Do not rerun Groups 1–2.
+Required for COMPLETE:
 
----
-
-## 9. AGGREGATE RESULT
+```text
+exit = 0
+0 failed
+0 errors
+all collected tests pass
+```
 
 Record:
+- passed;
+- skipped;
+- xfailed;
+- failed;
+- errors;
+- duration;
+- exact failing nodes if any.
 
-```text
-A count
-B count
-C count
-D count
-E count
-PASS count
+Do NOT use:
+- `-k`;
+- `--lf`;
+- test exclusion;
+- skip/xfail edits;
+- source/test repairs.
 
-true_regression_nodes = [...]
-mask01_related_true_regressions = [...]
-```
-
-Then choose:
-
-### Case 1
-
-If:
-
-```text
-mask01_related_true_regressions = []
-```
-
-record:
-
-```text
-MASK01_FULL_SUITE_FAILURES_CAUSALLY_UNRELATED = true
-```
-
-This is true even if a pre-existing/stale canonical test regression exists elsewhere.
-
-### Case 2
-
-If at least one D node is causally related to files changed in the MASK chain:
-
-```text
-MASK01_FULL_SUITE_FAILURES_CAUSALLY_UNRELATED = false
-```
-
-List exact node/path.
+If this gate fails:
+- D2 status = STOP;
+- persist the complete failure list;
+- do NOT modify external or canonical code;
+- await ChatGPT.
 
 ---
 
-## 10. FULL-SUITE GATE PLACEMENT RECOMMENDATION
+## 11. NO MODEL INFERENCE / TRAINING
 
-Choose one:
+Do NOT:
+- run real prediction on an image;
+- run locked cases;
+- train;
+- tune;
+- change model assets;
+- change detector/reference/mask algorithms.
 
-```text
-FULL_SUITE_GATE_PLACEMENT = EXTERNAL_COMPLETE_RC1
-```
+`check_setup.py` and pytest contract/package checks are allowed.
 
-if all current failures require complete-delivery assets/fixtures/structure/environment absent from the lightweight source tree.
-
-Or:
-
-```text
-FULL_SUITE_GATE_PLACEMENT = CANONICAL_SOURCE_TREE
-```
-
-if the remaining failures are genuine source-only regressions the lightweight tree is required to satisfy.
-
-Or:
-
-```text
-FULL_SUITE_GATE_PLACEMENT = SPLIT
-```
-
-if source-only tests can be valid here but complete-delivery tests require D2.
-
-For `SPLIT`, recommend:
-
-```text
-canonical lightweight gate = source-only + targeted contracts
-external D2 gate = complete delivery full suite
-```
+This D2 task is engineering synchronization/regression only.
 
 ---
 
-## 11. WORKTREE AUDIT
+## 12. EXTERNAL POST-REGRESSION INVENTORY
 
-After diagnostics:
+After all test gates, re-check:
 
 ```text
-git status --porcelain=v1 --untracked-files=all
-git diff --name-only
-git diff --cached --name-only
+decoder.pt
+detector.pt
+SAM2 checkpoint
+ProgramHead checkpoint
+Qwen model.safetensors
+logs/task8b1_prompt_suite.json
+logs/task8b_gates.json
 ```
 
-Do not stage/delete generated files outside task records.
+They must remain present.
+
+Do not stage or copy external generated pytest cache/log output into Git.
 
 ---
 
-## 12. REQUIRED REPORT
+## 13. REQUIRED D2 DECISION
+
+If D2-B/C/D/E/F all PASS and preserved assets remain unchanged:
+
+```text
+MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION = COMPLETE
+
+EXTERNAL_RC1_SOURCE_IDENTITY = 135/135 MATCH
+EXTERNAL_RC1_SETUP = READY
+EXTERNAL_MASK01_TARGETED_CONTRACTS = PASS
+EXTERNAL_RC1_FULL_SUITE = PASS
+
+SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_EXTERNAL_RC1
+MASK01_ENGINEERING_HARDENING_CHAIN = CLOSED
+
+semantic target correctness = NOT ESTABLISHED by runtime SUCCESS
+```
+
+Do NOT claim the scientific segmentation problem is solved.
+
+If any gate fails:
+
+```text
+MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION = STOP
+MASK01_ENGINEERING_HARDENING_CHAIN = CANONICAL_CLOSED_EXTERNAL_PENDING
+```
+
+and record exact blocker.
+
+---
+
+## 14. REQUIRED REPORT
 
 Create:
 
 ```text
-docs/task8b3_mask01_d1_r1e2_r2_remaining_failure_disambiguation.md
-evaluation/task8b3_mask01_d1_r1e2_r2_remaining_failure_disambiguation.json
+docs/task8b3_mask01_d2_external_rc1_sync_and_full_regression.md
+evaluation/task8b3_mask01_d2_external_rc1_sync_and_full_regression.json
 ```
 
 Update:
@@ -456,83 +521,117 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Required fields:
+Required report fields:
 
 ```text
-task_id = MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION
+task_id = MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION
 status
 
 starting branch/head
 task branch
+external_root
 
-nodes_requested = 13
-nodes_executed_individually = 13
+pre_sync_prerequisite_inventory
+pre_sync_preserved_asset_hashes
 
-per_node = [...]
+D2-A pre-sync check command/result
+D2-B sync command/result
+D2-C post-sync check command/result
 
-classification_counts = {...}
-true_regression_nodes = [...]
-mask01_related_true_regressions = [...]
+post_sync_preserved_asset_hashes
+preserved_assets_unchanged = true/false
 
-MASK01_FULL_SUITE_FAILURES_CAUSALLY_UNRELATED = true/false
+D2-D check_setup exit/result
+D2-E targeted success-semantics result
+D2-E targeted inspect result
+D2-F full suite result
 
-FULL_SUITE_GATE_PLACEMENT =
-EXTERNAL_COMPLETE_RC1
-or CANONICAL_SOURCE_TREE
-or SPLIT
+external_source_match = 135/135 or other
+external_setup_ready = true/false
+external_full_suite_pass = true/false
 
-full_suite_reexecuted = false
 canonical_files_modified = false
-assets_created = false
-fixtures_created = false
-dependencies_installed = false
-repairs_attempted = false
+model_assets_modified_by_sync = false
 model_inference = false
-external_write = false
+training = false
 
-next_gate = CHATGPT_R1E2_R2_REMOTE_AUDIT
+semantic_target_correctness =
+NOT_ESTABLISHED_BY_RUNTIME_SUCCESS
+
+github_persistence_policy = ALL_TASK_OUTCOMES_PUSHED
+next_gate = CHATGPT_D2_REMOTE_AUDIT
 ```
 
 ---
 
-## 13. EVERY OUTCOME MUST BE PUSHED
+## 15. REPOSITORY WORKTREE AUDIT
 
-Persist COMPLETE / STOP / FAILED to GitHub.
-
----
-
-## 14. COMMIT / PUSH
-
-Commit exactly:
+After external work:
 
 ```text
-git commit -m "docs(rc1): resolve remaining canonical suite failures"
+git status --porcelain=v1 --untracked-files=all
+git diff --name-only
+git diff --cached --name-only
 ```
+
+Only authorized report/handoff files may be staged.
+
+No canonical delivery file may change in the repository.
+
+---
+
+## 16. EVERY OUTCOME MUST BE PUSHED
+
+COMPLETE / STOP / FAILED must all be committed and pushed.
+
+---
+
+## 17. COMMIT / PUSH
+
+If COMPLETE, commit exactly:
+
+```text
+git commit -m "test(rc1): verify external mask01 delivery closure"
+```
+
+If STOP/FAILED, use a truthful status commit message.
 
 Push:
 
 ```text
-audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation
+delivery/task8b3-mask01-d2-external-sync-regression
 ```
 
 No force push.
+
+After push print:
+
+```text
+LOCAL_FINAL_HEAD=<sha>
+REMOTE_FINAL_HEAD=<sha>
+FINAL_PARENT=<sha>
+```
 
 Then STOP.
 
 ---
 
-## 15. SUCCESS DEFINITION
+## 18. SUCCESS DEFINITION
 
 ```text
-MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION = COMPLETE
+MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION = COMPLETE
 
-13 real nodes run individually
-all classifications based on own traceback
-MASK causality established
-full-suite gate placement decided
-canonical files unchanged
+external complete-delivery prerequisites = present
+135 lightweight source/config files = synced and verified
+preserved weights/assets/fixtures = unchanged
+check_setup = READY
+MASK-01 targeted contracts = 7/7 PASS
+complete external pytest suite = ALL PASS
 
-NEXT = CHATGPT_R1E2_R2_REMOTE_AUDIT
+SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_EXTERNAL_RC1
+MASK01_ENGINEERING_HARDENING_CHAIN = CLOSED
+
+NEXT = CHATGPT_D2_REMOTE_AUDIT
 ```
 
 Then STOP.

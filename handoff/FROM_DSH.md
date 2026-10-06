@@ -17,29 +17,29 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION Report
+# FROM_DSH — Task MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION` |
+| Task | `MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION` |
 | Status | **COMPLETE** |
-| Starting branch / head | `audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation` / `7251604686da5846d5bbef28048b8a7454bc4181` |
-| Task branch | `audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation` |
-| Nodes audited individually (`-vv`) | 13 |
-| Classification counts | {"A": 7, "D": 2, "C": 1, "B": 3} |
-| D-classified nodes | ['tests/test_paths_and_package.py::test_required_structure', 'tests/test_setup_checker.py::test_real_project_check_reports_ready'] |
-| Pre-MASK base dependency diff | POSSIBLY_CHAIN_RELATED_REQUIRES_REVIEW (base `a98ccecce205`) |
-| Required verdict 1 | **MASK01_FULL_SUITE_FAILURES_POSSIBLY_CAUSALLY_RELATED** |
-| Required verdict 2 | **FULL_SUITE_GATE_PLACEMENT = EXTERNAL_COMPLETE_RC1** |
-| merged commands / cross-node reuse | false / false |
-| full suite / repairs / canonical writes / created assets / deps | not run / none / none / none / none |
-| Evidence | `evaluation\task8b3_mask01_d1_r1e2_r2_remaining_failure_disambiguation.json` |
-| Report | `docs\task8b3_mask01_d1_r1e2_r2_remaining_failure_disambiguation.md` |
-| Next gate | `CHATGPT_R1E2_R2_REMOTE_AUDIT` |
+| Starting branch / head | `audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation` / `8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03` |
+| Task branch | `delivery/task8b3-mask01-d2-external-sync-regression` |
+| External source identity | checked=135 match=135 missing=0 mismatch=0 |
+| Preserved assets/fixtures unchanged | True |
+| `check_setup.py` READY | True |
+| MASK-01 targeted contracts 7/7 | True |
+| External complete suite | 130 passed in 54.05s |
+| Sync helper (only writer) | `scripts\sync_advisor_rc1_delivery.py` |
+| Manual external edits | NONE |
+| Real inference / training / param tuning | NOT executed |
+| Evidence | `evaluation\task8b3_mask01_d2_external_sync_and_full_regression.json` |
+| Report | `docs\task8b3_mask01_d2_external_sync_and_full_regression.md` |
+| Next gate | `CHATGPT_D2_REMOTE_AUDIT` |
 
-Watt was not needed for Task MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION (no downloads, no transfers).
+Watt was not needed for Task MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION (no downloads, no transfers).
 
 The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.

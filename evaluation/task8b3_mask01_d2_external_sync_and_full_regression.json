@@ -1,0 +1,93 @@
+{
+  "task_id": "MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION",
+  "status": "COMPLETE",
+  "starting_branch": "audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation",
+  "starting_head": "8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03",
+  "task_branch": "delivery/task8b3-mask01-d2-external-sync-regression",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "external_root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+  "external_is_git_repo": false,
+  "prerequisites": {
+    "VERSION": true,
+    "predict.py": true,
+    "check_setup.py": true,
+    "source_manifest.json": true,
+    "buildreasonseg": true,
+    "configs": true,
+    "tests": true,
+    "inference": true,
+    "inference/output": true,
+    "logs": true,
+    "logs/task8b1_transcripts": true,
+    "model": true,
+    "model/buildreasonseg_advisor": true,
+    "model/buildreasonseg_advisor/detector.pt": true,
+    "model/buildreasonseg_advisor/decoder.pt": true,
+    "model/components/sam2": true,
+    "model/components/program_head": true,
+    "model/components/program_head/Qwen3-VL-2B-Instruct": true
+  },
+  "missing_prerequisites": [],
+  "preserved_assets_before": {
+    "model/buildreasonseg_advisor/detector.pt": "54480241:ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "model/buildreasonseg_advisor/decoder.pt": "1117495:9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+    "model/components/program_head/program_parser_l3_rehearsal_v1.pt": "70090713:c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+    "model/components/sam2/sam2.1_hiera_base_plus.pt": "323606802:a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "logs/task8b1_transcripts": "tree:5:96e131663937b40468428dbabdcf046159780d646808e8560ae5a1d41661e16c",
+    "model/components/program_head/Qwen3-VL-2B-Instruct": "tree:10:5453fdc37d088971da38b8d793d2d7e5479677d0777d3f6ed8829805c566c580"
+  },
+  "preserved_assets_after": {
+    "model/buildreasonseg_advisor/detector.pt": "54480241:ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+    "model/buildreasonseg_advisor/decoder.pt": "1117495:9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+    "model/components/program_head/program_parser_l3_rehearsal_v1.pt": "70090713:c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+    "model/components/sam2/sam2.1_hiera_base_plus.pt": "323606802:a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+    "logs/task8b1_transcripts": "tree:5:96e131663937b40468428dbabdcf046159780d646808e8560ae5a1d41661e16c",
+    "model/components/program_head/Qwen3-VL-2B-Instruct": "tree:10:5453fdc37d088971da38b8d793d2d7e5479677d0777d3f6ed8829805c566c580"
+  },
+  "sync": {
+    "helper": "scripts\\sync_advisor_rc1_delivery.py",
+    "manual_edits_of_external_source": false,
+    "exit": 0,
+    "output_tail": [
+      "canonical source : C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1",
+      "destination      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "manifest files   : 135",
+      "",
+      "copied=135 verified=135 failures=0"
+    ]
+  },
+  "check_before": [
+    "",
+    "checked=135 match=127 missing=0 mismatch=8"
+  ],
+  "check_after": [
+    "",
+    "checked=135 match=135 missing=0 mismatch=0"
+  ],
+  "gates": {
+    "external_prerequisites": "ALL_PRESENT",
+    "check_before_sync": "checked=135 match=127 missing=0 mismatch=8",
+    "sync_counts": "copied=135 verified=135 failures=0",
+    "check_after_sync": "checked=135 match=135 missing=0 mismatch=0",
+    "external_source_identity_135_135": true,
+    "preserved_assets_unchanged": true,
+    "check_setup_ready": true,
+    "targeted_contracts_7_of_7": true,
+    "external_full_suite": {
+      "exit": 0,
+      "summary": "130 passed in 54.05s",
+      "failing_nodes": []
+    }
+  },
+  "all_gates_passed": true,
+  "real_model_inference_executed": false,
+  "training_executed": false,
+  "parameter_tuning_executed": false,
+  "k_substitution_used": false,
+  "last_failed_used": false,
+  "skipped_failing_nodes": false,
+  "repairs_during_run": false,
+  "assets_created_or_downloaded": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_D2_REMOTE_AUDIT"
+}
