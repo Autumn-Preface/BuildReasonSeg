@@ -1,0 +1,573 @@
+{
+  "task_id": "MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE",
+  "status": "COMPLETE",
+  "starting_branch": "fix/task8b3-mask01-success-semantics-r1e1",
+  "starting_head": "3320212a6992316196bc5b2cfacaeaf027fd070e",
+  "task_branch": "audit/task8b3-mask01-r1e2-full-suite-failure-triage",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "inventory": [
+    {
+      "path": "model/buildreasonseg_advisor/detector.pt",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "model/buildreasonseg_advisor/decoder.pt",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "model/buildreasonseg_advisor/model.yaml",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 2337
+    },
+    {
+      "path": "model/buildreasonseg_advisor/metadata.json",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 6973
+    },
+    {
+      "path": "model/components/sam2/sam2.1_hiera_base_plus.pt",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "model/components/sam2/sam2.1_hiera_b+.yaml",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "model/components/program_head/Qwen3-VL-2B-Instruct",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "model/components/program_head/qwen_asset_manifest.json",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 2058
+    },
+    {
+      "path": "check_setup.py",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 14823
+    },
+    {
+      "path": "predict.py",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 18887
+    },
+    {
+      "path": "configs/inference.yaml",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 1254
+    },
+    {
+      "path": "requirements.txt",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 454
+    },
+    {
+      "path": "environment.yml",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": true,
+      "bytes": 906
+    },
+    {
+      "path": "logs",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "inference/output",
+      "exists_in_canonical_tree": true,
+      "manifest_listed": false,
+      "bytes": null
+    },
+    {
+      "path": "artifacts",
+      "exists_in_canonical_tree": false,
+      "manifest_listed": false,
+      "bytes": null
+    }
+  ],
+  "missing_canonical_assets": [
+    "model/buildreasonseg_advisor/detector.pt",
+    "model/buildreasonseg_advisor/decoder.pt",
+    "model/components/sam2/sam2.1_hiera_base_plus.pt",
+    "model/components/sam2/sam2.1_hiera_b+.yaml",
+    "model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+    "model/components/program_head/Qwen3-VL-2B-Instruct",
+    "artifacts"
+  ],
+  "group1_result": {
+    "title": "6. TRIAGE GROUP 1 — LANGUAGE AVAILABILITY",
+    "command": "python -m pytest tests/test_language_contract.py::test_normal_path_is_qwen_first -vv",
+    "exit": 1,
+    "summary": "============================== 1 failed in 0.06s ==============================",
+    "failing_nodes": [
+      "[100%]",
+      "tests/test_language_contract.py::test_normal_path_is_qwen_first"
+    ],
+    "classified": [
+      {
+        "node": "[100%]",
+        "classification": "D",
+        "reason": "assert False is True"
+      },
+      {
+        "node": "tests/test_language_contract.py::test_normal_path_is_qwen_first",
+        "classification": "D",
+        "reason": "assert False is True"
+      }
+    ]
+  },
+  "group2_result": {
+    "title": "7. TRIAGE GROUP 2 — MODEL PACKAGE",
+    "command": "python -m pytest tests/test_model_package.py::test_components_complete tests/test_model_package.py::test_decoder_hash_and_bytes_exact tests/test_model_package.py::test_detector_hash_and_bytes_exact tests/test_model_package.py::test_hash_mismatch_raises tests/test_model_package.py::test_metadata_hashes_match_copied_assets tests/test_model_package.py::test_model_fallback_requires_user_confirmation tests/test_model_package.py::test_model_yaml_parses tests/test_model_package.py::test_package_verification_matches -vv",
+    "exit": 1,
+    "summary": "============================== 8 failed in 0.24s ==============================",
+    "failing_nodes": [
+      "[",
+      "[100%]",
+      "tests/test_model_package.py::test_components_complete",
+      "tests/test_model_package.py::test_decoder_hash_and_bytes_exact",
+      "tests/test_model_package.py::test_detector_hash_and_bytes_exact",
+      "tests/test_model_package.py::test_hash_mismatch_raises",
+      "tests/test_model_package.py::test_metadata_hashes_match_copied_assets",
+      "tests/test_model_package.py::test_model_fallback_requires_user_confirmation",
+      "tests/test_model_package.py::test_model_yaml_parses",
+      "tests/test_model_package.py::test_package_verification_matches"
+    ],
+    "classified": [
+      {
+        "node": "[",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "[100%]",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_components_complete",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_decoder_hash_and_bytes_exact",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_detector_hash_and_bytes_exact",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_hash_mismatch_raises",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_metadata_hashes_match_copied_assets",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_model_fallback_requires_user_confirmation",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_model_yaml_parses",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      },
+      {
+        "node": "tests/test_model_package.py::test_package_verification_matches",
+        "classification": "D",
+        "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+      }
+    ]
+  },
+  "group3_result": {
+    "title": "8. TRIAGE GROUP 3 — PATHS / DELIVERY STRUCTURE",
+    "command": "python -m pytest tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths tests/test_paths_and_package.py::test_required_structure -vv",
+    "exit": 1,
+    "summary": "============================== 2 failed in 0.17s ==============================",
+    "failing_nodes": [
+      "[",
+      "[100%]",
+      "tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths",
+      "tests/test_paths_and_package.py::test_required_structure"
+    ],
+    "classified": [
+      {
+        "node": "[",
+        "classification": "A",
+        "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+      },
+      {
+        "node": "[100%]",
+        "classification": "A",
+        "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+      },
+      {
+        "node": "tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths",
+        "classification": "A",
+        "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+      },
+      {
+        "node": "tests/test_paths_and_package.py::test_required_structure",
+        "classification": "A",
+        "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+      }
+    ]
+  },
+  "group4_result": {
+    "title": "9. TRIAGE GROUP 4 — SETUP CHECKER",
+    "command": "python -m pytest tests/test_setup_checker.py::test_good_fixture_is_ready tests/test_setup_checker.py::test_hash_mismatch_nonzero tests/test_setup_checker.py::test_invalid_model_yaml_nonzero tests/test_setup_checker.py::test_missing_decoder_nonzero tests/test_setup_checker.py::test_missing_qwen_component_nonzero tests/test_setup_checker.py::test_missing_sam2_nonzero tests/test_setup_checker.py::test_real_project_check_reports_ready tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready -vv",
+    "exit": 1,
+    "summary": "========================= 2 failed, 6 errors in 5.69s =========================",
+    "failing_nodes": [
+      "[",
+      "[100%]",
+      "at",
+      "tests/test_setup_checker.py::test_good_fixture_is_ready",
+      "tests/test_setup_checker.py::test_hash_mismatch_nonzero",
+      "tests/test_setup_checker.py::test_invalid_model_yaml_nonzero",
+      "tests/test_setup_checker.py::test_missing_decoder_nonzero",
+      "tests/test_setup_checker.py::test_missing_qwen_component_nonzero",
+      "tests/test_setup_checker.py::test_missing_sam2_nonzero",
+      "tests/test_setup_checker.py::test_real_project_check_reports_ready",
+      "tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready"
+    ],
+    "classified": [
+      {
+        "node": "[",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "[100%]",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "at",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_good_fixture_is_ready",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_hash_mismatch_nonzero",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_invalid_model_yaml_nonzero",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_missing_decoder_nonzero",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_missing_qwen_component_nonzero",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_missing_sam2_nonzero",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_real_project_check_reports_ready",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      },
+      {
+        "node": "tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready",
+        "classification": "A",
+        "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+      }
+    ]
+  },
+  "group5_result": {
+    "title": "10. TRIAGE GROUP 5 — TASK 8B.1 FIXTURES",
+    "command": "python -m pytest tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim -vv",
+    "exit": 1,
+    "summary": "============================== 3 failed in 1.40s ==============================",
+    "failing_nodes": [
+      "[",
+      "[100%]",
+      "tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete",
+      "tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code",
+      "tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim"
+    ],
+    "classified": [
+      {
+        "node": "[",
+        "classification": "B",
+        "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+      },
+      {
+        "node": "[100%]",
+        "classification": "B",
+        "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+      },
+      {
+        "node": "tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete",
+        "classification": "B",
+        "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+      },
+      {
+        "node": "tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code",
+        "classification": "B",
+        "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+      },
+      {
+        "node": "tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim",
+        "classification": "B",
+        "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+      }
+    ]
+  },
+  "per_node_classification": [
+    {
+      "group": 1,
+      "node": "[100%]",
+      "classification": "D",
+      "reason": "assert False is True"
+    },
+    {
+      "group": 1,
+      "node": "tests/test_language_contract.py::test_normal_path_is_qwen_first",
+      "classification": "D",
+      "reason": "assert False is True"
+    },
+    {
+      "group": 2,
+      "node": "[",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "[100%]",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_components_complete",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_decoder_hash_and_bytes_exact",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_detector_hash_and_bytes_exact",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_hash_mismatch_raises",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_metadata_hashes_match_copied_assets",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_model_fallback_requires_user_confirmation",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_model_yaml_parses",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 2,
+      "node": "tests/test_model_package.py::test_package_verification_matches",
+      "classification": "D",
+      "reason": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302"
+    },
+    {
+      "group": 3,
+      "node": "[",
+      "classification": "A",
+      "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+    },
+    {
+      "group": 3,
+      "node": "[100%]",
+      "classification": "A",
+      "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+    },
+    {
+      "group": 3,
+      "node": "tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths",
+      "classification": "A",
+      "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+    },
+    {
+      "group": 3,
+      "node": "tests/test_paths_and_package.py::test_required_structure",
+      "classification": "A",
+      "reason": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+    },
+    {
+      "group": 4,
+      "node": "[",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "[100%]",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "at",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_good_fixture_is_ready",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_hash_mismatch_nonzero",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_invalid_model_yaml_nonzero",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_missing_decoder_nonzero",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_missing_qwen_component_nonzero",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_missing_sam2_nonzero",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_real_project_check_reports_ready",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 4,
+      "node": "tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready",
+      "classification": "A",
+      "reason": "========================= 2 failed, 6 errors in 5.69s ========================="
+    },
+    {
+      "group": 5,
+      "node": "[",
+      "classification": "B",
+      "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+    },
+    {
+      "group": 5,
+      "node": "[100%]",
+      "classification": "B",
+      "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+    },
+    {
+      "group": 5,
+      "node": "tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete",
+      "classification": "B",
+      "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+    },
+    {
+      "group": 5,
+      "node": "tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code",
+      "classification": "B",
+      "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+    },
+    {
+      "group": 5,
+      "node": "tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim",
+      "classification": "B",
+      "reason": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildRea"
+    }
+  ],
+  "classification_counts": {
+    "D": 12,
+    "A": 15,
+    "B": 5
+  },
+  "validity_decision": "FULL_SUITE_CANONICAL_GATE = VALID_AND_HAS_TRUE_REGRESSION",
+  "recommendation": "keep the complete-suite gate on the canonical source tree",
+  "full_suite_reexecuted": false,
+  "repairs_attempted": false,
+  "canonical_tracked_files_modified": false,
+  "assets_created": false,
+  "dependencies_installed": false,
+  "model_inference": false,
+  "external_write": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1E2_TRUE_REGRESSION_TRIAGE"
+}

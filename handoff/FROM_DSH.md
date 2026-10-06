@@ -17,27 +17,29 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1E1_TARGETED_CANONICAL_GATES Report
+# FROM_DSH — Task MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1E1_TARGETED_CANONICAL_GATES` |
+| Task | `MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE` |
 | Status | **COMPLETE** |
-| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1e` / `5c94163097605bb05d0373f12f7c6cb3d5681d9f` |
-| Task branch | `fix/task8b3-mask01-success-semantics-r1e1` |
-| Gate A (5 SUCCESS semantics tests) | exit 0 · 5 passed in 1.50s · passed = True |
-| Gate B (2 inspect-proposals contract tests) | exit 0 · 2 passed in 3.61s · passed = True |
-| Gate C (135-entry Git canonical manifest validation) | basis=GIT_CANONICAL_BLOB_BYTES · entries=135 · digest=7967127fcfadfe4f… · mismatch=0 · passed = True |
-| Full `pytest -q` suite | NOT run |
-| Canonical writes (product/tests/manifest/docs) | NONE |
-| Repairs attempted | NONE |
-| Evidence | `evaluation\task8b3_mask01_d1_r1e1_targeted_canonical_gates.json` |
-| Report | `docs\task8b3_mask01_d1_r1e1_targeted_canonical_gates.md` |
-| Next gate | `CHATGPT_R1E1_REMOTE_AUDIT` |
+| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1e1` / `3320212a6992316196bc5b2cfacaeaf027fd070e` |
+| Task branch | `audit/task8b3-mask01-r1e2-full-suite-failure-triage` |
+| Missing canonical assets | 7 (see report inventory) |
+| Group exits | G1=1 · G2=1 · G3=1 · G4=1 · G5=1 |
+| Classified nodes | 32 |
+| Classification counts | {"D": 12, "A": 15, "B": 5} |
+| Validity decision | **FULL_SUITE_CANONICAL_GATE = VALID_AND_HAS_TRUE_REGRESSION** |
+| Recommendation | keep the complete-suite gate on the canonical source tree |
+| full suite re-executed / repairs / canonical modifications | false / none / none |
+| assets created / dependencies installed / inference / external write | false / false / false / false |
+| Evidence | `evaluation\task8b3_mask01_d1_r1e2_full_suite_failure_triage.json` |
+| Report | `docs\task8b3_mask01_d1_r1e2_full_suite_failure_triage.md` |
+| Next gate | `CHATGPT_R1E2_TRUE_REGRESSION_TRIAGE` |
 
-Watt was not needed for Task MASK01_D1_R1E1_TARGETED_CANONICAL_GATES (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE (no downloads, no transfers).
 
 The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.
