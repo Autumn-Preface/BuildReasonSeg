@@ -1,6 +1,6 @@
 {
   "task_id": "TASK8C_FINAL_DEMO_V1",
-  "status": "POST_RUNTIME_EVALUATOR_FIX_TESTED_PENDING_PUSH",
+  "status": "READY_FOR_SUPERVISOR_AUDIT",
   "starting_branch": "fix/task8b4-run-isolated-output-layout-v1",
   "starting_head": "92f28133931231d16b6053aca253b9e5073955ae",
   "task_branch": "eval/task8c-final-demo-v1",
@@ -953,7 +953,77 @@
         "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\right_stdout.txt",
         "bytes": 3306,
         "sha256": "bdcbdb097b14e1820114be76d50003a39e093f229a5e9f53d6f9293448848ce8"
-      }
+      },
+      "gt_audit": {
+        "tile_id": "1010",
+        "canonical_reference_id": 4,
+        "canonical_target_id": 3,
+        "instance_metadata": [
+          {
+            "tile_instance_id": 4,
+            "source_feature_id": 25833,
+            "mask_area": 2478,
+            "native_clipped_area": 2478,
+            "bbox": [
+              206,
+              18,
+              281,
+              87
+            ]
+          },
+          {
+            "tile_instance_id": 3,
+            "source_feature_id": 25806,
+            "mask_area": 1401,
+            "native_clipped_area": 1401,
+            "bbox": [
+              421,
+              34,
+              478,
+              92
+            ]
+          }
+        ],
+        "all_gt_instance_count": 5,
+        "truth_definition": "Existing Task 6M canonical native instance label map; rings rasterized in original order.",
+        "truth_inputs": [
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\test.jsonl",
+            "bytes": 14415287,
+            "sha256": "72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\tiles\\index.jsonl",
+            "bytes": 11969604,
+            "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\splits\\scene_disjoint_v1.json",
+            "bytes": 250610,
+            "sha256": "cd049045fe3446b255504f58eeb36b09e4158edea984113c036488d65976ea7e"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\instances\\1010.npz",
+            "bytes": 4840,
+            "sha256": "0a34043ef2b6dddb5d8f2d360a1b35e35d1a90184a9f11567a2b15545f6111c5"
+          }
+        ],
+        "native_rings_label_map_equal": true,
+        "model_calls": 0,
+        "semantic_chain_status": "REFERENCE_AND_TARGET_IDENTITY_MISMATCH",
+        "selected_reference_best_gt_instance_id": 3,
+        "selected_reference_best_gt_iou": 0.47855917667238423,
+        "selected_reference_iou_with_canonical_gt_reference": 0.0,
+        "reference_identity_best_overlap_match": false,
+        "target_iou": 0.0,
+        "target_dice": 0.0,
+        "predicted_target_area": 415,
+        "gt_target_area": 1401,
+        "predicted_target_best_gt_instance_id": null,
+        "predicted_target_best_gt_iou": 0.0,
+        "target_identity_best_overlap_match": false
+      },
+      "review_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\right_review.png"
     },
     {
       "relation": "left",
@@ -2212,7 +2282,77 @@
         "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\left_stdout.txt",
         "bytes": 2740,
         "sha256": "a963f6ab57b117d9316bf3cc28ca6db0dbdd8f0b6f4f45ba2fdc8c532a48044f"
-      }
+      },
+      "gt_audit": {
+        "tile_id": "1003",
+        "canonical_reference_id": 26,
+        "canonical_target_id": 24,
+        "instance_metadata": [
+          {
+            "tile_instance_id": 26,
+            "source_feature_id": 25456,
+            "mask_area": 3512,
+            "native_clipped_area": 3512,
+            "bbox": [
+              374,
+              210,
+              471,
+              293
+            ]
+          },
+          {
+            "tile_instance_id": 24,
+            "source_feature_id": 25414,
+            "mask_area": 1934,
+            "native_clipped_area": 1934,
+            "bbox": [
+              330,
+              234,
+              393,
+              310
+            ]
+          }
+        ],
+        "all_gt_instance_count": 45,
+        "truth_definition": "Existing Task 6M canonical native instance label map; rings rasterized in original order.",
+        "truth_inputs": [
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\test.jsonl",
+            "bytes": 14415287,
+            "sha256": "72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\tiles\\index.jsonl",
+            "bytes": 11969604,
+            "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\splits\\scene_disjoint_v1.json",
+            "bytes": 250610,
+            "sha256": "cd049045fe3446b255504f58eeb36b09e4158edea984113c036488d65976ea7e"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\instances\\1003.npz",
+            "bytes": 13399,
+            "sha256": "0facd8ea0ac4d531b313e559fcb89bcead78b89845f5e94a7984aa852c2f03f3"
+          }
+        ],
+        "native_rings_label_map_equal": true,
+        "model_calls": 0,
+        "semantic_chain_status": "REFERENCE_AND_TARGET_IDENTITY_MISMATCH",
+        "selected_reference_best_gt_instance_id": 37,
+        "selected_reference_best_gt_iou": 0.736328125,
+        "selected_reference_iou_with_canonical_gt_reference": 0.0,
+        "reference_identity_best_overlap_match": false,
+        "target_iou": 0.0,
+        "target_dice": 0.0,
+        "predicted_target_area": 1627,
+        "gt_target_area": 1934,
+        "predicted_target_best_gt_instance_id": 34,
+        "predicted_target_best_gt_iou": 0.17689946277820415,
+        "target_identity_best_overlap_match": false
+      },
+      "review_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\left_review.png"
     },
     {
       "relation": "above",
@@ -2729,7 +2869,77 @@
         "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\above_stdout.txt",
         "bytes": 2412,
         "sha256": "aa177e1e0fecd4ea800f4178ab58618c39d674c2ad696858c1789e95b9ce911a"
-      }
+      },
+      "gt_audit": {
+        "tile_id": "1008",
+        "canonical_reference_id": 4,
+        "canonical_target_id": 6,
+        "instance_metadata": [
+          {
+            "tile_instance_id": 4,
+            "source_feature_id": 25394,
+            "mask_area": 5013,
+            "native_clipped_area": 5013,
+            "bbox": [
+              27,
+              243,
+              94,
+              399
+            ]
+          },
+          {
+            "tile_instance_id": 6,
+            "source_feature_id": 25664,
+            "mask_area": 2571,
+            "native_clipped_area": 2571,
+            "bbox": [
+              142,
+              103,
+              256,
+              149
+            ]
+          }
+        ],
+        "all_gt_instance_count": 7,
+        "truth_definition": "Existing Task 6M canonical native instance label map; rings rasterized in original order.",
+        "truth_inputs": [
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\test.jsonl",
+            "bytes": 14415287,
+            "sha256": "72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\tiles\\index.jsonl",
+            "bytes": 11969604,
+            "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\splits\\scene_disjoint_v1.json",
+            "bytes": 250610,
+            "sha256": "cd049045fe3446b255504f58eeb36b09e4158edea984113c036488d65976ea7e"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\instances\\1008.npz",
+            "bytes": 5732,
+            "sha256": "3df678fba906c25bdedbd7ece83d432c4de102e9a7fcb7836ac8c8e5d5fca24d"
+          }
+        ],
+        "native_rings_label_map_equal": true,
+        "model_calls": 0,
+        "semantic_chain_status": "TARGET_IDENTITY_MISMATCH",
+        "selected_reference_best_gt_instance_id": 4,
+        "selected_reference_best_gt_iou": 0.9097432024169184,
+        "selected_reference_iou_with_canonical_gt_reference": 0.9097432024169184,
+        "reference_identity_best_overlap_match": true,
+        "target_iou": 0.07762201453790239,
+        "target_dice": 0.14406167188629246,
+        "predicted_target_area": 1580,
+        "gt_target_area": 2571,
+        "predicted_target_best_gt_instance_id": 7,
+        "predicted_target_best_gt_iou": 0.48158096699923253,
+        "target_identity_best_overlap_match": false
+      },
+      "review_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\above_review.png"
     },
     {
       "relation": "below",
@@ -3165,17 +3375,126 @@
         "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\below_stdout.txt",
         "bytes": 2564,
         "sha256": "ecfbe72623fa8a0e02671a8188698c2da58d52607e78efdb15c9bb496913f57c"
-      }
+      },
+      "gt_audit": {
+        "tile_id": "1009",
+        "canonical_reference_id": 3,
+        "canonical_target_id": 2,
+        "instance_metadata": [
+          {
+            "tile_instance_id": 3,
+            "source_feature_id": 25431,
+            "mask_area": 2606,
+            "native_clipped_area": 2606,
+            "bbox": [
+              187,
+              222,
+              233,
+              321
+            ]
+          },
+          {
+            "tile_instance_id": 2,
+            "source_feature_id": 25144,
+            "mask_area": 1210,
+            "native_clipped_area": 1210,
+            "bbox": [
+              293,
+              381,
+              339,
+              430
+            ]
+          }
+        ],
+        "all_gt_instance_count": 8,
+        "truth_definition": "Existing Task 6M canonical native instance label map; rings rasterized in original order.",
+        "truth_inputs": [
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\test.jsonl",
+            "bytes": 14415287,
+            "sha256": "72525bff76ef5bdc34dedcb257a5f9c72c420fce0d78dbaa34b02d5f230301dc"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\tiles\\index.jsonl",
+            "bytes": 11969604,
+            "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\splits\\scene_disjoint_v1.json",
+            "bytes": 250610,
+            "sha256": "cd049045fe3446b255504f58eeb36b09e4158edea984113c036488d65976ea7e"
+          },
+          {
+            "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\whu_native_vector\\instances\\1009.npz",
+            "bytes": 5234,
+            "sha256": "d7119a97eb51389a74a7088a513fe064ca82c2e5f69acb5c828894d88e286eda"
+          }
+        ],
+        "native_rings_label_map_equal": true,
+        "model_calls": 0,
+        "semantic_chain_status": "REFERENCE_AND_TARGET_IDENTITY_MISMATCH",
+        "selected_reference_best_gt_instance_id": 4,
+        "selected_reference_best_gt_iou": 0.8383610986042324,
+        "selected_reference_iou_with_canonical_gt_reference": 0.0,
+        "reference_identity_best_overlap_match": false,
+        "target_iou": 0.21570344424985405,
+        "target_dice": 0.35486194477791116,
+        "predicted_target_area": 2955,
+        "gt_target_area": 1210,
+        "predicted_target_best_gt_instance_id": 3,
+        "predicted_target_best_gt_iou": 0.6030556356298645,
+        "target_identity_best_overlap_match": false
+      },
+      "review_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\below_review.png"
     }
   ],
   "gt_audit_started_after_runtime_freeze": true,
   "model_calls_during_gt_audit": 0,
-  "aggregate": null,
+  "aggregate": {
+    "cases_attempted": 4,
+    "language_expected_program_executed": 4,
+    "runtime_success": 4,
+    "runtime_failed": 0,
+    "chain_identity_match": 0,
+    "reference_identity_mismatch": 0,
+    "target_identity_mismatch": 1,
+    "both_identity_mismatch": 3,
+    "language_failed": 0,
+    "not_evaluable": 0,
+    "mean_target_iou_over_runtime_success": 0.07333136469693911,
+    "mean_target_dice_over_runtime_success": 0.1247309041660509
+  },
   "legacy_output_unchanged": true,
   "input_unchanged": true,
   "protected_assets_unchanged": true,
   "source_identity_unchanged": true,
-  "review_artifacts": [],
+  "review_artifacts": [
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\right_review.png",
+      "bytes": 383845,
+      "sha256": "a0ae1883a1f32c26e8cafd8096244514fb3cd8d00ddf30b21841e5671314f58d"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\left_review.png",
+      "bytes": 441912,
+      "sha256": "0fdfa238f6a2e5561bae39ebb2d07abb4c0712816ccac01ec23e69256aaeb4b3"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\above_review.png",
+      "bytes": 412383,
+      "sha256": "6fc47bf3bf8ed0eacb44139ff1cfedad16ddcaa8fa1900c199f3508263e6fe6b"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\below_review.png",
+      "bytes": 406428,
+      "sha256": "34e68f8121da0766fb686cd27052a192eb3005e3568aeef94ef116b051a3ab89"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\contact_sheet.png",
+      "bytes": 1587997,
+      "sha256": "759ed3069a069eeee0466ef31da3aea586ac474a202a84da11ee9bd1bbe8c83c"
+    }
+  ],
   "no_real_model_inference": false,
   "no_gt_candidate_access": false,
   "external_write_operations_executed": null,
@@ -68779,14 +69098,15 @@
       "new_evaluator_sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542",
       "new_tests_sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
     },
-    "fix_checkpoint_commit": null
+    "fix_checkpoint_commit": "c18ba1e30e4772c7a6de4ab06410b5692a15eef4",
+    "completed_second_evaluator": true
   },
   "current_tests_identity": {
     "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\tests\\test_task8c_final_demo.py",
     "bytes": 17794,
     "sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
   },
-  "gt_evaluator_invocation_count": 1,
+  "gt_evaluator_invocation_count": 2,
   "invocation_1": {
     "command": [
       "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
@@ -68813,7 +69133,27 @@
     "reason": "READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE",
     "evaluator_sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
   },
-  "invocation_2": null,
+  "invocation_2": {
+    "invocation_count": 2,
+    "status": "COMPLETED",
+    "fix_id": "POST_RUNTIME_EVALUATOR_RENDER_FIX_V1",
+    "evaluator_sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542",
+    "command": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "-B",
+      "scripts/task8c_final_demo_evaluate.py"
+    ],
+    "model_calls": 0,
+    "detector_calls": 0,
+    "exit_code": 0,
+    "runtime_sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca",
+    "started_utc": "2026-10-06T20:41:16.879813+00:00",
+    "stdout": "{\n  \"cases_attempted\": 4,\n  \"language_expected_program_executed\": 4,\n  \"runtime_success\": 4,\n  \"runtime_failed\": 0,\n  \"chain_identity_match\": 0,\n  \"reference_identity_mismatch\": 0,\n  \"target_identity_mismatch\": 1,\n  \"both_identity_mismatch\": 3,\n  \"language_failed\": 0,\n  \"not_evaluable\": 0,\n  \"mean_target_iou_over_runtime_success\": 0.07333136469693911,\n  \"mean_target_dice_over_runtime_success\": 0.1247309041660509\n}\n",
+    "stderr": "",
+    "wall_seconds": 1.8439999999973224,
+    "completed_utc": "2026-10-06T20:41:18.778941+00:00",
+    "formal_output_writes": 0
+  },
   "gt_evaluator_invocations": {
     "invocation_1": {
       "command": [
@@ -68841,6 +69181,657 @@
       "reason": "READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE",
       "evaluator_sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
     },
-    "invocation_2": null
-  }
+    "invocation_2": {
+      "invocation_count": 2,
+      "status": "COMPLETED",
+      "fix_id": "POST_RUNTIME_EVALUATOR_RENDER_FIX_V1",
+      "evaluator_sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542",
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "scripts/task8c_final_demo_evaluate.py"
+      ],
+      "model_calls": 0,
+      "detector_calls": 0,
+      "exit_code": 0,
+      "runtime_sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca",
+      "started_utc": "2026-10-06T20:41:16.879813+00:00",
+      "stdout": "{\n  \"cases_attempted\": 4,\n  \"language_expected_program_executed\": 4,\n  \"runtime_success\": 4,\n  \"runtime_failed\": 0,\n  \"chain_identity_match\": 0,\n  \"reference_identity_mismatch\": 0,\n  \"target_identity_mismatch\": 1,\n  \"both_identity_mismatch\": 3,\n  \"language_failed\": 0,\n  \"not_evaluable\": 0,\n  \"mean_target_iou_over_runtime_success\": 0.07333136469693911,\n  \"mean_target_dice_over_runtime_success\": 0.1247309041660509\n}\n",
+      "stderr": "",
+      "wall_seconds": 1.8439999999973224,
+      "completed_utc": "2026-10-06T20:41:18.778941+00:00",
+      "formal_output_writes": 0
+    }
+  },
+  "pre_second_evaluator_integrity": {
+    "pass": true,
+    "verified_utc": "2026-10-06T20:40:29.111661+00:00",
+    "local_and_remote_fix_commit": "c18ba1e30e4772c7a6de4ab06410b5692a15eef4",
+    "frozen_runtime_sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca",
+    "formal_runner_invocation_count": 1,
+    "real_candidates_attempted": 4,
+    "inference_retries": 0,
+    "original_formal_freeze_unchanged": true,
+    "four_run_artifact_identities_unchanged": true,
+    "source_check": {
+      "exit_code": 0,
+      "checked": 135,
+      "match": 135,
+      "missing": 0,
+      "mismatch": 0,
+      "stdout": "canonical source : C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\ndestination      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\nmanifest files   : 135\n\nchecked=135 match=135 missing=0 mismatch=0\n",
+      "stderr": ""
+    },
+    "source_manifest_unchanged": true,
+    "historical_output_input_protected_assets_unchanged": true,
+    "grandfathered_settings_unchanged": true,
+    "no_additional_external_root_config": true,
+    "new_external_paths_only_authorized": true,
+    "runner_byte_identical": true,
+    "new_evaluator_and_tests_match_pushed_git": true
+  },
+  "final_integrity": {
+    "pass": true,
+    "verified_utc": "2026-10-06T20:46:16.650542+00:00",
+    "local_head_at_verification": "c18ba1e30e4772c7a6de4ab06410b5692a15eef4",
+    "source_check": {
+      "exit_code": 0,
+      "checked": 135,
+      "match": 135,
+      "missing": 0,
+      "mismatch": 0,
+      "stdout": "canonical source : C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\ndestination      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\nmanifest files   : 135\n\nchecked=135 match=135 missing=0 mismatch=0\n",
+      "stderr": ""
+    },
+    "source_manifest_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\source_manifest.json",
+      "bytes": 24376,
+      "sha256": "df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e"
+    },
+    "external_manifest_byte_identical_to_git": true,
+    "source_manifest_unchanged": true,
+    "canonical_source_config_unchanged": true,
+    "governance_unchanged": true,
+    "changed_preexisting_content_paths": [],
+    "preexisting_external_files": 2118,
+    "current_external_files": 2184,
+    "new_external_files": [
+      "inference/output/1003/diagnostics/direction_field.png",
+      "inference/output/1003/diagnostics/global_proposals.png",
+      "inference/output/1003/diagnostics/maps.npz",
+      "inference/output/1003/diagnostics/nearest_field.png",
+      "inference/output/1003/diagnostics/parsed_program.json",
+      "inference/output/1003/diagnostics/prompt.txt",
+      "inference/output/1003/diagnostics/proposals.json",
+      "inference/output/1003/diagnostics/prototype_similarity.png",
+      "inference/output/1003/diagnostics/reasoning_context.png",
+      "inference/output/1003/diagnostics/reference_context_mask.png",
+      "inference/output/1003/diagnostics/relation_weight.png",
+      "inference/output/1003/diagnostics/result.json",
+      "inference/output/1003/diagnostics/selected_reference.png",
+      "inference/output/1003/masks/1003_mask.png",
+      "inference/output/1003/overlays/1003_overlay.png",
+      "inference/output/1008/diagnostics/direction_field.png",
+      "inference/output/1008/diagnostics/global_proposals.png",
+      "inference/output/1008/diagnostics/maps.npz",
+      "inference/output/1008/diagnostics/nearest_field.png",
+      "inference/output/1008/diagnostics/parsed_program.json",
+      "inference/output/1008/diagnostics/prompt.txt",
+      "inference/output/1008/diagnostics/proposals.json",
+      "inference/output/1008/diagnostics/prototype_similarity.png",
+      "inference/output/1008/diagnostics/reasoning_context.png",
+      "inference/output/1008/diagnostics/reference_context_mask.png",
+      "inference/output/1008/diagnostics/relation_weight.png",
+      "inference/output/1008/diagnostics/result.json",
+      "inference/output/1008/diagnostics/selected_reference.png",
+      "inference/output/1008/masks/1008_mask.png",
+      "inference/output/1008/overlays/1008_overlay.png",
+      "inference/output/1009/diagnostics/direction_field.png",
+      "inference/output/1009/diagnostics/global_proposals.png",
+      "inference/output/1009/diagnostics/maps.npz",
+      "inference/output/1009/diagnostics/nearest_field.png",
+      "inference/output/1009/diagnostics/parsed_program.json",
+      "inference/output/1009/diagnostics/prompt.txt",
+      "inference/output/1009/diagnostics/proposals.json",
+      "inference/output/1009/diagnostics/prototype_similarity.png",
+      "inference/output/1009/diagnostics/reasoning_context.png",
+      "inference/output/1009/diagnostics/reference_context_mask.png",
+      "inference/output/1009/diagnostics/relation_weight.png",
+      "inference/output/1009/diagnostics/result.json",
+      "inference/output/1009/diagnostics/selected_reference.png",
+      "inference/output/1009/masks/1009_mask.png",
+      "inference/output/1009/overlays/1009_overlay.png",
+      "inference/output/1010/diagnostics/direction_field.png",
+      "inference/output/1010/diagnostics/global_proposals.png",
+      "inference/output/1010/diagnostics/maps.npz",
+      "inference/output/1010/diagnostics/nearest_field.png",
+      "inference/output/1010/diagnostics/parsed_program.json",
+      "inference/output/1010/diagnostics/prompt.txt",
+      "inference/output/1010/diagnostics/proposals.json",
+      "inference/output/1010/diagnostics/prototype_similarity.png",
+      "inference/output/1010/diagnostics/reasoning_context.png",
+      "inference/output/1010/diagnostics/reference_context_mask.png",
+      "inference/output/1010/diagnostics/relation_weight.png",
+      "inference/output/1010/diagnostics/result.json",
+      "inference/output/1010/diagnostics/selected_reference.png",
+      "inference/output/1010/masks/1010_mask.png",
+      "inference/output/1010/overlays/1010_overlay.png",
+      "logs/task8c_final_demo_v1/above_stdout.txt",
+      "logs/task8c_final_demo_v1/below_stdout.txt",
+      "logs/task8c_final_demo_v1/invocation.json",
+      "logs/task8c_final_demo_v1/left_stdout.txt",
+      "logs/task8c_final_demo_v1/right_stdout.txt",
+      "logs/task8c_final_demo_v1/runtime_results.json"
+    ],
+    "new_external_file_identities": [
+      {
+        "path": "inference/output/1003/diagnostics/direction_field.png",
+        "bytes": 701,
+        "sha256": "94bf2b9ca08353bb9542eb5beea3dfc0b6c854517fb001d43f666a5e598bf9ae",
+        "mtime_ns": 1791317650990117800
+      },
+      {
+        "path": "inference/output/1003/diagnostics/global_proposals.png",
+        "bytes": 377748,
+        "sha256": "8d4a2441f84d9f29c523c270e6a825eb7a7f317fe5b8b53cb91ee8c368b286cd",
+        "mtime_ns": 1791317650958202900
+      },
+      {
+        "path": "inference/output/1003/diagnostics/maps.npz",
+        "bytes": 1490673,
+        "sha256": "8d61bf7bebc80fee40c8b8c7e97d4125987312842d48fa0100e6b3a24ebe8ee2",
+        "mtime_ns": 1791317651077778800
+      },
+      {
+        "path": "inference/output/1003/diagnostics/nearest_field.png",
+        "bytes": 1166,
+        "sha256": "a10221e2e64a9239c124c06ac4b541b2afc283bdfaa588714c251025dadf172f",
+        "mtime_ns": 1791317650991125500
+      },
+      {
+        "path": "inference/output/1003/diagnostics/parsed_program.json",
+        "bytes": 178,
+        "sha256": "11355f130adb3c852f2bb23c2ff9877d16d21e6cce97d7bb2eccefe50ea46221",
+        "mtime_ns": 1791317650940726100
+      },
+      {
+        "path": "inference/output/1003/diagnostics/prompt.txt",
+        "bytes": 33,
+        "sha256": "04d42bba72966bebb5b051231e96e8220e4c1e7af168d647091163ee4006f43b",
+        "mtime_ns": 1791317650939722300
+      },
+      {
+        "path": "inference/output/1003/diagnostics/proposals.json",
+        "bytes": 18409,
+        "sha256": "1724821aa11b0a04cf0e4a27ba813ee2ed24a6f8a89cd7bd0e67a5b9833228d5",
+        "mtime_ns": 1791317650941739200
+      },
+      {
+        "path": "inference/output/1003/diagnostics/prototype_similarity.png",
+        "bytes": 3905,
+        "sha256": "79dfda22cae732142f918a03869252b93668a7f255d2f3b6b8138da922ac5cb6",
+        "mtime_ns": 1791317650992241000
+      },
+      {
+        "path": "inference/output/1003/diagnostics/reasoning_context.png",
+        "bytes": 348641,
+        "sha256": "3ac5d98d2c60b32101776e673d595501213d55642f0fe17cf87367b042bfc64c",
+        "mtime_ns": 1791317650988990900
+      },
+      {
+        "path": "inference/output/1003/diagnostics/reference_context_mask.png",
+        "bytes": 767,
+        "sha256": "cf5f0ef4490bd1f9a3e4f7a05a3cc7352a65d0c9cf1f0dd6d8f12320fc024790",
+        "mtime_ns": 1791317650990117800
+      },
+      {
+        "path": "inference/output/1003/diagnostics/relation_weight.png",
+        "bytes": 593,
+        "sha256": "fcd06d24ddf72d3fbc39b50dc02c1f9d5ab375ccb759a60bd7c7678871c1f433",
+        "mtime_ns": 1791317650991125500
+      },
+      {
+        "path": "inference/output/1003/diagnostics/result.json",
+        "bytes": 22903,
+        "sha256": "1952764f6bcdd84c003f5fc0ced87b925f9dd8b81d7ae155a1ddf422ab6feb26",
+        "mtime_ns": 1791317651078792100
+      },
+      {
+        "path": "inference/output/1003/diagnostics/selected_reference.png",
+        "bytes": 377748,
+        "sha256": "8d4a2441f84d9f29c523c270e6a825eb7a7f317fe5b8b53cb91ee8c368b286cd",
+        "mtime_ns": 1791317650974918200
+      },
+      {
+        "path": "inference/output/1003/masks/1003_mask.png",
+        "bytes": 734,
+        "sha256": "374aadd73b8f3e035b59d3117e5c143717ccaa12b1b7745b54b28660b33d3492",
+        "mtime_ns": 1791317650905402100
+      },
+      {
+        "path": "inference/output/1003/overlays/1003_overlay.png",
+        "bytes": 361566,
+        "sha256": "9ad0c60549e5105f1cdb6ab95c2686dee386b39a3e040fb6e1155ef51a69a39b",
+        "mtime_ns": 1791317650936647400
+      },
+      {
+        "path": "inference/output/1008/diagnostics/direction_field.png",
+        "bytes": 702,
+        "sha256": "a697f174a9b4b155bf97ed832cba5bee13801870e980d92af3f8e9a7dfc29c8d",
+        "mtime_ns": 1791317668715732100
+      },
+      {
+        "path": "inference/output/1008/diagnostics/global_proposals.png",
+        "bytes": 333202,
+        "sha256": "3a1492146452e227d0e7cbcbbaa10b01dd860559ecb003df0eb9317b98da3945",
+        "mtime_ns": 1791317668683617100
+      },
+      {
+        "path": "inference/output/1008/diagnostics/maps.npz",
+        "bytes": 1507634,
+        "sha256": "aa55d46f9800e0ce8aec1ff62c1e8ed46c41db0004a74fef2f872ac1742d7024",
+        "mtime_ns": 1791317668803196200
+      },
+      {
+        "path": "inference/output/1008/diagnostics/nearest_field.png",
+        "bytes": 1135,
+        "sha256": "58f0dd32c0696c6813c8f5f6d8efd9f1b91dc00c7d9aae7d943410951ca85969",
+        "mtime_ns": 1791317668716144100
+      },
+      {
+        "path": "inference/output/1008/diagnostics/parsed_program.json",
+        "bytes": 176,
+        "sha256": "6f3fe42e837037a2ccd51b549da069fa3a6abd4e8f76fa6577cdd77ad4882740",
+        "mtime_ns": 1791317668666442100
+      },
+      {
+        "path": "inference/output/1008/diagnostics/prompt.txt",
+        "bytes": 33,
+        "sha256": "f8962158edb4b3e8dd09406146d7584c376fa02d97de811916020692d551cc76",
+        "mtime_ns": 1791317668666442100
+      },
+      {
+        "path": "inference/output/1008/diagnostics/proposals.json",
+        "bytes": 4033,
+        "sha256": "c72ad7910406b230062a0f65d04d3d53e87106c8c2ad6cc3adf7e73729970364",
+        "mtime_ns": 1791317668666442100
+      },
+      {
+        "path": "inference/output/1008/diagnostics/prototype_similarity.png",
+        "bytes": 3549,
+        "sha256": "c9f45c83996e0891a4c82cd3156ea59d5995c026f9960d18e851162003a2a25f",
+        "mtime_ns": 1791317668716649500
+      },
+      {
+        "path": "inference/output/1008/diagnostics/reasoning_context.png",
+        "bytes": 335981,
+        "sha256": "ae86a5f0a19072837c35e370815f9984a6b62eb99833fd55d6fb7f51b83e8eb9",
+        "mtime_ns": 1791317668713539300
+      },
+      {
+        "path": "inference/output/1008/diagnostics/reference_context_mask.png",
+        "bytes": 846,
+        "sha256": "77b84f99fd6c4b906369a32bc8828a35444f1466f4710145a9b6bc6f94284dea",
+        "mtime_ns": 1791317668714643800
+      },
+      {
+        "path": "inference/output/1008/diagnostics/relation_weight.png",
+        "bytes": 672,
+        "sha256": "e0505d9d387a6119532ab2e6524d8deaa48772aa3d1a6a5eb04b903a3e144bf9",
+        "mtime_ns": 1791317668716649500
+      },
+      {
+        "path": "inference/output/1008/diagnostics/result.json",
+        "bytes": 7617,
+        "sha256": "bf264b315c0763959d970d4753a181d464163d26a6fae63e74e410563f1a653e",
+        "mtime_ns": 1791317668803703400
+      },
+      {
+        "path": "inference/output/1008/diagnostics/selected_reference.png",
+        "bytes": 333202,
+        "sha256": "3a1492146452e227d0e7cbcbbaa10b01dd860559ecb003df0eb9317b98da3945",
+        "mtime_ns": 1791317668699063600
+      },
+      {
+        "path": "inference/output/1008/masks/1008_mask.png",
+        "bytes": 618,
+        "sha256": "bed1b8c03aea3ff8865d1e1ae82a11386406becd1fb9d1566b28fd7a7bd3747e",
+        "mtime_ns": 1791317668634677600
+      },
+      {
+        "path": "inference/output/1008/overlays/1008_overlay.png",
+        "bytes": 330141,
+        "sha256": "ab1baaeea5dd1353c395c240ed6b27f13eaf72947262fefd98f005639a065e13",
+        "mtime_ns": 1791317668663404300
+      },
+      {
+        "path": "inference/output/1009/diagnostics/direction_field.png",
+        "bytes": 714,
+        "sha256": "2b9843eed9520592d9453bb554dc36c187a48ee27e08c3dad591751cd600c45b",
+        "mtime_ns": 1791317686261898800
+      },
+      {
+        "path": "inference/output/1009/diagnostics/global_proposals.png",
+        "bytes": 325703,
+        "sha256": "1d036c6d564116451c782fb3bcb999ab317fef2c262b4d55ef1ce2470bb0a4cb",
+        "mtime_ns": 1791317686230405200
+      },
+      {
+        "path": "inference/output/1009/diagnostics/maps.npz",
+        "bytes": 1432775,
+        "sha256": "6082915e7d8299244be6fe4587812b840e162657b0cc91f25c172261fb2c39b2",
+        "mtime_ns": 1791317686350529200
+      },
+      {
+        "path": "inference/output/1009/diagnostics/nearest_field.png",
+        "bytes": 948,
+        "sha256": "d2a1b31fa8c3c2259ad4872a0a70498a5740d4cb3b1350aab97324dc25081fbf",
+        "mtime_ns": 1791317686261898800
+      },
+      {
+        "path": "inference/output/1009/diagnostics/parsed_program.json",
+        "bytes": 176,
+        "sha256": "d2848b096c1f46834eb779bf43049cf75d1b806c259f256931f9ab3cf42a2dc0",
+        "mtime_ns": 1791317686213234900
+      },
+      {
+        "path": "inference/output/1009/diagnostics/prompt.txt",
+        "bytes": 33,
+        "sha256": "2ffd95b8a5f3ea9a3e9ab8e09200e44d607513b5a7ece5adc11faddb005e8ff9",
+        "mtime_ns": 1791317686212234700
+      },
+      {
+        "path": "inference/output/1009/diagnostics/proposals.json",
+        "bytes": 2425,
+        "sha256": "6311b95f912c6b8876f4b95dd35225a6d3544d3c15652de2dc914b4f060b4db5",
+        "mtime_ns": 1791317686214234800
+      },
+      {
+        "path": "inference/output/1009/diagnostics/prototype_similarity.png",
+        "bytes": 3644,
+        "sha256": "d9027110be3f715d19406a73ccc8af4ea3cb0f3e7f8b1851e122452084a027bc",
+        "mtime_ns": 1791317686262898800
+      },
+      {
+        "path": "inference/output/1009/diagnostics/reasoning_context.png",
+        "bytes": 322404,
+        "sha256": "3a9fe1bd1d0954d1a86e2545d2b1408eee655f6ff092fdd6bea2907585da9f5b",
+        "mtime_ns": 1791317686259835100
+      },
+      {
+        "path": "inference/output/1009/diagnostics/reference_context_mask.png",
+        "bytes": 554,
+        "sha256": "08c6ea226b9dabf8a04b3583305d0de64ec64327ee514abf68538828dca1d40f",
+        "mtime_ns": 1791317686260835300
+      },
+      {
+        "path": "inference/output/1009/diagnostics/relation_weight.png",
+        "bytes": 576,
+        "sha256": "b2ce5fa3dd50af0600d25222ae54827aa19afe3d481c04d01505a69ab1549a20",
+        "mtime_ns": 1791317686262898800
+      },
+      {
+        "path": "inference/output/1009/diagnostics/result.json",
+        "bytes": 5913,
+        "sha256": "11307ecb43948476d0d2155b9a05d5c6ba22f653833a0f9337682a8a2142efd8",
+        "mtime_ns": 1791317686350529200
+      },
+      {
+        "path": "inference/output/1009/diagnostics/selected_reference.png",
+        "bytes": 325703,
+        "sha256": "1d036c6d564116451c782fb3bcb999ab317fef2c262b4d55ef1ce2470bb0a4cb",
+        "mtime_ns": 1791317686245818900
+      },
+      {
+        "path": "inference/output/1009/masks/1009_mask.png",
+        "bytes": 864,
+        "sha256": "a4e556c6475780e425aaddbf1aad37e20501775575d9f75197decdaba12a54c4",
+        "mtime_ns": 1791317686179729000
+      },
+      {
+        "path": "inference/output/1009/overlays/1009_overlay.png",
+        "bytes": 324486,
+        "sha256": "4c75acd7063ed9b4fe491e867923bae5bcf54d9494784679bcc3d08fa83f2828",
+        "mtime_ns": 1791317686211234600
+      },
+      {
+        "path": "inference/output/1010/diagnostics/direction_field.png",
+        "bytes": 699,
+        "sha256": "c52f8ab114aa74e576457335d1bd0ce3870e0fd0dbc4c4d5e4b42bf12c9c0ece",
+        "mtime_ns": 1791317633224840700
+      },
+      {
+        "path": "inference/output/1010/diagnostics/global_proposals.png",
+        "bytes": 307664,
+        "sha256": "33bfe217377dde3927e22ee56fe30e70078d712e319cc927789fa523bd3436bd",
+        "mtime_ns": 1791317633193096700
+      },
+      {
+        "path": "inference/output/1010/diagnostics/maps.npz",
+        "bytes": 1414558,
+        "sha256": "4520d9be205560b0229f8fd8f9367e3af80aa859bedda5c27396daee1b474fea",
+        "mtime_ns": 1791317633310705000
+      },
+      {
+        "path": "inference/output/1010/diagnostics/nearest_field.png",
+        "bytes": 1152,
+        "sha256": "bf7ae27f9d4a3baf7bfb8911a950da010c275b743ac85a61ce9f414087a944bc",
+        "mtime_ns": 1791317633224840700
+      },
+      {
+        "path": "inference/output/1010/diagnostics/parsed_program.json",
+        "bytes": 179,
+        "sha256": "95377bce704a32df4f4087e74c243bf727acc5f0d3e579e06a83cb90382e5bfa",
+        "mtime_ns": 1791317633174983400
+      },
+      {
+        "path": "inference/output/1010/diagnostics/prompt.txt",
+        "bytes": 33,
+        "sha256": "7ab1676ef9bc6bf8a263606c868a2865d2b2b2e6f21968c0e818aa55de96f71c",
+        "mtime_ns": 1791317633174983400
+      },
+      {
+        "path": "inference/output/1010/diagnostics/proposals.json",
+        "bytes": 2410,
+        "sha256": "bad8c110c9e7a41947d56822f94024e883f3d61654f3d9f4d8ce5a949dd05d3b",
+        "mtime_ns": 1791317633175988900
+      },
+      {
+        "path": "inference/output/1010/diagnostics/prototype_similarity.png",
+        "bytes": 3651,
+        "sha256": "77d5640280f7278495f93e0e11621338a1e3b995f8d2f478b1b6cafea4826ae6",
+        "mtime_ns": 1791317633225842800
+      },
+      {
+        "path": "inference/output/1010/diagnostics/reasoning_context.png",
+        "bytes": 262126,
+        "sha256": "7d6a88d09d8cf0d0478c0a79efb0dd1fa981039f78d9005a3b403856f9ce57d9",
+        "mtime_ns": 1791317633222535300
+      },
+      {
+        "path": "inference/output/1010/diagnostics/reference_context_mask.png",
+        "bytes": 805,
+        "sha256": "0900a8154913396122ef1d16bd652971caaeaaf8d9b0c2f7b0efc1ba518b89b4",
+        "mtime_ns": 1791317633223535900
+      },
+      {
+        "path": "inference/output/1010/diagnostics/relation_weight.png",
+        "bytes": 646,
+        "sha256": "304bbad3dc6a77c43f06d1c50f848ffb9eecb45d7573ce145921d4aab58cc717",
+        "mtime_ns": 1791317633225842800
+      },
+      {
+        "path": "inference/output/1010/diagnostics/result.json",
+        "bytes": 5915,
+        "sha256": "872a6cb16a488958385a43d62945f3524bcd9ed2e8515d389a9a0f3ff5c0d6f4",
+        "mtime_ns": 1791317633311706100
+      },
+      {
+        "path": "inference/output/1010/diagnostics/selected_reference.png",
+        "bytes": 307664,
+        "sha256": "33bfe217377dde3927e22ee56fe30e70078d712e319cc927789fa523bd3436bd",
+        "mtime_ns": 1791317633208544200
+      },
+      {
+        "path": "inference/output/1010/masks/1010_mask.png",
+        "bytes": 517,
+        "sha256": "c6c926801fc34f3a69e0f1aa09fb13fe688abdf750a9f403b995fac3e2d2807e",
+        "mtime_ns": 1791317633150679500
+      },
+      {
+        "path": "inference/output/1010/overlays/1010_overlay.png",
+        "bytes": 306171,
+        "sha256": "abac7e84e97a15aeb485eb417a4b5c2e6167a7ea6b002267866adb1bdf5038f1",
+        "mtime_ns": 1791317633173779700
+      },
+      {
+        "path": "logs/task8c_final_demo_v1/above_stdout.txt",
+        "bytes": 2412,
+        "sha256": "aa177e1e0fecd4ea800f4178ab58618c39d674c2ad696858c1789e95b9ce911a",
+        "mtime_ns": 1791317688250719900
+      },
+      {
+        "path": "logs/task8c_final_demo_v1/below_stdout.txt",
+        "bytes": 2564,
+        "sha256": "ecfbe72623fa8a0e02671a8188698c2da58d52607e78efdb15c9bb496913f57c",
+        "mtime_ns": 1791317688257227700
+      },
+      {
+        "path": "logs/task8c_final_demo_v1/invocation.json",
+        "bytes": 101048,
+        "sha256": "21f5130de3782b3cfd2551178935bdc0d2d943c7d6619e8a86e9aaf3b58d6d27",
+        "mtime_ns": 1791317688231998600
+      },
+      {
+        "path": "logs/task8c_final_demo_v1/left_stdout.txt",
+        "bytes": 2740,
+        "sha256": "a963f6ab57b117d9316bf3cc28ca6db0dbdd8f0b6f4f45ba2fdc8c532a48044f",
+        "mtime_ns": 1791317688245271300
+      },
+      {
+        "path": "logs/task8c_final_demo_v1/right_stdout.txt",
+        "bytes": 3306,
+        "sha256": "bdcbdb097b14e1820114be76d50003a39e093f229a5e9f53d6f9293448848ce8",
+        "mtime_ns": 1791317688231998600
+      },
+      {
+        "path": "logs/task8c_final_demo_v1/runtime_results.json",
+        "bytes": 102173,
+        "sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca",
+        "mtime_ns": 1791317688263317900
+      }
+    ],
+    "allowed_new_run_roots": [
+      "inference/output/1010/",
+      "inference/output/1003/",
+      "inference/output/1008/",
+      "inference/output/1009/"
+    ],
+    "historical_output_files": 1543,
+    "historical_output_bytes_sha_mtime_unchanged": true,
+    "input_files": 6,
+    "input_unchanged": true,
+    "protected_model_files": 20,
+    "protected_assets_unchanged": true,
+    "all_preexisting_logs_unchanged": true,
+    "grandfathered_settings_unchanged": true,
+    "grandfathered_settings_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\Ultralytics\\settings.json",
+      "bytes": 606,
+      "sha256": "1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf"
+    },
+    "additional_external_root_config_files": [],
+    "frozen_formal_outputs_unchanged": true,
+    "frozen_runtime_and_log_hashes_unchanged": true,
+    "runtime_results_sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca",
+    "runner_byte_identical_to_formal_freeze": true,
+    "original_formal_freeze_payload_unchanged": true,
+    "original_42_tests_byte_identical_prefix": true,
+    "current_evaluator_exact_authorized_single_replacement": true,
+    "current_evaluator_tests_match_pushed_fix": true,
+    "native_truth_inputs_unchanged_since_evaluator_read": true,
+    "gt_model_calls": 0,
+    "gt_detector_calls": 0,
+    "formal_runner_invocations": 1,
+    "real_candidates_attempted": 4,
+    "inference_retries": 0,
+    "external_inventory_after_sha256": "70e9acfeb26daa8bad987f9504695b5da8aced0082891be27ba582d9e9cdcb1b",
+    "output_inventory_after_sha256": "3335f43cc529edb5907a0b4f726b9dcf8946fdef01bcfcae1fd7d30deb130e30",
+    "review_artifact_dimensions": {
+      "right_review.png": [
+        1536,
+        760
+      ],
+      "left_review.png": [
+        1536,
+        760
+      ],
+      "above_review.png": [
+        1536,
+        760
+      ],
+      "below_review.png": [
+        1536,
+        760
+      ],
+      "contact_sheet.png": [
+        3072,
+        1520
+      ]
+    },
+    "original_first_evaluator_failure_and_traceback_preserved": true
+  },
+  "review_visual_inspection": {
+    "completed": true,
+    "files": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\right_review.png",
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\left_review.png",
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\above_review.png",
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\below_review.png",
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\contact_sheet.png"
+    ],
+    "checks": "All four original RGB/reference/target-overlay panels, GT boundary legends, program/runtime/continuous metrics and classifications readable; contact sheet retains right/left/above/below order. No PNG redraw or semantic modification.",
+    "inspected_utc": "2026-10-06T20:46:16.679309+00:00"
+  },
+  "procedural_completion": true,
+  "final_scientific_verdict": "PENDING_SUPERVISOR_REMOTE_AND_VISUAL_AUDIT",
+  "gt_audit": "COMPLETED_FOUR_CASES",
+  "gt_evaluator_exit_code": 0,
+  "evaluator_second_invocation_completed": true,
+  "model_calls_during_evaluator_only_continuation": 0,
+  "detector_calls_during_evaluator_only_continuation": 0,
+  "inference_retries": 0,
+  "formal_runtime_outputs_unchanged": true,
+  "source_manifest_unchanged": true,
+  "original_formal_freeze_payload_unchanged": true,
+  "stop_record_scope": "HISTORICAL_THIRD_STOP_BEFORE_AUTHORIZED_RENDER_FIX; retained verbatim, resolved by Supervisor disposition and invocation_2 success",
+  "gt_evaluator_result_scope": "HISTORICAL_INVOCATION_1_FAILURE; preserved unchanged with complete traceback",
+  "harness_identities_scope": "ORIGINAL_PREFLIGHT_IDENTITIES; original freeze unchanged; post-runtime evaluator/test identities recorded separately",
+  "final_checkpoint_prepared_utc": "2026-10-06T20:48:51.138591+00:00",
+  "post_runtime_harness_identities": [
+    {
+      "relative": "scripts/task8c_final_demo_runner.py",
+      "identity": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_runner.py",
+        "bytes": 17934,
+        "sha256": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666"
+      }
+    },
+    {
+      "relative": "scripts/task8c_final_demo_evaluate.py",
+      "identity": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py",
+        "bytes": 16869,
+        "sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542"
+      }
+    },
+    {
+      "relative": "tests/test_task8c_final_demo.py",
+      "identity": {
+        "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\tests\\test_task8c_final_demo.py",
+        "bytes": 17794,
+        "sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
+      }
+    }
+  ]
 }

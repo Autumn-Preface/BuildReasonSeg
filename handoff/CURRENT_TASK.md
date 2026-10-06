@@ -7,7 +7,7 @@ Task ID:
 TASK8C_FINAL_DEMO_V1
 
 Status:
-IN_PROGRESS
+READY_FOR_SUPERVISOR_AUDIT
 
 Decision owner:
 ChatGPT Supervisor
@@ -1735,3 +1735,20 @@ commit + push，然后 STOP。
 # Executor POST_RUNTIME_EVALUATOR_RENDER_FIX_V1 checkpoint
 
 Applied only the exact writable-copy SUCCESS target-panel replacement authorized above. Runner bytes and all GT/scientific computation remain unchanged. Existing 42 tests were retained byte-for-byte and one saved-overlay SUCCESS regression test appended: 43/43 PASS / exit 0. Original FORMAL_FINAL_DEMO_FREEZE_V1 remains unmodified and records its original evaluator/test identities. New evaluator SHA256: 5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542. New tests SHA256: bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5. First evaluator failure retained in full; second invocation remains pending fix checkpoint push and frozen-artifact/integrity verification. Formal runner=1, attempts=4, inference retries=0; no new model call.
+
+
+# Executor GT Audit + Review Pack completion checkpoint
+
+POST_RUNTIME_EVALUATOR_RENDER_FIX_V1 was committed/pushed at c18ba1e30e4772c7a6de4ab06410b5692a15eef4 before evaluator invocation #2. Original formal freeze 20615080264774eb7b93b7d6a3c1e547093c4876 remains unchanged, and raw runtime checkpoint f41f32a05b83141312b078e6ab5975fbf70ec889/runtime SHA256 2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca remain frozen.
+
+Evaluator count=2: invocation #1 exit 1, complete original traceback/STOP retained; invocation #2 exit 0 using the authorized writable-copy repair, model calls=0, detector calls=0, no formal output writes. All four GT audits, four review PNGs and contact_sheet.png complete. Current fake-only tests=43/43 PASS (42 retained unchanged + one regression). No further test, evaluator or inference rerun occurred.
+
+Final aggregate: language expected program executed=4, runtime success=4, runtime failed=0; CHAIN_IDENTITY_MATCH=0; TARGET_IDENTITY_MISMATCH=1 (above); REFERENCE_AND_TARGET_IDENTITY_MISMATCH=3 (right/left/below); other classifications=0. Mean target IoU=0.07333136469693911; Dice=0.1247309041660509. Raw runtime semantic_status remains NOT_EVALUATED; post-hoc results are separate and unchanged. Final scientific verdict belongs to ChatGPT Supervisor.
+
+Final integrity PASS: 135/135, manifest exact Git MATCH, 1543 historical output bytes/SHA/mtime unchanged, 6 inputs/20 protected assets/all 2118 pre-formal external files unchanged. Only 60 Task8C run files and 6 logs added. All formal artifacts/logs/runtime hashes unchanged. Grandfathered settings remains 606 bytes / SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf; no additional external-root runtime config. Product/governance/runner unchanged; evaluator scientific computation unchanged.
+
+CURRENT_TASK Status = READY_FOR_SUPERVISOR_AUDIT
+EXECUTOR_STATE status = READY_FOR_SUPERVISOR_AUDIT
+next_gate = CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
+
+Commit/push final evidence, then STOP. Formal runner invocations=1; real candidates=4; inference retries=0. Do not run evaluator again or initiate repair/Assisted Mode.
