@@ -3,14 +3,16 @@ task_id: A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: audit/task8b3-a2-ground-truth-case-validity-v1
-head: 104bcde03ff8bedbd563a1c0eba6fe230f221dad
+head: c3a053d4fbee3df8f49a5c990e145d640c016ac6
 completed:
 - Required startup and remote anchor verified; task book installed byte-for-byte.
 - Phase A historical documentary search complete; no authoritative source/window recovered.
 - Phase B locked SHA256 and runtime/Pillow RGB equality verified.
 - Exact-pixel plan predeclared before corpus search.
-current_step: CHECKPOINT_1_HISTORY_IDENTITY_AND_PREDECLARED_PLAN
-next_action: CHECKPOINT_1_HISTORY_IDENTITY_AND_PREDECLARED_PLAN
+- Phase C exact canonical tile and bounded whole-source patch search completed; coverage
+  saved.
+current_step: CHECKPOINT_2_EXACT_SEARCH_NOT_ESTABLISHED
+next_action: CHECKPOINT_2_EXACT_SEARCH_NOT_ESTABLISHED
 tests_run: []
 files_modified:
 - docs/task8b3_a2_ground_truth_case_validity_audit_v1.md
@@ -23,8 +25,8 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 104bcde03ff8bedbd563a1c0eba6fe230f221dad
-  pushed: false
+  commit: c3a053d4fbee3df8f49a5c990e145d640c016ac6
+  pushed: true
 scientific_claim_scope: EXACT_OR_UNRESOLVED_A2_PROVENANCE_AND_CONDITIONAL_GT_CASE_VALIDITY_ONLY
 PROP01_status: OPEN
 no_model_inference: true

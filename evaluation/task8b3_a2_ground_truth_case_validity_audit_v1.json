@@ -4,7 +4,8 @@
     "Required startup and remote anchor verified; task book installed byte-for-byte.",
     "Phase A historical documentary search complete; no authoritative source/window recovered.",
     "Phase B locked SHA256 and runtime/Pillow RGB equality verified.",
-    "Exact-pixel plan predeclared before corpus search."
+    "Exact-pixel plan predeclared before corpus search.",
+    "Phase C exact canonical tile and bounded whole-source patch search completed; coverage saved."
   ],
   "exact_matches": [],
   "exact_search_anchors": [
@@ -129,6 +130,187 @@
       ]
     }
   ],
+  "exact_search_coverage": {
+    "C1": {
+      "all_available_cropped_images_indexed": true,
+      "counts_by_raster": {
+        "test": 3726,
+        "train1": 10044,
+        "train2": 3618
+      },
+      "errors": [],
+      "matches": 0,
+      "ordered_ref_decoded_rgb_hash_index_sha256": "d3c7e87b2802656eb61069a02a97ab621312fe464e38b9fa50c502df39bd2616",
+      "tiles": 17388
+    },
+    "C2": {
+      "execution": "same complete decoded index, predeclared windows; no adaptive locations",
+      "matches": 0,
+      "tiles": 17388,
+      "windows": 5
+    },
+    "C3": [
+      {
+        "anchor_occurrences": 0,
+        "bytes": 3001216122,
+        "bytes_scanned": 3001216122,
+        "decoder_exact_checks": [
+          {
+            "equal": true,
+            "tile_id": "42",
+            "window": [
+              21504,
+              0,
+              512,
+              512
+            ]
+          },
+          {
+            "equal": true,
+            "tile_id": "1306",
+            "window": [
+              32768,
+              9216,
+              512,
+              512
+            ]
+          },
+          {
+            "equal": true,
+            "tile_id": "3723",
+            "window": [
+              33792,
+              27136,
+              512,
+              512
+            ]
+          }
+        ],
+        "dimensions": [
+          35765,
+          27802
+        ],
+        "exact_patch_hits": 0,
+        "nonmonotonic_logical_tile_offsets": 164,
+        "patch_candidates_checked": 0,
+        "raster": "test.tif",
+        "seconds_total_elapsed": 8.328,
+        "source_file_sha256": "5325c8f38086fc5084dc64377da4cf63370da295a20284d197304135be263cde",
+        "status": "COMPLETE_ALL_BYTES",
+        "tile_count": 61040,
+        "tile_dimensions": [
+          128,
+          128
+        ]
+      },
+      {
+        "anchor_occurrences": 0,
+        "bytes": 8006812933,
+        "bytes_scanned": 8006812933,
+        "decoder_exact_checks": [
+          {
+            "equal": true,
+            "tile_id": "1_0",
+            "window": [
+              0,
+              0,
+              512,
+              512
+            ]
+          },
+          {
+            "equal": true,
+            "tile_id": "1_4124",
+            "window": [
+              16384,
+              11264,
+              512,
+              512
+            ]
+          },
+          {
+            "equal": true,
+            "tile_id": "1_10043",
+            "window": [
+              94720,
+              27136,
+              512,
+              512
+            ]
+          }
+        ],
+        "dimensions": [
+          95521,
+          27801
+        ],
+        "exact_patch_hits": 0,
+        "nonmonotonic_logical_tile_offsets": 0,
+        "patch_candidates_checked": 0,
+        "raster": "train1.tif",
+        "seconds_total_elapsed": 32.735,
+        "source_file_sha256": "37b537d6f9cfc1e0814b04ed4a549b6479b1e125e303650e3cb2474160d36012",
+        "status": "COMPLETE_ALL_BYTES",
+        "tile_count": 162846,
+        "tile_dimensions": [
+          128,
+          128
+        ]
+      },
+      {
+        "anchor_occurrences": 0,
+        "bytes": 2915467130,
+        "bytes_scanned": 2915467130,
+        "decoder_exact_checks": [
+          {
+            "equal": true,
+            "tile_id": "2_1",
+            "window": [
+              512,
+              0,
+              512,
+              512
+            ]
+          },
+          {
+            "equal": true,
+            "tile_id": "2_594",
+            "window": [
+              29696,
+              4096,
+              512,
+              512
+            ]
+          },
+          {
+            "equal": true,
+            "tile_id": "2_3617",
+            "window": [
+              33792,
+              27136,
+              512,
+              512
+            ]
+          }
+        ],
+        "dimensions": [
+          34772,
+          27802
+        ],
+        "exact_patch_hits": 0,
+        "nonmonotonic_logical_tile_offsets": 164,
+        "patch_candidates_checked": 0,
+        "raster": "train2.tif",
+        "seconds_total_elapsed": 40.547,
+        "source_file_sha256": "dc2f245d41832fbff9dd12beb4460bddbad9a5c3d3b81357c961550bad2a3aca",
+        "status": "COMPLETE_ALL_BYTES",
+        "tile_count": 59296,
+        "tile_dimensions": [
+          128,
+          128
+        ]
+      }
+    ]
+  },
   "exact_search_plan": {
     "C1_C2_corpus": "ALL source_image_ref paths in tracked native-vector tiles/index.jsonl; verify complete cropped image inventory",
     "C1_quadrants": [
@@ -225,7 +407,26 @@
     "fuzzy_or_perceptual_method": false,
     "transformations_searched": []
   },
+  "exact_search_plan_checkpoint": "c3a053d4fbee3df8f49a5c990e145d640c016ac6",
+  "execution_events": [
+    {
+      "C1_C2_initial_pass": "17388 tiles processed before setup failure; unsaved computed search observations not claimed, deterministic corpus indexing repeated.",
+      "facts": {
+        "all_three_offset_tables_unique": true,
+        "physical_block_overlap_count": 0,
+        "test_tif_nonmonotonic_transitions": 164,
+        "train1_tif_nonmonotonic_transitions": 0,
+        "train2_tif_nonmonotonic_transitions": 164
+      },
+      "failure": "AssertionError: diagnostic incorrectly assumed TIFF logical tile offsets are physically monotonic",
+      "outcome": "L1_MECHANICS_FAILURE_RECOVERED",
+      "phase": "C3_INITIAL_DECODER_SETUP",
+      "resolution": "Sort physical offsets separately, preserving original logical tile index and validated source mapping. Search plan and equality rules unchanged.",
+      "source": "Read-only BigTIFF IFD offset-array inspection; initial diagnostic traceback"
+    }
+  ],
   "full_window_verification": [],
+  "full_window_verification_reason": "No exact tile/window/patch hit produced a candidate source window; C4 had no candidates to verify.",
   "gt_building_instance_count": null,
   "gt_instances": [],
   "gt_left_of_candidates": [],
@@ -2038,8 +2239,8 @@
       "finding": "First tracked case tuple, no source construction.",
       "hash_basis": "git-show UTF8 text without trailing whitespace",
       "line_range": [
-        50,
-        52
+        49,
+        50
       ],
       "sha256": "b8fc261aeafbb8ac70aea1b52af66dd39d66e2b508fd60574a7a50333f0c65c8",
       "source": "scripts/task8b3_interactive_suite.py"
@@ -2166,6 +2367,38 @@
       "sha256": "928fce587ca2e2eed47df89c78efe895ae878d747995b3f06c490aaeb05816be"
     }
   ],
+  "inspected_native_vector_archive": {
+    "files": [
+      {
+        "bytes": 4999904,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images\\EA.shp",
+        "sha256": "9bbd1e06d6cd075fb9ad5c99926dbf411c667587876afb8a067da7859b541b44"
+      },
+      {
+        "bytes": 272780,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images\\EA.shx",
+        "sha256": "5b6e089a62bbb488eab5a8557938bf4dab2ac8f9effcef20c9c36e76c3a519be"
+      },
+      {
+        "bytes": 1636210,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images\\EA.dbf",
+        "sha256": "0a56dc0229f8ccac3dbe4917ece04208d081d4548ebeccd7a239fb4003bdbb04"
+      },
+      {
+        "bytes": 354,
+        "path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\2. The shape file of the whole images\\EA.prj",
+        "sha256": "e6da869114537fcbb76b4e47e07c0a636beb1b54c0cc7de10f804091bf598e7e"
+      }
+    ],
+    "identity_scope": "Dataset-level archive identity only; not mapped to A2"
+  },
+  "limitations": [
+    "Search covers untransformed decoded RGB equality in the complete available canonical WHU cropped tile set and three original whole-image rasters.",
+    "Whole-image search uses three predeclared exact 16x16 patches at every source position; it is not a search of all possible unknown historical transformations.",
+    "No original acquisition/site/sensor, train/val/test membership or outside-domain classification can be established from absence of exact matches.",
+    "No GT count or reference/target is fabricated; unknown is not zero.",
+    "Historical records and readable local artifacts inspected do not establish who created the original A2 pixels or why these pixels were selected."
+  ],
   "locked_a2_decoded_rgb_sha256": "d02b3597a389285d72874fea12a06dbc031c720bfc9506e986a184b6637940bf",
   "locked_a2_file_sha256": "10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
   "locked_a2_identity": {
@@ -2214,6 +2447,14 @@
       "total_bytes": 26469907989
     }
   ],
+  "relation_semantics_code_locations": {
+    "configs/spatial_relations_v1.yaml:21": "Documented single 512x512 tile scope; 1024 portability NOT_EVALUATED_NO_EXACT_PROVENANCE",
+    "spatial_reasoning/annotator.py:742": "generate_level3: reference -> full frozen direction set -> semantic nearest",
+    "spatial_reasoning/geometry.py:410": "component_box_distance boundary distance",
+    "spatial_reasoning/semantic_policy.py:176": "resolve_nearest over full direction set; no runner-up rescue",
+    "spatial_reasoning/semantic_policy.py:249": "direction_candidates_over_visible",
+    "spatial_reasoning/semantic_policy.py:80": "resolve_size_extreme over all visible components; frozen margin/eligibility"
+  },
   "relation_semantics_source": [
     {
       "bytes": 40902,
@@ -2266,6 +2507,18 @@
   "task_branch": "audit/task8b3-a2-ground-truth-case-validity-v1",
   "task_id": "A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1",
   "unavailable_fields_reason": "No exact full-window provenance; GT recovery/alignment/relation application are gated.",
-  "validation": {},
+  "unavailable_fields_reasons": {
+    "gt_building_instance_count": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "gt_instances": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "gt_left_of_candidates": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "gt_reference": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "gt_source_identities": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "gt_target": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "resolved_source_raster": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized.",
+    "resolved_source_window": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized."
+  },
+  "validation": {
+    "script_syntax_import_checkpoint2": "PASS: compile(source), runpy.run_path with non-main name; -B; no model imports"
+  },
   "verified_starting_remote_head": "104bcde03ff8bedbd563a1c0eba6fe230f221dad"
 }

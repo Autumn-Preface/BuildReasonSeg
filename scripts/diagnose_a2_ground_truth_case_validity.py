@@ -13,7 +13,6 @@ import bisect
 import hashlib
 import json
 import mmap
-import os
 from pathlib import Path
 import struct
 import subprocess
@@ -265,7 +264,7 @@ def prepare():
     sources = [
         source_record("handoff/TO_DSH.md", "AUTHORITATIVE", "Frozen A2 suite path/prompt/program, no source crop.", [112, 118],
                       "1287d0a2bab50a278452d4cd0ec8d492347afdfe"),
-        source_record("scripts/task8b3_interactive_suite.py", "AUTHORITATIVE", "First tracked case tuple, no source construction.", [50, 52],
+        source_record("scripts/task8b3_interactive_suite.py", "AUTHORITATIVE", "First tracked case tuple, no source construction.", [49, 50],
                       "1287d0a2bab50a278452d4cd0ec8d492347afdfe"),
     ]
     for rel, finding in [
@@ -362,8 +361,12 @@ class ExactTiledRGB:
         assert tags.get(274, [1]) == [1]
         assert len(self.offsets) == self.cols * self.rows == len(self.sizes)
         assert all(n == self.tw * self.th * 3 for n in self.sizes)
-        assert all(a + n <= b for a, n, b in zip(self.offsets, self.sizes, self.offsets[1:]))
-        assert self.offsets[-1] + self.sizes[-1] <= len(self.mm)
+        # Logical TIFF tile order need not be physical file-offset order.
+        self.physical_order = sorted(range(len(self.offsets)), key=self.offsets.__getitem__)
+        self.physical_offsets = [self.offsets[i] for i in self.physical_order]
+        assert all(self.offsets[a] + self.sizes[a] <= self.offsets[b]
+                   for a, b in zip(self.physical_order, self.physical_order[1:]))
+        assert max(a + n for a, n in zip(self.offsets, self.sizes)) <= len(self.mm)
         self.np = np
 
     def window(self, x, y, w, h):
@@ -380,9 +383,10 @@ class ExactTiledRGB:
         return out
 
     def pixel_at_byte(self, pos, length_pixels):
-        index = bisect.bisect_right(self.offsets, pos) - 1
-        if index < 0:
+        physical_index = bisect.bisect_right(self.physical_offsets, pos) - 1
+        if physical_index < 0:
             return None
+        index = self.physical_order[physical_index]
         delta = pos - self.offsets[index]
         if delta % 3 or delta + length_pixels * 3 > self.sizes[index]:
             return None
@@ -465,6 +469,7 @@ def search():
         "ordered_ref_decoded_rgb_hash_index_sha256": tile_digest.hexdigest()},
         "C2": {"tiles": len(hashes), "windows": 5, "matches": sum(m["anchor_id"].startswith("C2") for m in tile_matches),
                "execution": "same complete decoded index, predeclared windows; no adaptive locations"}, "C3": []}
+    save(data)  # Preserve the complete tile search before whole-raster mechanics.
     readers = {}
     try:
         for match in tile_matches:
@@ -519,6 +524,7 @@ def patch_search(data, rgb, readers):
         coverage = {"raster": name, "bytes": len(raster.mm), "bytes_scanned": 0,
                     "dimensions": [raster.width, raster.height], "tile_dimensions": [raster.tw, raster.th],
                     "tile_count": len(raster.offsets), "decoder_exact_checks": checks,
+                    "nonmonotonic_logical_tile_offsets": sum(a >= b for a, b in zip(raster.offsets, raster.offsets[1:])),
                     "anchor_occurrences": 0, "patch_candidates_checked": 0, "exact_patch_hits": 0,
                     "status": "IN_PROGRESS"}
         data["exact_search_coverage"]["C3"].append(coverage)
@@ -577,13 +583,36 @@ def gt():
 
 
 def finalize():
+    import runpy
     data = read()
+    script = ROOT / "scripts/diagnose_a2_ground_truth_case_validity.py"
+    compile(script.read_text(encoding="utf-8"), str(script), "exec")
+    runpy.run_path(str(script), run_name="a2_audit_import_check")
+    required = {
+        "task_id", "status", "starting_branch", "starting_head", "task_branch", "locked_a2_path",
+        "locked_a2_file_sha256", "locked_a2_decoded_rgb_sha256", "historical_sources_inspected",
+        "source_roots_inspected", "exact_search_plan", "exact_search_anchors", "exact_matches",
+        "full_window_verification", "provenance_status", "resolved_source_raster", "resolved_source_window",
+        "gt_source_identities", "gt_building_instance_count", "gt_instances", "relation_semantics_source",
+        "gt_reference", "gt_left_of_candidates", "gt_target", "gt_status", "case_validity",
+        "prop01_interpretation_candidate", *GUARDS,
+    }
+    assert required <= data.keys(), required - data.keys()
     assert data["exact_search_plan"] == PLAN and data.get("exact_search_plan_checkpoint")
     assert git("branch", "--show-current") == BRANCH and git("merge-base", START, "HEAD") == START
     for key, values in ENUMS.items():
         assert data[key] in values, (key, data[key])
     assert all(data[g] is True for g in GUARDS)
     if data["provenance_status"] in ("NOT_ESTABLISHED", "PARTIAL_EXACT_EVIDENCE"):
+        before_refusal = file_hash(EVIDENCE)
+        try:
+            gt()
+        except SystemExit as error:
+            assert str(error) == "GT_REFUSED_NO_EXACT_FULL_WINDOW_PROVENANCE"
+        else:
+            raise AssertionError("Non-exact GT gate did not refuse")
+        assert file_hash(EVIDENCE) == before_refusal
+        data["validation"]["gt_phase_refusal"] = "GT_REFUSED_NO_EXACT_FULL_WINDOW_PROVENANCE"
         assert data["resolved_source_raster"] is None and data["resolved_source_window"] is None
         assert not any(r.get("equal") for r in data["full_window_verification"])
         assert data["gt_status"] == "NOT_EVALUATED_NO_EXACT_PROVENANCE"
