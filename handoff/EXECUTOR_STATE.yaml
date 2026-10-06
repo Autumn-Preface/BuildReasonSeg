@@ -3,20 +3,26 @@ task_id: PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: audit/task8b3-prop01-a2-zero-proposals-forensics-v1
-head: 504268128b7a9b058580b7702c9429b27705c053
+head: 075f98733177e91c5c4ec5d546daeafb241c4a93
 completed:
   - Required five-file startup read and exact clean Git anchor verified.
   - Supervisor attachment copied verbatim and re-read; SHA256 matched.
   - Exact A2 and historical proposal-positive A1 provenance established.
   - Detector weights and 135 actual external source files verified against canonical Git blobs.
-current_step: PHASE_A_PROVENANCE_CHECKPOINT
-next_action: Run frozen detector-only A2 path with passive per-tile/stage observers, then one locked A1 control.
+  - Frozen CUDA A2 baseline reproduced; all nine raw-library and adapter counts zero.
+  - A2 accumulation/compact/merge counts zero; no downstream transition loses proposals.
+  - One locked A1 control reproduced raw 133 and merged 52.
+  - All 18 observed input tensors reverse source RGB channels; no altered-input inference executed.
+  - External 2094-file inventory and 144 protected content hashes unchanged.
+current_step: PHASE_B_C_D_E_INFERENCE_CHECKPOINT
+next_action: Review classification under task definitions, write final report, validate evidence and scope, hand off for Supervisor audit.
 hypotheses:
-  - NumPy RGB source versus Ultralytics BGR contract requires tensor observation; causal effect untested.
+  - Input channel contract mismatch is observed; its causal contribution to A2 zero remains untested. Any correction requires a separate Supervisor task.
   - External source_manifest has eight stale entries, but actual source files match canonical; no repair authorized.
 tests_run:
   - Provenance diagnostic PASS; exact inputs/model/source verified; external inventory and protected hashes unchanged.
   - Initial provenance harness assertion assumed external manifest identity; inspected discrepancy and recorded stale entries.
+  - Frozen detector-only inference PASS; A2 raw 0 / merged 0, A1 raw 133 / merged 52, 18 predict calls total.
 files_modified:
   - handoff/CURRENT_TASK.md
   - handoff/EXECUTOR_STATE.yaml
@@ -28,5 +34,5 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: null
-  pushed: null
+  commit: 075f98733177e91c5c4ec5d546daeafb241c4a93
+  pushed: true

@@ -1,13 +1,13 @@
 {
   "task_id": "PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1",
   "status": "IN_PROGRESS",
-  "stage": "A2_PROVENANCE_ESTABLISHED",
+  "stage": "INFERENCE_COMPLETE_PENDING_CLASSIFICATION",
   "starting_branch": "docs/governance-v1-1-idle-state-semantics",
   "starting_head": "504268128b7a9b058580b7702c9429b27705c053",
   "starting_working_tree": "clean",
   "task_branch": "audit/task8b3-prop01-a2-zero-proposals-forensics-v1",
   "authorization_attachment_sha256": "cd270805140da288a30d8ae67953241763b9de51e089c82a2e5f6ad9b8103a80",
-  "timestamp_utc": "2026-10-06T05:08:01.823470+00:00",
+  "timestamp_utc": "2026-10-06T05:09:12.833123+00:00",
   "A2_provenance": {
     "case_id": "A2",
     "image_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A2.png",
@@ -46,7 +46,7 @@
     "suite_diagnostics_path": null
   },
   "positive_control": {
-    "status": "PROVENANCE_ESTABLISHED",
+    "status": "PROPOSAL_POSITIVE",
     "provenance": {
       "case_id": "A1",
       "image_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A1.png",
@@ -83,6 +83,1920 @@
         "sha256": "8a4b459d65773a7dfb0ffcc509c26b5d3a7cea23cd759cdadf94cd46be84c227"
       },
       "suite_diagnostics_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\diagnostics\\A1_001"
+    },
+    "result": {
+      "tile_count": 9,
+      "per_tile": [
+        {
+          "tile_id": "tile_0000_r000_c000",
+          "tile_index": 0,
+          "top": 0,
+          "left": 0,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "dcec3d022280a9b17f337410f24db6f99609fc49ef92373a53c8ea598c47798a",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "dcec3d022280a9b17f337410f24db6f99609fc49ef92373a53c8ea598c47798a",
+          "results_count": 1,
+          "raw_ultralytics_count": 17,
+          "masks_present": true,
+          "masks_count": 17,
+          "raw_confidences": [
+            0.43481719493865967,
+            0.2969418168067932,
+            0.25594982504844666,
+            0.22217103838920593,
+            0.20406286418437958,
+            0.18673783540725708,
+            0.09444136172533035,
+            0.08702918887138367,
+            0.0853864997625351,
+            0.07594776153564453,
+            0.07238437235355377,
+            0.07095906138420105,
+            0.06252166628837585,
+            0.06209544837474823,
+            0.06024305894970894,
+            0.054243505001068115,
+            0.0521419532597065
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "fddafe117907dc0f1e1191eb9f657fe3d24638ccdc876bb56c6d015b023b189a",
+            "min": 0.0470588281750679,
+            "max": 0.9058824181556702,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "27bdee3a27ebe91a960d1bfdd3b9b7fb4ed809bfbf10563a09610f9ab0816465"
+          },
+          "runtime_detect_tile_count": 17,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0001_r000_c001",
+          "tile_index": 1,
+          "top": 0,
+          "left": 384,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "d4833226f47950895428ce248d635f503f16376cfb5379a87878b2dbaabc43eb",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "d4833226f47950895428ce248d635f503f16376cfb5379a87878b2dbaabc43eb",
+          "results_count": 1,
+          "raw_ultralytics_count": 11,
+          "masks_present": true,
+          "masks_count": 11,
+          "raw_confidences": [
+            0.31049978733062744,
+            0.28216537833213806,
+            0.14662131667137146,
+            0.12032477557659149,
+            0.1122613251209259,
+            0.09778115153312683,
+            0.08658289164304733,
+            0.06286706775426865,
+            0.05303845554590225,
+            0.05240081250667572,
+            0.05083170905709267
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "b889f91f46f840c33f4fcc3671edd5c5b14c570757adc5ed1f5d5a05830e131e",
+            "min": 0.0470588281750679,
+            "max": 0.9058824181556702,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "789d644dba6ab39cad686394d2cb65277fde43bd79bf848f57eac0ddf3c53358"
+          },
+          "runtime_detect_tile_count": 11,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0002_r000_c002",
+          "tile_index": 2,
+          "top": 0,
+          "left": 512,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "055efa042d8ab400b5b33963d6d7e5252d14e7d1592b53ea0a679ac4ed625dda",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "055efa042d8ab400b5b33963d6d7e5252d14e7d1592b53ea0a679ac4ed625dda",
+          "results_count": 1,
+          "raw_ultralytics_count": 4,
+          "masks_present": true,
+          "masks_count": 4,
+          "raw_confidences": [
+            0.27219653129577637,
+            0.07068866491317749,
+            0.06467871367931366,
+            0.058999862521886826
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "b57c37fc104dafe3c5cdefa0a206a793fa47b186dc32d74b99b1aaca7c113dcb",
+            "min": 0.0470588281750679,
+            "max": 0.9098039865493774,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "25f3a7a388b04a3d63158efb0a6c5f6e41442afb9db8b63fc4ac98471e2e9f8e"
+          },
+          "runtime_detect_tile_count": 4,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0100_r001_c000",
+          "tile_index": 3,
+          "top": 384,
+          "left": 0,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "ee2753b8852bbf75e32e0a109173c9d1b8d3e93f643de57584fc8e82756fb71f",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "ee2753b8852bbf75e32e0a109173c9d1b8d3e93f643de57584fc8e82756fb71f",
+          "results_count": 1,
+          "raw_ultralytics_count": 27,
+          "masks_present": true,
+          "masks_count": 27,
+          "raw_confidences": [
+            0.42927196621894836,
+            0.36707407236099243,
+            0.35207903385162354,
+            0.26968392729759216,
+            0.22619138658046722,
+            0.1867111176252365,
+            0.1844395399093628,
+            0.17743077874183655,
+            0.16765236854553223,
+            0.1611802875995636,
+            0.15806254744529724,
+            0.14871561527252197,
+            0.14149640500545502,
+            0.12922421097755432,
+            0.12919844686985016,
+            0.12633970379829407,
+            0.10124309360980988,
+            0.0711948350071907,
+            0.06949729472398758,
+            0.06612508744001389,
+            0.06593112647533417,
+            0.06475751847028732,
+            0.0642862543463707,
+            0.062399622052907944,
+            0.05711588263511658,
+            0.052860651165246964,
+            0.05279792100191116
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "0ba04f7a7446b625955c1794d2b868cd959970a48caf267844b8eadeeab0d29e",
+            "min": 0.03921568766236305,
+            "max": 0.917647123336792,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "205e995937097a01520353f6cf059c4f152883b7ffd546d32e9c2741662eb161"
+          },
+          "runtime_detect_tile_count": 27,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0101_r001_c001",
+          "tile_index": 4,
+          "top": 384,
+          "left": 384,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "bb4c852826628540025b0660e6c9980378ad52e2e28c4593c09c7187ccaf6487",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "bb4c852826628540025b0660e6c9980378ad52e2e28c4593c09c7187ccaf6487",
+          "results_count": 1,
+          "raw_ultralytics_count": 11,
+          "masks_present": true,
+          "masks_count": 11,
+          "raw_confidences": [
+            0.2618841230869293,
+            0.2164110392332077,
+            0.19959132373332977,
+            0.09775678813457489,
+            0.09254860877990723,
+            0.08148280531167984,
+            0.07910925149917603,
+            0.07405860722064972,
+            0.07356460392475128,
+            0.06826017796993256,
+            0.05377041548490524
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "f40954068af758ecb18be244dded841bab873df12c71cbf67c1f1dc05d2b7fd6",
+            "min": 0.0470588281750679,
+            "max": 0.9098039865493774,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "f96d94d5241585017cb2bd093ef851a9bf28213c3f08d7f2dc1ff3867b9213e8"
+          },
+          "runtime_detect_tile_count": 11,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0102_r001_c002",
+          "tile_index": 5,
+          "top": 384,
+          "left": 512,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "c0c6931e94575b8cc647b039a9170ca091a6b1cac187e12f1b480e67646f3bc9",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "c0c6931e94575b8cc647b039a9170ca091a6b1cac187e12f1b480e67646f3bc9",
+          "results_count": 1,
+          "raw_ultralytics_count": 7,
+          "masks_present": true,
+          "masks_count": 7,
+          "raw_confidences": [
+            0.23312966525554657,
+            0.2220371514558792,
+            0.11616310477256775,
+            0.10791166126728058,
+            0.07780749350786209,
+            0.06988617032766342,
+            0.05245371162891388
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "da2906781861ea3d9eb4cfdc8919285f8f0c580e4df132e0c8dc36fcfda0423c",
+            "min": 0.05098039656877518,
+            "max": 0.9098039865493774,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "5d37c0cb5227bee0b82e8510532298022af28b810c31ef72b19e9e130af1d365"
+          },
+          "runtime_detect_tile_count": 7,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0200_r002_c000",
+          "tile_index": 6,
+          "top": 512,
+          "left": 0,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "97567cac27a8de151eb7714e400f22d7ecfb6a326051d645f52bf19209a64982",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "97567cac27a8de151eb7714e400f22d7ecfb6a326051d645f52bf19209a64982",
+          "results_count": 1,
+          "raw_ultralytics_count": 22,
+          "masks_present": true,
+          "masks_count": 22,
+          "raw_confidences": [
+            0.4330143332481384,
+            0.3657878637313843,
+            0.2863764762878418,
+            0.2624041438102722,
+            0.2601717710494995,
+            0.22508451342582703,
+            0.17861266434192657,
+            0.17339172959327698,
+            0.16813629865646362,
+            0.16048748791217804,
+            0.15957510471343994,
+            0.1542346030473709,
+            0.12822581827640533,
+            0.10915129631757736,
+            0.10308697074651718,
+            0.07186039537191391,
+            0.06898435950279236,
+            0.0679468959569931,
+            0.06540439277887344,
+            0.056045375764369965,
+            0.05484427884221077,
+            0.053839098662137985
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "8b62263fd1443a3f7f0ad4c2e0dbccc9a95ca59b1ff668898d7c83865e6e55f3",
+            "min": 0.03921568766236305,
+            "max": 0.917647123336792,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "f33683c5c6698deb39024a1bdb0ea6b32ad244403f7916d3de96a1277f737af7"
+          },
+          "runtime_detect_tile_count": 22,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0201_r002_c001",
+          "tile_index": 7,
+          "top": 512,
+          "left": 384,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "07fcb1629723cfec8fe7604451ef107a1004d60c610c745b939b32987c5073fb",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "07fcb1629723cfec8fe7604451ef107a1004d60c610c745b939b32987c5073fb",
+          "results_count": 1,
+          "raw_ultralytics_count": 20,
+          "masks_present": true,
+          "masks_count": 20,
+          "raw_confidences": [
+            0.6212065815925598,
+            0.3477731943130493,
+            0.2751961052417755,
+            0.23807843029499054,
+            0.18601202964782715,
+            0.17739085853099823,
+            0.1621180921792984,
+            0.14367973804473877,
+            0.12254548072814941,
+            0.11093688756227493,
+            0.1106082946062088,
+            0.10125494003295898,
+            0.09643540531396866,
+            0.08973978459835052,
+            0.07590622454881668,
+            0.06860888749361038,
+            0.06850522011518478,
+            0.06716937571763992,
+            0.05702982842922211,
+            0.054364193230867386
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "8b40b8809c2ae3cfdccc22b3a88e45726ab192ca6750d1f8f39ad016bf1b01ae",
+            "min": 0.0470588281750679,
+            "max": 0.917647123336792,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "1620b7677f26c875a54e43e3d668d804e8c2a4c9034aed30e68744f6aff28fba"
+          },
+          "runtime_detect_tile_count": 20,
+          "adapter_early_return": null
+        },
+        {
+          "tile_id": "tile_0202_r002_c002",
+          "tile_index": 8,
+          "top": 512,
+          "left": 512,
+          "shape": [
+            512,
+            512,
+            3
+          ],
+          "dtype": "uint8",
+          "padding": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0,
+            "applied": false
+          },
+          "tile_sha256": "b92d554d2c308098c70ab9c68ea3d56992f9756556ea1b64f514fc16162c328f",
+          "equals_exact_source_slice": true,
+          "detector_numpy_source_sha256": "b92d554d2c308098c70ab9c68ea3d56992f9756556ea1b64f514fc16162c328f",
+          "results_count": 1,
+          "raw_ultralytics_count": 14,
+          "masks_present": true,
+          "masks_count": 14,
+          "raw_confidences": [
+            0.6200043559074402,
+            0.2943185567855835,
+            0.29130521416664124,
+            0.17312169075012207,
+            0.1647740751504898,
+            0.13585728406906128,
+            0.11452394723892212,
+            0.1065964624285698,
+            0.10011427849531174,
+            0.09160332381725311,
+            0.07583899050951004,
+            0.07576536387205124,
+            0.07136141508817673,
+            0.050052426755428314
+          ],
+          "detector_tensor": {
+            "shape": [
+              1,
+              3,
+              640,
+              640
+            ],
+            "dtype": "float32",
+            "sha256": "29434ca903c7163f44469c15b55762cc51fc9fa89a8c992be853823497c049bc",
+            "min": 0.05098039656877518,
+            "max": 0.917647123336792,
+            "equals_letterboxed_source_RGB": false,
+            "equals_letterboxed_source_channel_reversed": true,
+            "source_channels_are_distinct": true,
+            "expected_source_RGB_tensor_sha256": "8dafc431b4c98682447c898919bc7d96c56c030cc61dc75169056180579e0d0a"
+          },
+          "runtime_detect_tile_count": 14,
+          "adapter_early_return": null
+        }
+      ],
+      "pipeline_counts": {
+        "raw_ultralytics": 133,
+        "detect_tile": 133,
+        "accumulated_before_compact": 133,
+        "compact_valid": 133,
+        "accumulated": 133,
+        "merge_input": 133,
+        "merged": 52
+      },
+      "compact_events": [
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1219,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2589,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 313,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 3480,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 412,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 700,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 235,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 765,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2709,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 400,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 638,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 600,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 29,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 6470,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1466,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 760,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1351,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2963,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2593,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 3955,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1302,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 600,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 896,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 653,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1590,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 576,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 830,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 57,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2662,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 432,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 573,
+          "retained": true
+        },
+        {
+          "top": 0,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 625,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 221,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 645,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 3788,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1299,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 883,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 312,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1585,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1095,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 420,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 248,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 3464,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 138,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 403,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1169,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 4853,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 322,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 276,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 387,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 5531,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 633,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 517,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 616,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 455,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 712,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2709,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 961,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 588,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 464,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 169,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2551,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 160,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 572,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 345,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 160,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 348,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1503,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 4007,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 579,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 438,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 169,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 2167,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 570,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 348,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 317,
+          "retained": true
+        },
+        {
+          "top": 384,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 390,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 221,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 640,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 3990,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1298,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 786,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 875,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 312,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 1095,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 420,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 248,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 468,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 138,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 454,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 4845,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 276,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 695,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 638,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 387,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 639,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 614,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 238,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 0,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 951,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 357,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 961,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 268,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 743,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 394,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 169,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 189,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 627,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 359,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 272,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 349,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 478,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 454,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 849,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 239,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 706,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 73,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 160,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 343,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 384,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 160,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 357,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 965,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 261,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 169,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 358,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 189,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 353,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 632,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 86,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 349,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 479,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 838,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 67,
+          "retained": true
+        },
+        {
+          "top": 512,
+          "left": 512,
+          "input_mask_shape": [
+            512,
+            512
+          ],
+          "nonzero_pixels": 660,
+          "retained": true
+        }
+      ],
+      "raw_proposal_count": 133,
+      "merged_proposal_count": 52,
+      "detector_seconds": 0.381,
+      "effective_library_args": {
+        "imgsz": 640,
+        "conf": 0.05,
+        "max_det": 300,
+        "iou": 0.7,
+        "agnostic_nms": false,
+        "classes": null,
+        "augment": false,
+        "retina_masks": false,
+        "half": null,
+        "rect": true,
+        "save": false,
+        "save_txt": false,
+        "save_crop": false,
+        "device": "cuda",
+        "batch": 1,
+        "end2end": null
+      }
     }
   },
   "detector_model": {
@@ -91,7 +2005,8 @@
     "bytes": 54480241,
     "family": "YOLO26m-seg",
     "model_yaml_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\model\\buildreasonseg_advisor\\model.yaml",
-    "model_yaml_sha256": "83f0f04c62eb310b964afca195068a61cac728b6289bbbc38aa53265b88b113a"
+    "model_yaml_sha256": "83f0f04c62eb310b964afca195068a61cac728b6289bbbc38aa53265b88b113a",
+    "model_task": "segment"
   },
   "frozen_parameters": {
     "TILE_SIZE": 512,
@@ -879,9 +2794,423 @@
       }
     }
   ],
-  "tile_count": null,
-  "per_tile": [],
-  "pipeline_counts": null,
+  "tile_count": 9,
+  "per_tile": [
+    {
+      "tile_id": "tile_0000_r000_c000",
+      "tile_index": 0,
+      "top": 0,
+      "left": 0,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "f8f8b616b0f83eb6386f99cdad67ff66b959c76c397381436dd2409b9b81f0c1",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "f8f8b616b0f83eb6386f99cdad67ff66b959c76c397381436dd2409b9b81f0c1",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "0b4d6f0927cbde7be9719a0427ea9a7c7ce123a2cb82d02d4ae9c74279d13440",
+        "min": 0.10588236153125763,
+        "max": 0.43137258291244507,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "69bafd1e6e272370e5402de7c0c557adfe354789293629af2b23101814229e0b"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0001_r000_c001",
+      "tile_index": 1,
+      "top": 0,
+      "left": 384,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "5c617827f3aa194cdbf4470a515d0e2b38e96d5d1573681af627356af3983777",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "5c617827f3aa194cdbf4470a515d0e2b38e96d5d1573681af627356af3983777",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "6166794159a46b7d9386f29b3776523725b4b91fe247072712f5a6aad55384af",
+        "min": 0.10588236153125763,
+        "max": 0.4078431725502014,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "7dcb165333ced4b60b2603a5eb61206e5898054eef5af2ace570832a9b8863b1"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0002_r000_c002",
+      "tile_index": 2,
+      "top": 0,
+      "left": 512,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "16883b0d03d2e685bd55aaab2b6b9e81d9850b0cd3f71e756d3a3f0adef1bd36",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "16883b0d03d2e685bd55aaab2b6b9e81d9850b0cd3f71e756d3a3f0adef1bd36",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "91dbf2c1d728638b36af46bec942a3f91c3e1dc3ab2b0ccf13d08f4b7e4f4d4c",
+        "min": 0.1568627506494522,
+        "max": 0.5058823823928833,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "e9c9f821dae55535aa6af2944aa5cb60de22c1f4d1a4e144bf043dc450537c95"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0100_r001_c000",
+      "tile_index": 3,
+      "top": 384,
+      "left": 0,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "a44489bec0df6ca640c007e0b7c30eb513209baba9552b1c39b271c8a33ae6dd",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "a44489bec0df6ca640c007e0b7c30eb513209baba9552b1c39b271c8a33ae6dd",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "26e8f36f4a19f8283121fd324a6617def18d6dbf749b1dfdb39979a01e6e5810",
+        "min": 0.10196079313755035,
+        "max": 0.5529412031173706,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "848b216a38d9a02b03311e11ce1a8be5a1963a112bb8fcf59a2a50c55964afcf"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0101_r001_c001",
+      "tile_index": 4,
+      "top": 384,
+      "left": 384,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "25f38bfc07489c5bbd08f436aabb8471fff315cfd6e5722cbbf596c65a74dd81",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "25f38bfc07489c5bbd08f436aabb8471fff315cfd6e5722cbbf596c65a74dd81",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "6bf087c7f6ab18489986951da8cc895a212f4c7e78d8f82187df223ccfab70c0",
+        "min": 0.10196079313755035,
+        "max": 0.5529412031173706,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "43134aa03794099f33b4b539d39b9ce7b643a29727d80c67e008257ff96140f9"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0102_r001_c002",
+      "tile_index": 5,
+      "top": 384,
+      "left": 512,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "bdd5d7db7d60883e6dc9fe491d4606e6483d02ec3dc22f51c0b08fbb6eb91dcd",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "bdd5d7db7d60883e6dc9fe491d4606e6483d02ec3dc22f51c0b08fbb6eb91dcd",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "e4e06ad0b2c01581f023ec572118f472f15c8782f1f868c4e0a606e2bf51ba25",
+        "min": 0.13725490868091583,
+        "max": 0.5058823823928833,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "169d8a6c0e0d295df39d6b480c1db1ccd1e1461b38488f543edde3ab6f9c539a"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0200_r002_c000",
+      "tile_index": 6,
+      "top": 512,
+      "left": 0,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "ed6fff68dbdc8ee2d23d74ce7acdc4ad4c3a40794f11b1d80336fc00d8f6c9ce",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "ed6fff68dbdc8ee2d23d74ce7acdc4ad4c3a40794f11b1d80336fc00d8f6c9ce",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "eacb12323f57a202020dacd30d8246d00624c9ad5f8230c26de28e8db2a536c9",
+        "min": 0.09803922474384308,
+        "max": 0.5529412031173706,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "28ab070d9dd51245149b3272f1586834e839b4f32c8ce87d07804ceb9b421941"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0201_r002_c001",
+      "tile_index": 7,
+      "top": 512,
+      "left": 384,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "2f408c2686ca84c7ebb44f2cc0c8fc3f6ec50962537f64fefa022a49cd01a0f3",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "2f408c2686ca84c7ebb44f2cc0c8fc3f6ec50962537f64fefa022a49cd01a0f3",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "dcfdaf90d4c9dd8a838da2f75c5cc9f982006c7b4ce566468d3304f68ac61d2b",
+        "min": 0.09803922474384308,
+        "max": 0.5529412031173706,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "c80396ef15087b726db54d367c4faf430eb90a9a7099daeeaed5a24919828d24"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    },
+    {
+      "tile_id": "tile_0202_r002_c002",
+      "tile_index": 8,
+      "top": 512,
+      "left": 512,
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "tile_sha256": "2b1d926dba398b6229b70ba44be50375b78b26e8aa56405f0b3c8162c4bc1b6e",
+      "equals_exact_source_slice": true,
+      "detector_numpy_source_sha256": "2b1d926dba398b6229b70ba44be50375b78b26e8aa56405f0b3c8162c4bc1b6e",
+      "results_count": 1,
+      "raw_ultralytics_count": 0,
+      "masks_present": false,
+      "masks_count": 0,
+      "raw_confidences": [],
+      "detector_tensor": {
+        "shape": [
+          1,
+          3,
+          640,
+          640
+        ],
+        "dtype": "float32",
+        "sha256": "ca2b86afea8257d90376a77120ddbeae7ef96a4202c9bf12fe2ab70fcffa906c",
+        "min": 0.13725490868091583,
+        "max": 0.4745098352432251,
+        "equals_letterboxed_source_RGB": false,
+        "equals_letterboxed_source_channel_reversed": true,
+        "source_channels_are_distinct": true,
+        "expected_source_RGB_tensor_sha256": "68f259e8f9d8a1e45cbc60a6f8aade59c481a4844d046625131c32042f867371"
+      },
+      "runtime_detect_tile_count": 0,
+      "adapter_early_return": "result.masks is None OR result.boxes is None OR len(result.boxes) == 0"
+    }
+  ],
+  "pipeline_counts": {
+    "raw_ultralytics": 0,
+    "detect_tile": 0,
+    "accumulated_before_compact": 0,
+    "compact_valid": 0,
+    "accumulated": 0,
+    "merge_input": 0,
+    "merged": 0
+  },
   "primary_root_cause_classification": null,
   "root_cause_summary": null,
   "threshold_sweep_run": false,
@@ -900,8 +3229,50 @@
       "numpy": "2.4.6",
       "Pillow": "12.3.0",
       "opencv-python": "5.0.0.93"
+    },
+    "device": "cuda",
+    "cuda": "13.2",
+    "cudnn": 92000,
+    "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU"
+  },
+  "library_input_contract": {
+    "BasePredictor.preprocess": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\ultralytics\\engine\\predictor.py",
+      "sha256": "97eb67733ee2fd80fe998fd2c24a7f600fea6985698eb6a96ab5787e94c09586",
+      "first_line": 179,
+      "source": "    def preprocess(self, im: torch.Tensor | list[np.ndarray]) -> torch.Tensor:\n        \"\"\"Prepare input image before inference.\n\n        Args:\n            im (torch.Tensor | list[np.ndarray]): Images of shape (N, 3, H, W) for tensor, already RGB and normalized to\n                0.0-1.0, or [(H, W, 3) x N] for list of BGR uint8 arrays. See\n                ultralytics.data.loaders.LoadTensor._single_check for tensor input requirements.\n\n        Returns:\n            (torch.Tensor): Preprocessed image tensor of shape (N, 3, H, W).\n        \"\"\"\n        if not isinstance(im, torch.Tensor):\n            im = self.pre_transform(im)\n            # For a single image, add a batch dimension without the copy required by np.stack().\n            im = torch.from_numpy(im[0]).unsqueeze(0) if len(im) == 1 else torch.from_numpy(np.stack(im))\n            im = im.to(self.device)  # transfer as uint8, then reorder on device\n            im = im.permute(0, 3, 1, 2)  # BHWC to BCHW, (n, 3, h, w)\n            if im.shape[1] == 3:\n                im = im.flip(1)  # BGR to RGB\n            im = im.contiguous()\n            im = (im.half() if self.model.fp16 else im.float()).div_(255)  # uint8 to fp16/32, 0 - 255 to 0.0 - 1.0\n        else:\n            im = im.to(self.device)\n            im = im.half() if self.model.fp16 else im.float()  # already 0.0 - 1.0, no division\n        return im\n"
+    },
+    "LoadPilAndNumpy._single_check": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\ultralytics\\data\\loaders.py",
+      "sha256": "1ba7cb524ca05d6c2580e0fa6243467e40e939b178295cceb715b181f85d45d5",
+      "first_line": 565,
+      "source": "    @staticmethod\n    def _single_check(im: Image.Image | np.ndarray, channels: int = 3) -> np.ndarray:\n        \"\"\"Validate an image and normalize its channel count.\n\n        Notes:\n            - PIL inputs are converted to NumPy and returned in OpenCV-compatible BGR order for color images.\n            - NumPy color inputs are assumed to use OpenCV-compatible BGR order.\n        \"\"\"\n        if not isinstance(im, (Image.Image, np.ndarray)):\n            raise TypeError(f\"Expected PIL/np.ndarray image type, but got {type(im)}\")\n        pil = isinstance(im, Image.Image)\n        if pil:\n            flag = \"L\" if channels == 1 else \"RGB\"\n            im = np.asarray(im if im.mode == flag else im.convert(flag))  # convert() copies even when mode matches\n            if flag == \"L\":\n                im = im[..., None]\n        im = np.atleast_3d(im)\n        # Both routes validate here: a zero dimension divides by zero in LetterBox, and a batched array reads\n        # shape[2] as a channel count it is not. Raised rather than asserted so `python -O` keeps the check, and\n        # ahead of the cvtColor calls, which assert on an empty input instead of raising this message.\n        if im.ndim != 3 or not all(im.shape):\n            raise ValueError(f\"Expected a single (H, W, C) image, but got array of shape {im.shape}\")\n        if pil:\n            return im if channels == 1 else cv2.cvtColor(im, cv2.COLOR_RGB2BGR)\n        c = im.shape[2]\n        if c == channels:\n            return im\n        if c == 2:  # gray + alpha\n            im, c = im[..., :1], 1\n        u8 = im.dtype == np.uint8  # cvtColor rejects dtypes NumPy indexing accepts, float64 among them\n        if c == 1:\n            if u8 and channels == 3:\n                return cv2.cvtColor(im[..., 0], cv2.COLOR_GRAY2BGR)\n            return np.repeat(im, channels, axis=2)\n        if channels == 1:\n            return cv2.cvtColor(im, cv2.COLOR_BGRA2GRAY if c == 4 else cv2.COLOR_BGR2GRAY)[..., None]\n        return cv2.cvtColor(im, cv2.COLOR_BGRA2BGR) if u8 and c == 4 else np.ascontiguousarray(im[..., :3])\n"
     }
   },
+  "compact_events": [],
+  "raw_proposal_count": 0,
+  "merged_proposal_count": 0,
+  "detector_seconds": 17.991,
+  "effective_library_args": {
+    "imgsz": 640,
+    "conf": 0.05,
+    "max_det": 300,
+    "iou": 0.7,
+    "agnostic_nms": false,
+    "classes": null,
+    "augment": false,
+    "retina_masks": false,
+    "half": null,
+    "rect": true,
+    "save": false,
+    "save_txt": false,
+    "save_crop": false,
+    "device": "cuda",
+    "batch": 1,
+    "end2end": null
+  },
+  "baseline_reproduction": "REPRODUCED",
+  "inference_calls": 18,
   "external_integrity": {
     "inventory_file_count": 2094,
     "inventory_before_sha256": "091e7ef3555705fbe34f6281fcbd74eb20e36ce3765643c1f058233d4f570fc5",

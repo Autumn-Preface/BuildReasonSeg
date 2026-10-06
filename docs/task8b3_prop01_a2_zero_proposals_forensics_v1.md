@@ -1,6 +1,6 @@
 # PROP01 A2 Zero Proposals Forensics V1
 
-Status: IN_PROGRESS — provenance checkpoint; no inference yet in this task.
+Status: IN_PROGRESS — frozen inference checkpoint; final classification review pending.
 
 Task: `PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1`.
 Starting branch `docs/governance-v1-1-idle-state-semantics`, HEAD
@@ -32,8 +32,29 @@ Reproduce provenance:
 & '.conda/buildreasonseg-mvp/python.exe' -B scripts/diagnose_prop01_a2_zero_proposals.py --phase provenance
 ```
 
-Next: frozen `detect_global` inference with passive observations of actual library results, actual
-adapter output, compact calls, merge input/output and library input tensor; then one exact A1 control.
+Frozen CUDA inference completed through actual `detect_global` with passive observers: A2 nine
+tiles all returned zero raw Ultralytics boxes and zero actual adapter proposals. No compact call
+occurred, merge received zero entries and returned zero. Historical raw 0 / merged 0 reproduced.
+One exact A1 control reproduced raw 133, all 133 compact-valid/accumulated, merge input 133,
+merged 52. There were exactly 18 predict calls (9 A2 + 9 A1), no alternate input inference.
+
+Tensor observation revealed RGB NumPy arrays supplied to a BGR-assuming Ultralytics API:
+all 18 returned preprocessing tensors equal letterboxed channel-reversed source arrays and
+differ from the source RGB order. This is an observed input contract defect; the effect of a
+correction on zero detections remains untested. It does not authorize a repair or another inference.
+
+Environment: Python 3.11.16, Ultralytics 8.4.164, torch 2.13.0+cu132, CUDA 13.2,
+NVIDIA GeForce RTX 5080 Laptop GPU. Frozen invocation and effective defaults are in JSON.
+The external 2,094-file size/mtime inventory and 144 protected file hashes remained unchanged.
+The first checkpoint `075f98733177e91c5c4ec5d546daeafb241c4a93` is pushed.
+
+Reproduce frozen inference (writes only authorized evidence and temporary library settings):
+
+```powershell
+& '.conda/buildreasonseg-mvp/python.exe' -B scripts/diagnose_prop01_a2_zero_proposals.py --phase inference
+```
+
+Next: final classification/report review and Supervisor audit handoff.
 The diagnostic changes only process-local observers that forward original arguments/results unchanged.
 No product edits, tuning, sweeps, alternative model, alternative input, or external writes are authorized.
 Final acceptance remains with the ChatGPT Supervisor.
