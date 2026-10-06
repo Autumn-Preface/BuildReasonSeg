@@ -14188,5 +14188,28 @@
   "diagnostic_figures": [],
   "conclusions": [],
   "limitations": [],
-  "next_gate": "CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT"
+  "next_gate": "CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT",
+  "dedicated_test_history": [
+    {
+      "phase": "offline tool before real frozen map aggregation",
+      "result": "37 passed in 1.99s",
+      "exit_code": 0,
+      "fake_only": true,
+      "deterministic_fields_only_toy_counterfactual": true,
+      "model_calls": 0,
+      "external_writes": 0,
+      "basetemp": "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8d-offline-tests-v1"
+    }
+  ],
+  "diagnostic_tool_identity": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8d_above_target_chain_diagnosis.py",
+    "bytes": 44547,
+    "sha256": "b1b697dbdc147cb8e0a590b7d6876973e30c627d14be6f21acd7867bb2d3f62f"
+  },
+  "dedicated_test_identity": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\tests\\test_task8d_above_target_chain_diagnosis.py",
+    "bytes": 10962,
+    "sha256": "a1e707ef9bcb8849a9ff88aeac67e52aaba9b3013e513b5cb0e30a37330864d5"
+  },
+  "tool_scope": "Saved-map statistics + exact native geometry + canonical-reference deterministic fields only; inference/NN module/checkpoint/subprocess/external-write guard enforced."
 }

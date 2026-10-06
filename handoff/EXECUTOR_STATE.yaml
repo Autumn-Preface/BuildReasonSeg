@@ -3,7 +3,7 @@ task_id: TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: diag/task8d-above-target-chain-v1
-head: 764a805ef7d9651bfffd27dfaeb5808e8c21df1f
+head: faa043e516f158cc52d9958ec80f82eaed245fdc
 accepted_predecessor: TASK8C_FINAL_DEMO_V1 = ACCEPT
 completed:
 - Canonical read order completed; fetched remote predecessor exact; working tree clean;
@@ -12,18 +12,30 @@ completed:
   match accepted Task8C inventory.
 - Predeclared statistics/context mapping/ranking/first-divergence order locked before
   quantitative analysis.
-current_step: EVIDENCE_LOCK_AND_PREDECLARATION_READY
-next_action: Verify frozen artifacts and source; implement offline-only diagnosis
-  inside authorized paths.
-tests_run: []
+- Offline-only diagnostic code and 37 dedicated tests PASS; inference imports/checkpoints/NN
+  module construction/subprocess/external writes blocked.
+current_step: OFFLINE_TOOL_READY
+next_action: Run guarded offline diagnosis on exact frozen maps; counterfactual deterministic
+  fields only; generate repository figures/report.
+tests_run:
+- phase: offline tool before real frozen map aggregation
+  result: 37 passed in 1.99s
+  exit_code: 0
+  fake_only: true
+  deterministic_fields_only_toy_counterfactual: true
+  model_calls: 0
+  external_writes: 0
+  basetemp: C:\Users\ROG\AppData\Local\Temp\task8d-offline-tests-v1
 files_modified:
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
 - evaluation/task8d_above_target_chain_diagnosis_v1.json
+- scripts/task8d_above_target_chain_diagnosis.py
+- tests/test_task8d_above_target_chain_diagnosis.py
 uncommitted_changes: true
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: 764a805ef7d9651bfffd27dfaeb5808e8c21df1f
+  commit: faa043e516f158cc52d9958ec80f82eaed245fdc
   pushed: true
 next_gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
 model_calls: 0
