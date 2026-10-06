@@ -3,15 +3,21 @@ task_id: DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: fix/task8b3-detector-rgb-bgr-contract-v1
-head: 8e9f5712f4edb79bb47f584d3b13774e2c3fafa7
+head: 07aa62e5fd06e79ad42f73c6fd6e5a7e4ae4a29f
 completed:
 - Startup reads, exact clean anchor, authorized branch and task installation verified.
 - Minimal canonical repair and 47/47 related runtime tests PASS, including 5 new boundary/extraction
   cases.
 - Controlled sync 135/135 verified; only two source content identities differ; all
   non-source protected hashes unchanged.
-current_step: SIX_LOCKED_CASE_DETECTOR_REGRESSION
-next_action: SIX_LOCKED_CASE_DETECTOR_REGRESSION
+- A1 frozen real detector, tensor and immutable-input checks completed.
+- A2 frozen real detector, tensor and immutable-input checks completed.
+- A3 frozen real detector, tensor and immutable-input checks completed.
+- A4 frozen real detector, tensor and immutable-input checks completed.
+- B1 frozen real detector, tensor and immutable-input checks completed.
+- B2 frozen real detector, tensor and immutable-input checks completed.
+current_step: EXTERNAL_FULL_REGRESSION
+next_action: EXTERNAL_FULL_REGRESSION
 tests_run:
 - "47 passed in 6.00s\r"
 files_modified:
@@ -27,5 +33,5 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 8e9f5712f4edb79bb47f584d3b13774e2c3fafa7
+  commit: 07aa62e5fd06e79ad42f73c6fd6e5a7e4ae4a29f
   pushed: true
