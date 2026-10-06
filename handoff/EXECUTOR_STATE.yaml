@@ -1,16 +1,29 @@
 schema_version: 1
-task_id: NONE
-status: AWAITING_SUPERVISOR
-executor: NONE
-branch: null
-head: null
-completed: []
-current_step: null
-next_action: null
-hypotheses: []
-tests_run: []
-files_modified: []
-uncommitted_changes: false
+task_id: PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
+status: IN_PROGRESS
+executor: CODEX
+branch: audit/task8b3-prop01-a2-zero-proposals-forensics-v1
+head: 504268128b7a9b058580b7702c9429b27705c053
+completed:
+  - Required five-file startup read and exact clean Git anchor verified.
+  - Supervisor attachment copied verbatim and re-read; SHA256 matched.
+  - Exact A2 and historical proposal-positive A1 provenance established.
+  - Detector weights and 135 actual external source files verified against canonical Git blobs.
+current_step: PHASE_A_PROVENANCE_CHECKPOINT
+next_action: Run frozen detector-only A2 path with passive per-tile/stage observers, then one locked A1 control.
+hypotheses:
+  - NumPy RGB source versus Ultralytics BGR contract requires tensor observation; causal effect untested.
+  - External source_manifest has eight stale entries, but actual source files match canonical; no repair authorized.
+tests_run:
+  - Provenance diagnostic PASS; exact inputs/model/source verified; external inventory and protected hashes unchanged.
+  - Initial provenance harness assertion assumed external manifest identity; inspected discrepancy and recorded stale entries.
+files_modified:
+  - handoff/CURRENT_TASK.md
+  - handoff/EXECUTOR_STATE.yaml
+  - docs/task8b3_prop01_a2_zero_proposals_forensics_v1.md
+  - evaluation/task8b3_prop01_a2_zero_proposals_forensics_v1.json
+  - scripts/diagnose_prop01_a2_zero_proposals.py
+uncommitted_changes: true
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
