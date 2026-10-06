@@ -17,29 +17,28 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE Report
+# FROM_DSH — Task MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE` |
+| Task | `MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION` |
 | Status | **COMPLETE** |
-| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1e1` / `3320212a6992316196bc5b2cfacaeaf027fd070e` |
-| Task branch | `audit/task8b3-mask01-r1e2-full-suite-failure-triage` |
-| Missing canonical assets | 7 (see report inventory) |
-| Group exits | G1=1 · G2=1 · G3=1 · G4=1 · G5=1 |
-| Classified nodes | 32 |
-| Classification counts | {"D": 12, "A": 15, "B": 5} |
-| Validity decision | **FULL_SUITE_CANONICAL_GATE = VALID_AND_HAS_TRUE_REGRESSION** |
-| Recommendation | keep the complete-suite gate on the canonical source tree |
-| full suite re-executed / repairs / canonical modifications | false / none / none |
-| assets created / dependencies installed / inference / external write | false / false / false / false |
-| Evidence | `evaluation\task8b3_mask01_d1_r1e2_full_suite_failure_triage.json` |
-| Report | `docs\task8b3_mask01_d1_r1e2_full_suite_failure_triage.md` |
-| Next gate | `CHATGPT_R1E2_TRUE_REGRESSION_TRIAGE` |
+| Starting branch / head | `audit/task8b3-mask01-r1e2-full-suite-failure-triage` / `7a4e5454cdaf164c8d1706412c55b869074748e0` |
+| Task branch | `audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation` |
+| Nodes audited (individually, `-vv`) | 9 |
+| Classification counts | {"D": 5, "E": 4} |
+| True canonical code regressions | ['tests/test_language_contract.py::test_normal_path_is_qwen_first', 'tests/test_model_package.py::test_decoder_hash_and_bytes_exact', 'tests/test_model_package.py::test_detector_hash_and_bytes_exact', 'tests/test_model_package.py::test_metadata_hashes_match_copied_assets', 'tests/test_model_package.py::test_model_fallback_requires_user_confirmation'] |
+| Verdict | **TRUE_CANONICAL_CODE_REGRESSION_PRESENT** |
+| Recommendation | keep the complete-suite gate on the canonical source tree; triage the true regressions |
+| merged commands / token-as-node / cross-node reuse | false / false / false |
+| full suite / repairs / canonical writes / assets / deps | not run / none / none / none / none |
+| Evidence | `evaluation\task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.json` |
+| Report | `docs\task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.md` |
+| Next gate | `CHATGPT_R1E2_R1_REMOTE_AUDIT` |
 
-Watt was not needed for Task MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION (no downloads, no transfers).
 
 The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.

@@ -1,0 +1,220 @@
+{
+  "task_id": "MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION",
+  "status": "COMPLETE",
+  "starting_branch": "audit/task8b3-mask01-r1e2-full-suite-failure-triage",
+  "starting_head": "7a4e5454cdaf164c8d1706412c55b869074748e0",
+  "task_branch": "audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "nodes_audited": [
+    "tests/test_language_contract.py::test_normal_path_is_qwen_first",
+    "tests/test_model_package.py::test_components_complete",
+    "tests/test_model_package.py::test_decoder_hash_and_bytes_exact",
+    "tests/test_model_package.py::test_detector_hash_and_bytes_exact",
+    "tests/test_model_package.py::test_hash_mismatch_raises",
+    "tests/test_model_package.py::test_metadata_hashes_match_copied_assets",
+    "tests/test_model_package.py::test_model_fallback_requires_user_confirmation",
+    "tests/test_model_package.py::test_model_yaml_parses",
+    "tests/test_model_package.py::test_package_verification_matches"
+  ],
+  "node_count": 9,
+  "execution_method": "one `python -m pytest <NODE_ID> -vv` command per node",
+  "merged_commands_used": false,
+  "pytest_tokens_treated_as_nodes": false,
+  "cross_node_reason_reuse": false,
+  "per_node": [
+    {
+      "node": "tests/test_language_contract.py::test_normal_path_is_qwen_first",
+      "command": "python -m pytest tests/test_language_contract.py::test_normal_path_is_qwen_first -vv",
+      "exit": 1,
+      "classification": "D",
+      "decisive_failure": "assert False is True",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "E       AssertionError: ȱ���ʲ�: program_parser_l3_rehearsal_v1.pt, Qwen3-VL-2B-Instruct",
+        "E       assert False is True",
+        "",
+        "tests\\test_language_contract.py:19: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_language_contract.py::test_normal_path_is_qwen_first - AssertionError: ȱ���ʲ�: program_parser_l3_rehearsal_v1.pt, Qwen3-VL-2B-Instruct",
+        "assert False is True",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_components_complete",
+      "command": "python -m pytest tests/test_model_package.py::test_components_complete -vv",
+      "exit": 1,
+      "classification": "E",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_components_complete - buildreasonseg.errors.BuildReasonSegError: E302",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "        if missing:",
+        ">           raise BuildReasonSegError(\"E302\", detail=f\"ģ�Ͱ�ȱ���ļ�: {', '.join(missing)}\")",
+        "E           buildreasonseg.errors.BuildReasonSegError: E302",
+        "",
+        "buildreasonseg\\models\\package.py:56: BuildReasonSegError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_components_complete - buildreasonseg.errors.BuildReasonSegError: E302",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_decoder_hash_and_bytes_exact",
+      "command": "python -m pytest tests/test_model_package.py::test_decoder_hash_and_bytes_exact -vv",
+      "exit": 1,
+      "classification": "D",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_decoder_hash_and_bytes_exact - AssertionError: assert False",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "E        +    where is_file = WindowsPath('C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/decoder.pt').is_file",
+        "",
+        "tests\\test_model_package.py:24: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_decoder_hash_and_bytes_exact - AssertionError: assert False",
+        " +  where False = is_file()",
+        " +    where is_file = WindowsPath('C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/decoder.pt').is_file",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_detector_hash_and_bytes_exact",
+      "command": "python -m pytest tests/test_model_package.py::test_detector_hash_and_bytes_exact -vv",
+      "exit": 1,
+      "classification": "D",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_detector_hash_and_bytes_exact - AssertionError: assert False",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "E        +    where is_file = WindowsPath('C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/detector.pt').is_file",
+        "",
+        "tests\\test_model_package.py:31: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_detector_hash_and_bytes_exact - AssertionError: assert False",
+        " +  where False = is_file()",
+        " +    where is_file = WindowsPath('C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/detector.pt').is_file",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_hash_mismatch_raises",
+      "command": "python -m pytest tests/test_model_package.py::test_hash_mismatch_raises -vv",
+      "exit": 1,
+      "classification": "E",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_hash_mismatch_raises - buildreasonseg.errors.BuildReasonSegError: E302",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "        if missing:",
+        ">           raise BuildReasonSegError(\"E302\", detail=f\"ģ�Ͱ�ȱ���ļ�: {', '.join(missing)}\")",
+        "E           buildreasonseg.errors.BuildReasonSegError: E302",
+        "",
+        "buildreasonseg\\models\\package.py:56: BuildReasonSegError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_hash_mismatch_raises - buildreasonseg.errors.BuildReasonSegError: E302",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_metadata_hashes_match_copied_assets",
+      "command": "python -m pytest tests/test_model_package.py::test_metadata_hashes_match_copied_assets -vv",
+      "exit": 1,
+      "classification": "D",
+      "decisive_failure": "assert False",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "",
+        "tests\\test_model_package.py:94: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_metadata_hashes_match_copied_assets - AssertionError: model/buildreasonseg_advisor/decoder.pt",
+        "assert False",
+        " +  where False = is_file()",
+        " +    where is_file = WindowsPath('C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/decoder.pt').is_file",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_model_fallback_requires_user_confirmation",
+      "command": "python -m pytest tests/test_model_package.py::test_model_fallback_requires_user_confirmation -vv",
+      "exit": 1,
+      "classification": "D",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_model_fallback_requires_user_confirmation - assert False",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.08s ==============================",
+      "output_tail": [
+        "E       assert False",
+        "E        +  where False = any(<generator object test_model_fallback_requires_user_confirmation.<locals>.<genexpr> at 0x0000017EC9381BE0>)",
+        "",
+        "tests\\test_model_package.py:118: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_model_fallback_requires_user_confirmation - assert False",
+        " +  where False = any(<generator object test_model_fallback_requires_user_confirmation.<locals>.<genexpr> at 0x0000017EC9381BE0>)",
+        "============================== 1 failed in 0.08s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_model_yaml_parses",
+      "command": "python -m pytest tests/test_model_package.py::test_model_yaml_parses -vv",
+      "exit": 1,
+      "classification": "E",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_model_yaml_parses - buildreasonseg.errors.BuildReasonSegError: E302",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "        if missing:",
+        ">           raise BuildReasonSegError(\"E302\", detail=f\"ģ�Ͱ�ȱ���ļ�: {', '.join(missing)}\")",
+        "E           buildreasonseg.errors.BuildReasonSegError: E302",
+        "",
+        "buildreasonseg\\models\\package.py:56: BuildReasonSegError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_model_yaml_parses - buildreasonseg.errors.BuildReasonSegError: E302",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    },
+    {
+      "node": "tests/test_model_package.py::test_package_verification_matches",
+      "command": "python -m pytest tests/test_model_package.py::test_package_verification_matches -vv",
+      "exit": 1,
+      "classification": "E",
+      "decisive_failure": "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302",
+      "missing_paths": [],
+      "summary": "============================== 1 failed in 0.06s ==============================",
+      "output_tail": [
+        "        if missing:",
+        ">           raise BuildReasonSegError(\"E302\", detail=f\"ģ�Ͱ�ȱ���ļ�: {', '.join(missing)}\")",
+        "E           buildreasonseg.errors.BuildReasonSegError: E302",
+        "",
+        "buildreasonseg\\models\\package.py:56: BuildReasonSegError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_model_package.py::test_package_verification_matches - buildreasonseg.errors.BuildReasonSegError: E302",
+        "============================== 1 failed in 0.06s =============================="
+      ]
+    }
+  ],
+  "classification_counts": {
+    "D": 5,
+    "E": 4
+  },
+  "true_regressions": [
+    "tests/test_language_contract.py::test_normal_path_is_qwen_first",
+    "tests/test_model_package.py::test_decoder_hash_and_bytes_exact",
+    "tests/test_model_package.py::test_detector_hash_and_bytes_exact",
+    "tests/test_model_package.py::test_metadata_hashes_match_copied_assets",
+    "tests/test_model_package.py::test_model_fallback_requires_user_confirmation"
+  ],
+  "verdict": "TRUE_CANONICAL_CODE_REGRESSION_PRESENT",
+  "recommendation": "keep the complete-suite gate on the canonical source tree; triage the true regressions",
+  "full_suite_reexecuted": false,
+  "repairs_attempted": false,
+  "canonical_tracked_files_modified": false,
+  "assets_created_or_downloaded": false,
+  "dependencies_installed": false,
+  "model_inference": false,
+  "external_write": false,
+  "manifest_listed_assets": 135,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1E2_R1_REMOTE_AUDIT"
+}

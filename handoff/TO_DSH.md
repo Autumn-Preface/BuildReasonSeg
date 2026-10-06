@@ -1,76 +1,84 @@
-# TO_DSH — MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE
+# TO_DSH — MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `fix/task8b3-mask01-success-semantics-r1e1`
-> Required starting HEAD: `3320212a6992316196bc5b2cfacaeaf027fd070e`
-> New task branch: `audit/task8b3-mask01-r1e2-full-suite-failure-triage`
+> Required starting branch: `audit/task8b3-mask01-r1e2-full-suite-failure-triage`
+> Required starting HEAD: `7a4e5454cdaf164c8d1706412c55b869074748e0`
+> New task branch: `audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation`
 
-## 0. FROZEN STATE
+## 0. CHATGPT AUDIT
 
-R1-E1 is ACCEPTED for its targeted canonical scope.
+The previous R1-E2 remote state is accepted only as a persisted diagnostic snapshot.
 
-Verified:
+Its final classification is NOT accepted.
+
+Why:
+
+1. The report treated non-node pytest tokens such as:
+   ```text
+   [
+   [100%]
+   at
+   ```
+   as if they were test nodes.
+
+2. It classified:
+   ```text
+   test_normal_path_is_qwen_first
+   ```
+   as `D = TRUE_CANONICAL_CODE_REGRESSION`,
+   even though the same audit established that the canonical lightweight tree does NOT contain:
+   ```text
+   model/components/program_head/Qwen3-VL-2B-Instruct
+   ```
+   and this test asserts `frontend.available() is True`.
+
+3. It classified the complete model-package failure group as `D`,
+   even though the same inventory established that these complete-delivery assets are absent and not source-manifest-listed:
+   ```text
+   model/buildreasonseg_advisor/decoder.pt
+   model/buildreasonseg_advisor/detector.pt
+   model/components/sam2/sam2.1_hiera_base_plus.pt
+   model/components/program_head/program_parser_l3_rehearsal_v1.pt
+   model/components/program_head/Qwen3-VL-2B-Instruct
+   ```
+
+Therefore:
 
 ```text
-Gate A SUCCESS semantics = 5/5 PASS
-Gate B inspect-proposals contract = 2/2 PASS
-Gate C source manifest Git identity = PASS
-
-basis = GIT_CANONICAL_BLOB_BYTES
-entries = 135
-ordered_path_digest =
-7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd
+R1E2_STATE = ACCEPTED_AS_DIAGNOSTIC_SNAPSHOT
+R1E2_CLASSIFICATION = REJECTED
+FULL_SUITE_CANONICAL_GATE_DECISION = NOT_YET_DECIDED
 ```
 
-Therefore these three contracts are established:
-
-```text
-SUCCESS_SEMANTICS_HARDENING_TARGETED_CONTRACT = PASS
-INSPECT_PROPOSALS_ERROR_ORDER_CONTRACT = PASS
-SOURCE_MANIFEST_CANONICAL_IDENTITY = PASS
-```
-
-However, the earlier full suite on the canonical source tree produced:
-
-```text
-16 failed
-108 passed
-6 errors
-```
-
-The failing nodes cluster around:
-- model package/assets;
-- setup checker / runtime readiness;
-- paths / required delivery structure;
-- language Qwen availability;
-- Task 8B.1 frozen log fixtures.
-
-The canonical source manifest is explicitly a lightweight source/config snapshot, while several of those tests appear to require complete delivery assets and fixtures.
-
-This task performs READ-ONLY FAILURE TRIAGE ONLY.
-
-No repair is authorized.
+This corrective task disambiguates only the nodes that were incorrectly labeled TRUE REGRESSION.
 
 ---
 
 ## 1. PURPOSE
 
-Determine whether each previous full-suite failure belongs to one of these categories:
+Run each of the following REAL test nodes individually and capture its own output:
 
 ```text
-A = MISSING_FULL_DELIVERY_ASSET
-B = MISSING_NONCANONICAL_TEST_FIXTURE
-C = RUNTIME_DEPENDENCY_ENVIRONMENT
-D = TRUE_CANONICAL_CODE_REGRESSION
-E = OTHER
+tests/test_language_contract.py::test_normal_path_is_qwen_first
+
+tests/test_model_package.py::test_components_complete
+tests/test_model_package.py::test_decoder_hash_and_bytes_exact
+tests/test_model_package.py::test_detector_hash_and_bytes_exact
+tests/test_model_package.py::test_hash_mismatch_raises
+tests/test_model_package.py::test_metadata_hashes_match_copied_assets
+tests/test_model_package.py::test_model_fallback_requires_user_confirmation
+tests/test_model_package.py::test_model_yaml_parses
+tests/test_model_package.py::test_package_verification_matches
 ```
 
-The goal is NOT to make tests pass.
+Exactly 9 real nodes.
 
-The goal is to decide whether the complete pytest suite is a valid gate for the lightweight canonical source tree, or belongs on the external complete RC1 delivery after D2 sync.
+Do NOT infer one node's reason from another node.
+Do NOT parse progress tokens as nodes.
+Do NOT run these nodes as one pytest batch.
 
 ---
 
@@ -80,16 +88,16 @@ Verify:
 
 ```text
 current branch =
-fix/task8b3-mask01-success-semantics-r1e1
+audit/task8b3-mask01-r1e2-full-suite-failure-triage
 
 HEAD =
-3320212a6992316196bc5b2cfacaeaf027fd070e
+7a4e5454cdaf164c8d1706412c55b869074748e0
 ```
 
 Create:
 
 ```text
-audit/task8b3-mask01-r1e2-full-suite-failure-triage
+audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation
 ```
 
 Allowed initial worktree:
@@ -102,88 +110,101 @@ No reset/rebase/amend/stash/clean/force-push.
 
 ## 3. ALLOWED CHANGES
 
-Only:
+Only task records:
 
 ```text
-docs/task8b3_mask01_d1_r1e2_full_suite_failure_triage.md
-evaluation/task8b3_mask01_d1_r1e2_full_suite_failure_triage.json
+docs/task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.md
+evaluation/task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-DO NOT MODIFY ANYTHING UNDER:
+Do NOT modify anything under:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/
 ```
 
-Do not modify external RC1.
-
-Generated caches/logs must not be staged.
-
----
-
-## 4. DO NOT RUN THE COMPLETE SUITE AGAIN
-
-Explicitly forbidden:
-
-```text
-python -m pytest -q
-```
-
-We already have that result.
-
-This task runs only the previously failing groups with verbose failure output.
-
-Do not use `-k`.
-Do not repair.
-Do not add skips/xfails.
+Do NOT create/download/copy model assets.
+Do NOT install dependencies.
+Do NOT write external RC1.
 
 ---
 
-## 5. INVENTORY CHECK — REQUIRED FIRST
+## 4. CLASSIFICATION RULE — FROZEN
 
-From repository root, inspect the canonical source tree and its source manifest.
-
-Run a read-only Python command/script that reports existence AND whether each path is listed in `source_manifest.json` for:
+For each real node choose exactly one:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/decoder.pt
-delivery_src/BuildReasonSeg_Advisor_RC1/model/buildreasonseg_advisor/detector.pt
-delivery_src/BuildReasonSeg_Advisor_RC1/model/components/sam2/sam2.1_hiera_base_plus.pt
-delivery_src/BuildReasonSeg_Advisor_RC1/model/components/program_head/program_parser_l3_rehearsal_v1.pt
-delivery_src/BuildReasonSeg_Advisor_RC1/model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors
-delivery_src/BuildReasonSeg_Advisor_RC1/logs/task8b1_prompt_suite.json
-delivery_src/BuildReasonSeg_Advisor_RC1/logs/task8b_gates.json
-delivery_src/BuildReasonSeg_Advisor_RC1/setup_env.bat
+A = MISSING_FULL_DELIVERY_ASSET
+B = MISSING_NONCANONICAL_TEST_FIXTURE
+C = RUNTIME_DEPENDENCY_ENVIRONMENT
+D = TRUE_CANONICAL_CODE_REGRESSION
+E = OTHER
+PASS = TEST_PASSES_WHEN_RUN_INDIVIDUALLY
 ```
 
-Also report existence of these directories:
+Use these rules:
 
+### A — MISSING_FULL_DELIVERY_ASSET
+
+Use A only when the decisive failure is caused by a model/component/delivery asset or required delivery structure that:
+- is absent from the lightweight canonical tree, AND
+- is not part of the 135-entry lightweight source manifest.
+
+Examples include missing:
 ```text
-model/components/sam2
-logs
-runs/train
-runs/eval
-inference/output/masks
-inference/output/overlays
-inference/output/diagnostics
+decoder.pt
+detector.pt
+SAM2 checkpoint/config
+ProgramHead checkpoint
+Qwen base directory/assets
 ```
 
-Do not create missing paths.
+### C — RUNTIME_DEPENDENCY_ENVIRONMENT
 
-Record:
+Use C when the decisive failure is a missing/wrong Python runtime dependency/version and not a code assertion.
 
-```text
-exists = true/false
-manifest_listed = true/false
-```
+### D — TRUE_CANONICAL_CODE_REGRESSION
 
-for files.
+Use D ONLY when:
+- the test does not require an intentionally omitted full-delivery asset/fixture to reach its assertion, AND
+- the actual assertion demonstrates current canonical source behavior violating the test contract.
+
+A missing full-delivery asset MUST NOT be labeled D.
+
+### PASS
+
+If the node passes individually, record PASS.
+A previous batched/group failure must not be assigned to a node that passes individually.
 
 ---
 
-## 6. TRIAGE GROUP 1 — LANGUAGE AVAILABILITY
+## 5. INVENTORY FACTS — DO NOT RE-DISCOVER AS CODE CHANGES
+
+Previously established in the same remote state:
+
+```text
+ABSENT + NOT SOURCE-MANIFEST-LISTED:
+model/buildreasonseg_advisor/decoder.pt
+model/buildreasonseg_advisor/detector.pt
+model/components/sam2/sam2.1_hiera_base_plus.pt
+model/components/sam2/sam2.1_hiera_b+.yaml
+model/components/program_head/program_parser_l3_rehearsal_v1.pt
+model/components/program_head/Qwen3-VL-2B-Instruct
+
+PRESENT:
+model/buildreasonseg_advisor/model.yaml
+model/buildreasonseg_advisor/metadata.json
+model/buildreasonseg_advisor/metrics.json
+model/components/program_head/qwen_asset_manifest.json
+```
+
+Use these facts when interpreting a node's own traceback.
+
+---
+
+## 6. EXACT EXECUTION METHOD
 
 Working directory:
 
@@ -191,223 +212,185 @@ Working directory:
 delivery_src/BuildReasonSeg_Advisor_RC1
 ```
 
-Run exactly:
+Run EXACTLY ONE node per pytest invocation.
+
+Use:
 
 ```text
-python -m pytest tests/test_language_contract.py::test_normal_path_is_qwen_first -vv
+python -m pytest <NODE_ID> -vv
 ```
 
-Record:
-- exit;
-- assertion/error;
-- exact reason returned by `frontend.available()`;
-- classification A/B/C/D/E.
+for each of the 9 node IDs below.
 
-No repair.
+### Node 1
+
+```text
+tests/test_language_contract.py::test_normal_path_is_qwen_first
+```
+
+### Node 2
+
+```text
+tests/test_model_package.py::test_components_complete
+```
+
+### Node 3
+
+```text
+tests/test_model_package.py::test_decoder_hash_and_bytes_exact
+```
+
+### Node 4
+
+```text
+tests/test_model_package.py::test_detector_hash_and_bytes_exact
+```
+
+### Node 5
+
+```text
+tests/test_model_package.py::test_hash_mismatch_raises
+```
+
+### Node 6
+
+```text
+tests/test_model_package.py::test_metadata_hashes_match_copied_assets
+```
+
+### Node 7
+
+```text
+tests/test_model_package.py::test_model_fallback_requires_user_confirmation
+```
+
+### Node 8
+
+```text
+tests/test_model_package.py::test_model_yaml_parses
+```
+
+### Node 9
+
+```text
+tests/test_model_package.py::test_package_verification_matches
+```
+
+Do not batch them together.
 
 ---
 
-## 7. TRIAGE GROUP 2 — MODEL PACKAGE
+## 7. REQUIRED PER-NODE EVIDENCE
 
-Run exactly these previously failing nodes:
-
-```text
-python -m pytest tests/test_model_package.py::test_components_complete tests/test_model_package.py::test_decoder_hash_and_bytes_exact tests/test_model_package.py::test_detector_hash_and_bytes_exact tests/test_model_package.py::test_hash_mismatch_raises tests/test_model_package.py::test_metadata_hashes_match_copied_assets tests/test_model_package.py::test_model_fallback_requires_user_confirmation tests/test_model_package.py::test_model_yaml_parses tests/test_model_package.py::test_package_verification_matches -vv
-```
-
-For EACH failing node record:
-- first decisive failure line;
-- missing path / hash mismatch / config error / other;
-- classification A/B/C/D/E.
-
-Do not modify files or model assets.
-
----
-
-## 8. TRIAGE GROUP 3 — PATHS / DELIVERY STRUCTURE
-
-Run exactly:
+For EACH node record:
 
 ```text
-python -m pytest tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths tests/test_paths_and_package.py::test_required_structure -vv
-```
-
-For each failure record:
-- exact missing file/dir or assertion;
-- whether that item is expected to exist in the 135-entry source manifest;
-- classification A/B/C/D/E.
-
----
-
-## 9. TRIAGE GROUP 4 — SETUP CHECKER
-
-Run exactly:
-
-```text
-python -m pytest tests/test_setup_checker.py::test_good_fixture_is_ready tests/test_setup_checker.py::test_hash_mismatch_nonzero tests/test_setup_checker.py::test_invalid_model_yaml_nonzero tests/test_setup_checker.py::test_missing_decoder_nonzero tests/test_setup_checker.py::test_missing_qwen_component_nonzero tests/test_setup_checker.py::test_missing_sam2_nonzero tests/test_setup_checker.py::test_real_project_check_reports_ready tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready -vv
-```
-
-For each failing/error node record:
-- whether failure occurs during fixture construction or actual test assertion;
-- decisive missing file/dir/runtime dependency;
-- classification A/B/C/D/E.
-
-Do NOT install packages.
-Do NOT create missing assets.
-
----
-
-## 10. TRIAGE GROUP 5 — TASK 8B.1 FIXTURES
-
-Run exactly:
-
-```text
-python -m pytest tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim -vv
-```
-
-Record:
-- exact missing fixture or other failure;
-- whether that fixture is included in source_manifest.json;
-- classification A/B/C/D/E.
-
----
-
-## 11. REQUIRED AGGREGATE CLASSIFICATION
-
-Build a table containing every previously failing/error node from the R1-E STOP snapshot.
-
-Columns:
-
-```text
-node
-reproduced_status
-decisive_reason
-required_path_or_dependency
-exists_in_canonical_tree
-listed_in_source_manifest
+node_id
+exit_code
+pytest_summary
+PASS_or_FAIL
+exception_type_or_assertion
+first_decisive_failure_line
+required_missing_path_if_any
+required_runtime_dependency_if_any
 classification
-mask01_change_related
+classification_reason
 ```
 
-`mask01_change_related` must be one of:
+`first_decisive_failure_line` must come from that node's own invocation.
 
-```text
-YES
-NO
-UNRESOLVED
-```
-
-Do NOT mark `NO` merely because a file is missing.
-Explain causality from the actual failure.
+Do NOT use:
+- another node's failure line;
+- the group's final summary;
+- `[100%]`;
+- generic `FAILED ...` from a different node.
 
 ---
 
-## 12. VALIDITY DECISION
+## 8. SPECIAL CHECKS
 
-At the end, choose exactly one:
+### test_normal_path_is_qwen_first
 
-### Decision 1
+Record the exact `reason` returned by:
 
-```text
-FULL_SUITE_CANONICAL_GATE = INVALID_FOR_LIGHTWEIGHT_SOURCE_TREE
+```python
+QwenProgramHeadFrontend().available()
 ```
 
-Use only if evidence establishes that all reproduced failures/errors are caused by intentionally absent complete-delivery assets, noncanonical fixtures, or runtime-environment requirements rather than canonical code regressions.
+You may use a read-only Python one-liner to print it.
 
-Then recommend:
+If the reason identifies absent Qwen assets in the lightweight tree, classification must be A, not D.
 
+### test_model_yaml_parses
+
+This node reads `model.yaml`, which is PRESENT and source-manifest-listed.
+
+If it passes individually:
 ```text
-R1 canonical closure basis = targeted A/B/C contracts
-full complete suite gate = move to D2 external complete RC1
+classification = PASS
 ```
 
-### Decision 2
+If it fails, capture the exact field/value mismatch before considering D.
 
-```text
-FULL_SUITE_CANONICAL_GATE = VALID_AND_HAS_TRUE_REGRESSION
-```
+### test_hash_mismatch_raises
 
-Use if at least one failure is a genuine canonical code/test regression independent of absent delivery assets/environment.
+Determine whether it reaches its intended synthetic hash-mismatch assertion or fails earlier because `ModelPackage.load(DEFAULT_MODEL)` / required package assets are incomplete.
 
-Identify those nodes.
-
-### Decision 3
-
-```text
-FULL_SUITE_CANONICAL_GATE = UNRESOLVED
-```
-
-Use if evidence is insufficient.
-
-Do NOT make any repairs in all three cases.
+Classify from the actual node output.
 
 ---
 
-## 13. REQUIRED REPORT
+## 9. NO FULL SUITE / NO OTHER GROUPS
 
-Create:
-
-```text
-docs/task8b3_mask01_d1_r1e2_full_suite_failure_triage.md
-evaluation/task8b3_mask01_d1_r1e2_full_suite_failure_triage.json
-```
-
-Update:
+Do NOT run:
 
 ```text
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
+python -m pytest -q
 ```
 
-Report:
+Do NOT run:
+- paths group;
+- setup checker group;
+- Task 8B.1 group;
+- targeted MASK gates again.
 
-```text
-task_id = MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE
-status
-
-starting branch/head
-task branch
-
-canonical_inventory = {...}
-
-group1 result
-group2 result
-group3 result
-group4 result
-group5 result
-
-per_node_classification = [...]
-
-classification_counts:
-A =
-B =
-C =
-D =
-E =
-
-mask01_related:
-YES =
-NO =
-UNRESOLVED =
-
-full_suite_canonical_gate_decision =
-INVALID_FOR_LIGHTWEIGHT_SOURCE_TREE
-or VALID_AND_HAS_TRUE_REGRESSION
-or UNRESOLVED
-
-repairs_attempted = false
-canonical_tracked_files_modified = false
-full_suite_reexecuted = false
-model_inference = false
-training = false
-external_write = false
-
-next_gate = CHATGPT_R1E2_REMOTE_AUDIT
-```
+This task is only the 9-node D-vs-asset disambiguation.
 
 ---
 
-## 14. WORKTREE AUDIT
+## 10. AGGREGATE DECISION
+
+After all 9 individual runs, record:
+
+```text
+true_regression_count = number classified D
+missing_full_delivery_asset_count = number classified A
+runtime_environment_count = number classified C
+other_count = number classified E
+individual_pass_count = number classified PASS
+```
+
+Then choose exactly one:
+
+### If `true_regression_count == 0`
+
+```text
+PREVIOUS_TRUE_REGRESSION_CLASSIFICATION = REFUTED_FOR_GROUPS_1_2
+```
+
+This does NOT yet close R1-E2 globally; ChatGPT will combine this with groups 3/4/5 evidence.
+
+### If `true_regression_count > 0`
+
+```text
+PREVIOUS_TRUE_REGRESSION_CLASSIFICATION = CONFIRMED_IN_PART
+```
+
+List exact D nodes.
+
+---
+
+## 11. WORKTREE AUDIT
 
 After diagnostics:
 
@@ -417,32 +400,87 @@ git diff --name-only
 git diff --cached --name-only
 ```
 
-Do not stage generated files outside authorized task records.
-Do not use `git clean`.
+Do not stage/delete generated files outside authorized task records.
 
 ---
 
-## 15. EVERY OUTCOME MUST BE PUSHED
+## 12. REQUIRED REPORT
+
+Create:
+
+```text
+docs/task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.md
+evaluation/task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.json
+```
+
+Update:
+
+```text
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+Required report fields:
+
+```text
+task_id = MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION
+status
+starting branch/head
+task branch
+
+nodes_requested = 9
+nodes_executed_individually = 9
+
+per_node = [...]
+
+classification_counts:
+A =
+B =
+C =
+D =
+E =
+PASS =
+
+previous_true_regression_classification =
+REFUTED_FOR_GROUPS_1_2
+or CONFIRMED_IN_PART
+
+true_regression_nodes = [...]
+
+full_suite_reexecuted = false
+canonical_files_modified = false
+assets_created = false
+dependencies_installed = false
+repairs_attempted = false
+model_inference = false
+external_write = false
+
+next_gate = CHATGPT_R1E2_R1_REMOTE_AUDIT
+```
+
+---
+
+## 13. EVERY OUTCOME MUST BE PUSHED
 
 Whether COMPLETE / STOP / FAILED:
 - persist report/evidence/FROM_DSH;
 - commit only authorized task records;
-- push branch.
+- push task branch.
 
 ---
 
-## 16. COMMIT / PUSH
+## 14. COMMIT / PUSH
 
-Commit:
+Commit exactly:
 
 ```text
-git commit -m "docs(rc1): classify canonical full-suite failures"
+git commit -m "docs(rc1): disambiguate asset versus code regressions"
 ```
 
 Push:
 
 ```text
-audit/task8b3-mask01-r1e2-full-suite-failure-triage
+audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation
 ```
 
 No force push.
@@ -451,19 +489,18 @@ Then STOP.
 
 ---
 
-## 17. SUCCESS DEFINITION
+## 15. SUCCESS DEFINITION
 
 ```text
-MASK01_D1_R1E2_FULL_SUITE_FAILURE_TRIAGE = COMPLETE
+MASK01_D1_R1E2_R1_ASSET_REGRESSION_DISAMBIGUATION = COMPLETE
 
-all five failing groups diagnostically rerun
-all previous failing/error nodes classified
-no repair attempted
+9 real nodes executed individually
+no pytest progress token treated as a node
+every classification based on that node's own decisive output
+no repair performed
 canonical files unchanged
 
-full-suite gate validity decided with evidence
-
-NEXT = CHATGPT_R1E2_REMOTE_AUDIT
+NEXT = CHATGPT_R1E2_R1_REMOTE_AUDIT
 ```
 
 Then STOP.
