@@ -7,7 +7,7 @@ Task ID:
 TASK8C_FINAL_DEMO_V1
 
 Status:
-IN_PROGRESS
+STOPPED_FOR_SUPERVISOR
 
 Decision owner:
 ChatGPT Supervisor
@@ -1448,3 +1448,12 @@ Observed task HEAD: 3fac0e668c2af30b35bfae1ab8a3f36cee329e26. Freeze includes un
 # Formal runtime frozen — before GT audit
 
 Freeze commit 20615080264774eb7b93b7d6a3c1e547093c4876 was pushed and verified before the only runner invocation. Runner exit 0; right -> left -> above -> below, each once; all four processes exited. All four current production results record runtime SUCCESS, RUNTIME_STRUCTURAL_ONLY / NOT_EVALUATED. Runtime JSON, per-case output hashes and transcripts are frozen. No retry, replacement, reference override or proposal inspect. Native-vector GT has not been read. Raw runtime evidence checkpoint must be pushed before evaluator. Grandfathered settings unchanged; complete pre-existing external byte identities preserved; only four run roots and Task8C logs added.
+
+
+# Executor GT-evaluator STOP checkpoint — 2026-10-07
+
+Formal freeze 20615080264774eb7b93b7d6a3c1e547093c4876 was pushed before the single runner invocation. Four candidates were attempted once; four runtime SUCCESS/SUGGESTION_CORRECT. Raw runtime checkpoint f41f32a05b83141312b078e6ab5975fbf70ec889 was pushed before GT. GT evaluator ran once (model calls=0, detector calls=0) and failed during first SUCCESS review at task8c_final_demo_evaluate.py:226: ValueError: assignment destination is read-only. The saved-overlay np.asarray view cannot accept GT boundary drawing. No review PNG/contact sheet or complete GT report was produced.
+
+Frozen evaluator/runner/tests were not changed or rerun; no inference retry. All raw runtime outputs/hashes remain preserved. Stop-time integrity PASS: external source 135/135, manifest MATCH, 1543 historical output files (bytes/SHA/mtime), 6 inputs, 20 protected model byte/SHA identities, grandfathered settings, frozen outputs and Task8C logs unchanged. New files only in observed four Task8C run roots and Task8C logs; no additional external-root config appeared.
+
+STOP pending Supervisor disposition for an evaluation-only frozen-evaluator rendering repair and identity update. Do not rerun formal inference or repair any model/algorithm.

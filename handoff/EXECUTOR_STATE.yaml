@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8C_FINAL_DEMO_V1
-status: IN_PROGRESS
+status: STOPPED_FOR_SUPERVISOR
 executor: CODEX
 branch: eval/task8c-final-demo-v1
-head: 20615080264774eb7b93b7d6a3c1e547093c4876
+head: f41f32a05b83141312b078e6ab5975fbf70ec889
 completed:
 - Required canonical read order and exact fetched predecessor verified.
 - Evaluation branch created; full task book initially installed byte-for-byte.
@@ -26,9 +26,16 @@ completed:
   identities/caches verified.
 - 'One formal runner invocation: four candidates once in right/left/above/below order;
   four runtime SUCCESS; all raw output hashes frozen; GT not started.'
-current_step: FORMAL_RUNTIME_FROZEN_PENDING_GT_CHECKPOINT_PUSH
-next_action: Commit/push raw runtime evidence before zero-model-call GT evaluator.
-  No inference retry.
+- Raw runtime checkpoint f41f32a pushed before GT evaluator.
+- GT evaluator ran once with zero model/detector calls; first review failed on read-only
+  overlay array, no complete review or GT evidence persisted.
+- 'Stop-time integrity PASS: 135/135/manifest, all historical output/input/assets,
+  frozen outputs/log hashes and grandfathered settings; only authorized new run/log
+  paths.'
+current_step: STOP_FROZEN_GT_EVALUATOR_REVIEW_READ_ONLY_ARRAY
+next_action: Supervisor review of frozen-evaluator rendering failure; preserve all
+  four consumed formal attempts and outputs. No inference/evaluator rerun or harness
+  modification.
 tests_run:
 - name: Task8C dedicated fake tests - earlier revision
   result: 40 passed
@@ -45,10 +52,12 @@ files_modified:
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
 uncommitted_changes: true
-blocked_on_supervisor: false
-block_reason: null
+blocked_on_supervisor: true
+block_reason: Frozen evaluator failed at line 226 while drawing a target GT boundary
+  into a read-only saved-overlay array. Repair would change frozen harness bytes,
+  which current authorization forbids.
 last_checkpoint:
-  commit: 20615080264774eb7b93b7d6a3c1e547093c4876
+  commit: f41f32a05b83141312b078e6ab5975fbf70ec889
   pushed: true
 next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 formal_runner_invocation_count: 1
@@ -57,7 +66,7 @@ no_model_inference: false
 external_preflight: Accepted 42/42, 135/135, manifest MATCH, setup READY, TIFF PASS;
   grandfathered settings preserved
 formal_freeze: COMMITTED_PUSHED_AND_VERIFIED
-gt_audit: NOT_STARTED
+gt_audit: STARTED_THEN_FAILED_IN_FIRST_REVIEW
 no_product_change: true
 no_governance_change: true
 governance_staleness_acknowledged: true
@@ -78,4 +87,8 @@ execution_environment:
   TRANSFORMERS_OFFLINE: '1'
 formal_freeze_commit: 20615080264774eb7b93b7d6a3c1e547093c4876
 formal_runner_exit_code: 0
-runtime_output_hashes: FROZEN
+runtime_output_hashes: FROZEN_AND_UNCHANGED
+gt_evaluator_exit_code: 1
+gt_model_calls: 0
+gt_detector_calls: 0
+no_inference_retry: true
