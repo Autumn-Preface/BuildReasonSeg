@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: diag/task8d-above-target-chain-v1
-head: faa043e516f158cc52d9958ec80f82eaed245fdc
+head: e87e8f727d757a0fc2085ef333842a29537d0435
 accepted_predecessor: TASK8C_FINAL_DEMO_V1 = ACCEPT
 completed:
 - Canonical read order completed; fetched remote predecessor exact; working tree clean;
@@ -14,9 +14,21 @@ completed:
   quantitative analysis.
 - Offline-only diagnostic code and 37 dedicated tests PASS; inference imports/checkpoints/NN
   module construction/subprocess/external writes blocked.
-current_step: OFFLINE_TOOL_READY
-next_action: Run guarded offline diagnosis on exact frozen maps; counterfactual deterministic
-  fields only; generate repository figures/report.
+- Single guarded offline quantitative diagnosis completed on exact frozen maps; only
+  GT-reference deterministic P_dir/P_near/W/A recomputed; zero inference/checkpoint/process-model
+  calls.
+- All seven GT context instances reported; target6-vs7 trajectory, fixed-order first
+  divergence, canonical relations/boundary distance, D-B1 mechanism and runtime guards
+  documented with exact source citations.
+- Nine diagnostic figures generated in repository only and individually visually reviewed;
+  current dedicated tests41/41 PASS.
+- Final read-only135/135 manifest check and complete2184-file external integrity PASS;
+  Task8C/native truth/source/governance/input/historical output/protected assets unchanged.
+- Completion evidence prepared; commit/push and STOP for Supervisor remote audit.
+  No repair or architecture prescription.
+current_step: DIAGNOSIS_COMPLETE_READY_FOR_SUPERVISOR_REMOTE_AUDIT
+next_action: STOP; await CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT. Do not
+  begin repair.
 tests_run:
 - phase: offline tool before real frozen map aggregation
   result: 37 passed in 1.99s
@@ -26,16 +38,48 @@ tests_run:
   model_calls: 0
   external_writes: 0
   basetemp: C:\Users\ROG\AppData\Local\Temp\task8d-offline-tests-v1
+- phase: current offline diagnosis and conservative counterfactual interpretation
+    revision
+  result: 41 passed in 1.90s
+  exit_code: 0
+  fake_only: true
+  deterministic_fields_only_toy_counterfactual: true
+  model_calls: 0
+  external_writes: 0
+  basetemp: C:\Users\ROG\AppData\Local\Temp\task8d-offline-tests-v2
+  validated_diagnostic_script_sha256: 3689f1393e5907abf7bf33174907c1324c7b4165dd30f6fd1e6747f56e46ddef
+  validated_test_sha256: 6ad270f89dfff8b25acd895396073080ada59dd5764d6ed87ddc03d06bb12282
+- phase: final report closure/current diagnostic script and final JSON consistency
+    revision
+  result: 41 passed in 1.76s
+  exit_code: 0
+  fake_only: true
+  deterministic_fields_only_toy_counterfactual: true
+  model_calls: 0
+  external_writes: 0
+  basetemp: C:\Users\ROG\AppData\Local\Temp\task8d-offline-tests-v3
+  validated_diagnostic_script_sha256: 23bca55a7ee9edd7765da0d3a413e474a6e1cb4f86affb7a96d8c42bffe76616
+  validated_test_sha256: 6ad270f89dfff8b25acd895396073080ada59dd5764d6ed87ddc03d06bb12282
 files_modified:
-- handoff/CURRENT_TASK.md
-- handoff/EXECUTOR_STATE.yaml
-- evaluation/task8d_above_target_chain_diagnosis_v1.json
 - scripts/task8d_above_target_chain_diagnosis.py
 - tests/test_task8d_above_target_chain_diagnosis.py
-uncommitted_changes: true
+- docs/task8d_above_target_chain_diagnosis_v1.md
+- evaluation/task8d_above_target_chain_diagnosis_v1.json
+- evaluation/task8d_above_target_chain_diagnosis_v1/01_reference_and_gt.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/02_P_dir.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/03_P_near.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/04_W_and_A.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/05_C.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/06_logits_probability.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/07_final_mask_vs_gt.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/08_stage_trajectory.png
+- evaluation/task8d_above_target_chain_diagnosis_v1/contact_sheet.png
+- handoff/CURRENT_TASK.md
+- handoff/EXECUTOR_STATE.yaml
+uncommitted_changes: false
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: faa043e516f158cc52d9958ec80f82eaed245fdc
+  commit: e87e8f727d757a0fc2085ef333842a29537d0435
   pushed: true
 next_gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
 model_calls: 0
@@ -47,3 +91,15 @@ repair_implemented: false
 no_product_change: true
 no_governance_change: true
 task8c_artifacts_unchanged: true
+git_metadata_note: Branch/HEAD/last_checkpoint observed before final evidence commit.
+  Actual final local/remote HEAD and clean tree are verified after push; no self-referential
+  SHA is fabricated.
+canonical_source_gate: 135/135 PASS; missing0/mismatch0; read-only helper
+external_integrity_gate: 'PASS: all2184 files bytes/SHA256/mtime/file set unchanged,
+  additions/deletions0'
+native_truth_unchanged: true
+diagnostic_figures_visually_reviewed: 9
+first_observed_target_divergence_stage: C / C_mean
+counterfactual_interpretation: MIXED / NOT RESOLVED; automatic and GT-reference W/A
+  both favour6; no restoration
+scientific_acceptance: PENDING_SUPERVISOR_REMOTE_AUDIT

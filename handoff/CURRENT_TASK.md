@@ -1,7 +1,7 @@
 # CURRENT_TASK - TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
 
 Status:
-IN_PROGRESS
+READY_FOR_SUPERVISOR_AUDIT
 
 Decision owner: ChatGPT Supervisor
 Executor: CODEX
@@ -824,3 +824,15 @@ Report objectively:
 - unresolved questions.
 
 Do not prescribe or implement the next architecture.
+
+## Executor completion checkpoint
+
+Status: READY_FOR_SUPERVISOR_AUDIT
+Next gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
+
+Diagnosis only; no repair. First observed divergence: C / C_mean (actual top GT7); W/A favour GT6 over GT7, but their full ranking is topped by reference4. Logits/probability/final IoU continue to favour GT7.
+GT-reference deterministic W/A still favour6, ranks6/7 remain2/3; no preference restoration. Interpretation: MIXED / NOT RESOLVED; q/C/decoder counterfactual not evaluated.
+Runtime SUCCESS verifies mapped nonemptiness and centroid direction, not nearest/native GT target identity. Causal feature/prototype/decoder contributions remain unresolved.
+Current dedicated tests: 41 passed in1.76s / exit0; all9 diagnostic PNGs visually reviewed. Source/config helper135/135; manifest Git-byte identical. External2184 files unchanged in bytes/SHA256/mtime/file set; all Task8C repo evidence/artifacts/TIFFs and native GT unchanged. Grandfathered settings606bytes/SHA256 unchanged.
+Model/detector/predict/checkpoint calls0; external writes0; automatic frozen maps recomputed0. No product/governance/Task8C changes. Report, structured evidence and9 figures are persisted in the Task8D authorized paths.
+STOP after commit/push. Scientific acceptance remains with ChatGPT Supervisor; no repair task or new architecture is authorized.

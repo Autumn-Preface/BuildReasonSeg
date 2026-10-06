@@ -193,6 +193,18 @@ def test_real_deterministic_counterfactual_only_fields():
     assert np.isclose(one["A"].sum(),1)
 
 
+@pytest.mark.parametrize("auto,gt,expected,restored",[
+    (6,6,"MIXED / NOT RESOLVED",False),
+    (7,6,"PLAUSIBLE_CONTRIBUTOR",True),
+    (7,7,"NOT_SOLE_EXPLANATION",False),
+    (6,"TIE","MIXED / NOT RESOLVED",False)])
+def test_counterfactual_requires_actual_preference_restoration(auto,gt,expected,restored):
+    a=[{"stage":k,"which_instance_is_favoured":auto} for k in ("W","A")]
+    g=[{"stage":k,"which_instance_is_favoured":gt} for k in ("W","A")]
+    outcome=d.counterfactual_interpretation(a,g)
+    assert outcome["interpretation"]==expected and outcome["preference_restored"] is restored
+
+
 def test_aggregation_uses_context_mask_not_global_mask():
     masks={6:np.zeros((512,512),dtype=bool)};masks[6][100:108,100:108]=True
     ctx={"origin":[-8,-8],"size":512}
@@ -222,5 +234,8 @@ def test_counterfactual_schema_and_report_json_consistency():
         assert evidence["target6_vs_wrong7"]==d.pair_comparison(evidence["all_gt_instance_stage_table"])
         assert evidence["rank_trajectory"]==d.rank_trajectory(evidence["all_gt_instance_stage_table"])
         assert evidence["first_observed_target_divergence_stage"]==d.first_divergence(evidence["target6_vs_wrong7"],evidence["rank_trajectory"])
+        assert evidence["conclusions"]==d.diagnosis_conclusions(evidence)
+        assert set(evidence["db1_mechanism_source_citations"])==set(evidence["db1_mechanism_audit"])
+        assert all(evidence["db1_mechanism_source_citations"].values())
         assert d.REPORT_PATH.read_text(encoding="utf-8")==d.render_report(evidence)
         assert all(evidence[k]==0 for k in ("model_calls","detector_calls","predict_calls","checkpoint_loads","external_writes"))

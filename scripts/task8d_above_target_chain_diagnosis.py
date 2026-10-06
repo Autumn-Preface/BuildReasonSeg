@@ -261,6 +261,19 @@ def canonical_reference_fields(reference: np.ndarray) -> dict:
             "W": bundle["P_prod_64"].detach().numpy(), "A": attention[0, 0].detach().numpy()}
 
 
+def counterfactual_interpretation(automatic_pair: list[dict], gt_pair: list[dict]) -> dict:
+    auto = {r["stage"]: r["which_instance_is_favoured"] for r in automatic_pair}
+    gt = {r["stage"]: r["which_instance_is_favoured"] for r in gt_pair}
+    if all(gt[k] == 7 for k in ("W", "A")):
+        return {"interpretation": "NOT_SOLE_EXPLANATION", "preference_restored": False,
+                "interpretation_detail": "GT-reference fields still favour wrong7; reference-shape residual cannot be the sole geometric explanation."}
+    if all(auto[k] == 7 and gt[k] == 6 for k in ("W", "A")):
+        return {"interpretation": "PLAUSIBLE_CONTRIBUTOR", "preference_restored": True,
+                "interpretation_detail": "GT-reference fields restore target6 preference from wrong7; plausible contributor, not causal proof."}
+    return {"interpretation": "MIXED / NOT RESOLVED", "preference_restored": False,
+            "interpretation_detail": "No demonstrated restoration from wrong7. Automatic and GT-reference preferences must both be disclosed; no q/C/decoder counterfactual is available."}
+
+
 def counterfactual(maps: dict, context_masks: dict) -> dict:
     gt = canonical_reference_fields(context_masks[4])
     rows = []
@@ -280,9 +293,10 @@ def counterfactual(maps: dict, context_masks: dict) -> dict:
                           "automatic_sum": float(maps[k].astype(np.float64).sum()),
                           "gt_reference_sum": float(gt[k].astype(np.float64).sum()),
                           "gt_reference_array_sha256": hashlib.sha256(gt[k].tobytes()).hexdigest()}
-    preferred = [r["which_instance_is_favoured"] for r in pair]
-    interpretation = ("PLAUSIBLE_CONTRIBUTOR" if preferred == [6, 6] else
-                      "NOT_SOLE_EXPLANATION" if preferred == [7, 7] else "MIXED / NOT RESOLVED")
+    auto_rows = [{"instance_id": i, "W_mass": mass_mean(maps["W"], fractional_occupancy(context_masks[i]))[0],
+                  "A_attention_mass": mass_mean(maps["A"], fractional_occupancy(context_masks[i]))[0]}
+                 for i in (6, 7)]
+    interpretation = counterfactual_interpretation(pair_comparison(auto_rows, ("W", "A")), pair)
     return {"fields_recomputed": list(gt), "only_deterministic_fields": True,
             "C_recomputed": False, "q_recomputed": False, "decoder_called": False,
             "checkpoint_loads": 0, "automatic_maps_recomputed": False,
@@ -290,7 +304,7 @@ def counterfactual(maps: dict, context_masks: dict) -> dict:
             "task_shorthand_note": "W/sum(W) shorthand is recorded with the exact source EPS; no contract/normalization change.",
             "all_instance_W_A_table": rows, "target6_vs_wrong7": pair,
             "rank_trajectory": rank_trajectory(rows, ("W", "A")),
-            "field_difference_statistics": differences, "interpretation": interpretation,
+            "field_difference_statistics": differences, **interpretation,
             "causal_proof": False}
 
 
@@ -335,13 +349,18 @@ def audit_sources(payload: dict, result: dict) -> None:
              ("context.py", "directional_candidates"), ("context.py", "direction_satisfied"),
              ("pipeline.py", "predict_one"), ("pipeline.py", "_non_padding_mask"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "field_competition"),
+             ("_frozen/mvp/task7d_global_competition_decoder.py", "_group_norm"),
+             ("_frozen/mvp/task7d_global_competition_decoder.py", "VisualProjection.__init__"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "VisualProjection.forward"),
+             ("_frozen/mvp/task7d_global_competition_decoder.py", "DirectionEmbedding.__init__"),
+             ("_frozen/mvp/task7d_global_competition_decoder.py", "MaskDecoderTrunk.__init__"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "MaskDecoderTrunk.forward"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "target_prototype"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "prototype_similarity"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "GlobalCompetitionDecoder.competition"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "GlobalCompetitionDecoder.forward"),
              ("_frozen/mvp/task7d_global_competition_decoder.py", "GlobalCompetitionDecoder.upsampled"),
+             ("_frozen/mvp/task7d_global_competition_decoder.py", "GlobalCompetitionDecoder.input_spec"),
              ("_frozen/mvp/task6z_field_composition.py", "record_fields"),
              ("_frozen/mvp/geometric_relation_field_v02.py", "geometric_relation_field_v02"),
              ("_frozen/mvp/nearest_boundary_field.py", "nearest_boundary_field_512")]
@@ -359,6 +378,7 @@ def audit_sources(payload: dict, result: dict) -> None:
         "output_threshold": "upsampled_logits > 0.0, sigmoid probability recorded separately",
         "target_proposal_selection": False, "graph_construction": False, "dense_mask_emitted": True,
         "target_identity_or_nearest_identity_gate": False,
+        "saved_C_and_logits_paths": "Saved C is from the separately computed projected-feature competition state; logits use a second model forward under CUDA bfloat16 autocast when device is not cpu. Equality of those internal states is not established by saved maps.",
         "scope": "D-B1 selected in core.Db1Runtime.load; other variants in source are not the active runtime."}
     payload["runtime_guard_audit"] = {
         "frozen_directional_guard": result["directional_guard"],
@@ -372,6 +392,31 @@ def audit_sources(payload: dict, result: dict) -> None:
         "nearest_target_identity_checked": False, "GT_identity_checked": False,
         "runtime_success_scope": "RUNTIME_STRUCTURAL_ONLY / NOT_EVALUATED",
         "why_wrong_target_can_succeed": "After other pipeline stages complete, any nonempty mapped mask with centroid above the selected reference can pass; neither nearest building nor native GT identity is verified."}
+    traces = {r["function"]: {k: r[k] for k in ("path", "function", "line", "end_line")}
+              for r in payload["source_function_trace"]}
+    mechanism_functions = {
+        "W": ["field_competition"], "A": ["field_competition", "GlobalCompetitionDecoder.input_spec"],
+        "q": ["target_prototype", "VisualProjection.__init__", "VisualProjection.forward", "_group_norm", "GlobalCompetitionDecoder.input_spec"],
+        "C": ["prototype_similarity", "GlobalCompetitionDecoder.competition"],
+        "decoder_inputs": ["GlobalCompetitionDecoder.forward", "DirectionEmbedding.__init__", "GlobalCompetitionDecoder.input_spec"],
+        "decoder": ["MaskDecoderTrunk.__init__", "MaskDecoderTrunk.forward", "GlobalCompetitionDecoder.upsampled"],
+        "output_threshold": ["Db1Runtime.forward"],
+        "target_proposal_selection": ["run_core_chain", "Db1Runtime.forward", "GlobalCompetitionDecoder.forward"],
+        "graph_construction": ["run_core_chain", "GlobalCompetitionDecoder.competition", "GlobalCompetitionDecoder.forward"],
+        "dense_mask_emitted": ["Db1Runtime.forward", "GlobalCompetitionDecoder.forward"],
+        "target_identity_or_nearest_identity_gate": ["predict_one", "direction_satisfied"],
+        "saved_C_and_logits_paths": ["Db1Runtime.forward"], "scope": ["Db1Runtime.load"]}
+    payload["db1_mechanism_source_citations"] = {k: [traces[f] for f in functions]
+                                                for k, functions in mechanism_functions.items()}
+    payload["runtime_guard_source_citations"] = {
+        k: [traces[f] for f in functions] for k, functions in {
+            "direction_availability": ["directional_candidates", "guard_directional_candidates"],
+            "final_direction_check": ["direction_satisfied", "predict_one"],
+            "padding_check": ["context_to_global", "_non_padding_mask", "predict_one"],
+            "nearest_target_identity_checked": ["predict_one", "direction_satisfied"],
+            "GT_identity_checked": ["predict_one"],
+            "runtime_success_scope": ["predict_one", "direction_satisfied"],
+            "why_wrong_target_can_succeed": ["predict_one", "direction_satisfied"]}.items()}
 
 
 def clean(value):
@@ -390,6 +435,29 @@ def table(headers, rows) -> str:
                      ["| " + " | ".join(fmt(v) for v in row) + " |" for row in rows])
 
 
+def diagnosis_conclusions(d: dict) -> list[str]:
+    first, ranks, cf = d["first_observed_target_divergence_stage"], d["rank_trajectory"], d["canonical_reference_field_counterfactual"]
+    pair = {r["stage"]: r for r in d["target6_vs_wrong7"]}
+    rows = {r["instance_id"]: r for r in d["all_gt_instance_stage_table"]}
+    guard = d["runtime_guard_audit"]
+    return [
+        f"FIRST_OBSERVED_DIVERGENCE: {first['stage']} / {first.get('statistic')}. Actual top instance {first.get('actual_top_instance_id')}; target6 rank {ranks[first['stage']]['target6_rank']}, wrong7 rank {ranks[first['stage']]['wrong7_rank']}. Delta6-minus7={first.get('delta_6_minus_7')}. This is the earliest fixed-order observable preference, not a proven root cause.",
+        f"PRIMARY_EVIDENCE_SUPPORTS: P_dir mean favours{pair['P_dir']['which_instance_is_favoured']}, P_near mean favours{pair['P_near']['which_instance_is_favoured']}. Frozen W mass favours{pair['W']['which_instance_is_favoured']} and A mass favours{pair['A']['which_instance_is_favoured']} over the other member of the 6-vs7 pair; W/A top instance is {ranks['W']['top_instance_id']}/{ranks['A']['top_instance_id']}. Thus in this locked case a wrong7 preference is not present in the combined W/A comparison before C, but no discrete correct target selection is claimed.",
+        f"PRIMARY_EVIDENCE_SUPPORTS: C is where the observed 6-vs7 preference reverses. Logit mean ({rows[6]['logit_mean']} vs {rows[7]['logit_mean']}), probability mean ({rows[6]['probability_mean']} vs {rows[7]['probability_mean']}), positive fraction and final IoU continue to favour7. This is an observed downstream preference; saved C and decoder-forward states are computed separately. It does not prove C caused the decoder mask or isolate F, embedding, attention, C or learned-trunk contributions.",
+        f"{cf['interpretation']}: GT-reference deterministic fields still favour6, as automatic-reference W/A already did. W and A deltas increase numerically, but target6/wrong7 ranks remain2/3; there is no preference restoration. Reference-shape residual does not account for an observed W/A reversal in this comparison; its possible effect on q/C/decoder remains untested, not ruled out.",
+        f"Canonical geometry: both6 and7 satisfy the frozen above predicate. Existing canonical boundary gap to GT ref4 is {rows[6]['canonical_boundary_distance_px']}px for6 versus {rows[7]['canonical_boundary_distance_px']}px for7. The frozen nearest/proximity field gives greater mean to6; the eventual dense mask overlaps7 more.",
+        f"Runtime structural SUCCESS permits the semantic error: saved guard reports {guard['frozen_directional_guard']['candidate_count']} directional proposals and {guard['frozen_directional_guard']['inside_context']} inside context, final nonempty mask centroid row {guard['observed_target_centroid_yx'][0]} < selected-reference row {guard['observed_reference_centroid_yx'][0]}. Runtime checks this direction and mapped nonemptiness; it does not verify nearest building or native GT identity."]
+
+
+def cited_audit(audit: dict, citations: dict) -> str:
+    chunks = []
+    for k, v in audit.items():
+        refs = "; ".join(f"`{r['path']}:{r['line']}` ({r['function']}, end line {r['end_line']})"
+                         for r in citations.get(k, []))
+        chunks.append(f"**{k}**: {v}" + ("\n\nSource: " + refs + "." if refs else ""))
+    return "\n\n".join(chunks)
+
+
 def render_report(d: dict) -> str:
     pair, rank, cf = d["target6_vs_wrong7"], d["rank_trajectory"], d["canonical_reference_field_counterfactual"]
     first = d["first_observed_target_divergence_stage"]
@@ -398,8 +466,9 @@ def render_report(d: dict) -> str:
         p.extend([f"## {n}. {title}", body])
     section(1, "Question being diagnosed", "At what earliest observable stage does native GT target 6 lose numerically to wrong instance 7? Fixed order: W -> A -> C -> logits -> probability -> final mask. No pass threshold or root-cause claim is introduced.")
     section(2, "Why ABOVE is the clean case", "Sample " + SAMPLE + "; program " + PROGRAM + ". Reference best-overlap identity is GT 4, IoU 0.9097432024169184. Frozen target best overlap is GT 7, IoU 0.48158096699923253; canonical target 6 IoU 0.07762201453790239 / Dice 0.14406167188629246. This reduces the reference-identity confounder; reference shape remains imperfect.")
-    section(3, "Frozen evidence / no-rerun guarantee", "Task8C accepted HEAD: " + ACCEPTED_HEAD + ". Frozen runtime SHA256: " + RUNTIME_SHA + ". All ABOVE 15 artifacts/transcript and Task8C 10 repository evidence/harness files are SHA-locked. Saved maps are read-only primary evidence and none of the seven automatic maps is recomputed. Model/detector/predict/checkpoint calls and external writes are zero. Original Task8C formal runner remains one invocation / four attempts / zero retries. Pre/post identities and read-only audit are in JSON.\n\n" + table(["Map", "Shape", "Finite", "Min", "Max", "Sum"], [(k,v["shape"],v["finite"],v["min"],v["max"],v["sum"]) for k,v in d["frozen_map_shapes"].items()]))
-    mechanism = "\n\n".join(f"**{k}**: {v}" for k,v in d["db1_mechanism_audit"].items())
+    closure = d.get("closure_summary", "Final dedicated tests and integrity gate are pending.")
+    section(3, "Frozen evidence / no-rerun guarantee", "Task8C accepted HEAD: " + ACCEPTED_HEAD + ". Frozen runtime SHA256: " + RUNTIME_SHA + ". All ABOVE 15 artifacts/transcript and Task8C 10 repository evidence/harness files are SHA-locked. Saved maps are read-only primary evidence and none of the seven automatic maps is recomputed. Model/detector/predict/checkpoint calls and external writes are zero. Original Task8C formal runner remains one invocation / four attempts / zero retries. Pre/post identities and read-only audit are in JSON.\n\n" + closure + "\n\n" + table(["Map", "Shape", "Finite", "Min", "Max", "Sum"], [(k,v["shape"],v["finite"],v["min"],v["max"],v["sum"]) for k,v in d["frozen_map_shapes"].items()]))
+    mechanism = cited_audit(d["db1_mechanism_audit"], d.get("db1_mechanism_source_citations", {}))
     citations = table(["Exact source path", "Function", "Line / end line"], [(r["path"],r["function"],str(r["line"])+" / "+str(r["end_line"])) for r in d["source_function_trace"]])
     section(4, "Actual target mechanism in RC1", mechanism + "\n\nSource traces (full exact snippets and SHA identities also in JSON):\n\n" + citations + "\n\nTarget-stage candidate rankings below are post-hoc GT aggregations of dense maps; they are not a target-proposal selector. No graph is constructed. A_fixed is deterministic, while projected visual features and the dense decoder are learned components. Exact normalization retains source EPS=1e-6; W/sum(W) is shorthand, not a changed rule.")
     geo = table(["GT id", "Full GT area", "Context area", "Coverage", "Canonical above valid", "Reason", "Boundary gap to GT ref4 (px)"], [(r["instance_id"],r["GT_area"],r["context_GT_area"],r["context_coverage_fraction"],r["relation_validity"]["valid"],r["relation_validity"]["reason"],r["canonical_boundary_distance_px"]) for r in d["all_gt_instance_stage_table"]])
@@ -414,9 +483,9 @@ def render_report(d: dict) -> str:
     ranks = table(["Stage", "6 rank", "7 rank", "Top5 IDs", "All ordered IDs"],[(k,v["target6_rank"],v["wrong7_rank"],v["top5_instance_ids"],v["ordered_instance_ids"]) for k,v in rank.items()])
     section(11, "Target-6 vs wrong-7 trajectory", trajectory + "\n\n" + ranks + "\n\nDescending scores; exact ties break by ascending instance ID. Undefined means are excluded and no numeric pass threshold is used. Predeclared statistics were pushed in the evidence-lock checkpoint before aggregation.")
     cf_rows = cf["target6_vs_wrong7"]
-    section(12, "Canonical-reference deterministic counterfactual", "Only P_dir, P_near, W and A are recomputed from exact GT ref4 in the same frozen context using the frozen field code. No SAM2/F/q/C/decoder/checkpoint is evaluated. Normalization calls the frozen pure field_competition function and retains EPS; no neural module is constructed. Interpretation: **" + cf["interpretation"] + "**; not causal proof.\n\n" + table(["GT-ref stage", "6 mass", "7 mass", "Delta 6-7", "Favoured"],[(r["stage"],r["score_target6"],r["score_wrong7"],r["delta_6_minus_7"],r["which_instance_is_favoured"]) for r in cf_rows]) + "\n\n" + table(["Stage", "Auto 6/7 ranks", "GT-ref 6/7 ranks", "GT-ref top5"],[(k,str(rank[k]["target6_rank"])+"/"+str(rank[k]["wrong7_rank"]),str(cf["rank_trajectory"][k]["target6_rank"])+"/"+str(cf["rank_trajectory"][k]["wrong7_rank"]),cf["rank_trajectory"][k]["top5_instance_ids"]) for k in ("W","A")]) + "\n\n" + table(["Field", "Mean signed diff", "Mean abs diff", "Max abs diff", "RMS diff"],[(k,v["mean_signed_difference"],v["mean_absolute_difference"],v["max_absolute_difference"],v["rms_difference"]) for k,v in cf["field_difference_statistics"].items()]))
+    section(12, "Canonical-reference deterministic counterfactual", "Only P_dir, P_near, W and A are recomputed from exact GT ref4 in the same frozen context using the frozen field code. No SAM2/F/q/C/decoder/checkpoint is evaluated. Normalization calls the frozen pure field_competition function and retains EPS; no neural module is constructed. Interpretation: **" + cf["interpretation"] + "**; not causal proof. " + cf["interpretation_detail"] + "\n\n" + table(["GT-ref stage", "6 mass", "7 mass", "Delta 6-7", "Favoured"],[(r["stage"],r["score_target6"],r["score_wrong7"],r["delta_6_minus_7"],r["which_instance_is_favoured"]) for r in cf_rows]) + "\n\n" + table(["Stage", "Auto 6/7 ranks", "GT-ref 6/7 ranks", "GT-ref top5"],[(k,str(rank[k]["target6_rank"])+"/"+str(rank[k]["wrong7_rank"]),str(cf["rank_trajectory"][k]["target6_rank"])+"/"+str(cf["rank_trajectory"][k]["wrong7_rank"]),cf["rank_trajectory"][k]["top5_instance_ids"]) for k in ("W","A")]) + "\n\n" + table(["Field", "Mean signed diff", "Mean abs diff", "Max abs diff", "RMS diff"],[(k,v["mean_signed_difference"],v["mean_absolute_difference"],v["max_absolute_difference"],v["rms_difference"]) for k,v in cf["field_difference_statistics"].items()]))
     section(13, "First observed divergence", json.dumps(first,ensure_ascii=False,indent=2) + "\n\nThis is the earliest observed preference under the fixed aggregation rule. It is not a proven root cause, and the actual top competitor is reported even when neither instance6 nor instance7 leads.")
-    section(14, "Runtime SUCCESS guard explanation", "\n\n".join(f"**{k}**: {v}" for k,v in d["runtime_guard_audit"].items()) + "\n\nSource: context.guard_directional_candidates, context.direction_satisfied, pipeline.predict_one and pipeline._non_padding_mask at exact lines in section4. Proposal availability and final mask centroid direction do not check nearest identity or GT identity.")
+    section(14, "Runtime SUCCESS guard explanation", cited_audit(d["runtime_guard_audit"], d.get("runtime_guard_source_citations", {})) + "\n\nProposal availability and final mask centroid direction do not check nearest identity or GT identity.")
     section(15, "Evidence-supported diagnosis", "\n\n".join(d["conclusions"]))
     section(16, "What remains unresolved", "\n\n".join(d["limitations"]))
     section(17, "Possible future research directions - hypotheses only, NO IMPLEMENTATION", "Questions for future Supervisor-authorized research: how dense soft direction/proximity priors relate to strict canonical direction filtering and minimum boundary distance; whether global/background token contributions shape the prototype; how visual feature similarity and dense decoder inputs interact. These are hypotheses, not proposed repairs or an architecture prescription. No parameter/threshold/ranking change, ablation, training or inference is performed here.")
@@ -534,12 +603,7 @@ def diagnose(d: dict) -> tuple[dict, dict]:
               "mapping_verification":{"reference4_target6_wrong7_fully_represented":True,"native_exact_integer_mapping":True,"fractional_no_threshold":True,"saved_positive_logits_map_to_exact_final_mask":True},
               "model_calls":0,"detector_calls":0,"predict_calls":0,"checkpoint_loads":0,"external_writes":0})
     audit_sources(d,result)
-    first=d["first_observed_target_divergence_stage"]
-    pref={r["stage"]:r["which_instance_is_favoured"] for r in pair}
-    d["conclusions"]=["FIRST_OBSERVED_DIVERGENCE: "+str(first["stage"])+" using "+str(first.get("statistic"))+"; actual top instance "+str(first.get("actual_top_instance_id"))+". This is an observation, not causal proof.",
-                      "PRIMARY_EVIDENCE_SUPPORTS: fixed-statistic preferences are "+str(pref)+". The seven saved maps describe dense processing, not selection of a target proposal.",
-                      "Canonical-reference-only field counterfactual: "+d["canonical_reference_field_counterfactual"]["interpretation"]+". No visual prototype or decoder counterfactual is evaluated.",
-                      "Runtime structural SUCCESS permits this semantic error because it verifies nonempty mapped output and a final above-centroid constraint, not nearest/native GT identity."]
+    d["conclusions"]=diagnosis_conclusions(d)
     d["limitations"]=["One locked qualitative test example; not a new population metric or generalization result. Task7J metrics, model, seed, architecture and thresholds remain unchanged.",
                        "Instance mass depends on covered area; C/logit/probability means measure different quantities. Changes in their numerical preferences do not isolate causal contributions.",
                        "F and q and raw 64x64 decoder logits are not saved. C uses the saved competition state while logits follow the runtime forward path; no equality of mixed-precision internal feature states can be independently established from these artifacts.",
