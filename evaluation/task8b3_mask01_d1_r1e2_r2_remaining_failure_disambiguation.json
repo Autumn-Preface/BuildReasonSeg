@@ -1,0 +1,426 @@
+{
+  "task_id": "MASK01_D1_R1E2_R2_REMAINING_FAILURE_DISAMBIGUATION",
+  "status": "COMPLETE",
+  "starting_branch": "audit/task8b3-mask01-r1e2-r1-asset-regression-disambiguation",
+  "starting_head": "7251604686da5846d5bbef28048b8a7454bc4181",
+  "task_branch": "audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "nodes_audited": [
+    "tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths",
+    "tests/test_paths_and_package.py::test_required_structure",
+    "tests/test_setup_checker.py::test_good_fixture_is_ready",
+    "tests/test_setup_checker.py::test_hash_mismatch_nonzero",
+    "tests/test_setup_checker.py::test_invalid_model_yaml_nonzero",
+    "tests/test_setup_checker.py::test_missing_decoder_nonzero",
+    "tests/test_setup_checker.py::test_missing_qwen_component_nonzero",
+    "tests/test_setup_checker.py::test_missing_sam2_nonzero",
+    "tests/test_setup_checker.py::test_real_project_check_reports_ready",
+    "tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready",
+    "tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete",
+    "tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code",
+    "tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim"
+  ],
+  "node_count": 13,
+  "execution_method": "one `python -m pytest <NODE_ID> -vv` command per node",
+  "merged_commands_used": false,
+  "cross_node_reason_reuse": false,
+  "per_node": [
+    {
+      "node": "tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths",
+      "command": "python -m pytest tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 failed in 0.26s ==============================",
+      "decisive": "FAILED tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        ")\r\n\r\n    def test_moving_root_keeps_config_and_model_paths(tmp_path: Path, root: Path) -> None:\r\n        ",
+        "):\r\n>           shutil.copy2(root / name, target / name)\r\n\r\ntests\\test_paths_and_package.py:68: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "configs",
+        "tests"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "FAILED tests/test_paths_and_package.py::test_moving_root_keeps_config_and_model_paths - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_paths_and_package.py::test_required_structure",
+      "command": "python -m pytest tests/test_paths_and_package.py::test_required_structure -vv",
+      "exit": 1,
+      "classification": "D",
+      "reason": "pure behavioural assertion failure with no missing path or dependency cause",
+      "summary": "============================== 1 failed in 0.05s ==============================",
+      "decisive": "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []",
+      "exception_types": [
+        "AssertionError"
+      ],
+      "quoted_paths": [
+        ",\r\nE         + ]\r\n\r\ntests\\test_paths_and_package.py:31: AssertionError\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ["
+      ],
+      "exc_lines_tail": [
+        "E         + [",
+        "E         +     'inference/input',",
+        "E         + ]",
+        "FAILED tests/test_paths_and_package.py::test_required_structure - AssertionError: assert ['inference/input'] == []"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_good_fixture_is_ready",
+      "command": "python -m pytest tests/test_setup_checker.py::test_good_fixture_is_ready -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 error in 0.15s ===============================",
+      "decisive": "ERROR tests/test_setup_checker.py::test_good_fixture_is_ready - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_setup_checker.py::test_good_fixture_is_ready - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        "):\r\n>           shutil.copy2(ROOT / name, target / name)\r\n\r\ntests\\test_setup_checker.py:31: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "C:/Users/ROG/AppData/Local/Temp/pytest-of-ROG/pytest-106/test_good_fixture_is_ready0",
+        "C:/Users/ROG/AppData/Local/Temp/pytest-of-ROG/pytest-106/test_good_fixture_is_ready0/BuildReasonSeg_Advisor_RC1/VERSION",
+        "configs"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "ERROR tests/test_setup_checker.py::test_good_fixture_is_ready - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_hash_mismatch_nonzero",
+      "command": "python -m pytest tests/test_setup_checker.py::test_hash_mismatch_nonzero -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 error in 0.15s ===============================",
+      "decisive": "ERROR tests/test_setup_checker.py::test_hash_mismatch_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_setup_checker.py::test_hash_mismatch_nonzero - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        ")\r\n\r\n    @pytest.fixture()\r\n    def fixture_project(tmp_path: Path) -> Path:\r\n        ",
+        "):\r\n>           shutil.copy2(ROOT / name, target / name)\r\n\r\ntests\\test_setup_checker.py:31: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "configs",
+        "tests"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "ERROR tests/test_setup_checker.py::test_hash_mismatch_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_invalid_model_yaml_nonzero",
+      "command": "python -m pytest tests/test_setup_checker.py::test_invalid_model_yaml_nonzero -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 error in 0.18s ===============================",
+      "decisive": "ERROR tests/test_setup_checker.py::test_invalid_model_yaml_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_setup_checker.py::test_invalid_model_yaml_nonzero - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        "):\r\n>           shutil.copy2(ROOT / name, target / name)\r\n\r\ntests\\test_setup_checker.py:31: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "C:/Users/ROG/AppData/Local/Temp/pytest-of-ROG/pytest-108/test_invalid_model_yaml_nonzer0",
+        "C:/Users/ROG/AppData/Local/Temp/pytest-of-ROG/pytest-108/test_invalid_model_yaml_nonzer0/BuildReasonSeg_Advisor_RC1/VERSION",
+        "configs"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "ERROR tests/test_setup_checker.py::test_invalid_model_yaml_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_missing_decoder_nonzero",
+      "command": "python -m pytest tests/test_setup_checker.py::test_missing_decoder_nonzero -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 error in 0.18s ===============================",
+      "decisive": "ERROR tests/test_setup_checker.py::test_missing_decoder_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_setup_checker.py::test_missing_decoder_nonzero - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        ")\r\n\r\n    @pytest.fixture()\r\n    def fixture_project(tmp_path: Path) -> Path:\r\n        ",
+        "):\r\n>           shutil.copy2(ROOT / name, target / name)\r\n\r\ntests\\test_setup_checker.py:31: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "configs",
+        "tests"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "ERROR tests/test_setup_checker.py::test_missing_decoder_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_missing_qwen_component_nonzero",
+      "command": "python -m pytest tests/test_setup_checker.py::test_missing_qwen_component_nonzero -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 error in 0.18s ===============================",
+      "decisive": "ERROR tests/test_setup_checker.py::test_missing_qwen_component_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_setup_checker.py::test_missing_qwen_component_nonzero - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        ")\r\n\r\n    @pytest.fixture()\r\n    def fixture_project(tmp_path: Path) -> Path:\r\n        ",
+        "):\r\n>           shutil.copy2(ROOT / name, target / name)\r\n\r\ntests\\test_setup_checker.py:31: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "configs",
+        "tests"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "ERROR tests/test_setup_checker.py::test_missing_qwen_component_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_missing_sam2_nonzero",
+      "command": "python -m pytest tests/test_setup_checker.py::test_missing_sam2_nonzero -vv",
+      "exit": 1,
+      "classification": "A",
+      "reason": "missing full-delivery asset/structure path in this node's own traceback",
+      "summary": "============================== 1 error in 0.18s ===============================",
+      "decisive": "ERROR tests/test_setup_checker.py::test_missing_sam2_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+      "exception_types": [
+        "FileNotFoundError",
+        "OSError"
+      ],
+      "quoted_paths": [
+        "\r\n\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:256: FileNotFoundError\r\n=========================== short test summary info ===========================\r\nERROR tests/test_setup_checker.py::test_missing_sam2_nonzero - FileNotFoundError: [Errno 2] No such file or directory: ",
+        "\r\n    \r\n        target = tmp_path / ",
+        ")\r\n\r\n    @pytest.fixture()\r\n    def fixture_project(tmp_path: Path) -> Path:\r\n        ",
+        "):\r\n>           shutil.copy2(ROOT / name, target / name)\r\n\r\ntests\\test_setup_checker.py:31: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\shutil.py:448: in copy2\r\n    copyfile(src, dst, follow_symlinks=follow_symlinks)\r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n\r\nsrc = WindowsPath(",
+        "configs",
+        "tests"
+      ],
+      "exc_lines_tail": [
+        "except OSError:",
+        "E           FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'",
+        "ERROR tests/test_setup_checker.py::test_missing_sam2_nonzero - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\VERSION'"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_real_project_check_reports_ready",
+      "command": "python -m pytest tests/test_setup_checker.py::test_real_project_check_reports_ready -vv",
+      "exit": 1,
+      "classification": "D",
+      "reason": "pure behavioural assertion failure with no missing path or dependency cause",
+      "summary": "============================== 1 failed in 2.43s ==============================",
+      "decisive": "FAILED tests/test_setup_checker.py::test_real_project_check_reports_ready - AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)",
+      "exception_types": [
+        "AssertionError"
+      ],
+      "quoted_paths": [
+        " in completed.stdout, completed.stdout\r\nE       AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)\r\nE         [OK] OS �� Windows 10 (AMD64)\r\nE         [OK] PyTorch �� 2.13.0+cu132\r\nE         [OK] CUDA �� ���� (torch 13.2)\r\nE         [OK] GPU �� NVIDIA GeForce RTX 5080 Laptop GPU\r\nE         [OK] delivery root ��д �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\r\nE         [MISSING] required directories �� inference/input\r\nE         [OK] writable paths �� ��� / ���� / ��־Ŀ¼����д\r\nE         [MISSING] model package �� E302\r\nE         [MISSING] SAM2 assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\sam2\r\nE         [MISSING] Qwen / ProgramHead assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\program_head\r\nE         [OK] Ultralytics runtime �� runtime=8.4.164; model provenance=n/a\r\nE         [OK] Transformers runtime �� runtime=5.17.0\r\nE         [OK] source/assets portability �� delivery ��δ���� workspace ����·��������runtime environment �赥������\r\nE         \r\nE         BuildReasonSeg environment: NOT READY\r\nE         \r\nE       assert ",
+        ").stdout\r\n\r\ntests\\test_setup_checker.py:147: AssertionError\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_setup_checker.py::test_real_project_check_reports_ready - AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)\r\n  [OK] OS �� Windows 10 (AMD64)\r\n  [OK] PyTorch �� 2.13.0+cu132\r\n  [OK] CUDA �� ���� (torch 13.2)\r\n  [OK] GPU �� NVIDIA GeForce RTX 5080 Laptop GPU\r\n  [OK] delivery root ��д �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\r\n  [MISSING] required directories �� inference/input\r\n  [OK] writable paths �� ��� / ���� / ��־Ŀ¼����д\r\n  [MISSING] model package �� E302\r\n  [MISSING] SAM2 assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\sam2\r\n  [MISSING] Qwen / ProgramHead assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\program_head\r\n  [OK] Ultralytics runtime �� runtime=8.4.164; model provenance=n/a\r\n  [OK] Transformers runtime �� runtime=5.17.0\r\n  [OK] source/assets portability �� delivery ��δ���� workspace ����·��������runtime environment �赥������\r\n  \r\n  BuildReasonSeg environment: NOT READY\r\n  \r\nassert ",
+        "[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n"
+      ],
+      "exc_lines_tail": [
+        "E         BuildReasonSeg environment: NOT READY",
+        "E       assert 'BuildReasonSeg environment: READY' in '[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n'",
+        "E        +  where '[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n' = CompletedProcess(args=['C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe', 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\check_setup.py'], returncode=1, stdout='[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n', stderr='').stdout",
+        "FAILED tests/test_setup_checker.py::test_real_project_check_reports_ready - AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)"
+      ]
+    },
+    {
+      "node": "tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready",
+      "command": "python -m pytest tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready -vv",
+      "exit": 1,
+      "classification": "C",
+      "reason": "runtime dependency/environment failure in this node's own traceback",
+      "summary": "============================== 1 failed in 2.35s ==============================",
+      "decisive": "FAILED tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready - AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)",
+      "exception_types": [
+        "AssertionError"
+      ],
+      "quoted_paths": [
+        " in completed.stdout, completed.stdout\r\nE       AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)\r\nE         [OK] OS �� Windows 10 (AMD64)\r\nE         [OK] PyTorch �� 2.13.0+cu132\r\nE         [OK] CUDA �� ���� (torch 13.2)\r\nE         [OK] GPU �� NVIDIA GeForce RTX 5080 Laptop GPU\r\nE         [OK] delivery root ��д �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\r\nE         [MISSING] required directories �� inference/input\r\nE         [OK] writable paths �� ��� / ���� / ��־Ŀ¼����д\r\nE         [MISSING] model package �� E302\r\nE         [MISSING] SAM2 assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\sam2\r\nE         [MISSING] Qwen / ProgramHead assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\program_head\r\nE         [OK] Ultralytics runtime �� runtime=8.4.164; model provenance=n/a\r\nE         [OK] Transformers runtime �� runtime=5.17.0\r\nE         [OK] source/assets portability �� delivery ��δ���� workspace ����·��������runtime environment �赥������\r\nE         \r\nE         BuildReasonSeg environment: NOT READY\r\nE         \r\nE       assert ",
+        ").stdout\r\n\r\ntests\\test_setup_checker.py:172: AssertionError\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready - AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)\r\n  [OK] OS �� Windows 10 (AMD64)\r\n  [OK] PyTorch �� 2.13.0+cu132\r\n  [OK] CUDA �� ���� (torch 13.2)\r\n  [OK] GPU �� NVIDIA GeForce RTX 5080 Laptop GPU\r\n  [OK] delivery root ��д �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\r\n  [MISSING] required directories �� inference/input\r\n  [OK] writable paths �� ��� / ���� / ��־Ŀ¼����д\r\n  [MISSING] model package �� E302\r\n  [MISSING] SAM2 assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\sam2\r\n  [MISSING] Qwen / ProgramHead assets �� C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\\model\\components\\program_head\r\n  [OK] Ultralytics runtime �� runtime=8.4.164; model provenance=n/a\r\n  [OK] Transformers runtime �� runtime=5.17.0\r\n  [OK] source/assets portability �� delivery ��δ���� workspace ����·��������runtime environment �赥������\r\n  \r\n  BuildReasonSeg environment: NOT READY\r\n  \r\nassert ",
+        "[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n"
+      ],
+      "exc_lines_tail": [
+        "E         BuildReasonSeg environment: NOT READY",
+        "E       assert 'BuildReasonSeg environment: READY' in '[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n'",
+        "E        +  where '[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n' = CompletedProcess(args=['C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe', 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\check_setup.py'], returncode=1, stdout='[OK] Python \\u2014 3.11.16 (C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-mvp\\\\python.exe)\\n[OK] OS \\u2014 Windows 10 (AMD64)\\n[OK] PyTorch \\u2014 2.13.0+cu132\\n[OK] CUDA \\u2014 \\u53ef\\u7528 (torch 13.2)\\n[OK] GPU \\u2014 NVIDIA GeForce RTX 5080 Laptop GPU\\n[OK] delivery root \\u53ef\\u5199 \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\n[MISSING] required directories \\u2014 inference/input\\n[OK] writable paths \\u2014 \\u8f93\\u51fa / \\u8fd0\\u884c / \\u65e5\\u5fd7\\u76ee\\u5f55\\u5747\\u53ef\\u5199\\n[MISSING] model package \\u2014 E302\\n[MISSING] SAM2 assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\sam2\\n[MISSING] Qwen / ProgramHead assets \\u2014 C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\model\\\\components\\\\program_head\\n[OK] Ultralytics runtime \\u2014 runtime=8.4.164; model provenance=n/a\\n[OK] Transformers runtime \\u2014 runtime=5.17.0\\n[OK] source/assets portability \\u2014 delivery \\u5185\\u672a\\u53d1\\u73b0 workspace \\u7edd\\u5bf9\\u8def\\u5f84\\u4f9d\\u8d56\\uff1bruntime environment \\u9700\\u5355\\u72ec\\u914d\\u7f6e\\n\\nBuildReasonSeg environment: NOT READY\\n', stderr='').stdout",
+        "FAILED tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready - AssertionError: [OK] Python �� 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)"
+      ]
+    },
+    {
+      "node": "tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete",
+      "command": "python -m pytest tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete -vv",
+      "exit": 1,
+      "classification": "B",
+      "reason": "missing non-canonical fixture/temp path in this node's own traceback",
+      "summary": "============================== 1 failed in 1.19s ==============================",
+      "decisive": "FAILED tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json'",
+      "exception_types": [
+        "FileNotFoundError"
+      ],
+      "quoted_paths": [
+        "))\r\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n\r\ntests\\test_task8b1_fallback_ux.py:165: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\pathlib.py:1058: in read_text\r\n    with self.open(mode=",
+        "C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/logs/task8b1_prompt_suite.json",
+        "C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json"
+      ],
+      "exc_lines_tail": [
+        "E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json'",
+        "FAILED tests/test_task8b1_fallback_ux.py::test_fixture_frozen_and_complete - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json'"
+      ]
+    },
+    {
+      "node": "tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code",
+      "command": "python -m pytest tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code -vv",
+      "exit": 1,
+      "classification": "B",
+      "reason": "missing non-canonical fixture/temp path in this node's own traceback",
+      "summary": "============================== 1 failed in 1.20s ==============================",
+      "decisive": "FAILED tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json'",
+      "exception_types": [
+        "FileNotFoundError"
+      ],
+      "quoted_paths": [
+        "))\r\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n\r\ntests\\test_task8b1_fallback_ux.py:114: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\pathlib.py:1058: in read_text\r\n    with self.open(mode=",
+        "C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/logs/task8b1_prompt_suite.json",
+        "C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json"
+      ],
+      "exc_lines_tail": [
+        "E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json'",
+        "FAILED tests/test_task8b1_fallback_ux.py::test_no_prompt_to_program_table_in_delivery_code - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b1_prompt_suite.json'"
+      ]
+    },
+    {
+      "node": "tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim",
+      "command": "python -m pytest tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim -vv",
+      "exit": 1,
+      "classification": "B",
+      "reason": "missing non-canonical fixture/temp path in this node's own traceback",
+      "summary": "============================== 1 failed in 1.21s ==============================",
+      "decisive": "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b_gates.json'",
+      "exception_types": [
+        "FileNotFoundError"
+      ],
+      "quoted_paths": [
+        "))\r\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n\r\ntests\\test_task8b1_fallback_ux.py:181: \r\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\r\n..\\..\\.conda\\buildreasonseg-mvp\\Lib\\pathlib.py:1058: in read_text\r\n    with self.open(mode=",
+        "C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/delivery_src/BuildReasonSeg_Advisor_RC1/logs/task8b_gates.json",
+        "C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b_gates.json",
+        "The 8 paraphrases must be byte-identical to the frozen Task 8B artifact.",
+        "logs",
+        "task8b_gates.json"
+      ],
+      "exc_lines_tail": [
+        "E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b_gates.json'",
+        "FAILED tests/test_task8b1_fallback_ux.py::test_task8b_paraphrases_are_verbatim - FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\delivery_src\\\\BuildReasonSeg_Advisor_RC1\\\\logs\\\\task8b_gates.json'"
+      ]
+    }
+  ],
+  "classification_counts": {
+    "A": 7,
+    "D": 2,
+    "C": 1,
+    "B": 3
+  },
+  "d_classified_nodes": [
+    "tests/test_paths_and_package.py::test_required_structure",
+    "tests/test_setup_checker.py::test_real_project_check_reports_ready"
+  ],
+  "pre_mask_base_dependency_diff": {
+    "performed": true,
+    "base": "a98ccecce20585dc37520523cd32b49b0a684248",
+    "changed_paths": [
+      "delivery_src/BuildReasonSeg_Advisor_RC1/README.md",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/predict.py",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py",
+      "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py",
+      "docs/rc1_inspect01_preflight_order_fix.md",
+      "docs/task8b3_mask01_d1_r1a_r1_cli_contract_correction.md",
+      "docs/task8b3_mask01_d1_r1a_r2_executable_cli_fix.md",
+      "docs/task8b3_mask01_d1_r1a_r3_product_suffix_only.md",
+      "docs/task8b3_mask01_d1_r1a_r4_tests_only.md",
+      "docs/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.md",
+      "docs/task8b3_mask01_d1_r1a_r6_final_test_fix.md",
+      "docs/task8b3_mask01_d1_r1a_state_persistence.md",
+      "docs/task8b3_mask01_d1_r1b_canonical_docs.md",
+      "docs/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.md",
+      "docs/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.md",
+      "docs/task8b3_mask01_d1_r1c_runtime_contract_test_cleanup.md",
+      "docs/task8b3_mask01_d1_r1d2_post_inspect_manifest_recanonicalization.md",
+      "docs/task8b3_mask01_d1_r1d_source_manifest_canonicalization.md",
+      "docs/task8b3_mask01_d1_r1e1_targeted_canonical_gates.md",
+      "docs/task8b3_mask01_d1_r1e2_full_suite_failure_triage.md",
+      "docs/task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.md",
+      "docs/task8b3_mask01_d1_r1e_canonical_regression_closure.md",
+      "docs/task8b3_mask01_d1_success_semantics_hardening.md",
+      "evaluation/rc1_inspect01_preflight_order_fix.json",
+      "evaluation/task8b3_mask01_d1_r1a_r1_cli_contract_correction.json",
+      "evaluation/task8b3_mask01_d1_r1a_r2_executable_cli_fix.json",
+      "evaluation/task8b3_mask01_d1_r1a_r3_product_suffix_only.json",
+      "evaluation/task8b3_mask01_d1_r1a_r4_tests_only.json",
+      "evaluation/task8b3_mask01_d1_r1a_r5_test_contract_cleanup.json",
+      "evaluation/task8b3_mask01_d1_r1a_r6_final_test_fix.json",
+      "evaluation/task8b3_mask01_d1_r1a_state_persistence.json",
+      "evaluation/task8b3_mask01_d1_r1b_canonical_docs.json",
+      "evaluation/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.json",
+      "evaluation/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.json",
+      "evaluation/task8b3_mask01_d1_r1c_runtime_contract_test_cleanup.json",
+      "evaluation/task8b3_mask01_d1_r1d2_post_inspect_manifest_recanonicalization.json",
+      "evaluation/task8b3_mask01_d1_r1d_source_manifest_canonicalization.json",
+      "evaluation/task8b3_mask01_d1_r1e1_targeted_canonical_gates.json",
+      "evaluation/task8b3_mask01_d1_r1e2_full_suite_failure_triage.json",
+      "evaluation/task8b3_mask01_d1_r1e2_r1_asset_regression_disambiguation.json",
+      "evaluation/task8b3_mask01_d1_r1e_canonical_regression_closure.json",
+      "evaluation/task8b3_mask01_d1_success_semantics_hardening.json",
+      "handoff/FROM_DSH.md",
+      "handoff/TO_DSH.md"
+    ],
+    "verdict": "POSSIBLY_CHAIN_RELATED_REQUIRES_REVIEW",
+    "changed_count": 49,
+    "chain_relevant_paths": [
+      "delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md"
+    ]
+  },
+  "MASK01_FULL_SUITE_FAILURES_CAUSALLY_UNRELATED": false,
+  "causal_verdict": "MASK01_FULL_SUITE_FAILURES_POSSIBLY_CAUSALLY_RELATED",
+  "FULL_SUITE_GATE_PLACEMENT": "EXTERNAL_COMPLETE_RC1",
+  "full_suite_reexecuted": false,
+  "repairs_attempted": false,
+  "canonical_tracked_files_modified": false,
+  "directories_fixtures_assets_created": false,
+  "dependencies_installed": false,
+  "model_inference": false,
+  "external_write": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1E2_R2_REMOTE_AUDIT"
+}
