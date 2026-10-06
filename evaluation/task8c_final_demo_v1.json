@@ -1,0 +1,198 @@
+{
+  "task_id": "TASK8C_FINAL_DEMO_V1",
+  "status": "STOPPED_FOR_SUPERVISOR",
+  "starting_branch": "fix/task8b4-run-isolated-output-layout-v1",
+  "starting_head": "92f28133931231d16b6053aca253b9e5073955ae",
+  "task_branch": "eval/task8c-final-demo-v1",
+  "formal_freeze_commit": null,
+  "scientific_reuse_disclosure": {
+    "en": "The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.",
+    "zh": "这些定性 Demo 候选是在 Task 7J 最终冻结架构测试指标已经被消耗之后，从冻结的 BuildSpatialReason v0.2 测试划分中确定性选取的。其定性复用不会改变、替换或重新选择任何已报告的 Task 7J 指标、模型、阈值、随机种子或架构。"
+  },
+  "source_manifest_identity": {
+    "identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+    "git_canonical_manifest_sha256": "df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e",
+    "external_manifest": null,
+    "external_check_status": "NOT_RUN"
+  },
+  "external_preflight": {
+    "status": "NOT_RUN_AFTER_DEDICATED_TEST_GATE_STOP",
+    "source_check": null,
+    "check_setup": null,
+    "candidate_gate": null
+  },
+  "protected_assets_before": null,
+  "protected_assets_after": null,
+  "candidate_lock": [
+    {
+      "relation": "right",
+      "sample_id": "buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1010.tif",
+      "image_sha256": "1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2",
+      "prompt": "最大建筑右侧最近的建筑",
+      "expected_program": "largest_to_right_of_to_nearest"
+    },
+    {
+      "relation": "left",
+      "sample_id": "buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1003.tif",
+      "image_sha256": "eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38",
+      "prompt": "最大建筑左侧最近的建筑",
+      "expected_program": "largest_to_left_of_to_nearest"
+    },
+    {
+      "relation": "above",
+      "sample_id": "buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1008.tif",
+      "image_sha256": "0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd",
+      "prompt": "最大建筑上方最近的建筑",
+      "expected_program": "largest_to_above_to_nearest"
+    },
+    {
+      "relation": "below",
+      "sample_id": "buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1009.tif",
+      "image_sha256": "c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7",
+      "prompt": "最大建筑下方最近的建筑",
+      "expected_program": "largest_to_below_to_nearest"
+    }
+  ],
+  "runner_identity": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_runner.py",
+    "bytes": 17934,
+    "sha256": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666"
+  },
+  "evaluator_identity": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py",
+    "bytes": 16825,
+    "sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+  },
+  "dedicated_test_result": {
+    "pass": false,
+    "exit_code": 1,
+    "passed": 27,
+    "failed": 0,
+    "errors": 15,
+    "collected": 42,
+    "command": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "-B",
+      "-m",
+      "pytest",
+      "tests/test_task8c_final_demo.py",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp",
+      "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-formal-runtime-v1\\fake-tests-v2"
+    ],
+    "error_stage": "pytest tmp_path fixture setup",
+    "error_class": "FileNotFoundError / WinError 3",
+    "representative_error": "FileNotFoundError: [WinError 3] The system cannot find the path specified: 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-formal-runtime-v1\\fake-tests-v2'",
+    "cause": "The executor supplied a nested --basetemp whose parent did not exist. Pytest creates the base directory without parents=True. No test assertions failed; 15 fixture-dependent tests could not execute.",
+    "stdout_capture": "Tool output was truncated; 27 passed / 15 errors summary and representative setup trace retained. No full stdout log was saved.",
+    "fake_only": true,
+    "test_revision_sha256": "051755ce1a3af05bc6a862f31506c1ac7e2705878559a5f14c5ee4f38e6c1e3a",
+    "runner_revision_sha256": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666",
+    "evaluator_revision_sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+  },
+  "dedicated_test_history": [
+    {
+      "passed": 40,
+      "errors": 0,
+      "exit_code": 0,
+      "pass": true,
+      "revision": "Earlier version before adding frozen-artifact and deterministic-review tests, and tightening EOF timeout handling. Its PASS does not validate current harness.",
+      "basetemp": "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-fake-tests-v1",
+      "stdout_summary": "40 passed in 0.72s"
+    },
+    {
+      "pass": false,
+      "exit_code": 1,
+      "passed": 27,
+      "failed": 0,
+      "errors": 15,
+      "collected": 42,
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/test_task8c_final_demo.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-formal-runtime-v1\\fake-tests-v2"
+      ],
+      "error_stage": "pytest tmp_path fixture setup",
+      "error_class": "FileNotFoundError / WinError 3",
+      "representative_error": "FileNotFoundError: [WinError 3] The system cannot find the path specified: 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-formal-runtime-v1\\fake-tests-v2'",
+      "cause": "The executor supplied a nested --basetemp whose parent did not exist. Pytest creates the base directory without parents=True. No test assertions failed; 15 fixture-dependent tests could not execute.",
+      "stdout_capture": "Tool output was truncated; 27 passed / 15 errors summary and representative setup trace retained. No full stdout log was saved.",
+      "fake_only": true,
+      "test_revision_sha256": "051755ce1a3af05bc6a862f31506c1ac7e2705878559a5f14c5ee4f38e6c1e3a",
+      "runner_revision_sha256": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666",
+      "evaluator_revision_sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+    }
+  ],
+  "formal_runner_invocation_count": 0,
+  "case_attempt_order": [],
+  "cases": [],
+  "gt_audit_started_after_runtime_freeze": false,
+  "model_calls_during_gt_audit": 0,
+  "aggregate": null,
+  "legacy_output_unchanged": null,
+  "input_unchanged": null,
+  "protected_assets_unchanged": null,
+  "source_identity_unchanged": null,
+  "review_artifacts": [],
+  "no_real_model_inference": true,
+  "no_gt_candidate_access": true,
+  "external_write_operations_executed": 0,
+  "product_and_governance_diff_paths": [],
+  "task_book_attachment_identity": {
+    "path": "C:\\Users\\ROG\\.codex\\attachments\\5afc4d19-a747-4945-a323-7e67cc0681ed\\已粘贴的文本.txt",
+    "bytes": 26456,
+    "sha256": "c145f7efca4a3a0d99d46d2c51fac2aa658e1b2b081264512d19cd2a223392bb"
+  },
+  "task_book_initial_verbatim_install": true,
+  "stop": {
+    "gate": "DEDICATED_HARNESS_TESTS_NOT_100_PERCENT_GREEN",
+    "authority": "handoff/CURRENT_TASK.md section 39",
+    "instruction": "dedicated harness tests are not 100% green; STOP with evidence; Do not self-repair across these boundaries.",
+    "recoverable_cause": "L0 invocation path setup, identified but not repaired or rerun after STOP.",
+    "formal_attempts_consumed": 0,
+    "needed_disposition": "Supervisor review and continuation disposition before correcting temporary-directory invocation and completing the static gates."
+  },
+  "interaction_flag_rationale": "--confirm-command enables only the prescribed direct Y/N gate, as in the existing Task 8B.3 driver. Inference/reference/model/threshold defaults remain unchanged.",
+  "no_rescue_statement": {
+    "candidate replacement": "NONE",
+    "prompt replacement": "NONE",
+    "prompt retry": "NONE",
+    "inference retry": "NONE",
+    "reference override": "NONE",
+    "inspect-before-run": "NONE",
+    "threshold tuning": "NONE",
+    "ranking tuning": "NONE",
+    "mask-quality tuning": "NONE",
+    "architecture change": "NONE",
+    "model change": "NONE",
+    "checkpoint change": "NONE",
+    "training": "NONE",
+    "dependency installation": "NONE"
+  },
+  "next_gate": "CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT",
+  "final_scientific_verdict_owner": "ChatGPT Supervisor",
+  "no_candidate_replacement": true,
+  "no_prompt_retry": true,
+  "no_inference_retry": true,
+  "no_reference_override": true,
+  "no_inspect_pre_run": true,
+  "no_threshold_tuning": true,
+  "no_ranking_tuning": true,
+  "no_model_change": true,
+  "no_architecture_change": true,
+  "no_training": true,
+  "no_dependency_install": true
+}

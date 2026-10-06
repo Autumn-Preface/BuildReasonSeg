@@ -1,492 +1,526 @@
-# CURRENT_TASK — TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
+# CURRENT_TASK — TASK8C_FINAL_DEMO_V1
 
 ## 0. Metadata
 
+```text
 Task ID:
-
-TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
+TASK8C_FINAL_DEMO_V1
 
 Status:
-
-READY_FOR_SUPERVISOR_AUDIT
+STOPPED_FOR_SUPERVISOR
 
 Decision owner:
-
 ChatGPT Supervisor
 
 Authorized executor:
-
 CODEX
 
-Accepted predecessor task:
+Project phase:
+RC1_FINAL_DEMO
 
-A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
+Accepted predecessor:
+TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
 
 Accepted predecessor branch:
-
-audit/task8b3-a2-ground-truth-case-validity-v1
-
-Accepted predecessor remote HEAD:
-
-c6d09e77d3c403771a92d096fe5977ebaa61db67
-
-Required task branch:
-
 fix/task8b4-run-isolated-output-layout-v1
 
-Project phase:
+Accepted predecessor remote HEAD:
+92f28133931231d16b6053aca253b9e5073955ae
 
-RC1_ENGINEERING_RELIABILITY
+Required task branch:
+eval/task8c-final-demo-v1
 
 Next gate:
-
-CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
-
-
-## 1. Supervisor Disposition
-
-The previous A2 provenance / GT case-validity milestone is ACCEPTED.
-
-Accepted state:
-
-- RGB/BGR detector input contract is corrected.
-- A2 still returns zero proposals.
-- A2 exact source provenance remains NOT_ESTABLISHED.
-- A2 GT validity remains NOT_EVALUABLE_WITHOUT_PROVENANCE.
-- PROP-01 remains OPEN.
-- No further A2 forensic work is authorized by this task.
-- MEM-01 remains CLOSED.
-- MASK-01 engineering hardening remains CLOSED.
-- REF-01 residual limitation remains unchanged.
-- Task 8B.4 implementation is PARTIAL_ACCEPT / CONTINUE_AUTHORIZED under the Supervisor continuation disposition in section 29.
-
-This milestone is purely a delivery-output isolation repair.
-
-It MUST NOT modify scientific architecture, detector behaviour, relation semantics, target selection, segmentation behaviour, thresholds or acceptance semantics.
-
-
-## 2. Historical Task 8B.4 Requirement
-
-Task 8B.3 repeatedly recorded the following accepted/deferred requirement:
-
-```text
-Each predict run should own one independent directory under inference/output,
-with subdirectories diagnostics/, masks/, overlays/.
-```
-
-Status was repeatedly:
-
-```text
-ACCEPTED / DEFERRED TO TASK 8B.4
-```
-
-This task implements that exact deferred requirement.
-
-
-## 3. Current Defect
-
-Current canonical RC1 implementation uses shared directories:
-
-```text
-inference/output/masks/
-inference/output/overlays/
-inference/output/diagnostics/
-```
-
-Current allocation in:
-
-```text
-buildreasonseg/runtime/outputs.py
-```
-
-uses the existence of:
-
-```text
-<stem>_mask.png
-```
-
-inside the shared mask directory to choose the run suffix.
-
-Therefore a failed run that creates:
-
-```text
-diagnostics/<stem>/
-```
-
-but no mask does NOT reserve the suffix.
-
-A later run of the same image may reuse the same diagnostics location and overwrite previous forensic evidence.
-
-This is a delivery engineering defect.
-
-It is NOT a model-quality defect.
-
-
-## 4. Frozen New Output Contract
-
-### 4.1 Run directory
-
-Every output-owning image run receives exactly one independent directory under:
-
-```text
-inference/output/
-```
-
-Run slug:
-
-```text
-<stem>
-<stem>_001
-<stem>_002
-...
-```
-
-The first available run-directory name is allocated.
-
-Allocation MUST be based on existence of the run root itself.
-
-It MUST NOT depend on mask existence, overlay existence or diagnostic-file existence.
-
-
-### 4.2 Atomic reservation
-
-Preferred implementation:
-
-attempt to create the candidate run directory with filesystem exclusive/non-overwriting semantics.
-
-If it already exists:
-
-try the next suffix.
-
-This avoids two runs choosing the same directory merely because no mask file exists yet.
-
-Do not introduce locking infrastructure beyond what is necessary for directory reservation.
-
-
-### 4.3 Required structure
-
-Every allocated run root contains:
-
-```text
-<run_slug>/
-├─ diagnostics/
-├─ masks/
-└─ overlays/
-```
-
-Example first run:
-
-```text
-inference/output/A1/
-├─ diagnostics/
-├─ masks/
-│  └─ A1_mask.png
-└─ overlays/
-   └─ A1_overlay.png
-```
-
-Example second run:
-
-```text
-inference/output/A1_001/
-├─ diagnostics/
-├─ masks/
-│  └─ A1_mask_001.png
-└─ overlays/
-   └─ A1_overlay_001.png
+CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 ```
 
 
-### 4.4 Filename compatibility
+# 1. Supervisor Disposition
 
-Preserve the existing filename suffix convention.
+Task 8B.4 is formally ACCEPTED by the ChatGPT Supervisor.
 
-For run index 0:
-
-```text
-mask     = <stem>_mask.png
-overlay  = <stem>_overlay.png
-```
-
-For run index N:
+Accepted engineering state includes:
 
 ```text
-mask     = <stem>_mask_<NNN>.png
-overlay  = <stem>_overlay_<NNN>.png
+RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED
+external source/config identity = 135/135
+external check_setup = READY
+external complete suite = 150 passed
 ```
 
-The suffix now appears both in the run slug and in mask/overlay filenames.
-
-This preserves existing artifact filename semantics while adding run-level isolation.
-
-
-### 4.5 Diagnostics filenames
-
-Existing diagnostics names remain unchanged:
+Current scientific limitations remain:
 
 ```text
-prompt.txt
-parsed_program.json
-global_proposals.png
-proposals.json
-selected_reference.png
-reasoning_context.png
-reference_context_mask.png
-direction_field.png
-nearest_field.png
-relation_weight.png
-prototype_similarity.png
-maps.npz
-result.json
+MEM-01  = CLOSED
+MASK-01 = CLOSED_ENGINEERING_HARDENING
+REF-01  = ACTIVE_RESIDUAL_SELECTION_LIMITATION
+PROP-01 = OPEN_ENGINEERING_DEFECT
+
+REF-01:
+  right = stable
+  above = repaired
+  left  = residual selection limitation
+  below = residual selection limitation
+
+PROP-01:
+  A2 zero proposals remains OPEN
 ```
 
-They now live directly inside:
+No repair is authorized by this task.
+
+This task is an **evaluation/demo milestone only**.
+
+
+# 2. Governance Staleness Note
+
+At the accepted predecessor HEAD, `governance/PROJECT_STATE.yaml` still records:
 
 ```text
-<run_slug>/diagnostics/
+8B.4 = NOT_STARTED
+final_demo = NOT_STARTED
 ```
 
-There must NOT be a second nested `<stem>` directory.
-
-
-## 5. Output Path API Compatibility
-
-Existing payload keys MUST remain:
+The `8B.4 = NOT_STARTED` field is stale relative to the later explicit Supervisor acceptance at:
 
 ```text
-output_paths.mask
-output_paths.overlay
-output_paths.diagnostics
+92f28133931231d16b6053aca253b9e5073955ae
 ```
 
-Existing inspect-mode fields remain semantically equivalent.
+Do NOT edit governance files in Task 8C.
 
-CLI labels remain:
+The task book and actual Git evidence have higher execution relevance for this milestone.
+
+Final governance closure will occur only after Supervisor acceptance of Task 8C.
+
+
+# 3. Scientific Purpose
+
+The goal is to obtain one frozen, auditable qualitative end-to-end demonstration of the current RC1 system on the four immutable supported-domain candidates.
+
+The demonstrated chain is:
 
 ```text
-Mask         :
-Overlay      :
-Diagnostics  :
+Natural-language instruction
+→ Qwen 2B ProgramHead
+→ deterministic supported program
+→ YOLO26m proposals
+→ automatic largest reference selection
+→ spatial reasoning
+→ SAM/SAM2 + GRF + target-aware segmentation
+→ final mask / overlay
 ```
 
-Only filesystem path values change.
+This task must answer:
 
-Do NOT introduce a new required CLI argument.
+1. Does the current frozen RC1 execute the four supported spatial-reasoning types end to end?
+2. What reference does the automatic system actually select?
+3. What target mask does it actually output?
+4. How does that output compare with frozen GT after inference?
+5. Which successes and limitations are honestly visible?
 
-Do NOT change exit codes.
-
-Do NOT change result status semantics.
-
-Do NOT change SUCCESS semantics.
+It does NOT attempt to improve the system.
 
 
-## 6. Allocation Timing
+# 4. Mandatory Scientific Reuse Disclosure
 
-Preserve current error-order behaviour as much as possible.
+The following disclosure must appear verbatim in the final report:
 
-For full prediction:
+> The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
+
+Chinese translation must also be included:
+
+> 这些定性 Demo 候选是在 Task 7J 最终冻结架构测试指标已经被消耗之后，从冻结的 BuildSpatialReason v0.2 测试划分中确定性选取的。其定性复用不会改变、替换或重新选择任何已报告的 Task 7J 指标、模型、阈值、随机种子或架构。
+
+
+# 5. Frozen Supported Domain
+
+The Demo is restricted to:
 
 ```text
-load_image
-→ allocate run output directory
-→ remaining pipeline
+BuildSpatialReason v0.2
+WHU-EA-NativeVector v1.0
+WHU East Asia
+scene_disjoint_v1
+RGB optical aerial/overhead imagery
+tile-relative spatial reasoning
 ```
 
-is already the effective order and should remain so.
-
-For inspect-proposals mode, move output allocation immediately after successful image loading if necessary so that the image run owns its run directory before detector execution.
-
-Pre-image failures such as:
-
-- nonexistent input;
-- unsupported input path;
-- decode failure before successful image load;
-
-are NOT required to create an output run directory.
-
-Do not reorder model/package validation or other unrelated error contracts merely to create output folders.
-
-
-## 7. Failure Contract
-
-A failed run after output allocation still permanently owns its run directory.
-
-Example:
+No claim may be made about:
 
 ```text
-output/A2/
-├─ diagnostics/
-│  └─ result.json
-├─ masks/
-└─ overlays/
+cross-city generalization
+broad geographic generalization
+cross-sensor generalization
+arbitrary aerial-image robustness
+SAR
+infrared
+raw multispectral imagery
+unrestricted natural language
 ```
 
-If A2 is run again:
+
+# 6. Four Immutable Final-Demo Candidates
+
+Execution order is frozen:
 
 ```text
-output/A2_001/
+right → left → above → below
 ```
 
-MUST be allocated even though the first run produced no mask.
-
-No previous diagnostics may be silently overwritten.
-
-
-## 8. --no-save-diagnostics Contract
-
-`--no-save-diagnostics` continues to suppress diagnostic files.
-
-The run directory contract still applies.
-
-It is acceptable for:
+## 6.1 RIGHT
 
 ```text
-diagnostics/
+relation:
+right
+
+sample_id:
+buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
+
+image:
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1010.tif
+
+SHA256:
+1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2
+
+expected program:
+largest_to_right_of_to_nearest
+
+frozen prompt:
+最大建筑右侧最近的建筑
+
+GT reference tile_instance_id:
+4
+
+GT target tile_instance_id:
+3
 ```
 
-to exist but remain empty.
 
-Do NOT reinterpret an empty directory as a saved diagnostic artifact.
-
-
-## 9. Inspect-Proposals Contract
-
-`--inspect-proposals` uses the same run-isolated directory allocator.
-
-Expected shape:
+## 6.2 LEFT
 
 ```text
-output/<run_slug>/
-├─ diagnostics/
-│  ├─ global_proposals.png
-│  ├─ proposals.json
-│  ├─ result.json
-│  └─ ...
-├─ masks/
-└─ overlays/
+relation:
+left
+
+sample_id:
+buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
+
+image:
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1003.tif
+
+SHA256:
+eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38
+
+expected program:
+largest_to_left_of_to_nearest
+
+frozen prompt:
+最大建筑左侧最近的建筑
+
+GT reference tile_instance_id:
+26
+
+GT target tile_instance_id:
+24
 ```
 
-Inspect mode MUST NOT create a fake mask or overlay.
 
-
-## 10. Legacy Output Preservation
-
-Existing historical layout may already contain:
+## 6.3 ABOVE
 
 ```text
-inference/output/masks/
-inference/output/overlays/
-inference/output/diagnostics/
-review_task8b3/
-...
+relation:
+above
+
+sample_id:
+buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
+
+image:
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1008.tif
+
+SHA256:
+0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd
+
+expected program:
+largest_to_above_to_nearest
+
+frozen prompt:
+最大建筑上方最近的建筑
+
+GT reference tile_instance_id:
+4
+
+GT target tile_instance_id:
+6
 ```
 
-Do NOT:
 
-- delete them;
-- migrate them;
-- rename them;
-- clean them;
-- overwrite them for compatibility;
-- reinterpret them as new run directories.
-
-They are historical evidence.
-
-New allocator uses only the new run-root contract.
-
-If an image stem happens to collide with an existing root entry such as:
+## 6.4 BELOW
 
 ```text
-masks
-overlays
-diagnostics
+relation:
+below
+
+sample_id:
+buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+
+image:
+C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1009.tif
+
+SHA256:
+c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7
+
+expected program:
+largest_to_below_to_nearest
+
+frozen prompt:
+最大建筑下方最近的建筑
+
+GT reference tile_instance_id:
+3
+
+GT target tile_instance_id:
+2
 ```
 
-that candidate is already occupied and the allocator must choose the next suffix.
 
+# 7. Important Historical-Evidence Boundary
 
-## 11. Allowed Functional Scope
+Historical P1D12 proposal counts and historical REF-01 proposal IDs were produced before the current final detector/input-contract state.
 
-Preferred changed delivery files:
+They are historical forensic evidence only.
+
+Do NOT use historical values such as:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+right selected id 1
+left selected id 14 / GT-covered id 30
+above selected id 5
+below selected id 1 / GT-covered id 2
 ```
 
-Conditionally allowed only if mechanically required for the frozen path contract:
+as current Demo oracles.
+
+Do NOT require current proposal counts to equal historical P1D12 counts.
+
+Do NOT pass any historical proposal ID through `--reference-id`.
+
+Current Final Demo must observe the current production pipeline from scratch.
+
+
+# 8. Final Demo Mode
+
+All four cases MUST use:
 
 ```text
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
-delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
+AUTOMATIC REFERENCE MODE
 ```
 
-Avoid modifying `predict.py` unless a concrete failing contract test proves it is necessary.
-
-Repository evidence/handoff files allowed:
+Forbidden during the formal Final Demo:
 
 ```text
-docs/task8b4_run_isolated_output_layout_v1.md
-evaluation/task8b4_run_isolated_output_layout_v1.json
-handoff/CURRENT_TASK.md
-handoff/EXECUTOR_STATE.yaml
+--reference-id
+--inspect-proposals
+manual reference selection
+manual proposal selection
+manual target selection
 ```
 
-No other path is authorized without Supervisor escalation.
+There is no Assisted-Mode rescue in Task 8C.
+
+If automatic reference selection is wrong, preserve that result.
 
 
-## 12. Forbidden Scope
+# 9. No-Retry Rule
 
-Do NOT change:
+Each candidate may be executed exactly once.
 
-- detector implementation except already accepted RGB/BGR state;
-- detector threshold;
-- NMS;
-- tile size;
-- overlap;
-- imgsz;
-- max_det;
-- ProgramHead;
-- Qwen;
-- language fallback;
-- reference selection;
-- relation semantics;
-- SAM/SAM2;
-- D-B1;
-- GRF;
-- mask validity rules;
-- SUCCESS semantics;
-- model weights;
-- configs;
-- scientific metrics;
-- locked Demo candidate identities;
-- PROP-01 classification;
-- REF-01 classification;
-- MASK-01 classification;
-- governance/PROJECT_STATE.yaml;
-- governance/DECISIONS.md.
+Formal execution:
 
-Do NOT run real model inference in this milestone.
+```text
+RIGHT  = one attempt
+LEFT   = one attempt
+ABOVE  = one attempt
+BELOW  = one attempt
+```
 
-Do NOT run the historical six-image suite.
+No individual retry.
 
-Do NOT run A2.
+No prompt retry.
 
-Do NOT run the four locked Demo candidates.
+No altered paraphrase.
+
+No second detector pass.
+
+No Assisted Mode after failure.
+
+No re-running successful cases for a prettier image.
+
+A runtime failure remains part of the Final Demo evidence.
 
 
-## 13. Required Preflight
+# 10. Language Driver Rules
+
+Use the proven Task 8B.3 interactive-driver semantics or a newly isolated equivalent with dedicated tests.
+
+The formal prompt strings are frozen in §6.
+
+For each case:
+
+### Direct confirmation
+
+Answer:
+
+```text
+Y
+```
+
+ONLY when:
+
+```text
+initial_program == expected_program
+```
+
+Otherwise answer:
+
+```text
+N
+```
+
+Classification:
+
+```text
+DIRECT_CORRECT
+LANGUAGE_ERROR_SUPPORTED_WRONG
+```
+
+
+### Suggestion confirmation
+
+Answer:
+
+```text
+Y
+```
+
+ONLY when:
+
+```text
+suggested_program == expected_program
+```
+
+Otherwise:
+
+```text
+N
+```
+
+Classification:
+
+```text
+SUGGESTION_CORRECT
+SUGGESTION_WRONG
+```
+
+
+### Runtime fallback request
+
+If the product asks:
+
+```text
+是否进入有限兼容模式？ [Y/N]
+```
+
+answer:
+
+```text
+N
+```
+
+Task 8C is a Qwen-first Final Demo.
+
+Do not convert Qwen runtime failure into fallback success.
+
+
+# 11. Harness Architecture
+
+Create:
+
+```text
+scripts/task8c_final_demo_runner.py
+scripts/task8c_final_demo_evaluate.py
+tests/test_task8c_final_demo.py
+```
+
+The two operational roles MUST remain separate.
+
+## Runner
+
+`task8c_final_demo_runner.py`:
+
+- knows candidates, image hashes, prompts and expected programs;
+- drives the external `predict.py`;
+- contains NO GT mask reconstruction logic;
+- contains NO GT reference/target decision logic;
+- does NOT call `--reference-id`;
+- does NOT call `--inspect-proposals`;
+- invokes each formal candidate at most once;
+- records transcripts and objective runtime evidence.
+
+## Evaluator
+
+`task8c_final_demo_evaluate.py`:
+
+- performs ZERO model or detector calls;
+- runs only after all four formal runs are complete;
+- reads frozen output artifacts;
+- reconstructs native-vector GT reference/target masks;
+- computes post-hoc metrics and visual review panels;
+- must not modify any RC1 output.
+
+
+# 12. Harness Unit Gates Before Real Inference
+
+Dedicated tests must prove at least:
+
+1. candidate order is exactly right → left → above → below;
+2. all four sample IDs are exact;
+3. all four raster SHA256 values are exact;
+4. all four prompts are exact;
+5. all expected programs are exact;
+6. direct prompt answers Y only for the expected program;
+7. wrong supported program receives N;
+8. correct suggestion receives Y;
+9. wrong suggestion receives N;
+10. runtime fallback receives N;
+11. no case can be retried by the runner;
+12. `--reference-id` cannot appear in formal argv;
+13. `--inspect-proposals` cannot appear in formal argv;
+14. GT/native-vector paths are not accessed by the runner;
+15. evaluator contains no detector/model execution;
+16. evaluator cannot call `predict.py`;
+17. runner preserves per-case timeout;
+18. a failed case does not stop later cases;
+19. no output directory is cleared or deleted;
+20. generated evidence is deterministic from frozen runtime results.
+
+Required gate:
+
+```text
+python -m pytest tests/test_task8c_final_demo.py -q
+```
+
+must be 100% PASS before formal execution.
+
+
+# 13. Preflight
 
 Read in order:
 
-1. AGENTS.md
-2. governance/PROJECT_STATE.yaml
-3. governance/DECISIONS.md
-4. handoff/CURRENT_TASK.md
-5. handoff/EXECUTOR_STATE.yaml
+1. `AGENTS.md`
+2. `governance/PROJECT_STATE.yaml`
+3. `governance/DECISIONS.md`
+4. `handoff/CURRENT_TASK.md`
+5. `handoff/EXECUTOR_STATE.yaml`
 
 Then:
 
@@ -494,289 +528,30 @@ Then:
 git fetch
 ```
 
-Verify actual remote predecessor branch:
-
-```text
-audit/task8b3-a2-ground-truth-case-validity-v1
-```
-
-Required accepted predecessor HEAD:
-
-```text
-c6d09e77d3c403771a92d096fe5977ebaa61db67
-```
-
-If remote advanced:
-
-do NOT reset/rebase/amend.
-
-Inspect the additional commits.
-
-If they are not clearly Supervisor authorization-only changes for this milestone:
-
-persist evidence and STOP.
-
-If correct:
-
-create:
+Verify:
 
 ```text
 fix/task8b4-run-isolated-output-layout-v1
+remote HEAD =
+92f28133931231d16b6053aca253b9e5073955ae
 ```
 
-from the verified authorization point.
+If the remote predecessor advanced unexpectedly:
 
+inspect only and STOP unless the additional commits are clearly Supervisor-authorized state-only changes.
 
-## 14. Required Pre-Implementation Inspection
+Do NOT reset/rebase/amend/stash/clean.
 
-Before editing, record:
-
-- current `outputs.py` SHA256 / Git blob;
-- all references to:
-  - `allocate_outputs`
-  - `allocate_run_suffix`
-  - `suffix_of`
-  - `SampleOutputs`
-  - `output_dirs`
-- current README output contract;
-- current `inference/README.md` output tree;
-- current relevant tests;
-- current source-manifest entries for every manifest-listed file expected to change.
-
-Also inspect existing external:
+Create:
 
 ```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+eval/task8c-final-demo-v1
 ```
 
-read-only before implementation.
+from the accepted predecessor.
 
-Record inventories for:
 
-```text
-inference/input/
-inference/output/
-```
-
-and protected model assets.
-
-Do not modify external delivery during this phase.
-
-
-## 15. Required Unit Contract Tests
-
-At minimum add/modify tests proving all of the following.
-
-### T1 — first run layout
-
-For `example.png`, first allocation creates:
-
-```text
-output/example/
-output/example/diagnostics/
-output/example/masks/
-output/example/overlays/
-```
-
-and paths resolve to:
-
-```text
-output/example/masks/example_mask.png
-output/example/overlays/example_overlay.png
-output/example/diagnostics/
-```
-
-
-### T2 — second run isolation
-
-A second allocation for the same stem creates:
-
-```text
-output/example_001/
-```
-
-with filenames:
-
-```text
-example_mask_001.png
-example_overlay_001.png
-```
-
-
-### T3 — failed diagnostics-only run reserves suffix
-
-First allocation:
-
-```text
-output/example/
-```
-
-Write diagnostics only.
-
-Write NO mask.
-
-Second allocation MUST be:
-
-```text
-output/example_001/
-```
-
-and MUST NOT reuse:
-
-```text
-output/example/diagnostics/
-```
-
-
-### T4 — existing run directory is never reused
-
-Pre-create:
-
-```text
-output/example/
-output/example_001/
-```
-
-Next allocation must use:
-
-```text
-output/example_002/
-```
-
-
-### T5 — legacy shared outputs preserved
-
-Pre-create historical:
-
-```text
-output/masks/example_mask.png
-output/overlays/example_overlay.png
-output/diagnostics/example/result.json
-```
-
-Allocate a new run.
-
-Assertions:
-
-- historical files remain byte-identical;
-- new run uses the new run-root layout;
-- no legacy file is deleted or overwritten.
-
-
-### T6 — mask/overlay functional contract preserved
-
-Existing assertions remain true:
-
-- original image dimensions;
-- mask uint8;
-- values subset `{0,255}`;
-- overlay original size;
-- configured alpha behaviour unchanged.
-
-
-### T7 — diagnostics required fields preserved
-
-Existing diagnostics-file test remains valid under the new run-local diagnostics directory.
-
-
-### T8 — same run root
-
-Assert:
-
-```text
-mask
-overlay
-diagnostics
-```
-
-belong to the same run root.
-
-
-### T9 — collision with reserved/legacy root name
-
-If:
-
-```text
-output/masks/
-```
-
-already exists and input stem is `masks`, allocator must not treat that legacy directory as a new run.
-
-It must allocate a suffixed run slug.
-
-
-### T10 — no-save-diagnostics semantics
-
-No diagnostic files are produced when disabled.
-
-Do not weaken existing CLI contract.
-
-
-## 16. Canonical Test Gates
-
-Use the established project Python environment.
-
-From canonical RC1 root, first run targeted tests:
-
-```text
-python -m pytest tests/test_task8b_runtime.py -q
-python -m pytest tests/test_cli_contract.py -q
-```
-
-If `test_cli_contract.py` is unchanged, it must still be run.
-
-Supervisor L2 continuation disposition under frozen GOV-D007:
-
-```text
-canonical_full_suite_disposition = WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
-```
-
-The previously executed canonical full suite remains recorded as 127 passed / 17 failed / 6 errors, exit 1. It is an invalid complete-delivery gate in the lightweight canonical source/config snapshot, not a Task 8B.4 product regression. Do not rerun it to manufacture green acceptance, add excluded VERSION/assets/weights/logs/fixtures/inference/input, or weaken its tests.
-
-The complete full-suite acceptance gate belongs to external complete RC1 in section 20. Record exact external passed/failed count and exit code; do not assume a fixed test count.
-
-Any unexplained regression:
-
-STOP.
-
-
-## 17. Source Manifest Contract
-
-Manifest remains:
-
-```text
-schema = BuildReasonSeg.AdvisorRC1.SourceManifest.v1
-identity_basis = GIT_CANONICAL_BLOB_BYTES
-entries = 135
-```
-
-Do NOT add or remove manifest paths merely because this task changes contents.
-
-For every changed manifest-listed delivery file:
-
-update:
-
-```text
-bytes
-sha256
-```
-
-from committed Git canonical blob bytes.
-
-Recommended sequence:
-
-1. implement product/tests/docs;
-2. run targeted tests;
-3. commit checkpoint;
-4. calculate Git canonical blob identity from that commit;
-5. update only affected manifest entries;
-6. validate all 135 entries against Git canonical blob bytes;
-7. commit manifest checkpoint.
-
-Do NOT calculate canonical manifest identities from CRLF-expanded Windows working-tree bytes.
-
-
-## 18. External Sync Gate
+# 14. External RC1 Integrity Preflight
 
 External root:
 
@@ -784,63 +559,11 @@ External root:
 C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
 ```
 
-Before any write sync:
+Before formal inference:
 
-run the existing Git-canonical helper in check mode.
+### Source identity
 
-Expected principle:
-
-- mismatches must be limited to the exact manifest-listed files intentionally changed by Task 8B.4;
-- no unexplained unrelated mismatch may exist.
-
-If unrelated mismatches appear:
-
-STOP before sync.
-
-
-## 19. Controlled External Sync
-
-Only after the pre-sync gate is clean and understood:
-
-use the existing:
-
-```text
-scripts/sync_advisor_rc1_delivery.py
-```
-
-for one controlled source/config sync.
-
-Then separately write the exact Git-canonical:
-
-```text
-source_manifest.json
-```
-
-to external RC1, matching the established P1D11B procedure.
-
-Do NOT delete any external file.
-
-Do NOT touch:
-
-```text
-model weights
-Qwen assets
-SAM2 assets
-inference/input
-existing inference/output history
-logs except unavoidable test-generated logs
-```
-
-Protected asset hashes must remain unchanged.
-
-
-## 20. External Post-Sync Gates
-
-Required:
-
-### Gate A
-
-Git-canonical helper:
+Existing sync helper `--check`:
 
 ```text
 checked = 135
@@ -849,221 +572,765 @@ missing = 0
 mismatch = 0
 ```
 
-### Gate B
 
-External `source_manifest.json`:
-
-byte/hash identical to Git canonical manifest.
-
-### Gate C
+### Setup
 
 ```text
 python check_setup.py
 ```
 
-must report READY.
-
-
-### Gate D
-
-Run external targeted tests:
+must report:
 
 ```text
-python -m pytest tests/test_task8b_runtime.py -q
-python -m pytest tests/test_cli_contract.py -q
+BuildReasonSeg environment: READY
 ```
 
-### Gate E
 
-Run external full suite:
+### Asset snapshot
+
+Record byte length + SHA256 for all protected:
 
 ```text
-python -m pytest tests/ -q
+detector weights
+decoder weights
+SAM2 weights/config
+ProgramHead weights
+Qwen asset files
+model metadata/config
 ```
 
-All must exit 0.
-
-No model inference is authorized.
+No value may change during the milestone.
 
 
-## 21. External Historical Output Preservation Gate
+# 15. Candidate Identity Preflight
 
-Compare pre/post inventory of:
+For all four images verify:
+
+```text
+exists = true
+size = 512 × 512
+mode = RGB
+format = TIFF
+SHA256 = exact §6 lock
+```
+
+Any mismatch:
+
+```text
+STOP
+```
+
+No substitute image is permitted.
+
+
+# 16. Output Preflight
+
+Snapshot current external:
 
 ```text
 inference/output/
 ```
 
-Because no real inference is authorized in this milestone, existing historical output contents must remain unchanged.
+including path, byte length, SHA256 and mtime for all pre-existing files.
 
-No migration or cleanup is permitted.
+Do NOT delete or clear old outputs.
 
-Also verify:
+Task 8B.4 allocator decides the new run roots.
 
-```text
-inference/input/
-```
+Record the actual allocated run root after each case.
 
-is unchanged.
+Historical output must remain intact.
 
 
-## 22. Documentation Update
+# 17. Formal Final-Demo Freeze
 
-Update canonical RC1 README to document the new run-isolated layout.
-
-Replace the old shared example with:
+Before the first real case, persist:
 
 ```text
-inference/output/<run_slug>/
-├─ diagnostics/
-├─ masks/
-└─ overlays/
+FORMAL_FINAL_DEMO_FREEZE_V1
+
+task branch HEAD
+runner SHA256
+evaluator SHA256
+dedicated-test SHA256
+
+external source manifest SHA256
+external 135/135 status
+
+check_setup READY
+
+protected asset hashes
+
+candidate sample IDs
+candidate raster paths
+candidate raster SHA256 values
+
+frozen prompts
+expected programs
+
+execution order
+
+output inventory hash
 ```
 
-Document:
+Commit + push the freeze checkpoint BEFORE model inference.
+
+
+# 18. Formal Execution
+
+Exactly one invocation of the final runner:
 
 ```text
-first run  -> <stem>
-next runs -> <stem>_001, <stem>_002, ...
+<ENV_PYTHON> scripts/task8c_final_demo_runner.py
 ```
 
-State explicitly:
+Runner executes the four cases once each in frozen order.
 
-- failed runs reserve their run directory;
-- existing run outputs are never silently overwritten;
-- legacy pre-8B.4 shared output directories are preserved and are not migrated.
-
-
-Update:
+For each case use actual external RC1:
 
 ```text
-inference/README.md
+predict.py
+--image "<locked raster>"
+--prompt "<frozen prompt>"
 ```
 
-to the same contract.
+No other inference option changing semantics.
 
-Remove the stale claim that Task 8A has no real inference, since RC1 Task 8B runtime now exists.
-
-Do not change model-quality or scientific claims.
+Default automatic reference mode only.
 
 
-## 23. Required Evidence
+# 19. Per-Case Runtime Evidence
+
+Record:
+
+```text
+relation
+sample_id
+image path
+image SHA256
+prompt
+expected_program
+
+initial_program
+initial_confidence
+suggested_program
+driver_decision
+language_status
+
+exit_code
+runtime_status
+error_code
+error_reason
+
+raw_proposal_count
+merged_proposal_count
+tile_count
+
+reference_mode
+reference_id
+reference_area
+reference_confidence
+reference_bbox
+
+direction
+reasoning_context
+
+mask_area
+target_centroid
+timings
+
+run_root
+mask_path
+overlay_path
+diagnostics_path
+```
+
+For every written artifact record:
+
+```text
+bytes
+SHA256
+```
+
+
+# 20. SUCCESS Semantics
+
+Retain GOV-D005.
+
+A runtime result:
+
+```text
+status = SUCCESS
+```
+
+means only:
+
+```text
+validity_scope = RUNTIME_STRUCTURAL_ONLY
+semantic_status = NOT_EVALUATED
+```
+
+The runner must NOT label a SUCCESS result:
+
+```text
+SEMANTIC_SUCCESS
+CORRECT_TARGET
+DEMO_PASS
+```
+
+before GT audit.
+
+
+# 21. FAILED Semantics
+
+If a case fails:
+
+- preserve error code and reason;
+- preserve diagnostics;
+- require no fake mask;
+- require no fake overlay;
+- continue to the next locked case;
+- do not retry.
+
+A case-level runtime failure does NOT invalidate the formal procedure.
+
+
+# 22. GT Embargo
+
+Native-vector GT must not influence formal inference.
+
+The evaluator may begin only after:
+
+```text
+all four child processes have exited
+AND
+formal runtime-results JSON has been written
+AND
+all output artifact hashes have been frozen
+```
+
+After this point:
+
+```text
+NO model rerun
+NO prompt rerun
+NO reference override
+NO source change
+```
+
+GT is evaluation-only.
+
+
+# 23. Frozen GT Reconstruction
+
+Reuse the existing WHU-native-vector / BuildSpatialReason v0.2 infrastructure.
+
+For each candidate reconstruct:
+
+```text
+canonical GT reference mask
+canonical GT target mask
+all GT building instance masks for that tile
+```
+
+Required frozen IDs are those in §6.
+
+Verify reconstructed masks are nonempty and consistent with existing native-vector metadata.
+
+Do NOT regenerate or alter annotations.
+
+
+# 24. Reference Audit Without Detector Rerun
+
+For a runtime SUCCESS case:
+
+use:
+
+```text
+diagnostics/reference_context_mask.png
+result.json -> reasoning_context.origin
+result.json -> reasoning_context.size
+```
+
+to map the frozen selected-reference context mask back to the original 512×512 tile coordinate system.
+
+Use the same deterministic crop-to-global mapping semantics as the product `context_to_global()`.
+
+Do NOT rerun detector to recover the reference mask.
+
+Then compute against all GT building masks:
+
+```text
+selected_reference_best_gt_instance_id
+selected_reference_best_gt_iou
+selected_reference_gt_reference_iou
+reference_identity_best_overlap_match
+```
+
+Definition:
+
+```text
+reference_identity_best_overlap_match =
+    best_gt_instance_id == canonical_GT_reference_id
+    AND best_gt_iou > 0
+```
+
+This is an identity-best-overlap fact, NOT a segmentation-quality threshold pass.
+
+
+# 25. Target Audit
+
+For every runtime SUCCESS final mask compute:
+
+```text
+target_gt_iou
+target_gt_dice
+predicted_mask_area
+gt_target_area
+
+best_gt_instance_id
+best_gt_instance_iou
+
+target_identity_best_overlap_match
+```
+
+Definition:
+
+```text
+target_identity_best_overlap_match =
+    best_gt_instance_id == canonical_GT_target_id
+    AND best_gt_instance_iou > 0
+```
+
+Also report:
+
+```text
+reference_identity_best_overlap_match
+target_identity_best_overlap_match
+```
+
+Do NOT introduce a new IoU pass threshold.
+
+Do NOT tune any threshold after seeing these values.
+
+
+# 26. Semantic-Chain Classification
+
+For evidence organization only, use these exact enums:
+
+```text
+CHAIN_IDENTITY_MATCH
+REFERENCE_IDENTITY_MISMATCH
+TARGET_IDENTITY_MISMATCH
+REFERENCE_AND_TARGET_IDENTITY_MISMATCH
+RUNTIME_FAILED
+LANGUAGE_FAILED
+NOT_EVALUABLE_MISSING_ARTIFACT
+```
+
+Rules:
+
+### CHAIN_IDENTITY_MATCH
+
+```text
+reference_identity_best_overlap_match = true
+AND
+target_identity_best_overlap_match = true
+```
+
+This does NOT mean perfect mask quality.
+
+Continuous IoU/Dice values must still be reported.
+
+### REFERENCE_IDENTITY_MISMATCH
+
+reference mismatch but target identity matches.
+
+### TARGET_IDENTITY_MISMATCH
+
+reference identity matches but target identity does not.
+
+### REFERENCE_AND_TARGET_IDENTITY_MISMATCH
+
+both do not match.
+
+### RUNTIME_FAILED
+
+formal runtime failed before a final target mask exists.
+
+### LANGUAGE_FAILED
+
+the expected canonical program was not safely accepted/executed.
+
+No case may be relabeled manually.
+
+
+# 27. Review Images
+
+After GT evaluation, create one review PNG per relation:
+
+```text
+evaluation/task8c_final_demo_v1/right_review.png
+evaluation/task8c_final_demo_v1/left_review.png
+evaluation/task8c_final_demo_v1/above_review.png
+evaluation/task8c_final_demo_v1/below_review.png
+```
+
+Also create:
+
+```text
+evaluation/task8c_final_demo_v1/contact_sheet.png
+```
+
+Each per-case review should clearly show:
+
+```text
+A. original RGB input
+B. automatic selected reference + canonical GT reference boundary
+C. predicted target mask/overlay + canonical GT target boundary
+D. compact text summary:
+   program
+   runtime status
+   automatic reference ID
+   reference GT IoU
+   target GT IoU
+   target Dice
+   semantic-chain enum
+```
+
+Visualizations are evaluation-only.
+
+They must not influence inference.
+
+
+# 28. Review-Pack Accuracy
+
+Review PNGs must use the exact saved formal-run artifacts.
+
+Do NOT:
+
+- rerun prediction to obtain a better overlay;
+- substitute a different case;
+- manually repaint a mask;
+- crop away an obvious failure;
+- omit a failed candidate.
+
+If a case has no output mask, its review image must show:
+
+```text
+RUNTIME FAILED
+<error code>
+```
+
+alongside the original image and available diagnostics.
+
+
+# 29. Final-Demo Outcome
+
+The executor does NOT decide whether the project Demo is scientifically successful.
+
+It reports objective counts:
+
+```text
+cases_attempted
+language_expected_program_executed
+runtime_success
+runtime_failed
+
+chain_identity_match
+reference_identity_mismatch
+target_identity_mismatch
+both_identity_mismatch
+not_evaluable
+
+mean_target_iou_over_runtime_success
+mean_target_dice_over_runtime_success
+```
+
+Do not hide failures from aggregate statistics.
+
+
+# 30. No-Tuning / No-Rescue Statement
+
+Final evidence must explicitly state:
+
+```text
+candidate replacement = NONE
+prompt replacement = NONE
+prompt retry = NONE
+inference retry = NONE
+reference override = NONE
+inspect-before-run = NONE
+threshold tuning = NONE
+ranking tuning = NONE
+mask-quality tuning = NONE
+architecture change = NONE
+model change = NONE
+checkpoint change = NONE
+training = NONE
+dependency installation = NONE
+```
+
+This section is mandatory.
+
+
+# 31. Protected Historical Evidence
+
+Task 8C MUST NOT modify or overwrite:
+
+```text
+historical A1/A2/A3/A4/B1/B2 suite
+P1D12 inspect diagnostics
+REF-01 forensic evidence
+A2 forensic evidence
+Task 8B.4 historical output snapshot
+```
+
+The new run-isolated layout must create separate Final-Demo run roots.
+
+
+# 32. Product Immutability
+
+Forbidden modifications:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/**
+scripts/sync_advisor_rc1_delivery.py
+source_manifest.json
+external RC1 source/config
+model/**
+governance/**
+```
+
+Exception:
+
+none.
+
+If Final Demo exposes a product defect requiring code change:
+
+record it and STOP.
+
+Do not patch it inside Task 8C.
+
+
+# 33. Allowed Repository Changes
+
+Allowed:
+
+```text
+scripts/task8c_final_demo_runner.py
+scripts/task8c_final_demo_evaluate.py
+tests/test_task8c_final_demo.py
+
+docs/task8c_final_demo_v1.md
+evaluation/task8c_final_demo_v1.json
+evaluation/task8c_final_demo_v1/*.png
+
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+```
+
+No other repository path is authorized.
+
+
+# 34. External Writes Allowed
+
+External writes are restricted to:
+
+```text
+inference/output/<new Final-Demo run roots>/**
+logs/task8c_final_demo_v1/**
+```
+
+plus unavoidable runtime logs naturally produced by the existing RC1.
+
+External source/config/model files are read-only.
+
+
+# 35. Post-Run Integrity
+
+After all inference/evaluation work:
+
+verify external:
+
+```text
+source/config 135/135 unchanged
+source_manifest unchanged
+protected assets unchanged
+inference/input unchanged
+all pre-existing inference/output files unchanged
+```
+
+Only newly created Task 8C run roots and authorized new Task 8C logs may be added.
+
+
+# 36. Required Evidence JSON
 
 Create:
 
 ```text
-docs/task8b4_run_isolated_output_layout_v1.md
-evaluation/task8b4_run_isolated_output_layout_v1.json
+evaluation/task8c_final_demo_v1.json
 ```
 
-JSON must include at least:
+Required top-level fields:
 
 ```text
 task_id
+status
+
 starting_branch
 starting_head
 task_branch
+formal_freeze_commit
 
-historical_requirement
-old_layout
-new_layout
+scientific_reuse_disclosure
 
-changed_paths
-canonical_commits
-
-unit_test_results
-canonical_full_suite
-
-manifest_identity_basis
-manifest_entries
-manifest_changed_entries
-canonical_manifest_gate
-
-external_precheck
-external_sync
-external_manifest_identity
-external_postcheck
-external_setup
-external_targeted_tests
-external_full_suite
-
-legacy_output_inventory_before
-legacy_output_inventory_after
-legacy_output_unchanged
-
-input_inventory_before
-input_inventory_after
-input_unchanged
-
+source_manifest_identity
+external_preflight
 protected_assets_before
 protected_assets_after
-protected_assets_unchanged
 
-no_model_inference
-no_threshold_change
+candidate_lock
+runner_identity
+evaluator_identity
+dedicated_test_result
+
+formal_runner_invocation_count
+case_attempt_order
+
+cases
+
+gt_audit_started_after_runtime_freeze
+model_calls_during_gt_audit
+
+aggregate
+
+legacy_output_unchanged
+input_unchanged
+protected_assets_unchanged
+source_identity_unchanged
+
+no_candidate_replacement
+no_prompt_retry
+no_inference_retry
+no_reference_override
+no_inspect_pre_run
+no_threshold_tuning
+no_ranking_tuning
 no_model_change
-no_scientific_contract_change
-no_historical_output_migration
+no_architecture_change
+no_training
+no_dependency_install
+
+review_artifacts
 ```
 
-
-## 24. Checkpoints
-
-### Checkpoint 1
-
-Implementation + targeted canonical tests green.
-
-Commit + push.
+Each case must contain the §19 and §24–26 evidence.
 
 
-### Checkpoint 2
+# 37. Required Report
 
-Canonical targeted runtime 62 passed and CLI 24 passed + source manifest 135/135 Git-canonical validation: ACCEPTED by Supervisor L2 continuation disposition. The prior canonical full-suite execution is WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007 and remains preserved as 127/17/6, exit 1.
-
-Commit + push.
-
-
-### Checkpoint 3
-
-External pre-sync check understood and limited exactly to authorized changed files.
-
-Persist evidence before external write.
-
-
-### Checkpoint 4
-
-Controlled external sync + manifest write complete.
-
-Post-sync:
+Create:
 
 ```text
-135/135
-check_setup READY
-targeted tests PASS
-full external tests PASS
+docs/task8c_final_demo_v1.md
 ```
 
-Commit + push evidence.
+It must include:
+
+1. scope;
+2. frozen candidate table;
+3. reuse disclosure;
+4. formal freeze;
+5. language results;
+6. runtime results;
+7. reference post-hoc audit;
+8. target GT metrics;
+9. semantic-chain classifications;
+10. review-pack paths;
+11. no-retry/no-tuning statement;
+12. known limitations;
+13. explicit statement that final scientific verdict belongs to ChatGPT Supervisor.
 
 
-## 25. STOP Conditions
+# 38. Git Checkpoints
+
+## Checkpoint 1 — Harness Ready
+
+Completed:
+
+```text
+runner
+evaluator
+dedicated tests 100% PASS
+preflight identities PASS
+```
+
+No real candidate has run.
+
+Commit + push.
+
+
+## Checkpoint 2 — Formal Freeze
+
+Persist:
+
+```text
+FORMAL_FINAL_DEMO_FREEZE_V1
+```
+
+Commit + push.
+
+No product change after this point.
+
+
+## Checkpoint 3 — Formal Run Complete
+
+Exactly one runner invocation complete.
+
+All four candidates attempted.
+
+Raw runtime evidence and artifact hashes frozen.
+
+Commit + push evidence BEFORE GT evaluation if repository state permits.
+
+Do not rerun.
+
+
+## Checkpoint 4 — GT Audit + Review Pack
+
+Zero model calls.
+
+Post-hoc metrics and review images complete.
+
+Integrity checks complete.
+
+Commit + push.
+
+
+# 39. STOP Conditions
 
 STOP with evidence if:
 
-- required starting Git state conflicts;
-- unknown workspace changes exist;
-- unrelated external manifest mismatches exist;
-- implementation would require changing CLI schema;
-- implementation would require changing status/exit semantics;
-- any model or scientific component would need modification;
-- manifest canonical identity cannot be established;
-- external protected assets change unexpectedly;
-- legacy inference/output content changes unexpectedly;
-- tests expose an unrelated regression;
+- accepted predecessor Git state conflicts;
+- unknown repository modifications exist;
+- external 135/135 preflight fails;
+- `check_setup.py` is not READY;
+- any locked raster hash mismatches;
+- dedicated harness tests are not 100% green;
+- formal runner would require product modification;
+- formal runner crashes after real execution begins;
+- a retry would be required;
+- GT evaluation would require detector/model rerun;
+- pre-existing output is modified;
+- protected asset hash changes;
+- source/config drift appears;
 - destructive Git operation appears necessary.
 
+Do not self-repair across these boundaries.
 
-## 26. Git Safety
+
+# 40. Git Safety
 
 Forbidden:
 
@@ -1078,33 +1345,40 @@ history rewrite
 autonomous revert
 ```
 
-Preserve every real checkpoint and failure.
+Unknown changes must be preserved.
 
 
-## 27. Scientific Claim Boundary
+# 41. Success Criterion of the Executor Task
 
-Task 8B.4 may establish only:
+Task 8C executor completion means:
 
 ```text
-RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED
+formal procedure executed correctly
++
+all four locked candidates attempted once
++
+all evidence preserved
++
+post-hoc GT audit completed without model rerun
++
+review pack generated
 ```
 
-and associated delivery integrity.
+It does NOT require:
 
-It does NOT establish:
+```text
+4/4 runtime success
+4/4 semantic-chain match
+high IoU
+visually perfect masks
+```
 
-- better detector quality;
-- improved segmentation quality;
-- PROP-01 closure;
-- REF-01 closure;
-- MASK semantic correctness;
-- final Demo success;
-- architecture improvement.
+A genuine failure is a valid scientific Final Demo result.
 
 
-## 28. Completion State
+# 42. Final State
 
-On successful completion:
+On procedural completion:
 
 ```text
 handoff/CURRENT_TASK.md
@@ -1123,53 +1397,23 @@ READY_FOR_SUPERVISOR_AUDIT
 Next gate:
 
 ```text
-CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
+CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 ```
+
+Commit and push all authorized evidence.
 
 Then STOP.
 
-Do NOT automatically start Final Demo.
+Do NOT:
 
-## 29. Supervisor L2 Continuation Disposition
+- modify governance;
+- repair a failed Final-Demo case;
+- run Assisted Mode;
+- replace any candidate;
+- start a new model/algorithm task.
 
-```text
-TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1 = PARTIAL_ACCEPT / CONTINUE_AUTHORIZED
-accepted task branch = fix/task8b4-run-isolated-output-layout-v1
-accepted task remote HEAD = 7e0e8b3115c2b3660d57ffa5170c4fb5393be39c
-canonical_full_suite_disposition = WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
-```
+# Executor STOP checkpoint — 2026-10-07
 
-Authority: direct user-relayed ChatGPT Supervisor remote audit and L2 disposition. This continuation supersedes the original canonical full-suite green requirement in sections 16 and 24. GOV-D007 remains frozen and governance files are unchanged.
+The dedicated harness revalidation exited 1: 27 passed / 15 errors. All 15 errors occurred in pytest temporary-directory fixture setup because the supplied nested --basetemp parent did not exist (WinError 3). The previous 40-pass invocation covered an earlier harness/test revision. Per section 39, execution stops with evidence; no rerun or automatic repair was performed. No external preflight, formal freeze, real candidate, or GT audit has run.
 
-Accepted: implementation, canonical runtime 62 passed, CLI 24 passed, manifest 135/135, authorized diff scope and scientific/inference/asset-preservation boundaries. Preserve the earlier canonical 127 passed / 17 failed / 6 errors execution record without relabeling it PASS.
-
-Continuation startup: reread governance/handoff in canonical order, fetch and verify the exact accepted task HEAD above, inspect local changes and continue this same branch. Original predecessor creation steps in section 13 describe initial startup only. No new algorithm branch, reset/stash/clean/amend/discard is authorized. Unknown changes require STOP.
-
-External closure remains governed by sections 18–21: existing helper read-only precheck, one controlled manifest-listed sync, then exact Git-canonical source_manifest write under P1D11B. Expected source/config mismatches are exactly README.md, buildreasonseg/runtime/outputs.py, buildreasonseg/runtime/pipeline.py, inference/README.md and tests/test_task8b_runtime.py. The accepted unsynchronized external manifest may be replaced only by the exact current committed canonical manifest. Any unexplained additional source/config mismatch requires STOP before writes.
-
-Verify in order: helper 135/135, byte/hash-identical external manifest, external check_setup READY, external runtime and CLI targeted tests exit 0, then external complete full suite exit 0. No real model inference, A2, historical six-case suite, locked Demo candidates, or threshold/model/algorithm/scientific-contract change.
-
-Preserve input, every pre-existing historical output and protected model/Qwen/SAM2 asset. Unit tests must use temporary roots and must not create real output runs. Do not delete unexpected evidence; any historical output change requires STOP. Historical logs/fixtures are preserved; naturally generated test logs are permitted.
-
-Update the four authorized evidence/handoff files. On all gates passing, set CURRENT_TASK and EXECUTOR_STATE to READY_FOR_SUPERVISOR_AUDIT, next gate CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT, commit/push and STOP. Do not start Final Demo.
-
-
-## 30. Executor Closure Evidence — Supervisor Audit Pending
-
-Status: READY_FOR_SUPERVISOR_AUDIT. No final milestone approval is self-authorized.
-
-- Accepted implementation and canonical targeted tests: 62 runtime / 24 CLI passed.
-- Git-canonical manifest: 135/135; accepted product/source unchanged in continuation.
-- Canonical historical complete-suite execution retained: 127 passed / 17 failed / 6 errors, exit 1; WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007.
-- Precheck: exactly five authorized mismatches explained; no unrelated source/config drift.
-- Controlled helper sync: one invocation, 135 copied / 135 verified / 0 failures.
-- External manifest: exact Git-canonical bytes/hash MATCH; helper post-check before and after tests 135/135.
-- External check_setup: READY, exit 0.
-- External targeted tests: runtime 62 passed / CLI 24 passed, exit 0 each.
-- External complete full suite: 150 passed, exit 0.
-- Preservation: all 1,543 historical output files, 6 inputs and 20 protected model files byte-identical; historical logs/fixtures unchanged; no real output run directory added. Twelve naturally test-generated error logs retained. Existing derived Qwen integrity cache refreshed with identical bytes/hash; authorized manifest-listed model source/config copies retain identical content.
-- No real model inference, A2, historical six-case execution, locked Demo execution or threshold/model/algorithm/scientific-contract change.
-
-Detailed commands, outputs, identities and pre/post inventories: evaluation/task8b4_run_isolated_output_layout_v1.json and docs/task8b4_run_isolated_output_layout_v1.md.
-
-Next gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT. Commit/push this recoverable checkpoint, report actual Git HEAD and STOP. Final Demo remains unstarted.
+See docs/task8c_final_demo_v1.md and evaluation/task8c_final_demo_v1.json. Supervisor disposition is required before continuing; no formal attempt has been consumed.

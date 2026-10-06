@@ -1,117 +1,46 @@
 schema_version: 1
-task_id: TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
-status: READY_FOR_SUPERVISOR_AUDIT
+task_id: TASK8C_FINAL_DEMO_V1
+status: STOPPED_FOR_SUPERVISOR
 executor: CODEX
-branch: fix/task8b4-run-isolated-output-layout-v1
-head: 482bfe37fe622a41546578f7115e11127123d68b
+branch: eval/task8c-final-demo-v1
+head: 92f28133931231d16b6053aca253b9e5073955ae
 completed:
-- Startup reads, clean Git state, exact remote predecessor and task book installation
-  verified.
-- Preimplementation sources, references, manifest entries, external inputs/output
-  history and model asset hashes recorded.
-- Implementation and targeted canonical runtime 62/62 plus CLI 24/24 passed without
-  model inference.
-- Checkpoint 1 committed/pushed; five manifest identities updated from committed Git
-  blobs; 135/135 validation passed.
-- Full canonical test output and all 23 failed/error node classifications persisted;
-  external phase halted.
-- 'Read-only STOP integrity verification: 1543 output files, 6 inputs, 20 protected
-  assets and 135 external source files plus external manifest unchanged.'
-- Supervisor L2 disposition accepted previous implementation and canonical manifest;
-  continuation preflight clean; read-only external precheck explains exactly five
-  authorized mismatches.
-- One controlled helper sync copied/verified 135 files; exact Git canonical external
-  manifest MATCH; helper post-check 135/135 passed.
-- External check_setup.py reports READY, exit 0, without model inference.
-- 'External tests/test_task8b_runtime.py PASS: 62 passed in 1.58s'
-- 'External tests/test_cli_contract.py PASS: 24 passed in 15.95s'
-- 'Complete external tests/ acceptance gate PASS: 150 passed in 54.61s'
-- 'Final read-only integrity PASS: historical output/input/log contents preserved,
-  all protected asset hashes unchanged, no real output run directories added, final
-  external and Git manifest identities 135/135 MATCH.'
-- All authorized closure gates passed; audit handoff READY_FOR_SUPERVISOR_AUDIT; stop
-  without Final Demo.
-current_step: READY_FOR_SUPERVISOR_AUDIT_STOP
-next_action: STOP. Await ChatGPT Supervisor remote audit; do not start Final Demo.
+- Required canonical read order and exact fetched predecessor verified.
+- Evaluation branch created; full task book initially installed byte-for-byte.
+- Evaluation-only runner, zero-model-call evaluator, and dedicated fake tests written.
+- Earlier 40-test run passed; current 42-test invocation errors persisted transparently.
+current_step: STOP_DEDICATED_HARNESS_TEST_GATE
+next_action: Supervisor review of STOP evidence; no further execution before continuation
+  disposition.
 tests_run:
-- module: tests/test_task8b_runtime.py
+- name: Task8C dedicated fake tests - earlier revision
+  result: 40 passed
+  exit_code: 0
+- name: Task8C dedicated fake tests - current revision
+  result: 27 passed / 15 fixture setup errors (WinError 3 missing basetemp parent)
   exit_code: 1
-  counts:
-    failed: 2
-    passed: 60
-- module: tests/test_task8b_runtime.py
-  exit_code: 0
-  counts:
-    passed: 62
-- module: tests/test_cli_contract.py
-  exit_code: 0
-  counts:
-    passed: 24
-- module: tests/ (canonical full suite)
-  exit_code: 1
-  counts:
-    failed: 17
-    passed: 127
-    error: 6
-- module: external tests/test_task8b_runtime.py
-  exit_code: 0
-  counts:
-    passed: 62
-- module: external tests/test_cli_contract.py
-  exit_code: 0
-  counts:
-    passed: 24
-- module: external tests/ full suite
-  exit_code: 0
-  counts:
-    passed: 150
 files_modified:
-- delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
-- delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
-- delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-- delivery_src/BuildReasonSeg_Advisor_RC1/README.md
-- delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
+- scripts/task8c_final_demo_runner.py
+- scripts/task8c_final_demo_evaluate.py
+- tests/test_task8c_final_demo.py
+- docs/task8c_final_demo_v1.md
+- evaluation/task8c_final_demo_v1.json
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
-- docs/task8b4_run_isolated_output_layout_v1.md
-- evaluation/task8b4_run_isolated_output_layout_v1.json
-- delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 uncommitted_changes: true
-blocked_on_supervisor: false
-block_reason: null
-decision_level_required: null
+blocked_on_supervisor: true
+block_reason: 'CURRENT_TASK section 39: dedicated tests are not 100% green. Missing
+  nested basetemp parent caused 15 fixture setup errors; no self-repair or rerun.'
 last_checkpoint:
-  commit: 482bfe37fe622a41546578f7115e11127123d68b
-  pushed: true
-scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_AND_DELIVERY_INTEGRITY_ONLY
-PROP01_status: OPEN
+  commit: null
+  pushed: null
+next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
+formal_runner_invocation_count: 0
+real_candidates_attempted: 0
 no_model_inference: true
-next_gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
-observation_phase: Final handoff preparation before commit; actual final local/remote
-  HEAD and clean diff resolved after push
-external_sync_performed: true
-canonical_full_suite_disposition: WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
-supervisor_disposition: PARTIAL_ACCEPT / CONTINUE_AUTHORIZED
-closure_gates:
-  implementation: PASS
-  canonical_targeted_runtime: PASS (62 passed)
-  canonical_targeted_cli: PASS (24 passed)
-  canonical_manifest: 135/135 PASS
-  canonical_full_suite_disposition: WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
-  canonical_full_suite_historical_counts:
-    failed: 17
-    passed: 127
-    error: 6
-  canonical_full_suite_historical_exit_code: 1
-  external_precheck: EXPLAINED
-  external_sync: PASS
-  external_manifest: MATCH
-  external_check_setup: READY
-  external_targeted_tests: PASS (62 runtime / 24 CLI)
-  external_full_suite: PASS (150 passed, exit 0)
-  legacy_output_unchanged: true
-  input_unchanged: true
-  protected_assets_unchanged: true
-  historical_logs_unchanged: true
-  no_model_inference: true
-  external_sync_invocation_count: 1
+external_preflight: NOT_RUN
+formal_freeze: NOT_CREATED
+gt_audit: NOT_STARTED
+no_product_change: true
+no_governance_change: true
+governance_staleness_acknowledged: true
