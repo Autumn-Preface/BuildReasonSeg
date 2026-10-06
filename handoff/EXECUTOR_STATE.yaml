@@ -3,7 +3,7 @@ task_id: TASK8C_FINAL_DEMO_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: eval/task8c-final-demo-v1
-head: ce408ac73baa5c3e5fcd0b128c545b1717b456ee
+head: 3fac0e668c2af30b35bfae1ab8a3f36cee329e26
 completed:
 - Required canonical read order and exact fetched predecessor verified.
 - Evaluation branch created; full task book initially installed byte-for-byte.
@@ -20,9 +20,11 @@ completed:
 - Created/probed writable cache directories outside repo/external before use.
 - 'Static identities PASS: unchanged harness, complete accepted external baseline,
   TIFFs, canonical source and governance; no test/setup rerun.'
-current_step: HARNESS_READY_FORMAL_FREEZE_PENDING
-next_action: Commit/push harness-ready continuation; persist/push FORMAL_FINAL_DEMO_FREEZE_V1,
-  then verify frozen identities before single runner invocation.
+- Harness Ready checkpoint 3fac0e6 pushed; formal freeze prepared with all accepted
+  gates, immutable side-effect identity and exact environment.
+current_step: FORMAL_FREEZE_PREPARED_PENDING_PUSH
+next_action: Commit/push FORMAL_FINAL_DEMO_FREEZE_V1; verify exact local/remote freeze
+  HEAD and all static identities/caches, then invoke formal runner exactly once.
 tests_run:
 - name: Task8C dedicated fake tests - earlier revision
   result: 40 passed
@@ -42,7 +44,7 @@ uncommitted_changes: true
 blocked_on_supervisor: false
 block_reason: null
 last_checkpoint:
-  commit: ce408ac73baa5c3e5fcd0b128c545b1717b456ee
+  commit: 3fac0e668c2af30b35bfae1ab8a3f36cee329e26
   pushed: true
 next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 formal_runner_invocation_count: 0
@@ -50,7 +52,7 @@ real_candidates_attempted: 0
 no_model_inference: true
 external_preflight: Accepted 42/42, 135/135, manifest MATCH, setup READY, TIFF PASS;
   grandfathered settings preserved
-formal_freeze: PENDING
+formal_freeze: FORMAL_FINAL_DEMO_FREEZE_V1_PREPARED
 gt_audit: NOT_STARTED
 no_product_change: true
 no_governance_change: true

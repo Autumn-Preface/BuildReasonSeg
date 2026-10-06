@@ -88,3 +88,8 @@ Next gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT.
 Supervisor disposition at ce408ac73baa5c3e5fcd0b128c545b1717b456ee: SECOND_STOP_VALID / CONTINUE_AUTHORIZED. Both STOP records remain historical evidence. Current status: HARNESS_READY; formal freeze pending. The preserved preflight settings file is explicitly GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT, excluded from manifest-listed source/config failure classification, and must remain byte/SHA256 identical. It changes no product/model/scientific contract. Its original identity remains disclosed in JSON/report.
 
 Cache directories were created/probed outside repo/external before use: C:\Users\ROG\AppData\Local\Temp\task8c-yolo-config-v1 (including Ultralytics subdirectory) and C:\Users\ROG\AppData\Local\Temp\task8c-mpl-cache-v1. Exact environment values will be frozen. No existing external file was edited, moved or deleted. Accepted 42/42 and READY gates reused without rerun. Complete external, harness, TIFF, canonical source and governance identities verified unchanged. Formal execution and GT audit remain zero.
+
+
+## FORMAL_FINAL_DEMO_FREEZE_V1
+
+Prepared from actual task HEAD 3fac0e668c2af30b35bfae1ab8a3f36cee329e26. Exact freeze payload is in evaluation/task8c_final_demo_v1.json. It records accepted gates, Git/working harness identities, all four locks and execution order, default automatic reference mode with --confirm-command for required Y/N, 900-second per-case timeout and no retry, 135/135 source/manifest identities, protected assets, historical output/input/log inventories and hash, preserved grandfathered settings, verified outside-cache environment and font identity. No real candidate or GT audit has run. Freeze must be committed/pushed before execution.

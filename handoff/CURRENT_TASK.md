@@ -1438,3 +1438,8 @@ Disposition: TASK8C_FINAL_DEMO_V1 = SECOND_STOP_VALID / CONTINUE_AUTHORIZED. Acc
 External Ultralytics/settings.json (606 bytes; SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf) is explicitly GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT. Preserve its exact bytes; do not delete, move, edit or overwrite. It is not manifest-listed source/config or a model asset and changes no scientific/product contract. Include its immutable identity in formal freeze/final integrity; no additional external-root runtime config additions are authorized.
 
 L0 correction completed before use: existing writable TEMP/task8c-yolo-config-v1 (including Ultralytics subdirectory) and TEMP/task8c-mpl-cache-v1 outside repo/external. Future Ultralytics processes must use the exact frozen YOLO_CONFIG_DIR. Complete formal-freeze commit/push before the single authorized runner invocation; no retries, automatic reference only, GT embargo and scientific immutability remain in force.
+
+
+# FORMAL_FINAL_DEMO_FREEZE_V1 preparation
+
+Observed task HEAD: 3fac0e668c2af30b35bfae1ab8a3f36cee329e26. Freeze includes unchanged runner/evaluator/tests Git and working identities, accepted 42/42 and setup READY, 135/135 and external manifest MATCH, four locked TIFF identities/order/prompts/programs, all protected assets, historical output/input/log inventory, output inventory hash, grandfathered settings identity and exact verified writable outside-cache environment. The actual freeze commit will be obtained from Git after commit/push, not fabricated within its own content. Real attempts remain 0. Formal execution is forbidden until freeze push and subsequent identity verification succeed.
