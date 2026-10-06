@@ -1,0 +1,59 @@
+{
+  "task_id": "MASK01_D1_R1A_R4_TESTS_ONLY",
+  "task_status": "COMPLETE",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1a-r3-product",
+    "starting_head": "37b9afe0bc674630c4f9f5040e0035ceeb809fc1",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1a-r4-tests",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "test_fixes": {
+    "file": "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py",
+    "real_signatures_used": {
+      "_report_single": "(result, args)",
+      "_run_batch": "(runtime, args, package_name, parsed, language_info, started)",
+      "_batch_files": "(input_dir)"
+    },
+    "fake_payload_keys": [
+      "status",
+      "validity_scope",
+      "semantic_status",
+      "semantic_note",
+      "output_paths",
+      "reference_id",
+      "mask_area"
+    ]
+  },
+  "gates": {
+    "gate_a_nodes": [
+      "tests/test_cli_contract.py::test_r1a_single_success_semantics_block",
+      "tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics",
+      "tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary"
+    ],
+    "gate_a_exit": 0,
+    "gate_a_summary": "3 passed in 1.43s",
+    "gate_b_nodes": [
+      "tests/test_cli_contract.py::test_predict_help_lists_frozen_arguments",
+      "tests/test_cli_contract.py::test_predict_prompt_required_for_normal_inference",
+      "tests/test_cli_contract.py::test_predict_missing_image_reports_e201",
+      "tests/test_cli_contract.py::test_predict_unsupported_image_type_reports_e203"
+    ],
+    "gate_b_exit": 0,
+    "gate_b_summary": "4 passed in 6.61s",
+    "k_substitution_used": false,
+    "full_suite_run": false,
+    "inspect_node_run": false
+  },
+  "untouched_verified": {
+    "predict_py": true,
+    "pipeline_py": true,
+    "manifest": true,
+    "test_task8b_runtime": true,
+    "canonical_docs": true,
+    "inspect_proposals_defect_fixed": false
+  },
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false
+}

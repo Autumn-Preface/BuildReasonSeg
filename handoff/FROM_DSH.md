@@ -17,27 +17,28 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1A_R3_PRODUCT_SUFFIX_ONLY Report
+# FROM_DSH — Task MASK01_D1_R1A_R4_TESTS_ONLY Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1A_R3_PRODUCT_SUFFIX_ONLY` |
+| Task | `MASK01_D1_R1A_R4_TESTS_ONLY` |
 | Status | **COMPLETE** |
-| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1a-r2` / `aef9ff6fac3c9626130ddf96b3311eada601c9c3` |
-| Task branch | `fix/task8b3-mask01-success-semantics-r1a-r3-product` |
-| Product change | `predict.py` batch SUCCESS line now ends with `[runtime-only; semantic=NOT_EVALUATED]` |
-| Line before / after | `print(f"[{index}/{len(files)}] {path.name} ... SUCCESS")` → `print(f"[{index}/{len(files)}] {path.name} ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]")` |
-| Prescribed command | `python -m py_compile predict.py` → exit 0 |
-| tests / pipeline / manifest / canonical docs | UNCHANGED |
-| inspect-proposals | not touched |
-| Other commands run | NO · model / training / external sync = NOT executed |
-| Evidence | `evaluation\task8b3_mask01_d1_r1a_r3_product_suffix_only.json` |
-| Report | `docs\task8b3_mask01_d1_r1a_r3_product_suffix_only.md` |
+| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1a-r3-product` / `37b9afe0bc674630c4f9f5040e0035ceeb809fc1` |
+| Task branch | `fix/task8b3-mask01-success-semantics-r1a-r4-tests` |
+| Only file modified | `tests/test_cli_contract.py` |
+| Real contracts used | `_report_single(result, args)` · `_run_batch(runtime, args, package_name, parsed, language_info, started)` · `_batch_files(input_dir)` |
+| Gate A | exit 0 · 3 passed in 1.43s |
+| Gate B | exit 0 · 4 passed in 6.61s |
+| `-k` substitution / full suite / inspect node | NOT used / NOT run / NOT run |
+| predict.py / pipeline / manifest / docs | UNCHANGED |
+| Model inference / training / external sync | NONE |
+| Evidence | `evaluation\task8b3_mask01_d1_r1a_r4_tests_only.json` |
+| Report | `docs\task8b3_mask01_d1_r1a_r4_tests_only.md` |
 | Next action | Awaiting ChatGPT remote review; next task not entered |
 
-Watt was not needed for Task MASK01_D1_R1A_R3_PRODUCT_SUFFIX_ONLY (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1A_R4_TESTS_ONLY (no downloads, no transfers).
 
 The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.

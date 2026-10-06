@@ -187,11 +187,39 @@ def _success_payload():
     from buildreasonseg.runtime.pipeline import success_semantics
     return {"status": "SUCCESS", **success_semantics()}
 
+class _FakeResult:
+    """Minimal stand-in for a PipelineResult as consumed by predict.py."""
+
+    def __init__(self, payload, ok=True, error_code=None, error_reason=None):
+        self.result_payload = payload
+        self.ok = ok
+        self.error_code = error_code
+        self.error_reason = error_reason
+
+
+def _success_payload():
+    from buildreasonseg.runtime.pipeline import success_semantics
+    return {
+        "status": "SUCCESS",
+        **success_semantics(),
+        "output_paths": {"mask": "m.png", "overlay": "o.png", "diagnostics": "d/"},
+        "reference_id": 1,
+        "mask_area": 7,
+    }
+
+
+def _args(**overrides):
+    import argparse
+    base = dict(input_dir=".", prompt="q", device="cpu", alpha=1.0, save_diagnostics=False,
+                reference_id=None, inspect_proposals=False)
+    base.update(overrides)
+    return argparse.Namespace(**base)
+
 
 def test_r1a_single_success_semantics_block(capsys):
-    """Single-image SUCCESS prints the four frozen lines exactly once."""
+    """Single-image SUCCESS prints exactly the four frozen lines, one each."""
     import predict
-    predict._report_single(_FakeResult(_success_payload()), type("A", (), {})())
+    predict._report_single(_FakeResult(_success_payload()), _args())
     out = capsys.readouterr().out.splitlines()
     assert out.count("Result       : SUCCESS") == 1
     assert out.count("Validity     : RUNTIME_STRUCTURAL_ONLY") == 1
@@ -200,31 +228,30 @@ def test_r1a_single_success_semantics_block(capsys):
 
 
 def test_r1a_single_failure_omits_success_semantics(capsys):
+    """A failed single-image report keeps only the Result line on stdout and claims no semantics."""
     import predict
-    predict._report_single(_FakeResult({"status": "FAILED", "error_code": "E404"}, ok=False,
-                                      error_code="E404", error_reason="mask_only_in_padding"),
-                           type("A", (), {})())
-    out = capsys.readouterr().out
-    assert "Result       : FAILED" in out
-    assert "Validity     :" not in out and "Semantic     :" not in out and "Note         :" not in out
+    predict._report_single(_FakeResult({"status": "FAILED", "detail": "mask_only_in_padding"}, ok=False,
+                                      error_code="E404", error_reason="mask_only_in_padding"), _args())
+    captured = capsys.readouterr()
+    assert captured.out.count("Result       : FAILED") == 1
+    assert "Validity     :" not in captured.out
+    assert "Semantic     :" not in captured.out
+    assert "Note         :" not in captured.out
 
 
 def test_r1a_batch_success_annotation_and_runtime_summary(capsys, tmp_path, monkeypatch):
-    """_run_batch annotates each success line and reports Runtime success using the success counter."""
+    """_run_batch annotates every success line and reports Runtime success using the success counter."""
+    import time
     import predict
     images = []
     for name in ("one.png", "two.png"):
         path = tmp_path / name
         path.write_bytes(b"x")
         images.append(path)
-    monkeypatch.setattr(predict, "predict_one", lambda runtime, request: _FakeResult(_success_payload()))
-    monkeypatch.setattr(predict, "_iter_images", lambda folder: images, raising=False)
-    monkeypatch.setattr(predict, "_collect_images", lambda folder: images, raising=False)
-    args = type("A", (), {"folder": tmp_path, "prompt": "q", "reference_id": None, "inspect_proposals": False})()
-    try:
-        predict._run_batch(None, args)
-    except TypeError:
-        predict._run_batch(args)
+    monkeypatch.setattr(predict, "_batch_files", lambda directory: images, raising=True)
+    monkeypatch.setattr(predict, "predict_one", lambda runtime, request: _FakeResult(_success_payload()), raising=True)
+    exit_code = predict._run_batch(None, _args(input_dir=str(tmp_path)), "pkg", object(), {}, time.time())
     out = capsys.readouterr().out
     assert out.count("SUCCESS [runtime-only; semantic=NOT_EVALUATED]") == 2, out
     assert "Runtime success: 2" in out, out
+    assert exit_code == 0
