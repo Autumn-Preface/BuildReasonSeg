@@ -7,7 +7,7 @@ Task ID:
 TASK8C_FINAL_DEMO_V1
 
 Status:
-STOPPED_FOR_SUPERVISOR
+IN_PROGRESS
 
 Decision owner:
 ChatGPT Supervisor
@@ -1429,3 +1429,12 @@ Disposition: TASK8C_FINAL_DEMO_V1 = STOP_VALID / CONTINUE_AUTHORIZED. Accepted t
 Authorized same-revision dedicated test rerun: 42/42 PASS / exit 0; all runner/evaluator/test bytes unchanged. External 135/135, check_setup READY and all four TIFF identity gates PASS. However check_setup imported Ultralytics, which fell back from the uncreated nested task TEMP cache to the external working directory and created Ultralytics/settings.json (606 bytes; SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf). This persistent external config file is outside section 34 allowed write roots. It is preserved without deletion, relocation or cleanup. Per sections 32/34/35/39, STOP before formal freeze or model execution.
 
 Historical output (1543 files, including mtime), input (6 files), protected model assets (20 file byte/SHA identities), existing logs (327 files), external source/config 135/135 and source_manifest remain equal to accepted predecessor evidence. No formal runner invocation, real candidate attempt, model inference or GT audit has occurred. The settings file is not normalized into an accepted historical baseline. Supervisor disposition is required before continuation.
+
+
+# Supervisor second-STOP continuation — 2026-10-07
+
+Disposition: TASK8C_FINAL_DEMO_V1 = SECOND_STOP_VALID / CONTINUE_AUTHORIZED. Accepted remote HEAD: ce408ac73baa5c3e5fcd0b128c545b1717b456ee; same evaluation branch. Existing 42/42 PASS, 135/135, manifest MATCH, setup READY and four TIFF gates accepted; no tests/setup rerun. Three harness files remain unchanged.
+
+External Ultralytics/settings.json (606 bytes; SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf) is explicitly GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT. Preserve its exact bytes; do not delete, move, edit or overwrite. It is not manifest-listed source/config or a model asset and changes no scientific/product contract. Include its immutable identity in formal freeze/final integrity; no additional external-root runtime config additions are authorized.
+
+L0 correction completed before use: existing writable TEMP/task8c-yolo-config-v1 (including Ultralytics subdirectory) and TEMP/task8c-mpl-cache-v1 outside repo/external. Future Ultralytics processes must use the exact frozen YOLO_CONFIG_DIR. Complete formal-freeze commit/push before the single authorized runner invocation; no retries, automatic reference only, GT embargo and scientific immutability remain in force.

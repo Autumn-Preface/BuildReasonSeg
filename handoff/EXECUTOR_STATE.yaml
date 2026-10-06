@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8C_FINAL_DEMO_V1
-status: STOPPED_FOR_SUPERVISOR
+status: IN_PROGRESS
 executor: CODEX
 branch: eval/task8c-final-demo-v1
-head: 44a7dd1c3c3c8afe7ef1a0a569619017a7d4e4ea
+head: ce408ac73baa5c3e5fcd0b128c545b1717b456ee
 completed:
 - Required canonical read order and exact fetched predecessor verified.
 - Evaluation branch created; full task book initially installed byte-for-byte.
@@ -16,9 +16,13 @@ completed:
 - Detected and preserved unauthorized external runtime settings file; no cleanup.
 - Accepted Task8B4 historical output/input/model/log byte identities preserved; output
   mtime unchanged.
-current_step: STOP_UNAUTHORIZED_EXTERNAL_CONFIG_CREATION
-next_action: Supervisor disposition for preserved external Ultralytics/settings.json
-  and L0 cache-directory setup. Do not freeze or infer.
+- Supervisor accepted second STOP and grandfathered immutable settings.
+- Created/probed writable cache directories outside repo/external before use.
+- 'Static identities PASS: unchanged harness, complete accepted external baseline,
+  TIFFs, canonical source and governance; no test/setup rerun.'
+current_step: HARNESS_READY_FORMAL_FREEZE_PENDING
+next_action: Commit/push harness-ready continuation; persist/push FORMAL_FINAL_DEMO_FREEZE_V1,
+  then verify frozen identities before single runner invocation.
 tests_run:
 - name: Task8C dedicated fake tests - earlier revision
   result: 40 passed
@@ -35,21 +39,34 @@ files_modified:
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
 uncommitted_changes: true
-blocked_on_supervisor: true
-block_reason: check_setup created external Ultralytics/settings.json outside allowed
-  new run/log roots. File preserved; no cleanup or rerun.
+blocked_on_supervisor: false
+block_reason: null
 last_checkpoint:
-  commit: 44a7dd1c3c3c8afe7ef1a0a569619017a7d4e4ea
+  commit: ce408ac73baa5c3e5fcd0b128c545b1717b456ee
   pushed: true
 next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 formal_runner_invocation_count: 0
 real_candidates_attempted: 0
 no_model_inference: true
-external_preflight: 135/135 + READY + TIFF gates PASS; unexpected external runtime
-  config creation STOP
-formal_freeze: NOT_CREATED
+external_preflight: Accepted 42/42, 135/135, manifest MATCH, setup READY, TIFF PASS;
+  grandfathered settings preserved
+formal_freeze: PENDING
 gt_audit: NOT_STARTED
 no_product_change: true
 no_governance_change: true
 governance_staleness_acknowledged: true
 runner_evaluator_tests_unchanged: true
+grandfathered_runtime_side_effect:
+  path: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\Ultralytics\settings.json
+  bytes: 606
+  sha256: 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf
+  disposition: GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT
+  must_remain_unchanged: true
+execution_environment:
+  PYTHONDONTWRITEBYTECODE: '1'
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+  YOLO_CONFIG_DIR: C:\Users\ROG\AppData\Local\Temp\task8c-yolo-config-v1
+  MPLCONFIGDIR: C:\Users\ROG\AppData\Local\Temp\task8c-mpl-cache-v1
+  HF_HUB_OFFLINE: '1'
+  TRANSFORMERS_OFFLINE: '1'
