@@ -3,6 +3,7 @@
 Run with the established .conda/buildreasonseg-mvp/python.exe and -B.
 --phase provenance persists identities without loading a model.
 --phase inference performs one detect_global call each on locked A2 and A1.
+--phase finalize validates and classifies saved observations without model calls.
 All library writes/caches are redirected to a disposable temporary directory.
 """
 from __future__ import annotations
@@ -202,8 +203,8 @@ def observe_case(data, case, runtime):
         window = windows[len(records)]
         assert not padding["applied"]
         assert np.array_equal(tile, loaded.rgb[window.top:window.top + 512, window.left:window.left + 512])
-        assert kwargs == dict(source=tile, imgsz=640, conf=0.05, max_det=300,
-                             verbose=False, retina_masks=False, device="cuda")
+        assert {key: value for key, value in kwargs.items() if key != "source"} == dict(
+            imgsz=640, conf=0.05, max_det=300, verbose=False, retina_masks=False, device="cuda")
         results = raw_predict(*args, **kwargs)
         result = results[0] if results else None
         box_count = len(result.boxes) if result is not None and result.boxes is not None else 0
@@ -274,11 +275,81 @@ def observe_case(data, case, runtime):
                 effective_library_args=relevant)
 
 
+def classify(data):
+    """Apply only the authorized task's category predicates, without a repair experiment.
+
+    P1 describes incorrect detector pixels; it does not prove that correcting those
+    pixels would produce A2 proposals. Keep that separate from numerical stage counts.
+    """
+    if data["baseline_reproduction"] != "REPRODUCED":
+        return "P7_CAUSE_NOT_ESTABLISHED"
+    tensors = [tile["detector_tensor"] for tile in data["per_tile"]]
+    if all(t["source_channels_are_distinct"] and not t["equals_letterboxed_source_RGB"]
+           and t["equals_letterboxed_source_channel_reversed"] for t in tensors):
+        return "P1_INPUT_OR_PREPROCESSING_DEFECT"
+    if all(t["equals_letterboxed_source_RGB"] for t in tensors) and data["pipeline_counts"]["raw_ultralytics"] == 0:
+        return "P2_RAW_DETECTOR_ZERO"
+    return "P7_CAUSE_NOT_ESTABLISHED"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--phase", choices=("provenance", "inference"), required=True)
+    parser.add_argument("--phase", choices=("provenance", "inference", "finalize"), required=True)
     phase = parser.parse_args().phase
     sys.dont_write_bytecode = True
+    if phase == "finalize":
+        data = read_json(EVIDENCE)
+        assert data["baseline_reproduction"] == "REPRODUCED"
+        assert data["inference_calls"] == 18 and data["tile_count"] == 9
+        assert all(value == 0 for value in data["pipeline_counts"].values())
+        assert all(row["raw_ultralytics_count"] == row["runtime_detect_tile_count"] == 0
+                   and not row["masks_present"] and row["raw_confidences"] == []
+                   for row in data["per_tile"])
+        assert data["positive_control"]["result"]["pipeline_counts"] == dict(
+            raw_ultralytics=133, detect_tile=133, accumulated_before_compact=133,
+            compact_valid=133, accumulated=133, merge_input=133, merged=52)
+        integrity = data["external_integrity"]
+        assert digest(json.dumps(snapshot(), sort_keys=True).encode()) == integrity["inventory_after_sha256"]
+        assert protected_hashes() == integrity["protected_content_hashes"]
+        allowed = {"handoff/CURRENT_TASK.md", "handoff/EXECUTOR_STATE.yaml",
+                   "docs/task8b3_prop01_a2_zero_proposals_forensics_v1.md",
+                   "evaluation/task8b3_prop01_a2_zero_proposals_forensics_v1.json",
+                   "scripts/diagnose_prop01_a2_zero_proposals.py"}
+        assert set(git("diff", START, "--name-only").decode().splitlines()) <= allowed
+        data.update(status="READY_FOR_SUPERVISOR_AUDIT", stage="FINAL_EVIDENCE",
+                    primary_root_cause_classification=classify(data),
+                    earliest_observed_zero_count_stage="RAW_ULTRALYTICS_RESULT",
+                    earliest_verified_input_contract_defect="RGB_NUMPY_PASSED_TO_BGR_ASSUMING_API",
+                    root_cause_summary=(
+                        "Exact locked A2 decode and tiles are intact; RGB NumPy tiles supplied to a BGR-assuming "
+                        "Ultralytics API reach the network with R/B channels reversed. All nine raw Ultralytics "
+                        "results are zero, and downstream stages lose no proposals. P1 classifies the verified "
+                        "input contract defect; whether it causes the zero count remains untested."),
+                    classification_basis=("Task section 12 P1 predicate: wrong/transformed pixels reach detector; "
+                                          "all A2 tensors equal reversed source channels and differ from RGB. "
+                                          "P2's valid exact input prerequisite is therefore not satisfied."),
+                    zero_count_causal_contribution_of_channel_defect="NOT_ESTABLISHED",
+                    counterfactual_corrected_input_inference_run=False,
+                    detector_case_predict_calls=18,
+                    inference_call_definition="One model.predict per tile; library warmup is not a case inference.",
+                    stage_loss=[dict(transition="raw Ultralytics -> detect_tile", dropped=0),
+                                dict(transition="detect_tile -> global/compact", dropped=0),
+                                dict(transition="compact-valid -> merge input", dropped=0),
+                                dict(transition="merge input -> merged", dropped=0)],
+                    count_semantics=("raw_ultralytics = library returned boxes after frozen library policy; "
+                                     "raw_proposal_count = sum actual detect_tile lengths; accumulated = actual "
+                                     "compact-valid stored entries observed at merge; accumulated_before_compact "
+                                     "= actual compact calls, not a separate product list."),
+                    repair_hypothesis_only=("A separately authorized task could test an API-compatible channel "
+                                            "conversion; no prediction that this restores A2 proposals is established."),
+                    validation=dict(syntax="PASS (ast.parse/compile without bytecode)", json_parse="PASS",
+                                    recorded_evidence_assertions="PASS", scope_diff="FIVE_ALLOWED_PATHS_ONLY",
+                                    external_final_inventory_and_protected_hashes="UNCHANGED", full_pytest_run=False))
+        assert data["primary_root_cause_classification"] == "P1_INPUT_OR_PREPROCESSING_DEFECT"
+        write(data)
+        print(json.dumps(dict(status=data["status"], classification=data["primary_root_cause_classification"],
+                              pipeline_counts=data["pipeline_counts"], model_calls_this_phase=0)))
+        return
     before = snapshot()
     before_hashes = protected_hashes()
     with tempfile.TemporaryDirectory(prefix="prop01_forensics_") as temporary:
@@ -316,6 +387,15 @@ def main():
             data["detector_model"]["model_task"] = runtime._model.task
             data["stage"] = "INFERENCE_COMPLETE_PENDING_CLASSIFICATION"
             data["inference_calls"] = len(data["per_tile"]) + len(data["positive_control"].get("result", {}).get("per_tile", []))
+            data["primary_root_cause_classification"] = classify(data)
+            data["earliest_observed_zero_count_stage"] = "RAW_ULTRALYTICS_RESULT"
+            data["root_cause_summary"] = (
+                "Exact locked A2 tiles reach the frozen NumPy detector API unchanged as RGB, but its BGR "
+                "contract reverses R/B in the actual model tensor; all nine raw library results are zero, "
+                "with no downstream proposal loss. The channel defect is established; its contribution "
+                "to zero detections or the result of any correction is not established."
+                if data["primary_root_cause_classification"] == "P1_INPUT_OR_PREPROCESSING_DEFECT"
+                else "See measured stage counts; no stronger causal conclusion is authorized.")
         after = snapshot()
         after_hashes = protected_hashes()
         changed = [key for key in sorted(set(before) | set(after)) if before.get(key) != after.get(key)]

@@ -4,7 +4,7 @@
 
 ```text
 Task ID: PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
-Status: AUTHORIZED
+Status: READY_FOR_SUPERVISOR_AUDIT
 
 Decision owner: ChatGPT Supervisor
 Authorized executor: CODEX

@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: audit/task8b3-prop01-a2-zero-proposals-forensics-v1
-head: 075f98733177e91c5c4ec5d546daeafb241c4a93
+head: 471a93e8147166e3028a992d88be1a1677fffea3
 completed:
   - Required five-file startup read and exact clean Git anchor verified.
   - Supervisor attachment copied verbatim and re-read; SHA256 matched.
@@ -14,8 +14,10 @@ completed:
   - One locked A1 control reproduced raw 133 and merged 52.
   - All 18 observed input tensors reverse source RGB channels; no altered-input inference executed.
   - External 2094-file inventory and 144 protected content hashes unchanged.
-current_step: PHASE_B_C_D_E_INFERENCE_CHECKPOINT
-next_action: Review classification under task definitions, write final report, validate evidence and scope, hand off for Supervisor audit.
+  - Primary P1_INPUT_OR_PREPROCESSING_DEFECT recorded under the task predicate; zero-count causal contribution remains NOT_ESTABLISHED.
+  - Final report/evidence/syntax/JSON/scope validation completed; no repair or parameter change.
+current_step: STOP_FOR_SUPERVISOR_AUDIT
+next_action: CHATGPT_PROP01_FORENSICS_V1_REMOTE_AUDIT. Executor must not automatically enter repair.
 hypotheses:
   - Input channel contract mismatch is observed; its causal contribution to A2 zero remains untested. Any correction requires a separate Supervisor task.
   - External source_manifest has eight stale entries, but actual source files match canonical; no repair authorized.
@@ -23,16 +25,18 @@ tests_run:
   - Provenance diagnostic PASS; exact inputs/model/source verified; external inventory and protected hashes unchanged.
   - Initial provenance harness assertion assumed external manifest identity; inspected discrepancy and recorded stale entries.
   - Frozen detector-only inference PASS; A2 raw 0 / merged 0, A1 raw 133 / merged 52, 18 predict calls total.
+  - Diagnostic syntax/import and saved-evidence finalize assertions PASS; finalize performs zero inference calls.
+  - JSON and YAML parse, Supervisor task text preservation, git diff whitespace and five-path scope checks PASS.
 files_modified:
   - handoff/CURRENT_TASK.md
   - handoff/EXECUTOR_STATE.yaml
   - docs/task8b3_prop01_a2_zero_proposals_forensics_v1.md
   - evaluation/task8b3_prop01_a2_zero_proposals_forensics_v1.json
   - scripts/diagnose_prop01_a2_zero_proposals.py
-uncommitted_changes: true
+uncommitted_changes: false
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 075f98733177e91c5c4ec5d546daeafb241c4a93
+  commit: 471a93e8147166e3028a992d88be1a1677fffea3
   pushed: true
