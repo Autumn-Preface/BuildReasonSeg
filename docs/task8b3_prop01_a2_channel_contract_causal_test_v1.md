@@ -16,3 +16,11 @@ For each tile, first baseline model.predict on existing RGB NumPy, then correcte
 Prepared diagnostic: scripts/diagnose_prop01_a2_channel_contract_causal_test.py. --phase prepare performs zero inference; --phase run performs one nine-pair experiment; --phase finalize validates saved evidence with zero inference. Previous diagnostic/evidence remain read-only.
 
 External RC1 is read-only; 2,094-file inventory and 144 protected hashes are unchanged. No product repair, tuning, full pipeline or A1 rerun is authorized. Next gate CHATGPT_PROP01_CHANNEL_CAUSAL_TEST_REMOTE_AUDIT.
+
+## Paired experiment checkpoint
+
+Exactly one nine-pair experiment has completed (18 case predict calls). Baseline total raw boxes = 0; corrected total raw boxes = 0. All baseline tensors equal reversed source RGB; all corrected tensors equal intended source RGB. Baseline tensor hashes replay the accepted forensic tensors, while corrected hashes equal that evidence's intended RGB tensors.
+
+Primary classification: C2_CHANNEL_CORRECTION_STILL_ZERO. The real channel-contract defect is not sufficient to explain recovery: correcting it does not restore A2 proposals under the frozen setup. Do not conclude absence of any possible contribution, model inadequacy, domain gap, or scientific correctness. No further inference, tuning, or repair follows.
+
+Each paired call retains exactly the same args/model/backend. External 2,094-file inventory and 144 protected hashes remain unchanged. Result checkpoint will be pushed before final saved-evidence validation and Supervisor handoff.

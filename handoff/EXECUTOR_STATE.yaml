@@ -3,29 +3,36 @@ task_id: PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: audit/task8b3-prop01-a2-channel-contract-causal-test-v1
-head: 59296d25195a656e6a75e303e3cbb43fa9df8b8b
+head: 3aac94923214942b3411e73d0222814bf9710776
 completed:
-  - Five canonical startup reads and exact clean Git anchor verified.
-  - Supervisor task installed verbatim, SHA256 checked, and re-read.
-  - Exact A2, detector, source, installed libraries, and prior evidence identities verified.
-  - Prepared nine paired tiles with frozen invocation and tensor/baseline guards; zero inference so far.
-current_step: PRE_EXPERIMENT_CHECKPOINT
-next_action: Run exactly one paired A2 experiment; change only API-facing RGB NumPy to contiguous BGR NumPy.
+- Five canonical startup reads and exact clean Git anchor verified.
+- Supervisor task installed verbatim, SHA256 checked, and re-read.
+- Exact A2, detector, source, installed libraries, and prior evidence identities verified.
+- Prepared nine paired tiles with frozen invocation and tensor/baseline guards; zero inference so far.
+- 'Exactly one paired experiment completed: 9 baseline + 9 corrected calls, total 18.'
+- All baseline tensors match reversed RGB and accepted actual hashes; all corrected tensors match intended RGB.
+- 'Baseline raw boxes 0 and corrected raw boxes 0: C2_CHANNEL_CORRECTION_STILL_ZERO.'
+- Same frozen arguments/model/backend across each pair; external inventory and 144 hashes unchanged.
+current_step: PAIRED_RESULT_CHECKPOINT
+next_action: Validate saved paired evidence and complete report, then READY_FOR_SUPERVISOR_AUDIT handoff; no further inference.
 hypotheses:
-  - Whether channel correction restores A2 raw proposals is untested in this task.
+- Correction of the real channel defect is insufficient to recover A2 proposals at the frozen setup; no threshold experiment
+  or repair is authorized.
 tests_run:
-  - Prepare diagnostic PASS; nine tile hashes match accepted forensics.
-  - External inventory and 144 protected hashes unchanged.
+- Prepare diagnostic PASS; nine tile hashes match accepted forensics.
+- External inventory and 144 protected hashes unchanged.
+- Paired tensor assertions PASS; baseline guard PASS; 18 predict calls exactly.
+- Accepted baseline tensor hash replay and intended corrected hash checks PASS for all nine tiles.
 files_modified:
-  - handoff/CURRENT_TASK.md
-  - handoff/EXECUTOR_STATE.yaml
-  - docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
-  - evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
-  - scripts/diagnose_prop01_a2_channel_contract_causal_test.py
+- handoff/CURRENT_TASK.md
+- handoff/EXECUTOR_STATE.yaml
+- docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
+- evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
+- scripts/diagnose_prop01_a2_channel_contract_causal_test.py
 uncommitted_changes: true
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: null
-  pushed: null
+  commit: 3aac94923214942b3411e73d0222814bf9710776
+  pushed: true

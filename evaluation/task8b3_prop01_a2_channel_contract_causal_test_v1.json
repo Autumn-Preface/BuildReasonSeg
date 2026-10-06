@@ -1,8 +1,8 @@
 {
   "task_id": "PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1",
   "status": "IN_PROGRESS",
-  "stage": "PREPARED",
-  "timestamp_utc": "2026-10-06T05:27:39.421789+00:00",
+  "stage": "PAIRED_EXPERIMENT_COMPLETE",
+  "timestamp_utc": "2026-10-06T05:29:12.277407+00:00",
   "starting_branch": "audit/task8b3-prop01-a2-zero-proposals-forensics-v1",
   "starting_head": "59296d25195a656e6a75e303e3cbb43fa9df8b8b",
   "starting_working_tree": "clean",
@@ -86,7 +86,11 @@
       "numpy": "2.4.6",
       "Pillow": "12.3.0",
       "opencv-python": "5.0.0.93"
-    }
+    },
+    "device": "cuda",
+    "cuda": "13.2",
+    "cudnn": 92000,
+    "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU"
   },
   "installed_library_input_contract": {
     "BasePredictor.preprocess": {
@@ -275,15 +279,1240 @@
       }
     }
   ],
-  "per_tile": [],
+  "per_tile": [
+    {
+      "tile_id": "tile_0000_r000_c000",
+      "top": 0,
+      "left": 0,
+      "tile_rgb_sha256": "f8f8b616b0f83eb6386f99cdad67ff66b959c76c397381436dd2409b9b81f0c1",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "f8f8b616b0f83eb6386f99cdad67ff66b959c76c397381436dd2409b9b81f0c1",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "0b4d6f0927cbde7be9719a0427ea9a7c7ce123a2cb82d02d4ae9c74279d13440",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "69bafd1e6e272370e5402de7c0c557adfe354789293629af2b23101814229e0b",
+          "reversed_rgb_tensor_sha256": "0b4d6f0927cbde7be9719a0427ea9a7c7ce123a2cb82d02d4ae9c74279d13440",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "7f20fc4e0eabeb6ecbb227afcee934a34574cde247dcf6ecb02f2bf1ddfef3e3",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "69bafd1e6e272370e5402de7c0c557adfe354789293629af2b23101814229e0b",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "69bafd1e6e272370e5402de7c0c557adfe354789293629af2b23101814229e0b",
+          "reversed_rgb_tensor_sha256": "0b4d6f0927cbde7be9719a0427ea9a7c7ce123a2cb82d02d4ae9c74279d13440",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0001_r000_c001",
+      "top": 0,
+      "left": 384,
+      "tile_rgb_sha256": "5c617827f3aa194cdbf4470a515d0e2b38e96d5d1573681af627356af3983777",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "5c617827f3aa194cdbf4470a515d0e2b38e96d5d1573681af627356af3983777",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "6166794159a46b7d9386f29b3776523725b4b91fe247072712f5a6aad55384af",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "7dcb165333ced4b60b2603a5eb61206e5898054eef5af2ace570832a9b8863b1",
+          "reversed_rgb_tensor_sha256": "6166794159a46b7d9386f29b3776523725b4b91fe247072712f5a6aad55384af",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "0ea4a8a67d02d80e5cbef6ac45fae9dee413499527472b1522c12fb53ad63c4b",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "7dcb165333ced4b60b2603a5eb61206e5898054eef5af2ace570832a9b8863b1",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "7dcb165333ced4b60b2603a5eb61206e5898054eef5af2ace570832a9b8863b1",
+          "reversed_rgb_tensor_sha256": "6166794159a46b7d9386f29b3776523725b4b91fe247072712f5a6aad55384af",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0002_r000_c002",
+      "top": 0,
+      "left": 512,
+      "tile_rgb_sha256": "16883b0d03d2e685bd55aaab2b6b9e81d9850b0cd3f71e756d3a3f0adef1bd36",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "16883b0d03d2e685bd55aaab2b6b9e81d9850b0cd3f71e756d3a3f0adef1bd36",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "91dbf2c1d728638b36af46bec942a3f91c3e1dc3ab2b0ccf13d08f4b7e4f4d4c",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "e9c9f821dae55535aa6af2944aa5cb60de22c1f4d1a4e144bf043dc450537c95",
+          "reversed_rgb_tensor_sha256": "91dbf2c1d728638b36af46bec942a3f91c3e1dc3ab2b0ccf13d08f4b7e4f4d4c",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "224aa8485505f99ba7489224ed2fc5d79257b629bb268b39fe82a13f0f9a0d42",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "e9c9f821dae55535aa6af2944aa5cb60de22c1f4d1a4e144bf043dc450537c95",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "e9c9f821dae55535aa6af2944aa5cb60de22c1f4d1a4e144bf043dc450537c95",
+          "reversed_rgb_tensor_sha256": "91dbf2c1d728638b36af46bec942a3f91c3e1dc3ab2b0ccf13d08f4b7e4f4d4c",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0100_r001_c000",
+      "top": 384,
+      "left": 0,
+      "tile_rgb_sha256": "a44489bec0df6ca640c007e0b7c30eb513209baba9552b1c39b271c8a33ae6dd",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "a44489bec0df6ca640c007e0b7c30eb513209baba9552b1c39b271c8a33ae6dd",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "26e8f36f4a19f8283121fd324a6617def18d6dbf749b1dfdb39979a01e6e5810",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "848b216a38d9a02b03311e11ce1a8be5a1963a112bb8fcf59a2a50c55964afcf",
+          "reversed_rgb_tensor_sha256": "26e8f36f4a19f8283121fd324a6617def18d6dbf749b1dfdb39979a01e6e5810",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "081d4460fdebc5d29a9873ccfae055c18382f14ead583ab3e23d9b5916c6a829",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "848b216a38d9a02b03311e11ce1a8be5a1963a112bb8fcf59a2a50c55964afcf",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "848b216a38d9a02b03311e11ce1a8be5a1963a112bb8fcf59a2a50c55964afcf",
+          "reversed_rgb_tensor_sha256": "26e8f36f4a19f8283121fd324a6617def18d6dbf749b1dfdb39979a01e6e5810",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0101_r001_c001",
+      "top": 384,
+      "left": 384,
+      "tile_rgb_sha256": "25f38bfc07489c5bbd08f436aabb8471fff315cfd6e5722cbbf596c65a74dd81",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "25f38bfc07489c5bbd08f436aabb8471fff315cfd6e5722cbbf596c65a74dd81",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "6bf087c7f6ab18489986951da8cc895a212f4c7e78d8f82187df223ccfab70c0",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "43134aa03794099f33b4b539d39b9ce7b643a29727d80c67e008257ff96140f9",
+          "reversed_rgb_tensor_sha256": "6bf087c7f6ab18489986951da8cc895a212f4c7e78d8f82187df223ccfab70c0",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "19828e0b8ea4ec92626ac76911a2cec1b47e1ffa6007c4f45bbfb23a0451a534",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "43134aa03794099f33b4b539d39b9ce7b643a29727d80c67e008257ff96140f9",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "43134aa03794099f33b4b539d39b9ce7b643a29727d80c67e008257ff96140f9",
+          "reversed_rgb_tensor_sha256": "6bf087c7f6ab18489986951da8cc895a212f4c7e78d8f82187df223ccfab70c0",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0102_r001_c002",
+      "top": 384,
+      "left": 512,
+      "tile_rgb_sha256": "bdd5d7db7d60883e6dc9fe491d4606e6483d02ec3dc22f51c0b08fbb6eb91dcd",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "bdd5d7db7d60883e6dc9fe491d4606e6483d02ec3dc22f51c0b08fbb6eb91dcd",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "e4e06ad0b2c01581f023ec572118f472f15c8782f1f868c4e0a606e2bf51ba25",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "169d8a6c0e0d295df39d6b480c1db1ccd1e1461b38488f543edde3ab6f9c539a",
+          "reversed_rgb_tensor_sha256": "e4e06ad0b2c01581f023ec572118f472f15c8782f1f868c4e0a606e2bf51ba25",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "565a02849a9e95ca29ba33071b005c000772937887483eb4dc02369716242a52",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "169d8a6c0e0d295df39d6b480c1db1ccd1e1461b38488f543edde3ab6f9c539a",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "169d8a6c0e0d295df39d6b480c1db1ccd1e1461b38488f543edde3ab6f9c539a",
+          "reversed_rgb_tensor_sha256": "e4e06ad0b2c01581f023ec572118f472f15c8782f1f868c4e0a606e2bf51ba25",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0200_r002_c000",
+      "top": 512,
+      "left": 0,
+      "tile_rgb_sha256": "ed6fff68dbdc8ee2d23d74ce7acdc4ad4c3a40794f11b1d80336fc00d8f6c9ce",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "ed6fff68dbdc8ee2d23d74ce7acdc4ad4c3a40794f11b1d80336fc00d8f6c9ce",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "eacb12323f57a202020dacd30d8246d00624c9ad5f8230c26de28e8db2a536c9",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "28ab070d9dd51245149b3272f1586834e839b4f32c8ce87d07804ceb9b421941",
+          "reversed_rgb_tensor_sha256": "eacb12323f57a202020dacd30d8246d00624c9ad5f8230c26de28e8db2a536c9",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "03b2ca260f4e1a8bdf9272f86d0e6e4e53aca535b78e18c47b8b5a805f0160d9",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "28ab070d9dd51245149b3272f1586834e839b4f32c8ce87d07804ceb9b421941",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "28ab070d9dd51245149b3272f1586834e839b4f32c8ce87d07804ceb9b421941",
+          "reversed_rgb_tensor_sha256": "eacb12323f57a202020dacd30d8246d00624c9ad5f8230c26de28e8db2a536c9",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0201_r002_c001",
+      "top": 512,
+      "left": 384,
+      "tile_rgb_sha256": "2f408c2686ca84c7ebb44f2cc0c8fc3f6ec50962537f64fefa022a49cd01a0f3",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "2f408c2686ca84c7ebb44f2cc0c8fc3f6ec50962537f64fefa022a49cd01a0f3",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "dcfdaf90d4c9dd8a838da2f75c5cc9f982006c7b4ce566468d3304f68ac61d2b",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "c80396ef15087b726db54d367c4faf430eb90a9a7099daeeaed5a24919828d24",
+          "reversed_rgb_tensor_sha256": "dcfdaf90d4c9dd8a838da2f75c5cc9f982006c7b4ce566468d3304f68ac61d2b",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "9ad42ccdf088f25c6af4bb6f594cd1c6e5ffc176fe0e4b20417529ab55fac016",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "c80396ef15087b726db54d367c4faf430eb90a9a7099daeeaed5a24919828d24",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "c80396ef15087b726db54d367c4faf430eb90a9a7099daeeaed5a24919828d24",
+          "reversed_rgb_tensor_sha256": "dcfdaf90d4c9dd8a838da2f75c5cc9f982006c7b4ce566468d3304f68ac61d2b",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    },
+    {
+      "tile_id": "tile_0202_r002_c002",
+      "top": 512,
+      "left": 512,
+      "tile_rgb_sha256": "2b1d926dba398b6229b70ba44be50375b78b26e8aa56405f0b3c8162c4bc1b6e",
+      "shape": [
+        512,
+        512,
+        3
+      ],
+      "dtype": "uint8",
+      "padding": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0,
+        "applied": false
+      },
+      "baseline": {
+        "api_source_sha256": "2b1d926dba398b6229b70ba44be50375b78b26e8aa56405f0b3c8162c4bc1b6e",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "ca2b86afea8257d90376a77120ddbeae7ef96a4202c9bf12fe2ab70fcffa906c",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "68f259e8f9d8a1e45cbc60a6f8aade59c481a4844d046625131c32042f867371",
+          "reversed_rgb_tensor_sha256": "ca2b86afea8257d90376a77120ddbeae7ef96a4202c9bf12fe2ab70fcffa906c",
+          "equals_intended_rgb": false,
+          "equals_reversed_rgb": true
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "corrected": {
+        "api_source_sha256": "f8c72392b6202cc9dc396d754cbb5c784eaf713c9e75d448d3fe2e3beb5a2882",
+        "api_shape": [
+          512,
+          512,
+          3
+        ],
+        "api_dtype": "uint8",
+        "invocation_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "verbose": false,
+          "retina_masks": false,
+          "device": "cuda"
+        },
+        "raw_box_count": 0,
+        "masks_present": false,
+        "confidences": [],
+        "tensor": {
+          "network_tensor_sha256": "68f259e8f9d8a1e45cbc60a6f8aade59c481a4844d046625131c32042f867371",
+          "shape": [
+            1,
+            3,
+            640,
+            640
+          ],
+          "dtype": "float32",
+          "device": "cuda:0",
+          "intended_rgb_tensor_sha256": "68f259e8f9d8a1e45cbc60a6f8aade59c481a4844d046625131c32042f867371",
+          "reversed_rgb_tensor_sha256": "ca2b86afea8257d90376a77120ddbeae7ef96a4202c9bf12fe2ab70fcffa906c",
+          "equals_intended_rgb": true,
+          "equals_reversed_rgb": false
+        },
+        "tensor_contract_valid": true,
+        "results_count": 1,
+        "boxes_xyxy": [],
+        "mask_count": 0,
+        "effective_library_args": {
+          "imgsz": 640,
+          "conf": 0.05,
+          "max_det": 300,
+          "iou": 0.7,
+          "agnostic_nms": false,
+          "classes": null,
+          "augment": false,
+          "retina_masks": false,
+          "half": null,
+          "rect": true,
+          "save": false,
+          "save_txt": false,
+          "save_crop": false,
+          "device": "cuda",
+          "batch": 1,
+          "end2end": null
+        },
+        "backend_fp16": false
+      },
+      "same_model_predictor_and_backend": true
+    }
+  ],
   "planned_case_predict_calls": 18,
-  "case_predict_calls": 0,
-  "baseline_total_raw": null,
-  "corrected_total_raw": null,
-  "baseline_tensor_contract": "NOT_RUN",
-  "corrected_tensor_contract": "NOT_RUN",
-  "primary_classification": null,
-  "causal_conclusion": null,
+  "case_predict_calls": 18,
+  "baseline_total_raw": 0,
+  "corrected_total_raw": 0,
+  "baseline_tensor_contract": "CONFIRMED_REVERSED_SOURCE_RGB",
+  "corrected_tensor_contract": "CONFIRMED_INTENDED_SOURCE_RGB",
+  "primary_classification": "C2_CHANNEL_CORRECTION_STILL_ZERO",
+  "causal_conclusion": "Channel-contract defect is real, but correcting it is not sufficient to recover A2 proposals; valid corrected A2 detector tensors still yield zero raw proposals under the frozen setup.",
   "independent_variable": "API-facing NumPy channel representation only: RGB -> contiguous BGR",
   "corrected_conversion": "np.ascontiguousarray(RGB_tile[..., ::-1])",
   "threshold_sweep_run": false,
