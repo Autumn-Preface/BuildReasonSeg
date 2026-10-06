@@ -1,608 +1,708 @@
-# TO_DSH — MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION
+# TO_DSH — GOVERNANCE_V1_EXECUTOR_NEUTRAL_HANDOFF
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
-> Executor: DeepSeek Harness (DSH)
+> Executor: DSH for this migration task only
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation`
-> Required starting HEAD: `8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03`
-> New task branch: `delivery/task8b3-mask01-d2-external-sync-regression`
-> External RC1 target: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`
+> Required starting branch: `delivery/task8b3-mask01-d2-external-sync-regression`
+> Required starting HEAD: `1e9ac792d901b44db8ed33a09ee1552e11a865d9`
+> New task branch: `docs/governance-v1-executor-neutral-handoff`
 
-## 0. CHATGPT FINAL R1-E DECISION
+## 0. CHATGPT FINAL D2 DECISION
 
-R1-E2-R2 execution evidence is accepted, but two classifications are corrected by ChatGPT:
+D2 is ACCEPTED / CLOSED.
+
+Accepted remote state:
 
 ```text
-tests/test_paths_and_package.py::test_required_structure
-= A MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
-(reason: `inference/input` is an empty delivery directory and is not represented by the
-135-file Git lightweight source manifest)
-
-tests/test_setup_checker.py::test_real_project_check_reports_ready
-= A MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
-(reason: its own stdout reports missing `inference/input`, model package, SAM2 assets,
-and Qwen/ProgramHead assets)
-
-tests/test_setup_checker.py::test_real_runtime_reports_ultralytics_and_ready
-= A MISSING_FULL_DELIVERY_ASSET_OR_STRUCTURE
-NOT C, because its own stdout shows:
-Ultralytics runtime = OK
-Transformers runtime = OK
-while the complete-delivery structure/assets are missing
+branch = delivery/task8b3-mask01-d2-external-sync-regression
+HEAD   = 1e9ac792d901b44db8ed33a09ee1552e11a865d9
+parent = 8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03
+commit = test(rc1): verify external mask01 delivery closure
 ```
 
-Independent canonical-policy evidence:
+Accepted evidence:
 
 ```text
-source_manifest.copy_policy =
-Task 8B.2-R1 fixed lightweight source/config policy
+pre-sync source identity = 127/135 match
+controlled sync          = 135 copied / 135 verified / 0 failures
+post-sync identity       = 135/135 match
+preserved assets         = unchanged
+check_setup.py           = READY
+MASK targeted contracts  = 7/7 PASS
+external full suite      = 130 passed / 0 failed / 0 errors
+real inference           = not run
+training                 = not run
+parameter tuning         = not run
 ```
 
-and `scripts/sync_advisor_rc1_delivery.py` explicitly states that it:
-- copies only manifest-listed lightweight source/config files;
-- never touches model weights, downloaded assets, images, logs or generated outputs;
-- never deletes destination content.
-
-The canonical source tree is therefore intentionally NOT a complete runnable delivery tree.
-
-Corrected aggregate conclusion:
+Formal closure:
 
 ```text
-GROUPS_1_2:
-all 9 failures = complete-delivery asset prerequisites absent
-
-GROUPS_3_5:
-remaining failures = complete-delivery structure/assets or noncanonical frozen log fixtures
-no MASK-01 code regression established
-
-MASK01_FULL_SUITE_FAILURES_CAUSALLY_UNRELATED = true
-
-FULL_SUITE_GATE_PLACEMENT = EXTERNAL_COMPLETE_RC1
-```
-
-Canonical closure:
-
-```text
-SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_CANONICAL
-MASK01_CANONICAL_ENGINEERING_HARDENING = CLOSED
+SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_EXTERNAL_RC1
+MASK01_ENGINEERING_HARDENING_CHAIN = CLOSED
 
 runtime SUCCESS scope = RUNTIME_STRUCTURAL_ONLY
 semantic status = NOT_EVALUATED
-semantic target correctness = NOT ESTABLISHED by SUCCESS
-
-targeted canonical Gate A = 5/5 PASS
-targeted canonical Gate B = 2/2 PASS
-manifest Gate C = PASS
+semantic target correctness = NOT ESTABLISHED by runtime SUCCESS
 ```
 
-This task is D2: controlled canonical → external synchronization, then complete external RC1 regression.
+This task does NOT resume PROP-01 or 8B.4.
+
+Its only purpose is to modernize project governance so Codex and DSH can hand work off through repository state instead of conversation-specific context.
 
 ---
 
-## 1. GIT PREFLIGHT
+## 1. MIGRATION PRINCIPLE
 
-Verify exactly:
+Create an executor-neutral repository protocol.
 
-```text
-current branch =
-audit/task8b3-mask01-r1e2-r2-remaining-failure-disambiguation
-
-HEAD =
-8ab53f3df2664a9ad8f9f6bc8b5659a2251b0e03
-```
-
-Create:
+After this task, the project must conceptually follow:
 
 ```text
-delivery/task8b3-mask01-d2-external-sync-regression
+ChatGPT Chat
+= supervisor / scientific authority / milestone auditor
+
+Codex
+= preferred high-capability executor for long engineering milestones
+
+DSH
+= fallback executor / alternate executor
+
+GitHub + governance files
+= source of truth for handoff state
 ```
 
-Allowed initial working tree:
-- clean, or
-- only `M handoff/TO_DSH.md`.
+No executor owns unique project state.
 
-No reset/rebase/amend/stash/clean/force-push.
+A new executor must be able to continue by reading repository state without needing the previous executor's chat history.
 
 ---
 
-## 2. REPOSITORY WRITE SCOPE
+## 2. NON-DESTRUCTIVE MIGRATION
 
-DO NOT modify any canonical source/test/doc/manifest file.
+This migration is additive.
 
-Only repository task records may change:
+DO NOT delete, rename, or rewrite history for:
 
 ```text
-docs/task8b3_mask01_d2_external_rc1_sync_and_full_regression.md
-evaluation/task8b3_mask01_d2_external_rc1_sync_and_full_regression.json
+handoff/TO_DSH.md
+handoff/FROM_DSH.md
+```
+
+They remain historical compatibility artifacts.
+
+New canonical executor-neutral handoff files are:
+
+```text
+AGENTS.md
+governance/PROJECT_STATE.yaml
+governance/DECISIONS.md
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+```
+
+Future tasks may stop using TO_DSH/FROM_DSH after ChatGPT explicitly freezes the new protocol.
+
+---
+
+## 3. ALLOWED PATHS
+
+Only create/modify:
+
+```text
+AGENTS.md
+governance/PROJECT_STATE.yaml
+governance/DECISIONS.md
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+
+docs/governance_v1_executor_neutral_handoff.md
+evaluation/governance_v1_executor_neutral_handoff.json
+
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Canonical tree remains frozen.
-
-The ONLY non-repository write authorized is the controlled sync to:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-through the existing sync script.
-
-Do NOT manually copy or edit external source files.
+No product source, tests, canonical RC1 files, model assets, scientific reports, sync script, or external RC1 may be modified.
 
 ---
 
-## 3. EXTERNAL COMPLETE-DELIVERY PREFLIGHT
+## 4. AGENTS.md — REQUIRED CONTRACT
 
-Before any sync, verify the external root exists:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-If the root does not exist:
-- STOP;
-- do not create it;
-- persist report and push.
-
-Before sync, inventory these complete-delivery prerequisites.
-
-### Required files / assets
+Create repository-root:
 
 ```text
-VERSION
-setup_env.bat
-
-model/buildreasonseg_advisor/decoder.pt
-model/buildreasonseg_advisor/detector.pt
-
-model/components/sam2/sam2.1_hiera_base_plus.pt
-model/components/sam2/sam2.1_hiera_b+.yaml
-
-model/components/program_head/program_parser_l3_rehearsal_v1.pt
-model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors
-
-logs/task8b1_prompt_suite.json
-logs/task8b_gates.json
+AGENTS.md
 ```
 
-### Required directories
+It must be executor-neutral and apply to Codex, DSH, or any future coding agent.
+
+Required sections:
+
+### 4.1 Authority model
+
+State:
 
 ```text
-inference/input
-inference/output/masks
-inference/output/overlays
-inference/output/diagnostics
-runs/train
-runs/eval
-logs
+Supervisor = ChatGPT project conversation
+Executor = Codex / DSH / future agent
+Repository = source of truth
 ```
 
-Record for every item:
+Scientific/architecture decisions belong to Supervisor.
+
+Executor may make implementation-level engineering choices only within frozen constraints.
+
+### 4.2 Decision levels
+
+Define exactly:
 
 ```text
-exists
-bytes (for files where practical)
+L0 = execution mechanics
+     executor may decide
+
+L1 = local engineering implementation
+     executor may decide if contract/behavior remains frozen
+
+L2 = interface / contract / acceptance-rule change
+     supervisor approval required
+
+L3 = algorithm / threshold / ranking / model-selection change
+     supervisor approval required
+
+L4 = architecture / frozen scientific conclusion change
+     supervisor approval required
 ```
 
-For these preserved external assets, also record pre-sync SHA256:
+For L2-L4:
+- STOP at a recoverable checkpoint;
+- persist evidence;
+- update EXECUTOR_STATE;
+- do not self-authorize.
+
+### 4.3 Git safety
+
+Explicitly forbid by default:
 
 ```text
-model/buildreasonseg_advisor/decoder.pt
-model/buildreasonseg_advisor/detector.pt
-model/components/sam2/sam2.1_hiera_base_plus.pt
-model/components/program_head/program_parser_l3_rehearsal_v1.pt
-logs/task8b1_prompt_suite.json
-logs/task8b_gates.json
+git reset --hard
+git rebase
+git commit --amend
+git stash
+git clean
+force push
+history rewrite
 ```
 
-For the Qwen `model.safetensors`, record:
+Unknown files:
+- do not delete;
+- do not discard;
+- do not stage unless authorized.
+
+All task outcomes COMPLETE / STOP / FAILED must be persisted to GitHub.
+
+### 4.4 Scientific governance
+
+Freeze:
 
 ```text
-exists
-bytes
-mtime
+Qwen 2B ProgramHead
+YOLO26m proposal path
+deterministic spatial executor
+SAM/SAM2 visual path
+GRF
+target-aware segmentation
+Reference -> Relation -> Target -> Segmentation
 ```
 
-Do not hash multi-GB Qwen weights solely for this task.
+State project-specific prohibition without Supervisor approval:
 
-If ANY required prerequisite above is missing:
-- status = STOP;
-- classification = EXTERNAL_DELIVERY_INCOMPLETE_PREEXISTING;
-- do NOT run sync;
-- do NOT create/download the missing item;
-- commit/push truthful evidence;
-- await ChatGPT.
+```text
+threshold tuning
+scalar fitting
+locked-case rescue heuristics
+new ranking heuristic
+new model branch
+architecture rescue
+post-hoc semantic-quality threshold repair
+```
+
+### 4.5 Evidence semantics
+
+Freeze:
+
+```text
+test PASS != scientific correctness
+runtime SUCCESS != semantic target correctness
+FROM_EXECUTOR-style report != independent proof
+```
+
+Review source/diff/tests/evidence independently.
+
+### 4.6 Author-review separation
+
+State:
+
+```text
+Implementing agent cannot be the sole final approver of its own change.
+```
+
+For long Codex milestones:
+- implementer may run self-checks;
+- an independent reviewer agent is preferred;
+- final milestone acceptance remains Supervisor.
+
+### 4.7 Checkpoint protocol
+
+Require recoverable checkpoints for long tasks.
+
+At meaningful stages:
+- commit + push when safe;
+- update EXECUTOR_STATE;
+- do not leave sole state only inside agent conversation.
+
+### 4.8 Required startup read order
+
+Every executor must first read:
+
+```text
+AGENTS.md
+governance/PROJECT_STATE.yaml
+governance/DECISIONS.md
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+```
+
+then inspect actual Git branch/HEAD/diff before work.
+
+Actual source/Git state overrides stale prose.
 
 ---
 
-## 4. GATE D2-A — PRE-SYNC SOURCE COMPARISON
+## 5. PROJECT_STATE.yaml — REQUIRED CONTENT
 
-From repository root, run:
-
-```text
-python scripts/sync_advisor_rc1_delivery.py --destination "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1" --check
-```
-
-This is read-only.
-
-A non-zero result BEFORE sync is allowed and expected if external source/config is stale.
-
-Record exactly:
+Create:
 
 ```text
-exit
-checked
-match
-missing
-mismatch
+governance/PROJECT_STATE.yaml
 ```
 
-Do NOT classify a pre-sync mismatch as task failure.
+Use valid YAML.
+
+It must be concise and machine-readable.
+
+Required top-level structure:
+
+```yaml
+schema_version: 1
+project: BuildReasonSeg
+project_title_cn: ...
+phase: RC1_ENGINEERING_RELIABILITY
+supervisor: CHATGPT_PROJECT_CONVERSATION
+preferred_executor: CODEX
+fallback_executor: DSH
+
+canonical:
+  repo: Autumn-Preface/BuildReasonSeg
+  canonical_root: delivery_src/BuildReasonSeg_Advisor_RC1
+  external_root: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+  source_manifest_entries: 135
+  source_identity_basis: GIT_CANONICAL_BLOB_BYTES
+
+scientific_architecture:
+  frozen: true
+  components: [...]
+
+defects:
+  MEM-01: ...
+  PROP-01: ...
+  REF-01: ...
+  MASK-01: ...
+
+milestones:
+  mask01_d2: ...
+  8B.4: ...
+  final_demo: ...
+
+next_priority: ...
+
+executor_protocol:
+  current_task_file: handoff/CURRENT_TASK.md
+  executor_state_file: handoff/EXECUTOR_STATE.yaml
+  legacy_handoff_files: [...]
+```
+
+Freeze current defect states accurately:
+
+```text
+MEM-01 = CLOSED
+
+PROP-01 =
+OPEN_ENGINEERING_DEFECT
+A2 zero proposals
+blind threshold tuning prohibited
+
+REF-01 =
+ACTIVE_RESIDUAL_SELECTION_LIMITATION
+right = stable
+above = repaired
+left = residual
+below = residual
+further scalar rank repair rejected
+
+MASK-01 =
+CLOSED_ENGINEERING_HARDENING
+SUCCESS scope = RUNTIME_STRUCTURAL_ONLY
+semantic status = NOT_EVALUATED
+semantic correctness not established
+external full suite = 130/130 PASS
+```
+
+Current next project priority:
+
+```text
+GOVERNANCE_V1 migration first
+then ChatGPT chooses between PROP-01 continuation / 8B.4 sequencing
+```
+
+Do NOT invent that PROP-01 is solved.
 
 ---
 
-## 5. GATE D2-B — CONTROLLED SYNC
+## 6. DECISIONS.md — REQUIRED CONTENT
 
-Run exactly:
+Create:
 
 ```text
-python scripts/sync_advisor_rc1_delivery.py --destination "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1"
+governance/DECISIONS.md
 ```
+
+This is NOT a conversation transcript.
+
+It is a compact ledger of frozen decisions.
+
+Each entry must contain:
+
+```text
+Decision ID
+Status
+Decision
+Rationale / evidence summary
+What is prohibited
+Reopen condition
+```
+
+At minimum include:
+
+### GOV-D001
+```text
+SCIENTIFIC_ARCHITECTURE_FROZEN
+```
+
+### GOV-D002
+```text
+REJECT_FURTHER_SCALAR_RANK_REPAIR
+```
+
+### GOV-D003
+```text
+LARGEST_EXTENT_DOMINANCE_EXCEPTION_V1
+```
+
+### GOV-D004
+```text
+REJECT_THRESHOLD_BASED_MASK_VALIDITY_REPAIR
+```
+
+### GOV-D005
+```text
+SUCCESS_SEMANTICS_HARDENING_V1
+status = IMPLEMENTED_EXTERNAL_RC1
+```
+
+### GOV-D006
+```text
+INSPECT_IMAGE_PREFLIGHT_BEFORE_MODEL_V1
+status = IMPLEMENTED
+```
+
+### GOV-D007
+```text
+LIGHTWEIGHT_CANONICAL_VS_EXTERNAL_COMPLETE_DELIVERY
+```
+
+Decision:
+- canonical source tree is lightweight source/config snapshot;
+- complete-delivery full suite belongs on external RC1;
+- sync is one-way manifest-listed source/config;
+- preserved external weights/assets/log fixtures must not be overwritten by sync.
+
+### GOV-D008
+```text
+EXECUTOR_NEUTRAL_HANDOFF_V1
+```
+
+Decision:
+- Chat remains Supervisor;
+- Codex preferred executor;
+- DSH fallback executor;
+- repo state is the handoff source of truth.
+
+Do not fabricate exact historical metrics not needed by a decision.
+
+---
+
+## 7. CURRENT_TASK.md — INITIAL NEUTRAL STATE
+
+Create:
+
+```text
+handoff/CURRENT_TASK.md
+```
+
+This file defines the Supervisor-authorized current task, not executor-specific instructions.
+
+For this migration commit, after migration is complete, set it to a PAUSED / AWAITING_SUPERVISOR state.
+
+Required content:
+
+```text
+Task ID: NONE
+Status: AWAITING_SUPERVISOR
+Authorized executor: ANY
+Starting branch/head: <governance migration final state is filled as POST_COMMIT_EXTERNAL_FACT or omitted>
+Goal:
+  No engineering task is currently authorized after Governance V1 migration.
+
+Next:
+  ChatGPT Supervisor selects the next milestone.
+
+Forbidden while no task is active:
+  product edits
+  tests edits
+  algorithm changes
+  external RC1 writes
+```
+
+Do NOT pre-authorize PROP-01 automatically.
+
+---
+
+## 8. EXECUTOR_STATE.yaml — INITIAL NEUTRAL STATE
+
+Create valid YAML:
+
+```text
+handoff/EXECUTOR_STATE.yaml
+```
+
+Required fields:
+
+```yaml
+schema_version: 1
+task_id: NONE
+status: AWAITING_SUPERVISOR
+executor: NONE
+branch: docs/governance-v1-executor-neutral-handoff
+head: POST_COMMIT_EXTERNAL_FACT
+
+completed: []
+current_step: null
+next_action: null
+
+hypotheses: []
+tests_run: []
+files_modified: []
+
+uncommitted_changes: false
+
+blocked_on_supervisor: false
+block_reason: null
+
+decision_level_required: null
+
+last_checkpoint:
+  commit: POST_COMMIT_EXTERNAL_FACT
+  pushed: true
+```
+
+The final commit SHA cannot be known before commit; use `POST_COMMIT_EXTERNAL_FACT`.
+
+Future executors update this file at recoverable checkpoints.
+
+---
+
+## 9. GOVERNANCE DOCUMENTATION
+
+Create:
+
+```text
+docs/governance_v1_executor_neutral_handoff.md
+```
+
+Document:
+- why migration was needed;
+- old human-relay bottleneck;
+- Chat / Codex / DSH roles;
+- five canonical governance/handoff files;
+- executor switch procedure;
+- quota interruption procedure;
+- checkpoint procedure;
+- legacy TO_DSH/FROM_DSH compatibility status.
+
+Keep it concise and operational.
+
+---
+
+## 10. VALIDATION
+
+No pytest/model inference/training.
+
+Run only governance validation.
 
 Required:
 
+### A. YAML parse
+
+Parse:
+
 ```text
-copied = 135
-verified = 135
-failures = 0
-exit = 0
+governance/PROJECT_STATE.yaml
+handoff/EXECUTOR_STATE.yaml
 ```
 
-The script is the only authorized mechanism for source/config writes.
+with Python/PyYAML.
 
-If failure:
-- do not manually repair;
-- STOP after evidence persistence.
+Required:
+```text
+PASS
+```
+
+### B. Required-file presence
+
+Confirm all five canonical files exist:
+
+```text
+AGENTS.md
+governance/PROJECT_STATE.yaml
+governance/DECISIONS.md
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+```
+
+### C. No product changes
+
+Verify Git diff contains no paths under:
+
+```text
+delivery_src/
+scripts/
+```
+
+and no model/config/test source changes.
+
+### D. State consistency
+
+Programmatically or manually verify:
+
+```text
+MASK-01 = closed
+PROP-01 = open
+REF-01 = residual limitation
+current task = NONE / awaiting supervisor
+preferred executor = CODEX
+fallback executor = DSH
+```
+
+Do not change scientific status.
 
 ---
 
-## 6. GATE D2-C — POST-SYNC SOURCE IDENTITY
+## 11. REQUIRED EVIDENCE
 
-Run exactly:
-
-```text
-python scripts/sync_advisor_rc1_delivery.py --destination "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1" --check
-```
-
-Required:
+Create:
 
 ```text
-checked = 135
-match = 135
-missing = 0
-mismatch = 0
-exit = 0
+evaluation/governance_v1_executor_neutral_handoff.json
 ```
 
-This is the external source/config identity gate.
+Record:
+
+```text
+task_id
+status
+starting_branch
+starting_head
+task_branch
+
+created_files
+yaml_parse_pass
+required_files_present
+product_paths_changed = false
+scientific_state_changed = false
+legacy_handoff_deleted = false
+
+preferred_executor = CODEX
+fallback_executor = DSH
+supervisor = CHATGPT_PROJECT_CONVERSATION
+
+current_task_status = AWAITING_SUPERVISOR
+
+next_gate = CHATGPT_GOVERNANCE_V1_REMOTE_AUDIT
+```
+
+Also update legacy:
+
+```text
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
+```
+
+only to record this migration result / task text.
 
 ---
 
-## 7. PRESERVED-ASSET INTEGRITY
+## 12. DIFF GATE
 
-After sync, recompute the same SHA256 values for:
-
-```text
-decoder.pt
-detector.pt
-sam2.1_hiera_base_plus.pt
-program_parser_l3_rehearsal_v1.pt
-logs/task8b1_prompt_suite.json
-logs/task8b_gates.json
-```
-
-Required:
+Only stage:
 
 ```text
-pre_sha256 == post_sha256
+AGENTS.md
+governance/PROJECT_STATE.yaml
+governance/DECISIONS.md
+handoff/CURRENT_TASK.md
+handoff/EXECUTOR_STATE.yaml
+docs/governance_v1_executor_neutral_handoff.md
+evaluation/governance_v1_executor_neutral_handoff.json
+handoff/FROM_DSH.md
+handoff/TO_DSH.md
 ```
 
-For Qwen `model.safetensors`, required:
-
-```text
-exists after sync = true
-bytes after == bytes before
-mtime after == mtime before
-```
-
-This demonstrates that the lightweight sync did not touch preserved external assets/fixtures.
-
-Any unexpected mutation:
-- STOP;
-- no manual restoration;
+Anything else:
+- do not stage;
+- do not delete;
 - report.
 
 ---
 
-## 8. GATE D2-D — EXTERNAL SETUP READY
+## 13. COMMIT / PUSH
 
-Working directory:
-
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
-
-Run:
+If validation passes, commit exactly:
 
 ```text
-python check_setup.py
+git commit -m "docs(governance): add executor-neutral handoff protocol"
 ```
-
-Required:
-
-```text
-exit = 0
-BuildReasonSeg environment: READY
-```
-
-Also record lines for:
-
-```text
-model package
-SAM2 assets
-Qwen / ProgramHead assets
-Ultralytics runtime
-Transformers runtime
-```
-
-They must be READY/OK.
-
-If NOT READY:
-- do not repair/install/download;
-- STOP and report exact reason.
-
----
-
-## 9. GATE D2-E — TARGETED MASK-01 CONTRACTS ON EXTERNAL
-
-From external RC1 root run exactly:
-
-```text
-python -m pytest tests/test_cli_contract.py::test_r1a_single_success_semantics_block tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary tests/test_task8b_runtime.py::test_success_semantics_contract_exact tests/test_task8b_runtime.py::test_pipeline_result_ok_is_status_compatibility -q
-```
-
-Required:
-
-```text
-5 passed
-exit 0
-```
-
-Then run:
-
-```text
-python -m pytest tests/test_cli_contract.py::test_predict_inspect_proposals_does_not_require_prompt tests/test_cli_contract.py::test_inspect_unreadable_image_precedes_model_resolution -q
-```
-
-Required:
-
-```text
-2 passed
-exit 0
-```
-
-No repairs if either fails.
-
----
-
-## 10. GATE D2-F — COMPLETE EXTERNAL RC1 PYTEST SUITE
-
-Still in external RC1 root, run exactly:
-
-```text
-python -m pytest -q
-```
-
-Required for COMPLETE:
-
-```text
-exit = 0
-0 failed
-0 errors
-all collected tests pass
-```
-
-Record:
-- passed;
-- skipped;
-- xfailed;
-- failed;
-- errors;
-- duration;
-- exact failing nodes if any.
-
-Do NOT use:
-- `-k`;
-- `--lf`;
-- test exclusion;
-- skip/xfail edits;
-- source/test repairs.
-
-If this gate fails:
-- D2 status = STOP;
-- persist the complete failure list;
-- do NOT modify external or canonical code;
-- await ChatGPT.
-
----
-
-## 11. NO MODEL INFERENCE / TRAINING
-
-Do NOT:
-- run real prediction on an image;
-- run locked cases;
-- train;
-- tune;
-- change model assets;
-- change detector/reference/mask algorithms.
-
-`check_setup.py` and pytest contract/package checks are allowed.
-
-This D2 task is engineering synchronization/regression only.
-
----
-
-## 12. EXTERNAL POST-REGRESSION INVENTORY
-
-After all test gates, re-check:
-
-```text
-decoder.pt
-detector.pt
-SAM2 checkpoint
-ProgramHead checkpoint
-Qwen model.safetensors
-logs/task8b1_prompt_suite.json
-logs/task8b_gates.json
-```
-
-They must remain present.
-
-Do not stage or copy external generated pytest cache/log output into Git.
-
----
-
-## 13. REQUIRED D2 DECISION
-
-If D2-B/C/D/E/F all PASS and preserved assets remain unchanged:
-
-```text
-MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION = COMPLETE
-
-EXTERNAL_RC1_SOURCE_IDENTITY = 135/135 MATCH
-EXTERNAL_RC1_SETUP = READY
-EXTERNAL_MASK01_TARGETED_CONTRACTS = PASS
-EXTERNAL_RC1_FULL_SUITE = PASS
-
-SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_EXTERNAL_RC1
-MASK01_ENGINEERING_HARDENING_CHAIN = CLOSED
-
-semantic target correctness = NOT ESTABLISHED by runtime SUCCESS
-```
-
-Do NOT claim the scientific segmentation problem is solved.
-
-If any gate fails:
-
-```text
-MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION = STOP
-MASK01_ENGINEERING_HARDENING_CHAIN = CANONICAL_CLOSED_EXTERNAL_PENDING
-```
-
-and record exact blocker.
-
----
-
-## 14. REQUIRED REPORT
-
-Create:
-
-```text
-docs/task8b3_mask01_d2_external_rc1_sync_and_full_regression.md
-evaluation/task8b3_mask01_d2_external_rc1_sync_and_full_regression.json
-```
-
-Update:
-
-```text
-handoff/FROM_DSH.md
-handoff/TO_DSH.md
-```
-
-Required report fields:
-
-```text
-task_id = MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION
-status
-
-starting branch/head
-task branch
-external_root
-
-pre_sync_prerequisite_inventory
-pre_sync_preserved_asset_hashes
-
-D2-A pre-sync check command/result
-D2-B sync command/result
-D2-C post-sync check command/result
-
-post_sync_preserved_asset_hashes
-preserved_assets_unchanged = true/false
-
-D2-D check_setup exit/result
-D2-E targeted success-semantics result
-D2-E targeted inspect result
-D2-F full suite result
-
-external_source_match = 135/135 or other
-external_setup_ready = true/false
-external_full_suite_pass = true/false
-
-canonical_files_modified = false
-model_assets_modified_by_sync = false
-model_inference = false
-training = false
-
-semantic_target_correctness =
-NOT_ESTABLISHED_BY_RUNTIME_SUCCESS
-
-github_persistence_policy = ALL_TASK_OUTCOMES_PUSHED
-next_gate = CHATGPT_D2_REMOTE_AUDIT
-```
-
----
-
-## 15. REPOSITORY WORKTREE AUDIT
-
-After external work:
-
-```text
-git status --porcelain=v1 --untracked-files=all
-git diff --name-only
-git diff --cached --name-only
-```
-
-Only authorized report/handoff files may be staged.
-
-No canonical delivery file may change in the repository.
-
----
-
-## 16. EVERY OUTCOME MUST BE PUSHED
-
-COMPLETE / STOP / FAILED must all be committed and pushed.
-
----
-
-## 17. COMMIT / PUSH
-
-If COMPLETE, commit exactly:
-
-```text
-git commit -m "test(rc1): verify external mask01 delivery closure"
-```
-
-If STOP/FAILED, use a truthful status commit message.
 
 Push:
 
 ```text
-delivery/task8b3-mask01-d2-external-sync-regression
+docs/governance-v1-executor-neutral-handoff
 ```
 
 No force push.
+
+All outcomes COMPLETE / STOP / FAILED must be pushed.
 
 After push print:
 
@@ -614,24 +714,25 @@ FINAL_PARENT=<sha>
 
 Then STOP.
 
+Do not begin PROP-01, 8B.4, demo work, or any Codex migration execution.
+
 ---
 
-## 18. SUCCESS DEFINITION
+## 14. SUCCESS DEFINITION
 
 ```text
-MASK01_D2_EXTERNAL_RC1_SYNC_AND_FULL_REGRESSION = COMPLETE
+GOVERNANCE_V1_EXECUTOR_NEUTRAL_HANDOFF = COMPLETE
 
-external complete-delivery prerequisites = present
-135 lightweight source/config files = synced and verified
-preserved weights/assets/fixtures = unchanged
-check_setup = READY
-MASK-01 targeted contracts = 7/7 PASS
-complete external pytest suite = ALL PASS
+five canonical executor-neutral governance/handoff files created
+YAML parses
+scientific state preserved
+product tree unchanged
+legacy TO_DSH/FROM_DSH retained
+current task = AWAITING_SUPERVISOR
 
-SUCCESS_SEMANTICS_HARDENING_V1 = IMPLEMENTED_EXTERNAL_RC1
-MASK01_ENGINEERING_HARDENING_CHAIN = CLOSED
+Codex and DSH can both resume future work from repository state
 
-NEXT = CHATGPT_D2_REMOTE_AUDIT
+NEXT = CHATGPT_GOVERNANCE_V1_REMOTE_AUDIT
 ```
 
 Then STOP.

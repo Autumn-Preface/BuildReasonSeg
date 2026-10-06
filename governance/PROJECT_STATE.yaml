@@ -1,0 +1,61 @@
+schema_version: 1
+project: BuildReasonSeg
+project_title_cn: "基于遥感影像的建筑物提取与变化检测"
+phase: RC1_ENGINEERING_RELIABILITY
+supervisor: CHATGPT_PROJECT_CONVERSATION
+preferred_executor: CODEX
+fallback_executor: DSH
+
+canonical:
+  repo: Autumn-Preface/BuildReasonSeg
+  canonical_root: delivery_src/BuildReasonSeg_Advisor_RC1
+  external_root: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+  source_manifest_entries: 135
+  source_identity_basis: GIT_CANONICAL_BLOB_BYTES
+
+scientific_architecture:
+  frozen: true
+  components:
+    - Qwen 2B ProgramHead
+    - YOLO26m proposal path
+    - deterministic spatial executor
+    - SAM/SAM2 visual path
+    - GRF
+    - target-aware segmentation
+    - "Reference -> Relation -> Target -> Segmentation"
+
+defects:
+  MEM-01:
+    status: CLOSED
+  PROP-01:
+    status: OPEN_ENGINEERING_DEFECT
+    detail: A2 zero proposals
+    prohibited: blind threshold tuning
+  REF-01:
+    status: ACTIVE_RESIDUAL_SELECTION_LIMITATION
+    right: stable
+    above: repaired
+    left: residual
+    below: residual
+    rejected: further scalar rank repair
+  MASK-01:
+    status: CLOSED_ENGINEERING_HARDENING
+    success_scope: RUNTIME_STRUCTURAL_ONLY
+    semantic_status: NOT_EVALUATED
+    semantic_correctness: NOT_ESTABLISHED
+    external_full_suite: 130/130 PASS
+
+milestones:
+  mask01_d2: CLOSED_COMPLETE
+  8B.4: NOT_STARTED
+  final_demo: NOT_STARTED
+
+next_priority: GOVERNANCE_V1 migration first; then Supervisor chooses between PROP-01 continuation and 8B.4 sequencing
+next_priority_note: PROP-01 is not solved
+
+executor_protocol:
+  current_task_file: handoff/CURRENT_TASK.md
+  executor_state_file: handoff/EXECUTOR_STATE.yaml
+  legacy_handoff_files:
+    - handoff/TO_DSH.md
+    - handoff/FROM_DSH.md

@@ -1,0 +1,66 @@
+{
+  "task_id": "GOVERNANCE_V1_EXECUTOR_NEUTRAL_HANDOFF",
+  "status": "COMPLETE",
+  "starting_branch": "delivery/task8b3-mask01-d2-external-sync-regression",
+  "starting_head": "1e9ac792d901b44db8ed33a09ee1552e11a865d9",
+  "task_branch": "docs/governance-v1-executor-neutral-handoff",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "files_created": [
+    "AGENTS.md",
+    "governance/PROJECT_STATE.yaml",
+    "governance/DECISIONS.md",
+    "handoff/CURRENT_TASK.md",
+    "handoff/EXECUTOR_STATE.yaml"
+  ],
+  "yaml_parse": {
+    "governance/PROJECT_STATE.yaml": {
+      "parsed": true,
+      "keys": "PARSED [\"canonical\", \"defects\", \"executor_protocol\", \"fallback_executor\", \"milestones\", \"next_priority\", \"next_priority_note\", \"phase\", \"preferred_executor\", \"project\", \"project_title_cn\", \"schema_version\", \"scientific_architecture\", \"supervisor\"]",
+      "error": ""
+    },
+    "handoff/EXECUTOR_STATE.yaml": {
+      "parsed": true,
+      "keys": "PARSED [\"block_reason\", \"blocked_on_supervisor\", \"branch\", \"completed\", \"current_step\", \"decision_level_required\", \"executor\", \"files_modified\", \"head\", \"hypotheses\", \"last_checkpoint\", \"next_action\", \"schema_version\", \"status\", \"task_id\", \"tests_run\", \"uncommitted_changes\"]",
+      "error": ""
+    }
+  },
+  "yaml_parse_pass": true,
+  "required_files_present": true,
+  "presence": {
+    "AGENTS.md": true,
+    "governance/PROJECT_STATE.yaml": true,
+    "governance/DECISIONS.md": true,
+    "handoff/CURRENT_TASK.md": true,
+    "handoff/EXECUTOR_STATE.yaml": true
+  },
+  "state_consistency": {
+    "current_task_status_AWAITING_SUPERVISOR": true,
+    "executor_state_status_AWAITING_SUPERVISOR": true,
+    "project_state_points_to_current_task": true,
+    "project_state_points_to_executor_state": true,
+    "legacy_handoff_listed": true,
+    "MASK01_closed": true,
+    "PROP01_open": true,
+    "REF01_residual": true,
+    "no_auto_authorized_task": true,
+    "no_prop01_preauthorization": true,
+    "executor_neutral": true
+  },
+  "state_consistency_pass": true,
+  "current_task_status": "AWAITING_SUPERVISOR",
+  "product_paths_touched": [],
+  "legacy_handoff_kept": {
+    "handoff/TO_DSH.md": true,
+    "handoff/FROM_DSH.md": true
+  },
+  "scientific_state": {
+    "MASK-01": "CLOSED",
+    "PROP-01": "OPEN",
+    "REF-01": "RESIDUAL_LIMITATION",
+    "auto_started_tasks": []
+  },
+  "executor_neutral": true,
+  "chat_history_dependency": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_GOVERNANCE_V1_REMOTE_AUDIT"
+}
