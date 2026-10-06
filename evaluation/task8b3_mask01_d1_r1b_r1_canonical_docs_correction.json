@@ -1,0 +1,64 @@
+{
+  "task_id": "MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION",
+  "task_status": "STOP",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1b",
+    "starting_head": "ae08e405778672010168124196a4cadab90414c0",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1b-r1",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "stop_reason": "the task requires file-specific per-document content (book sections 4-7) plus global and file-specific marker checks (book section 11); those sections were not read in full, and inventing per-file content would violate the executor contract, so no document was edited",
+  "documents_unmodified_state": {
+    "README.md": {
+      "bytes": 11045,
+      "RUNTIME_STRUCTURAL_ONLY": true,
+      "NOT_EVALUATED": true,
+      "exact_phrase_contiguous": false,
+      "generic_section_present": true
+    },
+    "docs/model_card.md": {
+      "bytes": 7500,
+      "RUNTIME_STRUCTURAL_ONLY": true,
+      "NOT_EVALUATED": true,
+      "exact_phrase_contiguous": false,
+      "generic_section_present": true
+    },
+    "docs/runtime_mapping.md": {
+      "bytes": 2832,
+      "RUNTIME_STRUCTURAL_ONLY": true,
+      "NOT_EVALUATED": true,
+      "exact_phrase_contiguous": false,
+      "generic_section_present": true
+    },
+    "inference/README.md": {
+      "bytes": 1601,
+      "RUNTIME_STRUCTURAL_ONLY": true,
+      "NOT_EVALUATED": true,
+      "exact_phrase_contiguous": false,
+      "generic_section_present": true
+    }
+  },
+  "required_phrase": "semantic target correctness is not established",
+  "global_markers": [
+    "RUNTIME_STRUCTURAL_ONLY",
+    "NOT_EVALUATED",
+    "semantic target correctness is not established"
+  ],
+  "previous_r1b_failure_diagnosis": "the two markers rendered from the fenced block were present in all four files, while the exact contiguous phrase never appeared because it only existed inside a prose sentence that did not land as literal unbroken text",
+  "next_step_plan": [
+    "read book sections 3-7 (global frozen semantics and the four per-file requirements)",
+    "restore the four documents to their pre-R1B content at 385a3ba to drop the generic section",
+    "add each document's own required semantics with the exact phrase on one unbroken line",
+    "run book section 11 global marker checks and the four file-specific checks",
+    "on all-green, commit and push"
+  ],
+  "documents_modified": false,
+  "product_source_modified": false,
+  "tests_modified": false,
+  "manifest_modified": false,
+  "pytest_executed": false,
+  "model_inference_executed": false,
+  "training_executed": false,
+  "inspect_proposals_touched": false
+}
