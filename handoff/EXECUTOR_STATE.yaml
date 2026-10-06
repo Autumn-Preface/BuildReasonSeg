@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: audit/task8b3-a2-ground-truth-case-validity-v1
-head: c3a053d4fbee3df8f49a5c990e145d640c016ac6
+head: 0d86adc8d7d81684f894f287135065251d358e7d
 completed:
 - Required startup and remote anchor verified; task book installed byte-for-byte.
 - Phase A historical documentary search complete; no authoritative source/window recovered.
@@ -11,9 +11,18 @@ completed:
 - Exact-pixel plan predeclared before corpus search.
 - Phase C exact canonical tile and bounded whole-source patch search completed; coverage
   saved.
-current_step: CHECKPOINT_2_EXACT_SEARCH_NOT_ESTABLISHED
-next_action: CHECKPOINT_2_EXACT_SEARCH_NOT_ESTABLISHED
-tests_run: []
+- Deterministic saved-evidence validation complete; STOP for Supervisor audit.
+current_step: STOP_FOR_SUPERVISOR_AUDIT
+next_action: CHATGPT_A2_GT_CASE_VALIDITY_REMOTE_AUDIT
+tests_run:
+- Diagnostic syntax compile and module import PASS (-B; no bytecode writes).
+- Saved JSON parse, required fields/enums/guard assertions PASS.
+- Exact plan checkpoint predates search and all anchors remain frozen.
+- GT phase refuses saved non-exact provenance (no evidence changes).
+- Final allowed-path and whitespace diff audits PASS.
+- Locked A2 file and decoded RGB SHA256 rechecks PASS.
+- External RC1 and WHU path/size/mtime inventory unchanged; consulted identities unchanged.
+- Repeated finalize is deterministic and performs zero inference.
 files_modified:
 - docs/task8b3_a2_ground_truth_case_validity_audit_v1.md
 - evaluation/task8b3_a2_ground_truth_case_validity_audit_v1.json
@@ -25,7 +34,7 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: c3a053d4fbee3df8f49a5c990e145d640c016ac6
+  commit: 0d86adc8d7d81684f894f287135065251d358e7d
   pushed: true
 scientific_claim_scope: EXACT_OR_UNRESOLVED_A2_PROVENANCE_AND_CONDITIONAL_GT_CASE_VALIDITY_ONLY
 PROP01_status: OPEN

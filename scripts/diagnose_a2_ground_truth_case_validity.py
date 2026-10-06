@@ -178,6 +178,13 @@ def write_state(data, step, status="IN_PROGRESS"):
 
 def report(data):
     c = data.get("exact_search_coverage", {})
+    coverage_lines = "\n".join(
+        f"| {row['raster']} | {row.get('bytes_scanned', 0):,} / {row.get('bytes', 0):,} | {row.get('exact_patch_hits', 0)} | {row['status']} |"
+        for row in c.get("C3", []))
+    validation = data.get("validation", {})
+    check_lines = "\n".join(f"- {check}" for check in validation.get("checks", [])) or "Pending final validation."
+    inverse_checks = sum(row["physical_byte_to_pixel_inverse_checks"]
+                         for row in validation.get("decoder_byte_to_spatial_position_checks", []))
     text = f"""# A2 ground-truth and locked-case validity audit V1
 
 Task: {TASK}. Status: {data['status']}.
@@ -217,9 +224,23 @@ The two halves cover tile-boundary crossings; every candidate must pass full pat
 C4 requires complete in-bounds 1024 x 1024 RGB equality. No transformations, fuzzy matching,
 perceptual comparisons, threshold fitting or model calls are used.
 
-Search coverage: `{json.dumps(c, ensure_ascii=False)}`.
+C1/C2 indexed {c.get('C1', {}).get('tiles', 0):,} tiles: train1 10,044 / train2 3,618 / test 3,726.
+Quadrant matches: {c.get('C1', {}).get('matches', 'PENDING')}; interior-window matches: {c.get('C2', {}).get('matches', 'PENDING')}.
+
+| Whole source | File bytes scanned | Exact patch hits | Coverage |
+|---|---:|---:|---|
+{coverage_lines}
+
 Exact matches: {len(data['exact_matches'])}. Full-window records: {len(data['full_window_verification'])}.
-Limitations and unavailable-field reasons are saved explicitly in the JSON.
+Each whole-source decoder was checked against three fixed canonical source tiles, all pixel-identical.
+The initial diagnostic incorrectly assumed logical TIFF offsets were physically monotonic. The
+archive has nonmonotonic offsets in test/train2, with unique offsets and no physical block overlap.
+The L1 correction separates physical lookup order from logical tile order; mapping, anchors and
+equality rules remain fixed. The failure and deterministic retry are recorded in the JSON.
+No patch hit supplied a C4 candidate. Absence of an exact match does not establish outside-domain
+status, original site/sensor, train/val/test membership, or validity/invalidity of A2. Unknown GT
+count is null, not zero. Unknown historical image transformations were not searched.
+Unavailable-field reasons and source hashes are saved explicitly in the JSON.
 
 ## Conditional GT and frozen semantics
 
@@ -236,7 +257,11 @@ No overlay is created without exact GT-backed provenance.
 
 ## Validation and claim boundary
 
-Validation: {json.dumps(data.get('validation', {}), ensure_ascii=False)}.
+{check_lines}
+
+Physical-byte-to-spatial-position inverse checks: {inverse_checks:,} PASS; unaligned and
+tile-row-crossing anchors are rejected. Detailed commands/results are in the JSON.
+
 The audit makes no domain reclassification, detector improvement, semantic segmentation,
 PROP-01 closure or replacement-case claim. The accepted detector zero result is historical evidence;
 no inference is repeated. Only the authorized diagnostic, report, JSON and two handoff paths change.
@@ -599,6 +624,9 @@ def finalize():
     }
     assert required <= data.keys(), required - data.keys()
     assert data["exact_search_plan"] == PLAN and data.get("exact_search_plan_checkpoint")
+    original_plan = json.loads(git("show", f"{data['exact_search_plan_checkpoint']}:{EVIDENCE.relative_to(ROOT).as_posix()}"))
+    assert original_plan["exact_search_plan"] == data["exact_search_plan"]
+    assert original_plan["exact_search_anchors"] == data["exact_search_anchors"]
     assert git("branch", "--show-current") == BRANCH and git("merge-base", START, "HEAD") == START
     for key, values in ENUMS.items():
         assert data[key] in values, (key, data[key])
@@ -626,14 +654,19 @@ def finalize():
     changed.update(git("ls-files", "--others", "--exclude-standard").splitlines())
     assert changed <= ALLOWED, changed - ALLOWED
     assert not git("diff", "--check", START)
-    assert file_hash(A2) == LOCK and digest(rgb_locked().tobytes()) == data["locked_a2_decoded_rgb_sha256"]
+    locked = rgb_locked()
+    assert file_hash(A2) == LOCK and digest(locked.tobytes()) == data["locked_a2_decoded_rgb_sha256"]
+    for anchor in data["exact_search_anchors"]:
+        x, y, w, h = anchor["window"]
+        assert digest(locked[y:y+h, x:x+w].tobytes()) == anchor["decoded_rgb_sha256"]
     after = [inventory(EXTERNAL), inventory(WHU)]
     assert after == data["read_only_integrity_before"], "READ_ONLY_EXTERNAL_OR_WHU_INVENTORY_CHANGED"
     # Recheck every consulted source identity without running any historical script.
     for row in data["historical_sources_inspected"]:
         if row["commit"] is None:
             assert file_hash(row["source"]) == row["sha256"]
-    for row in data["relation_semantics_source"] + data["inspected_mapping_sources"]:
+    for row in (data["relation_semantics_source"] + data["inspected_mapping_sources"]
+                + data.get("inspected_native_vector_archive", {}).get("files", [])):
         assert file_hash(row["path"]) == row["sha256"]
     data["read_only_integrity_final"] = after
     data["validation"].update(checks=[

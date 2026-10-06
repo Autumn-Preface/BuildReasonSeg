@@ -5,7 +5,8 @@
     "Phase A historical documentary search complete; no authoritative source/window recovered.",
     "Phase B locked SHA256 and runtime/Pillow RGB equality verified.",
     "Exact-pixel plan predeclared before corpus search.",
-    "Phase C exact canonical tile and bounded whole-source patch search completed; coverage saved."
+    "Phase C exact canonical tile and bounded whole-source patch search completed; coverage saved.",
+    "Deterministic saved-evidence validation complete; STOP for Supervisor audit."
   ],
   "exact_matches": [],
   "exact_search_anchors": [
@@ -2429,9 +2430,42 @@
   "no_parameter_tuning": true,
   "no_product_change": true,
   "no_threshold_sweep": true,
+  "preflight": {
+    "fetch_completed": true,
+    "git_transport": "Existing app-bundled Git cmd/git.exe, GIT_EXEC_PATH=mingw64/bin; no repository Git config change, no dependency installation. System Git HTTPS helper/TLS failures preceded successful bundled fetch.",
+    "local_starting_branch": "fix/task8b3-detector-rgb-bgr-contract-v1",
+    "local_starting_head": "104bcde03ff8bedbd563a1c0eba6fe230f221dad",
+    "local_working_tree_clean": true,
+    "remote_predecessor_head_after_fetch": "104bcde03ff8bedbd563a1c0eba6fe230f221dad",
+    "remote_task_branch_absent_before_creation": true,
+    "startup_read_order": [
+      "AGENTS.md",
+      "governance/PROJECT_STATE.yaml",
+      "governance/DECISIONS.md",
+      "handoff/CURRENT_TASK.md",
+      "handoff/EXECUTOR_STATE.yaml"
+    ],
+    "task_branch_created_from_exact_required_head": true
+  },
   "prop01_interpretation_candidate": "PROP01_ROOT_CAUSE_REMAINS_UNRESOLVED",
   "provenance_status": "NOT_ESTABLISHED",
   "read_only_integrity_before": [
+    {
+      "definition": "SHA256 of sorted JSON [relative_path,bytes,mtime_ns] rows; read access time excluded",
+      "files": 2100,
+      "relative_path_size_mtime_ns_sha256": "360c17e958d0f124f6152f35beeaf466e86a0a56c15add8f8bcc5d9a4669fe0e",
+      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "total_bytes": 5329568950
+    },
+    {
+      "definition": "SHA256 of sorted JSON [relative_path,bytes,mtime_ns] rows; read access time excluded",
+      "files": 34797,
+      "relative_path_size_mtime_ns_sha256": "42d2bf1f665f452b8497c0aefa2b5edba2156c8bfe879bc75e7d48bf730dbf00",
+      "root": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)",
+      "total_bytes": 26469907989
+    }
+  ],
+  "read_only_integrity_final": [
     {
       "definition": "SHA256 of sorted JSON [relative_path,bytes,mtime_ns] rows; read access time excluded",
       "files": 2100,
@@ -2503,7 +2537,13 @@
   ],
   "starting_branch": "fix/task8b3-detector-rgb-bgr-contract-v1",
   "starting_head": "104bcde03ff8bedbd563a1c0eba6fe230f221dad",
-  "status": "IN_PROGRESS",
+  "status": "READY_FOR_SUPERVISOR_AUDIT",
+  "task_book_installation": {
+    "final_only_change": "First metadata Status: AUTHORIZED -> READY_FOR_SUPERVISOR_AUDIT; all other task-book bytes preserved.",
+    "initial_byte_for_byte_install_verified": true,
+    "original_file_sha256": "be376ed52c1c3e47f137912778c50f18a3eed6652334076efcfa41af22d14657",
+    "source_attachment": "C:\\Users\\ROG\\.codex\\attachments\\babdf22f-599f-443f-9da2-e9148de59f32\\已粘贴的文本.txt"
+  },
   "task_branch": "audit/task8b3-a2-ground-truth-case-validity-v1",
   "task_id": "A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1",
   "unavailable_fields_reason": "No exact full-window provenance; GT recovery/alignment/relation application are gated.",
@@ -2518,6 +2558,56 @@
     "resolved_source_window": "No exact full-window A2 provenance recovered; no GT association or relation calculation authorized."
   },
   "validation": {
+    "changed_paths": [
+      "docs/task8b3_a2_ground_truth_case_validity_audit_v1.md",
+      "evaluation/task8b3_a2_ground_truth_case_validity_audit_v1.json",
+      "handoff/CURRENT_TASK.md",
+      "handoff/EXECUTOR_STATE.yaml",
+      "scripts/diagnose_a2_ground_truth_case_validity.py"
+    ],
+    "checks": [
+      "Diagnostic syntax compile and module import PASS (-B; no bytecode writes).",
+      "Saved JSON parse, required fields/enums/guard assertions PASS.",
+      "Exact plan checkpoint predates search and all anchors remain frozen.",
+      "GT phase refuses saved non-exact provenance (no evidence changes).",
+      "Final allowed-path and whitespace diff audits PASS.",
+      "Locked A2 file and decoded RGB SHA256 rechecks PASS.",
+      "External RC1 and WHU path/size/mtime inventory unchanged; consulted identities unchanged.",
+      "Repeated finalize is deterministic and performs zero inference."
+    ],
+    "decoder_byte_to_spatial_position_checks": [
+      {
+        "logical_tiles": 61040,
+        "pass": true,
+        "physical_byte_to_pixel_inverse_checks": 244160,
+        "source_raster": "test.tif",
+        "unaligned_and_tile_row_crossing_offsets_rejected": true
+      },
+      {
+        "logical_tiles": 162846,
+        "pass": true,
+        "physical_byte_to_pixel_inverse_checks": 651384,
+        "source_raster": "train1.tif",
+        "unaligned_and_tile_row_crossing_offsets_rejected": true
+      },
+      {
+        "logical_tiles": 59296,
+        "pass": true,
+        "physical_byte_to_pixel_inverse_checks": 237184,
+        "source_raster": "train2.tif",
+        "unaligned_and_tile_row_crossing_offsets_rejected": true
+      }
+    ],
+    "external_and_whu_inventory_unchanged": true,
+    "finalize_zero_model_inference": true,
+    "gt_phase_refusal": "GT_REFUSED_NO_EXACT_FULL_WINDOW_PROVENANCE",
+    "gt_standalone_command_result": {
+      "command": "existing Python -B scripts/diagnose_a2_ground_truth_case_validity.py --phase gt",
+      "exit_code": 1,
+      "expected_refusal": true,
+      "output": "GT_REFUSED_NO_EXACT_FULL_WINDOW_PROVENANCE"
+    },
+    "repeated_finalize_byte_identical": true,
     "script_syntax_import_checkpoint2": "PASS: compile(source), runpy.run_path with non-main name; -B; no model imports"
   },
   "verified_starting_remote_head": "104bcde03ff8bedbd563a1c0eba6fe230f221dad"
