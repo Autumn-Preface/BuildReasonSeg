@@ -116,3 +116,32 @@ handoff/EXECUTOR_STATE.yaml
 ```
 
 and then inspect the actual Git branch / HEAD / diff before working. Actual source and Git state override stale prose.
+
+## 9. Git Authority and Idle Handoff Semantics (Governance V1.1)
+
+Actual Git branch / HEAD / diff are authoritative:
+
+```text
+actual git branch / HEAD / diff
+> stale branch/head metadata in handoff files
+```
+
+`EXECUTOR_STATE.branch`, `EXECUTOR_STATE.head`, and `last_checkpoint.commit` are
+observational/checkpoint metadata, not an alternate Git authority. They may be `null`
+when there is no meaningful active checkpoint. CURRENT_TASK Git fields likewise describe
+task/checkpoint metadata only.
+
+When `task_id = NONE` and `status = AWAITING_SUPERVISOR`, use the neutral idle state:
+
+```yaml
+branch: null
+head: null
+last_checkpoint:
+  commit: null
+  pushed: null
+```
+
+Repository anchor is not persisted while idle. Every Executor MUST resolve the actual
+branch and HEAD from Git at startup. Do not persist fabricated self-referential SHA
+placeholders as if they were real Git facts. Report actual local and remote final HEAD
+from Git after push; do not create an extra commit to write its own final SHA into itself.

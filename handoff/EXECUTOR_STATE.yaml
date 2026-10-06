@@ -2,24 +2,18 @@ schema_version: 1
 task_id: NONE
 status: AWAITING_SUPERVISOR
 executor: NONE
-branch: docs/governance-v1-executor-neutral-handoff
-head: POST_COMMIT_EXTERNAL_FACT
-
+branch: null
+head: null
 completed: []
 current_step: null
 next_action: null
-
 hypotheses: []
 tests_run: []
 files_modified: []
-
 uncommitted_changes: false
-
 blocked_on_supervisor: false
 block_reason: null
-
 decision_level_required: null
-
 last_checkpoint:
-  commit: POST_COMMIT_EXTERNAL_FACT
-  pushed: true
+  commit: null
+  pushed: null
