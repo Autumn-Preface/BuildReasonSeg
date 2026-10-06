@@ -1443,3 +1443,8 @@ L0 correction completed before use: existing writable TEMP/task8c-yolo-config-v1
 # FORMAL_FINAL_DEMO_FREEZE_V1 preparation
 
 Observed task HEAD: 3fac0e668c2af30b35bfae1ab8a3f36cee329e26. Freeze includes unchanged runner/evaluator/tests Git and working identities, accepted 42/42 and setup READY, 135/135 and external manifest MATCH, four locked TIFF identities/order/prompts/programs, all protected assets, historical output/input/log inventory, output inventory hash, grandfathered settings identity and exact verified writable outside-cache environment. The actual freeze commit will be obtained from Git after commit/push, not fabricated within its own content. Real attempts remain 0. Formal execution is forbidden until freeze push and subsequent identity verification succeed.
+
+
+# Formal runtime frozen — before GT audit
+
+Freeze commit 20615080264774eb7b93b7d6a3c1e547093c4876 was pushed and verified before the only runner invocation. Runner exit 0; right -> left -> above -> below, each once; all four processes exited. All four current production results record runtime SUCCESS, RUNTIME_STRUCTURAL_ONLY / NOT_EVALUATED. Runtime JSON, per-case output hashes and transcripts are frozen. No retry, replacement, reference override or proposal inspect. Native-vector GT has not been read. Raw runtime evidence checkpoint must be pushed before evaluator. Grandfathered settings unchanged; complete pre-existing external byte identities preserved; only four run roots and Task8C logs added.

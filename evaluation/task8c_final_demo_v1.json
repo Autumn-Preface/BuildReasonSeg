@@ -1,10 +1,10 @@
 {
   "task_id": "TASK8C_FINAL_DEMO_V1",
-  "status": "FORMAL_FREEZE_PREPARED",
+  "status": "FORMAL_RUNTIME_FROZEN_PENDING_GT",
   "starting_branch": "fix/task8b4-run-isolated-output-layout-v1",
   "starting_head": "92f28133931231d16b6053aca253b9e5073955ae",
   "task_branch": "eval/task8c-final-demo-v1",
-  "formal_freeze_commit": null,
+  "formal_freeze_commit": "20615080264774eb7b93b7d6a3c1e547093c4876",
   "scientific_reuse_disclosure": {
     "en": "The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.",
     "zh": "这些定性 Demo 候选是在 Task 7J 最终冻结架构测试指标已经被消耗之后，从冻结的 BuildSpatialReason v0.2 测试划分中确定性选取的。其定性复用不会改变、替换或重新选择任何已报告的 Task 7J 指标、模型、阈值、随机种子或架构。"
@@ -492,9 +492,2661 @@
       "harness_bytes_unchanged": true
     }
   ],
-  "formal_runner_invocation_count": 0,
-  "case_attempt_order": [],
-  "cases": [],
+  "formal_runner_invocation_count": 1,
+  "case_attempt_order": [
+    "right",
+    "left",
+    "above",
+    "below"
+  ],
+  "cases": [
+    {
+      "relation": "right",
+      "sample_id": "buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1010.tif",
+      "image_sha256": "1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2",
+      "prompt": "最大建筑右侧最近的建筑",
+      "expected_program": "largest_to_right_of_to_nearest",
+      "argv": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\predict.py",
+        "--image",
+        "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1010.tif",
+        "--prompt",
+        "最大建筑右侧最近的建筑",
+        "--confirm-command"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "wall_seconds": 21.328000000008615,
+      "timeout_seconds": 900.0,
+      "stdout": "[模型] buildreasonseg_advisor\r\nBuildReasonSeg Advisor RC1\r\nModel        : buildreasonseg_advisor\r\nDevice       : cuda\r\n\rLoading weights:   0%|          | 0/625 [00:00<?, ?it/s]\rLoading weights:   5%|▌         | 34/625 [00:00<00:01, 309.97it/s]\rLoading weights:  10%|█         | 65/625 [00:00<00:02, 225.24it/s]\rLoading weights:  14%|█▍        | 89/625 [00:00<00:03, 145.61it/s]\rLoading weights:  17%|█▋        | 107/625 [00:00<00:03, 143.61it/s]\rLoading weights:  20%|█▉        | 123/625 [00:00<00:03, 138.85it/s]\rLoading weights:  23%|██▎       | 143/625 [00:00<00:03, 134.41it/s]\rLoading weights:  25%|██▌       | 158/625 [00:01<00:03, 127.83it/s]\rLoading weights:  28%|██▊       | 172/625 [00:01<00:03, 114.53it/s]\rLoading weights:  29%|██▉       | 184/625 [00:01<00:03, 113.46it/s]\rLoading weights:  32%|███▏      | 197/625 [00:01<00:03, 111.10it/s]\rLoading weights:  33%|███▎      | 209/625 [00:01<00:03, 110.03it/s]\rLoading weights:  35%|███▌      | 221/625 [00:01<00:03, 101.58it/s]\rLoading weights:  37%|███▋      | 232/625 [00:01<00:03, 102.86it/s]\rLoading weights:  41%|████▏     | 258/625 [00:01<00:02, 141.15it/s]\rLoading weights:  46%|████▌     | 288/625 [00:02<00:01, 180.49it/s]\rLoading weights:  53%|█████▎    | 334/625 [00:02<00:01, 247.56it/s]\rLoading weights:  60%|██████    | 377/625 [00:02<00:00, 296.86it/s]\rLoading weights:  65%|██████▌   | 408/625 [00:02<00:00, 250.01it/s]\rLoading weights: 100%|██████████| 625/625 [00:02<00:00, 256.55it/s]\r\n[语言] Qwen / ProgramHead  置信度 1.000\r\n[解析] largest_to_right_of   (largest_to_right_of)\r\n当前解析结果不属于 RC1 已开放的四类空间推理语义。\r\n第一次解析：largest_to_right_of   (largest_to_right_of)\r\nQwen 建议的可支持替代指令：\r\n“最大建筑右侧最近的建筑”\r\n（理由：用户指令为‘最大建筑右侧最近的建筑’，系统第一次解析结果为‘largest_to_right_of’，该程序已支持‘右侧最近’的查找，因此无需额外处理，直接使用该程序即可。）\r\n建议程序：largest -> right_of -> nearest\r\n是否使用建议指令继续？ [Y/N]: Language     : Qwen / ProgramHead\r\nParsed       : largest -> right_of -> nearest\r\nMode         : AUTOMATIC\r\nCreating new Ultralytics Settings v0.0.8 file  \r\nView Ultralytics Settings with 'yolo settings' or at 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-yolo-config-v1\\Ultralytics\\settings.json'\r\nUpdate Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/usage/settings.\r\nResult       : SUCCESS\r\nValidity     : RUNTIME_STRUCTURAL_ONLY\r\nSemantic     : NOT_EVALUATED\r\nNote         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.\r\n\r\nMask         : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\masks\\1010_mask.png\r\nOverlay      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\overlays\\1010_overlay.png\r\nDiagnostics  : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\r\nReference ID : 3\r\nMask area    : 415\r\n",
+      "initial_program": "largest_to_right_of",
+      "initial_confidence": 0.9999436140060425,
+      "suggested_program": "largest_to_right_of_to_nearest",
+      "driver_decision": [
+        {
+          "kind": "suggestion",
+          "observed_program": "largest_to_right_of_to_nearest",
+          "answer": "Y",
+          "language_status": "SUGGESTION_CORRECT"
+        }
+      ],
+      "language_status": "SUGGESTION_CORRECT",
+      "language_expected_program_executed": true,
+      "initial_confidence_display": 1.0,
+      "runtime_status": "SUCCESS",
+      "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+      "semantic_status": "NOT_EVALUATED",
+      "error_code": null,
+      "error_reason": null,
+      "run_root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010",
+      "mask_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\masks\\1010_mask.png",
+      "overlay_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\overlays\\1010_overlay.png",
+      "diagnostics_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics",
+      "runtime_payload": {
+        "status": "SUCCESS",
+        "input_path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1010.tif",
+        "input_size": [
+          512,
+          512
+        ],
+        "input_dtype": "uint8",
+        "input_channels": 3,
+        "input_mode": "RGB",
+        "notes": [],
+        "model_package": "buildreasonseg_advisor",
+        "device": "cuda",
+        "prompt": "最大建筑右侧最近的建筑",
+        "language_mode": "qwen",
+        "confidence": 0.9999436140060425,
+        "score_source": "top1_softmax_from_program_head_logits",
+        "top5": [],
+        "original_prompt": "最大建筑右侧最近的建筑",
+        "initial_program": "largest_to_right_of",
+        "initial_supported": false,
+        "suggestion_used": true,
+        "suggested_program": "largest_to_right_of_to_nearest",
+        "suggestion_display_command": "最大建筑右侧最近的建筑",
+        "user_confirmation": "Y",
+        "parsed": {
+          "program": "largest_to_right_of_to_nearest",
+          "source": "qwen_program_head",
+          "confidence": null,
+          "supported": true,
+          "suggestion": "最大建筑右侧最近的建筑"
+        },
+        "suggestion_trace": {
+          "suggestion_status": "SUGGESTION",
+          "suggested_program": "largest_to_right_of_to_nearest",
+          "suggestion_validator_pass": true,
+          "suggestion_display_command": "最大建筑右侧最近的建筑"
+        },
+        "tile_size": 512,
+        "overlap": 128,
+        "tile_count": 1,
+        "raw_proposal_count": 7,
+        "merged_proposal_count": 6,
+        "proposals": {
+          "count": 6,
+          "items": [
+            {
+              "proposal_id": 0,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6743538975715637,
+              "mask_area": 727,
+              "global_bbox": [
+                0,
+                40,
+                30,
+                73
+              ],
+              "centroid": [
+                12.548830811554334,
+                54.77991746905089
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.06640625,
+              "raw_index": 2
+            },
+            {
+              "proposal_id": 1,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6900287866592407,
+              "mask_area": 1557,
+              "global_bbox": [
+                16,
+                206,
+                79,
+                233
+              ],
+              "centroid": [
+                47.092485549132945,
+                219.14065510597302
+              ],
+              "touches_image_border": false,
+              "border_clearance": 16.0,
+              "bbox_extent_ratio": 0.125,
+              "raw_index": 1
+            },
+            {
+              "proposal_id": 2,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.661760687828064,
+              "mask_area": 1379,
+              "global_bbox": [
+                31,
+                426,
+                84,
+                475
+              ],
+              "centroid": [
+                57.3313995649021,
+                450.3335750543872
+              ],
+              "touches_image_border": false,
+              "border_clearance": 31.0,
+              "bbox_extent_ratio": 0.10546875,
+              "raw_index": 3
+            },
+            {
+              "proposal_id": 3,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.08532894402742386,
+              "mask_area": 2909,
+              "global_bbox": [
+                26,
+                415,
+                122,
+                478
+              ],
+              "centroid": [
+                71.33551048470264,
+                446.0233757304916
+              ],
+              "touches_image_border": false,
+              "border_clearance": 26.0,
+              "bbox_extent_ratio": 0.189453125,
+              "raw_index": 5
+            },
+            {
+              "proposal_id": 4,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.20093697309494019,
+              "mask_area": 438,
+              "global_bbox": [
+                93,
+                437,
+                121,
+                462
+              ],
+              "centroid": [
+                107.37214611872146,
+                448.93150684931504
+              ],
+              "touches_image_border": false,
+              "border_clearance": 49.0,
+              "bbox_extent_ratio": 0.056640625,
+              "raw_index": 4
+            },
+            {
+              "proposal_id": 5,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.7126519680023193,
+              "mask_area": 858,
+              "global_bbox": [
+                88,
+                1,
+                139,
+                29
+              ],
+              "centroid": [
+                109.45337995337995,
+                12.034965034965035
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.1015625,
+              "raw_index": 0
+            }
+          ]
+        },
+        "parsed_reference_selector": "largest",
+        "effective_reference_id": 3,
+        "reference_override": false,
+        "reference_mode": "automatic",
+        "reference_id": 3,
+        "reference_area": 2909,
+        "reference_confidence": 0.08532894402742386,
+        "reference_bbox": [
+          26,
+          415,
+          122,
+          478
+        ],
+        "directional_guard": {
+          "direction": "right_of",
+          "candidate_count": 2,
+          "inside_context": 2,
+          "candidate_ids": [
+            2,
+            4
+          ]
+        },
+        "reasoning_context": {
+          "origin": [
+            292,
+            -185
+          ],
+          "size": 512,
+          "direction": "right_of",
+          "anchor_in_context": [
+            154,
+            256
+          ],
+          "reference_centroid_global": [
+            71.33551048470264,
+            446.0233757304916
+          ],
+          "padding": {
+            "top": 185,
+            "bottom": 0,
+            "left": 0,
+            "right": 292,
+            "origin_top": -185,
+            "origin_left": 292,
+            "mode": "reflect",
+            "applied": true
+          },
+          "reference_too_large": false,
+          "notes": []
+        },
+        "direction": "right_of",
+        "mask_area": 415,
+        "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+        "semantic_status": "NOT_EVALUATED",
+        "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
+        "target_centroid": [
+          70.80481927710844,
+          503.6265060240964
+        ],
+        "context_padding": {
+          "top": 185,
+          "left": 0,
+          "bottom": 0,
+          "right": 292,
+          "applied": true
+        },
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\masks\\1010_mask.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\overlays\\1010_overlay.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics"
+        },
+        "field_mass": 51.71626281738281,
+        "timings": {
+          "language": 0.0,
+          "detector": 0.847,
+          "merge": 0.0,
+          "sam2": 1.126,
+          "relation_fields": 0.126,
+          "db1": 0.261,
+          "total": 2.532
+        }
+      },
+      "artifacts": [
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\direction_field.png",
+          "bytes": 699,
+          "sha256": "c52f8ab114aa74e576457335d1bd0ce3870e0fd0dbc4c4d5e4b42bf12c9c0ece"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\global_proposals.png",
+          "bytes": 307664,
+          "sha256": "33bfe217377dde3927e22ee56fe30e70078d712e319cc927789fa523bd3436bd"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\maps.npz",
+          "bytes": 1414558,
+          "sha256": "4520d9be205560b0229f8fd8f9367e3af80aa859bedda5c27396daee1b474fea"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\nearest_field.png",
+          "bytes": 1152,
+          "sha256": "bf7ae27f9d4a3baf7bfb8911a950da010c275b743ac85a61ce9f414087a944bc"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\parsed_program.json",
+          "bytes": 179,
+          "sha256": "95377bce704a32df4f4087e74c243bf727acc5f0d3e579e06a83cb90382e5bfa"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\prompt.txt",
+          "bytes": 33,
+          "sha256": "7ab1676ef9bc6bf8a263606c868a2865d2b2b2e6f21968c0e818aa55de96f71c"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\proposals.json",
+          "bytes": 2410,
+          "sha256": "bad8c110c9e7a41947d56822f94024e883f3d61654f3d9f4d8ce5a949dd05d3b"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\prototype_similarity.png",
+          "bytes": 3651,
+          "sha256": "77d5640280f7278495f93e0e11621338a1e3b995f8d2f478b1b6cafea4826ae6"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\reasoning_context.png",
+          "bytes": 262126,
+          "sha256": "7d6a88d09d8cf0d0478c0a79efb0dd1fa981039f78d9005a3b403856f9ce57d9"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\reference_context_mask.png",
+          "bytes": 805,
+          "sha256": "0900a8154913396122ef1d16bd652971caaeaaf8d9b0c2f7b0efc1ba518b89b4"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\relation_weight.png",
+          "bytes": 646,
+          "sha256": "304bbad3dc6a77c43f06d1c50f848ffb9eecb45d7573ce145921d4aab58cc717"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\result.json",
+          "bytes": 5915,
+          "sha256": "872a6cb16a488958385a43d62945f3524bcd9ed2e8515d389a9a0f3ff5c0d6f4"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\diagnostics\\selected_reference.png",
+          "bytes": 307664,
+          "sha256": "33bfe217377dde3927e22ee56fe30e70078d712e319cc927789fa523bd3436bd"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\masks\\1010_mask.png",
+          "bytes": 517,
+          "sha256": "c6c926801fc34f3a69e0f1aa09fb13fe688abdf750a9f403b995fac3e2d2807e"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1010\\overlays\\1010_overlay.png",
+          "bytes": 306171,
+          "sha256": "abac7e84e97a15aeb485eb417a4b5c2e6167a7ea6b002267866adb1bdf5038f1"
+        }
+      ],
+      "raw_proposal_count": 7,
+      "merged_proposal_count": 6,
+      "tile_count": 1,
+      "reference_mode": "automatic",
+      "reference_id": 3,
+      "reference_area": 2909,
+      "reference_confidence": 0.08532894402742386,
+      "reference_bbox": [
+        26,
+        415,
+        122,
+        478
+      ],
+      "direction": "right_of",
+      "reasoning_context": {
+        "origin": [
+          292,
+          -185
+        ],
+        "size": 512,
+        "direction": "right_of",
+        "anchor_in_context": [
+          154,
+          256
+        ],
+        "reference_centroid_global": [
+          71.33551048470264,
+          446.0233757304916
+        ],
+        "padding": {
+          "top": 185,
+          "bottom": 0,
+          "left": 0,
+          "right": 292,
+          "origin_top": -185,
+          "origin_left": 292,
+          "mode": "reflect",
+          "applied": true
+        },
+        "reference_too_large": false,
+        "notes": []
+      },
+      "mask_area": 415,
+      "target_centroid": [
+        70.80481927710844,
+        503.6265060240964
+      ],
+      "timings": {
+        "language": 0.0,
+        "detector": 0.847,
+        "merge": 0.0,
+        "sam2": 1.126,
+        "relation_fields": 0.126,
+        "db1": 0.261,
+        "total": 2.532
+      },
+      "transcript_identity": {
+        "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\right_stdout.txt",
+        "bytes": 3306,
+        "sha256": "bdcbdb097b14e1820114be76d50003a39e093f229a5e9f53d6f9293448848ce8"
+      }
+    },
+    {
+      "relation": "left",
+      "sample_id": "buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1003.tif",
+      "image_sha256": "eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38",
+      "prompt": "最大建筑左侧最近的建筑",
+      "expected_program": "largest_to_left_of_to_nearest",
+      "argv": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\predict.py",
+        "--image",
+        "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1003.tif",
+        "--prompt",
+        "最大建筑左侧最近的建筑",
+        "--confirm-command"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "wall_seconds": 15.781000000002678,
+      "timeout_seconds": 900.0,
+      "stdout": "[模型] buildreasonseg_advisor\r\nBuildReasonSeg Advisor RC1\r\nModel        : buildreasonseg_advisor\r\nDevice       : cuda\r\n\rLoading weights:   0%|          | 0/625 [00:00<?, ?it/s]\rLoading weights:   2%|▏         | 10/625 [00:00<00:06, 97.95it/s]\rLoading weights:   3%|▎         | 20/625 [00:00<00:09, 66.96it/s]\rLoading weights:   5%|▍         | 30/625 [00:00<00:08, 73.89it/s]\rLoading weights:   6%|▌         | 39/625 [00:00<00:07, 78.12it/s]\rLoading weights:   8%|▊         | 49/625 [00:00<00:07, 81.49it/s]\rLoading weights:  14%|█▍        | 88/625 [00:00<00:03, 166.27it/s]\rLoading weights:  21%|██▏       | 133/625 [00:00<00:02, 201.32it/s]\rLoading weights:  24%|██▍       | 153/625 [00:01<00:02, 184.45it/s]\rLoading weights:  28%|██▊       | 172/625 [00:01<00:03, 150.09it/s]\rLoading weights:  30%|███       | 188/625 [00:01<00:02, 146.29it/s]\rLoading weights:  33%|███▎      | 209/625 [00:01<00:02, 158.85it/s]\rLoading weights:  42%|████▏     | 260/625 [00:01<00:01, 244.64it/s]\rLoading weights:  46%|████▌     | 288/625 [00:01<00:01, 248.90it/s]\rLoading weights:  52%|█████▏    | 326/625 [00:01<00:01, 279.67it/s]\rLoading weights:  69%|██████▊   | 429/625 [00:01<00:00, 467.36it/s]\rLoading weights:  76%|███████▋  | 477/625 [00:02<00:00, 461.40it/s]\rLoading weights: 100%|██████████| 625/625 [00:02<00:00, 310.34it/s]\r\n[语言] Qwen / ProgramHead  置信度 0.999\r\n[解析] largest_to_left_of   (largest_to_left_of)\r\n当前解析结果不属于 RC1 已开放的四类空间推理语义。\r\n第一次解析：largest_to_left_of   (largest_to_left_of)\r\nQwen 建议的可支持替代指令：\r\n“最大建筑左侧最近的建筑”\r\n（理由：用户指令为‘最大建筑左侧最近的建筑’，系统第一次解析结果为‘largest_to_left_of’，该程序已支持，且符合用户意图。）\r\n建议程序：largest -> left_of -> nearest\r\n是否使用建议指令继续？ [Y/N]: Language     : Qwen / ProgramHead\r\nParsed       : largest -> left_of -> nearest\r\nMode         : AUTOMATIC\r\nResult       : SUCCESS\r\nValidity     : RUNTIME_STRUCTURAL_ONLY\r\nSemantic     : NOT_EVALUATED\r\nNote         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.\r\n\r\nMask         : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\masks\\1003_mask.png\r\nOverlay      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\overlays\\1003_overlay.png\r\nDiagnostics  : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\r\nReference ID : 11\r\nMask area    : 1627\r\n",
+      "initial_program": "largest_to_left_of",
+      "initial_confidence": 0.9991422891616821,
+      "suggested_program": "largest_to_left_of_to_nearest",
+      "driver_decision": [
+        {
+          "kind": "suggestion",
+          "observed_program": "largest_to_left_of_to_nearest",
+          "answer": "Y",
+          "language_status": "SUGGESTION_CORRECT"
+        }
+      ],
+      "language_status": "SUGGESTION_CORRECT",
+      "language_expected_program_executed": true,
+      "initial_confidence_display": 0.999,
+      "runtime_status": "SUCCESS",
+      "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+      "semantic_status": "NOT_EVALUATED",
+      "error_code": null,
+      "error_reason": null,
+      "run_root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003",
+      "mask_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\masks\\1003_mask.png",
+      "overlay_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\overlays\\1003_overlay.png",
+      "diagnostics_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics",
+      "runtime_payload": {
+        "status": "SUCCESS",
+        "input_path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1003.tif",
+        "input_size": [
+          512,
+          512
+        ],
+        "input_dtype": "uint8",
+        "input_channels": 3,
+        "input_mode": "RGB",
+        "notes": [],
+        "model_package": "buildreasonseg_advisor",
+        "device": "cuda",
+        "prompt": "最大建筑左侧最近的建筑",
+        "language_mode": "qwen",
+        "confidence": 0.9991422891616821,
+        "score_source": "top1_softmax_from_program_head_logits",
+        "top5": [],
+        "original_prompt": "最大建筑左侧最近的建筑",
+        "initial_program": "largest_to_left_of",
+        "initial_supported": false,
+        "suggestion_used": true,
+        "suggested_program": "largest_to_left_of_to_nearest",
+        "suggestion_display_command": "最大建筑左侧最近的建筑",
+        "user_confirmation": "Y",
+        "parsed": {
+          "program": "largest_to_left_of_to_nearest",
+          "source": "qwen_program_head",
+          "confidence": null,
+          "supported": true,
+          "suggestion": "最大建筑左侧最近的建筑"
+        },
+        "suggestion_trace": {
+          "suggestion_status": "SUGGESTION",
+          "suggested_program": "largest_to_left_of_to_nearest",
+          "suggestion_validator_pass": true,
+          "suggestion_display_command": "最大建筑左侧最近的建筑"
+        },
+        "tile_size": 512,
+        "overlap": 128,
+        "tile_count": 1,
+        "raw_proposal_count": 59,
+        "merged_proposal_count": 46,
+        "proposals": {
+          "count": 46,
+          "items": [
+            {
+              "proposal_id": 0,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.15000751614570618,
+              "mask_area": 55,
+              "global_bbox": [
+                1,
+                187,
+                4,
+                204
+              ],
+              "centroid": [
+                2.1454545454545455,
+                196.85454545454544
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.03515625,
+              "raw_index": 38
+            },
+            {
+              "proposal_id": 1,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.11014381051063538,
+              "mask_area": 78,
+              "global_bbox": [
+                0,
+                106,
+                6,
+                118
+              ],
+              "centroid": [
+                2.576923076923077,
+                111.84615384615384
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.025390625,
+              "raw_index": 43
+            },
+            {
+              "proposal_id": 2,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.2114594429731369,
+              "mask_area": 177,
+              "global_bbox": [
+                1,
+                186,
+                9,
+                220
+              ],
+              "centroid": [
+                3.3559322033898304,
+                205.819209039548
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.068359375,
+              "raw_index": 34
+            },
+            {
+              "proposal_id": 3,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6082973480224609,
+              "mask_area": 1080,
+              "global_bbox": [
+                1,
+                8,
+                29,
+                67
+              ],
+              "centroid": [
+                11.766666666666667,
+                39.925
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.1171875,
+              "raw_index": 15
+            },
+            {
+              "proposal_id": 4,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6300098299980164,
+              "mask_area": 890,
+              "global_bbox": [
+                1,
+                378,
+                31,
+                425
+              ],
+              "centroid": [
+                11.965168539325843,
+                403.2808988764045
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.09375,
+              "raw_index": 13
+            },
+            {
+              "proposal_id": 5,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6577160358428955,
+              "mask_area": 1585,
+              "global_bbox": [
+                0,
+                282,
+                41,
+                349
+              ],
+              "centroid": [
+                15.900946372239748,
+                310.2454258675079
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.1328125,
+              "raw_index": 9
+            },
+            {
+              "proposal_id": 6,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5783752799034119,
+              "mask_area": 1876,
+              "global_bbox": [
+                10,
+                81,
+                52,
+                141
+              ],
+              "centroid": [
+                28.26279317697228,
+                110.58368869936034
+              ],
+              "touches_image_border": false,
+              "border_clearance": 10.0,
+              "bbox_extent_ratio": 0.119140625,
+              "raw_index": 19
+            },
+            {
+              "proposal_id": 7,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.26592323184013367,
+              "mask_area": 326,
+              "global_bbox": [
+                21,
+                238,
+                37,
+                263
+              ],
+              "centroid": [
+                28.598159509202453,
+                250.0
+              ],
+              "touches_image_border": false,
+              "border_clearance": 21.0,
+              "bbox_extent_ratio": 0.05078125,
+              "raw_index": 31
+            },
+            {
+              "proposal_id": 8,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.09197808057069778,
+              "mask_area": 371,
+              "global_bbox": [
+                37,
+                226,
+                56,
+                253
+              ],
+              "centroid": [
+                46.39353099730458,
+                238.66846361185983
+              ],
+              "touches_image_border": false,
+              "border_clearance": 37.0,
+              "bbox_extent_ratio": 0.0546875,
+              "raw_index": 48
+            },
+            {
+              "proposal_id": 9,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6798925995826721,
+              "mask_area": 2203,
+              "global_bbox": [
+                22,
+                146,
+                74,
+                210
+              ],
+              "centroid": [
+                48.39128461189287,
+                176.91602360417613
+              ],
+              "touches_image_border": false,
+              "border_clearance": 22.0,
+              "bbox_extent_ratio": 0.126953125,
+              "raw_index": 4
+            },
+            {
+              "proposal_id": 10,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.46626871824264526,
+              "mask_area": 650,
+              "global_bbox": [
+                30,
+                490,
+                69,
+                511
+              ],
+              "centroid": [
+                49.02153846153846,
+                502.7076923076923
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.078125,
+              "raw_index": 25
+            },
+            {
+              "proposal_id": 11,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6758344173431396,
+              "mask_area": 3484,
+              "global_bbox": [
+                16,
+                297,
+                93,
+                381
+              ],
+              "centroid": [
+                53.85132032146957,
+                339.784730195178
+              ],
+              "touches_image_border": false,
+              "border_clearance": 16.0,
+              "bbox_extent_ratio": 0.166015625,
+              "raw_index": 5
+            },
+            {
+              "proposal_id": 12,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.0945870503783226,
+              "mask_area": 1313,
+              "global_bbox": [
+                31,
+                488,
+                105,
+                511
+              ],
+              "centroid": [
+                67.42726580350342,
+                502.3929931454684
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.146484375,
+              "raw_index": 47
+            },
+            {
+              "proposal_id": 13,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.3868725299835205,
+              "mask_area": 850,
+              "global_bbox": [
+                49,
+                212,
+                89,
+                244
+              ],
+              "centroid": [
+                67.96941176470588,
+                226.72588235294117
+              ],
+              "touches_image_border": false,
+              "border_clearance": 49.0,
+              "bbox_extent_ratio": 0.080078125,
+              "raw_index": 28
+            },
+            {
+              "proposal_id": 14,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6738383769989014,
+              "mask_area": 2230,
+              "global_bbox": [
+                66,
+                239,
+                137,
+                299
+              ],
+              "centroid": [
+                102.24887892376682,
+                268.190134529148
+              ],
+              "touches_image_border": false,
+              "border_clearance": 66.0,
+              "bbox_extent_ratio": 0.140625,
+              "raw_index": 6
+            },
+            {
+              "proposal_id": 15,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5689907073974609,
+              "mask_area": 1016,
+              "global_bbox": [
+                92,
+                388,
+                136,
+                429
+              ],
+              "centroid": [
+                113.78346456692913,
+                408.03543307086613
+              ],
+              "touches_image_border": false,
+              "border_clearance": 82.0,
+              "bbox_extent_ratio": 0.087890625,
+              "raw_index": 21
+            },
+            {
+              "proposal_id": 16,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5419962406158447,
+              "mask_area": 1436,
+              "global_bbox": [
+                131,
+                404,
+                181,
+                452
+              ],
+              "centroid": [
+                156.75766016713092,
+                428.3760445682451
+              ],
+              "touches_image_border": false,
+              "border_clearance": 59.0,
+              "bbox_extent_ratio": 0.099609375,
+              "raw_index": 22
+            },
+            {
+              "proposal_id": 17,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.7156765460968018,
+              "mask_area": 1562,
+              "global_bbox": [
+                130,
+                322,
+                184,
+                378
+              ],
+              "centroid": [
+                157.99935979513444,
+                349.92573623559537
+              ],
+              "touches_image_border": false,
+              "border_clearance": 130.0,
+              "bbox_extent_ratio": 0.111328125,
+              "raw_index": 0
+            },
+            {
+              "proposal_id": 18,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.055983979254961014,
+              "mask_area": 310,
+              "global_bbox": [
+                152,
+                387,
+                173,
+                408
+              ],
+              "centroid": [
+                163.01290322580644,
+                397.0
+              ],
+              "touches_image_border": false,
+              "border_clearance": 103.0,
+              "bbox_extent_ratio": 0.04296875,
+              "raw_index": 58
+            },
+            {
+              "proposal_id": 19,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.07008320093154907,
+              "mask_area": 542,
+              "global_bbox": [
+                173,
+                438,
+                201,
+                473
+              ],
+              "centroid": [
+                187.30258302583024,
+                455.42435424354244
+              ],
+              "touches_image_border": false,
+              "border_clearance": 38.0,
+              "bbox_extent_ratio": 0.0703125,
+              "raw_index": 54
+            },
+            {
+              "proposal_id": 20,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.2193981558084488,
+              "mask_area": 785,
+              "global_bbox": [
+                174,
+                285,
+                215,
+                322
+              ],
+              "centroid": [
+                193.64968152866243,
+                303.20382165605093
+              ],
+              "touches_image_border": false,
+              "border_clearance": 174.0,
+              "bbox_extent_ratio": 0.08203125,
+              "raw_index": 33
+            },
+            {
+              "proposal_id": 21,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.1427881419658661,
+              "mask_area": 671,
+              "global_bbox": [
+                206,
+                311,
+                243,
+                346
+              ],
+              "centroid": [
+                224.67809239940388,
+                328.80029806259313
+              ],
+              "touches_image_border": false,
+              "border_clearance": 165.0,
+              "bbox_extent_ratio": 0.07421875,
+              "raw_index": 39
+            },
+            {
+              "proposal_id": 22,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.09953903406858444,
+              "mask_area": 5635,
+              "global_bbox": [
+                174,
+                246,
+                277,
+                362
+              ],
+              "centroid": [
+                228.01153504880213,
+                302.6452528837622
+              ],
+              "touches_image_border": false,
+              "border_clearance": 149.0,
+              "bbox_extent_ratio": 0.228515625,
+              "raw_index": 45
+            },
+            {
+              "proposal_id": 23,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6049254536628723,
+              "mask_area": 2065,
+              "global_bbox": [
+                207,
+                247,
+                271,
+                305
+              ],
+              "centroid": [
+                239.99225181598064,
+                276.2363196125908
+              ],
+              "touches_image_border": false,
+              "border_clearance": 206.0,
+              "bbox_extent_ratio": 0.126953125,
+              "raw_index": 16
+            },
+            {
+              "proposal_id": 24,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.66657555103302,
+              "mask_area": 2721,
+              "global_bbox": [
+                210,
+                406,
+                287,
+                472
+              ],
+              "centroid": [
+                249.90628445424477,
+                438.5251745681735
+              ],
+              "touches_image_border": false,
+              "border_clearance": 39.0,
+              "bbox_extent_ratio": 0.15234375,
+              "raw_index": 8
+            },
+            {
+              "proposal_id": 25,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.4776691496372223,
+              "mask_area": 1768,
+              "global_bbox": [
+                243,
+                190,
+                309,
+                242
+              ],
+              "centroid": [
+                270.8410633484163,
+                217.69966063348417
+              ],
+              "touches_image_border": false,
+              "border_clearance": 190.0,
+              "bbox_extent_ratio": 0.130859375,
+              "raw_index": 23
+            },
+            {
+              "proposal_id": 26,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.08549492806196213,
+              "mask_area": 5372,
+              "global_bbox": [
+                234,
+                156,
+                357,
+                255
+              ],
+              "centroid": [
+                291.65282948622485,
+                206.61280714817573
+              ],
+              "touches_image_border": false,
+              "border_clearance": 154.0,
+              "bbox_extent_ratio": 0.2421875,
+              "raw_index": 51
+            },
+            {
+              "proposal_id": 27,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.598155677318573,
+              "mask_area": 1744,
+              "global_bbox": [
+                291,
+                157,
+                357,
+                215
+              ],
+              "centroid": [
+                322.61467889908255,
+                184.67545871559633
+              ],
+              "touches_image_border": false,
+              "border_clearance": 154.0,
+              "bbox_extent_ratio": 0.130859375,
+              "raw_index": 17
+            },
+            {
+              "proposal_id": 28,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6376790404319763,
+              "mask_area": 2414,
+              "global_bbox": [
+                286,
+                309,
+                357,
+                377
+              ],
+              "centroid": [
+                323.67439933719965,
+                341.9225352112676
+              ],
+              "touches_image_border": false,
+              "border_clearance": 134.0,
+              "bbox_extent_ratio": 0.140625,
+              "raw_index": 11
+            },
+            {
+              "proposal_id": 29,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.1293332874774933,
+              "mask_area": 381,
+              "global_bbox": [
+                318,
+                279,
+                344,
+                302
+              ],
+              "centroid": [
+                330.82152230971127,
+                290.43832020997377
+              ],
+              "touches_image_border": false,
+              "border_clearance": 167.0,
+              "bbox_extent_ratio": 0.052734375,
+              "raw_index": 41
+            },
+            {
+              "proposal_id": 30,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6368457674980164,
+              "mask_area": 1278,
+              "global_bbox": [
+                327,
+                250,
+                379,
+                297
+              ],
+              "centroid": [
+                352.9366197183099,
+                273.48982785602504
+              ],
+              "touches_image_border": false,
+              "border_clearance": 132.0,
+              "bbox_extent_ratio": 0.103515625,
+              "raw_index": 12
+            },
+            {
+              "proposal_id": 31,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.10675060003995895,
+              "mask_area": 441,
+              "global_bbox": [
+                342,
+                359,
+                370,
+                397
+              ],
+              "centroid": [
+                356.5827664399093,
+                377.8843537414966
+              ],
+              "touches_image_border": false,
+              "border_clearance": 114.0,
+              "bbox_extent_ratio": 0.076171875,
+              "raw_index": 44
+            },
+            {
+              "proposal_id": 32,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5751488208770752,
+              "mask_area": 767,
+              "global_bbox": [
+                338,
+                490,
+                389,
+                511
+              ],
+              "centroid": [
+                358.3924380704042,
+                503.0456323337679
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.1015625,
+              "raw_index": 20
+            },
+            {
+              "proposal_id": 33,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.0662047266960144,
+              "mask_area": 2567,
+              "global_bbox": [
+                325,
+                228,
+                405,
+                293
+              ],
+              "centroid": [
+                367.5968056096611,
+                261.70588235294116
+              ],
+              "touches_image_border": false,
+              "border_clearance": 106.0,
+              "bbox_extent_ratio": 0.158203125,
+              "raw_index": 55
+            },
+            {
+              "proposal_id": 34,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.2590019702911377,
+              "mask_area": 1065,
+              "global_bbox": [
+                358,
+                232,
+                405,
+                270
+              ],
+              "centroid": [
+                381.76431924882627,
+                250.88262910798122
+              ],
+              "touches_image_border": false,
+              "border_clearance": 106.0,
+              "bbox_extent_ratio": 0.09375,
+              "raw_index": 32
+            },
+            {
+              "proposal_id": 35,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6731708645820618,
+              "mask_area": 934,
+              "global_bbox": [
+                364,
+                455,
+                410,
+                488
+              ],
+              "centroid": [
+                386.5203426124197,
+                470.6509635974304
+              ],
+              "touches_image_border": false,
+              "border_clearance": 23.0,
+              "bbox_extent_ratio": 0.091796875,
+              "raw_index": 7
+            },
+            {
+              "proposal_id": 36,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.685554027557373,
+              "mask_area": 2402,
+              "global_bbox": [
+                353,
+                93,
+                423,
+                157
+              ],
+              "centroid": [
+                389.4167360532889,
+                123.95129059117403
+              ],
+              "touches_image_border": false,
+              "border_clearance": 88.0,
+              "bbox_extent_ratio": 0.138671875,
+              "raw_index": 2
+            },
+            {
+              "proposal_id": 37,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5894298553466797,
+              "mask_area": 2402,
+              "global_bbox": [
+                368,
+                171,
+                439,
+                237
+              ],
+              "centroid": [
+                402.5029142381349,
+                203.52789342214822
+              ],
+              "touches_image_border": false,
+              "border_clearance": 72.0,
+              "bbox_extent_ratio": 0.140625,
+              "raw_index": 18
+            },
+            {
+              "proposal_id": 38,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6983555555343628,
+              "mask_area": 1799,
+              "global_bbox": [
+                385,
+                379,
+                445,
+                433
+              ],
+              "centroid": [
+                415.73652028904945,
+                405.6881600889383
+              ],
+              "touches_image_border": false,
+              "border_clearance": 66.0,
+              "bbox_extent_ratio": 0.119140625,
+              "raw_index": 1
+            },
+            {
+              "proposal_id": 39,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.45961248874664307,
+              "mask_area": 551,
+              "global_bbox": [
+                422,
+                342,
+                453,
+                372
+              ],
+              "centroid": [
+                437.03629764065334,
+                357.56805807622504
+              ],
+              "touches_image_border": false,
+              "border_clearance": 58.0,
+              "bbox_extent_ratio": 0.0625,
+              "raw_index": 26
+            },
+            {
+              "proposal_id": 40,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.644845187664032,
+              "mask_area": 1054,
+              "global_bbox": [
+                415,
+                481,
+                467,
+                511
+              ],
+              "centroid": [
+                439.39943074003793,
+                497.2855787476281
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.103515625,
+              "raw_index": 10
+            },
+            {
+              "proposal_id": 41,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.08031591027975082,
+              "mask_area": 1041,
+              "global_bbox": [
+                434,
+                161,
+                472,
+                198
+              ],
+              "centroid": [
+                455.6311239193084,
+                180.65513928914504
+              ],
+              "touches_image_border": false,
+              "border_clearance": 39.0,
+              "bbox_extent_ratio": 0.076171875,
+              "raw_index": 52
+            },
+            {
+              "proposal_id": 42,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.06185365095734596,
+              "mask_area": 923,
+              "global_bbox": [
+                454,
+                438,
+                491,
+                477
+              ],
+              "centroid": [
+                470.6056338028169,
+                455.90249187432283
+              ],
+              "touches_image_border": false,
+              "border_clearance": 20.0,
+              "bbox_extent_ratio": 0.078125,
+              "raw_index": 57
+            },
+            {
+              "proposal_id": 43,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6850184798240662,
+              "mask_area": 1358,
+              "global_bbox": [
+                456,
+                294,
+                510,
+                342
+              ],
+              "centroid": [
+                484.0058910162003,
+                317.220176730486
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.107421875,
+              "raw_index": 3
+            },
+            {
+              "proposal_id": 44,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.32602569460868835,
+              "mask_area": 665,
+              "global_bbox": [
+                474,
+                257,
+                511,
+                289
+              ],
+              "centroid": [
+                494.09774436090225,
+                272.1248120300752
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.07421875,
+              "raw_index": 29
+            },
+            {
+              "proposal_id": 45,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.2907402217388153,
+              "mask_area": 1299,
+              "global_bbox": [
+                476,
+                382,
+                511,
+                439
+              ],
+              "centroid": [
+                497.7490377213241,
+                408.3849114703618
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.11328125,
+              "raw_index": 30
+            }
+          ]
+        },
+        "parsed_reference_selector": "largest",
+        "effective_reference_id": 11,
+        "reference_override": false,
+        "reference_mode": "automatic",
+        "reference_id": 11,
+        "reference_area": 3484,
+        "reference_confidence": 0.6758344173431396,
+        "reference_bbox": [
+          16,
+          297,
+          93,
+          381
+        ],
+        "directional_guard": {
+          "direction": "left_of",
+          "candidate_count": 27,
+          "inside_context": 17,
+          "candidate_ids": [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6,
+            7,
+            8,
+            9,
+            13,
+            14,
+            20,
+            21,
+            22,
+            23,
+            25,
+            26,
+            27,
+            29,
+            30,
+            33,
+            34,
+            36,
+            37,
+            41,
+            43,
+            44
+          ]
+        },
+        "reasoning_context": {
+          "origin": [
+            -18,
+            -202
+          ],
+          "size": 512,
+          "direction": "left_of",
+          "anchor_in_context": [
+            358,
+            256
+          ],
+          "reference_centroid_global": [
+            53.85132032146957,
+            339.784730195178
+          ],
+          "padding": {
+            "top": 202,
+            "bottom": 0,
+            "left": 18,
+            "right": 0,
+            "origin_top": -202,
+            "origin_left": -18,
+            "mode": "reflect",
+            "applied": true
+          },
+          "reference_too_large": false,
+          "notes": []
+        },
+        "direction": "left_of",
+        "mask_area": 1627,
+        "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+        "semantic_status": "NOT_EVALUATED",
+        "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
+        "target_centroid": [
+          85.81929932390904,
+          253.48862937922556
+        ],
+        "context_padding": {
+          "top": 202,
+          "left": 18,
+          "bottom": 0,
+          "right": 0,
+          "applied": true
+        },
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\masks\\1003_mask.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\overlays\\1003_overlay.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics"
+        },
+        "field_mass": 57.64671325683594,
+        "timings": {
+          "language": 0.0,
+          "detector": 0.547,
+          "merge": 0.0,
+          "sam2": 0.894,
+          "relation_fields": 0.058,
+          "db1": 0.173,
+          "total": 1.857
+        }
+      },
+      "artifacts": [
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\direction_field.png",
+          "bytes": 701,
+          "sha256": "94bf2b9ca08353bb9542eb5beea3dfc0b6c854517fb001d43f666a5e598bf9ae"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\global_proposals.png",
+          "bytes": 377748,
+          "sha256": "8d4a2441f84d9f29c523c270e6a825eb7a7f317fe5b8b53cb91ee8c368b286cd"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\maps.npz",
+          "bytes": 1490673,
+          "sha256": "8d61bf7bebc80fee40c8b8c7e97d4125987312842d48fa0100e6b3a24ebe8ee2"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\nearest_field.png",
+          "bytes": 1166,
+          "sha256": "a10221e2e64a9239c124c06ac4b541b2afc283bdfaa588714c251025dadf172f"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\parsed_program.json",
+          "bytes": 178,
+          "sha256": "11355f130adb3c852f2bb23c2ff9877d16d21e6cce97d7bb2eccefe50ea46221"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\prompt.txt",
+          "bytes": 33,
+          "sha256": "04d42bba72966bebb5b051231e96e8220e4c1e7af168d647091163ee4006f43b"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\proposals.json",
+          "bytes": 18409,
+          "sha256": "1724821aa11b0a04cf0e4a27ba813ee2ed24a6f8a89cd7bd0e67a5b9833228d5"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\prototype_similarity.png",
+          "bytes": 3905,
+          "sha256": "79dfda22cae732142f918a03869252b93668a7f255d2f3b6b8138da922ac5cb6"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\reasoning_context.png",
+          "bytes": 348641,
+          "sha256": "3ac5d98d2c60b32101776e673d595501213d55642f0fe17cf87367b042bfc64c"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\reference_context_mask.png",
+          "bytes": 767,
+          "sha256": "cf5f0ef4490bd1f9a3e4f7a05a3cc7352a65d0c9cf1f0dd6d8f12320fc024790"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\relation_weight.png",
+          "bytes": 593,
+          "sha256": "fcd06d24ddf72d3fbc39b50dc02c1f9d5ab375ccb759a60bd7c7678871c1f433"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\result.json",
+          "bytes": 22903,
+          "sha256": "1952764f6bcdd84c003f5fc0ced87b925f9dd8b81d7ae155a1ddf422ab6feb26"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\diagnostics\\selected_reference.png",
+          "bytes": 377748,
+          "sha256": "8d4a2441f84d9f29c523c270e6a825eb7a7f317fe5b8b53cb91ee8c368b286cd"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\masks\\1003_mask.png",
+          "bytes": 734,
+          "sha256": "374aadd73b8f3e035b59d3117e5c143717ccaa12b1b7745b54b28660b33d3492"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1003\\overlays\\1003_overlay.png",
+          "bytes": 361566,
+          "sha256": "9ad0c60549e5105f1cdb6ab95c2686dee386b39a3e040fb6e1155ef51a69a39b"
+        }
+      ],
+      "raw_proposal_count": 59,
+      "merged_proposal_count": 46,
+      "tile_count": 1,
+      "reference_mode": "automatic",
+      "reference_id": 11,
+      "reference_area": 3484,
+      "reference_confidence": 0.6758344173431396,
+      "reference_bbox": [
+        16,
+        297,
+        93,
+        381
+      ],
+      "direction": "left_of",
+      "reasoning_context": {
+        "origin": [
+          -18,
+          -202
+        ],
+        "size": 512,
+        "direction": "left_of",
+        "anchor_in_context": [
+          358,
+          256
+        ],
+        "reference_centroid_global": [
+          53.85132032146957,
+          339.784730195178
+        ],
+        "padding": {
+          "top": 202,
+          "bottom": 0,
+          "left": 18,
+          "right": 0,
+          "origin_top": -202,
+          "origin_left": -18,
+          "mode": "reflect",
+          "applied": true
+        },
+        "reference_too_large": false,
+        "notes": []
+      },
+      "mask_area": 1627,
+      "target_centroid": [
+        85.81929932390904,
+        253.48862937922556
+      ],
+      "timings": {
+        "language": 0.0,
+        "detector": 0.547,
+        "merge": 0.0,
+        "sam2": 0.894,
+        "relation_fields": 0.058,
+        "db1": 0.173,
+        "total": 1.857
+      },
+      "transcript_identity": {
+        "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\left_stdout.txt",
+        "bytes": 2740,
+        "sha256": "a963f6ab57b117d9316bf3cc28ca6db0dbdd8f0b6f4f45ba2fdc8c532a48044f"
+      }
+    },
+    {
+      "relation": "above",
+      "sample_id": "buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1008.tif",
+      "image_sha256": "0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd",
+      "prompt": "最大建筑上方最近的建筑",
+      "expected_program": "largest_to_above_to_nearest",
+      "argv": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\predict.py",
+        "--image",
+        "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1008.tif",
+        "--prompt",
+        "最大建筑上方最近的建筑",
+        "--confirm-command"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "wall_seconds": 15.781000000002678,
+      "timeout_seconds": 900.0,
+      "stdout": "[模型] buildreasonseg_advisor\r\nBuildReasonSeg Advisor RC1\r\nModel        : buildreasonseg_advisor\r\nDevice       : cuda\r\n\rLoading weights:   0%|          | 0/625 [00:00<?, ?it/s]\rLoading weights:  10%|▉         | 62/625 [00:00<00:01, 478.10it/s]\rLoading weights:  18%|█▊        | 110/625 [00:00<00:02, 173.21it/s]\rLoading weights:  22%|██▏       | 137/625 [00:00<00:03, 155.82it/s]\rLoading weights:  35%|███▍      | 218/625 [00:00<00:01, 275.65it/s]\rLoading weights:  41%|████▏     | 258/625 [00:01<00:01, 189.51it/s]\rLoading weights:  51%|█████     | 317/625 [00:01<00:01, 253.78it/s]\rLoading weights:  58%|█████▊    | 361/625 [00:01<00:00, 287.54it/s]\rLoading weights:  64%|██████▍   | 402/625 [00:01<00:00, 311.69it/s]\rLoading weights:  71%|███████   | 445/625 [00:01<00:00, 335.32it/s]\rLoading weights:  87%|████████▋ | 543/625 [00:01<00:00, 487.15it/s]\rLoading weights:  96%|█████████▌| 600/625 [00:01<00:00, 452.15it/s]\rLoading weights: 100%|██████████| 625/625 [00:01<00:00, 322.28it/s]\r\n[语言] Qwen / ProgramHead  置信度 1.000\r\n[解析] largest_to_above   (largest_to_above)\r\n当前解析结果不属于 RC1 已开放的四类空间推理语义。\r\n第一次解析：largest_to_above   (largest_to_above)\r\nQwen 建议的可支持替代指令：\r\n“最大建筑上方最近的建筑”\r\n（理由：用户指令中的 '上方最近' 与系统支持的 'largest_to_above_to_nearest' 程序含义一致，且该程序已明确指向建筑物上方最近的建筑。）\r\n建议程序：largest -> above -> nearest\r\n是否使用建议指令继续？ [Y/N]: Language     : Qwen / ProgramHead\r\nParsed       : largest -> above -> nearest\r\nMode         : AUTOMATIC\r\nResult       : SUCCESS\r\nValidity     : RUNTIME_STRUCTURAL_ONLY\r\nSemantic     : NOT_EVALUATED\r\nNote         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.\r\n\r\nMask         : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\masks\\1008_mask.png\r\nOverlay      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\overlays\\1008_overlay.png\r\nDiagnostics  : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\r\nReference ID : 5\r\nMask area    : 1580\r\n",
+      "initial_program": "largest_to_above",
+      "initial_confidence": 0.9998648166656494,
+      "suggested_program": "largest_to_above_to_nearest",
+      "driver_decision": [
+        {
+          "kind": "suggestion",
+          "observed_program": "largest_to_above_to_nearest",
+          "answer": "Y",
+          "language_status": "SUGGESTION_CORRECT"
+        }
+      ],
+      "language_status": "SUGGESTION_CORRECT",
+      "language_expected_program_executed": true,
+      "initial_confidence_display": 1.0,
+      "runtime_status": "SUCCESS",
+      "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+      "semantic_status": "NOT_EVALUATED",
+      "error_code": null,
+      "error_reason": null,
+      "run_root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008",
+      "mask_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\masks\\1008_mask.png",
+      "overlay_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\overlays\\1008_overlay.png",
+      "diagnostics_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics",
+      "runtime_payload": {
+        "status": "SUCCESS",
+        "input_path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1008.tif",
+        "input_size": [
+          512,
+          512
+        ],
+        "input_dtype": "uint8",
+        "input_channels": 3,
+        "input_mode": "RGB",
+        "notes": [],
+        "model_package": "buildreasonseg_advisor",
+        "device": "cuda",
+        "prompt": "最大建筑上方最近的建筑",
+        "language_mode": "qwen",
+        "confidence": 0.9998648166656494,
+        "score_source": "top1_softmax_from_program_head_logits",
+        "top5": [],
+        "original_prompt": "最大建筑上方最近的建筑",
+        "initial_program": "largest_to_above",
+        "initial_supported": false,
+        "suggestion_used": true,
+        "suggested_program": "largest_to_above_to_nearest",
+        "suggestion_display_command": "最大建筑上方最近的建筑",
+        "user_confirmation": "Y",
+        "parsed": {
+          "program": "largest_to_above_to_nearest",
+          "source": "qwen_program_head",
+          "confidence": null,
+          "supported": true,
+          "suggestion": "最大建筑上方最近的建筑"
+        },
+        "suggestion_trace": {
+          "suggestion_status": "SUGGESTION",
+          "suggested_program": "largest_to_above_to_nearest",
+          "suggestion_validator_pass": true,
+          "suggestion_display_command": "最大建筑上方最近的建筑"
+        },
+        "tile_size": 512,
+        "overlap": 128,
+        "tile_count": 1,
+        "raw_proposal_count": 10,
+        "merged_proposal_count": 10,
+        "proposals": {
+          "count": 10,
+          "items": [
+            {
+              "proposal_id": 0,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5870545506477356,
+              "mask_area": 1445,
+              "global_bbox": [
+                1,
+                128,
+                53,
+                157
+              ],
+              "centroid": [
+                26.471972318339102,
+                142.40276816608997
+              ],
+              "touches_image_border": false,
+              "border_clearance": 1.0,
+              "bbox_extent_ratio": 0.103515625,
+              "raw_index": 3
+            },
+            {
+              "proposal_id": 1,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.14925944805145264,
+              "mask_area": 3175,
+              "global_bbox": [
+                103,
+                140,
+                153,
+                251
+              ],
+              "centroid": [
+                126.02141732283465,
+                196.10173228346457
+              ],
+              "touches_image_border": false,
+              "border_clearance": 103.0,
+              "bbox_extent_ratio": 0.21875,
+              "raw_index": 6
+            },
+            {
+              "proposal_id": 2,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.08806093037128448,
+              "mask_area": 1407,
+              "global_bbox": [
+                114,
+                202,
+                151,
+                249
+              ],
+              "centroid": [
+                132.63965884861406,
+                225.36602700781805
+              ],
+              "touches_image_border": false,
+              "border_clearance": 114.0,
+              "bbox_extent_ratio": 0.09375,
+              "raw_index": 9
+            },
+            {
+              "proposal_id": 3,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.13932016491889954,
+              "mask_area": 956,
+              "global_bbox": [
+                170,
+                196,
+                208,
+                221
+              ],
+              "centroid": [
+                188.4958158995816,
+                208.67573221757323
+              ],
+              "touches_image_border": false,
+              "border_clearance": 170.0,
+              "bbox_extent_ratio": 0.076171875,
+              "raw_index": 7
+            },
+            {
+              "proposal_id": 4,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6461971402168274,
+              "mask_area": 3087,
+              "global_bbox": [
+                222,
+                158,
+                274,
+                253
+              ],
+              "centroid": [
+                248.53709102688694,
+                203.1794622610949
+              ],
+              "touches_image_border": false,
+              "border_clearance": 158.0,
+              "bbox_extent_ratio": 0.1875,
+              "raw_index": 2
+            },
+            {
+              "proposal_id": 5,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.7081045508384705,
+              "mask_area": 5101,
+              "global_bbox": [
+                242,
+                30,
+                394,
+                89
+              ],
+              "centroid": [
+                316.66790825328366,
+                59.31170358753185
+              ],
+              "touches_image_border": false,
+              "border_clearance": 30.0,
+              "bbox_extent_ratio": 0.298828125,
+              "raw_index": 0
+            },
+            {
+              "proposal_id": 6,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.7024813890457153,
+              "mask_area": 4196,
+              "global_bbox": [
+                318,
+                132,
+                380,
+                249
+              ],
+              "centroid": [
+                347.3965681601525,
+                190.39180171591994
+              ],
+              "touches_image_border": false,
+              "border_clearance": 131.0,
+              "bbox_extent_ratio": 0.23046875,
+              "raw_index": 1
+            },
+            {
+              "proposal_id": 7,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.23215384781360626,
+              "mask_area": 2147,
+              "global_bbox": [
+                310,
+                291,
+                388,
+                333
+              ],
+              "centroid": [
+                348.2729389846297,
+                310.53004191895667
+              ],
+              "touches_image_border": false,
+              "border_clearance": 123.0,
+              "bbox_extent_ratio": 0.154296875,
+              "raw_index": 4
+            },
+            {
+              "proposal_id": 8,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.2258167266845703,
+              "mask_area": 1949,
+              "global_bbox": [
+                410,
+                95,
+                441,
+                163
+              ],
+              "centroid": [
+                425.8737814263725,
+                126.80400205233454
+              ],
+              "touches_image_border": false,
+              "border_clearance": 70.0,
+              "bbox_extent_ratio": 0.134765625,
+              "raw_index": 5
+            },
+            {
+              "proposal_id": 9,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.12863124907016754,
+              "mask_area": 2650,
+              "global_bbox": [
+                454,
+                424,
+                511,
+                489
+              ],
+              "centroid": [
+                487.8698113207547,
+                454.8883018867925
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.12890625,
+              "raw_index": 8
+            }
+          ]
+        },
+        "parsed_reference_selector": "largest",
+        "effective_reference_id": 5,
+        "reference_override": false,
+        "reference_mode": "automatic",
+        "reference_id": 5,
+        "reference_area": 5101,
+        "reference_confidence": 0.7081045508384705,
+        "reference_bbox": [
+          242,
+          30,
+          394,
+          89
+        ],
+        "directional_guard": {
+          "direction": "above",
+          "candidate_count": 5,
+          "inside_context": 5,
+          "candidate_ids": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "reasoning_context": {
+          "origin": [
+            -197,
+            -41
+          ],
+          "size": 512,
+          "direction": "above",
+          "anchor_in_context": [
+            256,
+            358
+          ],
+          "reference_centroid_global": [
+            316.66790825328366,
+            59.31170358753185
+          ],
+          "padding": {
+            "top": 41,
+            "bottom": 0,
+            "left": 197,
+            "right": 0,
+            "origin_top": -41,
+            "origin_left": -197,
+            "mode": "reflect",
+            "applied": true
+          },
+          "reference_too_large": false,
+          "notes": []
+        },
+        "direction": "above",
+        "mask_area": 1580,
+        "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+        "semantic_status": "NOT_EVALUATED",
+        "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
+        "target_centroid": [
+          43.403164556962025,
+          147.4126582278481
+        ],
+        "context_padding": {
+          "top": 41,
+          "left": 197,
+          "bottom": 0,
+          "right": 0,
+          "applied": true
+        },
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\masks\\1008_mask.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\overlays\\1008_overlay.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics"
+        },
+        "field_mass": 88.89723205566406,
+        "timings": {
+          "language": 0.0,
+          "detector": 0.519,
+          "merge": 0.0,
+          "sam2": 0.92,
+          "relation_fields": 0.053,
+          "db1": 0.178,
+          "total": 1.85
+        }
+      },
+      "artifacts": [
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\direction_field.png",
+          "bytes": 702,
+          "sha256": "a697f174a9b4b155bf97ed832cba5bee13801870e980d92af3f8e9a7dfc29c8d"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\global_proposals.png",
+          "bytes": 333202,
+          "sha256": "3a1492146452e227d0e7cbcbbaa10b01dd860559ecb003df0eb9317b98da3945"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\maps.npz",
+          "bytes": 1507634,
+          "sha256": "aa55d46f9800e0ce8aec1ff62c1e8ed46c41db0004a74fef2f872ac1742d7024"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\nearest_field.png",
+          "bytes": 1135,
+          "sha256": "58f0dd32c0696c6813c8f5f6d8efd9f1b91dc00c7d9aae7d943410951ca85969"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\parsed_program.json",
+          "bytes": 176,
+          "sha256": "6f3fe42e837037a2ccd51b549da069fa3a6abd4e8f76fa6577cdd77ad4882740"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\prompt.txt",
+          "bytes": 33,
+          "sha256": "f8962158edb4b3e8dd09406146d7584c376fa02d97de811916020692d551cc76"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\proposals.json",
+          "bytes": 4033,
+          "sha256": "c72ad7910406b230062a0f65d04d3d53e87106c8c2ad6cc3adf7e73729970364"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\prototype_similarity.png",
+          "bytes": 3549,
+          "sha256": "c9f45c83996e0891a4c82cd3156ea59d5995c026f9960d18e851162003a2a25f"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\reasoning_context.png",
+          "bytes": 335981,
+          "sha256": "ae86a5f0a19072837c35e370815f9984a6b62eb99833fd55d6fb7f51b83e8eb9"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\reference_context_mask.png",
+          "bytes": 846,
+          "sha256": "77b84f99fd6c4b906369a32bc8828a35444f1466f4710145a9b6bc6f94284dea"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\relation_weight.png",
+          "bytes": 672,
+          "sha256": "e0505d9d387a6119532ab2e6524d8deaa48772aa3d1a6a5eb04b903a3e144bf9"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\result.json",
+          "bytes": 7617,
+          "sha256": "bf264b315c0763959d970d4753a181d464163d26a6fae63e74e410563f1a653e"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\diagnostics\\selected_reference.png",
+          "bytes": 333202,
+          "sha256": "3a1492146452e227d0e7cbcbbaa10b01dd860559ecb003df0eb9317b98da3945"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\masks\\1008_mask.png",
+          "bytes": 618,
+          "sha256": "bed1b8c03aea3ff8865d1e1ae82a11386406becd1fb9d1566b28fd7a7bd3747e"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1008\\overlays\\1008_overlay.png",
+          "bytes": 330141,
+          "sha256": "ab1baaeea5dd1353c395c240ed6b27f13eaf72947262fefd98f005639a065e13"
+        }
+      ],
+      "raw_proposal_count": 10,
+      "merged_proposal_count": 10,
+      "tile_count": 1,
+      "reference_mode": "automatic",
+      "reference_id": 5,
+      "reference_area": 5101,
+      "reference_confidence": 0.7081045508384705,
+      "reference_bbox": [
+        242,
+        30,
+        394,
+        89
+      ],
+      "direction": "above",
+      "reasoning_context": {
+        "origin": [
+          -197,
+          -41
+        ],
+        "size": 512,
+        "direction": "above",
+        "anchor_in_context": [
+          256,
+          358
+        ],
+        "reference_centroid_global": [
+          316.66790825328366,
+          59.31170358753185
+        ],
+        "padding": {
+          "top": 41,
+          "bottom": 0,
+          "left": 197,
+          "right": 0,
+          "origin_top": -41,
+          "origin_left": -197,
+          "mode": "reflect",
+          "applied": true
+        },
+        "reference_too_large": false,
+        "notes": []
+      },
+      "mask_area": 1580,
+      "target_centroid": [
+        43.403164556962025,
+        147.4126582278481
+      ],
+      "timings": {
+        "language": 0.0,
+        "detector": 0.519,
+        "merge": 0.0,
+        "sam2": 0.92,
+        "relation_fields": 0.053,
+        "db1": 0.178,
+        "total": 1.85
+      },
+      "transcript_identity": {
+        "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\above_stdout.txt",
+        "bytes": 2412,
+        "sha256": "aa177e1e0fecd4ea800f4178ab58618c39d674c2ad696858c1789e95b9ce911a"
+      }
+    },
+    {
+      "relation": "below",
+      "sample_id": "buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450",
+      "image": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1009.tif",
+      "image_sha256": "c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7",
+      "prompt": "最大建筑下方最近的建筑",
+      "expected_program": "largest_to_below_to_nearest",
+      "argv": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\predict.py",
+        "--image",
+        "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1009.tif",
+        "--prompt",
+        "最大建筑下方最近的建筑",
+        "--confirm-command"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "wall_seconds": 15.562000000005355,
+      "timeout_seconds": 900.0,
+      "stdout": "[模型] buildreasonseg_advisor\r\nBuildReasonSeg Advisor RC1\r\nModel        : buildreasonseg_advisor\r\nDevice       : cuda\r\n\rLoading weights:   0%|          | 0/625 [00:00<?, ?it/s]\rLoading weights:   1%|          | 6/625 [00:00<00:11, 53.84it/s]\rLoading weights:   3%|▎         | 16/625 [00:00<00:07, 79.74it/s]\rLoading weights:   4%|▍         | 28/625 [00:00<00:06, 97.59it/s]\rLoading weights:  10%|█         | 65/625 [00:00<00:02, 191.86it/s]\rLoading weights:  13%|█▎        | 84/625 [00:00<00:03, 168.93it/s]\rLoading weights:  16%|█▌        | 101/625 [00:00<00:03, 145.21it/s]\rLoading weights:  21%|██▏       | 134/625 [00:00<00:02, 188.19it/s]\rLoading weights:  25%|██▍       | 154/625 [00:01<00:03, 156.20it/s]\rLoading weights:  27%|██▋       | 171/625 [00:01<00:04, 112.58it/s]\rLoading weights:  31%|███       | 193/625 [00:01<00:03, 132.87it/s]\rLoading weights:  39%|███▉      | 244/625 [00:01<00:01, 214.40it/s]\rLoading weights:  57%|█████▋    | 359/625 [00:01<00:00, 432.99it/s]\rLoading weights:  66%|██████▌   | 412/625 [00:01<00:00, 392.28it/s]\rLoading weights:  73%|███████▎  | 459/625 [00:01<00:00, 389.92it/s]\rLoading weights: 100%|██████████| 625/625 [00:01<00:00, 330.86it/s]\r\n[语言] Qwen / ProgramHead  置信度 1.000\r\n[解析] largest_to_below   (largest_to_below)\r\n当前解析结果不属于 RC1 已开放的四类空间推理语义。\r\n第一次解析：largest_to_below   (largest_to_below)\r\nQwen 建议的可支持替代指令：\r\n“最大建筑下方最近的建筑”\r\n（理由：用户指令为‘最大建筑下方最近的建筑’，系统支持的程序中‘largest_to_below_to_nearest’正是为此目的的精确对应。）\r\n建议程序：largest -> below -> nearest\r\n是否使用建议指令继续？ [Y/N]: Language     : Qwen / ProgramHead\r\nParsed       : largest -> below -> nearest\r\nMode         : AUTOMATIC\r\nResult       : SUCCESS\r\nValidity     : RUNTIME_STRUCTURAL_ONLY\r\nSemantic     : NOT_EVALUATED\r\nNote         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.\r\n\r\nMask         : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\masks\\1009_mask.png\r\nOverlay      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\overlays\\1009_overlay.png\r\nDiagnostics  : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\r\nReference ID : 1\r\nMask area    : 2955\r\n",
+      "initial_program": "largest_to_below",
+      "initial_confidence": 0.9999477863311768,
+      "suggested_program": "largest_to_below_to_nearest",
+      "driver_decision": [
+        {
+          "kind": "suggestion",
+          "observed_program": "largest_to_below_to_nearest",
+          "answer": "Y",
+          "language_status": "SUGGESTION_CORRECT"
+        }
+      ],
+      "language_status": "SUGGESTION_CORRECT",
+      "language_expected_program_executed": true,
+      "initial_confidence_display": 1.0,
+      "runtime_status": "SUCCESS",
+      "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+      "semantic_status": "NOT_EVALUATED",
+      "error_code": null,
+      "error_reason": null,
+      "run_root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009",
+      "mask_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\masks\\1009_mask.png",
+      "overlay_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\overlays\\1009_overlay.png",
+      "diagnostics_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics",
+      "runtime_payload": {
+        "status": "SUCCESS",
+        "input_path": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)\\1. The cropped image data and raster labels\\test\\image\\1009.tif",
+        "input_size": [
+          512,
+          512
+        ],
+        "input_dtype": "uint8",
+        "input_channels": 3,
+        "input_mode": "RGB",
+        "notes": [],
+        "model_package": "buildreasonseg_advisor",
+        "device": "cuda",
+        "prompt": "最大建筑下方最近的建筑",
+        "language_mode": "qwen",
+        "confidence": 0.9999477863311768,
+        "score_source": "top1_softmax_from_program_head_logits",
+        "top5": [],
+        "original_prompt": "最大建筑下方最近的建筑",
+        "initial_program": "largest_to_below",
+        "initial_supported": false,
+        "suggestion_used": true,
+        "suggested_program": "largest_to_below_to_nearest",
+        "suggestion_display_command": "最大建筑下方最近的建筑",
+        "user_confirmation": "Y",
+        "parsed": {
+          "program": "largest_to_below_to_nearest",
+          "source": "qwen_program_head",
+          "confidence": null,
+          "supported": true,
+          "suggestion": "最大建筑下方最近的建筑"
+        },
+        "suggestion_trace": {
+          "suggestion_status": "SUGGESTION",
+          "suggested_program": "largest_to_below_to_nearest",
+          "suggestion_validator_pass": true,
+          "suggestion_display_command": "最大建筑下方最近的建筑"
+        },
+        "tile_size": 512,
+        "overlap": 128,
+        "tile_count": 1,
+        "raw_proposal_count": 7,
+        "merged_proposal_count": 6,
+        "proposals": {
+          "count": 6,
+          "items": [
+            {
+              "proposal_id": 0,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.5800075531005859,
+              "mask_area": 466,
+              "global_bbox": [
+                103,
+                493,
+                144,
+                511
+              ],
+              "centroid": [
+                125.05793991416309,
+                504.59656652360513
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.08203125,
+              "raw_index": 3
+            },
+            {
+              "proposal_id": 1,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6798717379570007,
+              "mask_area": 2045,
+              "global_bbox": [
+                126,
+                165,
+                197,
+                198
+              ],
+              "centroid": [
+                160.98141809290954,
+                181.4679706601467
+              ],
+              "touches_image_border": false,
+              "border_clearance": 126.0,
+              "bbox_extent_ratio": 0.140625,
+              "raw_index": 0
+            },
+            {
+              "proposal_id": 2,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6721888184547424,
+              "mask_area": 1880,
+              "global_bbox": [
+                222,
+                188,
+                293,
+                222
+              ],
+              "centroid": [
+                256.1531914893617,
+                205.2813829787234
+              ],
+              "touches_image_border": false,
+              "border_clearance": 188.0,
+              "bbox_extent_ratio": 0.140625,
+              "raw_index": 1
+            },
+            {
+              "proposal_id": 3,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.4741607904434204,
+              "mask_area": 1207,
+              "global_bbox": [
+                382,
+                294,
+                429,
+                335
+              ],
+              "centroid": [
+                404.31151615575806,
+                314.97845898922947
+              ],
+              "touches_image_border": false,
+              "border_clearance": 82.0,
+              "bbox_extent_ratio": 0.09375,
+              "raw_index": 4
+            },
+            {
+              "proposal_id": 4,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.05493904650211334,
+              "mask_area": 156,
+              "global_bbox": [
+                426,
+                503,
+                450,
+                511
+              ],
+              "centroid": [
+                436.2371794871795,
+                507.80128205128204
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.048828125,
+              "raw_index": 6
+            },
+            {
+              "proposal_id": 5,
+              "source_tile_id": "tile_0000_r000_c000",
+              "confidence": 0.6372695565223694,
+              "mask_area": 1092,
+              "global_bbox": [
+                479,
+                414,
+                511,
+                462
+              ],
+              "centroid": [
+                498.18131868131866,
+                438.2051282051282
+              ],
+              "touches_image_border": true,
+              "border_clearance": 0.0,
+              "bbox_extent_ratio": 0.095703125,
+              "raw_index": 2
+            }
+          ]
+        },
+        "parsed_reference_selector": "largest",
+        "effective_reference_id": 1,
+        "reference_override": false,
+        "reference_mode": "automatic",
+        "reference_id": 1,
+        "reference_area": 2045,
+        "reference_confidence": 0.6798717379570007,
+        "reference_bbox": [
+          126,
+          165,
+          197,
+          198
+        ],
+        "directional_guard": {
+          "direction": "below",
+          "candidate_count": 4,
+          "inside_context": 2,
+          "candidate_ids": [
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "reasoning_context": {
+          "origin": [
+            -75,
+            7
+          ],
+          "size": 512,
+          "direction": "below",
+          "anchor_in_context": [
+            256,
+            154
+          ],
+          "reference_centroid_global": [
+            160.98141809290954,
+            181.4679706601467
+          ],
+          "padding": {
+            "top": 0,
+            "bottom": 7,
+            "left": 75,
+            "right": 0,
+            "origin_top": 7,
+            "origin_left": -75,
+            "mode": "reflect",
+            "applied": true
+          },
+          "reference_too_large": false,
+          "notes": []
+        },
+        "direction": "below",
+        "mask_area": 2955,
+        "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+        "semantic_status": "NOT_EVALUATED",
+        "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
+        "target_centroid": [
+          298.1133671742809,
+          234.46598984771575
+        ],
+        "context_padding": {
+          "top": 0,
+          "left": 75,
+          "bottom": 7,
+          "right": 0,
+          "applied": true
+        },
+        "output_paths": {
+          "mask": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\masks\\1009_mask.png",
+          "overlay": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\overlays\\1009_overlay.png",
+          "diagnostics": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics"
+        },
+        "field_mass": 53.86770248413086,
+        "timings": {
+          "language": 0.0,
+          "detector": 0.511,
+          "merge": 0.0,
+          "sam2": 0.89,
+          "relation_fields": 0.055,
+          "db1": 0.178,
+          "total": 1.814
+        }
+      },
+      "artifacts": [
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\direction_field.png",
+          "bytes": 714,
+          "sha256": "2b9843eed9520592d9453bb554dc36c187a48ee27e08c3dad591751cd600c45b"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\global_proposals.png",
+          "bytes": 325703,
+          "sha256": "1d036c6d564116451c782fb3bcb999ab317fef2c262b4d55ef1ce2470bb0a4cb"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\maps.npz",
+          "bytes": 1432775,
+          "sha256": "6082915e7d8299244be6fe4587812b840e162657b0cc91f25c172261fb2c39b2"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\nearest_field.png",
+          "bytes": 948,
+          "sha256": "d2a1b31fa8c3c2259ad4872a0a70498a5740d4cb3b1350aab97324dc25081fbf"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\parsed_program.json",
+          "bytes": 176,
+          "sha256": "d2848b096c1f46834eb779bf43049cf75d1b806c259f256931f9ab3cf42a2dc0"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\prompt.txt",
+          "bytes": 33,
+          "sha256": "2ffd95b8a5f3ea9a3e9ab8e09200e44d607513b5a7ece5adc11faddb005e8ff9"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\proposals.json",
+          "bytes": 2425,
+          "sha256": "6311b95f912c6b8876f4b95dd35225a6d3544d3c15652de2dc914b4f060b4db5"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\prototype_similarity.png",
+          "bytes": 3644,
+          "sha256": "d9027110be3f715d19406a73ccc8af4ea3cb0f3e7f8b1851e122452084a027bc"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\reasoning_context.png",
+          "bytes": 322404,
+          "sha256": "3a9fe1bd1d0954d1a86e2545d2b1408eee655f6ff092fdd6bea2907585da9f5b"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\reference_context_mask.png",
+          "bytes": 554,
+          "sha256": "08c6ea226b9dabf8a04b3583305d0de64ec64327ee514abf68538828dca1d40f"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\relation_weight.png",
+          "bytes": 576,
+          "sha256": "b2ce5fa3dd50af0600d25222ae54827aa19afe3d481c04d01505a69ab1549a20"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\result.json",
+          "bytes": 5913,
+          "sha256": "11307ecb43948476d0d2155b9a05d5c6ba22f653833a0f9337682a8a2142efd8"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\diagnostics\\selected_reference.png",
+          "bytes": 325703,
+          "sha256": "1d036c6d564116451c782fb3bcb999ab317fef2c262b4d55ef1ce2470bb0a4cb"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\masks\\1009_mask.png",
+          "bytes": 864,
+          "sha256": "a4e556c6475780e425aaddbf1aad37e20501775575d9f75197decdaba12a54c4"
+        },
+        {
+          "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\output\\1009\\overlays\\1009_overlay.png",
+          "bytes": 324486,
+          "sha256": "4c75acd7063ed9b4fe491e867923bae5bcf54d9494784679bcc3d08fa83f2828"
+        }
+      ],
+      "raw_proposal_count": 7,
+      "merged_proposal_count": 6,
+      "tile_count": 1,
+      "reference_mode": "automatic",
+      "reference_id": 1,
+      "reference_area": 2045,
+      "reference_confidence": 0.6798717379570007,
+      "reference_bbox": [
+        126,
+        165,
+        197,
+        198
+      ],
+      "direction": "below",
+      "reasoning_context": {
+        "origin": [
+          -75,
+          7
+        ],
+        "size": 512,
+        "direction": "below",
+        "anchor_in_context": [
+          256,
+          154
+        ],
+        "reference_centroid_global": [
+          160.98141809290954,
+          181.4679706601467
+        ],
+        "padding": {
+          "top": 0,
+          "bottom": 7,
+          "left": 75,
+          "right": 0,
+          "origin_top": 7,
+          "origin_left": -75,
+          "mode": "reflect",
+          "applied": true
+        },
+        "reference_too_large": false,
+        "notes": []
+      },
+      "mask_area": 2955,
+      "target_centroid": [
+        298.1133671742809,
+        234.46598984771575
+      ],
+      "timings": {
+        "language": 0.0,
+        "detector": 0.511,
+        "merge": 0.0,
+        "sam2": 0.89,
+        "relation_fields": 0.055,
+        "db1": 0.178,
+        "total": 1.814
+      },
+      "transcript_identity": {
+        "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\below_stdout.txt",
+        "bytes": 2564,
+        "sha256": "ecfbe72623fa8a0e02671a8188698c2da58d52607e78efdb15c9bb496913f57c"
+      }
+    }
+  ],
   "gt_audit_started_after_runtime_freeze": false,
   "model_calls_during_gt_audit": 0,
   "aggregate": null,
@@ -503,7 +3155,7 @@
   "protected_assets_unchanged": true,
   "source_identity_unchanged": true,
   "review_artifacts": [],
-  "no_real_model_inference": true,
+  "no_real_model_inference": false,
   "no_gt_candidate_access": true,
   "external_write_operations_executed": null,
   "product_and_governance_diff_paths": [],
@@ -65727,5 +68379,162 @@
     "gt_access_before_runtime_freeze": "PROHIBITED; none performed",
     "existing_stop_evidence": "Both accepted STOP records retained in stop_history and historical Git checkpoints."
   },
-  "formal_freeze_checkpoint_ready_for_push": true
+  "formal_freeze_checkpoint_ready_for_push": false,
+  "pre_formal_verification": {
+    "pass": true,
+    "verified_utc": "2026-10-06T20:12:56.349348+00:00",
+    "local_head": "20615080264774eb7b93b7d6a3c1e547093c4876",
+    "remote_tracking_head": "20615080264774eb7b93b7d6a3c1e547093c4876",
+    "real_remote_head_observed_after_push": "20615080264774eb7b93b7d6a3c1e547093c4876",
+    "harness_identities_match": true,
+    "complete_external_inventory_unchanged": true,
+    "historical_output_input_protected_assets_unchanged": true,
+    "grandfathered_settings_unchanged": true,
+    "cache_directories_exist_and_writable": true,
+    "formal_log_root_absent": true,
+    "gt_audit_not_started": true
+  },
+  "formal_freeze_pushed": true,
+  "frozen_runtime_identity": {
+    "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\runtime_results.json",
+    "bytes": 102173,
+    "sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca"
+  },
+  "real_candidates_attempted": 4,
+  "formal_runner_exit_code": 0,
+  "formal_runtime_log_identities": [
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\above_stdout.txt",
+      "bytes": 2412,
+      "sha256": "aa177e1e0fecd4ea800f4178ab58618c39d674c2ad696858c1789e95b9ce911a"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\below_stdout.txt",
+      "bytes": 2564,
+      "sha256": "ecfbe72623fa8a0e02671a8188698c2da58d52607e78efdb15c9bb496913f57c"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\invocation.json",
+      "bytes": 101048,
+      "sha256": "21f5130de3782b3cfd2551178935bdc0d2d943c7d6619e8a86e9aaf3b58d6d27"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\left_stdout.txt",
+      "bytes": 2740,
+      "sha256": "a963f6ab57b117d9316bf3cc28ca6db0dbdd8f0b6f4f45ba2fdc8c532a48044f"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\right_stdout.txt",
+      "bytes": 3306,
+      "sha256": "bdcbdb097b14e1820114be76d50003a39e093f229a5e9f53d6f9293448848ce8"
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\runtime_results.json",
+      "bytes": 102173,
+      "sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca"
+    }
+  ],
+  "runtime_freeze_checkpoint": {
+    "completed_utc": "2026-10-06T20:16:11.251614+00:00",
+    "all_four_processes_exited": true,
+    "output_hashes_frozen": true,
+    "runtime_json_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8c_final_demo_v1\\runtime_results.json",
+      "bytes": 102173,
+      "sha256": "2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca"
+    },
+    "case_attempt_order": [
+      "right",
+      "left",
+      "above",
+      "below"
+    ],
+    "runner_invocations": 1,
+    "case_attempts": 4,
+    "gt_audit_started": false,
+    "runtime_success_count": 4,
+    "language_expected_program_executed_count": 4,
+    "raw_evidence_before_gt": true
+  },
+  "post_runtime_pre_gt_integrity": {
+    "pass": true,
+    "changed_preexisting_content_paths": [],
+    "new_external_files": [
+      "inference/output/1003/diagnostics/direction_field.png",
+      "inference/output/1003/diagnostics/global_proposals.png",
+      "inference/output/1003/diagnostics/maps.npz",
+      "inference/output/1003/diagnostics/nearest_field.png",
+      "inference/output/1003/diagnostics/parsed_program.json",
+      "inference/output/1003/diagnostics/prompt.txt",
+      "inference/output/1003/diagnostics/proposals.json",
+      "inference/output/1003/diagnostics/prototype_similarity.png",
+      "inference/output/1003/diagnostics/reasoning_context.png",
+      "inference/output/1003/diagnostics/reference_context_mask.png",
+      "inference/output/1003/diagnostics/relation_weight.png",
+      "inference/output/1003/diagnostics/result.json",
+      "inference/output/1003/diagnostics/selected_reference.png",
+      "inference/output/1003/masks/1003_mask.png",
+      "inference/output/1003/overlays/1003_overlay.png",
+      "inference/output/1008/diagnostics/direction_field.png",
+      "inference/output/1008/diagnostics/global_proposals.png",
+      "inference/output/1008/diagnostics/maps.npz",
+      "inference/output/1008/diagnostics/nearest_field.png",
+      "inference/output/1008/diagnostics/parsed_program.json",
+      "inference/output/1008/diagnostics/prompt.txt",
+      "inference/output/1008/diagnostics/proposals.json",
+      "inference/output/1008/diagnostics/prototype_similarity.png",
+      "inference/output/1008/diagnostics/reasoning_context.png",
+      "inference/output/1008/diagnostics/reference_context_mask.png",
+      "inference/output/1008/diagnostics/relation_weight.png",
+      "inference/output/1008/diagnostics/result.json",
+      "inference/output/1008/diagnostics/selected_reference.png",
+      "inference/output/1008/masks/1008_mask.png",
+      "inference/output/1008/overlays/1008_overlay.png",
+      "inference/output/1009/diagnostics/direction_field.png",
+      "inference/output/1009/diagnostics/global_proposals.png",
+      "inference/output/1009/diagnostics/maps.npz",
+      "inference/output/1009/diagnostics/nearest_field.png",
+      "inference/output/1009/diagnostics/parsed_program.json",
+      "inference/output/1009/diagnostics/prompt.txt",
+      "inference/output/1009/diagnostics/proposals.json",
+      "inference/output/1009/diagnostics/prototype_similarity.png",
+      "inference/output/1009/diagnostics/reasoning_context.png",
+      "inference/output/1009/diagnostics/reference_context_mask.png",
+      "inference/output/1009/diagnostics/relation_weight.png",
+      "inference/output/1009/diagnostics/result.json",
+      "inference/output/1009/diagnostics/selected_reference.png",
+      "inference/output/1009/masks/1009_mask.png",
+      "inference/output/1009/overlays/1009_overlay.png",
+      "inference/output/1010/diagnostics/direction_field.png",
+      "inference/output/1010/diagnostics/global_proposals.png",
+      "inference/output/1010/diagnostics/maps.npz",
+      "inference/output/1010/diagnostics/nearest_field.png",
+      "inference/output/1010/diagnostics/parsed_program.json",
+      "inference/output/1010/diagnostics/prompt.txt",
+      "inference/output/1010/diagnostics/proposals.json",
+      "inference/output/1010/diagnostics/prototype_similarity.png",
+      "inference/output/1010/diagnostics/reasoning_context.png",
+      "inference/output/1010/diagnostics/reference_context_mask.png",
+      "inference/output/1010/diagnostics/relation_weight.png",
+      "inference/output/1010/diagnostics/result.json",
+      "inference/output/1010/diagnostics/selected_reference.png",
+      "inference/output/1010/masks/1010_mask.png",
+      "inference/output/1010/overlays/1010_overlay.png",
+      "logs/task8c_final_demo_v1/above_stdout.txt",
+      "logs/task8c_final_demo_v1/below_stdout.txt",
+      "logs/task8c_final_demo_v1/invocation.json",
+      "logs/task8c_final_demo_v1/left_stdout.txt",
+      "logs/task8c_final_demo_v1/right_stdout.txt",
+      "logs/task8c_final_demo_v1/runtime_results.json"
+    ],
+    "allowed_new_run_roots": [
+      "inference/output/1010/",
+      "inference/output/1003/",
+      "inference/output/1008/",
+      "inference/output/1009/"
+    ],
+    "grandfathered_settings_unchanged": true,
+    "no_additional_external_runtime_config": true,
+    "historical_output_mtime_unchanged": true
+  }
 }

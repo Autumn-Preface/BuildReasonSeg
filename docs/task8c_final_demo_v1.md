@@ -93,3 +93,20 @@ Cache directories were created/probed outside repo/external before use: C:\Users
 ## FORMAL_FINAL_DEMO_FREEZE_V1
 
 Prepared from actual task HEAD 3fac0e668c2af30b35bfae1ab8a3f36cee329e26. Exact freeze payload is in evaluation/task8c_final_demo_v1.json. It records accepted gates, Git/working harness identities, all four locks and execution order, default automatic reference mode with --confirm-command for required Y/N, 900-second per-case timeout and no retry, 135/135 source/manifest identities, protected assets, historical output/input/log inventories and hash, preserved grandfathered settings, verified outside-cache environment and font identity. No real candidate or GT audit has run. Freeze must be committed/pushed before execution.
+
+
+Formal freeze commit: **20615080264774eb7b93b7d6a3c1e547093c4876**, pushed and verified. Local HEAD, origin task-branch HEAD and observed real remote HEAD agree. Pre-run checks PASS for unchanged harness, complete accepted external inventory, historical output/input/protected assets, preserved grandfathered settings, and existing writable outside-cache directories. Only the formal runner remains to be invoked; attempts are still 0 at this observation.
+
+
+## Formal runtime frozen before GT
+
+Runner invocation count 1; exit 0; four cases once in the locked order. Each current production result is runtime SUCCESS only, with semantic_status NOT_EVALUATED. Saved artifacts and raw transcripts are frozen; no GT access has occurred.
+
+| Relation | Language | Runtime | Auto reference ID | Run root |
+|---|---|---|---|---|
+| right | SUGGESTION_CORRECT | SUCCESS | 3 | C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\1010 |
+| left | SUGGESTION_CORRECT | SUCCESS | 11 | C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\1003 |
+| above | SUGGESTION_CORRECT | SUCCESS | 5 | C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\1008 |
+| below | SUGGESTION_CORRECT | SUCCESS | 1 | C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\1009 |
+
+The exact stdout, confirmation decisions, proposal counts, reference/context/mask statistics, timings and every saved artifact byte/SHA identity are in JSON. All pre-existing external file bytes and the grandfathered settings are unchanged; newly added files are restricted to the observed four run roots and Task8C logs. Historical output mtime is unchanged. GT remains NOT_STARTED until this raw checkpoint is committed/pushed.
