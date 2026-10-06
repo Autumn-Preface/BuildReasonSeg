@@ -159,3 +159,16 @@ python evaluate.py --model buildreasonseg_advisor --dataset datasets/MyDataset -
 
 `docs/model_card.md`（模型/指标/限制）、`docs/command_grammar.md`（命令语法与错误码）、
 `docs/dataset_format.md`（数据集约定）、`RC1_TASK8B_REPORT.md`（本任务构建与验证报告）。
+
+## SUCCESS semantics (frozen)
+
+```text
+validity_scope  = RUNTIME_STRUCTURAL_ONLY
+semantic_status = NOT_EVALUATED
+semantic_note   = SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target
+                  correctness is not established.
+```
+
+`SUCCESS` is a runtime structural status only: it confirms that the RC1 runtime completed and passed its current
+structural checks. It does **not** establish semantic target correctness — semantic target correctness is not
+established by this runtime status.

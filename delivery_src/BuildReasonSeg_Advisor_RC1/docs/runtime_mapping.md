@@ -23,3 +23,16 @@ RC1 自己新增的工程层（不改变核心数学）：`runtime/imageio.py`�
 （核心链编排）、`runtime/program_head.py`（真实 Qwen runtime + suggestion 生成）、`runtime/outputs.py`
 （mask/overlay/diagnostics）、`runtime/manifest.py`（Qwen 资产 manifest）、`runtime/pipeline.py`（端到端流程）、
 `predict.py`（真实 CLI）。
+
+## SUCCESS semantics (frozen)
+
+```text
+validity_scope  = RUNTIME_STRUCTURAL_ONLY
+semantic_status = NOT_EVALUATED
+semantic_note   = SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target
+                  correctness is not established.
+```
+
+`SUCCESS` is a runtime structural status only: it confirms that the RC1 runtime completed and passed its current
+structural checks. It does **not** establish semantic target correctness — semantic target correctness is not
+established by this runtime status.

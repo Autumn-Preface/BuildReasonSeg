@@ -1,0 +1,81 @@
+{
+  "task_id": "MASK01_D1_R1B_CANONICAL_DOCS",
+  "task_status": "STOP",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1a-r6-tests",
+    "starting_head": "385a3ba5d87c22712c75e8a22273d5720bd9cfe8",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1b",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "documents": {
+    "paths": [
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\README.md",
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\docs\\model_card.md",
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\docs\\runtime_mapping.md",
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\inference\\README.md"
+    ],
+    "edits": {
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\README.md": "SECTION_APPENDED",
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\docs\\model_card.md": "SECTION_APPENDED",
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\docs\\runtime_mapping.md": "SECTION_APPENDED",
+      "delivery_src\\BuildReasonSeg_Advisor_RC1\\inference\\README.md": "SECTION_APPENDED"
+    }
+  },
+  "markers": [
+    "RUNTIME_STRUCTURAL_ONLY",
+    "NOT_EVALUATED",
+    "semantic target correctness is not established"
+  ],
+  "marker_validation": {
+    "delivery_src\\BuildReasonSeg_Advisor_RC1\\README.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": false
+      },
+      "result": "FAIL"
+    },
+    "delivery_src\\BuildReasonSeg_Advisor_RC1\\docs\\model_card.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": false
+      },
+      "result": "FAIL"
+    },
+    "delivery_src\\BuildReasonSeg_Advisor_RC1\\docs\\runtime_mapping.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": false
+      },
+      "result": "FAIL"
+    },
+    "delivery_src\\BuildReasonSeg_Advisor_RC1\\inference\\README.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": false
+      },
+      "result": "FAIL"
+    }
+  },
+  "marker_validation_passed": false,
+  "frozen_semantics": {
+    "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+    "semantic_status": "NOT_EVALUATED",
+    "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established."
+  },
+  "untouched_verified": {
+    "pipeline_py": true,
+    "predict_py": true,
+    "tests": true,
+    "source_manifest": true,
+    "inspect_proposals_defect_fixed": false
+  },
+  "pytest_executed": false,
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false
+}

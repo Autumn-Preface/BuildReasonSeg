@@ -110,3 +110,16 @@ detector 与 research 冻结路径**检测数、置信度、mask 完全一致**�
 - 锁定候选**尚未**被声称成功；未来失败不得在无新 ChatGPT 决定的情况下替换。
 - `scene_disjoint_v1` 的场景分离 ≠ 跨城市泛化证据；任意航空/跨传感器鲁棒性 **NOT ESTABLISHED**。
 - A2 为持续未检出样例，来源/域 **NOT ESTABLISHED**；**不得**判定为已证实的域外样本。
+
+## SUCCESS semantics (frozen)
+
+```text
+validity_scope  = RUNTIME_STRUCTURAL_ONLY
+semantic_status = NOT_EVALUATED
+semantic_note   = SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target
+                  correctness is not established.
+```
+
+`SUCCESS` is a runtime structural status only: it confirms that the RC1 runtime completed and passed its current
+structural checks. It does **not** establish semantic target correctness — semantic target correctness is not
+established by this runtime status.
