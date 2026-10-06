@@ -17,30 +17,30 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1C_RUNTIME_CONTRACT_TEST_CLEANUP Report
+# FROM_DSH — Task MASK01_D1_R1D_SOURCE_MANIFEST_CANONICALIZATION Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1C_RUNTIME_CONTRACT_TEST_CLEANUP` |
+| Task | `MASK01_D1_R1D_SOURCE_MANIFEST_CANONICALIZATION` |
 | Status | **COMPLETE** |
-| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1b-r2` / `60cacc8a2d4460740ad9849fef00f506ad951549` |
-| Task branch | `fix/task8b3-mask01-success-semantics-r1c` |
-| Only file modified | `tests/test_task8b_runtime.py` |
-| Old tautological assertion removed | True |
-| `success_semantics()` exact dict test | True |
-| `PipelineResult.ok` compatibility test | True |
-| 2-node gate | exit 0 · 2 passed in 1.47s |
-| full suite / `-k` | NOT run / NOT used |
-| product source / CLI tests / docs / manifest | UNCHANGED |
-| manifest_update | `DEFERRED_TO_R1_D` |
-| model inference / training / external write | false / false / false |
-| Evidence | `evaluation\task8b3_mask01_d1_r1c_runtime_contract_test_cleanup.json` |
-| Report | `docs\task8b3_mask01_d1_r1c_runtime_contract_test_cleanup.md` |
-| Next gate | `CHATGPT_R1C_REMOTE_AUDIT` (R1-D not entered) |
+| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1c` / `3bf9dafac69175d36a1abb6a83d019ef118ca72c` |
+| Task branch | `fix/task8b3-mask01-success-semantics-r1d` |
+| Only file modified | `source_manifest.json` |
+| Identity source | HEAD Git canonical blob bytes (working tree not used) |
+| Entries updated / already canonical | 8 / 127 |
+| Entry count preserved | True (135 → 135) |
+| Path order preserved | True |
+| All-entry `entry_source_bytes()` validation | PASS |
+| Manifest contract validation | True |
+| product source / tests / docs / sync script | UNCHANGED |
+| pytest / model inference / training / external sync | not run / false / false / false |
+| Evidence | `evaluation\task8b3_mask01_d1_r1d_source_manifest_canonicalization.json` |
+| Report | `docs\task8b3_mask01_d1_r1d_source_manifest_canonicalization.md` |
+| Next gate | `CHATGPT_R1D_REMOTE_AUDIT` (R1-E not entered) |
 
-Watt was not needed for Task MASK01_D1_R1C_RUNTIME_CONTRACT_TEST_CLEANUP (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1D_SOURCE_MANIFEST_CANONICALIZATION (no downloads, no transfers).
 
 The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.

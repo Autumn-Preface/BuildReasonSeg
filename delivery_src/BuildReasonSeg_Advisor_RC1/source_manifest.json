@@ -22,8 +22,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 10499,
-      "sha256": "f709903048d4385a0a4bcdb7b5a471018e70618909a075aa0a51d57fc99155bd"
+      "bytes": 11171,
+      "sha256": "3a17a3c20a7f790d3aa83571d1831adbcaba02e5dcfefefaed5a3e6a22647ff2"
     },
     {
       "path": "buildreasonseg/__init__.py",
@@ -507,8 +507,8 @@
     },
     {
       "path": "buildreasonseg/runtime/pipeline.py",
-      "bytes": 18736,
-      "sha256": "3a48fcf0f2c07cc99803841aea72c13e0419ea31c4ac05164c52677af654b75f"
+      "bytes": 19237,
+      "sha256": "f4c305a5d89f1ce5262b9e97282019dd5abfae804a10e53035e0623438dc69f5"
     },
     {
       "path": "buildreasonseg/runtime/program_head.py",
@@ -577,13 +577,13 @@
     },
     {
       "path": "docs/model_card.md",
-      "bytes": 6954,
-      "sha256": "8cbb29b72e69b902b3897c5e4238eea299e7e52f043c193dbc72bb282c004152"
+      "bytes": 7507,
+      "sha256": "dd7a0c663c13a56fe540fd669f3e34d0c5484608ac1e8410220c8aa49c710e79"
     },
     {
       "path": "docs/runtime_mapping.md",
-      "bytes": 2286,
-      "sha256": "654f10a40951d94324a45362faa137305dac475937bbaa679389ee152aeccdd7"
+      "bytes": 2781,
+      "sha256": "ec49552fea57d487bc731c45c48ebde530bc85f294f98b441138dea013cb4254"
     },
     {
       "path": "environment.yml",
@@ -597,8 +597,8 @@
     },
     {
       "path": "inference/README.md",
-      "bytes": 1055,
-      "sha256": "50a24ce6859d121c6dc2bda2df6c92099c9fcec03bde3e964d9bc61be888c580"
+      "bytes": 1545,
+      "sha256": "7a587312a53aa1bebfbf3c34248815313be99367a071a0ff5151bba94c4db953"
     },
     {
       "path": "model/buildreasonseg_advisor/metadata.json",
@@ -622,8 +622,8 @@
     },
     {
       "path": "predict.py",
-      "bytes": 17911,
-      "sha256": "96ae67697d4165a74baca43181f6c5da0f045241077cd65735832fb5e156f77b"
+      "bytes": 18681,
+      "sha256": "a342e92b515c738a7e09097cc5df156f4119b4be3627e0c5f058bcc3e20fa211"
     },
     {
       "path": "prepare_dataset.py",
@@ -642,8 +642,8 @@
     },
     {
       "path": "tests/test_cli_contract.py",
-      "bytes": 6877,
-      "sha256": "b3894aeb782bec90818f7f7d412d9a9cafb98de948b57c57539262c7233be149"
+      "bytes": 10188,
+      "sha256": "f6cfe97b2b168b0d25f66a8dad7a1fb70aec7e404b8b4f4b393297be1b5914ac"
     },
     {
       "path": "tests/test_language_contract.py",
@@ -672,8 +672,8 @@
     },
     {
       "path": "tests/test_task8b_runtime.py",
-      "bytes": 28128,
-      "sha256": "71915e8abfbe96b328736c2c84a8773640ec58cd01f847f6b58aa33edf6ec46b"
+      "bytes": 29711,
+      "sha256": "c25ef45698059de2c6b00d6bf7f87fe4de0b49f1db18eff20f7d5bf36b74ffdb"
     },
     {
       "path": "train.py",

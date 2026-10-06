@@ -1,0 +1,101 @@
+{
+  "task_id": "MASK01_D1_R1D_SOURCE_MANIFEST_CANONICALIZATION",
+  "status": "COMPLETE",
+  "starting_branch": "fix/task8b3-mask01-success-semantics-r1c",
+  "starting_head": "3bf9dafac69175d36a1abb6a83d019ef118ca72c",
+  "task_branch": "fix/task8b3-mask01-success-semantics-r1d",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "identity_source": "HEAD Git canonical blob bytes (working-tree bytes not used)",
+  "entry_count_before": 135,
+  "entry_count_after": 135,
+  "entry_count_preserved": true,
+  "path_order_preserved": true,
+  "updated_entries": [
+    {
+      "path": "README.md",
+      "old_bytes": 10499,
+      "new_bytes": 11171,
+      "old_sha256": "f709903048d4385a0a4bcdb7b5a471018e70618909a075aa0a51d57fc99155bd",
+      "new_sha256": "3a17a3c20a7f790d3aa83571d1831adbcaba02e5dcfefefaed5a3e6a22647ff2"
+    },
+    {
+      "path": "buildreasonseg/runtime/pipeline.py",
+      "old_bytes": 18736,
+      "new_bytes": 19237,
+      "old_sha256": "3a48fcf0f2c07cc99803841aea72c13e0419ea31c4ac05164c52677af654b75f",
+      "new_sha256": "f4c305a5d89f1ce5262b9e97282019dd5abfae804a10e53035e0623438dc69f5"
+    },
+    {
+      "path": "docs/model_card.md",
+      "old_bytes": 6954,
+      "new_bytes": 7507,
+      "old_sha256": "8cbb29b72e69b902b3897c5e4238eea299e7e52f043c193dbc72bb282c004152",
+      "new_sha256": "dd7a0c663c13a56fe540fd669f3e34d0c5484608ac1e8410220c8aa49c710e79"
+    },
+    {
+      "path": "docs/runtime_mapping.md",
+      "old_bytes": 2286,
+      "new_bytes": 2781,
+      "old_sha256": "654f10a40951d94324a45362faa137305dac475937bbaa679389ee152aeccdd7",
+      "new_sha256": "ec49552fea57d487bc731c45c48ebde530bc85f294f98b441138dea013cb4254"
+    },
+    {
+      "path": "inference/README.md",
+      "old_bytes": 1055,
+      "new_bytes": 1545,
+      "old_sha256": "50a24ce6859d121c6dc2bda2df6c92099c9fcec03bde3e964d9bc61be888c580",
+      "new_sha256": "7a587312a53aa1bebfbf3c34248815313be99367a071a0ff5151bba94c4db953"
+    },
+    {
+      "path": "predict.py",
+      "old_bytes": 17911,
+      "new_bytes": 18681,
+      "old_sha256": "96ae67697d4165a74baca43181f6c5da0f045241077cd65735832fb5e156f77b",
+      "new_sha256": "a342e92b515c738a7e09097cc5df156f4119b4be3627e0c5f058bcc3e20fa211"
+    },
+    {
+      "path": "tests/test_cli_contract.py",
+      "old_bytes": 6877,
+      "new_bytes": 10188,
+      "old_sha256": "b3894aeb782bec90818f7f7d412d9a9cafb98de948b57c57539262c7233be149",
+      "new_sha256": "f6cfe97b2b168b0d25f66a8dad7a1fb70aec7e404b8b4f4b393297be1b5914ac"
+    },
+    {
+      "path": "tests/test_task8b_runtime.py",
+      "old_bytes": 28128,
+      "new_bytes": 29711,
+      "old_sha256": "71915e8abfbe96b328736c2c84a8773640ec58cd01f847f6b58aa33edf6ec46b",
+      "new_sha256": "c25ef45698059de2c6b00d6bf7f87fe4de0b49f1db18eff20f7d5bf36b74ffdb"
+    }
+  ],
+  "already_canonical_entries": 127,
+  "missing_at_head": [],
+  "helper": {
+    "path": "scripts\\sync_advisor_rc1_delivery.py",
+    "function": "entry_source_bytes",
+    "signature": "(entry: 'dict', basis: 'str | None', root: 'Path') -> 'bytes | None'"
+  },
+  "all_entry_git_canonical_validation": "PASS",
+  "manifest_contract_validation": {
+    "schema_present": true,
+    "schema_value": "BuildReasonSeg.AdvisorRC1.SourceManifest.v1",
+    "identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+    "identity_basis_is_git_canonical": true,
+    "entry_count": 135,
+    "unique_paths": true,
+    "all_paths_exist_at_head": true,
+    "no_control_file_entry": true
+  },
+  "manifest_contract_pass": true,
+  "product_source_changed": false,
+  "tests_changed": false,
+  "canonical_docs_changed": false,
+  "sync_script_changed": false,
+  "pytest": "not run",
+  "model_inference": false,
+  "training": false,
+  "external_sync_performed": false,
+  "inspect_proposals_touched": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1D_REMOTE_AUDIT"
+}
