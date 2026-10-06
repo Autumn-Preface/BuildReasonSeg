@@ -632,10 +632,36 @@ def test_large_image_path_never_allocates_full_frame_bool(monkeypatch) -> None:
     assert result["merged"][0].mask_crop.shape == (50, 60)
     assert tuple(result["merged"][0].mask_crop.shape) != (5000, 5000)
 
-def test_success_semantics_contract_present():
-    """SUCCESS is a runtime/structural status; semantic correctness is explicitly not established."""
-    from buildreasonseg.runtime.pipeline import SUCCESS_SEMANTIC_NOTE, SUCCESS_SEMANTIC_STATUS, SUCCESS_VALIDITY_SCOPE
-    assert SUCCESS_VALIDITY_SCOPE == "RUNTIME_STRUCTURAL_ONLY"
-    assert SUCCESS_SEMANTIC_STATUS == "NOT_EVALUATED"
-    assert "semantic target correctness is not established" in SUCCESS_SEMANTIC_NOTE
-    assert "semantic_status" in ("semantic_status", "runtime-only; semantic=")
+def test_success_semantics_contract_exact():
+    """The public machine-readable SUCCESS contract is exactly this dictionary."""
+    from buildreasonseg.runtime.pipeline import success_semantics
+    assert success_semantics() == {
+        "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+        "semantic_status": "NOT_EVALUATED",
+        "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
+    }
+
+
+def test_pipeline_result_ok_is_status_compatibility():
+    """PipelineResult.ok is exactly (status == "SUCCESS") and nothing else."""
+    import dataclasses
+    from buildreasonseg.runtime.pipeline import PipelineResult
+    required = {field.name for field in dataclasses.fields(PipelineResult)
+                if field.default is dataclasses.MISSING and field.default_factory is dataclasses.MISSING}
+    payload = {"status": "SUCCESS"}
+
+    def build(status):
+        kwargs = {name: payload if name == "result_payload" else None for name in required}
+        kwargs["status"] = status
+        if "result_payload" not in kwargs:
+            kwargs["result_payload"] = payload
+        return PipelineResult(**kwargs)
+
+    success = build("SUCCESS")
+    failed = build("FAILED")
+    other = build("PARTIAL")
+    assert success.ok is True and success.status == "SUCCESS"
+    assert failed.ok is False and failed.status == "FAILED"
+    assert other.ok is False and other.status == "PARTIAL"
+    for result in (success, failed, other):
+        assert result.ok == (result.status == "SUCCESS")

@@ -1,0 +1,35 @@
+{
+  "task_id": "MASK01_D1_R1C_RUNTIME_CONTRACT_TEST_CLEANUP",
+  "status": "COMPLETE",
+  "starting_branch": "fix/task8b3-mask01-success-semantics-r1b-r2",
+  "starting_head": "60cacc8a2d4460740ad9849fef00f506ad951549",
+  "task_branch": "fix/task8b3-mask01-success-semantics-r1c",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "file_modified": "delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py",
+  "old_tautological_assertion_removed": true,
+  "success_semantics_exact_dict_test": true,
+  "pipeline_result_ok_compatibility_test": true,
+  "source_string_scanning_used": false,
+  "gate": {
+    "nodes": [
+      "tests/test_task8b_runtime.py::test_success_semantics_contract_exact",
+      "tests/test_task8b_runtime.py::test_pipeline_result_ok_is_status_compatibility"
+    ],
+    "exit": 0,
+    "summary": "2 passed in 1.47s",
+    "full_suite_run": false,
+    "k_substitution_used": false
+  },
+  "product_source_changed": false,
+  "cli_tests_changed": false,
+  "canonical_docs_changed": false,
+  "manifest_changed": false,
+  "manifest_update": "DEFERRED_TO_R1_D",
+  "inspect_proposals_changed": false,
+  "pytest_full_suite": "not run",
+  "model_inference": false,
+  "training": false,
+  "external_write": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1C_REMOTE_AUDIT"
+}
