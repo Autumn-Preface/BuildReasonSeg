@@ -1,0 +1,48 @@
+{
+  "task_id": "MASK01_D1_R1A_R2_EXECUTABLE_CLI_FIX",
+  "task_status": "STOP",
+  "git": {
+    "repository": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "starting_branch": "fix/task8b3-mask01-success-semantics-r1a-r1",
+    "starting_head": "2fe6369d7def85b59a16c28af4340eb61f24437c",
+    "task_branch": "fix/task8b3-mask01-success-semantics-r1a-r2",
+    "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT"
+  },
+  "fixes": {
+    "successes_increment_restored": true,
+    "batch_annotation_restored": false,
+    "runtime_success_summary_present": true,
+    "single_note_deduplicated": true,
+    "batch_function": "_run_batch"
+  },
+  "gates": {
+    "gate_a_nodes": [
+      "tests/test_cli_contract.py::test_r1a_single_success_semantics_block",
+      "tests/test_cli_contract.py::test_r1a_single_failure_omits_success_semantics",
+      "tests/test_cli_contract.py::test_r1a_batch_success_annotation_and_runtime_summary"
+    ],
+    "gate_a_exit": 1,
+    "gate_a_summary": "2 failed, 1 passed in 1.55s",
+    "gate_b_nodes": [
+      "tests/test_cli_contract.py::test_predict_help_lists_frozen_arguments",
+      "tests/test_cli_contract.py::test_predict_prompt_required_for_normal_inference",
+      "tests/test_cli_contract.py::test_predict_missing_image_reports_e201",
+      "tests/test_cli_contract.py::test_predict_unsupported_image_type_reports_e203"
+    ],
+    "gate_b_exit": 0,
+    "gate_b_summary": "4 passed in 6.62s",
+    "k_substitution_used": false,
+    "full_suite_run": false,
+    "inspect_proposals_node_run": false
+  },
+  "untouched_verified": {
+    "pipeline_py": true,
+    "manifest": true,
+    "test_task8b_runtime": true,
+    "canonical_docs": true,
+    "inspect_proposals_defect_fixed": false
+  },
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false
+}

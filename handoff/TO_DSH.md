@@ -1,131 +1,134 @@
-# TO_DSH — MASK01_D1_R1A_R1_CLI_CONTRACT_CORRECTION
+# TO_DSH — MASK01_D1_R1A_R2_EXECUTABLE_CLI_FIX
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `fix/task8b3-mask01-success-semantics-r1a`
-> Required starting HEAD: `1e2282151aa8c0c3cbbdc63526d8e449dc7b655d`
-> New task branch: `fix/task8b3-mask01-success-semantics-r1a-r1`
+> Required starting branch: `fix/task8b3-mask01-success-semantics-r1a-r1`
+> Required starting HEAD: `2fe6369d7def85b59a16c28af4340eb61f24437c`
+> New task branch: `fix/task8b3-mask01-success-semantics-r1a-r2`
 
 ## 0. PURPOSE
 
-This is a small corrective task for R1-A only.
+This is a narrowly scoped corrective task for R1-A.
 
-ChatGPT independently audited commit:
+ChatGPT independently audited:
 
 ```text
-1e2282151aa8c0c3cbbdc63526d8e449dc7b655d
-docs(rc1): persist r1a cli semantics state
+2fe6369d7def85b59a16c28af4340eb61f24437c
+fix(rc1): correct cli success semantics contract
 ```
 
-The persisted R1-A state is useful and accepted as an audit snapshot, but the CLI implementation itself is NOT yet accepted.
+The commit is preserved as historical state, but the implementation is NOT accepted.
 
-This task corrects only the R1-A implementation contract.
+Do not rewrite history.
 
-Do not fix the separate inspect-proposals exit-code failure in this task.
+This task fixes only the executable CLI presentation/counting regressions and the behavioral tests that must prove them.
+
+Do NOT fix the separate inspect-proposals `30 vs 20` issue.
 
 ---
 
-## 1. CHATGPT AUDIT FINDINGS
+## 1. FROZEN AUDIT FINDINGS
 
-Three R1-A defects are frozen for correction.
+### A. Batch success counter regression
 
-### Defect A — wrong single-image SUCCESS presentation
+Current code removed:
 
-Current implementation prints:
-
-```text
-Result       : SUCCESS
-Result       : SUCCESS [runtime-only; semantic=NOT_EVALUATED]
-Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
+```python
+successes += 1
 ```
 
-This is NOT the frozen contract.
+from the successful batch branch.
 
-Required exact block:
+This is a real regression.
+
+It can make:
 
 ```text
-Result       : SUCCESS
-Validity     : RUNTIME_STRUCTURAL_ONLY
-Semantic     : NOT_EVALUATED
-Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
+Runtime success count = wrong
+batch exit-code decision = wrong
 ```
 
-There must be only one `Result` line.
+because later logic still uses `successes`.
 
-### Defect B — batch summary label not changed
+Required correction:
 
-Current code still prints:
+```python
+if result.ok:
+    successes += 1
+    ...
+```
+
+must be restored.
+
+### B. Batch success annotation was removed
+
+Current successful item prints only:
 
 ```text
-Success: <n>
+... SUCCESS
 ```
 
 Required:
 
 ```text
-Runtime success: <n>
+... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
 ```
 
-### Defect C — contract tests are still source-string tests
+Restore this exact suffix.
 
-Current new tests mainly read `predict.py` as text and assert strings exist.
+### C. `_report_single()` repeats the Note line
 
-That does not prove runtime presentation behavior.
+Current structure effectively does:
 
-R1-A requires real deterministic behavior tests using synthetic/fake result objects or a minimal pure formatting helper.
+```python
+for line in success_report_lines(payload):
+    print(line)
+    print(Note)
+```
+
+but `success_report_lines()` already returns the Note line.
+
+Therefore the Note is repeated.
+
+Required:
+
+```python
+for line in success_report_lines(payload):
+    print(line)
+```
+
+and nothing else inside that loop.
+
+A successful single result must print exactly four semantic lines, once each.
+
+### D. Previous tests did not prove the required runtime behavior
+
+The previous commit added helper-level tests but:
+- did not use the exact required R1-A test names;
+- used a `try/except Exception: pass` pattern around `_report_single()`;
+- used a weak conditional assertion;
+- did not exercise `_run_batch()` enough to catch the deleted `successes += 1`;
+- did not prove the successful item suffix and summary count together.
+
+This task must replace those weak tests with strict executable tests.
 
 ---
 
-## 2. SEPARATE PRE-EXISTING FAILURE — DO NOT FIX HERE
+## 2. GIT PREFLIGHT
 
-Known current canonical test:
-
-```text
-test_predict_inspect_proposals_does_not_require_prompt
-```
-
-has been reported as:
-
-```text
-expected = returncode 20 / E202
-observed = returncode 30
-```
-
-This issue existed before this corrective implementation and is classified for now as:
-
-```text
-PREEXISTING_CANONICAL_CONTRACT_FAILURE_CANDIDATE
-```
-
-Do NOT in this task:
-
-```text
-change inspect-proposals behavior
-change E202/E3xx routing
-change model package verification order
-change PredictRuntime initialization order
-edit or skip/xfail that existing inspect test
-```
-
-A separate ChatGPT task will handle it if needed.
-
----
-
-## 3. GIT PREFLIGHT
-
-Verify:
+Verify exactly:
 
 ```text
 current branch =
-fix/task8b3-mask01-success-semantics-r1a
+fix/task8b3-mask01-success-semantics-r1a-r1
 
 HEAD =
-1e2282151aa8c0c3cbbdc63526d8e449dc7b655d
+2fe6369d7def85b59a16c28af4340eb61f24437c
 ```
 
-Allowed initial working tree:
+Allowed initial worktree:
 
 ```text
 clean
@@ -139,41 +142,37 @@ M handoff/TO_DSH.md
 
 from task-book replacement.
 
-Any other pre-existing mutation:
-
-```text
-record it
-do not delete it
-do not reset/restore/clean it
-STOP implementation if it overlaps this task
-```
+Any other pre-existing change:
+- do not delete;
+- do not reset;
+- do not restore;
+- do not clean;
+- record and STOP overlapping implementation.
 
 Create:
 
 ```text
-fix/task8b3-mask01-success-semantics-r1a-r1
+fix/task8b3-mask01-success-semantics-r1a-r2
 ```
-
-from the required HEAD.
 
 No reset/rebase/amend/stash/clean/force-push.
 
 ---
 
-## 4. EXACT ALLOWED PRODUCT CHANGES
+## 3. ALLOWED PATHS
 
-Only:
+Only these product/test files may change:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/predict.py
 delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_cli_contract.py
 ```
 
-plus task reporting:
+And these task records:
 
 ```text
-docs/task8b3_mask01_d1_r1a_r1_cli_contract_correction.md
-evaluation/task8b3_mask01_d1_r1a_r1_cli_contract_correction.json
+docs/task8b3_mask01_d1_r1a_r2_executable_cli_fix.md
+evaluation/task8b3_mask01_d1_r1a_r2_executable_cli_fix.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
@@ -183,9 +182,9 @@ No other path may change.
 Explicitly forbidden:
 
 ```text
-buildreasonseg/runtime/pipeline.py
-tests/test_task8b_runtime.py
-source_manifest.json
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
+delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 canonical README/docs
 configs
 models
@@ -195,9 +194,21 @@ external RC1
 
 ---
 
-## 5. SINGLE-IMAGE NORMAL SUCCESS — EXACT CONTRACT
+## 4. SINGLE-IMAGE SUCCESS CONTRACT
 
-In `predict.py`, `_report_single()` normal SUCCESS must print exactly:
+Keep or minimally correct `success_report_lines(payload)`.
+
+For this payload:
+
+```python
+{
+    "status": "SUCCESS",
+    "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+    "semantic_status": "NOT_EVALUATED",
+}
+```
+
+it must return exactly:
 
 ```text
 Result       : SUCCESS
@@ -206,7 +217,9 @@ Semantic     : NOT_EVALUATED
 Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
 ```
 
-Then preserve the existing blank line and existing output lines:
+`_report_single()` must print those four lines exactly once each.
+
+Then existing successful output:
 
 ```text
 Mask
@@ -216,119 +229,107 @@ Reference ID
 Mask area
 ```
 
-Do not print a second `Result` line.
+must still print.
 
-For normal SUCCESS, obtain:
+There must be exactly one:
 
 ```text
-validity_scope
-semantic_status
+Result       :
 ```
 
-from `result.result_payload`.
+line and exactly one:
 
-Expected machine values are already provided by the frozen `pipeline.py` contract.
+```text
+Note         :
+```
 
-The user-facing Note may be a stable CLI constant/string in `predict.py`.
+line.
 
-Do not change machine semantics in `pipeline.py`.
+FAILED output must not print Validity/Semantic/Note.
+
+Do not change error handling.
 
 ---
 
-## 6. SINGLE-IMAGE FAILED RESULT
+## 5. BATCH CONTRACT — RESTORE EXECUTABLE BEHAVIOR
 
-For failed result:
+In `_run_batch()`:
 
-```text
-status != SUCCESS
+### Successful result
+
+Must perform:
+
+```python
+successes += 1
 ```
 
-must NOT print:
+and print exactly:
 
 ```text
-Validity     :
-Semantic     :
-SUCCESS only confirms the current runtime structural checks
+[<index>/<total>] <filename> ... SUCCESS [runtime-only; semantic=NOT_EVALUATED]
 ```
 
-Existing failure/error rendering remains unchanged.
+### Failed result
+
+Existing failure count and presentation stay unchanged:
+
+```python
+failures += 1
+```
+
+### Summary
+
+Must print:
+
+```text
+Batch complete
+Runtime success: <successes>
+Failed : <failures>
+Total  : <...>s
+```
+
+### Exit semantics
+
+Must remain:
+
+```text
+all successful -> 0
+all failed -> EXIT_BATCH_ALL_FAILED
+mixed -> EXIT_BATCH_PARTIAL
+```
+
+Do not change constants or status semantics.
 
 ---
 
-## 7. BATCH SUCCESS PRESENTATION
+## 6. REAL BEHAVIORAL TESTS — EXACT NAMES
 
-Keep exact success suffix:
-
-```text
-SUCCESS [runtime-only; semantic=NOT_EVALUATED]
-```
-
-Prefer reading the semantic status from the successful result payload if a minimal implementation permits it without unrelated refactoring.
-
-Do not change:
+In:
 
 ```text
-result.ok
-success counting
-failure counting
-batch exit codes
-iteration behavior
+tests/test_cli_contract.py
 ```
 
----
+remove/replace the weak R1-A-R1 tests as needed.
 
-## 8. BATCH SUMMARY
-
-Change only:
+Create exactly these tests:
 
 ```text
-Success: <n>
+test_r1a_single_success_semantics_block
+test_r1a_single_failure_omits_success_semantics
+test_r1a_batch_success_annotation_and_runtime_summary
 ```
 
-to:
+### Test 1 — single success
 
-```text
-Runtime success: <n>
-```
-
-Keep:
-
-```text
-Failed : <n>
-Total  : <time>s
-```
-
-and return-code behavior unchanged.
-
----
-
-## 9. REAL CONTRACT TESTS — REQUIRED
-
-Replace the R1-A source-string tests with behavioral tests.
-
-Do not inspect source code text to prove CLI output.
-
-Use:
-
-```text
-import predict as predict_module
-```
-
-and synthetic/fake result objects.
-
-### Test A — successful single result
-
-Use a small fake/synthetic result with:
+Use a fake result object with:
 
 ```python
 result.result_payload = {
     "status": "SUCCESS",
     "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
     "semantic_status": "NOT_EVALUATED",
-    "semantic_note": (
-        "SUCCESS means the RC1 runtime completed and passed its current structural checks; "
-        "semantic target correctness is not established."
-    ),
+    "semantic_note": "SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target correctness is not established.",
     "output_paths": {
         "mask": "mask.png",
         "overlay": "overlay.png",
@@ -342,87 +343,91 @@ result.ok = True
 
 Call:
 
-```text
-predict_module._report_single(...)
+```python
+predict_module._report_single(fake, fake_args)
 ```
 
 directly.
 
+Do NOT wrap it in `try/except`.
+
 Capture stdout.
 
-Require exact lines:
+Assert:
+- exact four semantic lines are present;
+- each appears exactly once;
+- exactly one `Result       :` line;
+- exactly one `Note         :` line;
+- mask/overlay/diagnostics/reference/mask area lines are present.
+
+### Test 2 — single failure
+
+Use a fake result with:
 
 ```text
-Result       : SUCCESS
-Validity     : RUNTIME_STRUCTURAL_ONLY
-Semantic     : NOT_EVALUATED
-Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
+status = FAILED
+ok = False
+error_code = E404
 ```
 
-Also require:
+and enough payload fields for the existing error path.
 
-```text
-Mask         : mask.png
-Overlay      : overlay.png
-Diagnostics  : diag
-Reference ID : 7
-Mask area    : 123
-```
-
-Require only one line beginning with:
-
-```text
-Result       :
-```
-
-### Test B — failed single result
-
-Use a fake FAILED result compatible with `_report_single()`.
+Call `_report_single()` directly.
 
 Capture stdout/stderr.
 
-Prove output does NOT contain:
+Assert stdout contains:
+
+```text
+Result       : FAILED
+```
+
+and does NOT contain:
 
 ```text
 Validity     :
 Semantic     :
-SUCCESS only confirms
+Note         :
 ```
 
-Do not change failure semantics.
+Do not suppress exceptions.
 
-### Test C — batch success annotation and summary
+### Test 3 — batch success + summary + counting
 
-Do not run models.
+This test must exercise the actual `_run_batch()` function without model execution.
 
-Use monkeypatch/fakes around the smallest existing unit, or factor a tiny pure formatting/reporting helper in `predict.py` if needed.
+Use monkeypatch/fakes for:
+- `_batch_files` or a temporary directory with supported filenames;
+- `predict_one()` returning fake successful results;
+- runtime can be a dummy object because patched `predict_one()` must prevent model execution;
+- args must contain the fields `_run_batch()` reads.
 
-Prove actual emitted output contains:
+Use at least 2 fake input files, both successful.
 
-```text
-SUCCESS [runtime-only; semantic=NOT_EVALUATED]
-Runtime success:
-```
+Call `_run_batch()` directly.
 
-This must exercise Python behavior, not source-text scanning.
+Assert:
+- return code is `0`;
+- stdout contains 2 successful item lines with exact suffix:
+  `SUCCESS [runtime-only; semantic=NOT_EVALUATED]`;
+- stdout contains:
+  `Runtime success: 2`;
+- stdout contains:
+  `Failed : 0`.
 
-Do not invoke real `PredictRuntime`.
+This test must fail if `successes += 1` is deleted.
+
+Optional: if simple, add a separate mixed fake inside the same test or another existing helper test to preserve mixed exit semantics, but do not expand scope unnecessarily.
+
+No source-code string scanning is allowed for these three tests.
 
 ---
 
-## 10. R1-A-R1 TEST GATE
+## 7. TEST GATES — RUN EXACTLY
 
-Because the unrelated inspect-proposals test is already a known separate candidate defect, do NOT use the full `test_cli_contract.py` file as this subtask's acceptance gate.
+From canonical delivery root run exactly:
 
-Give the new behavioral tests exact names:
-
-```text
-test_r1a_single_success_semantics_block
-test_r1a_single_failure_omits_success_semantics
-test_r1a_batch_success_annotation_and_runtime_summary
-```
-
-Run exactly:
+### Gate A
 
 ```text
 python -m pytest \
@@ -439,7 +444,7 @@ Required:
 exit 0
 ```
 
-Also run these existing unaffected smoke contracts:
+### Gate B
 
 ```text
 python -m pytest \
@@ -457,23 +462,49 @@ Required:
 exit 0
 ```
 
-Do NOT run the known failing inspect-proposals node in this task.
+Do not replace these commands with `-k`.
 
-Do NOT run full `test_cli_contract.py`.
+Do not run the inspect-proposals failing node.
 
-Do NOT run full canonical suite.
+Do not run full `test_cli_contract.py`.
+
+Do not run full canonical suite.
 
 ---
 
-## 11. MANIFEST
+## 8. KNOWN INSPECT-PROPOSALS ISSUE
 
-Do NOT update:
+Do NOT modify:
+
+```text
+test_predict_inspect_proposals_does_not_require_prompt
+```
+
+Do NOT:
+- xfail it;
+- skip it;
+- weaken it;
+- change `--inspect-proposals`;
+- change E202/E3xx behavior;
+- change model verification/runtime initialization order.
+
+Frozen current classification:
+
+```text
+PREEXISTING_CANONICAL_CONTRACT_FAILURE_CANDIDATE
+```
+
+Separate task later.
+
+---
+
+## 9. MANIFEST
+
+Do not modify:
 
 ```text
 source_manifest.json
 ```
-
-This remains intentionally deferred to R1-D.
 
 Record:
 
@@ -481,17 +512,19 @@ Record:
 manifest_update = DEFERRED_TO_R1_D
 ```
 
+Temporary manifest mismatch is expected until R1-D.
+
 ---
 
-## 12. EVERY OUTCOME MUST BE PUSHED
+## 10. EVERY OUTCOME MUST BE PUSHED
 
-Project collaboration policy:
+Current project collaboration rule is frozen:
 
 ```text
 ALL TASK OUTCOMES MUST BE PERSISTED TO GITHUB
 ```
 
-Whether this task ends:
+Regardless of:
 
 ```text
 COMPLETE
@@ -500,19 +533,23 @@ STOP
 FAILED
 ```
 
-DSH must update `FROM_DSH.md`, report/evidence, commit authorized state, and push.
+you must:
+- update FROM_DSH;
+- write report/evidence;
+- commit authorized current state;
+- push task branch.
 
-Do not leave the true state only locally.
+Do not leave facts only in the local workspace.
 
 ---
 
-## 13. REQUIRED REPORT
+## 11. REQUIRED REPORT
 
 Create:
 
 ```text
-docs/task8b3_mask01_d1_r1a_r1_cli_contract_correction.md
-evaluation/task8b3_mask01_d1_r1a_r1_cli_contract_correction.json
+docs/task8b3_mask01_d1_r1a_r2_executable_cli_fix.md
+evaluation/task8b3_mask01_d1_r1a_r2_executable_cli_fix.json
 ```
 
 Update:
@@ -522,48 +559,45 @@ handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Include:
+Report:
 
 ```text
-task_id = MASK01_D1_R1A_R1_CLI_CONTRACT_CORRECTION
+task_id = MASK01_D1_R1A_R2_EXECUTABLE_CLI_FIX
 status
 
 starting branch/head
 task branch
 
-audit defect A corrected?
-audit defect B corrected?
-audit defect C corrected?
+batch_success_counter_restored
+batch_success_suffix_restored
+single_note_duplication_fixed
 
-exact single SUCCESS block
-batch SUCCESS suffix
-batch summary label
+single SUCCESS exact block
+batch success exact line format
+batch summary exact label
 
-behavioral tests:
-3-node R1A command/result
-4-node unaffected smoke command/result
+Gate A command/result
+Gate B command/result
 
-inspect-proposals defect modified = NO
+known inspect-proposals issue modified = NO
 
 pipeline modified = NO
 manifest modified = NO
 canonical docs modified = NO
 model inference = NO
 training = NO
-external write = NO
+external sync/write = NO
 
 manifest_update = DEFERRED_TO_R1_D
 
-github_persistence_policy =
-ALL_TASK_OUTCOMES_PUSHED
+github_persistence_policy = ALL_TASK_OUTCOMES_PUSHED
 
-next_gate =
-CHATGPT_R1A_R1_REMOTE_AUDIT
+next_gate = CHATGPT_R1A_R2_REMOTE_AUDIT
 ```
 
 ---
 
-## 14. DIFF GATE
+## 12. DIFF GATE
 
 Before commit:
 
@@ -573,24 +607,27 @@ git diff --name-only
 git diff --cached --name-only
 ```
 
-Only Section 4 paths may be staged.
+Only Section 3 paths may be staged.
 
-Unexpected paths must not be deleted or staged.
+Unexpected files:
+- do not delete;
+- do not stage;
+- report them.
 
 ---
 
-## 15. COMMIT / PUSH
+## 13. COMMIT / PUSH
 
 Commit exactly once:
 
 ```text
-git commit -m "fix(rc1): correct cli success semantics contract"
+git commit -m "fix(rc1): restore executable cli success contract"
 ```
 
 Push:
 
 ```text
-fix/task8b3-mask01-success-semantics-r1a-r1
+fix/task8b3-mask01-success-semantics-r1a-r2
 ```
 
 No force push.
@@ -611,12 +648,11 @@ FINAL_PARENT=<sha>
 
 Then STOP.
 
-Do not enter the inspect-proposals corrective task.
-Do not enter R1-B.
+Do not enter any later task.
 
 ---
 
-## 16. ABSOLUTE PROHIBITIONS
+## 14. ABSOLUTE PROHIBITIONS
 
 Do NOT:
 
@@ -625,23 +661,27 @@ modify pipeline.py
 modify source_manifest.json
 modify canonical docs
 modify test_task8b_runtime.py
+
 fix inspect-proposals
-skip/xfail the inspect test
+skip/xfail inspect test
 change E202/E3xx handling
 change model initialization order
+
 run model inference
 run training
 run full canonical suite
-write external RC1
-sync external RC1
+write/sync external RC1
+
+change algorithms
 add thresholds
-change architecture
+
 reset
 rebase
 amend
 stash
 clean
 force-push
+
 start R1-B
 start R1-C
 start R1-D
@@ -651,33 +691,40 @@ start D2
 
 ---
 
-## 17. SUCCESS DEFINITION
+## 15. SUCCESS DEFINITION
 
-Expected successful terminal state:
+Expected successful state:
 
 ```text
-MASK01_D1_R1A_R1 = COMPLETE
+MASK01_D1_R1A_R2 = COMPLETE
 
-single-image block:
+single success:
 Result       : SUCCESS
 Validity     : RUNTIME_STRUCTURAL_ONLY
 Semantic     : NOT_EVALUATED
 Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.
 
-batch:
+single Note count = 1
+single Result count = 1
+
+batch successful item:
 SUCCESS [runtime-only; semantic=NOT_EVALUATED]
-Runtime success:
 
-behavioral R1-A tests = 3/3 PASS
-unaffected CLI smoke tests = 4/4 PASS
+batch counting:
+successes incremented correctly
 
-known inspect-proposals candidate defect = UNCHANGED / DEFERRED
+batch summary:
+Runtime success: <n>
 
-pipeline = UNCHANGED
-manifest = DEFERRED_TO_R1_D
-external RC1 = UNCHANGED
+Gate A = 3/3 PASS
+Gate B = 4/4 PASS
 
-NEXT = CHATGPT_R1A_R1_REMOTE_AUDIT
+inspect-proposals issue = unchanged/deferred
+pipeline = unchanged
+manifest = deferred to R1-D
+external RC1 = unchanged
+
+NEXT = CHATGPT_R1A_R2_REMOTE_AUDIT
 ```
 
 Then STOP.

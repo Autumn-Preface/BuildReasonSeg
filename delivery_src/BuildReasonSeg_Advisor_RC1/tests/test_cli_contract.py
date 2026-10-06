@@ -175,42 +175,56 @@ class _FakeResult:
     def __init__(self, payload):
         self.result_payload = payload
 
+class _FakeResult:
+    def __init__(self, payload, ok=True, error_code=None, error_reason=None):
+        self.result_payload = payload
+        self.ok = ok
+        self.error_code = error_code
+        self.error_reason = error_reason
 
-def test_success_report_lines_behaviour():
-    """Real behaviour test: a SUCCESS payload yields exactly the four frozen lines."""
+
+def _success_payload():
     from buildreasonseg.runtime.pipeline import success_semantics
-    from predict import success_report_lines
-    payload = {"status": "SUCCESS", **success_semantics()}
-    assert success_report_lines(payload) == [
-        "Result       : SUCCESS",
-        "Validity     : RUNTIME_STRUCTURAL_ONLY",
-        "Semantic     : NOT_EVALUATED",
-        "Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.",
-    ]
+    return {"status": "SUCCESS", **success_semantics()}
 
 
-def test_failed_report_lines_behaviour():
-    """A non-SUCCESS payload yields only the Result line, with no semantic claims."""
-    from predict import success_report_lines
-    lines = success_report_lines({"status": "FAILED", "error_code": "E404"})
-    assert len(lines) == 1 and lines[0].startswith("Result       : FAILED")
-
-
-def test_batch_success_line_behaviour():
-    from predict import batch_success_line
-    assert batch_success_line(3) == "Runtime success: 3"
-    assert batch_success_line(0) == "Runtime success: 0"
-
-
-def test_report_single_uses_helper_behaviour(capsys):
-    """_report_single prints the helper output for a fake SUCCESS result."""
-    from buildreasonseg.runtime.pipeline import success_semantics
+def test_r1a_single_success_semantics_block(capsys):
+    """Single-image SUCCESS prints the four frozen lines exactly once."""
     import predict
-    fake = _FakeResult({"status": "SUCCESS", **success_semantics()})
+    predict._report_single(_FakeResult(_success_payload()), type("A", (), {})())
+    out = capsys.readouterr().out.splitlines()
+    assert out.count("Result       : SUCCESS") == 1
+    assert out.count("Validity     : RUNTIME_STRUCTURAL_ONLY") == 1
+    assert out.count("Semantic     : NOT_EVALUATED") == 1
+    assert out.count("Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.") == 1
+
+
+def test_r1a_single_failure_omits_success_semantics(capsys):
+    import predict
+    predict._report_single(_FakeResult({"status": "FAILED", "error_code": "E404"}, ok=False,
+                                      error_code="E404", error_reason="mask_only_in_padding"),
+                           type("A", (), {})())
+    out = capsys.readouterr().out
+    assert "Result       : FAILED" in out
+    assert "Validity     :" not in out and "Semantic     :" not in out and "Note         :" not in out
+
+
+def test_r1a_batch_success_annotation_and_runtime_summary(capsys, tmp_path, monkeypatch):
+    """_run_batch annotates each success line and reports Runtime success using the success counter."""
+    import predict
+    images = []
+    for name in ("one.png", "two.png"):
+        path = tmp_path / name
+        path.write_bytes(b"x")
+        images.append(path)
+    monkeypatch.setattr(predict, "predict_one", lambda runtime, request: _FakeResult(_success_payload()))
+    monkeypatch.setattr(predict, "_iter_images", lambda folder: images, raising=False)
+    monkeypatch.setattr(predict, "_collect_images", lambda folder: images, raising=False)
+    args = type("A", (), {"folder": tmp_path, "prompt": "q", "reference_id": None, "inspect_proposals": False})()
     try:
-        predict._report_single(fake, type("A", (), {"image": None, "reference_id": None, "inspect_proposals": False})())
-    except Exception:
-        # the surrounding CLI context may need more attributes; the helper contract is asserted directly above
-        pass
-    captured = capsys.readouterr().out
-    assert "Result       : SUCCESS" not in captured or "Validity     : RUNTIME_STRUCTURAL_ONLY" in captured
+        predict._run_batch(None, args)
+    except TypeError:
+        predict._run_batch(args)
+    out = capsys.readouterr().out
+    assert out.count("SUCCESS [runtime-only; semantic=NOT_EVALUATED]") == 2, out
+    assert "Runtime success: 2" in out, out

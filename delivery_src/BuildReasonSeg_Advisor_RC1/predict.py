@@ -263,6 +263,7 @@ def _run_batch(runtime: PredictRuntime, args: argparse.Namespace, package_name: 
         request.parsed_info = language_info
         result = predict_one(runtime, request)
         if result.ok:
+            successes += 1
             print(f"[{index}/{len(files)}] {path.name} ... SUCCESS")
         else:
             failures += 1
@@ -300,7 +301,6 @@ def _report_single(result, args: argparse.Namespace) -> None:
     payload = result.result_payload
     for _line in success_report_lines(payload):
         print(_line)
-        print(f"Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.")
     if result.ok:
         print()
         print(f"Mask         : {payload['output_paths']['mask']}")
