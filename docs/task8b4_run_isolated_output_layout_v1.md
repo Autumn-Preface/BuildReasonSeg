@@ -58,3 +58,9 @@ The existing read-only helper reported checked=135, match=130, missing=0, mismat
 External manifest is byte-identical to the Supervisor-accepted STOP inventory. Its stale entry identities (including earlier accepted repair entries) are enumerated in JSON and explained by the accepted unsynchronized control manifest. The authorized P1D11B write will install the exact current Git canonical manifest. All output/input/model inventories still equal the prior STOP snapshot; fresh closure baseline also includes historical logs and the complete file inventory.
 
 Checkpoint 3 persists this explained precheck before any external write. Controlled sync and all post-sync acceptance gates remain pending at this checkpoint. No product/source changes are introduced during continuation.
+
+## External closure progress checkpoint
+
+Exactly one helper sync completed: copied=135, verified=135, failures=0. External source_manifest was written from binary Git canonical bytes and matches byte-for-byte/SHA256. Post-check: checked=135, match=135, missing=0, mismatch=0, exit 0. `check_setup.py` reports READY, exit 0. External targeted modules pass: runtime 62/62 and CLI 24/24, both exit 0.
+
+The established Python environment uses unique temporary Ultralytics/matplotlib cache directories and offline asset flags to avoid the earlier sandbox user-settings permission issue. This is L0 execution mechanics; source/test behavior is unchanged. Targeted tests use synthetic/stub inputs and temporary output roots; no real inference occurs. External complete full suite and final historical/protected integrity checks are pending.

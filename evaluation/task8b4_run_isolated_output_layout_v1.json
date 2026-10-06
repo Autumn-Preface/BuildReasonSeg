@@ -112,6 +112,11 @@
       "phase": "PRIOR_STOP_MANIFEST_AND_FAILURE_EVIDENCE_ACCEPTED_BY_SUPERVISOR",
       "pushed": true,
       "remote_verified": "7e0e8b3115c2b3660d57ffa5170c4fb5393be39c"
+    },
+    {
+      "commit": "37f2d681ef5140080b342c20168de82907adfbc4",
+      "phase": "CHECKPOINT_3_SUPERVISOR_DISPOSITION_AND_EXPLAINED_PRECHECK",
+      "pushed": true
     }
   ],
   "unit_test_results": [
@@ -420,20 +425,135 @@
     "unrelated_source_config_mismatches": [],
     "git_identity_commit": "7e0e8b3115c2b3660d57ffa5170c4fb5393be39c"
   },
-  "external_sync": null,
+  "external_sync": {
+    "command": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "-B",
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\sync_advisor_rc1_delivery.py",
+      "--destination",
+      "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1"
+    ],
+    "cwd": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "exit_code": 0,
+    "stdout": "canonical source : C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\ndestination      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\nmanifest files   : 135\n\ncopied=135 verified=135 failures=0\n",
+    "stderr": "",
+    "counts": {
+      "copied": 135,
+      "verified": 135,
+      "failures": 0
+    },
+    "git_identity_commit": "37f2d681ef5140080b342c20168de82907adfbc4",
+    "invocation_count": 1,
+    "deletions": 0
+  },
   "external_manifest_identity": {
     "before": {
       "bytes": 24375,
       "sha256": "5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c"
     },
     "after": {
-      "bytes": 24375,
-      "sha256": "5c175a9ced5912106d9e3906ffedc85a1c6946b632804dc53cc5d20f15bb716c"
-    }
+      "bytes": 24376,
+      "sha256": "df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e"
+    },
+    "git_canonical": {
+      "bytes": 24376,
+      "sha256": "df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e"
+    },
+    "git_identity_commit": "37f2d681ef5140080b342c20168de82907adfbc4",
+    "byte_identical": true,
+    "status": "MATCH",
+    "procedure": "P1D11B exact binary git show HEAD canonical manifest; no working-tree newline conversion"
   },
-  "external_postcheck": null,
-  "external_setup": null,
-  "external_targeted_tests": [],
+  "external_postcheck": {
+    "command": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "-B",
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\sync_advisor_rc1_delivery.py",
+      "--destination",
+      "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "--check"
+    ],
+    "cwd": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "exit_code": 0,
+    "stdout": "canonical source : C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src\\BuildReasonSeg_Advisor_RC1\ndestination      : C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\nmanifest files   : 135\n\nchecked=135 match=135 missing=0 mismatch=0\n",
+    "stderr": "",
+    "counts": {
+      "checked": 135,
+      "match": 135,
+      "missing": 0,
+      "mismatch": 0
+    },
+    "git_identity_commit": "37f2d681ef5140080b342c20168de82907adfbc4"
+  },
+  "external_setup": {
+    "command": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "-B",
+      "check_setup.py"
+    ],
+    "cwd": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+    "exit_code": 0,
+    "stdout": "Creating new Ultralytics Settings v0.0.8 file  \nView Ultralytics Settings with 'yolo settings' or at 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8b4-external-closure-xol70yql\\yolo\\Ultralytics\\settings.json'\nUpdate Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/usage/settings.\n[OK] Python — 3.11.16 (C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe)\n[OK] OS — Windows 10 (AMD64)\n[OK] PyTorch — 2.13.0+cu132\n[OK] CUDA — 可用 (torch 13.2)\n[OK] GPU — NVIDIA GeForce RTX 5080 Laptop GPU\n[OK] delivery root 可写 — C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\n[OK] required directories — 16 项齐备\n[OK] writable paths — 输出 / 运行 / 日志目录均可写\n[OK] model package — C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\model\\buildreasonseg_advisor\n[OK] model.yaml — decoder=D-B1 seed=20261003\n[OK] metadata.json — 6 个资产记录\n[OK] D-B1 decoder — sha256=9187b133ee4c71ca… bytes=1117495\n[OK] U-C1 detector — sha256=ef852b5801e6bdf9… bytes=54480241\n[OK] SAM2 assets — sam2.1_hiera_base_plus.pt sha256=a2345aede8715ab1…\n[OK] Qwen / ProgramHead assets — ProgramHead sha256=c150573613c42109… + 3 base files\n[OK] Qwen asset manifest — 11 个文件全部校验通过 (4.34 GB)\n[OK] Ultralytics runtime — runtime=8.4.164; model provenance=8.4.164\n[OK] Transformers runtime — runtime=5.17.0; model provenance=5.17.0\n[OK] source/assets portability — delivery 内未发现 workspace 绝对路径依赖；runtime environment 需单独配置\n\nBuildReasonSeg environment: READY\n",
+    "stderr": "",
+    "seconds": 4.93,
+    "ready": true,
+    "no_model_inference": true,
+    "operation": "Imports/dependency checks, paths and asset hashes only; no model runtime/inference"
+  },
+  "external_targeted_tests": [
+    {
+      "module": "tests/test_task8b_runtime.py",
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/test_task8b_runtime.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8b4-external-targeted-1791313096065774100"
+      ],
+      "cwd": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "exit_code": 0,
+      "counts": {
+        "passed": 62
+      },
+      "summary": "62 passed in 1.58s",
+      "seconds": 2.304,
+      "stdout": "..............................................................           [100%]\n62 passed in 1.58s\n",
+      "stderr": "",
+      "no_model_inference": true,
+      "fixtures": "temporary synthetic images and injected model/detector stubs; CLI help/error/parser/report contracts"
+    },
+    {
+      "module": "tests/test_cli_contract.py",
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/test_cli_contract.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8b4-external-targeted-1791313098404338600"
+      ],
+      "cwd": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "exit_code": 0,
+      "counts": {
+        "passed": 24
+      },
+      "summary": "24 passed in 15.95s",
+      "seconds": 16.679,
+      "stdout": "........................                                                 [100%]\n24 passed in 15.95s\n",
+      "stderr": "",
+      "no_model_inference": true,
+      "fixtures": "temporary synthetic images and injected model/detector stubs; CLI help/error/parser/report contracts"
+    }
+  ],
   "external_full_suite": null,
   "legacy_output_inventory_before": [
     {
@@ -19983,7 +20103,11 @@
     "Checkpoint 1 committed/pushed; five manifest identities updated from committed Git blobs; 135/135 validation passed.",
     "Full canonical test output and all 23 failed/error node classifications persisted; external phase halted.",
     "Read-only STOP integrity verification: 1543 output files, 6 inputs, 20 protected assets and 135 external source files plus external manifest unchanged.",
-    "Supervisor L2 disposition accepted previous implementation and canonical manifest; continuation preflight clean; read-only external precheck explains exactly five authorized mismatches."
+    "Supervisor L2 disposition accepted previous implementation and canonical manifest; continuation preflight clean; read-only external precheck explains exactly five authorized mismatches.",
+    "One controlled helper sync copied/verified 135 files; exact Git canonical external manifest MATCH; helper post-check 135/135 passed.",
+    "External check_setup.py reports READY, exit 0, without model inference.",
+    "External tests/test_task8b_runtime.py PASS: 62 passed in 1.58s",
+    "External tests/test_cli_contract.py PASS: 24 passed in 15.95s"
   ],
   "no_model_inference": true,
   "no_threshold_change": true,
@@ -20945,11 +21069,11 @@
       "test_source_unchanged": true
     }
   ],
-  "current_step": "EXTERNAL_PRECHECK_EXPLAINED",
+  "current_step": "EXTERNAL_FULL_SUITE",
   "stop_reason": null,
   "decision_level_required": null,
   "supervisor_resolution_required": null,
-  "external_write_performed": false,
+  "external_write_performed": true,
   "ready_for_supervisor_audit": false,
   "checkpoint_2": {
     "status": "ACCEPTED_BY_SUPERVISOR_L2_DISPOSITION",
@@ -42816,6 +42940,136 @@
         "bytes": 257,
         "mtime_ns": 1790964585909156000
       }
+    ],
+    "output_directories_before_full_suite": [
+      "diagnostics",
+      "diagnostics/1003",
+      "diagnostics/1008",
+      "diagnostics/1009",
+      "diagnostics/1010",
+      "diagnostics/A1",
+      "diagnostics/A1_001",
+      "diagnostics/A2",
+      "diagnostics/A3",
+      "diagnostics/A4",
+      "diagnostics/B1",
+      "diagnostics/B2",
+      "diagnostics/fixed_2x2_mosaic",
+      "diagnostics/fixture0_left",
+      "diagnostics/fixture0_left_001",
+      "diagnostics/fixture0_left_002",
+      "diagnostics/fixture0_left_003",
+      "diagnostics/fixture0_left_004",
+      "diagnostics/fixture0_left_005",
+      "diagnostics/fixture0_left_006",
+      "diagnostics/fixture0_left_007",
+      "diagnostics/fixture0_left_008",
+      "diagnostics/fixture0_left_009",
+      "diagnostics/fixture0_left_010",
+      "diagnostics/fixture0_left_011",
+      "diagnostics/fixture0_left_012",
+      "diagnostics/fixture0_left_013",
+      "diagnostics/fixture0_left_014",
+      "diagnostics/fixture0_left_015",
+      "diagnostics/fixture0_left_016",
+      "diagnostics/fixture0_left_017",
+      "diagnostics/fixture0_left_018",
+      "diagnostics/fixture0_left_019",
+      "diagnostics/fixture0_left_020",
+      "diagnostics/fixture0_left_021",
+      "diagnostics/fixture0_left_022",
+      "diagnostics/fixture0_left_023",
+      "diagnostics/fixture0_left_024",
+      "diagnostics/fixture0_left_025",
+      "diagnostics/fixture1_right",
+      "diagnostics/fixture1_right_001",
+      "diagnostics/fixture1_right_002",
+      "diagnostics/fixture1_right_003",
+      "diagnostics/fixture1_right_004",
+      "diagnostics/fixture1_right_005",
+      "diagnostics/fixture1_right_006",
+      "diagnostics/fixture1_right_007",
+      "diagnostics/fixture1_right_008",
+      "diagnostics/fixture1_right_009",
+      "diagnostics/fixture1_right_010",
+      "diagnostics/fixture1_right_011",
+      "diagnostics/fixture1_right_012",
+      "diagnostics/fixture1_right_013",
+      "diagnostics/fixture1_right_014",
+      "diagnostics/fixture1_right_015",
+      "diagnostics/fixture1_right_016",
+      "diagnostics/fixture1_right_017",
+      "diagnostics/fixture1_right_018",
+      "diagnostics/fixture1_right_019",
+      "diagnostics/fixture1_right_020",
+      "diagnostics/fixture1_right_021",
+      "diagnostics/fixture1_right_022",
+      "diagnostics/fixture1_right_023",
+      "diagnostics/fixture1_right_024",
+      "diagnostics/fixture1_right_025",
+      "diagnostics/fixture1_right_026",
+      "diagnostics/fixture2_above",
+      "diagnostics/fixture2_above_001",
+      "diagnostics/fixture2_above_002",
+      "diagnostics/fixture2_above_003",
+      "diagnostics/fixture2_above_004",
+      "diagnostics/fixture2_above_005",
+      "diagnostics/fixture2_above_006",
+      "diagnostics/fixture2_above_007",
+      "diagnostics/fixture2_above_008",
+      "diagnostics/fixture2_above_009",
+      "diagnostics/fixture2_above_010",
+      "diagnostics/fixture2_above_011",
+      "diagnostics/fixture2_above_012",
+      "diagnostics/fixture2_above_013",
+      "diagnostics/fixture2_above_014",
+      "diagnostics/fixture3_below",
+      "diagnostics/fixture3_below_001",
+      "diagnostics/fixture3_below_002",
+      "diagnostics/fixture3_below_003",
+      "diagnostics/fixture3_below_004",
+      "diagnostics/fixture3_below_005",
+      "diagnostics/fixture3_below_006",
+      "diagnostics/fixture3_below_007",
+      "diagnostics/fixture3_below_008",
+      "diagnostics/fixture3_below_009",
+      "diagnostics/fixture3_below_010",
+      "diagnostics/fixture3_below_011",
+      "diagnostics/fixture3_below_012",
+      "diagnostics/fixture3_below_013",
+      "diagnostics/fixture3_below_014",
+      "diagnostics/fixture3_below_015",
+      "diagnostics/fixture3_below_016",
+      "diagnostics/fixture3_below_017",
+      "diagnostics/fixture3_below_018",
+      "diagnostics/fixture3_below_019",
+      "diagnostics/fixture3_below_020",
+      "diagnostics/fixture3_below_021",
+      "diagnostics/fixture3_below_022",
+      "diagnostics/fixture3_below_023",
+      "diagnostics/fixture3_below_024",
+      "diagnostics/fixture3_below_025",
+      "masks",
+      "overlays",
+      "review_task8b3"
+    ],
+    "output_root_entries_before_full_suite": [
+      {
+        "name": "diagnostics",
+        "directory": true
+      },
+      {
+        "name": "masks",
+        "directory": true
+      },
+      {
+        "name": "overlays",
+        "directory": true
+      },
+      {
+        "name": "review_task8b3",
+        "directory": true
+      }
     ]
   },
   "external_manifest_presync": {
@@ -42962,5 +43216,42 @@
     ],
     "explanation": "Accepted STOP external manifest is unchanged; it has not been synchronized to current Git canonical manifest. Exact committed canonical manifest write is explicitly authorized after source/config sync."
   },
-  "external_sync_invocation_count": 0
+  "external_sync_invocation_count": 1,
+  "closure_execution_environment": {
+    "python": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+    "python_version": "3.11.16 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:36:16) [MSC v.1942 64 bit (AMD64)]",
+    "scratch_root": "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8b4-external-closure-xol70yql",
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUTF8": "1",
+      "PYTHONIOENCODING": "utf-8",
+      "YOLO_CONFIG_DIR": "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8b4-external-closure-xol70yql\\yolo",
+      "MPLCONFIGDIR": "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8b4-external-closure-xol70yql\\mpl",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "libraries": {
+      "torch": "2.13.0+cu132",
+      "numpy": "2.4.6",
+      "Pillow": "12.3.0",
+      "pytest": "9.1.1",
+      "ultralytics": "8.4.164",
+      "transformers": "5.17.0"
+    },
+    "mechanical_reason": "Redirect user-level Ultralytics/matplotlib runtime cache to unique task temporary directories; offline flags prevent network asset lookup. No product/test contract changes."
+  },
+  "external_unit_safety_review": {
+    "test_modules": [
+      "test_task8b_runtime.py",
+      "test_cli_contract.py",
+      "test_language_contract.py",
+      "test_model_package.py",
+      "test_paths_and_package.py",
+      "test_setup_checker.py",
+      "test_task8b1_fallback_ux.py"
+    ],
+    "model_calls": "DetectorRuntime tests inject _model or detect_tile stubs; QwenProgramHeadFrontend.parse is a non-inference NotInTask8A placeholder; ModelPackage.load only reads metadata/config; full suite verifies asset hashes and synthetic fixtures. CLI requests stop at help/preimage/errors or use fake results.",
+    "real_output_allocation_tests": "Every test calling allocate_outputs or failed/inspect pipeline monkeypatches paths.inference_dir to tmp_path.",
+    "history_suite": "No inference entrypoint/historical suite/locked candidate is invoked."
+  }
 }

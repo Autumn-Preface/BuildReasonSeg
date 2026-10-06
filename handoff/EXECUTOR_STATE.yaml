@@ -3,7 +3,7 @@ task_id: TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: fix/task8b4-run-isolated-output-layout-v1
-head: 7e0e8b3115c2b3660d57ffa5170c4fb5393be39c
+head: 37f2d681ef5140080b342c20168de82907adfbc4
 completed:
 - Startup reads, clean Git state, exact remote predecessor and task book installation
   verified.
@@ -20,9 +20,14 @@ completed:
 - Supervisor L2 disposition accepted previous implementation and canonical manifest;
   continuation preflight clean; read-only external precheck explains exactly five
   authorized mismatches.
-current_step: EXTERNAL_PRECHECK_EXPLAINED
-next_action: Commit/push explained precheck and Supervisor disposition, then execute
-  one controlled external sync and ordered closure gates.
+- One controlled helper sync copied/verified 135 files; exact Git canonical external
+  manifest MATCH; helper post-check 135/135 passed.
+- External check_setup.py reports READY, exit 0, without model inference.
+- 'External tests/test_task8b_runtime.py PASS: 62 passed in 1.58s'
+- 'External tests/test_cli_contract.py PASS: 24 passed in 15.95s'
+current_step: EXTERNAL_FULL_SUITE
+next_action: Run complete external tests/ acceptance gate, then content-preservation
+  checks.
 tests_run:
 - module: tests/test_task8b_runtime.py
   exit_code: 1
@@ -43,6 +48,14 @@ tests_run:
     failed: 17
     passed: 127
     error: 6
+- module: external tests/test_task8b_runtime.py
+  exit_code: 0
+  counts:
+    passed: 62
+- module: external tests/test_cli_contract.py
+  exit_code: 0
+  counts:
+    passed: 24
 files_modified:
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
@@ -59,7 +72,7 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 7e0e8b3115c2b3660d57ffa5170c4fb5393be39c
+  commit: 37f2d681ef5140080b342c20168de82907adfbc4
   pushed: true
 scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_ONLY
 PROP01_status: OPEN
@@ -67,6 +80,6 @@ no_model_inference: true
 next_gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
 observation_phase: Continuation checkpoint preparation; actual final local/remote
   HEAD resolved from Git after push
-external_sync_performed: false
+external_sync_performed: true
 canonical_full_suite_disposition: WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
 supervisor_disposition: PARTIAL_ACCEPT / CONTINUE_AUTHORIZED
