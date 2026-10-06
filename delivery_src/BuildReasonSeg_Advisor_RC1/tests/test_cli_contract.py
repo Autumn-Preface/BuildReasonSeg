@@ -186,8 +186,8 @@ def _success_payload():
     return {
         "status": "SUCCESS",
         **success_semantics(),
-        "output_paths": {"mask": "m.png", "overlay": "o.png", "diagnostics": "d"},
-        "reference_id": 1,
+        "output_paths": {"mask": "mask.png", "overlay": "overlay.png", "diagnostics": "diag"},
+        "reference_id": 123,
         "mask_area": 7,
     }
 
@@ -207,10 +207,10 @@ def _expected_single_success_lines():
         "Semantic     : NOT_EVALUATED",
         "Note         : SUCCESS only confirms the current runtime structural checks; semantic target correctness is not established.",
         "",
-        "Mask         : m.png",
-        "Overlay      : o.png",
-        "Diagnostics  : d",
-        "Reference ID : 1",
+        "Mask         : mask.png",
+        "Overlay      : overlay.png",
+        "Diagnostics  : diag",
+        "Reference ID : 123",
         "Mask area    : 7",
     ]
 
@@ -246,8 +246,9 @@ def test_r1a_batch_success_annotation_and_runtime_summary(capsys, tmp_path, monk
         (tmp_path / name).write_bytes(b"x")
     assert len(predict._batch_files(tmp_path)) == 2
     monkeypatch.setattr(predict, "predict_one", lambda runtime, request: _FakeResult(_success_payload()), raising=True)
-    exit_code = predict._run_batch(None, _args(input_dir=str(tmp_path)), "pkg", object(), {}, time.time())
+    exit_code = predict._run_batch(None, _args(input_dir=tmp_path), "pkg", object(), {}, time.time())
     out = capsys.readouterr().out
     assert out.count("SUCCESS [runtime-only; semantic=NOT_EVALUATED]") == 2, out
     assert out.count("Runtime success: 2") == 1, out
+    assert out.count("Failed : 0") == 1, out
     assert exit_code == 0
