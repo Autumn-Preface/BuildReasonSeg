@@ -8,7 +8,7 @@ TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
 
 Status:
 
-IN_PROGRESS
+READY_FOR_SUPERVISOR_AUDIT
 
 Decision owner:
 
@@ -1152,3 +1152,24 @@ Verify in order: helper 135/135, byte/hash-identical external manifest, external
 Preserve input, every pre-existing historical output and protected model/Qwen/SAM2 asset. Unit tests must use temporary roots and must not create real output runs. Do not delete unexpected evidence; any historical output change requires STOP. Historical logs/fixtures are preserved; naturally generated test logs are permitted.
 
 Update the four authorized evidence/handoff files. On all gates passing, set CURRENT_TASK and EXECUTOR_STATE to READY_FOR_SUPERVISOR_AUDIT, next gate CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT, commit/push and STOP. Do not start Final Demo.
+
+
+## 30. Executor Closure Evidence — Supervisor Audit Pending
+
+Status: READY_FOR_SUPERVISOR_AUDIT. No final milestone approval is self-authorized.
+
+- Accepted implementation and canonical targeted tests: 62 runtime / 24 CLI passed.
+- Git-canonical manifest: 135/135; accepted product/source unchanged in continuation.
+- Canonical historical complete-suite execution retained: 127 passed / 17 failed / 6 errors, exit 1; WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007.
+- Precheck: exactly five authorized mismatches explained; no unrelated source/config drift.
+- Controlled helper sync: one invocation, 135 copied / 135 verified / 0 failures.
+- External manifest: exact Git-canonical bytes/hash MATCH; helper post-check before and after tests 135/135.
+- External check_setup: READY, exit 0.
+- External targeted tests: runtime 62 passed / CLI 24 passed, exit 0 each.
+- External complete full suite: 150 passed, exit 0.
+- Preservation: all 1,543 historical output files, 6 inputs and 20 protected model files byte-identical; historical logs/fixtures unchanged; no real output run directory added. Twelve naturally test-generated error logs retained. Existing derived Qwen integrity cache refreshed with identical bytes/hash; authorized manifest-listed model source/config copies retain identical content.
+- No real model inference, A2, historical six-case execution, locked Demo execution or threshold/model/algorithm/scientific-contract change.
+
+Detailed commands, outputs, identities and pre/post inventories: evaluation/task8b4_run_isolated_output_layout_v1.json and docs/task8b4_run_isolated_output_layout_v1.md.
+
+Next gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT. Commit/push this recoverable checkpoint, report actual Git HEAD and STOP. Final Demo remains unstarted.

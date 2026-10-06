@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: fix/task8b4-run-isolated-output-layout-v1
-head: 37f2d681ef5140080b342c20168de82907adfbc4
+head: 482bfe37fe622a41546578f7115e11127123d68b
 completed:
 - Startup reads, clean Git state, exact remote predecessor and task book installation
   verified.
@@ -25,9 +25,14 @@ completed:
 - External check_setup.py reports READY, exit 0, without model inference.
 - 'External tests/test_task8b_runtime.py PASS: 62 passed in 1.58s'
 - 'External tests/test_cli_contract.py PASS: 24 passed in 15.95s'
-current_step: EXTERNAL_FULL_SUITE
-next_action: Run complete external tests/ acceptance gate, then content-preservation
-  checks.
+- 'Complete external tests/ acceptance gate PASS: 150 passed in 54.61s'
+- 'Final read-only integrity PASS: historical output/input/log contents preserved,
+  all protected asset hashes unchanged, no real output run directories added, final
+  external and Git manifest identities 135/135 MATCH.'
+- All authorized closure gates passed; audit handoff READY_FOR_SUPERVISOR_AUDIT; stop
+  without Final Demo.
+current_step: READY_FOR_SUPERVISOR_AUDIT_STOP
+next_action: STOP. Await ChatGPT Supervisor remote audit; do not start Final Demo.
 tests_run:
 - module: tests/test_task8b_runtime.py
   exit_code: 1
@@ -56,6 +61,10 @@ tests_run:
   exit_code: 0
   counts:
     passed: 24
+- module: external tests/ full suite
+  exit_code: 0
+  counts:
+    passed: 150
 files_modified:
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
@@ -72,14 +81,37 @@ blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 37f2d681ef5140080b342c20168de82907adfbc4
+  commit: 482bfe37fe622a41546578f7115e11127123d68b
   pushed: true
-scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_ONLY
+scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_AND_DELIVERY_INTEGRITY_ONLY
 PROP01_status: OPEN
 no_model_inference: true
 next_gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
-observation_phase: Continuation checkpoint preparation; actual final local/remote
-  HEAD resolved from Git after push
+observation_phase: Final handoff preparation before commit; actual final local/remote
+  HEAD and clean diff resolved after push
 external_sync_performed: true
 canonical_full_suite_disposition: WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
 supervisor_disposition: PARTIAL_ACCEPT / CONTINUE_AUTHORIZED
+closure_gates:
+  implementation: PASS
+  canonical_targeted_runtime: PASS (62 passed)
+  canonical_targeted_cli: PASS (24 passed)
+  canonical_manifest: 135/135 PASS
+  canonical_full_suite_disposition: WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
+  canonical_full_suite_historical_counts:
+    failed: 17
+    passed: 127
+    error: 6
+  canonical_full_suite_historical_exit_code: 1
+  external_precheck: EXPLAINED
+  external_sync: PASS
+  external_manifest: MATCH
+  external_check_setup: READY
+  external_targeted_tests: PASS (62 runtime / 24 CLI)
+  external_full_suite: PASS (150 passed, exit 0)
+  legacy_output_unchanged: true
+  input_unchanged: true
+  protected_assets_unchanged: true
+  historical_logs_unchanged: true
+  no_model_inference: true
+  external_sync_invocation_count: 1

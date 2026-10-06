@@ -1,66 +1,78 @@
 # Task 8B.4 — run-isolated output layout
 
-Status: IN_PROGRESS — Supervisor PARTIAL_ACCEPT / CONTINUE_AUTHORIZED; external precheck explained.
+Status: **READY_FOR_SUPERVISOR_AUDIT**. Next gate: `CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT`. Executor work stops here; milestone approval remains with ChatGPT Supervisor and Final Demo has not started.
 
-## Authority and starting state
+## Result and scope
 
-Task: `TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1`. Exact clean predecessor and fetched remote: `audit/task8b3-a2-ground-truth-case-validity-v1` at `c6d09e77d3c403771a92d096fe5977ebaa61db67`. Task branch: `fix/task8b4-run-isolated-output-layout-v1`. Supervisor task book installed byte-for-byte; startup reads and original source/hash evidence are in the JSON report.
+Each output-owning image run exclusively reserves the first available `inference/output/<stem[_NNN]>/`, with `diagnostics/`, `masks/`, `overlays/`. A failed or empty run permanently occupies its root. Allocation never depends on mask existence; existing directories/files and legacy root names advance the suffix. Filenames retain `<stem>_mask[_NNN].png` and `<stem>_overlay[_NNN].png`. Diagnostics retain their original names directly inside run-local diagnostics.
 
-## Implemented behavior
+Inspect reserves after successful image load and before detector execution. Disabling diagnostics suppresses diagnostic files; inspect never writes a mask/overlay. Payload fields, CLI labels, exit/status and SUCCESS semantics remain frozen. Historical shared outputs are preserved without migration or cleanup. No product/source change was made during continuation.
 
-Each output-owning image run exclusively creates the first available `inference/output/<stem[_NNN]>/` and its `diagnostics/`, `masks/`, `overlays/` children. Failed or empty runs permanently occupy their root; mask existence never selects the suffix. Filenames retain `<stem>_mask[_NNN].png` / `<stem>_overlay[_NNN].png`. Diagnostics filenames remain unchanged and live directly inside run-local diagnostics.
+## Authority and checkpoints
 
-Inspect mode allocates immediately after successful image load, before detector execution. Disabling diagnostics suppresses its writes. Inspect never writes a mask or overlay. Payload fields, CLI labels, status/exit and SUCCESS semantics stay unchanged. The optional no-argument `output_dirs()` query retains its old locations; allocation always supplies the new run root.
+Initial accepted predecessor: `audit/task8b3-a2-ground-truth-case-validity-v1` at `c6d09e77d3c403771a92d096fe5977ebaa61db67`. Task branch: `fix/task8b4-run-isolated-output-layout-v1`. Initial task book was installed byte-for-byte; original sources, Git blobs, SHA256 identities and call references remain in JSON.
 
-Legacy shared directories and files are neither reused nor migrated. Any occupied root entry, including a file or `masks`, `overlays`, `diagnostics`, advances the suffix.
+Implementation plus green targeted tests was committed/pushed at `7965a99743f02d5427c55be429e09349faa3605e`. Manifest and canonical failure STOP evidence was committed/pushed at `7e0e8b3115c2b3660d57ffa5170c4fb5393be39c`.
 
-## Canonical targeted validation
+The Supervisor remotely audited that exact task HEAD and issued **PARTIAL_ACCEPT / CONTINUE_AUTHORIZED**, an explicit L2 disposition under GOV-D007. Startup reread the five required governance/handoff files in order, fetched the exact remote HEAD, verified the local branch/HEAD and clean worktree, and continued the same branch. No new branch or destructive Git operation occurred.
+
+Explained pre-sync evidence was committed/pushed at `37f2d681ef5140080b342c20168de82907adfbc4` before any external write. Sync/setup/targeted gates were committed/pushed at `482bfe37fe622a41546578f7115e11127123d68b`. The final audit-ready checkpoint follows that observed commit; actual final local/remote SHA is resolved after push, without writing a fabricated self-referential SHA into its files.
+
+## Canonical validation and preserved failure history
 
 | Gate | Result |
 | --- | --- |
-| `tests/test_task8b_runtime.py` | 62 passed, exit 0 |
-| `tests/test_cli_contract.py` (unchanged) | 24 passed, exit 0 |
-
-New synthetic/stub contracts cover T1–T10, first/second paths, failure reruns, empty and file collisions, legacy preservation, parallel allocation, mask dtype/dimensions/alpha, diagnostic names, no-save behavior and pre-load failure timing. The first runtime attempt had two fixture errors from using an invalid parse source; the fixture now uses the existing `user_supplied` source. All attempts and outputs are retained in JSON.
-
-## Prior manifest and STOP integrity record (historical)
-
-Starting manifest validation against Git blobs: 135 checked, 135 match, 0 missing, 0 mismatch. The five changed manifest-listed files are outputs.py, pipeline.py, test_task8b_runtime.py, README.md and inference/README.md. Their identities were calculated from committed Git blobs at `7965a99743f02d5427c55be429e09349faa3605e`, not Windows working-tree bytes. Updated manifest validates 135/135; exactly five entries changed, with no path addition/removal.
-
-Read-only external inventories recorded before implementation: 1,543 output-history files, 6 input files and 20 protected model-asset files. Full byte lengths, SHA256 values and timestamps are retained in JSON. No external writes or sync have occurred.
-
-Full canonical suite: **127 passed, 17 failed, 6 errors; exit 1** (37.58 s). No failing node is in runtime or CLI contracts. The complete stdout/stderr, commands, failed/error nodes and classifications are retained in JSON.
-
-The original five failing test-module sources, check_setup.py and package/frontend dependencies are byte-identical to the accepted predecessor. Canonical `VERSION`, decoder/detector, SAM2, ProgramHead/Qwen weights and fallback fixtures are absent both in the accepted Git snapshot and current canonical tree; they exist in complete external RC1. `inference/input` is absent in canonical. Six setup fixture errors and the relocation test stop when copying missing VERSION. Package/language tests require absent assets; fallback tests require absent historical log fixtures. Two READY assertions cannot pass with missing full-delivery prerequisites. A further unchanged setup assertion fails because sandbox access to AppData/Roaming/Ultralytics/settings.json is denied (WinError 5), suppressing its provenance label; this is preserved as an L0 environment observation, not a product regression claim.
-
-The original task-book sections 16/24 required a green full canonical gate at checkpoint 2 (superseded by the Supervisor continuation below). GOV-D007 explicitly freezes the lightweight canonical / complete external distinction. A green canonical complete-delivery gate cannot be produced within the authorized file scope without adding excluded prerequisites or changing gate/test acceptance. The executor has made neither change. **Checkpoint 2 is not accepted and READY_FOR_SUPERVISOR_AUDIT is not claimed.** Supervisor must reconcile the required gate and authorize the next action.
-
-External helper pre-sync check, controlled sync, manifest write, post-check, setup and external targeted/full tests are **NOT_RUN**. No external write has occurred. Read-only STOP integrity checks verify exact before/after equality (including file timestamps) for all 1,543 historical output files, 6 inputs and 20 protected model assets. All 135 external source files and the external manifest are unchanged. Recorded starting external source identities also match the accepted predecessor manifest 135/135. These checks do not establish post-sync acceptance.
-
-Implementation checkpoint was committed/pushed at `7965a99743f02d5427c55be429e09349faa3605e`. The updated manifest, failure evidence and STOP handoff are saved in a separate follow-on checkpoint. Final SHA is resolved from actual Git after push; the files intentionally contain the preceding observed checkpoint rather than a fabricated self-referential SHA. The Supervisor-provided CURRENT_TASK remains byte-for-byte installed, with STOP outcome recorded in EXECUTOR_STATE.
-
-## Boundaries
-
-No real detector/Qwen/SAM/D-B1 inference, A2, historical image suite, locked Demo cases, model/threshold/algorithm changes, scientific claim changes, legacy cleanup or protected-asset changes. This milestone may establish only engineering output isolation and delivery integrity. Final acceptance remains with ChatGPT Supervisor.
-
-## Supervisor continuation and external precheck
-
-The Supervisor remotely reviewed and accepted implementation, canonical targeted contracts (62 runtime / 24 CLI), canonical manifest 135/135 and the authorized diff at `7e0e8b3115c2b3660d57ffa5170c4fb5393be39c`. Ordered governance/handoff reads, fetch, exact local/remote task HEAD and clean worktree were reverified; no new branch was created.
+| Canonical runtime targeted | 62 passed, exit 0; Supervisor accepted |
+| Canonical CLI targeted (unchanged) | 24 passed, exit 0; Supervisor accepted |
+| Canonical manifest | 135 checked / 135 match / 0 missing / 0 mismatch |
+| Historical canonical full suite | 127 passed / 17 failed / 6 errors, exit 1; preserved, not PASS |
 
 ```text
 canonical_full_suite_disposition = WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
 ```
 
-The historical 127 passed / 17 failed / 6 errors execution remains intact and is not relabeled PASS. No excluded asset/fixture/VERSION/input directory or test weakening is introduced in canonical. GOV-D007 assigns the complete full-suite acceptance gate to external complete RC1.
+The complete-delivery gate is invalid for the lightweight canonical source/config snapshot. The Supervisor classified the prior 127/17/6 execution as inapplicable, not a Task 8B.4 product regression. Full commands/stdout/stderr and all failed/error node classifications remain unchanged in JSON. Canonical lacks excluded VERSION, model/Qwen/SAM2 assets, historical log fixtures and input directory; an earlier setup attempt also encountered sandbox Ultralytics settings access denial. No excluded prerequisites were added and no tests were weakened. The first targeted attempt's two invalid parse-source fixture errors and their local fixture correction are also retained.
 
-The existing read-only helper reported checked=135, match=130, missing=0, mismatch=5 (exit 1 expected). Differences are exactly README.md, runtime/outputs.py, runtime/pipeline.py, inference/README.md and tests/test_task8b_runtime.py. Each external identity equals its recorded pre-Task8B4 identity and each target equals the accepted committed canonical identity. There is no unrelated source/config mismatch.
+Contract tests cover T1–T10, first/second paths, diagnostics-only failure reruns, empty/file/legacy collisions, concurrent allocation, mask dimensions/dtype/values/alpha, diagnostic fields, no-save behavior and pre-load error timing. They use synthetic images and injected detector/model stubs with temporary output roots.
 
-External manifest is byte-identical to the Supervisor-accepted STOP inventory. Its stale entry identities (including earlier accepted repair entries) are enumerated in JSON and explained by the accepted unsynchronized control manifest. The authorized P1D11B write will install the exact current Git canonical manifest. All output/input/model inventories still equal the prior STOP snapshot; fresh closure baseline also includes historical logs and the complete file inventory.
+Exactly five manifest entries changed: README.md, runtime/outputs.py, runtime/pipeline.py, inference/README.md and tests/test_task8b_runtime.py. Their byte lengths/SHA256 values were derived from committed Git canonical blobs at the implementation checkpoint. Schema, identity basis and all 135 path entries remain unchanged; no CRLF-expanded working-tree identity was used.
 
-Checkpoint 3 persists this explained precheck before any external write. Controlled sync and all post-sync acceptance gates remain pending at this checkpoint. No product/source changes are introduced during continuation.
+## External closure
 
-## External closure progress checkpoint
+External root: `C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1`.
 
-Exactly one helper sync completed: copied=135, verified=135, failures=0. External source_manifest was written from binary Git canonical bytes and matches byte-for-byte/SHA256. Post-check: checked=135, match=135, missing=0, mismatch=0, exit 0. `check_setup.py` reports READY, exit 0. External targeted modules pass: runtime 62/62 and CLI 24/24, both exit 0.
+| Gate | Exact result |
+| --- | --- |
+| Existing helper read-only precheck | 135 checked / 130 match / 0 missing / 5 mismatch; exit 1 expected; EXPLAINED |
+| Controlled source/config sync | One invocation; 135 copied / 135 verified / 0 failures; exit 0 |
+| External manifest | Exact Git canonical binary write under P1D11B; byte/hash MATCH |
+| Helper post-check | 135 checked / 135 match / 0 missing / 0 mismatch; exit 0 |
+| External check_setup | READY; exit 0 |
+| External runtime targeted | 62 passed; exit 0 |
+| External CLI targeted | 24 passed; exit 0 |
+| External complete full suite | 150 passed; exit 0 (55.393 s) |
+| Final helper after tests | 135 checked / 135 match / 0 missing / 0 mismatch; exit 0 |
 
-The established Python environment uses unique temporary Ultralytics/matplotlib cache directories and offline asset flags to avoid the earlier sandbox user-settings permission issue. This is L0 execution mechanics; source/test behavior is unchanged. Targeted tests use synthetic/stub inputs and temporary output roots; no real inference occurs. External complete full suite and final historical/protected integrity checks are pending.
+Precheck mismatches were exactly the five authorized changed entries. Every external identity matched its recorded pre-Task8B4 source identity and every target matched the accepted Git blob. The external control manifest was unchanged from the accepted STOP snapshot; its stale entry differences, including earlier accepted repairs, are enumerated in JSON. No unrelated source/config drift was found. The helper copied only its 135 listed paths and deleted nothing; the control manifest was separately written from Git bytes. External manifest SHA256: `df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e`.
+
+The established `.conda/buildreasonseg-mvp` Python environment was used. Unique temporary Ultralytics/matplotlib caches and offline asset flags avoided the prior user-settings sandbox issue without changing source/test contracts. Setup verifies imports, paths and asset hashes. The full suite reads metadata/assets and historical fixtures, uses temporary synthetic setup fixtures, stub detector/pipeline tests, and CLI help/error/report contracts. It runs no real inference or historical image suite.
+
+## Preservation evidence
+
+Fresh continuation pre-sync inventories and final inventories are retained in JSON, together with initial preimplementation and STOP history evidence.
+
+| Protected content | Result |
+| --- | --- |
+| Historical inference/output files | All 1,543 byte-identical; path membership and timestamps unchanged |
+| inference/input files | All 6 byte-identical; path membership and timestamps unchanged |
+| Protected model/Qwen/SAM2 files | All 20 byte lengths/SHA256 values and path membership unchanged |
+| Historical logs/fixtures | All pre-existing contents unchanged |
+| Real output directories through full suite | Unchanged; no new run directory |
+| External file deletions | 0 |
+| Natural test additions | 12 error logs, retained |
+
+The authorized helper rewrote manifest-listed model metadata/config files with identical content. Existing full setup verification refreshed the derived Qwen integrity cache with identical bytes/hash. These timestamp-only changes are enumerated separately; no protected content change was accepted or hidden. All external inventory changes are explained by listed source/config sync, exact control-manifest write, the identical cache refresh and natural test logs. No evidence was deleted.
+
+## Claim boundary
+
+Established: `RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED` and delivery integrity under the authorized gates. No detector/Qwen/SAM/D-B1 inference, A2, historical six-case suite, locked Demo execution, threshold/model/algorithm/scientific-contract modification or historical output migration occurred. PROP-01 and REF-01 conclusions remain unchanged; SUCCESS still asserts runtime structural validity only, not semantic target correctness. Governance files remain unchanged. Final milestone acceptance belongs to the Supervisor.
