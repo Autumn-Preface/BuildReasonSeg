@@ -1,6 +1,6 @@
 {
   "task_id": "TASK8C_FINAL_DEMO_V1",
-  "status": "STOPPED_FOR_SUPERVISOR",
+  "status": "POST_RUNTIME_EVALUATOR_FIX_TESTED_PENDING_PUSH",
   "starting_branch": "fix/task8b4-run-isolated-output-layout-v1",
   "starting_head": "92f28133931231d16b6053aca253b9e5073955ae",
   "task_branch": "eval/task8c-final-demo-v1",
@@ -387,8 +387,8 @@
   },
   "evaluator_identity": {
     "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py",
-    "bytes": 16825,
-    "sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+    "bytes": 16869,
+    "sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542"
   },
   "dedicated_test_result": {
     "pass": true,
@@ -403,23 +403,18 @@
       "-p",
       "no:cacheprovider",
       "--basetemp",
-      "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-fake-tests-v3"
+      "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-fake-tests-render-fix-v1"
     ],
-    "stdout": "..........................................                               [100%]\n42 passed in 0.74s\n",
+    "stdout": "...........................................                              [100%]\n43 passed in 0.80s\n",
     "stderr": "",
     "fake_only": true,
-    "expected_collected": 42,
-    "before_identities": {
-      "scripts/task8c_final_demo_runner.py": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666",
-      "scripts/task8c_final_demo_evaluate.py": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b",
-      "tests/test_task8c_final_demo.py": "051755ce1a3af05bc6a862f31506c1ac7e2705878559a5f14c5ee4f38e6c1e3a"
-    },
-    "after_identities": {
-      "scripts/task8c_final_demo_runner.py": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666",
-      "scripts/task8c_final_demo_evaluate.py": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b",
-      "tests/test_task8c_final_demo.py": "051755ce1a3af05bc6a862f31506c1ac7e2705878559a5f14c5ee4f38e6c1e3a"
-    },
-    "harness_bytes_unchanged": true
+    "expected_collected": 43,
+    "original_42_tests_retained_byte_for_byte": true,
+    "new_success_saved_overlay_regression_tests": 1,
+    "runner_unchanged": true,
+    "evaluator_exact_single_authorized_replacement": true,
+    "new_evaluator_sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542",
+    "new_tests_sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
   },
   "dedicated_test_history": [
     {
@@ -490,6 +485,32 @@
         "tests/test_task8c_final_demo.py": "051755ce1a3af05bc6a862f31506c1ac7e2705878559a5f14c5ee4f38e6c1e3a"
       },
       "harness_bytes_unchanged": true
+    },
+    {
+      "pass": true,
+      "exit_code": 0,
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/test_task8c_final_demo.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-fake-tests-render-fix-v1"
+      ],
+      "stdout": "...........................................                              [100%]\n43 passed in 0.80s\n",
+      "stderr": "",
+      "fake_only": true,
+      "expected_collected": 43,
+      "original_42_tests_retained_byte_for_byte": true,
+      "new_success_saved_overlay_regression_tests": 1,
+      "runner_unchanged": true,
+      "evaluator_exact_single_authorized_replacement": true,
+      "new_evaluator_sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542",
+      "new_tests_sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
     }
   ],
   "formal_runner_invocation_count": 1,
@@ -3268,7 +3289,8 @@
         "real_candidates_attempted": 4,
         "no_inference_retry": true,
         "needed_disposition": "Supervisor authorization is required for an evaluation-only frozen-evaluator rendering repair/identity update; formal inference must not be rerun."
-      }
+      },
+      "supervisor_resolution": "THIRD_STOP_VALID / CONTINUE_EVALUATOR_ONLY; single writable-overlay-copy repair and one fake regression test authorized; all four formal inference attempts remain consumed."
     }
   ],
   "supervisor_continuation": {
@@ -29276,24 +29298,21 @@
         "disposition": "GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT",
         "must_remain_unchanged": true
       }
+    },
+    {
+      "disposition": "THIRD_STOP_VALID / CONTINUE_EVALUATOR_ONLY",
+      "accepted_remote_head": "7704fa520a85fe25457c5950e4d0062695859099",
+      "formal_runner_rerun": "FORBIDDEN",
+      "authorized_fix_id": "POST_RUNTIME_EVALUATOR_RENDER_FIX_V1",
+      "evaluator_invocation_2_only": "AUTHORIZED_AFTER_FIX_PUSH_AND_FROZEN_ARTIFACT_INTEGRITY",
+      "authorization_attachment": {
+        "path": "C:\\Users\\ROG\\.codex\\attachments\\65b5bb45-b6cd-4820-8161-78a0740e01ce\\已粘贴的文本.txt",
+        "bytes": 6521,
+        "sha256": "5e81db61395418e058b9698a53f5b662cd62070ecf30bba36fd2033aebb32254"
+      }
     }
   ],
-  "active_stop": {
-    "gate": "FROZEN_GT_EVALUATOR_REVIEW_ARRAY_READ_ONLY",
-    "phase": "POST_RUNTIME_GT_AUDIT",
-    "exit_code": 1,
-    "error": "ValueError: assignment destination is read-only",
-    "path": "scripts/task8c_final_demo_evaluate.py",
-    "line": 226,
-    "cause": "The SUCCESS review path loads the saved overlay using np.asarray(Image.open(...).convert(\"RGB\")); this array is read-only. Drawing the GT target boundary raises at assignment.",
-    "authority": "Supervisor requires unchanged frozen runner/evaluator/tests; no source changes after formal runtime freeze.",
-    "no_harness_repair_performed": true,
-    "no_evaluator_rerun_performed": true,
-    "formal_runner_invocations": 1,
-    "real_candidates_attempted": 4,
-    "no_inference_retry": true,
-    "needed_disposition": "Supervisor authorization is required for an evaluation-only frozen-evaluator rendering repair/identity update; formal inference must not be rerun."
-  },
+  "active_stop": null,
   "grandfathered_runtime_side_effect": {
     "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\Ultralytics\\settings.json",
     "bytes": 606,
@@ -68699,5 +68718,129 @@
     "language_expected_program_executed": 4,
     "runtime_success": 4,
     "runtime_failed": 0
+  },
+  "post_runtime_evaluator_fix": {
+    "id": "POST_RUNTIME_EVALUATOR_RENDER_FIX_V1",
+    "reason": "READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE",
+    "scientific_computation_changed": false,
+    "formal_runtime_changed": false,
+    "model_inference": false,
+    "authorized_by": "ChatGPT Supervisor THIRD_STOP_VALID / CONTINUE_EVALUATOR_ONLY",
+    "accepted_remote_head": "7704fa520a85fe25457c5950e4d0062695859099",
+    "before_evaluator_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py",
+      "bytes": 16825,
+      "sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+    },
+    "after_evaluator_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py",
+      "bytes": 16869,
+      "sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542"
+    },
+    "before_tests_sha256": "051755ce1a3af05bc6a862f31506c1ac7e2705878559a5f14c5ee4f38e6c1e3a",
+    "after_tests_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\tests\\test_task8c_final_demo.py",
+      "bytes": 17794,
+      "sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
+    },
+    "runner_identity": {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_runner.py",
+      "bytes": 17934,
+      "sha256": "15fcb108ca385c96d970e1076f04706e3bb3f398947df37a85ad67bbc59cc666"
+    },
+    "change": "Only saved-overlay SUCCESS target_panel becomes np.array(..., copy=True).",
+    "gt_reconstruction_metrics_classification_aggregate_unchanged": true,
+    "original_freeze_payload_unchanged": true,
+    "original_42_tests_retained": true,
+    "added_tests": 1,
+    "fake_only_test_result": {
+      "pass": true,
+      "exit_code": 0,
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/test_task8c_final_demo.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "C:\\Users\\ROG\\AppData\\Local\\Temp\\task8c-fake-tests-render-fix-v1"
+      ],
+      "stdout": "...........................................                              [100%]\n43 passed in 0.80s\n",
+      "stderr": "",
+      "fake_only": true,
+      "expected_collected": 43,
+      "original_42_tests_retained_byte_for_byte": true,
+      "new_success_saved_overlay_regression_tests": 1,
+      "runner_unchanged": true,
+      "evaluator_exact_single_authorized_replacement": true,
+      "new_evaluator_sha256": "5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542",
+      "new_tests_sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
+    },
+    "fix_checkpoint_commit": null
+  },
+  "current_tests_identity": {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\tests\\test_task8c_final_demo.py",
+    "bytes": 17794,
+    "sha256": "bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5"
+  },
+  "gt_evaluator_invocation_count": 1,
+  "invocation_1": {
+    "command": [
+      "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "-B",
+      "scripts/task8c_final_demo_evaluate.py"
+    ],
+    "invocation_count": 1,
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py\", line 302, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py\", line 275, in main\n    reviewed = review_image(row, audit, reference, masks)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py\", line 226, in review_image\n    target_panel[boundary(masks[audit[\"canonical_target_id\"]])] = (0, 255, 255)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: assignment destination is read-only\n",
+    "observed_utc": "2026-10-06T20:21:04.694213+00:00",
+    "raw_runtime_checkpoint_pushed_before_gt": "f41f32a05b83141312b078e6ab5975fbf70ec889",
+    "runtime_identity_verified_before_gt": true,
+    "gt_audit_started_after_runtime_freeze": true,
+    "truth_access_relation": "right",
+    "failure_stage": "first SUCCESS review target boundary assignment",
+    "reviews_completed": 0,
+    "cases_persisted_with_complete_gt_audit": 0,
+    "model_calls": 0,
+    "detector_calls": 0,
+    "native_vector_data_writes": 0,
+    "formal_output_writes": 0,
+    "no_reexecution_after_failure": true,
+    "reason": "READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE",
+    "evaluator_sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+  },
+  "invocation_2": null,
+  "gt_evaluator_invocations": {
+    "invocation_1": {
+      "command": [
+        "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+        "-B",
+        "scripts/task8c_final_demo_evaluate.py"
+      ],
+      "invocation_count": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py\", line 302, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py\", line 275, in main\n    reviewed = review_image(row, audit, reference, masks)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task8c_final_demo_evaluate.py\", line 226, in review_image\n    target_panel[boundary(masks[audit[\"canonical_target_id\"]])] = (0, 255, 255)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: assignment destination is read-only\n",
+      "observed_utc": "2026-10-06T20:21:04.694213+00:00",
+      "raw_runtime_checkpoint_pushed_before_gt": "f41f32a05b83141312b078e6ab5975fbf70ec889",
+      "runtime_identity_verified_before_gt": true,
+      "gt_audit_started_after_runtime_freeze": true,
+      "truth_access_relation": "right",
+      "failure_stage": "first SUCCESS review target boundary assignment",
+      "reviews_completed": 0,
+      "cases_persisted_with_complete_gt_audit": 0,
+      "model_calls": 0,
+      "detector_calls": 0,
+      "native_vector_data_writes": 0,
+      "formal_output_writes": 0,
+      "no_reexecution_after_failure": true,
+      "reason": "READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE",
+      "evaluator_sha256": "d471563773102c7ac53f8c766f26bd7bd3a43e06a5063f3e45f5dfe8990b4b9b"
+    },
+    "invocation_2": null
   }
 }

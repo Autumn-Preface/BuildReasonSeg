@@ -305,3 +305,68 @@ def test_review_is_deterministic_and_shows_failure(tmp_path):
     assert first.size == (1536, 760) and first.tobytes() == second.tobytes()
     # Original full-size pixels remain intact; evidence is shown in a separate footer.
     assert first.getpixel((0, 42)) == (10, 20, 30)
+
+
+def test_success_review_saved_overlay_writable_without_inference(tmp_path, monkeypatch):
+    import builtins
+    import io
+    import subprocess
+
+    image_path = tmp_path / "fake_success.tif"
+    overlay_path = tmp_path / "saved_overlay.png"
+    Image.new("RGB", (512, 512), (10, 20, 30)).save(image_path)
+    overlay = np.full((512, 512, 3), (70, 80, 90), dtype=np.uint8)
+    overlay[40:60, 40:60] = (210, 50, 50)
+    Image.fromarray(overlay).save(overlay_path)
+    overlay_before = overlay_path.read_bytes()
+    overlay_identity = evaluator.identity(overlay_path)
+    reference = np.zeros((512, 512), dtype=bool)
+    reference[10:20, 10:20] = True
+    target = np.zeros((512, 512), dtype=bool)
+    target[40:60, 40:60] = True
+    row = {"image": str(image_path), "overlay_path": str(overlay_path), "relation": "right",
+           "sample_id": "fake_success", "expected_program": "expected", "initial_program": "expected",
+           "suggested_program": None, "language_status": "DIRECT_CORRECT", "runtime_status": "SUCCESS",
+           "exit_code": 0, "reference_id": 7, "error_code": None, "error_reason": None}
+    audit = {"canonical_reference_id": 1, "canonical_target_id": 2,
+             "selected_reference_iou_with_canonical_gt_reference": 1.0,
+             "target_iou": 1.0, "target_dice": 1.0, "semantic_chain_status": "CHAIN_IDENTITY_MATCH"}
+    execution_calls = []
+
+    def forbid_execution(*args, **kwargs):
+        execution_calls.append((args, kwargs))
+        pytest.fail("review rendering attempted process/model execution")
+
+    for name in ("Popen", "run", "call", "check_call", "check_output"):
+        monkeypatch.setattr(subprocess, name, forbid_execution)
+    original_import = builtins.__import__
+
+    def guarded_import(name, *args, **kwargs):
+        if name.split(".")[0] in ("torch", "ultralytics", "transformers", "predict", "buildreasonseg"):
+            forbid_execution(name)
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", guarded_import)
+    original_open = Image.open
+    overlay_reads = []
+
+    def tracked_open(path, *args, **kwargs):
+        if Path(path) == overlay_path:
+            overlay_reads.append(str(path))
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Image, "open", tracked_open)
+    first = evaluator.review_image(row, audit, reference, {1: reference, 2: target})
+    second = evaluator.review_image(row, audit, reference, {1: reference, 2: target})
+    assert overlay_reads == [str(overlay_path), str(overlay_path)]
+    assert first.getpixel((1024+100, 42+100)) == (70, 80, 90)
+    assert first.getpixel((1024+50, 42+50)) == (210, 50, 50)
+    assert first.getpixel((1024+40, 42+40)) == (0, 255, 255)
+    assert first.tobytes() == second.tobytes()
+    first_png, second_png = io.BytesIO(), io.BytesIO()
+    first.save(first_png, format="PNG")
+    second.save(second_png, format="PNG")
+    assert first_png.getvalue() == second_png.getvalue()
+    assert overlay_path.read_bytes() == overlay_before
+    assert evaluator.identity(overlay_path) == overlay_identity
+    assert execution_calls == []

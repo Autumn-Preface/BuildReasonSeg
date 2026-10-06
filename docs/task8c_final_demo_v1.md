@@ -99,3 +99,10 @@ Current STOP is an evaluation harness rendering failure, not an adverse model/al
 Final scientific verdict belongs to **ChatGPT Supervisor**. Four structural runtime successes do not establish correct references/targets or mask quality. GT review completion is outstanding; this checkpoint is **not READY_FOR_SUPERVISOR_AUDIT** procedural completion.
 
 Next gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT.
+
+
+## Supervisor-authorized post-runtime evaluator repair
+
+Current continuation status: POST_RUNTIME_EVALUATOR_RENDER_FIX_V1 tested, pending commit/push and second evaluator. THIRD_STOP_VALID / CONTINUE_EVALUATOR_ONLY accepted at 7704fa520a85fe25457c5950e4d0062695859099. Earlier failures remain historical evidence. The only evaluator change is np.asarray(saved overlay) -> np.array(saved overlay, copy=True), enabling local review-boundary drawing. GT reconstruction, coordinate mapping, IoU/Dice, best overlap, identity/classification, aggregate semantics, candidate/GT IDs and artifact verification are unchanged. Original formal freeze 20615080264774eb7b93b7d6a3c1e547093c4876 and raw checkpoint f41f32a05b83141312b078e6ab5975fbf70ec889 are preserved. Formal runner must never rerun.
+
+New evaluator SHA256: 5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542. New tests SHA256: bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5. Current fake-only suite: 43/43 PASS, exit 0; original 42 tests preserved, one saved-overlay SUCCESS regression appended. The test verifies exact overlay reads, writable target-boundary rendering, byte-identical input overlay, deterministic review/PNG and no process/model/detector/predict calls. First evaluator invocation remains exit 1 with full traceback and zero model/detector calls; only invocation 2 is authorized after push/integrity checks.

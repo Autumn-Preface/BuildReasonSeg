@@ -7,7 +7,7 @@ Task ID:
 TASK8C_FINAL_DEMO_V1
 
 Status:
-STOPPED_FOR_SUPERVISOR
+IN_PROGRESS
 
 Decision owner:
 ChatGPT Supervisor
@@ -1457,3 +1457,281 @@ Formal freeze 20615080264774eb7b93b7d6a3c1e547093c4876 was pushed before the sin
 Frozen evaluator/runner/tests were not changed or rerun; no inference retry. All raw runtime outputs/hashes remain preserved. Stop-time integrity PASS: external source 135/135, manifest MATCH, 1543 historical output files (bytes/SHA/mtime), 6 inputs, 20 protected model byte/SHA identities, grandfathered settings, frozen outputs and Task8C logs unchanged. New files only in observed four Task8C run roots and Task8C logs; no additional external-root config appeared.
 
 STOP pending Supervisor disposition for an evaluation-only frozen-evaluator rendering repair and identity update. Do not rerun formal inference or repair any model/algorithm.
+
+
+# Supervisor third-STOP disposition — verbatim authorization
+
+ChatGPT Supervisor 已完成第三次 Task 8C 审核。
+
+Supervisor disposition：
+
+TASK8C_FINAL_DEMO_V1 = THIRD_STOP_VALID / CONTINUE_EVALUATOR_ONLY
+
+继续当前分支：
+
+eval/task8c-final-demo-v1
+
+当前 accepted remote HEAD：
+
+7704fa520a85fe25457c5950e4d0062695859099
+
+必须保留以下冻结事实：
+
+formal freeze commit:
+20615080264774eb7b93b7d6a3c1e547093c4876
+
+raw frozen runtime checkpoint:
+f41f32a05b83141312b078e6ab5975fbf70ec889
+
+runtime_results.json:
+sha256 =
+2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca
+
+formal_runner_invocation_count = 1
+real_candidates_attempted = 4
+case order = right / left / above / below
+inference retries = 0
+
+这四次 formal attempts 已全部消耗。
+
+从现在起严格禁止：
+
+formal runner rerun
+predict.py rerun
+detector rerun
+model inference
+candidate retry
+prompt retry
+--reference-id
+--inspect-proposals
+重新生成 mask/overlay
+修改任何 external formal run artifact
+
+四例冻结 runtime 结果：
+
+right:
+runtime SUCCESS
+raw/merged = 7/6
+automatic reference_id = 3
+mask_area = 415
+
+left:
+runtime SUCCESS
+raw/merged = 59/46
+automatic reference_id = 11
+mask_area = 1627
+
+above:
+runtime SUCCESS
+raw/merged = 10/10
+automatic reference_id = 5
+mask_area = 1580
+
+below:
+runtime SUCCESS
+raw/merged = 7/6
+automatic reference_id = 1
+mask_area = 2955
+
+这些仍然只是 RUNTIME_STRUCTURAL_ONLY，不得在 GT audit 完成前升级为 semantic correctness。
+
+当前 GT evaluator invocation #1：
+
+exit = 1
+model calls = 0
+detector calls = 0
+
+冻结失败：
+
+scripts/task8c_final_demo_evaluate.py review rendering path
+
+ValueError:
+assignment destination is read-only
+
+根因已经由 Supervisor 审核确认：
+
+SUCCESS review path 使用：
+
+target_panel = np.asarray(Image.open(row["overlay_path"]).convert("RGB"))
+
+该 ndarray 是 read-only，随后绘制 GT boundary 时赋值失败。
+
+现在授权唯一 evaluator 产品逻辑修复：
+
+将这一处改为显式可写副本，例如精确采用：
+
+target_panel = np.array(
+    Image.open(row["overlay_path"]).convert("RGB"),
+    copy=True,
+)
+
+除使 review target panel 可写外，不得改变：
+
+GT reconstruction
+context_to_global
+IoU
+Dice
+best_overlap
+identity_audit
+semantic-chain enums
+aggregate semantics
+candidate IDs
+GT IDs
+review content语义
+runtime verification
+artifact verification
+
+scripts/task8c_final_demo_runner.py 必须 byte-identical，不得修改。
+
+允许在：
+
+tests/test_task8c_final_demo.py
+
+增加一个针对 runtime SUCCESS + saved overlay 的回归测试，证明：
+
+1. saved overlay path 被读取；
+2. GT target boundary 可以绘制，不再出现 read-only assignment；
+3. 输入 overlay 文件本身 byte-identical；
+4. review rendering deterministic；
+5. 不发生 model/detector/predict 调用。
+
+现有 tests 不得削弱或删除。
+
+这是 Supervisor 明确授权的：
+
+POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
+
+注意：不要修改原 FORMAL_FINAL_DEMO_FREEZE_V1，也不要伪装 evaluator 从未变化。
+
+原 freeze 仍然是正式推理前的真实 freeze。
+
+新增记录：
+
+post_runtime_evaluator_fix:
+  id: POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
+  reason: READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE
+  scientific_computation_changed: false
+  formal_runtime_changed: false
+  model_inference: false
+
+先执行当前 fake-only Task8C dedicated test suite。
+
+如果新增 1 个测试，则预期至少原有 42 个全部继续 PASS，新测试也 PASS。
+
+出现任何真正 assertion failure → 保存证据并 STOP。
+
+测试绿色后：
+
+commit + push evaluator-only fix checkpoint。
+
+必须记录新的 evaluator SHA256 和 tests SHA256。
+
+然后验证：
+
+- frozen runtime_results.json SHA256 仍为
+  2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca
+- 四个 run root 内所有 frozen artifacts bytes/SHA unchanged
+- formal runner invocation仍为 1
+- grandfathered Ultralytics/settings.json unchanged
+- 135/135 source/config unchanged
+- source_manifest unchanged
+- historical output/input/protected assets unchanged
+
+随后授权 GT evaluator **第二次且仅第二次**执行。
+
+这是 evaluator retry，不是 inference retry。
+
+最终证据必须如实保存：
+
+gt_evaluator_invocation_count = 2
+
+invocation_1:
+  exit = 1
+  model_calls = 0
+  detector_calls = 0
+  reason = READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE
+
+invocation_2:
+  使用 POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
+  model_calls = 0
+  detector_calls = 0
+
+不得删除、覆盖或淡化第一次 evaluator failure。
+
+第二次 evaluator 必须只读取冻结 formal outputs 和 native-vector truth。
+
+它必须完成：
+
+right GT audit
+left GT audit
+above GT audit
+below GT audit
+
+并产生：
+
+evaluation/task8c_final_demo_v1/right_review.png
+evaluation/task8c_final_demo_v1/left_review.png
+evaluation/task8c_final_demo_v1/above_review.png
+evaluation/task8c_final_demo_v1/below_review.png
+evaluation/task8c_final_demo_v1/contact_sheet.png
+
+完成 reference audit：
+
+selected_reference_best_gt_instance_id
+selected_reference_best_gt_iou
+selected_reference_iou_with_canonical_gt_reference
+reference_identity_best_overlap_match
+
+完成 target audit：
+
+target_iou
+target_dice
+predicted_target_area
+gt_target_area
+predicted_target_best_gt_instance_id
+predicted_target_best_gt_iou
+target_identity_best_overlap_match
+
+并按原冻结规则生成：
+
+CHAIN_IDENTITY_MATCH
+REFERENCE_IDENTITY_MISMATCH
+TARGET_IDENTITY_MISMATCH
+REFERENCE_AND_TARGET_IDENTITY_MISMATCH
+RUNTIME_FAILED
+LANGUAGE_FAILED
+NOT_EVALUABLE_MISSING_ARTIFACT
+
+禁止增加新的 IoU pass threshold。
+
+禁止人工修改任何 semantic-chain classification。
+
+最终 aggregate 按原 Task 8C 规则计算。
+
+完成后做最终 integrity gate：
+
+formal runtime outputs unchanged
+historical outputs unchanged
+input unchanged
+protected assets unchanged
+135/135 unchanged
+source_manifest unchanged
+grandfathered settings unchanged
+no new unexpected external-root config
+model/detector calls during GT audit = 0
+formal runner invocations = 1
+inference retries = 0
+
+最终：
+
+CURRENT_TASK = READY_FOR_SUPERVISOR_AUDIT
+EXECUTOR_STATE = READY_FOR_SUPERVISOR_AUDIT
+next_gate = CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
+
+commit + push，然后 STOP。
+
+不得根据 GT 结果好坏启动任何模型或算法修复。
+
+# Executor POST_RUNTIME_EVALUATOR_RENDER_FIX_V1 checkpoint
+
+Applied only the exact writable-copy SUCCESS target-panel replacement authorized above. Runner bytes and all GT/scientific computation remain unchanged. Existing 42 tests were retained byte-for-byte and one saved-overlay SUCCESS regression test appended: 43/43 PASS / exit 0. Original FORMAL_FINAL_DEMO_FREEZE_V1 remains unmodified and records its original evaluator/test identities. New evaluator SHA256: 5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542. New tests SHA256: bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5. First evaluator failure retained in full; second invocation remains pending fix checkpoint push and frozen-artifact/integrity verification. Formal runner=1, attempts=4, inference retries=0; no new model call.

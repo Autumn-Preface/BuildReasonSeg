@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8C_FINAL_DEMO_V1
-status: STOPPED_FOR_SUPERVISOR
+status: IN_PROGRESS
 executor: CODEX
 branch: eval/task8c-final-demo-v1
-head: f41f32a05b83141312b078e6ab5975fbf70ec889
+head: 7704fa520a85fe25457c5950e4d0062695859099
 completed:
 - Required canonical read order and exact fetched predecessor verified.
 - Evaluation branch created; full task book initially installed byte-for-byte.
@@ -32,10 +32,15 @@ completed:
 - 'Stop-time integrity PASS: 135/135/manifest, all historical output/input/assets,
   frozen outputs/log hashes and grandfathered settings; only authorized new run/log
   paths.'
-current_step: STOP_FROZEN_GT_EVALUATOR_REVIEW_READ_ONLY_ARRAY
-next_action: Supervisor review of frozen-evaluator rendering failure; preserve all
-  four consumed formal attempts and outputs. No inference/evaluator rerun or harness
-  modification.
+- Third STOP accepted; evaluator-only continuation authorized.
+- Exact writable-overlay-copy replacement plus one SUCCESS saved-overlay regression
+  test; runner/original freeze/scientific evaluation functions unchanged.
+- Current fake-only dedicated suite 43/43 PASS / exit 0; original 42 tests retained
+  unchanged.
+current_step: POST_RUNTIME_EVALUATOR_RENDER_FIX_TESTED_PENDING_PUSH
+next_action: Commit/push authorized evaluator-only render fix and identities, verify
+  frozen runtime/artifacts/integrity, then second and only second evaluator invocation.
+  Never rerun inference.
 tests_run:
 - name: Task8C dedicated fake tests - earlier revision
   result: 40 passed
@@ -46,18 +51,21 @@ tests_run:
 - name: Task8C current HEAD fake tests - corrected L0 invocation
   result: 42 passed in 0.74s; harness bytes unchanged
   exit_code: 0
+- name: Post-runtime evaluator render fix dedicated fake-only suite
+  result: 43 passed in 0.80s
+  exit_code: 0
 files_modified:
+- scripts/task8c_final_demo_evaluate.py
+- tests/test_task8c_final_demo.py
 - docs/task8c_final_demo_v1.md
 - evaluation/task8c_final_demo_v1.json
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
 uncommitted_changes: true
-blocked_on_supervisor: true
-block_reason: Frozen evaluator failed at line 226 while drawing a target GT boundary
-  into a read-only saved-overlay array. Repair would change frozen harness bytes,
-  which current authorization forbids.
+blocked_on_supervisor: false
+block_reason: null
 last_checkpoint:
-  commit: f41f32a05b83141312b078e6ab5975fbf70ec889
+  commit: 7704fa520a85fe25457c5950e4d0062695859099
   pushed: true
 next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 formal_runner_invocation_count: 1
@@ -70,7 +78,7 @@ gt_audit: STARTED_THEN_FAILED_IN_FIRST_REVIEW
 no_product_change: true
 no_governance_change: true
 governance_staleness_acknowledged: true
-runner_evaluator_tests_unchanged: true
+runner_evaluator_tests_unchanged: false
 grandfathered_runtime_side_effect:
   path: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\Ultralytics\settings.json
   bytes: 606
@@ -92,3 +100,8 @@ gt_evaluator_exit_code: 1
 gt_model_calls: 0
 gt_detector_calls: 0
 no_inference_retry: true
+runner_unchanged: true
+scientific_evaluator_functions_unchanged: true
+original_42_tests_unchanged: true
+gt_evaluator_invocation_count: 1
+post_runtime_evaluator_fix_id: POST_RUNTIME_EVALUATOR_RENDER_FIX_V1

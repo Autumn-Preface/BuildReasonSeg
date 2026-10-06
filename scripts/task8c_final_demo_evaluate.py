@@ -222,7 +222,10 @@ def review_image(row: dict, audit: dict, reference: np.ndarray | None,
     ref_panel[boundary(masks[audit["canonical_reference_id"]])] = (0, 255, 0)
     target_panel = rgb.copy()
     if row.get("overlay_path") and Path(row["overlay_path"]).is_file():
-        target_panel = np.asarray(Image.open(row["overlay_path"]).convert("RGB"))
+        target_panel = np.array(
+            Image.open(row["overlay_path"]).convert("RGB"),
+            copy=True,
+        )
     target_panel[boundary(masks[audit["canonical_target_id"]])] = (0, 255, 255)
     canvas = Image.new("RGB", (1536, 760), "#15191f")
     for n, panel in enumerate((rgb, ref_panel, target_panel)):
