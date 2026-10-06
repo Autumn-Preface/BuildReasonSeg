@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: fix/task8b3-detector-rgb-bgr-contract-v1
-head: 07aa62e5fd06e79ad42f73c6fd6e5a7e4ae4a29f
+head: 99a559b2383540ff44eee115c6e4a42c43b2d315
 completed:
 - Startup reads, exact clean anchor, authorized branch and task installation verified.
 - Minimal canonical repair and 47/47 related runtime tests PASS, including 5 new boundary/extraction
@@ -16,10 +16,20 @@ completed:
 - A4 frozen real detector, tensor and immutable-input checks completed.
 - B1 frozen real detector, tensor and immutable-input checks completed.
 - B2 frozen real detector, tensor and immutable-input checks completed.
-current_step: EXTERNAL_FULL_REGRESSION
-next_action: EXTERNAL_FULL_REGRESSION
+- External complete RC1 regression PASS.
+- Final 135/135 external source identities and all protected content hashes unchanged
+  after validation.
+- Final evidence validation and Supervisor audit handoff ready; no scientific closure
+  claim.
+current_step: STOP_FOR_SUPERVISOR_AUDIT
+next_action: CHATGPT_DETECTOR_CHANNEL_REPAIR_REMOTE_AUDIT
 tests_run:
-- "47 passed in 6.00s\r"
+- 'Canonical runtime tests: 47/47 PASS including 5 new contracts.'
+- 'Real six-case detector regression: 374 actual tensor/API/kwargs/immutability checks
+  PASS.'
+- 'External full regression: 135 passed, 0 failed, 0 errors; failing nodes=[]'
+- Canonical/external 135/135 source identity PASS; 1964/1964 protected hashes unchanged.
+- Whole detector AST boundary-only diff and final saved-evidence assertions PASS.
 files_modified:
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
@@ -28,10 +38,13 @@ files_modified:
 - delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
 - delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
-uncommitted_changes: true
+uncommitted_changes: false
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 07aa62e5fd06e79ad42f73c6fd6e5a7e4ae4a29f
+  commit: 99a559b2383540ff44eee115c6e4a42c43b2d315
   pushed: true
+scientific_claim_scope: DETECTOR_RGB_BGR_INPUT_CONTRACT_CORRECTED_ONLY
+PROP01_status: OPEN
+A2_case_validity: NOT_EVALUATED_IN_THIS_TASK
