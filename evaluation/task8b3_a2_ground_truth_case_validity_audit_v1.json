@@ -1,0 +1,2271 @@
+{
+  "case_validity": "NOT_EVALUABLE_WITHOUT_PROVENANCE",
+  "completed": [
+    "Required startup and remote anchor verified; task book installed byte-for-byte.",
+    "Phase A historical documentary search complete; no authoritative source/window recovered.",
+    "Phase B locked SHA256 and runtime/Pillow RGB equality verified.",
+    "Exact-pixel plan predeclared before corpus search."
+  ],
+  "exact_matches": [],
+  "exact_search_anchors": [
+    {
+      "decoded_rgb_sha256": "f8f8b616b0f83eb6386f99cdad67ff66b959c76c397381436dd2409b9b81f0c1",
+      "id": "C1_0",
+      "window": [
+        0,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "16883b0d03d2e685bd55aaab2b6b9e81d9850b0cd3f71e756d3a3f0adef1bd36",
+      "id": "C1_1",
+      "window": [
+        512,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "ed6fff68dbdc8ee2d23d74ce7acdc4ad4c3a40794f11b1d80336fc00d8f6c9ce",
+      "id": "C1_2",
+      "window": [
+        0,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "2b1d926dba398b6229b70ba44be50375b78b26e8aa56405f0b3c8162c4bc1b6e",
+      "id": "C1_3",
+      "window": [
+        512,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "df0b189ababa26dd4edc1c98bda94e9a660dfacf4b9e5b35b3404e6ae69b3c8c",
+      "id": "C2_0",
+      "window": [
+        256,
+        0,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "348693efc7e94ecfe9f629979006bfced0b0a59abf226eca20b787aefabad051",
+      "id": "C2_1",
+      "window": [
+        0,
+        256,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "2ec069269b98d39fd1b0fdb4a8079a4d7dbe5703394345c481fbffb6ff4fea14",
+      "id": "C2_2",
+      "window": [
+        256,
+        256,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "7bcc632d30e2acc4ceb640041a028dc5178f1ba34588dcd93bd364f61f259459",
+      "id": "C2_3",
+      "window": [
+        512,
+        256,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "c3da210cc7a24a83b5310234234bd67f639d0dbfbc8c5cc84f62335b944c5373",
+      "id": "C2_4",
+      "window": [
+        256,
+        512,
+        512,
+        512
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "9971c9cbe4a2f34f8b2afbff92e959f139b29199138b6e94d377b990630896ff",
+      "id": "C3_0",
+      "window": [
+        256,
+        256,
+        16,
+        16
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "e5f2a7a854ccad1ada6c403261453a97df208168fe6561124ea291e22e6255ed",
+      "id": "C3_1",
+      "window": [
+        496,
+        496,
+        16,
+        16
+      ]
+    },
+    {
+      "decoded_rgb_sha256": "6b2698515540a1583d9e3eda0652df2072ae7b26de3cf592d41f345285b5c67c",
+      "id": "C3_2",
+      "window": [
+        752,
+        752,
+        16,
+        16
+      ]
+    }
+  ],
+  "exact_search_plan": {
+    "C1_C2_corpus": "ALL source_image_ref paths in tracked native-vector tiles/index.jsonl; verify complete cropped image inventory",
+    "C1_quadrants": [
+      [
+        0,
+        0,
+        512,
+        512
+      ],
+      [
+        512,
+        0,
+        512,
+        512
+      ],
+      [
+        0,
+        512,
+        512,
+        512
+      ],
+      [
+        512,
+        512,
+        512,
+        512
+      ]
+    ],
+    "C2_interior_windows": [
+      [
+        256,
+        0,
+        512,
+        512
+      ],
+      [
+        0,
+        256,
+        512,
+        512
+      ],
+      [
+        256,
+        256,
+        512,
+        512
+      ],
+      [
+        512,
+        256,
+        512,
+        512
+      ],
+      [
+        256,
+        512,
+        512,
+        512
+      ]
+    ],
+    "C3_boundary_coverage": "a 16-pixel row can cross at most one 128-pixel tile boundary; at least one 8-pixel half is contiguous",
+    "C3_chunk_bytes": 33554432,
+    "C3_corpus": [
+      "test.tif",
+      "train1.tif",
+      "train2.tif"
+    ],
+    "C3_max_anchor_occurrences": 10000,
+    "C3_max_seconds_total": 600,
+    "C3_method": "scan uncompressed RGB TIFF tiles for BOTH exact 8-pixel halves of the patch first row; verify entire 16x16 patch",
+    "C3_patches": [
+      [
+        256,
+        256,
+        16,
+        16
+      ],
+      [
+        496,
+        496,
+        16,
+        16
+      ],
+      [
+        752,
+        752,
+        16,
+        16
+      ]
+    ],
+    "C4": "reconstruct complete in-bounds 1024x1024 source window and compare every decoded RGB byte",
+    "coordinate_convention": "[x,y,width,height], zero-based decoded RGB; no transformations",
+    "exact_only": true,
+    "fuzzy_or_perceptual_method": false,
+    "transformations_searched": []
+  },
+  "full_window_verification": [],
+  "gt_building_instance_count": null,
+  "gt_instances": [],
+  "gt_left_of_candidates": [],
+  "gt_reference": null,
+  "gt_source_identities": [],
+  "gt_status": "NOT_EVALUATED_NO_EXACT_PROVENANCE",
+  "gt_target": null,
+  "historical_documentary_search": {
+    "P0_established": false,
+    "conclusion": "Inspected records fix file identity and intended program; no authoritative reproducible source raster/window record found.",
+    "historical_task_versions": [
+      {
+        "A2_lines": [
+          {
+            "line": 113,
+            "text": "## A2"
+          },
+          {
+            "line": 115,
+            "text": "file = inference/input/A2.png"
+          },
+          {
+            "line": 357,
+            "text": "11. suite contains exactly A1/A2/A3/A4/B1/B2;"
+          },
+          {
+            "line": 390,
+            "text": "- SHA256."
+          },
+          {
+            "line": 404,
+            "text": "It must execute A1→A2→A3→A4→B1→B2."
+          },
+          {
+            "line": 472,
+            "text": "A2_overlay_review.png"
+          },
+          {
+            "line": 554,
+            "text": "A2: ..."
+          },
+          {
+            "line": 682,
+            "text": "A2:"
+          }
+        ],
+        "commit_record": "1287d0a2bab50a278452d4cd0ec8d492347afdfe 2026-10-03T23:51:34+08:00 绘尽梨衣绘烬樱 docs(demo): record task8b3 execution stop",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "94b3c62ac3b471f1b48fe7790830783639fd898ae333dbc7d6b9ecb4aede880b"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 276,
+            "text": "15. suite contains exactly A1/A2/A3/A4/B1/B2 with exact frozen prompts/programs."
+          },
+          {
+            "line": 326,
+            "text": "Verify all six frozen inputs and preserve the SHA256 identities already recorded in R1 report."
+          },
+          {
+            "line": 362,
+            "text": "`A1 -> A2 -> A3 -> A4 -> B1 -> B2`"
+          },
+          {
+            "line": 405,
+            "text": "- `A2_overlay_review.png`"
+          },
+          {
+            "line": 466,
+            "text": "A2: ..."
+          },
+          {
+            "line": 597,
+            "text": "A2:"
+          }
+        ],
+        "commit_record": "c08c65998f045d0e712c7e212f37a63042ec0f27 2026-10-04T01:33:10+08:00 绘尽梨衣绘烬樱 docs(demo): record task8b3-r2 execution stop",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "a42bc109e78cc344a292cb82f78c2d02bb76812c865bd221de5de210e21e0ab7"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 98,
+            "text": "Verify the six files exist, are readable, and SHA256 exactly match:"
+          },
+          {
+            "line": 104,
+            "text": "A2.png"
+          },
+          {
+            "line": 105,
+            "text": "10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 133,
+            "text": "A2_sha256 = 10286b1..."
+          },
+          {
+            "line": 160,
+            "text": "A1 -> A2 -> A3 -> A4 -> B1 -> B2"
+          },
+          {
+            "line": 241,
+            "text": "A2_overlay_review.png"
+          },
+          {
+            "line": 303,
+            "text": "A2: language=<...> runtime=<...>"
+          },
+          {
+            "line": 414,
+            "text": "A2:"
+          }
+        ],
+        "commit_record": "648dc9d48886f6da478f8e27b54116d48ca1d725 2026-10-04T05:02:49+08:00 绘尽梨衣绘烬樱 docs(demo): record formal six-image suite",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "c2f59ad94210238d4468b55a3a13177a5238f4456af3b8da27a97d2c9f611e54"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 87,
+            "text": "A2 language FALLBACK_CORRECT runtime FAILED E401"
+          },
+          {
+            "line": 125,
+            "text": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_transcripts\\A2.txt"
+          },
+          {
+            "line": 143,
+            "text": "inference\\output\\diagnostics\\A2\\"
+          },
+          {
+            "line": 231,
+            "text": "# 9. Forensics D — A2 E401"
+          },
+          {
+            "line": 233,
+            "text": "From existing A2 transcript/result/proposals only:"
+          },
+          {
+            "line": 308,
+            "text": "A2 detector/proposal path can return zero proposals on a building-containing Demo scene."
+          },
+          {
+            "line": 355,
+            "text": "6. A2 E401 forensics"
+          },
+          {
+            "line": 377,
+            "text": "A2 forensics: <summary>"
+          },
+          {
+            "line": 434,
+            "text": "- A2 forensics documented without unsupported causality;"
+          },
+          {
+            "line": 468,
+            "text": "A2:"
+          }
+        ],
+        "commit_record": "4bcd26b5403bcdaf3ee73f9855c1ffca8db5ac63 2026-10-04T05:48:31+08:00 绘尽梨衣绘烬樱 docs(demo): record six-image failure forensics",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "13bb01fb441352409dc544ebd94b78709047aa3d5555e5f232f399b050a211fd"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D1: A2 Zero-Proposal Forensics"
+          },
+          {
+            "line": 15,
+            "text": "A2.png"
+          },
+          {
+            "line": 108,
+            "text": "# 5. Recover historical A2 evidence"
+          },
+          {
+            "line": 110,
+            "text": "Locate and inspect all existing tracked/untracked local artifacts from the original Task 8B.3 R4B / Demo run that mention A2."
+          },
+          {
+            "line": 126,
+            "text": "A2"
+          },
+          {
+            "line": 127,
+            "text": "A2.png"
+          },
+          {
+            "line": 144,
+            "text": "- exact A2 status;"
+          },
+          {
+            "line": 153,
+            "text": "# 6. Inspect A2 image metadata only"
+          },
+          {
+            "line": 155,
+            "text": "Locate the frozen A2 image used in the Demo."
+          },
+          {
+            "line": 160,
+            "text": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A2.png"
+          },
+          {
+            "line": 168,
+            "text": "- file hash SHA256."
+          },
+          {
+            "line": 196,
+            "text": "Trace A2 from:"
+          },
+          {
+            "line": 233,
+            "text": "- what exact warning class/string corresponds to the historical A2 NMS warning;"
+          },
+          {
+            "line": 250,
+            "text": "A2"
+          },
+          {
+            "line": 256,
+            "text": "determine whether A2 is uniquely zero-proposal and uniquely associated with the warning."
+          },
+          {
+            "line": 275,
+            "text": "- historical A2 warning is recovered and maps to local Ultralytics NMS time-limit behavior;"
+          },
+          {
+            "line": 276,
+            "text": "- A2 raw_count is truly zero;"
+          },
+          {
+            "line": 286,
+            "text": "A. `CONTROLLED_A2_INSPECT_PROPOSALS_RUN`"
+          },
+          {
+            "line": 308,
+            "text": "2. Historical A2 evidence"
+          },
+          {
+            "line": 310,
+            "text": "4. A2 image metadata/hash"
+          },
+          {
+            "line": 315,
+            "text": "9. A1/A2/A3/A4 historical comparison"
+          },
+          {
+            "line": 339,
+            "text": "A2 image: <path>"
+          },
+          {
+            "line": 340,
+            "text": "A2 dimensions: <WxH>"
+          },
+          {
+            "line": 341,
+            "text": "A2 historical raw/merged: 0/0"
+          },
+          {
+            "line": 384,
+            "text": "- historical A2 evidence exhaustively searched;"
+          },
+          {
+            "line": 385,
+            "text": "- A2 metadata/tile plan documented;"
+          },
+          {
+            "line": 415,
+            "text": "A2:"
+          }
+        ],
+        "commit_record": "dfc66e5a97639074149ce66e6cd4a6f0180e3e71 2026-10-04T20:56:42+08:00 绘尽梨衣绘烬樱 docs(rc1): investigate a2 zero-proposal defect",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "fc0407c8b9078fa09e16e0897588ea0827ec2b65553258f3370d6678b13e04f9"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D2: Controlled A2 Detector Result Probe"
+          },
+          {
+            "line": 15,
+            "text": "historical A2:"
+          },
+          {
+            "line": 36,
+            "text": "This task performs exactly ONE controlled detector-only A2 probe to distinguish:"
+          },
+          {
+            "line": 78,
+            "text": "- rerun A2 after the one probe;"
+          },
+          {
+            "line": 110,
+            "text": "inference/input/A2.png"
+          },
+          {
+            "line": 112,
+            "text": "sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 147,
+            "text": "1. load A2 RGB once;"
+          },
+          {
+            "line": 154,
+            "text": "4. generate the normal 9 A2 tile windows;"
+          },
+          {
+            "line": 279,
+            "text": "with frozen current assets/settings, A2 now produces raw wrapper proposals and the historical zero-proposal symptom does not reproduce."
+          },
+          {
+            "line": 360,
+            "text": "A2 dimensions/hash: 1024x1024 / MATCH"
+          },
+          {
+            "line": 426,
+            "text": "A2:"
+          },
+          {
+            "line": 459,
+            "text": "等待 ChatGPT 审核；不得修改 detector、不得降低阈值、不得重跑 A2、不得进入 REF-01/MASK-01/Task 8B.4/8C。"
+          }
+        ],
+        "commit_record": "54fd6f4c8bf94f893a8c48cf4c0ce5f2132cf386 2026-10-04T21:14:02+08:00 绘尽梨衣绘烬樱 test(rc1): probe a2 detector result structure",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "feedde7b50fe16a9f5fb34082ab064a311c1b012f839f086d2b1ca8668eb067b"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D3: A2 Full-Frame Context Probe"
+          },
+          {
+            "line": 15,
+            "text": "A2 = 1024×1024"
+          },
+          {
+            "line": 28,
+            "text": "A. detector cannot detect A2 at conf=0.05 even with global image context"
+          },
+          {
+            "line": 36,
+            "text": "→ one full A2 frame"
+          },
+          {
+            "line": 71,
+            "text": "- run tiled A2 again;"
+          },
+          {
+            "line": 80,
+            "text": "- run any second A2 inference;"
+          },
+          {
+            "line": 105,
+            "text": "Verify frozen A2:"
+          },
+          {
+            "line": 108,
+            "text": "path = inference/input/A2.png"
+          },
+          {
+            "line": 111,
+            "text": "sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 129,
+            "text": "source = full 1024×1024 A2 RGB image"
+          },
+          {
+            "line": 150,
+            "text": "1. load A2 RGB once;"
+          },
+          {
+            "line": 226,
+            "text": "at the same checkpoint/conf/imgsz/device, the detector can detect A2 with full-image context but fails when A2 is decomposed into 512-px tiles."
+          },
+          {
+            "line": 271,
+            "text": "NEXT = CONTROLLED_SUBTHRESHOLD_A2_PROBE"
+          },
+          {
+            "line": 309,
+            "text": "4. A2 identity"
+          },
+          {
+            "line": 339,
+            "text": "A2 dimensions/hash: 1024x1024 / MATCH"
+          },
+          {
+            "line": 411,
+            "text": "A2 full-frame:"
+          }
+        ],
+        "commit_record": "9f260ab035b5072d44b1979042fbcc63f7c458b8 2026-10-04T21:40:07+08:00 绘尽梨衣绘烬樱 test(rc1): probe a2 full-frame detector context",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "a23b05ac4cb4bef6df0981effaf22588bd9ad2f0e64eca2ea28a5805a33837ab"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D5: Detector Provenance and A2 Domain-Gap Forensics"
+          },
+          {
+            "line": 12,
+            "text": "P1D1–P1D4 have excluded these explanations for A2 zero proposals:"
+          },
+          {
+            "line": 24,
+            "text": "A2 = 1024×1024 RGB"
+          },
+          {
+            "line": 57,
+            "text": "- run A1/A2/A3/A4/B1/B2 inference;"
+          },
+          {
+            "line": 98,
+            "text": "SHA256"
+          },
+          {
+            "line": 192,
+            "text": "# 8. Recover A2 provenance and input-domain facts"
+          },
+          {
+            "line": 194,
+            "text": "Search Demo/R4B artifacts and file metadata for A2 provenance."
+          },
+          {
+            "line": 210,
+            "text": "Record directly measurable frozen A2 facts:"
+          },
+          {
+            "line": 216,
+            "text": "SHA256"
+          },
+          {
+            "line": 224,
+            "text": "# 9. Training-domain vs A2 comparison"
+          },
+          {
+            "line": 229,
+            "text": "property                         active detector training/validation domain    A2"
+          },
+          {
+            "line": 253,
+            "text": "SHA256"
+          },
+          {
+            "line": 287,
+            "text": "- only if detector training/validation domain and A2 source/domain are established and materially mismatched."
+          },
+          {
+            "line": 290,
+            "text": "- only if A2 is established to belong to the expected detector domain and still fails through P1D4."
+          },
+          {
+            "line": 296,
+            "text": "- if checkpoint provenance exists but A2 provenance/domain is too incomplete to distinguish mismatch from in-domain blind spot."
+          },
+          {
+            "line": 306,
+            "text": "NEXT = CONTROLLED_ALTERNATE_DETECTOR_A2_PROBE"
+          },
+          {
+            "line": 349,
+            "text": "10. A2 provenance and measurable facts"
+          },
+          {
+            "line": 350,
+            "text": "11. training-domain vs A2 comparison"
+          },
+          {
+            "line": 376,
+            "text": "Active detector SHA256: <sha>"
+          },
+          {
+            "line": 381,
+            "text": "A2 source/domain: <value / NOT ESTABLISHED>"
+          },
+          {
+            "line": 419,
+            "text": "- A2 provenance searched and unknowns retained;"
+          },
+          {
+            "line": 446,
+            "text": "SHA256 = <...>"
+          },
+          {
+            "line": 456,
+            "text": "A2 source/domain:"
+          }
+        ],
+        "commit_record": "d17517b53b1cb9b82cbecc0432a5023eaa756278 2026-10-04T22:50:54+08:00 绘尽梨衣绘烬樱 docs(rc1): audit detector provenance for a2",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "02a95c178c219e106763485eaeafa38ceabc08f259a789798d350e052dfa80a5"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 33,
+            "text": "A2 source/domain:"
+          },
+          {
+            "line": 53,
+            "text": "3. the task required direct A2 dtype/bit-depth/channel statistics, but they were omitted;"
+          },
+          {
+            "line": 54,
+            "text": "4. the required training-domain-vs-A2 comparison table was omitted;"
+          },
+          {
+            "line": 87,
+            "text": "- run A1/A2/A3/A4/B1/B2 inference;"
+          },
+          {
+            "line": 137,
+            "text": "A2 source/domain ="
+          },
+          {
+            "line": 238,
+            "text": "# 8. Compute the required non-model A2 descriptive statistics"
+          },
+          {
+            "line": 243,
+            "text": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A2.png"
+          },
+          {
+            "line": 251,
+            "text": "sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 279,
+            "text": "# 9. Add the required training-domain vs A2 table"
+          },
+          {
+            "line": 283,
+            "text": "| property | active detector training/validation domain | A2 |"
+          },
+          {
+            "line": 321,
+            "text": "A2 validation = YES/NO"
+          },
+          {
+            "line": 337,
+            "text": "- A2/RC1 validation must be reported separately from generic WHU validation."
+          },
+          {
+            "line": 348,
+            "text": "evidence, even if it has never been run on A2/RC1. That does NOT authorize adopting it into RC1."
+          },
+          {
+            "line": 366,
+            "text": "B. merely running a future isolated alternate-detector A2 diagnostic, without changing RC1 or research claims, would:"
+          },
+          {
+            "line": 386,
+            "text": "direct provenance evidence establishes A2's domain."
+          },
+          {
+            "line": 395,
+            "text": "CONTROLLED_ALTERNATE_DETECTOR_A2_PROBE"
+          },
+          {
+            "line": 422,
+            "text": "3. active detector path/bytes/SHA256"
+          },
+          {
+            "line": 429,
+            "text": "10. A2 provenance"
+          },
+          {
+            "line": 430,
+            "text": "11. A2 required pixel statistics"
+          },
+          {
+            "line": 431,
+            "text": "12. exact training-domain-vs-A2 comparison table"
+          },
+          {
+            "line": 460,
+            "text": "Active detector SHA256: ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474"
+          },
+          {
+            "line": 468,
+            "text": "A2 source/domain: <value / NOT ESTABLISHED>"
+          },
+          {
+            "line": 469,
+            "text": "A2 descriptive stats: RECORDED / NOT RECORDED"
+          },
+          {
+            "line": 470,
+            "text": "Training-vs-A2 comparison table: RECORDED / NOT RECORDED"
+          },
+          {
+            "line": 511,
+            "text": "- A2 required pixel statistics are recorded;"
+          },
+          {
+            "line": 512,
+            "text": "- the full training-vs-A2 table is present;"
+          },
+          {
+            "line": 544,
+            "text": "A2 descriptive stats:"
+          },
+          {
+            "line": 547,
+            "text": "Training-vs-A2 table:"
+          }
+        ],
+        "commit_record": "ede134cf2fea622c1e3ea2229ea6417a8633c8c1 2026-10-04T23:12:39+08:00 绘尽梨衣绘烬樱 docs(rc1): complete detector provenance audit",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "2264958ba663cd5b35988818b3b0a5a7409aa99d566e3a06ec694788354069ff"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D6: Isolated Epoch-18 Alternate Detector A2 Probe"
+          },
+          {
+            "line": 25,
+            "text": "P1D2 = active checkpoint, 9 normal A2 tiles, conf=0.05 → 9/9 boxes=0"
+          },
+          {
+            "line": 26,
+            "text": "P1D3 = active checkpoint, full A2, conf=0.05 → boxes=0"
+          },
+          {
+            "line": 27,
+            "text": "P1D4 = active checkpoint, 9 normal A2 tiles, conf=0.001 → 9/9 boxes=0"
+          },
+          {
+            "line": 29,
+            "text": "A2 source/domain = NOT ESTABLISHED"
+          },
+          {
+            "line": 43,
+            "text": "isolated alternate-detector A2 diagnostic only:"
+          },
+          {
+            "line": 82,
+            "text": "- run full-frame A2;"
+          },
+          {
+            "line": 112,
+            "text": "Verify frozen A2:"
+          },
+          {
+            "line": 115,
+            "text": "path = external inference/input/A2.png"
+          },
+          {
+            "line": 118,
+            "text": "sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 131,
+            "text": "Before loading it record `exists`, bytes, and full SHA256."
+          },
+          {
+            "line": 178,
+            "text": "1. load A2 RGB once;"
+          },
+          {
+            "line": 230,
+            "text": "## A — `PROP01_EPOCH18_RECOVERS_A2_SIGNAL`"
+          },
+          {
+            "line": 234,
+            "text": "Interpretation: the earlier same-lineage YOLO26m-seg checkpoint produces usable A2 proposal signal under the same"
+          },
+          {
+            "line": 247,
+            "text": "Interpretation: the closest same-lineage earlier checkpoint also fails on A2, weakening a continuation-specific"
+          },
+          {
+            "line": 267,
+            "text": "NEXT = CONTROLLED_YOLOV8M_A2_PROBE"
+          },
+          {
+            "line": 305,
+            "text": "4. A2 identity"
+          },
+          {
+            "line": 306,
+            "text": "5. alternate checkpoint path/bytes/full SHA256/provenance"
+          },
+          {
+            "line": 339,
+            "text": "A2 dimensions/hash: 1024x1024 / MATCH"
+          },
+          {
+            "line": 342,
+            "text": "Alternate checkpoint SHA256: <full sha>"
+          },
+          {
+            "line": 390,
+            "text": "- exactly 9 epoch-18 detector calls, one per normal A2 tile;"
+          },
+          {
+            "line": 419,
+            "text": "<full SHA256>"
+          },
+          {
+            "line": 421,
+            "text": "A2 aggregate:"
+          }
+        ],
+        "commit_record": "48ea366e95fdfa022fd6e922f0d5656ad673941b 2026-10-04T23:41:45+08:00 绘尽梨衣绘烬樱 test(rc1): probe epoch18 detector on a2",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "2c30fcd3ef08360b0c18dbb34103ef9405cd36b7cdbc5471e3cea6e4ad8fbd82"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D7: Isolated YOLOv8m-WHU Baseline A2 Probe"
+          },
+          {
+            "line": 17,
+            "text": "active continued YOLO26m-seg @ A2:"
+          },
+          {
+            "line": 20,
+            "text": "same-lineage epoch-18 YOLO26m-seg @ A2:"
+          },
+          {
+            "line": 41,
+            "text": "This task performs ONE isolated A2 diagnostic with that baseline checkpoint."
+          },
+          {
+            "line": 71,
+            "text": "- run full-frame A2;"
+          },
+          {
+            "line": 111,
+            "text": "Verify A2:"
+          },
+          {
+            "line": 117,
+            "text": "10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 137,
+            "text": "full SHA256"
+          },
+          {
+            "line": 140,
+            "text": "Require full SHA256 exactly:"
+          },
+          {
+            "line": 170,
+            "text": "same A2"
+          },
+          {
+            "line": 198,
+            "text": "Use exactly the real A2 tile geometry:"
+          },
+          {
+            "line": 233,
+            "text": "1. load A2 RGB once;"
+          },
+          {
+            "line": 321,
+            "text": "## A — `PROP01_YOLOV8M_RECOVERS_A2_SIGNAL`"
+          },
+          {
+            "line": 335,
+            "text": "A2 proposal signal under the same runtime/geometry/conf/imgsz/device where both YOLO26"
+          },
+          {
+            "line": 339,
+            "text": "This supports a YOLO26-lineage/model-specific A2 blind-spot hypothesis."
+          },
+          {
+            "line": 355,
+            "text": "two independent WHU-trained detector lineages both produce zero A2 boxes under the"
+          },
+          {
+            "line": 359,
+            "text": "This materially strengthens the hypothesis that A2 is outside the effective detector domain"
+          },
+          {
+            "line": 399,
+            "text": "NEXT = A2_INPUT_DOMAIN_DECISION"
+          },
+          {
+            "line": 403,
+            "text": "decide whether A2 should remain a formal RC1 success case, become an explicit unsupported-domain failure case,"
+          },
+          {
+            "line": 450,
+            "text": "4. A2 identity"
+          },
+          {
+            "line": 451,
+            "text": "5. YOLOv8m checkpoint path/bytes/full SHA256"
+          },
+          {
+            "line": 487,
+            "text": "A2 dimensions/hash: 1024x1024 / MATCH"
+          },
+          {
+            "line": 490,
+            "text": "Alternate checkpoint SHA256: <full sha>"
+          },
+          {
+            "line": 542,
+            "text": "- exactly 9 YOLOv8m calls, one per A2 tile;"
+          },
+          {
+            "line": 571,
+            "text": "<full SHA256>"
+          },
+          {
+            "line": 576,
+            "text": "A2 aggregate:"
+          }
+        ],
+        "commit_record": "5f52338b7507cc377190cacb33611c644f223a88 2026-10-04T23:51:58+08:00 绘尽梨衣绘烬樱 test(rc1): probe yolov8m whu detector on a2",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "eac39351b80d026ae5b656679ad97f24736efd661f23a23bbe19a25720d6daae"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D8: A2 Input Photometric / Domain Audit"
+          },
+          {
+            "line": 16,
+            "text": "  A2 tiled @ conf=0.05  → 9/9 boxes=0"
+          },
+          {
+            "line": 17,
+            "text": "  A2 full-frame @ 0.05  → boxes=0"
+          },
+          {
+            "line": 18,
+            "text": "  A2 tiled @ conf=0.001 → 9/9 boxes=0"
+          },
+          {
+            "line": 21,
+            "text": "  A2 tiled @ 0.05 → 9/9 boxes=0"
+          },
+          {
+            "line": 24,
+            "text": "  A2 tiled @ 0.05 → 9/9 boxes=0"
+          },
+          {
+            "line": 35,
+            "text": "P1D5-R1 also established A2 descriptive facts:"
+          },
+          {
+            "line": 43,
+            "text": "A2 source/domain = NOT ESTABLISHED"
+          },
+          {
+            "line": 46,
+            "text": "The remaining question is whether A2 is a strong *input photometric/texture outlier* relative to:"
+          },
+          {
+            "line": 79,
+            "text": "- overwrite A2/A1/A3/A4;"
+          },
+          {
+            "line": 80,
+            "text": "- create a corrected A2;"
+          },
+          {
+            "line": 86,
+            "text": "- remove or replace A2 from the Demo;"
+          },
+          {
+            "line": 110,
+            "text": "Require A2:"
+          },
+          {
+            "line": 113,
+            "text": "A2.png"
+          },
+          {
+            "line": 116,
+            "text": "10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 126,
+            "text": "SHA256"
+          },
+          {
+            "line": 131,
+            "text": "If A2 identity mismatches:"
+          },
+          {
+            "line": 170,
+            "text": "Without modifying files, compute/compare SHA256 for image files in the active task6m train/val/test image roots."
+          },
+          {
+            "line": 172,
+            "text": "Search for exact byte/hash match to A2."
+          },
+          {
+            "line": 177,
+            "text": "A2_EXACT_MATCH_TRAIN"
+          },
+          {
+            "line": 178,
+            "text": "A2_EXACT_MATCH_VAL"
+          },
+          {
+            "line": 179,
+            "text": "A2_EXACT_MATCH_TEST"
+          },
+          {
+            "line": 180,
+            "text": "A2_NO_EXACT_MATCH"
+          },
+          {
+            "line": 188,
+            "text": "Also search exact SHA256 for A1/A3/A4 and record matches if any."
+          },
+          {
+            "line": 285,
+            "text": "A2"
+          },
+          {
+            "line": 292,
+            "text": "For A2 and each available control, if training-domain stats exist, report percentile rank within the COMBINED active"
+          },
+          {
+            "line": 320,
+            "text": "A2"
+          },
+          {
+            "line": 340,
+            "text": "If training distribution exists, report for A2:"
+          },
+          {
+            "line": 354,
+            "text": "If the active training source consists of 512×512 tiles, compare A2 tile metrics directly to that distribution and"
+          },
+          {
+            "line": 365,
+            "text": "A2 raw = 0"
+          },
+          {
+            "line": 379,
+            "text": "determine whether A2 is lower than ALL available successful controls."
+          },
+          {
+            "line": 384,
+            "text": "A2 value / median(A1,A3,A4)"
+          },
+          {
+            "line": 393,
+            "text": "Read non-model metadata for A2 and controls:"
+          },
+          {
+            "line": 408,
+            "text": "Specifically check whether A2 has an obvious encoding anomaly relative to A1/A3/A4."
+          },
+          {
+            "line": 413,
+            "text": "A2_ENCODING_ANOMALY_FOUND"
+          },
+          {
+            "line": 414,
+            "text": "A2_ENCODING_ANOMALY_NOT_FOUND"
+          },
+          {
+            "line": 415,
+            "text": "A2_ENCODING_METADATA_INCONCLUSIVE"
+          },
+          {
+            "line": 424,
+            "text": "## A — `PROP01_A2_PHOTOMETRIC_OUTLIER_STRONGLY_SUPPORTED`"
+          },
+          {
+            "line": 428,
+            "text": "- A2 is a strong outlier in at least TWO of:"
+          },
+          {
+            "line": 432,
+            "text": "- for each qualifying metric, A2 whole-image OR at least 7/9 A2 tiles lies below the active training p01;"
+          },
+          {
+            "line": 433,
+            "text": "- and A2 is lower than all available successful controls on the same metrics."
+          },
+          {
+            "line": 438,
+            "text": "## B — `PROP01_A2_DARKNESS_OUTLIER_ONLY`"
+          },
+          {
+            "line": 441,
+            "text": "- A2 Y_mean/dark_fraction is extreme versus training,"
+          },
+          {
+            "line": 447,
+            "text": "## C — `PROP01_A2_NOT_PHOTOMETRIC_OUTLIER`"
+          },
+          {
+            "line": 451,
+            "text": "- A2 lies at or above p05 for at least 3 of the 4 core metrics:"
+          },
+          {
+            "line": 455,
+            "text": "## D — `PROP01_A2_INPUT_DOMAIN_INCONCLUSIVE`"
+          },
+          {
+            "line": 467,
+            "text": "NEXT = CONTROLLED_A2_PHOTOMETRIC_RESCUE_DESIGN"
+          },
+          {
+            "line": 476,
+            "text": "NEXT = A2_BRIGHTNESS_RESCUE_DESIGN"
+          },
+          {
+            "line": 488,
+            "text": "NEXT = A2_INPUT_DOMAIN_POLICY_DECISION"
+          },
+          {
+            "line": 510,
+            "text": "8. whole-image A1/A2/A3/A4 comparison"
+          },
+          {
+            "line": 513,
+            "text": "11. A2 vs successful controls ratios"
+          },
+          {
+            "line": 541,
+            "text": "A2 identity: MATCH / MISMATCH"
+          },
+          {
+            "line": 545,
+            "text": "A2 exact-match provenance: <enum>"
+          },
+          {
+            "line": 546,
+            "text": "A2 whole Y_mean: <value>"
+          },
+          {
+            "line": 547,
+            "text": "A2 whole Y_std: <value>"
+          },
+          {
+            "line": 548,
+            "text": "A2 whole Y_dynamic_98: <value>"
+          },
+          {
+            "line": 549,
+            "text": "A2 whole gradient_mean: <value>"
+          },
+          {
+            "line": 550,
+            "text": "A2 training percentile Y_mean: <value / NA>"
+          },
+          {
+            "line": 551,
+            "text": "A2 training percentile Y_std: <value / NA>"
+          },
+          {
+            "line": 552,
+            "text": "A2 training percentile Y_dynamic_98: <value / NA>"
+          },
+          {
+            "line": 553,
+            "text": "A2 training percentile gradient_mean: <value / NA>"
+          },
+          {
+            "line": 554,
+            "text": "A2 tiles below p01 Y_std: <n / NA>"
+          },
+          {
+            "line": 555,
+            "text": "A2 tiles below p01 Y_dynamic_98: <n / NA>"
+          },
+          {
+            "line": 556,
+            "text": "A2 tiles below p01 gradient_mean: <n / NA>"
+          },
+          {
+            "line": 590,
+            "text": "- A2 identity matches;"
+          },
+          {
+            "line": 594,
+            "text": "- all frozen metrics computed for A2 and controls;"
+          },
+          {
+            "line": 597,
+            "text": "- A2 whole/tile percentile comparison recorded;"
+          },
+          {
+            "line": 621,
+            "text": "A2 exact-match provenance:"
+          },
+          {
+            "line": 627,
+            "text": "A2:"
+          },
+          {
+            "line": 639,
+            "text": "A2 tiles below p01:"
+          }
+        ],
+        "commit_record": "b4dc1967cdc6734d35315d29eed11eb284b50244 2026-10-05T00:32:59+08:00 绘尽梨衣绘烬樱 docs(rc1): audit a2 input photometric domain",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "89b6128268b9236a5737497ef7914a6ed2c60962d88f9b857b03a6e0b6e2adfb"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 1,
+            "text": "# TO_DSH — Task 8B.3-P1D8-R1: Complete A2 Input-Domain Evidence Contract"
+          },
+          {
+            "line": 23,
+            "text": "PROP01_A2_NOT_PHOTOMETRIC_OUTLIER"
+          },
+          {
+            "line": 29,
+            "text": "A2 whole:"
+          },
+          {
+            "line": 199,
+            "text": "# 7. Split-specific A2 percentile robustness"
+          },
+          {
+            "line": 201,
+            "text": "For A2 whole-image metrics compute deterministic percentile rank separately within:"
+          },
+          {
+            "line": 227,
+            "text": "# 8. Required A1/A2/A3/A4 tile summaries"
+          },
+          {
+            "line": 229,
+            "text": "For each case A1/A2/A3/A4, using the same frozen 9-tile geometry, report:"
+          },
+          {
+            "line": 249,
+            "text": "# 9. Required A2 p01/p05 tile counts"
+          },
+          {
+            "line": 251,
+            "text": "Against the COMBINED active training distribution, record A2's 9-tile counts:"
+          },
+          {
+            "line": 296,
+            "text": "A2 whole value / median(A1 whole, A3 whole, A4 whole)"
+          },
+          {
+            "line": 299,
+            "text": "A2 median-tile value /"
+          },
+          {
+            "line": 303,
+            "text": "Also record whether A2 is lower than ALL THREE successful controls for each metric at:"
+          },
+          {
+            "line": 320,
+            "text": "A2_ENCODING_ANOMALY_FOUND"
+          },
+          {
+            "line": 321,
+            "text": "A2_ENCODING_ANOMALY_NOT_FOUND"
+          },
+          {
+            "line": 322,
+            "text": "A2_ENCODING_METADATA_INCONCLUSIVE"
+          },
+          {
+            "line": 328,
+            "text": "all A1/A2/A3/A4:"
+          },
+          {
+            "line": 339,
+            "text": "A2_ENCODING_ANOMALY_NOT_FOUND"
+          },
+          {
+            "line": 349,
+            "text": "PROP01_A2_PHOTOMETRIC_OUTLIER_STRONGLY_SUPPORTED"
+          },
+          {
+            "line": 350,
+            "text": "PROP01_A2_DARKNESS_OUTLIER_ONLY"
+          },
+          {
+            "line": 351,
+            "text": "PROP01_A2_NOT_PHOTOMETRIC_OUTLIER"
+          },
+          {
+            "line": 352,
+            "text": "PROP01_A2_INPUT_DOMAIN_INCONCLUSIVE"
+          },
+          {
+            "line": 362,
+            "text": "PROP01_A2_NOT_PHOTOMETRIC_OUTLIER"
+          },
+          {
+            "line": 382,
+            "text": "PROP01_A2_NOT_PHOTOMETRIC_OUTLIER"
+          },
+          {
+            "line": 413,
+            "text": "9. A2 split-specific percentile table"
+          },
+          {
+            "line": 414,
+            "text": "10. whole A1/A2/A3/A4 metrics"
+          },
+          {
+            "line": 416,
+            "text": "12. A2 p01/p05 tile-count table"
+          },
+          {
+            "line": 449,
+            "text": "A2 split-specific percentiles: RECORDED / NOT RECORDED"
+          },
+          {
+            "line": 451,
+            "text": "A2 p01/p05 tile counts: RECORDED / NOT RECORDED"
+          },
+          {
+            "line": 489,
+            "text": "- split-specific A2 percentile robustness is recorded;"
+          },
+          {
+            "line": 491,
+            "text": "- A2 p01/p05 tile counts are explicit;"
+          },
+          {
+            "line": 524,
+            "text": "A2 p01/p05 tile counts:"
+          }
+        ],
+        "commit_record": "a220faf0dd9872829ee2bd7b7be859bbd90db7bb 2026-10-05T02:21:16+08:00 绘尽梨衣绘烬樱 docs(rc1): complete a2 input-domain audit",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "2cdef3d631acec4d7fc46b37e4946dcef4e8768c19e334519a263f66244732de"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 18,
+            "text": "  A2 tiled @ conf=0.05  -> 9/9 boxes=0"
+          },
+          {
+            "line": 19,
+            "text": "  A2 full-frame @ 0.05  -> boxes=0"
+          },
+          {
+            "line": 20,
+            "text": "  A2 tiled @ 0.001      -> 9/9 boxes=0"
+          },
+          {
+            "line": 23,
+            "text": "  A2 tiled @ 0.05 -> 9/9 boxes=0"
+          },
+          {
+            "line": 26,
+            "text": "  A2 tiled @ 0.05 -> 9/9 boxes=0"
+          },
+          {
+            "line": 28,
+            "text": "A2 encoding anomaly:"
+          },
+          {
+            "line": 36,
+            "text": "PROP01_A2_NOT_PHOTOMETRIC_OUTLIER"
+          },
+          {
+            "line": 41,
+            "text": "A2 split-specific percentile:"
+          },
+          {
+            "line": 52,
+            "text": "Thus A2 is not an extreme outlier under the original combined rule, but it is extremely low-contrast relative to"
+          },
+          {
+            "line": 77,
+            "text": "- modify the frozen A2 file;"
+          },
+          {
+            "line": 85,
+            "text": "- run original/untransformed A2 again;"
+          },
+          {
+            "line": 86,
+            "text": "- run full-frame A2;"
+          },
+          {
+            "line": 123,
+            "text": "Temporary transformed A2 and diagnostic transcript must remain outside the repository and outside external RC1 normal"
+          },
+          {
+            "line": 135,
+            "text": "Verify frozen A2:"
+          },
+          {
+            "line": 138,
+            "text": "path = external inference/input/A2.png"
+          },
+          {
+            "line": 141,
+            "text": "sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f"
+          },
+          {
+            "line": 158,
+            "text": "A2 source luminance mean = 65.6886"
+          },
+          {
+            "line": 159,
+            "text": "A2 source luminance std  = 6.3262"
+          },
+          {
+            "line": 194,
+            "text": "The transform is applied once to the WHOLE 1024x1024 A2 image, then the normal 9 detector tiles are extracted from"
+          },
+          {
+            "line": 202,
+            "text": "C:\\D\\DeepSeekHarness\\scratch\\task8b3_p1d9\\A2_validation_moment_affine.png"
+          },
+          {
+            "line": 209,
+            "text": "SHA256"
+          },
+          {
+            "line": 215,
+            "text": "Do NOT overwrite A2."
+          },
+          {
+            "line": 242,
+            "text": "original A2 sha256 still unchanged"
+          },
+          {
+            "line": 250,
+            "text": "- original A2 changed."
+          },
+          {
+            "line": 263,
+            "text": "active detector SHA256"
+          },
+          {
+            "line": 303,
+            "text": "1. load original A2 once;"
+          },
+          {
+            "line": 317,
+            "text": "Do NOT call detector on original A2."
+          },
+          {
+            "line": 388,
+            "text": "a single predeclared validation-derived global affine photometric transform restores usable active-detector A2"
+          },
+          {
+            "line": 464,
+            "text": "original A2 SHA256 unchanged = YES"
+          },
+          {
+            "line": 465,
+            "text": "active detector SHA256 unchanged = YES"
+          },
+          {
+            "line": 501,
+            "text": "19. original A2 unchanged"
+          },
+          {
+            "line": 522,
+            "text": "Original A2 modified: NO"
+          },
+          {
+            "line": 529,
+            "text": "Temporary transformed image SHA256: <sha>"
+          },
+          {
+            "line": 580,
+            "text": "- original A2 and detector identity verified;"
+          },
+          {
+            "line": 583,
+            "text": "- original A2 never modified;"
+          },
+          {
+            "line": 586,
+            "text": "- no original-A2 detector rerun;"
+          },
+          {
+            "line": 618,
+            "text": "A2 transformed:"
+          },
+          {
+            "line": 640,
+            "text": "Original A2 modified:"
+          }
+        ],
+        "commit_record": "70e2e2361e9e16cca891138de5d2712318282b2b 2026-10-05T03:21:56+08:00 绘尽梨衣绘烬樱 test(rc1): probe validation-moment rescue on a2",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "57978d578a1089b533d463e3e23ec8b0112f51b392ca34209a0a0cbc71a5d6fc"
+      },
+      {
+        "A2_lines": [
+          {
+            "line": 11,
+            "text": "P1D1–P1D9 have exhausted the bounded diagnostic tree for A2 without modifying the product."
+          },
+          {
+            "line": 27,
+            "text": "A2 encoding:"
+          },
+          {
+            "line": 30,
+            "text": "A2 photometric audit:"
+          },
+          {
+            "line": 66,
+            "text": "- modify A2 or any Demo input;"
+          },
+          {
+            "line": 70,
+            "text": "- replace A2;"
+          },
+          {
+            "line": 71,
+            "text": "- remove A2;"
+          },
+          {
+            "line": 96,
+            "text": "why A1/A2/A3/A4/B1/B2 were selected"
+          },
+          {
+            "line": 102,
+            "text": "whether replacing/removing A2 is currently allowed by an existing rule"
+          },
+          {
+            "line": 132,
+            "text": "6. replace A2 in a future Demo success suite while retaining A2 as a documented stress/failure case"
+          },
+          {
+            "line": 153,
+            "text": "A2 ground-truth building masks available? YES / NO / NOT ESTABLISHED"
+          },
+          {
+            "line": 154,
+            "text": "A2-like labeled images available? YES / NO / NOT ESTABLISHED"
+          },
+          {
+            "line": 155,
+            "text": "A2 source/domain provenance available? YES / NO"
+          },
+          {
+            "line": 162,
+            "text": "avoid tuning to A2 alone."
+          },
+          {
+            "line": 186,
+            "text": "Assess whether A2 can honestly be retained as:"
+          },
+          {
+            "line": 251,
+            "text": "keep the frozen detector unchanged, document the supported input domain, retain A2 as a stress/failure case, and"
+          },
+          {
+            "line": 254,
+            "text": "## Option D — Keep A2 as mandatory 6/6 success and block release"
+          },
+          {
+            "line": 257,
+            "text": "do not change architecture or policy until the current frozen detector succeeds on A2."
+          },
+          {
+            "line": 278,
+            "text": "- current bounded diagnostics give strong evidence A2 is a persistent unsupported/blind-spot case;"
+          },
+          {
+            "line": 286,
+            "text": "- the project requirement genuinely requires A2-like inputs to succeed;"
+          },
+          {
+            "line": 322,
+            "text": "- that A2 was fixed if it was not;"
+          }
+        ],
+        "commit_record": "2edee1af99d89740cf5e75c99b08fe872b0bcef1 2026-10-05T03:37:33+08:00 绘尽梨衣绘烬樱 docs(rc1): decide prop01 resolution path",
+        "path": "handoff/TO_DSH.md",
+        "text_sha256": "3a1193496eb1d51be3d9c6a7a44e8e73279c1cc3b5e989eb4da888a5882a5757"
+      }
+    ],
+    "searches": [
+      {
+        "command": [
+          "rg",
+          "-n",
+          "-i",
+          "A2\\.png|10286b1e|A2.*(origin|provenance|source|crop|来源|裁剪)",
+          "docs",
+          "scripts",
+          "handoff",
+          "evaluation",
+          "-g",
+          "*.md",
+          "-g",
+          "*.py",
+          "-g",
+          "*.json",
+          "-g",
+          "*.yaml"
+        ],
+        "excerpts": [
+          "handoff\\PROJECT_STATE.md:972:| Canonical dataset | `datasets/whu_native_vector/v1.0/` — `WHU-EA-NativeVector` v1.0, UID `(EA.shp SHA256, source_feature_id)` |",
+          "handoff\\EXECUTOR_STATE.yaml:24:scientific_claim_scope: EXACT_OR_UNRESOLVED_A2_PROVENANCE_AND_CONDITIONAL_GT_CASE_VALIDITY_ONLY",
+          "scripts\\build_spatial_reason.py:54:def sha256_source_file(path: Path) -> str:",
+          "scripts\\build_spatial_reason.py:55:    \"\"\"SHA256 of a *source* file after CRLF -> LF normalisation.",
+          "scripts\\build_spatial_reason.py:277:    block[\"file_sha256\"] = {_relpath(path): sha256_source_file(path) for path in paths}",
+          "scripts\\diagnose_prop01_a2_channel_contract_causal_test.py:1:\"\"\"Supervisor-authorized paired A2 RGB/BGR test, with no product/source edits.",
+          "scripts\\diagnose_prop01_a2_channel_contract_causal_test.py:68:    image = Path(accepted[\"A2_provenance\"][\"image_path\"])",
+          "scripts\\diagnose_prop01_a2_channel_contract_causal_test.py:69:    assert image == EXTERNAL / \"inference/input/A2.png\"",
+          "scripts\\diagnose_prop01_a2_channel_contract_causal_test.py:91:                A2_identity=accepted[\"A2_provenance\"], detector_identity=accepted[\"detector_model\"],",
+          "scripts\\diagnose_prop01_a2_channel_contract_causal_test.py:157:        result = dict(api_source_sha256=prior.digest(source.tobytes()), api_shape=list(source.shape),",
+          "scripts\\diagnose_prop01_a2_channel_contract_causal_test.py:247:        assert corrected[\"tensor\"][\"network_tensor_sha256\"] == old[\"detector_tensor\"][\"expected_source_RGB_tensor_sha256\"]",
+          "scripts\\check_artifact_consistency.py:475:        for name in set(generation.get(\"file_sha256\") or {}) | set(current_source.get(\"file_sha256\") or {})",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:32:    \"A2\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:143:    return dict(task_id=TASK, status=\"IN_PROGRESS\", stage=\"A2_PROVENANCE_ESTABLISHED\",",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:147:                timestamp_utc=datetime.now(timezone.utc).isoformat(), A2_provenance=cases[\"A2\"],",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:216:                           tile_sha256=digest(tile.tobytes()), equals_exact_source_slice=True,",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:217:                           detector_numpy_source_sha256=digest(kwargs[\"source\"].tobytes()),",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:329:                                          \"all A2 tensors equal reversed source channels and differ from RGB. \"",
+          "scripts\\diagnose_prop01_a2_zero_proposals.py:411:        print(json.dumps(dict(stage=data[\"stage\"], A2_sha256=data[\"A2_provenance\"][\"sha256\"],",
+          "docs\\architecture_decisions.md:1048:1. **Canonical dataset `WHU-EA-NativeVector` v1.0** under `datasets/whu_native_vector/v1.0/` covering **all 17,388** cropped tiles (train 3,135 · train_no 10,527 · test 903 · test_no 2,823), including the `_no` and empty tiles the semantic workflow discarded: **41,186** clipped instances from **33,788** distinct features, per-instance polygons in tile pixel coordinates, `source_fea",
+          "docs\\architecture_decisions.md:1092:| 025 | **Task 6L: the primary instance truth is migrated to the native vector map with a scene-disjoint split → `VECTOR_DATASET_MIGRATION_PASS`** | Canonical `WHU-EA-NativeVector` v1.0 indexes **all 17,388** cropped tiles (including `_no` and empty tiles) with **41,186** clipped instances from **33,788** distinct `EA.shp` features, identity `(EA.shp SHA256, source_feature_id)`, no",
+          "docs\\research\\task5_5_sources.md:216:| S120 | ModelScope API — `Qwen/Qwen3-VL-4B-Instruct` | https://www.modelscope.cn/api/v1/models/Qwen/Qwen3-VL-4B-Instruct | Official model-host API | 2026-09-26 | `License: apache-2.0`; `Architectures [\"Qwen3VLForConditionalGeneration\"]`; `model_size 4,437,815,808`; `tensor_type [\"BF16\"]`; shards 4,967,229,296 + 3,908,490,048 B; `StorageSize 8,887,293,488`; card 256K→1M, FA2 recom",
+          "docs\\research\\task5_5_sources.md:250:| S154 | HF short link — `hf.co/collections/ByteDance/sa2va-model-zoo` | https://hf.co/collections/ByteDance/sa2va-model-zoo | Official short link | 2026-09-26 | Short link used in paper/repo; cross-origin redirect refused | UNVERIFIED |",
+          "docs\\research\\task5_5_sources.md:561:**Reconciliation with the raw files' own counts.** The raws report \"60 distinct URLs\" (`sa2va.md` §16), \"50 deduplicated sources\" (`datasets.md` §11) and 35 (`environment.md` §12), 43 (`rs_reasoning.md` §9+§10.4), ~100 (`foundational.md` §7+§8) and 16 (`base_mllm.md` §14). The consolidated figure is far larger because (a) URL-level dedup exposes many entries the raws grouped (e.g.",
+          "docs\\research\\_raw\\base_mllm.md:198:| 1 | ModelScope API — `Qwen/Qwen3-VL-4B-Instruct` | https://www.modelscope.cn/api/v1/models/Qwen/Qwen3-VL-4B-Instruct | PRIMARY-VENDOR | `License: apache-2.0`; `Architectures [\"Qwen3VLForConditionalGeneration\"]`; `model_size 4,437,815,808`; `tensor_type [\"BF16\"]`; shards 4,967,229,296 + 3,908,490,048; `StorageSize 8,887,293,488`; card: 256K→1M, FA2 recommended, build transformers ",
+          "docs\\research\\_raw\\base_mllm.md:208:| 11 | Qwen3-VL docs — Installation / FAQ / Troubleshooting / LoRA / Training Overview (third-party renderings) | https://mintlify.wiki/QwenLM/Qwen3-VL/installation · https://mintlify.wiki/QwenLM/Qwen3-VL/resources/faq · https://mintlify.wiki/QwenLM/Qwen3-VL/resources/troubleshooting · https://mintlify.wiki/QwenLM/Qwen3-VL/fine-tuning/lora.md · https://mintlify.wiki/QwenLM/Qwen3-VL",
+          "docs\\research\\_raw\\datasets.md:239:* **Bottom line: Sa2VA offers no aerial/building pretraining data. It is relevant to BuildReasonSeg only as a natural-image zero-shot / fine-tuning baseline.** `PROVENANCE CAVEAT`: repo manifest read via `ghproxy.net`.",
+          "docs\\task6c_prompt_ablation.md:39:  images). The file's `source_sample_ids_sha256` records that Task 6B is the source.",
+          "docs\\research\\_raw\\environment.md:145:| **Qwen-VL runtime** | `FACT` Qwen3-VL needs `transformers>=4.57.0`; `qwen-vl-utils==0.0.14` optional-but-recommended; FA2 optional (SDPA/default works) [S22][S23]. `FACT` non-Linux limitation: \"if you are not using Linux, you might not be able to install `decord` from PyPI\" → torchvision fallback (or torchcodec + FFmpeg) [S24][S22]. Qwen2.5-VL card: build transformers from sour",
+          "docs\\research\\_raw\\environment.md:161:- `UNVERIFIED (host unreachable)` — **all claims whose only source is the SAM 2 repository text** (Linux platform line, Windows→WSL recommendation, CUDA-extension optionality, MSVC/nvcc FAQ), all FlashAttention **main-branch** claims (FA2/FA3/FA4 GPU lists, FA4 existence), and the **bitsandbytes CHANGELOG-only** statements (0.43.0 \"officially supported from source\", 0.45.1 Blackw",
+          "docs\\research\\_raw\\foundational.md:284:14. **\"First\"/\"novel\"/\"SOTA\" claims located (attribute, do not assert):** GLaMM \"the first model that can generate natural language responses seamlessly intertwined with corresponding object segmentation masks\"; Sa2VA \"first comprehensive, unified model\" for dense grounded image+video understanding; SegEarth-R1 \"a new task, geospatial pixel reasoning\" / \"the first large-scale be",
+          "docs\\research\\_raw\\sa2va.md:307:| Stages / data | Single stage if you copy Sa2VA's structure; the real cost is data: RefCOCO/+/g + GCG + video sets, and the Sa2VA training bundle has **no declared licence** → re-source per dataset | **High** on data licensing/plumbing |",
+          "docs\\research\\_raw\\sa2va.md:366:| `hf.co` short links used in paper/repo | https://hf.co/collections/ByteDance/sa2va-model-zoo | cross-origin redirect refused / host blackholed |",
+          "docs\\task6l_vector_dataset_migration.md:24:| UID | `(EA.shp SHA256, source_feature_id)` — the hash is recorded in the manifest |",
+          "docs\\task8b3_detector_rgb_bgr_contract_repair_v1.md:17:External root: `C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1`. Before sync, the evidence JSON records the full external file size/mtime inventory and SHA256 of every non-manifest-listed file, including all model assets, locked images, historical logs and outputs, and the external manifest. Existing external manifest metadata drift is preserved. Source",
+          "docs\\task8b3_detector_rgb_bgr_contract_repair_v1.md:51:Final inventory grew from 2099 to 2105 files only because the existing error-contract tests generated six new `logs/error_20261006_*.log` files; historical logs/outputs remain byte-identical. Existing `check_setup.py:205` calls `manifest.verify(full=True)`, whose unchanged `manifest.py:106-108` refreshes `qwen_integrity_cache.json` with the same verified hash. Th",
+          "docs\\task8b3_detector_rgb_bgr_contract_repair_v1.md:67:CURRENT_TASK and EXECUTOR_STATE are READY_FOR_SUPERVISOR_AUDIT. Machine-readable evidence: `evaluation/task8b3_detector_rgb_bgr_contract_repair_v1.json`. STOP for `CHATGPT_DETECTOR_CHANNEL_REPAIR_REMOTE_AUDIT`; no deeper PROP-01, A2 provenance/ground-truth audit, tuning or replacement follows automatically.",
+          "docs\\task8b3_p1d10_prop01_resolution_decision.md:22:| P1D5 / P1D5-R1 | detector provenance / A2 domain audit | active = YOLO26m-seg `ef852b58…` = documented Task 6M1 `best.pt`; 1 class `building`; A2 provenance NOT ESTABLISHED; alternates exist but none validated on A2/RC1; detector swap touches frozen claims; `PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE` |",
+          "docs\\task8b3_p1d10_prop01_resolution_decision.md:30:A2 is not a strong photometric outlier in the combined training distribution, and its own provenance is unknown.",
+          "docs\\task8b3_p1d10_prop01_resolution_decision.md:69:A2 source/domain provenance available?         NO",
+          "docs\\task8b3_p1d10_prop01_resolution_decision.md:260:The defect status is corrected to **`PROP01_OPEN_ENGINEERING_DEFECT`**: A2's provenance is unknown, so no independently defined",
+          "docs\\task8b3_p1d11a_policy_implementation.md:98:The A2 policy wording is unchanged and remains evidence-bounded (provenance NOT ESTABLISHED, documented persistent",
+          "docs\\task8b3_p1d11_supported_domain_policy.md:50:A2 provenance/domain = NOT ESTABLISHED.",
+          "docs\\task8b3_p1d11_manifest_normalization.md:28:manifest sha256 used to validate source/destination = False",
+          "docs\\task8b3_p1d11_manifest_normalization.md:40:\"identity_basis_note\": \"bytes and sha256 are computed from Git canonical blob/index bytes; working-tree line-ending expansion is not part of source identity\"",
+          "docs\\task8b3_p1d1_a2_zero_proposal_forensics.md:27:input       : inference/input/A2.png size=(1024, 1024) mode=RGB bytes=1 677 040",
+          "docs\\task8b3_p1d1_a2_zero_proposal_forensics.md:28:              sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "docs\\task8b3_p1d2_a2_detector_result_probe.md:21:source image    = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "docs\\task8b3_p1d3_a2_fullframe_context_probe.md:20:input      = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "docs\\task8b3_p1d4_a2_subthreshold_tile_probe.md:19:input      = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:5:Read-only audit of the active proposal-detector provenance, the A2 data/domain provenance, locally available",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:58:## 5. A2 data source / domain",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:61:A2.png identity : 1 677 040 bytes, 1024x1024 RGB, sha256 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:107:Because checkpoint provenance **is** established (§2–§4) but A2's provenance/domain is **NOT ESTABLISHED** (§5), the",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:121:`DOMAIN_EVIDENCE_RECOVERY`, i.e. recover A2's data provenance/domain so the mismatch question can be answered.",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:126:A2 data source / domain / sensor / GSD / site                       : NOT ESTABLISHED",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:200:file            = inference/input/A2.png · 1 677 040 bytes · PNG · RGB · 1024x1024",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:201:sha256          = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "docs\\task8b3_p1d5_detector_provenance_domain_gap.md:226:and geographic descriptors are not recorded and A2's provenance is unknown.",
+          "docs\\task8b3_p1d8_a2_input_domain_audit.md:21:| A2 | C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A2.png | 1024×1024 | RGB | 1677040 | `10286b1e76db9e38…` | YES |",
+          "docs\\task8b3_p1d8_a2_input_domain_audit.md:25:A2 is byte-identical to the frozen value `10286b1e…`; A1/A3/A4 are uniquely identified by the same paths used by the",
+          "docs\\task8b3_p1d8_a2_input_domain_audit.md:122:A2's membership in the training domain is **NOT ESTABLISHED** (file identity absent; geographic provenance still",
+          "docs\\task8b3_p1d8_a2_input_domain_audit.md:156:A2 geographic/sensor/site provenance                                  : NOT ESTABLISHED",
+          "docs\\task8b3_p1d8_a2_input_domain_audit.md:341:A2 geographic/sensor/site provenance                                  : NOT ESTABLISHED",
+          "docs\\task8b3_prop01_a2_channel_contract_causal_test_v1.md:27:Exact input: `inference/input/A2.png`, RGB uint8, 1024 x 1024, 1,677,040 bytes, SHA256 `10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f`. Runtime decode equals direct Pillow RGB decode. All nine source-space tile hashes match the accepted previous forensic evidence. There is no substituted image or additional case.",
+          "docs\\task8b3_prop01_a2_channel_contract_causal_test_v1.md:29:Existing detector: `model/buildreasonseg_advisor/detector.pt`, YOLO26m-seg, segmentation task, 54,480,241 bytes, SHA256 `ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474`. The model identity, model.yaml, actual external source files, installed input-contract library source hashes and library versions match the accepted forensic evidence. Pre",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:9:Primary classification: **P1_INPUT_OR_PREPROCESSING_DEFECT**, using the exact task section 12 predicate \"wrong/corrupted/transformed pixels reach detector\". Exact A2 decoding and all nine NumPy tiles preserve source RGB pixels, but RC1 passes those RGB arrays to a BGR-assuming Ultralytics API. Every actual A2 network input tensor has reversed R/B channels relati",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:25:| Relative path | inference/input/A2.png | inference/input/A1.png |",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:28:| SHA256 | 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f | 8a4b459d65773a7dfb0ffcc509c26b5d3a7cea23cd759cdadf94cd46be84c227 |",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:51:One actual DetectorRuntime.detect_global call for A2 and one for A1: exactly 18 tile model.predict calls. Process-local observers wrap actual predict, detect_tile, _compact_mask, merge_proposals and BasePredictor.preprocess, forwarding original arguments/results unchanged and restoring observers afterward. No product files are edited. No Qwen, SAM2, D-B1, full ",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:93:Input defect chain: imageio.py L89/L93 preserves RGB; detector.py L220 passes it; installed ultralytics/data/loaders.py L571 documents NumPy BGR and L590 accepts the three channels unchanged; engine/predictor.py L197 flips channels intending BGR to RGB. All A2 tensors are float32 [1,3,640,640], equal normalized letterboxed source with reversed channels, unequal",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:108:& '.conda/buildreasonseg-mvp/python.exe' -B scripts/diagnose_prop01_a2_zero_proposals.py --phase provenance",
+          "docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md:119:A future separately authorized task could test API-compatible channel conversion. This is a hypothesis only; no correction or prediction of recovered A2 proposals is established. No product source edit, tuning/sweep, alternative input inference, parameter/weight/model change, scientific conclusion change or external sync occurred. Only the five authorized repo",
+          "docs\\task8b3_ref01_eligibility_repair_impl.md:138:Because the verified byte content equals the published SHA256, the compile failure originates from the published patcher",
+          "docs\\task8b3_six_image_demo_suite.md:35:| A2.png | 1677040 | 1024 | 1024 | RGB | 3 | 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f |",
+          "docs\\task8b3_six_image_demo_suite.md:406:A2_sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "scripts\\task6l_build_dataset.py:117:        print(f\"[6l.build] {len(corpus)} native features; shp sha256 {provenance['shp_sha256'][:12]}\",",
+          "scripts\\task6l_build_dataset.py:415:            \"uid\": \"(EA.shp SHA256, source_feature_id)\",",
+          "scripts\\task6l_build_dataset.py:559:            \"shp_sha256\": provenance[\"shp_sha256\"],",
+          "scripts\\task6l_validate.py:227:                \"shp_sha256_recorded\": manifest[\"shapefile_provenance\"][\"shp_sha256\"],",
+          "scripts\\task6l_build_v0_2.py:326:                    \"(EA.shp SHA256, source_feature_id), recorded in the canonical manifest.\"",
+          "scripts\\task6m1_resume_train.py:114:                \"matches_source\": digest == sha256_file(SOURCE_RUN / \"weights\" / name),",
+          "scripts\\task6m1_resume_train.py:234:        name: {\"actual\": sha256_file(SOURCE_RUN / \"weights\" / name), \"expected\": expected}",
+          "scripts\\task6m1_source_snapshot.py:115:            \"matches_original\": digest == sha256_file(source),",
+          "scripts\\task6m1_source_snapshot.py:129:            \"matches_original\": sha256_file(target) == sha256_file(source),",
+          "scripts\\task6m_parser_eval.py:177:            \"sha256\": sha256_file(source_checkpoint),",
+          "evaluation\\task6l_verdict.json:117:        \"uid_definition\": \"stable instance UID = (EA.shp SHA256, source_feature_id)\"",
+          "scripts\\task6u_candidate_coverage.py:203:            \"checkpoint\", \"checkpoint_sha256\", \"source_image_size\", \"masks_restored_to_source\")},",
+          "scripts\\task7b_build_parser_data.py:9:* `evaluation/task7b_eval_prompt_manifest.json` — pre-training SHA256 manifest of every evaluation source.",
+          "scripts\\task8b3_interactive_suite.py:54:    (\"A2\", \"inference/input/A2.png\", \"以面积最大的建筑为参考，分割它左侧最近的建筑\",",
+          "evaluation\\task7a_natural_language_val.json:2:  \"_doc\": \"Task 7A section 13. A2 natural-language L3 end-to-end integration on Z-MiniVal240: the source image and the natural-language query are the only inputs. Parser errors, out-of-scope programs and reference abstentions all score strict target IoU = 0. No training, no test split.\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:2160:      \"inference/input/A2.png\": [",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:9868:      \"inference/input/A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:12532:      \"inference/input/A2.png\": [",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:20235:      \"inference/input/A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:22891:      \"inference/input/A2.png\": [",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:30736:      \"inference/input/A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:33393:      \"inference/input/A2.png\": [",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:41134:      \"inference/input/A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:43109:      \"file\": \"inference/input/A2.png\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:45598:        \"file\": \"inference/input/A2.png\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:45605:        \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:45608:        \"file\": \"inference/input/A2.png\",",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:220682:  \"evidence_runner_source\": \"import hashlib\\nimport importlib.metadata\\nimport json\\nimport os\\nfrom pathlib import Path\\nimport re\\nimport subprocess\\nimport sys\\nimport time\\nimport traceback\\n\\nROOT = Path(r'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg')\\nEXTERNAL = Path(r'C:\\\\D\\\\DeepSeekHarness\\\\delivery\\\\BuildReasonSeg_Advisor_RC1')",
+          "evaluation\\task8b3_detector_rgb_bgr_contract_repair_v1.json:220767:      \"file\": \"inference/input/A2.png\",",
+          "evaluation\\task8b3_prop01_a2_channel_contract_causal_test_v1.json:17:    \"image_path\": \"C:\\\\D\\\\DeepSeekHarness\\\\delivery\\\\BuildReasonSeg_Advisor_RC1\\\\inference\\\\input\\\\A2.png\",",
+          "evaluation\\task8b3_prop01_a2_channel_contract_causal_test_v1.json:18:    \"filename\": \"A2.png\",",
+          "evaluation\\task8b3_prop01_a2_channel_contract_causal_test_v1.json:20:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_prop01_a2_channel_contract_causal_test_v1.json:41:      \"file\": \"inference/input/A2.png\",",
+          "evaluation\\task8b3_prop01_a2_channel_contract_causal_test_v1.json:48:      \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "evaluation\\task8b3_prop01_a2_channel_contract_causal_test_v1.json:1670:      \"inference/input/A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:11:  \"A2_provenance\": {",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:13:    \"image_path\": \"C:\\\\D\\\\DeepSeekHarness\\\\delivery\\\\BuildReasonSeg_Advisor_RC1\\\\inference\\\\input\\\\A2.png\",",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:14:    \"filename\": \"A2.png\",",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:16:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:37:      \"file\": \"inference/input/A2.png\",",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:44:      \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:3403:      \"inference/input/A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "evaluation\\task8b3_prop01_a2_zero_proposals_forensics_v1.json:3432:  \"classification_basis\": \"Task section 12 P1 predicate: wrong/transformed pixels reach detector; all A2 tensors equal reversed source channels and differ from RGB. P2's valid exact input prerequisite is therefore not satisfied.\","
+        ],
+        "exit": 0,
+        "matching_lines": 119,
+        "output_sha256": "dfa21f9bd67b31fbecd3aee73269a6e3255bed361e3c18f7915c356c475e3f2f"
+      },
+      {
+        "command": [
+          "rg",
+          "-n",
+          "-i",
+          "A2\\.png|10286b1e|A2.*(origin|provenance|source|crop|来源|裁剪)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs",
+          "-g",
+          "*.md",
+          "-g",
+          "*.py",
+          "-g",
+          "*.json",
+          "-g",
+          "*.txt",
+          "-g",
+          "*.log"
+        ],
+        "excerpts": [
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\build8a_step1_assets.py:112:                               \"matches\": sha256_file(copied) == sha256_file(source_file)})",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\build8a_step2_metadata.py:27:    asset[\"sha256\"] = source[\"sha256\"]",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\build8b1_step3_suite.py:143:               \"fixture_sha256_source\": \"logs/task8b1_prompt_suite.json\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b1_suite_results.json:3: \"fixture_sha256_source\": \"logs/task8b1_prompt_suite.json\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b1_suite_run2_results.json:3: \"fixture_sha256_source\": \"logs/task8b1_prompt_suite.json\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b1_suite_run3_results.json:3: \"fixture_sha256_source\": \"logs/task8b1_prompt_suite.json\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b2_r1_phases_a_g.py:123:    source_hash, target_hash = sha256(source), sha256(target)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b2_r1_delivery_inventory.txt:122:inference/input/A2.png\t1677040",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_m1b1_sync.py:90:canonical_manifest_sha = sha256(CANON / \"source_manifest.json\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_m1b1_sync.py:111:    assert source.stat().st_size == entry[\"bytes\"] and sha256(source) == entry[\"sha256\"], entry[\"path\"]",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_p1d8_domain_audit.json:15:   \"path\": \"C:\\\\D\\\\DeepSeekHarness\\\\delivery\\\\BuildReasonSeg_Advisor_RC1\\\\inference\\\\input\\\\A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_p1d8_domain_audit.json:22:   \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_p1d8_audit.log:3:A2 {'path': 'C:\\\\D\\\\DeepSeekHarness\\\\delivery\\\\BuildReasonSeg_Advisor_RC1\\\\inference\\\\input\\\\A2.png', 'size': [1024, 1024], 'mode': 'RGB', 'bytes': 1677040, 'sha256': '10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f', 'matches_frozen': True}",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_r4b_formal_run.log:2:[8b3-r2] {\"id\": \"A2\", \"file\": \"inference/input/A2.png\", \"exists\": true, \"bytes\": 1677040, \"width\": 1024, \"height\": 1024, \"mode\": \"RGB\", \"channels\": 3, \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"}",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d10r1_repair.py:103:The defect status is corrected to **`{STATUS}`**: A2's provenance is unknown, so no independently defined",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d10r1_repair.py:152:| Corrected error 2 | original PROP-01 reclassification was unsupported (A2 provenance NOT ESTABLISHED) → withdrawn |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d10_decision.py:51:| P1D5 / P1D5-R1 | detector provenance / A2 domain audit | active = YOLO26m-seg `ef852b58…` = documented Task 6M1 `best.pt`; 1 class `building`; A2 provenance NOT ESTABLISHED; alternates exist but none validated on A2/RC1; detector swap touches frozen claims; `PROP01_DOMAIN_GAP_INSUFFICIENT_EVIDENCE` |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d10_decision.py:59:A2 is not a strong photometric outlier in the combined training distribution, and its own provenance is unknown.",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d10_decision.py:98:A2 source/domain provenance available?         NO",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar1_policy.py:140:A2 provenance/domain = NOT ESTABLISHED.",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar1_policy.py:217:- **A2 是已记录的持续未检出（persistent non-detection）压力样例，其来源/域为 NOT ESTABLISHED，且不得声称其“域外”。**",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar1_policy.py:244:- A2 为持续未检出样例，来源/域 **NOT ESTABLISHED**；**不得**判定为已证实的域外样本。",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:69:    \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:76:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:126:  \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:178:    \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:185:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:300:    \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:307:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:422:    \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:429:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:531:    \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:538:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:640:    \"file\": \"inference/input/A2.png\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json:647:    \"sha256\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11a_policy.py:124:A2 provenance/domain = NOT ESTABLISHED.",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11a_policy.py:188:- **A2 是已记录的持续未检出（persistent non-detection）压力样例，其来源/域为 NOT ESTABLISHED，且不声称其“域外”。**",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11a_policy.py:219:- A2 为持续未检出样例，其来源/域 **NOT ESTABLISHED**；**不得**将其判定为已证实的域外样本。",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar3_fix.py:171:The A2 policy wording is unchanged and remains evidence-bounded (provenance NOT ESTABLISHED, documented persistent",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11br1_stop.py:38:canonical_manifest_sha = hashlib.sha256(blob(\"source_manifest.json\")).hexdigest()",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11br1_migrate.py:83:canonical_manifest_sha = hashlib.sha256(blob(\"source_manifest.json\")).hexdigest()",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11br1_migrate.py:124:external_sha = sha256(EXTERNAL / \"source_manifest.json\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11b_sync.py:140:external_manifest_sha = sha256(EXTERNAL / \"source_manifest.json\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar2_policy.py:109:A2 provenance/domain = NOT ESTABLISHED.",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar2_policy.py:186:- **A2 是已记录的持续未检出（persistent non-detection）压力样例，其来源/域为 NOT ESTABLISHED，且不得声称其“域外”。**",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11ar2_policy.py:212:- A2 为持续未检出样例，来源/域 **NOT ESTABLISHED**；**不得**判定为已证实的域外样本。",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11br2_migrate.py:86:canonical_manifest_sha = hashlib.sha256(blob(\"source_manifest.json\")).hexdigest()",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11br2_migrate.py:121:external_sha = sha256(EXTERNAL / \"source_manifest.json\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11m1_normalize.py:78:    \"manifest_sha256_validates_source_or_destination\": \"entry[\\\"sha256\\\"]\" in helper or \"['sha256']\" in helper,",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11m1_normalize.py:86:assert consumer[\"manifest_sha256_validates_source_or_destination\"] is False",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11m1_normalize.py:148:manifest sha256 used to validate source/destination = {consumer['manifest_sha256_validates_source_or_destination']}",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11m1_normalize.py:220:| Consumer semantics | sync helper enumerates by `path` and compares actual content; manifest `bytes`/`sha256` are not used for validation; `source_manifest.json` is not self-listed → normalization safe |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d3_closeout.py:67:input      = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11s1_helper.py:101:        if source.stat().st_size != target.stat().st_size or sha256_file(source) != sha256_file(target):",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d11s1_helper.py:143:        if sha256_file(target) == sha256_file(source) and target.stat().st_size == source.stat().st_size:",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d2_closeout.py:76:source image    = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d3_probe_runner.py:32:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d1_evidence.py:68:a2 = EXTERNAL / \"inference\" / \"input\" / \"A2.png\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d1_evidence.py:70:    emit(f\"A2.png size={handle.size} mode={handle.mode} bytes={a2.stat().st_size} sha256={sha256(a2)}\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d1_evidence.py:71:emit(\"frozen A2 sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d1_closeout.py:50:input       : inference/input/A2.png size=(1024, 1024) mode=RGB bytes=1 677 040",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d1_closeout.py:51:              sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d1_closeout.py:188:| A2 input identity | 1024×1024 RGB, sha256 `10286b1e…` = frozen hash |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d2_probe_runner.py:36:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d4_closeout.py:72:input      = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d4_probe_runner.py:35:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5r1_closeout.py:88:file            = inference/input/A2.png · 1 677 040 bytes · PNG · RGB · 1024x1024",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5r1_closeout.py:89:sha256          = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5r1_closeout.py:114:and geographic descriptors are not recorded and A2's provenance is unknown.",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5r1_evidence.py:85:path = EXTERNAL / \"inference\" / \"input\" / \"A2.png\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5r1_evidence2.py:48:path = EXTERNAL / \"inference\" / \"input\" / \"A2.png\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:28:Read-only audit of the active proposal-detector provenance, the A2 data/domain provenance, locally available",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:81:## 5. A2 data source / domain",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:84:A2.png identity : 1 677 040 bytes, 1024x1024 RGB, sha256 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:130:Because checkpoint provenance **is** established (§2–§4) but A2's provenance/domain is **NOT ESTABLISHED** (§5), the",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:144:`DOMAIN_EVIDENCE_RECOVERY`, i.e. recover A2's data provenance/domain so the mismatch question can be answered.",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:149:A2 data source / domain / sensor / GSD / site                       : NOT ESTABLISHED",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_closeout.py:186:| A2 source/domain | NOT ESTABLISHED |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_evidence.py:93:emit(\"=== A2 / SIX-IMAGE SOURCE + DOMAIN EVIDENCE ===\")",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d5_evidence.py:94:for hit in grep(REPO, (\"A2.png\", \"six-image\", \"六图\", \"inference/input\")):",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d6_probe_runner.py:60:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d7_runner.py:81:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_audit.py:19:            \"A2\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_audit.py:146:a2_rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8r1_closeout.py:164:A2 geographic/sensor/site provenance                                  : NOT ESTABLISHED",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8r1_closeout.py:206:| A2 provenance/membership | NOT ESTABLISHED |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_closeout.py:95:A2 is byte-identical to the frozen value `10286b1e…`; A1/A3/A4 are uniquely identified by the same paths used by the",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_closeout.py:169:A2's membership in the training domain is **NOT ESTABLISHED** (file identity absent; geographic provenance still",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_closeout.py:203:A2 geographic/sensor/site provenance                                  : NOT ESTABLISHED",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_closeout.py:238:| A2 identity | 1024×1024 RGB · 1 677 040 B · sha256 `10286b1e…` (matches frozen) |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d8_closeout.py:247:| A2 provenance/membership | NOT ESTABLISHED |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d9_runner.py:27:A2 = EXTERNAL / \"inference\" / \"input\" / \"A2.png\"",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_p1d9_runner.py:205:source A2                      : Y_mean {transform_stats['source']['Y_mean']:.4f} · Y_std {transform_stats['source']['Y_std']:.4f} · Y_dynamic_98 {transform_stats['source']['Y_dynamic_98']:.4f}",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_pack_report.py:152:| A2.png | 1677040 | 1024 | 1024 | RGB | 3 | 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_r4b_gate.py:15:            \"A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_r4b_gate.py:74:A2_sha256 = {inputs['A2.png']}",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01e3ar2_stop.py:105:Because the verified byte content equals the published SHA256, the compile failure originates from the published patcher",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01e3b1_manifest.py:120:external_manifest_sha = hashlib.sha256((EXTERNAL / \"source_manifest.json\").read_bytes()).hexdigest()",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01e3b1_manifest.py:121:external_written = external_manifest_sha != hashlib.sha256((EXTERNAL / \"source_manifest.json\").read_bytes()).hexdigest()",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01e3b2_sync.py:100:external_manifest_sha = hashlib.sha256((EXTERNAL / \"source_manifest.json\").read_bytes()).hexdigest()",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01f1r5_verify.py:82:            \"external_source_manifest_sha256\": sha256_file(EXTERNAL / \"source_manifest.json\"),",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01f1r5_verify.py:83:            \"canonical_source_manifest_sha256\": sha256_file(CANON / \"source_manifest.json\")}",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_ref01f1r6_closure.py:82:    \"external_control_manifest_sha256\": sha_file(EXTERNAL / \"source_manifest.json\"),",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_suite.py:38:    (\"A2\", \"inference/input/A2.png\", \"以面积最大的建筑为参考，分割它左侧最近的建筑\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d2_probe.py:18:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d3_probe.py:17:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d4_probe.py:19:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5r1_evidence2.txt:255:sha256 = 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:335:=== A2 / SIX-IMAGE SOURCE + DOMAIN EVIDENCE ===",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:361:docs\\task8b3_p1d1_a2_zero_proposal_forensics.md:27: input       : inference/input/A2.png size=(1024, 1024) mode=RGB bytes=1 677 040",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:362:docs\\task8b3_p1d2_a2_detector_result_probe.md:21: source image    = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:364:docs\\task8b3_p1d3_a2_fullframe_context_probe.md:20: input      = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:365:docs\\task8b3_p1d4_a2_subthreshold_tile_probe.md:19: input      = inference/input/A2.png (1024x1024 RGB, frozen sha256 10286b1e…)",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:367:docs\\task8b3_six_image_demo_suite.md:35: | A2.png | 1677040 | 1024 | 1024 | RGB | 3 | 10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f |",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:372:logs\\task8b3_r4b_freeze.json:7: \"A2.png\": \"10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:375:scripts\\task8b3_interactive_suite.py:54: (\"A2\", \"inference/input/A2.png\", \"以面积最大的建筑为参考，分割它左侧最近的建筑\",",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d5_evidence.txt:419:A2.png | 1677040 bytes",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d6_probe.py:18:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))",
+          "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\_p1d7_probe.py:21:rgb = np.asarray(Image.open(EXTERNAL / \"inference\" / \"input\" / \"A2.png\").convert(\"RGB\"))"
+        ],
+        "exit": 0,
+        "matching_lines": 119,
+        "output_sha256": "cff3912d7d8ca7659d6108de8a271932e8b3751adc458eee4b5558744a0c3722"
+      }
+    ],
+    "suite_introduction_log": "1287d0a2bab50a278452d4cd0ec8d492347afdfe 2026-10-03T23:51:34+08:00 绘尽梨衣绘烬樱 docs(demo): record task8b3 execution stop\nc08c65998f045d0e712c7e212f37a63042ec0f27 2026-10-04T01:33:10+08:00 绘尽梨衣绘烬樱 docs(demo): record task8b3-r2 execution stop\nd4b7d36c68be7cee6970b9f3d58cc1cd4f47caf1 2026-10-04T04:36:21+08:00 绘尽梨衣绘烬樱 test(demo): finalize six-image harness",
+    "tracked_A2_path_history": ""
+  },
+  "historical_sources_inspected": [
+    {
+      "classification": "AUTHORITATIVE",
+      "commit": "1287d0a2bab50a278452d4cd0ec8d492347afdfe",
+      "finding": "Frozen A2 suite path/prompt/program, no source crop.",
+      "hash_basis": "git-show UTF8 text without trailing whitespace",
+      "line_range": [
+        112,
+        118
+      ],
+      "sha256": "94b3c62ac3b471f1b48fe7790830783639fd898ae333dbc7d6b9ecb4aede880b",
+      "source": "handoff/TO_DSH.md"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "commit": "1287d0a2bab50a278452d4cd0ec8d492347afdfe",
+      "finding": "First tracked case tuple, no source construction.",
+      "hash_basis": "git-show UTF8 text without trailing whitespace",
+      "line_range": [
+        50,
+        52
+      ],
+      "sha256": "b8fc261aeafbb8ac70aea1b52af66dd39d66e2b508fd60574a7a50333f0c65c8",
+      "source": "scripts/task8b3_interactive_suite.py"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "R4B freeze identifies exact A2 bytes/program; no original raster/window.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "ea0a353322c66ac8b9c4ea5d3f70fd64434ad09307a99dee557903adb02d65f7",
+      "source": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8b3_six_image_demo_suite.md"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Prior documentary audit: origin NOT ESTABLISHED.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "1850f3d3a0748e85ba40b662915cd5a2a2d8ca45de8f9a39d6aa260fc08d20a5",
+      "source": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8b3_p1d5_detector_provenance_domain_gap.md"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Historical whole-file search and photometric audit; no source mapping.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "ae3d9bf95408e7a7bb24be113e8925ee2a071d3dd4d04cccf3671ed107047339",
+      "source": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8b3_p1d8_a2_input_domain_audit.md"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Prior input provenance and GT availability NOT ESTABLISHED.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "8193cc7263eaa61e19b4af66f1382398268982d78b39bf1161e8f37e710d2a46",
+      "source": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8b3_p1d10_prop01_resolution_decision.md"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Locked identity and accepted earlier engineering evidence.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "99a35585d00275c4d8f24fcf325981441743f944287ff321e5400e8b222ea185",
+      "source": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8b3_prop01_a2_zero_proposals_forensics_v1.md"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Accepted corrected zero detector result; not rerun.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "0cda90d856f7e4cb61391a8ea5c918cceb120cce61c7c2aeed4f854f561e2701",
+      "source": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8b3_detector_rgb_bgr_contract_repair_v1.md"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Pre-existing inventory lists A2, 1677040 bytes; no original source.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "9ff442d2d7b4172ed4ab638325ea8337894fd57acd9f4ce544cd2603602f0580",
+      "source": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b2_r1_delivery_inventory.txt"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Existing suite input hash/program and failure records.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "d2aaf3d1fbc3b3bec047b2852de50fe9890569d85f45f21b85656c3d05adb7e9",
+      "source": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_suite_results.json"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Preserved transcript; no creation provenance.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "2da193a3599cec2302261fefff0f579471b34418241ea39c9ab5df0539ecdea8",
+      "source": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_transcripts\\A2.txt"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Historical domain audit retained, not repeated.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "54f0e8d9badff5df38aa47d9012af59f1185e1f8995680481fd08d89dab65d1e",
+      "source": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\task8b3_p1d8_domain_audit.json"
+    },
+    {
+      "classification": "DESCRIPTIVE_ONLY",
+      "commit": null,
+      "finding": "Earlier untracked driver consumes A2; does not construct it.",
+      "hash_basis": "file bytes",
+      "line_range": null,
+      "sha256": "96403874f0c56cfadee1a445c2ba1246986b2b05e8437662bc71036f14c836ea",
+      "source": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\logs\\build_scripts\\task8b3_suite.py"
+    }
+  ],
+  "inspected_mapping_sources": [
+    {
+      "bytes": 11969604,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\tiles\\index.jsonl",
+      "sha256": "f4fd8d1b67220665d65dc0322ef6b8cdbaff5af8eef4c90f2cf6282b2045b6ad"
+    },
+    {
+      "bytes": 3907,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\whu_native_vector\\v1.0\\manifest.json",
+      "sha256": "35ba3a90139e96e11108b9a15e1192b9b025c4c76aa100002cebeb8a598df353"
+    },
+    {
+      "bytes": 146650,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6k1_tile_mapping.json",
+      "sha256": "87e79b25a90851c46f044f9df36d32b2a83c1d623e7a4ebf69bc14e44f27ff8e"
+    },
+    {
+      "bytes": 4837,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6k1_vector_raster_alignment.json",
+      "sha256": "928fce587ca2e2eed47df89c78efe895ae878d747995b3f06c490aaeb05816be"
+    }
+  ],
+  "locked_a2_decoded_rgb_sha256": "d02b3597a389285d72874fea12a06dbc031c720bfc9506e986a184b6637940bf",
+  "locked_a2_file_sha256": "10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+  "locked_a2_identity": {
+    "bytes": 1677040,
+    "creation_time_ns": 1790978541891992300,
+    "dtype": "uint8",
+    "info": {},
+    "last_write_time_ns": 1790978314897318600,
+    "mode": "RGB",
+    "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A2.png",
+    "runtime_decode_equal_pillow_rgb": true,
+    "runtime_source": {
+      "bytes": 7978,
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\buildreasonseg\\runtime\\imageio.py",
+      "sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878"
+    },
+    "sha256": "10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f",
+    "size": [
+      1024,
+      1024
+    ],
+    "timestamp_evidence_class": "DESCRIPTIVE_ONLY"
+  },
+  "locked_a2_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1\\inference\\input\\A2.png",
+  "no_candidate_replacement": true,
+  "no_external_write": true,
+  "no_model_inference": true,
+  "no_parameter_tuning": true,
+  "no_product_change": true,
+  "no_threshold_sweep": true,
+  "prop01_interpretation_candidate": "PROP01_ROOT_CAUSE_REMAINS_UNRESOLVED",
+  "provenance_status": "NOT_ESTABLISHED",
+  "read_only_integrity_before": [
+    {
+      "definition": "SHA256 of sorted JSON [relative_path,bytes,mtime_ns] rows; read access time excluded",
+      "files": 2100,
+      "relative_path_size_mtime_ns_sha256": "360c17e958d0f124f6152f35beeaf466e86a0a56c15add8f8bcc5d9a4669fe0e",
+      "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "total_bytes": 5329568950
+    },
+    {
+      "definition": "SHA256 of sorted JSON [relative_path,bytes,mtime_ns] rows; read access time excluded",
+      "files": 34797,
+      "relative_path_size_mtime_ns_sha256": "42d2bf1f665f452b8497c0aefa2b5edba2156c8bfe879bc75e7d48bf730dbf00",
+      "root": "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)",
+      "total_bytes": 26469907989
+    }
+  ],
+  "relation_semantics_source": [
+    {
+      "bytes": 40902,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\spatial_reasoning\\annotator.py",
+      "sha256": "a49956a7c0324db89c95860d4056c8052d31a353d3260e6c7d9fff762fa161ca"
+    },
+    {
+      "bytes": 13465,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\spatial_reasoning\\semantic_policy.py",
+      "sha256": "69a7dc6a64804d7e1211d32029c198a68577af386e09a6d349dce4c79f071aa8"
+    },
+    {
+      "bytes": 34359,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\spatial_reasoning\\relations.py",
+      "sha256": "ec0fd6139cf312bcb77bd8dded89c44da4fc6a84c331f0a81a49a058f036c7dc"
+    },
+    {
+      "bytes": 18927,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\spatial_reasoning\\geometry.py",
+      "sha256": "a80617a65b96ccc76b5d6b9ba244f18a809d4c60a14690b503163f20a7ca1807"
+    },
+    {
+      "bytes": 11656,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\configs\\spatial_relations_v1.yaml",
+      "sha256": "f6cba54ee0d6883ef286d1a903431e08b79bf9df2ae37a2e26101728f7185628"
+    },
+    {
+      "bytes": 3945,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\configs\\build_spatial_reason_v0.2.yaml",
+      "sha256": "51106e2af3888a48cebe6edf89767875b28493b3c39782311d6a78a9b16993b6"
+    },
+    {
+      "bytes": 6551,
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\build_spatial_reason\\v0.2\\manifest.json",
+      "sha256": "635cc471cca4f0e008c6e712cb80d2cde33e9878e7dffb2ee9b4c172647ae615"
+    }
+  ],
+  "resolved_source_raster": null,
+  "resolved_source_window": null,
+  "source_roots_inspected": [
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+    "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+    "C:\\D\\resources\\Satellite dataset Ⅱ (East Asia)",
+    "datasets/whu_native_vector/v1.0",
+    "datasets/build_spatial_reason/v0.2"
+  ],
+  "starting_branch": "fix/task8b3-detector-rgb-bgr-contract-v1",
+  "starting_head": "104bcde03ff8bedbd563a1c0eba6fe230f221dad",
+  "status": "IN_PROGRESS",
+  "task_branch": "audit/task8b3-a2-ground-truth-case-validity-v1",
+  "task_id": "A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1",
+  "unavailable_fields_reason": "No exact full-window provenance; GT recovery/alignment/relation application are gated.",
+  "validation": {},
+  "verified_starting_remote_head": "104bcde03ff8bedbd563a1c0eba6fe230f221dad"
+}

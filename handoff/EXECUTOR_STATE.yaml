@@ -1,50 +1,38 @@
 schema_version: 1
-task_id: DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
-status: READY_FOR_SUPERVISOR_AUDIT
+task_id: A2_GROUND_TRUTH_AND_LOCKED_CASE_VALIDITY_AUDIT_V1
+status: IN_PROGRESS
 executor: CODEX
-branch: fix/task8b3-detector-rgb-bgr-contract-v1
-head: 99a559b2383540ff44eee115c6e4a42c43b2d315
+branch: audit/task8b3-a2-ground-truth-case-validity-v1
+head: 104bcde03ff8bedbd563a1c0eba6fe230f221dad
 completed:
-- Startup reads, exact clean anchor, authorized branch and task installation verified.
-- Minimal canonical repair and 47/47 related runtime tests PASS, including 5 new boundary/extraction
-  cases.
-- Controlled sync 135/135 verified; only two source content identities differ; all
-  non-source protected hashes unchanged.
-- A1 frozen real detector, tensor and immutable-input checks completed.
-- A2 frozen real detector, tensor and immutable-input checks completed.
-- A3 frozen real detector, tensor and immutable-input checks completed.
-- A4 frozen real detector, tensor and immutable-input checks completed.
-- B1 frozen real detector, tensor and immutable-input checks completed.
-- B2 frozen real detector, tensor and immutable-input checks completed.
-- External complete RC1 regression PASS.
-- Final 135/135 external source identities and all protected content hashes unchanged
-  after validation.
-- Final evidence validation and Supervisor audit handoff ready; no scientific closure
-  claim.
-current_step: STOP_FOR_SUPERVISOR_AUDIT
-next_action: CHATGPT_DETECTOR_CHANNEL_REPAIR_REMOTE_AUDIT
-tests_run:
-- 'Canonical runtime tests: 47/47 PASS including 5 new contracts.'
-- 'Real six-case detector regression: 374 actual tensor/API/kwargs/immutability checks
-  PASS.'
-- 'External full regression: 135 passed, 0 failed, 0 errors; failing nodes=[]'
-- Canonical/external 135/135 source identity PASS; 1964/1964 protected hashes unchanged.
-- Whole detector AST boundary-only diff and final saved-evidence assertions PASS.
+- Required startup and remote anchor verified; task book installed byte-for-byte.
+- Phase A historical documentary search complete; no authoritative source/window recovered.
+- Phase B locked SHA256 and runtime/Pillow RGB equality verified.
+- Exact-pixel plan predeclared before corpus search.
+current_step: CHECKPOINT_1_HISTORY_IDENTITY_AND_PREDECLARED_PLAN
+next_action: CHECKPOINT_1_HISTORY_IDENTITY_AND_PREDECLARED_PLAN
+tests_run: []
 files_modified:
+- docs/task8b3_a2_ground_truth_case_validity_audit_v1.md
+- evaluation/task8b3_a2_ground_truth_case_validity_audit_v1.json
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
-- docs/task8b3_detector_rgb_bgr_contract_repair_v1.md
-- evaluation/task8b3_detector_rgb_bgr_contract_repair_v1.json
-- delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-- delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
-- delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+- scripts/diagnose_a2_ground_truth_case_validity.py
 uncommitted_changes: false
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 99a559b2383540ff44eee115c6e4a42c43b2d315
-  pushed: true
-scientific_claim_scope: DETECTOR_RGB_BGR_INPUT_CONTRACT_CORRECTED_ONLY
+  commit: 104bcde03ff8bedbd563a1c0eba6fe230f221dad
+  pushed: false
+scientific_claim_scope: EXACT_OR_UNRESOLVED_A2_PROVENANCE_AND_CONDITIONAL_GT_CASE_VALIDITY_ONLY
 PROP01_status: OPEN
-A2_case_validity: NOT_EVALUATED_IN_THIS_TASK
+no_model_inference: true
+no_product_change: true
+no_external_write: true
+provenance_status: NOT_ESTABLISHED
+gt_status: NOT_EVALUATED_NO_EXACT_PROVENANCE
+case_validity: NOT_EVALUABLE_WITHOUT_PROVENANCE
+no_threshold_sweep: true
+no_parameter_tuning: true
+no_candidate_replacement: true
