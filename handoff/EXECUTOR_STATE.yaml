@@ -1,42 +1,29 @@
 schema_version: 1
-task_id: PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
-status: READY_FOR_SUPERVISOR_AUDIT
+task_id: DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
+status: IN_PROGRESS
 executor: CODEX
-branch: audit/task8b3-prop01-a2-channel-contract-causal-test-v1
-head: 9ea5938dcdb0d7f126cf5d3d8843d7cc45d0daba
+branch: fix/task8b3-detector-rgb-bgr-contract-v1
+head: 4e3019c77984dcb27c7a10651ccc7df631abf0da
 completed:
-- Five canonical startup reads and exact clean Git anchor verified.
-- Supervisor task installed verbatim, SHA256 checked, and re-read.
-- Exact A2, detector, source, installed libraries, and prior evidence identities verified.
-- Prepared nine paired tiles with frozen invocation and tensor/baseline guards; zero inference so far.
-- 'Exactly one paired experiment completed: 9 baseline + 9 corrected calls, total 18.'
-- All baseline tensors match reversed RGB and accepted actual hashes; all corrected tensors match intended RGB.
-- 'Baseline raw boxes 0 and corrected raw boxes 0: C2_CHANNEL_CORRECTION_STILL_ZERO.'
-- Same frozen arguments/model/backend across each pair; external inventory and 144 hashes unchanged.
-- Saved-evidence classification and final assertions PASS; C2 evidence-backed.
-- Final report and handoff ready for Supervisor remote audit; no repair or tuning.
-current_step: STOP_FOR_SUPERVISOR_AUDIT
-next_action: CHATGPT_PROP01_CHANNEL_CAUSAL_TEST_REMOTE_AUDIT; do not automatically enter repair or further inference.
-hypotheses:
-- Correction of the real channel defect is insufficient to recover A2 proposals at the frozen setup; no threshold experiment
-  or repair is authorized.
+- Startup reads, exact clean anchor, authorized branch and task installation verified.
+- Minimal canonical repair and 47/47 related runtime tests PASS, including 5 new boundary/extraction
+  cases.
+current_step: COMMIT_CANONICAL_CHECKPOINT
+next_action: COMMIT_CANONICAL_CHECKPOINT
 tests_run:
-- Prepare diagnostic PASS; nine tile hashes match accepted forensics.
-- External inventory and 144 protected hashes unchanged.
-- Paired tensor assertions PASS; baseline guard PASS; 18 predict calls exactly.
-- Accepted baseline tensor hash replay and intended corrected hash checks PASS for all nine tiles.
-- Saved-evidence finalize PASS, zero inference calls.
-- Syntax/import, JSON/YAML, attachment preservation, whitespace and five-authorized-path scope checks PASS.
+- "47 passed in 6.00s\r"
 files_modified:
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
-- docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
-- evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
-- scripts/diagnose_prop01_a2_channel_contract_causal_test.py
-uncommitted_changes: false
+- docs/task8b3_detector_rgb_bgr_contract_repair_v1.md
+- evaluation/task8b3_detector_rgb_bgr_contract_repair_v1.json
+- delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+- delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py
+- delivery_src/BuildReasonSeg_Advisor_RC1/tests/test_task8b_runtime.py
+uncommitted_changes: true
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 9ea5938dcdb0d7f126cf5d3d8843d7cc45d0daba
-  pushed: true
+  commit: null
+  pushed: false

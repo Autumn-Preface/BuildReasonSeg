@@ -146,6 +146,75 @@ def test_extract_tile_reflection_padding_mapping() -> None:
     assert padded["bottom"] == 112 and padded["right"] == 112
 
 
+# ---------------------------------------------------------------- detector API boundary
+
+
+@pytest.mark.parametrize("dtype", [np.uint8, np.float32])
+@pytest.mark.parametrize("device", ["cpu", "cuda"])
+def test_detect_tile_rgb_bgr_boundary_preserves_input_and_invocation(dtype, device) -> None:
+    from types import SimpleNamespace
+
+    # Deliberately distinct channels and a non-contiguous, read-only RGB tile.
+    rgb = np.empty((8, 12, 3), dtype=dtype)
+    rgb[...] = [17, 83, 201]
+    tile = rgb[::2, ::2]
+    tile.setflags(write=False)
+    before = rgb.tobytes()
+    calls = []
+
+    def predict(**kwargs):
+        calls.append(kwargs)
+        return [SimpleNamespace(masks=None, boxes=None)]
+
+    runtime = detector.DetectorRuntime(device=device)
+    runtime._model = SimpleNamespace(predict=predict)
+    assert runtime.detect_tile(tile) == []
+    assert len(calls) == 1
+    call = calls[0]
+    source = call.pop("source")
+    assert call == {"imgsz": 640, "conf": 0.05, "max_det": 300,
+                    "verbose": False, "retina_masks": False, "device": device}
+    assert source.shape == tile.shape and source.dtype == tile.dtype
+    assert source.flags.c_contiguous and not np.shares_memory(source, tile)
+    assert np.array_equal(source, np.broadcast_to([201, 83, 17], tile.shape))
+    assert rgb.tobytes() == before
+    # Even an API consumer writing its own array cannot mutate the internal RGB tile.
+    source[...] = 0
+    assert rgb.tobytes() == before
+
+
+def test_detect_tile_keeps_proposal_extraction_contract() -> None:
+    from types import SimpleNamespace
+    import torch
+
+    masks = torch.zeros((2, 512, 512), dtype=torch.float32)
+    masks[0, 10:12, 20:23] = 0.5  # frozen strict > 0.5 gate
+    masks[0, 10, 20] = 0.6
+    masks[1, 40:42, 50:53] = 1.0
+    confidences = torch.tensor([0.3, 0.9])
+    boxes = torch.tensor([[20, 10, 23, 12], [50, 40, 53, 42]])
+
+    class Boxes:
+        conf = confidences
+        xyxy = boxes
+
+        def __len__(self):
+            return 2
+
+    result = SimpleNamespace(masks=SimpleNamespace(data=masks), boxes=Boxes())
+    runtime = detector.DetectorRuntime(device="cpu")
+    runtime._model = SimpleNamespace(predict=lambda **kwargs: [result])
+    output = runtime.detect_tile(np.zeros((512, 512, 3), dtype=np.uint8))
+    assert [item["index"] for item in output] == [1, 0]
+    for item in output:
+        index = item["index"]
+        assert set(item) == {"index", "confidence", "mask", "box"}
+        assert item["confidence"] == float(confidences[index])
+        assert item["box"] == boxes[index].tolist()
+        assert item["mask"].dtype == np.bool_
+        assert np.array_equal(item["mask"], masks[index].numpy() > 0.5)
+
+
 # ---------------------------------------------------------------- merge
 
 

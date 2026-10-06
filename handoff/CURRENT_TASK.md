@@ -1,12 +1,12 @@
-# CURRENT_TASK — PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
+# CURRENT_TASK — DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
 
-## Metadata
+## 0. Metadata
 
 Task ID:
-PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
+DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
 
 Status:
-READY_FOR_SUPERVISOR_AUDIT
+AUTHORIZED
 
 Decision owner:
 ChatGPT Supervisor
@@ -15,337 +15,519 @@ Authorized executor:
 CODEX
 
 Required starting branch:
-audit/task8b3-prop01-a2-zero-proposals-forensics-v1
-
-Required starting HEAD:
-59296d25195a656e6a75e303e3cbb43fa9df8b8b
-
-Task branch:
 audit/task8b3-prop01-a2-channel-contract-causal-test-v1
 
+Required starting HEAD:
+4e3019c77984dcb27c7a10651ccc7df631abf0da
 
-## 1. Accepted starting facts
+Task branch:
+fix/task8b3-detector-rgb-bgr-contract-v1
 
-Supervisor accepts the previous forensic milestone.
 
-Established:
+## 1. Accepted Starting Facts
 
-- exact A2 provenance is known;
-- frozen baseline A2 raw proposals = 0;
-- all nine Ultralytics results are already zero;
-- no downstream BuildReasonSeg stage drops A2 proposals;
-- A1 positive control produces raw 133 / merged 52;
-- BuildReasonSeg supplies RGB NumPy arrays to model.predict;
-- installed Ultralytics interprets NumPy color input as BGR;
-- resulting A2 detector tensors have R/B channels reversed.
+Supervisor accepts:
 
-Not established:
+- PROP01_A2_ZERO_PROPOSALS_ROOT_CAUSE_FORENSICS_V1
+- PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
 
-- whether this channel-contract defect causes A2 zero proposals.
+Established engineering facts:
 
-PROP-01 remains OPEN.
+1. BuildReasonSeg runtime image contract is RGB.
+2. `tile_rgb` is an RGB NumPy array.
+3. Current detector passes this NumPy array directly to Ultralytics `model.predict`.
+4. Installed Ultralytics interprets NumPy color input as BGR.
+5. Ultralytics preprocessing therefore flips the current RGB input and produces an R/B-reversed network tensor.
+6. Converting API-facing RGB NumPy to contiguous BGR restores the intended RGB network tensor.
+7. Correcting this channel contract did not recover A2 proposals:
+   - baseline raw = 0
+   - corrected raw = 0
+
+Therefore:
+
+RGB/BGR contract defect = VERIFIED
+
+A2 zero-proposal causal root = NOT ESTABLISHED
+
+PROP-01 = OPEN
+
+A2 evaluation-case validity is subject to a later, separately authorized provenance / ground-truth audit.
+
+This task MUST NOT use “A2 becomes non-zero” as a success criterion.
 
 
 ## 2. Goal
 
-Perform one controlled causal experiment.
+Repair the verified detector input contract defect.
 
-Compare:
+Required product invariant after repair:
 
-BASELINE:
-BuildReasonSeg existing RGB NumPy input
-→ current Ultralytics preprocessing
+BuildReasonSeg internal image
+= RGB
 
-COUNTERFACTUAL:
-same exact RGB tile
-→ convert only API-facing NumPy representation to BGR
-→ unchanged Ultralytics preprocessing
-→ resulting network tensor must equal intended RGB tensor
+Ultralytics NumPy API-facing image
+= contiguous BGR
 
-Everything except channel representation must remain frozen.
+Ultralytics preprocessing output
+= intended RGB network tensor
 
-Question:
-
-Does correcting the RGB/BGR API contract change A2 from zero raw detector proposals to non-zero proposals?
+This is an engineering input-contract repair only.
 
 
-## 3. Allowed repository writes
+## 3. Frozen Parameters and Scientific Constraints
 
-Only:
+Do NOT change:
 
-handoff/CURRENT_TASK.md
-handoff/EXECUTOR_STATE.yaml
+- confidence threshold
+- mask threshold
+- imgsz
+- max_det
+- NMS
+- TTA
+- tile size
+- tile overlap
+- tile stride
+- duplicate IoU
+- detector weights
+- detector model
+- reference ranking
+- spatial reasoning
+- architecture
+- success semantics
+- semantic acceptance rules
 
-docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
-evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
+No threshold sweep.
 
-scripts/diagnose_prop01_a2_channel_contract_causal_test.py
+No parameter tuning.
+
+No locked-case rescue heuristic.
+
+No A2-specific branch.
 
 
-## 4. Forbidden
+## 4. Intended Minimal Implementation
 
-Do NOT modify product runtime source.
+Preferred repair location:
+
+Ultralytics API boundary inside detector runtime.
+
+Conceptually:
+
+```python
+api_tile = np.ascontiguousarray(tile_rgb[..., ::-1])
+
+model.predict(
+    source=api_tile,
+    imgsz=self.imgsz,
+    conf=self.conf,
+    max_det=self.max_det,
+    verbose=False,
+    retina_masks=False,
+    device=...
+)
+```
+
+Requirements:
+
+- internal `tile_rgb` remains RGB;
+- do not mutate `tile_rgb` in place;
+- API-facing array must be contiguous;
+- shape preserved;
+- dtype preserved;
+- all frozen detector arguments preserved.
+
+Exact local implementation is L1 and may be chosen by the Executor if these contracts remain unchanged.
+
+
+## 5. Allowed Product Changes
+
+Allowed canonical product file:
+
+`delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/detector.py`
+
+Allowed tests:
+
+only the minimum directly relevant tests under:
+
+`delivery_src/BuildReasonSeg_Advisor_RC1/tests/`
+
+If required by the existing canonical source-manifest contract:
+
+the minimum necessary `source_manifest` update is allowed.
+
+Also allowed:
+
+- `handoff/CURRENT_TASK.md`
+- `handoff/EXECUTOR_STATE.yaml`
+- `docs/task8b3_detector_rgb_bgr_contract_repair_v1.md`
+- `evaluation/task8b3_detector_rgb_bgr_contract_repair_v1.json`
+
+
+## 6. Forbidden Changes
 
 Do NOT modify:
 
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/**
-tests/**
-configs/**
-model/**
-governance/PROJECT_STATE.yaml
-governance/DECISIONS.md
-external RC1
+- `governance/PROJECT_STATE.yaml`
+- `governance/DECISIONS.md`
+- ProgramHead
+- SAM/SAM2
+- GRF
+- reference ranking
+- reasoning context
+- pipeline success semantics
+- mask validity semantics
 
-Do NOT perform:
+Do NOT modify external RC1 manually.
 
-confidence sweep
-threshold sweep
-imgsz change
-max_det change
-NMS change
-TTA
-model replacement
-weight change
-ranking change
-architecture change
-product repair
-external sync
+Do NOT opportunistically repair unrelated manifest drift or unrelated defects.
 
 
-## 5. Exact experiment
+## 7. Required Contract Tests
 
-Use exact locked A2:
+Add or strengthen focused tests proving:
 
-inference/input/A2.png
+### A. API-facing channel contract
 
-SHA256:
+Given a known RGB tile:
 
-10286b1e76db9e38c474635a465c9e677dbcf58375c1d39f7b742eeb991f434f
+BuildReasonSeg internal tile
+= RGB
 
-Use frozen detector:
+array passed to Ultralytics
+= BGR equivalent
 
-YOLO26m-seg
 
-Frozen parameters:
+### B. Original input immutability
 
-tile = 512
-overlap = 128
-stride = 384
-imgsz = 640
-conf = 0.05
-max_det = 300
-duplicate_iou = 0.50
+The original RGB array must remain byte-identical after detector invocation preparation.
 
-For each of the 9 exact A2 tiles run a paired comparison.
 
-BASELINE:
+### C. Shape / dtype preservation
 
-model.predict(source=RGB_tile, ...frozen args...)
+API-facing conversion preserves:
 
-COUNTERFACTUAL:
+- H
+- W
+- 3 channels
+- dtype
 
-BGR_api_tile =
-np.ascontiguousarray(RGB_tile[..., ::-1])
 
-model.predict(source=BGR_api_tile, ...same frozen args...)
+### D. Contiguity
 
-No other difference is allowed.
+The array passed to Ultralytics must be C-contiguous.
 
 
-## 6. Tensor assertion
+### E. Frozen invocation
 
-Observe Ultralytics preprocessing.
+Verify unchanged:
 
-For baseline confirm:
+- imgsz
+- conf
+- max_det
+- verbose
+- retina_masks
+- device
 
-network tensor
-= source RGB with R/B reversed
+No new inference parameter may be introduced.
 
-For counterfactual confirm:
 
-network tensor
-= intended source RGB
+### F. Existing proposal extraction contract
 
-If this assertion fails:
+The channel-boundary fix must not alter downstream proposal extraction semantics beyond changed detector outputs resulting naturally from corrected pixels.
 
-STOP
 
-classification =
-INPUT_CONTRACT_COUNTERFACTUAL_INVALID
+## 8. Canonical Validation
 
+First run the minimum relevant canonical tests.
 
-## 7. Baseline guard
+At minimum:
 
-The paired baseline must reproduce:
+- new RGB/BGR contract tests;
+- directly related detector/runtime tests.
 
-total raw boxes = 0
+Do not weaken tests to accommodate implementation.
 
-If baseline becomes non-zero:
+If unrelated failures occur:
 
-STOP
+- classify them;
+- persist evidence;
+- do not modify unrelated product behavior.
 
-classification =
-BASELINE_NOT_REPRODUCIBLE
 
-Do not interpret the counterfactual.
+## 9. Controlled External RC1 Sync
 
+Only after canonical implementation and targeted tests pass:
 
-## 8. Required per-tile evidence
+use the repository's existing controlled RC1 synchronization mechanism.
 
-For every tile record:
+Do NOT manually copy individual product files.
 
-tile_id
-top
-left
-tile RGB SHA256
+Use the existing source-manifest / sync contract.
 
-baseline:
-  network tensor SHA256
-  raw box count
-  masks present
-  confidences
+Before sync:
 
-corrected:
-  network tensor SHA256
-  raw box count
-  masks present
-  confidences
+record relevant protected external identities.
 
-All parameters and model identity must be identical between the pair.
+After sync:
 
+verify canonical vs external source identity.
 
-## 9. Required classification
+Must not alter:
 
-Use one:
+- detector weights
+- ProgramHead/Qwen assets
+- SAM/SAM2 assets
+- locked inputs
+- historical logs
+- unrelated runtime assets
 
-C1_CHANNEL_CORRECTION_RECOVERS_PROPOSALS
 
-Meaning:
-baseline total raw = 0
-corrected total raw > 0
+## 10. Real Detector Regression
 
-Allowed conclusion:
-channel-contract defect has experimentally established causal contribution to A2 zero-proposal failure under the frozen setup.
+After controlled sync, run the frozen detector path on the existing six locked cases:
 
-Do NOT claim it is the sole scientific root cause or that full pipeline correctness is established.
+- A1
+- A2
+- A3
+- A4
+- B1
+- B2
 
+Record for each:
 
-C2_CHANNEL_CORRECTION_STILL_ZERO
+- raw proposal count
+- merged proposal count
+- reference selection where available
+- runtime status where directly relevant
 
-Meaning:
-baseline total raw = 0
-corrected total raw = 0
+Compare against the previously accepted baseline.
 
-Allowed conclusion:
-channel-contract defect is real, but correcting it is not sufficient to recover A2 proposals.
+Observed count changes are evidence, not automatically regressions.
 
-The valid corrected A2 detector path still returns zero proposals.
 
-Do NOT tune threshold.
+## 11. A2 Interpretation Guard
 
+A2 MUST NOT be used as the success criterion for this repair.
 
-C3_BASELINE_NOT_REPRODUCIBLE
+Accepted prior causal experiment already established:
 
-STOP.
+correct RGB tensor
+→ A2 raw proposals still = 0
 
+Therefore if repaired product A2 remains:
 
-C4_COUNTERFACTUAL_INVALID
+raw = 0
 
-STOP.
+record:
 
+PROP01_REMAINS_OPEN
 
-## 10. No repair
+and continue normal validation.
 
-Even if C1 is obtained:
+Do NOT:
 
-DO NOT edit detector.py.
-DO NOT sync external RC1.
-DO NOT run full pipeline as a repaired product.
+- lower conf;
+- alter detector parameters;
+- add A2 rescue logic.
 
-Record the repair candidate only as:
+If A2 unexpectedly becomes non-zero:
 
-API-compatible RGB→BGR conversion before passing NumPy tile to Ultralytics.
+record the discrepancy exactly and continue only if no task STOP condition is triggered.
 
-Actual product repair requires a new Supervisor task.
+Do not claim PROP-01 closure.
 
+Do not infer scientific correctness.
 
-## 11. External integrity
+A2 ground-truth / evaluation-case validity is explicitly outside this task and will require separate Supervisor authorization.
 
-External complete RC1 is read-only.
 
-Before and after experiment verify relevant protected artifacts remain unchanged.
+## 12. Broader Regression
 
-No image, log, cache, config or output may be written into external RC1.
+After targeted tests and external detector checks pass:
 
+run the existing external RC1 regression suite according to repository practice.
 
-## 12. Evidence
+Record:
+
+- exact pass count
+- exact fail count
+- exact failing nodes if any
+
+Do not modify unrelated tests merely to obtain green status.
+
+
+## 13. STOP Conditions
+
+STOP and persist a recoverable checkpoint if the repair causes any unexplained:
+
+- runtime crash
+- new E5xx failure
+- detector model-loading issue
+- gross proposal disappearance on previously proposal-positive controls
+- input-contract regression
+- unrelated product regression requiring L2-L4 decisions
+- unsafe Git state
+- external RC1 integrity violation
+
+Do not perform a second repair automatically.
+
+
+## 14. Scientific Claim Boundary
+
+This task may establish only:
+
+DETECTOR_RGB_BGR_INPUT_CONTRACT = CORRECTED
+
+It does NOT establish:
+
+- A2 is a valid evaluation case
+- PROP-01 is closed
+- detector scientific quality improved
+- semantic target correctness
+- segmentation correctness
+- REF-01 closure
+- architecture improvement
+- final Challenge Cup performance improvement
+
+
+## 15. Required Evidence
 
 Create:
 
-docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
+`docs/task8b3_detector_rgb_bgr_contract_repair_v1.md`
 
-evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
+`evaluation/task8b3_detector_rgb_bgr_contract_repair_v1.json`
 
-JSON must include:
+Evidence must include at least:
 
-task_id
-status
+- task_id
+- status
+- starting_branch
+- starting_head
+- task_branch
+- changed_product_paths
+- old_channel_contract
+- new_channel_contract
+- targeted_test_results
+- canonical_source_identity
+- external_sync_result
+- external_source_identity
 
-starting_branch
-starting_head
-task_branch
+Locked-case results must include:
 
-A2 identity
-detector identity
-frozen parameters
+- A1
+- A2
+- A3
+- A4
+- B1
+- B2
 
-baseline_total_raw
-corrected_total_raw
+Also record:
 
-per_tile paired results
+- external_regression_result
+- threshold_sweep_run = false
+- parameter_tuning_run = false
+- model_change = false
+- weight_change = false
+- A2_special_handling = false
+- PROP01_status = OPEN
+- A2_case_validity = NOT_EVALUATED_IN_THIS_TASK
 
-baseline_tensor_contract
-corrected_tensor_contract
+next_gate:
 
-primary_classification
-causal_conclusion
-
-threshold_sweep_run = false
-parameter_tuning_run = false
-product_source_changed = false
-external_write = false
-
-next_gate =
-CHATGPT_PROP01_CHANNEL_CAUSAL_TEST_REMOTE_AUDIT
+CHATGPT_DETECTOR_CHANNEL_REPAIR_REMOTE_AUDIT
 
 
-## 13. Git/checkpoint
+## 16. Git Safety
 
-Git safety rules from AGENTS.md remain active.
+Forbidden:
 
-No reset --hard
-No rebase
-No amend
-No stash
-No clean
-No force push
+- git reset --hard
+- git rebase
+- git commit --amend
+- git stash
+- git clean
+- force push
+- history rewrite
 
-At completion:
+Unknown pre-existing files or modifications:
 
-CURRENT_TASK Status =
+- preserve them;
+- do not stage them;
+- STOP if they prevent safe execution.
+
+
+## 17. Checkpoint Protocol
+
+Use meaningful recoverable checkpoints.
+
+Recommended:
+
+1. canonical implementation + contract tests
+2. controlled external sync
+3. six-case detector regression
+4. broader regression
+5. final Supervisor handoff
+
+When a stage is L0-L1 and its gate passes:
+
+continue automatically.
+
+Do not stop merely because a checkpoint was completed.
+
+Only STOP for the task-defined escalation conditions.
+
+
+## 18. Final State
+
+On successful completion:
+
+`handoff/CURRENT_TASK.md`
+
+Status:
+
 READY_FOR_SUPERVISOR_AUDIT
 
-EXECUTOR_STATE Status =
+`handoff/EXECUTOR_STATE.yaml`
+
+status:
+
 READY_FOR_SUPERVISOR_AUDIT
 
-Commit and push task branch.
+Commit and push all authorized work.
+
+Report actual remote HEAD.
 
 Then STOP.
 
+Do NOT automatically begin:
 
-## Success
+- deeper PROP-01 investigation
+- A2 ground-truth audit
+- threshold experiments
+- detector replacement
 
-PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
+
+## 19. Success Definition
+
+DETECTOR_RGB_BGR_CONTRACT_REPAIR_V1
 = READY_FOR_SUPERVISOR_AUDIT
 
-No product repair is authorized.
+Required:
+
+- verified RGB/BGR product contract repaired;
+- intended RGB reaches detector network;
+- original internal RGB contract preserved;
+- frozen detector parameters unchanged;
+- targeted contract tests pass;
+- external RC1 synchronized through controlled mechanism;
+- locked-case impact recorded;
+- broader regression recorded;
+- no threshold tuning;
+- no A2-specific rescue logic;
+- PROP-01 remains OPEN;
+- A2 case validity remains outside this task.
+
+NEXT:
+
+CHATGPT_DETECTOR_CHANNEL_REPAIR_REMOTE_AUDIT

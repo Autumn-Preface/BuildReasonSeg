@@ -216,8 +216,10 @@ class DetectorRuntime:
         import torch
 
         model = self.load()
+        # Internal tiles are RGB; Ultralytics NumPy inputs use BGR before preprocessing.
+        api_tile = np.ascontiguousarray(tile_rgb[..., ::-1])
         with torch.no_grad():
-            results = model.predict(source=tile_rgb, imgsz=self.imgsz, conf=self.conf,
+            results = model.predict(source=api_tile, imgsz=self.imgsz, conf=self.conf,
                                     max_det=self.max_det, verbose=False, retina_masks=False,
                                     device=self.device if self.device != "cpu" else "cpu")
         output = []
