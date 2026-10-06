@@ -1417,3 +1417,15 @@ Do NOT:
 The dedicated harness revalidation exited 1: 27 passed / 15 errors. All 15 errors occurred in pytest temporary-directory fixture setup because the supplied nested --basetemp parent did not exist (WinError 3). The previous 40-pass invocation covered an earlier harness/test revision. Per section 39, execution stops with evidence; no rerun or automatic repair was performed. No external preflight, formal freeze, real candidate, or GT audit has run.
 
 See docs/task8c_final_demo_v1.md and evaluation/task8c_final_demo_v1.json. Supervisor disposition is required before continuing; no formal attempt has been consumed.
+
+
+# Supervisor continuation — 2026-10-07
+
+Disposition: TASK8C_FINAL_DEMO_V1 = STOP_VALID / CONTINUE_AUTHORIZED. Accepted task-branch remote HEAD: 44a7dd1c3c3c8afe7ef1a0a569619017a7d4e4ea. Continue the same branch. Preserve prior STOP evidence. Runner/evaluator/tests bytes must not change. Only the first test invocation basetemp was corrected to a fresh path under an existing TEMP parent. Same HEAD revision: 42 passed / exit 0; all three harness SHA256 values unchanged. The prior STOP gate is superseded by this explicit continuation. Proceed with original external/static gates and pushed formal freeze before any real inference. All no-retry, automatic-reference, GT embargo, source/governance immutability and final audit rules remain in force.
+
+
+# Executor external-preflight STOP checkpoint — 2026-10-07
+
+Authorized same-revision dedicated test rerun: 42/42 PASS / exit 0; all runner/evaluator/test bytes unchanged. External 135/135, check_setup READY and all four TIFF identity gates PASS. However check_setup imported Ultralytics, which fell back from the uncreated nested task TEMP cache to the external working directory and created Ultralytics/settings.json (606 bytes; SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf). This persistent external config file is outside section 34 allowed write roots. It is preserved without deletion, relocation or cleanup. Per sections 32/34/35/39, STOP before formal freeze or model execution.
+
+Historical output (1543 files, including mtime), input (6 files), protected model assets (20 file byte/SHA identities), existing logs (327 files), external source/config 135/135 and source_manifest remain equal to accepted predecessor evidence. No formal runner invocation, real candidate attempt, model inference or GT audit has occurred. The settings file is not normalized into an accepted historical baseline. Supervisor disposition is required before continuation.

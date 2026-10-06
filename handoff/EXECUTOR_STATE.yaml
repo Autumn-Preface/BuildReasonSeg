@@ -3,15 +3,22 @@ task_id: TASK8C_FINAL_DEMO_V1
 status: STOPPED_FOR_SUPERVISOR
 executor: CODEX
 branch: eval/task8c-final-demo-v1
-head: 92f28133931231d16b6053aca253b9e5073955ae
+head: 44a7dd1c3c3c8afe7ef1a0a569619017a7d4e4ea
 completed:
 - Required canonical read order and exact fetched predecessor verified.
 - Evaluation branch created; full task book initially installed byte-for-byte.
 - Evaluation-only runner, zero-model-call evaluator, and dedicated fake tests written.
 - Earlier 40-test run passed; current 42-test invocation errors persisted transparently.
-current_step: STOP_DEDICATED_HARNESS_TEST_GATE
-next_action: Supervisor review of STOP evidence; no further execution before continuation
-  disposition.
+- Supervisor accepted STOP; same 42-test revision PASS with corrected existing-parent
+  basetemp.
+- External 135/135 source check and post-STOP source check PASS; manifest MATCH.
+- check_setup READY; four locked TIFF path/shape/RGB/format/SHA gates PASS.
+- Detected and preserved unauthorized external runtime settings file; no cleanup.
+- Accepted Task8B4 historical output/input/model/log byte identities preserved; output
+  mtime unchanged.
+current_step: STOP_UNAUTHORIZED_EXTERNAL_CONFIG_CREATION
+next_action: Supervisor disposition for preserved external Ultralytics/settings.json
+  and L0 cache-directory setup. Do not freeze or infer.
 tests_run:
 - name: Task8C dedicated fake tests - earlier revision
   result: 40 passed
@@ -19,28 +26,30 @@ tests_run:
 - name: Task8C dedicated fake tests - current revision
   result: 27 passed / 15 fixture setup errors (WinError 3 missing basetemp parent)
   exit_code: 1
+- name: Task8C current HEAD fake tests - corrected L0 invocation
+  result: 42 passed in 0.74s; harness bytes unchanged
+  exit_code: 0
 files_modified:
-- scripts/task8c_final_demo_runner.py
-- scripts/task8c_final_demo_evaluate.py
-- tests/test_task8c_final_demo.py
 - docs/task8c_final_demo_v1.md
 - evaluation/task8c_final_demo_v1.json
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
 uncommitted_changes: true
 blocked_on_supervisor: true
-block_reason: 'CURRENT_TASK section 39: dedicated tests are not 100% green. Missing
-  nested basetemp parent caused 15 fixture setup errors; no self-repair or rerun.'
+block_reason: check_setup created external Ultralytics/settings.json outside allowed
+  new run/log roots. File preserved; no cleanup or rerun.
 last_checkpoint:
-  commit: null
-  pushed: null
+  commit: 44a7dd1c3c3c8afe7ef1a0a569619017a7d4e4ea
+  pushed: true
 next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
 formal_runner_invocation_count: 0
 real_candidates_attempted: 0
 no_model_inference: true
-external_preflight: NOT_RUN
+external_preflight: 135/135 + READY + TIFF gates PASS; unexpected external runtime
+  config creation STOP
 formal_freeze: NOT_CREATED
 gt_audit: NOT_STARTED
 no_product_change: true
 no_governance_change: true
 governance_staleness_acknowledged: true
+runner_evaluator_tests_unchanged: true
