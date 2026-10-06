@@ -1,1754 +1,826 @@
-# CURRENT_TASK — TASK8C_FINAL_DEMO_V1
-
-## 0. Metadata
-
-```text
-Task ID:
-TASK8C_FINAL_DEMO_V1
+# CURRENT_TASK - TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
 
 Status:
-READY_FOR_SUPERVISOR_AUDIT
+IN_PROGRESS
 
-Decision owner:
-ChatGPT Supervisor
+Decision owner: ChatGPT Supervisor
+Executor: CODEX
+Next gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
 
-Authorized executor:
-CODEX
+## Supervisor task authorization - verbatim
 
-Project phase:
-RC1_FINAL_DEMO
+TASK AUTHORIZATION
+
+Task ID:
+TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
+
+Model:
+GPT-6.1 Sol
+
+Reasoning:
+极高
+
+Mode:
+DIAGNOSIS ONLY — NO REPAIR
 
 Accepted predecessor:
-TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
+TASK8C_FINAL_DEMO_V1 = ACCEPT
 
 Accepted predecessor branch:
-fix/task8b4-run-isolated-output-layout-v1
-
-Accepted predecessor remote HEAD:
-92f28133931231d16b6053aca253b9e5073955ae
-
-Required task branch:
 eval/task8c-final-demo-v1
 
+Accepted remote HEAD:
+764a805ef7d9651bfffd27dfaeb5808e8c21df1f
+
+Required new branch:
+diag/task8d-above-target-chain-v1
+
 Next gate:
-CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
-```
+CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
 
 
-# 1. Supervisor Disposition
+# 1. Purpose
 
-Task 8B.4 is formally ACCEPTED by the ChatGPT Supervisor.
+This task performs a post-Final-Demo scientific diagnosis of the cleanest frozen failure:
 
-Accepted engineering state includes:
-
-```text
-RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED
-external source/config identity = 135/135
-external check_setup = READY
-external complete suite = 150 passed
-```
-
-Current scientific limitations remain:
-
-```text
-MEM-01  = CLOSED
-MASK-01 = CLOSED_ENGINEERING_HARDENING
-REF-01  = ACTIVE_RESIDUAL_SELECTION_LIMITATION
-PROP-01 = OPEN_ENGINEERING_DEFECT
-
-REF-01:
-  right = stable
-  above = repaired
-  left  = residual selection limitation
-  below = residual selection limitation
-
-PROP-01:
-  A2 zero proposals remains OPEN
-```
-
-No repair is authorized by this task.
-
-This task is an **evaluation/demo milestone only**.
-
-
-# 2. Governance Staleness Note
-
-At the accepted predecessor HEAD, `governance/PROJECT_STATE.yaml` still records:
-
-```text
-8B.4 = NOT_STARTED
-final_demo = NOT_STARTED
-```
-
-The `8B.4 = NOT_STARTED` field is stale relative to the later explicit Supervisor acceptance at:
-
-```text
-92f28133931231d16b6053aca253b9e5073955ae
-```
-
-Do NOT edit governance files in Task 8C.
-
-The task book and actual Git evidence have higher execution relevance for this milestone.
-
-Final governance closure will occur only after Supervisor acceptance of Task 8C.
-
-
-# 3. Scientific Purpose
-
-The goal is to obtain one frozen, auditable qualitative end-to-end demonstration of the current RC1 system on the four immutable supported-domain candidates.
-
-The demonstrated chain is:
-
-```text
-Natural-language instruction
-→ Qwen 2B ProgramHead
-→ deterministic supported program
-→ YOLO26m proposals
-→ automatic largest reference selection
-→ spatial reasoning
-→ SAM/SAM2 + GRF + target-aware segmentation
-→ final mask / overlay
-```
-
-This task must answer:
-
-1. Does the current frozen RC1 execute the four supported spatial-reasoning types end to end?
-2. What reference does the automatic system actually select?
-3. What target mask does it actually output?
-4. How does that output compare with frozen GT after inference?
-5. Which successes and limitations are honestly visible?
-
-It does NOT attempt to improve the system.
-
-
-# 4. Mandatory Scientific Reuse Disclosure
-
-The following disclosure must appear verbatim in the final report:
-
-> The qualitative Demo candidates are deterministically selected from the frozen BuildSpatialReason v0.2 test split after the Task 7J final frozen-architecture test metrics were already consumed. Their qualitative reuse does not alter, replace, or re-select any reported Task 7J metric, model, threshold, seed, or architecture.
-
-Chinese translation must also be included:
-
-> 这些定性 Demo 候选是在 Task 7J 最终冻结架构测试指标已经被消耗之后，从冻结的 BuildSpatialReason v0.2 测试划分中确定性选取的。其定性复用不会改变、替换或重新选择任何已报告的 Task 7J 指标、模型、阈值、随机种子或架构。
-
-
-# 5. Frozen Supported Domain
-
-The Demo is restricted to:
-
-```text
-BuildSpatialReason v0.2
-WHU-EA-NativeVector v1.0
-WHU East Asia
-scene_disjoint_v1
-RGB optical aerial/overhead imagery
-tile-relative spatial reasoning
-```
-
-No claim may be made about:
-
-```text
-cross-city generalization
-broad geographic generalization
-cross-sensor generalization
-arbitrary aerial-image robustness
-SAR
-infrared
-raw multispectral imagery
-unrestricted natural language
-```
-
-
-# 6. Four Immutable Final-Demo Candidates
-
-Execution order is frozen:
-
-```text
-right → left → above → below
-```
-
-## 6.1 RIGHT
-
-```text
-relation:
-right
-
-sample_id:
-buildsr_test_1010_3_largest_to_right_of_to_nearest_df818125cf91
-
-image:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1010.tif
-
-SHA256:
-1688306c5edbffe4944809bd5a4db5e880d0e0fdfbec1f264eb691d24d395be2
-
-expected program:
-largest_to_right_of_to_nearest
-
-frozen prompt:
-最大建筑右侧最近的建筑
-
-GT reference tile_instance_id:
-4
-
-GT target tile_instance_id:
-3
-```
-
-
-## 6.2 LEFT
-
-```text
-relation:
-left
-
-sample_id:
-buildsr_test_1003_3_largest_to_left_of_to_nearest_f3fcb14e14c3
-
-image:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1003.tif
-
-SHA256:
-eea4edd0db9e079e20b6cd3cc9a20bde6312c4e24049ab6e8c64273259b50c38
-
-expected program:
-largest_to_left_of_to_nearest
-
-frozen prompt:
-最大建筑左侧最近的建筑
-
-GT reference tile_instance_id:
-26
-
-GT target tile_instance_id:
-24
-```
-
-
-## 6.3 ABOVE
-
-```text
-relation:
-above
+ABOVE case
 
 sample_id:
 buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
 
-image:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1008.tif
-
-SHA256:
-0efe8bc2e1d1f3f575ee7aa0670f4bf7e4a3d53350e923455dfcf5a2735095dd
-
-expected program:
+program:
 largest_to_above_to_nearest
 
-frozen prompt:
-最大建筑上方最近的建筑
+canonical GT reference:
+tile_instance_id = 4
 
-GT reference tile_instance_id:
-4
+canonical GT target:
+tile_instance_id = 6
 
-GT target tile_instance_id:
-6
-```
+Frozen Task 8C result:
 
+runtime = SUCCESS
+automatic reference proposal id = 5
 
-## 6.4 BELOW
+selected-reference best GT instance = 4
+reference IoU with canonical GT reference = 0.9097432024169184
+reference identity match = true
 
-```text
-relation:
-below
+predicted target best-overlap GT instance = 7
+predicted target best GT IoU = 0.48158096699923253
 
-sample_id:
-buildsr_test_1009_3_largest_to_below_to_nearest_bd900ccef450
+canonical target IoU = 0.07762201453790239
+canonical target Dice = 0.14406167188629246
 
-image:
-C:\D\resources\Satellite dataset Ⅱ (East Asia)\1. The cropped image data and raster labels\test\image\1009.tif
+semantic status:
+TARGET_IDENTITY_MISMATCH
 
-SHA256:
-c22134e671f2d0b70b9231c8e1fea1664b7e89f57b5e26967e1828b3f8e323d7
 
-expected program:
-largest_to_below_to_nearest
+This case is selected because:
 
-frozen prompt:
-最大建筑下方最近的建筑
+Reference identity is already correct,
+but Target identity is wrong.
 
-GT reference tile_instance_id:
-3
+Therefore it allows diagnosis of the downstream:
 
-GT target tile_instance_id:
-2
-```
+Reference
+→ geometric relation representation
+→ nearest representation
+→ field composition / competition
+→ visual prototype similarity
+→ decoder
+→ final dense mask
 
+without REF-01 identity failure as the primary confounder.
 
-# 7. Important Historical-Evidence Boundary
 
-Historical P1D12 proposal counts and historical REF-01 proposal IDs were produced before the current final detector/input-contract state.
+# 2. Scientific correction / frozen understanding
 
-They are historical forensic evidence only.
+Do NOT describe the current RC1 target stage as:
 
-Do NOT use historical values such as:
+"select one target proposal"
 
-```text
-right selected id 1
-left selected id 14 / GT-covered id 30
-above selected id 5
-below selected id 1 / GT-covered id 2
-```
+That is not the current frozen implementation.
 
-as current Demo oracles.
+The actual RC1 core chain is:
 
-Do NOT require current proposal counts to equal historical P1D12 counts.
+reference mask
+→ P_dir
+→ P_near
+→ W = clamp(P_dir * P_near)
+→ A_fixed = W / sum(W)
+→ projected SAM2 visual features F
+→ q = Σ A_i F_i
+→ C = cosine(F_i, q)
+→ D-B1 decoder
+→ logits
+→ bilinear upsample
+→ logits > 0
+→ dense target mask
 
-Do NOT pass any historical proposal ID through `--reference-id`.
+Relevant frozen source:
 
-Current Final Demo must observe the current production pipeline from scratch.
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
 
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
+task7d_global_competition_decoder.py
 
-# 8. Final Demo Mode
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
+task6z_field_composition.py
 
-All four cases MUST use:
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
+geometric_relation_field_v02.py
 
-```text
-AUTOMATIC REFERENCE MODE
-```
+delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
+nearest_boundary_field.py
 
-Forbidden during the formal Final Demo:
 
-```text
---reference-id
---inspect-proposals
-manual reference selection
-manual proposal selection
-manual target selection
-```
+# 3. Absolute prohibitions
 
-There is no Assisted-Mode rescue in Task 8C.
+This milestone MUST NOT:
 
-If automatic reference selection is wrong, preserve that result.
+- rerun Task 8C formal runner
+- execute predict.py
+- execute DetectorRuntime
+- execute Sam2Runtime
+- execute Db1Runtime
+- execute Qwen / ProgramHead
+- load any model checkpoint for inference
+- invoke Ultralytics
+- invoke Transformers inference
+- use --reference-id
+- use --inspect-proposals
+- retry any Final Demo case
+- change any Task 8C artifact
+- change any external RC1 formal output
+- change product source
+- change model weights
+- change thresholds
+- change ranking
+- train anything
+- modify governance
+- implement any repair
 
+No new model inference of any kind is authorized.
 
-# 9. No-Retry Rule
+This is an offline forensic / scientific diagnosis only.
 
-Each candidate may be executed exactly once.
 
-Formal execution:
+# 4. Git preflight
 
-```text
-RIGHT  = one attempt
-LEFT   = one attempt
-ABOVE  = one attempt
-BELOW  = one attempt
-```
+Read in canonical order:
 
-No individual retry.
-
-No prompt retry.
-
-No altered paraphrase.
-
-No second detector pass.
-
-No Assisted Mode after failure.
-
-No re-running successful cases for a prettier image.
-
-A runtime failure remains part of the Final Demo evidence.
-
-
-# 10. Language Driver Rules
-
-Use the proven Task 8B.3 interactive-driver semantics or a newly isolated equivalent with dedicated tests.
-
-The formal prompt strings are frozen in §6.
-
-For each case:
-
-### Direct confirmation
-
-Answer:
-
-```text
-Y
-```
-
-ONLY when:
-
-```text
-initial_program == expected_program
-```
-
-Otherwise answer:
-
-```text
-N
-```
-
-Classification:
-
-```text
-DIRECT_CORRECT
-LANGUAGE_ERROR_SUPPORTED_WRONG
-```
-
-
-### Suggestion confirmation
-
-Answer:
-
-```text
-Y
-```
-
-ONLY when:
-
-```text
-suggested_program == expected_program
-```
-
-Otherwise:
-
-```text
-N
-```
-
-Classification:
-
-```text
-SUGGESTION_CORRECT
-SUGGESTION_WRONG
-```
-
-
-### Runtime fallback request
-
-If the product asks:
-
-```text
-是否进入有限兼容模式？ [Y/N]
-```
-
-answer:
-
-```text
-N
-```
-
-Task 8C is a Qwen-first Final Demo.
-
-Do not convert Qwen runtime failure into fallback success.
-
-
-# 11. Harness Architecture
-
-Create:
-
-```text
-scripts/task8c_final_demo_runner.py
-scripts/task8c_final_demo_evaluate.py
-tests/test_task8c_final_demo.py
-```
-
-The two operational roles MUST remain separate.
-
-## Runner
-
-`task8c_final_demo_runner.py`:
-
-- knows candidates, image hashes, prompts and expected programs;
-- drives the external `predict.py`;
-- contains NO GT mask reconstruction logic;
-- contains NO GT reference/target decision logic;
-- does NOT call `--reference-id`;
-- does NOT call `--inspect-proposals`;
-- invokes each formal candidate at most once;
-- records transcripts and objective runtime evidence.
-
-## Evaluator
-
-`task8c_final_demo_evaluate.py`:
-
-- performs ZERO model or detector calls;
-- runs only after all four formal runs are complete;
-- reads frozen output artifacts;
-- reconstructs native-vector GT reference/target masks;
-- computes post-hoc metrics and visual review panels;
-- must not modify any RC1 output.
-
-
-# 12. Harness Unit Gates Before Real Inference
-
-Dedicated tests must prove at least:
-
-1. candidate order is exactly right → left → above → below;
-2. all four sample IDs are exact;
-3. all four raster SHA256 values are exact;
-4. all four prompts are exact;
-5. all expected programs are exact;
-6. direct prompt answers Y only for the expected program;
-7. wrong supported program receives N;
-8. correct suggestion receives Y;
-9. wrong suggestion receives N;
-10. runtime fallback receives N;
-11. no case can be retried by the runner;
-12. `--reference-id` cannot appear in formal argv;
-13. `--inspect-proposals` cannot appear in formal argv;
-14. GT/native-vector paths are not accessed by the runner;
-15. evaluator contains no detector/model execution;
-16. evaluator cannot call `predict.py`;
-17. runner preserves per-case timeout;
-18. a failed case does not stop later cases;
-19. no output directory is cleared or deleted;
-20. generated evidence is deterministic from frozen runtime results.
-
-Required gate:
-
-```text
-python -m pytest tests/test_task8c_final_demo.py -q
-```
-
-must be 100% PASS before formal execution.
-
-
-# 13. Preflight
-
-Read in order:
-
-1. `AGENTS.md`
-2. `governance/PROJECT_STATE.yaml`
-3. `governance/DECISIONS.md`
-4. `handoff/CURRENT_TASK.md`
-5. `handoff/EXECUTOR_STATE.yaml`
+1. AGENTS.md
+2. governance/PROJECT_STATE.yaml
+3. governance/DECISIONS.md
+4. handoff/CURRENT_TASK.md
+5. handoff/EXECUTOR_STATE.yaml
 
 Then:
 
-```text
 git fetch
-```
 
 Verify:
 
-```text
-fix/task8b4-run-isolated-output-layout-v1
-remote HEAD =
-92f28133931231d16b6053aca253b9e5073955ae
-```
-
-If the remote predecessor advanced unexpectedly:
-
-inspect only and STOP unless the additional commits are clearly Supervisor-authorized state-only changes.
-
-Do NOT reset/rebase/amend/stash/clean.
+origin/eval/task8c-final-demo-v1
+=
+764a805ef7d9651bfffd27dfaeb5808e8c21df1f
 
 Create:
 
-```text
-eval/task8c-final-demo-v1
-```
+diag/task8d-above-target-chain-v1
 
-from the accepted predecessor.
+from that exact accepted HEAD.
 
+Unknown branch/HEAD/diff:
+inspect then STOP.
 
-# 14. External RC1 Integrity Preflight
+No reset --hard / rebase / amend / stash / clean / force push.
 
-External root:
 
-```text
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
-```
+# 5. Frozen evidence lock
 
-Before formal inference:
+Task 8C evidence is READ ONLY.
 
-### Source identity
+Read:
 
-Existing sync helper `--check`:
+evaluation/task8c_final_demo_v1.json
 
-```text
-checked = 135
-match = 135
-missing = 0
-mismatch = 0
-```
+Locate the ABOVE frozen case and verify all recorded artifact identities.
 
+The external frozen run root is expected to be:
 
-### Setup
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\
+inference\output\1008
 
-```text
-python check_setup.py
-```
+Required frozen files include at least:
 
-must report:
-
-```text
-BuildReasonSeg environment: READY
-```
-
-
-### Asset snapshot
-
-Record byte length + SHA256 for all protected:
-
-```text
-detector weights
-decoder weights
-SAM2 weights/config
-ProgramHead weights
-Qwen asset files
-model metadata/config
-```
-
-No value may change during the milestone.
-
-
-# 15. Candidate Identity Preflight
-
-For all four images verify:
-
-```text
-exists = true
-size = 512 × 512
-mode = RGB
-format = TIFF
-SHA256 = exact §6 lock
-```
-
-Any mismatch:
-
-```text
-STOP
-```
-
-No substitute image is permitted.
-
-
-# 16. Output Preflight
-
-Snapshot current external:
-
-```text
-inference/output/
-```
-
-including path, byte length, SHA256 and mtime for all pre-existing files.
-
-Do NOT delete or clear old outputs.
-
-Task 8B.4 allocator decides the new run roots.
-
-Record the actual allocated run root after each case.
-
-Historical output must remain intact.
-
-
-# 17. Formal Final-Demo Freeze
-
-Before the first real case, persist:
-
-```text
-FORMAL_FINAL_DEMO_FREEZE_V1
-
-task branch HEAD
-runner SHA256
-evaluator SHA256
-dedicated-test SHA256
-
-external source manifest SHA256
-external 135/135 status
-
-check_setup READY
-
-protected asset hashes
-
-candidate sample IDs
-candidate raster paths
-candidate raster SHA256 values
-
-frozen prompts
-expected programs
-
-execution order
-
-output inventory hash
-```
-
-Commit + push the freeze checkpoint BEFORE model inference.
-
-
-# 18. Formal Execution
-
-Exactly one invocation of the final runner:
-
-```text
-<ENV_PYTHON> scripts/task8c_final_demo_runner.py
-```
-
-Runner executes the four cases once each in frozen order.
-
-For each case use actual external RC1:
-
-```text
-predict.py
---image "<locked raster>"
---prompt "<frozen prompt>"
-```
-
-No other inference option changing semantics.
-
-Default automatic reference mode only.
-
-
-# 19. Per-Case Runtime Evidence
-
-Record:
-
-```text
-relation
-sample_id
-image path
-image SHA256
-prompt
-expected_program
-
-initial_program
-initial_confidence
-suggested_program
-driver_decision
-language_status
-
-exit_code
-runtime_status
-error_code
-error_reason
-
-raw_proposal_count
-merged_proposal_count
-tile_count
-
-reference_mode
-reference_id
-reference_area
-reference_confidence
-reference_bbox
-
-direction
-reasoning_context
-
-mask_area
-target_centroid
-timings
-
-run_root
-mask_path
-overlay_path
-diagnostics_path
-```
-
-For every written artifact record:
-
-```text
-bytes
-SHA256
-```
-
-
-# 20. SUCCESS Semantics
-
-Retain GOV-D005.
-
-A runtime result:
-
-```text
-status = SUCCESS
-```
-
-means only:
-
-```text
-validity_scope = RUNTIME_STRUCTURAL_ONLY
-semantic_status = NOT_EVALUATED
-```
-
-The runner must NOT label a SUCCESS result:
-
-```text
-SEMANTIC_SUCCESS
-CORRECT_TARGET
-DEMO_PASS
-```
-
-before GT audit.
-
-
-# 21. FAILED Semantics
-
-If a case fails:
-
-- preserve error code and reason;
-- preserve diagnostics;
-- require no fake mask;
-- require no fake overlay;
-- continue to the next locked case;
-- do not retry.
-
-A case-level runtime failure does NOT invalidate the formal procedure.
-
-
-# 22. GT Embargo
-
-Native-vector GT must not influence formal inference.
-
-The evaluator may begin only after:
-
-```text
-all four child processes have exited
-AND
-formal runtime-results JSON has been written
-AND
-all output artifact hashes have been frozen
-```
-
-After this point:
-
-```text
-NO model rerun
-NO prompt rerun
-NO reference override
-NO source change
-```
-
-GT is evaluation-only.
-
-
-# 23. Frozen GT Reconstruction
-
-Reuse the existing WHU-native-vector / BuildSpatialReason v0.2 infrastructure.
-
-For each candidate reconstruct:
-
-```text
-canonical GT reference mask
-canonical GT target mask
-all GT building instance masks for that tile
-```
-
-Required frozen IDs are those in §6.
-
-Verify reconstructed masks are nonempty and consistent with existing native-vector metadata.
-
-Do NOT regenerate or alter annotations.
-
-
-# 24. Reference Audit Without Detector Rerun
-
-For a runtime SUCCESS case:
-
-use:
-
-```text
+diagnostics/result.json
+diagnostics/proposals.json
 diagnostics/reference_context_mask.png
-result.json -> reasoning_context.origin
-result.json -> reasoning_context.size
-```
+diagnostics/maps.npz
+masks/1008_mask.png
+overlays/1008_overlay.png
 
-to map the frozen selected-reference context mask back to the original 512×512 tile coordinate system.
+Before analysis:
 
-Use the same deterministic crop-to-global mapping semantics as the product `context_to_global()`.
+- verify each file against the SHA256 identity recorded in Task 8C;
+- verify runtime_results.json remains:
+  SHA256 =
+  2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca
+- verify Task 8C evidence files are not modified.
 
-Do NOT rerun detector to recover the reference mask.
-
-Then compute against all GT building masks:
-
-```text
-selected_reference_best_gt_instance_id
-selected_reference_best_gt_iou
-selected_reference_gt_reference_iou
-reference_identity_best_overlap_match
-```
-
-Definition:
-
-```text
-reference_identity_best_overlap_match =
-    best_gt_instance_id == canonical_GT_reference_id
-    AND best_gt_iou > 0
-```
-
-This is an identity-best-overlap fact, NOT a segmentation-quality threshold pass.
+If any frozen identity differs:
+STOP.
 
 
-# 25. Target Audit
+# 6. Primary diagnostic question
 
-For every runtime SUCCESS final mask compute:
+Answer:
 
-```text
-target_gt_iou
-target_gt_dice
-predicted_mask_area
-gt_target_area
+At what earliest observable stage does the canonical target
+GT instance 6
+lose to the eventual wrong building
+GT instance 7?
 
-best_gt_instance_id
-best_gt_instance_iou
+The diagnosis must follow:
 
-target_identity_best_overlap_match
-```
+Reference geometry
+→ P_dir
+→ P_near
+→ W
+→ A
+→ C
+→ logits
+→ probability
+→ final mask
 
-Definition:
 
-```text
-target_identity_best_overlap_match =
-    best_gt_instance_id == canonical_GT_target_id
-    AND best_gt_instance_iou > 0
-```
+# 7. Ground truth
+
+Use the exact same frozen WHU native-vector truth used by Task 8C.
+
+Do not regenerate annotations.
+
+Canonical:
+
+reference = instance 4
+target = instance 6
+
+Frozen observed wrong best-overlap target:
+instance 7
+
+Verify these identities before analysis.
+
+Also reconstruct all GT building-instance masks in tile 1008,
+because candidate-level rankings must be reported for the full relevant set,
+not only instance 6 and 7.
+
+
+# 8. Context mapping
+
+Read frozen:
+
+result.json -> reasoning_context.origin / size
+
+Map native GT masks into the exact frozen reasoning context.
+
+Verify:
+
+- canonical ref 4 is represented;
+- canonical target 6 is represented;
+- wrong instance 7 is represented;
+- no mapping/resizing mismatch;
+- final Task8C target mask remains byte-identical.
+
+No repainting or manual mask editing.
+
+
+# 9. Frozen map analysis
+
+Load ONLY the already-saved:
+
+diagnostics/maps.npz
+
+It must contain:
+
+P_dir
+P_near
+W
+A
+C
+logits
+probability
+
+Verify shapes and finite values.
+
+Do not recompute these seven frozen automatic-reference maps.
+
+They are the primary evidence.
+
+
+# 10. Candidate-mask aggregation rule
+
+For 512x512 maps:
+
+use exact native GT masks directly.
+
+For 64x64 maps:
+
+downsample each binary GT mask with area interpolation to a fractional occupancy mask.
+
+Do NOT threshold the fractional mask.
+
+For a 64x64 map X and GT instance occupancy M:
+
+mass(X,M) =
+sum(X * M)
+
+mean(X,M) =
+sum(X * M) / sum(M)
+
+For A specifically:
+
+candidate_attention_mass =
+sum(A * M)
+
+because A is the frozen global competition distribution.
+
+For W:
+
+candidate_W_mass =
+sum(W * M)
+
+For C:
+
+candidate_C_mean =
+sum(C * M) / sum(M)
+
+For 512 logits/probability:
+
+candidate_logit_mean =
+mean(logits over exact GT mask)
+
+candidate_probability_mean =
+mean(probability over exact GT mask)
+
+candidate_positive_logit_fraction =
+fraction of exact GT pixels where logits > 0
+
+For final predicted binary mask:
+
+compute IoU with every GT instance.
+
+No new acceptance threshold may be introduced.
+
+
+# 11. Required per-instance table
+
+For every GT building instance inside the reasoning context, record:
+
+instance_id
+GT area
+relation validity using the existing canonical relation implementation
+canonical boundary distance to reference if the existing frozen implementation exposes it
+
+P_dir mass / mean
+P_near mass / mean
+W mass / mean
+A attention mass
+C mean
+logit mean
+probability mean
+positive-logit fraction
+final predicted-mask IoU
+
+Important:
+
+For canonical relation validity and boundary distance,
+reuse the existing canonical repository implementation.
+
+Do NOT invent a new geometry predicate or distance formula.
+
+Locate and record the exact function/module used.
+
+If no authoritative canonical implementation can be located:
+record that field as NOT_ESTABLISHED rather than inventing one.
+
+
+# 12. Target 6 vs wrong instance 7 comparison
+
+Produce an explicit stage table:
+
+stage
+score_target6
+score_wrong7
+delta_6_minus_7
+which_instance_is_favoured
+
+At minimum:
+
+P_dir
+P_near
+W mass
+A mass
+C mean
+logit mean
+probability mean
+positive-logit fraction
+final mask IoU
+
+No threshold.
+
+"favoured" simply means numerical comparison under the predeclared statistic.
+
+
+# 13. Rank trajectory
+
+For every relevant GT instance, rank the appropriate stage statistic.
+
+Report the ranks of:
+
+canonical target 6
+wrong instance 7
+
+for:
+
+W mass
+A mass
+C mean
+logit mean
+probability mean
+final mask IoU
+
+Also report the top-5 instance ids at every stage.
+
+Do not change scoring statistics after viewing the result.
+
+
+# 14. First-divergence rule
+
+Determine:
+
+FIRST_OBSERVED_TARGET_DIVERGENCE_STAGE
+
+using the fixed stage order:
+
+W
+→ A
+→ C
+→ logits
+→ probability
+→ final mask
+
+The first stage where instance 7 is favoured over canonical instance 6
+under the predeclared statistic
+is the first observed divergence.
+
+If neither 6 nor 7 is the main competitor at that stage,
+report that fact and the actual top instance.
+
+Do not force a root-cause label.
+
+
+# 15. Reference-shape counterfactual — deterministic fields only
+
+This is NOT model inference.
+
+Use canonical GT reference mask instance 4 and the exact frozen deterministic field code to recompute ONLY:
+
+P_dir_GTref
+P_near_GTref
+W_GTref
+A_GTref = W_GTref / sum(W_GTref)
+
+No SAM2.
+No q.
+No C.
+No decoder.
+No checkpoint.
+
+Compare automatic-reference fields versus canonical-GT-reference fields.
+
+For target 6 and wrong 7 report:
+
+W mass
+A mass
+delta target6-minus-wrong7
 
 Also report:
 
-```text
-reference_identity_best_overlap_match
-target_identity_best_overlap_match
-```
+field difference statistics
+and rank changes.
 
-Do NOT introduce a new IoU pass threshold.
+Purpose:
 
-Do NOT tune any threshold after seeing these values.
+test whether the ~0.91-but-not-perfect automatic reference mask
+is sufficient to explain the downstream geometric preference.
 
+Interpretation must remain conservative:
 
-# 26. Semantic-Chain Classification
+- if GT-reference fields restore target6 preference,
+  reference-shape residual is a plausible contributor;
+- if GT-reference fields still favour wrong7,
+  reference-shape residual cannot be the sole explanation;
+- otherwise:
+  MIXED / NOT RESOLVED.
 
-For evidence organization only, use these exact enums:
+Do not call this a causal proof.
 
-```text
-CHAIN_IDENTITY_MATCH
-REFERENCE_IDENTITY_MISMATCH
-TARGET_IDENTITY_MISMATCH
-REFERENCE_AND_TARGET_IDENTITY_MISMATCH
-RUNTIME_FAILED
-LANGUAGE_FAILED
-NOT_EVALUABLE_MISSING_ARTIFACT
-```
 
-Rules:
+# 16. Frozen D-B1 mechanism audit
 
-### CHAIN_IDENTITY_MATCH
+Using source inspection only, document exactly:
 
-```text
-reference_identity_best_overlap_match = true
-AND
-target_identity_best_overlap_match = true
-```
+W
+A_fixed
+q
+C
+decoder inputs
+output threshold
 
-This does NOT mean perfect mask quality.
+For D-B1 specifically establish from source whether:
 
-Continuous IoU/Dice values must still be reported.
+- A is learned or deterministic;
+- q is derived from A-weighted projected visual features;
+- C is cosine similarity;
+- target proposals are or are not used;
+- graph construction is or is not used;
+- the final mask is selected as an instance or emitted densely;
+- the final hard runtime validity gate checks target identity, nearest identity,
+  or only structural/directional properties.
 
-### REFERENCE_IDENTITY_MISMATCH
+Every conclusion must cite exact source path + line/function in the report.
 
-reference mismatch but target identity matches.
 
-### TARGET_IDENTITY_MISMATCH
+# 17. Runtime guard audit
 
-reference identity matches but target identity does not.
+Inspect:
 
-### REFERENCE_AND_TARGET_IDENTITY_MISMATCH
+buildreasonseg/runtime/context.py
+buildreasonseg/runtime/pipeline.py
 
-both do not match.
+and the frozen ABOVE result's:
 
-### RUNTIME_FAILED
+directional_guard
 
-formal runtime failed before a final target mask exists.
+Answer:
 
-### LANGUAGE_FAILED
+What exactly must a wrong target satisfy in order for runtime to still return SUCCESS?
 
-the expected canonical program was not safely accepted/executed.
+Specifically distinguish:
 
-No case may be relabeled manually.
+- direction availability guard;
+- final centroid direction check;
+- nearest-target identity correctness;
+- GT identity correctness.
 
+Do not infer beyond the source.
 
-# 27. Review Images
 
-After GT evaluation, create one review PNG per relation:
-
-```text
-evaluation/task8c_final_demo_v1/right_review.png
-evaluation/task8c_final_demo_v1/left_review.png
-evaluation/task8c_final_demo_v1/above_review.png
-evaluation/task8c_final_demo_v1/below_review.png
-```
-
-Also create:
-
-```text
-evaluation/task8c_final_demo_v1/contact_sheet.png
-```
-
-Each per-case review should clearly show:
-
-```text
-A. original RGB input
-B. automatic selected reference + canonical GT reference boundary
-C. predicted target mask/overlay + canonical GT target boundary
-D. compact text summary:
-   program
-   runtime status
-   automatic reference ID
-   reference GT IoU
-   target GT IoU
-   target Dice
-   semantic-chain enum
-```
-
-Visualizations are evaluation-only.
-
-They must not influence inference.
-
-
-# 28. Review-Pack Accuracy
-
-Review PNGs must use the exact saved formal-run artifacts.
-
-Do NOT:
-
-- rerun prediction to obtain a better overlay;
-- substitute a different case;
-- manually repaint a mask;
-- crop away an obvious failure;
-- omit a failed candidate.
-
-If a case has no output mask, its review image must show:
-
-```text
-RUNTIME FAILED
-<error code>
-```
-
-alongside the original image and available diagnostics.
-
-
-# 29. Final-Demo Outcome
-
-The executor does NOT decide whether the project Demo is scientifically successful.
-
-It reports objective counts:
-
-```text
-cases_attempted
-language_expected_program_executed
-runtime_success
-runtime_failed
-
-chain_identity_match
-reference_identity_mismatch
-target_identity_mismatch
-both_identity_mismatch
-not_evaluable
-
-mean_target_iou_over_runtime_success
-mean_target_dice_over_runtime_success
-```
-
-Do not hide failures from aggregate statistics.
-
-
-# 30. No-Tuning / No-Rescue Statement
-
-Final evidence must explicitly state:
-
-```text
-candidate replacement = NONE
-prompt replacement = NONE
-prompt retry = NONE
-inference retry = NONE
-reference override = NONE
-inspect-before-run = NONE
-threshold tuning = NONE
-ranking tuning = NONE
-mask-quality tuning = NONE
-architecture change = NONE
-model change = NONE
-checkpoint change = NONE
-training = NONE
-dependency installation = NONE
-```
-
-This section is mandatory.
-
-
-# 31. Protected Historical Evidence
-
-Task 8C MUST NOT modify or overwrite:
-
-```text
-historical A1/A2/A3/A4/B1/B2 suite
-P1D12 inspect diagnostics
-REF-01 forensic evidence
-A2 forensic evidence
-Task 8B.4 historical output snapshot
-```
-
-The new run-isolated layout must create separate Final-Demo run roots.
-
-
-# 32. Product Immutability
-
-Forbidden modifications:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/**
-scripts/sync_advisor_rc1_delivery.py
-source_manifest.json
-external RC1 source/config
-model/**
-governance/**
-```
-
-Exception:
-
-none.
-
-If Final Demo exposes a product defect requiring code change:
-
-record it and STOP.
-
-Do not patch it inside Task 8C.
-
-
-# 33. Allowed Repository Changes
-
-Allowed:
-
-```text
-scripts/task8c_final_demo_runner.py
-scripts/task8c_final_demo_evaluate.py
-tests/test_task8c_final_demo.py
-
-docs/task8c_final_demo_v1.md
-evaluation/task8c_final_demo_v1.json
-evaluation/task8c_final_demo_v1/*.png
-
-handoff/CURRENT_TASK.md
-handoff/EXECUTOR_STATE.yaml
-```
-
-No other repository path is authorized.
-
-
-# 34. External Writes Allowed
-
-External writes are restricted to:
-
-```text
-inference/output/<new Final-Demo run roots>/**
-logs/task8c_final_demo_v1/**
-```
-
-plus unavoidable runtime logs naturally produced by the existing RC1.
-
-External source/config/model files are read-only.
-
-
-# 35. Post-Run Integrity
-
-After all inference/evaluation work:
-
-verify external:
-
-```text
-source/config 135/135 unchanged
-source_manifest unchanged
-protected assets unchanged
-inference/input unchanged
-all pre-existing inference/output files unchanged
-```
-
-Only newly created Task 8C run roots and authorized new Task 8C logs may be added.
-
-
-# 36. Required Evidence JSON
+# 18. Required visual evidence
 
 Create:
 
-```text
-evaluation/task8c_final_demo_v1.json
-```
+evaluation/task8d_above_target_chain_diagnosis_v1/
+
+with at least:
+
+01_reference_and_gt.png
+02_P_dir.png
+03_P_near.png
+04_W_and_A.png
+05_C.png
+06_logits_probability.png
+07_final_mask_vs_gt.png
+08_stage_trajectory.png
+contact_sheet.png
+
+All diagnostic maps must show boundaries for:
+
+GT reference 4
+GT target 6
+wrong instance 7
+
+using a clear legend.
+
+Do not alter underlying values for display.
+
+Heatmaps may normalize only for visualization;
+raw quantitative calculations must use frozen arrays.
+
+
+# 19. Required diagnosis JSON
+
+Create:
+
+evaluation/task8d_above_target_chain_diagnosis_v1.json
 
 Required top-level fields:
 
-```text
 task_id
 status
+accepted_predecessor
+task8c_head
+task8c_runtime_identity
+above_artifact_identity_verification
 
-starting_branch
-starting_head
-task_branch
-formal_freeze_commit
+source_paths
+source_function_trace
 
-scientific_reuse_disclosure
+sample_lock
+reference_lock
+target_lock
+wrong_instance_lock
 
-source_manifest_identity
-external_preflight
-protected_assets_before
-protected_assets_after
+reasoning_context
 
-candidate_lock
-runner_identity
-evaluator_identity
-dedicated_test_result
+frozen_maps_identity
+frozen_map_shapes
 
-formal_runner_invocation_count
-case_attempt_order
+all_gt_instance_stage_table
+target6_vs_wrong7
+rank_trajectory
+first_observed_target_divergence_stage
 
-cases
+canonical_reference_field_counterfactual
 
-gt_audit_started_after_runtime_freeze
-model_calls_during_gt_audit
+runtime_guard_audit
+db1_mechanism_audit
 
-aggregate
+model_calls
+detector_calls
+predict_calls
+checkpoint_loads
 
-legacy_output_unchanged
-input_unchanged
-protected_assets_unchanged
-source_identity_unchanged
+external_writes
+task8c_artifacts_unchanged
 
-no_candidate_replacement
-no_prompt_retry
-no_inference_retry
-no_reference_override
-no_inspect_pre_run
-no_threshold_tuning
-no_ranking_tuning
-no_model_change
-no_architecture_change
-no_training
-no_dependency_install
+diagnostic_figures
 
-review_artifacts
-```
-
-Each case must contain the §19 and §24–26 evidence.
+conclusions
+limitations
 
 
-# 37. Required Report
+# 20. Required scientific report
 
 Create:
 
-```text
-docs/task8c_final_demo_v1.md
-```
+docs/task8d_above_target_chain_diagnosis_v1.md
 
-It must include:
+Required structure:
 
-1. scope;
-2. frozen candidate table;
-3. reuse disclosure;
-4. formal freeze;
-5. language results;
-6. runtime results;
-7. reference post-hoc audit;
-8. target GT metrics;
-9. semantic-chain classifications;
-10. review-pack paths;
-11. no-retry/no-tuning statement;
-12. known limitations;
-13. explicit statement that final scientific verdict belongs to ChatGPT Supervisor.
-
-
-# 38. Git Checkpoints
-
-## Checkpoint 1 — Harness Ready
-
-Completed:
-
-```text
-runner
-evaluator
-dedicated tests 100% PASS
-preflight identities PASS
-```
-
-No real candidate has run.
-
-Commit + push.
+1. Question being diagnosed
+2. Why ABOVE is the clean case
+3. Frozen evidence / no-rerun guarantee
+4. Actual target mechanism in RC1
+5. Reference geometry audit
+6. P_dir / P_near analysis
+7. W / A analysis
+8. C prototype-similarity analysis
+9. Decoder logits / probability analysis
+10. Final mask analysis
+11. Target-6 vs wrong-7 trajectory
+12. Canonical-reference deterministic counterfactual
+13. First observed divergence
+14. Runtime SUCCESS guard explanation
+15. Evidence-supported diagnosis
+16. What remains unresolved
+17. Possible future research directions — hypotheses only, NO IMPLEMENTATION
+18. Questions worth discussing with the advisor
 
 
-## Checkpoint 2 — Formal Freeze
+# 21. Diagnosis conclusion vocabulary
 
-Persist:
+Do NOT use:
 
-```text
-FORMAL_FINAL_DEMO_FREEZE_V1
-```
+"fixed"
+"solved"
+"root cause proven"
 
-Commit + push.
+unless logically established, which is not expected here.
 
-No product change after this point.
+Prefer:
 
-
-## Checkpoint 3 — Formal Run Complete
-
-Exactly one runner invocation complete.
-
-All four candidates attempted.
-
-Raw runtime evidence and artifact hashes frozen.
-
-Commit + push evidence BEFORE GT evaluation if repository state permits.
-
-Do not rerun.
+FIRST_OBSERVED_DIVERGENCE
+PRIMARY_EVIDENCE_SUPPORTS
+PLAUSIBLE_CONTRIBUTOR
+NOT_SOLE_EXPLANATION
+MIXED
+UNRESOLVED
 
 
-## Checkpoint 4 — GT Audit + Review Pack
+# 22. No-repair rule
 
-Zero model calls.
+Even if the cause appears obvious:
 
-Post-hoc metrics and review images complete.
+DO NOT:
 
-Integrity checks complete.
+change P_dir parameters
+change P_near sigma
+change W
+change A normalization
+change prototype
+change D-B1
+change threshold
+add proposal selection
+add graph logic
+add a target-instance selector
+train a model
+change the architecture
 
-Commit + push.
-
-
-# 39. STOP Conditions
-
-STOP with evidence if:
-
-- accepted predecessor Git state conflicts;
-- unknown repository modifications exist;
-- external 135/135 preflight fails;
-- `check_setup.py` is not READY;
-- any locked raster hash mismatches;
-- dedicated harness tests are not 100% green;
-- formal runner would require product modification;
-- formal runner crashes after real execution begins;
-- a retry would be required;
-- GT evaluation would require detector/model rerun;
-- pre-existing output is modified;
-- protected asset hash changes;
-- source/config drift appears;
-- destructive Git operation appears necessary.
-
-Do not self-repair across these boundaries.
+This task ends at diagnosis.
 
 
-# 40. Git Safety
+# 23. Dedicated tests
 
-Forbidden:
+Create:
 
-```text
-git reset --hard
-git rebase
-git commit --amend
-git stash
-git clean
-force push
-history rewrite
-autonomous revert
-```
+tests/test_task8d_above_target_chain_diagnosis.py
 
-Unknown changes must be preserved.
+Tests must prove at minimum:
 
+- correct Task8C above sample lock;
+- frozen artifact identity verification;
+- no predict.py;
+- no DetectorRuntime;
+- no Sam2Runtime;
+- no Db1Runtime;
+- no torch.load checkpoint;
+- no Ultralytics;
+- no Transformers;
+- no subprocess model execution;
+- no external writes;
+- Task8C files opened read-only;
+- 64x64 fractional area mapping is deterministic;
+- candidate mass/mean formulas;
+- target6-vs-7 delta calculation;
+- ranking deterministic;
+- first-divergence ordering fixed;
+- no numeric pass threshold;
+- canonical-reference counterfactual contains deterministic fields only;
+- report/JSON consistency.
 
-# 41. Success Criterion of the Executor Task
-
-Task 8C executor completion means:
-
-```text
-formal procedure executed correctly
-+
-all four locked candidates attempted once
-+
-all evidence preserved
-+
-post-hoc GT audit completed without model rerun
-+
-review pack generated
-```
-
-It does NOT require:
-
-```text
-4/4 runtime success
-4/4 semantic-chain match
-high IoU
-visually perfect masks
-```
-
-A genuine failure is a valid scientific Final Demo result.
+All tests must PASS before final handoff.
 
 
-# 42. Final State
+# 24. Allowed repository changes
 
-On procedural completion:
+Only:
 
-```text
+scripts/task8d_above_target_chain_diagnosis.py
+tests/test_task8d_above_target_chain_diagnosis.py
+docs/task8d_above_target_chain_diagnosis_v1.md
+evaluation/task8d_above_target_chain_diagnosis_v1.json
+evaluation/task8d_above_target_chain_diagnosis_v1/*.png
 handoff/CURRENT_TASK.md
-Status:
-READY_FOR_SUPERVISOR_AUDIT
-```
-
-and:
-
-```text
 handoff/EXECUTOR_STATE.yaml
-status:
+
+No product source changes.
+No governance changes.
+No Task8C evidence changes.
+
+
+# 25. External writes
+
+NONE.
+
+All external RC1 files are READ ONLY.
+
+Diagnostic outputs belong only in repository evaluation/.
+
+
+# 26. Completion state
+
+On successful completion:
+
+CURRENT_TASK Status:
 READY_FOR_SUPERVISOR_AUDIT
-```
 
-Next gate:
+EXECUTOR_STATE status:
+READY_FOR_SUPERVISOR_AUDIT
 
-```text
-CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
-```
+next_gate:
+CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
 
-Commit and push all authorized evidence.
+Commit + push all evidence.
 
 Then STOP.
 
-Do NOT:
+Do not begin a repair task.
 
-- modify governance;
-- repair a failed Final-Demo case;
-- run Assisted Mode;
-- replace any candidate;
-- start a new model/algorithm task.
 
-# Executor STOP checkpoint — 2026-10-07
+# 27. Final executor summary
 
-The dedicated harness revalidation exited 1: 27 passed / 15 errors. All 15 errors occurred in pytest temporary-directory fixture setup because the supplied nested --basetemp parent did not exist (WinError 3). The previous 40-pass invocation covered an earlier harness/test revision. Per section 39, execution stops with evidence; no rerun or automatic repair was performed. No external preflight, formal freeze, real candidate, or GT audit has run.
+Report objectively:
 
-See docs/task8c_final_demo_v1.md and evaluation/task8c_final_demo_v1.json. Supervisor disposition is required before continuing; no formal attempt has been consumed.
+- first observed divergence stage;
+- target6 vs wrong7 trajectory;
+- whether canonical-reference field counterfactual changes the result;
+- whether the failure is already visible before C;
+- whether C introduces/reinforces the error;
+- whether decoder logits introduce/reinforce the error;
+- why runtime structural SUCCESS permits the semantic error;
+- unresolved questions.
 
-
-# Supervisor continuation — 2026-10-07
-
-Disposition: TASK8C_FINAL_DEMO_V1 = STOP_VALID / CONTINUE_AUTHORIZED. Accepted task-branch remote HEAD: 44a7dd1c3c3c8afe7ef1a0a569619017a7d4e4ea. Continue the same branch. Preserve prior STOP evidence. Runner/evaluator/tests bytes must not change. Only the first test invocation basetemp was corrected to a fresh path under an existing TEMP parent. Same HEAD revision: 42 passed / exit 0; all three harness SHA256 values unchanged. The prior STOP gate is superseded by this explicit continuation. Proceed with original external/static gates and pushed formal freeze before any real inference. All no-retry, automatic-reference, GT embargo, source/governance immutability and final audit rules remain in force.
-
-
-# Executor external-preflight STOP checkpoint — 2026-10-07
-
-Authorized same-revision dedicated test rerun: 42/42 PASS / exit 0; all runner/evaluator/test bytes unchanged. External 135/135, check_setup READY and all four TIFF identity gates PASS. However check_setup imported Ultralytics, which fell back from the uncreated nested task TEMP cache to the external working directory and created Ultralytics/settings.json (606 bytes; SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf). This persistent external config file is outside section 34 allowed write roots. It is preserved without deletion, relocation or cleanup. Per sections 32/34/35/39, STOP before formal freeze or model execution.
-
-Historical output (1543 files, including mtime), input (6 files), protected model assets (20 file byte/SHA identities), existing logs (327 files), external source/config 135/135 and source_manifest remain equal to accepted predecessor evidence. No formal runner invocation, real candidate attempt, model inference or GT audit has occurred. The settings file is not normalized into an accepted historical baseline. Supervisor disposition is required before continuation.
-
-
-# Supervisor second-STOP continuation — 2026-10-07
-
-Disposition: TASK8C_FINAL_DEMO_V1 = SECOND_STOP_VALID / CONTINUE_AUTHORIZED. Accepted remote HEAD: ce408ac73baa5c3e5fcd0b128c545b1717b456ee; same evaluation branch. Existing 42/42 PASS, 135/135, manifest MATCH, setup READY and four TIFF gates accepted; no tests/setup rerun. Three harness files remain unchanged.
-
-External Ultralytics/settings.json (606 bytes; SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf) is explicitly GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT. Preserve its exact bytes; do not delete, move, edit or overwrite. It is not manifest-listed source/config or a model asset and changes no scientific/product contract. Include its immutable identity in formal freeze/final integrity; no additional external-root runtime config additions are authorized.
-
-L0 correction completed before use: existing writable TEMP/task8c-yolo-config-v1 (including Ultralytics subdirectory) and TEMP/task8c-mpl-cache-v1 outside repo/external. Future Ultralytics processes must use the exact frozen YOLO_CONFIG_DIR. Complete formal-freeze commit/push before the single authorized runner invocation; no retries, automatic reference only, GT embargo and scientific immutability remain in force.
-
-
-# FORMAL_FINAL_DEMO_FREEZE_V1 preparation
-
-Observed task HEAD: 3fac0e668c2af30b35bfae1ab8a3f36cee329e26. Freeze includes unchanged runner/evaluator/tests Git and working identities, accepted 42/42 and setup READY, 135/135 and external manifest MATCH, four locked TIFF identities/order/prompts/programs, all protected assets, historical output/input/log inventory, output inventory hash, grandfathered settings identity and exact verified writable outside-cache environment. The actual freeze commit will be obtained from Git after commit/push, not fabricated within its own content. Real attempts remain 0. Formal execution is forbidden until freeze push and subsequent identity verification succeed.
-
-
-# Formal runtime frozen — before GT audit
-
-Freeze commit 20615080264774eb7b93b7d6a3c1e547093c4876 was pushed and verified before the only runner invocation. Runner exit 0; right -> left -> above -> below, each once; all four processes exited. All four current production results record runtime SUCCESS, RUNTIME_STRUCTURAL_ONLY / NOT_EVALUATED. Runtime JSON, per-case output hashes and transcripts are frozen. No retry, replacement, reference override or proposal inspect. Native-vector GT has not been read. Raw runtime evidence checkpoint must be pushed before evaluator. Grandfathered settings unchanged; complete pre-existing external byte identities preserved; only four run roots and Task8C logs added.
-
-
-# Executor GT-evaluator STOP checkpoint — 2026-10-07
-
-Formal freeze 20615080264774eb7b93b7d6a3c1e547093c4876 was pushed before the single runner invocation. Four candidates were attempted once; four runtime SUCCESS/SUGGESTION_CORRECT. Raw runtime checkpoint f41f32a05b83141312b078e6ab5975fbf70ec889 was pushed before GT. GT evaluator ran once (model calls=0, detector calls=0) and failed during first SUCCESS review at task8c_final_demo_evaluate.py:226: ValueError: assignment destination is read-only. The saved-overlay np.asarray view cannot accept GT boundary drawing. No review PNG/contact sheet or complete GT report was produced.
-
-Frozen evaluator/runner/tests were not changed or rerun; no inference retry. All raw runtime outputs/hashes remain preserved. Stop-time integrity PASS: external source 135/135, manifest MATCH, 1543 historical output files (bytes/SHA/mtime), 6 inputs, 20 protected model byte/SHA identities, grandfathered settings, frozen outputs and Task8C logs unchanged. New files only in observed four Task8C run roots and Task8C logs; no additional external-root config appeared.
-
-STOP pending Supervisor disposition for an evaluation-only frozen-evaluator rendering repair and identity update. Do not rerun formal inference or repair any model/algorithm.
-
-
-# Supervisor third-STOP disposition — verbatim authorization
-
-ChatGPT Supervisor 已完成第三次 Task 8C 审核。
-
-Supervisor disposition：
-
-TASK8C_FINAL_DEMO_V1 = THIRD_STOP_VALID / CONTINUE_EVALUATOR_ONLY
-
-继续当前分支：
-
-eval/task8c-final-demo-v1
-
-当前 accepted remote HEAD：
-
-7704fa520a85fe25457c5950e4d0062695859099
-
-必须保留以下冻结事实：
-
-formal freeze commit:
-20615080264774eb7b93b7d6a3c1e547093c4876
-
-raw frozen runtime checkpoint:
-f41f32a05b83141312b078e6ab5975fbf70ec889
-
-runtime_results.json:
-sha256 =
-2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca
-
-formal_runner_invocation_count = 1
-real_candidates_attempted = 4
-case order = right / left / above / below
-inference retries = 0
-
-这四次 formal attempts 已全部消耗。
-
-从现在起严格禁止：
-
-formal runner rerun
-predict.py rerun
-detector rerun
-model inference
-candidate retry
-prompt retry
---reference-id
---inspect-proposals
-重新生成 mask/overlay
-修改任何 external formal run artifact
-
-四例冻结 runtime 结果：
-
-right:
-runtime SUCCESS
-raw/merged = 7/6
-automatic reference_id = 3
-mask_area = 415
-
-left:
-runtime SUCCESS
-raw/merged = 59/46
-automatic reference_id = 11
-mask_area = 1627
-
-above:
-runtime SUCCESS
-raw/merged = 10/10
-automatic reference_id = 5
-mask_area = 1580
-
-below:
-runtime SUCCESS
-raw/merged = 7/6
-automatic reference_id = 1
-mask_area = 2955
-
-这些仍然只是 RUNTIME_STRUCTURAL_ONLY，不得在 GT audit 完成前升级为 semantic correctness。
-
-当前 GT evaluator invocation #1：
-
-exit = 1
-model calls = 0
-detector calls = 0
-
-冻结失败：
-
-scripts/task8c_final_demo_evaluate.py review rendering path
-
-ValueError:
-assignment destination is read-only
-
-根因已经由 Supervisor 审核确认：
-
-SUCCESS review path 使用：
-
-target_panel = np.asarray(Image.open(row["overlay_path"]).convert("RGB"))
-
-该 ndarray 是 read-only，随后绘制 GT boundary 时赋值失败。
-
-现在授权唯一 evaluator 产品逻辑修复：
-
-将这一处改为显式可写副本，例如精确采用：
-
-target_panel = np.array(
-    Image.open(row["overlay_path"]).convert("RGB"),
-    copy=True,
-)
-
-除使 review target panel 可写外，不得改变：
-
-GT reconstruction
-context_to_global
-IoU
-Dice
-best_overlap
-identity_audit
-semantic-chain enums
-aggregate semantics
-candidate IDs
-GT IDs
-review content语义
-runtime verification
-artifact verification
-
-scripts/task8c_final_demo_runner.py 必须 byte-identical，不得修改。
-
-允许在：
-
-tests/test_task8c_final_demo.py
-
-增加一个针对 runtime SUCCESS + saved overlay 的回归测试，证明：
-
-1. saved overlay path 被读取；
-2. GT target boundary 可以绘制，不再出现 read-only assignment；
-3. 输入 overlay 文件本身 byte-identical；
-4. review rendering deterministic；
-5. 不发生 model/detector/predict 调用。
-
-现有 tests 不得削弱或删除。
-
-这是 Supervisor 明确授权的：
-
-POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
-
-注意：不要修改原 FORMAL_FINAL_DEMO_FREEZE_V1，也不要伪装 evaluator 从未变化。
-
-原 freeze 仍然是正式推理前的真实 freeze。
-
-新增记录：
-
-post_runtime_evaluator_fix:
-  id: POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
-  reason: READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE
-  scientific_computation_changed: false
-  formal_runtime_changed: false
-  model_inference: false
-
-先执行当前 fake-only Task8C dedicated test suite。
-
-如果新增 1 个测试，则预期至少原有 42 个全部继续 PASS，新测试也 PASS。
-
-出现任何真正 assertion failure → 保存证据并 STOP。
-
-测试绿色后：
-
-commit + push evaluator-only fix checkpoint。
-
-必须记录新的 evaluator SHA256 和 tests SHA256。
-
-然后验证：
-
-- frozen runtime_results.json SHA256 仍为
-  2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca
-- 四个 run root 内所有 frozen artifacts bytes/SHA unchanged
-- formal runner invocation仍为 1
-- grandfathered Ultralytics/settings.json unchanged
-- 135/135 source/config unchanged
-- source_manifest unchanged
-- historical output/input/protected assets unchanged
-
-随后授权 GT evaluator **第二次且仅第二次**执行。
-
-这是 evaluator retry，不是 inference retry。
-
-最终证据必须如实保存：
-
-gt_evaluator_invocation_count = 2
-
-invocation_1:
-  exit = 1
-  model_calls = 0
-  detector_calls = 0
-  reason = READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE
-
-invocation_2:
-  使用 POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
-  model_calls = 0
-  detector_calls = 0
-
-不得删除、覆盖或淡化第一次 evaluator failure。
-
-第二次 evaluator 必须只读取冻结 formal outputs 和 native-vector truth。
-
-它必须完成：
-
-right GT audit
-left GT audit
-above GT audit
-below GT audit
-
-并产生：
-
-evaluation/task8c_final_demo_v1/right_review.png
-evaluation/task8c_final_demo_v1/left_review.png
-evaluation/task8c_final_demo_v1/above_review.png
-evaluation/task8c_final_demo_v1/below_review.png
-evaluation/task8c_final_demo_v1/contact_sheet.png
-
-完成 reference audit：
-
-selected_reference_best_gt_instance_id
-selected_reference_best_gt_iou
-selected_reference_iou_with_canonical_gt_reference
-reference_identity_best_overlap_match
-
-完成 target audit：
-
-target_iou
-target_dice
-predicted_target_area
-gt_target_area
-predicted_target_best_gt_instance_id
-predicted_target_best_gt_iou
-target_identity_best_overlap_match
-
-并按原冻结规则生成：
-
-CHAIN_IDENTITY_MATCH
-REFERENCE_IDENTITY_MISMATCH
-TARGET_IDENTITY_MISMATCH
-REFERENCE_AND_TARGET_IDENTITY_MISMATCH
-RUNTIME_FAILED
-LANGUAGE_FAILED
-NOT_EVALUABLE_MISSING_ARTIFACT
-
-禁止增加新的 IoU pass threshold。
-
-禁止人工修改任何 semantic-chain classification。
-
-最终 aggregate 按原 Task 8C 规则计算。
-
-完成后做最终 integrity gate：
-
-formal runtime outputs unchanged
-historical outputs unchanged
-input unchanged
-protected assets unchanged
-135/135 unchanged
-source_manifest unchanged
-grandfathered settings unchanged
-no new unexpected external-root config
-model/detector calls during GT audit = 0
-formal runner invocations = 1
-inference retries = 0
-
-最终：
-
-CURRENT_TASK = READY_FOR_SUPERVISOR_AUDIT
-EXECUTOR_STATE = READY_FOR_SUPERVISOR_AUDIT
-next_gate = CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
-
-commit + push，然后 STOP。
-
-不得根据 GT 结果好坏启动任何模型或算法修复。
-
-# Executor POST_RUNTIME_EVALUATOR_RENDER_FIX_V1 checkpoint
-
-Applied only the exact writable-copy SUCCESS target-panel replacement authorized above. Runner bytes and all GT/scientific computation remain unchanged. Existing 42 tests were retained byte-for-byte and one saved-overlay SUCCESS regression test appended: 43/43 PASS / exit 0. Original FORMAL_FINAL_DEMO_FREEZE_V1 remains unmodified and records its original evaluator/test identities. New evaluator SHA256: 5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542. New tests SHA256: bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5. First evaluator failure retained in full; second invocation remains pending fix checkpoint push and frozen-artifact/integrity verification. Formal runner=1, attempts=4, inference retries=0; no new model call.
-
-
-# Executor GT Audit + Review Pack completion checkpoint
-
-POST_RUNTIME_EVALUATOR_RENDER_FIX_V1 was committed/pushed at c18ba1e30e4772c7a6de4ab06410b5692a15eef4 before evaluator invocation #2. Original formal freeze 20615080264774eb7b93b7d6a3c1e547093c4876 remains unchanged, and raw runtime checkpoint f41f32a05b83141312b078e6ab5975fbf70ec889/runtime SHA256 2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca remain frozen.
-
-Evaluator count=2: invocation #1 exit 1, complete original traceback/STOP retained; invocation #2 exit 0 using the authorized writable-copy repair, model calls=0, detector calls=0, no formal output writes. All four GT audits, four review PNGs and contact_sheet.png complete. Current fake-only tests=43/43 PASS (42 retained unchanged + one regression). No further test, evaluator or inference rerun occurred.
-
-Final aggregate: language expected program executed=4, runtime success=4, runtime failed=0; CHAIN_IDENTITY_MATCH=0; TARGET_IDENTITY_MISMATCH=1 (above); REFERENCE_AND_TARGET_IDENTITY_MISMATCH=3 (right/left/below); other classifications=0. Mean target IoU=0.07333136469693911; Dice=0.1247309041660509. Raw runtime semantic_status remains NOT_EVALUATED; post-hoc results are separate and unchanged. Final scientific verdict belongs to ChatGPT Supervisor.
-
-Final integrity PASS: 135/135, manifest exact Git MATCH, 1543 historical output bytes/SHA/mtime unchanged, 6 inputs/20 protected assets/all 2118 pre-formal external files unchanged. Only 60 Task8C run files and 6 logs added. All formal artifacts/logs/runtime hashes unchanged. Grandfathered settings remains 606 bytes / SHA256 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf; no additional external-root runtime config. Product/governance/runner unchanged; evaluator scientific computation unchanged.
-
-CURRENT_TASK Status = READY_FOR_SUPERVISOR_AUDIT
-EXECUTOR_STATE status = READY_FOR_SUPERVISOR_AUDIT
-next_gate = CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
-
-Commit/push final evidence, then STOP. Formal runner invocations=1; real candidates=4; inference retries=0. Do not run evaluator again or initiate repair/Assisted Mode.
+Do not prescribe or implement the next architecture.

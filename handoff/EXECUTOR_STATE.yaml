@@ -1,163 +1,37 @@
 schema_version: 1
-task_id: TASK8C_FINAL_DEMO_V1
-status: READY_FOR_SUPERVISOR_AUDIT
+task_id: TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
+status: IN_PROGRESS
 executor: CODEX
-branch: eval/task8c-final-demo-v1
-head: c18ba1e30e4772c7a6de4ab06410b5692a15eef4
+branch: diag/task8d-above-target-chain-v1
+head: 764a805ef7d9651bfffd27dfaeb5808e8c21df1f
+accepted_predecessor: TASK8C_FINAL_DEMO_V1 = ACCEPT
 completed:
-- Required canonical read order and exact fetched predecessor verified.
-- Evaluation branch created; full task book initially installed byte-for-byte.
-- Evaluation-only runner, zero-model-call evaluator, and dedicated fake tests written.
-- Earlier 40-test run passed; current 42-test invocation errors persisted transparently.
-- Supervisor accepted STOP; same 42-test revision PASS with corrected existing-parent
-  basetemp.
-- External 135/135 source check and post-STOP source check PASS; manifest MATCH.
-- check_setup READY; four locked TIFF path/shape/RGB/format/SHA gates PASS.
-- Detected and preserved unauthorized external runtime settings file; no cleanup.
-- Accepted Task8B4 historical output/input/model/log byte identities preserved; output
-  mtime unchanged.
-- Supervisor accepted second STOP and grandfathered immutable settings.
-- Created/probed writable cache directories outside repo/external before use.
-- 'Static identities PASS: unchanged harness, complete accepted external baseline,
-  TIFFs, canonical source and governance; no test/setup rerun.'
-- Harness Ready checkpoint 3fac0e6 pushed; formal freeze prepared with all accepted
-  gates, immutable side-effect identity and exact environment.
-- FORMAL_FINAL_DEMO_FREEZE_V1 commit 2061508 pushed; local/remote HEAD and all pre-run
-  identities/caches verified.
-- 'One formal runner invocation: four candidates once in right/left/above/below order;
-  four runtime SUCCESS; all raw output hashes frozen; GT not started.'
-- Raw runtime checkpoint f41f32a pushed before GT evaluator.
-- GT evaluator ran once with zero model/detector calls; first review failed on read-only
-  overlay array, no complete review or GT evidence persisted.
-- 'Stop-time integrity PASS: 135/135/manifest, all historical output/input/assets,
-  frozen outputs/log hashes and grandfathered settings; only authorized new run/log
-  paths.'
-- Third STOP accepted; evaluator-only continuation authorized.
-- Exact writable-overlay-copy replacement plus one SUCCESS saved-overlay regression
-  test; runner/original freeze/scientific evaluation functions unchanged.
-- Current fake-only dedicated suite 43/43 PASS / exit 0; original 42 tests retained
-  unchanged.
-- Evaluator-only fix c18ba1e pushed; runtime SHA 2fcbb705 and all frozen external/artifact
-  identities verified unchanged; original formal freeze preserved.
-- 'Evaluator invocation #2 exit 0; four native-vector GT audits and five review PNGs
-  completed; model/detector calls zero.'
-- All reviews visually inspected; generated classifications and continuous metrics
-  preserved without edits.
-- 'Final integrity PASS: 135/135/manifest, frozen formal artifacts/logs, 1543 historical
-  output, 6 input, 20 protected assets and grandfathered settings unchanged; only
-  60 Task8C artifacts and 6 logs added.'
-- Procedural completion; runtime successes 4/4, complete chain identity matches 0/4;
-  final scientific verdict awaits Supervisor.
-current_step: READY_FOR_SUPERVISOR_AUDIT
-next_action: STOP; await ChatGPT Supervisor remote and visual audit. No further inference/evaluator
-  or repairs.
-tests_run:
-- name: Task8C dedicated fake tests - earlier revision
-  result: 40 passed
-  exit_code: 0
-- name: Task8C dedicated fake tests - current revision
-  result: 27 passed / 15 fixture setup errors (WinError 3 missing basetemp parent)
-  exit_code: 1
-- name: Task8C current HEAD fake tests - corrected L0 invocation
-  result: 42 passed in 0.74s; harness bytes unchanged
-  exit_code: 0
-- name: Post-runtime evaluator render fix dedicated fake-only suite
-  result: 43 passed in 0.80s
-  exit_code: 0
+- Canonical read order completed; fetched remote predecessor exact; working tree clean;
+  authorized branch created.
+- ABOVE 15 artifacts/transcript/runtime/native truth verified; all 2184 external files
+  match accepted Task8C inventory.
+- Predeclared statistics/context mapping/ranking/first-divergence order locked before
+  quantitative analysis.
+current_step: EVIDENCE_LOCK_AND_PREDECLARATION_READY
+next_action: Verify frozen artifacts and source; implement offline-only diagnosis
+  inside authorized paths.
+tests_run: []
 files_modified:
-- scripts/task8c_final_demo_evaluate.py
-- tests/test_task8c_final_demo.py
-- docs/task8c_final_demo_v1.md
-- evaluation/task8c_final_demo_v1.json
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
-- evaluation/task8c_final_demo_v1/right_review.png
-- evaluation/task8c_final_demo_v1/left_review.png
-- evaluation/task8c_final_demo_v1/above_review.png
-- evaluation/task8c_final_demo_v1/below_review.png
-- evaluation/task8c_final_demo_v1/contact_sheet.png
-uncommitted_changes: false
+- evaluation/task8d_above_target_chain_diagnosis_v1.json
+uncommitted_changes: true
 blocked_on_supervisor: false
-block_reason: null
 last_checkpoint:
-  commit: c18ba1e30e4772c7a6de4ab06410b5692a15eef4
+  commit: 764a805ef7d9651bfffd27dfaeb5808e8c21df1f
   pushed: true
-next_gate: CHATGPT_TASK8C_FINAL_DEMO_REMOTE_AND_VISUAL_AUDIT
-formal_runner_invocation_count: 1
-real_candidates_attempted: 4
-no_model_inference: false
-external_preflight: Accepted 42/42, 135/135, manifest MATCH, setup READY, TIFF PASS;
-  grandfathered settings preserved
-formal_freeze: COMMITTED_PUSHED_AND_VERIFIED
-gt_audit: COMPLETED_FOUR_CASES_WITH_REVIEW_PACK
+next_gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
+model_calls: 0
+detector_calls: 0
+predict_calls: 0
+checkpoint_loads: 0
+external_writes: 0
+repair_implemented: false
 no_product_change: true
 no_governance_change: true
-governance_staleness_acknowledged: true
-runner_evaluator_tests_unchanged: false
-grandfathered_runtime_side_effect:
-  path: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\Ultralytics\settings.json
-  bytes: 606
-  sha256: 1dae32b8abfc0f084cdee6c446dcf5420031bfcf005fb358f473a9a34d368cdf
-  disposition: GRANDFATHERED_TASK8C_PREFLIGHT_RUNTIME_SIDE_EFFECT
-  must_remain_unchanged: true
-execution_environment:
-  PYTHONDONTWRITEBYTECODE: '1'
-  PYTHONUTF8: '1'
-  PYTHONIOENCODING: utf-8
-  YOLO_CONFIG_DIR: C:\Users\ROG\AppData\Local\Temp\task8c-yolo-config-v1
-  MPLCONFIGDIR: C:\Users\ROG\AppData\Local\Temp\task8c-mpl-cache-v1
-  HF_HUB_OFFLINE: '1'
-  TRANSFORMERS_OFFLINE: '1'
-formal_freeze_commit: 20615080264774eb7b93b7d6a3c1e547093c4876
-formal_runner_exit_code: 0
-runtime_output_hashes: FROZEN_AND_UNCHANGED
-gt_evaluator_exit_code: 0
-gt_model_calls: 0
-gt_detector_calls: 0
-no_inference_retry: true
-runner_unchanged: true
-scientific_evaluator_functions_unchanged: true
-original_42_tests_unchanged: true
-gt_evaluator_invocation_count: 2
-post_runtime_evaluator_fix_id: POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
-post_runtime_evaluator_fix_commit: c18ba1e30e4772c7a6de4ab06410b5692a15eef4
-inference_retries: 0
-final_integrity: PASS
-review_pack: FOUR_REVIEW_PNGS_AND_CONTACT_SHEET_COMPLETE
-final_scientific_verdict: PENDING_SUPERVISOR_REMOTE_AND_VISUAL_AUDIT
-procedural_completion: true
-original_formal_freeze_unchanged: true
-grandfathered_settings_unchanged: true
-legacy_output_unchanged: true
-input_unchanged: true
-protected_assets_unchanged: true
-source_manifest_unchanged: true
-source_config_check: 135/135 PASS
-no_additional_external_root_config: true
-aggregate:
-  cases_attempted: 4
-  language_expected_program_executed: 4
-  runtime_success: 4
-  runtime_failed: 0
-  chain_identity_match: 0
-  reference_identity_mismatch: 0
-  target_identity_mismatch: 1
-  both_identity_mismatch: 3
-  language_failed: 0
-  not_evaluable: 0
-  mean_target_iou_over_runtime_success: 0.07333136469693911
-  mean_target_dice_over_runtime_success: 0.1247309041660509
-gt_evaluator_invocation_1:
-  exit_code: 1
-  reason: READ_ONLY_OVERLAY_ARRAY_RENDER_FAILURE
-  model_calls: 0
-  detector_calls: 0
-  traceback_preserved: true
-gt_evaluator_invocation_2:
-  exit_code: 0
-  fix_id: POST_RUNTIME_EVALUATOR_RENDER_FIX_V1
-  model_calls: 0
-  detector_calls: 0
-  formal_output_writes: 0
-post_runtime_evaluator_sha256: 5a23d5e2a0801e81a9a6af3c44fa71afdf5b0864bfa6f50cce6aabb71cc5e542
-current_tests_sha256: bfcb7b13dde3bc470b5b703c1bebca83493384308a2c0d0839d08fbf853584b5
+task8c_artifacts_unchanged: true
