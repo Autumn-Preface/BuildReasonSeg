@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
-status: STOPPED
+status: IN_PROGRESS
 executor: CODEX
 branch: fix/task8b4-run-isolated-output-layout-v1
-head: 7965a99743f02d5427c55be429e09349faa3605e
+head: 7e0e8b3115c2b3660d57ffa5170c4fb5393be39c
 completed:
 - Startup reads, clean Git state, exact remote predecessor and task book installation
   verified.
@@ -17,9 +17,12 @@ completed:
   external phase halted.
 - 'Read-only STOP integrity verification: 1543 output files, 6 inputs, 20 protected
   assets and 135 external source files plus external manifest unchanged.'
-current_step: STOPPED_BEFORE_EXTERNAL_SYNC
-next_action: Supervisor resolves mandatory canonical full-suite green gate versus
-  GOV-D007 before further task execution.
+- Supervisor L2 disposition accepted previous implementation and canonical manifest;
+  continuation preflight clean; read-only external precheck explains exactly five
+  authorized mismatches.
+current_step: EXTERNAL_PRECHECK_EXPLAINED
+next_action: Commit/push explained precheck and Supervisor disposition, then execute
+  one controlled external sync and ordered closure gates.
 tests_run:
 - module: tests/test_task8b_runtime.py
   exit_code: 1
@@ -52,21 +55,18 @@ files_modified:
 - evaluation/task8b4_run_isolated_output_layout_v1.json
 - delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 uncommitted_changes: true
-blocked_on_supervisor: true
-block_reason: 'Checkpoint 2 requires full canonical tests green, but the lightweight
-  canonical snapshot cannot satisfy complete-delivery assertions: 127 passed, 17 failed,
-  6 errors, exit 1. Missing prerequisites are absent from the accepted predecessor
-  too; one unchanged setup assertion additionally fails on sandbox Ultralytics settings
-  access. Achieving a green gate or changing its disposition requires Supervisor direction;
-  no unauthorized assets, test weakening or external writes.'
-decision_level_required: L2_CANONICAL_GATE_DISPOSITION
+blocked_on_supervisor: false
+block_reason: null
+decision_level_required: null
 last_checkpoint:
-  commit: 7965a99743f02d5427c55be429e09349faa3605e
+  commit: 7e0e8b3115c2b3660d57ffa5170c4fb5393be39c
   pushed: true
 scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_ONLY
 PROP01_status: OPEN
 no_model_inference: true
 next_gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
-observation_phase: STOP checkpoint preparation; final actual local/remote HEAD is
-  reported from Git after push
+observation_phase: Continuation checkpoint preparation; actual final local/remote
+  HEAD resolved from Git after push
 external_sync_performed: false
+canonical_full_suite_disposition: WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
+supervisor_disposition: PARTIAL_ACCEPT / CONTINUE_AUTHORIZED

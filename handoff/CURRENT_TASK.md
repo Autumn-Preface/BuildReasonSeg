@@ -8,7 +8,7 @@ TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
 
 Status:
 
-AUTHORIZED
+IN_PROGRESS
 
 Decision owner:
 
@@ -58,7 +58,7 @@ Accepted state:
 - MEM-01 remains CLOSED.
 - MASK-01 engineering hardening remains CLOSED.
 - REF-01 residual limitation remains unchanged.
-- Task 8B.4 has not yet been implemented.
+- Task 8B.4 implementation is PARTIAL_ACCEPT / CONTINUE_AUTHORIZED under the Supervisor continuation disposition in section 29.
 
 This milestone is purely a delivery-output isolation repair.
 
@@ -725,15 +725,15 @@ python -m pytest tests/test_cli_contract.py -q
 
 If `test_cli_contract.py` is unchanged, it must still be run.
 
-Then run:
+Supervisor L2 continuation disposition under frozen GOV-D007:
 
 ```text
-python -m pytest tests/ -q
+canonical_full_suite_disposition = WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
 ```
 
-Record exact passed/failed count and exit code.
+The previously executed canonical full suite remains recorded as 127 passed / 17 failed / 6 errors, exit 1. It is an invalid complete-delivery gate in the lightweight canonical source/config snapshot, not a Task 8B.4 product regression. Do not rerun it to manufacture green acceptance, add excluded VERSION/assets/weights/logs/fixtures/inference/input, or weaken its tests.
 
-Do not assume a fixed test count because this task adds tests.
+The complete full-suite acceptance gate belongs to external complete RC1 in section 20. Record exact external passed/failed count and exit code; do not assume a fixed test count.
 
 Any unexplained regression:
 
@@ -1018,7 +1018,7 @@ Commit + push.
 
 ### Checkpoint 2
 
-Full canonical tests green + source manifest 135/135 Git-canonical validation.
+Canonical targeted runtime 62 passed and CLI 24 passed + source manifest 135/135 Git-canonical validation: ACCEPTED by Supervisor L2 continuation disposition. The prior canonical full-suite execution is WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007 and remains preserved as 127/17/6, exit 1.
 
 Commit + push.
 
@@ -1129,3 +1129,26 @@ CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
 Then STOP.
 
 Do NOT automatically start Final Demo.
+
+## 29. Supervisor L2 Continuation Disposition
+
+```text
+TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1 = PARTIAL_ACCEPT / CONTINUE_AUTHORIZED
+accepted task branch = fix/task8b4-run-isolated-output-layout-v1
+accepted task remote HEAD = 7e0e8b3115c2b3660d57ffa5170c4fb5393be39c
+canonical_full_suite_disposition = WAIVED_AS_INVALID_BY_SUPERVISOR_UNDER_GOV_D007
+```
+
+Authority: direct user-relayed ChatGPT Supervisor remote audit and L2 disposition. This continuation supersedes the original canonical full-suite green requirement in sections 16 and 24. GOV-D007 remains frozen and governance files are unchanged.
+
+Accepted: implementation, canonical runtime 62 passed, CLI 24 passed, manifest 135/135, authorized diff scope and scientific/inference/asset-preservation boundaries. Preserve the earlier canonical 127 passed / 17 failed / 6 errors execution record without relabeling it PASS.
+
+Continuation startup: reread governance/handoff in canonical order, fetch and verify the exact accepted task HEAD above, inspect local changes and continue this same branch. Original predecessor creation steps in section 13 describe initial startup only. No new algorithm branch, reset/stash/clean/amend/discard is authorized. Unknown changes require STOP.
+
+External closure remains governed by sections 18–21: existing helper read-only precheck, one controlled manifest-listed sync, then exact Git-canonical source_manifest write under P1D11B. Expected source/config mismatches are exactly README.md, buildreasonseg/runtime/outputs.py, buildreasonseg/runtime/pipeline.py, inference/README.md and tests/test_task8b_runtime.py. The accepted unsynchronized external manifest may be replaced only by the exact current committed canonical manifest. Any unexplained additional source/config mismatch requires STOP before writes.
+
+Verify in order: helper 135/135, byte/hash-identical external manifest, external check_setup READY, external runtime and CLI targeted tests exit 0, then external complete full suite exit 0. No real model inference, A2, historical six-case suite, locked Demo candidates, or threshold/model/algorithm/scientific-contract change.
+
+Preserve input, every pre-existing historical output and protected model/Qwen/SAM2 asset. Unit tests must use temporary roots and must not create real output runs. Do not delete unexpected evidence; any historical output change requires STOP. Historical logs/fixtures are preserved; naturally generated test logs are permitted.
+
+Update the four authorized evidence/handoff files. On all gates passing, set CURRENT_TASK and EXECUTOR_STATE to READY_FOR_SUPERVISOR_AUDIT, next gate CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT, commit/push and STOP. Do not start Final Demo.
