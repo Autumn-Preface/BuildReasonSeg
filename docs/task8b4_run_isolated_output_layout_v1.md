@@ -1,6 +1,6 @@
 # Task 8B.4 — run-isolated output layout
 
-Status: IN_PROGRESS — implementation checkpoint; final Supervisor acceptance pending.
+Status: STOPPED — checkpoint 2 canonical gate unmet; Supervisor disposition required before external sync.
 
 ## Authority and starting state
 
@@ -25,11 +25,19 @@ New synthetic/stub contracts cover T1–T10, first/second paths, failure reruns,
 
 ## Manifest and external integrity
 
-Starting manifest validation against Git blobs: 135 checked, 135 match, 0 missing, 0 mismatch. The five changed manifest-listed files are outputs.py, pipeline.py, test_task8b_runtime.py, README.md and inference/README.md. Their identities will be calculated from the implementation commit, not Windows working-tree bytes. No manifest paths will change.
+Starting manifest validation against Git blobs: 135 checked, 135 match, 0 missing, 0 mismatch. The five changed manifest-listed files are outputs.py, pipeline.py, test_task8b_runtime.py, README.md and inference/README.md. Their identities were calculated from committed Git blobs at `7965a99743f02d5427c55be429e09349faa3605e`, not Windows working-tree bytes. Updated manifest validates 135/135; exactly five entries changed, with no path addition/removal.
 
 Read-only external inventories recorded before implementation: 1,543 output-history files, 6 input files and 20 protected model-asset files. Full byte lengths, SHA256 values and timestamps are retained in JSON. No external writes or sync have occurred.
 
-Full canonical and all external gates remain pending. Canonical is the lightweight snapshot described in GOV-D007; missing assets/fixtures will be assessed from actual full-suite output without broadening this task or weakening tests.
+Full canonical suite: **127 passed, 17 failed, 6 errors; exit 1** (37.58 s). No failing node is in runtime or CLI contracts. The complete stdout/stderr, commands, failed/error nodes and classifications are retained in JSON.
+
+The original five failing test-module sources, check_setup.py and package/frontend dependencies are byte-identical to the accepted predecessor. Canonical `VERSION`, decoder/detector, SAM2, ProgramHead/Qwen weights and fallback fixtures are absent both in the accepted Git snapshot and current canonical tree; they exist in complete external RC1. `inference/input` is absent in canonical. Six setup fixture errors and the relocation test stop when copying missing VERSION. Package/language tests require absent assets; fallback tests require absent historical log fixtures. Two READY assertions cannot pass with missing full-delivery prerequisites. A further unchanged setup assertion fails because sandbox access to AppData/Roaming/Ultralytics/settings.json is denied (WinError 5), suppressing its provenance label; this is preserved as an L0 environment observation, not a product regression claim.
+
+Task-book sections 16/24 require a green full canonical gate at checkpoint 2. GOV-D007 explicitly freezes the lightweight canonical / complete external distinction. A green canonical complete-delivery gate cannot be produced within the authorized file scope without adding excluded prerequisites or changing gate/test acceptance. The executor has made neither change. **Checkpoint 2 is not accepted and READY_FOR_SUPERVISOR_AUDIT is not claimed.** Supervisor must reconcile the required gate and authorize the next action.
+
+External helper pre-sync check, controlled sync, manifest write, post-check, setup and external targeted/full tests are **NOT_RUN**. No external write has occurred. Read-only STOP integrity checks verify exact before/after equality (including file timestamps) for all 1,543 historical output files, 6 inputs and 20 protected model assets. All 135 external source files and the external manifest are unchanged. Recorded starting external source identities also match the accepted predecessor manifest 135/135. These checks do not establish post-sync acceptance.
+
+Implementation checkpoint was committed/pushed at `7965a99743f02d5427c55be429e09349faa3605e`. The updated manifest, failure evidence and STOP handoff are saved in a separate follow-on checkpoint. Final SHA is resolved from actual Git after push; the files intentionally contain the preceding observed checkpoint rather than a fabricated self-referential SHA. The Supervisor-provided CURRENT_TASK remains byte-for-byte installed, with STOP outcome recorded in EXECUTOR_STATE.
 
 ## Boundaries
 

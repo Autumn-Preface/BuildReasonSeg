@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8B4_RUN_ISOLATED_OUTPUT_LAYOUT_V1
-status: IN_PROGRESS
+status: STOPPED
 executor: CODEX
 branch: fix/task8b4-run-isolated-output-layout-v1
-head: c6d09e77d3c403771a92d096fe5977ebaa61db67
+head: 7965a99743f02d5427c55be429e09349faa3605e
 completed:
 - Startup reads, clean Git state, exact remote predecessor and task book installation
   verified.
@@ -11,9 +11,15 @@ completed:
   history and model asset hashes recorded.
 - Implementation and targeted canonical runtime 62/62 plus CLI 24/24 passed without
   model inference.
-current_step: CHECKPOINT_1_TARGETED_CANONICAL_GREEN
-next_action: Commit/push implementation; derive manifest identities from committed
-  Git blobs; run full canonical suite.
+- Checkpoint 1 committed/pushed; five manifest identities updated from committed Git
+  blobs; 135/135 validation passed.
+- Full canonical test output and all 23 failed/error node classifications persisted;
+  external phase halted.
+- 'Read-only STOP integrity verification: 1543 output files, 6 inputs, 20 protected
+  assets and 135 external source files plus external manifest unchanged.'
+current_step: STOPPED_BEFORE_EXTERNAL_SYNC
+next_action: Supervisor resolves mandatory canonical full-suite green gate versus
+  GOV-D007 before further task execution.
 tests_run:
 - module: tests/test_task8b_runtime.py
   exit_code: 1
@@ -28,6 +34,12 @@ tests_run:
   exit_code: 0
   counts:
     passed: 24
+- module: tests/ (canonical full suite)
+  exit_code: 1
+  counts:
+    failed: 17
+    passed: 127
+    error: 6
 files_modified:
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/outputs.py
 - delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/pipeline.py
@@ -38,13 +50,23 @@ files_modified:
 - handoff/EXECUTOR_STATE.yaml
 - docs/task8b4_run_isolated_output_layout_v1.md
 - evaluation/task8b4_run_isolated_output_layout_v1.json
+- delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
 uncommitted_changes: true
-blocked_on_supervisor: false
-block_reason: null
-decision_level_required: null
+blocked_on_supervisor: true
+block_reason: 'Checkpoint 2 requires full canonical tests green, but the lightweight
+  canonical snapshot cannot satisfy complete-delivery assertions: 127 passed, 17 failed,
+  6 errors, exit 1. Missing prerequisites are absent from the accepted predecessor
+  too; one unchanged setup assertion additionally fails on sandbox Ultralytics settings
+  access. Achieving a green gate or changing its disposition requires Supervisor direction;
+  no unauthorized assets, test weakening or external writes.'
+decision_level_required: L2_CANONICAL_GATE_DISPOSITION
 last_checkpoint:
-  commit: null
-  pushed: null
+  commit: 7965a99743f02d5427c55be429e09349faa3605e
+  pushed: true
 scientific_claim_scope: RUN_ISOLATED_OUTPUT_LAYOUT_IMPLEMENTED_ONLY
 PROP01_status: OPEN
 no_model_inference: true
+next_gate: CHATGPT_TASK8B4_OUTPUT_LAYOUT_REMOTE_AUDIT
+observation_phase: STOP checkpoint preparation; final actual local/remote HEAD is
+  reported from Git after push
+external_sync_performed: false

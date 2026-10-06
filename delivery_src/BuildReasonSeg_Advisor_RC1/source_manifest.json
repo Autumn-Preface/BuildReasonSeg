@@ -22,8 +22,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11171,
-      "sha256": "3a17a3c20a7f790d3aa83571d1831adbcaba02e5dcfefefaed5a3e6a22647ff2"
+      "bytes": 11591,
+      "sha256": "005ce241a9704deff0c802773cb6db9a36c56d839aee7a9f12bdbea7561465f3"
     },
     {
       "path": "buildreasonseg/__init__.py",
@@ -502,13 +502,13 @@
     },
     {
       "path": "buildreasonseg/runtime/outputs.py",
-      "bytes": 9166,
-      "sha256": "f12f86cfcc04339bfcf21728643b66b9d0d3cd63cf6faa5a16b4a5f7a3fbfc9c"
+      "bytes": 9317,
+      "sha256": "5da369e210b69d461391ae07e81fe992b02e89fbb0de196e4ead4e531b020782"
     },
     {
       "path": "buildreasonseg/runtime/pipeline.py",
-      "bytes": 19237,
-      "sha256": "f4c305a5d89f1ce5262b9e97282019dd5abfae804a10e53035e0623438dc69f5"
+      "bytes": 19311,
+      "sha256": "ec803658e476d9f14451b48ca80e3ce8eb11ee103039a2311b1249f9d1b8d798"
     },
     {
       "path": "buildreasonseg/runtime/program_head.py",
@@ -597,8 +597,8 @@
     },
     {
       "path": "inference/README.md",
-      "bytes": 1545,
-      "sha256": "7a587312a53aa1bebfbf3c34248815313be99367a071a0ff5151bba94c4db953"
+      "bytes": 2131,
+      "sha256": "1bb41a8880883962a5c8ca3aa4b7f09811c25c7c66eb78d565da6602afbd848d"
     },
     {
       "path": "model/buildreasonseg_advisor/metadata.json",
@@ -672,8 +672,8 @@
     },
     {
       "path": "tests/test_task8b_runtime.py",
-      "bytes": 32399,
-      "sha256": "4ac1ef2e8c0ef2b60f3655bf442b35a0bb1dd8b4a94298940583486d9fe69f98"
+      "bytes": 43060,
+      "sha256": "5192031da90b420fd310b2ef8f4a9d239df4755be45bffeda8d2c70f4b2da210"
     },
     {
       "path": "train.py",
