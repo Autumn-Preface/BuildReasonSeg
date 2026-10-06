@@ -1,0 +1,48 @@
+{
+  "task_id": "RC1_INSPECT01_PREFLIGHT_ORDER_FIX",
+  "status": "COMPLETE",
+  "starting_branch": "fix/task8b3-mask01-success-semantics-r1d",
+  "starting_head": "5808e64ed43fd383be9e08bf623a9bfdc27f62b4",
+  "task_branch": "fix/rc1-inspect-proposals-preflight-order",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "design_id": "INSPECT_IMAGE_PREFLIGHT_BEFORE_MODEL_V1",
+  "fix": {
+    "file": "delivery_src/BuildReasonSeg_Advisor_RC1/predict.py",
+    "import_added": "from buildreasonseg.runtime.imageio import load_image",
+    "preflight": "if args.inspect_proposals: load_image(args.image)",
+    "inserted_before": "_resolve_and_report(args) and PredictRuntime(...)",
+    "normal_inference_order_changed": false,
+    "duplicate_decode_accepted": "the valid inspect path may decode the image again inside inspect_proposals()"
+  },
+  "regression_test": "test_inspect_unreadable_image_precedes_model_resolution",
+  "gates": {
+    "gate_a_nodes": [
+      "tests/test_cli_contract.py::test_predict_inspect_proposals_does_not_require_prompt",
+      "tests/test_cli_contract.py::test_inspect_unreadable_image_precedes_model_resolution"
+    ],
+    "gate_a_exit": 0,
+    "gate_a_summary": "2 passed in 3.24s",
+    "gate_b_nodes": [
+      "tests/test_cli_contract.py::test_predict_help_lists_frozen_arguments",
+      "tests/test_cli_contract.py::test_predict_prompt_required_for_normal_inference",
+      "tests/test_cli_contract.py::test_predict_missing_image_reports_e201",
+      "tests/test_cli_contract.py::test_predict_unsupported_image_type_reports_e203"
+    ],
+    "gate_b_exit": 0,
+    "gate_b_summary": "4 passed in 6.12s",
+    "full_suite_run": false,
+    "k_substitution_used": false
+  },
+  "untouched_verified": {
+    "imageio": true,
+    "runtime_pipeline": true,
+    "detector": true,
+    "manifest": true,
+    "canonical_docs": true
+  },
+  "model_inference_executed": false,
+  "training_executed": false,
+  "external_sync_performed": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_INSPECT01_REMOTE_AUDIT"
+}

@@ -252,3 +252,15 @@ def test_r1a_batch_success_annotation_and_runtime_summary(capsys, tmp_path, monk
     assert out.count("Runtime success: 2") == 1, out
     assert out.count("Failed : 0") == 1, out
     assert exit_code == 0
+
+def test_inspect_unreadable_image_precedes_model_resolution(tmp_path: Path) -> None:
+    """A corrupt inspect image fails with E202 / exit 20 before model resolution or runtime setup."""
+    image = tmp_path / "tile.png"
+    image.write_bytes(b"not-an-image")
+    completed = run_cli("predict.py", "--image", str(image), "--inspect-proposals")
+    assert completed.returncode == 20, completed
+    assert "E202" in completed.stderr, completed.stderr
+    # the image error must precede model resolution and runtime setup output
+    assert "Model        :" not in (completed.stdout or "")
+    assert "Device       :" not in (completed.stdout or "")
+    assert "E101" not in completed.stderr

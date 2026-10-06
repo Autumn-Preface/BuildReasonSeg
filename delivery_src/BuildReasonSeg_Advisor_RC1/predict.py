@@ -29,6 +29,7 @@ from buildreasonseg.language.registry import ParsedProgram
 from buildreasonseg.language.suggestion import EXAMPLES, SUGGESTION_QUESTION
 from buildreasonseg.language.validator import validate
 from buildreasonseg.models.package import resolve_model
+from buildreasonseg.runtime.imageio import load_image
 from buildreasonseg.runtime.pipeline import (
     PipelineRequest,
     PredictRuntime,
@@ -327,6 +328,10 @@ def handler(args: argparse.Namespace) -> int:
     config = resolve_config(args.config)
     if not config.is_file():
         raise BuildReasonSegError("E101", detail=f"配置文件不存在: {config}")
+    if args.inspect_proposals:
+        # inspect-only preflight: fail with E202 before model resolution / runtime setup
+        load_image(args.image)
+
     package_name = _resolve_and_report(args)
 
     print("BuildReasonSeg Advisor RC1")
