@@ -1,62 +1,77 @@
-# TO_DSH — MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION
+# TO_DSH — MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT
 
 > Status: ACTIVE
 > Decision owner: ChatGPT
 > Executor: DeepSeek Harness (DSH)
 > Repository: `C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg`
-> Required starting branch: `fix/task8b3-mask01-success-semantics-r1b`
-> Required starting HEAD: `ae08e405778672010168124196a4cadab90414c0`
-> New task branch: `fix/task8b3-mask01-success-semantics-r1b-r1`
+> Required starting branch: `fix/task8b3-mask01-success-semantics-r1b-r1`
+> Required starting HEAD: `79fc7e859cb0acbce2e86658cb65630026a20d1b`
+> New task branch: `fix/task8b3-mask01-success-semantics-r1b-r2`
 
-## 0. PURPOSE
+## 0. EXECUTION RULE
 
-Correct the incomplete R1-B documentation implementation only.
+READ THIS ENTIRE FILE BEFORE EDITING ANYTHING.
 
-ChatGPT audit of `ae08e405778672010168124196a4cadab90414c0`:
+This task intentionally gives the exact replacement text for all four canonical documents.
+
+Do NOT invent wording.
+Do NOT summarize the instructions.
+Do NOT stop because later sections were not read.
+Do NOT restore/reset/rebase/amend history.
+
+The four documents currently end with the same generic section:
 
 ```text
-R1-B state persistence = accepted
-R1-B implementation = NOT ACCEPTED
-task status = STOP
+## SUCCESS semantics (frozen)
+...
 ```
 
-All four canonical documents were updated, but:
-- the exact phrase `semantic target correctness is not established` is not contiguous in any file;
-- the four files do not yet contain their file-specific required semantics.
+For each document, replace ONLY that final generic SUCCESS section with the exact document-specific block supplied below.
 
-No runtime/product/test behavior may change.
+Do not edit earlier content.
 
 ---
 
-## 1. GIT PREFLIGHT
+## 1. CURRENT AUDITED STATE
 
-Verify:
-
-```text
-current branch =
-fix/task8b3-mask01-success-semantics-r1b
-
-HEAD =
-ae08e405778672010168124196a4cadab90414c0
-```
-
-Create:
+Starting branch:
 
 ```text
 fix/task8b3-mask01-success-semantics-r1b-r1
 ```
 
-Allowed initial worktree:
-- clean, or
-- only `M handoff/TO_DSH.md`.
+Starting HEAD:
 
-No reset/rebase/amend/stash/clean/force-push.
+```text
+79fc7e859cb0acbce2e86658cb65630026a20d1b
+```
+
+Parent:
+
+```text
+ae08e405778672010168124196a4cadab90414c0
+```
+
+R1-B-R1 status:
+
+```text
+STOP
+documents modified = NONE
+```
+
+Therefore the four canonical docs are still exactly the R1-B versions with the identical generic section appended at the end.
+
+Create:
+
+```text
+fix/task8b3-mask01-success-semantics-r1b-r2
+```
 
 ---
 
 ## 2. ALLOWED PATHS
 
-Only these canonical documents:
+Only modify these four canonical docs:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/README.md
@@ -65,66 +80,67 @@ delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md
 delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
 ```
 
-and task records:
+And task records:
 
 ```text
-docs/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.md
-evaluation/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.json
+docs/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.md
+evaluation/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Do NOT modify:
-- `predict.py`
-- `runtime/pipeline.py`
-- any tests
-- `source_manifest.json`
-- model/config/weights
-- inference outputs
-- external RC1.
+No other path may change.
+
+Forbidden:
+
+```text
+predict.py
+runtime/pipeline.py
+tests/*
+source_manifest.json
+configs
+models
+weights
+inference outputs
+external RC1
+```
+
+No pytest.
+No model inference.
+No training.
+No external sync.
 
 ---
 
-## 3. GLOBAL FROZEN SEMANTICS
+## 3. README.md — EXACT REPLACEMENT BLOCK
 
-Every one of the four canonical docs must contain these exact contiguous strings:
+File:
 
 ```text
-RUNTIME_STRUCTURAL_ONLY
-NOT_EVALUATED
-semantic target correctness is not established
+delivery_src/BuildReasonSeg_Advisor_RC1/README.md
 ```
 
-Do not line-wrap the third phrase across lines in source text.
-
-Frozen meaning:
+Find the FINAL section beginning:
 
 ```text
-status = SUCCESS
+## SUCCESS semantics (frozen)
+```
+
+Replace that entire final section with exactly:
+
+```markdown
+## SUCCESS 状态语义
+
+为保持既有接口兼容，正常推理仍保留 `status="SUCCESS"`。这里的 `SUCCESS` 只表示 RC1 runtime 已完成并通过当前的结构性检查，不表示目标建筑已经在语义上被正确识别或分割。
+
+机器可读字段固定为：
+
+```text
 validity_scope = RUNTIME_STRUCTURAL_ONLY
 semantic_status = NOT_EVALUATED
 ```
 
-`SUCCESS` means only that the current RC1 runtime completed and passed its structural checks.
-
-It does NOT establish semantic target correctness.
-
-Do not claim MASK-01 semantic correctness is solved.
-
----
-
-## 4. README.md — FILE-SPECIFIC REQUIREMENTS
-
-Keep the existing appended SUCCESS section, but correct/expand it so it explicitly states all of:
-
-```text
-status="SUCCESS" is retained for compatibility
-validity_scope="RUNTIME_STRUCTURAL_ONLY"
-semantic_status="NOT_EVALUATED"
-semantic target correctness is not established
-```
-
-Also explicitly document the single-image CLI presentation:
+单图 CLI 对应显示：
 
 ```text
 Result       : SUCCESS
@@ -132,62 +148,74 @@ Validity     : RUNTIME_STRUCTURAL_ONLY
 Semantic     : NOT_EVALUATED
 ```
 
-And state that this change is:
+因此，semantic target correctness is not established。
 
-```text
-a status-contract clarification, not a model-quality or mask-quality repair
+这属于 `status-contract` 的语义澄清，不是模型性能修复，也不是 `mask-quality` 修复。
 ```
 
-Do not rewrite unrelated README material.
+Do not change any earlier README content.
 
 ---
 
-## 5. docs/model_card.md — FILE-SPECIFIC REQUIREMENTS
+## 4. docs/model_card.md — EXACT REPLACEMENT BLOCK
 
-Keep/add a concise `Runtime SUCCESS` subsection.
-
-It must explicitly distinguish:
+File:
 
 ```text
-runtime structural validity
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
 ```
 
-from:
+Find the FINAL section beginning:
 
 ```text
-semantic target correctness
+## SUCCESS semantics (frozen)
 ```
 
-Include exact fields:
+Replace that entire final section with exactly:
+
+```markdown
+## Runtime SUCCESS 语义
+
+RC1 必须区分 runtime structural validity 与 semantic target correctness。
+
+机器可读字段固定为：
 
 ```text
 validity_scope = RUNTIME_STRUCTURAL_ONLY
 semantic_status = NOT_EVALUATED
 ```
 
-Include exact contiguous phrase:
+`SUCCESS` 只确认当前 runtime structural validity：即推理链完成并通过现有结构性检查。它不是语义质量判定，因此 semantic target correctness is not established。
 
-```text
-semantic target correctness is not established
+这一状态契约不改变 Task 7I / Task 7J 的任何指标、模型选择、seed、reference-selection 结论或泛化边界。
 ```
 
-Do not change any Task 7I/7J metric, seed, model claim, language metric, or domain/generalization statement.
+Do not change any metric or earlier model-card content.
 
 ---
 
-## 6. docs/runtime_mapping.md — FILE-SPECIFIC REQUIREMENTS
+## 5. docs/runtime_mapping.md — EXACT REPLACEMENT BLOCK
 
-The SUCCESS section must explicitly record responsibility split:
+File:
 
 ```text
-runtime/pipeline.py
-  owns the machine-readable SUCCESS semantics
-
-predict.py
-  owns the user-facing CLI presentation
+delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md
 ```
 
-Document:
+Find the FINAL section beginning:
+
+```text
+## SUCCESS semantics (frozen)
+```
+
+Replace that entire final section with exactly:
+
+```markdown
+## SUCCESS 语义职责映射
+
+`runtime/pipeline.py` 负责 machine-readable SUCCESS semantics；`predict.py` 负责 user-facing CLI presentation。
+
+冻结的机器字段为：
 
 ```text
 status = SUCCESS
@@ -195,109 +223,59 @@ validity_scope = RUNTIME_STRUCTURAL_ONLY
 semantic_status = NOT_EVALUATED
 ```
 
-Also state explicitly:
+兼容性保持不变：`PipelineResult.ok` remains compatible with status == SUCCESS。
 
-```text
-PipelineResult.ok remains compatible with status == SUCCESS
+这里的 `SUCCESS` 仅表示当前结构性 runtime checks 已通过；semantic target correctness is not established。
 ```
 
-and:
-
-```text
-semantic target correctness is not established
-```
-
-Do not alter the source-mapping table except for this appended semantics section.
+Do not alter the mapping table or earlier content.
 
 ---
 
-## 7. inference/README.md — FILE-SPECIFIC REQUIREMENTS
+## 6. inference/README.md — EXACT REPLACEMENT BLOCK
 
-Add/correct the result-semantics note so it explicitly refers to normal-inference `result.json`.
+File:
 
-It must state that normal inference `result.json` with:
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
+```
+
+Find the FINAL section beginning:
+
+```text
+## SUCCESS semantics (frozen)
+```
+
+Replace that entire final section with exactly:
+
+```markdown
+## Runtime result semantics
+
+正常推理生成的 `result.json` 若记录：
 
 ```text
 status = SUCCESS
 ```
 
-also carries:
+则同时携带：
 
 ```text
 validity_scope = RUNTIME_STRUCTURAL_ONLY
 semantic_status = NOT_EVALUATED
 ```
 
-State:
+这只表示当前 RC1 runtime 已完成并通过现有结构性检查；semantic target correctness is not established。
 
-```text
-semantic target correctness is not established
+因此 `result.json` 中的 `SUCCESS` 不能被解释为目标建筑在语义上已经正确匹配，也不能被解释为 mask 质量验收通过。
 ```
 
-Do not redesign the inference directory.
-
-Do not fix unrelated historical Task 8A wording in this task.
+Do not redesign the directory description or alter earlier content.
 
 ---
 
-## 8. SCIENTIFIC CLAIMS — FROZEN
+## 7. GLOBAL VALIDATION — REQUIRED
 
-Do not modify:
-- Task 7I metrics
-- Task 7J metrics
-- oracle/predicted-reference conclusions
-- REF-01 / PROP-01
-- A1–B2 history
-- Demo policy
-- language robustness
-- domain/generalization statements
-- model/seed/threshold/architecture claims.
-
-No new performance claims.
-
----
-
-## 9. INSPECT-PROPOSALS ISSUE — OUT OF SCOPE
-
-Do not touch or hide:
-
-```text
-test_predict_inspect_proposals_does_not_require_prompt
-```
-
-Frozen classification:
-
-```text
-PREEXISTING_CANONICAL_CONTRACT_FAILURE_CANDIDATE
-```
-
-No E202/E3xx or initialization-order changes.
-
----
-
-## 10. MANIFEST
-
-Do NOT update:
-
-```text
-delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
-```
-
-Record:
-
-```text
-manifest_update = DEFERRED_TO_R1_D
-```
-
----
-
-## 11. VALIDATION — EXACT
-
-Do NOT run pytest.
-
-Run a deterministic source-text validation.
-
-For EACH of the four canonical files, require all three exact contiguous markers:
+After editing, each of the four files MUST contain these exact contiguous strings:
 
 ```text
 RUNTIME_STRUCTURAL_ONLY
@@ -314,65 +292,146 @@ docs/runtime_mapping.md = PASS
 inference/README.md = PASS
 ```
 
-Also run file-specific marker checks:
+The third phrase MUST exist as one contiguous source-text string.
+Do not line-wrap inside that phrase.
 
-### README
-Require:
+---
+
+## 8. FILE-SPECIFIC VALIDATION — REQUIRED
+
+### README.md
+
+Require exact source markers:
 
 ```text
 status="SUCCESS"
-Validity
-Semantic
+Result       : SUCCESS
+Validity     : RUNTIME_STRUCTURAL_ONLY
+Semantic     : NOT_EVALUATED
 status-contract
 mask-quality
 ```
 
-Equivalent punctuation around `status="SUCCESS"` is acceptable only if the literal `status="SUCCESS"` appears.
+### docs/model_card.md
 
-### model_card
-Require both contiguous concepts:
+Require:
 
 ```text
 runtime structural validity
 semantic target correctness
+RUNTIME_STRUCTURAL_ONLY
+NOT_EVALUATED
 ```
 
-### runtime_mapping
+### docs/runtime_mapping.md
+
 Require:
 
 ```text
 runtime/pipeline.py
 predict.py
 PipelineResult.ok
+status = SUCCESS
+RUNTIME_STRUCTURAL_ONLY
+NOT_EVALUATED
 ```
 
-### inference/README
+### inference/README.md
+
 Require:
 
 ```text
 result.json
 status = SUCCESS
+RUNTIME_STRUCTURAL_ONLY
+NOT_EVALUATED
 ```
 
-Validation must PASS before COMPLETE status.
+All four file-specific validations must PASS.
 
-Also verify no product/test/manifest path changed.
+---
+
+## 9. SCIENTIFIC / ENGINEERING FREEZE
+
+Do not change or reinterpret:
+
+```text
+Task 7I metrics
+Task 7J metrics
+oracle/predicted-reference conclusions
+PROP-01
+REF-01
+A1/A2/A3/A4/B1/B2 history
+Demo policy
+language robustness
+domain/generalization statements
+model/seed/threshold/architecture
+```
+
+Do not claim MASK-01 semantic correctness is solved.
+
+Do not modify inspect-proposals behavior or docs to hide its known issue.
+
+Known issue remains:
+
+```text
+PREEXISTING_CANONICAL_CONTRACT_FAILURE_CANDIDATE
+```
+
+---
+
+## 10. MANIFEST
+
+Do NOT modify:
+
+```text
+delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json
+```
+
+Record:
+
+```text
+manifest_update = DEFERRED_TO_R1_D
+```
+
+Manifest mismatch caused by doc changes is expected until R1-D.
+
+---
+
+## 11. VALIDATION COMMAND POLICY
+
+Do NOT run pytest.
+
+Run deterministic text checks only.
+
+You may use Python or shell text inspection to verify Sections 7 and 8.
+
+Also verify changed product/test paths are exactly:
+
+```text
+NONE
+```
+
+outside the four allowed docs.
 
 ---
 
 ## 12. EVERY OUTCOME MUST BE PUSHED
 
-Frozen rule:
+Frozen collaboration rule:
 
 ```text
 ALL TASK OUTCOMES MUST BE PERSISTED TO GITHUB
 ```
 
-Whether COMPLETE / STOP / FAILED:
+Whether status is COMPLETE / STOP / FAILED:
+
 - update `handoff/FROM_DSH.md`;
 - create report/evidence;
 - commit authorized state;
 - push branch.
+
+Do not leave task facts only locally.
 
 ---
 
@@ -381,8 +440,8 @@ Whether COMPLETE / STOP / FAILED:
 Create:
 
 ```text
-docs/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.md
-evaluation/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.json
+docs/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.md
+evaluation/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.json
 ```
 
 Update:
@@ -395,21 +454,25 @@ handoff/TO_DSH.md
 Report at least:
 
 ```text
-task_id = MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION
+task_id = MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT
 status
+
 starting branch/head
 task branch
 
-global_marker_validation:
+documents_modified = 4
+
+global_validation:
 README = PASS/FAIL
 model_card = PASS/FAIL
 runtime_mapping = PASS/FAIL
 inference_README = PASS/FAIL
 
-README_specific_validation = PASS/FAIL
-model_card_specific_validation = PASS/FAIL
-runtime_mapping_specific_validation = PASS/FAIL
-inference_README_specific_validation = PASS/FAIL
+file_specific_validation:
+README = PASS/FAIL
+model_card = PASS/FAIL
+runtime_mapping = PASS/FAIL
+inference_README = PASS/FAIL
 
 scientific_metrics_changed = false
 product_source_changed = false
@@ -417,6 +480,7 @@ tests_changed = false
 manifest_changed = false
 inspect_proposals_changed = false
 
+pytest = not run
 model_inference = false
 training = false
 external_write = false
@@ -424,27 +488,27 @@ external_write = false
 manifest_update = DEFERRED_TO_R1_D
 github_persistence_policy = ALL_TASK_OUTCOMES_PUSHED
 
-next_gate = CHATGPT_R1B_R1_REMOTE_AUDIT
+next_gate = CHATGPT_R1B_R2_REMOTE_AUDIT
 ```
 
 ---
 
 ## 14. DIFF GATE
 
-Only stage:
+Before commit, only these may be staged:
 
 ```text
 delivery_src/BuildReasonSeg_Advisor_RC1/README.md
 delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md
 delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md
 delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md
-docs/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.md
-evaluation/task8b3_mask01_d1_r1b_r1_canonical_docs_correction.json
+docs/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.md
+evaluation/task8b3_mask01_d1_r1b_r2_exact_doc_replacement.json
 handoff/FROM_DSH.md
 handoff/TO_DSH.md
 ```
 
-Unexpected paths:
+Unexpected files:
 - do not delete;
 - do not stage;
 - report them.
@@ -453,25 +517,21 @@ Unexpected paths:
 
 ## 15. COMMIT / PUSH
 
-Commit exactly once:
+If the required doc validations all PASS, commit exactly:
 
 ```text
-git commit -m "docs(rc1): complete runtime success semantics docs"
+git commit -m "docs(rc1): finalize runtime success semantics docs"
 ```
+
+If STOP/FAILED occurs, still commit the truthful authorized state with a truthful STOP/FAILED message and push.
 
 Push:
 
 ```text
-fix/task8b3-mask01-success-semantics-r1b-r1
+fix/task8b3-mask01-success-semantics-r1b-r2
 ```
 
 No force push.
-
-Reports use:
-
-```text
-final_commit_sha = POST_COMMIT_EXTERNAL_FACT
-```
 
 After push print:
 
@@ -483,52 +543,41 @@ FINAL_PARENT=<sha>
 
 Then STOP.
 
-Do not enter R1-C.
+Do NOT enter R1-C.
 
 ---
 
-## 16. ABSOLUTE PROHIBITIONS
+## 16. SUCCESS DEFINITION
 
-Do NOT:
-- modify product code;
-- modify tests;
-- modify manifest;
-- change scientific results;
-- fix inspect-proposals;
-- run pytest;
-- run model inference/training;
-- sync external RC1;
-- reset/rebase/amend/stash/clean/force-push;
-- start R1-C/R1-D/R1-E/D2.
-
----
-
-## 17. SUCCESS DEFINITION
+Expected:
 
 ```text
-MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION = COMPLETE
+MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT = COMPLETE
 
-all four global marker checks = PASS
-all four file-specific checks = PASS
+four canonical docs modified = YES
+
+all global marker checks = PASS
+all file-specific checks = PASS
 
 README:
-compatibility + CLI presentation + status-not-quality clarification documented
+compatibility + CLI presentation + status-contract-not-mask-quality meaning = documented
 
 model_card:
-runtime structural validity vs semantic target correctness documented
+runtime structural validity vs semantic target correctness = documented
 
 runtime_mapping:
-pipeline/predict responsibility split + PipelineResult.ok compatibility documented
+pipeline/predict responsibility split + PipelineResult.ok compatibility = documented
 
 inference README:
-result.json machine fields documented
+result.json machine fields = documented
 
 scientific claims = unchanged
-product/tests = unchanged
+product source = unchanged
+tests = unchanged
 manifest = deferred to R1-D
 inspect-proposals issue = unchanged
 
-NEXT = CHATGPT_R1B_R1_REMOTE_AUDIT
+NEXT = CHATGPT_R1B_R2_REMOTE_AUDIT
 ```
 
 Then STOP.

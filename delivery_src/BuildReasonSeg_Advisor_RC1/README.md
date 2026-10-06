@@ -160,15 +160,25 @@ python evaluate.py --model buildreasonseg_advisor --dataset datasets/MyDataset -
 `docs/model_card.md`（模型/指标/限制）、`docs/command_grammar.md`（命令语法与错误码）、
 `docs/dataset_format.md`（数据集约定）、`RC1_TASK8B_REPORT.md`（本任务构建与验证报告）。
 
-## SUCCESS semantics (frozen)
+## SUCCESS 状态语义
+
+为保持既有接口兼容，正常推理仍保留 `status="SUCCESS"`。这里的 `SUCCESS` 只表示 RC1 runtime 已完成并通过当前的结构性检查，不表示目标建筑已经在语义上被正确识别或分割。
+
+机器可读字段固定为：
 
 ```text
-validity_scope  = RUNTIME_STRUCTURAL_ONLY
+validity_scope = RUNTIME_STRUCTURAL_ONLY
 semantic_status = NOT_EVALUATED
-semantic_note   = SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target
-                  correctness is not established.
 ```
 
-`SUCCESS` is a runtime structural status only: it confirms that the RC1 runtime completed and passed its current
-structural checks. It does **not** establish semantic target correctness — semantic target correctness is not
-established by this runtime status.
+单图 CLI 对应显示：
+
+```text
+Result       : SUCCESS
+Validity     : RUNTIME_STRUCTURAL_ONLY
+Semantic     : NOT_EVALUATED
+```
+
+因此，semantic target correctness is not established。
+
+这属于 `status-contract` 的语义澄清，不是模型性能修复，也不是 `mask-quality` 修复。

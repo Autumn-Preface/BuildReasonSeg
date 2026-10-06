@@ -1,0 +1,116 @@
+{
+  "task_id": "MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT",
+  "status": "COMPLETE",
+  "starting_branch": "fix/task8b3-mask01-success-semantics-r1b-r1",
+  "starting_head": "79fc7e859cb0acbce2e86658cb65630026a20d1b",
+  "task_branch": "fix/task8b3-mask01-success-semantics-r1b-r2",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "documents_modified": 4,
+  "documents": [
+    "delivery_src/BuildReasonSeg_Advisor_RC1/README.md",
+    "delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md",
+    "delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md",
+    "delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md"
+  ],
+  "global_validation": {
+    "README": "PASS",
+    "model_card": "PASS",
+    "runtime_mapping": "PASS",
+    "README_README": "PASS"
+  },
+  "file_specific_validation": {
+    "README": "PASS",
+    "model_card": "PASS",
+    "runtime_mapping": "PASS",
+    "README_README": "PASS"
+  },
+  "global_marker_detail": {
+    "delivery_src/BuildReasonSeg_Advisor_RC1/README.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": true
+      },
+      "result": "PASS"
+    },
+    "delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": true
+      },
+      "result": "PASS"
+    },
+    "delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": true
+      },
+      "result": "PASS"
+    },
+    "delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md": {
+      "markers": {
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true,
+        "semantic target correctness is not established": true
+      },
+      "result": "PASS"
+    }
+  },
+  "file_specific_detail": {
+    "delivery_src/BuildReasonSeg_Advisor_RC1/README.md": {
+      "markers": {
+        "status=\"SUCCESS\"": true,
+        "Result       : SUCCESS": true,
+        "Validity     : RUNTIME_STRUCTURAL_ONLY": true,
+        "Semantic     : NOT_EVALUATED": true,
+        "status-contract": true,
+        "mask-quality": true
+      },
+      "result": "PASS"
+    },
+    "delivery_src/BuildReasonSeg_Advisor_RC1/docs/model_card.md": {
+      "markers": {
+        "runtime structural validity": true,
+        "semantic target correctness": true,
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true
+      },
+      "result": "PASS"
+    },
+    "delivery_src/BuildReasonSeg_Advisor_RC1/docs/runtime_mapping.md": {
+      "markers": {
+        "runtime/pipeline.py": true,
+        "predict.py": true,
+        "PipelineResult.ok": true,
+        "status = SUCCESS": true,
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true
+      },
+      "result": "PASS"
+    },
+    "delivery_src/BuildReasonSeg_Advisor_RC1/inference/README.md": {
+      "markers": {
+        "result.json": true,
+        "status = SUCCESS": true,
+        "RUNTIME_STRUCTURAL_ONLY": true,
+        "NOT_EVALUATED": true
+      },
+      "result": "PASS"
+    }
+  },
+  "scientific_metrics_changed": false,
+  "product_source_changed": false,
+  "tests_changed": false,
+  "manifest_changed": false,
+  "inspect_proposals_changed": false,
+  "pytest": "not run",
+  "model_inference": false,
+  "training": false,
+  "external_write": false,
+  "manifest_update": "DEFERRED_TO_R1_D",
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1B_R2_REMOTE_AUDIT",
+  "known_issue": "PREEXISTING_CANONICAL_CONTRACT_FAILURE_CANDIDATE"
+}

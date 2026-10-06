@@ -20,15 +20,21 @@ inference/
 > Task 8A 尚未实现真实推理，因此本目录不会产生任何结果文件。
 > 大图 tile size / overlap / merge threshold / context 参数**尚未冻结**，将在后续任务定义。
 
-## SUCCESS semantics (frozen)
+## Runtime result semantics
+
+正常推理生成的 `result.json` 若记录：
 
 ```text
-validity_scope  = RUNTIME_STRUCTURAL_ONLY
-semantic_status = NOT_EVALUATED
-semantic_note   = SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target
-                  correctness is not established.
+status = SUCCESS
 ```
 
-`SUCCESS` is a runtime structural status only: it confirms that the RC1 runtime completed and passed its current
-structural checks. It does **not** establish semantic target correctness — semantic target correctness is not
-established by this runtime status.
+则同时携带：
+
+```text
+validity_scope = RUNTIME_STRUCTURAL_ONLY
+semantic_status = NOT_EVALUATED
+```
+
+这只表示当前 RC1 runtime 已完成并通过现有结构性检查；semantic target correctness is not established。
+
+因此 `result.json` 中的 `SUCCESS` 不能被解释为目标建筑在语义上已经正确匹配，也不能被解释为 mask 质量验收通过。

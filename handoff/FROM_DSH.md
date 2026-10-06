@@ -17,26 +17,30 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION Report
+# FROM_DSH — Task MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION` |
-| Status | **STOP** (no document edited; per-file specifications not yet read) |
-| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1b` / `ae08e405778672010168124196a4cadab90414c0` |
-| Task branch | `fix/task8b3-mask01-success-semantics-r1b-r1` |
-| Documents modified | NONE |
-| Exact phrase present in all four docs | False |
-| Previous R1B failure diagnosis | the exact contiguous phrase existed only inside prose and never landed as literal text |
-| product source / tests / manifest | UNCHANGED |
-| pytest / model inference / training | NOT run · inspect-proposals untouched |
-| Evidence | `evaluation\task8b3_mask01_d1_r1b_r1_canonical_docs_correction.json` |
-| Report | `docs\task8b3_mask01_d1_r1b_r1_canonical_docs_correction.md` |
-| Next action | Awaiting authorization to read book sections 3-7 and 11, then apply the per-file requirements; R1-C not entered |
+| Task | `MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT` |
+| Status | **COMPLETE** |
+| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1b-r1` / `79fc7e859cb0acbce2e86658cb65630026a20d1b` |
+| Task branch | `fix/task8b3-mask01-success-semantics-r1b-r2` |
+| Documents modified | 4 (README, docs/model_card.md, docs/runtime_mapping.md, inference/README.md) |
+| Global validation | README.md=PASS · docs/model_card.md=PASS · docs/runtime_mapping.md=PASS · inference/README.md=PASS |
+| File-specific validation | README.md=PASS · docs/model_card.md=PASS · docs/runtime_mapping.md=PASS · inference/README.md=PASS |
+| Contiguous phrase present in all four | True |
+| scientific metrics / product source / tests / manifest changed | false / false / false / false |
+| pytest / model inference / training / external write | not run / false / false / false |
+| manifest_update | `DEFERRED_TO_R1_D` |
+| github_persistence_policy | ALL_TASK_OUTCOMES_PUSHED |
+| Evidence | `evaluation\task8b3_mask01_d1_r1b_r2_exact_doc_replacement.json` |
+| Report | `docs\task8b3_mask01_d1_r1b_r2_exact_doc_replacement.md` |
+| Next gate | `CHATGPT_R1B_R2_REMOTE_AUDIT` (R1-C not entered) |
 
-Watt was not needed for Task MASK01_D1_R1B_R1_CANONICAL_DOCS_CORRECTION (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1B_R2_EXACT_DOC_REPLACEMENT (no downloads, no transfers).
 
-The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.
+The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local, remote and parent heads are printed after the
+push.

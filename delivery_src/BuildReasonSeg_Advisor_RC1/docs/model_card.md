@@ -111,15 +111,17 @@ detector 与 research 冻结路径**检测数、置信度、mask 完全一致**�
 - `scene_disjoint_v1` 的场景分离 ≠ 跨城市泛化证据；任意航空/跨传感器鲁棒性 **NOT ESTABLISHED**。
 - A2 为持续未检出样例，来源/域 **NOT ESTABLISHED**；**不得**判定为已证实的域外样本。
 
-## SUCCESS semantics (frozen)
+## Runtime SUCCESS 语义
+
+RC1 必须区分 runtime structural validity 与 semantic target correctness。
+
+机器可读字段固定为：
 
 ```text
-validity_scope  = RUNTIME_STRUCTURAL_ONLY
+validity_scope = RUNTIME_STRUCTURAL_ONLY
 semantic_status = NOT_EVALUATED
-semantic_note   = SUCCESS means the RC1 runtime completed and passed its current structural checks; semantic target
-                  correctness is not established.
 ```
 
-`SUCCESS` is a runtime structural status only: it confirms that the RC1 runtime completed and passed its current
-structural checks. It does **not** establish semantic target correctness — semantic target correctness is not
-established by this runtime status.
+`SUCCESS` 只确认当前 runtime structural validity：即推理链完成并通过现有结构性检查。它不是语义质量判定，因此 semantic target correctness is not established。
+
+这一状态契约不改变 Task 7I / Task 7J 的任何指标、模型选择、seed、reference-selection 结论或泛化边界。
