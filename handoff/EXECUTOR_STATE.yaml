@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: audit/task8b3-prop01-a2-channel-contract-causal-test-v1
-head: 3aac94923214942b3411e73d0222814bf9710776
+head: 9ea5938dcdb0d7f126cf5d3d8843d7cc45d0daba
 completed:
 - Five canonical startup reads and exact clean Git anchor verified.
 - Supervisor task installed verbatim, SHA256 checked, and re-read.
@@ -13,8 +13,10 @@ completed:
 - All baseline tensors match reversed RGB and accepted actual hashes; all corrected tensors match intended RGB.
 - 'Baseline raw boxes 0 and corrected raw boxes 0: C2_CHANNEL_CORRECTION_STILL_ZERO.'
 - Same frozen arguments/model/backend across each pair; external inventory and 144 hashes unchanged.
-current_step: PAIRED_RESULT_CHECKPOINT
-next_action: Validate saved paired evidence and complete report, then READY_FOR_SUPERVISOR_AUDIT handoff; no further inference.
+- Saved-evidence classification and final assertions PASS; C2 evidence-backed.
+- Final report and handoff ready for Supervisor remote audit; no repair or tuning.
+current_step: STOP_FOR_SUPERVISOR_AUDIT
+next_action: CHATGPT_PROP01_CHANNEL_CAUSAL_TEST_REMOTE_AUDIT; do not automatically enter repair or further inference.
 hypotheses:
 - Correction of the real channel defect is insufficient to recover A2 proposals at the frozen setup; no threshold experiment
   or repair is authorized.
@@ -23,16 +25,18 @@ tests_run:
 - External inventory and 144 protected hashes unchanged.
 - Paired tensor assertions PASS; baseline guard PASS; 18 predict calls exactly.
 - Accepted baseline tensor hash replay and intended corrected hash checks PASS for all nine tiles.
+- Saved-evidence finalize PASS, zero inference calls.
+- Syntax/import, JSON/YAML, attachment preservation, whitespace and five-authorized-path scope checks PASS.
 files_modified:
 - handoff/CURRENT_TASK.md
 - handoff/EXECUTOR_STATE.yaml
 - docs/task8b3_prop01_a2_channel_contract_causal_test_v1.md
 - evaluation/task8b3_prop01_a2_channel_contract_causal_test_v1.json
 - scripts/diagnose_prop01_a2_channel_contract_causal_test.py
-uncommitted_changes: true
+uncommitted_changes: false
 blocked_on_supervisor: false
 block_reason: null
 decision_level_required: null
 last_checkpoint:
-  commit: 3aac94923214942b3411e73d0222814bf9710776
+  commit: 9ea5938dcdb0d7f126cf5d3d8843d7cc45d0daba
   pushed: true

@@ -1,7 +1,7 @@
 {
   "task_id": "PROP01_A2_CHANNEL_CONTRACT_CAUSAL_TEST_V1",
-  "status": "IN_PROGRESS",
-  "stage": "PAIRED_EXPERIMENT_COMPLETE",
+  "status": "READY_FOR_SUPERVISOR_AUDIT",
+  "stage": "FINAL_EVIDENCE",
   "timestamp_utc": "2026-10-06T05:29:12.277407+00:00",
   "starting_branch": "audit/task8b3-prop01-a2-zero-proposals-forensics-v1",
   "starting_head": "59296d25195a656e6a75e303e3cbb43fa9df8b8b",
@@ -414,7 +414,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0001_r000_c001",
@@ -550,7 +552,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0002_r000_c002",
@@ -686,7 +690,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0100_r001_c000",
@@ -822,7 +828,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0101_r001_c001",
@@ -958,7 +966,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0102_r001_c002",
@@ -1094,7 +1104,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0200_r002_c000",
@@ -1230,7 +1242,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0201_r002_c001",
@@ -1366,7 +1380,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     },
     {
       "tile_id": "tile_0202_r002_c002",
@@ -1502,7 +1518,9 @@
         },
         "backend_fp16": false
       },
-      "same_model_predictor_and_backend": true
+      "same_model_predictor_and_backend": true,
+      "baseline_tensor_matches_accepted_forensics": true,
+      "corrected_tensor_matches_accepted_intended_rgb": true
     }
   ],
   "planned_case_predict_calls": 18,
@@ -1677,5 +1695,12 @@
     "inventory_after_sha256": "091e7ef3555705fbe34f6281fcbd74eb20e36ce3765643c1f058233d4f570fc5",
     "changed_inventory_paths": [],
     "changed_protected_hash_paths": []
+  },
+  "repair_candidate_only": "API-compatible RGB→BGR conversion before passing NumPy tile to Ultralytics",
+  "validation": {
+    "saved_evidence_assertions": "PASS",
+    "external_integrity": "UNCHANGED",
+    "scope": "FIVE_AUTHORIZED_PATHS_ONLY",
+    "finalize_inference_calls": 0
   }
 }

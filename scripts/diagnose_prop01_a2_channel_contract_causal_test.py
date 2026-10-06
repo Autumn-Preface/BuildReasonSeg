@@ -220,20 +220,37 @@ def experiment(data):
 
 
 def validate_saved(data):
+    accepted = prior.read_json(prior.EVIDENCE)
+    assert prior.file_hash(prior.EVIDENCE) == data["accepted_forensic_evidence"]["sha256"]
+    assert data["frozen_parameters"] == prior.POLICY
+    assert data["environment"]["libraries"] == accepted["environment"]["libraries"]
+    for name, version in data["environment"]["libraries"].items():
+        assert importlib.metadata.version(name) == version
+    for source in data["installed_library_input_contract"].values():
+        assert prior.file_hash(source["path"]) == source["sha256"]
+    for flag in ("threshold_sweep_run", "parameter_tuning_run", "product_source_changed", "external_write",
+                 "product_repair_run", "full_pipeline_run", "positive_control_run", "external_sync_run"):
+        assert data[flag] is False
     assert len(data["per_tile"]) == 9 and data["case_predict_calls"] == 18
     assert data["baseline_total_raw"] == 0
     assert data["baseline_tensor_contract"] == "CONFIRMED_REVERSED_SOURCE_RGB"
     assert data["corrected_tensor_contract"] == "CONFIRMED_INTENDED_SOURCE_RGB"
-    for row in data["per_tile"]:
+    for row, old in zip(data["per_tile"], accepted["per_tile"]):
         baseline, corrected = row["baseline"], row["corrected"]
+        assert row["tile_id"] == old["tile_id"] and row["tile_rgb_sha256"] == old["tile_sha256"]
         assert row["same_model_predictor_and_backend"]
         assert baseline["tensor_contract_valid"] and corrected["tensor_contract_valid"]
         assert baseline["raw_box_count"] == 0
         assert baseline["tensor"]["network_tensor_sha256"] == baseline["tensor"]["reversed_rgb_tensor_sha256"]
         assert corrected["tensor"]["network_tensor_sha256"] == corrected["tensor"]["intended_rgb_tensor_sha256"]
+        assert baseline["tensor"]["network_tensor_sha256"] == old["detector_tensor"]["sha256"]
+        assert corrected["tensor"]["network_tensor_sha256"] == old["detector_tensor"]["expected_source_RGB_tensor_sha256"]
+        assert not baseline["tensor"]["equals_intended_rgb"] and not corrected["tensor"]["equals_reversed_rgb"]
         assert baseline["invocation_args"] == corrected["invocation_args"] == PARAMS
         assert baseline["effective_library_args"] == corrected["effective_library_args"]
         assert len(corrected["confidences"]) == corrected["raw_box_count"]
+        row["baseline_tensor_matches_accepted_forensics"] = True
+        row["corrected_tensor_matches_accepted_intended_rgb"] = True
     assert data["corrected_total_raw"] == sum(row["corrected"]["raw_box_count"] for row in data["per_tile"])
     expected = "C1_CHANNEL_CORRECTION_RECOVERS_PROPOSALS" if data["corrected_total_raw"] > 0 else "C2_CHANNEL_CORRECTION_STILL_ZERO"
     assert data["primary_classification"] == expected
