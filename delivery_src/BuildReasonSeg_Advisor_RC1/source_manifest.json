@@ -622,8 +622,8 @@
     },
     {
       "path": "predict.py",
-      "bytes": 18681,
-      "sha256": "a342e92b515c738a7e09097cc5df156f4119b4be3627e0c5f058bcc3e20fa211"
+      "bytes": 18887,
+      "sha256": "16e18bd5af208a4940a26c3e9e455ead3c25a03220ca19c33d89d73710deb71d"
     },
     {
       "path": "prepare_dataset.py",
@@ -642,8 +642,8 @@
     },
     {
       "path": "tests/test_cli_contract.py",
-      "bytes": 10188,
-      "sha256": "f6cfe97b2b168b0d25f66a8dad7a1fb70aec7e404b8b4f4b393297be1b5914ac"
+      "bytes": 10877,
+      "sha256": "7ff3efdf34666acafff75a177581051bf67703142bd52950e2e765d70b0f526e"
     },
     {
       "path": "tests/test_language_contract.py",

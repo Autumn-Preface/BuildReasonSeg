@@ -1,0 +1,63 @@
+{
+  "task_id": "MASK01_D1_R1D2_POST_INSPECT_MANIFEST_RECANONICALIZATION",
+  "status": "COMPLETE",
+  "starting_branch": "fix/rc1-inspect-proposals-preflight-order",
+  "starting_head": "efc48eb5ee8b0851a84e8a3d95533f1acd23cacf",
+  "task_branch": "fix/task8b3-mask01-success-semantics-r1d2",
+  "final_commit_sha": "POST_COMMIT_EXTERNAL_FACT",
+  "identity_source": "HEAD Git canonical blob bytes (working-tree bytes not used)",
+  "entry_count_before": 135,
+  "entry_count_after": 135,
+  "ordered_path_digest_before": "7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd",
+  "ordered_path_digest_after": "7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd",
+  "ordered_path_digest_preserved": true,
+  "path_order_preserved": true,
+  "entry_count_preserved": true,
+  "updated_entries": [
+    {
+      "path": "predict.py",
+      "old_bytes": 18681,
+      "new_bytes": 18887,
+      "old_sha256": "a342e92b515c738a7e09097cc5df156f4119b4be3627e0c5f058bcc3e20fa211",
+      "new_sha256": "16e18bd5af208a4940a26c3e9e455ead3c25a03220ca19c33d89d73710deb71d"
+    },
+    {
+      "path": "tests/test_cli_contract.py",
+      "old_bytes": 10188,
+      "new_bytes": 10877,
+      "old_sha256": "f6cfe97b2b168b0d25f66a8dad7a1fb70aec7e404b8b4f4b393297be1b5914ac",
+      "new_sha256": "7ff3efdf34666acafff75a177581051bf67703142bd52950e2e765d70b0f526e"
+    }
+  ],
+  "already_canonical_entries": 133,
+  "missing_at_head": [],
+  "helper": {
+    "path": "scripts\\sync_advisor_rc1_delivery.py",
+    "function": "entry_source_bytes",
+    "signature": "(entry: 'dict', basis: 'str | None', root: 'Path') -> 'bytes | None'"
+  },
+  "all_entry_git_canonical_validation": "PASS",
+  "manifest_contract_validation": {
+    "schema_present": true,
+    "schema_value": "BuildReasonSeg.AdvisorRC1.SourceManifest.v1",
+    "identity_basis": "GIT_CANONICAL_BLOB_BYTES",
+    "identity_basis_is_git_canonical": true,
+    "entry_count": 135,
+    "unique_paths": true,
+    "all_paths_exist_at_head": true,
+    "no_control_file_entry": true,
+    "ordered_path_digest_before": "7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd",
+    "ordered_path_digest_after": "7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd"
+  },
+  "manifest_contract_pass": true,
+  "product_source_changed": false,
+  "tests_changed": false,
+  "canonical_docs_changed": false,
+  "sync_script_changed": false,
+  "pytest": "not run",
+  "model_inference": false,
+  "training": false,
+  "external_sync_performed": false,
+  "github_persistence_policy": "ALL_TASK_OUTCOMES_PUSHED",
+  "next_gate": "CHATGPT_R1D2_REMOTE_AUDIT"
+}

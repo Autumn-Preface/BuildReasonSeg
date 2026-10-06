@@ -17,30 +17,30 @@ quality_json_path: evaluation/build_spatial_reason_v0.1.1_quality.json
 sample_pack_path: evaluation/build_spatial_reason_v0.1.1_samples
 <!-- ARTIFACT-FACTS:END -->
 
-# FROM_DSH — Task RC1_INSPECT01_PREFLIGHT_ORDER_FIX Report
+# FROM_DSH — Task MASK01_D1_R1D2_POST_INSPECT_MANIFEST_RECANONICALIZATION Report
 
 _This file holds the current engineering handoff. Research-task reports (Task 7J and earlier) are preserved in git
 history._
 
 | item | value |
 |---|---|
-| Task | `RC1_INSPECT01_PREFLIGHT_ORDER_FIX` |
+| Task | `MASK01_D1_R1D2_POST_INSPECT_MANIFEST_RECANONICALIZATION` |
 | Status | **COMPLETE** |
-| Starting branch / head | `fix/task8b3-mask01-success-semantics-r1d` / `5808e64ed43fd383be9e08bf623a9bfdc27f62b4` |
-| Task branch | `fix/rc1-inspect-proposals-preflight-order` |
-| Design | `INSPECT_IMAGE_PREFLIGHT_BEFORE_MODEL_V1` |
-| Fix | inspect-only `load_image()` preflight before `_resolve_and_report` / `PredictRuntime` |
-| Contract | `--inspect-proposals` + unreadable image → **E202 / exit 20** |
-| Regression test | `test_inspect_unreadable_image_precedes_model_resolution` |
-| Gate A | exit 0 · 2 passed in 3.24s |
-| Gate B | exit 0 · 4 passed in 6.12s |
-| runtime pipeline / imageio / detector / manifest / docs | UNCHANGED |
-| normal inference ordering changed | NO |
-| model inference / training / external sync | false / false / false |
-| Evidence | `evaluation\rc1_inspect01_preflight_order_fix.json` |
-| Report | `docs\rc1_inspect01_preflight_order_fix.md` |
-| Next gate | `CHATGPT_INSPECT01_REMOTE_AUDIT` (R1-D2 / R1-E not entered) |
+| Starting branch / head | `fix/rc1-inspect-proposals-preflight-order` / `efc48eb5ee8b0851a84e8a3d95533f1acd23cacf` |
+| Task branch | `fix/task8b3-mask01-success-semantics-r1d2` |
+| Only file modified | `source_manifest.json` |
+| ordered_path_digest_before | `7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd` |
+| ordered_path_digest_after | `7967127fcfadfe4f7f19a3511163c9f77476673774dcac6e8f5a7e49ea20a7bd` |
+| digest / count / order preserved | True / True / True |
+| Entries updated / already canonical | 2 / 133 |
+| All-entry `entry_source_bytes()` validation | PASS |
+| Manifest contract validation | True |
+| product source / tests / docs / sync script | UNCHANGED |
+| pytest / model inference / training / external sync | not run / false / false / false |
+| Evidence | `evaluation\task8b3_mask01_d1_r1d2_post_inspect_manifest_recanonicalization.json` |
+| Report | `docs\task8b3_mask01_d1_r1d2_post_inspect_manifest_recanonicalization.md` |
+| Next gate | `CHATGPT_R1D2_REMOTE_AUDIT` (R1-E not entered) |
 
-Watt was not needed for Task RC1_INSPECT01_PREFLIGHT_ORDER_FIX (no downloads, no transfers).
+Watt was not needed for Task MASK01_D1_R1D2_POST_INSPECT_MANIFEST_RECANONICALIZATION (no downloads, no transfers).
 
 The commit records `final_commit_sha = POST_COMMIT_EXTERNAL_FACT`; local and remote heads are printed after the push.
