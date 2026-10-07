@@ -67,3 +67,9 @@ Fake tests 对 torch.load、模型构造/加载、detector、SAM2、D-B1、Progr
 该界面改善本地操作，不证明模型语义正确；既有能力边界和结构 guard 保持冻结。推理可能失败或产生需人工核验的目标。预览保持纵横比，读图复用 accepted image contract。
 
 下一步为 staging 实包、无模型环境/绑定检查、整包移动和最终完整性核验。最终审批属于 Supervisor。
+
+## Staging checkpoint
+
+独立实包已完成。清单80项全部 SHA256 通过；正常环境探测通过；真实 accepted API 绑定在禁止模型构造、加载和推理护栏下通过；正常 GUI 启动完成并安全关闭。原生 PowerShell launcher 探测选中已验证 Python，其最终 Start-Process 在验证中被拦截记录，以免留下孤立窗口。
+
+验证脚本曾出现绑定顺序、导入护栏范围、GUI poll 等待和 PowerShell 验证变量 scope 四项 L0 调用失败。所有真实记录保留在 JSON，随后仅调整验证调用机制后通过；交付代码和57-test revision 未改变。staging 私有 YOLO_CONFIG_DIR 下生成 Ultralytics/settings.json，未落入根目录或旧 RC1。

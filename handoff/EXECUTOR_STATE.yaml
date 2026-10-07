@@ -3,7 +3,7 @@ task_id: TASK8E_USER_FACING_DEMO_PACKAGE_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: delivery/task8e-user-demo-v1
-head: e814bdd6d255467b88c5fef812b7cb640647badb
+head: bb5b86e9648d7a75982a3232a7d672fc2d2fc33d
 accepted_predecessor: TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT
 completed:
 - Canonical read order and remote exact HEAD/clean working tree verified; authorized
@@ -16,9 +16,15 @@ completed:
 - 57 fake/API/Tkinter tests PASS with model-call guards; initial L0 sandbox TEMP setup
   errors retained.
 - Presentation-only GUI display check PASS; no model inference.
-current_step: GUI_ASSEMBLY_CODE_TESTED
-next_action: Assemble new staging; no-model self-check; folder move; final integrity
-  gates.
+- New staging assembled with 54 accepted source/config files + 17 assets/version;
+  old RC1 inventory unchanged.
+- 80/80 package SHA256 self-check and native environment check PASS; guarded actual
+  API binding and GUI startup ready PASS.
+- Native PowerShell launcher probe/path selection PASS with final Start-Process intercepted;
+  L0 validation invocation failures retained.
+current_step: STAGING_VERIFIED_NO_INFERENCE
+next_action: Move entire verified staging folder to final path; repeat final self-check
+  and preservation gates.
 tests_run:
 - suite: tests/test_task8e_user_demo.py
   result: 57 passed in 2.76s
@@ -26,7 +32,7 @@ tests_run:
 uncommitted_changes: true
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: e814bdd6d255467b88c5fef812b7cb640647badb
+  commit: bb5b86e9648d7a75982a3232a7d672fc2d2fc33d
   pushed: true
 next_gate: CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
 model_inference_calls: 0

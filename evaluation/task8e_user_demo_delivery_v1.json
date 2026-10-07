@@ -4,7 +4,7 @@
   "accepted_predecessor": "TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT",
   "accepted_predecessor_head": "b569dcefa26af9788a9ec75eb52cbb8317305bea",
   "branch": "delivery/task8e-user-demo-v1",
-  "head": "e814bdd6d255467b88c5fef812b7cb640647badb",
+  "head": "bb5b86e9648d7a75982a3232a7d672fc2d2fc33d",
   "external_demo_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1",
   "gui_mode": "TKINTER",
   "authorization_identity": {
@@ -13945,9 +13945,925 @@
     ]
   },
   "python_runtime_discovery": null,
-  "package_manifest": null,
-  "model_asset_identity": [],
-  "source_asset_identity": [],
+  "package_manifest": {
+    "demo_version": "V1",
+    "files": [
+      {
+        "path": "BuildReasonSeg_Demo.py",
+        "bytes": 16519,
+        "sha256": "70ca1a758ef053fdee2af7652e1d4e66fd3d5667a266cb628d3c1af8a533c956",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "_engine/VERSION",
+        "bytes": 257,
+        "sha256": "75e28f8f940a430a58a216e245ca80dfd391efd74dadfde9acea3366b48158c0",
+        "role": "accepted_engine_version"
+      },
+      {
+        "path": "_engine/buildreasonseg/__init__.py",
+        "bytes": 1315,
+        "sha256": "d246ac60376a72aa6cbef0a38a73afd7f82a0dbe60bb9a0dbdc13bc499302633",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/cli/__init__.py",
+        "bytes": 508,
+        "sha256": "408a802a5dd6dd9456919f7be89864eff5dc892427183f302bcd554a53130ea3",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/cli/common.py",
+        "bytes": 3835,
+        "sha256": "2cb6632ce63e75372aa6b8fe9444e6f0830c2a2471db4dac6f30245eaedca8e8",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/errors.py",
+        "bytes": 6121,
+        "sha256": "470196b06f216a9e431230a6451361a7359eb5583c0a0e839d1fe2e8f5964d18",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/inference/__init__.py",
+        "bytes": 413,
+        "sha256": "8d5ba4d915d76a13652370737ec95b5b1a5399fb70fd4467af8d10b67acff6ac",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/inference/contract.py",
+        "bytes": 3607,
+        "sha256": "7a030088f3dc428f1a76e690e35966326f584506c11053528ae2fcb80f8a68c6",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/language/__init__.py",
+        "bytes": 997,
+        "sha256": "bce1dad5d8f7bdeaec3e7d42d73d6498c597b34bb3a9a5179fc6a87659980ef8",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/language/fallback.py",
+        "bytes": 1371,
+        "sha256": "0addfdac729539bfc17ffca18a1bba80931f9d242a728caea14b7e2e9c6b62a6",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/language/frontend.py",
+        "bytes": 7714,
+        "sha256": "2000e92f72439a6d55185bfa99a6b8271cfdd94ecdc77754fdc1d527c1dcd822",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/language/registry.py",
+        "bytes": 3281,
+        "sha256": "954781555aa5c4bca1f8cb3fbf8ca4d1b219163a1f85275fbc16e4d98bd7bdbb",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/language/suggestion.py",
+        "bytes": 3156,
+        "sha256": "a91fb09b581e53f886e7cc56cd2561aebf6084b1b11955c4d7eb26354fdd2405",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/language/validator.py",
+        "bytes": 3546,
+        "sha256": "93d440f37ce9599975f5897084674d5b228c33b8b81b7fdbe8002833a1a59d7c",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/models/__init__.py",
+        "bytes": 545,
+        "sha256": "3e186646be27b4d2b67be1f0fde99537e31d0bbe10439814d133f4171b709860",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/models/checkpoints.py",
+        "bytes": 1953,
+        "sha256": "7274657e0d175c92985f4d8dd192af32740391a49edbacf2091421d3c69f7711",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/models/package.py",
+        "bytes": 10556,
+        "sha256": "38c8cc97578701c21a70a7b3e4c08f8ae30651b89702f2bf7bf42f92ee197a99",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/paths.py",
+        "bytes": 4070,
+        "sha256": "ff6e851ba4e235f00d6b7bb9a32b92801f5f603c7e3033f8e7b435ab571eaba2",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/__init__.py",
+        "bytes": 85,
+        "sha256": "ffcfe449612ed272aee4481e1614ea123fae2007672b5a74b6db41e3238510f3",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/__init__.py",
+        "bytes": 1412,
+        "sha256": "c995d7c131f8387ee45fc730b0950e363b3ce4b6a5ae4d4c551d2f7d1b116237",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/data.py",
+        "bytes": 12067,
+        "sha256": "3eed38cde7f8812069547dbd81cddd85fa82bddb74f99e0c38cb3323e5cb08ba",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/geometric_relation_field.py",
+        "bytes": 9361,
+        "sha256": "6009feb409d6840df3305077c02c30c5887814f0ecb98006ccb210e1fcd5082e",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py",
+        "bytes": 8427,
+        "sha256": "269b2e2e120c19438341dc6b958af2fca4cca4e9cedbea06982f697ffef3673d",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/losses.py",
+        "bytes": 2871,
+        "sha256": "6c4b5152071e328ff46227aada9f1bd907e7fc9377e2db910a143ce5643e1038",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/native_vector_adapter.py",
+        "bytes": 15826,
+        "sha256": "236c409927043e397764cb5dcc1418736c98d900a3c11845afb698b6846f78fc",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/nearest_boundary_field.py",
+        "bytes": 5213,
+        "sha256": "2f8405642780ae24afcd17aff9cc597ea467f9e7178533e34201ea314e15afd3",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/program_parser.py",
+        "bytes": 12281,
+        "sha256": "d501607dc692fbfb28986d45abd8807721101ac73aa9296a83af217780f71840",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/qwen_seg.py",
+        "bytes": 37318,
+        "sha256": "259dd90d8a80b574d79a46089f3090836410bb2c12ac8173a9f75cbc09fa2a2d",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/sam2_bridge.py",
+        "bytes": 26266,
+        "sha256": "504fc38aad8c255e1b416e10e6ca16fee09bddd1bda3a455d4da2272cb3a3b73",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/shapefile_reader.py",
+        "bytes": 15739,
+        "sha256": "c5fdf6b3e94e15149e410ae425a3d36fd08ec6aa8974d97cddb11e703e544539",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/structured_grounding.py",
+        "bytes": 22654,
+        "sha256": "942070170ab2bea9c87a3550877c400402c52b236a416cfdf9d6025395d7140e",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6m_eval.py",
+        "bytes": 15077,
+        "sha256": "6f8fbcb9215163c32904de2adbf03b712f30b741c68303eb795e96e875d7045c",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6n_relation_decoder.py",
+        "bytes": 18306,
+        "sha256": "88efe10d0ecdee3f0da7d7864a2d35b8040c320a9910d35e0aa975017ef4d496",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6q_reference_resolver.py",
+        "bytes": 10038,
+        "sha256": "6a356761f2e0b14587fb0f3c649970d19adddd68180cdd4db06d7f7a8ec8237e",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6s_directional_pipeline.py",
+        "bytes": 14015,
+        "sha256": "d7b3be598a7ce3a7b53a2edc7c1aa8820ae6c3ea874032385c6ddb3bdf4d4dc8",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6u_common.py",
+        "bytes": 12660,
+        "sha256": "6a4659aff0143bd6192de937907e54afe9c4e179b56ef4468f4643159e2c5fa5",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6z_field_composition.py",
+        "bytes": 6291,
+        "sha256": "5626167a9f85b43e092e5ba060e5b31ccf737ad5e896d9257b92f9479095ca34",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+        "bytes": 14790,
+        "sha256": "de4da2bbf8ee62a54554588cce05674b08c8f57123bb2e2b8f83bc3fb1af3ec6",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/whu_native_vector.py",
+        "bytes": 24344,
+        "sha256": "9ae8025ed3b0b94803ae996f76785eef18a8a140fc5a88fa9b396aca8f7330b3",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/_frozen/mvp/whu_vector_audit.py",
+        "bytes": 17001,
+        "sha256": "2fb131cf8367ea69ab9686a5e6c18628cfda8082a104a5ff20db3ec294a94e7d",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/context.py",
+        "bytes": 8459,
+        "sha256": "13df06bc1311da9cd6d3d2164d6ce1bd6c47f011c4a7f38baa1fc683a871faac",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/core.py",
+        "bytes": 11064,
+        "sha256": "37c38ba4acd1bb0f77533674333172991fd91c7dba37342be208f445b1d65a15",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/detector.py",
+        "bytes": 21407,
+        "sha256": "01884a438961a6fa2029f0378ecbc62594beb736b36b80f4c2808123ccdb20f2",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/frozen_paths.py",
+        "bytes": 3060,
+        "sha256": "a3344400dea3915385a8d3d2f5bf050f1666ac7afe8b330d3006ba5d840bf67a",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/imageio.py",
+        "bytes": 7978,
+        "sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/outputs.py",
+        "bytes": 9317,
+        "sha256": "5da369e210b69d461391ae07e81fe992b02e89fbb0de196e4ead4e531b020782",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/pipeline.py",
+        "bytes": 19311,
+        "sha256": "ec803658e476d9f14451b48ca80e3ce8eb11ee103039a2311b1249f9d1b8d798",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/runtime/program_head.py",
+        "bytes": 13432,
+        "sha256": "c00cd21e49e66182cadc24a1fdf09316d27f71c02e0ab920d0cd9cfb3ad18250",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/utils/__init__.py",
+        "bytes": 333,
+        "sha256": "53eb818e61499f33287648efd8abd0dbad6e48e854467f774a40c4bad2205867",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/utils/device.py",
+        "bytes": 1145,
+        "sha256": "4d8c3d5305359233e31e43e3970721b7c936d73d3669274b44fa6ef5d2ab8a15",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/utils/hashing.py",
+        "bytes": 1379,
+        "sha256": "bd87590c7f86c31d81085669b56bc35968ec6e6bb51e13d808bcfd7af3e4d836",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/buildreasonseg/utils/logging.py",
+        "bytes": 1392,
+        "sha256": "56085dacfa0399baa9d0fee8c21305b3507589ddc97e7f3a4e7559a3fcfe645f",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/configs/inference.yaml",
+        "bytes": 1254,
+        "sha256": "49502e5830a1785f93a4ff7f7a9fe5c6bfcde1fd84c607dec1dbde6ec4884df5",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/model/buildreasonseg_advisor/decoder.pt",
+        "bytes": 1117495,
+        "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/buildreasonseg_advisor/detector.pt",
+        "bytes": 54480241,
+        "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/buildreasonseg_advisor/metadata.json",
+        "bytes": 6802,
+        "sha256": "a77f5b76bd8e43c648a06ea672788c97e9f6cd3a76cc18f8132267af2792aa8e",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/model/buildreasonseg_advisor/model.yaml",
+        "bytes": 2268,
+        "sha256": "83f0f04c62eb310b964afca195068a61cac728b6289bbbc38aa53265b88b113a",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json",
+        "bytes": 5502,
+        "sha256": "6f8a6a55027e3da5160105556cda5dd69f6423f1c32645f6730d32de7773d0c4",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/config.json",
+        "bytes": 1505,
+        "sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/generation_config.json",
+        "bytes": 269,
+        "sha256": "1e241830b48b397cb0900101421df5450baddc7adf01e5fc86b5615865f3bae4",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/merges.txt",
+        "bytes": 1671839,
+        "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors",
+        "bytes": 4255140312,
+        "sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/preprocessor_config.json",
+        "bytes": 390,
+        "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer.json",
+        "bytes": 7032403,
+        "sha256": "a5d85b6dcc535e6b93115a9ef287e6132fdbf30270da6218194ba742261173c7",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer_config.json",
+        "bytes": 10868,
+        "sha256": "c2da771801886ad9ae98181793ffd3dfb7f1af30f6f7c6a4e15d7dbba52e2399",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/video_preprocessor_config.json",
+        "bytes": 385,
+        "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/vocab.json",
+        "bytes": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+        "bytes": 70090713,
+        "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/program_head/qwen_asset_manifest.json",
+        "bytes": 1995,
+        "sha256": "5c4cf25e31e1058578137027a0a84d6bf81b48bd0709f238e518a4570c56361f",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/sam2/sam2.1_hiera_b+.yaml",
+        "bytes": 3766,
+        "sha256": "ef47e14197a65c1fd542e1862270ee851c2b15e571b2c58ceb0329d15be33769",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/model/components/sam2/sam2.1_hiera_base_plus.pt",
+        "bytes": 323606802,
+        "sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+        "role": "accepted_model_asset"
+      },
+      {
+        "path": "_engine/predict.py",
+        "bytes": 18887,
+        "sha256": "16e18bd5af208a4940a26c3e9e455ead3c25a03220ca19c33d89d73710deb71d",
+        "role": "accepted_engine_source"
+      },
+      {
+        "path": "_ui/__init__.py",
+        "bytes": 81,
+        "sha256": "c95c2ee0ba5b75ff2c7bfe4da8f35f1133b8ca496171d96ee31be1d63267e80c",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "_ui/backend.py",
+        "bytes": 14122,
+        "sha256": "132fec7ad6a57f9c61bbdc6f8dddce9b96c4266cc51c35527996491937c666c5",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "_ui/environment.py",
+        "bytes": 5098,
+        "sha256": "636e65d9a6be2ffc87dc7d6f7cd7fb4250e00ab51697bd87452d6a6df53039e1",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "_ui/launch.ps1",
+        "bytes": 2108,
+        "sha256": "2bada66fb97a8964d57487c24598e8579e4dce0da052a8e7fc20103eb2b529f8",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "_ui/runtime.json",
+        "bytes": 171,
+        "sha256": "91b903ab1c1e5cf1d8370dca2dacba5eac78a4c020cd1af4f265e81bee13db59",
+        "role": "machine_python_locator_only"
+      },
+      {
+        "path": "使用说明.md",
+        "bytes": 5866,
+        "sha256": "dca9706fc46520ebefa5ec95a16b40cda53a2dfd7e58b4cc44fee91f81574bc2",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "启动BuildReasonSeg Demo.bat",
+        "bytes": 106,
+        "sha256": "dd221c4b6d6d8e3430f17329e2955031f6e97ed537daf3c580889fbb46dfa291",
+        "role": "user_demo_source"
+      },
+      {
+        "path": "版本说明.txt",
+        "bytes": 436,
+        "sha256": "6956b04df51c3b5d8dbe341dbe14d2633d162385efb23a623f27899000020ca7",
+        "role": "user_demo_source"
+      }
+    ],
+    "total_bytes": 4716468600,
+    "file_count": 80,
+    "runtime_environment_bundled": false,
+    "source_model_portability": "PATH_PORTABLE_ON_CONFIGURED_MACHINE"
+  },
+  "model_asset_identity": [
+    {
+      "path": "_engine/model/buildreasonseg_advisor/decoder.pt",
+      "bytes": 1117495,
+      "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/buildreasonseg_advisor/detector.pt",
+      "bytes": 54480241,
+      "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json",
+      "bytes": 5502,
+      "sha256": "6f8a6a55027e3da5160105556cda5dd69f6423f1c32645f6730d32de7773d0c4",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/config.json",
+      "bytes": 1505,
+      "sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/generation_config.json",
+      "bytes": 269,
+      "sha256": "1e241830b48b397cb0900101421df5450baddc7adf01e5fc86b5615865f3bae4",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/merges.txt",
+      "bytes": 1671839,
+      "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors",
+      "bytes": 4255140312,
+      "sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/preprocessor_config.json",
+      "bytes": 390,
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer.json",
+      "bytes": 7032403,
+      "sha256": "a5d85b6dcc535e6b93115a9ef287e6132fdbf30270da6218194ba742261173c7",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer_config.json",
+      "bytes": 10868,
+      "sha256": "c2da771801886ad9ae98181793ffd3dfb7f1af30f6f7c6a4e15d7dbba52e2399",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/video_preprocessor_config.json",
+      "bytes": 385,
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/vocab.json",
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+      "bytes": 70090713,
+      "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/program_head/qwen_asset_manifest.json",
+      "bytes": 1995,
+      "sha256": "5c4cf25e31e1058578137027a0a84d6bf81b48bd0709f238e518a4570c56361f",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/sam2/sam2.1_hiera_b+.yaml",
+      "bytes": 3766,
+      "sha256": "ef47e14197a65c1fd542e1862270ee851c2b15e571b2c58ceb0329d15be33769",
+      "role": "accepted_model_asset"
+    },
+    {
+      "path": "_engine/model/components/sam2/sam2.1_hiera_base_plus.pt",
+      "bytes": 323606802,
+      "sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+      "role": "accepted_model_asset"
+    }
+  ],
+  "source_asset_identity": [
+    {
+      "path": "_engine/VERSION",
+      "bytes": 257,
+      "sha256": "75e28f8f940a430a58a216e245ca80dfd391efd74dadfde9acea3366b48158c0",
+      "role": "accepted_engine_version"
+    },
+    {
+      "path": "_engine/buildreasonseg/__init__.py",
+      "bytes": 1315,
+      "sha256": "d246ac60376a72aa6cbef0a38a73afd7f82a0dbe60bb9a0dbdc13bc499302633",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/cli/__init__.py",
+      "bytes": 508,
+      "sha256": "408a802a5dd6dd9456919f7be89864eff5dc892427183f302bcd554a53130ea3",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/cli/common.py",
+      "bytes": 3835,
+      "sha256": "2cb6632ce63e75372aa6b8fe9444e6f0830c2a2471db4dac6f30245eaedca8e8",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/errors.py",
+      "bytes": 6121,
+      "sha256": "470196b06f216a9e431230a6451361a7359eb5583c0a0e839d1fe2e8f5964d18",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/inference/__init__.py",
+      "bytes": 413,
+      "sha256": "8d5ba4d915d76a13652370737ec95b5b1a5399fb70fd4467af8d10b67acff6ac",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/inference/contract.py",
+      "bytes": 3607,
+      "sha256": "7a030088f3dc428f1a76e690e35966326f584506c11053528ae2fcb80f8a68c6",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/language/__init__.py",
+      "bytes": 997,
+      "sha256": "bce1dad5d8f7bdeaec3e7d42d73d6498c597b34bb3a9a5179fc6a87659980ef8",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/language/fallback.py",
+      "bytes": 1371,
+      "sha256": "0addfdac729539bfc17ffca18a1bba80931f9d242a728caea14b7e2e9c6b62a6",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/language/frontend.py",
+      "bytes": 7714,
+      "sha256": "2000e92f72439a6d55185bfa99a6b8271cfdd94ecdc77754fdc1d527c1dcd822",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/language/registry.py",
+      "bytes": 3281,
+      "sha256": "954781555aa5c4bca1f8cb3fbf8ca4d1b219163a1f85275fbc16e4d98bd7bdbb",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/language/suggestion.py",
+      "bytes": 3156,
+      "sha256": "a91fb09b581e53f886e7cc56cd2561aebf6084b1b11955c4d7eb26354fdd2405",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/language/validator.py",
+      "bytes": 3546,
+      "sha256": "93d440f37ce9599975f5897084674d5b228c33b8b81b7fdbe8002833a1a59d7c",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/models/__init__.py",
+      "bytes": 545,
+      "sha256": "3e186646be27b4d2b67be1f0fde99537e31d0bbe10439814d133f4171b709860",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/models/checkpoints.py",
+      "bytes": 1953,
+      "sha256": "7274657e0d175c92985f4d8dd192af32740391a49edbacf2091421d3c69f7711",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/models/package.py",
+      "bytes": 10556,
+      "sha256": "38c8cc97578701c21a70a7b3e4c08f8ae30651b89702f2bf7bf42f92ee197a99",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/paths.py",
+      "bytes": 4070,
+      "sha256": "ff6e851ba4e235f00d6b7bb9a32b92801f5f603c7e3033f8e7b435ab571eaba2",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/__init__.py",
+      "bytes": 85,
+      "sha256": "ffcfe449612ed272aee4481e1614ea123fae2007672b5a74b6db41e3238510f3",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/__init__.py",
+      "bytes": 1412,
+      "sha256": "c995d7c131f8387ee45fc730b0950e363b3ce4b6a5ae4d4c551d2f7d1b116237",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/data.py",
+      "bytes": 12067,
+      "sha256": "3eed38cde7f8812069547dbd81cddd85fa82bddb74f99e0c38cb3323e5cb08ba",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/geometric_relation_field.py",
+      "bytes": 9361,
+      "sha256": "6009feb409d6840df3305077c02c30c5887814f0ecb98006ccb210e1fcd5082e",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py",
+      "bytes": 8427,
+      "sha256": "269b2e2e120c19438341dc6b958af2fca4cca4e9cedbea06982f697ffef3673d",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/losses.py",
+      "bytes": 2871,
+      "sha256": "6c4b5152071e328ff46227aada9f1bd907e7fc9377e2db910a143ce5643e1038",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/native_vector_adapter.py",
+      "bytes": 15826,
+      "sha256": "236c409927043e397764cb5dcc1418736c98d900a3c11845afb698b6846f78fc",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/nearest_boundary_field.py",
+      "bytes": 5213,
+      "sha256": "2f8405642780ae24afcd17aff9cc597ea467f9e7178533e34201ea314e15afd3",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/program_parser.py",
+      "bytes": 12281,
+      "sha256": "d501607dc692fbfb28986d45abd8807721101ac73aa9296a83af217780f71840",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/qwen_seg.py",
+      "bytes": 37318,
+      "sha256": "259dd90d8a80b574d79a46089f3090836410bb2c12ac8173a9f75cbc09fa2a2d",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/sam2_bridge.py",
+      "bytes": 26266,
+      "sha256": "504fc38aad8c255e1b416e10e6ca16fee09bddd1bda3a455d4da2272cb3a3b73",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/shapefile_reader.py",
+      "bytes": 15739,
+      "sha256": "c5fdf6b3e94e15149e410ae425a3d36fd08ec6aa8974d97cddb11e703e544539",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/structured_grounding.py",
+      "bytes": 22654,
+      "sha256": "942070170ab2bea9c87a3550877c400402c52b236a416cfdf9d6025395d7140e",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6m_eval.py",
+      "bytes": 15077,
+      "sha256": "6f8fbcb9215163c32904de2adbf03b712f30b741c68303eb795e96e875d7045c",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6n_relation_decoder.py",
+      "bytes": 18306,
+      "sha256": "88efe10d0ecdee3f0da7d7864a2d35b8040c320a9910d35e0aa975017ef4d496",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6q_reference_resolver.py",
+      "bytes": 10038,
+      "sha256": "6a356761f2e0b14587fb0f3c649970d19adddd68180cdd4db06d7f7a8ec8237e",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6s_directional_pipeline.py",
+      "bytes": 14015,
+      "sha256": "d7b3be598a7ce3a7b53a2edc7c1aa8820ae6c3ea874032385c6ddb3bdf4d4dc8",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6u_common.py",
+      "bytes": 12660,
+      "sha256": "6a4659aff0143bd6192de937907e54afe9c4e179b56ef4468f4643159e2c5fa5",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6z_field_composition.py",
+      "bytes": 6291,
+      "sha256": "5626167a9f85b43e092e5ba060e5b31ccf737ad5e896d9257b92f9479095ca34",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+      "bytes": 14790,
+      "sha256": "de4da2bbf8ee62a54554588cce05674b08c8f57123bb2e2b8f83bc3fb1af3ec6",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/whu_native_vector.py",
+      "bytes": 24344,
+      "sha256": "9ae8025ed3b0b94803ae996f76785eef18a8a140fc5a88fa9b396aca8f7330b3",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/_frozen/mvp/whu_vector_audit.py",
+      "bytes": 17001,
+      "sha256": "2fb131cf8367ea69ab9686a5e6c18628cfda8082a104a5ff20db3ec294a94e7d",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/context.py",
+      "bytes": 8459,
+      "sha256": "13df06bc1311da9cd6d3d2164d6ce1bd6c47f011c4a7f38baa1fc683a871faac",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/core.py",
+      "bytes": 11064,
+      "sha256": "37c38ba4acd1bb0f77533674333172991fd91c7dba37342be208f445b1d65a15",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/detector.py",
+      "bytes": 21407,
+      "sha256": "01884a438961a6fa2029f0378ecbc62594beb736b36b80f4c2808123ccdb20f2",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/frozen_paths.py",
+      "bytes": 3060,
+      "sha256": "a3344400dea3915385a8d3d2f5bf050f1666ac7afe8b330d3006ba5d840bf67a",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/imageio.py",
+      "bytes": 7978,
+      "sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/outputs.py",
+      "bytes": 9317,
+      "sha256": "5da369e210b69d461391ae07e81fe992b02e89fbb0de196e4ead4e531b020782",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/pipeline.py",
+      "bytes": 19311,
+      "sha256": "ec803658e476d9f14451b48ca80e3ce8eb11ee103039a2311b1249f9d1b8d798",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/runtime/program_head.py",
+      "bytes": 13432,
+      "sha256": "c00cd21e49e66182cadc24a1fdf09316d27f71c02e0ab920d0cd9cfb3ad18250",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/utils/__init__.py",
+      "bytes": 333,
+      "sha256": "53eb818e61499f33287648efd8abd0dbad6e48e854467f774a40c4bad2205867",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/utils/device.py",
+      "bytes": 1145,
+      "sha256": "4d8c3d5305359233e31e43e3970721b7c936d73d3669274b44fa6ef5d2ab8a15",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/utils/hashing.py",
+      "bytes": 1379,
+      "sha256": "bd87590c7f86c31d81085669b56bc35968ec6e6bb51e13d808bcfd7af3e4d836",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/buildreasonseg/utils/logging.py",
+      "bytes": 1392,
+      "sha256": "56085dacfa0399baa9d0fee8c21305b3507589ddc97e7f3a4e7559a3fcfe645f",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/configs/inference.yaml",
+      "bytes": 1254,
+      "sha256": "49502e5830a1785f93a4ff7f7a9fe5c6bfcde1fd84c607dec1dbde6ec4884df5",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/model/buildreasonseg_advisor/metadata.json",
+      "bytes": 6802,
+      "sha256": "a77f5b76bd8e43c648a06ea672788c97e9f6cd3a76cc18f8132267af2792aa8e",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/model/buildreasonseg_advisor/model.yaml",
+      "bytes": 2268,
+      "sha256": "83f0f04c62eb310b964afca195068a61cac728b6289bbbc38aa53265b88b113a",
+      "role": "accepted_engine_source"
+    },
+    {
+      "path": "_engine/predict.py",
+      "bytes": 18887,
+      "sha256": "16e18bd5af208a4940a26c3e9e455ead3c25a03220ca19c33d89d73710deb71d",
+      "role": "accepted_engine_source"
+    }
+  ],
   "forbidden_content_audit": null,
   "portability_result": null,
   "tests": [
@@ -14173,6 +15089,10 @@
         "buildreasonseg.paths": [
           "buildreasonseg"
         ],
+        "buildreasonseg.language.registry": [
+          "buildreasonseg",
+          "buildreasonseg.language"
+        ],
         "buildreasonseg.language": [
           "buildreasonseg",
           "buildreasonseg.language.fallback",
@@ -14181,14 +15101,11 @@
           "buildreasonseg.language.suggestion",
           "buildreasonseg.language.validator"
         ],
-        "buildreasonseg.language.registry": [
-          "buildreasonseg",
-          "buildreasonseg.language"
-        ],
-        "buildreasonseg.language.fallback": [
+        "buildreasonseg.language.suggestion": [
           "buildreasonseg",
           "buildreasonseg.language",
-          "buildreasonseg.language.frontend"
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.validator"
         ],
         "buildreasonseg.language.frontend": [
           "buildreasonseg",
@@ -14201,17 +15118,26 @@
         "buildreasonseg.errors": [
           "buildreasonseg"
         ],
-        "buildreasonseg.language.suggestion": [
+        "buildreasonseg.language.fallback": [
           "buildreasonseg",
           "buildreasonseg.language",
-          "buildreasonseg.language.registry",
-          "buildreasonseg.language.validator"
+          "buildreasonseg.language.frontend"
         ],
         "buildreasonseg.models.package": [
           "buildreasonseg",
           "buildreasonseg.errors",
           "buildreasonseg.models",
           "buildreasonseg.paths",
+          "buildreasonseg.utils.hashing"
+        ],
+        "buildreasonseg.models": [
+          "buildreasonseg",
+          "buildreasonseg.models.checkpoints",
+          "buildreasonseg.models.package"
+        ],
+        "buildreasonseg.models.checkpoints": [
+          "buildreasonseg",
+          "buildreasonseg.models",
           "buildreasonseg.utils.hashing"
         ],
         "buildreasonseg.utils.hashing": [
@@ -14233,16 +15159,6 @@
           "buildreasonseg.paths",
           "buildreasonseg.utils"
         ],
-        "buildreasonseg.models": [
-          "buildreasonseg",
-          "buildreasonseg.models.checkpoints",
-          "buildreasonseg.models.package"
-        ],
-        "buildreasonseg.models.checkpoints": [
-          "buildreasonseg",
-          "buildreasonseg.models",
-          "buildreasonseg.utils.hashing"
-        ],
         "buildreasonseg.runtime.imageio": [
           "buildreasonseg",
           "buildreasonseg.errors"
@@ -14258,25 +15174,6 @@
           "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline",
           "buildreasonseg.runtime.frozen_paths"
         ],
-        "buildreasonseg.runtime.frozen_paths": [
-          "buildreasonseg",
-          "buildreasonseg.paths",
-          "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
-          "buildreasonseg.runtime._frozen.mvp.task6u_common"
-        ],
-        "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder": [
-          "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp",
-          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field",
-          "buildreasonseg.runtime._frozen.mvp.losses",
-          "buildreasonseg.runtime._frozen.mvp.sam2_bridge"
-        ],
-        "buildreasonseg.runtime._frozen.mvp.sam2_bridge": [
-          "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp"
-        ],
         "buildreasonseg.runtime._frozen.mvp": [
           "buildreasonseg",
           "buildreasonseg.runtime._frozen"
@@ -14284,22 +15181,23 @@
         "buildreasonseg.runtime._frozen": [
           "buildreasonseg"
         ],
-        "buildreasonseg.runtime._frozen.mvp.losses": [
+        "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline": [
           "buildreasonseg",
           "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp"
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field"
         ],
         "buildreasonseg.runtime._frozen.mvp.geometric_relation_field": [
           "buildreasonseg",
           "buildreasonseg.runtime._frozen",
           "buildreasonseg.runtime._frozen.mvp"
-        ],
-        "buildreasonseg.runtime._frozen.mvp.task6u_common": [
-          "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp",
-          "buildreasonseg.runtime._frozen.mvp.task6m_eval",
-          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
         ],
         "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver": [
           "buildreasonseg",
@@ -14314,24 +15212,6 @@
           "buildreasonseg.runtime._frozen.mvp.native_vector_adapter",
           "buildreasonseg.runtime._frozen.mvp.whu_native_vector"
         ],
-        "buildreasonseg.runtime._frozen.mvp.whu_native_vector": [
-          "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp",
-          "buildreasonseg.runtime._frozen.mvp.shapefile_reader",
-          "buildreasonseg.runtime._frozen.mvp.whu_vector_audit"
-        ],
-        "buildreasonseg.runtime._frozen.mvp.shapefile_reader": [
-          "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp"
-        ],
-        "buildreasonseg.runtime._frozen.mvp.whu_vector_audit": [
-          "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp",
-          "buildreasonseg.runtime._frozen.mvp.shapefile_reader"
-        ],
         "buildreasonseg.runtime._frozen.mvp.native_vector_adapter": [
           "buildreasonseg",
           "buildreasonseg.runtime._frozen",
@@ -14340,6 +15220,24 @@
           "buildreasonseg.runtime._frozen.mvp.whu_native_vector"
         ],
         "buildreasonseg.runtime._frozen.mvp.structured_grounding": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.whu_native_vector": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.shapefile_reader",
+          "buildreasonseg.runtime._frozen.mvp.whu_vector_audit"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.whu_vector_audit": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.shapefile_reader"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.shapefile_reader": [
           "buildreasonseg",
           "buildreasonseg.runtime._frozen",
           "buildreasonseg.runtime._frozen.mvp"
@@ -14361,18 +15259,36 @@
           "buildreasonseg.runtime._frozen.mvp",
           "buildreasonseg.runtime._frozen.mvp.qwen_seg"
         ],
-        "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline": [
+        "buildreasonseg.runtime.frozen_paths": [
           "buildreasonseg",
-          "buildreasonseg.runtime._frozen",
-          "buildreasonseg.runtime._frozen.mvp",
-          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
-          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+          "buildreasonseg.runtime._frozen.mvp.task6u_common"
         ],
-        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02": [
+        "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder": [
           "buildreasonseg",
           "buildreasonseg.runtime._frozen",
           "buildreasonseg.runtime._frozen.mvp",
-          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field"
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field",
+          "buildreasonseg.runtime._frozen.mvp.losses",
+          "buildreasonseg.runtime._frozen.mvp.sam2_bridge"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.sam2_bridge": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.losses": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6u_common": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.task6m_eval",
+          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
         ],
         "buildreasonseg.runtime.pipeline": [
           "buildreasonseg",
@@ -14390,11 +15306,21 @@
           "buildreasonseg.runtime.program_head",
           "buildreasonseg.utils.device"
         ],
+        "buildreasonseg.runtime.outputs": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.imageio"
+        ],
         "buildreasonseg.runtime.detector": [
           "buildreasonseg",
           "buildreasonseg.errors",
           "buildreasonseg.paths",
           "buildreasonseg.runtime.imageio"
+        ],
+        "buildreasonseg.runtime.context": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.runtime.detector"
         ],
         "buildreasonseg.runtime.core": [
           "buildreasonseg",
@@ -14423,16 +15349,6 @@
           "buildreasonseg.runtime._frozen",
           "buildreasonseg.runtime._frozen.mvp"
         ],
-        "buildreasonseg.runtime.context": [
-          "buildreasonseg",
-          "buildreasonseg.errors",
-          "buildreasonseg.runtime.detector"
-        ],
-        "buildreasonseg.runtime.outputs": [
-          "buildreasonseg",
-          "buildreasonseg.paths",
-          "buildreasonseg.runtime.imageio"
-        ],
         "predict": [
           "buildreasonseg",
           "buildreasonseg.cli.common",
@@ -14447,16 +15363,6 @@
           "buildreasonseg.runtime.pipeline",
           "buildreasonseg.runtime.program_head"
         ],
-        "buildreasonseg.inference.contract": [
-          "buildreasonseg",
-          "buildreasonseg.errors",
-          "buildreasonseg.inference",
-          "buildreasonseg.paths"
-        ],
-        "buildreasonseg.inference": [
-          "buildreasonseg",
-          "buildreasonseg.inference.contract"
-        ],
         "buildreasonseg.cli.common": [
           "buildreasonseg",
           "buildreasonseg.cli",
@@ -14467,6 +15373,16 @@
         "buildreasonseg.cli": [
           "buildreasonseg",
           "buildreasonseg.cli.common"
+        ],
+        "buildreasonseg.inference.contract": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.inference",
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.inference": [
+          "buildreasonseg",
+          "buildreasonseg.inference.contract"
         ]
       },
       "policy": "AST imports at all depths plus package initializers; no runtime or model execution"
@@ -14539,5 +15455,654 @@
     "screenshot": "docs/task8e_user_demo_ui.png",
     "model_calls": 0,
     "presentation_only": true
+  },
+  "assembly": {
+    "manifest": {
+      "demo_version": "V1",
+      "files": [
+        {
+          "path": "BuildReasonSeg_Demo.py",
+          "bytes": 16519,
+          "sha256": "70ca1a758ef053fdee2af7652e1d4e66fd3d5667a266cb628d3c1af8a533c956",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "_engine/VERSION",
+          "bytes": 257,
+          "sha256": "75e28f8f940a430a58a216e245ca80dfd391efd74dadfde9acea3366b48158c0",
+          "role": "accepted_engine_version"
+        },
+        {
+          "path": "_engine/buildreasonseg/__init__.py",
+          "bytes": 1315,
+          "sha256": "d246ac60376a72aa6cbef0a38a73afd7f82a0dbe60bb9a0dbdc13bc499302633",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/cli/__init__.py",
+          "bytes": 508,
+          "sha256": "408a802a5dd6dd9456919f7be89864eff5dc892427183f302bcd554a53130ea3",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/cli/common.py",
+          "bytes": 3835,
+          "sha256": "2cb6632ce63e75372aa6b8fe9444e6f0830c2a2471db4dac6f30245eaedca8e8",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/errors.py",
+          "bytes": 6121,
+          "sha256": "470196b06f216a9e431230a6451361a7359eb5583c0a0e839d1fe2e8f5964d18",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/inference/__init__.py",
+          "bytes": 413,
+          "sha256": "8d5ba4d915d76a13652370737ec95b5b1a5399fb70fd4467af8d10b67acff6ac",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/inference/contract.py",
+          "bytes": 3607,
+          "sha256": "7a030088f3dc428f1a76e690e35966326f584506c11053528ae2fcb80f8a68c6",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/language/__init__.py",
+          "bytes": 997,
+          "sha256": "bce1dad5d8f7bdeaec3e7d42d73d6498c597b34bb3a9a5179fc6a87659980ef8",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/language/fallback.py",
+          "bytes": 1371,
+          "sha256": "0addfdac729539bfc17ffca18a1bba80931f9d242a728caea14b7e2e9c6b62a6",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/language/frontend.py",
+          "bytes": 7714,
+          "sha256": "2000e92f72439a6d55185bfa99a6b8271cfdd94ecdc77754fdc1d527c1dcd822",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/language/registry.py",
+          "bytes": 3281,
+          "sha256": "954781555aa5c4bca1f8cb3fbf8ca4d1b219163a1f85275fbc16e4d98bd7bdbb",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/language/suggestion.py",
+          "bytes": 3156,
+          "sha256": "a91fb09b581e53f886e7cc56cd2561aebf6084b1b11955c4d7eb26354fdd2405",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/language/validator.py",
+          "bytes": 3546,
+          "sha256": "93d440f37ce9599975f5897084674d5b228c33b8b81b7fdbe8002833a1a59d7c",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/models/__init__.py",
+          "bytes": 545,
+          "sha256": "3e186646be27b4d2b67be1f0fde99537e31d0bbe10439814d133f4171b709860",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/models/checkpoints.py",
+          "bytes": 1953,
+          "sha256": "7274657e0d175c92985f4d8dd192af32740391a49edbacf2091421d3c69f7711",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/models/package.py",
+          "bytes": 10556,
+          "sha256": "38c8cc97578701c21a70a7b3e4c08f8ae30651b89702f2bf7bf42f92ee197a99",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/paths.py",
+          "bytes": 4070,
+          "sha256": "ff6e851ba4e235f00d6b7bb9a32b92801f5f603c7e3033f8e7b435ab571eaba2",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/__init__.py",
+          "bytes": 85,
+          "sha256": "ffcfe449612ed272aee4481e1614ea123fae2007672b5a74b6db41e3238510f3",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/__init__.py",
+          "bytes": 1412,
+          "sha256": "c995d7c131f8387ee45fc730b0950e363b3ce4b6a5ae4d4c551d2f7d1b116237",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/data.py",
+          "bytes": 12067,
+          "sha256": "3eed38cde7f8812069547dbd81cddd85fa82bddb74f99e0c38cb3323e5cb08ba",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/geometric_relation_field.py",
+          "bytes": 9361,
+          "sha256": "6009feb409d6840df3305077c02c30c5887814f0ecb98006ccb210e1fcd5082e",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py",
+          "bytes": 8427,
+          "sha256": "269b2e2e120c19438341dc6b958af2fca4cca4e9cedbea06982f697ffef3673d",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/losses.py",
+          "bytes": 2871,
+          "sha256": "6c4b5152071e328ff46227aada9f1bd907e7fc9377e2db910a143ce5643e1038",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/native_vector_adapter.py",
+          "bytes": 15826,
+          "sha256": "236c409927043e397764cb5dcc1418736c98d900a3c11845afb698b6846f78fc",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/nearest_boundary_field.py",
+          "bytes": 5213,
+          "sha256": "2f8405642780ae24afcd17aff9cc597ea467f9e7178533e34201ea314e15afd3",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/program_parser.py",
+          "bytes": 12281,
+          "sha256": "d501607dc692fbfb28986d45abd8807721101ac73aa9296a83af217780f71840",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/qwen_seg.py",
+          "bytes": 37318,
+          "sha256": "259dd90d8a80b574d79a46089f3090836410bb2c12ac8173a9f75cbc09fa2a2d",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/sam2_bridge.py",
+          "bytes": 26266,
+          "sha256": "504fc38aad8c255e1b416e10e6ca16fee09bddd1bda3a455d4da2272cb3a3b73",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/shapefile_reader.py",
+          "bytes": 15739,
+          "sha256": "c5fdf6b3e94e15149e410ae425a3d36fd08ec6aa8974d97cddb11e703e544539",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/structured_grounding.py",
+          "bytes": 22654,
+          "sha256": "942070170ab2bea9c87a3550877c400402c52b236a416cfdf9d6025395d7140e",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6m_eval.py",
+          "bytes": 15077,
+          "sha256": "6f8fbcb9215163c32904de2adbf03b712f30b741c68303eb795e96e875d7045c",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6n_relation_decoder.py",
+          "bytes": 18306,
+          "sha256": "88efe10d0ecdee3f0da7d7864a2d35b8040c320a9910d35e0aa975017ef4d496",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6q_reference_resolver.py",
+          "bytes": 10038,
+          "sha256": "6a356761f2e0b14587fb0f3c649970d19adddd68180cdd4db06d7f7a8ec8237e",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6s_directional_pipeline.py",
+          "bytes": 14015,
+          "sha256": "d7b3be598a7ce3a7b53a2edc7c1aa8820ae6c3ea874032385c6ddb3bdf4d4dc8",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6u_common.py",
+          "bytes": 12660,
+          "sha256": "6a4659aff0143bd6192de937907e54afe9c4e179b56ef4468f4643159e2c5fa5",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task6z_field_composition.py",
+          "bytes": 6291,
+          "sha256": "5626167a9f85b43e092e5ba060e5b31ccf737ad5e896d9257b92f9479095ca34",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+          "bytes": 14790,
+          "sha256": "de4da2bbf8ee62a54554588cce05674b08c8f57123bb2e2b8f83bc3fb1af3ec6",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/whu_native_vector.py",
+          "bytes": 24344,
+          "sha256": "9ae8025ed3b0b94803ae996f76785eef18a8a140fc5a88fa9b396aca8f7330b3",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/_frozen/mvp/whu_vector_audit.py",
+          "bytes": 17001,
+          "sha256": "2fb131cf8367ea69ab9686a5e6c18628cfda8082a104a5ff20db3ec294a94e7d",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/context.py",
+          "bytes": 8459,
+          "sha256": "13df06bc1311da9cd6d3d2164d6ce1bd6c47f011c4a7f38baa1fc683a871faac",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/core.py",
+          "bytes": 11064,
+          "sha256": "37c38ba4acd1bb0f77533674333172991fd91c7dba37342be208f445b1d65a15",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/detector.py",
+          "bytes": 21407,
+          "sha256": "01884a438961a6fa2029f0378ecbc62594beb736b36b80f4c2808123ccdb20f2",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/frozen_paths.py",
+          "bytes": 3060,
+          "sha256": "a3344400dea3915385a8d3d2f5bf050f1666ac7afe8b330d3006ba5d840bf67a",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/imageio.py",
+          "bytes": 7978,
+          "sha256": "b6223be7cb2ab0e0ecae1ae350d7c546d3788a02c35439d167684ad9f359c878",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/outputs.py",
+          "bytes": 9317,
+          "sha256": "5da369e210b69d461391ae07e81fe992b02e89fbb0de196e4ead4e531b020782",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/pipeline.py",
+          "bytes": 19311,
+          "sha256": "ec803658e476d9f14451b48ca80e3ce8eb11ee103039a2311b1249f9d1b8d798",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/runtime/program_head.py",
+          "bytes": 13432,
+          "sha256": "c00cd21e49e66182cadc24a1fdf09316d27f71c02e0ab920d0cd9cfb3ad18250",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/utils/__init__.py",
+          "bytes": 333,
+          "sha256": "53eb818e61499f33287648efd8abd0dbad6e48e854467f774a40c4bad2205867",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/utils/device.py",
+          "bytes": 1145,
+          "sha256": "4d8c3d5305359233e31e43e3970721b7c936d73d3669274b44fa6ef5d2ab8a15",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/utils/hashing.py",
+          "bytes": 1379,
+          "sha256": "bd87590c7f86c31d81085669b56bc35968ec6e6bb51e13d808bcfd7af3e4d836",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/buildreasonseg/utils/logging.py",
+          "bytes": 1392,
+          "sha256": "56085dacfa0399baa9d0fee8c21305b3507589ddc97e7f3a4e7559a3fcfe645f",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/configs/inference.yaml",
+          "bytes": 1254,
+          "sha256": "49502e5830a1785f93a4ff7f7a9fe5c6bfcde1fd84c607dec1dbde6ec4884df5",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/model/buildreasonseg_advisor/decoder.pt",
+          "bytes": 1117495,
+          "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/buildreasonseg_advisor/detector.pt",
+          "bytes": 54480241,
+          "sha256": "ef852b5801e6bdf902ddc581ada6f04a5673deecba092f3b2c24c0efa861f474",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/buildreasonseg_advisor/metadata.json",
+          "bytes": 6802,
+          "sha256": "a77f5b76bd8e43c648a06ea672788c97e9f6cd3a76cc18f8132267af2792aa8e",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/model/buildreasonseg_advisor/model.yaml",
+          "bytes": 2268,
+          "sha256": "83f0f04c62eb310b964afca195068a61cac728b6289bbbc38aa53265b88b113a",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json",
+          "bytes": 5502,
+          "sha256": "6f8a6a55027e3da5160105556cda5dd69f6423f1c32645f6730d32de7773d0c4",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/config.json",
+          "bytes": 1505,
+          "sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/generation_config.json",
+          "bytes": 269,
+          "sha256": "1e241830b48b397cb0900101421df5450baddc7adf01e5fc86b5615865f3bae4",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/merges.txt",
+          "bytes": 1671839,
+          "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors",
+          "bytes": 4255140312,
+          "sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/preprocessor_config.json",
+          "bytes": 390,
+          "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer.json",
+          "bytes": 7032403,
+          "sha256": "a5d85b6dcc535e6b93115a9ef287e6132fdbf30270da6218194ba742261173c7",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer_config.json",
+          "bytes": 10868,
+          "sha256": "c2da771801886ad9ae98181793ffd3dfb7f1af30f6f7c6a4e15d7dbba52e2399",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/video_preprocessor_config.json",
+          "bytes": 385,
+          "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/Qwen3-VL-2B-Instruct/vocab.json",
+          "bytes": 2776833,
+          "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+          "bytes": 70090713,
+          "sha256": "c150573613c421098f55776a4b2a26e1536b806dd5c210f716715fd2ded58d9a",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/program_head/qwen_asset_manifest.json",
+          "bytes": 1995,
+          "sha256": "5c4cf25e31e1058578137027a0a84d6bf81b48bd0709f238e518a4570c56361f",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/sam2/sam2.1_hiera_b+.yaml",
+          "bytes": 3766,
+          "sha256": "ef47e14197a65c1fd542e1862270ee851c2b15e571b2c58ceb0329d15be33769",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/model/components/sam2/sam2.1_hiera_base_plus.pt",
+          "bytes": 323606802,
+          "sha256": "a2345aede8715ab1d5d31b4a509fb160c5a4af1970f199d9054ccfb746c004c5",
+          "role": "accepted_model_asset"
+        },
+        {
+          "path": "_engine/predict.py",
+          "bytes": 18887,
+          "sha256": "16e18bd5af208a4940a26c3e9e455ead3c25a03220ca19c33d89d73710deb71d",
+          "role": "accepted_engine_source"
+        },
+        {
+          "path": "_ui/__init__.py",
+          "bytes": 81,
+          "sha256": "c95c2ee0ba5b75ff2c7bfe4da8f35f1133b8ca496171d96ee31be1d63267e80c",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "_ui/backend.py",
+          "bytes": 14122,
+          "sha256": "132fec7ad6a57f9c61bbdc6f8dddce9b96c4266cc51c35527996491937c666c5",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "_ui/environment.py",
+          "bytes": 5098,
+          "sha256": "636e65d9a6be2ffc87dc7d6f7cd7fb4250e00ab51697bd87452d6a6df53039e1",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "_ui/launch.ps1",
+          "bytes": 2108,
+          "sha256": "2bada66fb97a8964d57487c24598e8579e4dce0da052a8e7fc20103eb2b529f8",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "_ui/runtime.json",
+          "bytes": 171,
+          "sha256": "91b903ab1c1e5cf1d8370dca2dacba5eac78a4c020cd1af4f265e81bee13db59",
+          "role": "machine_python_locator_only"
+        },
+        {
+          "path": "使用说明.md",
+          "bytes": 5866,
+          "sha256": "dca9706fc46520ebefa5ec95a16b40cda53a2dfd7e58b4cc44fee91f81574bc2",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "启动BuildReasonSeg Demo.bat",
+          "bytes": 106,
+          "sha256": "dd221c4b6d6d8e3430f17329e2955031f6e97ed537daf3c580889fbb46dfa291",
+          "role": "user_demo_source"
+        },
+        {
+          "path": "版本说明.txt",
+          "bytes": 436,
+          "sha256": "6956b04df51c3b5d8dbe341dbe14d2633d162385efb23a623f27899000020ca7",
+          "role": "user_demo_source"
+        }
+      ],
+      "total_bytes": 4716468600,
+      "file_count": 80,
+      "runtime_environment_bundled": false,
+      "source_model_portability": "PATH_PORTABLE_ON_CONFIGURED_MACHINE"
+    },
+    "staging": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1",
+    "final": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1",
+    "forbidden_content_audit": {
+      "pass": true,
+      "offenders": [],
+      "links": 0
+    },
+    "source_unchanged": true,
+    "clean_results_output_logs": true,
+    "move_pending": true
+  },
+  "staging_self_check": {
+    "ok": true,
+    "message": "环境检查：通过",
+    "runtime": {
+      "ok": true,
+      "message": "环境检查：通过",
+      "errors": [],
+      "versions": {
+        "Python": "3.11.16",
+        "torch": "2.13.0+cu132",
+        "ultralytics": "8.4.164",
+        "transformers": "5.17.0",
+        "numpy": "2.4.6",
+        "PIL": "12.3.0",
+        "cv2": "5.0.0",
+        "scipy": "1.17.1",
+        "yaml": "6.0.3",
+        "torchvision": "0.28.0+cu132",
+        "accelerate": "1.15.0",
+        "safetensors": "0.8.0",
+        "peft": "0.21.0",
+        "sam2": "available",
+        "hydra": "1.3.7",
+        "omegaconf": "2.3.1",
+        "tkinter": "8.6"
+      },
+      "python": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+      "cache_environment": {
+        "YOLO_CONFIG_DIR": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_runtime_cache\\yolo",
+        "MPLCONFIGDIR": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_runtime_cache\\matplotlib",
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUTF8": "1",
+        "PYTHONIOENCODING": "utf-8"
+      },
+      "model_calls": 0
+    },
+    "package": {
+      "ok": true,
+      "message": "文件检查：通过",
+      "checked": 80,
+      "full_hash": true,
+      "failures": []
+    },
+    "paths": {
+      "_engine": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine",
+      "results": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\results",
+      "_runtime_cache": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_runtime_cache"
+    },
+    "model_calls": 0
+  },
+  "validation_invocation_history": [
+    {
+      "phase": "staging no-model binding first invocation",
+      "exit_code": 1,
+      "error": "ModuleNotFoundError: No module named buildreasonseg",
+      "cause": "L0 validation order: validation imported engine modules before calling existing bind_engine(root).",
+      "product_assertion_failure": false,
+      "model_calls": 0,
+      "disposition": "Correct validation invocation order only; delivery code/tests unchanged."
+    },
+    {
+      "phase": "staging no-model binding second invocation",
+      "exit_code": 1,
+      "error": "Validation AssertionError: environment probe could not use transformers/peft with global torch.nn.Module.__init__ forbidden guard active.",
+      "cause": "Validation guard scope blocked dependency first-import capability checks after successful EngineAdapter construction. Previously normal staging self-check passed.",
+      "product_dedicated_tests_unchanged": true,
+      "checkpoint_loads": 0,
+      "inference_calls": 0,
+      "disposition": "Correct validation order/scope: complete native import probe, then guard model construction/loading/inference API; no package source or tests changed."
+    },
+    {
+      "phase": "staging validation third invocation",
+      "exit_code": 1,
+      "error": "Validation asserted GUI ready before the scheduled 80ms queue poll ran.",
+      "cause": "L0 GUI smoke timing: worker completed quickly, but UI event had not yet been processed.",
+      "model_calls": 0,
+      "disposition": "Wait for UI ready state, not just worker-idle; package source/tests unchanged."
+    },
+    {
+      "phase": "staging native launcher interception first invocation",
+      "exit_code": 2,
+      "error": "Validation Start-Process interception assigned child script scope; parent harness variable remained null.",
+      "cause": "L0 PowerShell test interception scope, not launcher runtime failure.",
+      "model_calls": 0,
+      "disposition": "Use harness global variable in isolated PowerShell validation process; GUI startup and API binding already PASS; no delivery source changes."
+    }
+  ],
+  "staging_engine_binding": {
+    "pass": true,
+    "engine_root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine",
+    "model_paths": {
+      "model_package": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\buildreasonseg_advisor",
+      "sam2_checkpoint": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\components\\sam2\\sam2.1_hiera_base_plus.pt",
+      "program_head_checkpoint": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\components\\program_head\\program_parser_l3_rehearsal_v1.pt",
+      "qwen_assets": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\components\\program_head\\Qwen3-VL-2B-Instruct"
+    },
+    "all_model_paths_inside_engine": true,
+    "automatic_only": true,
+    "checkpoint_loads": 0,
+    "model_calls": 0,
+    "package_verified": true,
+    "live_dependency_imports": true,
+    "frozen_paths": {
+      "patched": {
+        "task6n_relation_decoder.SAM2_CHECKPOINT": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\components\\sam2\\sam2.1_hiera_base_plus.pt",
+        "task6n_relation_decoder.SAM2_CONFIG_NAME": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+        "task6u_common.PROPOSAL_CHECKPOINT": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\buildreasonseg_advisor\\detector.pt"
+      },
+      "sam2_checkpoint": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\components\\sam2\\sam2.1_hiera_base_plus.pt",
+      "sam2_config": "configs/sam2.1/sam2.1_hiera_b+.yaml",
+      "proposal_checkpoint": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\_engine\\model\\buildreasonseg_advisor\\detector.pt",
+      "frozen_import_root": "buildreasonseg.runtime._frozen.mvp"
+    }
+  },
+  "staging_gui_startup": {
+    "pass": true,
+    "title": "BuildReasonSeg 建筑空间推理分割 Demo",
+    "ready": true,
+    "status": "环境检查：通过",
+    "run_clicked": false,
+    "run_enabled": true,
+    "safe_close": true,
+    "model_calls": 0
+  },
+  "staging_launcher_check": {
+    "WindowStyle": "Hidden",
+    "FilePath": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+    "ArgumentList": [
+      "-B",
+      "\"C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1\\BuildReasonSeg_Demo.py\""
+    ],
+    "actual_process_start": false,
+    "WorkingDirectory": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1_task8e_staging_v1",
+    "native_runtime_probe": true,
+    "start_process_intercepted_for_no_orphan_gui": true,
+    "model_calls": 0,
+    "pass": true
+  },
+  "assembly_checkpoint": {
+    "staging_complete": true,
+    "self_check": "PASS 80/80 SHA256 + compatible runtime",
+    "api_binding": "PASS guarded no model calls",
+    "gui_startup": "PASS ready + safe close",
+    "launcher": "PASS native runtime discovery, final process-launch intercepted",
+    "model_calls": 0
   }
 }
