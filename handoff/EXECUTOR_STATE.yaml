@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8E_USER_FACING_DEMO_PACKAGE_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: delivery/task8e-user-demo-v1
-head: bb5b86e9648d7a75982a3232a7d672fc2d2fc33d
+head: 2aa46a8b9a3139535e48b98ed77311d5ae078922
 accepted_predecessor: TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT
 completed:
 - Canonical read order and remote exact HEAD/clean working tree verified; authorized
@@ -22,17 +22,22 @@ completed:
   API binding and GUI startup ready PASS.
 - Native PowerShell launcher probe/path selection PASS with final Start-Process intercepted;
   L0 validation invocation failures retained.
-current_step: STAGING_VERIFIED_NO_INFERENCE
-next_action: Move entire verified staging folder to final path; repeat final self-check
-  and preservation gates.
+- Verified staging moved as one folder to final; final native environment/API/GUI
+  startup PASS from TEMP CWD.
+- Final preservation/clean-package gates PASS; user docs14 sections and manifest recorded;
+  no inference.
+- READY_FOR_SUPERVISOR_AUDIT; commit/push completion evidence then STOP.
+current_step: DELIVERY_READY
+next_action: STOP; await CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT.
+  No Task8F or scientific repair.
 tests_run:
 - suite: tests/test_task8e_user_demo.py
   result: 57 passed in 2.76s
   exit_code: 0
-uncommitted_changes: true
+uncommitted_changes: false
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: bb5b86e9648d7a75982a3232a7d672fc2d2fc33d
+  commit: 2aa46a8b9a3139535e48b98ed77311d5ae078922
   pushed: true
 next_gate: CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
 model_inference_calls: 0
@@ -42,3 +47,24 @@ no_governance_change: true
 advisor_rc1_unchanged: true
 task8c_unchanged: true
 task8d_unchanged: true
+external_demo_path: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1
+real_model_smoke: REAL_MODEL_SMOKE_DEFERRED_TO_USER_ACCEPTANCE_TEST
+final_gates:
+  gui_available: TK_OK
+  dedicated_fake_tests: 57/57 PASS exit 0
+  native_environment: PASS
+  accepted_runtime_api_binding: PASS with load/inference guards
+  app_startup: PASS ready, safe close
+  staging_to_final_move: PASS
+  package_manifest: 80/80 bytes/SHA256 PASS
+  copied_model_assets: 16/16 SHA256 MATCH
+  accepted_source_config_plus_version: 55/55 MATCH
+  forbidden_content: PASS
+  clean_results_output_input_logs: PASS
+  private_cache_only: PASS
+  old_canonical_source: 135/135 PASS
+  old_RC1: 2184/2184 unchanged
+  Task8C: 10/10 unchanged
+  Task8D: 13/13 unchanged
+  canonical_and_governance: 139/139 unchanged
+  real_model_smoke: REAL_MODEL_SMOKE_DEFERRED_TO_USER_ACCEPTANCE_TEST
