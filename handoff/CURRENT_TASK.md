@@ -1,18 +1,18 @@
-# CURRENT_TASK - TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
+# CURRENT_TASK - TASK8E_USER_FACING_DEMO_PACKAGE_V1
 
 Status:
-READY_FOR_SUPERVISOR_AUDIT
+IN_PROGRESS
 
 Decision owner: ChatGPT Supervisor
 Executor: CODEX
-Next gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
+Next gate: CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
 
 ## Supervisor task authorization - verbatim
 
 TASK AUTHORIZATION
 
 Task ID:
-TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1
+TASK8E_USER_FACING_DEMO_PACKAGE_V1
 
 Model:
 GPT-6.1 Sol
@@ -21,778 +21,925 @@ Reasoning:
 极高
 
 Mode:
-DIAGNOSIS ONLY — NO REPAIR
+USER-FACING DELIVERY / NO SCIENTIFIC REPAIR
 
-Accepted predecessor:
-TASK8C_FINAL_DEMO_V1 = ACCEPT
+Accepted scientific predecessor:
+TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT
 
 Accepted predecessor branch:
-eval/task8c-final-demo-v1
+diag/task8d-above-target-chain-v1
 
 Accepted remote HEAD:
-764a805ef7d9651bfffd27dfaeb5808e8c21df1f
+b569dcefa26af9788a9ec75eb52cbb8317305bea
 
 Required new branch:
-diag/task8d-above-target-chain-v1
+delivery/task8e-user-demo-v1
+
+External delivery destination:
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1
 
 Next gate:
-CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
+CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
 
 
-# 1. Purpose
+# 1. Goal
 
-This task performs a post-Final-Demo scientific diagnosis of the cleanest frozen failure:
+Create a clean user-facing BuildReasonSeg Demo package.
 
-ABOVE case
+This is NOT:
 
-sample_id:
-buildsr_test_1008_3_largest_to_above_to_nearest_5e191d7ac314
+- a development handoff;
+- a research audit package;
+- a debugging interface;
+- a new algorithm;
+- a repair of Task8C/8D failures.
 
-program:
-largest_to_above_to_nearest
+The package is intended for a normal local user who wants to:
 
-canonical GT reference:
-tile_instance_id = 4
+1. choose an RGB aerial/satellite image;
+2. enter a supported spatial-language instruction;
+3. confirm the system interpretation;
+4. run automatic inference;
+5. view the resulting overlay and mask;
+6. locate saved results.
 
-canonical GT target:
-tile_instance_id = 6
+The external package must be delivered at:
 
-Frozen Task 8C result:
-
-runtime = SUCCESS
-automatic reference proposal id = 5
-
-selected-reference best GT instance = 4
-reference IoU with canonical GT reference = 0.9097432024169184
-reference identity match = true
-
-predicted target best-overlap GT instance = 7
-predicted target best GT IoU = 0.48158096699923253
-
-canonical target IoU = 0.07762201453790239
-canonical target Dice = 0.14406167188629246
-
-semantic status:
-TARGET_IDENTITY_MISMATCH
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1
 
 
-This case is selected because:
+# 2. Frozen scientific behavior
 
-Reference identity is already correct,
-but Target identity is wrong.
+The user Demo MUST reuse the accepted RC1 scientific runtime unchanged.
 
-Therefore it allows diagnosis of the downstream:
+Scientific chain remains:
 
-Reference
-→ geometric relation representation
-→ nearest representation
-→ field composition / competition
-→ visual prototype similarity
-→ decoder
-→ final dense mask
-
-without REF-01 identity failure as the primary confounder.
-
-
-# 2. Scientific correction / frozen understanding
-
-Do NOT describe the current RC1 target stage as:
-
-"select one target proposal"
-
-That is not the current frozen implementation.
-
-The actual RC1 core chain is:
-
-reference mask
+Qwen / ProgramHead
+→ validator / optional Qwen suggestion
+→ YOLO global proposals
+→ automatic largest Reference selection
+→ 512 reasoning context
 → P_dir
 → P_near
-→ W = clamp(P_dir * P_near)
-→ A_fixed = W / sum(W)
-→ projected SAM2 visual features F
-→ q = Σ A_i F_i
-→ C = cosine(F_i, q)
-→ D-B1 decoder
-→ logits
-→ bilinear upsample
-→ logits > 0
-→ dense target mask
+→ D-B1
+→ dense mask
 
-Relevant frozen source:
+Do NOT change:
 
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/core.py
+- detector
+- RGB/BGR contract
+- proposal merge
+- reference selector
+- eligibility
+- relation fields
+- nearest field
+- W / A / q / C
+- decoder
+- checkpoint
+- threshold
+- final structural guards
+- model assets
+- program grammar
+- supported semantic set
 
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
-task7d_global_competition_decoder.py
-
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
-task6z_field_composition.py
-
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
-geometric_relation_field_v02.py
-
-delivery_src/BuildReasonSeg_Advisor_RC1/buildreasonseg/runtime/_frozen/mvp/
-nearest_boundary_field.py
+This task may improve presentation and interaction only.
 
 
-# 3. Absolute prohibitions
+# 3. User-facing semantic scope
 
-This milestone MUST NOT:
+Expose only the four accepted automatic tasks:
 
-- rerun Task 8C formal runner
-- execute predict.py
-- execute DetectorRuntime
-- execute Sam2Runtime
-- execute Db1Runtime
-- execute Qwen / ProgramHead
-- load any model checkpoint for inference
-- invoke Ultralytics
-- invoke Transformers inference
-- use --reference-id
-- use --inspect-proposals
-- retry any Final Demo case
-- change any Task 8C artifact
-- change any external RC1 formal output
-- change product source
-- change model weights
-- change thresholds
-- change ranking
-- train anything
-- modify governance
-- implement any repair
+最大建筑 → 左侧 → 最近建筑
+最大建筑 → 右侧 → 最近建筑
+最大建筑 → 上方 → 最近建筑
+最大建筑 → 下方 → 最近建筑
 
-No new model inference of any kind is authorized.
+Natural-language text input MUST still go through the existing:
 
-This is an offline forensic / scientific diagnosis only.
+Qwen / ProgramHead → Validator
+
+flow.
+
+Do NOT create a keyword/regex shortcut that bypasses Qwen.
+
+Recommended example buttons / quick-fill controls are allowed,
+but they only fill the text box.
+
+They must not directly set the program id.
 
 
-# 4. Git preflight
+# 4. No diagnostic user modes
 
-Read in canonical order:
+The user-facing UI MUST NOT expose:
 
-1. AGENTS.md
-2. governance/PROJECT_STATE.yaml
-3. governance/DECISIONS.md
-4. handoff/CURRENT_TASK.md
-5. handoff/EXECUTOR_STATE.yaml
+--reference-id
+--inspect-proposals
+assisted reference mode
+manual proposal selection
+threshold controls
+ranking controls
+model/checkpoint controls
+debug map selection
+training/evaluation controls
 
-Then:
+Automatic reference mode only.
 
-git fetch
 
-Verify:
+# 5. GUI preference
 
-origin/eval/task8c-final-demo-v1
-=
-764a805ef7d9651bfffd27dfaeb5808e8c21df1f
+First perform a read-only environment check:
+
+<accepted Python> -c "import tkinter; print('TK_OK')"
+
+If tkinter works:
+
+implement a Windows Tkinter GUI.
+
+Do NOT install any dependency.
+
+If tkinter is unavailable:
+
+implement a clean interactive console launcher instead and record:
+
+GUI_UNAVAILABLE_EXISTING_ENV
+
+Do not install PyQt, Gradio, Streamlit, Flask, customtkinter, tkinterdnd or any other package.
+
+Preferred GUI is strongly recommended if available.
+
+
+# 6. Required GUI workflow
+
+The main screen should contain at minimum:
+
+- title:
+  BuildReasonSeg 建筑空间推理分割 Demo
+
+- image path display
+- “选择图片” button
+- natural-language prompt text box
+- four example / quick-fill buttons
+- “开始分析” button
+- status/progress display
+- original-image preview
+- result-overlay preview
+- result summary
+- “查看 Mask”
+- “打开结果文件夹”
+- “重新选择图片” or equivalent
+
+Optional:
+a small “查看使用说明” button.
+
+
+# 7. User interaction semantics
+
+Normal flow:
+
+SELECT IMAGE
+→ ENTER PROMPT
+→ LANGUAGE PARSE
+→ USER CONFIRMATION
+→ INFERENCE
+→ RESULT
+
+If Qwen directly produces one of the four supported programs:
+
+show a user-facing interpretation such as:
+
+系统理解：
+参考对象：最大建筑
+方向关系：上方
+目标关系：最近建筑
+
+Then ask:
+
+是否按此理解继续？
+
+Only confirmation proceeds to inference.
+
+If initial parse is unsupported but existing Qwen suggestion returns
+a Validator-approved supported program:
+
+show:
+
+原始指令未能直接映射到当前支持的四类任务。
+
+系统建议理解为：
+“……”
+
+Then ask the user to accept or reject.
+
+Never auto-accept a suggestion.
+
+If Qwen is unavailable or runtime fails:
+
+preserve the existing fallback contract.
+
+Use a user-facing confirmation such as:
+
+语言模型当前不可用。
+是否使用有限兼容模式继续？
+
+Do not silently enter fallback.
+
+
+# 8. User-facing status text
+
+Do NOT expose false scientific success.
+
+When runtime returns status SUCCESS, display wording equivalent to:
+
+推理流程已完成。
+结果已生成，请结合原图人工核验目标是否正确。
+
+Optionally show:
+
+运行状态：流程完成
+语义正确性：未自动验证
+
+Do NOT display:
+
+识别正确
+分割正确
+AI 已成功找到正确建筑
+
+unless ground truth exists, which this Demo does not use.
+
+
+# 9. Friendly progress states
+
+During execution show coarse user-facing states such as:
+
+正在理解指令……
+正在检测建筑……
+正在确定参考建筑……
+正在进行空间推理……
+正在生成分割结果……
+
+Do not invent precise progress percentages unless real progress is available.
+
+The GUI must remain responsive during heavy inference.
+
+Use a background worker/thread and communicate UI updates safely.
+
+One Run button press must produce at most one inference attempt.
+
+Disable duplicate Run actions while running.
+
+
+# 10. Error handling
+
+Translate common RC1 failures into concise Chinese user messages.
+
+Examples:
+
+unsupported image
+no buildings detected
+no valid reference
+reasoning-context limitation
+empty target mask
+language parse unsupported
+model/environment unavailable
+
+Retain the original error code in a secondary/detail field.
+
+Do not hide the error.
+
+Do not automatically retry.
+
+
+# 11. Result presentation
+
+On runtime SUCCESS, show at minimum:
+
+- original image
+- overlay
+- prompt
+- interpreted supported task
+- runtime status
+- elapsed time if available
+
+Provide buttons:
+
+查看 Mask
+打开结果文件夹
+
+The result UI should not require the user to navigate `_engine/inference/output` manually.
+
+
+# 12. Clean user result directory
+
+Create at Demo root:
+
+results/
+
+For each completed run create a clean user result directory, for example:
+
+results/
+  20261007_183500_1008/
+    overlay.png
+    mask.png
+    result_summary.json
+
+The exact collision-safe naming may differ but must be deterministic/collision-safe.
+
+For successful runs copy ONLY user-facing artifacts from the frozen engine run:
+
+mask
+overlay
+a sanitized user summary JSON
+
+Do not mutate the engine artifacts.
+
+Do not pretend the copied summary is the original scientific result.json.
+
+Suggested summary fields:
+
+demo_version
+timestamp
+input_image
+prompt
+interpreted_program
+language_mode
+runtime_status
+validity_scope
+semantic_status
+elapsed_seconds
+mask_file
+overlay_file
+engine_run_root
+
+Failure runs may save a small failure summary but must not create fake mask/overlay.
+
+
+# 13. Internal engine layout
+
+The user-facing delivery root should stay clean.
+
+Preferred:
+
+BuildReasonSeg_Demo_V1/
+├─ 启动BuildReasonSeg Demo.bat
+├─ BuildReasonSeg_Demo.py
+├─ 使用说明.md
+├─ 版本说明.txt
+├─ results/
+└─ _engine/
+   ├─ buildreasonseg/
+   ├─ configs/
+   ├─ model/
+   ├─ inference/
+   ├─ logs/
+   └─ other strictly required runtime files
+
+The accepted RC1 engine may be copied/assembled inside `_engine`.
+
+Do NOT expose development handoff material.
+
+
+# 14. Explicitly forbidden in external user Demo
+
+The final external Demo package MUST NOT contain:
+
+handoff/
+governance/
+evaluation/
+.git/
+Git metadata
+Task8C reports
+Task8D reports
+Supervisor task books
+Codex executor states
+historical research diagnostics
+historical inference/output
+developer test suites
+research workspace source paths
+private temporary files
+
+Also do not include development-only:
+
+train.py
+evaluate.py
+prepare_dataset.py
+
+unless static dependency analysis proves one is unexpectedly required by runtime.
+
+They are not user Demo features.
+
+
+# 15. Clean runtime state
+
+The new Demo package must start with:
+
+empty results/
+clean internal inference/output/
+clean logs/
+
+Do NOT copy the 1543+ historical RC1 outputs.
+
+Do NOT copy Task8C formal outputs.
+
+Do NOT copy A1/A2/A3/A4/B1/B2 historical diagnostics.
+
+The existing accepted:
+
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+
+must remain byte-for-byte unchanged.
+
+
+# 16. Model assets
+
+The new user Demo may copy the accepted model/runtime assets from:
+
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+
+where needed.
+
+Copied model asset SHA256 must match the accepted RC1 identities.
+
+Do not use links/junctions/symlinks to the old RC1.
+
+The new Demo should own its required asset files.
+
+This supports folder-level movability.
+
+
+# 17. Folder portability goal
+
+Target:
+
+PATH_PORTABLE_ON_CONFIGURED_MACHINE
+
+Meaning:
+
+- no code path may depend on the absolute location of BuildReasonSeg_Demo_V1;
+- all Demo/engine/model/result paths resolve relative to the Demo root;
+- the whole Demo folder may be moved to another directory on the same configured PC;
+- no path into the research workspace is required for scientific assets/source.
+
+Cross-machine zero-configuration portability is NOT required in V1 because Python/CUDA/runtime dependencies are not bundled.
+
+Record this distinction clearly:
+
+folder/source/model portability:
+SUPPORTED
+
+runtime environment portability:
+NOT_BUNDLED_V1
+
+
+# 18. Python runtime discovery
+
+Do not bundle or copy the existing conda environment in this task.
+
+The launcher should discover Python in this order or an equivalent deterministic order:
+
+1. environment variable BUILDREASONSEG_PYTHON if set;
+2. optional `<demo_root>\runtime\python.exe` if it exists in the future;
+3. the currently validated BuildReasonSeg Python environment on this PC;
+4. compatible `python` on PATH.
+
+Before launch, perform a lightweight import/version check for the required runtime.
+
+At minimum verify:
+
+Python
+torch
+ultralytics == accepted frozen version
+transformers
+numpy
+Pillow
+opencv
+scipy
+
+If no compatible runtime is found:
+
+show a clear Chinese message and STOP.
+
+No installation.
+
+
+# 19. Offline/cache isolation
+
+The launcher/app must create writable cache directories relative to the Demo root or TEMP and explicitly configure:
+
+YOLO_CONFIG_DIR
+MPLCONFIGDIR
+HF_HUB_OFFLINE=1
+TRANSFORMERS_OFFLINE=1
+PYTHONDONTWRITEBYTECODE=1
+PYTHONUTF8=1
+PYTHONIOENCODING=utf-8
+
+Do not allow Ultralytics to create a new settings file in the Demo root unexpectedly.
+
+Prefer:
+
+<demo_root>\_runtime_cache\yolo
+<demo_root>\_runtime_cache\matplotlib
+
+or an equivalent private cache subtree.
+
+The cache subtree is runtime-generated and not a scientific artifact.
+
+
+# 20. Assembly reproducibility
+
+In the research repository create an assembly/build script, for example:
+
+scripts/build_task8e_user_demo.py
+
+It must:
+
+- construct the new package from accepted source/assets;
+- create clean runtime directories;
+- reject forbidden development content;
+- verify copied asset hashes;
+- emit a package manifest;
+- never modify the source RC1.
+
+Do not manually assemble an undocumented external folder only.
+
+
+# 21. Repository-side source
+
+Keep user-Demo source in a clear authorized repository location, for example:
+
+demo/user_demo_v1/
+
+or another concise equivalent.
+
+It should contain:
+
+GUI/launcher source
+user README template
+version metadata
+
+Do not copy multi-GB model assets into Git.
+
+The assembly script copies heavy assets only into the external package.
+
+
+# 22. User documentation
+
+External root must contain:
+
+使用说明.md
+
+Written for a non-developer.
+
+Required sections:
+
+1. Demo 是做什么的
+2. 当前支持什么类型的图片
+3. 当前支持的四类指令
+4. 如何启动
+5. 如何选择图片
+6. 如何输入指令
+7. 如何确认系统理解
+8. 如何查看结果
+9. Mask 和 Overlay 分别是什么
+10. results 文件夹在哪里
+11. 常见错误及处理
+12. 当前能力边界
+13. “流程完成”不等于“语义结果一定正确”
+14. 如何关闭程序
+
+Do not discuss Task IDs, governance, handoff, Codex or Supervisor in user docs.
+
+
+# 23. Version file
+
+External:
+
+版本说明.txt
+
+Keep it short.
+
+Example content:
+
+BuildReasonSeg Demo V1
+User-facing local demonstration package
+
+Core:
+BuildReasonSeg Advisor RC1
+
+Supported task:
+largest building → direction → nearest building
+
+Supported directions:
+left / right / above / below
+
+Runtime semantic result:
+not automatically ground-truth validated
+
+
+# 24. Demo UI must not disclose developer clutter by default
+
+Do not dump:
+
+raw proposals
+full Python traceback
+maps.npz
+C/W/A internals
+Qwen top5
+checkpoint SHA
+Git SHA
+Task IDs
+
+into the main UI.
+
+A concise expandable technical error detail may show:
+
+error code
+short detail
+
+Raw engine logs stay internal.
+
+
+# 25. User-facing image handling
+
+Use the same accepted image contract as RC1.
+
+File picker filter:
+
+PNG
+JPG/JPEG
+TIF/TIFF
+
+Do not add new image-format support.
+
+Preview resizing is presentation-only and must preserve aspect ratio.
+
+Never modify the original user image.
+
+
+# 26. Core call contract
+
+Prefer importing/reusing the existing accepted runtime rather than shell-parsing CLI stdout.
+
+UI-specific orchestration may wrap:
+
+ProgramHeadRuntime
+Validator
+existing suggestion flow
+PredictRuntime
+PipelineRequest
+predict_one
+
+but must not duplicate/rewrite scientific algorithms.
+
+If CLI helper functions are safely reusable, reuse them.
+
+Any UI implementation of language confirmation/suggestion must preserve the same decision semantics:
+
+direct supported → user confirmation
+unsupported → Qwen suggestion → Validator → user confirmation
+fallback → explicit user confirmation
+
+No automatic Y.
+
+
+# 27. Thread/process safety
+
+The GUI must not freeze while heavy inference runs.
+
+Use exactly one background worker for one inference request.
+
+No parallel model runs.
+
+Prevent double-click duplicate requests.
+
+Do not terminate a live inference by destructive process kill.
+
+On application close during inference:
+
+either disable close until safe
+or show a warning that current inference should finish.
+
+Choose a conservative implementation.
+
+
+# 28. Testing
+
+Create repository tests for the user Demo.
+
+At minimum verify:
+
+- no handoff/governance/evaluation/test artifacts enter external package;
+- assembly never modifies accepted RC1;
+- heavy model assets are copied byte-identically;
+- no absolute Demo-root dependency;
+- runtime Python discovery deterministic;
+- unsupported runtime produces friendly failure;
+- four quick-fill examples only populate text;
+- quick-fill does not bypass Qwen;
+- user confirmation required before inference;
+- Qwen suggestion confirmation required;
+- fallback confirmation required;
+- no reference-id;
+- no inspect-proposals;
+- no threshold/ranking/model UI;
+- one click → at most one inference;
+- duplicate Run disabled while busy;
+- SUCCESS wording does not claim semantic correctness;
+- failure creates no fake mask;
+- results copy does not modify engine artifacts;
+- clean package starts with empty results/output/logs;
+- image preview is display-only;
+- user docs contain no Task/Codex/Supervisor/handoff language.
+
+Use mocks/fakes for GUI/backend tests where appropriate.
+
+Tests must not perform model inference unless explicitly authorized below.
+
+
+# 29. Real inference during Task8E
+
+Do NOT rerun any Task8C locked Final Demo sample.
+
+Do NOT use:
+
+1003.tif
+1008.tif
+1009.tif
+1010.tif
+
+for Task8E smoke.
+
+A real model inference is NOT required for the initial package build if UI/backend integration can be validated safely with mocks plus accepted RC1 runtime evidence.
+
+If a real package smoke is genuinely needed:
+
+select one deterministic NON-Task8C image already available locally;
+record why it was selected;
+perform at most ONE inference;
+do not tune/retry;
+do not use the outcome as scientific evidence.
+
+If no suitable safe sample exists:
+skip real inference and record:
+REAL_MODEL_SMOKE_DEFERRED_TO_USER_ACCEPTANCE_TEST
+
+Do not create a new research claim.
+
+
+# 30. Folder-move smoke
+
+Because source/model path portability is desired:
+
+the package must not contain hardcoded Demo-root paths.
+
+Perform a practical path-portability test if it can be done without duplicating all model bytes again.
+
+Acceptable examples:
+
+- assemble under a staging folder then rename/move the whole package to final destination and run self-check;
+- or build at a temporary delivery name, verify, rename to final, verify again.
+
+Do not use symlinks/junctions.
+
+Success criterion:
+
+the final application resolves `_engine`, models and results from its own location.
+
+Do not claim cross-PC portability.
+
+
+# 31. Self-check
+
+Provide a user-accessible but simple self-check mechanism.
+
+Could be:
+
+“环境检查” button
+
+or:
+
+BuildReasonSeg_Demo.py --self-check
+
+It should return user-facing:
+
+环境检查：通过
+
+or a clear failure explanation.
+
+It must not require development files.
+
+
+# 32. External delivery acceptance
+
+At final external path verify:
+
+- launcher exists
+- app starts
+- user documentation exists
+- no forbidden developer directories/files
+- model assets verify
+- clean results initially
+- clean engine output initially
+- cache dirs private
+- source paths relative
+- existing Advisor_RC1 unchanged
+- no Task8C/Task8D artifact modified
+
+
+# 33. Required repository report
 
 Create:
 
-diag/task8d-above-target-chain-v1
+docs/task8e_user_demo_delivery_v1.md
 
-from that exact accepted HEAD.
+This is a developer/audit report in the repository only.
 
-Unknown branch/HEAD/diff:
-inspect then STOP.
+It must NOT be copied into the user Demo.
 
-No reset --hard / rebase / amend / stash / clean / force push.
+Include:
 
+scope
+package tree
+GUI/console choice
+runtime discovery
+portability status
+asset provenance
+tests
+external package manifest
+forbidden-content audit
+existing RC1 preservation
+known limitations
+exact user workflow
+final external path
 
-# 5. Frozen evidence lock
 
-Task 8C evidence is READ ONLY.
-
-Read:
-
-evaluation/task8c_final_demo_v1.json
-
-Locate the ABOVE frozen case and verify all recorded artifact identities.
-
-The external frozen run root is expected to be:
-
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\
-inference\output\1008
-
-Required frozen files include at least:
-
-diagnostics/result.json
-diagnostics/proposals.json
-diagnostics/reference_context_mask.png
-diagnostics/maps.npz
-masks/1008_mask.png
-overlays/1008_overlay.png
-
-Before analysis:
-
-- verify each file against the SHA256 identity recorded in Task 8C;
-- verify runtime_results.json remains:
-  SHA256 =
-  2fcbb705acf1ceeb28fc9609bfda869150e7b800b2bea0d9fba9a723c12ff8ca
-- verify Task 8C evidence files are not modified.
-
-If any frozen identity differs:
-STOP.
-
-
-# 6. Primary diagnostic question
-
-Answer:
-
-At what earliest observable stage does the canonical target
-GT instance 6
-lose to the eventual wrong building
-GT instance 7?
-
-The diagnosis must follow:
-
-Reference geometry
-→ P_dir
-→ P_near
-→ W
-→ A
-→ C
-→ logits
-→ probability
-→ final mask
-
-
-# 7. Ground truth
-
-Use the exact same frozen WHU native-vector truth used by Task 8C.
-
-Do not regenerate annotations.
-
-Canonical:
-
-reference = instance 4
-target = instance 6
-
-Frozen observed wrong best-overlap target:
-instance 7
-
-Verify these identities before analysis.
-
-Also reconstruct all GT building-instance masks in tile 1008,
-because candidate-level rankings must be reported for the full relevant set,
-not only instance 6 and 7.
-
-
-# 8. Context mapping
-
-Read frozen:
-
-result.json -> reasoning_context.origin / size
-
-Map native GT masks into the exact frozen reasoning context.
-
-Verify:
-
-- canonical ref 4 is represented;
-- canonical target 6 is represented;
-- wrong instance 7 is represented;
-- no mapping/resizing mismatch;
-- final Task8C target mask remains byte-identical.
-
-No repainting or manual mask editing.
-
-
-# 9. Frozen map analysis
-
-Load ONLY the already-saved:
-
-diagnostics/maps.npz
-
-It must contain:
-
-P_dir
-P_near
-W
-A
-C
-logits
-probability
-
-Verify shapes and finite values.
-
-Do not recompute these seven frozen automatic-reference maps.
-
-They are the primary evidence.
-
-
-# 10. Candidate-mask aggregation rule
-
-For 512x512 maps:
-
-use exact native GT masks directly.
-
-For 64x64 maps:
-
-downsample each binary GT mask with area interpolation to a fractional occupancy mask.
-
-Do NOT threshold the fractional mask.
-
-For a 64x64 map X and GT instance occupancy M:
-
-mass(X,M) =
-sum(X * M)
-
-mean(X,M) =
-sum(X * M) / sum(M)
-
-For A specifically:
-
-candidate_attention_mass =
-sum(A * M)
-
-because A is the frozen global competition distribution.
-
-For W:
-
-candidate_W_mass =
-sum(W * M)
-
-For C:
-
-candidate_C_mean =
-sum(C * M) / sum(M)
-
-For 512 logits/probability:
-
-candidate_logit_mean =
-mean(logits over exact GT mask)
-
-candidate_probability_mean =
-mean(probability over exact GT mask)
-
-candidate_positive_logit_fraction =
-fraction of exact GT pixels where logits > 0
-
-For final predicted binary mask:
-
-compute IoU with every GT instance.
-
-No new acceptance threshold may be introduced.
-
-
-# 11. Required per-instance table
-
-For every GT building instance inside the reasoning context, record:
-
-instance_id
-GT area
-relation validity using the existing canonical relation implementation
-canonical boundary distance to reference if the existing frozen implementation exposes it
-
-P_dir mass / mean
-P_near mass / mean
-W mass / mean
-A attention mass
-C mean
-logit mean
-probability mean
-positive-logit fraction
-final predicted-mask IoU
-
-Important:
-
-For canonical relation validity and boundary distance,
-reuse the existing canonical repository implementation.
-
-Do NOT invent a new geometry predicate or distance formula.
-
-Locate and record the exact function/module used.
-
-If no authoritative canonical implementation can be located:
-record that field as NOT_ESTABLISHED rather than inventing one.
-
-
-# 12. Target 6 vs wrong instance 7 comparison
-
-Produce an explicit stage table:
-
-stage
-score_target6
-score_wrong7
-delta_6_minus_7
-which_instance_is_favoured
-
-At minimum:
-
-P_dir
-P_near
-W mass
-A mass
-C mean
-logit mean
-probability mean
-positive-logit fraction
-final mask IoU
-
-No threshold.
-
-"favoured" simply means numerical comparison under the predeclared statistic.
-
-
-# 13. Rank trajectory
-
-For every relevant GT instance, rank the appropriate stage statistic.
-
-Report the ranks of:
-
-canonical target 6
-wrong instance 7
-
-for:
-
-W mass
-A mass
-C mean
-logit mean
-probability mean
-final mask IoU
-
-Also report the top-5 instance ids at every stage.
-
-Do not change scoring statistics after viewing the result.
-
-
-# 14. First-divergence rule
-
-Determine:
-
-FIRST_OBSERVED_TARGET_DIVERGENCE_STAGE
-
-using the fixed stage order:
-
-W
-→ A
-→ C
-→ logits
-→ probability
-→ final mask
-
-The first stage where instance 7 is favoured over canonical instance 6
-under the predeclared statistic
-is the first observed divergence.
-
-If neither 6 nor 7 is the main competitor at that stage,
-report that fact and the actual top instance.
-
-Do not force a root-cause label.
-
-
-# 15. Reference-shape counterfactual — deterministic fields only
-
-This is NOT model inference.
-
-Use canonical GT reference mask instance 4 and the exact frozen deterministic field code to recompute ONLY:
-
-P_dir_GTref
-P_near_GTref
-W_GTref
-A_GTref = W_GTref / sum(W_GTref)
-
-No SAM2.
-No q.
-No C.
-No decoder.
-No checkpoint.
-
-Compare automatic-reference fields versus canonical-GT-reference fields.
-
-For target 6 and wrong 7 report:
-
-W mass
-A mass
-delta target6-minus-wrong7
-
-Also report:
-
-field difference statistics
-and rank changes.
-
-Purpose:
-
-test whether the ~0.91-but-not-perfect automatic reference mask
-is sufficient to explain the downstream geometric preference.
-
-Interpretation must remain conservative:
-
-- if GT-reference fields restore target6 preference,
-  reference-shape residual is a plausible contributor;
-- if GT-reference fields still favour wrong7,
-  reference-shape residual cannot be the sole explanation;
-- otherwise:
-  MIXED / NOT RESOLVED.
-
-Do not call this a causal proof.
-
-
-# 16. Frozen D-B1 mechanism audit
-
-Using source inspection only, document exactly:
-
-W
-A_fixed
-q
-C
-decoder inputs
-output threshold
-
-For D-B1 specifically establish from source whether:
-
-- A is learned or deterministic;
-- q is derived from A-weighted projected visual features;
-- C is cosine similarity;
-- target proposals are or are not used;
-- graph construction is or is not used;
-- the final mask is selected as an instance or emitted densely;
-- the final hard runtime validity gate checks target identity, nearest identity,
-  or only structural/directional properties.
-
-Every conclusion must cite exact source path + line/function in the report.
-
-
-# 17. Runtime guard audit
-
-Inspect:
-
-buildreasonseg/runtime/context.py
-buildreasonseg/runtime/pipeline.py
-
-and the frozen ABOVE result's:
-
-directional_guard
-
-Answer:
-
-What exactly must a wrong target satisfy in order for runtime to still return SUCCESS?
-
-Specifically distinguish:
-
-- direction availability guard;
-- final centroid direction check;
-- nearest-target identity correctness;
-- GT identity correctness.
-
-Do not infer beyond the source.
-
-
-# 18. Required visual evidence
+# 34. Evidence JSON
 
 Create:
 
-evaluation/task8d_above_target_chain_diagnosis_v1/
+evaluation/task8e_user_demo_delivery_v1.json
 
-with at least:
-
-01_reference_and_gt.png
-02_P_dir.png
-03_P_near.png
-04_W_and_A.png
-05_C.png
-06_logits_probability.png
-07_final_mask_vs_gt.png
-08_stage_trajectory.png
-contact_sheet.png
-
-All diagnostic maps must show boundaries for:
-
-GT reference 4
-GT target 6
-wrong instance 7
-
-using a clear legend.
-
-Do not alter underlying values for display.
-
-Heatmaps may normalize only for visualization;
-raw quantitative calculations must use frozen arrays.
-
-
-# 19. Required diagnosis JSON
-
-Create:
-
-evaluation/task8d_above_target_chain_diagnosis_v1.json
-
-Required top-level fields:
+Include:
 
 task_id
 status
 accepted_predecessor
-task8c_head
-task8c_runtime_identity
-above_artifact_identity_verification
-
-source_paths
-source_function_trace
-
-sample_lock
-reference_lock
-target_lock
-wrong_instance_lock
-
-reasoning_context
-
-frozen_maps_identity
-frozen_map_shapes
-
-all_gt_instance_stage_table
-target6_vs_wrong7
-rank_trajectory
-first_observed_target_divergence_stage
-
-canonical_reference_field_counterfactual
-
-runtime_guard_audit
-db1_mechanism_audit
-
-model_calls
-detector_calls
-predict_calls
-checkpoint_loads
-
-external_writes
-task8c_artifacts_unchanged
-
-diagnostic_figures
-
-conclusions
-limitations
+branch/head
+external_demo_path
+gui_mode
+python_runtime_discovery
+package_manifest
+model_asset_identity
+source_asset_identity
+forbidden_content_audit
+portability_result
+tests
+real_model_smoke
+advisor_rc1_unchanged
+task8c_unchanged
+task8d_unchanged
+user_docs
+user_workflow
+known_limitations
 
 
-# 20. Required scientific report
+# 35. Allowed repository changes
 
-Create:
+Only user-demo related files, for example:
 
-docs/task8d_above_target_chain_diagnosis_v1.md
-
-Required structure:
-
-1. Question being diagnosed
-2. Why ABOVE is the clean case
-3. Frozen evidence / no-rerun guarantee
-4. Actual target mechanism in RC1
-5. Reference geometry audit
-6. P_dir / P_near analysis
-7. W / A analysis
-8. C prototype-similarity analysis
-9. Decoder logits / probability analysis
-10. Final mask analysis
-11. Target-6 vs wrong-7 trajectory
-12. Canonical-reference deterministic counterfactual
-13. First observed divergence
-14. Runtime SUCCESS guard explanation
-15. Evidence-supported diagnosis
-16. What remains unresolved
-17. Possible future research directions — hypotheses only, NO IMPLEMENTATION
-18. Questions worth discussing with the advisor
-
-
-# 21. Diagnosis conclusion vocabulary
-
-Do NOT use:
-
-"fixed"
-"solved"
-"root cause proven"
-
-unless logically established, which is not expected here.
-
-Prefer:
-
-FIRST_OBSERVED_DIVERGENCE
-PRIMARY_EVIDENCE_SUPPORTS
-PLAUSIBLE_CONTRIBUTOR
-NOT_SOLE_EXPLANATION
-MIXED
-UNRESOLVED
-
-
-# 22. No-repair rule
-
-Even if the cause appears obvious:
-
-DO NOT:
-
-change P_dir parameters
-change P_near sigma
-change W
-change A normalization
-change prototype
-change D-B1
-change threshold
-add proposal selection
-add graph logic
-add a target-instance selector
-train a model
-change the architecture
-
-This task ends at diagnosis.
-
-
-# 23. Dedicated tests
-
-Create:
-
-tests/test_task8d_above_target_chain_diagnosis.py
-
-Tests must prove at minimum:
-
-- correct Task8C above sample lock;
-- frozen artifact identity verification;
-- no predict.py;
-- no DetectorRuntime;
-- no Sam2Runtime;
-- no Db1Runtime;
-- no torch.load checkpoint;
-- no Ultralytics;
-- no Transformers;
-- no subprocess model execution;
-- no external writes;
-- Task8C files opened read-only;
-- 64x64 fractional area mapping is deterministic;
-- candidate mass/mean formulas;
-- target6-vs-7 delta calculation;
-- ranking deterministic;
-- first-divergence ordering fixed;
-- no numeric pass threshold;
-- canonical-reference counterfactual contains deterministic fields only;
-- report/JSON consistency.
-
-All tests must PASS before final handoff.
-
-
-# 24. Allowed repository changes
-
-Only:
-
-scripts/task8d_above_target_chain_diagnosis.py
-tests/test_task8d_above_target_chain_diagnosis.py
-docs/task8d_above_target_chain_diagnosis_v1.md
-evaluation/task8d_above_target_chain_diagnosis_v1.json
-evaluation/task8d_above_target_chain_diagnosis_v1/*.png
+demo/user_demo_v1/**
+scripts/build_task8e_user_demo.py
+tests/test_task8e_user_demo.py
+docs/task8e_user_demo_delivery_v1.md
+evaluation/task8e_user_demo_delivery_v1.json
 handoff/CURRENT_TASK.md
 handoff/EXECUTOR_STATE.yaml
 
-No product source changes.
+No product scientific source changes.
 No governance changes.
-No Task8C evidence changes.
 
 
-# 25. External writes
+# 36. External writes
 
-NONE.
+Authorized:
 
-All external RC1 files are READ ONLY.
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1\**
 
-Diagnostic outputs belong only in repository evaluation/.
+and a temporary sibling staging folder used solely for package assembly.
+
+Forbidden:
+
+modifying
+C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\**
+
+except read-only access.
+
+Do not delete any pre-existing delivery.
 
 
-# 26. Completion state
+# 37. Completion state
 
-On successful completion:
+On success:
 
 CURRENT_TASK Status:
 READY_FOR_SUPERVISOR_AUDIT
@@ -801,38 +948,28 @@ EXECUTOR_STATE status:
 READY_FOR_SUPERVISOR_AUDIT
 
 next_gate:
-CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
+CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
 
-Commit + push all evidence.
+Commit + push repository evidence.
 
 Then STOP.
 
-Do not begin a repair task.
+Do not start Task8F or scientific repair.
 
 
-# 27. Final executor summary
+# 38. Final executor summary
 
-Report objectively:
+Report:
 
-- first observed divergence stage;
-- target6 vs wrong7 trajectory;
-- whether canonical-reference field counterfactual changes the result;
-- whether the failure is already visible before C;
-- whether C introduces/reinforces the error;
-- whether decoder logits introduce/reinforce the error;
-- why runtime structural SUCCESS permits the semantic error;
-- unresolved questions.
-
-Do not prescribe or implement the next architecture.
-
-## Executor completion checkpoint
-
-Status: READY_FOR_SUPERVISOR_AUDIT
-Next gate: CHATGPT_TASK8D_ABOVE_CHAIN_DIAGNOSIS_REMOTE_AUDIT
-
-Diagnosis only; no repair. First observed divergence: C / C_mean (actual top GT7); W/A favour GT6 over GT7, but their full ranking is topped by reference4. Logits/probability/final IoU continue to favour GT7.
-GT-reference deterministic W/A still favour6, ranks6/7 remain2/3; no preference restoration. Interpretation: MIXED / NOT RESOLVED; q/C/decoder counterfactual not evaluated.
-Runtime SUCCESS verifies mapped nonemptiness and centroid direction, not nearest/native GT target identity. Causal feature/prototype/decoder contributions remain unresolved.
-Current dedicated tests: 41 passed in1.76s / exit0; all9 diagnostic PNGs visually reviewed. Source/config helper135/135; manifest Git-byte identical. External2184 files unchanged in bytes/SHA256/mtime/file set; all Task8C repo evidence/artifacts/TIFFs and native GT unchanged. Grandfathered settings606bytes/SHA256 unchanged.
-Model/detector/predict/checkpoint calls0; external writes0; automatic frozen maps recomputed0. No product/governance/Task8C changes. Report, structured evidence and9 figures are persisted in the Task8D authorized paths.
-STOP after commit/push. Scientific acceptance remains with ChatGPT Supervisor; no repair task or new architecture is authorized.
+- exact external Demo path;
+- GUI or console mode;
+- whether folder is movable on the configured machine;
+- what remains machine-specific;
+- exact startup action;
+- exact six-step user workflow;
+- where results appear;
+- how semantic uncertainty is communicated;
+- package size;
+- tests;
+- whether real model smoke was performed;
+- confirmation that old Advisor_RC1 and Task8C/8D evidence are unchanged.
