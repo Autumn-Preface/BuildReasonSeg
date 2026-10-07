@@ -4,7 +4,7 @@
   "accepted_predecessor": "TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT",
   "accepted_predecessor_head": "b569dcefa26af9788a9ec75eb52cbb8317305bea",
   "branch": "delivery/task8e-user-demo-v1",
-  "head": "b569dcefa26af9788a9ec75eb52cbb8317305bea",
+  "head": "e814bdd6d255467b88c5fef812b7cb640647badb",
   "external_demo_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V1",
   "gui_mode": "TKINTER",
   "authorization_identity": {
@@ -13950,7 +13950,54 @@
   "source_asset_identity": [],
   "forbidden_content_audit": null,
   "portability_result": null,
-  "tests": [],
+  "tests": [
+    {
+      "phase": "initial sandbox TEMP invocation",
+      "collected": 57,
+      "passed": 0,
+      "setup_errors": 57,
+      "assertion_failures": 0,
+      "exit_code": 1,
+      "result": "57 errors in 14.36s",
+      "disposition": "L0 invocation environment failure: sandbox redirected TEMP could not create pytest numbered fixture directories; no tests reached assertions, no external assembly or model inference."
+    },
+    {
+      "phase": "existing real TEMP v2",
+      "command": "python -B -m pytest tests/test_task8e_user_demo.py -q -p no:cacheprovider --basetemp C:\\Users\\ROG\\AppData\\Local\\Temp\\task8e-demo-tests-v2",
+      "collected": 57,
+      "passed": 57,
+      "setup_errors": 0,
+      "assertion_failures": 0,
+      "exit_code": 0,
+      "seconds": 3.29,
+      "result": "57 passed in 3.29s",
+      "model_inference_calls": 0
+    },
+    {
+      "phase": "existing real TEMP v3",
+      "command": "python -B -m pytest tests/test_task8e_user_demo.py -q -p no:cacheprovider --basetemp C:\\Users\\ROG\\AppData\\Local\\Temp\\task8e-demo-tests-v3",
+      "collected": 57,
+      "passed": 57,
+      "setup_errors": 0,
+      "assertion_failures": 0,
+      "exit_code": 0,
+      "seconds": 3.02,
+      "result": "57 passed in 3.02s",
+      "model_inference_calls": 0
+    },
+    {
+      "phase": "existing real TEMP v4",
+      "command": "python -B -m pytest tests/test_task8e_user_demo.py -q -p no:cacheprovider --basetemp C:\\Users\\ROG\\AppData\\Local\\Temp\\task8e-demo-tests-v4",
+      "collected": 57,
+      "passed": 57,
+      "setup_errors": 0,
+      "assertion_failures": 0,
+      "exit_code": 0,
+      "seconds": 2.76,
+      "result": "57 passed in 2.76s",
+      "model_inference_calls": 0
+    }
+  ],
   "real_model_smoke": {
     "performed": false,
     "status": "REAL_MODEL_SMOKE_DEFERRED_TO_USER_ACCEPTANCE_TEST",
@@ -13974,5 +14021,523 @@
     "Runtime Python/CUDA dependencies are not bundled; source/assets folder portability targets only the configured PC.",
     "Runtime SUCCESS does not establish semantic correctness."
   ],
-  "next_gate": "CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT"
+  "next_gate": "CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT",
+  "assembly_plan": {
+    "accepted_head": "b569dcefa26af9788a9ec75eb52cbb8317305bea",
+    "engine_sources": [
+      "buildreasonseg/__init__.py",
+      "buildreasonseg/cli/__init__.py",
+      "buildreasonseg/cli/common.py",
+      "buildreasonseg/errors.py",
+      "buildreasonseg/inference/__init__.py",
+      "buildreasonseg/inference/contract.py",
+      "buildreasonseg/language/__init__.py",
+      "buildreasonseg/language/fallback.py",
+      "buildreasonseg/language/frontend.py",
+      "buildreasonseg/language/registry.py",
+      "buildreasonseg/language/suggestion.py",
+      "buildreasonseg/language/validator.py",
+      "buildreasonseg/models/__init__.py",
+      "buildreasonseg/models/checkpoints.py",
+      "buildreasonseg/models/package.py",
+      "buildreasonseg/paths.py",
+      "buildreasonseg/runtime/_frozen/__init__.py",
+      "buildreasonseg/runtime/_frozen/mvp/__init__.py",
+      "buildreasonseg/runtime/_frozen/mvp/data.py",
+      "buildreasonseg/runtime/_frozen/mvp/geometric_relation_field.py",
+      "buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py",
+      "buildreasonseg/runtime/_frozen/mvp/losses.py",
+      "buildreasonseg/runtime/_frozen/mvp/native_vector_adapter.py",
+      "buildreasonseg/runtime/_frozen/mvp/nearest_boundary_field.py",
+      "buildreasonseg/runtime/_frozen/mvp/program_parser.py",
+      "buildreasonseg/runtime/_frozen/mvp/qwen_seg.py",
+      "buildreasonseg/runtime/_frozen/mvp/sam2_bridge.py",
+      "buildreasonseg/runtime/_frozen/mvp/shapefile_reader.py",
+      "buildreasonseg/runtime/_frozen/mvp/structured_grounding.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6m_eval.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6n_relation_decoder.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6q_reference_resolver.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6s_directional_pipeline.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6u_common.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6z_field_composition.py",
+      "buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+      "buildreasonseg/runtime/_frozen/mvp/whu_native_vector.py",
+      "buildreasonseg/runtime/_frozen/mvp/whu_vector_audit.py",
+      "buildreasonseg/runtime/context.py",
+      "buildreasonseg/runtime/core.py",
+      "buildreasonseg/runtime/detector.py",
+      "buildreasonseg/runtime/frozen_paths.py",
+      "buildreasonseg/runtime/imageio.py",
+      "buildreasonseg/runtime/outputs.py",
+      "buildreasonseg/runtime/pipeline.py",
+      "buildreasonseg/runtime/program_head.py",
+      "buildreasonseg/utils/__init__.py",
+      "buildreasonseg/utils/device.py",
+      "buildreasonseg/utils/hashing.py",
+      "buildreasonseg/utils/logging.py",
+      "configs/inference.yaml",
+      "model/buildreasonseg_advisor/metadata.json",
+      "model/buildreasonseg_advisor/model.yaml",
+      "predict.py"
+    ],
+    "assets": [
+      "model/buildreasonseg_advisor/decoder.pt",
+      "model/buildreasonseg_advisor/detector.pt",
+      "model/components/sam2/sam2.1_hiera_base_plus.pt",
+      "model/components/sam2/sam2.1_hiera_b+.yaml",
+      "model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+      "model/components/program_head/qwen_asset_manifest.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/generation_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/merges.txt",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/preprocessor_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/video_preprocessor_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/vocab.json",
+      "VERSION"
+    ],
+    "static_dependency_analysis": {
+      "seeds": [
+        "predict",
+        "buildreasonseg.runtime.pipeline",
+        "buildreasonseg.runtime.program_head",
+        "buildreasonseg.runtime.imageio",
+        "buildreasonseg.models.package",
+        "buildreasonseg.language.validator"
+      ],
+      "modules": [
+        "buildreasonseg",
+        "buildreasonseg.cli",
+        "buildreasonseg.cli.common",
+        "buildreasonseg.errors",
+        "buildreasonseg.inference",
+        "buildreasonseg.inference.contract",
+        "buildreasonseg.language",
+        "buildreasonseg.language.fallback",
+        "buildreasonseg.language.frontend",
+        "buildreasonseg.language.registry",
+        "buildreasonseg.language.suggestion",
+        "buildreasonseg.language.validator",
+        "buildreasonseg.models",
+        "buildreasonseg.models.checkpoints",
+        "buildreasonseg.models.package",
+        "buildreasonseg.paths",
+        "buildreasonseg.runtime._frozen",
+        "buildreasonseg.runtime._frozen.mvp",
+        "buildreasonseg.runtime._frozen.mvp.data",
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field",
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+        "buildreasonseg.runtime._frozen.mvp.losses",
+        "buildreasonseg.runtime._frozen.mvp.native_vector_adapter",
+        "buildreasonseg.runtime._frozen.mvp.nearest_boundary_field",
+        "buildreasonseg.runtime._frozen.mvp.program_parser",
+        "buildreasonseg.runtime._frozen.mvp.qwen_seg",
+        "buildreasonseg.runtime._frozen.mvp.sam2_bridge",
+        "buildreasonseg.runtime._frozen.mvp.shapefile_reader",
+        "buildreasonseg.runtime._frozen.mvp.structured_grounding",
+        "buildreasonseg.runtime._frozen.mvp.task6m_eval",
+        "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+        "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver",
+        "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline",
+        "buildreasonseg.runtime._frozen.mvp.task6u_common",
+        "buildreasonseg.runtime._frozen.mvp.task6z_field_composition",
+        "buildreasonseg.runtime._frozen.mvp.task7d_global_competition_decoder",
+        "buildreasonseg.runtime._frozen.mvp.whu_native_vector",
+        "buildreasonseg.runtime._frozen.mvp.whu_vector_audit",
+        "buildreasonseg.runtime.context",
+        "buildreasonseg.runtime.core",
+        "buildreasonseg.runtime.detector",
+        "buildreasonseg.runtime.frozen_paths",
+        "buildreasonseg.runtime.imageio",
+        "buildreasonseg.runtime.outputs",
+        "buildreasonseg.runtime.pipeline",
+        "buildreasonseg.runtime.program_head",
+        "buildreasonseg.utils",
+        "buildreasonseg.utils.device",
+        "buildreasonseg.utils.hashing",
+        "buildreasonseg.utils.logging",
+        "predict"
+      ],
+      "import_edges": {
+        "buildreasonseg.language.validator": [
+          "buildreasonseg",
+          "buildreasonseg.language",
+          "buildreasonseg.language.registry"
+        ],
+        "buildreasonseg": [
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.paths": [
+          "buildreasonseg"
+        ],
+        "buildreasonseg.language": [
+          "buildreasonseg",
+          "buildreasonseg.language.fallback",
+          "buildreasonseg.language.frontend",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.suggestion",
+          "buildreasonseg.language.validator"
+        ],
+        "buildreasonseg.language.registry": [
+          "buildreasonseg",
+          "buildreasonseg.language"
+        ],
+        "buildreasonseg.language.fallback": [
+          "buildreasonseg",
+          "buildreasonseg.language",
+          "buildreasonseg.language.frontend"
+        ],
+        "buildreasonseg.language.frontend": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.language",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.validator",
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.errors": [
+          "buildreasonseg"
+        ],
+        "buildreasonseg.language.suggestion": [
+          "buildreasonseg",
+          "buildreasonseg.language",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.validator"
+        ],
+        "buildreasonseg.models.package": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.models",
+          "buildreasonseg.paths",
+          "buildreasonseg.utils.hashing"
+        ],
+        "buildreasonseg.utils.hashing": [
+          "buildreasonseg",
+          "buildreasonseg.utils"
+        ],
+        "buildreasonseg.utils": [
+          "buildreasonseg",
+          "buildreasonseg.utils.device",
+          "buildreasonseg.utils.hashing",
+          "buildreasonseg.utils.logging"
+        ],
+        "buildreasonseg.utils.device": [
+          "buildreasonseg",
+          "buildreasonseg.utils"
+        ],
+        "buildreasonseg.utils.logging": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.utils"
+        ],
+        "buildreasonseg.models": [
+          "buildreasonseg",
+          "buildreasonseg.models.checkpoints",
+          "buildreasonseg.models.package"
+        ],
+        "buildreasonseg.models.checkpoints": [
+          "buildreasonseg",
+          "buildreasonseg.models",
+          "buildreasonseg.utils.hashing"
+        ],
+        "buildreasonseg.runtime.imageio": [
+          "buildreasonseg",
+          "buildreasonseg.errors"
+        ],
+        "buildreasonseg.runtime.program_head": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.program_parser",
+          "buildreasonseg.runtime._frozen.mvp.qwen_seg",
+          "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline",
+          "buildreasonseg.runtime.frozen_paths"
+        ],
+        "buildreasonseg.runtime.frozen_paths": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+          "buildreasonseg.runtime._frozen.mvp.task6u_common"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field",
+          "buildreasonseg.runtime._frozen.mvp.losses",
+          "buildreasonseg.runtime._frozen.mvp.sam2_bridge"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.sam2_bridge": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen"
+        ],
+        "buildreasonseg.runtime._frozen": [
+          "buildreasonseg"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.losses": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6u_common": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.task6m_eval",
+          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.task6m_eval"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6m_eval": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.native_vector_adapter",
+          "buildreasonseg.runtime._frozen.mvp.whu_native_vector"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.whu_native_vector": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.shapefile_reader",
+          "buildreasonseg.runtime._frozen.mvp.whu_vector_audit"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.shapefile_reader": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.whu_vector_audit": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.shapefile_reader"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.native_vector_adapter": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.structured_grounding",
+          "buildreasonseg.runtime._frozen.mvp.whu_native_vector"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.structured_grounding": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.qwen_seg": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.data"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.data": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.program_parser": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.qwen_seg"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field"
+        ],
+        "buildreasonseg.runtime.pipeline": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.language.frontend",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.suggestion",
+          "buildreasonseg.language.validator",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.context",
+          "buildreasonseg.runtime.core",
+          "buildreasonseg.runtime.detector",
+          "buildreasonseg.runtime.imageio",
+          "buildreasonseg.runtime.outputs",
+          "buildreasonseg.runtime.program_head",
+          "buildreasonseg.utils.device"
+        ],
+        "buildreasonseg.runtime.detector": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.imageio"
+        ],
+        "buildreasonseg.runtime.core": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+          "buildreasonseg.runtime._frozen.mvp.task6z_field_composition",
+          "buildreasonseg.runtime._frozen.mvp.task7d_global_competition_decoder",
+          "buildreasonseg.runtime.context",
+          "buildreasonseg.runtime.frozen_paths"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6z_field_composition": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+          "buildreasonseg.runtime._frozen.mvp.nearest_boundary_field"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.nearest_boundary_field": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task7d_global_competition_decoder": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime.context": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.runtime.detector"
+        ],
+        "buildreasonseg.runtime.outputs": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.imageio"
+        ],
+        "predict": [
+          "buildreasonseg",
+          "buildreasonseg.cli.common",
+          "buildreasonseg.errors",
+          "buildreasonseg.inference.contract",
+          "buildreasonseg.language.frontend",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.suggestion",
+          "buildreasonseg.language.validator",
+          "buildreasonseg.models.package",
+          "buildreasonseg.runtime.imageio",
+          "buildreasonseg.runtime.pipeline",
+          "buildreasonseg.runtime.program_head"
+        ],
+        "buildreasonseg.inference.contract": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.inference",
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.inference": [
+          "buildreasonseg",
+          "buildreasonseg.inference.contract"
+        ],
+        "buildreasonseg.cli.common": [
+          "buildreasonseg",
+          "buildreasonseg.cli",
+          "buildreasonseg.errors",
+          "buildreasonseg.paths",
+          "buildreasonseg.utils.logging"
+        ],
+        "buildreasonseg.cli": [
+          "buildreasonseg",
+          "buildreasonseg.cli.common"
+        ]
+      },
+      "policy": "AST imports at all depths plus package initializers; no runtime or model execution"
+    },
+    "omitted_optional_model_files": [
+      "metrics.json",
+      "qwen_integrity_cache.json"
+    ],
+    "no_runtime_execution": true
+  },
+  "demo_code_checkpoint": {
+    "observed_parent_head": "e814bdd6d255467b88c5fef812b7cb640647badb",
+    "dedicated_tests": "57/57 PASS",
+    "identities": [
+      {
+        "path": "demo/user_demo_v1/_ui/__init__.py",
+        "bytes": 81,
+        "sha256": "c95c2ee0ba5b75ff2c7bfe4da8f35f1133b8ca496171d96ee31be1d63267e80c"
+      },
+      {
+        "path": "demo/user_demo_v1/_ui/backend.py",
+        "bytes": 14122,
+        "sha256": "132fec7ad6a57f9c61bbdc6f8dddce9b96c4266cc51c35527996491937c666c5"
+      },
+      {
+        "path": "demo/user_demo_v1/_ui/environment.py",
+        "bytes": 5098,
+        "sha256": "636e65d9a6be2ffc87dc7d6f7cd7fb4250e00ab51697bd87452d6a6df53039e1"
+      },
+      {
+        "path": "demo/user_demo_v1/_ui/launch.ps1",
+        "bytes": 2108,
+        "sha256": "2bada66fb97a8964d57487c24598e8579e4dce0da052a8e7fc20103eb2b529f8"
+      },
+      {
+        "path": "demo/user_demo_v1/BuildReasonSeg_Demo.py",
+        "bytes": 16519,
+        "sha256": "70ca1a758ef053fdee2af7652e1d4e66fd3d5667a266cb628d3c1af8a533c956"
+      },
+      {
+        "path": "demo/user_demo_v1/使用说明.md",
+        "bytes": 5866,
+        "sha256": "dca9706fc46520ebefa5ec95a16b40cda53a2dfd7e58b4cc44fee91f81574bc2"
+      },
+      {
+        "path": "demo/user_demo_v1/启动BuildReasonSeg Demo.bat",
+        "bytes": 106,
+        "sha256": "dd221c4b6d6d8e3430f17329e2955031f6e97ed537daf3c580889fbb46dfa291"
+      },
+      {
+        "path": "demo/user_demo_v1/版本说明.txt",
+        "bytes": 436,
+        "sha256": "6956b04df51c3b5d8dbe341dbe14d2633d162385efb23a623f27899000020ca7"
+      },
+      {
+        "path": "scripts/build_task8e_user_demo.py",
+        "bytes": 14720,
+        "sha256": "2f9955d7f6d6dea22f5eb2103f60e81a8b1727d10ad345c6bca891fb7457cd69"
+      },
+      {
+        "path": "tests/test_task8e_user_demo.py",
+        "bytes": 23073,
+        "sha256": "61d21c20e7dd3845e5c8f9d4eb78752b68a28d592a7b40849938c841b4c51c77"
+      }
+    ]
+  },
+  "gui_display_check": {
+    "pass": true,
+    "all_required_controls_visible": true,
+    "screenshot": "docs/task8e_user_demo_ui.png",
+    "model_calls": 0,
+    "presentation_only": true
+  }
 }

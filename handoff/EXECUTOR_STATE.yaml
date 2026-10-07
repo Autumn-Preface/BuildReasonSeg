@@ -3,7 +3,7 @@ task_id: TASK8E_USER_FACING_DEMO_PACKAGE_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: delivery/task8e-user-demo-v1
-head: b569dcefa26af9788a9ec75eb52cbb8317305bea
+head: e814bdd6d255467b88c5fef812b7cb640647badb
 accepted_predecessor: TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT
 completed:
 - Canonical read order and remote exact HEAD/clean working tree verified; authorized
@@ -11,14 +11,22 @@ completed:
 - Tkinter available; GUI selected with no dependency installation.
 - Old Advisor RC1 all2184 bytes/SHA256/mtime/file identities and Task8C/Task8D evidence
   locked; final Demo destination absent.
-current_step: PREFLIGHT_LOCKED
-next_action: Implement user GUI/orchestration, deterministic Python discovery and
-  reproducible clean assembly; fake-only tests.
-tests_run: []
+- GUI, frozen API orchestration, launcher discovery, relative paths and reproducible
+  assembly implemented.
+- 57 fake/API/Tkinter tests PASS with model-call guards; initial L0 sandbox TEMP setup
+  errors retained.
+- Presentation-only GUI display check PASS; no model inference.
+current_step: GUI_ASSEMBLY_CODE_TESTED
+next_action: Assemble new staging; no-model self-check; folder move; final integrity
+  gates.
+tests_run:
+- suite: tests/test_task8e_user_demo.py
+  result: 57 passed in 2.76s
+  exit_code: 0
 uncommitted_changes: true
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: b569dcefa26af9788a9ec75eb52cbb8317305bea
+  commit: e814bdd6d255467b88c5fef812b7cb640647badb
   pushed: true
 next_gate: CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
 model_inference_calls: 0
