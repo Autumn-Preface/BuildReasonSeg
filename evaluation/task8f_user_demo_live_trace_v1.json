@@ -4,7 +4,7 @@
   "accepted_predecessor": "TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT",
   "accepted_predecessor_head": "93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4",
   "branch": "delivery/task8f-user-demo-live-trace-v1",
-  "head": "93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4",
+  "head": "f4b36a3a3ef2f3861214b65e17394c5f284444b1",
   "external_demo_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2",
   "staging_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1",
   "next_gate": "CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT",
@@ -16009,7 +16009,58 @@
       "task8f_does_not_copy_or_modify_these_artifacts": true
     }
   },
-  "tests": [],
+  "tests": [
+    {
+      "phase": "initial Trace/UI revision",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "collected": 34,
+      "passed": 32,
+      "failed": 2,
+      "setup_errors": 0,
+      "exit_code": 1,
+      "seconds": 6.08,
+      "failure_root": "V2 TracePage.begin loop referenced undefined card index i; second failure followed same main-thread reset exception.",
+      "stderr_note": "A manually-busy GUI test also exposed an idle-close progressbar timer cleanup gap.",
+      "model_calls": 0,
+      "disposition": "L1 UI-only correction: correct indexed reset loop and stop idle progressbar timer on close; tests are not weakened.",
+      "identities": [
+        {
+          "path": "demo/user_demo_v2/_ui/trace_ui.py",
+          "sha256": "44f6f12873566099e2e3a4dd37678a3961e0dec6bf88d70e2bfde2a7e337a286"
+        },
+        {
+          "path": "demo/user_demo_v2/BuildReasonSeg_Demo.py",
+          "sha256": "c68284c17bce8a80ed7f7336ec99e6b1049114ce82d40a165602e38e4a206f49"
+        },
+        {
+          "path": "tests/test_task8f_user_demo_live_trace.py",
+          "sha256": "4ed8e8d3b9971c30f9b01cdb35c3b34dd8ff08981eafc038217c485b72b6f2e7"
+        }
+      ]
+    },
+    {
+      "phase": "Trace/UI fixed revision",
+      "collected": 34,
+      "passed": 34,
+      "failed": 0,
+      "setup_errors": 0,
+      "exit_code": 0,
+      "seconds": 3.23,
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "model_calls": 0
+    },
+    {
+      "phase": "Trace/UI checkpoint revision",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "collected": 36,
+      "passed": 36,
+      "failed": 0,
+      "setup_errors": 0,
+      "exit_code": 0,
+      "seconds": 3.34,
+      "model_calls": 0
+    }
+  ],
   "real_model_smoke": {
     "performed": false,
     "model_calls": 0,
@@ -16034,5 +16085,17 @@
     "observer_failure_semantics": "Scientific outputs/errors preserved; Demo records OBSERVATION_FAILED separately and must not silently present inference as successful delivery.",
     "no_additional_model_calls": true,
     "real_model_smoke": "Deferred until all fake/static/package gates; optional at most1 non-locked input."
+  },
+  "trace_ui_checkpoint": {
+    "peer_pages": true,
+    "single_worker": true,
+    "main_thread_only": true,
+    "bounded_background_preview_renderer": true,
+    "live_stage_before_worker_end_test": "PASS",
+    "read_only_arrays": "PASS",
+    "failure_preservation": "E401/E402/E404/E502 PASS",
+    "persist_and_reopen": "PASS",
+    "no_real_inference": true,
+    "engine_hooks": "NOT_IMPLEMENTED_YET"
   }
 }

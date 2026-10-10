@@ -3,20 +3,27 @@ task_id: TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: delivery/task8f-user-demo-live-trace-v1
-head: 93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4
+head: f4b36a3a3ef2f3861214b65e17394c5f284444b1
 accepted_predecessor: TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT
 completed:
 - Startup read order, remote exact HEAD and clean working tree verified; required
   branch created.
 - Accepted V1, old RC1 and locked Task8C/D/E/governance identities inventoried read-only.
-current_step: PREFLIGHT
-next_action: Implement two-page trace/UI and fake tests, then minimal V2-only observer
-  and scientific equivalence gates.
-tests_run: []
+- Two peer pages, same worker, bounded async previews, read-only StageEvent storage/reopen
+  implemented.
+- 36 fake Trace/UI tests PASS; initial32/2 UI failures retained and corrected locally
+  without weakened tests.
+current_step: TRACE_UI_FAKE_GATE_PASS
+next_action: Implement minimal V2-only observation hooks; static scientific AST equivalence
+  and fake count/output equivalence.
+tests_run:
+- suite: tests/test_task8f_user_demo_live_trace.py
+  result: 36 passed in3.34s
+  exit_code: 0
 uncommitted_changes: true
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: 93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4
+  commit: f4b36a3a3ef2f3861214b65e17394c5f284444b1
   pushed: true
 next_gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
 model_inference_calls: 0

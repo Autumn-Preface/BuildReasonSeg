@@ -9,3 +9,7 @@ Status: IN_PROGRESS
 设计：结果 | 推理过程，过程页可滚动两列九阶段卡片。模型阶段快照为只读副本，通过有界后台渲染队列落盘与推送主线程。失败留存已完成阶段，D-B1候选与最终guard结果严格分离。Stage6/7的W/A/q/C观测只激活于既有实际模型forward，不使用其前置诊断计算冒充真实forward状态。无额外模型调用、无GT、无阈值/算法变化。
 
 计划checkpoint：Trace/UI fake tests；V2只读observer与等价性；组装和页面/迁移门禁；最终报告与证据。
+
+## Trace/UI checkpoint
+
+当前36项fake tests PASS (3.34s/exit0)：两页切换、主线程/worker隔离、同run事件、只读数组、实时显示先于worker结束、各失败留存、缺失观测不能静默当成功、持久化/重开。首次32passed/2failed为TracePage重置卡片索引错误及其后继UI事件失败，真实记录留存在JSON，已L1局部修正并停止关闭时的progressbar timer。无外部组装或真实推理。
