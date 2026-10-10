@@ -577,6 +577,6 @@ Codex 必须说明：
 ## Executor checkpoint
 
 Status: IN_PROGRESS
-Current step: OBSERVATION_SCIENTIFIC_EQUIVALENCE_PASS
+Current step: V2_PACKAGE_INTEGRITY_AND_NATIVE_GUI_PASS
 Next gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
-No model inference. V2 external assembly pending.
+V2 final delivery assembled and verified. Real model smoke deferred.

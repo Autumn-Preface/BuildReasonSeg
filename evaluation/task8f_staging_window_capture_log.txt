@@ -1,0 +1,1 @@
+{"pass": true, "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1", "files": 84, "model_calls": 0}

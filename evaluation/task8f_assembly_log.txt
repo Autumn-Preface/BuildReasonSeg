@@ -1,0 +1,18 @@
+Verified asset model/buildreasonseg_advisor/decoder.pt
+Verified asset model/buildreasonseg_advisor/detector.pt
+Verified asset model/components/sam2/sam2.1_hiera_base_plus.pt
+Verified asset model/components/sam2/sam2.1_hiera_b+.yaml
+Verified asset model/components/program_head/program_parser_l3_rehearsal_v1.pt
+Verified asset model/components/program_head/qwen_asset_manifest.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/config.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/generation_config.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/merges.txt
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/preprocessor_config.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer_config.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/video_preprocessor_config.json
+Verified asset model/components/program_head/Qwen3-VL-2B-Instruct/vocab.json
+Verified asset VERSION
+{"source_files": 54, "expected_entries": 84, "static_audit": "PASS", "assembled": true, "finalized": false}

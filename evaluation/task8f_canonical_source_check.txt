@@ -1,0 +1,5 @@
+canonical source : C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\delivery_src\BuildReasonSeg_Advisor_RC1
+destination      : C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+manifest files   : 135
+
+checked=135 match=135 missing=0 mismatch=0

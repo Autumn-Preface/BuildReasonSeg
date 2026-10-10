@@ -1,0 +1,19 @@
+{
+    "parse_errors":  0,
+    "native_powershell":  "5.1.26100.9444",
+    "dispatch_intercepted":  true,
+    "actual_environment_probe":  true,
+    "pass":  true,
+    "root":  "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1",
+    "model_inference":  0,
+    "dispatch":  {
+                     "WindowStyle":  "Hidden",
+                     "FilePath":  "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\python.exe",
+                     "ArgumentList":  [
+                                          "-B",
+                                          "\"C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1\\BuildReasonSeg_Demo.py\""
+                                      ],
+                     "WorkingDirectory":  "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1"
+                 },
+    "utf8_bom":  true
+}

@@ -360,6 +360,63 @@ def test_all_proposals_shown_and_original_masks_unchanged(selected):
     assert ids == [0, 1, 2] and before == [p["mask_crop"].tobytes() for p in props]
 
 
+def test_reference_highlight_matches_real_selected_id_bbox_and_mask():
+    rgb,props,*_=fixture_arrays()
+    renderer=r.PreviewRenderer()
+    renderer.render(2,{"rgb":rgb,"proposals":props},{"raw_count":3})
+    selected=props[2]
+    previews,details=renderer.render(3,{"reference_mask_crop":selected["mask_crop"]},{"selected_id":2,"bbox":selected["bbox"]})
+    assert details["highlighted_reference_id"]==2
+    top,left,_,_=selected["bbox"]
+    # Exact source-coordinate corner of the selected fixture is yellow, not the other proposals.
+    assert tuple(np.asarray(previews[0])[top,left])==(255,225,35)
+    assert selected["mask_crop"].all()
+
+
+@pytest.mark.parametrize("status",["SUCCESS","FAILED"])
+def test_single_worker_request_trace_summary_engine_root_and_no_retry(tmp_path,status):
+    entered,release=threading.Event(),threading.Event()
+    calls=[];confirmations=[]
+    runroot=tmp_path/"_engine/inference/output/fixed_fake_r001"
+    (runroot/"diagnostics").mkdir(parents=True)
+    mask,overlay=runroot/"fake_mask.png",runroot/"fake_overlay.png"
+    if status=="SUCCESS":
+        Image.new("L",(512,512),255).save(mask);Image.new("RGB",(512,512)).save(overlay)
+    class Adapter:
+        def __init__(self,root): self.root=root
+        def run(self,image,prompt,confirm,progress):
+            calls.append("single_fake_run");entered.set();assert release.wait(8)
+            assert confirm("direct","FIXED FAKE confirmation")
+            fake_events(self.observer,8)
+            paths={"diagnostics":str(runroot/"diagnostics")}
+            if status=="SUCCESS": paths.update(mask=str(mask),overlay=str(overlay))
+            outcome=NS(status=status,ok=status=="SUCCESS",error_code=None if status=="SUCCESS" else "E404",result_payload={"status":status,"output_paths":paths,"validity_scope":"RUNTIME_STRUCTURAL_ONLY","semantic_status":"NOT_EVALUATED"})
+            self.observer.emit(9,"RUNNING",{"guard_executed":True})
+            self.observer.emit(9,"COMPLETED" if status=="SUCCESS" else "FAILED",{"runtime_status":status,"guard_executed":True,"final_output_valid":status=="SUCCESS","mask_path":str(mask) if status=="SUCCESS" else None,"overlay_path":str(overlay) if status=="SUCCESS" else None,"error_code":outcome.error_code})
+            return outcome,"largest_to_above_to_nearest",{"language_mode":"FAKE_ONLY"}
+    worker=b.Worker();worker.confirm=lambda kind,message:confirmations.append(kind) or True
+    action=lambda:b.run_request(tmp_path,Path("fixed_fake.png"),"FIXED FAKE",worker,Adapter)
+    try:
+        assert worker.start(action) and entered.wait(5)
+        assert not worker.start(action)
+        release.set();worker.thread.join(8)
+        assert not worker.busy and calls==["single_fake_run"] and confirmations==["direct"]
+        published=[value for kind,value in list(worker.events.queue) if kind=="result"]
+        assert len(published)==1
+        summary=published[0]["summary"];directory=Path(published[0]["directory"])
+        trace=json.loads((directory/"trace/trace_manifest.json").read_text(encoding="utf-8"))
+        assert summary["runtime_status"]==status and summary["observation_status"]=="OK"
+        assert summary["engine_run_root"]==trace["engine_run_root"]=="_engine/inference/output/fixed_fake_r001"
+        assert trace["run_id"]==directory.name and trace["status"]=="FROZEN"
+        assert len(list((tmp_path/"results").iterdir()))==1
+        assert (directory/"mask.png").is_file()==(status=="SUCCESS")
+        assert (directory/"overlay.png").is_file()==(status=="SUCCESS")
+        assert worker.adapter.observer is None
+    finally:
+        release.set()
+        if worker.thread:worker.thread.join(8)
+
+
 @pytest.mark.parametrize("name,fixed", [("P_dir", (0,1)), ("P_near", (0,1)), ("W", (0,1)), ("A", None), ("C", (-1,1))])
 def test_display_normalization_does_not_mutate_raw_map(name, fixed):
     a = np.linspace(-.2, .8, 4096, dtype=np.float32).reshape(64,64)

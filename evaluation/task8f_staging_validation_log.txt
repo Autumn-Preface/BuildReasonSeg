@@ -1,0 +1,4 @@
+Creating new Ultralytics Settings v0.0.8 file  
+View Ultralytics Settings with 'yolo settings' or at 'C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V2_task8f_staging_v1\_runtime_cache\yolo\Ultralytics\settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/usage/settings.
+{"pass": true, "root": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1", "files": 84, "model_calls": 0}

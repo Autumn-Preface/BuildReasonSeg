@@ -3,7 +3,7 @@ task_id: TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: delivery/task8f-user-demo-live-trace-v1
-head: 5c3e74732364b437c1c32b32a145ee56b22e2c0a
+head: 2880bbdb9ac80ea14c6ebe48379e27c43c76fbcf
 accepted_predecessor: TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT
 completed:
 - Startup read order, remote exact HEAD and clean working tree verified; required
@@ -21,9 +21,19 @@ completed:
   corrected, no scientific changes.
 - V2 staging builder and user instructions prepared; no external V2 writes, no model
   smoke.
-current_step: OBSERVATION_SCIENTIFIC_EQUIVALENCE_PASS
-next_action: Assemble absent V2 staging, full hashes, native no-model GUI/launcher
-  checks, sibling move, final preservation.
+- V2 staging84 immutable entries/4.716GB hashes and provenance verified; native environment/two
+  peer pages PASS.
+- Native Windows PowerShell5.1 startup probe/BOM/quoting PASS; actual GUI class and
+  private cache paths verified separately.
+- New staging moved once to official V2 root; final84 hash and relocated GUI/launcher
+  PASS.
+- Current56 dedicated fake tests PASS; original V1 unchanged57 tests PASS; read-only
+  canonical helper135/135 PASS.
+- Final old RC12184/V1295/locked repository175 identities PASS; only one new V2 private
+  cache config, no user/engine run/log files.
+current_step: V2_PACKAGE_INTEGRITY_AND_NATIVE_GUI_PASS
+next_action: Persist final delivery report/evidence; READY_FOR_SUPERVISOR_AUDIT commit
+  and push, then STOP.
 tests_run:
 - suite: tests/test_task8f_user_demo_live_trace.py
   result: 36 passed in3.34s
@@ -31,10 +41,13 @@ tests_run:
 - suite: tests/test_task8f_user_demo_live_trace.py
   result: 53 passed in12.31s strict warnings-as-error
   exit_code: 0
+- suite: tests/test_task8f_user_demo_live_trace.py
+  result: 56 passed in12.58s strict warnings-as-error
+  exit_code: 0
 uncommitted_changes: true
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: 5c3e74732364b437c1c32b32a145ee56b22e2c0a
+  commit: 2880bbdb9ac80ea14c6ebe48379e27c43c76fbcf
   pushed: true
 next_gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
 model_inference_calls: 0
