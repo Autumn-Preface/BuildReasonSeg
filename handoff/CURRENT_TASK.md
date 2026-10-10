@@ -1,14 +1,3 @@
-# CURRENT_TASK - TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1
-
-Status:
-IN_PROGRESS
-
-Decision owner: ChatGPT Supervisor
-Executor: CODEX
-Next gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
-
-## Supervisor task authorization - verbatim
-
 # TASK AUTHORIZATION
 
 **Task ID:** `TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1`
@@ -583,3 +572,11 @@ Codex 必须说明：
 - 原 V1 是否保留；
 - 是否完成真实模型 smoke；
 - 有哪些仍需用户手动验收的功能。
+
+
+## Executor checkpoint
+
+Status: IN_PROGRESS
+Current step: OBSERVATION_SCIENTIFIC_EQUIVALENCE_PASS
+Next gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
+No model inference. V2 external assembly pending.

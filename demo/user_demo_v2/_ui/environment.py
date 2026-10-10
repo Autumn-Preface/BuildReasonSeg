@@ -48,6 +48,10 @@ def probe_runtime(root: Path, importer=importlib.import_module) -> dict:
         try:
             module = importer(name)
             version = str(getattr(module, "__version__", getattr(module, "TkVersion", "available")))
+            if name == "ultralytics" and hasattr(module, "settings"):
+                # Directory hints in this NEW private cache only; no detector/model parameter changes.
+                module.settings.update({"datasets_dir": "_runtime_cache/datasets",
+                                        "weights_dir": "_engine/model", "runs_dir": "_engine/inference/output"})
             versions[name] = version
             if name == "ultralytics" and version != REQUIRED_ULTRALYTICS:
                 errors.append("Ultralytics 版本不兼容，需要 " + REQUIRED_ULTRALYTICS + "。")

@@ -342,7 +342,15 @@ class DemoApp:
             return
         self.progress.stop()
         self.window.after_cancel(self.poll_id)
+        # Release Tk-owned references on their owner thread before later worker-side GC.
+        self.photos.clear()
+        self.trace_page.photos.clear()
+        self.trace_page.cards.clear()
+        self.trace_page.banner = None
+        self.trace_page.busy = None
+        self.path_text = self.status = self.summary = None
         self.window.destroy()
+        self.window.report_callback_exception = None
 
     def callback_error(self, kind, error, trace):
         import traceback

@@ -13,3 +13,11 @@ Status: IN_PROGRESS
 ## Trace/UI checkpoint
 
 当前36项fake tests PASS (3.34s/exit0)：两页切换、主线程/worker隔离、同run事件、只读数组、实时显示先于worker结束、各失败留存、缺失观测不能静默当成功、持久化/重开。首次32passed/2failed为TracePage重置卡片索引错误及其后继UI事件失败，真实记录留存在JSON，已L1局部修正并停止关闭时的progressbar timer。无外部组装或真实推理。
+
+## Observation/scientific equivalence checkpoint
+
+V2-only derivatives: pipeline.py, core.py, _frozen/mvp/task7d_global_competition_decoder.py; added runtime/observation.py. Full accepted-module AST identical in observer disabled and enabled paths after erasing only observation transport/metadata/keyword. Exact unified diff and base/V2 SHA256 in JSON. W/A/q/C sampled within original actual forward scope; original pre-forward diagnostic calculation is not represented as actual forward.
+
+53 dedicated fake tests PASS (12.31s/exit0; Tk unraisable warnings as errors), covering all four directions, final masks/PNG bytes, error reasons/codes, detector/SAM/forward counts and RNG state. Fixed fixtures initially used invalid parse source and padding-only success mask; native Tk owner-thread lifecycle warnings/fatal exit retained in raw v4-v10 records and corrected before assembly. No science output repair.
+
+Model smoke deferred to user acceptance: no current user-selected nonlocked input/confirmation. Actual GPU timing, live stage appearance and full interactive workflow remain manual acceptance. New V2 package plan84 files, not yet assembled.

@@ -8,6 +8,9 @@ import queue
 import sys
 import threading
 import time
+import subprocess
+import random
+import gc
 from pathlib import Path
 from types import SimpleNamespace as NS
 
@@ -33,6 +36,241 @@ def load_module(name, path):
     return module
 
 
+@pytest.fixture(scope="session")
+def engine_pair(tmp_path_factory):
+    patcher = load_module("task8f_patch", APP / "engine_observation_patch.py")
+    blobs = {p: subprocess.run(["git", "show", "93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4:delivery_src/BuildReasonSeg_Advisor_RC1/"+p], capture_output=True, check=True).stdout for p in patcher.FILES}
+    patched, records = patcher.patched_sources(blobs)
+    directory = tmp_path_factory.mktemp("derived-engine")
+    observation = load_module("buildreasonseg.runtime.observation", APP / "engine_observation/observation.py")
+    old, new = {}, {}
+    for i, relative in enumerate(patcher.FILES):
+        a, z = directory / f"old_{i}.py", directory / f"new_{i}.py"
+        a.write_bytes(blobs[relative]); z.write_bytes(patched[relative])
+        key = Path(relative).stem
+        old[key] = load_module("task8f_old_"+key, a)
+        new[key] = load_module("task8f_new_"+key, z)
+    return NS(old=old, new=new, observation=observation, patcher=patcher, blobs=blobs, patched=patched, records=records)
+
+
+class FixedFakeDb1:
+    """No nn.Module or weights. Executes original competition/forward with fixed tensor fixtures."""
+    variant = "D-B1"
+    uses_learned_score_head = False
+    uses_relation_fields = True
+    uses_prototype = True
+    def __init__(self, competition, mask):
+        import torch
+        self.module, self.mask = competition, mask
+        self.calls = {"projection": 0, "competition": 0, "forward": 0}
+        self.states = []
+    def direction_embedding(self, relations, h, w, device):
+        import torch
+        return torch.zeros((1, 16, h, w), device=device)
+    def visual_projection(self, visual):
+        import torch
+        self.calls["projection"] += 1
+        # Deliberately distinguish diagnostic and actual forward states without any randomness.
+        v = torch.arange(128*64*64, dtype=torch.float32).reshape(1,128,64,64)
+        return torch.sin(v * .00013 * self.calls["projection"])
+    def competition(self, *args):
+        self.calls["competition"] += 1
+        state = self.module.GlobalCompetitionDecoder.competition(self, *args)
+        self.states.append(state)
+        return state
+    def trunk(self, features):
+        import torch
+        return torch.as_tensor(self.mask.astype(np.float32)*4-2)[None,None]
+    def __call__(self, *args):
+        self.calls["forward"] += 1
+        return self.module.GlobalCompetitionDecoder.forward(self, *args)
+    def upsampled(self, logits, size):
+        return self.module.GlobalCompetitionDecoder.upsampled(self, logits, size)
+
+
+def fake_core(pair, which, monkeypatch, mask=None, crash=None):
+    import torch
+    modules = getattr(pair, which)
+    core, frozen = modules["core"], modules["task7d_global_competition_decoder"]
+    mask = mask if mask is not None else np.pad(np.ones((32,32),bool), ((32,0),(16,16)))
+    model = FixedFakeDb1(frozen, mask)
+    db = NS(device="cpu", load=lambda: model)
+    db.forward = lambda *args, **kw: core.Db1Runtime.forward(db, *args, **kw)
+    sam_calls = []
+    def encode(rgb):
+        sam_calls.append(rgb.copy())
+        if crash == "sam":
+            raise RuntimeError("fixed fake SAM failure")
+        return torch.zeros((1,256,64,64))
+    def fields(ref, program):
+        if crash == "fields":
+            raise RuntimeError("fixed fake fields failure")
+        return {"P_dir_64": np.full((64,64), .75, np.float32), "P_near_64": np.linspace(.1,.9,4096,dtype=np.float32).reshape(64,64)}
+    monkeypatch.setattr(core, "record_fields", fields)
+    if crash == "db1":
+        db.forward = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("fixed fake D-B1 failure"))
+    return core, NS(encode=encode), db, model, sam_calls
+
+
+def test_exact_scientific_ast_both_observer_paths_and_math_change_rejected(engine_pair):
+    pair = engine_pair
+    assert all(row.get("scientific_ast_audit", {}).get("paths") == {"enabled":True,"disabled":True} for row in pair.records[:3])
+    relative = pair.patcher.FILES[-1]
+    changed = pair.patched[relative].replace(b"attention = weight /", b"attention = 2 * weight /")
+    with pytest.raises(ValueError, match="Scientific AST differs"):
+        pair.patcher.audit_scientific_ast(pair.blobs[relative], changed)
+    relative = pair.patcher.FILES[1]
+    changed = pair.patched[relative].replace(b"with _trace_scope(observer):", b"with _trace_scope(observer):\n                        visual_batch = visual_batch * 2")
+    with pytest.raises(ValueError, match="Scientific AST differs"):
+        pair.patcher.audit_scientific_ast(pair.blobs[relative], changed)
+
+
+@pytest.mark.parametrize("direction", ["left","right","above","below"])
+def test_core_outputs_counts_rng_identical_and_actual_forward_maps(engine_pair, monkeypatch, direction):
+    import torch
+    pair = engine_pair
+    records, values, counts = [], [], []
+    states = (random.getstate(), np.random.get_state(), torch.get_rng_state().clone())
+    for which, enabled in (("old",False),("new",False),("new",True)):
+        core, sam, db, model, sam_calls = fake_core(pair, which, monkeypatch)
+        kw = {"observer": records.append} if enabled else {}
+        output = core.run_core_chain(np.zeros((512,512,3),np.uint8), np.ones((512,512),bool), "largest_to_"+direction+"_to_nearest" if direction in ("above","below") else "largest_to_"+direction+"_of_to_nearest", sam2=sam, db1=db, **kw)
+        values.append(output)
+        counts.append((dict(model.calls),len(sam_calls)))
+        if enabled:
+            captured = next(e for e in records if e["stage_id"] == 7 and e["state"] == "COMPLETED")
+            assert captured["metadata"]["q_dimension"] == 128
+            np.testing.assert_array_equal(captured["arrays"]["C"], model.states[1].similarity.numpy())
+            assert not np.array_equal(captured["arrays"]["C"], model.states[0].similarity.numpy())
+    for value in values[1:]:
+        for field in ("logits","mask_context","probability_context","direction_field","nearest_field","relation_weight","prototype_similarity","attention"):
+            np.testing.assert_array_equal(getattr(values[0], field), getattr(value,field))
+        assert value.field_mass == values[0].field_mass and value.notes == values[0].notes
+    assert counts == [({"projection":2,"competition":2,"forward":1},1)]*3
+    assert random.getstate() == states[0]
+    current_np = np.random.get_state()
+    assert current_np[0] == states[1][0] and np.array_equal(current_np[1],states[1][1]) and current_np[2:] == states[1][2:]
+    assert torch.equal(torch.get_rng_state(), states[2])
+    assert [(e["stage_id"],e["state"]) for e in records] == [(5,"RUNNING"),(5,"COMPLETED"),(6,"RUNNING"),(6,"RUNNING"),(6,"COMPLETED"),(7,"RUNNING"),(7,"COMPLETED"),(8,"RUNNING"),(8,"COMPLETED")]
+    assert pair.observation.active_observer() is None
+
+
+def test_observer_failure_and_immutable_snapshot_do_not_change_core(engine_pair, monkeypatch):
+    pair = engine_pair
+    core, sam, db, model, _ = fake_core(pair, "new", monkeypatch)
+    failures=[]
+    class Failing:
+        def __call__(self, event):
+            for array in event["arrays"].values():
+                if isinstance(array,np.ndarray):
+                    with pytest.raises(ValueError):
+                        array.setflags(write=True)
+            raise RuntimeError("renderer failed")
+        def observation_failed(self, error, stage): failures.append(stage)
+    observer = Failing()
+    output = core.run_core_chain(np.zeros((512,512,3),np.uint8), np.ones((512,512),bool), "largest_to_above_to_nearest", sam2=sam,db1=db,observer=observer)
+    assert output.mask_context.any() and failures
+    assert len(pair.observation.observation_errors(observer)) == len(failures)
+    assert model.calls == {"projection":2,"competition":2,"forward":1}
+    assert pair.observation.active_observer() is None
+
+
+@pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+    from buildreasonseg.runtime.detector import GlobalProposal
+    from buildreasonseg.runtime import outputs
+    from buildreasonseg.errors import BuildReasonSegError
+    pair = engine_pair
+    image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+    records, results, calls = [], [], []
+    for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+        pipeline = getattr(pair,which)["pipeline"]
+        core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((24,32),(20,36))),crash=case)
+        monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+        prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+        target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+        detected=[]
+        def detect(rgb):
+            detected.append(rgb.copy())
+            return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+        runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+        if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+        if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+        directory = tmp_path / str(i); directory.mkdir()
+        for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+        output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+        monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+        request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen_program_head"),parsed_info={"original_prompt":"FAKE only"})
+        result = pipeline.predict_one(runtime,request,**({"observer":records.append} if enabled else {}))
+        results.append(result); calls.append((len(detected),len(sam_calls),dict(model.calls)))
+    assert calls[0] == calls[1] == calls[2]
+    assert [x.status for x in results] == [results[0].status]*3
+    assert [x.error_code for x in results] == [results[0].error_code]*3
+    assert [x.error_reason for x in results] == [results[0].error_reason]*3
+    if case=="success":
+        assert results[0].ok
+        for x in results[1:]: np.testing.assert_array_equal(x.mask,results[0].mask)
+        for name in ("masks/fake_r000.png","overlays/fake_r000.png"):
+            # Save names are taken from returned paths, never inferred from expected suffixes.
+            key = "mask" if name.startswith("masks") else "overlay"
+            data = [Path(x.result_payload["output_paths"][key]).read_bytes() for x in results]
+            assert data[0] == data[1] == data[2]
+        assert results[2].result_payload["semantic_status"] == "NOT_EVALUATED"
+    else:
+        expected = {"zero":"E401","no_reference":"E402","context":"E404","empty":"E404","wrong_direction":"E404","sam":"E502","fields":"E502","db1":"E502"}[case]
+        assert results[0].error_code == expected
+        assert not list(tmp_path.rglob("masks/*.png")) and not list(tmp_path.rglob("overlays/*.png"))
+    completed = [e["stage_id"] for e in records if e["state"]=="COMPLETED"]
+    if case in ("empty","wrong_direction"): assert completed == [2,3,4,5,6,7,8] and records[-1]["state"]=="FAILED" and records[-1]["metadata"]["guard_executed"]
+    if case=="zero": assert completed==[2] and records[-1]["metadata"]["error_code"]=="E401"
+    if case=="no_reference": assert completed==[2] and records[-1]["metadata"]["error_code"]=="E402"
+    if case=="context": assert completed==[2,3] and any(e["stage_id"]==4 and e["metadata"].get("context") for e in records)
+    if case=="sam": assert completed==[2,3,4]
+    if case in ("fields","db1"): assert completed==[2,3,4,5]
+    # Real hook packets, including torch 4-D W/A/C, must survive the actual renderer/storage bridge.
+    trace=session(tmp_path,"bridge")
+    trace.emit(1,"RUNNING"); trace.emit(1,"COMPLETED",{"original_prompt":"FIXED FAKE / no model"})
+    for event in records: trace(event)
+    assert trace.finish(result=results[2],engine_run_root="FAKE_PRIVATE_TMP_ENGINE_RUN")
+    assert not trace.failures
+    assert (trace.trace/"stage_events.jsonl").is_file()
+    assert trace.stages[9] == ("COMPLETED" if case=="success" else "FAILED")
+    if case in ("empty","wrong_direction"):
+        assert trace.stages[8]=="COMPLETED" and trace.latest[8]["previews"]
+
+
+def test_v2_builder_plan_provenance_and_rejects_math_drift():
+    from scripts import build_task8f_user_demo as builder
+    blobs=builder.accepted_blobs()
+    plan,derived=builder.plan(blobs)
+    assert len(plan["source_paths"])==54 and len(plan["assets"])==17
+    assert plan["expected_manifest_entries"]==84
+    assert len(plan["observation_source_differences"])==4 and len(derived)==4
+    assert builder.FINAL.name=="BuildReasonSeg_Demo_V2" and builder.STAGING.parent==builder.FINAL.parent
+    for row in plan["observation_source_differences"][:3]:
+        assert row["base_sha256"] == hashlib.sha256(blobs[row["path"]]).hexdigest()
+        assert row["v2_sha256"] == hashlib.sha256(derived[row["path"]]).hexdigest()
+    assert not any("weights" in r or "torch.load" in r for r in derived["buildreasonseg/runtime/observation.py"].decode().splitlines())
+
+
+def test_existing_result_controls_and_mask_view_retained(tmp_path,monkeypatch):
+    root,app=make_app(tmp_path)
+    try:
+        directory=tmp_path/"results/success";directory.mkdir(parents=True)
+        Image.new("RGB",(512,512)).save(directory/"overlay.png")
+        Image.new("L",(512,512),255).save(directory/"mask.png")
+        app.present_result({"directory":str(directory),"summary":{"runtime_status":"SUCCESS","overlay_file":"overlay.png","mask_file":"mask.png","prompt":"FAKE","interpreted_program":"largest_to_above_to_nearest","elapsed_seconds":.1}})
+        assert app.mask_button.instate(["!disabled"]) and app.results_button.instate(["!disabled"])
+        opened=[];monkeypatch.setattr(gui.os,"startfile",lambda path:opened.append(str(path)),raising=False)
+        app.open_results();assert opened==[str(directory)]
+        app.view_mask();root.update()
+        assert any(isinstance(child,app.tk.Toplevel) for child in root.winfo_children())
+        for child in root.winfo_children():
+            if isinstance(child,app.tk.Toplevel): child.destroy()
+        assert "语义正确性：未自动验证" in app.summary.get()
+    finally: app.close()
+
+
 gui = load_module("task8f_gui", APP / "BuildReasonSeg_Demo.py")
 helpers = load_module("task8f_cli", CANONICAL / "predict.py")
 from buildreasonseg.language.frontend import DeterministicFallbackFrontend
@@ -56,6 +294,9 @@ def no_models(monkeypatch, tmp_path):
             monkeypatch.setattr(cls, method, forbidden)
     from _ui.environment import configure_environment
     configure_environment(tmp_path / "private-cache-owner")
+    yield
+    # Multiple real Tk interpreters in one test process must be disposed by their owner thread.
+    gc.collect()
 
 
 def fixture_arrays():

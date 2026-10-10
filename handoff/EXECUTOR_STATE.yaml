@@ -3,7 +3,7 @@ task_id: TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1
 status: IN_PROGRESS
 executor: CODEX
 branch: delivery/task8f-user-demo-live-trace-v1
-head: f4b36a3a3ef2f3861214b65e17394c5f284444b1
+head: 5c3e74732364b437c1c32b32a145ee56b22e2c0a
 accepted_predecessor: TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT
 completed:
 - Startup read order, remote exact HEAD and clean working tree verified; required
@@ -13,17 +13,28 @@ completed:
   implemented.
 - 36 fake Trace/UI tests PASS; initial32/2 UI failures retained and corrected locally
   without weakened tests.
-current_step: TRACE_UI_FAKE_GATE_PASS
-next_action: Implement minimal V2-only observation hooks; static scientific AST equivalence
-  and fake count/output equivalence.
+- V2-only three source derivatives plus observation transport; enabled and disabled
+  full scientific AST equality PASS.
+- 53 dedicated fake tests PASS with strict warning gate; masks/overlay/error/count/RNG
+  equivalence and actual-forward W/A/q/C bridge PASS.
+- All test failures/native Tk lifecycle dump retained; fixture and main-thread lifecycle
+  corrected, no scientific changes.
+- V2 staging builder and user instructions prepared; no external V2 writes, no model
+  smoke.
+current_step: OBSERVATION_SCIENTIFIC_EQUIVALENCE_PASS
+next_action: Assemble absent V2 staging, full hashes, native no-model GUI/launcher
+  checks, sibling move, final preservation.
 tests_run:
 - suite: tests/test_task8f_user_demo_live_trace.py
   result: 36 passed in3.34s
   exit_code: 0
+- suite: tests/test_task8f_user_demo_live_trace.py
+  result: 53 passed in12.31s strict warnings-as-error
+  exit_code: 0
 uncommitted_changes: true
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: f4b36a3a3ef2f3861214b65e17394c5f284444b1
+  commit: 5c3e74732364b437c1c32b32a145ee56b22e2c0a
   pushed: true
 next_gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
 model_inference_calls: 0

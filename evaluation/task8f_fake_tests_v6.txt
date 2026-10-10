@@ -1,0 +1,50 @@
+......F............................................                      [100%]
+================================== FAILURES ===================================
+__ test_pipeline_scientific_output_error_counts_and_retained_stages[success] __
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000213654B6150>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v6/test_pipeline_scientific_outpu0')
+case = 'success'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+            request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen_program_head"),parsed_info={"original_prompt":"FAKE only"})
+            result = pipeline.predict_one(runtime,request,**({"observer":records.append} if enabled else {}))
+            results.append(result); calls.append((len(detected),len(sam_calls),dict(model.calls)))
+        assert calls[0] == calls[1] == calls[2]
+        assert [x.status for x in results] == [results[0].status]*3
+        assert [x.error_code for x in results] == [results[0].error_code]*3
+        assert [x.error_reason for x in results] == [results[0].error_reason]*3
+        if case=="success":
+>           assert results[0].ok
+E           AssertionError: assert False
+E            +  where False = PipelineResult(status='FAILED', image=WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v6/test_pipeline...eline_scientific_outpu0\\0\\diagnostics\\result.json']), error_code='E404', error_reason='empty_target_mask', notes=[]).ok
+
+tests\test_task8f_user_demo_live_trace.py:210: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[success]
+1 failed, 50 passed in 3.95s

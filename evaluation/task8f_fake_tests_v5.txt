@@ -1,0 +1,454 @@
+......FFFFFFFFF....................................                      [100%]
+================================== FAILURES ===================================
+__ test_pipeline_scientific_output_error_counts_and_retained_stages[success] __
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E88289490>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu0')
+case = 'success'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+___ test_pipeline_scientific_output_error_counts_and_retained_stages[zero] ____
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E881EBE90>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu1')
+case = 'zero'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+_ test_pipeline_scientific_output_error_counts_and_retained_stages[no_reference] _
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E8824A3D0>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu2')
+case = 'no_reference'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+__ test_pipeline_scientific_output_error_counts_and_retained_stages[context] __
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E892F0E90>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu3')
+case = 'context'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+___ test_pipeline_scientific_output_error_counts_and_retained_stages[empty] ___
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E8820F4D0>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu4')
+case = 'empty'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+_ test_pipeline_scientific_output_error_counts_and_retained_stages[wrong_direction] _
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E880F5850>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu5')
+case = 'wrong_direction'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+____ test_pipeline_scientific_output_error_counts_and_retained_stages[sam] ____
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E893CB150>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu6')
+case = 'sam'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+__ test_pipeline_scientific_output_error_counts_and_retained_stages[fields] ___
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E88132490>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu7')
+case = 'fields'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+____ test_pipeline_scientific_output_error_counts_and_retained_stages[db1] ____
+
+engine_pair = namespace(old={'pipeline': <module 'task8f_old_pipeline' from 'C:\\Users\\ROG\\AppData\\Local\\Temp\\task8f-trace-test...NTIFIC_ALGORITHM', 'v2_bytes': 2553, 'v2_sha256': '7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955'}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E881BA190>
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v5/test_pipeline_scientific_outpu8')
+case = 'db1'
+
+    @pytest.mark.parametrize("case", ["success","zero","no_reference","context","empty","wrong_direction","sam","fields","db1"])
+    def test_pipeline_scientific_output_error_counts_and_retained_stages(engine_pair, monkeypatch, tmp_path, case):
+        from buildreasonseg.runtime.detector import GlobalProposal
+        from buildreasonseg.runtime import outputs
+        from buildreasonseg.errors import BuildReasonSegError
+        pair = engine_pair
+        image = tmp_path / "fake.png"; Image.new("RGB",(512,512),(110,140,170)).save(image)
+        records, results, calls = [], [], []
+        for i,(which,enabled) in enumerate((("old",False),("new",False),("new",True))):
+            pipeline = getattr(pair,which)["pipeline"]
+            core,sam,db,model,sam_calls = fake_core(pair,which,monkeypatch,mask=np.zeros((64,64),bool) if case=="empty" else np.pad(np.ones((8,8),bool),((48,8),(16,40))) if case=="wrong_direction" else np.pad(np.ones((8,8),bool),((4,52),(20,36))),crash=case)
+            monkeypatch.setattr(pipeline,"run_core_chain",core.run_core_chain)
+            prop = GlobalProposal(proposal_id=0,source_tile_id="fake",tile_index=0,raw_index=0,global_bbox=(240,240,270,270),mask_crop=np.ones((31,31),bool),mask_area=961,confidence=.9,centroid=(255,255),touches_image_border=False,border_clearance=240,image_size=(512,512))
+            target = GlobalProposal(proposal_id=1,source_tile_id="fake",tile_index=0,raw_index=1,global_bbox=(60,240,80,260),mask_crop=np.ones((21,21),bool),mask_area=441,confidence=.8,centroid=(70,250),touches_image_border=False,border_clearance=60,image_size=(512,512))
+            detected=[]
+            def detect(rgb):
+                detected.append(rgb.copy())
+                return {"merged": [] if case=="zero" else [prop,target],"raw_count":0 if case=="zero" else 2,"detector_seconds":.01,"tile_size":512,"overlap":128,"windows":[1]}
+            runtime = NS(device="cpu", detector=NS(detect_global=detect),sam2=sam,db1=db)
+            if case=="no_reference": monkeypatch.setattr(pipeline,"select_reference",lambda *a,**k:None)
+            if case=="context": monkeypatch.setattr(pipeline,"guard_directional_candidates",lambda *a: (_ for _ in ()).throw(BuildReasonSegError("E404",context={"reason":"no_directional_candidate"})))
+            directory = tmp_path / str(i); directory.mkdir()
+            for name in ("diagnostics","masks","overlays"): (directory/name).mkdir()
+            output = outputs.SampleOutputs(stem="fake",suffix_index=0,diagnostics_dir=str(directory/"diagnostics"),mask_path=str(directory/"masks/fake_mask.png"),overlay_path=str(directory/"overlays/fake_overlay.png"))
+            monkeypatch.setattr(outputs,"allocate_outputs",lambda p:output)
+>           request = pipeline.PipelineRequest(image=image,parsed=ParsedProgram(program="largest_to_above_to_nearest",source="qwen"),parsed_info={"original_prompt":"FAKE only"})
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:12: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ParsedProgram(program='largest_to_above_to_nearest', source='qwen', confidence=None, raw_text='', normalized_text='', reference_family=None, direction=None, terminal=None, diagnostics={})
+
+    def __post_init__(self) -> None:
+        if self.source not in PARSE_SOURCES:
+>           raise ValueError(f"unknown parse source: {self.source!r}")
+E           ValueError: unknown parse source: 'qwen'
+
+delivery_src\BuildReasonSeg_Advisor_RC1\buildreasonseg\language\registry.py:51: ValueError
+=========================== short test summary info ===========================
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[success]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[zero]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[no_reference]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[context]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[empty]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[wrong_direction]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[sam]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[fields]
+FAILED tests/test_task8f_user_demo_live_trace.py::test_pipeline_scientific_output_error_counts_and_retained_stages[db1]
+9 failed, 42 passed in 3.96s

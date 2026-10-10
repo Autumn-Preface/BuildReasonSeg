@@ -4,7 +4,7 @@
   "accepted_predecessor": "TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT",
   "accepted_predecessor_head": "93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4",
   "branch": "delivery/task8f-user-demo-live-trace-v1",
-  "head": "f4b36a3a3ef2f3861214b65e17394c5f284444b1",
+  "head": "5c3e74732364b437c1c32b32a145ee56b22e2c0a",
   "external_demo_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2",
   "staging_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1",
   "next_gate": "CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT",
@@ -16059,12 +16059,101 @@
       "exit_code": 0,
       "seconds": 3.34,
       "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v4",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 42,
+      "failed": 9,
+      "exit_code": 1,
+      "seconds": "4.31",
+      "raw_output": "evaluation/task8f_fake_tests_v4.txt",
+      "cause_or_disposition": "Invalid fake ParsedProgram source FAKE rejected by frozen registry before pipeline.",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v5",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 42,
+      "failed": 9,
+      "exit_code": 1,
+      "seconds": "3.96",
+      "raw_output": "evaluation/task8f_fake_tests_v5.txt",
+      "cause_or_disposition": "Invalid fake ParsedProgram source qwen rejected; exact PARSE_SOURCES inspected thereafter.",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v6",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 50,
+      "failed": 1,
+      "exit_code": 1,
+      "seconds": "3.95",
+      "raw_output": "evaluation/task8f_fake_tests_v6.txt",
+      "cause_or_disposition": "Success-only fixed fake Mask fell wholly into true context padding; original and both observer modes all correctly returned E404. Fixed fixture coordinates, no guard change.",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v7",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 50,
+      "failed": 1,
+      "exit_code": 1,
+      "seconds": "4.09",
+      "raw_output": "evaluation/task8f_fake_tests_v7.txt",
+      "cause_or_disposition": "Tk initialization transient init.tcl read error; existing file read verified, invocation points explicitly at existing Tcl/Tk dirs.",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v8",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 51,
+      "failed": 0,
+      "exit_code": 0,
+      "seconds": "4.05",
+      "raw_output": "evaluation/task8f_fake_tests_v8.txt",
+      "cause_or_disposition": "PASS",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v9",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 53,
+      "failed": 0,
+      "exit_code": 0,
+      "seconds": "44.33",
+      "raw_output": "evaluation/task8f_fake_tests_v9.txt",
+      "cause_or_disposition": "PASS with one Tk owner-thread destructor warning; retained and repaired before external assembly.",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v10",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": null,
+      "failed": null,
+      "exit_code": -2147483645,
+      "seconds": null,
+      "raw_output": "evaluation/task8f_fake_tests_v10.txt",
+      "cause_or_disposition": "Native 0x80000003 exit in background garbage collection of destroyed Tk interpreter. No completed suite claim; raw dump retained.",
+      "model_calls": 0
+    },
+    {
+      "phase": "observation/scientific/UI revision v11",
+      "suite": "tests/test_task8f_user_demo_live_trace.py",
+      "passed": 53,
+      "failed": 0,
+      "exit_code": 0,
+      "seconds": "12.31",
+      "raw_output": "evaluation/task8f_fake_tests_v11.txt",
+      "cause_or_disposition": "PASS strict PytestUnraisableExceptionWarning-as-error after main-thread close references and owner-thread test teardown GC.",
+      "model_calls": 0
     }
   ],
   "real_model_smoke": {
     "performed": false,
     "model_calls": 0,
-    "status": "NOT_AUTHORIZED_BEFORE_STATIC_AND_FAKE_GATES"
+    "status": "DEFERRED_TO_USER_ACCEPTANCE",
+    "reason": "No suitable current user-selected nonlocked input and confirmation are available. Fake/static/native no-model acceptance covers gates; GPU snapshot latency and actual interactive stage appearance remain manual acceptance. No preview/inference on locked cases."
   },
   "scientific_contract_changed": false,
   "observation_only": true,
@@ -16097,5 +16186,690 @@
     "persist_and_reopen": "PASS",
     "no_real_inference": true,
     "engine_hooks": "NOT_IMPLEMENTED_YET"
+  },
+  "observation_source_differences": [
+    {
+      "path": "buildreasonseg/runtime/pipeline.py",
+      "provenance": "ACCEPTED_GIT_CANONICAL_BLOB_PLUS_EXPLICIT_V2_OBSERVATION_ONLY_EDITS",
+      "base_bytes": 19311,
+      "base_sha256": "ec803658e476d9f14451b48ca80e3ce8eb11ee103039a2311b1249f9d1b8d798",
+      "v2_bytes": 22899,
+      "v2_sha256": "6e89e379048466cd91d5a4c6175d5ff867651298fc90c466d617c5a9bd0e9396",
+      "scientific_ast_audit": {
+        "pass": true,
+        "paths": {
+          "disabled": true,
+          "enabled": true
+        },
+        "method": "Full module AST equality for both observer paths after erasing only observation transport/metadata and observer keyword."
+      },
+      "unified_diff": "--- accepted/buildreasonseg/runtime/pipeline.py\n+++ v2/buildreasonseg/runtime/pipeline.py\n@@ -16,6 +16,7 @@\n import numpy as np\n \n from buildreasonseg import paths\n+from buildreasonseg.runtime.observation import emit as _trace_emit\n from buildreasonseg.errors import BuildReasonSegError\n from buildreasonseg.language.frontend import FALLBACK_BANNER, DeterministicFallbackFrontend\n from buildreasonseg.language.registry import ParsedProgram\n@@ -183,11 +184,12 @@\n     }\n \n \n-def predict_one(runtime: PredictRuntime, request: PipelineRequest) -> PipelineResult:\n+def predict_one(runtime: PredictRuntime, request: PipelineRequest, *, observer=None) -> PipelineResult:\n     \"\"\"Run the full chain for one image; never fabricates a mask when the algorithm stage fails.\"\"\"\n \n     total_started = time.time()\n     timings = StageTimings()\n+    _trace_stage = 1\n     loaded = load_image(request.image)\n     outputs = outputs_module.allocate_outputs(request.image)\n     payload: dict = {\"status\": \"FAILED\", **loaded.describe(), \"model_package\": request.model,\n@@ -210,6 +212,12 @@\n         if request.save_diagnostics:\n             outputs_module.save_diagnostics(outputs, payload)\n             payload[\"output_paths\"] = {\"diagnostics\": outputs.diagnostics_dir}\n+        if observer is not None:\n+            _trace_emit(observer, 9, \"FAILED\", {\"runtime_status\": \"FAILED\", \"error_code\": error.code,\n+                        \"reason\": payload.get(\"reason\"), \"context\": error.context,\n+                        \"guard_executed\": _trace_stage == 9, \"final_output_valid\": False,\n+                        \"elapsed_seconds\": time.time() - total_started,\n+                        \"validity_scope\": \"RUNTIME_STRUCTURAL_ONLY\", \"semantic_status\": \"NOT_EVALUATED\"})\n         return PipelineResult(status=\"FAILED\", image=request.image, result_payload=payload,\n                               outputs=outputs, error_code=error.code,\n                               error_reason=payload.get(\"reason\"))\n@@ -217,6 +225,8 @@\n     try:\n         # ---- language (already parsed once per process for batch mode)\n         if parsed is None:\n+            if observer is not None:\n+                _trace_emit(observer, 1, \"RUNNING\", {\"original_prompt\": request.prompt})\n             language_started = time.time()\n             parsed, language_info = parse_prompt(runtime, request)\n             timings.language = time.time() - language_started\n@@ -254,7 +264,15 @@\n             payload[\"suggestion_used\"] = True\n             payload[\"suggested_program\"] = request.parsed_info.get(\"suggested_program\")\n \n+        if observer is not None:\n+            if request.parsed is None:\n+                _trace_emit(observer, 1, \"COMPLETED\", {\"original_prompt\": request.prompt,\n+                            \"initial_program\": parsed.program, \"initial_supported\": validation.supported,\n+                            \"final_program\": parsed.program, \"language_mode\": payload.get(\"language_mode\", \"qwen\")})\n         # ---- global detection + merge\n+        _trace_stage = 2\n+        if observer is not None:\n+            _trace_emit(observer, 2, \"RUNNING\")\n         detection = runtime.detector.detect_global(loaded.rgb)\n         proposals: list[GlobalProposal] = detection[\"merged\"]\n         timings.detector = detection[\"detector_seconds\"]\n@@ -264,10 +282,19 @@\n                         \"merged_proposal_count\": len(proposals),\n                         \"proposals\": {\"count\": len(proposals),\n                                       \"items\": [proposal.to_dict() for proposal in proposals]}})\n+        if observer is not None:\n+            _trace_emit(observer, 2, \"COMPLETED\", {\"raw_count\": detection[\"raw_count\"],\n+                        \"merged_count\": len(proposals), \"detector_seconds\": detection[\"detector_seconds\"],\n+                        \"proposal_ids\": [p.proposal_id for p in proposals]},\n+                        {\"rgb\": loaded.rgb, \"proposals\": [{\"proposal_id\": p.proposal_id,\n+                         \"bbox\": p.global_bbox, \"mask_crop\": p.mask_crop} for p in proposals]})\n         if not proposals:\n             raise BuildReasonSegError(\"E401\", detail=\"整幅影像未检测到任何建筑实例。\")\n \n         # ---- global reference\n+        _trace_stage = 3\n+        if observer is not None:\n+            _trace_emit(observer, 3, \"RUNNING\")\n         if reference_mode == \"assisted\":\n             reference = proposal_by_id(proposals, int(request.reference_id))\n             if reference is None:\n@@ -289,9 +316,20 @@\n                         \"reference_confidence\": float(reference.confidence),\n                         \"reference_bbox\": list(reference.global_bbox)})\n \n+        if observer is not None:\n+            _trace_emit(observer, 3, \"COMPLETED\", {\"selected_id\": reference.proposal_id,\n+                        \"mask_area\": int(reference.mask_area), \"confidence\": float(reference.confidence),\n+                        \"bbox\": list(reference.global_bbox), \"mode\": reference_mode},\n+                        {\"reference_mask_crop\": reference.mask_crop})\n         # ---- deterministic 512 reasoning context\n+        _trace_stage = 4\n+        if observer is not None:\n+            _trace_emit(observer, 4, \"RUNNING\")\n         direction = program_to_direction(parsed.program)\n         context = plan_context(reference, direction)\n+        if observer is not None:\n+            _trace_emit(observer, 4, \"RUNNING\", {\"direction\": direction, \"context\": context.to_dict(),\n+                        \"context_rgb_available\": False})\n         guard = guard_directional_candidates(reference, proposals, direction, context)\n         payload[\"directional_guard\"] = guard\n         rgb_context, padding = _context_rgb(loaded.rgb, context)\n@@ -303,13 +341,25 @@\n         reference_mask = _reference_mask_context(reference, context)\n         if not reference_mask.any():\n             raise BuildReasonSegError(\"E402\", detail=\"参考建筑在本 reasoning context 内没有有效像素。\")\n-        chain = run_core_chain(rgb_context, reference_mask, parsed.program, sam2=runtime.sam2,\n-                               db1=runtime.db1)\n+        if observer is not None:\n+            _trace_emit(observer, 4, \"COMPLETED\", {\"direction\": direction, \"context\": context.to_dict(),\n+                        \"reference_pixels\": int(reference_mask.sum())},\n+                        {\"context_rgb\": rgb_context, \"reference_mask\": reference_mask})\n+        _trace_stage = 5\n+        if observer is None:\n+            chain = run_core_chain(rgb_context, reference_mask, parsed.program, sam2=runtime.sam2,\n+                                   db1=runtime.db1)\n+        else:\n+            chain = run_core_chain(rgb_context, reference_mask, parsed.program, sam2=runtime.sam2,\n+                                   db1=runtime.db1, observer=observer)\n         timings.sam2 = chain.timings.get(\"sam2\", 0.0)\n         timings.relation_fields = chain.timings.get(\"relation_fields\", 0.0)\n         timings.db1 = chain.timings.get(\"db1\", 0.0)\n \n         # ---- hard post-inference validity (no \"pick the best\")\n+        _trace_stage = 9\n+        if observer is not None:\n+            _trace_emit(observer, 9, \"RUNNING\", {\"guard_executed\": True})\n         mask_full, map_padding = context_to_global(chain.mask_context, context,\n                                                   (loaded.height, loaded.width))\n         if not mask_full.any():\n@@ -350,6 +400,11 @@\n         timings.total = time.time() - total_started\n         payload[\"timings\"] = timings.to_dict()\n         _rewrite_result_json(outputs, payload)\n+        if observer is not None:\n+            _trace_emit(observer, 9, \"COMPLETED\", {\"runtime_status\": \"SUCCESS\", \"guard_executed\": True,\n+                        \"final_output_valid\": True, \"validity_scope\": payload[\"validity_scope\"],\n+                        \"semantic_status\": payload[\"semantic_status\"], \"elapsed_seconds\": timings.total,\n+                        \"mask_path\": info[\"mask\"], \"overlay_path\": info[\"overlay\"]})\n         return PipelineResult(status=\"SUCCESS\", image=request.image, result_payload=payload,\n                               mask=mask_full, outputs=outputs)\n     except BuildReasonSegError as error:\n"
+    },
+    {
+      "path": "buildreasonseg/runtime/core.py",
+      "provenance": "ACCEPTED_GIT_CANONICAL_BLOB_PLUS_EXPLICIT_V2_OBSERVATION_ONLY_EDITS",
+      "base_bytes": 11064,
+      "base_sha256": "37c38ba4acd1bb0f77533674333172991fd91c7dba37342be208f445b1d65a15",
+      "v2_bytes": 12475,
+      "v2_sha256": "0339b53512925f18ac93bcc0867d78e330cb82fc35312d0cef140c4920d56b5b",
+      "scientific_ast_audit": {
+        "pass": true,
+        "paths": {
+          "disabled": true,
+          "enabled": true
+        },
+        "method": "Full module AST equality for both observer paths after erasing only observation transport/metadata and observer keyword."
+      },
+      "unified_diff": "--- accepted/buildreasonseg/runtime/core.py\n+++ v2/buildreasonseg/runtime/core.py\n@@ -20,6 +20,7 @@\n import numpy as np\n \n from buildreasonseg import paths\n+from buildreasonseg.runtime.observation import emit as _trace_emit, observation_scope as _trace_scope\n from buildreasonseg.errors import BuildReasonSegError\n from buildreasonseg.runtime import frozen_paths\n \n@@ -132,7 +133,7 @@\n     def parameter_count(self) -> int:\n         return int(sum(parameter.numel() for parameter in self.load().parameters()))\n \n-    def forward(self, visual, direction: str, directional, nearest) -> dict:\n+    def forward(self, visual, direction: str, directional, nearest, *, observer=None) -> dict:\n         \"\"\"Run the frozen D-B1 chain and return logits plus every diagnostic map.\n \n         `directional` / `nearest` are the frozen `P_dir_64` / `P_near_64` tensors `[1,1,64,64]`.\n@@ -151,7 +152,11 @@\n             state = model.competition(projected, [relation], directional_batch, nearest_batch)\n             with torch.autocast(device_type=\"cuda\", dtype=torch.bfloat16,\n                                 enabled=self.device != \"cpu\"):\n-                logits = model(visual_batch, [relation], directional_batch, nearest_batch)\n+                if observer is None:\n+                    logits = model(visual_batch, [relation], directional_batch, nearest_batch)\n+                else:\n+                    with _trace_scope(observer):\n+                        logits = model(visual_batch, [relation], directional_batch, nearest_batch)\n             upsampled = model.upsampled(logits, TARGET_SIZE)\n             probability = torch.sigmoid(upsampled)\n             relation_weight = (directional_batch * nearest_batch).clamp(0.0, 1.0)\n@@ -208,7 +213,7 @@\n \n \n def run_core_chain(rgb_context: np.ndarray, reference_mask: np.ndarray, program_id: str, *,\n-                   sam2: Sam2Runtime, db1: Db1Runtime, visual=None) -> CoreChainResult:\n+                   sam2: Sam2Runtime, db1: Db1Runtime, visual=None, observer=None) -> CoreChainResult:\n     \"\"\"The frozen chain inside one 512 reasoning context.\n \n     `visual` may inject an already-extracted frozen SAM2 feature tensor (used by the core-equivalence gate to\n@@ -220,16 +225,32 @@\n     direction = program_to_direction(program_id)\n     timings: dict[str, float] = {}\n     started = time.time()\n+    if observer is not None:\n+        _trace_emit(observer, 5, \"RUNNING\")\n     features = sam2.encode(rgb_context) if visual is None else visual\n     timings[\"sam2\"] = round(time.time() - started, 3)\n+    if observer is not None:\n+        _trace_emit(observer, 5, \"COMPLETED\", {\"encoding_complete\": True, \"feature_shape\": list(features.shape),\n+                    \"elapsed_seconds\": timings[\"sam2\"], \"raw_feature_tensor_saved\": False})\n+        _trace_emit(observer, 6, \"RUNNING\")\n     started = time.time()\n     fields = record_fields(reference_mask.astype(bool), program_id)\n     timings[\"relation_fields\"] = round(time.time() - started, 3)\n     directional = torch.as_tensor(np.asarray(fields[\"P_dir_64\"]))[None, None]\n     nearest = torch.as_tensor(np.asarray(fields[\"P_near_64\"]))[None, None]\n     started = time.time()\n-    outputs = db1.forward(features, direction, directional, nearest)\n+    if observer is not None:\n+        _trace_emit(observer, 6, \"RUNNING\", {\"source\": \"actual frozen field calculation; W/A pending actual forward\"},\n+                    {\"P_dir\": fields[\"P_dir_64\"], \"P_near\": fields[\"P_near_64\"]})\n+    if observer is None:\n+        outputs = db1.forward(features, direction, directional, nearest)\n+    else:\n+        outputs = db1.forward(features, direction, directional, nearest, observer=observer)\n     timings[\"db1\"] = round(time.time() - started, 3)\n+    if observer is not None:\n+        _trace_emit(observer, 8, \"COMPLETED\", {\"candidate_only\": True, \"validation_state\": \"NOT_YET_GUARDED\",\n+                    \"mask_pixels\": int(outputs[\"mask\"].sum()), \"elapsed_seconds\": timings[\"db1\"]},\n+                    {\"logits\": outputs[\"logits\"], \"probability\": outputs[\"probability\"], \"mask\": outputs[\"mask\"]})\n     return CoreChainResult(\n         logits=outputs[\"logits\"], mask_context=outputs[\"mask\"].astype(bool),\n         probability_context=outputs[\"probability\"], direction_field=outputs[\"direction_field\"],\n"
+    },
+    {
+      "path": "buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+      "provenance": "ACCEPTED_GIT_CANONICAL_BLOB_PLUS_EXPLICIT_V2_OBSERVATION_ONLY_EDITS",
+      "base_bytes": 14790,
+      "base_sha256": "de4da2bbf8ee62a54554588cce05674b08c8f57123bb2e2b8f83bc3fb1af3ec6",
+      "v2_bytes": 16157,
+      "v2_sha256": "efbc86198b70c0539f53c532cb9b23b9c5a5b592a33c269ff24fecf5a5489968",
+      "scientific_ast_audit": {
+        "pass": true,
+        "paths": {
+          "disabled": true,
+          "enabled": true
+        },
+        "method": "Full module AST equality for both observer paths after erasing only observation transport/metadata and observer keyword."
+      },
+      "unified_diff": "--- accepted/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py\n+++ v2/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py\n@@ -48,6 +48,7 @@\n import torch\n import torch.nn as nn\n import torch.nn.functional as F\n+from buildreasonseg.runtime.observation import active_observer as _trace_active, emit_current as _trace_current\n \n VISUAL_CHANNELS = 256\n VISUAL_PROJECTION_CHANNELS = 128\n@@ -170,6 +171,12 @@\n     if mass <= EPS:\n         raise InvalidFieldMass(\"INVALID_FIELD_MASS\")\n     attention = weight / (weight.sum(dim=(-2, -1), keepdim=True) + EPS)\n+    if _trace_active() is not None:\n+        _trace_current(6, \"COMPLETED\", {\"source\": \"actual D-B1 forward field_competition\",\n+                       \"field_shapes\": {\"P_dir\": list(directional.shape), \"P_near\": list(nearest.shape),\n+                                         \"W\": list(weight.shape), \"A\": list(attention.shape)}},\n+                       {\"P_dir\": directional, \"P_near\": nearest, \"W\": weight, \"A\": attention})\n+        _trace_current(7, \"RUNNING\")\n     return attention, mass\n \n \n@@ -235,6 +242,16 @@\n         prototype = target_prototype(features, attention) if self.uses_prototype else None\n         similarity = (prototype_similarity(features, prototype)\n                       if prototype is not None else None)\n+        if _trace_active() is not None:\n+            _trace_current(7, \"COMPLETED\", {\"q_formed\": prototype is not None,\n+                           \"q_shape\": list(prototype.shape) if prototype is not None else None,\n+                           \"q_dimension\": int(prototype.shape[-1]) if prototype is not None else None,\n+                           \"C_shape\": list(similarity.shape) if similarity is not None else None,\n+                           \"source\": \"actual D-B1 forward competition state\",\n+                           \"source_dtype\": str(similarity.dtype) if similarity is not None else None,\n+                           \"similarity_scope\": \"visual cosine similarity, not target correctness probability\"},\n+                           {\"C\": similarity})\n+            _trace_current(8, \"RUNNING\")\n         return CompetitionState(attention=attention, attention_vis=attention_vis, prototype=prototype,\n                                 similarity=similarity, field_mass=field_mass)\n \n"
+    },
+    {
+      "path": "buildreasonseg/runtime/observation.py",
+      "provenance": "NEW_V2_READ_ONLY_OBSERVATION_TRANSPORT_NO_SCIENTIFIC_ALGORITHM",
+      "v2_bytes": 2553,
+      "v2_sha256": "7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955"
+    }
+  ],
+  "assembly_plan": {
+    "accepted_head": "93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4",
+    "source_paths": [
+      "buildreasonseg/__init__.py",
+      "buildreasonseg/cli/__init__.py",
+      "buildreasonseg/cli/common.py",
+      "buildreasonseg/errors.py",
+      "buildreasonseg/inference/__init__.py",
+      "buildreasonseg/inference/contract.py",
+      "buildreasonseg/language/__init__.py",
+      "buildreasonseg/language/fallback.py",
+      "buildreasonseg/language/frontend.py",
+      "buildreasonseg/language/registry.py",
+      "buildreasonseg/language/suggestion.py",
+      "buildreasonseg/language/validator.py",
+      "buildreasonseg/models/__init__.py",
+      "buildreasonseg/models/checkpoints.py",
+      "buildreasonseg/models/package.py",
+      "buildreasonseg/paths.py",
+      "buildreasonseg/runtime/_frozen/__init__.py",
+      "buildreasonseg/runtime/_frozen/mvp/__init__.py",
+      "buildreasonseg/runtime/_frozen/mvp/data.py",
+      "buildreasonseg/runtime/_frozen/mvp/geometric_relation_field.py",
+      "buildreasonseg/runtime/_frozen/mvp/geometric_relation_field_v02.py",
+      "buildreasonseg/runtime/_frozen/mvp/losses.py",
+      "buildreasonseg/runtime/_frozen/mvp/native_vector_adapter.py",
+      "buildreasonseg/runtime/_frozen/mvp/nearest_boundary_field.py",
+      "buildreasonseg/runtime/_frozen/mvp/program_parser.py",
+      "buildreasonseg/runtime/_frozen/mvp/qwen_seg.py",
+      "buildreasonseg/runtime/_frozen/mvp/sam2_bridge.py",
+      "buildreasonseg/runtime/_frozen/mvp/shapefile_reader.py",
+      "buildreasonseg/runtime/_frozen/mvp/structured_grounding.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6m_eval.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6n_relation_decoder.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6q_reference_resolver.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6s_directional_pipeline.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6u_common.py",
+      "buildreasonseg/runtime/_frozen/mvp/task6z_field_composition.py",
+      "buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+      "buildreasonseg/runtime/_frozen/mvp/whu_native_vector.py",
+      "buildreasonseg/runtime/_frozen/mvp/whu_vector_audit.py",
+      "buildreasonseg/runtime/context.py",
+      "buildreasonseg/runtime/core.py",
+      "buildreasonseg/runtime/detector.py",
+      "buildreasonseg/runtime/frozen_paths.py",
+      "buildreasonseg/runtime/imageio.py",
+      "buildreasonseg/runtime/outputs.py",
+      "buildreasonseg/runtime/pipeline.py",
+      "buildreasonseg/runtime/program_head.py",
+      "buildreasonseg/utils/__init__.py",
+      "buildreasonseg/utils/device.py",
+      "buildreasonseg/utils/hashing.py",
+      "buildreasonseg/utils/logging.py",
+      "configs/inference.yaml",
+      "model/buildreasonseg_advisor/metadata.json",
+      "model/buildreasonseg_advisor/model.yaml",
+      "predict.py"
+    ],
+    "assets": [
+      "model/buildreasonseg_advisor/decoder.pt",
+      "model/buildreasonseg_advisor/detector.pt",
+      "model/components/sam2/sam2.1_hiera_base_plus.pt",
+      "model/components/sam2/sam2.1_hiera_b+.yaml",
+      "model/components/program_head/program_parser_l3_rehearsal_v1.pt",
+      "model/components/program_head/qwen_asset_manifest.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/chat_template.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/generation_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/merges.txt",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/model.safetensors",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/preprocessor_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/tokenizer_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/video_preprocessor_config.json",
+      "model/components/program_head/Qwen3-VL-2B-Instruct/vocab.json",
+      "VERSION"
+    ],
+    "app_files": [
+      "BuildReasonSeg_Demo.py",
+      "启动BuildReasonSeg Demo.bat",
+      "使用说明.md",
+      "版本说明.txt",
+      "_ui/__init__.py",
+      "_ui/environment.py",
+      "_ui/backend.py",
+      "_ui/launch.ps1",
+      "_ui/trace.py",
+      "_ui/render.py",
+      "_ui/trace_ui.py"
+    ],
+    "static_dependency_analysis": {
+      "seeds": [
+        "predict",
+        "buildreasonseg.runtime.pipeline",
+        "buildreasonseg.runtime.program_head",
+        "buildreasonseg.runtime.imageio",
+        "buildreasonseg.models.package",
+        "buildreasonseg.language.validator"
+      ],
+      "modules": [
+        "buildreasonseg",
+        "buildreasonseg.cli",
+        "buildreasonseg.cli.common",
+        "buildreasonseg.errors",
+        "buildreasonseg.inference",
+        "buildreasonseg.inference.contract",
+        "buildreasonseg.language",
+        "buildreasonseg.language.fallback",
+        "buildreasonseg.language.frontend",
+        "buildreasonseg.language.registry",
+        "buildreasonseg.language.suggestion",
+        "buildreasonseg.language.validator",
+        "buildreasonseg.models",
+        "buildreasonseg.models.checkpoints",
+        "buildreasonseg.models.package",
+        "buildreasonseg.paths",
+        "buildreasonseg.runtime._frozen",
+        "buildreasonseg.runtime._frozen.mvp",
+        "buildreasonseg.runtime._frozen.mvp.data",
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field",
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+        "buildreasonseg.runtime._frozen.mvp.losses",
+        "buildreasonseg.runtime._frozen.mvp.native_vector_adapter",
+        "buildreasonseg.runtime._frozen.mvp.nearest_boundary_field",
+        "buildreasonseg.runtime._frozen.mvp.program_parser",
+        "buildreasonseg.runtime._frozen.mvp.qwen_seg",
+        "buildreasonseg.runtime._frozen.mvp.sam2_bridge",
+        "buildreasonseg.runtime._frozen.mvp.shapefile_reader",
+        "buildreasonseg.runtime._frozen.mvp.structured_grounding",
+        "buildreasonseg.runtime._frozen.mvp.task6m_eval",
+        "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+        "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver",
+        "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline",
+        "buildreasonseg.runtime._frozen.mvp.task6u_common",
+        "buildreasonseg.runtime._frozen.mvp.task6z_field_composition",
+        "buildreasonseg.runtime._frozen.mvp.task7d_global_competition_decoder",
+        "buildreasonseg.runtime._frozen.mvp.whu_native_vector",
+        "buildreasonseg.runtime._frozen.mvp.whu_vector_audit",
+        "buildreasonseg.runtime.context",
+        "buildreasonseg.runtime.core",
+        "buildreasonseg.runtime.detector",
+        "buildreasonseg.runtime.frozen_paths",
+        "buildreasonseg.runtime.imageio",
+        "buildreasonseg.runtime.outputs",
+        "buildreasonseg.runtime.pipeline",
+        "buildreasonseg.runtime.program_head",
+        "buildreasonseg.utils",
+        "buildreasonseg.utils.device",
+        "buildreasonseg.utils.hashing",
+        "buildreasonseg.utils.logging",
+        "predict"
+      ],
+      "import_edges": {
+        "buildreasonseg.language.validator": [
+          "buildreasonseg",
+          "buildreasonseg.language",
+          "buildreasonseg.language.registry"
+        ],
+        "buildreasonseg": [
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.paths": [
+          "buildreasonseg"
+        ],
+        "buildreasonseg.language": [
+          "buildreasonseg",
+          "buildreasonseg.language.fallback",
+          "buildreasonseg.language.frontend",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.suggestion",
+          "buildreasonseg.language.validator"
+        ],
+        "buildreasonseg.language.frontend": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.language",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.validator",
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.errors": [
+          "buildreasonseg"
+        ],
+        "buildreasonseg.language.registry": [
+          "buildreasonseg",
+          "buildreasonseg.language"
+        ],
+        "buildreasonseg.language.fallback": [
+          "buildreasonseg",
+          "buildreasonseg.language",
+          "buildreasonseg.language.frontend"
+        ],
+        "buildreasonseg.language.suggestion": [
+          "buildreasonseg",
+          "buildreasonseg.language",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.validator"
+        ],
+        "buildreasonseg.models.package": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.models",
+          "buildreasonseg.paths",
+          "buildreasonseg.utils.hashing"
+        ],
+        "buildreasonseg.models": [
+          "buildreasonseg",
+          "buildreasonseg.models.checkpoints",
+          "buildreasonseg.models.package"
+        ],
+        "buildreasonseg.models.checkpoints": [
+          "buildreasonseg",
+          "buildreasonseg.models",
+          "buildreasonseg.utils.hashing"
+        ],
+        "buildreasonseg.utils.hashing": [
+          "buildreasonseg",
+          "buildreasonseg.utils"
+        ],
+        "buildreasonseg.utils": [
+          "buildreasonseg",
+          "buildreasonseg.utils.device",
+          "buildreasonseg.utils.hashing",
+          "buildreasonseg.utils.logging"
+        ],
+        "buildreasonseg.utils.device": [
+          "buildreasonseg",
+          "buildreasonseg.utils"
+        ],
+        "buildreasonseg.utils.logging": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.utils"
+        ],
+        "buildreasonseg.runtime.imageio": [
+          "buildreasonseg",
+          "buildreasonseg.errors"
+        ],
+        "buildreasonseg.runtime.program_head": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.program_parser",
+          "buildreasonseg.runtime._frozen.mvp.qwen_seg",
+          "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline",
+          "buildreasonseg.runtime.frozen_paths"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.qwen_seg": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.data"
+        ],
+        "buildreasonseg.runtime._frozen": [
+          "buildreasonseg"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.data": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.program_parser": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.qwen_seg"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6s_directional_pipeline": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.task6m_eval"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6m_eval": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.native_vector_adapter",
+          "buildreasonseg.runtime._frozen.mvp.whu_native_vector"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.whu_native_vector": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.shapefile_reader",
+          "buildreasonseg.runtime._frozen.mvp.whu_vector_audit"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.whu_vector_audit": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.shapefile_reader"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.shapefile_reader": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.native_vector_adapter": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.structured_grounding",
+          "buildreasonseg.runtime._frozen.mvp.whu_native_vector"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.structured_grounding": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.geometric_relation_field": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime.frozen_paths": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+          "buildreasonseg.runtime._frozen.mvp.task6u_common"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field",
+          "buildreasonseg.runtime._frozen.mvp.losses",
+          "buildreasonseg.runtime._frozen.mvp.sam2_bridge"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.sam2_bridge": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.losses": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6u_common": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.task6m_eval",
+          "buildreasonseg.runtime._frozen.mvp.task6q_reference_resolver"
+        ],
+        "buildreasonseg.runtime.pipeline": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.language.frontend",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.suggestion",
+          "buildreasonseg.language.validator",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.context",
+          "buildreasonseg.runtime.core",
+          "buildreasonseg.runtime.detector",
+          "buildreasonseg.runtime.imageio",
+          "buildreasonseg.runtime.outputs",
+          "buildreasonseg.runtime.program_head",
+          "buildreasonseg.utils.device"
+        ],
+        "buildreasonseg.runtime.outputs": [
+          "buildreasonseg",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.imageio"
+        ],
+        "buildreasonseg.runtime.context": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.runtime.detector"
+        ],
+        "buildreasonseg.runtime.detector": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime.imageio"
+        ],
+        "buildreasonseg.runtime.core": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.paths",
+          "buildreasonseg.runtime._frozen.mvp.task6n_relation_decoder",
+          "buildreasonseg.runtime._frozen.mvp.task6z_field_composition",
+          "buildreasonseg.runtime._frozen.mvp.task7d_global_competition_decoder",
+          "buildreasonseg.runtime.context",
+          "buildreasonseg.runtime.frozen_paths"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task7d_global_competition_decoder": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.task6z_field_composition": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp",
+          "buildreasonseg.runtime._frozen.mvp.geometric_relation_field_v02",
+          "buildreasonseg.runtime._frozen.mvp.nearest_boundary_field"
+        ],
+        "buildreasonseg.runtime._frozen.mvp.nearest_boundary_field": [
+          "buildreasonseg",
+          "buildreasonseg.runtime._frozen",
+          "buildreasonseg.runtime._frozen.mvp"
+        ],
+        "predict": [
+          "buildreasonseg",
+          "buildreasonseg.cli.common",
+          "buildreasonseg.errors",
+          "buildreasonseg.inference.contract",
+          "buildreasonseg.language.frontend",
+          "buildreasonseg.language.registry",
+          "buildreasonseg.language.suggestion",
+          "buildreasonseg.language.validator",
+          "buildreasonseg.models.package",
+          "buildreasonseg.runtime.imageio",
+          "buildreasonseg.runtime.pipeline",
+          "buildreasonseg.runtime.program_head"
+        ],
+        "buildreasonseg.cli.common": [
+          "buildreasonseg",
+          "buildreasonseg.cli",
+          "buildreasonseg.errors",
+          "buildreasonseg.paths",
+          "buildreasonseg.utils.logging"
+        ],
+        "buildreasonseg.cli": [
+          "buildreasonseg",
+          "buildreasonseg.cli.common"
+        ],
+        "buildreasonseg.inference.contract": [
+          "buildreasonseg",
+          "buildreasonseg.errors",
+          "buildreasonseg.inference",
+          "buildreasonseg.paths"
+        ],
+        "buildreasonseg.inference": [
+          "buildreasonseg",
+          "buildreasonseg.inference.contract"
+        ]
+      },
+      "policy": "AST imports at all depths plus package initializers; no runtime or model execution"
+    },
+    "observation_source_differences": [
+      {
+        "path": "buildreasonseg/runtime/pipeline.py",
+        "provenance": "ACCEPTED_GIT_CANONICAL_BLOB_PLUS_EXPLICIT_V2_OBSERVATION_ONLY_EDITS",
+        "base_bytes": 19311,
+        "base_sha256": "ec803658e476d9f14451b48ca80e3ce8eb11ee103039a2311b1249f9d1b8d798",
+        "v2_bytes": 22899,
+        "v2_sha256": "6e89e379048466cd91d5a4c6175d5ff867651298fc90c466d617c5a9bd0e9396",
+        "scientific_ast_audit": {
+          "pass": true,
+          "paths": {
+            "disabled": true,
+            "enabled": true
+          },
+          "method": "Full module AST equality for both observer paths after erasing only observation transport/metadata and observer keyword."
+        },
+        "unified_diff": "--- accepted/buildreasonseg/runtime/pipeline.py\n+++ v2/buildreasonseg/runtime/pipeline.py\n@@ -16,6 +16,7 @@\n import numpy as np\n \n from buildreasonseg import paths\n+from buildreasonseg.runtime.observation import emit as _trace_emit\n from buildreasonseg.errors import BuildReasonSegError\n from buildreasonseg.language.frontend import FALLBACK_BANNER, DeterministicFallbackFrontend\n from buildreasonseg.language.registry import ParsedProgram\n@@ -183,11 +184,12 @@\n     }\n \n \n-def predict_one(runtime: PredictRuntime, request: PipelineRequest) -> PipelineResult:\n+def predict_one(runtime: PredictRuntime, request: PipelineRequest, *, observer=None) -> PipelineResult:\n     \"\"\"Run the full chain for one image; never fabricates a mask when the algorithm stage fails.\"\"\"\n \n     total_started = time.time()\n     timings = StageTimings()\n+    _trace_stage = 1\n     loaded = load_image(request.image)\n     outputs = outputs_module.allocate_outputs(request.image)\n     payload: dict = {\"status\": \"FAILED\", **loaded.describe(), \"model_package\": request.model,\n@@ -210,6 +212,12 @@\n         if request.save_diagnostics:\n             outputs_module.save_diagnostics(outputs, payload)\n             payload[\"output_paths\"] = {\"diagnostics\": outputs.diagnostics_dir}\n+        if observer is not None:\n+            _trace_emit(observer, 9, \"FAILED\", {\"runtime_status\": \"FAILED\", \"error_code\": error.code,\n+                        \"reason\": payload.get(\"reason\"), \"context\": error.context,\n+                        \"guard_executed\": _trace_stage == 9, \"final_output_valid\": False,\n+                        \"elapsed_seconds\": time.time() - total_started,\n+                        \"validity_scope\": \"RUNTIME_STRUCTURAL_ONLY\", \"semantic_status\": \"NOT_EVALUATED\"})\n         return PipelineResult(status=\"FAILED\", image=request.image, result_payload=payload,\n                               outputs=outputs, error_code=error.code,\n                               error_reason=payload.get(\"reason\"))\n@@ -217,6 +225,8 @@\n     try:\n         # ---- language (already parsed once per process for batch mode)\n         if parsed is None:\n+            if observer is not None:\n+                _trace_emit(observer, 1, \"RUNNING\", {\"original_prompt\": request.prompt})\n             language_started = time.time()\n             parsed, language_info = parse_prompt(runtime, request)\n             timings.language = time.time() - language_started\n@@ -254,7 +264,15 @@\n             payload[\"suggestion_used\"] = True\n             payload[\"suggested_program\"] = request.parsed_info.get(\"suggested_program\")\n \n+        if observer is not None:\n+            if request.parsed is None:\n+                _trace_emit(observer, 1, \"COMPLETED\", {\"original_prompt\": request.prompt,\n+                            \"initial_program\": parsed.program, \"initial_supported\": validation.supported,\n+                            \"final_program\": parsed.program, \"language_mode\": payload.get(\"language_mode\", \"qwen\")})\n         # ---- global detection + merge\n+        _trace_stage = 2\n+        if observer is not None:\n+            _trace_emit(observer, 2, \"RUNNING\")\n         detection = runtime.detector.detect_global(loaded.rgb)\n         proposals: list[GlobalProposal] = detection[\"merged\"]\n         timings.detector = detection[\"detector_seconds\"]\n@@ -264,10 +282,19 @@\n                         \"merged_proposal_count\": len(proposals),\n                         \"proposals\": {\"count\": len(proposals),\n                                       \"items\": [proposal.to_dict() for proposal in proposals]}})\n+        if observer is not None:\n+            _trace_emit(observer, 2, \"COMPLETED\", {\"raw_count\": detection[\"raw_count\"],\n+                        \"merged_count\": len(proposals), \"detector_seconds\": detection[\"detector_seconds\"],\n+                        \"proposal_ids\": [p.proposal_id for p in proposals]},\n+                        {\"rgb\": loaded.rgb, \"proposals\": [{\"proposal_id\": p.proposal_id,\n+                         \"bbox\": p.global_bbox, \"mask_crop\": p.mask_crop} for p in proposals]})\n         if not proposals:\n             raise BuildReasonSegError(\"E401\", detail=\"整幅影像未检测到任何建筑实例。\")\n \n         # ---- global reference\n+        _trace_stage = 3\n+        if observer is not None:\n+            _trace_emit(observer, 3, \"RUNNING\")\n         if reference_mode == \"assisted\":\n             reference = proposal_by_id(proposals, int(request.reference_id))\n             if reference is None:\n@@ -289,9 +316,20 @@\n                         \"reference_confidence\": float(reference.confidence),\n                         \"reference_bbox\": list(reference.global_bbox)})\n \n+        if observer is not None:\n+            _trace_emit(observer, 3, \"COMPLETED\", {\"selected_id\": reference.proposal_id,\n+                        \"mask_area\": int(reference.mask_area), \"confidence\": float(reference.confidence),\n+                        \"bbox\": list(reference.global_bbox), \"mode\": reference_mode},\n+                        {\"reference_mask_crop\": reference.mask_crop})\n         # ---- deterministic 512 reasoning context\n+        _trace_stage = 4\n+        if observer is not None:\n+            _trace_emit(observer, 4, \"RUNNING\")\n         direction = program_to_direction(parsed.program)\n         context = plan_context(reference, direction)\n+        if observer is not None:\n+            _trace_emit(observer, 4, \"RUNNING\", {\"direction\": direction, \"context\": context.to_dict(),\n+                        \"context_rgb_available\": False})\n         guard = guard_directional_candidates(reference, proposals, direction, context)\n         payload[\"directional_guard\"] = guard\n         rgb_context, padding = _context_rgb(loaded.rgb, context)\n@@ -303,13 +341,25 @@\n         reference_mask = _reference_mask_context(reference, context)\n         if not reference_mask.any():\n             raise BuildReasonSegError(\"E402\", detail=\"参考建筑在本 reasoning context 内没有有效像素。\")\n-        chain = run_core_chain(rgb_context, reference_mask, parsed.program, sam2=runtime.sam2,\n-                               db1=runtime.db1)\n+        if observer is not None:\n+            _trace_emit(observer, 4, \"COMPLETED\", {\"direction\": direction, \"context\": context.to_dict(),\n+                        \"reference_pixels\": int(reference_mask.sum())},\n+                        {\"context_rgb\": rgb_context, \"reference_mask\": reference_mask})\n+        _trace_stage = 5\n+        if observer is None:\n+            chain = run_core_chain(rgb_context, reference_mask, parsed.program, sam2=runtime.sam2,\n+                                   db1=runtime.db1)\n+        else:\n+            chain = run_core_chain(rgb_context, reference_mask, parsed.program, sam2=runtime.sam2,\n+                                   db1=runtime.db1, observer=observer)\n         timings.sam2 = chain.timings.get(\"sam2\", 0.0)\n         timings.relation_fields = chain.timings.get(\"relation_fields\", 0.0)\n         timings.db1 = chain.timings.get(\"db1\", 0.0)\n \n         # ---- hard post-inference validity (no \"pick the best\")\n+        _trace_stage = 9\n+        if observer is not None:\n+            _trace_emit(observer, 9, \"RUNNING\", {\"guard_executed\": True})\n         mask_full, map_padding = context_to_global(chain.mask_context, context,\n                                                   (loaded.height, loaded.width))\n         if not mask_full.any():\n@@ -350,6 +400,11 @@\n         timings.total = time.time() - total_started\n         payload[\"timings\"] = timings.to_dict()\n         _rewrite_result_json(outputs, payload)\n+        if observer is not None:\n+            _trace_emit(observer, 9, \"COMPLETED\", {\"runtime_status\": \"SUCCESS\", \"guard_executed\": True,\n+                        \"final_output_valid\": True, \"validity_scope\": payload[\"validity_scope\"],\n+                        \"semantic_status\": payload[\"semantic_status\"], \"elapsed_seconds\": timings.total,\n+                        \"mask_path\": info[\"mask\"], \"overlay_path\": info[\"overlay\"]})\n         return PipelineResult(status=\"SUCCESS\", image=request.image, result_payload=payload,\n                               mask=mask_full, outputs=outputs)\n     except BuildReasonSegError as error:\n"
+      },
+      {
+        "path": "buildreasonseg/runtime/core.py",
+        "provenance": "ACCEPTED_GIT_CANONICAL_BLOB_PLUS_EXPLICIT_V2_OBSERVATION_ONLY_EDITS",
+        "base_bytes": 11064,
+        "base_sha256": "37c38ba4acd1bb0f77533674333172991fd91c7dba37342be208f445b1d65a15",
+        "v2_bytes": 12475,
+        "v2_sha256": "0339b53512925f18ac93bcc0867d78e330cb82fc35312d0cef140c4920d56b5b",
+        "scientific_ast_audit": {
+          "pass": true,
+          "paths": {
+            "disabled": true,
+            "enabled": true
+          },
+          "method": "Full module AST equality for both observer paths after erasing only observation transport/metadata and observer keyword."
+        },
+        "unified_diff": "--- accepted/buildreasonseg/runtime/core.py\n+++ v2/buildreasonseg/runtime/core.py\n@@ -20,6 +20,7 @@\n import numpy as np\n \n from buildreasonseg import paths\n+from buildreasonseg.runtime.observation import emit as _trace_emit, observation_scope as _trace_scope\n from buildreasonseg.errors import BuildReasonSegError\n from buildreasonseg.runtime import frozen_paths\n \n@@ -132,7 +133,7 @@\n     def parameter_count(self) -> int:\n         return int(sum(parameter.numel() for parameter in self.load().parameters()))\n \n-    def forward(self, visual, direction: str, directional, nearest) -> dict:\n+    def forward(self, visual, direction: str, directional, nearest, *, observer=None) -> dict:\n         \"\"\"Run the frozen D-B1 chain and return logits plus every diagnostic map.\n \n         `directional` / `nearest` are the frozen `P_dir_64` / `P_near_64` tensors `[1,1,64,64]`.\n@@ -151,7 +152,11 @@\n             state = model.competition(projected, [relation], directional_batch, nearest_batch)\n             with torch.autocast(device_type=\"cuda\", dtype=torch.bfloat16,\n                                 enabled=self.device != \"cpu\"):\n-                logits = model(visual_batch, [relation], directional_batch, nearest_batch)\n+                if observer is None:\n+                    logits = model(visual_batch, [relation], directional_batch, nearest_batch)\n+                else:\n+                    with _trace_scope(observer):\n+                        logits = model(visual_batch, [relation], directional_batch, nearest_batch)\n             upsampled = model.upsampled(logits, TARGET_SIZE)\n             probability = torch.sigmoid(upsampled)\n             relation_weight = (directional_batch * nearest_batch).clamp(0.0, 1.0)\n@@ -208,7 +213,7 @@\n \n \n def run_core_chain(rgb_context: np.ndarray, reference_mask: np.ndarray, program_id: str, *,\n-                   sam2: Sam2Runtime, db1: Db1Runtime, visual=None) -> CoreChainResult:\n+                   sam2: Sam2Runtime, db1: Db1Runtime, visual=None, observer=None) -> CoreChainResult:\n     \"\"\"The frozen chain inside one 512 reasoning context.\n \n     `visual` may inject an already-extracted frozen SAM2 feature tensor (used by the core-equivalence gate to\n@@ -220,16 +225,32 @@\n     direction = program_to_direction(program_id)\n     timings: dict[str, float] = {}\n     started = time.time()\n+    if observer is not None:\n+        _trace_emit(observer, 5, \"RUNNING\")\n     features = sam2.encode(rgb_context) if visual is None else visual\n     timings[\"sam2\"] = round(time.time() - started, 3)\n+    if observer is not None:\n+        _trace_emit(observer, 5, \"COMPLETED\", {\"encoding_complete\": True, \"feature_shape\": list(features.shape),\n+                    \"elapsed_seconds\": timings[\"sam2\"], \"raw_feature_tensor_saved\": False})\n+        _trace_emit(observer, 6, \"RUNNING\")\n     started = time.time()\n     fields = record_fields(reference_mask.astype(bool), program_id)\n     timings[\"relation_fields\"] = round(time.time() - started, 3)\n     directional = torch.as_tensor(np.asarray(fields[\"P_dir_64\"]))[None, None]\n     nearest = torch.as_tensor(np.asarray(fields[\"P_near_64\"]))[None, None]\n     started = time.time()\n-    outputs = db1.forward(features, direction, directional, nearest)\n+    if observer is not None:\n+        _trace_emit(observer, 6, \"RUNNING\", {\"source\": \"actual frozen field calculation; W/A pending actual forward\"},\n+                    {\"P_dir\": fields[\"P_dir_64\"], \"P_near\": fields[\"P_near_64\"]})\n+    if observer is None:\n+        outputs = db1.forward(features, direction, directional, nearest)\n+    else:\n+        outputs = db1.forward(features, direction, directional, nearest, observer=observer)\n     timings[\"db1\"] = round(time.time() - started, 3)\n+    if observer is not None:\n+        _trace_emit(observer, 8, \"COMPLETED\", {\"candidate_only\": True, \"validation_state\": \"NOT_YET_GUARDED\",\n+                    \"mask_pixels\": int(outputs[\"mask\"].sum()), \"elapsed_seconds\": timings[\"db1\"]},\n+                    {\"logits\": outputs[\"logits\"], \"probability\": outputs[\"probability\"], \"mask\": outputs[\"mask\"]})\n     return CoreChainResult(\n         logits=outputs[\"logits\"], mask_context=outputs[\"mask\"].astype(bool),\n         probability_context=outputs[\"probability\"], direction_field=outputs[\"direction_field\"],\n"
+      },
+      {
+        "path": "buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py",
+        "provenance": "ACCEPTED_GIT_CANONICAL_BLOB_PLUS_EXPLICIT_V2_OBSERVATION_ONLY_EDITS",
+        "base_bytes": 14790,
+        "base_sha256": "de4da2bbf8ee62a54554588cce05674b08c8f57123bb2e2b8f83bc3fb1af3ec6",
+        "v2_bytes": 16157,
+        "v2_sha256": "efbc86198b70c0539f53c532cb9b23b9c5a5b592a33c269ff24fecf5a5489968",
+        "scientific_ast_audit": {
+          "pass": true,
+          "paths": {
+            "disabled": true,
+            "enabled": true
+          },
+          "method": "Full module AST equality for both observer paths after erasing only observation transport/metadata and observer keyword."
+        },
+        "unified_diff": "--- accepted/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py\n+++ v2/buildreasonseg/runtime/_frozen/mvp/task7d_global_competition_decoder.py\n@@ -48,6 +48,7 @@\n import torch\n import torch.nn as nn\n import torch.nn.functional as F\n+from buildreasonseg.runtime.observation import active_observer as _trace_active, emit_current as _trace_current\n \n VISUAL_CHANNELS = 256\n VISUAL_PROJECTION_CHANNELS = 128\n@@ -170,6 +171,12 @@\n     if mass <= EPS:\n         raise InvalidFieldMass(\"INVALID_FIELD_MASS\")\n     attention = weight / (weight.sum(dim=(-2, -1), keepdim=True) + EPS)\n+    if _trace_active() is not None:\n+        _trace_current(6, \"COMPLETED\", {\"source\": \"actual D-B1 forward field_competition\",\n+                       \"field_shapes\": {\"P_dir\": list(directional.shape), \"P_near\": list(nearest.shape),\n+                                         \"W\": list(weight.shape), \"A\": list(attention.shape)}},\n+                       {\"P_dir\": directional, \"P_near\": nearest, \"W\": weight, \"A\": attention})\n+        _trace_current(7, \"RUNNING\")\n     return attention, mass\n \n \n@@ -235,6 +242,16 @@\n         prototype = target_prototype(features, attention) if self.uses_prototype else None\n         similarity = (prototype_similarity(features, prototype)\n                       if prototype is not None else None)\n+        if _trace_active() is not None:\n+            _trace_current(7, \"COMPLETED\", {\"q_formed\": prototype is not None,\n+                           \"q_shape\": list(prototype.shape) if prototype is not None else None,\n+                           \"q_dimension\": int(prototype.shape[-1]) if prototype is not None else None,\n+                           \"C_shape\": list(similarity.shape) if similarity is not None else None,\n+                           \"source\": \"actual D-B1 forward competition state\",\n+                           \"source_dtype\": str(similarity.dtype) if similarity is not None else None,\n+                           \"similarity_scope\": \"visual cosine similarity, not target correctness probability\"},\n+                           {\"C\": similarity})\n+            _trace_current(8, \"RUNNING\")\n         return CompetitionState(attention=attention, attention_vis=attention_vis, prototype=prototype,\n                                 similarity=similarity, field_mass=field_mass)\n \n"
+      },
+      {
+        "path": "buildreasonseg/runtime/observation.py",
+        "provenance": "NEW_V2_READ_ONLY_OBSERVATION_TRANSPORT_NO_SCIENTIFIC_ALGORITHM",
+        "v2_bytes": 2553,
+        "v2_sha256": "7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955"
+      }
+    ],
+    "expected_manifest_entries": 84
+  },
+  "observation_checkpoint": {
+    "status": "PASS",
+    "scientific_ast_enabled_disabled": "PASS",
+    "current_dedicated_fake_tests": 53,
+    "strict_warning_gate": true,
+    "cases": [
+      "SUCCESS",
+      "E401",
+      "E402",
+      "context E404",
+      "empty E404",
+      "wrong direction E404",
+      "SAM E502",
+      "fields E502",
+      "D-B1 E502"
+    ],
+    "equalities": [
+      "Mask arrays",
+      "final Mask/Overlay PNG bytes",
+      "error code/reason",
+      "detector/SAM/model counts",
+      "Python/NumPy/Torch random states"
+    ],
+    "forward_maps_source": "Actual inner D-B1 forward, not existing diagnostic pass. Original projection/competition2 and forward1 retained.",
+    "harness_identities": [
+      {
+        "path": "demo/user_demo_v2/BuildReasonSeg_Demo.py",
+        "bytes": 19048,
+        "sha256": "da59fc35026e95a90cec58893b25dd34af8fac197645c3d3932d3e79631135ee"
+      },
+      {
+        "path": "demo/user_demo_v2/启动BuildReasonSeg Demo.bat",
+        "bytes": 106,
+        "sha256": "dd221c4b6d6d8e3430f17329e2955031f6e97ed537daf3c580889fbb46dfa291"
+      },
+      {
+        "path": "demo/user_demo_v2/使用说明.md",
+        "bytes": 6395,
+        "sha256": "2dc988414ccdd222e7d5d6e9bdb62f4c4ae1b5ab86e1e6ff33d245fbbf37043e"
+      },
+      {
+        "path": "demo/user_demo_v2/版本说明.txt",
+        "bytes": 1287,
+        "sha256": "7e6fcbb444bab39a2af41aacdbecb3b5793626b68d092f5c0abde8193de36fc6"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/__init__.py",
+        "bytes": 81,
+        "sha256": "c95c2ee0ba5b75ff2c7bfe4da8f35f1133b8ca496171d96ee31be1d63267e80c"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/environment.py",
+        "bytes": 5467,
+        "sha256": "0ad1dedce26f09b799d6107e62831dadd5e6f22bc2243241f033ac49cb898951"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/backend.py",
+        "bytes": 17992,
+        "sha256": "9b53eb46698346899ec376c95bc30d234fda7d5891e6818c50e2218c3ffe3e20"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/launch.ps1",
+        "bytes": 2108,
+        "sha256": "2bada66fb97a8964d57487c24598e8579e4dce0da052a8e7fc20103eb2b529f8"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/trace.py",
+        "bytes": 12284,
+        "sha256": "82fce359fe9446a04c0b99c2beb38e32bfd2fba236000015989ca952c3d7032e"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/render.py",
+        "bytes": 12083,
+        "sha256": "88d9bd0722699b86dfd05a41c99b71013179397588d17a605f8eb454f7184de2"
+      },
+      {
+        "path": "demo/user_demo_v2/_ui/trace_ui.py",
+        "bytes": 10701,
+        "sha256": "0198a4fb0a1406baf8dc3573535476d699f4597b0c44ca407acf3ab8ceada700"
+      },
+      {
+        "path": "tests/test_task8f_user_demo_live_trace.py",
+        "bytes": 34040,
+        "sha256": "0a0ed14f814e7f812ac6b472ae7c8af508d0137b7ce0a8e4fc07820037a91719"
+      },
+      {
+        "path": "demo/user_demo_v2/engine_observation_patch.py",
+        "bytes": 15546,
+        "sha256": "22a4fa23ae186342d07449e137b445decfe20e8d256d2b5e8cc5faaf3b1ea010"
+      },
+      {
+        "path": "demo/user_demo_v2/engine_observation/observation.py",
+        "bytes": 2553,
+        "sha256": "7573b5870445687377f612c6804e074ad72e9340109763f64b252f6cccd17955"
+      },
+      {
+        "path": "scripts/build_task8f_user_demo.py",
+        "bytes": 8872,
+        "sha256": "a639448efebc3302da2b1510893d6549e54a538496059838eb5adcdab5ac9288"
+      }
+    ],
+    "model_calls": 0
   }
 }

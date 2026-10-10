@@ -1,0 +1,60 @@
+.............................................F.....                      [100%]
+================================== FAILURES ===================================
+__________ test_quickfill_text_only_and_busy_duplicate_run_disabled ___________
+
+tmp_path = WindowsPath('C:/Users/ROG/AppData/Local/Temp/task8f-trace-tests-v7/test_quickfill_text_only_and_b0')
+
+    def test_quickfill_text_only_and_busy_duplicate_run_disabled(tmp_path):
+>       root,app=make_app(tmp_path)
+                 ^^^^^^^^^^^^^^^^^^
+
+tests\test_task8f_user_demo_live_trace.py:481: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_task8f_user_demo_live_trace.py:462: in make_app
+    root=tk.Tk();root.withdraw()
+         ^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <tkinter.Tk object .>, screenName = None, baseName = '__main__'
+className = 'Tk', useTk = True, sync = False, use = None
+
+    def __init__(self, screenName=None, baseName=None, className='Tk',
+                 useTk=True, sync=False, use=None):
+        """Return a new top level widget on screen SCREENNAME. A new Tcl interpreter will
+        be created. BASENAME will be used for the identification of the profile file (see
+        readprofile).
+        It is constructed from sys.argv[0] without extensions if None is given. CLASSNAME
+        is the name of the widget class."""
+        self.master = None
+        self.children = {}
+        self._tkloaded = False
+        # to avoid recursions in the getattr code in case of failure, we
+        # ensure that self.tk is always _something_.
+        self.tk = None
+        if baseName is None:
+            import os
+            baseName = os.path.basename(sys.argv[0])
+            baseName, ext = os.path.splitext(baseName)
+            if ext not in ('.py', '.pyc'):
+                baseName = baseName + ext
+        interactive = False
+>       self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       _tkinter.TclError: Can't find a usable init.tcl in the following directories: 
+E           C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/buildreasonseg-mvp/Library/lib/tcl8.6 C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/lib/tcl8.6 C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/lib/tcl8.6 C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/library C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/library C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/tcl8.6.15/library C:/D/DeepSeekHarness/workspace/project/tcl8.6.15/library
+E       
+E       C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/buildreasonseg-mvp/Library/lib/tcl8.6/init.tcl: couldn't read file "C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/buildreasonseg-mvp/Library/lib/tcl8.6/init.tcl": No error
+E       couldn't read file "C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/buildreasonseg-mvp/Library/lib/tcl8.6/init.tcl": No error
+E           while executing
+E       "source C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/buildreasonseg-mvp/Library/lib/tcl8.6/init.tcl"
+E           ("uplevel" body line 1)
+E           invoked from within
+E       "uplevel #0 [list source $tclfile]"
+E       
+E       
+E       This probably means that Tcl wasn't installed properly.
+
+.conda\buildreasonseg-mvp\Lib\tkinter\__init__.py:2345: TclError
+=========================== short test summary info ===========================
+FAILED tests/test_task8f_user_demo_live_trace.py::test_quickfill_text_only_and_busy_duplicate_run_disabled
+1 failed, 50 passed in 4.09s
