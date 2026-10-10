@@ -1,986 +1,585 @@
-# CURRENT_TASK - TASK8E_USER_FACING_DEMO_PACKAGE_V1
+# CURRENT_TASK - TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1
 
 Status:
-READY_FOR_SUPERVISOR_AUDIT
+IN_PROGRESS
 
 Decision owner: ChatGPT Supervisor
 Executor: CODEX
-Next gate: CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
+Next gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
 
 ## Supervisor task authorization - verbatim
 
-TASK AUTHORIZATION
+# TASK AUTHORIZATION
 
-Task ID:
-TASK8E_USER_FACING_DEMO_PACKAGE_V1
+**Task ID:** `TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1`
 
-Model:
-GPT-6.1 Sol
+**Mode:** USER-FACING DEMO ENHANCEMENT / OBSERVABILITY ONLY
 
-Reasoning:
-极高
+**Accepted predecessor:** `TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT`
 
-Mode:
-USER-FACING DELIVERY / NO SCIENTIFIC REPAIR
+**Repository:** `Autumn-Preface/BuildReasonSeg`
 
-Accepted scientific predecessor:
-TASK8D_ABOVE_TARGET_CHAIN_DIAGNOSIS_V1 = ACCEPT
+**Accepted predecessor branch:** `delivery/task8e-user-demo-v1`
 
-Accepted predecessor branch:
-diag/task8d-above-target-chain-v1
+**Accepted predecessor HEAD:** `93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4`
 
-Accepted remote HEAD:
-b569dcefa26af9788a9ec75eb52cbb8317305bea
+**Required new branch:** `delivery/task8f-user-demo-live-trace-v1`
 
-Required new branch:
-delivery/task8e-user-demo-v1
+**New external destination:**
 
-External delivery destination:
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1
+`C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V2`
 
-Next gate:
-CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
+**Next gate:** `CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT`
 
+## 1. 核心目标
 
-# 1. Goal
+在已接受的 BuildReasonSeg Demo V1 基础上，建立一个具有实时推理过程展示能力的用户 Demo V2。
 
-Create a clean user-facing BuildReasonSeg Demo package.
+必须采用**两个可切换的平级页面**：
 
-This is NOT:
+- 结果
+- 推理过程（Pipeline Trace）
 
-- a development handoff;
-- a research audit package;
-- a debugging interface;
-- a new algorithm;
-- a repair of Task8C/8D failures.
+推荐使用 Tkinter `ttk.Notebook` 或功能等价的页面管理结构。
 
-The package is intended for a normal local user who wants to:
+两个页面必须处于同一主窗口的平级层次。
 
-1. choose an RGB aerial/satellite image;
-2. enter a supported spatial-language instruction;
-3. confirm the system interpretation;
-4. run automatic inference;
-5. view the resulting overlay and mask;
-6. locate saved results.
+禁止：
 
-The external package must be delivered at:
+- 把推理过程嵌套在原结果页里面；
+- 用独立弹窗代替新页面；
+- 把推理过程设计成另一个独立程序；
+- 切换页面时重新推理；
+- 为了展示中间量而修改算法。
 
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1
+结果页保留 V1 已有交互与功能。
 
+两个页面共享同一个 Worker、同一次 inference、同一份结果状态。
 
-# 2. Frozen scientific behavior
+## 2. 冻结科学链路
 
-The user Demo MUST reuse the accepted RC1 scientific runtime unchanged.
+不得改变：
 
-Scientific chain remains:
+Qwen / ProgramHead → Validator / suggestion → YOLO26m-seg → automatic Reference → 512 reasoning context → SAM2 → P_dir / P_near → W / A → q / C → D-B1 → Mask → structural guard。
 
-Qwen / ProgramHead
-→ validator / optional Qwen suggestion
-→ YOLO global proposals
-→ automatic largest Reference selection
-→ 512 reasoning context
-→ P_dir
-→ P_near
-→ D-B1
-→ dense mask
+不得修改：
 
-Do NOT change:
+- 模型权重和 checkpoint；
+- YOLO 推理参数与 RGB/BGR 契约；
+- proposal merge；
+- reference eligibility / ranking；
+- context 规划；
+- 方向和邻近场公式；
+- W / A / q / C 的数值计算；
+- D-B1 的网络与输出阈值；
+- padding、方向和其他结构 guard；
+- Qwen 解析、建议与用户确认规则。
 
-- detector
-- RGB/BGR contract
-- proposal merge
-- reference selector
-- eligibility
-- relation fields
-- nearest field
-- W / A / q / C
-- decoder
-- checkpoint
-- threshold
-- final structural guards
-- model assets
-- program grammar
-- supported semantic set
+`SUCCESS` 必须继续表示 `RUNTIME_STRUCTURAL_ONLY`，不能自动声称语义正确。
 
-This task may improve presentation and interaction only.
+## 3. 新增九个可视化阶段
 
+### Stage 1：语言理解
 
-# 3. User-facing semantic scope
+显示用户原始输入、ProgramHead 初始 program、是否受支持、Qwen suggestion、用户确认后的最终 program。
 
-Expose only the four accepted automatic tasks:
+若首次解析缺少 nearest，真实展示该事实。
 
-最大建筑 → 左侧 → 最近建筑
-最大建筑 → 右侧 → 最近建筑
-最大建筑 → 上方 → 最近建筑
-最大建筑 → 下方 → 最近建筑
+置信度不得写成语义正确率。
 
-Natural-language text input MUST still go through the existing:
+拒绝建议或取消时，后续阶段显示“未执行”。
 
-Qwen / ProgramHead → Validator
+### Stage 2：YOLO proposals
 
-flow.
+模型检测并完成 merge 后立即显示：
 
-Do NOT create a keyword/regex shortcut that bypasses Qwen.
+- 原图上的半透明 proposal masks；
+- 各实例的 proposal ID；
+- 必要时标示 bbox；
+- raw / merged proposal counts；
+- 检测耗时。
 
-Recommended example buttons / quick-fill controls are allowed,
-but they only fill the text box.
+保留所有合格输出候选，不得为美观隐藏错误候选。
 
-They must not directly set the program id.
+可视化不得修改 proposal mask。
 
+E401 时保留 0 候选的检测结果，并停止后续阶段。
 
-# 4. No diagnostic user modes
+### Stage 3：Automatic Reference
 
-The user-facing UI MUST NOT expose:
+在候选可视化基础上高亮自动选择的 Reference。
 
---reference-id
---inspect-proposals
-assisted reference mode
-manual proposal selection
-threshold controls
-ranking controls
-model/checkpoint controls
-debug map selection
-training/evaluation controls
+展示：
 
-Automatic reference mode only.
+- selected proposal ID；
+- mask area；
+- confidence；
+- bbox；
+- automatic mode。
 
+不得暴露可改变算法的 `reference-id` 输入功能。
 
-# 5. GUI preference
+E402 时明确说明“没有可用 Reference”。
 
-First perform a read-only environment check:
+### Stage 4：Reasoning Context
 
-<accepted Python> -c "import tkinter; print('TK_OK')"
+显示：
 
-If tkinter works:
+- 原图中 512×512 context 的实际位置；
+- 真正传入核心链的 context RGB 图；
+- 参考 Mask；
+- 方向；
+- padding 状态。
 
-implement a Windows Tkinter GUI.
+不得通过重新裁剪推测 context，必须使用真实运行计算得到的坐标与数据。
 
-Do NOT install any dependency.
+### Stage 5：SAM2 Visual Features
 
-If tkinter is unavailable:
+显示视觉编码已完成、原始特征形状、耗时。
 
-implement a clean interactive console launcher instead and record:
+可以提供简洁的特征网格示意，但不能把任何虚构热力图冒充 SAM2 输出。
 
-GUI_UNAVAILABLE_EXISTING_ENV
+不必显示 256 个 feature channels，不保存原始大特征张量。
 
-Do not install PyQt, Gradio, Streamlit, Flask, customtkinter, tkinterdnd or any other package.
+### Stage 6：Spatial Reasoning Fields
 
-Preferred GUI is strongly recommended if available.
+实际空间场计算完成后展示：
 
+- `P_dir`
+- `P_near`
+- `W`
+- `A`
 
-# 6. Required GUI workflow
+采用四宫格热力图，尽量叠加 Reference 边界。
 
-The main screen should contain at minimum:
+所有图标注其真实名称。
 
-- title:
-  BuildReasonSeg 建筑空间推理分割 Demo
+显示颜色映射范围与使用的显示归一化方式。
 
-- image path display
-- “选择图片” button
-- natural-language prompt text box
-- four example / quick-fill buttons
-- “开始分析” button
-- status/progress display
-- original-image preview
-- result-overlay preview
-- result summary
-- “查看 Mask”
-- “打开结果文件夹”
-- “重新选择图片” or equivalent
+不得修改原始数值；不得把显示归一化后的颜色当作原始概率。
 
-Optional:
-a small “查看使用说明” button.
+### Stage 7：Prototype & Similarity
 
+显示：
 
-# 7. User interaction semantics
+- q 已形成；
+- q 的维度；
+- C similarity heatmap；
+- 对应的 context 区域。
 
-Normal flow:
+q 不需要显示 128 个维度的数值。
 
-SELECT IMAGE
-→ ENTER PROMPT
-→ LANGUAGE PARSE
-→ USER CONFIRMATION
-→ INFERENCE
-→ RESULT
+C 只表示视觉相似度，不是目标正确概率。
 
-If Qwen directly produces one of the four supported programs:
+### Stage 8：D-B1 Segmentation
 
-show a user-facing interpretation such as:
+D-B1 计算完成后立即显示：
 
-系统理解：
-参考对象：最大建筑
-方向关系：上方
-目标关系：最近建筑
+- logits / probability heatmap；
+- 二值 Mask；
+- context 中的预测结果。
 
-Then ask:
+注意：若后续 structural guard 返回 E404，这里显示的是**未经最终结构验证的 D-B1 中间输出**。
 
-是否按此理解继续？
+必须明确标注：
 
-Only confirmation proceeds to inference.
+“D-B1 已生成候选 Mask，但尚未通过最终结构检查。”
 
-If initial parse is unsupported but existing Qwen suggestion returns
-a Validator-approved supported program:
+不得把它保存或称作已接受的最终目标分割结果。
 
-show:
+### Stage 9：Final Guard & Result
 
-原始指令未能直接映射到当前支持的四类任务。
+显示：
 
-系统建议理解为：
-“……”
+- guard 结果；
+- SUCCESS / E401 / E402 / E403 / E404；
+- 最终输出是否有效；
+- Overlay / Mask；
+- elapsed time。
 
-Then ask the user to accept or reject.
+不得声称已经通过 GT 或目标实例身份验证。
 
-Never auto-accept a suggestion.
+失败时，未执行的阶段保持“未执行”。
 
-If Qwen is unavailable or runtime fails:
+## 4. 真正的实时更新
 
-preserve the existing fallback contract.
+不是“推理结束后一次性展示”。
 
-Use a user-facing confirmation such as:
+要求每完成一个计算阶段，通过 observation-only StageEvent 推送结果：
 
-语言模型当前不可用。
-是否使用有限兼容模式继续？
+Scientific runtime → read-only observation → worker queue → Tkinter main thread → Trace UI。
 
-Do not silently enter fallback.
+事件可包含：
 
+- run ID；
+- stage ID；
+- stage state；
+- 时间与耗时；
+- 快照路径或只读数据副本；
+- 简要元数据；
+- 错误码。
 
-# 8. User-facing status text
+只能在 Tkinter 主线程更新界面。
 
-Do NOT expose false scientific success.
+严禁模型线程直接操作 Tk 控件。
 
-When runtime returns status SUCCESS, display wording equivalent to:
+事件顺序必须符合真实执行顺序，不得为了视觉效果伪造阶段完成事件。
 
-推理流程已完成。
-结果已生成，请结合原图人工核验目标是否正确。
+切换结果页与推理过程页，不得新增模型调用。
 
-Optionally show:
+## 5. 观测接口与科学隔离
 
-运行状态：流程完成
-语义正确性：未自动验证
+当前已验收 RC1 在成功后集中保存多数 diagnostics，失败时可能没有完整中间快照。
 
-Do NOT display:
+因此授权增加有限的**纯观测 Hook**，但只能在 Demo V2 自有的引擎副本中生效。
 
-识别正确
-分割正确
-AI 已成功找到正确建筑
+不得修改：
 
-unless ground truth exists, which this Demo does not use.
+- canonical `delivery_src/BuildReasonSeg_Advisor_RC1/**`；
+- 已存在的 `BuildReasonSeg_Advisor_RC1`；
+- 已存在的 `BuildReasonSeg_Demo_V1`；
+- Task 8C / 8D / 8E 证据。
 
+优先采用：
 
-# 9. Friendly progress states
+- 可选 observer 回调；
+- 阶段完成时对已有结果制作只读快照；
+- 快照异步转交 UI；
+- 观测代码不向科学计算传递任何修改后的输入。
 
-During execution show coarse user-facing states such as:
+禁止通过第二次检测、第二次 SAM2 或第二次 D-B1 前向调用来补充展示结果。
 
-正在理解指令……
-正在检测建筑……
-正在确定参考建筑……
-正在进行空间推理……
-正在生成分割结果……
+禁止重复实现科学算法。
 
-Do not invent precise progress percentages unless real progress is available.
+确有必要在 V2 的 pipeline/core/Db1Runtime 副本内增加观测边界时：
 
-The GUI must remain responsive during heavy inference.
+1. 必须局部且最小化；
+2. observer=None 时保持原执行路径；
+3. 不改变科学计算函数的数学表达和参数；
+4. 不改变模型前向次数；
+5. 不改变随机状态与权重；
+6. 不改变最终 Mask、Overlay 和 error code；
+7. 在报告中逐一列出与冻结源码不同的纯观测代码；
+8. 配套 fake/equivalence tests。
 
-Use a background worker/thread and communicate UI updates safely.
+任何改变数学结果的需求，立即 STOP。
 
-One Run button press must produce at most one inference attempt.
+不得暗中修改冻结算法。
 
-Disable duplicate Run actions while running.
+## 6. 失败时保存已经完成的阶段
 
+必须保证：
 
-# 10. Error handling
+- E401：保留语言阶段与 0 proposals 的检测记录；
+- E402：保留已有 proposals；
+- context guard 失败：保留 language、YOLO、Reference 与已有 context 信息；
+- E404：若已经完成 D-B1，保留真实 D-B1 中间 Mask、logits/probability 等已生成数据；
+- E502：保留崩溃之前实际成功完成的阶段，但不伪造后续阶段。
 
-Translate common RC1 failures into concise Chinese user messages.
+区分：
 
-Examples:
+- 已完成；
+- 进行中；
+- 失败；
+- 未执行；
+- 用户取消。
 
-unsupported image
-no buildings detected
-no valid reference
-reasoning-context limitation
-empty target mask
-language parse unsupported
-model/environment unavailable
+不得因最终失败清空前面阶段卡片。
 
-Retain the original error code in a secondary/detail field.
+Observation failure 也不能被静默记录成科学 inference SUCCESS。
 
-Do not hide the error.
+## 7. Trace 存储
 
-Do not automatically retry.
+为每次用户运行建立独立 Trace 记录。
 
+建议：
 
-# 11. Result presentation
+`results/<run_slug>/trace/`
 
-On runtime SUCCESS, show at minimum:
+包含：
 
-- original image
-- overlay
-- prompt
-- interpreted supported task
-- runtime status
-- elapsed time if available
+- `stage_events.jsonl`；
+- `trace_manifest.json`；
+- 需要的预览 PNG；
+- 简洁的阶段数据摘要。
 
-Provide buttons:
+与现有 `result_summary.json` 共存。
 
-查看 Mask
-打开结果文件夹
+只保存可视化需要的轻量文件，不复制多 GB 权重或大特征张量。
 
-The result UI should not require the user to navigate `_engine/inference/output` manually.
+Trace 文件应关联同一次真实运行的 engine run root。
 
+最终 FAIL 不得伪造 `mask.png` 或 `overlay.png`。
 
-# 12. Clean user result directory
+必须防止多次运行互相覆盖、跨 run 混入旧图、同名图碰撞。
 
-Create at Demo root:
+保留结果页原有的保存与打开结果文件夹功能。
 
-results/
+## 8. UI 与交互要求
 
-For each completed run create a clean user result directory, for example:
+采用独立平级页面：
 
-results/
-  20261007_183500_1008/
-    overlay.png
-    mask.png
-    result_summary.json
+`结果 | 推理过程`
 
-The exact collision-safe naming may differ but must be deterministic/collision-safe.
+过程页使用可以上下滚动的两列阶段卡片，依真实运行逐项更新。
 
-For successful runs copy ONLY user-facing artifacts from the frozen engine run:
+原有结果页：
 
-mask
-overlay
-a sanitized user summary JSON
+- 选择图片；
+- 输入指令；
+- 四个快捷示例；
+- 开始分析；
+- 原图与 Overlay；
+- 查看 Mask；
+- 打开结果文件夹；
 
-Do not mutate the engine artifacts.
+继续保留。
 
-Do not pretend the copied summary is the original scientific result.json.
+运行中允许切换页面，不能重复启动 inference。
 
-Suggested summary fields:
+一个用户点击对应最多一次实际推理。
 
-demo_version
-timestamp
-input_image
-prompt
-interpreted_program
-language_mode
-runtime_status
-validity_scope
-semantic_status
-elapsed_seconds
-mask_file
-overlay_file
-engine_run_root
+新的运行开始时创建新的 trace session；旧结果不应混入新结果。
 
-Failure runs may save a small failure summary but must not create fake mask/overlay.
+各阶段状态、图片和数据应来自同一 run ID。
 
+不得在主页面显示大量开发日志、traceback、隐藏权重路径。
 
-# 13. Internal engine layout
+必要时可以增加只读图像放大/查看功能，但不得影响模型选择或推理结果。
 
-The user-facing delivery root should stay clean.
+## 9. 展示图片要求
 
-Preferred:
+YOLO 使用：
 
-BuildReasonSeg_Demo_V1/
-├─ 启动BuildReasonSeg Demo.bat
-├─ BuildReasonSeg_Demo.py
-├─ 使用说明.md
-├─ 版本说明.txt
-├─ results/
-└─ _engine/
-   ├─ buildreasonseg/
-   ├─ configs/
-   ├─ model/
-   ├─ inference/
-   ├─ logs/
-   └─ other strictly required runtime files
+半透明实例 Mask + proposal 编号。
 
-The accepted RC1 engine may be copied/assembled inside `_engine`.
+Reference 使用醒目但不遮盖屋顶的高亮边界。
 
-Do NOT expose development handoff material.
+Context 显示原图位置及真实裁剪区域。
 
+P_dir、P_near、W、A 与 C 使用图例清楚的热力图。
 
-# 14. Explicitly forbidden in external user Demo
+D-B1 显示 probability 与 binary mask。
 
-The final external Demo package MUST NOT contain:
+所有图保持比例与坐标对应关系。
 
-handoff/
-governance/
-evaluation/
-.git/
-Git metadata
-Task8C reports
-Task8D reports
-Supervisor task books
-Codex executor states
-historical research diagnostics
-historical inference/output
-developer test suites
-research workspace source paths
-private temporary files
+图像 resize、上色、alpha blend 只能用于展示，不能回写模型数组。
 
-Also do not include development-only:
+对多个图像、图块、大尺寸输入需要限制预览占用，避免 GUI 内存无限增长。
 
-train.py
-evaluate.py
-prepare_dataset.py
+## 10. V2 外部交付
 
-unless static dependency analysis proves one is unexpectedly required by runtime.
+创建：
 
-They are not user Demo features.
+`C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V2`
 
+保留 V1 完整不变。
 
-# 15. Clean runtime state
+V2 应包含：
 
-The new Demo package must start with:
+- 双击启动器；
+- Tkinter 用户界面；
+- 结果与推理过程两个平级页面；
+- 独立引擎和模型资产；
+- `results/`；
+- 使用说明；
+- 版本说明；
+- 内部 runtime cache；
+- 完整 package manifest。
 
-empty results/
-clean internal inference/output/
-clean logs/
+不得包含：
 
-Do NOT copy the 1543+ historical RC1 outputs.
+- handoff；
+- governance；
+- evaluation；
+- tests；
+- Git 元数据；
+- 研究任务书；
+- 旧模型实验结果。
 
-Do NOT copy Task8C formal outputs.
+V2 继续支持已配置电脑上的文件夹整体迁移。
 
-Do NOT copy A1/A2/A3/A4/B1/B2 historical diagnostics.
+无需实现跨电脑免配置运行。
 
-The existing accepted:
+禁止安装新依赖，除非出现无法继续的阻塞并经过 Supervisor 重新授权。
 
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+## 11. 组装脚本与源码管理
 
-must remain byte-for-byte unchanged.
+基于当前 Task 8E 的用户 Demo 代码继续实现。
 
+新增或扩展：
 
-# 16. Model assets
+- 用户 UI 页面；
+- StageEvent 与只读 TraceAdapter；
+- 预览渲染工具；
+- V2 组装脚本；
+- 测试；
+- 用户使用说明；
+- 交付报告与证据。
 
-The new user Demo may copy the accepted model/runtime assets from:
+模型资产不进入 Git。
 
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1
+组装脚本必须能重复构建 V2，使用 staging + manifest/hash 校验。
 
-where needed.
+禁止仅通过手工复制文件完成交付。
 
-Copied model asset SHA256 must match the accepted RC1 identities.
+V2 中如存在经批准的纯观测引擎源码差异，必须明确标注其 provenance 和 SHA；不得仍声称所有源码均与 RC1 byte-identical。
 
-Do not use links/junctions/symlinks to the old RC1.
+## 12. 必须通过的测试
 
-The new Demo should own its required asset files.
+至少覆盖：
 
-This supports folder-level movability.
+1. 两个平级页面存在且能切换。
+2. 切换页面不触发 inference。
+3. Worker 单次运行不被重复启动。
+4. StageEvent 顺序正确。
+5. 同一 run 的事件不会串入其他 run。
+6. YOLO 原始候选与展示候选一致。
+7. 候选可视化不改变原 mask。
+8. Reference 高亮使用真实 selected proposal。
+9. Reference 不能被用户手动改写。
+10. Context 预览使用真实 origin/size/padding。
+11. P_dir/P_near/W/A/C 的显示不修改原数组。
+12. 真实运行阶段才可标记完成。
+13. 中间图像不能由额外模型推理产生。
+14. D-B1 Mask 与最终通过 guard 的 Mask 在状态上严格区分。
+15. E401、E402、E404 失败场景保留先前已完成阶段。
+16. 无产物时不伪造截图。
+17. 失败时没有虚假最终 Mask/Overlay。
+18. 结果页原有功能不退化。
+19. 语言 suggestion 仍需要用户确认。
+20. 快捷按钮不绕过 Qwen。
+21. 没有 reference override、threshold control、inspect mode。
+22. 观测 Hook 启用/关闭不改变科学输出与错误语义。
+23. 观测不增加 detector/SAM2/D-B1 forward count。
+24. V1 与 Advisor RC1 byte-identical。
+25. V2 的模型资产来自接受版本并通过 hash 校验。
+26. 旧 Task 8C/8D/8E 证据完全不变。
+27. V2 根目录无开发 handoff 与历史诊断。
+28. 实际 GUI 运行不会因为创建预览图而阻塞主线程。
+29. 完成与失败阶段的事件能持久化并重新打开。
+30. 显示 SUCCESS 时不会声称目标身份正确。
 
+测试优先使用 fake runtime 和固定模拟阶段输出。
 
-# 17. Folder portability goal
+不得使用已经冻结的 Task 8C 四个样例重新推理。
 
-Target:
+## 13. 真实推理 Smoke
 
-PATH_PORTABLE_ON_CONFIGURED_MACHINE
+先完成全部 fake tests、静态科学源差异审计和 V2 文件完整性门禁。
 
-Meaning:
+允许在确有必要时，选取一个非 Task 8C 的本地输入执行**最多一次**端到端真实 V2 smoke。
 
-- no code path may depend on the absolute location of BuildReasonSeg_Demo_V1;
-- all Demo/engine/model/result paths resolve relative to the Demo root;
-- the whole Demo folder may be moved to another directory on the same configured PC;
-- no path into the research workspace is required for scientific assets/source.
+不得尝试多图择优。
 
-Cross-machine zero-configuration portability is NOT required in V1 because Python/CUDA/runtime dependencies are not bundled.
+不得通过重跑或修改阈值救场。
 
-Record this distinction clearly:
+真实 smoke 只验证：
 
-folder/source/model portability:
-SUPPORTED
+- 阶段事件真实更新；
+- 页面切换；
+- 真实快照；
+- 正确保留失败；
+- 无新增模型调用；
+- 最终结果与 Trace 属于同一次执行。
 
-runtime environment portability:
-NOT_BUNDLED_V1
+不将其计入正式研究评价，也不据此声称模型效果提升。
 
+如果没有合适输入或存在安全阻塞，可推迟给用户自行测试，并在报告中明确披露。
 
-# 18. Python runtime discovery
+## 14. 交付说明
 
-Do not bundle or copy the existing conda environment in this task.
+更新 V2 用户使用说明，说明：
 
-The launcher should discover Python in this order or an equivalent deterministic order:
+1. 如何双击启动。
+2. 如何进入“结果”页。
+3. 如何进入“推理过程”页。
+4. 如何在运行中切换。
+5. 每个阶段代表什么。
+6. 如何查看 YOLO proposals。
+7. 如何查看自动 Reference。
+8. 如何查看空间热力图。
+9. 如何查看 D-B1 分割图。
+10. E401/E404 时前面阶段为何仍可查看。
+11. Trace 展示只是模型中间状态，不是 GT 验证。
+12. 如何找到结果文件夹和 Trace 文件。
 
-1. environment variable BUILDREASONSEG_PYTHON if set;
-2. optional `<demo_root>\runtime\python.exe` if it exists in the future;
-3. the currently validated BuildReasonSeg Python environment on this PC;
-4. compatible `python` on PATH.
+## 15. Git 与执行安全
 
-Before launch, perform a lightweight import/version check for the required runtime.
+首先读取：
 
-At minimum verify:
+1. `AGENTS.md`
+2. `governance/PROJECT_STATE.yaml`
+3. `governance/DECISIONS.md`
+4. `handoff/CURRENT_TASK.md`
+5. `handoff/EXECUTOR_STATE.yaml`
 
-Python
-torch
-ultralytics == accepted frozen version
-transformers
-numpy
-Pillow
-opencv
-scipy
+然后 fetch 并验证 accepted predecessor HEAD。
 
-If no compatible runtime is found:
+任何 branch、HEAD 或未知改动冲突：inspect 后 STOP。
 
-show a clear Chinese message and STOP.
+新建：
 
-No installation.
+`delivery/task8f-user-demo-live-trace-v1`
 
+禁止 reset --hard、rebase、amend、stash、clean、force push。
 
-# 19. Offline/cache isolation
+阶段性 commit/push：
 
-The launcher/app must create writable cache directories relative to the Demo root or TEMP and explicitly configure:
+1. Trace/UI 设计与 fake tests。
+2. 只读 observer 实现与科学等价性验证。
+3. V2 打包、完整性、页面验收。
+4. 最终证据与交付报告。
 
-YOLO_CONFIG_DIR
-MPLCONFIGDIR
-HF_HUB_OFFLINE=1
-TRANSFORMERS_OFFLINE=1
-PYTHONDONTWRITEBYTECODE=1
-PYTHONUTF8=1
-PYTHONIOENCODING=utf-8
+不得为了继续执行而隐藏失败测试或破坏已有用户数据。
 
-Do not allow Ultralytics to create a new settings file in the Demo root unexpectedly.
+## 16. 最终报告与验收
 
-Prefer:
+建立：
 
-<demo_root>\_runtime_cache\yolo
-<demo_root>\_runtime_cache\matplotlib
+`docs/task8f_user_demo_live_trace_v1.md`
 
-or an equivalent private cache subtree.
+以及：
 
-The cache subtree is runtime-generated and not a scientific artifact.
+`evaluation/task8f_user_demo_live_trace_v1.json`
 
+记录：
 
-# 20. Assembly reproducibility
+- V2 路径、包大小和 manifest；
+- 页面结构；
+- 九阶段事件与图像；
+- 只读观测 Hook 的精确源码差异；
+- 观测与算法输出等价性测试；
+- 失败留存测试；
+- 有无真实 smoke；
+- 运行时版本和路径迁移；
+- 原 V1、Advisor RC1、Task 8C/8D/8E 完整性；
+- 已知限制。
 
-In the research repository create an assembly/build script, for example:
+最终状态：
 
-scripts/build_task8e_user_demo.py
+`CURRENT_TASK = READY_FOR_SUPERVISOR_AUDIT`
 
-It must:
+`EXECUTOR_STATE = READY_FOR_SUPERVISOR_AUDIT`
 
-- construct the new package from accepted source/assets;
-- create clean runtime directories;
-- reject forbidden development content;
-- verify copied asset hashes;
-- emit a package manifest;
-- never modify the source RC1.
+`next_gate = CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT`
 
-Do not manually assemble an undocumented external folder only.
+Commit + push，随后 STOP。
 
+不得自行开始算法修复或新架构实验。
 
-# 21. Repository-side source
+## 17. 最终交付摘要
 
-Keep user-Demo source in a clear authorized repository location, for example:
+Codex 必须说明：
 
-demo/user_demo_v1/
-
-or another concise equivalent.
-
-It should contain:
-
-GUI/launcher source
-user README template
-version metadata
-
-Do not copy multi-GB model assets into Git.
-
-The assembly script copies heavy assets only into the external package.
-
-
-# 22. User documentation
-
-External root must contain:
-
-使用说明.md
-
-Written for a non-developer.
-
-Required sections:
-
-1. Demo 是做什么的
-2. 当前支持什么类型的图片
-3. 当前支持的四类指令
-4. 如何启动
-5. 如何选择图片
-6. 如何输入指令
-7. 如何确认系统理解
-8. 如何查看结果
-9. Mask 和 Overlay 分别是什么
-10. results 文件夹在哪里
-11. 常见错误及处理
-12. 当前能力边界
-13. “流程完成”不等于“语义结果一定正确”
-14. 如何关闭程序
-
-Do not discuss Task IDs, governance, handoff, Codex or Supervisor in user docs.
-
-
-# 23. Version file
-
-External:
-
-版本说明.txt
-
-Keep it short.
-
-Example content:
-
-BuildReasonSeg Demo V1
-User-facing local demonstration package
-
-Core:
-BuildReasonSeg Advisor RC1
-
-Supported task:
-largest building → direction → nearest building
-
-Supported directions:
-left / right / above / below
-
-Runtime semantic result:
-not automatically ground-truth validated
-
-
-# 24. Demo UI must not disclose developer clutter by default
-
-Do not dump:
-
-raw proposals
-full Python traceback
-maps.npz
-C/W/A internals
-Qwen top5
-checkpoint SHA
-Git SHA
-Task IDs
-
-into the main UI.
-
-A concise expandable technical error detail may show:
-
-error code
-short detail
-
-Raw engine logs stay internal.
-
-
-# 25. User-facing image handling
-
-Use the same accepted image contract as RC1.
-
-File picker filter:
-
-PNG
-JPG/JPEG
-TIF/TIFF
-
-Do not add new image-format support.
-
-Preview resizing is presentation-only and must preserve aspect ratio.
-
-Never modify the original user image.
-
-
-# 26. Core call contract
-
-Prefer importing/reusing the existing accepted runtime rather than shell-parsing CLI stdout.
-
-UI-specific orchestration may wrap:
-
-ProgramHeadRuntime
-Validator
-existing suggestion flow
-PredictRuntime
-PipelineRequest
-predict_one
-
-but must not duplicate/rewrite scientific algorithms.
-
-If CLI helper functions are safely reusable, reuse them.
-
-Any UI implementation of language confirmation/suggestion must preserve the same decision semantics:
-
-direct supported → user confirmation
-unsupported → Qwen suggestion → Validator → user confirmation
-fallback → explicit user confirmation
-
-No automatic Y.
-
-
-# 27. Thread/process safety
-
-The GUI must not freeze while heavy inference runs.
-
-Use exactly one background worker for one inference request.
-
-No parallel model runs.
-
-Prevent double-click duplicate requests.
-
-Do not terminate a live inference by destructive process kill.
-
-On application close during inference:
-
-either disable close until safe
-or show a warning that current inference should finish.
-
-Choose a conservative implementation.
-
-
-# 28. Testing
-
-Create repository tests for the user Demo.
-
-At minimum verify:
-
-- no handoff/governance/evaluation/test artifacts enter external package;
-- assembly never modifies accepted RC1;
-- heavy model assets are copied byte-identically;
-- no absolute Demo-root dependency;
-- runtime Python discovery deterministic;
-- unsupported runtime produces friendly failure;
-- four quick-fill examples only populate text;
-- quick-fill does not bypass Qwen;
-- user confirmation required before inference;
-- Qwen suggestion confirmation required;
-- fallback confirmation required;
-- no reference-id;
-- no inspect-proposals;
-- no threshold/ranking/model UI;
-- one click → at most one inference;
-- duplicate Run disabled while busy;
-- SUCCESS wording does not claim semantic correctness;
-- failure creates no fake mask;
-- results copy does not modify engine artifacts;
-- clean package starts with empty results/output/logs;
-- image preview is display-only;
-- user docs contain no Task/Codex/Supervisor/handoff language.
-
-Use mocks/fakes for GUI/backend tests where appropriate.
-
-Tests must not perform model inference unless explicitly authorized below.
-
-
-# 29. Real inference during Task8E
-
-Do NOT rerun any Task8C locked Final Demo sample.
-
-Do NOT use:
-
-1003.tif
-1008.tif
-1009.tif
-1010.tif
-
-for Task8E smoke.
-
-A real model inference is NOT required for the initial package build if UI/backend integration can be validated safely with mocks plus accepted RC1 runtime evidence.
-
-If a real package smoke is genuinely needed:
-
-select one deterministic NON-Task8C image already available locally;
-record why it was selected;
-perform at most ONE inference;
-do not tune/retry;
-do not use the outcome as scientific evidence.
-
-If no suitable safe sample exists:
-skip real inference and record:
-REAL_MODEL_SMOKE_DEFERRED_TO_USER_ACCEPTANCE_TEST
-
-Do not create a new research claim.
-
-
-# 30. Folder-move smoke
-
-Because source/model path portability is desired:
-
-the package must not contain hardcoded Demo-root paths.
-
-Perform a practical path-portability test if it can be done without duplicating all model bytes again.
-
-Acceptable examples:
-
-- assemble under a staging folder then rename/move the whole package to final destination and run self-check;
-- or build at a temporary delivery name, verify, rename to final, verify again.
-
-Do not use symlinks/junctions.
-
-Success criterion:
-
-the final application resolves `_engine`, models and results from its own location.
-
-Do not claim cross-PC portability.
-
-
-# 31. Self-check
-
-Provide a user-accessible but simple self-check mechanism.
-
-Could be:
-
-“环境检查” button
-
-or:
-
-BuildReasonSeg_Demo.py --self-check
-
-It should return user-facing:
-
-环境检查：通过
-
-or a clear failure explanation.
-
-It must not require development files.
-
-
-# 32. External delivery acceptance
-
-At final external path verify:
-
-- launcher exists
-- app starts
-- user documentation exists
-- no forbidden developer directories/files
-- model assets verify
-- clean results initially
-- clean engine output initially
-- cache dirs private
-- source paths relative
-- existing Advisor_RC1 unchanged
-- no Task8C/Task8D artifact modified
-
-
-# 33. Required repository report
-
-Create:
-
-docs/task8e_user_demo_delivery_v1.md
-
-This is a developer/audit report in the repository only.
-
-It must NOT be copied into the user Demo.
-
-Include:
-
-scope
-package tree
-GUI/console choice
-runtime discovery
-portability status
-asset provenance
-tests
-external package manifest
-forbidden-content audit
-existing RC1 preservation
-known limitations
-exact user workflow
-final external path
-
-
-# 34. Evidence JSON
-
-Create:
-
-evaluation/task8e_user_demo_delivery_v1.json
-
-Include:
-
-task_id
-status
-accepted_predecessor
-branch/head
-external_demo_path
-gui_mode
-python_runtime_discovery
-package_manifest
-model_asset_identity
-source_asset_identity
-forbidden_content_audit
-portability_result
-tests
-real_model_smoke
-advisor_rc1_unchanged
-task8c_unchanged
-task8d_unchanged
-user_docs
-user_workflow
-known_limitations
-
-
-# 35. Allowed repository changes
-
-Only user-demo related files, for example:
-
-demo/user_demo_v1/**
-scripts/build_task8e_user_demo.py
-tests/test_task8e_user_demo.py
-docs/task8e_user_demo_delivery_v1.md
-evaluation/task8e_user_demo_delivery_v1.json
-handoff/CURRENT_TASK.md
-handoff/EXECUTOR_STATE.yaml
-
-No product scientific source changes.
-No governance changes.
-
-
-# 36. External writes
-
-Authorized:
-
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1\**
-
-and a temporary sibling staging folder used solely for package assembly.
-
-Forbidden:
-
-modifying
-C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\**
-
-except read-only access.
-
-Do not delete any pre-existing delivery.
-
-
-# 37. Completion state
-
-On success:
-
-CURRENT_TASK Status:
-READY_FOR_SUPERVISOR_AUDIT
-
-EXECUTOR_STATE status:
-READY_FOR_SUPERVISOR_AUDIT
-
-next_gate:
-CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
-
-Commit + push repository evidence.
-
-Then STOP.
-
-Do not start Task8F or scientific repair.
-
-
-# 38. Final executor summary
-
-Report:
-
-- exact external Demo path;
-- GUI or console mode;
-- whether folder is movable on the configured machine;
-- what remains machine-specific;
-- exact startup action;
-- exact six-step user workflow;
-- where results appear;
-- how semantic uncertainty is communicated;
-- package size;
-- tests;
-- whether real model smoke was performed;
-- confirmation that old Advisor_RC1 and Task8C/8D evidence are unchanged.
-
-## Executor completion checkpoint
-
-Status: READY_FOR_SUPERVISOR_AUDIT
-External Demo: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V1
-GUI: Tkinter; 57 dedicated fake/API/GUI tests PASS; no dependency installation.
-80/80 package hashes, staged folder move, final environment/API/GUI startup, clean runtime state and forbidden-content checks PASS.
-Old RC1 all2184 files, 135/135 Git-canonical source/config, Task8C/8D and frozen governance unchanged.
-Real model smoke: REAL_MODEL_SMOKE_DEFERRED_TO_USER_ACCEPTANCE_TEST; inference calls = 0.
-Next gate: CHATGPT_TASK8E_USER_DEMO_REMOTE_AND_LOCAL_DELIVERY_AUDIT
-Next action: STOP; await Supervisor remote/local delivery audit; no scientific repair or Task8F.
+- V2 最终所在路径；
+- 启动方式；
+- 两页切换方式；
+- 是否实现真实逐阶段更新；
+- E401/E404 如何呈现；
+- Trace 保存位置；
+- 新增的只读观测 Hook 是否改变科学计算；
+- 所有测试结果；
+- 原 V1 是否保留；
+- 是否完成真实模型 smoke；
+- 有哪些仍需用户手动验收的功能。
