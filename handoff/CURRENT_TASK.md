@@ -574,9 +574,13 @@ Codex 必须说明：
 - 有哪些仍需用户手动验收的功能。
 
 
-## Executor checkpoint
+## Executor completion checkpoint
 
-Status: IN_PROGRESS
-Current step: V2_PACKAGE_INTEGRITY_AND_NATIVE_GUI_PASS
+Status: READY_FOR_SUPERVISOR_AUDIT
+Current step: DELIVERY_COMPLETE_AWAITING_SUPERVISOR_AUDIT
 Next gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
-V2 final delivery assembled and verified. Real model smoke deferred.
+Final delivery: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V2
+Current fake tests56/56, V1 regression57/57, source135/135, manifest84/84.
+Real model smoke DEFERRED_TO_USER_ACCEPTANCE; real model calls0.
+Existing RC1/V1, protected assets, canonical/governance and Task8C/D/E evidence unchanged.
+Commit and push final report/evidence, then STOP. Supervisor acceptance pending.

@@ -1,9 +1,9 @@
 schema_version: 1
 task_id: TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: delivery/task8f-user-demo-live-trace-v1
-head: 2880bbdb9ac80ea14c6ebe48379e27c43c76fbcf
+head: 8163266a60b6c41c57a824671dee704a2ea538c2
 accepted_predecessor: TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT
 completed:
 - Startup read order, remote exact HEAD and clean working tree verified; required
@@ -31,9 +31,12 @@ completed:
   canonical helper135/135 PASS.
 - Final old RC12184/V1295/locked repository175 identities PASS; only one new V2 private
   cache config, no user/engine run/log files.
-current_step: V2_PACKAGE_INTEGRITY_AND_NATIVE_GUI_PASS
-next_action: Persist final delivery report/evidence; READY_FOR_SUPERVISOR_AUDIT commit
-  and push, then STOP.
+- Default Tcl/Tk startup without test-only environment overrides PASS.
+- Final delivery report, source diffs/SHA,30-item coverage, all test history, visual
+  artifacts and smoke deferral disclosed.
+current_step: DELIVERY_COMPLETE_AWAITING_SUPERVISOR_AUDIT
+next_action: STOP. Await CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT; no algorithm repair
+  or new experiment.
 tests_run:
 - suite: tests/test_task8f_user_demo_live_trace.py
   result: 36 passed in3.34s
@@ -44,13 +47,39 @@ tests_run:
 - suite: tests/test_task8f_user_demo_live_trace.py
   result: 56 passed in12.58s strict warnings-as-error
   exit_code: 0
-uncommitted_changes: true
+uncommitted_changes: false
 blocked_on_supervisor: false
 last_checkpoint:
-  commit: 2880bbdb9ac80ea14c6ebe48379e27c43c76fbcf
+  commit: 8163266a60b6c41c57a824671dee704a2ea538c2
   pushed: true
 next_gate: CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT
 model_inference_calls: 0
 no_scientific_contract_change: true
 no_canonical_change: true
 no_governance_change: true
+external_demo_path: C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V2
+real_model_smoke: DEFERRED_TO_USER_ACCEPTANCE
+no_existing_delivery_change: true
+no_task8c_8d_8e_evidence_change: true
+acceptance_summary:
+  two_peer_pages: PASS
+  shared_worker_same_run: PASS
+  live_callbacks_async_preview: PASS_STATIC_FAKE_NATIVE_UI
+  scientific_ast_disabled_enabled: PASS
+  fixed_cpu_scientific_output_error_count_rng_equivalence: PASS
+  dedicated_fake_tests: 56/56 PASS
+  v1_regression: 57/57 PASS
+  canonical_source_config: 135/135 PASS
+  v2_manifest_full_hash: 84/84 PASS
+  model_assets: 16 accepted hashes PASS
+  native_gui_environment: PASS
+  native_default_tcl_startup: PASS
+  native_launcher_probe_bom_quoting: PASS_DISPATCH_INTERCEPTED
+  relocated_runtime_assets: PASS
+  legacy_rc1_v1_locked_evidence: UNCHANGED
+  real_model_smoke: DEFERRED_TO_USER_ACCEPTANCE
+  no_locked_candidate_reuse: true
+  model_inference_calls: 0
+  no_scientific_change: true
+  no_governance_change: true
+  supervisor_acceptance: PENDING

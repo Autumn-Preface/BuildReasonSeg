@@ -1,10 +1,10 @@
 {
   "task_id": "TASK8F_USER_DEMO_LIVE_PIPELINE_TRACE_V1",
-  "status": "IN_PROGRESS",
+  "status": "READY_FOR_SUPERVISOR_AUDIT",
   "accepted_predecessor": "TASK8E_USER_FACING_DEMO_PACKAGE_V1 = ACCEPT",
   "accepted_predecessor_head": "93f66bc9a4fcb7b7ce5699f1c1afe412d18c43d4",
   "branch": "delivery/task8f-user-demo-live-trace-v1",
-  "head": "2880bbdb9ac80ea14c6ebe48379e27c43c76fbcf",
+  "head": "8163266a60b6c41c57a824671dee704a2ea538c2",
   "external_demo_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2",
   "staging_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2_task8f_staging_v1",
   "next_gate": "CHATGPT_TASK8F_USER_DEMO_LIVE_TRACE_AUDIT",
@@ -18583,5 +18583,96 @@
     "all_runtime_assets_under_relocated_engine": true,
     "model_calls": 0
   },
-  "integrity_reuses_existing_test_results": true
+  "integrity_reuses_existing_test_results": true,
+  "default_tcl_startup": {
+    "pass": true,
+    "tcl_env_overrides_absent": true,
+    "tcl_actual_library": "C:/D/DeepSeekHarness/workspace/project/BuildReasonSeg/.conda/buildreasonseg-mvp/Library/lib/tcl8.6",
+    "gui_ready": true,
+    "model_calls": 0,
+    "no_input_or_analyze_action": true
+  },
+  "final_acceptance": {
+    "two_peer_pages": "PASS",
+    "shared_worker_same_run": "PASS",
+    "live_callbacks_async_preview": "PASS_STATIC_FAKE_NATIVE_UI",
+    "scientific_ast_disabled_enabled": "PASS",
+    "fixed_cpu_scientific_output_error_count_rng_equivalence": "PASS",
+    "dedicated_fake_tests": "56/56 PASS",
+    "v1_regression": "57/57 PASS",
+    "canonical_source_config": "135/135 PASS",
+    "v2_manifest_full_hash": "84/84 PASS",
+    "model_assets": "16 accepted hashes PASS",
+    "native_gui_environment": "PASS",
+    "native_default_tcl_startup": "PASS",
+    "native_launcher_probe_bom_quoting": "PASS_DISPATCH_INTERCEPTED",
+    "relocated_runtime_assets": "PASS",
+    "legacy_rc1_v1_locked_evidence": "UNCHANGED",
+    "real_model_smoke": "DEFERRED_TO_USER_ACCEPTANCE",
+    "no_locked_candidate_reuse": true,
+    "model_inference_calls": 0,
+    "no_scientific_change": true,
+    "no_governance_change": true,
+    "supervisor_acceptance": "PENDING"
+  },
+  "checkpoint_history": [
+    {
+      "commit": "f4b36a3a3ef2f3861214b65e17394c5f284444b1",
+      "scope": "accepted baseline/scope",
+      "pushed": true
+    },
+    {
+      "commit": "5c3e74732364b437c1c32b32a145ee56b22e2c0a",
+      "scope": "Trace/UI36 fake PASS",
+      "pushed": true
+    },
+    {
+      "commit": "2880bbdb9ac80ea14c6ebe48379e27c43c76fbcf",
+      "scope": "observation equivalence53 fake PASS",
+      "pushed": true
+    },
+    {
+      "commit": "8163266a60b6c41c57a824671dee704a2ea538c2",
+      "scope": "V2 package/native/integrity56 fake PASS",
+      "pushed": true
+    }
+  ],
+  "final_checkpoint_sha_note": "head/last checkpoint are actual preceding package checkpoint observations; obtain final task HEAD from Git after push, never fabricate self-referential SHA.",
+  "visual_artifact_identities": [
+    {
+      "path": "docs/task8f_fake_candidate_failure.png",
+      "bytes": 81208,
+      "sha256": "c8c8068980f9253e0871ae2e94b7ef8b3ef6548c7c54efe329f22803b6a59f8f"
+    },
+    {
+      "path": "docs/task8f_fake_fields_similarity.png",
+      "bytes": 71991,
+      "sha256": "0258807a680de01550998ad5831dc989fce96357b70a77bca347620ea8a95597"
+    },
+    {
+      "path": "docs/task8f_fake_proposals_context.png",
+      "bytes": 47463,
+      "sha256": "0dfad18401362e2d8be2221349fc4222785cd8357a4fcc5d82f29403ba27e8dc"
+    },
+    {
+      "path": "docs/task8f_final_results.png",
+      "bytes": 37562,
+      "sha256": "8480b03fa40e7e2da74382192f7b7d9ef0bc75d762b51c535e1f5601e6ae5fb3"
+    },
+    {
+      "path": "docs/task8f_final_trace.png",
+      "bytes": 42656,
+      "sha256": "b188393ff0027e6dfbb6b2c9fe5753e7c06cce70c5a3f85047d4bedf8f26036b"
+    },
+    {
+      "path": "docs/task8f_staging_results.png",
+      "bytes": 37562,
+      "sha256": "8480b03fa40e7e2da74382192f7b7d9ef0bc75d762b51c535e1f5601e6ae5fb3"
+    },
+    {
+      "path": "docs/task8f_staging_trace.png",
+      "bytes": 42656,
+      "sha256": "b188393ff0027e6dfbb6b2c9fe5753e7c06cce70c5a3f85047d4bedf8f26036b"
+    }
+  ]
 }
