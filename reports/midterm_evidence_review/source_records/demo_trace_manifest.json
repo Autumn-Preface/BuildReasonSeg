@@ -1,0 +1,912 @@
+{
+  "schema": "USER_DEMO_TRACE_V1",
+  "run_id": "20261012_155017_1034",
+  "status": "FROZEN",
+  "runtime_status": "SUCCESS",
+  "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+  "semantic_status": "NOT_EVALUATED",
+  "engine_run_root": "_engine/inference/output/1034",
+  "stages": {
+    "1": {
+      "name": "语言理解",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 6,
+        "stage_id": 1,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:49.077215+00:00",
+        "elapsed_seconds": 31.99,
+        "metadata": {
+          "original_prompt": "找到最大建筑左侧的最近的建筑",
+          "qwen_available": true,
+          "confidence_scope": "模型评分，不是语义正确率",
+          "initial_program": "largest_to_left_of",
+          "initial_supported": false,
+          "initial_has_nearest": false,
+          "confidence": 0.9981189370155334,
+          "language_mode": "qwen",
+          "suggestion": {
+            "status": "SUGGESTION",
+            "program": "largest_to_left_of_to_nearest",
+            "display_command": "最大建筑左侧最近的建筑",
+            "reason": "用户指令明确要求找到最大建筑左侧的最近建筑，而系统当前支持的程序中，'largest_to_left_of_to_nearest' 正是该操作的完整表达，且与用户意图完全一致。",
+            "raw": "{\"status\": \"SUGGESTION\", \"program\": \"largest_to_left_of_to_nearest\", \"display_command\": \"最大建筑左侧最近的建筑\", \"reason\": \"用户指令明确要求找到最大建筑左侧的最近建筑，而系统当前支持的程序中，'largest_to_left_of_to_nearest' 正是该操作的完整表达，且与用户意图完全一致。\"}",
+            "invoked": true
+          },
+          "suggested_program": "largest_to_left_of_to_nearest",
+          "suggestion_validator_pass": true,
+          "user_confirmation": "Y",
+          "confirmation_kind": "suggestion",
+          "final_program": "largest_to_left_of_to_nearest",
+          "display": {},
+          "render_completed_at": "2026-10-12T07:50:49.078675+00:00"
+        },
+        "previews": [],
+        "error_code": null
+      }
+    },
+    "2": {
+      "name": "YOLO proposals",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 8,
+        "stage_id": 2,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:50.138742+00:00",
+        "elapsed_seconds": 33.052,
+        "metadata": {
+          "raw_count": 16,
+          "merged_count": 14,
+          "detector_seconds": 1.059,
+          "proposal_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "display": {
+            "displayed_proposal_ids": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ]
+          },
+          "array_snapshot_identities": {
+            "rgb": {
+              "shape": [
+                512,
+                512,
+                3
+              ],
+              "dtype": "uint8",
+              "sha256": "b25327ea68842001dbabc13c845fd28e64741c9a24fe3f304fe18912397dcbb4",
+              "raw_min": 0.0,
+              "raw_max": 255.0
+            },
+            "proposals": [
+              {
+                "proposal_id": 0,
+                "bbox": [
+                  0,
+                  209,
+                  5,
+                  220
+                ],
+                "mask_crop": {
+                  "shape": [
+                    6,
+                    12
+                  ],
+                  "dtype": "bool",
+                  "sha256": "e9f4254a5b7da3ce62c48604146bdfd2ebd4eb588c2269100b90b2ae57904849",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 1,
+                "bbox": [
+                  1,
+                  225,
+                  10,
+                  265
+                ],
+                "mask_crop": {
+                  "shape": [
+                    10,
+                    41
+                  ],
+                  "dtype": "bool",
+                  "sha256": "4f2a644ef1de19571f1ad6400c0e4b2568a0ea246d799e43a5f1184753d22aa0",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 2,
+                "bbox": [
+                  1,
+                  46,
+                  12,
+                  73
+                ],
+                "mask_crop": {
+                  "shape": [
+                    12,
+                    28
+                  ],
+                  "dtype": "bool",
+                  "sha256": "5a23d02deea0ebb23d65b37127a3ed8ea11349cfc035e592aad227e48d5acbb8",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 3,
+                "bbox": [
+                  3,
+                  194,
+                  34,
+                  211
+                ],
+                "mask_crop": {
+                  "shape": [
+                    32,
+                    18
+                  ],
+                  "dtype": "bool",
+                  "sha256": "535329ae508aee31bcb3969dd97f07b7a1f02928c73912d343874b9c0763b446",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 4,
+                "bbox": [
+                  41,
+                  439,
+                  88,
+                  511
+                ],
+                "mask_crop": {
+                  "shape": [
+                    48,
+                    73
+                  ],
+                  "dtype": "bool",
+                  "sha256": "7d940062f3e654d1c8fcb7720d47c21e3163f06d6af2c48a611687ec76184624",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 5,
+                "bbox": [
+                  42,
+                  148,
+                  89,
+                  206
+                ],
+                "mask_crop": {
+                  "shape": [
+                    48,
+                    59
+                  ],
+                  "dtype": "bool",
+                  "sha256": "1c4652d3977d3c257792c1596bba98bb9ccb353403c4b8b246d5c4f6df9071ad",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 6,
+                "bbox": [
+                  117,
+                  52,
+                  170,
+                  103
+                ],
+                "mask_crop": {
+                  "shape": [
+                    54,
+                    52
+                  ],
+                  "dtype": "bool",
+                  "sha256": "2f8ff26c079ca3b20deeabcf41d1e8c8c75a11f16a815ec6a3867bb0cf69f967",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 7,
+                "bbox": [
+                  171,
+                  349,
+                  194,
+                  410
+                ],
+                "mask_crop": {
+                  "shape": [
+                    24,
+                    62
+                  ],
+                  "dtype": "bool",
+                  "sha256": "bc37b09062e4a6801e10abe36945ec81de3ac51588e13623d215cfb81426b726",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 8,
+                "bbox": [
+                  171,
+                  254,
+                  207,
+                  318
+                ],
+                "mask_crop": {
+                  "shape": [
+                    37,
+                    65
+                  ],
+                  "dtype": "bool",
+                  "sha256": "1c6ddcc518aa8421600a17ee08ce4202507e84782f9db758507dcdca90f6fa75",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 9,
+                "bbox": [
+                  173,
+                  339,
+                  217,
+                  417
+                ],
+                "mask_crop": {
+                  "shape": [
+                    45,
+                    79
+                  ],
+                  "dtype": "bool",
+                  "sha256": "5c938aabae4e32a40442775181d5ebe9322415dd3e6242024c933dfe1302b71f",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 10,
+                "bbox": [
+                  230,
+                  334,
+                  241,
+                  361
+                ],
+                "mask_crop": {
+                  "shape": [
+                    12,
+                    28
+                  ],
+                  "dtype": "bool",
+                  "sha256": "10e0ff1e955b8104e3c02a34b054379dd0d87c67ffc6499487d6b02590dac539",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 11,
+                "bbox": [
+                  238,
+                  249,
+                  281,
+                  315
+                ],
+                "mask_crop": {
+                  "shape": [
+                    44,
+                    67
+                  ],
+                  "dtype": "bool",
+                  "sha256": "436abb155ad76b6e61cd5c1f61521aded565d80993dc782bcf190682ce40d1a6",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 12,
+                "bbox": [
+                  245,
+                  333,
+                  287,
+                  398
+                ],
+                "mask_crop": {
+                  "shape": [
+                    43,
+                    66
+                  ],
+                  "dtype": "bool",
+                  "sha256": "3be86b66cd378a01f84861100e61a104eac87e5ddbe5a894a6f0c3ae551e46d6",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 13,
+                "bbox": [
+                  283,
+                  447,
+                  329,
+                  511
+                ],
+                "mask_crop": {
+                  "shape": [
+                    47,
+                    65
+                  ],
+                  "dtype": "bool",
+                  "sha256": "22bd967d18ab2cf3fe812500ce5ba27b58563924c073b8d0cb474b04aa829062",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              }
+            ]
+          },
+          "render_completed_at": "2026-10-12T07:50:50.180949+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_02_event_008_1.png",
+            "bytes": 331249,
+            "sha256": "e74350bef82b7799a3f3cdd92fa05480cfbaf1d226e8c60683c7926d7edfed27"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "3": {
+      "name": "Automatic Reference",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 10,
+        "stage_id": 3,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:50.138742+00:00",
+        "elapsed_seconds": 33.052,
+        "metadata": {
+          "selected_id": 9,
+          "mask_area": 3297,
+          "confidence": 0.7130877375602722,
+          "bbox": [
+            173,
+            339,
+            217,
+            417
+          ],
+          "mode": "automatic",
+          "display": {
+            "highlighted_reference_id": 9
+          },
+          "array_snapshot_identities": {
+            "reference_mask_crop": {
+              "shape": [
+                45,
+                79
+              ],
+              "dtype": "bool",
+              "sha256": "5c938aabae4e32a40442775181d5ebe9322415dd3e6242024c933dfe1302b71f",
+              "raw_min": 0.0,
+              "raw_max": 1.0
+            }
+          },
+          "render_completed_at": "2026-10-12T07:50:50.207602+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_03_event_010_1.png",
+            "bytes": 328769,
+            "sha256": "55a60b19174fc7ba6c989682c200b1922a17c54d191afb8eda9ed0c6495db69d"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "4": {
+      "name": "Reasoning Context",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 13,
+        "stage_id": 4,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:50.185203+00:00",
+        "elapsed_seconds": 33.1,
+        "metadata": {
+          "direction": "left_of",
+          "context": {
+            "origin": [
+              20,
+              -62
+            ],
+            "size": 512,
+            "direction": "left_of",
+            "anchor_in_context": [
+              358,
+              256
+            ],
+            "reference_centroid_global": [
+              194.37003336366394,
+              378.0078859569305
+            ],
+            "padding": {
+              "top": 62,
+              "bottom": 0,
+              "left": 0,
+              "right": 20,
+              "origin_top": -62,
+              "origin_left": 20,
+              "mode": "reflect",
+              "applied": true
+            },
+            "reference_too_large": false,
+            "notes": []
+          },
+          "reference_pixels": 3297,
+          "display": {},
+          "array_snapshot_identities": {
+            "context_rgb": {
+              "shape": [
+                512,
+                512,
+                3
+              ],
+              "dtype": "uint8",
+              "sha256": "4328aa084114eada82e89201fda12f8584e32567a95a12f6e490f65d49822528",
+              "raw_min": 0.0,
+              "raw_max": 255.0
+            },
+            "reference_mask": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "bool",
+              "sha256": "c4eeb1d0ffb55f8bac4bf21674c6bde056bf7c23a5256488f115b2bc8ec329a7",
+              "raw_min": 0.0,
+              "raw_max": 1.0
+            }
+          },
+          "render_completed_at": "2026-10-12T07:50:50.329478+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_04_event_013_1.png",
+            "bytes": 328562,
+            "sha256": "a74c5b1198641881cdb3e6d784ba965357c2df6a354975100443b4ad224a00e6"
+          },
+          {
+            "path": "stage_04_event_013_2.png",
+            "bytes": 331645,
+            "sha256": "7852d330e38297f9eb1a8d50d4c1aced47ecd5d10b69da24d25c8fed7ec9d306"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "5": {
+      "name": "SAM2 Visual Features",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 15,
+        "stage_id": 5,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:51.112556+00:00",
+        "elapsed_seconds": 34.026,
+        "metadata": {
+          "encoding_complete": true,
+          "feature_shape": [
+            1,
+            256,
+            64,
+            64
+          ],
+          "elapsed_seconds": 0.925,
+          "raw_feature_tensor_saved": false,
+          "display": {},
+          "render_completed_at": "2026-10-12T07:50:51.112556+00:00"
+        },
+        "previews": [],
+        "error_code": null
+      }
+    },
+    "6": {
+      "name": "Spatial Reasoning Fields",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 18,
+        "stage_id": 6,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:51.390517+00:00",
+        "elapsed_seconds": 34.305,
+        "metadata": {
+          "source": "actual D-B1 forward field_competition",
+          "field_shapes": {
+            "P_dir": [
+              1,
+              1,
+              64,
+              64
+            ],
+            "P_near": [
+              1,
+              1,
+              64,
+              64
+            ],
+            "W": [
+              1,
+              1,
+              64,
+              64
+            ],
+            "A": [
+              1,
+              1,
+              64,
+              64
+            ]
+          },
+          "display": {
+            "P_dir": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "91aad3dc71d60c2d52c5c635dae263af5825ed7523308e2fa33881a1d14f30b1",
+              "raw_min": 1.437172998880812e-14,
+              "raw_max": 1.0,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "P_near": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "a0f3c1a53910f8d699b3b1c251e80a34e7bc0cdf2aa3728ba4753185e760ccda",
+              "raw_min": 0.0,
+              "raw_max": 0.9595060348510742,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "W": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "b7346914043da947d11af60c09a0cad0c0c5f79b832560bade4a620bb2e73252",
+              "raw_min": 0.0,
+              "raw_max": 0.7827801704406738,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "A": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "7ab90feb893a06b9457032f29a5386f663e8fc3dcb87e4ba5d929583aa4c017b",
+              "raw_min": 0.0,
+              "raw_max": 0.012935370206832886,
+              "display_range": [
+                0.0,
+                0.012935370206832886
+              ],
+              "display_normalization": "per-map min/max; constant maps use zero color",
+              "color_is_not_raw_probability": true
+            }
+          },
+          "array_snapshot_identities": {
+            "P_dir": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "91aad3dc71d60c2d52c5c635dae263af5825ed7523308e2fa33881a1d14f30b1",
+              "raw_min": 1.437172998880812e-14,
+              "raw_max": 1.0
+            },
+            "P_near": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "a0f3c1a53910f8d699b3b1c251e80a34e7bc0cdf2aa3728ba4753185e760ccda",
+              "raw_min": 0.0,
+              "raw_max": 0.9595060348510742
+            },
+            "W": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "b7346914043da947d11af60c09a0cad0c0c5f79b832560bade4a620bb2e73252",
+              "raw_min": 0.0,
+              "raw_max": 0.7827801704406738
+            },
+            "A": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "7ab90feb893a06b9457032f29a5386f663e8fc3dcb87e4ba5d929583aa4c017b",
+              "raw_min": 0.0,
+              "raw_max": 0.012935370206832886
+            }
+          },
+          "render_completed_at": "2026-10-12T07:50:51.427023+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_06_event_018_1.png",
+            "bytes": 89501,
+            "sha256": "d06aaec3c1fc03a003232dee0e55669ab6926cf538ce73783946345bc6de5e47"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "7": {
+      "name": "Prototype & Similarity",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 20,
+        "stage_id": 7,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:51.391517+00:00",
+        "elapsed_seconds": 34.305,
+        "metadata": {
+          "q_formed": true,
+          "q_shape": [
+            1,
+            128
+          ],
+          "q_dimension": 128,
+          "C_shape": [
+            1,
+            1,
+            64,
+            64
+          ],
+          "source": "actual D-B1 forward competition state",
+          "source_dtype": "torch.float32",
+          "similarity_scope": "visual cosine similarity, not target correctness probability",
+          "display": {
+            "C": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "69e530bb359521afbb5c6f260ade9bb9e7965e4da92c822c9c53c3fccb68374b",
+              "raw_min": 0.04896475002169609,
+              "raw_max": 0.7171630859375,
+              "display_range": [
+                -1.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            }
+          },
+          "array_snapshot_identities": {
+            "C": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "69e530bb359521afbb5c6f260ade9bb9e7965e4da92c822c9c53c3fccb68374b",
+              "raw_min": 0.04896475002169609,
+              "raw_max": 0.7171630859375
+            }
+          },
+          "render_completed_at": "2026-10-12T07:50:51.447041+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_07_event_020_1.png",
+            "bytes": 28225,
+            "sha256": "e693858bf7689445618d806a027760c5c6f3535c5ff9350c6d55c1a595cb412d"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "8": {
+      "name": "D-B1 Segmentation",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 22,
+        "stage_id": 8,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:51.424519+00:00",
+        "elapsed_seconds": 34.339,
+        "metadata": {
+          "candidate_only": true,
+          "validation_state": "NOT_YET_GUARDED",
+          "mask_pixels": 5372,
+          "elapsed_seconds": 0.165,
+          "display": {
+            "probability": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "59f6933fcb86bb8183051c3ad0b6fd2ebfbc74f301e4e23ba29e9976f50c8bda",
+              "raw_min": 1.68992588811534e-08,
+              "raw_max": 0.9999998807907104,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "logits": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "4d31430b7531f6fcae0325efd3b981c2ebb913fd3ae605ea4fbac321ec22a640",
+              "raw_min": -17.89599609375,
+              "raw_max": 16.047119140625
+            }
+          },
+          "array_snapshot_identities": {
+            "logits": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "4d31430b7531f6fcae0325efd3b981c2ebb913fd3ae605ea4fbac321ec22a640",
+              "raw_min": -17.89599609375,
+              "raw_max": 16.047119140625
+            },
+            "probability": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "59f6933fcb86bb8183051c3ad0b6fd2ebfbc74f301e4e23ba29e9976f50c8bda",
+              "raw_min": 1.68992588811534e-08,
+              "raw_max": 0.9999998807907104
+            },
+            "mask": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "bool",
+              "sha256": "dca1149938934fce4b9e25c789fd82222295c68c1a0d826bed18c9f3a7fa98be",
+              "raw_min": 0.0,
+              "raw_max": 1.0
+            }
+          },
+          "render_completed_at": "2026-10-12T07:50:51.508502+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_08_event_022_1.png",
+            "bytes": 230257,
+            "sha256": "e2e67b5e2c8572ebffdb646dc3160a61a036cdeeeb88c751b8d9108c338732f6"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "9": {
+      "name": "Final Guard & Result",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261012_155017_1034",
+        "sequence": 24,
+        "stage_id": 9,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-12T07:50:51.624797+00:00",
+        "elapsed_seconds": 34.538,
+        "metadata": {
+          "runtime_status": "SUCCESS",
+          "guard_executed": true,
+          "final_output_valid": true,
+          "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "elapsed_seconds": 2.546581983566284,
+          "mask_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\_engine\\inference\\output\\1034\\masks\\1034_mask.png",
+          "overlay_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\_engine\\inference\\output\\1034\\overlays\\1034_overlay.png",
+          "display": {},
+          "render_completed_at": "2026-10-12T07:50:51.663729+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_09_event_024_1.png",
+            "bytes": 325368,
+            "sha256": "09266a0e977b0820bef2376914a02348f56c61da3a4ca6e6749a675c1e035ac3"
+          },
+          {
+            "path": "stage_09_event_024_2.png",
+            "bytes": 9602,
+            "sha256": "c0f77dae69d9f9d707f1eacee996f3ace35d27fbf945f1164368785c863a716d"
+          }
+        ],
+        "error_code": null
+      }
+    }
+  },
+  "event_count": 24,
+  "observation_failures": [],
+  "feature_tensor_saved": false,
+  "model_calls_by_trace": 0
+}

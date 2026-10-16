@@ -1,0 +1,26 @@
+[
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\result_summary.json",
+    "copy_path": "source_records/demo_result_summary.json",
+    "bytes": 711,
+    "sha256": "6b3035080551f54dbba521ffb62c0d6e1ee3871538ddf66c5cca10362aec74d0"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\trace_manifest.json",
+    "copy_path": "source_records/demo_trace_manifest.json",
+    "bytes": 28246,
+    "sha256": "5c74a62d91e267910a3901191fb01dbf915d27175f6b8b24c0ee7a7bc2d0b341"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\stage_events.jsonl",
+    "copy_path": "source_records/demo_stage_events.jsonl",
+    "bytes": 23012,
+    "sha256": "2d59ce32752c0bf23f64533c04ecb10e61e2410adfb621b8b964991785072a0b"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\_engine\\inference\\output\\1034\\diagnostics\\result.json",
+    "copy_path": "source_records/demo_engine_result.json",
+    "bytes": 9271,
+    "sha256": "ace14c0c8790dc26accfe6c5484925fdbe1910c8d022e675f907907d9750f8af"
+  }
+]

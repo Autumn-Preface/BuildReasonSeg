@@ -1,0 +1,6 @@
+# Preserve archived artifact bytes, including original CSV/JSON line endings.
+selected/** -text
+source_records/** -text
+derived/*.png -text
+contact_sheet.png -text
+audit/*.csv.gz -text

@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "changed_existing_paths": [],
+  "protected_tracked_files": 1450,
+  "metadata_checked": 111308,
+  "selected_originals_sha256_checked": 10,
+  "model_inference_calls": 0,
+  "training_calls": 0,
+  "historical_results_logs_configs_unchanged": true,
+  "only_allowed_existing_changes": [
+    "handoff/CURRENT_TASK.md",
+    "handoff/EXECUTOR_STATE.yaml"
+  ]
+}

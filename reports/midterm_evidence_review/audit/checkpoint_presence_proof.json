@@ -1,0 +1,55 @@
+{
+  "source": "evaluation\\task7j_checkpoint_manifest.json",
+  "source_identity": {
+    "bytes": 5393,
+    "sha256": "75d0535a462151e8a2b34107486508f033cb24e68dd821d0278e920de01b9137"
+  },
+  "all_six_original_checkpoints_present_hash_match": true,
+  "records": [
+    {
+      "name": "Z-B3/20261001",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261001\\best.pt",
+      "bytes": 1108279,
+      "sha256": "5c9fada7c7395d4172a9be27aa4fbc96a470ed4c248d8a4d78a4d9d7eb251201",
+      "matches_frozen_record": true
+    },
+    {
+      "name": "Z-B3/20261002",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261002\\best.pt",
+      "bytes": 1108279,
+      "sha256": "f7ee1a094d3aef7e0bc099d217a5c9cda6eac5e1ad6309dc24813e41a6f8fea9",
+      "matches_frozen_record": true
+    },
+    {
+      "name": "Z-B3/20261003",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\Z-B3\\20261003\\best.pt",
+      "bytes": 1108279,
+      "sha256": "10aee8e04b0e44b3a9f99efc3b000485fd817746290f4e19d3b29e1b72c55859",
+      "matches_frozen_record": true
+    },
+    {
+      "name": "D-B1/20261001",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261001\\best.pt",
+      "bytes": 1117495,
+      "sha256": "d89b0f6f88c2c2d3fe5040679d6727ae513106e29685c321bcd22e9a030d2954",
+      "matches_frozen_record": true
+    },
+    {
+      "name": "D-B1/20261002",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261002\\best.pt",
+      "bytes": 1117495,
+      "sha256": "95ac39112ac4e4048ed315718404d7c2bf30906c9ebc645e7b3b5d27495b7ad4",
+      "matches_frozen_record": true
+    },
+    {
+      "name": "D-B1/20261003",
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\checkpoints\\task7i\\D-B1\\20261003\\best.pt",
+      "bytes": 1117495,
+      "sha256": "9187b133ee4c71ca2750d421d6149bdba1812eabc8c9faacde193036c0db8586",
+      "matches_frozen_record": true
+    }
+  ],
+  "torch_load_calls": 0,
+  "weight_selection": false,
+  "model_inference_calls": 0
+}

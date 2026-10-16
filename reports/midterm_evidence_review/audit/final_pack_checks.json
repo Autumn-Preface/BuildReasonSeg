@@ -1,0 +1,23 @@
+{
+  "pass": true,
+  "manifest_rows": 12,
+  "original_png_copies": 10,
+  "redrawn_pngs": 2,
+  "originals_byte_identical": true,
+  "all_image_hashes_dimensions_match_csv": true,
+  "source_record_copies_byte_identical": true,
+  "contact_sheet_size": [
+    1980,
+    2052
+  ],
+  "originals_and_contact_and_redraws_visually_reviewed": true,
+  "metric_means_sd_and_all_three_seeds_checked": true,
+  "demo_24events_12preview_hashes_verified": true,
+  "all_six_frozen_weights_sha256_match_no_load": true,
+  "allowed_diff_scope": true,
+  "model_calls": 0,
+  "training_calls": 0,
+  "office_files_edited": false,
+  "damage_relabeling": false,
+  "acceptance": "PENDING_CHATGPT_AND_USER_REVIEW"
+}

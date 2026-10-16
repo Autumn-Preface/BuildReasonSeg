@@ -1,0 +1,27 @@
+{
+  "run_id": "20261012_155017_1034",
+  "timestamp": "2026-10-12T15:50:51.673135+08:00",
+  "source_summary": {
+    "bytes": 711,
+    "sha256": "6b3035080551f54dbba521ffb62c0d6e1ee3871538ddf66c5cca10362aec74d0"
+  },
+  "trace_status": "FROZEN",
+  "events": 24,
+  "previews_checked": 12,
+  "event_png_hashes_match": true,
+  "input_path": "C:\\Users\\ROG\\Pictures\\1034.tif",
+  "input_identity": {
+    "bytes": 790116,
+    "sha256": "c8187558691251150196e90e04fb0c32c04fb1b1ae07eb346301aaac3348341d"
+  },
+  "input_rgb_pixel_hash_matches_stage2": true,
+  "input_rgb_sha256": "b25327ea68842001dbabc13c845fd28e64741c9a24fe3f304fe18912397dcbb4",
+  "same_engine_run_root": true,
+  "overlay_mask_copy_hash_match": true,
+  "runtime_status": "SUCCESS",
+  "semantic_status": "NOT_EVALUATED",
+  "gt_verified": false,
+  "new_inference_calls": 0,
+  "selection_rule": "The two existing V2 runs were both inventoried; first chronological run is used for all four related snapshots, not chosen by visual accuracy.",
+  "other_existing_run": "20261012_155256_1034"
+}

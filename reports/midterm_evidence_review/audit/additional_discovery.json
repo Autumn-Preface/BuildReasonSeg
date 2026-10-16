@@ -1,0 +1,30 @@
+{
+  "directories": [
+    {
+      "path": "C:/D/resources/建筑物语义分割",
+      "standalone_images_found": 0,
+      "scope": "top-level listing and recursive requested-image-extension filename search; one paper PDF, not evidence of project experiments"
+    },
+    {
+      "path": "C:/D/resources/挑战杯中期审查",
+      "standalone_images_found": 0,
+      "scope": "top-level listing and recursive requested-image-extension filename search; existing Office materials unmodified/unopened"
+    },
+    {
+      "path": "C:/D/resources/大挑申报材料",
+      "scope": "top-level directory identification only; source text not opened for style or claims"
+    }
+  ],
+  "office_embedded_media_not_reviewed": true,
+  "whole_disk_search_performed": false,
+  "v02_query_counts_recorded": {
+    "test": 6219,
+    "train": 12778,
+    "val": 9111
+  },
+  "v02_level_counts_recorded": {
+    "1": 19769,
+    "2": 5323,
+    "3": 3016
+  }
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "E01",
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\baseline\\yolo_whu\\plots\\results.png",
+    "copy_path": "selected/E01_results.png",
+    "identity": {
+      "bytes": 388482,
+      "sha256": "eaff988036f6c9cc62e55a0b08443f9dc325a2b1dcd1dd11e6422199d23086b4"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/baseline/yolo_whu/plots/results.png"
+  },
+  {
+    "id": "E02",
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6k1_samples\\1_0_panel.png",
+    "copy_path": "selected/E02_1_0_panel.png",
+    "identity": {
+      "bytes": 123458,
+      "sha256": "80ed4b57856a3ac552e6c3f7f0e767ac81fb47734483b6a9524b08ab26530982"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6k1_samples/1_0_panel.png"
+  },
+  {
+    "id": "E03",
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6l_samples\\1_0_overlay.png",
+    "copy_path": "selected/E03_1_0_overlay.png",
+    "identity": {
+      "bytes": 118785,
+      "sha256": "38749f6c647e4446639b4e8a5b81ba268d35be96e738b83bcd786c7e30c1e9f8"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6l_samples/1_0_overlay.png"
+  },
+  {
+    "id": "E04",
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1\\above_review.png",
+    "copy_path": "selected/E04_above_review.png",
+    "identity": {
+      "bytes": 412383,
+      "sha256": "6fc47bf3bf8ed0eacb44139ff1cfedad16ddcaa8fa1900c199f3508263e6fe6b"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task8c_final_demo_v1/above_review.png"
+  },
+  {
+    "id": "E05",
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8d_above_target_chain_diagnosis_v1\\04_W_and_A.png",
+    "copy_path": "selected/E05_04_W_and_A.png",
+    "identity": {
+      "bytes": 91400,
+      "sha256": "0c3913b125c97e00efe18f595c6945a75977dff3265e030151009e873857babe"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task8d_above_target_chain_diagnosis_v1/04_W_and_A.png"
+  },
+  {
+    "id": "E06",
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8f_final_results.png",
+    "copy_path": "selected/E06_task8f_final_results.png",
+    "identity": {
+      "bytes": 37562,
+      "sha256": "8480b03fa40e7e2da74382192f7b7d9ef0bc75d762b51c535e1f5601e6ae5fb3"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/task8f_final_results.png"
+  },
+  {
+    "id": "E07",
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\stage_03_event_010_1.png",
+    "copy_path": "selected/E07_stage_03_event_010_1.png",
+    "identity": {
+      "bytes": 328769,
+      "sha256": "55a60b19174fc7ba6c989682c200b1922a17c54d191afb8eda9ed0c6495db69d"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": ""
+  },
+  {
+    "id": "E08",
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\stage_06_event_018_1.png",
+    "copy_path": "selected/E08_stage_06_event_018_1.png",
+    "identity": {
+      "bytes": 89501,
+      "sha256": "d06aaec3c1fc03a003232dee0e55669ab6926cf538ce73783946345bc6de5e47"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": ""
+  },
+  {
+    "id": "E09",
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\stage_08_event_022_1.png",
+    "copy_path": "selected/E09_stage_08_event_022_1.png",
+    "identity": {
+      "bytes": 230257,
+      "sha256": "e2e67b5e2c8572ebffdb646dc3160a61a036cdeeeb88c751b8d9108c338732f6"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": ""
+  },
+  {
+    "id": "E10",
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\overlay.png",
+    "copy_path": "selected/E10_overlay.png",
+    "identity": {
+      "bytes": 316653,
+      "sha256": "79b1b86f38cbe3b1b3103b74c88088d8a78e5ec32975e2ee9aae7a6713038a29"
+    },
+    "visual_review": "ORIGINAL_IMAGE_INSPECTED",
+    "github_source": ""
+  }
+]

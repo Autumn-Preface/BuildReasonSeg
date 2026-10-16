@@ -1,0 +1,1 @@
+{"original_copies": 10, "redraws": 2, "manifest_rows": 12, "trace_previews_checked": 12, "model_calls": 0}

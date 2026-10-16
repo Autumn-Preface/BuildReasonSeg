@@ -1,0 +1,9 @@
+﻿路径或类别,不入精选的理由,检查方式
+docs/task8f_fake_*.png,明确fake测试，不能充作真实算法运行,路径/既有Task8F报告；未纳入精选
+evaluation/task6d_panels/pair_01_1_1247.png,真实退化失败，原图中文缺字、颜色异常、低分辨率，不适合正面效果页,原图逐图检查+生成脚本+checkpoint_manifest同样本/两条指令记录
+evaluation/build_spatial_reason_v0.1.1_samples/014_level3_nontrivial_buildsr_train_1_10026_3_largest_to_below_to_nearest_732dee5f98fe.png,真实数据标注样例，324×384，长指令显示截断；不是模型输出,原图逐图检查+quality JSON和审查文档
+evaluation/relation_samples/ground_truth_panel.png,真实历史连通域GT编号图，无RGB背景；不能作分割预测成果,原图逐图检查+render_ground_truth_panel源函数
+evaluation/relation_samples/test_3151.png,真实几何关系分析图，文字小、实例拥挤；不能代表MLLM推理成功,原图逐图检查+关系统计记录
+C:/D/DeepSeekHarness/workspace/project/WHU_Building_Segment/runs/segment/logs/whu_building_v1/val_batch0_labels.jpg,真实GT batch mosaic，类别文字遮挡，部分图名不清,原图逐图检查；与pred背景布局对照，未对所有被遮挡文件名作独立身份确认
+C:/D/DeepSeekHarness/workspace/project/WHU_Building_Segment/runs/segment/logs/whu_building_v1/val_batch0_pred.jpg,真实val prediction，类别/置信度遮挡严重，不作为精度证明,原图逐图检查+同run CSV/args；不替代正式test统计
+C:/D/DeepSeekHarness/workspace/project/WHU_Building_Segment/runs/segment/predict/1003.jpg,真实历史预测，置信度/框遮挡明显；不把单图当test指标,原图逐图检查；其余903文件主要做路径/header清点，未逐张筛选最优

@@ -1,0 +1,19 @@
+{
+  "summary_kind": "USER_DEMO_SUMMARY_NOT_ENGINE_RESULT",
+  "demo_version": "V2",
+  "timestamp": "2026-10-12T15:50:51.673135+08:00",
+  "input_image": "C:\\Users\\ROG\\Pictures\\1034.tif",
+  "prompt": "找到最大建筑左侧的最近的建筑",
+  "interpreted_program": "largest_to_left_of_to_nearest",
+  "language_mode": "qwen",
+  "runtime_status": "SUCCESS",
+  "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+  "semantic_status": "NOT_EVALUATED",
+  "elapsed_seconds": 34.587,
+  "mask_file": "mask.png",
+  "overlay_file": "overlay.png",
+  "engine_run_root": "_engine/inference/output/1034",
+  "underlying_runtime_status": "SUCCESS",
+  "trace_directory": "trace",
+  "observation_status": "OK"
+}

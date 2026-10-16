@@ -1,10 +1,10 @@
 schema_version: 1
 task_id: MIDTERM_EVIDENCE_REVIEW_20261017
-status: IN_PROGRESS
+status: READY_FOR_SUPERVISOR_AUDIT
 executor: CODEX
 branch: codex/midterm-evidence-review-20261017
-head: e06777b0a0844c5c29325701eb2e819bd193ff04
-current_step: INVENTORY_AND_REMOTE_PROVENANCE_COMPLETE
+head: 228c47ba4619f64c37e361fd50f4b53c4a4c5952
+current_step: MIDTERM_EVIDENCE_PACK_COMPLETE
 completed:
 - Startup governance read order, clean Git, fetch exact current Task8F remote HEAD.
 - Independent documentation/evidence branch created; main and prior task branch unchanged.
@@ -12,14 +12,46 @@ completed:
   preserved.
 - Old YOLO val-only metrics, four-case zero chain-identity matches and real Oct12
   Demo traces identified.
-next_action: Complete source-chain/visual review; copy originals and generate explicitly
-  labeled saved-record plots; integrity gate.
+- 10 original PNG copies visually reviewed and byte-identical;2 labeled plots rebuilt
+  only from existing CSV/JSON;12-item manifest/contact sheet.
+- Historical baseline val-only numbers, native GT-vs-GT semantics, full3-seed/2-reference
+  comparison and failure cases labeled accurately.
+- Real Oct12 Demo24events/12preview hashes, original RGB pixel hash, same-run engine
+  Mask/Overlay verified.
+- Six frozen historical checkpoints hash verified without loading or selection.
+- Chinese report/PPT recommendations/missing evidence cover all six acceptance questions.
+- Preservation1450 tracked hashes/111308 metadata rows PASS; no old source/result/log/config/Office
+  edits.
+next_action: Commit/push final evidence pack; STOP for ChatGPT and user joint review.
+  No training, inference or scientific change.
 last_checkpoint:
-  commit: e06777b0a0844c5c29325701eb2e819bd193ff04
+  commit: 228c47ba4619f64c37e361fd50f4b53c4a4c5952
   pushed: true
 model_inference_calls: 0
 training_calls: 0
 no_scientific_change: true
 no_governance_change: true
-uncommitted_changes: true
+uncommitted_changes: false
 next_gate: CHATGPT_AND_USER_MIDTERM_EVIDENCE_REVIEW
+verification:
+  pass: true
+  manifest_rows: 12
+  original_png_copies: 10
+  redrawn_pngs: 2
+  originals_byte_identical: true
+  all_image_hashes_dimensions_match_csv: true
+  source_record_copies_byte_identical: true
+  contact_sheet_size:
+  - 1980
+  - 2052
+  originals_and_contact_and_redraws_visually_reviewed: true
+  metric_means_sd_and_all_three_seeds_checked: true
+  demo_24events_12preview_hashes_verified: true
+  all_six_frozen_weights_sha256_match_no_load: true
+  allowed_diff_scope: true
+  model_calls: 0
+  training_calls: 0
+  office_files_edited: false
+  damage_relabeling: false
+  acceptance: PENDING_CHATGPT_AND_USER_REVIEW
+report_directory: reports/midterm_evidence_review

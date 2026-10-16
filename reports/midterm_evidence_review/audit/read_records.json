@@ -1,0 +1,206 @@
+[
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\result_summary.json",
+    "copy_path": "source_records/demo_result_summary.json",
+    "bytes": 711,
+    "sha256": "6b3035080551f54dbba521ffb62c0d6e1ee3871538ddf66c5cca10362aec74d0"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\trace_manifest.json",
+    "copy_path": "source_records/demo_trace_manifest.json",
+    "bytes": 28246,
+    "sha256": "5c74a62d91e267910a3901191fb01dbf915d27175f6b8b24c0ee7a7bc2d0b341"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\results\\20261012_155017_1034\\trace\\stage_events.jsonl",
+    "copy_path": "source_records/demo_stage_events.jsonl",
+    "bytes": 23012,
+    "sha256": "2d59ce32752c0bf23f64533c04ecb10e61e2410adfb621b8b964991785072a0b"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V2\\_engine\\inference\\output\\1034\\diagnostics\\result.json",
+    "copy_path": "source_records/demo_engine_result.json",
+    "bytes": 9271,
+    "sha256": "ace14c0c8790dc26accfe6c5484925fdbe1910c8d022e675f907907d9750f8af"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\baseline\\yolo_whu\\README.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/baseline/yolo_whu/README.md",
+    "bytes": 6556,
+    "sha256": "b68fc5ca4c797cf31b2f326b7a7eb719ecbd9f65866d9fe0edeaa44482569e67"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\baseline\\yolo_whu\\manifest.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/baseline/yolo_whu/manifest.json",
+    "bytes": 11803,
+    "sha256": "ea15b10ade776e13ed3170d10ebcb584c1bc3d6d49880acc0190e7342e30dd51"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\baseline\\yolo_whu\\run_record\\args.yaml",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/baseline/yolo_whu/run_record/args.yaml",
+    "bytes": 1763,
+    "sha256": "f5dbc41fc58e4565a6f91fc4ddb7e83716b76aca0aaf2221364bf66a17d8b7b8"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\baseline\\yolo_whu\\run_record\\results.csv",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/baseline/yolo_whu/run_record/results.csv",
+    "bytes": 17463,
+    "sha256": "1a2c2ef1d9996add92b4c0b3e99187f476c7726e8f958c95d8267b936d86f5d7"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\build_spatial_reason_v0.1.1_quality.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/build_spatial_reason_v0.1.1_quality.json",
+    "bytes": 16699,
+    "sha256": "a8b278314266a2af19b652582602b71042fa1669972201d8cf08e76101539d0b"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\build_spatial_reason_v0.1.1_quality_audit.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/build_spatial_reason_v0.1.1_quality_audit.md",
+    "bytes": 8152,
+    "sha256": "97d41320ec9e9ccb855fe288ab7856e0c9ad21ea37525cf171ca7b540e8bed85"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6k1_samples\\index.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6k1_samples/index.json",
+    "bytes": 2785,
+    "sha256": "42d7fee6c128f776efc7a7e1ded68af4107a939dbcd2e75ee7c108cf9a97343b"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6k1_tile_mapping.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6k1_tile_mapping.json",
+    "bytes": 146650,
+    "sha256": "87e79b25a90851c46f044f9df36d32b2a83c1d623e7a4ebf69bc14e44f27ff8e"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6k1_samples.py",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/scripts/task6k1_samples.py",
+    "bytes": 5656,
+    "sha256": "cc8c32cc52db1619006ec22738abbf5c93395fe66955e2008313ad786af6245b"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6l_vector_dataset_integrity.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6l_vector_dataset_integrity.json",
+    "bytes": 1996,
+    "sha256": "7c8c7cfec2490ad5147d6e369e17ee21bd5e60c1bcc5634a3c83f2b381657966"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6l_verdict.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6l_verdict.json",
+    "bytes": 5180,
+    "sha256": "f76c32d1c75f993ce6b378875b840e45987f9a781f62423b19230f9c0b737bde"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6l_validate.py",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/scripts/task6l_validate.py",
+    "bytes": 23876,
+    "sha256": "adbf31ff438fd26ecc570ffb36be072984d451f26f0273252dd25c919b4a7dff"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6d_checkpoint_manifest.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6d_checkpoint_manifest.json",
+    "bytes": 8112,
+    "sha256": "6c2eccbfe9771dde80d5d72a0bec4ae77e091a6dcd4cc846bc97400e62e47082"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task6d_spatial_grounding_bridge.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/task6d_spatial_grounding_bridge.md",
+    "bytes": 14897,
+    "sha256": "18aed4f7c3213592798caf2417522cb0088953a0a8d1f8109d2fb20e6ac08a17"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts\\task6d_evaluate.py",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/scripts/task6d_evaluate.py",
+    "bytes": 28039,
+    "sha256": "8d397d1c7090915d3d9ee180b63e903c88abbe8b32b4eb41e54150fbd8aaaaa9"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_db1.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7i_training_db1.json",
+    "bytes": 16666,
+    "sha256": "84d106fe5da9def0f9d80390c8d89dc164d3e2ee8ff106f60f06ede307aa5fb8"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7i_training_zb3.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7i_training_zb3.json",
+    "bytes": 15373,
+    "sha256": "af84a55effd8af2b1398451610d03093ecebbb378b000772e8c3b693e2e5e282"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7j_final_comparison.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7j_final_comparison.json",
+    "bytes": 10948,
+    "sha256": "e30b564c01453e134c0db856b7d1ce089ef450802d5b263d685edbc0e2a386f0"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7j_test_population_manifest.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7j_test_population_manifest.json",
+    "bytes": 7834,
+    "sha256": "e5048ba27156c348fac01a37078b23fa5d1c757b48bf02dec465842d476635fd"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7j_test_pair_manifest.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7j_test_pair_manifest.json",
+    "bytes": 220275,
+    "sha256": "d31d561aa7289534dcd9f28e85e7ee2339b964da1cab8c3cb2618d2ba1305b66"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7j_verdict.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7j_verdict.json",
+    "bytes": 16376,
+    "sha256": "4b00ffbee9856f7ccf2c8a5b529cff0c5ceba5384cbfb014c4084ff51bf3b9ee"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task7j_final_test.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/task7j_final_test.md",
+    "bytes": 8278,
+    "sha256": "f197d332188a67fa9275e8d5c2d675e7f93d7823049da4621e53e198d2499031"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8c_final_demo_v1.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task8c_final_demo_v1.json",
+    "bytes": 2791016,
+    "sha256": "a0b56c5336cd7d6f7fd2153ceb429f21a67413f0a6b792dc1021e3919bb0f901"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8c_final_demo_v1.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/task8c_final_demo_v1.md",
+    "bytes": 21114,
+    "sha256": "e23f1e314456e4dca7d50931ac883be4b56753056639273553c55d87866937b5"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8d_above_target_chain_diagnosis_v1.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task8d_above_target_chain_diagnosis_v1.json",
+    "bytes": 1124207,
+    "sha256": "1aed7cd79b4ffbef62fe327e05d5034cff3ac2e0321a306b6418ed947e73bd1a"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8d_above_target_chain_diagnosis_v1.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/task8d_above_target_chain_diagnosis_v1.md",
+    "bytes": 29200,
+    "sha256": "9af247ba9a47e279dd43eac2c7da73fc3082a9d4b4bee5587b3cd23fe3d43f1d"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task8f_user_demo_live_trace_v1.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task8f_user_demo_live_trace_v1.json",
+    "bytes": 860285,
+    "sha256": "06fa395f89a84e94d43bf519fcf8c22935868a62aa45aa5737cb0fbf78efdb69"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs\\task8f_user_demo_live_trace_v1.md",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/docs/task8f_user_demo_live_trace_v1.md",
+    "bytes": 27747,
+    "sha256": "7cda10b676520acadfccac14b8ef38a51ea46de7692cd033ff84fc1d6829adbe"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task7j_checkpoint_manifest.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task7j_checkpoint_manifest.json",
+    "bytes": 5393,
+    "sha256": "75d0535a462151e8a2b34107486508f033cb24e68dd821d0278e920de01b9137"
+  },
+  {
+    "original_path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation\\task6l_build_spatial_reason_v0.2_quality.json",
+    "github_source": "https://github.com/Autumn-Preface/BuildReasonSeg/blob/e06777b0a0844c5c29325701eb2e819bd193ff04/evaluation/task6l_build_spatial_reason_v0.2_quality.json",
+    "bytes": 8901,
+    "sha256": "64af54e263b216dae43515d0702dd119a62ed2aaa0860a62e962042e5f9fb902"
+  }
+]
