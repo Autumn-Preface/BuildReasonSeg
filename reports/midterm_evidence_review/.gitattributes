@@ -1,6 +1,6 @@
 # Preserve archived artifact bytes, including original CSV/JSON line endings.
 selected/** -text
-source_records/** -text
+source_records/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 derived/*.png -text
 contact_sheet.png -text
 audit/*.csv.gz -text
