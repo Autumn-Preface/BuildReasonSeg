@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-19T01:16:37.2728179+08:00",
+  "git_fsck_exit": 0,
+  "git_version": "git version 2.55.0.windows.2",
+  "retained_python_probe_exit": 0,
+  "python_probe": {
+    "executable": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\python.exe",
+    "python": "3.11.16 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:36:16) [MSC v.1942 64 bit (AMD64)]",
+    "tk_import": true,
+    "package_records": 73
+  },
+  "model_imports": 0,
+  "inference_calls": 0
+}

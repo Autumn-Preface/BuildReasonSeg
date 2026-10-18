@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-10-19T01:15:42+0800",
+  "roots": {
+    "C:\\D\\DeepSeekHarness": {
+      "files": 121139,
+      "logical_bytes": 20643668113,
+      "physical_bytes": null
+    },
+    "C:\\D\\DeepSeek Harness": {
+      "files": 7814,
+      "logical_bytes": 1093989152,
+      "physical_bytes": null
+    },
+    "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex": {
+      "files": 2375,
+      "logical_bytes": 698774914,
+      "physical_bytes": null
+    },
+    "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0": {
+      "files": 3650,
+      "logical_bytes": 2346401834,
+      "physical_bytes": null
+    },
+    "C:\\Users\\ROG\\.cache\\codex-runtimes\\codex-primary-runtime": {
+      "files": 22397,
+      "logical_bytes": 1454287017,
+      "physical_bytes": null
+    }
+  },
+  "errors": [
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\system-access-risk\\.pytest_cache",
+      "error": "[WinError 5] 拒绝访问。: 'C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\system-access-risk\\\\.pytest_cache'"
+    }
+  ],
+  "skipped_reparse_points": [],
+  "disk_free_bytes": 127878488064
+}

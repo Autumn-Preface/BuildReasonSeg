@@ -124,6 +124,9 @@ md('recovery_notes.md',r'''
 所有唯一历史模型状态均保留，没有删除不可恢复的唯一训练权重。无法确认价值或来源的项目文件、认证与个人设置、不相关课程项目和不可读目录不处理。
 ''')
 sw=j('software_verification.json')
+apps=j('running_software_after.json')
+assert sw['git_fsck_exit']==0 and sw['retained_python_probe_exit']==0
+assert apps['codex_engine_alive'] and apps['codex_ui_alive'] and apps['dsh_executable_exists']
 md('final_verification.md',f'''
 # 最终完整性与软件检查
 
@@ -151,6 +154,8 @@ md('final_verification.md',f'''
 |真实模型推理 / 训练 / 算法优化|0 / 0 / 0|
 
 清理前 git fsck --connectivity-only exit 0，两项 dangling blob 属既有状态，未清理 Git 数据。清理后同项结果见 git_fsck_after.txt，exit code {sw['git_fsck_exit']}。
+
+补充只读核对曾把 Windows CRLF 工作树 manifest 与 external LF 比较而记录 false；该结果保留在 integrity_first_worktree_comparison.json。manifest_line_ending_forensics.json 证实起始工作树就有 686 个 CRLF、内容语义相同，external 与 Git 原始 blob 完全 byte/hash 一致；正式检查改用真实 Git bytes。没有同步、改文件、豁免指标或改变科学/验收规则。
 
 已知保留：唯一历史 checkpoint、完整 RC1/proposal 环境、新方向可能复用的原始数据/通用 pretrained 权重、全部科研记录；未把全部 best/last 当同一文件。旧 MVP 残留 6709-byte Typer 随包 skill，是删除前 guard 保留项。其他项目不可读 pytest cache 未测量、未清理。
 

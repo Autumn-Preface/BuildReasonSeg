@@ -1,0 +1,10 @@
+{
+  "working_sha": "6dc567be8b79659a3eaf112ea57a609585f89f69c786d2718c99d44e4c3ce8a8",
+  "external_sha": "df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e",
+  "git_blob_sha": "df9a870d72a25421311698f7a8865e07b4a4e11e9bfe52df18975da17b3bcf7e",
+  "canonical_worktree_before": "6dc567be8b79659a3eaf112ea57a609585f89f69c786d2718c99d44e4c3ce8a8",
+  "json_semantic_equal": true,
+  "git_blob_external_byte_identical": true,
+  "working_crlf": 686,
+  "external_crlf": 0
+}

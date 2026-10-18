@@ -77,7 +77,9 @@ def main():
     rc1=ROOTS[0]/'delivery/BuildReasonSeg_Advisor_RC1'
     source_manifest=json.loads((canonical/'source_manifest.json').read_text(encoding='utf-8'))
     for r in source_manifest['files']:check_file(rc1/r['path'],r['sha256'])
-    source_match=digest(canonical/'source_manifest.json')==digest(rc1/'source_manifest.json')
+    # Git canonical bytes are authoritative; Windows checkout CRLF translation is pre-existing.
+    canonical_blob=subprocess.check_output(['git','show','HEAD:delivery_src/BuildReasonSeg_Advisor_RC1/source_manifest.json'],cwd=REPO)
+    source_match=canonical_blob==(rc1/'source_manifest.json').read_bytes()
     assert deleted<=expected
     closure=dict(checked_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'),
         preexisting_tracked_files=len(tracked),tracked_hash_checks=len(tracked)-2,

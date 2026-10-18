@@ -1,0 +1,301 @@
+﻿root,path,bytes,mtime_ns,dev,inode,nlink
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\components\program_head\Qwen3-VL-2B-Instruct\model.safetensors,4255140312,1790371670765843200,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\app.asar,582072504,1792200701344341300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cublasLt64_13.dll,455684208,1790370978544472500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\torch_cuda.dll,412515840,1790370987235541400,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex.exe,341312816,1792200703159836900,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\bin\896a0166b774037a\codex.exe,341312816,1792200703159836900,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\chrome.dll,329664816,1792200684089616600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\components\sam2\sam2.1_hiera_base_plus.pt,323606802,1790371720868841100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\torch_cpu.dll,305204736,1790370983552650700,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex,296885960,1792140522423225400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cufft64_12.dll,290169456,1790370980714428400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\best_smoketest.pt,286463859,1790372266102824100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\last_smoketest.pt,286463859,1790372266570108100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\best_run4.pt,286453942,1790376799130729800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\best_run5.pt,286453942,1790378238908310100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\last_run5.pt,286453942,1790378476830617400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\best_run3.pt,286453878,1790375135679666700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\last_run3.pt,286453878,1790375168947458600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\last_run4.pt,286453878,1790377097553480000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\best.pt,286343801,1790374212640110900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\last.pt,286343801,1790374229582707200,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\DeepSeek Harness.exe,246343144,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\program_parser_v02_best.pt,210280688,1790628097681833300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6j\j2_best.pt,210252896,1790551414300652200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cudnn_engines_precompiled64_9.dll,206805616,1790370979176944100,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\app.asar,182794869,1792228850000000000,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules\@deepseek-ai\libreoffice-kit-win32-x64\bin\libreoffice-kit.exe,178561512,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\_polars_runtime_32\_polars_runtime.pyd,175884800,1790616038984718300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cusparse64_12.dll,163115120,1790370981669901700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m1\source_epoch18_snapshot\weights\last.pt,162482447,1790625181451943800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m1\source_epoch18_snapshot\weights\best.pt,162481487,1790624193370569100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m1\runs\m1_yolo26m_seg_continued\weights\last_resume.pt,162467783,1790634886696430400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cusolver64_12.dll,144265840,1790370981134657000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cusolverMg64_12.dll,111374960,1790370981350712200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cudnn_adv64_9.dll,106935920,1790370978749491000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6i\I0\i0_final.pt,101877462,1790545422157003400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch1.pt,100489355,1790524366690814800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch6.pt,100489355,1790525768417226200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch2.pt,100489291,1790524581445082900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch3.pt,100489291,1790524795930615400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch4.pt,100489291,1790525136847818000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch5.pt,100489291,1790525450418131500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch7.pt,100489291,1790526090730377800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F1\f1_epoch8.pt,100489291,1790526429028166200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6f\F0\f0_final.pt,100488684,1790523585139770500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\task6d1_G0_corrected\G0_epoch1.pt,100472395,1790504142205693500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\task6d1_G0_corrected\G0_epoch2.pt,100472331,1790504832966235900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6e\E1\e1_epoch1.pt,100461067,1790513043555038100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6e\E1\e1_epoch2.pt,100461067,1790515504194987200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6e\E1\e1_epoch3.pt,100461067,1790517793941113000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6e\E0\e0_final.pt,100460530,1790510684598154700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6h1\H0R\h0r_final.pt,97351627,1790538430386987500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6g\G0\g0_final.pt,97351211,1790529773580873600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6h\H0\h0_final.pt,97350891,1790536525233404000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6b\best_language.pt,96252015,1790396528648177400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6b\phaseA_last.pt,96250941,1790393023531456000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\P_C\phaseA_last.pt,96250621,1790412014034016300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\P_L\phaseA_last.pt,96250621,1790414089745226700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\U_C\phaseA_last.pt,96250621,1790407454272586900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\U_L\phaseA_last.pt,96250621,1790409741622498700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6b\best_joint.pt,96250404,1790395217216470700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6b\best_mask.pt,96249867,1790395216855422200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6b\last.pt,96213390,1790396528447282500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\P_C\last.pt,96213070,1790413049302977400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\P_L\last.pt,96213070,1790415123184369800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\U_C\last.pt,96213070,1790408636729929500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6c\U_L\last.pt,96213070,1790410916000099100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\nvrtc64_130_0.dll,94862960,1790370982653548000,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\node\bin\node.exe,93580104,1792228850000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\artifact_tool_v2\bin\artifact_tool_rpc_daemon.exe,93580104,1792172190000000000,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\cua_node\bin\node.exe,93381936,1792200703542797400,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\runtimes\cua_node\78fb63cda1a9e2b2\bin\node.exe,93381936,1792200703542797400,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe,92825416,1785755888000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\nvJitLink_130_0.dll,88481392,1790370981994686200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\cv2\cv2.pyd,86293504,1790371077684738200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\input\B2.tif,75080895,1790978500452760900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\input\B1.tif,75040370,1790978465004872400,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex-code-mode-host.exe,74921776,1792200702742167800,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\bin\896a0166b774037a\codex-code-mode-host.exe,74921776,1792200702742167800,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex-code-mode-host,74277776,1792140529520358000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\components\program_head\program_parser_l3_rehearsal_v1.pt,70090713,1790805035418506900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task7c\program_parser_l3_rehearsal_v1.pt,70090713,1790805035418506900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task7b\program_parser_l3_hardened_v1.pt,70090243,1790793502466829900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6t\_candidate_C1.pt,70083683,1790712720224278900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\curand64_10.dll,59178608,1790370980850490900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cudnn_heuristic64_9.dll,58922096,1790370979420964100,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\cua_node\bin\node_modules\@oai\sky\bin\windows\swift\x64\codex-computer-use-swift.exe,56534320,1792200703720158500,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\runtimes\cua_node\78fb63cda1a9e2b2\bin\node_modules\@oai\sky\bin\windows\swift\x64\codex-computer-use-swift.exe,56534320,1792200703720158500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\B1_overlay.png,56103121,1791093135453306300,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex-windows-sandbox-service.exe,55824688,1792200702878248400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\local_cache\sam2_source\.git\objects\pack\pack-576b262b3a41cc333ae47501bdd8e6f6e5b1c4b0.pack,55726554,1790371138837756400,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\tectonic\tectonic.exe,55059760,1792200705418862300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment\weights\yolov8m-seg.pt,54921020,1785779061661889700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment\runs\segment\logs\whu_building_v1\weights\best.pt,54835548,1785784095529330400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\WHU_Building_Segment\runs\segment\logs\whu_building_v1\weights\last.pt,54835548,1785784095363208300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\pretrained\yolo26m-seg.pt,54750385,1790616115485115300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\model\buildreasonseg_advisor\detector.pt,54480241,1790643607174389900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m1\runs\m1_yolo26m_seg_continued\weights\best.pt,54480241,1790643607174389900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m1\runs\m1_yolo26m_seg_continued\weights\last.pt,54480241,1790643606961259800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\runs\probe_b16\weights\best.pt,54467057,1790617624960348200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\runs\probe_b16\weights\last.pt,54467057,1790617624670998100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\runs\timing_epoch1\weights\best.pt,54467057,1790619419551388400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\runs\timing_epoch1\weights\last.pt,54467057,1790619419047261700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cublas64_13.dll,51572848,1790370977523728000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\overlays\B2_overlay.png,45886564,1791093169982118700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\legacy_archive\20261019\BuildReasonSeg_Demo_V1_non_model.zip,44740017,1792342524416793000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.git\objects\pack\pack-008608c2c1c8e3ea28e83b38fe0831ac4f7514f1.pack,42273182,1792193892246329200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cudnn_ops64_9.dll,36692592,1790370979482262000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@oai\artifact-tool\node_modules\@oai\walnut\wasm\dotnet.native.eo4fgjki7v.wasm,34918854,1792171866000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\artifact_tool_v2\bin\node_modules\@oai\walnut\wasm\dotnet.native.eo4fgjki7v.wasm,34918854,1792172191000000000,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\cua_node\bin\node_repl.exe,34610200,1792200703802521800,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\runtimes\cua_node\78fb63cda1a9e2b2\bin\node_repl.exe,34610200,1792200703802521800,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\icudt78.dll,33126192,1792172948000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\cv2\opencv_videoio_ffmpeg500_64.dll,30876160,1790371077804936200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.1\train.jsonl,29621180,1790340242835005600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.2\train.jsonl,29572306,1790610752785694400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\torch_cpu.lib,29242954,1790370983801772200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\nvperf_host.dll,28580976,1790370982057207700,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@napi-rs\canvas-win32-x64-msvc\skia.win32-x64-msvc.node,27310384,1792173198000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round08\training\features.joblib,26104850,1792302218893290900,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\dxcompiler.dll,25920304,1792200684226580300,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\dxcompiler.dll,25757672,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\c687dbadf6bd509d147c13444746c142623ab42379b62e71233f4420271d96e7.joblib,25359631,1792160857529543800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\9522950cf8065678d9151eaf.joblib,25358703,1792143552696443000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\eafb43d0a75aeacb3f59a474487ba2d408aab04229c8193ac77b9024dd9a56e3.joblib,25358703,1792160854414480800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\60d4cba0d00e726ce51bb5ea28cc7418a597b9676f856718fed1a818eae1e9a9.joblib,25358519,1792160893579948100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\47526bf8c7d61d71d00251f0.joblib,25354391,1792143607201896200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\ed5c293cc2040a16155305b66e158c889787adb646a79d7e68600726b19b3137.joblib,25354391,1792160890790198200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Library\bin\libcrypto-3-x64.pdb,25317376,1788174871800141500,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources.pak,25218967,1792140417462207200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\cudnn_engines_runtime_compiled64_9.dll,24853104,1790370979241452500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.1.1\train.jsonl,24725659,1790357319948066600,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@oai\artifact-tool\node_modules\skia-canvas\lib\skia.node,24247088,1792173202000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\artifact_tool_v2\bin\node_modules\skia-canvas\lib\skia.node,24247088,1792173356000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\pretrained\yolo26s-seg.pt,23467933,1790616126253494800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\smoke\m0\weights\best.pt,23332637,1790625510523177000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\smoke\m0\weights\last.pt,23332637,1790625510343984500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\smoke\probe_run\weights\best.pt,23332317,1790625469261127900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\checkpoints\task6m\smoke\probe_run\weights\last.pt,23332317,1790625469170395600,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\artifact_tool_v2\bin\artifact_tool_rpc_daemon.js,22601359,1792172191000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\features\1c502fa4db403fa9c31b03e6.joblib,22308207,1792090013298474400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\features\296e51ffc4fc7757d0a98cda.joblib,22303863,1792090039584836400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.2\val.jsonl,21084930,1790610865047092200,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\LICENSES.chromium.html,20477229,1792228850000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\numpy.libs\libscipy_openblas64_-9e3e5a4229c1ca39f10dc82bba9e2b2b.dll,20419376,1792173468000000000,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\python\Lib\site-packages\numpy.libs\libscipy_openblas64_-9e3e5a4229c1ca39f10dc82bba9e2b2b.dll,20417000,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\numpy.libs\libscipy_openblas64_-63c857e738469261263c764a36be9436.dll,20415488,1790370961943485700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\scipy.libs\libscipy_openblas-64eda39e79589aedb16f58e5547eb599.dll,20260864,1790378835898176500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\torch_python.dll,19746816,1790370987298044800,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\System.Management.Automation.dll,19646264,1792171962222994900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\av.libs\avcodec-62-984de33114b7fa384296817dec999c9d.dll,19266048,1790371078986696400,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\cua_node\bin\node_modules\@img\sharp-win32-x64\lib\libvips-42.dll,19033904,1792200703656921400,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@img\sharp-win32-x64\lib\libvips-42.dll,19033904,1792173186000000000,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\runtimes\cua_node\78fb63cda1a9e2b2\bin\node_modules\@img\sharp-win32-x64\lib\libvips-42.dll,19033904,1792200703656921400,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules\@img\sharp-win32-x64\lib\libvips-42.dll,19031528,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\3b69df8cb447240ceba3725f.joblib,18557767,1792143359794604200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\a300a25f92bfb65e00becae160661619a07eab4c6625fa85ce2321f8caa207ca.joblib,18557767,1792160677297143500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\0f9631264b4909c1d6ac9ecad6ac32da089c5218d18d4c4e2c8475d1a4703e7a.joblib,18557167,1792160875156565800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\6241f85aa098fc2b38ef65fd.joblib,18554799,1792143581602163200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\bb47cc9973aa0fae9af31bbc29a8b1009df6491abb86e0ae7786dc5662f3a885.joblib,18554799,1792160873040246200,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\Microsoft.CodeAnalysis.CSharp.dll,18536312,1792171959593798400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\whu_native_vector\v1.0\instances\index.jsonl,18233822,1790612201878682000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\task6k\relation_drift.jsonl,18179658,1790592912865251300,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\app.asar.unpacked\dsh\node_modules\sherpa-onnx-win-x64\onnxruntime.dll,17812456,1792228850000000000,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex-windows-sandbox-setup.exe,17700144,1792200702934753700,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\bin\896a0166b774037a\codex-windows-sandbox-setup.exe,17700144,1792200702934753700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\9b50231fae33b2c99d28c4a9.joblib,17014295,1792143075918466000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\10249679717a2257edb235dfaafcc06d236f193a86ba945535316678fe1ec682.joblib,17014295,1792160552648781500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\08c298b4078a4da8b05e9c77ae641957350da3329d9173a480b6b4b8c63b507b.joblib,17011839,1792160669469795400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\python311.pdb,16912384,1787841439693884800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\1776cd88b523fe197cee362a.joblib,16588447,1792086852601503400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\2e2ad11604b8d40a2453d9c5.joblib,16588447,1792086996955011400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\ac70584c0ad2f54333e5c671.joblib,16588447,1792086915333129000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\b6f6426023d26b0cf9ef88b8.joblib,16588447,1792086998609471900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\hardware\feature_cache.joblib,16588447,1792089853140746900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\97406fbf49eea98d0d736206.joblib,16584119,1792086919026186200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\9dc68669ffe2311167d1ed0c.joblib,16584119,1792087021029443700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\ffed84e4991b7a6dd297e154.joblib,16584119,1792087022535576200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\whu\metadata\train.jsonl,16464429,1790336107734976200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\features\094424b0549eae565308ec64.joblib,16323679,1792089900213065100,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\System.Private.CoreLib.dll,16033616,1792171962444560600,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\pnpm\dist\pnpm.mjs,15896609,1792228850000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\PresentationFramework.dll,15816528,1792171961551098900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\fcf5e08bd9ce31867e12a45b01c2a6a5f99aa239a575704b14f6b82374195e23.joblib,14433847,1792160666759151000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\5615c3c7dc90da27adf44af0.joblib,14433671,1792143077559637500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\bbe2e7a82ba00efd98cfec82efed705f6e25cba97fcb9ed055f0d815dba3a3b1.joblib,14433671,1792160554326064900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\a862f66d5092ac98eef0a8e0.joblib,14432671,1792143072151098400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\92c6f8487094d9b246eab042062edb306f64137835344bbbbb52813185b39d2b.joblib,14432671,1792160547974411500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.2\test.jsonl,14415287,1790610928022491700,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\plugins\openai-bundled\plugins\code-review\assets\pull-requests.js,13929229,1792140593344240200,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\pnpm\dist\pnpm.mjs,13891041,1792171923000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\task6k\tile_scan.jsonl,13751283,1790592294239966900,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\System.Windows.Forms.dll,13715240,1792171962810167700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round08\private_checks\future_features.joblib,13613086,1792302381668396800,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@oai\artifact-tool\dist\artifact_tool.mjs,13384327,1792171866000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.git\objects\pack\pack-80ec86e0971c13c808e82c2e721d348c872549db.pack,13371070,1792343020539178700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\av.libs\libx265-efe48a158520a59ef99c0a0b3eb835ae.dll,12746240,1790371079154527200,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\git\mingw64\libexec\git-core\git-lfs.exe,12738008,1760659033000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\whu_native_vector\reasoning_view\scene_disjoint_v1\metadata\train.jsonl,12602210,1790609553291338500,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources.pak,12436174,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\task6k1\relation_drift_vector_pseudo.jsonl,12377722,1790601638781277200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\1c4c86f7f5856e0829105f72.joblib,12140287,1792086878097392700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\421d5a25876b4f37bcad3319.joblib,12140287,1792087010386507800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\d922fb53400910061280d29d.joblib,12140287,1792086917153102900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\modeling\cache\fe11cd2b02c5fe62b83f239c.joblib,12140287,1792087009143863700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\whu_native_vector\v1.0\tiles\index.jsonl,11969604,1790612201594085100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\f4680feefaec1665704bc33b9e13e8891e6c86bf78bddba628f3660a4a8dfc64.joblib,11157095,1792160664539832800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\legacy_archive\20261019\BuildReasonSeg_Demo_V2_non_model.zip,11146516,1792342526614197400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\752bcabd6396e225565d0aa9.joblib,11145023,1792143069124131100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\edcea04e9557c65b9ddd8d70dd6c64c2bb345de0395cdb62636e75d84f5ba2f4.joblib,11145023,1792160544242389200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\53c2c7bd70f6ed78dd1726fd.joblib,11144599,1792143073463273800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\0013e819ceb679e9a9b29bd7fd336130e626e9afee5d356c77cf4f20fdf013ef.joblib,11144599,1792160549181702800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\reports\legacy_cleanup\20261019\cleanup_manifest.csv,11081302,1792343249220900400,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\icudtl.dat,10875024,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.1\test.jsonl,10845342,1790340351679784900,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\icudtl.dat,10819840,1790447221932220900,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@oai\artifact-tool\dist\artifact-session\index.mjs,10723497,1792171866000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@oai\artifact-tool\dist\artifact-session\prepare.mjs,10672636,1792171866000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@napi-rs\canvas-win32-x64-msvc\icudtl.dat,10468208,1792171924000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\git\usr\share\misc\magic.mgc,10357200,1774277490000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\whu_native_vector\reasoning_view\legacy_compat_v1\metadata\train.jsonl,10247462,1790609911529712700,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules\@oai\artifact-tool\dist\artifact-session\host-daemon.mjs,10155927,1792171866000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\task6w\quality_dataset\quality_rows.npz,10093648,1790763760411220700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\local_cache\sam2_source\notebooks\video_predictor_example.ipynb,10092808,1790371139167185800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\3395040f93eb5e33d4a187ea3372076ca021bbe3052e27d62abcf3e447139692.joblib,9919388,1792160869823354400,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\cryptography\hazmat\bindings\_rust.pyd,9913136,1792173367000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\c441f24b0e0633bd39a4c385652d87d8aa2516f452b75efc5ae6446729cf9f12.joblib,9850044,1792160870764062100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\features\27943eeca6df58b69afb4f64.joblib,9818951,1792089920170512700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\e0adfb0c108d31aed15d3f3f7a25a5c963157d3de82fc5f0698917d27604d302.joblib,9796268,1792160857804231800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\fits\de975e33309a4a53c1a31e1bff9b335a809acacb48b4ace09a7ef3408a556c04.joblib,9717756,1792241358832654900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\hf_xet\hf_xet.pyd,9499136,1790371078164477500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\a7ba8493d31dbf48bd92ab983d72b29925a4b32a32352808d18b3e3cc3efec9b.joblib,9491671,1792160704522178300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\0ef053c53e8b5c3896e41b34.joblib,9484431,1792143266375153100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\32f535165b6f577007836320fdc5a23407cd91a91e303c4cd48df2c5579813e9.joblib,9484431,1792160607006079500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round06\features\6247e1996a85127f99a71cad0d9d13f508b966b23f384f2f0be9643435f01860.joblib,9483087,1792188473500834600,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\git\mingw64\bin\libSkiaSharp.dll,9414176,1774277480000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\encoding\f4f8dca19179d49954d2651f.joblib,9177740,1792090436757968300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\local_cache\sam2_source\notebooks\image_predictor_example.ipynb,9167687,1790371139119769500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round03\encoding\5e5212889868fb19c89d9a28.joblib,9152775,1792090071901262800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.1.1\test.jsonl,9146152,1790357440940333500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\fits\ce7d86f10464746be2218172f6f4aa5b08087878fa1157fa0aed432d478d4832.joblib,9030957,1792240910038938700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07b\fits\165b36188a71ac9fc92fd88998c71f69023c59e3d2e7884ca7c89e36b93c20ce.joblib,9030957,1792246150452491100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\1619c84c1d4fc042e8d68d308a21c740beac6b4ab01c90a65e02465a5c8d093d.joblib,9030925,1792160592983422200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\f1496e151031ca4e712294d4556d565e8aeb70afe16c13d83cefe95e23f3f254.joblib,8992268,1792160677502952400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\B2\global_proposals.png,8909275,1791093170639270400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\B2\selected_reference.png,8909275,1791093170906608900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torch\lib\sleef.lib,8811892,1790370982678550600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\B1\global_proposals.png,8617188,1791093136157645100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Advisor_RC1\inference\output\diagnostics\B1\selected_reference.png,8617188,1791093136503348200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\task6m1_train.log,8506664,1790643634717338600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\6cab22349e7ba56340f33be9678aa1efe7be8e32da5afb42b368b2e3327680b6.joblib,8412589,1792160555282311100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\fits\942cbe0f2413fca3849abdf743c5cd9bccba59ddc48d4055a4002072f4a7733d.joblib,8351501,1792240911868556700,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\PresentationCore.dll,8324904,1792171960113441400,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\whu_native_vector\reasoning_view\scene_disjoint_v1\metadata\val.jsonl,8257061,1790609567672544100,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\codex-command-runner.exe,8217392,1792200702824940100,0,0,0
+C:\Users\ROG\AppData\Local\OpenAI\Codex,C:\Users\ROG\AppData\Local\OpenAI\Codex\bin\896a0166b774037a\codex-command-runner.exe,8217392,1792200702824940100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\task6k_inventory.log,8181350,1790591728670703600,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\Microsoft.CodeAnalysis.dll,8128376,1792171959649097500,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\plugin-signatures\openai-bundled\chrome\plugin.tar.gz,8066502,1792200704024459700,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\DLLs\libcrypto-3-x64.dll,8003376,1792173219000000000,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\python\DLLs\libcrypto-3-x64.dll,8001000,1792228850000000000,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\PIL\_avif.cp312-win_amd64.pyd,7909168,1792173644000000000,0,0,0
+C:\D\DeepSeek Harness,C:\D\DeepSeek Harness\resources\runtime\primary-runtime\dependencies\python\Lib\site-packages\PIL\_avif.cp312-win_amd64.pyd,7906792,1792228850000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\373160d98fb05dc9d5db2f5a6437a14e486562b49d953a45c028bfe5152a1fe1.joblib,7895708,1792160870290206500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\PIL\_avif.cp311-win_amd64.pyd,7888896,1790370960515786700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\local_cache\sam2_source\notebooks\automatic_mask_generator_example.ipynb,7858688,1790371139082769800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\torchvision\_C.pyd,7852544,1790371009751403200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\31be8687ae9077ca2ba4173f.joblib,7850543,1792143066081484700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\d26ea33e47b516f3501bedb4d28696ba1912463cfb0f40beebc7708c8da36c3e.joblib,7850543,1792160541088277200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\tokenizers\tokenizers.pyd,7847936,1790371086497659500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\a18959b97ff4161df2def99a.joblib,7845951,1792143069975752800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\b875aad9671aa0ddac7c5f33cf2d91121fb38e6e1b3b83043d466412d6ead55d.joblib,7845951,1792160545109805500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round06\features\13ff6716897cb800a9e022abe67ab6408d8275d92eee8e15d4466aa8c4c82f4e.joblib,7843511,1792188496983303700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\features\13ff6716897cb800a9e022abe67ab6408d8275d92eee8e15d4466aa8c4c82f4e.joblib,7843511,1792241505281017900,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\System.Private.Xml.dll,7788328,1792171962514921200,0,0,0
+C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0,C:\Program Files\WindowsApps\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\app\resources\plugin-signatures\openai-bundled\browser\plugin.tar.gz,7687651,1792200703872724800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\site-packages\av.libs\libSvtAv1Enc-c4dd99c98ddcdb013e820dbd68a30e26.dll,7673344,1790371079089022500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\c5ccff6bc63ba5e07fe5e1343fa72cb48782e9dea182374ceff2a1014925bcd3.joblib,7629532,1792160672455645800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\fits\a0a696e6da603b5365eb96e29b54d76cf2f2cb8875545d7b4e527fbe3e87b98c.joblib,7627445,1792240907246009500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07b\fits\430902db31b39f72caed0569c574126ad08907316966f9f3dfbc3211573bb300.joblib,7627445,1792246149030419200,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\ba1629382de8306e6b5a9d29d14efd69441d647408191452caae259287f4d8e9.joblib,7627413,1792160590133316700,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\fa19275fbd75a3d41ce952bc0126fde04ff065edc95b239829651d87f824e742.joblib,7620492,1792160869346637900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\c632a211fd38a7cdb84bba6e1439b50874d1ba04a4cafedac547b39f21a66bc3.joblib,7614076,1792160674893263300,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\77978421cb61c020666f683307b8ebfb71d46f6f1c8e0676f357beddb213d3e9.joblib,7609724,1792160670142959600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\fits\dddbf4039902045aa2493959540a07ca091b67d8d5df244241a11dcb2cc7a9f3.joblib,7576396,1792240912310229500,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\959a827abafa0b6e940ef9ae5a85d962fea34f90a81d7ce5d5e1f366e0ff9804.joblib,7576364,1792160671275942900,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round07\fits\75f39e660534fec69e2c1ed2eb1890f7b633a6f75329f073172670c0e73182c8.joblib,7541836,1792241357836572000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\a868cb8c8edd61493f76ead6.joblib,7508687,1792143264067208600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\502062a9eadcdb378b9b15e057e9d7118ac790b8dbd51e7550adf75cbcb385ea.joblib,7508687,1792160604160580600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round04\features\fa16e96f886735238a2751c1.joblib,7506031,1792143267205559100,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\15e7a70871f01406d1007c39b5704a91cb8a15cde991525b8aa8dac9228596a0.joblib,7506031,1792160607817468800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\220c099704050ab7d88186751d58af2bf238ee1a2e93f8b5e65aaa710aac838d.joblib,7504751,1792160636540638600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\features\d646e38bcf9c98fb65d13178a86598d30e638123abc194a208405e83d4ae73e0.joblib,7503799,1792160702888207800,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\26de2e62d4fdcc15423c69df60e64cd4b51b84ce8ca3d78e42d1f7e814c74646.joblib,7500316,1792160867351507500,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\libcrypto-3-x64.dll,7449904,1792173033000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\d3492bce2753046df746f5f0a01f5bbf2e5001a3066fb7b140f260f452a87377.joblib,7419084,1792160868905849400,0,0,0
+C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime,C:\Users\ROG\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\site-packages\pypdfium2_raw\pdfium.dll,7397168,1792173701000000000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\system-access-risk\data\round05\fits\e42894e66bf90299f146f672954b7f30ce599f9122312c9a42ab0384fd95ff1a.joblib,7390369,1792160861540562600,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\datasets\build_spatial_reason\v0.1\val.jsonl,7381799,1790340288908795000,0,0,0
+C:\D\DeepSeekHarness,C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Library\bin\libcrypto-3-x64.dll,7349064,1788174995152674100,0,0,0

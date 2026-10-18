@@ -1,19 +1,15 @@
-# CURRENT_TASK — LEGACY_CLEANUP_20261019
+# CURRENT_TASK — NONE
 
-Status: IN_PROGRESS
-Authority: User authorization dated 2026-10-19, Legacy-Cleanup 工作区清理与交接任务书.
-Branch: codex/legacy-cleanup-20261019
-Starting HEAD: 97ee74c5ffb4a883584f7a994d75ccc5a7bdd4cf
+Task ID: NONE
+Status: AWAITING_SUPERVISOR
 
-Scope: inventory actual project/deployment/software roots; remove confirmed redundant
-deployments, exact duplicates and rebuildable caches via reviewed per-file allowlist.
-Preserve source, Git history, governance, frozen conclusions, unique final weights,
-dataset/GT/splits, research records, midterm evidence and authentication/running tools.
-No model inference/training/algorithm work; no reset/rebase/amend/stash/clean/history rewrite.
+Previous task: LEGACY_CLEANUP_20261019 — COMPLETE
+Report: reports/legacy_cleanup/20261019/README.md
 
-Plan and evidence: reports/legacy_cleanup/20261019/cleanup_plan.md
-Checkpoint: inventory, hashes and verified small Demo archives ready before deletion.
-Next: commit/push plan, perform allowlisted cleanup, verify integrity and space,
-commit/push closure, then end legacy architecture work and enter neutral idle handoff.
+Inventory, explicit deletion plan, hashes and recovery records were committed/pushed
+before cleanup. Allowlisted redundant files were removed; preservation and space
+checks passed. No product/governance/scientific changes, training or inference.
 
-Deletion checkpoint: 71578 planned files removed; failures 0. Post SHA256 gate 15947 unique files PASS. Final space/software/metadata closure in progress.
+Idle Git metadata: branch = null; head = null. Actual Git branch/HEAD remain authoritative.
+Await user/Supervisor report review or a new explicit task.
+Do not proactively resume legacy architecture research, Demo, inference or development.
