@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-10-18T20:17:03.532724+00:00",
+  "python_ast_scripts": [
+    "reports\\damage_p0\\20261019\\acquire_samples.py",
+    "reports\\damage_p0\\20261019\\add_sample_evidence.py",
+    "reports\\damage_p0\\20261019\\audit_final.py",
+    "reports\\damage_p0\\20261019\\build_registries.py",
+    "reports\\damage_p0\\20261019\\check_resources.py",
+    "reports\\damage_p0\\20261019\\fetch_additional.py",
+    "reports\\damage_p0\\20261019\\fetch_sources.py",
+    "reports\\damage_p0\\20261019\\inspect_samples.py",
+    "reports\\damage_p0\\20261019\\probe_python.py"
+  ],
+  "python_ast_passed": true,
+  "yaml_files": [
+    "governance/PROJECT_STATE.yaml",
+    "handoff/EXECUTOR_STATE.yaml"
+  ],
+  "yaml_parse_passed": true,
+  "scope": "syntax and evidence consistency; not scientific acceptance"
+}

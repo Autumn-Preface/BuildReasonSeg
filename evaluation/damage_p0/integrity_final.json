@@ -1,21 +1,13 @@
 {
-  "checked_at": "2026-10-18T20:13:15.211194+00:00",
+  "checked_at": "2026-10-18T20:17:29.986274+00:00",
   "baseline": "0e7ee93c8ca62426e5f79b39fc874f1a2b7e7ee4",
-  "observed_head": "40aa16398e850578f6dc0bc79758736147b9d835",
+  "observed_head": "bbfd017b71431a88e33503e5b02e75fef0bad9e7",
   "branch": "codex/damage-p0-20261019",
   "protected_hash_records": 6443,
   "protected_unique_files_hashed": 6434,
   "allowed_governance_hash_skips": [],
   "changed_paths": [
     "AGENTS.md",
-    "governance/DAMAGE_RESEARCH_SCOPE.md",
-    "governance/DECISIONS.md",
-    "governance/PROJECT_STATE.yaml",
-    "handoff/CURRENT_TASK.md",
-    "handoff/EXECUTOR_STATE.yaml",
-    "reports/damage_p0/20261019/authorization.md"
-  ],
-  "untracked_paths": [
     "datasets/damage/.gitignore",
     "datasets/damage/README.md",
     "docs/research/damage_p0/dataset_survey.md",
@@ -44,11 +36,17 @@
     "evaluation/damage_p0/storage_final.json",
     "evaluation/damage_p0/weight_access.json",
     "evaluation/damage_p0/wsl_facts.json",
+    "governance/DAMAGE_RESEARCH_SCOPE.md",
+    "governance/DECISIONS.md",
+    "governance/PROJECT_STATE.yaml",
+    "handoff/CURRENT_TASK.md",
+    "handoff/EXECUTOR_STATE.yaml",
     "reports/damage_p0/20261019/README.md",
     "reports/damage_p0/20261019/acquire_samples.py",
     "reports/damage_p0/20261019/add_sample_evidence.py",
     "reports/damage_p0/20261019/audit_environment.ps1",
     "reports/damage_p0/20261019/audit_final.py",
+    "reports/damage_p0/20261019/authorization.md",
     "reports/damage_p0/20261019/build_registries.py",
     "reports/damage_p0/20261019/check_resources.py",
     "reports/damage_p0/20261019/fetch_additional.py",
@@ -66,8 +64,12 @@
     "reports/damage_p0/20261019/sample_evidence/deepcrack_11112.png",
     "reports/damage_p0/20261019/sample_evidence/deepcrack_11113.png"
   ],
+  "untracked_paths": [
+    "evaluation/damage_p0/validation.json",
+    "reports/damage_p0/20261019/independent_review.md"
+  ],
   "scope_check": "PASS",
-  "local_links_checked": 71,
+  "local_links_checked": 73,
   "registry_rows": {
     "dataset_registry.csv": 8,
     "model_registry.csv": 9

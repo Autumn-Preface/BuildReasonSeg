@@ -67,7 +67,7 @@ research_lines:
     scientific_architecture_frozen: true
     autonomous_resume: false
   damage_research:
-    status: P0_AUTHORIZED
+    status: P0_EXECUTION_COMPLETE_AWAITING_SUPERVISOR
     task_id: DAMAGE-P0
     authorization_date: '2026-10-19'
     scope: governance/DAMAGE_RESEARCH_SCOPE.md

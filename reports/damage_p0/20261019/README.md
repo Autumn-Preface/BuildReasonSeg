@@ -1,6 +1,6 @@
 # BuildReasonSeg — Damage-P0 执行报告
 
-任务：DAMAGE-P0，授权日期2026-10-19。状态：**调查与协议草案已完成，最终核验/交接收尾中**。
+任务：DAMAGE-P0，授权日期2026-10-19。状态：**EXECUTION_COMPLETE，等待Supervisor独立验收**。
 本报告不是 ACCEPTED，不授权Damage-P1。验收权归ChatGPT Supervisor。
 
 ## 1. 执行摘要
@@ -24,6 +24,7 @@
 PATH Git缺HTTPS helper，改用现有bundled Git正常fetch/push，没有重装Git或改全局配置。
 
 治理检查点：`40aa16398e850578f6dc0bc79758736147b9d835`，已推送。
+调查/协议检查点：`bbfd017b71431a88e33503e5b02e75fef0bad9e7`，已推送。
 后续调查和最终交付记录在分支Git log中；最终实际本地/远端HEAD在push后从Git读取并向Supervisor报告，
 不预写自身SHA再制造额外提交。[git_startup.json](../../../evaluation/damage_p0/git_startup.json)记录起点观察。
 
@@ -125,11 +126,13 @@ Facade390/S2DS/dacl/OmniCrack未做配对抽样，状态和原因已记；是否
 ## 12. 自检、证据与交接
 
 [integrity_final.json](../../../evaluation/damage_p0/integrity_final.json)检查改动白名单、旧保护资产SHA256、
-本地引用链接、JSON/CSV、样本hash和GPU算子记录。首轮6443保护记录/6434唯一文件fresh hash无错误；
-最终状态以收尾再核验文件为准。小脚本语法/表格一致性检查通过才交付；未运行旧产品完整测试，
+本地引用链接、JSON/CSV、样本hash和GPU算子记录。6443保护记录/6434唯一文件fresh hash无错误；
+最终核验PASS（范围、引用、登记、样本完整性）。[validation.json](../../../evaluation/damage_p0/validation.json)
+记录9个Python脚本AST及治理/handoff YAML解析PASS。未运行旧产品完整测试，
 因为本任务不修改产品逻辑，不能以旧测试PASS冒充损伤科学正确性。
 
-独立复核结果另存review记录，仍不替代Supervisor验收。最终handoff记录执行结束、等待独立审查；
+已完成[只读独立材料复核](independent_review.md)，发现的2项P2均修复并经reviewer读回关闭，
+未发现剩余P0交付阻断问题；仍不替代Supervisor验收。最终handoff记录执行结束、等待Supervisor审查；
 所有重要成果提交推送任务分支，工作树/本地远端HEAD实际核对后报告并停止。
 
 证据入口：
