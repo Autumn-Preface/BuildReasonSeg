@@ -1,7 +1,7 @@
 {
-  "files": 71579,
-  "logical_bytes": 44155351459,
-  "expected_released_allocated_bytes": 31762711160,
+  "files": 71578,
+  "logical_bytes": 44155344750,
+  "expected_released_allocated_bytes": 31762702968,
   "shared_hardlink_paths": 23152,
   "categories": {
     "Retired Demo deployment; all non-model bytes preserved in verified local ZIP.": {
@@ -33,8 +33,8 @@
       "logical_bytes": 3220368896
     },
     "Retired original Python clone; proposal environment retained intact, no active MVP process at final gate.": {
-      "files": 42620,
-      "logical_bytes": 3995496032
+      "files": 42619,
+      "logical_bytes": 3995489323
     },
     "Exact duplicate historical checkpoint; unique stage/ablation state retained, no model selection.": {
       "files": 3,
@@ -49,7 +49,7 @@
       "logical_bytes": 139469472
     }
   },
-  "preserved_hash_records": 6442,
+  "preserved_hash_records": 6443,
   "all_selected_paths_untracked_or_ignored": true,
   "archives": [
     {

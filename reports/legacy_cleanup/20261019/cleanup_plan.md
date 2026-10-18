@@ -11,7 +11,7 @@
 完整扫描有一处访问拒绝：另一项目 `workspace/system-access-risk/.pytest_cache`；提权只读复核仍拒绝，该目录大小未知、原样保留。其余可读文件均列入，不能把总数解释为该不可读目录也已测量。
 硬链接逐文件核验：17,388 张 Task6M 训练影像与原始 WHU tile index/source_image_ref 精确对应；硬链接路径减少不等于释放同量磁盘。
 实际预计释放量使用 Windows FILE_STANDARD_INFO AllocationSize 和真实文件 ID/link count，保留其他链接的文件不计物理释放。
-白名单 71,579 文件，逻辑移除 44,155,351,459 bytes；预计释放实际分配空间 31,762,711,160 bytes（29.5813 GiB）。报告及小型档案新增占用另计。
+白名单 71,578 文件，逻辑移除 44,155,344,750 bytes；预计释放实际分配空间 31,762,702,968 bytes（29.5813 GiB）。报告及小型档案新增占用另计。
 
 ## 授权删除类别
 
@@ -24,7 +24,7 @@
 |C05|Rebuildable frozen-SAM2 per-tile feature cache; configs/task6n_oracle_relation_field.yaml and original RGB/weights retained.|2363|9911442816|
 |C06|Derived YOLO training image export; exact retained original verified (usually NTFS hardlink).|17388|12400660232|
 |C07|Redundant historical baseline dataset; exact full-tree peer outside cleanup scope retained.|8078|3220368896|
-|C08|Retired original Python clone; proposal environment retained intact, no active MVP process at final gate.|42620|3995496032|
+|C08|Retired original Python clone; proposal environment retained intact, no active MVP process at final gate.|42619|3995489323|
 |C09|Exact duplicate historical checkpoint; unique stage/ablation state retained, no model selection.|3|395047617|
 |C10|Rebuildable Python bytecode / pytest cache.|413|13143782|
 |C11|Rebuildable pip HTTP/wheel download cache; installed proposal environment retained.|257|139469472|
@@ -45,3 +45,7 @@
 不使用 reset/rebase/amend/stash/clean/force push；不清空系统 TEMP，不删除程序依赖，不改变原始硬链接目标的属性或字节。仅移除白名单涉及目录中已空的目录，不递归扩大范围。
 每个实际删除项写 cleanup_manifest.csv；原始理由/恢复路径和哈希证明见压缩白名单/duplicate_hash_proof/native_image_export_proof。锁定或拒绝访问的文件保留记录，不强行改权限。
 完成后复核 Git 跟踪/治理/中期成果/RC1/数据/关键权重 SHA256，核实软件进程与保留 Python/Git可用，统计空间前后与真实卷空闲变化。无模型加载、推理、训练、阈值调整。
+
+## 删除前安全检查补记
+
+首个执行检查在任何 unlink 之前拦截 Typer 包内 `.agents/skills/typer/SKILL.md`（6709 bytes）。未删除历史文件。保留该文件并从白名单排除，额外纳入保留哈希索引；没有削弱安全检查。退役 MVP 环境将残留这份包内技能说明及其父目录，不构成可运行 Python 环境。

@@ -1,0 +1,23 @@
+{
+  "checkpoint": "1fd354d164a9a6f5a896aec4654d5ee13b9d2fec",
+  "outcome": "SAFETY_GUARD_BEFORE_FIRST_DELETE",
+  "deleted_files": 0,
+  "execution_start_file_absent": true,
+  "excluded_paths": [
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-mvp\\Lib\\site-packages\\typer\\.agents\\skills\\typer\\SKILL.md",
+      "reason": "Retired original Python clone; proposal environment retained intact, no active MVP process at final gate.",
+      "recovery": "Recreate using recorded Python/package versions and tracked environment recipes; binary clone is not archived.",
+      "retained_copy": "",
+      "bytes": "6709",
+      "mtime_ns": "1790371084218993300",
+      "inode": "562949954912772",
+      "dev": "4004876537",
+      "nlink": "1",
+      "allocated_bytes": "8192",
+      "sha256": "",
+      "reason_id": "C08"
+    }
+  ],
+  "disposition": "Preserve file, narrow allowlist, recommit/push; guard not weakened."
+}

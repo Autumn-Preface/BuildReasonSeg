@@ -3,15 +3,16 @@ task_id: LEGACY_CLEANUP_20261019
 status: IN_PROGRESS
 executor: CODEX
 branch: codex/legacy-cleanup-20261019
-head: 97ee74c5ffb4a883584f7a994d75ccc5a7bdd4cf
-current_step: INVENTORY_AND_PRESERVATION_READY_BEFORE_DELETE
+head: 1fd354d164a9a6f5a896aec4654d5ee13b9d2fec
+current_step: SAFETY_GUARD_EXCLUSION_READY_BEFORE_DELETE
 report_directory: reports/legacy_cleanup/20261019
 next_action: Push inventory checkpoint, then execute explicit allowlist and verify.
 last_checkpoint:
-  commit: null
-  pushed: false
+  commit: 1fd354d164a9a6f5a896aec4654d5ee13b9d2fec
+  pushed: true
 model_inference_calls: 0
 training_calls: 0
 governance_changes: false
 scientific_changes: false
 deletions_started: false
+first_execution_guard: Bundled Typer .agents skill excluded; zero historical deletions.
