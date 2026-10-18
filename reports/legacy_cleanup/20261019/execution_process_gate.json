@@ -1,0 +1,5 @@
+{
+  "checked_at": "2026-10-19T01:03:20.5993982+08:00",
+  "active_retired_environment_or_demo_processes": 0,
+  "method": "Get-Process executable path; project model environments have no running process"
+}

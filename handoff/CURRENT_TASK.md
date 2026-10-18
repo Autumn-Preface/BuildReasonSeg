@@ -1,21 +1,17 @@
-# CURRENT_TASK — MIDTERM_EVIDENCE_REVIEW_20261017
+# CURRENT_TASK — LEGACY_CLEANUP_20261019
 
-Status: READY_FOR_SUPERVISOR_AUDIT
+Status: IN_PROGRESS
+Authority: User authorization dated 2026-10-19, Legacy-Cleanup 工作区清理与交接任务书.
+Branch: codex/legacy-cleanup-20261019
+Starting HEAD: 97ee74c5ffb4a883584f7a994d75ccc5a7bdd4cf
 
-用户授权：为江苏师范大学挑战杯校内孵化项目中期检查，审查GitHub及本地已有BuildReasonSeg科研图片；整理8—12张原始副本、来源清单、总览图、PPT建议、缺失证据及报告到reports/midterm_evidence_review/，独立分支commit/push等待共同审查。
+Scope: inventory actual project/deployment/software roots; remove confirmed redundant
+deployments, exact duplicates and rebuildable caches via reviewed per-file allowlist.
+Preserve source, Git history, governance, frozen conclusions, unique final weights,
+dataset/GT/splits, research records, midterm evidence and authentication/running tools.
+No model inference/training/algorithm work; no reset/rebase/amend/stash/clean/history rewrite.
 
-Scope: L0/L1 evidence organization only. No model inference/training, checkpoint/threshold/model selection, source/config/algorithm/governance edits, historical image/log/result changes, or Office/PPT editing. New plots may only read saved records and must be labeled redrawn. Old aerial building results are not facade damage results.
-
-Actual branch: codex/midterm-evidence-review-20261017
-Starting HEAD: e06777b0a0844c5c29325701eb2e819bd193ff04
-Next: provenance and visual review, select unchanged originals, build labeled replot/contact sheet, verify preservation, commit/push final review pack.
-
-Previous Task8F remains pending its Supervisor audit; this audit does not accept/reopen/change its scientific or engineering contract. Prior handoff snapshots preserved under this review audit/ and Git history.
-
-## Completion checkpoint
-
-10 unchanged original copies +2 explicitly labeled record-based redraws,12-row manifest/contact sheet,Chinese report/PPT recommendations/missing evidence complete.
-1450 old tracked hashes /111308 metadata records /10 original-copy SHA256 checks PASS.
-All6 frozen checkpoint hashes and real Demo run24events/12previews verified without model load/inference.
-Model calls0,training0; no historical experiment/data/config/source/governance/Office edit.
-Final acceptance remains pending ChatGPT and user joint review. Commit/push, then STOP.
+Plan and evidence: reports/legacy_cleanup/20261019/cleanup_plan.md
+Checkpoint: inventory, hashes and verified small Demo archives ready before deletion.
+Next: commit/push plan, perform allowlisted cleanup, verify integrity and space,
+commit/push closure, then end legacy architecture work and enter neutral idle handoff.

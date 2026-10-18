@@ -1,0 +1,187 @@
+[
+  {
+    "Id": 7076,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 10008,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 13232,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 19372,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 20064,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 21184,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 22900,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 23840,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 24252,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 34276,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 37360,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 37916,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 38420,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 38440,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 41444,
+    "ProcessName": "ChatGPT",
+    "Path": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1013.4894.0_x64__2p2nqsd0c76g0\\app\\ChatGPT.exe"
+  },
+  {
+    "Id": 6884,
+    "ProcessName": "codex",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\bin\\896a0166b774037a\\codex.exe"
+  },
+  {
+    "Id": 38220,
+    "ProcessName": "codex",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\bin\\896a0166b774037a\\codex.exe"
+  },
+  {
+    "Id": 41188,
+    "ProcessName": "codex",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\bin\\896a0166b774037a\\codex.exe"
+  },
+  {
+    "Id": 30156,
+    "ProcessName": "codex-code-mode-host",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\bin\\896a0166b774037a\\codex-code-mode-host.exe"
+  },
+  {
+    "Id": 43320,
+    "ProcessName": "codex-computer-use-swift",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_modules\\@oai\\sky\\bin\\windows\\swift\\x64\\codex-computer-use-swift.exe"
+  },
+  {
+    "Id": 13884,
+    "ProcessName": "codex-windows-sandbox-service",
+    "Path": null
+  },
+  {
+    "Id": 3560,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 15776,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 22784,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 35336,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 35896,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 38424,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 39096,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 39820,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 43696,
+    "ProcessName": "node",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node.exe"
+  },
+  {
+    "Id": 24136,
+    "ProcessName": "node_repl",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_repl.exe"
+  },
+  {
+    "Id": 25456,
+    "ProcessName": "node_repl",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_repl.exe"
+  },
+  {
+    "Id": 36008,
+    "ProcessName": "node_repl",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_repl.exe"
+  },
+  {
+    "Id": 40204,
+    "ProcessName": "node_repl",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_repl.exe"
+  },
+  {
+    "Id": 40756,
+    "ProcessName": "node_repl",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_repl.exe"
+  },
+  {
+    "Id": 43200,
+    "ProcessName": "node_repl",
+    "Path": "C:\\Users\\ROG\\AppData\\Local\\OpenAI\\Codex\\runtimes\\cua_node\\78fb63cda1a9e2b2\\bin\\node_repl.exe"
+  },
+  {
+    "Id": 36680,
+    "ProcessName": "python",
+    "Path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\python.exe"
+  }
+]

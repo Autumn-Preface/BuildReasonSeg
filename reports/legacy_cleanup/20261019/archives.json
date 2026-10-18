@@ -1,0 +1,14 @@
+[
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\legacy_archive\\20261019\\BuildReasonSeg_Demo_V1_non_model.zip",
+    "bytes": 44740017,
+    "sha256": "6d117df063913488328ae9ffa22b1d2f218cd4e8f0ac76acf1d1269c01cc111e",
+    "entries": 277
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\legacy_archive\\20261019\\BuildReasonSeg_Demo_V2_non_model.zip",
+    "bytes": 11146516,
+    "sha256": "38b7188237d15b95011cccdc80f99a5d8bce051e8d9b0d11a457b968dd3171b4",
+    "entries": 133
+  }
+]

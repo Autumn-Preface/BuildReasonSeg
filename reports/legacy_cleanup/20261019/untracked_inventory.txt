@@ -1,0 +1,16 @@
+reports/legacy_cleanup/20261019/audit_cleanup.py
+reports/legacy_cleanup/20261019/disk_inventory.csv
+reports/legacy_cleanup/20261019/files_before.csv.gz
+reports/legacy_cleanup/20261019/git_start.json
+reports/legacy_cleanup/20261019/git_status_inventory.txt
+reports/legacy_cleanup/20261019/inventory_before.json
+reports/legacy_cleanup/20261019/largest_files_before.csv
+reports/legacy_cleanup/20261019/native_image_export_proof.csv
+reports/legacy_cleanup/20261019/prepare_plan.py
+reports/legacy_cleanup/20261019/previous_CURRENT_TASK.md
+reports/legacy_cleanup/20261019/previous_EXECUTOR_STATE.yaml
+reports/legacy_cleanup/20261019/registered_appx.json
+reports/legacy_cleanup/20261019/registered_desktop_apps.json
+reports/legacy_cleanup/20261019/running_software_before.json
+reports/legacy_cleanup/20261019/tracked_before.json
+reports/legacy_cleanup/20261019/weight_identities_before.csv

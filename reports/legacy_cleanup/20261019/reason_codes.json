@@ -1,0 +1,13 @@
+{
+  "C01": "Retired Demo deployment; all non-model bytes preserved in verified local ZIP.",
+  "C02": "Retired Demo model duplicate; single complete Advisor_RC1 retained.",
+  "C03": "Redundant Qwen cached model/tokenizer copy; pinned revision and complete RC1 retained.",
+  "C04": "Redundant SAM2 pretrained checkpoint; byte-identical RC1 copy retained.",
+  "C05": "Rebuildable frozen-SAM2 per-tile feature cache; configs/task6n_oracle_relation_field.yaml and original RGB/weights retained.",
+  "C06": "Derived YOLO training image export; exact retained original verified (usually NTFS hardlink).",
+  "C07": "Redundant historical baseline dataset; exact full-tree peer outside cleanup scope retained.",
+  "C08": "Retired original Python clone; proposal environment retained intact, no active MVP process at final gate.",
+  "C09": "Exact duplicate historical checkpoint; unique stage/ablation state retained, no model selection.",
+  "C10": "Rebuildable Python bytecode / pytest cache.",
+  "C11": "Rebuildable pip HTTP/wheel download cache; installed proposal environment retained."
+}

@@ -1,0 +1,70 @@
+{
+  "files": 71579,
+  "logical_bytes": 44155351459,
+  "expected_released_allocated_bytes": 31762711160,
+  "shared_hardlink_paths": 23152,
+  "categories": {
+    "Retired Demo deployment; all non-model bytes preserved in verified local ZIP.": {
+      "files": 410,
+      "logical_bytes": 57574728
+    },
+    "Retired Demo model duplicate; single complete Advisor_RC1 retained.": {
+      "files": 36,
+      "logical_bytes": 9431900776
+    },
+    "Redundant Qwen cached model/tokenizer copy; pinned revision and complete RC1 retained.": {
+      "files": 10,
+      "logical_bytes": 4266640306
+    },
+    "Redundant SAM2 pretrained checkpoint; byte-identical RC1 copy retained.": {
+      "files": 1,
+      "logical_bytes": 323606802
+    },
+    "Rebuildable frozen-SAM2 per-tile feature cache; configs/task6n_oracle_relation_field.yaml and original RGB/weights retained.": {
+      "files": 2363,
+      "logical_bytes": 9911442816
+    },
+    "Derived YOLO training image export; exact retained original verified (usually NTFS hardlink).": {
+      "files": 17388,
+      "logical_bytes": 12400660232
+    },
+    "Redundant historical baseline dataset; exact full-tree peer outside cleanup scope retained.": {
+      "files": 8078,
+      "logical_bytes": 3220368896
+    },
+    "Retired original Python clone; proposal environment retained intact, no active MVP process at final gate.": {
+      "files": 42620,
+      "logical_bytes": 3995496032
+    },
+    "Exact duplicate historical checkpoint; unique stage/ablation state retained, no model selection.": {
+      "files": 3,
+      "logical_bytes": 395047617
+    },
+    "Rebuildable Python bytecode / pytest cache.": {
+      "files": 413,
+      "logical_bytes": 13143782
+    },
+    "Rebuildable pip HTTP/wheel download cache; installed proposal environment retained.": {
+      "files": 257,
+      "logical_bytes": 139469472
+    }
+  },
+  "preserved_hash_records": 6442,
+  "all_selected_paths_untracked_or_ignored": true,
+  "archives": [
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\legacy_archive\\20261019\\BuildReasonSeg_Demo_V1_non_model.zip",
+      "bytes": 44740017,
+      "sha256": "6d117df063913488328ae9ffa22b1d2f218cd4e8f0ac76acf1d1269c01cc111e",
+      "entries": 277
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\legacy_archive\\20261019\\BuildReasonSeg_Demo_V2_non_model.zip",
+      "bytes": 11146516,
+      "sha256": "38b7188237d15b95011cccdc80f99a5d8bce051e8d9b0d11a457b968dd3171b4",
+      "entries": 133
+    }
+  ],
+  "source_model_loads": 0,
+  "physical_accounting": "FILE_STANDARD_INFO.AllocationSize; unique file ID only when all its hardlinks are planned for deletion."
+}
