@@ -59,3 +59,18 @@ executor_protocol:
   legacy_handoff_files:
     - handoff/TO_DSH.md
     - handoff/FROM_DSH.md
+
+# Historical fields above continue to describe the frozen legacy RC1 line.
+research_lines:
+  legacy_rc1:
+    status: FROZEN_HISTORICAL
+    scientific_architecture_frozen: true
+    autonomous_resume: false
+  damage_research:
+    status: P0_AUTHORIZED
+    task_id: DAMAGE-P0
+    authorization_date: '2026-10-19'
+    scope: governance/DAMAGE_RESEARCH_SCOPE.md
+    p1_authorized: false
+    final_backbone: null
+    protocol_status: DRAFT_PENDING_SUPERVISOR_REVIEW

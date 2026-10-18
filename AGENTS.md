@@ -145,3 +145,13 @@ Repository anchor is not persisted while idle. Every Executor MUST resolve the a
 branch and HEAD from Git at startup. Do not persist fabricated self-referential SHA
 placeholders as if they were real Git facts. Report actual local and remote final HEAD
 from Git after push; do not create an extra commit to write its own final SHA into itself.
+
+## 10. Independent Damage Research (Supervisor authorization 2026-10-19)
+
+The frozen architecture and scientific prohibitions above continue to govern the legacy RC1 line.
+DAMAGE-P0 separately authorizes dataset/literature/model surveys, read-only environment checks,
+small lawful data samples, draft experimental protocols and storage governance. It is not constrained
+to legacy model choices and cannot alter legacy code, weights, splits, results or Demo archives.
+No new algorithm implementation, large training/downloads, dependency changes in existing environments,
+final backbone selection, P1 execution or self-acceptance is authorized. See GOV-D009 and
+governance/DAMAGE_RESEARCH_SCOPE.md. P1 and protocol freezing require Supervisor review.

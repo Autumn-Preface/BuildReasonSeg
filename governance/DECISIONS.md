@@ -106,3 +106,19 @@ Decisions: Chat remains Supervisor; Codex is the preferred executor; DSH is the 
 Prohibited: relying on chat history as the only state; pre-authorizing tasks.
 Reopen condition: Supervisor decision.
 ```
+
+## GOV-D009
+
+```text
+Decision ID: GOV-D009
+Status: SUPERVISOR_AUTHORIZED_P0_ONLY
+Decision: INDEPENDENT_DAMAGE_RESEARCH_LINE
+Authority: Supervisor task brief DAMAGE-P0 dated 2026-10-19, preserved at
+  reports/damage_p0/20261019/authorization.md.
+Decision: establish a separate RGB visible facade damage segmentation research line;
+  legacy RC1 remains frozen historical research, including its conclusions and assets.
+  Damage P0 surveys and draft protocols are not bound to legacy model choices.
+Prohibited: changing frozen legacy experiments/assets; implementing new algorithms;
+  training at scale; choosing the final backbone; accepting P0 or starting P1 without Supervisor.
+Reopen condition: explicit Supervisor authorization after independent P0 review.
+```

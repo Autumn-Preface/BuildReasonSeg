@@ -1,15 +1,11 @@
-# CURRENT_TASK — NONE
+# CURRENT_TASK — DAMAGE-P0
 
-Task ID: NONE
-Status: AWAITING_SUPERVISOR
+Status: IN_PROGRESS
+Authority: reports/damage_p0/20261019/authorization.md
+Branch: codex/damage-p0-20261019
+Verified starting local and remote cleanup HEAD: 0e7ee93c8ca62426e5f79b39fc874f1a2b7e7ee4
+Remote main: 57b368d5647e842d8f31d6d1a9997bf1df3cc0fb; 150 commits behind task baseline.
+Startup worktree clean; fetched through bundled Git because PATH Git lacks HTTPS helper.
 
-Previous task: LEGACY_CLEANUP_20261019 — COMPLETE
-Report: reports/legacy_cleanup/20261019/README.md
-
-Inventory, explicit deletion plan, hashes and recovery records were committed/pushed
-before cleanup. Allowlisted redundant files were removed; preservation and space
-checks passed. No product/governance/scientific changes, training or inference.
-
-Idle Git metadata: branch = null; head = null. Actual Git branch/HEAD remain authoritative.
-Await user/Supervisor report review or a new explicit task.
-Do not proactively resume legacy architecture research, Demo, inference or development.
+Next: public-source surveys, lawful small samples, environment audit, draft protocol, gaps and storage report.
+No legacy implementation changes; no training; no Damage-P1. Final acceptance belongs to Supervisor.
