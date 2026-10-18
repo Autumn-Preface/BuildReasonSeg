@@ -3,16 +3,17 @@ task_id: DAMAGE-P0
 status: IN_PROGRESS
 executor: CODEX
 branch: codex/damage-p0-20261019
-head: 0e7ee93c8ca62426e5f79b39fc874f1a2b7e7ee4
+head: 40aa163
 last_checkpoint:
-  commit: 0e7ee93c8ca62426e5f79b39fc874f1a2b7e7ee4
+  commit: 40aa163
   pushed: true
-current_step: P0_0_GOVERNANCE_PREPARATION
-next_action: Survey resources and audit environment within P0 scope.
+current_step: SURVEYS_AND_PROTOCOL_DRAFTED_PENDING_AUDIT
+next_action: Check legacy integrity, independent review, final report and push.
 report_directory: reports/damage_p0/20261019
 model_inference_calls: 0
 training_calls: 0
+new_weight_download_bytes: 0
 governance_changes: true
-scientific_changes: false
+legacy_scientific_changes: false
 p1_authorized: false
 acceptance: PENDING_SUPERVISOR

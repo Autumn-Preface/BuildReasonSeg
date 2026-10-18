@@ -1,0 +1,261 @@
+{
+  "mode": "HUMAN_GT_PARSER_NO_INFERENCE",
+  "records": [
+    {
+      "dataset": "cubit",
+      "image": "datasets\\damage\\local\\cubit\\CR1_1.JPG",
+      "image_sha256": "93d27de9110a93ed543e6d76511d65c09fa5673f753d86fe09693b6335c57119",
+      "width": 3000,
+      "height": 4500,
+      "planes": {
+        "0": {
+          "foreground_pixels": 136098,
+          "foreground_fraction": 0.010081333333333333,
+          "fraction_after_512_square_nearest": 0.009952545166015625
+        }
+      },
+      "errors": [],
+      "instances": 3,
+      "annotation": "datasets\\damage\\local\\cubit\\CR1_1.txt",
+      "annotation_sha256": "74ed1cc7e9d130c5483294d4bc00a9198ac57151400f17cd4bf8da7b5f978874",
+      "native_crop_xyxy": [
+        1932,
+        2476,
+        2188,
+        2732
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\cubit_CR1_1.png"
+    },
+    {
+      "dataset": "cubit",
+      "image": "datasets\\damage\\local\\cubit\\CR1_10.JPG",
+      "image_sha256": "4648100798868f5c93669340aa341429278e6e65fca2200bc729afe6afa383b4",
+      "width": 3000,
+      "height": 4500,
+      "planes": {
+        "0": {
+          "foreground_pixels": 151027,
+          "foreground_fraction": 0.011187185185185185,
+          "fraction_after_512_square_nearest": 0.0112152099609375
+        }
+      },
+      "errors": [],
+      "instances": 3,
+      "annotation": "datasets\\damage\\local\\cubit\\CR1_10.txt",
+      "annotation_sha256": "35b7b34f8d270138736c54600960c068c489b56efa940f3e814b818fadc6cb4f",
+      "native_crop_xyxy": [
+        1690,
+        2540,
+        1946,
+        2796
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\cubit_CR1_10.png"
+    },
+    {
+      "dataset": "cubit",
+      "image": "datasets\\damage\\local\\cubit\\SP0_1.JPG",
+      "image_sha256": "0288794ef4e068f1ad0a133cf9f0b334f6e79d80964ab37a48e7a63b5721ba3e",
+      "width": 4800,
+      "height": 3200,
+      "planes": {
+        "1": {
+          "foreground_pixels": 749218,
+          "foreground_fraction": 0.04877721354166667,
+          "fraction_after_512_square_nearest": 0.0487060546875
+        }
+      },
+      "errors": [],
+      "instances": 2,
+      "annotation": "datasets\\damage\\local\\cubit\\SP0_1.txt",
+      "annotation_sha256": "33d4ebd575bbc167c5b8577262220b29a9ffe94abc9e3037791906ab0a6d6588",
+      "native_crop_xyxy": [
+        2773,
+        1781,
+        3029,
+        2037
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\cubit_SP0_1.png"
+    },
+    {
+      "dataset": "cubit",
+      "image": "datasets\\damage\\local\\cubit\\SP0_10.JPG",
+      "image_sha256": "55bee013927f311f38cb2229bcc25d8e21b408b229d5d0c736cff590274adfc1",
+      "width": 4800,
+      "height": 3200,
+      "planes": {
+        "1": {
+          "foreground_pixels": 754547,
+          "foreground_fraction": 0.049124153645833335,
+          "fraction_after_512_square_nearest": 0.049205780029296875
+        }
+      },
+      "errors": [],
+      "instances": 2,
+      "annotation": "datasets\\damage\\local\\cubit\\SP0_10.txt",
+      "annotation_sha256": "00e96072b1df538ccfd2b0ba63dcfb95c4343a1b01c4881e40e7fee0757d129a",
+      "native_crop_xyxy": [
+        2663,
+        1586,
+        2919,
+        1842
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\cubit_SP0_10.png"
+    },
+    {
+      "dataset": "deepcrack",
+      "image": "datasets\\damage\\local\\deepcrack\\11111.jpg",
+      "image_sha256": "ae57ecf44ee75dedb8a2897dd975cade168bec7515dbf4c4bdcca9f52214c587",
+      "width": 544,
+      "height": 384,
+      "planes": {
+        "crack": {
+          "foreground_pixels": 5060,
+          "foreground_fraction": 0.024222579656862746,
+          "fraction_after_512_square_nearest": 0.024188995361328125
+        }
+      },
+      "errors": [],
+      "annotation_size": [
+        544,
+        384
+      ],
+      "unique_values": [
+        0,
+        255
+      ],
+      "annotation": "datasets\\damage\\local\\deepcrack\\11111.png",
+      "annotation_sha256": "e500b0002e5b001e4ed07061b60b5f249c95179676553299884159ea32e93869",
+      "native_crop_xyxy": [
+        288,
+        57,
+        544,
+        313
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\deepcrack_11111.png"
+    },
+    {
+      "dataset": "deepcrack",
+      "image": "datasets\\damage\\local\\deepcrack\\11112.jpg",
+      "image_sha256": "44e62c6410a898b496e245ac28f3f1604c31acb04cad4e5b0551738f40a78313",
+      "width": 544,
+      "height": 384,
+      "planes": {
+        "crack": {
+          "foreground_pixels": 12392,
+          "foreground_fraction": 0.059321384803921566,
+          "fraction_after_512_square_nearest": 0.059661865234375
+        }
+      },
+      "errors": [],
+      "annotation_size": [
+        544,
+        384
+      ],
+      "unique_values": [
+        0,
+        255
+      ],
+      "annotation": "datasets\\damage\\local\\deepcrack\\11112.png",
+      "annotation_sha256": "a0420bad43cd286f4de95a5894ba03590550124857831cedc83a32f895fb9801",
+      "native_crop_xyxy": [
+        288,
+        51,
+        544,
+        307
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\deepcrack_11112.png"
+    },
+    {
+      "dataset": "deepcrack",
+      "image": "datasets\\damage\\local\\deepcrack\\11113.jpg",
+      "image_sha256": "ab5a25f596a665aac2c36cf8174172dbd8dc8287cf01e638a514c640500beb37",
+      "width": 544,
+      "height": 384,
+      "planes": {
+        "crack": {
+          "foreground_pixels": 7255,
+          "foreground_fraction": 0.03473020067401961,
+          "fraction_after_512_square_nearest": 0.034740447998046875
+        }
+      },
+      "errors": [],
+      "annotation_size": [
+        544,
+        384
+      ],
+      "unique_values": [
+        0,
+        255
+      ],
+      "annotation": "datasets\\damage\\local\\deepcrack\\11113.png",
+      "annotation_sha256": "54d22152fccd4845c306606b4fc1626aea1295a3172074c6dc4977ed73b2c8d8",
+      "native_crop_xyxy": [
+        197,
+        78,
+        453,
+        334
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\deepcrack_11113.png"
+    },
+    {
+      "dataset": "cif",
+      "image": "datasets\\damage\\local\\cif\\IMG_0345.jpg",
+      "image_sha256": "1999fad4879e065aca45c58f00cbe52a0564f00591d8db43522f1d1aa1c70411",
+      "width": 3024,
+      "height": 4032,
+      "planes": {
+        "2": {
+          "foreground_pixels": 34223,
+          "foreground_fraction": 0.002806827785126396,
+          "fraction_after_512_square_nearest": 0.002777099609375
+        },
+        "6": {
+          "foreground_pixels": 2845,
+          "foreground_fraction": 0.00023333503926261862,
+          "fraction_after_512_square_nearest": 0.0002288818359375
+        }
+      },
+      "errors": [],
+      "instances": 8,
+      "annotation": "datasets\\damage\\local\\cif\\IMG_0345.json",
+      "annotation_sha256": "a25d232eb98ddec68458785790aaf31dc3b37470154c1a68b58b6304dae5d02d",
+      "native_crop_xyxy": [
+        1599,
+        2471,
+        1855,
+        2727
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\cif_IMG_0345.png"
+    },
+    {
+      "dataset": "cif",
+      "image": "datasets\\damage\\local\\cif\\IMG_8896.jpg",
+      "image_sha256": "16a156da35bc0bab86b19f3545b7e4e2cabfbad73306414891168fd8b835a4ea",
+      "width": 3024,
+      "height": 4032,
+      "planes": {
+        "2": {
+          "foreground_pixels": 33787,
+          "foreground_fraction": 0.0027710688828000334,
+          "fraction_after_512_square_nearest": 0.002704620361328125
+        },
+        "6": {
+          "foreground_pixels": 30052,
+          "foreground_fraction": 0.0024647397539262618,
+          "fraction_after_512_square_nearest": 0.002475738525390625
+        }
+      },
+      "errors": [],
+      "instances": 8,
+      "annotation": "datasets\\damage\\local\\cif\\IMG_8896.json",
+      "annotation_sha256": "94f7ba8f4ae473aa55803c5d52e6bb2463001cd0a54e9a75313c5a7a0c8c792d",
+      "native_crop_xyxy": [
+        1144,
+        3222,
+        1400,
+        3478
+      ],
+      "evidence": "reports\\damage_p0\\20261019\\sample_evidence\\cif_IMG_8896.png"
+    }
+  ]
+}

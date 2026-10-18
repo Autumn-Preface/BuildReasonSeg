@@ -1,0 +1,3 @@
+# Local source snapshots only; access metadata and report citations are tracked one level above.
+*
+!.gitignore

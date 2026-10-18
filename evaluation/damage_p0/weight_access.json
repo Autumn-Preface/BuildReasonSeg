@@ -1,0 +1,24 @@
+[
+  {
+    "name": "sam2.1_hiera_tiny",
+    "url": "https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt",
+    "method": "HEAD",
+    "status": 200,
+    "content_length": "156008466",
+    "downloaded_weight_bytes": 0
+  },
+  {
+    "name": "yolo11s-seg",
+    "url": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11s-seg.pt",
+    "method": "HEAD",
+    "status": 200,
+    "content_length": "20669228",
+    "downloaded_weight_bytes": 0
+  },
+  {
+    "name": "sam3",
+    "url": "https://huggingface.co/facebook/sam3/resolve/main/sam3.pt",
+    "method": "HEAD",
+    "error": "<HTTPError 401: 'Unauthorized'>"
+  }
+]

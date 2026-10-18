@@ -1,0 +1,74 @@
+[
+  {
+    "repo": "BenyunZhao/CUBIT-InSeg",
+    "sha": "8fee6385a2a1a714cdeab53321a8e275f652799f",
+    "commit_url": "https://github.com/BenyunZhao/CUBIT-InSeg/commit/8fee6385a2a1a714cdeab53321a8e275f652799f",
+    "commit_date": "2026-09-03T06:32:29Z"
+  },
+  {
+    "repo": "phiyodr/dacl10k-toolkit",
+    "sha": "fa74af3bf63c9f549c5f039a94539de9c0b1bc2d",
+    "commit_url": "https://github.com/phiyodr/dacl10k-toolkit/commit/fa74af3bf63c9f549c5f039a94539de9c0b1bc2d",
+    "commit_date": "2025-01-01T19:50:10Z"
+  },
+  {
+    "repo": "ben-z-original/s2ds",
+    "sha": "86a7e8af5da9cde00a050056db6e6fe219eed280",
+    "commit_url": "https://github.com/ben-z-original/s2ds/commit/86a7e8af5da9cde00a050056db6e6fe219eed280",
+    "commit_date": "2022-10-10T07:42:47Z"
+  },
+  {
+    "repo": "yhlleo/DeepCrack",
+    "sha": "8202a60701068645c883ed68b95fd3f30914d90c",
+    "commit_url": "https://github.com/yhlleo/DeepCrack/commit/8202a60701068645c883ed68b95fd3f30914d90c",
+    "commit_date": "2023-05-08T06:09:21Z"
+  },
+  {
+    "repo": "KG-TSI-Civil/CrackSAM",
+    "sha": "155026b08c64bde1c68d1c37f3b588ddb33454a7",
+    "commit_url": "https://github.com/KG-TSI-Civil/CrackSAM/commit/155026b08c64bde1c68d1c37f3b588ddb33454a7",
+    "commit_date": "2026-09-23T04:04:18Z"
+  },
+  {
+    "repo": "HqiTao/CT-crackseg",
+    "sha": "cae03437fb8a44157c1f2a4543e95522e0fd2a08",
+    "commit_url": "https://github.com/HqiTao/CT-crackseg/commit/cae03437fb8a44157c1f2a4543e95522e0fd2a08",
+    "commit_date": "2024-09-12T01:19:13Z"
+  },
+  {
+    "repo": "spiderforest/MixerCSeg",
+    "sha": "7ad3fd6fd0e9bc60d1eb9c3b50292d876485dd1d",
+    "commit_url": "https://github.com/spiderforest/MixerCSeg/commit/7ad3fd6fd0e9bc60d1eb9c3b50292d876485dd1d",
+    "commit_date": "2026-03-09T06:51:17Z"
+  },
+  {
+    "repo": "facebookresearch/sam2",
+    "sha": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "commit_url": "https://github.com/facebookresearch/sam2/commit/2b90b9f5ceec907a1c18123530e92e794ad901a4",
+    "commit_date": "2024-12-16T00:47:17Z"
+  },
+  {
+    "repo": "facebookresearch/sam3",
+    "sha": "7f473cfd983d5eb43040ff608f66bff0d7bdcb53",
+    "commit_url": "https://github.com/facebookresearch/sam3/commit/7f473cfd983d5eb43040ff608f66bff0d7bdcb53",
+    "commit_date": "2026-10-14T23:42:46Z"
+  },
+  {
+    "repo": "NVlabs/SegFormer",
+    "sha": "65fa8cfa9b52b6ee7e8897a98705abf8570f9e32",
+    "commit_url": "https://github.com/NVlabs/SegFormer/commit/65fa8cfa9b52b6ee7e8897a98705abf8570f9e32",
+    "commit_date": "2023-06-13T22:01:29Z"
+  },
+  {
+    "repo": "milesial/Pytorch-UNet",
+    "sha": "21d7850f2af30a9695bbeea75f3136aa538cfc4a",
+    "commit_url": "https://github.com/milesial/Pytorch-UNet/commit/21d7850f2af30a9695bbeea75f3136aa538cfc4a",
+    "commit_date": "2024-02-11T00:59:01Z"
+  },
+  {
+    "repo": "ultralytics/ultralytics",
+    "sha": "ee00414e1d86e111ab17fe2aa12a29452eb4b55d",
+    "commit_url": "https://github.com/ultralytics/ultralytics/commit/ee00414e1d86e111ab17fe2aa12a29452eb4b55d",
+    "commit_date": "2026-10-18T02:55:13Z"
+  }
+]

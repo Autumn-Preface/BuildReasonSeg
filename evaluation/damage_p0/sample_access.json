@@ -1,0 +1,776 @@
+{
+  "checked_at": "2026-10-18T19:56:12.642492+00:00",
+  "transferred_bytes": 25256662,
+  "events": [
+    {
+      "url": "https://drive.google.com/drive/folders/1HqS0rMWgwsy70TbaZYFqwzgFxLL_hp_b",
+      "method": "GET",
+      "status": 200,
+      "content_length": null,
+      "content_range": null,
+      "bytes": 323885,
+      "sha256": "030f67476687f8256d6750f156b48b01cabf5d1ca0f489c9eaf84001ea505435"
+    },
+    {
+      "url": "https://drive.google.com/drive/folders/1WZKYslWDqXUl-n4mp23j48JdR9wZ3J6T",
+      "method": "GET",
+      "status": 200,
+      "content_length": null,
+      "content_range": null,
+      "bytes": 317603,
+      "sha256": "9518face9a26909a8c545240c397b67b113a242fb870f5aa85ae485ff1dcf64b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "HEAD",
+      "status": 200,
+      "content_length": "67708808",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "22",
+      "content_range": "bytes 67708786-67708807/67708808",
+      "bytes": 22,
+      "sha256": "0d71f40a7e0e32b567e93979ecefea5642b69c2860f1bf86cb74978a7bbc2366"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20",
+      "content_range": "bytes 67708766-67708785/67708808",
+      "bytes": 20,
+      "sha256": "b7675644d7b3916a1fd318bd1b57fef6bd81952b3ebfd9274a14af391de7b207"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "97995",
+      "content_range": "bytes 67610791-67708785/67708808",
+      "bytes": 97995,
+      "sha256": "9e6f1261e1b9b063bbfc797c92bae8f61d5124af6b5d6ad8eec6defa7eb18c2b"
+    },
+    {
+      "url": "https://dacl10k.s3.eu-central-1.amazonaws.com/dacl10k-challenge/dacl10k_v2_devphase.zip",
+      "method": "HEAD",
+      "error": "<HTTPError 403: 'Forbidden'>"
+    },
+    {
+      "dataset": "dacl",
+      "error": "<HTTPError 403: 'Forbidden'>"
+    },
+    {
+      "url": "https://drive.google.com/drive/folders/1HqS0rMWgwsy70TbaZYFqwzgFxLL_hp_b",
+      "method": "GET",
+      "status": 200,
+      "content_length": null,
+      "content_range": null,
+      "bytes": 323720,
+      "sha256": "1e009800284d0c388ce57a8ce718a1aaee6e636ff1a5b5913f985c78b0be1e19"
+    },
+    {
+      "url": "https://drive.google.com/drive/folders/1WZKYslWDqXUl-n4mp23j48JdR9wZ3J6T",
+      "method": "GET",
+      "status": 200,
+      "content_length": null,
+      "content_range": null,
+      "bytes": 317804,
+      "sha256": "fa2a721585d3fd12bb48cb0a8db9b2e76a6888655ee8f19be0916a7e13828d14"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "HEAD",
+      "status": 200,
+      "content_length": "15034071180",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "HEAD",
+      "status": 200,
+      "content_length": "248950377",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "22",
+      "content_range": "bytes 15034071158-15034071179/15034071180",
+      "bytes": 22,
+      "sha256": "8022a0982473e33bc2ceeda339804d3a4ae4b774c6c0d50e375acad51a03eb13"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20",
+      "content_range": "bytes 15034071138-15034071157/15034071180",
+      "bytes": 20,
+      "sha256": "4d665c8307019ddc765cf7d19b5a0ee3ad5599acaf773e0bbdc8787a27939b62"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "56",
+      "content_range": "bytes 15034071082-15034071137/15034071180",
+      "bytes": 56,
+      "sha256": "990348bf360d5ad9eed02815447e9f946ab35c78d0094f8fd8f8c05762c50cd5"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "588215",
+      "content_range": "bytes 15033482867-15034071081/15034071180",
+      "bytes": 588215,
+      "sha256": "54bb64e1ef0acb031d292d323adcefaf35786f616a3332edb774daec7663749f"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "22",
+      "content_range": "bytes 248950355-248950376/248950377",
+      "bytes": 22,
+      "sha256": "fdb12e6c5b65acf639dcbaca40665e4ca047e4c1bd6a7fa6287e7a7b538f56ef"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20",
+      "content_range": "bytes 248950335-248950354/248950377",
+      "bytes": 20,
+      "sha256": "c80f2aff8f9a1d37d3c56ff58363255e18702106e1bad1ea0fae31d170fafbf5"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "540251",
+      "content_range": "bytes 248410104-248950354/248950377",
+      "bytes": 540251,
+      "sha256": "dc61814ebee1729625cf7ade97bd67c467f2a409f476f75e3f7db297c0c817fa"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 7106543494-7106543523/15034071180",
+      "bytes": 30,
+      "sha256": "ae2bc0121e0b8e8488493fc5d3870b49217b9b74f4f7333a2121fe927d6769b8"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "16",
+      "content_range": "bytes 7106543524-7106543539/15034071180",
+      "bytes": 16,
+      "sha256": "4eca3b19490afa66cb7613c57dfc2027f95959578a48177f8241675464a42860"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "4401894",
+      "content_range": "bytes 7106543572-7110945465/15034071180",
+      "bytes": 4401894,
+      "sha256": "8eb203bb3478d4c4561ba76ca946fe8138e065f9ca97cd64e0a8379ae10fe07a"
+    },
+    {
+      "archive_entry": "images/CR1_1.JPG",
+      "bytes": 4400720,
+      "sha256": "93d27de9110a93ed543e6d76511d65c09fa5673f753d86fe09693b6335c57119",
+      "local": "datasets\\damage\\local\\cubit\\CR1_1.JPG"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 118524083-118524112/248950377",
+      "bytes": 30,
+      "sha256": "f444e3a4c6ff578a610abf0ed7f8da2996e0ba382e871b9ae5b0cdf3952404fa"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "16",
+      "content_range": "bytes 118524113-118524128/248950377",
+      "bytes": 16,
+      "sha256": "d7c8e0aa71c22816de35680543681b7b4155a1a2a6d05fd4d10c038b1ac94163"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "39081",
+      "content_range": "bytes 118524161-118563241/248950377",
+      "bytes": 39081,
+      "sha256": "2eb0f1e43e6209fb1bb5911d08677a4bd9d4f46e96e913ceb049d6a6c01b90aa"
+    },
+    {
+      "archive_entry": "labels/CR1_1.txt",
+      "bytes": 213449,
+      "sha256": "74ed1cc7e9d130c5483294d4bc00a9198ac57151400f17cd4bf8da7b5f978874",
+      "local": "datasets\\damage\\local\\cubit\\CR1_1.txt"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 12903807752-12903807781/15034071180",
+      "bytes": 30,
+      "sha256": "fd3dd72a6b219bd442f06c2aef1d70469b4b3c2e34383cb74ceb25188859ae78"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "17",
+      "content_range": "bytes 12903807782-12903807798/15034071180",
+      "bytes": 17,
+      "sha256": "2e4c3b897d8464badfb61554ba031b73527491106b88de893d367c11f88cb619"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "4183611",
+      "content_range": "bytes 12903807831-12907991441/15034071180",
+      "bytes": 4183611,
+      "sha256": "120c459e13dc81b90b378a55ce6175f2410f258fcae5d14cc63c31e77a19c093"
+    },
+    {
+      "archive_entry": "images/CR1_10.JPG",
+      "bytes": 4182501,
+      "sha256": "4648100798868f5c93669340aa341429278e6e65fca2200bc729afe6afa383b4",
+      "local": "datasets\\damage\\local\\cubit\\CR1_10.JPG"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 215805307-215805336/248950377",
+      "bytes": 30,
+      "sha256": "b58554ddfcbc8ec07014f906e84a47262d83733be77a84fdab46ffe8c133f95c"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "17",
+      "content_range": "bytes 215805337-215805353/248950377",
+      "bytes": 17,
+      "sha256": "261918ec0fa0e6c15b09628c99fd618dca5611d0a042cff4a23909f2c38513cf"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "43776",
+      "content_range": "bytes 215805386-215849161/248950377",
+      "bytes": 43776,
+      "sha256": "553ca6a1a549bbb0f335457232067286c03fd4d530484158bc5fe5e677851adb"
+    },
+    {
+      "archive_entry": "labels/CR1_10.txt",
+      "bytes": 241907,
+      "sha256": "35b7b34f8d270138736c54600960c068c489b56efa940f3e814b818fadc6cb4f",
+      "local": "datasets\\damage\\local\\cubit\\CR1_10.txt"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "HEAD",
+      "status": 200,
+      "content_length": "67708808",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "22",
+      "content_range": "bytes 67708786-67708807/67708808",
+      "bytes": 22,
+      "sha256": "0d71f40a7e0e32b567e93979ecefea5642b69c2860f1bf86cb74978a7bbc2366"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20",
+      "content_range": "bytes 67708766-67708785/67708808",
+      "bytes": 20,
+      "sha256": "b7675644d7b3916a1fd318bd1b57fef6bd81952b3ebfd9274a14af391de7b207"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "97995",
+      "content_range": "bytes 67610791-67708785/67708808",
+      "bytes": 97995,
+      "sha256": "9e6f1261e1b9b063bbfc797c92bae8f61d5124af6b5d6ad8eec6defa7eb18c2b"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 51997496-51997525/67708808",
+      "bytes": 30,
+      "sha256": "679f10387ecc0b70454051c23b894f5832b2330c289db7cbbe379f632a66f95e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "19",
+      "content_range": "bytes 51997526-51997544/67708808",
+      "bytes": 19,
+      "sha256": "24db7e20f6f8ed26b7e3b49a6f56aa9cd4dc4baca9d3e27a194a5c92a0ef8422"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "65738",
+      "content_range": "bytes 51997573-52063310/67708808",
+      "bytes": 65738,
+      "sha256": "31d725b29d84f08497bacbf2671850326c5076da9b7212b298b138f1c7b6734f"
+    },
+    {
+      "archive_entry": "train_img/11111.jpg",
+      "bytes": 65896,
+      "sha256": "ae57ecf44ee75dedb8a2897dd975cade168bec7515dbf4c4bdcca9f52214c587",
+      "local": "datasets\\damage\\local\\deepcrack\\11111.jpg"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 67268041-67268070/67708808",
+      "bytes": 30,
+      "sha256": "5ce6081b136e54164a85c40ae57293d5c2e0e0688c9394ccfab7b200f447a5d7"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "19",
+      "content_range": "bytes 67268071-67268089/67708808",
+      "bytes": 19,
+      "sha256": "e92c53394c2603de694228620a9145d478d4b9282decf42882cd4f8338917c8d"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "1170",
+      "content_range": "bytes 67268118-67269287/67708808",
+      "bytes": 1170,
+      "sha256": "cc35b72bdee8bb0d5352c3cc7fdb58d6d6279a9cea07c060831a1c5d9eb20362"
+    },
+    {
+      "archive_entry": "train_lab/11111.png",
+      "bytes": 1258,
+      "sha256": "e500b0002e5b001e4ed07061b60b5f249c95179676553299884159ea32e93869",
+      "local": "datasets\\damage\\local\\deepcrack\\11111.png"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 50560599-50560628/67708808",
+      "bytes": 30,
+      "sha256": "c807849dff093ecabf9564d241d3f241c054a47ce6bd6f5b298a3a4d7838cc21"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "19",
+      "content_range": "bytes 50560629-50560647/67708808",
+      "bytes": 19,
+      "sha256": "18b9766771919ddce7f8c27fda719c4ac9b8723f444da1fb15859d9e822fc24e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "75376",
+      "content_range": "bytes 50560676-50636051/67708808",
+      "bytes": 75376,
+      "sha256": "77415082621d27a9cc2e6aa2cc59d8793c95bc605b65b0f0dd07f35e91332f4f"
+    },
+    {
+      "archive_entry": "train_img/11112.jpg",
+      "bytes": 75644,
+      "sha256": "44e62c6410a898b496e245ac28f3f1604c31acb04cad4e5b0551738f40a78313",
+      "local": "datasets\\damage\\local\\deepcrack\\11112.jpg"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 67228160-67228189/67708808",
+      "bytes": 30,
+      "sha256": "9d1613b9b4e0776ee7ebcdc48fa4e1d33af53fe25812690e5afead86ce88dc81"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "19",
+      "content_range": "bytes 67228190-67228208/67708808",
+      "bytes": 19,
+      "sha256": "79776b10af0dfb09bd95068aefda2ea1d080275fabd66a23017deccf4bc3caba"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "3040",
+      "content_range": "bytes 67228237-67231276/67708808",
+      "bytes": 3040,
+      "sha256": "b04b742c0d9d7774a2f138c9b5315b96d1d781a47bc31d729ab11852d93eb3a6"
+    },
+    {
+      "archive_entry": "train_lab/11112.png",
+      "bytes": 3157,
+      "sha256": "a0420bad43cd286f4de95a5894ba03590550124857831cedc83a32f895fb9801",
+      "local": "datasets\\damage\\local\\deepcrack\\11112.png"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 50991088-50991117/67708808",
+      "bytes": 30,
+      "sha256": "0ae07486304933027ab6e8111f2f862242731955e56d0d4283f871d1ff50118c"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "19",
+      "content_range": "bytes 50991118-50991136/67708808",
+      "bytes": 19,
+      "sha256": "2243ba02f412215c54f09ac536c62b1770904e5d29082d1bcbcd6c1948a30f58"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "66786",
+      "content_range": "bytes 50991165-51057950/67708808",
+      "bytes": 66786,
+      "sha256": "84279c32fcbae275ffe47be71b8410e043a0d25852dc2f643c1c3b18f29fa62f"
+    },
+    {
+      "archive_entry": "train_img/11113.jpg",
+      "bytes": 67028,
+      "sha256": "ab5a25f596a665aac2c36cf8174172dbd8dc8287cf01e638a514c640500beb37",
+      "local": "datasets\\damage\\local\\deepcrack\\11113.jpg"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 67248636-67248665/67708808",
+      "bytes": 30,
+      "sha256": "0818b8f888368907befe1792bf263300ba853fae5fd78ba045fff06562d9e4c2"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "19",
+      "content_range": "bytes 67248666-67248684/67708808",
+      "bytes": 19,
+      "sha256": "6ad1606602e52c2d758433c29d85ffc577ed69fdcfd7d50bab5090e590e3eb98"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yhlleo/DeepCrack/master/dataset/DeepCrack.zip",
+      "method": "GET",
+      "status": 206,
+      "content_length": "1350",
+      "content_range": "bytes 67248713-67250062/67708808",
+      "bytes": 1350,
+      "sha256": "f9750448a92c2531a9feab596ae81cd5ff2d62168c9d5885932304f551537335"
+    },
+    {
+      "archive_entry": "train_lab/11113.png",
+      "bytes": 1438,
+      "sha256": "54d22152fccd4845c306606b4fc1626aea1295a3172074c6dc4977ed73b2c8d8",
+      "local": "datasets\\damage\\local\\deepcrack\\11113.png"
+    },
+    {
+      "url": "https://dacl10k.s3.eu-central-1.amazonaws.com/dacl10k-challenge/dacl10k_v2_devphase.zip",
+      "method": "HEAD",
+      "error": "<HTTPError 403: 'Forbidden'>"
+    },
+    {
+      "dataset": "dacl",
+      "error": "<HTTPError 403: 'Forbidden'>"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "HEAD",
+      "status": 200,
+      "content_length": "15034071180",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "22",
+      "content_range": "bytes 15034071158-15034071179/15034071180",
+      "bytes": 22,
+      "sha256": "8022a0982473e33bc2ceeda339804d3a4ae4b774c6c0d50e375acad51a03eb13"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20",
+      "content_range": "bytes 15034071138-15034071157/15034071180",
+      "bytes": 20,
+      "sha256": "4d665c8307019ddc765cf7d19b5a0ee3ad5599acaf773e0bbdc8787a27939b62"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "56",
+      "content_range": "bytes 15034071082-15034071137/15034071180",
+      "bytes": 56,
+      "sha256": "990348bf360d5ad9eed02815447e9f946ab35c78d0094f8fd8f8c05762c50cd5"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "588215",
+      "content_range": "bytes 15033482867-15034071081/15034071180",
+      "bytes": 588215,
+      "sha256": "54bb64e1ef0acb031d292d323adcefaf35786f616a3332edb774daec7663749f"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "HEAD",
+      "status": 200,
+      "content_length": "248950377",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "22",
+      "content_range": "bytes 248950355-248950376/248950377",
+      "bytes": 22,
+      "sha256": "fdb12e6c5b65acf639dcbaca40665e4ca047e4c1bd6a7fa6287e7a7b538f56ef"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20",
+      "content_range": "bytes 248950335-248950354/248950377",
+      "bytes": 20,
+      "sha256": "c80f2aff8f9a1d37d3c56ff58363255e18702106e1bad1ea0fae31d170fafbf5"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "540251",
+      "content_range": "bytes 248410104-248950354/248950377",
+      "bytes": 540251,
+      "sha256": "dc61814ebee1729625cf7ade97bd67c467f2a409f476f75e3f7db297c0c817fa"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 221731500-221731529/248950377",
+      "bytes": 30,
+      "sha256": "42aff99e95db15dec87b7d490fb9a486d1ea034092714edfc2fe896125c8895c"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "16",
+      "content_range": "bytes 221731530-221731545/248950377",
+      "bytes": 16,
+      "sha256": "92f72c494d13ab58aa5b3d9210ed1ac0c549d2540f0693b240ffbaa7a6a9cc94"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "20755",
+      "content_range": "bytes 221731578-221752332/248950377",
+      "bytes": 20755,
+      "sha256": "78b9c1662d1e4bdd31b37238f5ed224b8049b897c977042d1643f4bdea9a1426"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 10632157993-10632158022/15034071180",
+      "bytes": 30,
+      "sha256": "e941d17399b84e8ce0c1e2e62ec71959d1850dd5165d8d53f258eea2b3b7f22e"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "16",
+      "content_range": "bytes 10632158023-10632158038/15034071180",
+      "bytes": 16,
+      "sha256": "bfe48560de35c0b3d1d1b63cda7efd10f273c8d487a7fb83b3d22ecbfac6935b"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "4446241",
+      "content_range": "bytes 10632158071-10636604311/15034071180",
+      "bytes": 4446241,
+      "sha256": "fffbaef6008060de80320620405dbc2dda1939daed6a510f9fa87995ae1bf031"
+    },
+    {
+      "archive_entry": "labels/SP0_1.txt",
+      "bytes": 111063,
+      "sha256": "33d4ebd575bbc167c5b8577262220b29a9ffe94abc9e3037791906ab0a6d6588",
+      "local": "datasets\\damage\\local\\cubit\\SP0_1.txt"
+    },
+    {
+      "archive_entry": "images/SP0_1.JPG",
+      "bytes": 4445676,
+      "sha256": "0288794ef4e068f1ad0a133cf9f0b334f6e79d80964ab37a48e7a63b5721ba3e",
+      "local": "datasets\\damage\\local\\cubit\\SP0_1.JPG"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 73261749-73261778/248950377",
+      "bytes": 30,
+      "sha256": "61bff432a19509be7cd41f2c1651521c4b98505599756680a47ec8dcb6c639b7"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "17",
+      "content_range": "bytes 73261779-73261795/248950377",
+      "bytes": 17,
+      "sha256": "278f551426d7b72a12a63d191d7314b72238e95c8ea1e6fee365130e056d2fd6"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1KEYRaHPRZ6G3ScoOOsFjzDYDzOzVXeUg&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "21414",
+      "content_range": "bytes 73261828-73283241/248950377",
+      "bytes": 21414,
+      "sha256": "cac8450a8be42652bf3f04c9bf785db1109a30f524d2e9ebe595ea45a6118ec3"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "30",
+      "content_range": "bytes 1482555942-1482555971/15034071180",
+      "bytes": 30,
+      "sha256": "d3ac34b817f8bfc4e3f8b5b19f17f2ee5ce016ddae5a0c651bcb505b784413cb"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "17",
+      "content_range": "bytes 1482555972-1482555988/15034071180",
+      "bytes": 17,
+      "sha256": "a60f774acaa941275ffcbc3ed66b14cfdb927b8cfaf6b7e319ce79e8538a7fcb"
+    },
+    {
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "status": 206,
+      "content_length": "4289531",
+      "content_range": "bytes 1482556021-1486845551/15034071180",
+      "bytes": 4289531,
+      "sha256": "5e198258f498df896782976ab5a5b1b6ef1ad2103aac57fad66de2a3522974dd"
+    },
+    {
+      "archive_entry": "labels/SP0_10.txt",
+      "bytes": 114627,
+      "sha256": "00e96072b1df538ccfd2b0ba63dcfb95c4343a1b01c4881e40e7fee0757d129a",
+      "local": "datasets\\damage\\local\\cubit\\SP0_10.txt"
+    },
+    {
+      "archive_entry": "images/SP0_10.JPG",
+      "bytes": 4288795,
+      "sha256": "55bee013927f311f38cb2229bcc25d8e21b408b229d5d0c736cff590274adfc1",
+      "local": "datasets\\damage\\local\\cubit\\SP0_10.JPG"
+    },
+    {
+      "url": "https://datasets-server.huggingface.co/cached-assets/ibm-research/cif-dataset/--/75057c6b0838a24c401c292a7e54a88a4cf28271/--/default/train_full/0/image/image.jpg",
+      "method": "GET",
+      "status": 200,
+      "content_length": "2051076",
+      "content_range": null,
+      "bytes": 2051076,
+      "sha256": "16a156da35bc0bab86b19f3545b7e4e2cabfbad73306414891168fd8b835a4ea",
+      "local": "datasets\\damage\\local\\cif\\IMG_8896.jpg"
+    },
+    {
+      "url": "https://datasets-server.huggingface.co/cached-assets/ibm-research/cif-dataset/--/75057c6b0838a24c401c292a7e54a88a4cf28271/--/default/train_full/1/image/image.jpg",
+      "method": "GET",
+      "status": 200,
+      "content_length": "1808859",
+      "content_range": null,
+      "bytes": 1808859,
+      "sha256": "1999fad4879e065aca45c58f00cbe52a0564f00591d8db43522f1d1aa1c70411",
+      "local": "datasets\\damage\\local\\cif\\IMG_0345.jpg"
+    }
+  ]
+}

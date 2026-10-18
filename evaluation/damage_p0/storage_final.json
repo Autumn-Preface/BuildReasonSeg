@@ -1,0 +1,45 @@
+{
+  "checked_at": "2026-10-18T20:13:15.287836+00:00",
+  "unit": "logical bytes; not NTFS allocation",
+  "scope_excludes": "storage_final.json itself; .git objects; small increments to existing governance/handoff files",
+  "directories": [
+    {
+      "path": "docs/research/damage_p0",
+      "files": 8,
+      "logical_bytes": 59201
+    },
+    {
+      "path": "datasets/damage",
+      "files": 20,
+      "logical_bytes": 22246223
+    },
+    {
+      "path": "evaluation/damage_p0",
+      "files": 88,
+      "logical_bytes": 25258329
+    },
+    {
+      "path": "reports/damage_p0/20261019",
+      "files": 22,
+      "logical_bytes": 2312121
+    }
+  ],
+  "logical_bytes_total": 49875874,
+  "local_only_caches": [
+    {
+      "path": "datasets/damage/local",
+      "files": 18,
+      "logical_bytes": 22245265,
+      "action": "retain for pending review; candidate rebuildable cache, no deletion performed"
+    },
+    {
+      "path": "evaluation/damage_p0/sources",
+      "files": 72,
+      "logical_bytes": 24875580,
+      "action": "retain for pending review; candidate rebuildable cache, no deletion performed"
+    }
+  ],
+  "volume_total_bytes": 991902896128,
+  "volume_free_bytes": 154532921344,
+  "cleanup_performed": false
+}

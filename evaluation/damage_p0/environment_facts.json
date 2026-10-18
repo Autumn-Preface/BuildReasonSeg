@@ -1,0 +1,76 @@
+{
+  "captured_at": "2026-10-19T03:50:07.5666464+08:00",
+  "mode": "READ_ONLY_NO_INSTALL_NO_MODEL_LOAD",
+  "probes": [
+    {
+      "success": true,
+      "output": "{\r\n  \"Caption\": \"Microsoft Windows 11 家庭版 中文版\",\r\n  \"Version\": \"10.0.26300\",\r\n  \"BuildNumber\": \"26300\",\r\n  \"OSArchitecture\": \"64 位\",\r\n  \"TotalVisibleMemorySize\": 32900648,\r\n  \"FreePhysicalMemory\": 17942248\r\n}",
+      "name": "windows"
+    },
+    {
+      "success": true,
+      "output": "{\r\n  \"Name\": \"Intel(R) Core(TM) Ultra 9 275HX\",\r\n  \"NumberOfCores\": 24,\r\n  \"NumberOfLogicalProcessors\": 24\r\n}",
+      "name": "cpu"
+    },
+    {
+      "success": true,
+      "output": "{\r\n  \"TotalPhysicalMemory\": 33690263552\r\n}",
+      "name": "memory"
+    },
+    {
+      "success": true,
+      "output": "{\r\n  \"DeviceID\": \"C:\",\r\n  \"Size\": 991902896128,\r\n  \"FreeSpace\": 154617380864\r\n}",
+      "name": "disks"
+    },
+    {
+      "success": true,
+      "output": "Driver Version                                         : 617.42 [Deprecated; will be removed in CUDA 14.0. Use KMD Version instead]\r\nCUDA Version                                           : 13.4 [Deprecated; will be removed in CUDA 14.0. Use CUDA UMD Version instead]\r\nCUDA UMD Version                                       : 13.4",
+      "name": "gpu_driver"
+    },
+    {
+      "success": true,
+      "output": "NVIDIA GeForce RTX 5080 Laptop GPU, 16303 MiB, 617.42",
+      "name": "gpu_query"
+    },
+    {
+      "success": true,
+      "output": "W\u0000S\u0000L\u0000 \u0000Hr,g:\u0000 \u00003\u0000.\u00000\u0000.\u00003\u0000.\u00000\u0000\r\n\u0000\r\n\u0000�Q8hHr,g:\u0000 \u00006\u0000.\u00001\u00008\u0000.\u00005\u00004\u0000.\u00001\u0000-\u00001\u0000\r\n\u0000\r\n\u0000W\u0000S\u0000L\u0000g\u0000 \u0000Hr,g:\u0000 \u00001\u0000.\u00000\u0000.\u00007\u00009\u0000\r\n\u0000\r\n\u0000M\u0000S\u0000R\u0000D\u0000C\u0000 \u0000Hr,g:\u0000 \u00001\u0000.\u00002\u0000.\u00007\u00003\u00009\u00001\u0000\r\n\u0000\r\n\u0000D\u0000i\u0000r\u0000e\u0000c\u0000t\u00003\u0000D\u0000 \u0000Hr,g:\u0000 \u00001\u0000.\u00006\u00001\u00001\u0000.\u00001\u0000-\u00008\u00001\u00005\u00002\u00008\u00005\u00001\u00001\u0000\r\n\u0000\r\n\u0000D\u0000X\u0000C\u0000o\u0000r\u0000e\u0000 \u0000Hr,g:\u0000 \u00001\u00000\u0000.\u00000\u0000.\u00002\u00006\u00001\u00000\u00000\u0000.\u00001\u0000-\u00002\u00004\u00000\u00003\u00003\u00001\u0000-\u00001\u00004\u00003\u00005\u0000.\u0000g\u0000e\u0000-\u0000r\u0000e\u0000l\u0000e\u0000a\u0000s\u0000e\u0000\r\n\u0000\r\n\u0000W\u0000i\u0000n\u0000d\u0000o\u0000w\u0000s\u0000 \u0000Hr,g:\u0000 \u00001\u00000\u0000.\u00000\u0000.\u00002\u00006\u00003\u00000\u00000\u0000.\u00009\u00007\u00001\u00001\u0000\r\n\u0000\r\n\u0000",
+      "name": "wsl_version"
+    },
+    {
+      "success": true,
+      "output": "؞��\u0006R�S:\u0000 \u0000d\u0000o\u0000c\u0000k\u0000e\u0000r\u0000-\u0000d\u0000e\u0000s\u0000k\u0000t\u0000o\u0000p\u0000\r\n\u0000\r\n\u0000؞��Hr,g:\u0000 \u00002\u0000\r\n\u0000\r\n\u0000",
+      "name": "wsl_status"
+    },
+    {
+      "success": true,
+      "output": "\u0000 \u0000N\u0000A\u0000M\u0000E\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000S\u0000T\u0000A\u0000T\u0000E\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000V\u0000E\u0000R\u0000S\u0000I\u0000O\u0000N\u0000\r\n\u0000\r\n\u0000*\u0000 \u0000d\u0000o\u0000c\u0000k\u0000e\u0000r\u0000-\u0000d\u0000e\u0000s\u0000k\u0000t\u0000o\u0000p\u0000 \u0000 \u0000 \u0000 \u0000S\u0000t\u0000o\u0000p\u0000p\u0000e\u0000d\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u00002\u0000\r\n\u0000\r\n\u0000",
+      "name": "wsl_distros"
+    },
+    {
+      "success": true,
+      "output": "{\r\n  \"envs\": [\r\n    \"C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-proposal\",\r\n    \"C:\\\\D\\\\anaconda3\",\r\n    \"C:\\\\Users\\\\ROG\\\\.conda\\\\envs\\\\access-risk\",\r\n    \"C:\\\\Users\\\\ROG\\\\.conda\\\\envs\\\\jupyter\",\r\n    \"C:\\\\Users\\\\ROG\\\\.conda\\\\envs\\\\yolo_sam_env\"\r\n  ],\r\n  \"envs_details\": {\r\n    \"C:\\\\D\\\\DeepSeekHarness\\\\workspace\\\\project\\\\BuildReasonSeg\\\\.conda\\\\buildreasonseg-proposal\": {\r\n      \"name\": \"\",\r\n      \"created\": \"2026-09-28T17:19:58.725416+00:00\",\r\n      \"last_modified\": \"2026-09-28T17:20:07.901015+00:00\",\r\n      \"active\": false,\r\n      \"base\": false,\r\n      \"frozen\": false,\r\n      \"writable\": true\r\n    },\r\n    \"C:\\\\D\\\\anaconda3\": {\r\n      \"name\": \"base\",\r\n      \"created\": \"2026-01-02T05:45:11.388837+00:00\",\r\n      \"last_modified\": \"2025-12-09T18:26:22+00:00\",\r\n      \"active\": true,\r\n      \"base\": true,\r\n      \"frozen\": false,\r\n      \"writable\": false\r\n    },\r\n    \"C:\\\\Users\\\\ROG\\\\.conda\\\\envs\\\\access-risk\": {\r\n      \"name\": \"access-risk\",\r\n      \"created\": \"2026-10-15T17:04:08.161364+00:00\",\r\n      \"last_modified\": \"2026-10-15T17:04:37.794172+00:00\",\r\n      \"active\": false,\r\n      \"base\": false,\r\n      \"frozen\": false,\r\n      \"writable\": true\r\n    },\r\n    \"C:\\\\Users\\\\ROG\\\\.conda\\\\envs\\\\jupyter\": {\r\n      \"name\": \"jupyter\",\r\n      \"created\": \"2026-06-06T14:18:07.269695+00:00\",\r\n      \"last_modified\": \"2026-06-06T16:02:02.885963+00:00\",\r\n      \"active\": false,\r\n      \"base\": false,\r\n      \"frozen\": false,\r\n      \"writable\": true\r\n    },\r\n    \"C:\\\\Users\\\\ROG\\\\.conda\\\\envs\\\\yolo_sam_env\": {\r\n      \"name\": \"yolo_sam_env\",\r\n      \"created\": \"2026-07-13T09:51:08.225485+00:00\",\r\n      \"last_modified\": \"2026-07-13T09:51:14.733210+00:00\",\r\n      \"active\": false,\r\n      \"base\": false,\r\n      \"frozen\": false,\r\n      \"writable\": true\r\n    }\r\n  }\r\n}",
+      "name": "conda_envs"
+    },
+    {
+      "success": true,
+      "output": "conda 25.11.0",
+      "name": "conda_version"
+    },
+    {
+      "success": true,
+      "output": "[\r\n  {\r\n    \"Source\": \"C:\\\\D\\\\Git\\\\Git\\\\cmd\\\\git.exe\"\r\n  },\r\n  {\r\n    \"Source\": \"C:\\\\Users\\\\ROG\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\native\\\\git\\\\cmd\\\\git.exe\"\r\n  }\r\n]",
+      "name": "git_path"
+    },
+    {
+      "success": false,
+      "output": "The term 'nvcc' is not recognized as a name of a cmdlet, function, script file, or executable program.\r\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again.",
+      "name": "nvcc_path"
+    },
+    {
+      "success": true,
+      "output": "",
+      "name": "cache_paths"
+    }
+  ]
+}

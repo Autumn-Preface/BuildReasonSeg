@@ -1,0 +1,20 @@
+{
+  "date_local": "2026-10-19",
+  "repository": "Autumn-Preface/BuildReasonSeg",
+  "source": "startup git status/branch/rev-parse/diff and bundled git fetch/ls-remote observations",
+  "startup_branch": "codex/legacy-cleanup-20261019",
+  "startup_head": "0e7ee93c8ca62426e5f79b39fc874f1a2b7e7ee4",
+  "startup_status_porcelain": "",
+  "startup_diff": "",
+  "verified_remote_cleanup_head": "0e7ee93c8ca62426e5f79b39fc874f1a2b7e7ee4",
+  "verified_remote_main_head": "57b368d5647e842d8f31d6d1a9997bf1df3cc0fb",
+  "commits_in_cleanup_not_main": 150,
+  "local_remote_cleanup_left_right": [0, 0],
+  "task_branch_preexisted_remote": false,
+  "task_branch": "codex/damage-p0-20261019",
+  "governance_checkpoint": "40aa16398e850578f6dc0bc79758736147b9d835",
+  "governance_checkpoint_pushed": true,
+  "git_mechanics": "PATH Git missing HTTPS helper; bundled existing Git worked; no global config changed",
+  "main_merged": false,
+  "history_rewritten": false
+}

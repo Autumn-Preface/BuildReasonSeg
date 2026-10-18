@@ -1,0 +1,35 @@
+{
+  "executable": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\python.exe",
+  "python": "3.11.16 | packaged by Anaconda, Inc. | (main, Aug 27 2026, 14:36:16) [MSC v.1942 64 bit (AMD64)]",
+  "packages": {
+    "torch": "2.13.0+cu132",
+    "torchvision": "0.28.0+cu132",
+    "numpy": "2.4.6",
+    "Pillow": "12.3.0",
+    "opencv-python": "5.0.0.93",
+    "scikit-image": null,
+    "scipy": "1.17.1",
+    "transformers": "5.17.0",
+    "ultralytics": "8.4.164",
+    "SAM-2": "1.0",
+    "PyYAML": "6.0.3",
+    "huggingface-hub": "1.33.0"
+  },
+  "gpu_smoke": {
+    "attempted": true,
+    "sum": 262144.0,
+    "expected": 262144.0,
+    "passed": true,
+    "bf16_supported": true
+  },
+  "torch_cuda_build": "13.2",
+  "cuda_available": true,
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 5080 Laptop GPU",
+    "total_memory": 17066033152,
+    "capability": [
+      12,
+      0
+    ]
+  }
+}
