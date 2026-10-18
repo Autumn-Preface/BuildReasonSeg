@@ -1,0 +1,9 @@
+{
+  "time": "2026-10-19T01:14:42.8935305+08:00",
+  "process_id": 37364,
+  "phase": "AFTER_ALL_ALLOWLISTED_UNLINKS_BEFORE_EMPTY_DIRECTORY_SUMMARY",
+  "reason": "Inefficient repeated ancestor membership checks; bounded empty-directory finisher will replace only this mechanics step",
+  "deleted_files": 71578,
+  "failed_files": 0,
+  "stopped_process": "Own task cleanup Python only"
+}

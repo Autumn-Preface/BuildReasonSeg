@@ -1,0 +1,9 @@
+{
+  "checkpoint": "ae708695ac8dc5a344c10b1f941fa6ce76f019d8",
+  "allowlist_sha256": "f6bcecda8ebb261c6ef729b32a94e5e61f45359f04af2bb6e293e055191ca69a",
+  "started": "2026-10-19T01:07:16+0800",
+  "disk_free_bytes": 96352751616,
+  "all_paths_resolved_and_inside_explicit_scope": true,
+  "all_predelete_identities_match": true,
+  "all_selected_untracked_and_not_protected": true
+}

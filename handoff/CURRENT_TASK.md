@@ -15,3 +15,5 @@ Plan and evidence: reports/legacy_cleanup/20261019/cleanup_plan.md
 Checkpoint: inventory, hashes and verified small Demo archives ready before deletion.
 Next: commit/push plan, perform allowlisted cleanup, verify integrity and space,
 commit/push closure, then end legacy architecture work and enter neutral idle handoff.
+
+Deletion checkpoint: 71578 planned files removed; failures 0. Post SHA256 gate 15947 unique files PASS. Final space/software/metadata closure in progress.

@@ -1,0 +1,15 @@
+{
+  "finished": "2026-10-19T01:14:52+0800",
+  "checkpoint": "ae708695ac8dc5a344c10b1f941fa6ce76f019d8",
+  "planned_files": 71578,
+  "deleted_files": 71578,
+  "failed_files": 0,
+  "removed_empty_directories": 5158,
+  "deleted_logical_bytes": 44155344750,
+  "released_file_allocation_bytes": 31762702968,
+  "physical_method": "FILE_STANDARD_INFO allocation; only completely unlinked file IDs counted.",
+  "free_before_bytes": 96352751616,
+  "free_after_bytes": 127886106624,
+  "no_source_or_governance_or_inference_writes": true,
+  "mechanics_correction": "Own process stopped only after all unlinks; bounded empty-directory-only finish."
+}
