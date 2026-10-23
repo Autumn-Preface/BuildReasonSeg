@@ -122,3 +122,15 @@ Prohibited: changing frozen legacy experiments/assets; implementing new algorith
   training at scale; choosing the final backbone; accepting P0 or starting P1 without Supervisor.
 Reopen condition: explicit Supervisor authorization after independent P0 review.
 ```
+
+## GOV-D010
+
+```text
+Decision ID: GOV-D010
+Status: SUPERVISOR_AUTHORIZED_DEMO_R1_ONLY
+Decision: INDEPENDENT_V3_DEMO_RESTORATION_AND_UI
+Authority: reports/demo_r1/20261023/authorization.md dated 2026-10-23.
+Scope: new V3 engine copy, existing V2 observer mechanism, UI upgrade, engineering tests and limited user-confirmed smoke.
+Legacy RC1 and Damage-P0 remain read-only. No scientific formulas, thresholds, weights, ranking or formal evaluation changes.
+Acceptance remains with Supervisor; Damage Research does not advance.
+```

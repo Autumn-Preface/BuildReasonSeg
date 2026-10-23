@@ -1,0 +1,11 @@
+{
+  "final": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V3",
+  "files": 85,
+  "bytes": 4716523448,
+  "hash_check": "PASS",
+  "forbidden_audit": {
+    "pass": true,
+    "offenders": [],
+    "links": 0
+  }
+}

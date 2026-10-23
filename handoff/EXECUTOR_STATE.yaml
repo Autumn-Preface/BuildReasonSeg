@@ -1,30 +1,14 @@
 schema_version: 1
-task_id: DAMAGE-P0
-status: EXECUTION_COMPLETE
-review_status: AWAITING_CHATGPT_SUPERVISOR_INDEPENDENT_ACCEPTANCE
+task_id: DEMO-R1
+status: IN_PROGRESS
 executor: CODEX
-branch: codex/damage-p0-20261019
-head: bbfd017b71431a88e33503e5b02e75fef0bad9e7
+branch: delivery/demo-r1-restore-ui-20261023
+head: 0ef69a2ed6f80251dc14760bab81053a8468954e
 last_checkpoint:
-  commit: bbfd017b71431a88e33503e5b02e75fef0bad9e7
+  commit: 0ef69a2ed6f80251dc14760bab81053a8468954e
   pushed: true
-metadata_note: Observed checkpoint before final closure commit; actual Git branch and HEAD are authoritative.
-current_step: P0_DELIVERED_STOPPED_FOR_SUPERVISOR_REVIEW
-next_action: Await Supervisor acceptance or explicit supplemental P0/P1 authorization.
-report_directory: reports/damage_p0/20261019
-model_inference_calls: 0
+current_step: RESTORE_UI_AND_TEST
+report_directory: reports/demo_r1/20261023
+scientific_changes: false
 training_calls: 0
-new_weight_download_bytes: 0
-governance_changes: true
-legacy_scientific_changes: false
-legacy_asset_hash_check: PASS
-independent_material_review: TWO_P2_CLOSED_NO_REMAINING_DELIVERY_BLOCKER
-protocol_status: DRAFT_PENDING_SUPERVISOR_REVIEW
-p1_authorized: false
-final_backbone: null
-acceptance: PENDING_SUPERVISOR
-unresolved:
-  - CUBIT version, class ID authority and building or sequence grouping.
-  - Some data not pair-sampled; dacl AWS403, OmniCrack requires academic request, S2DS redistribution prohibited.
-  - Weight-specific terms, modern CUDA compatibility and SAM3 gated access not resolved.
-  - Protocol TBD and P1 resource budget require Supervisor decision.
+next_action: Test observer equivalence and native UI; build independently; user confirms real Qwen interpretation.
