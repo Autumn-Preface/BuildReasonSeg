@@ -1,0 +1,42 @@
+{
+  "rc1_inventory_unchanged": true,
+  "rc1_records": 2184,
+  "package_hashes_pass": true,
+  "package_files": 85,
+  "package_bytes": 4716526027,
+  "package_ui_matches_repository": true,
+  "derived_engine_exact_v2_observer_patch": true,
+  "archives": {
+    "BuildReasonSeg_Demo_V1_non_model.zip": {
+      "bytes": 44740017,
+      "sha256": "6d117df063913488328ae9ffa22b1d2f218cd4e8f0ac76acf1d1269c01cc111e"
+    },
+    "BuildReasonSeg_Demo_V2_non_model.zip": {
+      "bytes": 11146516,
+      "sha256": "38b7188237d15b95011cccdc80f99a5d8bce051e8d9b0d11a457b968dd3171b4"
+    }
+  },
+  "forbidden_audit": {
+    "pass": true,
+    "offenders": [],
+    "links": 0
+  },
+  "protected_git_paths_changed": [],
+  "read_only_replay_pass": true,
+  "replay_queued_events": 26,
+  "real_run_id": "20261023_230642_1034",
+  "real_events": 24,
+  "real_all_nine_completed": true,
+  "real_output_files": {
+    "mask.png": {
+      "bytes": 609,
+      "sha256": "9153c33a093b62dfe54919899c23df9aa2446462519061a7d6bb9e0d32f40440"
+    },
+    "overlay.png": {
+      "bytes": 315911,
+      "sha256": "b5ef22bd224a17163262c1a855e8ad4e2262b0aeef2c1612f58b7bd5e5c59671"
+    }
+  },
+  "real_rc1_vs_v3_paired_equivalence": "NOT_PERFORMED",
+  "semantic_correctness": "NOT_EVALUATED"
+}

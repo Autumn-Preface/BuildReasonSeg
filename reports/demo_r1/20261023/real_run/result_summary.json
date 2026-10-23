@@ -1,0 +1,19 @@
+{
+  "summary_kind": "USER_DEMO_SUMMARY_NOT_ENGINE_RESULT",
+  "demo_version": "V3",
+  "timestamp": "2026-10-23T23:07:39.966183+08:00",
+  "input_image": "C:\\Users\\ROG\\Pictures\\1034.tif",
+  "prompt": "最大建筑下方最近的建筑",
+  "interpreted_program": "largest_to_below_to_nearest",
+  "language_mode": "qwen",
+  "runtime_status": "SUCCESS",
+  "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+  "semantic_status": "NOT_EVALUATED",
+  "elapsed_seconds": 57.825,
+  "mask_file": "mask.png",
+  "overlay_file": "overlay.png",
+  "engine_run_root": "_engine/inference/output/1034",
+  "underlying_runtime_status": "SUCCESS",
+  "trace_directory": "trace",
+  "observation_status": "OK"
+}

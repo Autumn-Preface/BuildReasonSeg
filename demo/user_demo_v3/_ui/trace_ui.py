@@ -6,6 +6,14 @@ import threading
 
 from .trace import STAGES, STATE_TEXT
 
+DISPLAY_NAMES = ("语言指令解析", "YOLO26m 建筑候选检测", "自动参考建筑选择", "推理区域构建",
+                 "SAM2 视觉特征编码", "空间关系场计算", "视觉原型与相似度", "D-B1 候选分割", "结构检查与最终输出")
+PURPOSES = ("理解参考对象、方向和目标关系，建议须由用户确认。", "找到图中的建筑候选，并保留实际编号。",
+            "按原有规则选择作为空间推理起点的建筑。", "确定实际送入模型的 512×512 图像区域。",
+            "把推理区域编码为视觉特征；不生成示意热力图。", "展示方向、距离及其组合如何形成空间权重。",
+            "由空间权重形成视觉原型，再计算各位置的视觉相似度。", "展示解码器候选；此时尚未通过最终结构检查。",
+            "检查输出结构并保存结果；目标语义正确性仍须人工核验。")
+
 
 def display_metadata(stage, metadata):
     keys = {
@@ -79,12 +87,14 @@ class TracePage:
         self.inner.columnconfigure(0, weight=1, uniform="stage")
         self.inner.columnconfigure(1, weight=1, uniform="stage")
         for i, name in enumerate(STAGES, 1):
-            card = ttk.LabelFrame(self.inner, text=f"{i}. {name}", padding=12)
+            card = ttk.LabelFrame(self.inner, text=f"{i}. {DISPLAY_NAMES[i-1]}", padding=12)
             card.grid(row=(i-1)//2, column=(i-1)%2, sticky="new", padx=6, pady=8)
             state = tk.StringVar(value="未执行")
             text = tk.StringVar(value="本次运行尚未到达此阶段。")
             label = ttk.Label(card, textvariable=state, foreground="#9aacc7")
             label.pack(anchor="w")
+            purpose = ttk.Label(card, text=PURPOSES[i-1], wraplength=485, foreground="#9aacc7")
+            purpose.pack(anchor="w", fill="x", pady=(6, 0))
             details = ttk.Label(card, textvariable=text, wraplength=485, justify="left")
             details.pack(anchor="w", fill="x", pady=(6, 8))
             images = ttk.Frame(card)

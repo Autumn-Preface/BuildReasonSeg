@@ -206,7 +206,7 @@ def publish_result(root: Path, image: Path, prompt: str, program: str | None, in
         raise DemoFailure("E502")
     payload = {} if result is None else result.result_payload
     success = bool(result is not None and result.ok and not observation_failed)
-    summary = {"summary_kind": "USER_DEMO_SUMMARY_NOT_ENGINE_RESULT", "demo_version": "V2",
+    summary = {"summary_kind": "USER_DEMO_SUMMARY_NOT_ENGINE_RESULT", "demo_version": "V3",
                "timestamp": (clock or dt.datetime.now().astimezone()).isoformat(), "input_image": str(Path(image).resolve()),
                "prompt": prompt, "interpreted_program": program, "language_mode": info.get("language_mode"),
                "runtime_status": "SUCCESS" if success else "FAILED", "validity_scope": payload.get("validity_scope"),

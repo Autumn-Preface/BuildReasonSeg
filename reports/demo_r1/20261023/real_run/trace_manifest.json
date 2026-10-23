@@ -1,0 +1,912 @@
+{
+  "schema": "USER_DEMO_TRACE_V1",
+  "run_id": "20261023_230642_1034",
+  "status": "FROZEN",
+  "runtime_status": "SUCCESS",
+  "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+  "semantic_status": "NOT_EVALUATED",
+  "engine_run_root": "_engine/inference/output/1034",
+  "stages": {
+    "1": {
+      "name": "语言理解",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 6,
+        "stage_id": 1,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:36.866567+00:00",
+        "elapsed_seconds": 54.724,
+        "metadata": {
+          "original_prompt": "最大建筑下方最近的建筑",
+          "qwen_available": true,
+          "confidence_scope": "模型评分，不是语义正确率",
+          "initial_program": "largest_to_below",
+          "initial_supported": false,
+          "initial_has_nearest": false,
+          "confidence": 0.9999477863311768,
+          "language_mode": "qwen",
+          "suggestion": {
+            "status": "SUGGESTION",
+            "program": "largest_to_below_to_nearest",
+            "display_command": "最大建筑下方最近的建筑",
+            "reason": "用户指令为‘最大建筑下方最近的建筑’，系统支持的程序中‘largest_to_below_to_nearest’正是为此目的的精确对应。",
+            "raw": "{\"status\": \"SUGGESTION\", \"program\": \"largest_to_below_to_nearest\", \"display_command\": \"最大建筑下方最近的建筑\", \"reason\": \"用户指令为‘最大建筑下方最近的建筑’，系统支持的程序中‘largest_to_below_to_nearest’正是为此目的的精确对应。\"}",
+            "invoked": true
+          },
+          "suggested_program": "largest_to_below_to_nearest",
+          "suggestion_validator_pass": true,
+          "user_confirmation": "Y",
+          "confirmation_kind": "suggestion",
+          "final_program": "largest_to_below_to_nearest",
+          "display": {},
+          "render_completed_at": "2026-10-23T15:07:36.869565+00:00"
+        },
+        "previews": [],
+        "error_code": null
+      }
+    },
+    "2": {
+      "name": "YOLO proposals",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 8,
+        "stage_id": 2,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:38.026243+00:00",
+        "elapsed_seconds": 55.884,
+        "metadata": {
+          "raw_count": 16,
+          "merged_count": 14,
+          "detector_seconds": 1.156,
+          "proposal_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "display": {
+            "displayed_proposal_ids": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ]
+          },
+          "array_snapshot_identities": {
+            "rgb": {
+              "shape": [
+                512,
+                512,
+                3
+              ],
+              "dtype": "uint8",
+              "sha256": "b25327ea68842001dbabc13c845fd28e64741c9a24fe3f304fe18912397dcbb4",
+              "raw_min": 0.0,
+              "raw_max": 255.0
+            },
+            "proposals": [
+              {
+                "proposal_id": 0,
+                "bbox": [
+                  0,
+                  209,
+                  5,
+                  220
+                ],
+                "mask_crop": {
+                  "shape": [
+                    6,
+                    12
+                  ],
+                  "dtype": "bool",
+                  "sha256": "e9f4254a5b7da3ce62c48604146bdfd2ebd4eb588c2269100b90b2ae57904849",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 1,
+                "bbox": [
+                  1,
+                  225,
+                  10,
+                  265
+                ],
+                "mask_crop": {
+                  "shape": [
+                    10,
+                    41
+                  ],
+                  "dtype": "bool",
+                  "sha256": "4f2a644ef1de19571f1ad6400c0e4b2568a0ea246d799e43a5f1184753d22aa0",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 2,
+                "bbox": [
+                  1,
+                  46,
+                  12,
+                  73
+                ],
+                "mask_crop": {
+                  "shape": [
+                    12,
+                    28
+                  ],
+                  "dtype": "bool",
+                  "sha256": "5a23d02deea0ebb23d65b37127a3ed8ea11349cfc035e592aad227e48d5acbb8",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 3,
+                "bbox": [
+                  3,
+                  194,
+                  34,
+                  211
+                ],
+                "mask_crop": {
+                  "shape": [
+                    32,
+                    18
+                  ],
+                  "dtype": "bool",
+                  "sha256": "535329ae508aee31bcb3969dd97f07b7a1f02928c73912d343874b9c0763b446",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 4,
+                "bbox": [
+                  41,
+                  439,
+                  88,
+                  511
+                ],
+                "mask_crop": {
+                  "shape": [
+                    48,
+                    73
+                  ],
+                  "dtype": "bool",
+                  "sha256": "7d940062f3e654d1c8fcb7720d47c21e3163f06d6af2c48a611687ec76184624",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 5,
+                "bbox": [
+                  42,
+                  148,
+                  89,
+                  206
+                ],
+                "mask_crop": {
+                  "shape": [
+                    48,
+                    59
+                  ],
+                  "dtype": "bool",
+                  "sha256": "1c4652d3977d3c257792c1596bba98bb9ccb353403c4b8b246d5c4f6df9071ad",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 6,
+                "bbox": [
+                  117,
+                  52,
+                  170,
+                  103
+                ],
+                "mask_crop": {
+                  "shape": [
+                    54,
+                    52
+                  ],
+                  "dtype": "bool",
+                  "sha256": "2f8ff26c079ca3b20deeabcf41d1e8c8c75a11f16a815ec6a3867bb0cf69f967",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 7,
+                "bbox": [
+                  171,
+                  349,
+                  194,
+                  410
+                ],
+                "mask_crop": {
+                  "shape": [
+                    24,
+                    62
+                  ],
+                  "dtype": "bool",
+                  "sha256": "bc37b09062e4a6801e10abe36945ec81de3ac51588e13623d215cfb81426b726",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 8,
+                "bbox": [
+                  171,
+                  254,
+                  207,
+                  318
+                ],
+                "mask_crop": {
+                  "shape": [
+                    37,
+                    65
+                  ],
+                  "dtype": "bool",
+                  "sha256": "1c6ddcc518aa8421600a17ee08ce4202507e84782f9db758507dcdca90f6fa75",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 9,
+                "bbox": [
+                  173,
+                  339,
+                  217,
+                  417
+                ],
+                "mask_crop": {
+                  "shape": [
+                    45,
+                    79
+                  ],
+                  "dtype": "bool",
+                  "sha256": "5c938aabae4e32a40442775181d5ebe9322415dd3e6242024c933dfe1302b71f",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 10,
+                "bbox": [
+                  230,
+                  334,
+                  241,
+                  361
+                ],
+                "mask_crop": {
+                  "shape": [
+                    12,
+                    28
+                  ],
+                  "dtype": "bool",
+                  "sha256": "10e0ff1e955b8104e3c02a34b054379dd0d87c67ffc6499487d6b02590dac539",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 11,
+                "bbox": [
+                  238,
+                  249,
+                  281,
+                  315
+                ],
+                "mask_crop": {
+                  "shape": [
+                    44,
+                    67
+                  ],
+                  "dtype": "bool",
+                  "sha256": "436abb155ad76b6e61cd5c1f61521aded565d80993dc782bcf190682ce40d1a6",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 12,
+                "bbox": [
+                  245,
+                  333,
+                  287,
+                  398
+                ],
+                "mask_crop": {
+                  "shape": [
+                    43,
+                    66
+                  ],
+                  "dtype": "bool",
+                  "sha256": "3be86b66cd378a01f84861100e61a104eac87e5ddbe5a894a6f0c3ae551e46d6",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              },
+              {
+                "proposal_id": 13,
+                "bbox": [
+                  283,
+                  447,
+                  329,
+                  511
+                ],
+                "mask_crop": {
+                  "shape": [
+                    47,
+                    65
+                  ],
+                  "dtype": "bool",
+                  "sha256": "22bd967d18ab2cf3fe812500ce5ba27b58563924c073b8d0cb474b04aa829062",
+                  "raw_min": 0.0,
+                  "raw_max": 1.0
+                }
+              }
+            ]
+          },
+          "render_completed_at": "2026-10-23T15:07:38.113684+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_02_event_008_1.png",
+            "bytes": 331249,
+            "sha256": "e74350bef82b7799a3f3cdd92fa05480cfbaf1d226e8c60683c7926d7edfed27"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "3": {
+      "name": "Automatic Reference",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 10,
+        "stage_id": 3,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:38.027242+00:00",
+        "elapsed_seconds": 55.884,
+        "metadata": {
+          "selected_id": 9,
+          "mask_area": 3297,
+          "confidence": 0.7130877375602722,
+          "bbox": [
+            173,
+            339,
+            217,
+            417
+          ],
+          "mode": "automatic",
+          "display": {
+            "highlighted_reference_id": 9
+          },
+          "array_snapshot_identities": {
+            "reference_mask_crop": {
+              "shape": [
+                45,
+                79
+              ],
+              "dtype": "bool",
+              "sha256": "5c938aabae4e32a40442775181d5ebe9322415dd3e6242024c933dfe1302b71f",
+              "raw_min": 0.0,
+              "raw_max": 1.0
+            }
+          },
+          "render_completed_at": "2026-10-23T15:07:38.148032+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_03_event_010_1.png",
+            "bytes": 328769,
+            "sha256": "55a60b19174fc7ba6c989682c200b1922a17c54d191afb8eda9ed0c6495db69d"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "4": {
+      "name": "Reasoning Context",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 13,
+        "stage_id": 4,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:38.121032+00:00",
+        "elapsed_seconds": 55.978,
+        "metadata": {
+          "direction": "below",
+          "context": {
+            "origin": [
+              122,
+              40
+            ],
+            "size": 512,
+            "direction": "below",
+            "anchor_in_context": [
+              256,
+              154
+            ],
+            "reference_centroid_global": [
+              194.37003336366394,
+              378.0078859569305
+            ],
+            "padding": {
+              "top": 0,
+              "bottom": 40,
+              "left": 0,
+              "right": 122,
+              "origin_top": 40,
+              "origin_left": 122,
+              "mode": "reflect",
+              "applied": true
+            },
+            "reference_too_large": false,
+            "notes": []
+          },
+          "reference_pixels": 3297,
+          "display": {},
+          "array_snapshot_identities": {
+            "context_rgb": {
+              "shape": [
+                512,
+                512,
+                3
+              ],
+              "dtype": "uint8",
+              "sha256": "9748f880fb04363f811e0f5881fcab98486a9f97a8acaad9d4bf50b4fa4cd639",
+              "raw_min": 0.0,
+              "raw_max": 255.0
+            },
+            "reference_mask": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "bool",
+              "sha256": "f607bc0f5f5e0f4058d36df7f37f0e175a25e67d4aa85edaf85dc654cd326412",
+              "raw_min": 0.0,
+              "raw_max": 1.0
+            }
+          },
+          "render_completed_at": "2026-10-23T15:07:38.278927+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_04_event_013_1.png",
+            "bytes": 328599,
+            "sha256": "8db6e28ce9c4f24e9ae496b087baf567fb4c60f8c046647f94eebd0bf1f1466a"
+          },
+          {
+            "path": "stage_04_event_013_2.png",
+            "bytes": 323749,
+            "sha256": "a87a8dda2bc4860d0f78f75a2a025efdf3ced6b708b084d9b00d1883d90345bc"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "5": {
+      "name": "SAM2 Visual Features",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 15,
+        "stage_id": 5,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:39.206154+00:00",
+        "elapsed_seconds": 57.063,
+        "metadata": {
+          "encoding_complete": true,
+          "feature_shape": [
+            1,
+            256,
+            64,
+            64
+          ],
+          "elapsed_seconds": 1.083,
+          "raw_feature_tensor_saved": false,
+          "display": {},
+          "render_completed_at": "2026-10-23T15:07:39.206154+00:00"
+        },
+        "previews": [],
+        "error_code": null
+      }
+    },
+    "6": {
+      "name": "Spatial Reasoning Fields",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 18,
+        "stage_id": 6,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:39.642275+00:00",
+        "elapsed_seconds": 57.5,
+        "metadata": {
+          "source": "actual D-B1 forward field_competition",
+          "field_shapes": {
+            "P_dir": [
+              1,
+              1,
+              64,
+              64
+            ],
+            "P_near": [
+              1,
+              1,
+              64,
+              64
+            ],
+            "W": [
+              1,
+              1,
+              64,
+              64
+            ],
+            "A": [
+              1,
+              1,
+              64,
+              64
+            ]
+          },
+          "display": {
+            "P_dir": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "8c7c25f739304533b45cd391b9c7d91e1a3a50a284b3774135e7deff6584f52b",
+              "raw_min": 1.0982171796307741e-14,
+              "raw_max": 1.0,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "P_near": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "e779b5d38c17d7c26b0b8c8eac9418f2baea29548c37cd9aa479501ef1a7cc31",
+              "raw_min": 0.0,
+              "raw_max": 0.9595060348510742,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "W": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "23b15e52d6ebe13904026a44967beec4b24197226b9aa46b7029c194e27fbe09",
+              "raw_min": 0.0,
+              "raw_max": 0.5046658515930176,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "A": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "b234f8ca756d8bda3096fbdef4afb22b56fac42833dd30b3205ebed73d1cd251",
+              "raw_min": 0.0,
+              "raw_max": 0.01075485348701477,
+              "display_range": [
+                0.0,
+                0.01075485348701477
+              ],
+              "display_normalization": "per-map min/max; constant maps use zero color",
+              "color_is_not_raw_probability": true
+            }
+          },
+          "array_snapshot_identities": {
+            "P_dir": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "8c7c25f739304533b45cd391b9c7d91e1a3a50a284b3774135e7deff6584f52b",
+              "raw_min": 1.0982171796307741e-14,
+              "raw_max": 1.0
+            },
+            "P_near": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "e779b5d38c17d7c26b0b8c8eac9418f2baea29548c37cd9aa479501ef1a7cc31",
+              "raw_min": 0.0,
+              "raw_max": 0.9595060348510742
+            },
+            "W": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "23b15e52d6ebe13904026a44967beec4b24197226b9aa46b7029c194e27fbe09",
+              "raw_min": 0.0,
+              "raw_max": 0.5046658515930176
+            },
+            "A": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "b234f8ca756d8bda3096fbdef4afb22b56fac42833dd30b3205ebed73d1cd251",
+              "raw_min": 0.0,
+              "raw_max": 0.01075485348701477
+            }
+          },
+          "render_completed_at": "2026-10-23T15:07:39.683132+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_06_event_018_1.png",
+            "bytes": 88827,
+            "sha256": "e829bef22673ba1728bbb3532b3adc001ffa87177d9d90c90c5ba93eb3052dd4"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "7": {
+      "name": "Prototype & Similarity",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 20,
+        "stage_id": 7,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:39.643277+00:00",
+        "elapsed_seconds": 57.501,
+        "metadata": {
+          "q_formed": true,
+          "q_shape": [
+            1,
+            128
+          ],
+          "q_dimension": 128,
+          "C_shape": [
+            1,
+            1,
+            64,
+            64
+          ],
+          "source": "actual D-B1 forward competition state",
+          "source_dtype": "torch.float32",
+          "similarity_scope": "visual cosine similarity, not target correctness probability",
+          "display": {
+            "C": {
+              "shape": [
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "9f14efd17fbd143d634421a92453f699395a54b0ea12520902bfccad27ea2e6a",
+              "raw_min": 0.1327963024377823,
+              "raw_max": 0.6963870525360107,
+              "display_range": [
+                -1.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            }
+          },
+          "array_snapshot_identities": {
+            "C": {
+              "shape": [
+                1,
+                1,
+                64,
+                64
+              ],
+              "dtype": "float32",
+              "sha256": "9f14efd17fbd143d634421a92453f699395a54b0ea12520902bfccad27ea2e6a",
+              "raw_min": 0.1327963024377823,
+              "raw_max": 0.6963870525360107
+            }
+          },
+          "render_completed_at": "2026-10-23T15:07:39.706580+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_07_event_020_1.png",
+            "bytes": 27913,
+            "sha256": "d054c55cb7b8704f5bdf281c8e1262442438253b90993823a6abbe9181c0f8c5"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "8": {
+      "name": "D-B1 Segmentation",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 22,
+        "stage_id": 8,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:39.687641+00:00",
+        "elapsed_seconds": 57.545,
+        "metadata": {
+          "candidate_only": true,
+          "validation_state": "NOT_YET_GUARDED",
+          "mask_pixels": 2791,
+          "elapsed_seconds": 0.318,
+          "display": {
+            "probability": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "9b7c71e3813bf4aecc549f5c9a0cf3be01c760826edbf092238af223b75453d5",
+              "raw_min": 6.508884986544672e-09,
+              "raw_max": 0.9999998807907104,
+              "display_range": [
+                0.0,
+                1.0
+              ],
+              "display_normalization": "fixed range",
+              "color_is_not_raw_probability": true
+            },
+            "logits": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "4f06928a0085445e2d26df854aca8d312157fdf9f917438a1298ec53034a46d8",
+              "raw_min": -18.85009765625,
+              "raw_max": 16.548828125
+            }
+          },
+          "array_snapshot_identities": {
+            "logits": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "4f06928a0085445e2d26df854aca8d312157fdf9f917438a1298ec53034a46d8",
+              "raw_min": -18.85009765625,
+              "raw_max": 16.548828125
+            },
+            "probability": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "float32",
+              "sha256": "9b7c71e3813bf4aecc549f5c9a0cf3be01c760826edbf092238af223b75453d5",
+              "raw_min": 6.508884986544672e-09,
+              "raw_max": 0.9999998807907104
+            },
+            "mask": {
+              "shape": [
+                512,
+                512
+              ],
+              "dtype": "bool",
+              "sha256": "33d06f680402799da8a14b5ac9fc763176f1df69c15b082647f8eb8f1f26782d",
+              "raw_min": 0.0,
+              "raw_max": 1.0
+            }
+          },
+          "render_completed_at": "2026-10-23T15:07:39.774807+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_08_event_022_1.png",
+            "bytes": 220925,
+            "sha256": "e35ee556828e4fe48a5fc8b50e8c366ed1e053a5c6ea61a69ff0cd6cd8926466"
+          }
+        ],
+        "error_code": null
+      }
+    },
+    "9": {
+      "name": "Final Guard & Result",
+      "state": "COMPLETED",
+      "latest_event": {
+        "run_id": "20261023_230642_1034",
+        "sequence": 24,
+        "stage_id": 9,
+        "state": "COMPLETED",
+        "timestamp": "2026-10-23T15:07:39.908092+00:00",
+        "elapsed_seconds": 57.765,
+        "metadata": {
+          "runtime_status": "SUCCESS",
+          "guard_executed": true,
+          "final_output_valid": true,
+          "validity_scope": "RUNTIME_STRUCTURAL_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "elapsed_seconds": 3.040524959564209,
+          "mask_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V3\\_engine\\inference\\output\\1034\\masks\\1034_mask.png",
+          "overlay_path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V3\\_engine\\inference\\output\\1034\\overlays\\1034_overlay.png",
+          "display": {},
+          "render_completed_at": "2026-10-23T15:07:39.956182+00:00"
+        },
+        "previews": [
+          {
+            "path": "stage_09_event_024_1.png",
+            "bytes": 324625,
+            "sha256": "6355f5752ce1c38623fc8680da0a7ad7294de65cd91f30a192756fef8d2f1525"
+          },
+          {
+            "path": "stage_09_event_024_2.png",
+            "bytes": 8837,
+            "sha256": "c8ee0bc0f953c5cbf123226cff143be25f8b05e3ac48d5960c6eb54aa15a3efe"
+          }
+        ],
+        "error_code": null
+      }
+    }
+  },
+  "event_count": 24,
+  "observation_failures": [],
+  "feature_tensor_saved": false,
+  "model_calls_by_trace": 0
+}

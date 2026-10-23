@@ -1,4 +1,4 @@
-"""V2 trace/UI tests with fixed fake stages; no weights or scientific model inference."""
+"""V3 trace/UI tests derived from V2; fixed fake stages, no weights or model inference."""
 from __future__ import annotations
 
 import importlib.util
@@ -501,6 +501,7 @@ def test_observation_failure_explicit_and_scientific_result_untouched(tmp_path):
     s.emit(1,"RUNNING");assert not s.finish(result=scientific)
     assert scientific.status=="SUCCESS" and s.failures
     out=b.publish_result(tmp_path,Path('fake.png'),'text',None,{},scientific,observation_failed=True,directory=s.directory)
+    assert out["summary"]["demo_version"] == "V3"
     assert out["summary"]["runtime_status"]=="FAILED" and out["summary"]["underlying_runtime_status"]=="SUCCESS"
     assert out["summary"]["failure_scope"]=="OBSERVATION_ONLY"
     assert not (s.directory/'mask.png').exists()
@@ -590,6 +591,17 @@ def test_quickfill_text_only_and_busy_duplicate_run_disabled(tmp_path):
         assert app.notebook.instate(['!disabled'])
         app.run();app.run();assert app.worker.thread is None
         app.worker.busy=False
+    finally:app.close()
+
+
+def test_cli_prefill_survives_environment_check_disabled_text_without_inference(tmp_path):
+    root,app=make_app(tmp_path)
+    try:
+        app.prompt.configure(state="disabled")
+        app.prefill_prompt("最大建筑下方最近的建筑")
+        assert app.prompt.get("1.0", "end").strip() == "最大建筑下方最近的建筑"
+        assert app.prompt.cget("state") == "disabled"
+        assert app.worker.thread is None
     finally:app.close()
 
 

@@ -1,14 +1,20 @@
 schema_version: 1
 task_id: DEMO-R1
-status: IN_PROGRESS
+status: EXECUTION_COMPLETE_AWAITING_SUPERVISOR
 executor: CODEX
 branch: delivery/demo-r1-restore-ui-20261023
-head: 0ef69a2ed6f80251dc14760bab81053a8468954e
+head: 4f966cba71e019e6e73ab037eee470239d18a9d5
 last_checkpoint:
-  commit: 0ef69a2ed6f80251dc14760bab81053a8468954e
+  commit: 4f966cba71e019e6e73ab037eee470239d18a9d5
   pushed: true
-current_step: RESTORE_UI_AND_TEST
+current_step: ENGINEERING_DELIVERED_REVIEW_PENDING
 report_directory: reports/demo_r1/20261023
 scientific_changes: false
 training_calls: 0
-next_action: Test observer equivalence and native UI; build independently; user confirms real Qwen interpretation.
+engineering_tests: 57_PASS
+real_smoke_run: 20261023_230642_1034
+real_smoke_status: SUCCESS_RUNTIME_STRUCTURAL_ONLY
+real_paired_equivalence: NOT_PERFORMED
+semantic_correctness: NOT_EVALUATED
+independent_review: reports/demo_r1/20261023/independent_review.md
+next_action: Supervisor reviews source, reports and runnable V3; no scientific self-acceptance or P1.

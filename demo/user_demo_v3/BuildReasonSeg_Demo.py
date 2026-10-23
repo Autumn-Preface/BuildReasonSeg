@@ -78,7 +78,13 @@ class DemoApp:
         ttk.Label(shell, text="BUILDREASONSEG  /  空间推理实验室", style="Hint.TLabel").pack(anchor="w")
         ttk.Label(shell, text="从一句指令，到可追溯的建筑分割", style="Title.TLabel").pack(anchor="w", pady=(8,18))
         body=ttk.Frame(shell);body.pack(fill="both",expand=True)
-        sidebar=ttk.Frame(body,width=320);sidebar.pack(side="left",fill="y",padx=(0,24));sidebar.pack_propagate(False)
+        sidebar_host=ttk.Frame(body,width=340);sidebar_host.pack(side="left",fill="y",padx=(0,16));sidebar_host.pack_propagate(False)
+        sidebar_canvas=tk.Canvas(sidebar_host,bg="#0b1423",highlightthickness=0)
+        sidebar_scroll=ttk.Scrollbar(sidebar_host,orient="vertical",command=sidebar_canvas.yview);sidebar_scroll.pack(side="right",fill="y")
+        sidebar_canvas.configure(yscrollcommand=sidebar_scroll.set);sidebar_canvas.pack(side="left",fill="both",expand=True)
+        sidebar=ttk.Frame(sidebar_canvas);sidebar_id=sidebar_canvas.create_window((0,0),window=sidebar,anchor="nw")
+        sidebar.bind("<Configure>",lambda e:sidebar_canvas.configure(scrollregion=sidebar_canvas.bbox("all")))
+        sidebar_canvas.bind("<Configure>",lambda e:sidebar_canvas.itemconfigure(sidebar_id,width=e.width))
         ttk.Label(sidebar,text="01  选择影像",style="Heading.TLabel").pack(anchor="w")
         self.path_text=tk.StringVar(value="尚未选择图片")
         ttk.Label(sidebar,textvariable=self.path_text,wraplength=300).pack(fill="x",pady=10)
@@ -158,6 +164,13 @@ class DemoApp:
         self.prompt.delete("1.0", "end")
         self.prompt.insert("1.0", EXAMPLES[index])  # text only; no program binding or inference
 
+    def prefill_prompt(self, text):
+        previous = self.prompt.cget("state")
+        self.prompt.configure(state="normal")
+        self.prompt.delete("1.0", "end")
+        self.prompt.insert("1.0", text)
+        self.prompt.configure(state=previous)
+
     def show_preview(self, label, key, image):
         from PIL import ImageTk
         photo = ImageTk.PhotoImage(image, master=self.window)
@@ -179,6 +192,11 @@ class DemoApp:
             code = getattr(e, "code", "E202")
             messagebox.showerror("图片无法使用", ERROR_MESSAGES.get(code, ERROR_MESSAGES["E202"]), parent=self.window)
             return
+        self.load_image_path(Path(name), image)
+
+    def load_image_path(self, name, image=None):
+        if image is None:
+            image=preview_image(self.root,Path(name))
         self.image_path = Path(name).resolve()
         self.path_text.set(str(self.image_path))
         self.show_preview(self.original, "original", image)
@@ -356,6 +374,8 @@ class DemoApp:
 def main():
     parser = argparse.ArgumentParser(description="BuildReasonSeg 本地 Demo 环境检查", allow_abbrev=False)
     parser.add_argument("--self-check", action="store_true")
+    parser.add_argument("--image", type=Path, help="仅预填影像，不启动推理")
+    parser.add_argument("--prompt", default="", help="仅预填文字，仍需用户确认")
     args = parser.parse_args()
     configure_environment(DEMO_ROOT)
     if args.self_check:
@@ -364,7 +384,11 @@ def main():
         raise SystemExit(0 if result["ok"] else 1)
     import tkinter as tk
     root = tk.Tk()
-    DemoApp(root)
+    app=DemoApp(root)
+    if args.image:
+        app.load_image_path(args.image)
+    if args.prompt:
+        app.prefill_prompt(args.prompt)
     root.mainloop()
 
 
