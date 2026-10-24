@@ -155,3 +155,14 @@ to legacy model choices and cannot alter legacy code, weights, splits, results o
 No new algorithm implementation, large training/downloads, dependency changes in existing environments,
 final backbone selection, P1 execution or self-acceptance is authorized. See GOV-D009 and
 governance/DAMAGE_RESEARCH_SCOPE.md. P1 and protocol freezing require Supervisor review.
+
+## 11. DAMAGE-P1A (Supervisor authorization 2026-10-25)
+
+The user's DAMAGE-P1A task supersedes the P0-only execution limit for this task only.
+It authorizes CUBIT-InSeg admission audits, a new isolated environment, data/evaluation engineering,
+a standard from-scratch two-channel U-Net, a small real training smoke and one development seed
+bounded by 60 epochs and 12 GPU hours after admission and engineering gates pass.
+Unconfirmed authoritative class mapping blocks formal training. Missing building groups must be
+reported; no cross-building generalization claim is authorized. Official test splits stay isolated.
+No changes to RC1, Demo V3, old research assets, MLLM/spatial integration, innovation modules,
+P1B/P2, or self-acceptance are authorized. See GOV-D011 and the new task's report directory.

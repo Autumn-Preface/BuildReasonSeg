@@ -1,0 +1,16 @@
+{
+  "free_bytes": 126698659840,
+  "planning_upper_bounds": {
+    "archives": 23622320128,
+    "extracted": 25769803776,
+    "new_environment_and_install_cache": 17179869184,
+    "checkpoints_logs_predictions": 8589934592,
+    "safety_margin": 4294967296
+  },
+  "required_plus_min_free": 117037858816,
+  "minimum_system_free_bytes": 37580963840,
+  "dense_full_resolution_mask_cache": "FORBIDDEN_BY_BUDGET_ON_THE_FLY_ONLY",
+  "metadata_transfer_cap": 50331648,
+  "no_legacy_cleanup": true,
+  "full_plan_fits": true
+}

@@ -1,0 +1,54 @@
+{
+  "sha": "8fee6385a2a1a714cdeab53321a8e275f652799f",
+  "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/trees/8fee6385a2a1a714cdeab53321a8e275f652799f",
+  "tree": [
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10fabd90118f7ce38bb2e4753e105e744442a429",
+      "size": 18658,
+      "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/blobs/10fabd90118f7ce38bb2e4753e105e744442a429"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b07ea73d408c5404e4aee5a3ebb7ca2582bdc988",
+      "size": 3923,
+      "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/blobs/b07ea73d408c5404e4aee5a3ebb7ca2582bdc988"
+    },
+    {
+      "path": "figures",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2ddd3e4c757458333aa9638bdc3b4e715252dad8",
+      "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/trees/2ddd3e4c757458333aa9638bdc3b4e715252dad8"
+    },
+    {
+      "path": "figures/distribution.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fefcf38ff6f433bbba56cd16b5fd4da8a15da16",
+      "size": 957646,
+      "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/blobs/4fefcf38ff6f433bbba56cd16b5fd4da8a15da16"
+    },
+    {
+      "path": "figures/proportion.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "841c6afdc7eb480c8aff95a9b558397d06a2b24b",
+      "size": 342056,
+      "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/blobs/841c6afdc7eb480c8aff95a9b558397d06a2b24b"
+    },
+    {
+      "path": "figures/sample.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30d0d89a597f450d1f25cbf7a150c092c1c3815f",
+      "size": 2921516,
+      "url": "https://api.github.com/repos/BenyunZhao/CUBIT-InSeg/git/blobs/30d0d89a597f450d1f25cbf7a150c092c1c3815f"
+    }
+  ],
+  "truncated": false
+}

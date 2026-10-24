@@ -1,0 +1,5 @@
+Collecting pycocotools==2.0.11
+  Downloading pycocotools-2.0.11-cp311-cp311-win_amd64.whl.metadata (1.3 kB)
+Downloading pycocotools-2.0.11-cp311-cp311-win_amd64.whl (80 kB)
+Installing collected packages: pycocotools
+Successfully installed pycocotools-2.0.11

@@ -1,0 +1,12 @@
+{
+  "files": 2324,
+  "logical_bytes": 10141251260,
+  "inventory_sha256": "1155c5641875326ef00763f88882a956b86ebf3f200d141f44fa24215b75f9d4",
+  "roots": [
+    "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+    "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V3",
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\legacy_archive\\20261019",
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets\\damage\\local"
+  ],
+  "capture_scope": "fresh P1A checkpoint before any training; task code never writes these roots"
+}

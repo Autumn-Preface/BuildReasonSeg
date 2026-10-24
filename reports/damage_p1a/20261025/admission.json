@@ -1,0 +1,15 @@
+{
+  "status": "BLOCKED",
+  "training_allowed": false,
+  "class_map": null,
+  "validity_policy": null,
+  "manifest_sha256": null,
+  "reasons": [
+    "MAPPING_UNCONFIRMED: original YOLO TXT numeric IDs lack direct authoritative definition",
+    "VALIDITY_POLICY_UNFROZEN: original spalling-priority annotation does not establish independent crack negatives",
+    "VALIDATION_INDEPENDENCE_UNESTABLISHED: cross-split image duplicate candidates and no building/flight groups"
+  ],
+  "real_training_steps": 0,
+  "test_predictions_read": false,
+  "supervisor_acceptance": "PENDING"
+}

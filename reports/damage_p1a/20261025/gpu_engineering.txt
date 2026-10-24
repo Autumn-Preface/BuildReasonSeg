@@ -1,0 +1,72 @@
+{
+  "scope": "SYNTHETIC_ONLY_NO_CUBIT_DATA_NO_CHECKPOINT",
+  "python": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "versions": {
+    "torch": "2.13.0+cu132",
+    "numpy": "2.4.6",
+    "Pillow": "12.3.0",
+    "scipy": "1.17.1",
+    "pytest": "9.1.1",
+    "pycocotools": "2.0.11"
+  },
+  "cuda_runtime": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5080 Laptop GPU",
+  "capability": [
+    12,
+    0
+  ],
+  "driver_inventory": "NVIDIA GeForce RTX 5080 Laptop GPU, 621.01, 16303 MiB, 2038 MiB",
+  "deterministic_algorithms": true,
+  "tf32": false,
+  "precision": "float32",
+  "seed": 20261025,
+  "real_damage_training_steps": 0,
+  "cuda_matrix_sum": 262144.0,
+  "parameters": 31031810,
+  "synthetic_optimizer_steps": 2,
+  "losses": [
+    0.8433565497398376,
+    0.8417671918869019
+  ],
+  "output_weight_gradient_norms": [
+    0.02189486101269722,
+    0.022224238142371178
+  ],
+  "updated_parameters": true,
+  "shape": [
+    1,
+    2,
+    512,
+    512
+  ],
+  "wall_seconds_including_model_init": 7.47918159999972,
+  "peak_allocated_bytes": 8594177024,
+  "peak_reserved_bytes": 13314818048,
+  "clone_independence_samples": [
+    {
+      "path": "python.exe",
+      "source_sha256": "db44abe9c1b318e6c6b201dddab44c163146b4ef26363adea3f0eb17c68fa84c",
+      "clone_sha256": "db44abe9c1b318e6c6b201dddab44c163146b4ef26363adea3f0eb17c68fa84c",
+      "same_file": false
+    },
+    {
+      "path": "Lib/site-packages/torch/__init__.py",
+      "source_sha256": "767496b63c899ec3d1106a4c1eeac664a9b3947a9b2f9eefa7a901cdfe8a0288",
+      "clone_sha256": "767496b63c899ec3d1106a4c1eeac664a9b3947a9b2f9eefa7a901cdfe8a0288",
+      "same_file": false
+    },
+    {
+      "path": "Lib/site-packages/torch/lib/torch_cuda.dll",
+      "source_sha256": "680e49ea4703ad06f802638c329e7526f165c65597910b6d5363f485f35833ba",
+      "clone_sha256": "680e49ea4703ad06f802638c329e7526f165c65597910b6d5363f485f35833ba",
+      "same_file": false
+    },
+    {
+      "path": "Lib/site-packages/numpy/__init__.py",
+      "source_sha256": "65d5e777b6d662ba19cb80800bef3eb999eda7aee51eea62c308feabf679dba4",
+      "clone_sha256": "65d5e777b6d662ba19cb80800bef3eb999eda7aee51eea62c308feabf679dba4",
+      "same_file": false
+    }
+  ]
+}

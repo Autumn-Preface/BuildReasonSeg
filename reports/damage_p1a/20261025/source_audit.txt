@@ -1,0 +1,4 @@
+train [('images.zip', 15034071180, 5596), ('labels.zip', 248950377, 5596)]
+val [('images.zip', 1853116822, 699), ('labels.zip', 30763780, 699)]
+test [('images.zip', 1861617729, 701), ('labels.zip', 30772180, 701)]
+Official Git 8fee6385a2a1a714cdeab53321a8e275f652799f metadata bytes 2697226

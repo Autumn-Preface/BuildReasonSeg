@@ -134,3 +134,20 @@ Scope: new V3 engine copy, existing V2 observer mechanism, UI upgrade, engineeri
 Legacy RC1 and Damage-P0 remain read-only. No scientific formulas, thresholds, weights, ranking or formal evaluation changes.
 Acceptance remains with Supervisor; Damage Research does not advance.
 ```
+
+## GOV-D011
+
+```text
+Decision ID: GOV-D011
+Status: SUPERVISOR_AUTHORIZED_P1A_CONDITIONAL
+Decision: DAMAGE_VISUAL_DATA_ADMISSION_AND_FIRST_UNET_BASELINE
+Authority: user's DAMAGE-P1A task dated 2026-10-25, recorded at reports/damage_p1a/20261025/authorization.md.
+Scope: official CUBIT-InSeg admission, isolated environment, reusable data/reconstruction/metrics,
+  standard from-scratch U-Net with two independent damage channels; small smoke then one development
+  seed, at most 60 epochs and 12 GPU hours, only after admission and engineering checks.
+Stops: unconfirmed authoritative class mapping, untrustworthy validation, insufficient resources,
+  or material metric errors. Missing building groups permit a clearly limited exploratory protocol
+  but never a cross-building generalization claim. Test predictions cannot guide selection/tuning.
+Protected: legacy RC1, V3, P0 and prior formal experiments. No MLLM/spatial integration, new visual
+  innovation modules, broad model sweep, P1B/P2 or self-acceptance. P0 history is not rewritten.
+```

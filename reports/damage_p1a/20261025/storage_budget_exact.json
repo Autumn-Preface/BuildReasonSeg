@@ -1,0 +1,18 @@
+{
+  "free_at_budget_bytes": 126897930240,
+  "full_plan": {
+    "all_archives": 19059292068,
+    "all_uncompressed": 20530647832,
+    "new_env_and_cache_upper": 8589934592,
+    "training_outputs_upper": 4294967296,
+    "temporary_upper": 2147483648
+  },
+  "minimum_system_free_bytes": 53687091200,
+  "full_plan_plus_reserve_bytes": 108309416636,
+  "fits": true,
+  "current_acquisition": "LABEL_ARCHIVES_ONLY_UNTIL_MAPPING_GATE",
+  "full_resolution_mask_cache": false,
+  "test_usage": "annotation inventory only; no predictions or tuning",
+  "dense_probability_archive": false,
+  "old_assets_cleanup": false
+}

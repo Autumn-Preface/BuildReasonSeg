@@ -1,0 +1,12 @@
+......................                                                   [100%]
+============================== warnings summary ===============================
+tests/test_damage_p1a.py::test_authoritative_mapping_is_required_and_not_inferred
+tests/test_damage_p1a.py::test_overlap_union_unknown_and_explicit_ignore_are_preserved
+tests/test_damage_p1a.py::test_overlap_union_unknown_and_explicit_ignore_are_preserved
+tests/test_damage_p1a.py::test_overlap_union_unknown_and_explicit_ignore_are_preserved
+tests/test_damage_p1a.py::test_overlap_union_unknown_and_explicit_ignore_are_preserved
+  C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\site-packages\pycocotools\mask.py:89: DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword
+    return _mask.decode(rleObjs)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+22 passed, 5 warnings in 2.47s

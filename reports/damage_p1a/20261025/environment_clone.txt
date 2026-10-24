@@ -1,0 +1,9 @@
+3 channel Terms of Service accepted
+Source:      C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal
+Destination: C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a
+Packages: 20
+Files: 36394
+
+NoWritablePkgsDirError: No writeable pkgs directories configured.
+  - C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\artifacts\damage_p1a\conda_cache;C:\D\anaconda3\pkgs
+

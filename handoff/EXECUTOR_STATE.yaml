@@ -1,20 +1,16 @@
 schema_version: 1
-task_id: DEMO-R1
-status: EXECUTION_COMPLETE_AWAITING_SUPERVISOR
+task_id: DAMAGE-P1A
+status: IN_PROGRESS
 executor: CODEX
-branch: delivery/demo-r1-restore-ui-20261023
-head: 4f966cba71e019e6e73ab037eee470239d18a9d5
+branch: research/damage-p1a-visual-baseline-20261025
+head: a2f43aa2f5379920b9db6452dcc18b80481cdb76
 last_checkpoint:
-  commit: 4f966cba71e019e6e73ab037eee470239d18a9d5
+  commit: a2f43aa2f5379920b9db6452dcc18b80481cdb76
   pushed: true
-current_step: ENGINEERING_DELIVERED_REVIEW_PENDING
-report_directory: reports/demo_r1/20261023
-scientific_changes: false
+current_step: TRAINING_BLOCKED_COMPLETE_ENGINEERING
+report_directory: reports/damage_p1a/20261025
+data_admission: BLOCKED_MAPPING_AND_VALIDATION
 training_calls: 0
-engineering_tests: 57_PASS
-real_smoke_run: 20261023_230642_1034
-real_smoke_status: SUCCESS_RUNTIME_STRUCTURAL_ONLY
-real_paired_equivalence: NOT_PERFORMED
-semantic_correctness: NOT_EVALUATED
-independent_review: reports/demo_r1/20261023/independent_review.md
-next_action: Supervisor reviews source, reports and runnable V3; no scientific self-acceptance or P1.
+test_predictions_read: false
+synthetic_optimizer_steps: 2
+next_action: Finish engineering review, data/protection evidence and STOP report; do not train on guessed IDs.

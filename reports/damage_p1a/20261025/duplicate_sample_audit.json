@@ -1,0 +1,72 @@
+{
+  "crc_size_candidate_groups": 589,
+  "cross_split_candidate_groups": 222,
+  "candidate_pair_counts": {
+    "train__val": 99,
+    "test__train": 110,
+    "test__val": 13
+  },
+  "selection": "first two archive-order train/val candidate groups; not representative; no test image appearance inspected",
+  "verified_pairs": [
+    {
+      "files": [
+        {
+          "split": "train",
+          "archive_path": "images/SP1_813.JPG",
+          "bytes": 3993950,
+          "sha256": "ad5ef01c9a6a81eb183ba19e5ee8a2f419eaaad6e567c8c7c8e2a65c7ff7e781",
+          "decoded_rgb_sha256": "a9b5592618237bf180c743c833d92cc8fa21e6d11a0c2639d0b9cbbe9eedda6b",
+          "size_wh": [
+            4800,
+            3200
+          ],
+          "local": "artifacts/damage_p1a/duplicate_samples/train_SP1_813.JPG"
+        },
+        {
+          "split": "val",
+          "archive_path": "images/SP0_818.JPG",
+          "bytes": 3993950,
+          "sha256": "ad5ef01c9a6a81eb183ba19e5ee8a2f419eaaad6e567c8c7c8e2a65c7ff7e781",
+          "decoded_rgb_sha256": "a9b5592618237bf180c743c833d92cc8fa21e6d11a0c2639d0b9cbbe9eedda6b",
+          "size_wh": [
+            4800,
+            3200
+          ],
+          "local": "artifacts/damage_p1a/duplicate_samples/val_SP0_818.JPG"
+        }
+      ],
+      "encoded_identical": true,
+      "decoded_identical": true
+    },
+    {
+      "files": [
+        {
+          "split": "train",
+          "archive_path": "images/SP1_1091.JPG",
+          "bytes": 3135436,
+          "sha256": "f64361a7117be8879813cfb373131719a4911b440265441bc532710f3eddd0ff",
+          "decoded_rgb_sha256": "ffff457343ff805be1460f84016f7b0e748cc26bb1ea75f7d94f4130cd9cd504",
+          "size_wh": [
+            4800,
+            3200
+          ],
+          "local": "artifacts/damage_p1a/duplicate_samples/train_SP1_1091.JPG"
+        },
+        {
+          "split": "val",
+          "archive_path": "images/SP0_1102.JPG",
+          "bytes": 3135436,
+          "sha256": "f64361a7117be8879813cfb373131719a4911b440265441bc532710f3eddd0ff",
+          "decoded_rgb_sha256": "ffff457343ff805be1460f84016f7b0e748cc26bb1ea75f7d94f4130cd9cd504",
+          "size_wh": [
+            4800,
+            3200
+          ],
+          "local": "artifacts/damage_p1a/duplicate_samples/val_SP0_1102.JPG"
+        }
+      ],
+      "encoded_identical": true,
+      "decoded_identical": true
+    }
+  ]
+}
