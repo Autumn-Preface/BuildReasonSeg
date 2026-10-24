@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 1393, in _RealGetContents
+    endrec = _EndRecData(fp)
+             ^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 320, in _EndRecData
+    data = fpin.read()
+           ^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\audit_sources.py", line 87, in read
+    data,row=get(self.url,n,{'Range':f'bytes={self.pos}-{self.pos+n-1}'})
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\audit_sources.py", line 35, in get
+    with urllib.request.urlopen(req, timeout=45) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\urllib\request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\urllib\request.py", line 525, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\urllib\request.py", line 634, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\urllib\request.py", line 563, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\urllib\request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\urllib\request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 416: Requested range not satisfiable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\inspect_samples.py", line 66, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\inspect_samples.py", line 21, in main
+    with zipfile.ZipFile(remote) as z:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 1330, in __init__
+    self._RealGetContents()
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 1395, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file

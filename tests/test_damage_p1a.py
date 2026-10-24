@@ -21,7 +21,8 @@ def test_authoritative_mapping_is_required_and_not_inferred():
     assert valid[1].all() and not valid[0].any()
 
 
-@pytest.mark.parametrize('line',['0 0 0 1 0','0 0 0 1 0 1 nan','0 0 0 1 0 1 1.01','0 -0.1 0 1 0 1 1'])
+@pytest.mark.parametrize('line',['0 0 0 1 0','0 0 0 1 0 1 nan','0 0 0 1 0 1 1.01','0 -0.1 0 1 0 1 1',
+                               '0 0.5 0.5 0.5 0.5 0.5 0.5','0 0 0 0.5 0.5 1 1'])
 def test_invalid_polygons_fail(line):
     with pytest.raises(ValueError):parse_yolo(line,{0:0})
 
@@ -31,6 +32,11 @@ def test_overlap_union_unknown_and_explicit_ignore_are_preserved():
     target,valid=rasterize([(0,square),(0,square),(1,square)],4,4,[True,True],[(0,square)])
     assert target.all() and not valid[0].any() and valid[1].all()
     with pytest.raises(ValueError,match='unknown'):rasterize([(1,square)],4,4,[True,False])
+
+
+def test_nonzero_subpixel_positive_polygon_cannot_silently_become_negative():
+    tiny=np.array([[.1,.1],[.1001,.1],[.1001,.1001]])
+    with pytest.raises(ValueError,match='zero rasterized pixels'):rasterize([(0,tiny)],8,8,[True,False])
 
 
 @pytest.mark.parametrize('h,w,size,overlap',[(5,7,4,2),(3,2,8,2),(15,17,8,3),(512,512,512,128),(517,725,512,128)])
@@ -75,11 +81,23 @@ def test_empty_negative_false_positive_and_unknown_channel():
     assert s['classes'][1]['known_images']==0 and s['foreground_miou'] is None
 
 
-@pytest.mark.parametrize('key',['source_image_id','image_sha256','building_id','sequence_id'])
+@pytest.mark.parametrize('key',['source_image_id','image_sha256','building_id','sequence_id','tile_parent_id'])
 def test_split_leakage_fails_before_cropping(key):
     rows=[{'source_image_id':str(i),'image_sha256':str(i),'known_channels':[True,True],'split':s} for i,s in enumerate(['train','val'])]
     for row in rows:row[key]='shared'
     with pytest.raises(ValueError,match='leakage'):validate_manifest(rows)
+
+
+@pytest.mark.parametrize('known',[[True,'false'],[1,0],[True],None])
+def test_unknown_channels_require_real_boolean_values(known):
+    with pytest.raises(ValueError,match='boolean'):rasterize([],4,4,known)
+    with pytest.raises(ValueError,match='boolean'):validate_manifest([{'split':'train','known_channels':known}])
+
+
+def test_reconstruction_rejects_silent_broadcast_and_invalid_native_box():
+    recon=Reconstructor(8,8)
+    with pytest.raises(ValueError,match='probability shape'):recon.add(Tile(0,0,4,4),np.ones((2,1,1)))
+    with pytest.raises(ValueError,match='outside'):recon.add(Tile(6,6,4,4),np.ones((2,4,4)))
 
 
 def test_padding_validity_and_mask_geometry():
@@ -109,3 +127,30 @@ def test_current_training_entry_fails_before_model_or_manifest_access(monkeypatc
     monkeypatch.setattr(model,'UNet',lambda:calls.append('UNEXPECTED_MODEL_CONSTRUCTION'))
     with pytest.raises(RuntimeError,match='DATA_ADMISSION_BLOCKED'):train.run('configs/damage_p1a/unet_baseline.json')
     assert not calls
+
+
+@pytest.mark.parametrize('hours,epochs',[(float('nan'),60),(float('inf'),60),(0,60),(12,0),(12,61),(12,True)])
+def test_training_budget_cannot_be_disabled_by_nonfinite_or_invalid_values(hours,epochs):
+    from research.damage_p1a.train import validate_config
+    with pytest.raises(ValueError):validate_config({'max_gpu_hours':hours,'epochs':epochs,'test_inference':False})
+
+
+def test_full_native_evaluator_on_hand_constructed_synthetic_rgb_and_polygons(tmp_path):
+    import hashlib
+    from PIL import Image
+    from research.damage_p1a.train import evaluate
+    rgb=np.zeros((16,20,3),np.uint8);rgb[:,:10,0]=255;rgb[8:,:,1]=255
+    Image.fromarray(rgb).save(tmp_path/'image.png')
+    (tmp_path/'label.txt').write_text('0 0 0 0.5 0 0.5 1 0 1\n1 0 0.5 1 0.5 1 1 0 1',encoding='utf-8')
+    row={'source_image_id':'SYNTHETIC_ONLY','image':'image.png','label':'label.txt','known_channels':[True,True],
+         'image_sha256':hashlib.sha256((tmp_path/'image.png').read_bytes()).hexdigest(),
+         'label_sha256':hashlib.sha256((tmp_path/'label.txt').read_bytes()).hexdigest()}
+    class PixelRule(torch.nn.Module):
+        def forward(self,x):
+            assert not torch.is_grad_enabled()
+            return x[:,:2]*10-5
+    m,timing=evaluate(PixelRule(),[row],tmp_path,{0:0,1:1},
+        {'tile_size':16,'validation_overlap':4,'threshold':.5},torch.device('cpu'))
+    assert m.summary()['foreground_miou']==1.0
+    assert sum(r['valid_pixels'] for r in m.rows)==2*16*20
+    assert timing[0]['native_hw']==[16,20] and timing[0]['tiles']==2

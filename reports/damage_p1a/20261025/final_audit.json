@@ -1,0 +1,20 @@
+{
+  "status": "STOP_DATA_ADMISSION",
+  "json_parsed": 17,
+  "python_ast_parsed": 13,
+  "local_markdown_links_pass": true,
+  "label_archive_hashes_pass": true,
+  "duplicate_sample_hashes_pass": true,
+  "admission_blocked": true,
+  "real_training_run_directory_exists": false,
+  "real_damage_training_steps": 0,
+  "engineering_tests": 38,
+  "test_predictions_read": false,
+  "changed_paths_within_scope": true,
+  "free_bytes": 127459393536,
+  "minimum_free_bytes": 53687091200,
+  "snapshot_scope": "logical sizes exclude Git and existing old assets",
+  "new_artifact_logical_bytes": 326879313,
+  "new_env_logical_bytes": 3992902931,
+  "frozen_config_sha256": "6f6250d8d2f1ad8901d22bff3ed00307e0f3d28fa53cf470b6b1314ee965583d"
+}

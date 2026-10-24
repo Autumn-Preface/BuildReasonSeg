@@ -1,0 +1,10 @@
+{
+  "python": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+  "torch_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\torch\\__init__.py",
+  "torch_extension_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\torch\\_C.cp311-win_amd64.pyd",
+  "numpy_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\numpy\\__init__.py",
+  "PIL_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\PIL\\__init__.py",
+  "coco_file": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\pycocotools\\__init__.py",
+  "free_bytes": 127462203392,
+  "config_sha256": "6f6250d8d2f1ad8901d22bff3ed00307e0f3d28fa53cf470b6b1314ee965583d"
+}

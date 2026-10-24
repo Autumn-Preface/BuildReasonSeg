@@ -939,6 +939,25 @@
       },
       "bytes": 32,
       "sha256": "ecf9c107f70eca70bacdd1a06ada74d65d1a8b97899987e3916d46df77354930"
+    },
+    {
+      "at_utc": "2026-10-24T22:49:49.401601+00:00",
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "HEAD",
+      "status": 200,
+      "final_url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8",
+        "Content-Length": "0"
+      },
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "at_utc": "2026-10-24T22:49:51.272228+00:00",
+      "url": "https://drive.usercontent.google.com/download?id=1LEaYyASd7nHL-RryO1i-ucF2X5NAikqo&export=download&confirm=t",
+      "method": "GET",
+      "error": "<HTTPError 416: 'Requested range not satisfiable'>"
     }
   ]
 }

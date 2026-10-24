@@ -24,13 +24,18 @@ def validate_manifest(rows):
     seen={}
     for row in rows:
         if row['split'] not in ('train','val','test'):raise ValueError('unknown split')
-        for key in ('source_image_id','image_sha256','building_id','sequence_id'):
+        for key in ('source_image_id','image_sha256','building_id','sequence_id','tile_parent_id'):
             value=row.get(key)
             if value is None:continue
             ident=(key,value)
             if ident in seen and seen[ident]!=row['split']:raise ValueError('cross-split leakage: '+key)
             seen[ident]=row['split']
-        if len(row.get('known_channels',[]))!=2:raise ValueError('explicit channel validity required')
+        _known_channels(row.get('known_channels'))
+
+
+def _known_channels(value):
+    if not isinstance(value,(list,tuple)) or len(value)!=2 or any(type(v) is not bool for v in value):
+        raise ValueError('explicit boolean channel validity required')
 
 
 def parse_yolo(text, class_map):
@@ -42,7 +47,11 @@ def parse_yolo(text, class_map):
         if raw not in class_map:raise ValueError('unmapped annotation ID')
         if len(points)<6 or len(points)%2 or not np.isfinite(points).all() or np.any((points<0)|(points>1)):
             raise ValueError('invalid normalized polygon')
-        result.append((class_map[raw],points.reshape(-1,2)))
+        polygon=points.reshape(-1,2)
+        signed_area_twice=np.sum(polygon[:,0]*np.roll(polygon[:,1],-1)-polygon[:,1]*np.roll(polygon[:,0],-1))
+        if len(np.unique(polygon,axis=0))<3 or signed_area_twice==0:
+            raise ValueError('degenerate polygon; do not turn positive annotation into background')
+        result.append((class_map[raw],polygon))
     return result
 
 
@@ -52,11 +61,14 @@ def rasterize(polygons, height, width, known_channels, ignore_polygons=()):
     No hidden priority or inferred negative channels. Explicit unknown polygons are ignored.
     """
     from pycocotools import mask as coco
+    _known_channels(known_channels)
     target=np.zeros((2,height,width),dtype=bool)
     valid=np.broadcast_to(np.asarray(known_channels,dtype=bool)[:,None,None],target.shape).copy()
     def decode(points):
         p=np.asarray(points,dtype=np.float64)*np.array([width,height])
-        return coco.decode(coco.frPyObjects([p.reshape(-1).tolist()],height,width))[:,:,0].astype(bool)
+        decoded=coco.decode(coco.frPyObjects([p.reshape(-1).tolist()],height,width))[:,:,0].astype(bool)
+        if not decoded.any():raise ValueError('polygon has zero rasterized pixels; do not silently create negative GT')
+        return decoded
     for channel,points in polygons:
         if channel not in (0,1):raise ValueError('invalid output channel')
         if not known_channels[channel]:raise ValueError('positive annotation in unknown channel')
@@ -97,7 +109,12 @@ class Reconstructor:
         self.count=np.zeros((height,width),np.uint32)
     def add(self,tile,probability):
         p=np.asarray(probability)
-        if p.shape[0]!=2 or not np.isfinite(p).all() or np.any((p<0)|(p>1)):raise ValueError('invalid probability')
+        if not all(isinstance(v,(int,np.integer)) for v in (tile.top,tile.left,tile.height,tile.width)):
+            raise ValueError('invalid tile geometry')
+        if min(tile.top,tile.left)<0 or min(tile.height,tile.width)<=0 or tile.top+tile.height>self.count.shape[0] or tile.left+tile.width>self.count.shape[1]:
+            raise ValueError('tile outside native image')
+        if p.ndim!=3 or p.shape[0]!=2 or p.shape[1]<tile.height or p.shape[2]<tile.width or not np.isfinite(p).all() or np.any((p<0)|(p>1)):
+            raise ValueError('invalid probability shape/value')
         self.total[:,tile.top:tile.top+tile.height,tile.left:tile.left+tile.width]+=p[:,:tile.height,:tile.width]
         self.count[tile.top:tile.top+tile.height,tile.left:tile.left+tile.width]+=1
     def finish(self):

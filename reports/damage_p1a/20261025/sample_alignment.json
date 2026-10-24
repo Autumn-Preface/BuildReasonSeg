@@ -1,0 +1,86 @@
+[
+  {
+    "split": "train",
+    "stem": "CR1_1",
+    "image_sha256": "93d27de9110a93ed543e6d76511d65c09fa5673f753d86fe09693b6335c57119",
+    "label_sha256": "74ed1cc7e9d130c5483294d4bc00a9198ac57151400f17cd4bf8da7b5f978874",
+    "shape_hw": [
+      4500,
+      3000
+    ],
+    "raw_id_instances": {
+      "0": 3,
+      "1": 0
+    },
+    "raw_id_foreground_pixels": [
+      129822,
+      0
+    ],
+    "evidence": "CR1_1_raw_gt.png",
+    "image_source": "HISTORICAL_P0_READ_ONLY_SIZE_CRC_MATCH_CURRENT_DIRECTORY",
+    "scope": "small deterministic raw-ID alignment audit, not semantic validation or predictions"
+  },
+  {
+    "split": "train",
+    "stem": "CR1_10",
+    "image_sha256": "4648100798868f5c93669340aa341429278e6e65fca2200bc729afe6afa383b4",
+    "label_sha256": "35b7b34f8d270138736c54600960c068c489b56efa940f3e814b818fadc6cb4f",
+    "shape_hw": [
+      4500,
+      3000
+    ],
+    "raw_id_instances": {
+      "0": 3,
+      "1": 0
+    },
+    "raw_id_foreground_pixels": [
+      143922,
+      0
+    ],
+    "evidence": "CR1_10_raw_gt.png",
+    "image_source": "HISTORICAL_P0_READ_ONLY_SIZE_CRC_MATCH_CURRENT_DIRECTORY",
+    "scope": "small deterministic raw-ID alignment audit, not semantic validation or predictions"
+  },
+  {
+    "split": "train",
+    "stem": "SP1_813",
+    "image_sha256": "ad5ef01c9a6a81eb183ba19e5ee8a2f419eaaad6e567c8c7c8e2a65c7ff7e781",
+    "label_sha256": "c2d98f11482970271ade9d9a164ee843bb1b8a60803d34f896269bda78f8d6ab",
+    "shape_hw": [
+      3200,
+      4800
+    ],
+    "raw_id_instances": {
+      "0": 0,
+      "1": 3
+    },
+    "raw_id_foreground_pixels": [
+      0,
+      2050993
+    ],
+    "evidence": "SP1_813_raw_gt.png",
+    "image_source": "CURRENT_OFFICIAL_RANGE_DOWNLOAD",
+    "scope": "small deterministic raw-ID alignment audit, not semantic validation or predictions"
+  },
+  {
+    "split": "train",
+    "stem": "SP1_1091",
+    "image_sha256": "f64361a7117be8879813cfb373131719a4911b440265441bc532710f3eddd0ff",
+    "label_sha256": "3b75556ad2507fa53e0a168f010f02439e8375862846cb3ca0ddde851d88e6e1",
+    "shape_hw": [
+      3200,
+      4800
+    ],
+    "raw_id_instances": {
+      "0": 0,
+      "1": 3
+    },
+    "raw_id_foreground_pixels": [
+      0,
+      206625
+    ],
+    "evidence": "SP1_1091_raw_gt.png",
+    "image_source": "CURRENT_OFFICIAL_RANGE_DOWNLOAD",
+    "scope": "small deterministic raw-ID alignment audit, not semantic validation or predictions"
+  }
+]

@@ -67,12 +67,17 @@ research_lines:
     scientific_architecture_frozen: true
     autonomous_resume: false
   damage_research:
-    status: P1A_DATA_ADMISSION_IN_PROGRESS
+    status: P1A_STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
     task_id: DAMAGE-P1A
     authorization_date: '2026-10-25'
-    scope: governance/DAMAGE_RESEARCH_SCOPE.md
+    scope: reports/damage_p1a/20261025/authorization.md
+    p0_scope: governance/DAMAGE_RESEARCH_SCOPE.md
     p1_authorized: P1A_ONLY_CONDITIONAL_ON_ADMISSION
     final_backbone: null
     protocol_status: DRAFT_PENDING_SUPERVISOR_REVIEW
     p0_record: reports/damage_p0/20261019/README.md
     p1a_record: reports/damage_p1a/20261025/authorization.md
+    p1a_report: reports/damage_p1a/20261025/README.md
+    p1a_admission: BLOCKED_MAPPING_VALIDITY_AND_CONFIRMED_VALIDATION_DUPLICATES
+    p1a_real_training_steps: 0
+    p1b_p2_authorized: false

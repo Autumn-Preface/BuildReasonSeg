@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\inspect_samples.py", line 66, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\inspect_samples.py", line 22, in main
+    for stem in ['CR1_1','CR1_10']:(local/(stem+'.JPG')).write_bytes(z.read('images/'+stem+'.JPG'))
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 1542, in read
+    return fp.read()
+           ^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 968, in read
+    buf += self._read1(self.MAX_N)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 1050, in _read1
+    data += self._read2(n - len(data))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 1082, in _read2
+    data = self._fileobj.read(n)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-damage-p1a\Lib\zipfile.py", line 802, in read
+    data = self._file.read(n)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\damage_p1a\audit_sources.py", line 86, in read
+    if n>4*1024**2:raise ValueError('range too large')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: range too large

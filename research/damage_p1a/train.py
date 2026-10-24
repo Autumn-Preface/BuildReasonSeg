@@ -7,6 +7,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
 import random
 import subprocess
@@ -55,6 +56,8 @@ def evaluate(model,rows,root,class_map,config,device,deadline=float('inf')):
     for row in rows:
         if time.monotonic()>=deadline:raise TimeoutError('Budget exhausted before full validation; no partial score')
         begin=time.perf_counter();rgb,gt,valid=load_record(row,root,class_map)
+        input_and_gt_seconds=time.perf_counter()-begin
+        inference_begin=time.perf_counter()
         h,w=rgb.shape[:2];recon=Reconstructor(h,w);network_seconds=0.0
         windows=tiles(h,w,config['tile_size'],config['validation_overlap'])
         for tile in windows:
@@ -67,16 +70,28 @@ def evaluate(model,rows,root,class_map,config,device,deadline=float('inf')):
             if device.type=='cuda':torch.cuda.synchronize()
             network_seconds+=time.perf_counter()-t
             recon.add(tile,p[0].cpu().numpy())
-        metrics.add(row['source_image_id'],recon.finish(),gt,valid,config['threshold'])
+        probability=recon.finish()
+        inference_system_seconds=time.perf_counter()-inference_begin
+        metrics.add(row['source_image_id'],probability,gt,valid,config['threshold'])
         timings.append({'image_id':row['source_image_id'],'native_hw':[h,w],'tiles':len(windows),
-            'network_seconds_synchronized':network_seconds,'end_to_end_seconds':time.perf_counter()-begin})
+            'network_seconds_synchronized':network_seconds,'input_and_gt_load_check_seconds':input_and_gt_seconds,
+            'inference_system_seconds_excluding_input_and_gt_loading':inference_system_seconds,
+            'evaluation_end_to_end_seconds_including_gt_and_metrics':time.perf_counter()-begin})
     return metrics,timings
+
+
+def validate_config(config):
+    hours=config['max_gpu_hours'];epochs=config['epochs']
+    if type(hours) not in (int,float) or not math.isfinite(hours) or not 0<hours<=12:
+        raise ValueError('P1A budget must be finite and in (0,12] hours')
+    if type(epochs) is not int or not 1<=epochs<=60:raise ValueError('P1A epochs must be integer 1..60')
+    if config.get('test_inference') is not False:raise ValueError('P1A test inference forbidden')
 
 
 def run(config_path):
     config=json.loads(Path(config_path).read_text(encoding='utf-8'))
     gate=require_admission(config)  # BEFORE model construction, data access or output reservation.
-    if config.get('test_inference') or config['epochs']>60 or config['max_gpu_hours']>12:raise ValueError('P1A scope/budget exceeded')
+    validate_config(config)
     rows=json.loads(Path(config['manifest']).read_text(encoding='utf-8'));validate_manifest(rows)
     training=[r for r in rows if r['split']=='train'];validation=[r for r in rows if r['split']=='val']
     if not training or not validation:raise ValueError('train and val required')

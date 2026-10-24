@@ -1,16 +1,20 @@
 schema_version: 1
 task_id: DAMAGE-P1A
-status: IN_PROGRESS
+status: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
 executor: CODEX
 branch: research/damage-p1a-visual-baseline-20261025
-head: a2f43aa2f5379920b9db6452dcc18b80481cdb76
+head: 2955c4ad029306be8721d9fed5928dcf0d5b611f
 last_checkpoint:
-  commit: a2f43aa2f5379920b9db6452dcc18b80481cdb76
+  commit: 2955c4ad029306be8721d9fed5928dcf0d5b611f
   pushed: true
-current_step: TRAINING_BLOCKED_COMPLETE_ENGINEERING
+current_step: STOP_CHECKPOINT_DATA_AND_ENGINEERING_DELIVERED
 report_directory: reports/damage_p1a/20261025
 data_admission: BLOCKED_MAPPING_AND_VALIDATION
 training_calls: 0
 test_predictions_read: false
 synthetic_optimizer_steps: 2
-next_action: Finish engineering review, data/protection evidence and STOP report; do not train on guessed IDs.
+real_damage_training_steps: 0
+engineering_tests: 38_PASS
+independent_review: reports/damage_p1a/20261025/independent_engineering_review.md
+report: reports/damage_p1a/20261025/README.md
+next_action: Supervisor reviews mapping, validity policy and independent validation plan before any real training.

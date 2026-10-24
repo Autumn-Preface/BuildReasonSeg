@@ -1,0 +1,8 @@
+{
+  "protected_files": 2324,
+  "fresh_hash_mtime_size_match": true,
+  "protected_git_paths_changed": [],
+  "old_environment_change_scope": "only read for offline clone; sampled binary copies have distinct file IDs and equal SHA",
+  "real_damage_training_steps": 0,
+  "formal_test_predictions_read": false
+}

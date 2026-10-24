@@ -74,6 +74,8 @@ class RemoteZip(io.RawIOBase):
             _,row=get(self.url,1,{'Range':'bytes=0-0'})
             self.size=int(row['headers']['Content-Range'].split('/')[-1])
         self.version_headers=row['headers']
+        if self.size<=0 or 'text/html' in self.version_headers.get('Content-Type',''):
+            raise ValueError('Archive endpoint returned unavailable/HTML metadata; no full-download fallback')
     def seekable(self): return True
     def readable(self): return True
     def tell(self): return self.pos
@@ -83,7 +85,7 @@ class RemoteZip(io.RawIOBase):
     def read(self, n=-1):
         n=min(self.size-self.pos, n if n>=0 else self.size-self.pos)
         if n<=0:return b''
-        if n>4*1024**2:raise ValueError('range too large')
+        if n>8*1024**2:raise ValueError('range too large')
         data,row=get(self.url,n,{'Range':f'bytes={self.pos}-{self.pos+n-1}'})
         if row['status']!=206 or not row['headers'].get('Content-Range','').startswith(f'bytes {self.pos}-'):
             raise ValueError('Server did not honor range; no full archive fallback')

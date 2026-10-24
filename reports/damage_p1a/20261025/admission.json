@@ -7,7 +7,7 @@
   "reasons": [
     "MAPPING_UNCONFIRMED: original YOLO TXT numeric IDs lack direct authoritative definition",
     "VALIDITY_POLICY_UNFROZEN: original spalling-priority annotation does not establish independent crack negatives",
-    "VALIDATION_INDEPENDENCE_UNESTABLISHED: cross-split image duplicate candidates and no building/flight groups"
+    "VALIDATION_CONTAMINATION_CONFIRMED: two sampled train/val pairs have identical encoded and decoded SHA256; 222 cross-split CRC/size candidate groups, no building/flight groups"
   ],
   "real_training_steps": 0,
   "test_predictions_read": false,
