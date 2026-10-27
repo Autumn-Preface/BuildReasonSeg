@@ -1,0 +1,12 @@
+{
+  "observed_at": "2026-10-27T16:32:29.662Z",
+  "window": {
+    "app": "process:C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\python.exe",
+    "id": 2886348,
+    "title": "BuildReasonSeg 建筑空间推理分割 Demo V3"
+  },
+  "visible_status": "环境检查：通过",
+  "image_selected": false,
+  "inference_requested": false,
+  "standard_launcher": true
+}

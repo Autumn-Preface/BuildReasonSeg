@@ -1,0 +1,15 @@
+{
+  "deleted_files": 685,
+  "deleted_logical_bytes": 15057511,
+  "retained_hash_records_checked": 9482,
+  "intentional_handoff_changes_excluded": 2,
+  "environment_size_mtime_file_set_unchanged": 85250,
+  "environment_critical_sha256_pass": true,
+  "v3_manifest_files_verified": 85,
+  "old_reports_and_scientific_assets_unchanged": true,
+  "before_free_bytes": 125446184960,
+  "after_free_bytes": 125461061632,
+  "net_volume_free_increase_bytes": 14876672,
+  "space_caveat": "Logical removed bytes and net live volume change differ due to allocation and other processes; do not equate them",
+  "no_training_or_dataset_download": true
+}

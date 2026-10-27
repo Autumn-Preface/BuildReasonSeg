@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V3\BuildReasonSeg_Demo.py", line 396, in <module>
+    main()
+  File "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V3\BuildReasonSeg_Demo.py", line 380, in main
+    configure_environment(DEMO_ROOT)
+  File "C:\D\DeepSeekHarness\delivery\BuildReasonSeg_Demo_V3\_ui\environment.py", line 27, in configure_environment
+    with probe.open("x", encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\.conda\buildreasonseg-proposal\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V3\\_runtime_cache\\yolo\\.probe_35208'

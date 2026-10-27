@@ -1,21 +1,28 @@
 schema_version: 1
-task_id: LOCAL-STORAGE-CLEANUP-20261027
-status: PAUSED_BY_USER
+task_id: NONE
+status: AWAITING_SUPERVISOR
 executor: CODEX
-branch: codex/local-storage-cleanup-20261027
-head: 8e3e0e2f5510a03dfa27b8418e2fc2a1ef16995c
+branch: null
+head: null
 last_checkpoint:
-  commit: 8e3e0e2f5510a03dfa27b8418e2fc2a1ef16995c
-  pushed: true
-current_step: PAUSED_AFTER_ALLOWLIST_DELETE_BEFORE_FINAL_VERIFICATION
-report_directory: reports/storage_cleanup/20261027
-plan_sha256: 79e8015a4eb6f53ddfe368d7890e922c54d3ba43eddeb2721965901d8801670f
-training_calls: 0
-dataset_download_bytes: 0
-deleted_files: 685
-deleted_logical_bytes: 15057511
-v3_self_check: PASS
-v3_native_window_check: PENDING
-post_cleanup_protection_check: PENDING
-pause_authority: explicit_user_request_2026_10_27
-next_action: Wait for explicit user resume; do not rerun deletion or start other work.
+  commit: null
+  pushed: null
+last_task:
+  task_id: LOCAL-STORAGE-CLEANUP-20261027
+  execution_status: COMPLETE_PENDING_SUPERVISOR_REVIEW
+  finalized_date: '2026-10-28'
+  report: reports/storage_cleanup/20261027/README.md
+  deleted_files: 685
+  deleted_logical_bytes: 15057511
+  empty_directories_removed: 1049
+  deletion_window_net_free_bytes: 14876672
+  post_cleanup_protection_check: PASS
+  v3_full_self_check: PASS
+  v3_native_window_check: PASS
+  training_calls: 0
+  dataset_download_bytes: 0
+research_context:
+  damage_p1a: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
+  real_training_steps: 0
+  legacy_rc1: FROZEN_HISTORICAL
+next_action: Await Supervisor review; do not rerun cleanup or start download/research tasks.
