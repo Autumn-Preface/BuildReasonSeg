@@ -1,20 +1,15 @@
 schema_version: 1
-task_id: DAMAGE-P1A
-status: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
+task_id: LOCAL-STORAGE-CLEANUP-20261027
+status: IN_PROGRESS
 executor: CODEX
-branch: research/damage-p1a-visual-baseline-20261025
-head: 2955c4ad029306be8721d9fed5928dcf0d5b611f
+branch: codex/local-storage-cleanup-20261027
+head: 4dcabff660de82a0b8f585da6c2c22dea9bafc9f
 last_checkpoint:
-  commit: 2955c4ad029306be8721d9fed5928dcf0d5b611f
+  commit: 4dcabff660de82a0b8f585da6c2c22dea9bafc9f
   pushed: true
-current_step: STOP_CHECKPOINT_DATA_AND_ENGINEERING_DELIVERED
-report_directory: reports/damage_p1a/20261025
-data_admission: BLOCKED_MAPPING_AND_VALIDATION
+current_step: CLEANUP_PLAN_REVIEWED_BEFORE_DELETE
+report_directory: reports/storage_cleanup/20261027
+plan_sha256: 79e8015a4eb6f53ddfe368d7890e922c54d3ba43eddeb2721965901d8801670f
 training_calls: 0
-test_predictions_read: false
-synthetic_optimizer_steps: 2
-real_damage_training_steps: 0
-engineering_tests: 38_PASS
-independent_review: reports/damage_p1a/20261025/independent_engineering_review.md
-report: reports/damage_p1a/20261025/README.md
-next_action: Supervisor reviews mapping, validity policy and independent validation plan before any real training.
+dataset_download_bytes: 0
+next_action: Verify independent scope review; persist plan; remove reviewed files; verify V3/assets/environments and stop.

@@ -1,0 +1,30 @@
+[
+  {
+    "cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\damage_p1a\\source\\1HqS0rMWgwsy70TbaZYFqwzgFxLL_hp_b.html",
+    "sha256": "55a5bc92c8466e42b52f34b1497035119c8ed18740f97677d6e7fa00f1bcea74",
+    "folder_entries_match_committed_inventory": true,
+    "names_ids_and_full_descriptions_match": true,
+    "entries": 3
+  },
+  {
+    "cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\damage_p1a\\source\\1WZKYslWDqXUl-n4mp23j48JdR9wZ3J6T.html",
+    "sha256": "7aff349ff54fdd38391bc135e2e60c10bb5257d1a0832d8b166d3b19c1197645",
+    "folder_entries_match_committed_inventory": true,
+    "names_ids_and_full_descriptions_match": true,
+    "entries": 2
+  },
+  {
+    "cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\damage_p1a\\source\\1sffbt7yZ5jnQtkK4c2hg1l0XtOBtg3OD.html",
+    "sha256": "ae4a4b68ce464347841eb4424f2366db65f4df56b379c7e6896919225b4d6887",
+    "folder_entries_match_committed_inventory": true,
+    "names_ids_and_full_descriptions_match": true,
+    "entries": 2
+  },
+  {
+    "cache": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts\\damage_p1a\\source\\1MdeKlUkC_8rsav8kXPn8Y6jfhLXOKBz3.html",
+    "sha256": "2c82f2a88cab40d7ae568e8ef327f9ad149c2ea71c9368f06952aed547c15d74",
+    "folder_entries_match_committed_inventory": true,
+    "names_ids_and_full_descriptions_match": true,
+    "entries": 2
+  }
+]

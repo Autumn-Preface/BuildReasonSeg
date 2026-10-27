@@ -1,0 +1,65 @@
+[
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+    "bytes": 105288,
+    "mtime_ns": 1787841627881013100,
+    "sha256": "db44abe9c1b318e6c6b201dddab44c163146b4ef26363adea3f0eb17c68fa84c",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\torch\\__init__.py",
+    "bytes": 114928,
+    "mtime_ns": 1790370972375181200,
+    "sha256": "767496b63c899ec3d1106a4c1eeac664a9b3947a9b2f9eefa7a901cdfe8a0288",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\torch\\lib\\torch_cuda.dll",
+    "bytes": 412515840,
+    "mtime_ns": 1790370987235541400,
+    "sha256": "680e49ea4703ad06f802638c329e7526f165c65597910b6d5363f485f35833ba",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\numpy\\__init__.py",
+    "bytes": 27550,
+    "mtime_ns": 1790370961408444800,
+    "sha256": "65d5e777b6d662ba19cb80800bef3eb999eda7aee51eea62c308feabf679dba4",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\Lib\\site-packages\\pycocotools\\mask.py",
+    "bytes": 4693,
+    "mtime_ns": 1792881511125465900,
+    "sha256": "1281ce0b5436ffe924c96521b2ae1d589f6f0e2a7b7281b6bb284f7b2245545c",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\python.exe",
+    "bytes": 105288,
+    "mtime_ns": 1787841627881013100,
+    "sha256": "db44abe9c1b318e6c6b201dddab44c163146b4ef26363adea3f0eb17c68fa84c",
+    "hard_links": 2
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\Lib\\site-packages\\torch\\__init__.py",
+    "bytes": 114928,
+    "mtime_ns": 1790370972375181200,
+    "sha256": "767496b63c899ec3d1106a4c1eeac664a9b3947a9b2f9eefa7a901cdfe8a0288",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\Lib\\site-packages\\torch\\lib\\torch_cuda.dll",
+    "bytes": 412515840,
+    "mtime_ns": 1790370987235541400,
+    "sha256": "680e49ea4703ad06f802638c329e7526f165c65597910b6d5363f485f35833ba",
+    "hard_links": 1
+  },
+  {
+    "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-proposal\\Lib\\site-packages\\numpy\\__init__.py",
+    "bytes": 27550,
+    "mtime_ns": 1790370961408444800,
+    "sha256": "65d5e777b6d662ba19cb80800bef3eb999eda7aee51eea62c308feabf679dba4",
+    "hard_links": 1
+  }
+]

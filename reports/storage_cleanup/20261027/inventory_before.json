@@ -1,0 +1,1860 @@
+{
+  "roots": [
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda",
+      "files": 85250,
+      "bytes": 7985558866,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.git",
+      "files": 522,
+      "bytes": 75574106,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.pytest_cache",
+      "files": 5,
+      "bytes": 9451,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.tmp",
+      "files": 672,
+      "bytes": 6923335,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts",
+      "files": 65509,
+      "bytes": 8828277950,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\baseline",
+      "files": 7,
+      "bytes": 519297,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\buildreasonseg_mvp",
+      "files": 66,
+      "bytes": 894164,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\configs",
+      "files": 19,
+      "bytes": 80518,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets",
+      "files": 4090,
+      "bytes": 248764801,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\delivery_src",
+      "files": 221,
+      "bytes": 1456264,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\demo",
+      "files": 35,
+      "bytes": 260936,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\docs",
+      "files": 161,
+      "bytes": 2629629,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\environment",
+      "files": 1,
+      "bytes": 1759,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation",
+      "files": 740,
+      "bytes": 105640770,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\governance",
+      "files": 3,
+      "bytes": 10862,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\handoff",
+      "files": 7,
+      "bytes": 236243,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache",
+      "files": 675,
+      "bytes": 123016641,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\logs",
+      "files": 1,
+      "bytes": 767,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\models",
+      "files": 1,
+      "bytes": 0,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\reports",
+      "files": 212,
+      "bytes": 43407959,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research",
+      "files": 12,
+      "bytes": 51673,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\runs",
+      "files": 0,
+      "bytes": 0,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\scripts",
+      "files": 295,
+      "bytes": 3987524,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\spatial_reasoning",
+      "files": 11,
+      "bytes": 205493,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\tests",
+      "files": 68,
+      "bytes": 1360431,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\training",
+      "files": 1,
+      "bytes": 0,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\weights",
+      "files": 0,
+      "bytes": 0,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Advisor_RC1",
+      "files": 2184,
+      "bytes": 5341048622,
+      "reparse_points": [],
+      "errors": []
+    },
+    {
+      "path": "C:\\D\\DeepSeekHarness\\delivery\\BuildReasonSeg_Demo_V3",
+      "files": 152,
+      "bytes": 4727578236,
+      "reparse_points": [],
+      "errors": []
+    }
+  ],
+  "details": {
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.tmp": {
+      "damage_p1a_tests_04/test_full_native_evaluator_on_0": {
+        "files": 2,
+        "bytes": 140
+      },
+      "damage_p1a_tests_05/test_full_native_evaluator_on_0": {
+        "files": 2,
+        "bytes": 140
+      },
+      "damage_p1a_tests_06/test_full_native_evaluator_on_0": {
+        "files": 2,
+        "bytes": 140
+      },
+      "demo_r1_57_final/derived-engine0": {
+        "files": 6,
+        "bytes": 96696
+      },
+      "demo_r1_57_final/test_context_preview_uses_supp0/results": {
+        "files": 6,
+        "bytes": 68868
+      },
+      "demo_r1_57_final/test_existing_result_controls_0/results": {
+        "files": 2,
+        "bytes": 2144
+      },
+      "demo_r1_57_final/test_failures_preserve_complet0/results": {
+        "files": 3,
+        "bytes": 20022
+      },
+      "demo_r1_57_final/test_failures_preserve_complet1/results": {
+        "files": 3,
+        "bytes": 24876
+      },
+      "demo_r1_57_final/test_failures_preserve_complet2/results": {
+        "files": 10,
+        "bytes": 230447
+      },
+      "demo_r1_57_final/test_failures_preserve_complet3/results": {
+        "files": 8,
+        "bytes": 137816
+      },
+      "demo_r1_57_final/test_language_missing_nearest_0/results": {
+        "files": 2,
+        "bytes": 4420
+      },
+      "demo_r1_57_final/test_language_missing_nearest_1/results": {
+        "files": 2,
+        "bytes": 4420
+      },
+      "demo_r1_57_final/test_missing_observations_cann0/results": {
+        "files": 2,
+        "bytes": 2526
+      },
+      "demo_r1_57_final/test_no_feature_tensor_saved_a0/results": {
+        "files": 10,
+        "bytes": 230318
+      },
+      "demo_r1_57_final/test_observation_failure_expli0/results": {
+        "files": 2,
+        "bytes": 2566
+      },
+      "demo_r1_57_final/test_persistence_reopen_comple0/results": {
+        "files": 3,
+        "bytes": 19892
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu0": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu0/0": {
+        "files": 15,
+        "bytes": 74167
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu0/1": {
+        "files": 15,
+        "bytes": 74166
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu0/2": {
+        "files": 15,
+        "bytes": 74168
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu0/results": {
+        "files": 14,
+        "bytes": 314950
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu1": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu1/0": {
+        "files": 4,
+        "bytes": 1409
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu1/1": {
+        "files": 4,
+        "bytes": 1409
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu1/2": {
+        "files": 4,
+        "bytes": 1409
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu1/results": {
+        "files": 3,
+        "bytes": 18594
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu2": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu2/0": {
+        "files": 4,
+        "bytes": 2873
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu2/1": {
+        "files": 4,
+        "bytes": 2873
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu2/2": {
+        "files": 4,
+        "bytes": 2873
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu2/results": {
+        "files": 3,
+        "bytes": 22367
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu3": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu3/0": {
+        "files": 4,
+        "bytes": 3042
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu3/1": {
+        "files": 4,
+        "bytes": 3042
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu3/2": {
+        "files": 4,
+        "bytes": 3042
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu3/results": {
+        "files": 5,
+        "bytes": 50568
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu4": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu4/0": {
+        "files": 4,
+        "bytes": 3669
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu4/1": {
+        "files": 4,
+        "bytes": 3667
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu4/2": {
+        "files": 4,
+        "bytes": 3669
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu4/results": {
+        "files": 12,
+        "bytes": 293612
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu5": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu5/0": {
+        "files": 4,
+        "bytes": 3728
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu5/1": {
+        "files": 4,
+        "bytes": 3730
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu5/2": {
+        "files": 4,
+        "bytes": 3728
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu5/results": {
+        "files": 12,
+        "bytes": 295049
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu6": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu6/0": {
+        "files": 4,
+        "bytes": 3653
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu6/1": {
+        "files": 4,
+        "bytes": 3653
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu6/2": {
+        "files": 4,
+        "bytes": 3653
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu6/results": {
+        "files": 7,
+        "bytes": 80202
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu7": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu7/0": {
+        "files": 4,
+        "bytes": 3656
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu7/1": {
+        "files": 4,
+        "bytes": 3656
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu7/2": {
+        "files": 4,
+        "bytes": 3656
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu7/results": {
+        "files": 9,
+        "bytes": 148081
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu8": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu8/0": {
+        "files": 4,
+        "bytes": 3654
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu8/1": {
+        "files": 4,
+        "bytes": 3654
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu8/2": {
+        "files": 4,
+        "bytes": 3654
+      },
+      "demo_r1_57_final/test_pipeline_scientific_outpu8/results": {
+        "files": 10,
+        "bytes": 193831
+      },
+      "demo_r1_57_final/test_real_stage_required_for_c0/results": {
+        "files": 2,
+        "bytes": 2582
+      },
+      "demo_r1_57_final/test_reopen_rejects_cross_run_0/results": {
+        "files": 3,
+        "bytes": 8432
+      },
+      "demo_r1_57_final/test_single_worker_request_tra0/results": {
+        "files": 15,
+        "bytes": 254692
+      },
+      "demo_r1_57_final/test_single_worker_request_tra0/_engine": {
+        "files": 3,
+        "bytes": 2144
+      },
+      "demo_r1_57_final/test_single_worker_request_tra1/results": {
+        "files": 11,
+        "bytes": 232688
+      },
+      "demo_r1_57_final/test_single_worker_request_tra1/_engine": {
+        "files": 1,
+        "bytes": 0
+      },
+      "demo_r1_57_final/test_stage_display_updates_bef0/results": {
+        "files": 3,
+        "bytes": 23738
+      },
+      "demo_r1_57_final/test_user_cancel_has_no_later_0/results": {
+        "files": 2,
+        "bytes": 2557
+      },
+      "demo_r1_57_final/test_worker_serial_and_renderi0/results": {
+        "files": 3,
+        "bytes": 23738
+      },
+      "demo_r1_fake_evidence/results/20261023_232714_SIMULATION_ONLY": {
+        "files": 10,
+        "bytes": 231350
+      },
+      "demo_r1_final_2334/derived-engine0": {
+        "files": 6,
+        "bytes": 96696
+      },
+      "demo_r1_final_2334/test_context_preview_uses_supp0/results": {
+        "files": 6,
+        "bytes": 68864
+      },
+      "demo_r1_final_2334/test_existing_result_controls_0/results": {
+        "files": 2,
+        "bytes": 2144
+      },
+      "demo_r1_final_2334/test_failures_preserve_complet0/results": {
+        "files": 3,
+        "bytes": 20022
+      },
+      "demo_r1_final_2334/test_failures_preserve_complet1/results": {
+        "files": 3,
+        "bytes": 24876
+      },
+      "demo_r1_final_2334/test_failures_preserve_complet2/results": {
+        "files": 10,
+        "bytes": 230448
+      },
+      "demo_r1_final_2334/test_failures_preserve_complet3/results": {
+        "files": 8,
+        "bytes": 137817
+      },
+      "demo_r1_final_2334/test_language_missing_nearest_0/results": {
+        "files": 2,
+        "bytes": 4420
+      },
+      "demo_r1_final_2334/test_language_missing_nearest_1/results": {
+        "files": 2,
+        "bytes": 4420
+      },
+      "demo_r1_final_2334/test_missing_observations_cann0/results": {
+        "files": 2,
+        "bytes": 2526
+      },
+      "demo_r1_final_2334/test_no_feature_tensor_saved_a0/results": {
+        "files": 10,
+        "bytes": 230317
+      },
+      "demo_r1_final_2334/test_observation_failure_expli0/results": {
+        "files": 2,
+        "bytes": 2566
+      },
+      "demo_r1_final_2334/test_persistence_reopen_comple0/results": {
+        "files": 3,
+        "bytes": 19892
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu0": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu0/0": {
+        "files": 15,
+        "bytes": 74174
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu0/1": {
+        "files": 15,
+        "bytes": 74176
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu0/2": {
+        "files": 15,
+        "bytes": 74176
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu0/results": {
+        "files": 14,
+        "bytes": 314955
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu1": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu1/0": {
+        "files": 4,
+        "bytes": 1411
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu1/1": {
+        "files": 4,
+        "bytes": 1411
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu1/2": {
+        "files": 4,
+        "bytes": 1411
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu1/results": {
+        "files": 3,
+        "bytes": 18594
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu2": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu2/0": {
+        "files": 4,
+        "bytes": 2875
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu2/1": {
+        "files": 4,
+        "bytes": 2875
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu2/2": {
+        "files": 4,
+        "bytes": 2875
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu2/results": {
+        "files": 3,
+        "bytes": 22367
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu3": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu3/0": {
+        "files": 4,
+        "bytes": 3044
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu3/1": {
+        "files": 4,
+        "bytes": 3044
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu3/2": {
+        "files": 4,
+        "bytes": 3044
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu3/results": {
+        "files": 5,
+        "bytes": 50570
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu4": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu4/0": {
+        "files": 4,
+        "bytes": 3671
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu4/1": {
+        "files": 4,
+        "bytes": 3669
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu4/2": {
+        "files": 4,
+        "bytes": 3669
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu4/results": {
+        "files": 12,
+        "bytes": 293608
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu5": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu5/0": {
+        "files": 4,
+        "bytes": 3732
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu5/1": {
+        "files": 4,
+        "bytes": 3732
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu5/2": {
+        "files": 4,
+        "bytes": 3730
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu5/results": {
+        "files": 12,
+        "bytes": 295048
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu6": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu6/0": {
+        "files": 4,
+        "bytes": 3655
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu6/1": {
+        "files": 4,
+        "bytes": 3655
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu6/2": {
+        "files": 4,
+        "bytes": 3655
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu6/results": {
+        "files": 7,
+        "bytes": 80202
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu7": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu7/0": {
+        "files": 4,
+        "bytes": 3658
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu7/1": {
+        "files": 4,
+        "bytes": 3658
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu7/2": {
+        "files": 4,
+        "bytes": 3658
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu7/results": {
+        "files": 9,
+        "bytes": 148079
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu8": {
+        "files": 1,
+        "bytes": 1881
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu8/0": {
+        "files": 4,
+        "bytes": 3656
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu8/1": {
+        "files": 4,
+        "bytes": 3656
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu8/2": {
+        "files": 4,
+        "bytes": 3656
+      },
+      "demo_r1_final_2334/test_pipeline_scientific_outpu8/results": {
+        "files": 10,
+        "bytes": 193826
+      },
+      "demo_r1_final_2334/test_real_stage_required_for_c0/results": {
+        "files": 2,
+        "bytes": 2582
+      },
+      "demo_r1_final_2334/test_reopen_rejects_cross_run_0/results": {
+        "files": 3,
+        "bytes": 8432
+      },
+      "demo_r1_final_2334/test_single_worker_request_tra0/results": {
+        "files": 15,
+        "bytes": 254701
+      },
+      "demo_r1_final_2334/test_single_worker_request_tra0/_engine": {
+        "files": 3,
+        "bytes": 2144
+      },
+      "demo_r1_final_2334/test_single_worker_request_tra1/results": {
+        "files": 11,
+        "bytes": 232684
+      },
+      "demo_r1_final_2334/test_single_worker_request_tra1/_engine": {
+        "files": 1,
+        "bytes": 0
+      },
+      "demo_r1_final_2334/test_stage_display_updates_bef0/results": {
+        "files": 3,
+        "bytes": 23738
+      },
+      "demo_r1_final_2334/test_user_cancel_has_no_later_0/results": {
+        "files": 2,
+        "bytes": 2557
+      },
+      "demo_r1_final_2334/test_worker_serial_and_renderi0/results": {
+        "files": 3,
+        "bytes": 23738
+      },
+      "demo_r1_raw_test_attempts": {
+        "files": 2,
+        "bytes": 432859
+      }
+    },
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\artifacts": {
+      ".": {
+        "files": 206,
+        "bytes": 43788657
+      },
+      "checkpoints": {
+        "files": 10,
+        "bytes": 2864338780
+      },
+      "checkpoints/task6b": {
+        "files": 5,
+        "bytes": 481216617
+      },
+      "checkpoints/task6c/P_C": {
+        "files": 2,
+        "bytes": 192463691
+      },
+      "checkpoints/task6c/P_L": {
+        "files": 2,
+        "bytes": 192463691
+      },
+      "checkpoints/task6c/task6d1_G0_corrected": {
+        "files": 2,
+        "bytes": 200944726
+      },
+      "checkpoints/task6c/U_C": {
+        "files": 2,
+        "bytes": 192463691
+      },
+      "checkpoints/task6c/U_L": {
+        "files": 2,
+        "bytes": 192463691
+      },
+      "checkpoints/task6e/E0": {
+        "files": 1,
+        "bytes": 100460530
+      },
+      "checkpoints/task6e/E1": {
+        "files": 3,
+        "bytes": 301383201
+      },
+      "checkpoints/task6f/F0": {
+        "files": 1,
+        "bytes": 100488684
+      },
+      "checkpoints/task6f/F1": {
+        "files": 8,
+        "bytes": 803914456
+      },
+      "checkpoints/task6g/G0": {
+        "files": 1,
+        "bytes": 97351211
+      },
+      "checkpoints/task6h/H0": {
+        "files": 1,
+        "bytes": 97350891
+      },
+      "checkpoints/task6h1/H0R": {
+        "files": 1,
+        "bytes": 97351627
+      },
+      "checkpoints/task6i/I0": {
+        "files": 1,
+        "bytes": 101877462
+      },
+      "checkpoints/task6j": {
+        "files": 1,
+        "bytes": 210252896
+      },
+      "checkpoints/task6m": {
+        "files": 1,
+        "bytes": 210280688
+      },
+      "checkpoints/task6m/pretrained": {
+        "files": 2,
+        "bytes": 78218318
+      },
+      "checkpoints/task6m/runs": {
+        "files": 10,
+        "bytes": 217880012
+      },
+      "checkpoints/task6m/smoke": {
+        "files": 1216,
+        "bytes": 491856780
+      },
+      "checkpoints/task6m1/runs": {
+        "files": 5,
+        "bytes": 271443623
+      },
+      "checkpoints/task6m1/source_epoch18_snapshot": {
+        "files": 4,
+        "bytes": 324970552
+      },
+      "checkpoints/task6t": {
+        "files": 1,
+        "bytes": 70083683
+      },
+      "checkpoints/task6u": {
+        "files": 1,
+        "bytes": 8049
+      },
+      "checkpoints/task6w": {
+        "files": 1,
+        "bytes": 148181
+      },
+      "checkpoints/task6y": {
+        "files": 8,
+        "bytes": 8557464
+      },
+      "checkpoints/task6z": {
+        "files": 12,
+        "bytes": 12987240
+      },
+      "checkpoints/task7b": {
+        "files": 1,
+        "bytes": 70090243
+      },
+      "checkpoints/task7c": {
+        "files": 1,
+        "bytes": 70090713
+      },
+      "checkpoints/task7d": {
+        "files": 8,
+        "bytes": 10947492
+      },
+      "checkpoints/task7g": {
+        "files": 1,
+        "bytes": 31685
+      },
+      "checkpoints/task7i/D-B1": {
+        "files": 6,
+        "bytes": 13415200
+      },
+      "checkpoints/task7i/Z-B3": {
+        "files": 6,
+        "bytes": 13304224
+      },
+      "damage_p1a": {
+        "files": 1,
+        "bytes": 673974
+      },
+      "damage_p1a/duplicate_samples": {
+        "files": 4,
+        "bytes": 14258772
+      },
+      "damage_p1a/pip_cache/http-v2": {
+        "files": 8,
+        "bytes": 145090
+      },
+      "damage_p1a/pip_cache/selfcheck": {
+        "files": 1,
+        "bytes": 175
+      },
+      "damage_p1a/raw_labels": {
+        "files": 3,
+        "bytes": 310486337
+      },
+      "damage_p1a/source": {
+        "files": 6,
+        "bytes": 1314965
+      },
+      "legacy_archive/20261019": {
+        "files": 2,
+        "bytes": 55886533
+      },
+      "logs": {
+        "files": 15,
+        "bytes": 84334
+      },
+      "stage_outputs": {
+        "files": 2,
+        "bytes": 5033
+      },
+      "task6c_determinism": {
+        "files": 2,
+        "bytes": 2980
+      },
+      "task6d1_hidden": {
+        "files": 3,
+        "bytes": 5565002
+      },
+      "task6j_yolo_proposals": {
+        "files": 133,
+        "bytes": 674641
+      },
+      "task6k": {
+        "files": 5,
+        "bytes": 34388928
+      },
+      "task6k1": {
+        "files": 4,
+        "bytes": 17017231
+      },
+      "task6k1/vector_instances": {
+        "files": 4038,
+        "bytes": 20670986
+      },
+      "task6l_determinism/a": {
+        "files": 5,
+        "bytes": 456251
+      },
+      "task6l_determinism/b": {
+        "files": 5,
+        "bytes": 456251
+      },
+      "task6m1_demo/ood_1": {
+        "files": 1,
+        "bytes": 1575
+      },
+      "task6m1_demo/ood_2": {
+        "files": 1,
+        "bytes": 1572
+      },
+      "task6m1_demo/ood_3": {
+        "files": 1,
+        "bytes": 1572
+      },
+      "task6m1_demo/ood_4": {
+        "files": 1,
+        "bytes": 1563
+      },
+      "task6m1_demo/ood_5": {
+        "files": 1,
+        "bytes": 1568
+      },
+      "task6m1_demo/ood_6": {
+        "files": 1,
+        "bytes": 1542
+      },
+      "task6m1_demo/supported_2_1263_largest_to_above_to_nearest": {
+        "files": 3,
+        "bytes": 322261
+      },
+      "task6m1_demo/supported_2_1346_largest_to_right_of_to_nearest": {
+        "files": 3,
+        "bytes": 273858
+      },
+      "task6m1_demo/supported_2_1714_smallest_to_right_of": {
+        "files": 1,
+        "bytes": 1363
+      },
+      "task6m1_demo/supported_2_1855_topmost": {
+        "files": 3,
+        "bytes": 319844
+      },
+      "task6m1_demo/supported_2_1918_smallest": {
+        "files": 3,
+        "bytes": 285922
+      },
+      "task6m1_demo/supported_2_1_smallest_to_nearest": {
+        "files": 3,
+        "bytes": 317006
+      },
+      "task6m1_demo/supported_2_2258_leftmost": {
+        "files": 3,
+        "bytes": 306189
+      },
+      "task6m1_demo/supported_2_2426_largest_to_right_of": {
+        "files": 1,
+        "bytes": 1369
+      },
+      "task6m1_demo/supported_2_2557_smallest_to_below": {
+        "files": 1,
+        "bytes": 1358
+      },
+      "task6m1_demo/supported_2_2731_largest_to_left_of_to_nearest": {
+        "files": 3,
+        "bytes": 312680
+      },
+      "task6m1_demo/supported_2_402_largest_to_below_to_nearest": {
+        "files": 3,
+        "bytes": 310111
+      },
+      "task6m1_demo/supported_2_672_rightmost": {
+        "files": 3,
+        "bytes": 306334
+      },
+      "task6m1_domain_probe": {
+        "files": 1,
+        "bytes": 1575
+      },
+      "task6m_demo/2_1109": {
+        "files": 3,
+        "bytes": 259413
+      },
+      "task6m_demo/2_1213": {
+        "files": 3,
+        "bytes": 300909
+      },
+      "task6m_demo/2_2636": {
+        "files": 3,
+        "bytes": 356206
+      },
+      "task6m_demo/2_2711": {
+        "files": 3,
+        "bytes": 282985
+      },
+      "task6m_demo/2_3208": {
+        "files": 3,
+        "bytes": 324800
+      },
+      "task6m_demo/2_3257": {
+        "files": 3,
+        "bytes": 301216
+      },
+      "task6m_demo/2_3464": {
+        "files": 3,
+        "bytes": 308855
+      },
+      "task6m_demo/2_3507": {
+        "files": 1,
+        "bytes": 998
+      },
+      "task6m_demo/2_3572": {
+        "files": 3,
+        "bytes": 341238
+      },
+      "task6m_demo/2_538": {
+        "files": 1,
+        "bytes": 1005
+      },
+      "task6m_demo/2_967": {
+        "files": 3,
+        "bytes": 297526
+      },
+      "task6m_demo/2_976": {
+        "files": 1,
+        "bytes": 997
+      },
+      "task6m_demo/unsupported": {
+        "files": 3,
+        "bytes": 259395
+      },
+      "task6m_demo_smoke": {
+        "files": 3,
+        "bytes": 284031
+      },
+      "task6m_yolo_native": {
+        "files": 1,
+        "bytes": 332
+      },
+      "task6m_yolo_native/labels": {
+        "files": 2,
+        "bytes": 5851175
+      },
+      "task6m_yolo_native/labels/test": {
+        "files": 3726,
+        "bytes": 986793
+      },
+      "task6m_yolo_native/labels/train": {
+        "files": 10044,
+        "bytes": 1582833
+      },
+      "task6m_yolo_native/labels/val": {
+        "files": 3618,
+        "bytes": 1678020
+      },
+      "task6n/checkpoints": {
+        "files": 6,
+        "bytes": 6623304
+      },
+      "task6n/packs": {
+        "files": 4,
+        "bytes": 810520
+      },
+      "task6o/checkpoints": {
+        "files": 4,
+        "bytes": 4145584
+      },
+      "task6p/checkpoints": {
+        "files": 2,
+        "bytes": 2200592
+      },
+      "task6p/reference_packs": {
+        "files": 3,
+        "bytes": 541003
+      },
+      "task6q": {
+        "files": 1,
+        "bytes": 77896
+      },
+      "task6r/checkpoints": {
+        "files": 4,
+        "bytes": 4409686
+      },
+      "task6s/cli/control_01": {
+        "files": 1,
+        "bytes": 680
+      },
+      "task6s/cli/control_02": {
+        "files": 1,
+        "bytes": 677
+      },
+      "task6s/cli/control_03": {
+        "files": 1,
+        "bytes": 668
+      },
+      "task6s/cli/control_04": {
+        "files": 1,
+        "bytes": 644
+      },
+      "task6s/cli/control_05": {
+        "files": 1,
+        "bytes": 2024
+      },
+      "task6s/cli/control_06": {
+        "files": 1,
+        "bytes": 2023
+      },
+      "task6s/cli/control_07": {
+        "files": 1,
+        "bytes": 2216
+      },
+      "task6s/cli/control_08": {
+        "files": 1,
+        "bytes": 2227
+      },
+      "task6s/cli/on_the_fly": {
+        "files": 5,
+        "bytes": 402842
+      },
+      "task6s/cli/supported_01": {
+        "files": 5,
+        "bytes": 423286
+      },
+      "task6s/cli/supported_02": {
+        "files": 5,
+        "bytes": 426375
+      },
+      "task6s/cli/supported_03": {
+        "files": 5,
+        "bytes": 423294
+      },
+      "task6s/cli/supported_04": {
+        "files": 1,
+        "bytes": 2209
+      },
+      "task6s/cli/supported_05": {
+        "files": 1,
+        "bytes": 2201
+      },
+      "task6s/cli/supported_06": {
+        "files": 1,
+        "bytes": 2218
+      },
+      "task6s/cli/supported_07": {
+        "files": 5,
+        "bytes": 485228
+      },
+      "task6s/cli/supported_08": {
+        "files": 5,
+        "bytes": 485215
+      },
+      "task6s/cli/supported_09": {
+        "files": 5,
+        "bytes": 485225
+      },
+      "task6s/cli/supported_10": {
+        "files": 5,
+        "bytes": 493862
+      },
+      "task6s/cli/supported_11": {
+        "files": 5,
+        "bytes": 500967
+      },
+      "task6s/cli/supported_12": {
+        "files": 5,
+        "bytes": 493861
+      },
+      "task6s/cli/supported_13": {
+        "files": 5,
+        "bytes": 388648
+      },
+      "task6s/cli/supported_14": {
+        "files": 5,
+        "bytes": 388637
+      },
+      "task6s/cli/supported_15": {
+        "files": 5,
+        "bytes": 388659
+      },
+      "task6s/cli/supported_16": {
+        "files": 1,
+        "bytes": 2226
+      },
+      "task6s/cli/supported_17": {
+        "files": 1,
+        "bytes": 2214
+      },
+      "task6s/cli/supported_18": {
+        "files": 1,
+        "bytes": 2237
+      },
+      "task6s/cli/supported_19": {
+        "files": 5,
+        "bytes": 409801
+      },
+      "task6s/cli/supported_20": {
+        "files": 5,
+        "bytes": 409789
+      },
+      "task6s/cli/supported_21": {
+        "files": 5,
+        "bytes": 409800
+      },
+      "task6s/cli/supported_22": {
+        "files": 5,
+        "bytes": 458647
+      },
+      "task6s/cli/supported_23": {
+        "files": 5,
+        "bytes": 458634
+      },
+      "task6s/cli/supported_24": {
+        "files": 5,
+        "bytes": 458648
+      },
+      "task6s_smoke": {
+        "files": 5,
+        "bytes": 449466
+      },
+      "task6t": {
+        "files": 2,
+        "bytes": 334466
+      },
+      "task6t/cli/control_01": {
+        "files": 1,
+        "bytes": 680
+      },
+      "task6t/cli/control_02": {
+        "files": 1,
+        "bytes": 677
+      },
+      "task6t/cli/control_03": {
+        "files": 1,
+        "bytes": 668
+      },
+      "task6t/cli/control_04": {
+        "files": 1,
+        "bytes": 644
+      },
+      "task6t/cli/control_05": {
+        "files": 1,
+        "bytes": 2027
+      },
+      "task6t/cli/control_06": {
+        "files": 1,
+        "bytes": 2026
+      },
+      "task6t/cli/control_07": {
+        "files": 1,
+        "bytes": 2219
+      },
+      "task6t/cli/control_08": {
+        "files": 1,
+        "bytes": 2229
+      },
+      "task6t/cli/fixed24_01": {
+        "files": 5,
+        "bytes": 423289
+      },
+      "task6t/cli/fixed24_02": {
+        "files": 5,
+        "bytes": 423277
+      },
+      "task6t/cli/fixed24_03": {
+        "files": 5,
+        "bytes": 423296
+      },
+      "task6t/cli/fixed24_04": {
+        "files": 1,
+        "bytes": 2213
+      },
+      "task6t/cli/fixed24_05": {
+        "files": 1,
+        "bytes": 2201
+      },
+      "task6t/cli/fixed24_06": {
+        "files": 1,
+        "bytes": 2222
+      },
+      "task6t/cli/fixed24_07": {
+        "files": 5,
+        "bytes": 485231
+      },
+      "task6t/cli/fixed24_08": {
+        "files": 5,
+        "bytes": 485218
+      },
+      "task6t/cli/fixed24_09": {
+        "files": 5,
+        "bytes": 485229
+      },
+      "task6t/cli/fixed24_10": {
+        "files": 5,
+        "bytes": 493864
+      },
+      "task6t/cli/fixed24_11": {
+        "files": 5,
+        "bytes": 493851
+      },
+      "task6t/cli/fixed24_12": {
+        "files": 5,
+        "bytes": 493863
+      },
+      "task6t/cli/fixed24_13": {
+        "files": 5,
+        "bytes": 388653
+      },
+      "task6t/cli/fixed24_14": {
+        "files": 5,
+        "bytes": 388641
+      },
+      "task6t/cli/fixed24_15": {
+        "files": 5,
+        "bytes": 388663
+      },
+      "task6t/cli/fixed24_16": {
+        "files": 1,
+        "bytes": 2229
+      },
+      "task6t/cli/fixed24_17": {
+        "files": 1,
+        "bytes": 2216
+      },
+      "task6t/cli/fixed24_18": {
+        "files": 1,
+        "bytes": 2240
+      },
+      "task6t/cli/fixed24_19": {
+        "files": 5,
+        "bytes": 409804
+      },
+      "task6t/cli/fixed24_20": {
+        "files": 5,
+        "bytes": 409792
+      },
+      "task6t/cli/fixed24_21": {
+        "files": 5,
+        "bytes": 409804
+      },
+      "task6t/cli/fixed24_22": {
+        "files": 5,
+        "bytes": 458650
+      },
+      "task6t/cli/fixed24_23": {
+        "files": 5,
+        "bytes": 458637
+      },
+      "task6t/cli/fixed24_24": {
+        "files": 5,
+        "bytes": 458650
+      },
+      "task6t/parser_train_augmented": {
+        "files": 2,
+        "bytes": 5361038
+      },
+      "task6u/proposals": {
+        "files": 1,
+        "bytes": 15752
+      },
+      "task6u/proposals/U-C0": {
+        "files": 419,
+        "bytes": 925210
+      },
+      "task6u/proposals/U-C1": {
+        "files": 2348,
+        "bytes": 7426341
+      },
+      "task6u/proposals/U-C2": {
+        "files": 195,
+        "bytes": 409938
+      },
+      "task6u/proposals/U-C3": {
+        "files": 195,
+        "bytes": 476143
+      },
+      "task6w/quality_dataset": {
+        "files": 1,
+        "bytes": 10093648
+      },
+      "task6y/packs": {
+        "files": 4,
+        "bytes": 1424110
+      },
+      "task6z/packs": {
+        "files": 4,
+        "bytes": 1892501
+      },
+      "task7a/cli/success": {
+        "files": 6,
+        "bytes": 342185
+      },
+      "task7a/cli/unsupported": {
+        "files": 1,
+        "bytes": 850
+      },
+      "task7b/parser_train_augmented": {
+        "files": 1,
+        "bytes": 987731
+      },
+      "task7b/scope/control_1": {
+        "files": 1,
+        "bytes": 866
+      },
+      "task7b/scope/control_2": {
+        "files": 1,
+        "bytes": 870
+      },
+      "task7b/scope/control_3": {
+        "files": 1,
+        "bytes": 871
+      },
+      "task7b/scope/control_4": {
+        "files": 1,
+        "bytes": 866
+      },
+      "task7b/scope/ood_1": {
+        "files": 1,
+        "bytes": 844
+      },
+      "task7b/scope/ood_2": {
+        "files": 1,
+        "bytes": 838
+      },
+      "task7c/parser_rehearsal": {
+        "files": 1,
+        "bytes": 1488355
+      },
+      "task7c/scope/control_1": {
+        "files": 1,
+        "bytes": 866
+      },
+      "task7c/scope/control_2": {
+        "files": 1,
+        "bytes": 870
+      },
+      "task7c/scope/control_3": {
+        "files": 1,
+        "bytes": 871
+      },
+      "task7c/scope/control_4": {
+        "files": 1,
+        "bytes": 866
+      },
+      "task7c/scope/ood_1": {
+        "files": 1,
+        "bytes": 844
+      },
+      "task7c/scope/ood_2": {
+        "files": 1,
+        "bytes": 838
+      },
+      "task7e/holdout": {
+        "files": 2,
+        "bytes": 731593
+      },
+      "task7f": {
+        "files": 1,
+        "bytes": 2746233
+      },
+      "task7g/selector_dataset": {
+        "files": 1,
+        "bytes": 4376137
+      },
+      "task7i/packs": {
+        "files": 2,
+        "bytes": 2456345
+      },
+      "task7j/packs": {
+        "files": 1,
+        "bytes": 784971
+      },
+      "watt_lifecycle": {
+        "files": 12,
+        "bytes": 1941302
+      },
+      "whu_native_vector/instances": {
+        "files": 17388,
+        "bytes": 72065507
+      },
+      "whu_native_vector/reasoning_view/legacy_compat_v1": {
+        "files": 4042,
+        "bytes": 24305332
+      },
+      "whu_native_vector/reasoning_view/scene_disjoint_v1": {
+        "files": 17392,
+        "bytes": 38840995
+      }
+    },
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\datasets": {
+      "build_spatial_reason/v0.1": {
+        "files": 5,
+        "bytes": 47857335
+      },
+      "build_spatial_reason/v0.1.1": {
+        "files": 5,
+        "bytes": 40011903
+      },
+      "build_spatial_reason/v0.2": {
+        "files": 5,
+        "bytes": 65085062
+      },
+      "damage": {
+        "files": 2,
+        "bytes": 958
+      },
+      "damage/local/cif": {
+        "files": 4,
+        "bytes": 4032106
+      },
+      "damage/local/cubit": {
+        "files": 8,
+        "bytes": 17998738
+      },
+      "damage/local/deepcrack": {
+        "files": 6,
+        "bytes": 214421
+      },
+      "transforms": {
+        "files": 1,
+        "bytes": 24955
+      },
+      "whu": {
+        "files": 2,
+        "bytes": 11004
+      },
+      "whu/components/test": {
+        "files": 903,
+        "bytes": 1901189
+      },
+      "whu/components/train": {
+        "files": 2508,
+        "bytes": 4935094
+      },
+      "whu/components/val": {
+        "files": 627,
+        "bytes": 1333703
+      },
+      "whu/metadata": {
+        "files": 3,
+        "bytes": 27658095
+      },
+      "whu/polygons": {
+        "files": 3,
+        "bytes": 6912599
+      },
+      "whu_native_vector/v1.0": {
+        "files": 3,
+        "bytes": 8227
+      },
+      "whu_native_vector/v1.0/instances": {
+        "files": 2,
+        "bytes": 18308830
+      },
+      "whu_native_vector/v1.0/splits": {
+        "files": 2,
+        "bytes": 500978
+      },
+      "whu_native_vector/v1.0/tiles": {
+        "files": 1,
+        "bytes": 11969604
+      }
+    },
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\evaluation": {
+      ".": {
+        "files": 459,
+        "bytes": 37600555
+      },
+      "build_spatial_reason_v0.1.1_samples": {
+        "files": 29,
+        "bytes": 7085938
+      },
+      "build_spatial_reason_v0.1_samples": {
+        "files": 37,
+        "bytes": 9416586
+      },
+      "damage_p0": {
+        "files": 18,
+        "bytes": 385065
+      },
+      "damage_p0/sources": {
+        "files": 72,
+        "bytes": 24875580
+      },
+      "relation_samples": {
+        "files": 42,
+        "bytes": 1426257
+      },
+      "task6a_samples": {
+        "files": 23,
+        "bytes": 4945071
+      },
+      "task6b_samples": {
+        "files": 19,
+        "bytes": 4053900
+      },
+      "task6c_samples": {
+        "files": 5,
+        "bytes": 4051504
+      },
+      "task6d_panels": {
+        "files": 6,
+        "bytes": 1568457
+      },
+      "task6k1_samples": {
+        "files": 10,
+        "bytes": 1190211
+      },
+      "task6l_samples": {
+        "files": 6,
+        "bytes": 725464
+      },
+      "task8c_final_demo_v1": {
+        "files": 5,
+        "bytes": 3232565
+      },
+      "task8d_above_target_chain_diagnosis_v1": {
+        "files": 9,
+        "bytes": 5083617
+      }
+    },
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\local_cache": {
+      "ca": {
+        "files": 1,
+        "bytes": 1596136
+      },
+      "huggingface/hub": {
+        "files": 1,
+        "bytes": 195
+      },
+      "huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct": {
+        "files": 8,
+        "bytes": 1586
+      },
+      "huggingface/xet/logs": {
+        "files": 1,
+        "bytes": 333457
+      },
+      "models/.cache/huggingface": {
+        "files": 2,
+        "bytes": 196
+      },
+      "sam2_source": {
+        "files": 15,
+        "bytes": 61003
+      },
+      "sam2_source/.git": {
+        "files": 6,
+        "bytes": 66644
+      },
+      "sam2_source/.git/hooks": {
+        "files": 14,
+        "bytes": 26788
+      },
+      "sam2_source/.git/info": {
+        "files": 1,
+        "bytes": 240
+      },
+      "sam2_source/.git/logs": {
+        "files": 3,
+        "bytes": 594
+      },
+      "sam2_source/.git/objects": {
+        "files": 3,
+        "bytes": 55748350
+      },
+      "sam2_source/.git/refs": {
+        "files": 2,
+        "bytes": 71
+      },
+      "sam2_source/.github/workflows": {
+        "files": 1,
+        "bytes": 373
+      },
+      "sam2_source/assets": {
+        "files": 2,
+        "bytes": 920614
+      },
+      "sam2_source/build/lib": {
+        "files": 59,
+        "bytes": 605692
+      },
+      "sam2_source/checkpoints": {
+        "files": 1,
+        "bytes": 2671
+      },
+      "sam2_source/demo": {
+        "files": 2,
+        "bytes": 4998
+      },
+      "sam2_source/demo/backend": {
+        "files": 11,
+        "bytes": 52341
+      },
+      "sam2_source/demo/data": {
+        "files": 5,
+        "bytes": 9111626
+      },
+      "sam2_source/demo/frontend": {
+        "files": 247,
+        "bytes": 3066725
+      },
+      "sam2_source/notebooks": {
+        "files": 3,
+        "bytes": 27119183
+      },
+      "sam2_source/notebooks/images": {
+        "files": 3,
+        "bytes": 1497729
+      },
+      "sam2_source/notebooks/videos": {
+        "files": 201,
+        "bytes": 15062828
+      },
+      "sam2_source/sam2": {
+        "files": 11,
+        "bytes": 169420
+      },
+      "sam2_source/sam2/configs": {
+        "files": 9,
+        "bytes": 42255
+      },
+      "sam2_source/sam2/csrc": {
+        "files": 1,
+        "bytes": 8097
+      },
+      "sam2_source/sam2/modeling": {
+        "files": 14,
+        "bytes": 132756
+      },
+      "sam2_source/sam2/utils": {
+        "files": 4,
+        "bytes": 31834
+      },
+      "sam2_source/SAM_2.egg-info": {
+        "files": 5,
+        "bytes": 21314
+      },
+      "sam2_source/sav_dataset": {
+        "files": 7,
+        "bytes": 694826
+      },
+      "sam2_source/sav_dataset/example": {
+        "files": 3,
+        "bytes": 6330832
+      },
+      "sam2_source/sav_dataset/utils": {
+        "files": 2,
+        "bytes": 24371
+      },
+      "sam2_source/tools": {
+        "files": 2,
+        "bytes": 25240
+      },
+      "sam2_source/training": {
+        "files": 6,
+        "bytes": 92989
+      },
+      "sam2_source/training/assets": {
+        "files": 2,
+        "bytes": 14460
+      },
+      "sam2_source/training/dataset": {
+        "files": 8,
+        "bytes": 61268
+      },
+      "sam2_source/training/model": {
+        "files": 2,
+        "bytes": 27091
+      },
+      "sam2_source/training/scripts": {
+        "files": 1,
+        "bytes": 4986
+      },
+      "sam2_source/training/utils": {
+        "files": 6,
+        "bytes": 54862
+      }
+    },
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\logs": {
+      ".": {
+        "files": 1,
+        "bytes": 767
+      }
+    },
+    "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\runs": {}
+  },
+  "disk": {
+    "total": 991902896128,
+    "free": 125431066624
+  },
+  "git_head": "4dcabff660de82a0b8f585da6c2c22dea9bafc9f",
+  "git_status": "?? reports/storage_cleanup/\n"
+}

@@ -1,21 +1,14 @@
-# CURRENT_TASK — DAMAGE-P1A
+# CURRENT_TASK — LOCAL-STORAGE-CLEANUP-20261027
 
-Status: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
-Authority: reports/damage_p1a/20261025/authorization.md
-Branch: research/damage-p1a-visual-baseline-20261025
-Starting HEAD: a2f43aa2f5379920b9db6452dcc18b80481cdb76
-Previous DEMO-R1 execution record: reports/demo_r1/20261023/README.md (awaiting Supervisor).
-Previous Damage-P0 record: reports/damage_p0/20261019/README.md (not rewritten).
-
-Current step: permitted data/engineering delivery complete; formal training BLOCKED.
-Data audit: original 5596/699/701 split and all 62187 numeric polygon instances parsed;
-  raw TXT 0/1 semantic mapping unconfirmed; 222 CRC/size cross-split candidate groups;
-  two sampled train/val groups confirmed exact encoded and decoded SHA duplicates.
-Environment: separate Conda copy created; CUDA and synthetic-only U-Net backward/AdamW pass.
-Engineering tests: 38 synthetic contract tests pass; two actual GPU optimizer steps used synthetic tensors only.
-No real damage training started. No real validation metrics, checkpoint or model error analysis exists.
-Admission file: reports/damage_p1a/20261025/admission.json (BLOCKED).
-Only P1A authorized. Protect RC1, Demo V3, P0, official test and all previous research assets.
-Report: reports/damage_p1a/20261025/README.md
-Pushed checkpoint before final report: 2955c4ad029306be8721d9fed5928dcf0d5b611f
-Next: Supervisor reviews mapping/validity and independent validation plan; do not resume by guessing labels.
+Status: IN_PROGRESS
+Authority: reports/storage_cleanup/20261027/authorization.md
+Branch: codex/local-storage-cleanup-20261027
+Starting HEAD: 4dcabff660de82a0b8f585da6c2c22dea9bafc9f
+Plan: reports/storage_cleanup/20261027/plan.json
+Plan SHA256: 79e8015a4eb6f53ddfe368d7890e922c54d3ba43eddeb2721965901d8801670f
+Only 685 explicitly hashed files, 15057511 logical bytes planned for removal.
+Retain original label ZIPs (recovery unconfirmed), unique Demo history archives, P0 samples,
+RC1, V3, all scientific checkpoints and both usable environments.
+No research/download/training authorized by this maintenance task.
+P1A scientific state remains STOP_DATA_ADMISSION; previous handoff preserved in this report directory.
+Next: independent review, persist plan, literal single-file cleanup, V3 startup/protection checks and final report.

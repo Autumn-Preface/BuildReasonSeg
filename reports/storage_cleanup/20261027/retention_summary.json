@@ -1,0 +1,23 @@
+{
+  "retained_hash_records": 9484,
+  "environment_records": 85250,
+  "category_totals": {
+    "synthetic_test_temp": {
+      "files": 670,
+      "logical_bytes": 6490476
+    },
+    "project_install_cache": {
+      "files": 9,
+      "logical_bytes": 145265
+    },
+    "parsed_directory_cache": {
+      "files": 4,
+      "logical_bytes": 1292384
+    },
+    "exact_duplicate_image": {
+      "files": 2,
+      "logical_bytes": 7129386
+    }
+  },
+  "planned_logical_bytes": 15057511
+}
