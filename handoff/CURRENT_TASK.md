@@ -1,15 +1,28 @@
-# CURRENT_TASK — CUBIT-TEXT-PILOT-01
-Status: IN_PROGRESS_FINAL_REVIEW
-Authority: reports/cubit_text_pilot/20261029/AUTHORIZATION.md
-Branch: codex/cubit-text-pilot-01-20261029
-Starting HEAD: 4b9cc90c39a9d6375f81445935ad2bc7d3dc4318
-Report directory: reports/cubit_text_pilot/20261029
-Tool: research/cubit_text_pilot
+# CURRENT_TASK — NONE
+Status: AWAITING_SUPERVISOR
+Branch: null
+HEAD: null
+Last checkpoint commit: null
+Last checkpoint pushed: null
 
-Four-sample engineering gate passed before remaining six were prepared. Ten train images,
-33 original instances, image/label hashes and line IDs match prior candidate pool. Human
-confirmations and formal training samples remain zero. QA drafts are isolated and ignored.
-Independent review: API 31 checks and ten-source provenance passed. UI observed by executor.
-Pending: final launcher/docs/risk checklist, final source protection check, GitHub delivery.
-Raw CUBIT, old research, RC1, V3 and CodeArts Space remain read-only/not accessed for modification.
-No export, training, dataset download or automatic annotation authorized.
+Last execution: CUBIT-TEXT-PILOT-01, COMPLETE_PENDING_SUPERVISOR_REVIEW (2026-10-29).
+Report: reports/cubit_text_pilot/20261029/README.md
+Authority: reports/cubit_text_pilot/20261029/AUTHORIZATION.md
+Local entry: research/cubit_text_pilot/start_review.cmd -> http://127.0.0.1:8765
+
+Four-image engineering/UI gate passed before remaining six prepared. Exactly ten authorized
+train images and 33 original instances; source hashes/geometry/IDs verified, no original writes.
+Normal user drafts empty; all engineering drafts isolated TOOL_TEST_NOT_HUMAN in qa_drafts.
+Source protection: 20 files hashes/size/mtime unchanged. Formal human confirmations=0,
+training samples=0, training calls=0. Independent API/source/launcher checks passed;
+reviewer did not independently validate GUI or scientific annotation correctness.
+
+Tool supports image zoom/pan, original polygon overlays, multi-instance target sets, manual
+instruction edits, reference/domain/unknown boxes, relations, risk flags and versioned JSON.
+No formal export/accepted status or model generation. Local user tool remains available idle;
+QA service closed. Final acceptance and actual human annotation remain with Supervisor/user.
+
+P1A data admission remains stopped. Class mapping, valid domain, completeness and building groups
+remain unresolved. Previous research/RC1/V3/CodeArts Space unchanged. Do not start formal text
+creation, batch annotation/export, model training, fine-tuning, LISA or expand candidates automatically.
+Resolve actual branch/HEAD from Git; neutral idle metadata intentionally omits repository anchor.

@@ -1,0 +1,73 @@
+{
+  "source_files_checked": 20,
+  "all_pass": true,
+  "images": [
+    {
+      "key": "CR1_177",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "CR1_40",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "CR1_140",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "CR1_663",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "CR1_1775",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "SP1_1427",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "SP1_1133",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "SP0_70",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "SP1_436",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    },
+    {
+      "key": "SP0_794",
+      "source_hashes_match": true,
+      "size_and_mtime_unchanged": true,
+      "normal_user_drafts": 0
+    }
+  ],
+  "qa_browser_reference_relation_revision": 2,
+  "qa_records_not_human_annotations": true,
+  "formal_training_samples": 0,
+  "human_confirmations": 0,
+  "test_images_accessed": 0,
+  "source_writes": 0,
+  "training_calls": 0
+}

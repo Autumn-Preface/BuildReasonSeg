@@ -151,7 +151,7 @@
     }
   ],
   "source_bytes_read": 36471534,
-  "elapsed_seconds": 0.2697942000004332,
+  "elapsed_seconds": 0.2658246999999392,
   "image_pixel_decodes": 0,
   "test_images_accessed": 0,
   "scope": "Original bytes, header sizes/orientation and polygon provenance only; not human visual acceptance or proof of no scene leakage"

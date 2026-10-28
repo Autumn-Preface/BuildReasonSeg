@@ -1,0 +1,119 @@
+{
+  "all_pass": true,
+  "checks": [
+    {
+      "case": "existing-ok",
+      "pass": true,
+      "threw": false,
+      "error": null,
+      "calls": [
+        {
+          "kind": "browser",
+          "target": "http://127.0.0.1:8765",
+          "cwd": null,
+          "window": null,
+          "args": null
+        }
+      ]
+    },
+    {
+      "case": "existing-qa",
+      "pass": true,
+      "threw": true,
+      "error": "Port 8765 is occupied by a different session. Close that server first.",
+      "calls": []
+    },
+    {
+      "case": "existing-hash",
+      "pass": true,
+      "threw": true,
+      "error": "Port 8765 is occupied by a different session. Close that server first.",
+      "calls": []
+    },
+    {
+      "case": "existing-tool",
+      "pass": true,
+      "threw": true,
+      "error": "Port 8765 is occupied by a different session. Close that server first.",
+      "calls": []
+    },
+    {
+      "case": "new-ok",
+      "pass": true,
+      "threw": false,
+      "error": null,
+      "calls": [
+        {
+          "kind": "directory",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\drafts"
+        },
+        {
+          "kind": "server",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+          "cwd": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+          "window": "Hidden",
+          "args": [
+            "-B",
+            "\"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\server.py\""
+          ]
+        },
+        {
+          "kind": "pid",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\drafts\\server.pid"
+        },
+        {
+          "kind": "browser",
+          "target": "http://127.0.0.1:8765",
+          "cwd": null,
+          "window": null,
+          "args": null
+        }
+      ]
+    },
+    {
+      "case": "new-qa",
+      "pass": true,
+      "threw": true,
+      "error": "Session identity mismatch. Browser was not opened and no PID was written.",
+      "calls": [
+        {
+          "kind": "directory",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\drafts"
+        },
+        {
+          "kind": "server",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+          "cwd": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+          "window": "Hidden",
+          "args": [
+            "-B",
+            "\"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\server.py\""
+          ]
+        }
+      ]
+    },
+    {
+      "case": "new-hash",
+      "pass": true,
+      "threw": true,
+      "error": "Session identity mismatch. Browser was not opened and no PID was written.",
+      "calls": [
+        {
+          "kind": "directory",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\drafts"
+        },
+        {
+          "kind": "server",
+          "target": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+          "cwd": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg",
+          "window": "Hidden",
+          "args": [
+            "-B",
+            "\"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\server.py\""
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "PowerShell function mocks only; no browser, service, socket, directory, PID or log writes performed by launcher"
+}

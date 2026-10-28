@@ -1,17 +1,33 @@
 schema_version: 1
-task_id: CUBIT-TEXT-PILOT-01
-status: IN_PROGRESS_FINAL_REVIEW
+task_id: NONE
+status: AWAITING_SUPERVISOR
 executor: CODEX
-branch: codex/cubit-text-pilot-01-20261029
-head: 4b9cc90c39a9d6375f81445935ad2bc7d3dc4318
+branch: null
+head: null
 last_checkpoint:
-  commit: 4b9cc90c39a9d6375f81445935ad2bc7d3dc4318
-  pushed: true
-report: reports/cubit_text_pilot/20261029/README.md
-four_sample_gate: PASS
-authorized_train_images: 10
-source_instances: 33
-human_confirmations: 0
-formal_training_samples: 0
-training_calls: 0
-next_action: Finish launcher/docs, independent review and final delivery; no research escalation.
+  commit: null
+  pushed: null
+last_task:
+  task_id: CUBIT-TEXT-PILOT-01
+  execution_status: COMPLETE_PENDING_SUPERVISOR_REVIEW
+  finalized_date: '2026-10-29'
+  report: reports/cubit_text_pilot/20261029/README.md
+  local_entry: research/cubit_text_pilot/start_review.cmd
+  four_image_gate: PASS
+  train_images: 10
+  original_instances: 33
+  human_confirmations: 0
+  formal_training_samples: 0
+  training_calls: 0
+  dataset_download_bytes: 0
+  source_protection: PASS_20_FILES
+  independent_engineering_review: PASS
+  user_workbench: AVAILABLE_IDLE_127_0_0_1_8765
+  qa_service: CLOSED
+research_context:
+  damage_p1a: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
+  class_mapping: UNCONFIRMED
+  annotation_valid_domain: UNKNOWN
+  building_groups: UNKNOWN
+  legacy_rc1: FROZEN_HISTORICAL
+next_action: Await Supervisor acceptance and actual human review; no automatic research/export/training.

@@ -24,11 +24,11 @@
 - 33 个多边形以 Decimal 鞋带公式核算，没有精确零有向面积；十图均不在历史 CRC32+大小重复候选集合中。这不证明无自交、碎片化、近重复或同建筑泄漏。
 - mapping=unconfirmed、valid_domain=unknown、building_group=null、pending_human_review 均保留，未升级为官方语义或正式标注。
 
-结果：[ten_source_results.json](ten_source_results.json)。本次十图来源核验读取 36471534 逻辑字节，约 0.270 秒；只解码标签与图像头部，没有解码图像像素或访问官方 test 图像。以上两次字节数不包含下面 Store/API 多次读取，不能冒称 reviewer 全程总成本。
+结果：[ten_source_results.json](ten_source_results.json)。本次十图来源核验读取 36471534 逻辑字节，首轮约 0.270 秒，最终复跑约 0.266 秒；只解码标签与图像头部，没有解码图像像素或访问官方 test 图像。以上两次字节数不包含下面 Store/API 多次读取，不能冒称 reviewer 全程总成本。
 
 ## 工程测试实际结果
 
-独立脚本 [check_engineering.py](check_engineering.py) 的 **31 项检查全部通过**，约 0.726 秒；结果在 [engineering_results.json](engineering_results.json)。使用已有 P1A Python，不安装或修改依赖。为支持本地回环 socket 和不可覆盖 hard-link 原子发布，以正常权限运行一次，未修改 ACL。
+独立脚本 [check_engineering.py](check_engineering.py) 的 **31 项检查全部通过**，首轮约 0.726 秒，最终复跑约 0.774 秒；结果在 [engineering_results.json](engineering_results.json)。使用已有 P1A Python，不安装或修改依赖。为支持本地回环 socket 和不可覆盖 hard-link 原子发布，以正常权限运行一次，未修改 ACL。
 
 检查覆盖：
 
@@ -44,11 +44,13 @@
 
 ## 复查发现及已处理事项
 
-在实现早期提出并读回确认三个工程改进：
+在实现早期提出并读回确认四个工程改进：
 
 1. 草稿根限制为本工具 drafts/qa_drafts，避免误指历史科研目录。
 2. 直接写最终 revision 改为同目录临时文件写完/fsync 后非覆盖原子发布，未发布临时文件不参与历史读取；已用注入失败测试复核。
 3. 保存及重载等待期间锁住编辑/切图，防止异步旧响应覆盖新图草稿或用户刚输入内容。修复后读回 `saving/loading/busy` 门禁；此项静态复核，未模拟完整浏览器竞态压力。
+
+4. 正常入口的新启动轮询分支起初没有重新核验返回会话身份。独立函数 mock 复现后，执行者加入所有分支最终共同的 tool/manifest SHA/drafts_root/十图数量校验，再写 PID 和打开浏览器。七项 mock 复验通过。
 
 未由 reviewer 直接修改实现或审核结论。复查时 `git diff --name-only 4b9cc90...` 没有旧跟踪文件变更，新增工作限任务新目录；后续交接更新及最终 Git 推送由主执行者另核。
 
@@ -59,3 +61,23 @@
 原多边形只用于只读轮廓/临时显示 Mask；显示的 even-odd 栅格效果不是官方修订 Mask 或正式训练目标。任意内部任务类型和 ID 不得进入模型输入；当前没有正式导出接口。工程测试通过不保证用户自由文本绝对无答案泄漏，还需人工审核语义。
 
 最终接收、规范修订冻结和任何后续标注/训练授权仍属于 ChatGPT Supervisor。本次复查不批准自己，不触发批量指令、训练集导出、微调、LISA 或扩大样本。
+
+
+## 最终增量复查
+
+执行者新增普通双击入口、会话身份字段与指令元数据阻断后，reviewer 独立复跑原 **31 项工程/API 检查与十图全部来源检查**，仍全部通过。另以独立动态端口运行 [check_delta.py](check_delta.py)，七种新增内部元数据/任务分类文本阻断及三项会话身份字段检查共 **10 项通过**，见 [delta_results.json](delta_results.json)。没有连接或关闭主 8765/QA 8766 服务。
+
+启动器 [check_launcher.ps1](check_launcher.ps1) 用 PowerShell 局部 mock 替代所有启动、目录、PID、日志副作用：合法既有会话、既有 QA/错误哈希/错误工具身份、新合法会话、预检后出现 QA/错误哈希会话，共 **7 项最终通过**，见 [launcher_results.json](launcher_results.json)。最初新启动分支的两项确实失败，完整证据另存 [launcher_results_initial_failure.json](launcher_results_initial_failure.json)，没有删除失败记录。修复后不匹配会话不能写 PID 或打开浏览器。此为入口分支合约测试，不是 reviewer 真实双击 GUI 测试。
+
+静态审查 `start_review.cmd/ps1`：使用既有 P1A Python 和默认十图 samples.json，不安装或下载；正常日志/PID/草稿均指向本工具 drafts，不复用 qa_drafts；已存在不匹配会话被拒绝，不自动清理占用进程。当前实际 drafts 目录没有 reparse 属性，独立只读清点仅见 server.pid/stdout/stderr，没有 rev JSON 人工标注。README 说明草稿不自动持久化、旧版本冲突、停止服务前核对 PID 和 QA 隔离，未要求修改原图/标签或旧资产。
+
+读过新 `ANNOTATION_DRAFT_V02.md` 与 `CANDIDATE_REVIEW.md`：原始/派生/内部元数据分开，所有十图观察均标为执行者暂定视觉问题，明确局部覆盖不完整、33 行不等于物理损伤、无正式指令/人工确认，保留 mapping/validity/building-group/重复证据局限。reviewer 未重新视觉判定这些观察，不据此批准对齐、漏标或复杂指令成立。v0.2 是新文件草案，没有改写上一阶段规范。
+
+复验时一次自动权限检查超时未执行；同一隔离测试请求随后重试成功。超时不计作产品测试失败，也不称其为安全拒绝。受审源码/入口/本轮文档精确 SHA 更新于 [reviewed_source_hashes.json](reviewed_source_hashes.json)；后续如改代码应对受影响部分复查。本轮没有最终 Git 合并/科学自批权限，最终提交核验仍由主执行者执行。
+
+
+## 末轮显示与文档核对
+
+仅只读确认最终 `app.js` 差异：loadSample 成功后增加底部原图尺寸/非修订 GT 文案赋值，未改变保存、几何、状态门禁或数据格式。未为此重复无关测试，也未操作 UI。`CANDIDATE_REVIEW.md` 将观察方式更正为对照整图原多边形位置，明确原像素局部不是逐像素边缘验收，和本报告的视觉验证边界一致。
+
+已读最终任务 README，31/10/7 独立检查数量、十图33实例及执行者/独立GUI证据区分与本 reviewer 实际证据相符。提醒执行者将手工改 JSON 的限制表述精确：来源字段不匹配会拒绝，但当前 load 不重新验证完整历史哈希链；记录哈希链不等于防篡改保证。没有因文案提醒修改实现或重做无关测试。

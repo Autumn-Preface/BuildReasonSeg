@@ -34,9 +34,9 @@
     "eight_original_file_sha_size_mtime_unchanged": true
   },
   "notes": [],
-  "elapsed_seconds": 0.7256478999997853,
+  "elapsed_seconds": 0.7742708000005223,
   "raw_files_checked": 8,
-  "qa_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\review-c76cd632fd164fc2b481ac57479d66ec",
+  "qa_root": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\review-a03f7a67a1cc459d81206db92a06a8e0",
   "scope": "four source samples only; QA records never human annotations; no UI or model tests",
   "initial_independent_four_provenance": {
     "all_image_label_hash_and_stable_ids_match": true,

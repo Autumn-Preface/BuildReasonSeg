@@ -1,0 +1,17 @@
+{
+  "all_pass": true,
+  "checks": {
+    "reject_task_level": true,
+    "reject_reasoning_kind": true,
+    "reject_numeric_class": true,
+    "reject_class_id": true,
+    "reject_instance_id": true,
+    "reject_视觉语义推理": true,
+    "reject_空间关系推理": true,
+    "session_tool": true,
+    "session_manifest_hash": true,
+    "session_draft_root": true
+  },
+  "elapsed_seconds": 0.5734269000004133,
+  "scope": "isolated dynamic port, no main 8765/8766 use; no draft save, UI or source writes"
+}

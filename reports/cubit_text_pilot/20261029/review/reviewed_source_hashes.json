@@ -1,7 +1,13 @@
 {
-  "research/cubit_text_pilot/server.py": "30c711cbddb0b81e0f68269d6f2c41203baafcba4a828433511554e324d72165",
+  "research/cubit_text_pilot/server.py": "dad7bcef8bdf2e4abf1e9d73552c06cf3e2e9909909ef4c2f4352de2e80b80b4",
   "research/cubit_text_pilot/prepare.py": "83e8f62bb62a86f307312759948f4593f1f75c977c25197cfb4c41586c1ad9e9",
-  "research/cubit_text_pilot/web/app.js": "fb11cfbdbbc1dc6818de9d9d78d63420caf1a84d5980db238593754864dbcc5f",
+  "research/cubit_text_pilot/web/app.js": "3fcb4c151b2a6b5397fed7449cde17ad19a7f3575473e37af037c570765449a5",
   "research/cubit_text_pilot/web/index.html": "ec42bb752f21338d6db8398f290f0533e2887c05fd494557892c6a5e838c79e0",
-  "research/cubit_text_pilot/web/style.css": "c60bfe46fd9e2b6f9afc44a3747f77f5304e6d7207a68c3ae83c9e712bb72f47"
+  "research/cubit_text_pilot/web/style.css": "c60bfe46fd9e2b6f9afc44a3747f77f5304e6d7207a68c3ae83c9e712bb72f47",
+  "research/cubit_text_pilot/start_review.ps1": "4d3a0cb2fec9aea05a05bae47f384a940ae546492834f3e9231e5c32fff8940e",
+  "research/cubit_text_pilot/start_review.cmd": "b576ebd790de0692e921ba1a70c3da17b3f0e89f72970f67aa43d6e57c869e24",
+  "research/cubit_text_pilot/README.md": "6b7dd98f29df5246abedabf453720aeac48f879fe9e86333bef45aaba3692d9c",
+  "reports/cubit_text_pilot/20261029/ANNOTATION_DRAFT_V02.md": "a7ed72b44f8cc402a868290808e23f0c8d24c344ad4a1e128029f20a423c59d8",
+  "reports/cubit_text_pilot/20261029/CANDIDATE_REVIEW.md": "673c58dfe0cd3920f4177338c3028bd00fa9b7c8aaa62b28adb83a041bf1a70b",
+  "reports/cubit_text_pilot/20261029/README.md": "5a8c0833485ed723905922a3af1e0022b877e58191ac61233ed305f43d385337"
 }

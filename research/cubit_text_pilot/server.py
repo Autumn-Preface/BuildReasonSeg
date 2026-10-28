@@ -28,7 +28,7 @@ def validate_edit(e, sample):
     check(e['valid_domain'] in ('unknown','target_region_proposed','class_region_proposed','full_image_proposed'),'有效域仅记录建议，不自动确认')
     ids={r['instance_id'] for r in sample['instances']}
     targets=e['target_instance_ids'];check(isinstance(targets,list) and len(set(targets))==len(targets) and all(x in ids for x in targets),'目标必须来自本图原实例')
-    check(not re.search(r'cubit-v1|\b(?:CR|SP)[01]_\d+|L\d{4}|(?:class|类别|类目)\s*[:：#]?\s*[01]\b|(?:task_family|direct_target|visual_semantic|spatial_reasoning)',e['instruction_text'],re.I),'指令含内部 ID/类别/任务元数据，请改为自然语言')
+    check(not re.search(r'cubit-v1|\b(?:CR|SP)[01]_\d+|L\d{4}|(?:class|类别|类目)\s*[:：#]?\s*[01]\b|(?:task_family|task_level|reasoning_kind|numeric_class|class_id|instance_id|direct_target|visual_semantic|spatial_reasoning|视觉语义推理|空间关系推理)',e['instruction_text'],re.I),'指令含内部 ID/类别/任务元数据，请改为自然语言')
     for k in ('references','relations','regions','risks'): check(isinstance(e[k],list) and len(e[k])<=100,'列表过长或类型错误')
     refids=set()
     for r in e['references']:
@@ -52,7 +52,7 @@ def empty_edit():
 
 class Store:
     def __init__(self,manifest,root):
-        self.manifest=read(manifest);self.source=Path(self.manifest['source_root']).resolve();self.root=Path(root).resolve();self.lock=threading.Lock()
+        self.manifest=read(manifest);self.manifest_sha256=sha(Path(manifest).read_bytes());self.source=Path(self.manifest['source_root']).resolve();self.root=Path(root).resolve();self.lock=threading.Lock()
         check(any(self.root.is_relative_to(BASE/name) for name in ('drafts','qa_drafts')) and not self.root.is_relative_to(self.source),'仅允许本工具 drafts/qa_drafts 下保存')
         self.samples={r['key']:r for r in self.manifest['images']};check(len(self.samples) in (4,10),'仅允许四图门禁或十图批次')
         for k,s in self.samples.items():
@@ -113,7 +113,7 @@ class Handler(BaseHTTPRequestHandler):
             self.guard();u=urlparse(self.path);q=parse_qs(u.query);store=self.server.store
             if u.path in ('/','/app.js','/style.css'):
                 p=BASE/'web'/({'/':'index.html','/app.js':'app.js','/style.css':'style.css'}[u.path]);self.send(p.read_bytes(),ctype={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8'}[p.suffix])
-            elif u.path=='/api/session': self.send(dict(token=self.server.token,images=[dict(key=k,instances=len(s['instances'])) for k,s in store.samples.items()]))
+            elif u.path=='/api/session': self.send(dict(tool='cubit-text-pilot-01',manifest_sha256=store.manifest_sha256,drafts_root=str(store.root),token=self.server.token,images=[dict(key=k,instances=len(s['instances'])) for k,s in store.samples.items()]))
             elif u.path=='/api/sample':
                 s=store.sample(q['key'][0]);store.verify(s);self.send(dict(sample=s,drafts=store.listings(s['key']),empty_edit=empty_edit()))
             elif u.path=='/api/image':

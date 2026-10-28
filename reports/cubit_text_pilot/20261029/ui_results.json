@@ -1,0 +1,39 @@
+{
+  "four_gate": "four_gate.json",
+  "other_six_visible_loads": [
+    {
+      "key": "CR1_140",
+      "visibleInfo": "train · 4500 × 3000 · 3 个原始实例",
+      "instanceRows": 3
+    },
+    {
+      "key": "CR1_663",
+      "visibleInfo": "train · 4500 × 3000 · 4 个原始实例",
+      "instanceRows": 4
+    },
+    {
+      "key": "CR1_1775",
+      "visibleInfo": "train · 4500 × 3000 · 8 个原始实例",
+      "instanceRows": 8
+    },
+    {
+      "key": "SP1_1133",
+      "visibleInfo": "train · 4500 × 3000 · 3 个原始实例",
+      "instanceRows": 3
+    },
+    {
+      "key": "SP0_70",
+      "visibleInfo": "train · 4800 × 3200 · 7 个原始实例",
+      "instanceRows": 7
+    },
+    {
+      "key": "SP1_436",
+      "visibleInfo": "train · 4500 × 3000 · 2 个原始实例",
+      "instanceRows": 2
+    }
+  ],
+  "qa_reference_relation_saved_and_reloaded": true,
+  "qa_operator": "TOOL_TEST_NOT_HUMAN",
+  "normal_user_fields_empty": true,
+  "formal_confirmation": false
+}

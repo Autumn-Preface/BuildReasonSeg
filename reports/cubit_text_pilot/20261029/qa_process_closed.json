@@ -1,0 +1,5 @@
+{
+  "ProcessId": 35444,
+  "ExecutablePath": "C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe",
+  "CommandLine": "\"C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\.conda\\buildreasonseg-damage-p1a\\python.exe\" -B research/cubit_text_pilot/server.py --manifest reports/cubit_text_pilot/20261029/first_four.json --drafts research/cubit_text_pilot/qa_drafts/ui_four --port 8766"
+}
