@@ -1,0 +1,142 @@
+[
+  {
+    "key": "CR1_177",
+    "crop_xyxy_pixels": [
+      1715,
+      1025,
+      2915,
+      1925
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "bc7563c37f1c7d76be40a1da832af88cef9b55f2ae22ec1656118ad8b3845bf8",
+    "source_label_sha256": "0fb8e6cfe127806aee30a252284954f73f3cad3e74b2307c61bebcdbfe0e6c9e"
+  },
+  {
+    "key": "CR1_40",
+    "crop_xyxy_pixels": [
+      1276,
+      941,
+      2476,
+      1841
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "0c713d7d1e84e09437f49029cf933dcf289429a60c6c0c5c5908dd9cc2ec78d6",
+    "source_label_sha256": "5cfa457806e943b2d1da73d08011656eb7ad318c0eb2c187338da54a1ba68444"
+  },
+  {
+    "key": "CR1_140",
+    "crop_xyxy_pixels": [
+      2813,
+      1671,
+      4013,
+      2571
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "a293346b78c35e8b270134b6577d9ec3abbf62c0cff73745f7f1f67f5a97095b",
+    "source_label_sha256": "d0cba55066cde6f6c0f4bf0ddf5004a98fcbb5222a26105bd968e5a1ddfeb73a"
+  },
+  {
+    "key": "CR1_663",
+    "crop_xyxy_pixels": [
+      0,
+      2100,
+      1200,
+      3000
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "e2d6300ae2df8b9137b81d1015d3a6dec4d5091a99c7d7629dca1ca8fab6f938",
+    "source_label_sha256": "ce20eb177dd63108f9ce8ff314663bc5a06bba10baca2db152ff7341b503a45f"
+  },
+  {
+    "key": "CR1_1775",
+    "crop_xyxy_pixels": [
+      1378,
+      2100,
+      2578,
+      3000
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "535796aec93c2510d7de5478646f0136a5191e640433bd819e5197d51bd1a831",
+    "source_label_sha256": "5c7f9791ca671780b4c07bab6d326e6d8da0226b1a104318d6e8918551e80ce2"
+  },
+  {
+    "key": "SP1_1427",
+    "crop_xyxy_pixels": [
+      1808,
+      735,
+      3008,
+      1635
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "c3c15caa1d07238226118b0e6decd2728ee2ed4dada2657d469e53a8309033f2",
+    "source_label_sha256": "4f95eb7652ce25f1269293bdcf3942ea8a223085c901e2271e0e214f9cee8dfc"
+  },
+  {
+    "key": "SP1_1133",
+    "crop_xyxy_pixels": [
+      1456,
+      1737,
+      2656,
+      2637
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "56e12c0b6449d91ca3fd3fa0044cc1a9aca342f3e89a19a1ec21c6a0d4767aed",
+    "source_label_sha256": "3a900340bfb58b72e1880b74ff02fd1836891d429f9d5b501c90177b9c08a6b1"
+  },
+  {
+    "key": "SP0_70",
+    "crop_xyxy_pixels": [
+      552,
+      2300,
+      1752,
+      3200
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "df244d22992bb79f62f6d3f99967c4a212b53ba82f8fb56ac073c911492e42d1",
+    "source_label_sha256": "89388d2096977c576d33c0a9643625f283c7cee7ad35db892c89ff4656f6b88f"
+  },
+  {
+    "key": "SP1_436",
+    "crop_xyxy_pixels": [
+      2547,
+      1312,
+      3747,
+      2212
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "1c100f969ad4c3763d10fc8da6246de53009e1e99af990bda3d955e7d0e56e9a",
+    "source_label_sha256": "77ebf0518b0dc38f693578c722bd1dfd79ac59366aec064247f61ef8642ef85b"
+  },
+  {
+    "key": "SP0_794",
+    "crop_xyxy_pixels": [
+      1511,
+      1386,
+      2711,
+      2286
+    ],
+    "resize": false,
+    "focus_line": 1,
+    "limitations": "first polygon center crop is not an exhaustive whole-image pixel audit",
+    "source_image_sha256": "b2fd20243a87e28d2764177df694562ed7a7180dc7c295b829db2e488ca8d5bd",
+    "source_label_sha256": "2395d82ca0dbb602687c155070845f6e8eaa6bfa64d7f2325b12ea5f9a557100"
+  }
+]

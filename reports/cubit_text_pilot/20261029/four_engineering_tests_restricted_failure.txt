@@ -1,0 +1,53 @@
+test_01_four_real_roundtrips (__main__.DraftTests.test_01_four_real_roundtrips) ... ERROR
+test_02_revision_history_conflict (__main__.DraftTests.test_02_revision_history_conflict) ... ERROR
+test_03_group_geometry_roundtrip (__main__.DraftTests.test_03_group_geometry_roundtrip) ... ERROR
+test_04_no_human_confirmation (__main__.DraftTests.test_04_no_human_confirmation) ... ok
+test_05_foreign_target_rejected (__main__.DraftTests.test_05_foreign_target_rejected) ... ok
+test_06_nonfinite_and_outside_geometry (__main__.DraftTests.test_06_nonfinite_and_outside_geometry) ... ok
+test_07_internal_input_leak_rejected (__main__.DraftTests.test_07_internal_input_leak_rejected) ... ok
+test_08_source_write_path_rejected (__main__.DraftTests.test_08_source_write_path_rejected) ... ok
+test_09_traversal_id_rejected (__main__.DraftTests.test_09_traversal_id_rejected) ... ok
+test_10_unknown_fields_and_author (__main__.DraftTests.test_10_unknown_fields_and_author) ... ok
+test_11_orphan_relation (__main__.DraftTests.test_11_orphan_relation) ... ok
+test_12_default_unknown_and_empty (__main__.DraftTests.test_12_default_unknown_and_empty) ... ok
+
+======================================================================
+ERROR: test_01_four_real_roundtrips (__main__.DraftTests.test_01_four_real_roundtrips)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\cubit_text_pilot\test_workbench.py", line 14, in test_01_four_real_roundtrips
+    e=self.edit(k);r=self.store.save(k,None,0,e);s=Store(MANIFEST,self.store.root);loaded=s.load(k,r['annotation_id']);self.assertEqual(loaded['edit'],e);self.assertEqual(loaded['source']['image_sha256'],s.sample(k)['image_sha256']);self.assertFalse(loaded['formal_export_enabled'])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\cubit_text_pilot\server.py", line 99, in save
+    try: os.link(temp,p)
+         ^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\unit-77e19e3e96f742fda57bd2b06884160c\\CR1_177\\cd6153893c9640f4a2dfc96e3d8ecddc\\tmpcpc70dq_.tmp' -> 'C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\unit-77e19e3e96f742fda57bd2b06884160c\\CR1_177\\cd6153893c9640f4a2dfc96e3d8ecddc\\rev-000001.json'
+
+======================================================================
+ERROR: test_02_revision_history_conflict (__main__.DraftTests.test_02_revision_history_conflict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\cubit_text_pilot\test_workbench.py", line 16, in test_02_revision_history_conflict
+    e=self.edit();r=self.store.save('CR1_177',None,0,e);before=self.store.revisions('CR1_177',r['annotation_id'])[0].read_bytes();e['notes']='���̵ڶ���';r2=self.store.save('CR1_177',r['annotation_id'],1,e)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\cubit_text_pilot\server.py", line 99, in save
+    try: os.link(temp,p)
+         ^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\unit-77e19e3e96f742fda57bd2b06884160c\\CR1_177\\f3fa5c9a78ee4dc0a51d29d136bd9912\\tmp92akphug.tmp' -> 'C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\unit-77e19e3e96f742fda57bd2b06884160c\\CR1_177\\f3fa5c9a78ee4dc0a51d29d136bd9912\\rev-000001.json'
+
+======================================================================
+ERROR: test_03_group_geometry_roundtrip (__main__.DraftTests.test_03_group_geometry_roundtrip)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\cubit_text_pilot\test_workbench.py", line 20, in test_03_group_geometry_roundtrip
+    k='SP0_794';e=self.edit(k);e['target_instance_ids']=[i['instance_id'] for i in self.store.sample(k)['instances']];e['references']=[dict(id='ref-test',name='���߲��Կ򣬷��˹�������',bbox_normalized=[.1,.2,.3,.4])];e['regions']=[dict(kind='unknown',bbox_normalized=[.6,.6,.8,.8],note='���̲���')];e['relations']=[dict(reference_id='ref-test',target_instance_ids=e['target_instance_ids'],relation='���Թ�ϵ',evidence='��������֤')];r=self.store.save(k,None,0,e);self.assertEqual(self.store.load(k,r['annotation_id'])['edit'],e)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\D\DeepSeekHarness\workspace\project\BuildReasonSeg\research\cubit_text_pilot\server.py", line 99, in save
+    try: os.link(temp,p)
+         ^^^^^^^^^^^^^^^
+PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\unit-77e19e3e96f742fda57bd2b06884160c\\SP0_794\\1801a46cdafa4b219f25978ff627e36d\\tmpthwc75x2.tmp' -> 'C:\\D\\DeepSeekHarness\\workspace\\project\\BuildReasonSeg\\research\\cubit_text_pilot\\qa_drafts\\unit-77e19e3e96f742fda57bd2b06884160c\\SP0_794\\1801a46cdafa4b219f25978ff627e36d\\rev-000001.json'
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.174s
+
+FAILED (errors=3)

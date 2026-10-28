@@ -1,0 +1,17 @@
+test_01_four_real_roundtrips (__main__.DraftTests.test_01_four_real_roundtrips) ... ok
+test_02_revision_history_conflict (__main__.DraftTests.test_02_revision_history_conflict) ... ok
+test_03_group_geometry_roundtrip (__main__.DraftTests.test_03_group_geometry_roundtrip) ... ok
+test_04_no_human_confirmation (__main__.DraftTests.test_04_no_human_confirmation) ... ok
+test_05_foreign_target_rejected (__main__.DraftTests.test_05_foreign_target_rejected) ... ok
+test_06_nonfinite_and_outside_geometry (__main__.DraftTests.test_06_nonfinite_and_outside_geometry) ... ok
+test_07_internal_input_leak_rejected (__main__.DraftTests.test_07_internal_input_leak_rejected) ... ok
+test_08_source_write_path_rejected (__main__.DraftTests.test_08_source_write_path_rejected) ... ok
+test_09_traversal_id_rejected (__main__.DraftTests.test_09_traversal_id_rejected) ... ok
+test_10_unknown_fields_and_author (__main__.DraftTests.test_10_unknown_fields_and_author) ... ok
+test_11_orphan_relation (__main__.DraftTests.test_11_orphan_relation) ... ok
+test_12_default_unknown_and_empty (__main__.DraftTests.test_12_default_unknown_and_empty) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.322s
+
+OK

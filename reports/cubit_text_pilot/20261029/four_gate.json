@@ -1,0 +1,35 @@
+{
+  "gate": "PASS_BEFORE_OTHER_SIX_PREPARATION",
+  "samples": [
+    {
+      "key": "CR1_177",
+      "revision": 1,
+      "target_count": 1,
+      "source_hashes_match": true,
+      "ui_open_locate_edit_save_reload": "observed_by_executor_browser_tools"
+    },
+    {
+      "key": "CR1_40",
+      "revision": 1,
+      "target_count": 1,
+      "source_hashes_match": true,
+      "ui_open_locate_edit_save_reload": "observed_by_executor_browser_tools"
+    },
+    {
+      "key": "SP1_1427",
+      "revision": 1,
+      "target_count": 1,
+      "source_hashes_match": true,
+      "ui_open_locate_edit_save_reload": "observed_by_executor_browser_tools"
+    },
+    {
+      "key": "SP0_794",
+      "revision": 1,
+      "target_count": 2,
+      "source_hashes_match": true,
+      "ui_open_locate_edit_save_reload": "observed_by_executor_browser_tools"
+    }
+  ],
+  "human_confirmations": 0,
+  "formal_training_samples": 0
+}

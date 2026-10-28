@@ -1,25 +1,15 @@
-# CURRENT_TASK — NONE
+# CURRENT_TASK — CUBIT-TEXT-PILOT-01
+Status: IN_PROGRESS_FINAL_REVIEW
+Authority: reports/cubit_text_pilot/20261029/AUTHORIZATION.md
+Branch: codex/cubit-text-pilot-01-20261029
+Starting HEAD: 4b9cc90c39a9d6375f81445935ad2bc7d3dc4318
+Report directory: reports/cubit_text_pilot/20261029
+Tool: research/cubit_text_pilot
 
-Status: AWAITING_SUPERVISOR
-Branch: null
-HEAD: null
-Last checkpoint commit: null
-Last checkpoint pushed: null
-
-Last execution: CUBIT-TEXT-PREP-20261029, COMPLETE_PENDING_SUPERVISOR_REVIEW.
-Report: reports/cubit_text_prep/20261029/README.md
-Authority: reports/cubit_text_prep/20261029/AUTHORIZATION.md
-
-6996 images / 62187 polygon-line instances indexed. 31 train candidates prepared, not human annotations.
-All current label SHA256 match historical manifest. 13 exact zero-area polygons (old brief said12).
-Historical 222 cross-split groups located as CRC32+size candidates; full SHA evidence not located.
-All historical duplicate candidates conservatively excluded; no full image rehash or near-duplicate sweep.
-Independent structural / final-candidate / parser checks PASS. Final acceptance remains Supervisor.
-
-Raw CUBIT, official splits, RC1, V3, old research and environments unchanged by task scripts.
-Test used for metadata-only anomaly/provenance index; no test image decoded or selected.
-No text training instructions, training, fine-tuning, LISA or CodeArts Space access.
-P1A remains STOP_DATA_ADMISSION. Class mapping, validity domains and building groups unresolved.
-Do not start manual annotation, formal export or training without next Supervisor authorization.
-Prior cleanup acceptance and handoff snapshots preserved in this task report directory.
-Resolve actual branch and HEAD from Git; idle metadata is intentionally neutral.
+Four-sample engineering gate passed before remaining six were prepared. Ten train images,
+33 original instances, image/label hashes and line IDs match prior candidate pool. Human
+confirmations and formal training samples remain zero. QA drafts are isolated and ignored.
+Independent review: API 31 checks and ten-source provenance passed. UI observed by executor.
+Pending: final launcher/docs/risk checklist, final source protection check, GitHub delivery.
+Raw CUBIT, old research, RC1, V3 and CodeArts Space remain read-only/not accessed for modification.
+No export, training, dataset download or automatic annotation authorized.

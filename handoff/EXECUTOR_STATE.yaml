@@ -1,32 +1,17 @@
 schema_version: 1
-task_id: NONE
-status: AWAITING_SUPERVISOR
+task_id: CUBIT-TEXT-PILOT-01
+status: IN_PROGRESS_FINAL_REVIEW
 executor: CODEX
-branch: null
-head: null
+branch: codex/cubit-text-pilot-01-20261029
+head: 4b9cc90c39a9d6375f81445935ad2bc7d3dc4318
 last_checkpoint:
-  commit: null
-  pushed: null
-last_task:
-  task_id: CUBIT-TEXT-PREP-20261029
-  execution_status: COMPLETE_PENDING_SUPERVISOR_REVIEW
-  finalized_date: '2026-10-29'
-  report: reports/cubit_text_prep/20261029/README.md
-  images_indexed: 6996
-  instances_indexed: 62187
-  pilot_candidates: 31
-  human_annotations_completed: 0
-  exact_zero_area_polygons: 13
-  historical_cross_split_duplicate_candidate_groups: 222
-  final_independent_checks: PASS
-  test_image_decodes: 0
-  training_calls: 0
-  dataset_download_bytes: 0
-research_context:
-  damage_p1a: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
-  class_mapping: UNCONFIRMED
-  valid_domain: UNKNOWN
-  building_groups: UNKNOWN
-  legacy_rc1: FROZEN_HISTORICAL
-  huawei_application: SEPARATE_CODEARTS_SPACE_SINGLE_AGENT_NOT_ACCESSED
-next_action: Await Supervisor review of candidate pool and annotation draft; do not advance automatically.
+  commit: 4b9cc90c39a9d6375f81445935ad2bc7d3dc4318
+  pushed: true
+report: reports/cubit_text_pilot/20261029/README.md
+four_sample_gate: PASS
+authorized_train_images: 10
+source_instances: 33
+human_confirmations: 0
+formal_training_samples: 0
+training_calls: 0
+next_action: Finish launcher/docs, independent review and final delivery; no research escalation.

@@ -1,0 +1,158 @@
+{
+  "all_pass": true,
+  "checks": {
+    "exact_ten": true,
+    "unique_image_hashes": true,
+    "prior_commit_expected": true,
+    "prior_candidate_file_sha_match": true,
+    "four_gate_recorded": true,
+    "all_per_image_checks": true
+  },
+  "images": [
+    {
+      "key": "CR1_177",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 1
+    },
+    {
+      "key": "CR1_40",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 1
+    },
+    {
+      "key": "CR1_140",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 3
+    },
+    {
+      "key": "CR1_663",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 4
+    },
+    {
+      "key": "CR1_1775",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 8
+    },
+    {
+      "key": "SP1_1427",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 1
+    },
+    {
+      "key": "SP1_1133",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 3
+    },
+    {
+      "key": "SP0_70",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 7
+    },
+    {
+      "key": "SP1_436",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 2
+    },
+    {
+      "key": "SP0_794",
+      "checks": {
+        "train_only": true,
+        "both_raw_hashes_match_previous_and_manifest": true,
+        "all_line_ids_numeric_classes_and_coordinates_exact": true,
+        "no_exact_zero_signed_area": true,
+        "outside_all_historical_crc_candidates": true,
+        "risks_unresolved_not_formal": true,
+        "original_dimensions_orientation": true,
+        "original_size_mtime_still_match_preparation": true
+      },
+      "instances": 3
+    }
+  ],
+  "source_bytes_read": 36471534,
+  "elapsed_seconds": 0.2697942000004332,
+  "image_pixel_decodes": 0,
+  "test_images_accessed": 0,
+  "scope": "Original bytes, header sizes/orientation and polygon provenance only; not human visual acceptance or proof of no scene leakage"
+}
