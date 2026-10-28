@@ -1,0 +1,10 @@
+{
+  "schema_version": "draft-0.1",
+  "record_status": "template_not_training_sample",
+  "annotation_id": null,
+  "source": {"dataset_version": "CUBIT-InSeg-original-local", "image_id": null, "image_sha256": null, "label_sha256": null, "official_split": "train", "building_group": null},
+  "internal": {"task_family": null, "numeric_class_ids": [], "class_mapping_status": "unconfirmed", "visual_class_name": null, "valid_domain": "unknown", "target_instance_ids": [], "reference_annotations": [], "relation_evidence": [], "ambiguity_flags": [], "mask_recipe": {"source": "original_polygon_lines", "instance_union": [], "rasterizer_version": null, "original_width_height": null, "overlap_policy": null, "ignore_region": null, "derived_mask_sha256": null}},
+  "human_annotation": {"instruction_text": null, "author": null, "reviewer": null, "created_at": null, "revision": 0, "review_status": "draft", "rejection_reason": null, "time_minutes": null, "event_log": []},
+  "model_input_allowlist": ["image", "instruction_text"],
+  "formal_export_enabled": false
+}

@@ -1,0 +1,27 @@
+{
+  "counts": {
+    "train": 5596,
+    "val": 699,
+    "test": 701
+  },
+  "instances": 62187,
+  "anomalies": 13,
+  "anomaly_counts": {
+    "zero_area": 13
+  },
+  "eligible_train": 4675,
+  "pilot_pool": 42,
+  "label_hash_mismatches": 0,
+  "cross_duplicate_groups": 222,
+  "source_metadata_changes": [],
+  "elapsed_seconds": 45.192063199999666,
+  "counted_label_and_candidate_image_bytes_read": 1834113696,
+  "candidate_image_hash_count": 42,
+  "other_image_hash_count": 0,
+  "test_image_decode_count": 0,
+  "test_selection_count": 0,
+  "byte_cost_caveat": "logical bytes; excludes Pillow header reads, repeated candidate label reads and filesystem/cache IO",
+  "image_hash_coverage": "candidate only; all other image hashes deferred, never fabricated",
+  "audit_sha256": "2ad863fbb7ea659ff194fce2bba9787cd60a1be16bcd5c1678338d90a5bc9c7a",
+  "historical_manifest_sha256": "bdee5dafc1f3ee8ff81256ab79aaa0b44e2b5389aadf99ed155487939e8cf32c"
+}

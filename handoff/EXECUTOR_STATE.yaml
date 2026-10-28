@@ -8,21 +8,25 @@ last_checkpoint:
   commit: null
   pushed: null
 last_task:
-  task_id: LOCAL-STORAGE-CLEANUP-20261027
+  task_id: CUBIT-TEXT-PREP-20261029
   execution_status: COMPLETE_PENDING_SUPERVISOR_REVIEW
-  finalized_date: '2026-10-28'
-  report: reports/storage_cleanup/20261027/README.md
-  deleted_files: 685
-  deleted_logical_bytes: 15057511
-  empty_directories_removed: 1049
-  deletion_window_net_free_bytes: 14876672
-  post_cleanup_protection_check: PASS
-  v3_full_self_check: PASS
-  v3_native_window_check: PASS
+  finalized_date: '2026-10-29'
+  report: reports/cubit_text_prep/20261029/README.md
+  images_indexed: 6996
+  instances_indexed: 62187
+  pilot_candidates: 31
+  human_annotations_completed: 0
+  exact_zero_area_polygons: 13
+  historical_cross_split_duplicate_candidate_groups: 222
+  final_independent_checks: PASS
+  test_image_decodes: 0
   training_calls: 0
   dataset_download_bytes: 0
 research_context:
   damage_p1a: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
-  real_training_steps: 0
+  class_mapping: UNCONFIRMED
+  valid_domain: UNKNOWN
+  building_groups: UNKNOWN
   legacy_rc1: FROZEN_HISTORICAL
-next_action: Await Supervisor review; do not rerun cleanup or start download/research tasks.
+  huawei_application: SEPARATE_CODEARTS_SPACE_SINGLE_AGENT_NOT_ACCESSED
+next_action: Await Supervisor review of candidate pool and annotation draft; do not advance automatically.

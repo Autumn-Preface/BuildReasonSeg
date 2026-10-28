@@ -1,0 +1,1695 @@
+[
+  {
+    "image_id": "cubit-v1/train/CR1_177",
+    "split": "train",
+    "image_relpath": "train/images/CR1_177.JPG",
+    "label_relpath": "train/labels/CR1_177.txt",
+    "label_sha256": "0fb8e6cfe127806aee30a252284954f73f3cad3e74b2307c61bebcdbfe0e6c9e",
+    "image_sha256": "bc7563c37f1c7d76be40a1da832af88cef9b55f2ae22ec1656118ad8b3845bf8",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 5470077,
+    "instances": 1,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 1,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_177/L0001/0fb8e6cfe127806a"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_40",
+    "split": "train",
+    "image_relpath": "train/images/CR1_40.JPG",
+    "label_relpath": "train/labels/CR1_40.txt",
+    "label_sha256": "5cfa457806e943b2d1da73d08011656eb7ad318c0eb2c187338da54a1ba68444",
+    "image_sha256": "0c713d7d1e84e09437f49029cf933dcf289429a60c6c0c5c5908dd9cc2ec78d6",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 5572034,
+    "instances": 1,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 2,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_40/L0001/5cfa457806e943b2"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_32",
+    "split": "train",
+    "image_relpath": "train/images/CR1_32.JPG",
+    "label_relpath": "train/labels/CR1_32.txt",
+    "label_sha256": "6e0d6b4af9c6f1ca8e51f6eb40eb71eb74366476b2ef861673a713b236309b85",
+    "image_sha256": "65212498f4f26ae0b94878e4429a80dde3e5163a7b996edef50b61c1dfc22e99",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 5467077,
+    "instances": 1,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 3,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_32/L0001/6e0d6b4af9c6f1ca"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_45",
+    "split": "train",
+    "image_relpath": "train/images/CR1_45.JPG",
+    "label_relpath": "train/labels/CR1_45.txt",
+    "label_sha256": "3c528ff81263533cf1a610ee8485081e50506a1e846df15a93a1d221c8aa7890",
+    "image_sha256": "2e91edf32f34cc84ec129aecad78b7752d0eb059db9ed42291ce1305a6d08397",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 5749762,
+    "instances": 1,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 4,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_45/L0001/3c528ff81263533c"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_28",
+    "split": "train",
+    "image_relpath": "train/images/CR1_28.JPG",
+    "label_relpath": "train/labels/CR1_28.txt",
+    "label_sha256": "ab12fe2bc84fbaba2c0b5926fcc0cf9a660a2d03a59e49b66fe8a1c351b70ef6",
+    "image_sha256": "f3d0f810b99d8f848d01828d221b3850f331a44ad39433dac7591c2b2ba33e62",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 5248720,
+    "instances": 1,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 5,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_28/L0001/ab12fe2bc84fbaba"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_184",
+    "split": "train",
+    "image_relpath": "train/images/CR1_184.JPG",
+    "label_relpath": "train/labels/CR1_184.txt",
+    "label_sha256": "bde3d555cd2d845d4792fec5c7b002eb8d428053550880ac2832be2099a80b89",
+    "image_sha256": "3edba510b298a4595362ee31797fd5869ca3f74322a2dea4c103bc832f836b22",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 5378909,
+    "instances": 1,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 6,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_184/L0001/bde3d555cd2d845d"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_663",
+    "split": "train",
+    "image_relpath": "train/images/CR1_663.JPG",
+    "label_relpath": "train/labels/CR1_663.txt",
+    "label_sha256": "ce20eb177dd63108f9ce8ff314663bc5a06bba10baca2db152ff7341b503a45f",
+    "image_sha256": "e2d6300ae2df8b9137b81d1015d3a6dec4d5091a99c7d7629dca1ca8fab6f938",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2383662,
+    "instances": 4,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 7,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_663/L0001/9b8e81e3f0dc055c",
+      "cubit-v1/train/CR1_663/L0002/8c97115e4593a6ec",
+      "cubit-v1/train/CR1_663/L0003/c72e721299605c07",
+      "cubit-v1/train/CR1_663/L0004/417d06c32961f325"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_3099",
+    "split": "train",
+    "image_relpath": "train/images/CR1_3099.JPG",
+    "label_relpath": "train/labels/CR1_3099.txt",
+    "label_sha256": "2abfc00b2d56fa886143922ad695cb600586aa3b2a321c54dc2f1db48c38b939",
+    "image_sha256": "de42414bc55e43f3edc431b05ecb01c7c45dce76910fa3b616bafaecb33cbc85",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2111464,
+    "instances": 2,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 8,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_3099/L0001/2a634bf357d130e7",
+      "cubit-v1/train/CR1_3099/L0002/b42360e0b9ee5a7c"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_2043",
+    "split": "train",
+    "image_relpath": "train/images/CR1_2043.JPG",
+    "label_relpath": "train/labels/CR1_2043.txt",
+    "label_sha256": "5b35bc4f80565946325094137bb01606256a57392dc20d3555ea173e20dadf02",
+    "image_sha256": "b086877108f456a6cfcdf570c5f815caf22ea6d72527cb1b637a21ed354adf9f",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1905042,
+    "instances": 5,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 9,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_2043/L0001/79e39b7c4566bf63",
+      "cubit-v1/train/CR1_2043/L0002/95fb7af281b3b103",
+      "cubit-v1/train/CR1_2043/L0003/c4d68e62af79c82d",
+      "cubit-v1/train/CR1_2043/L0004/067871cf4ae94b3b",
+      "cubit-v1/train/CR1_2043/L0005/eea405ebecb956cf"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_315",
+    "split": "train",
+    "image_relpath": "train/images/CR1_315.JPG",
+    "label_relpath": "train/labels/CR1_315.txt",
+    "label_sha256": "f4bb2ac66aaf6af1ac18798755f61ec2bad6d3746d6797106db5b7d5028f567c",
+    "image_sha256": "703ffe69a649576e3c24f699cbcfce3600695fd30d91e96704b1feddce92a809",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 966239,
+    "instances": 5,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 10,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_315/L0001/fa7b43e18b02a575",
+      "cubit-v1/train/CR1_315/L0002/9b7974f4f461cef4",
+      "cubit-v1/train/CR1_315/L0003/5a1d1e5bbebf8f9e",
+      "cubit-v1/train/CR1_315/L0004/733f7379a0163e29",
+      "cubit-v1/train/CR1_315/L0005/f5a9f375d1bd65c5"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_140",
+    "split": "train",
+    "image_relpath": "train/images/CR1_140.JPG",
+    "label_relpath": "train/labels/CR1_140.txt",
+    "label_sha256": "d0cba55066cde6f6c0f4bf0ddf5004a98fcbb5222a26105bd968e5a1ddfeb73a",
+    "image_sha256": "a293346b78c35e8b270134b6577d9ec3abbf62c0cff73745f7f1f67f5a97095b",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 3318390,
+    "instances": 3,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 11,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_140/L0001/b5ff4b200360eee5",
+      "cubit-v1/train/CR1_140/L0002/380de7bf05a779cc",
+      "cubit-v1/train/CR1_140/L0003/c8704a1111a5e5ea"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_6",
+    "split": "train",
+    "image_relpath": "train/images/CR1_6.JPG",
+    "label_relpath": "train/labels/CR1_6.txt",
+    "label_sha256": "4fa01e97434c9ce52b1b14e2ce95c88c75591923c13bf499fa6ca67bb883386c",
+    "image_sha256": "7fd5c531eb42e7ba7ca1855a31ae5814c468cc5af456f8c692a24ce2ef42fdcb",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      3000,
+      4500
+    ],
+    "image_bytes": 4182233,
+    "instances": 3,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 12,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_6/L0001/1c76af02e7583ee1",
+      "cubit-v1/train/CR1_6/L0002/f4a9cc4b703e417e",
+      "cubit-v1/train/CR1_6/L0003/f3509f178395aab8"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1775",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1775.JPG",
+    "label_relpath": "train/labels/CR1_1775.txt",
+    "label_sha256": "5c7f9791ca671780b4c07bab6d326e6d8da0226b1a104318d6e8918551e80ce2",
+    "image_sha256": "535796aec93c2510d7de5478646f0136a5191e640433bd819e5197d51bd1a831",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1877892,
+    "instances": 8,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 13,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1775/L0001/bcc9bed5f91c7af2",
+      "cubit-v1/train/CR1_1775/L0002/64df8cba0d427d22",
+      "cubit-v1/train/CR1_1775/L0003/4c07b9de79822c05",
+      "cubit-v1/train/CR1_1775/L0004/f3bbc20a5fe9b331",
+      "cubit-v1/train/CR1_1775/L0005/e1a5e05dfa9541c6",
+      "cubit-v1/train/CR1_1775/L0006/9868568c466e283a",
+      "cubit-v1/train/CR1_1775/L0007/c21d54b86cfb63a3",
+      "cubit-v1/train/CR1_1775/L0008/ac8da3c365c1a309"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_648",
+    "split": "train",
+    "image_relpath": "train/images/CR1_648.JPG",
+    "label_relpath": "train/labels/CR1_648.txt",
+    "label_sha256": "42fc14777b79f76d8560be73153cd3419414a268e46d6f32562412a9c2808034",
+    "image_sha256": "bd41f16986e0152f231d527f93a6a8c9f6a9ba4024b52dff0b3c47b9f8bd9a85",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1959098,
+    "instances": 7,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 14,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_648/L0001/bc8cf44c204334be",
+      "cubit-v1/train/CR1_648/L0002/9d3d8146aeff0d77",
+      "cubit-v1/train/CR1_648/L0003/ae7e59a2c4e77bea",
+      "cubit-v1/train/CR1_648/L0004/2d6215660b934792",
+      "cubit-v1/train/CR1_648/L0005/9fd88a4920145b50",
+      "cubit-v1/train/CR1_648/L0006/7acd9cc2a6807f5a",
+      "cubit-v1/train/CR1_648/L0007/a14f96773368f1e8"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1699",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1699.JPG",
+    "label_relpath": "train/labels/CR1_1699.txt",
+    "label_sha256": "b36f7d2dd2d206d5d6ec62ba1acb609d09cd50932c9f80ff839684ceb3713438",
+    "image_sha256": "d138d329b4b22e3709b74087a98ac0a3b2771e57a800b12c8e9ec0f681ae7de7",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1686561,
+    "instances": 9,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 15,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1699/L0001/aea2a76d3ee17a92",
+      "cubit-v1/train/CR1_1699/L0002/d1d320503213a2ce",
+      "cubit-v1/train/CR1_1699/L0003/f7d3f9e7cbea0662",
+      "cubit-v1/train/CR1_1699/L0004/bb6051f01fbe0d95",
+      "cubit-v1/train/CR1_1699/L0005/692f44c9e0db0bc3",
+      "cubit-v1/train/CR1_1699/L0006/b665f9d7d2e6b74d",
+      "cubit-v1/train/CR1_1699/L0007/572bf509e7964b73",
+      "cubit-v1/train/CR1_1699/L0008/17085f391a97fe98",
+      "cubit-v1/train/CR1_1699/L0009/c4204edab5a2b67a"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_2357",
+    "split": "train",
+    "image_relpath": "train/images/CR1_2357.JPG",
+    "label_relpath": "train/labels/CR1_2357.txt",
+    "label_sha256": "b70ca0a3acaa41026d54c23161f981ff0e3b4194d60c8991d6f870620c3cc1fb",
+    "image_sha256": "cf82064fb2b92dc4f58adb97a7eb5f091641405015d0867493a78e9649ac2dd6",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1820339,
+    "instances": 15,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 16,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_2357/L0001/d9b0607d4d2cd489",
+      "cubit-v1/train/CR1_2357/L0002/4d788ab8af69728f",
+      "cubit-v1/train/CR1_2357/L0003/6306b5de7e6758e7",
+      "cubit-v1/train/CR1_2357/L0004/29fe1aa58bb42d52",
+      "cubit-v1/train/CR1_2357/L0005/0ac00e197e8a32aa",
+      "cubit-v1/train/CR1_2357/L0006/c5cb2512dc6b8b3a",
+      "cubit-v1/train/CR1_2357/L0007/31a69517f6dd684b",
+      "cubit-v1/train/CR1_2357/L0008/49635d639a6361d2",
+      "cubit-v1/train/CR1_2357/L0009/9bfd010daccc43e4",
+      "cubit-v1/train/CR1_2357/L0010/d9ec9d3d8dbe4d99",
+      "cubit-v1/train/CR1_2357/L0011/875a75bd9e06e6ee",
+      "cubit-v1/train/CR1_2357/L0012/7ed4cf34a4e97983",
+      "cubit-v1/train/CR1_2357/L0013/511de99e3dd2e59e",
+      "cubit-v1/train/CR1_2357/L0014/6730db86228e56da",
+      "cubit-v1/train/CR1_2357/L0015/750b88173280456e"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_103",
+    "split": "train",
+    "image_relpath": "train/images/CR1_103.JPG",
+    "label_relpath": "train/labels/CR1_103.txt",
+    "label_sha256": "e700dfea37eab39a05948ce6269edf5c925984a5e34f0bcdc5433ccf0910d58e",
+    "image_sha256": "cd2fa9d2a4fbf6ab319bcbf38b970455a0fab6fdfc5d4f51bb80222dd82a6d12",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 3016626,
+    "instances": 9,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 17,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_103/L0001/ea3c7e01d6ac217e",
+      "cubit-v1/train/CR1_103/L0002/a26be11da526f8de",
+      "cubit-v1/train/CR1_103/L0003/6ec9f5b51c01b46a",
+      "cubit-v1/train/CR1_103/L0004/d722947522dbb22f",
+      "cubit-v1/train/CR1_103/L0005/1e2ecc3f769063dd",
+      "cubit-v1/train/CR1_103/L0006/0bd15192db3ac0bb",
+      "cubit-v1/train/CR1_103/L0007/65f7391f88a5d729",
+      "cubit-v1/train/CR1_103/L0008/3a88eb42ff836f25",
+      "cubit-v1/train/CR1_103/L0009/378ea106434baaf2"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_3142",
+    "split": "train",
+    "image_relpath": "train/images/CR1_3142.JPG",
+    "label_relpath": "train/labels/CR1_3142.txt",
+    "label_sha256": "94e335e5ffefc1dfef8568336c2b17a3ce285147649d4e90ac9b3f48cf3fb83c",
+    "image_sha256": "db223b8f409829858023853e1c4eb570feab28481782b450195470288a48dbaa",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1574990,
+    "instances": 9,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 18,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_3142/L0001/d0d1b17f90f31236",
+      "cubit-v1/train/CR1_3142/L0002/17e40b7921440fa8",
+      "cubit-v1/train/CR1_3142/L0003/95414e9b573c1032",
+      "cubit-v1/train/CR1_3142/L0004/27c3f408cc2058e8",
+      "cubit-v1/train/CR1_3142/L0005/bbe38c290e1963f5",
+      "cubit-v1/train/CR1_3142/L0006/43e6d4ef56e29390",
+      "cubit-v1/train/CR1_3142/L0007/688f714327487a65",
+      "cubit-v1/train/CR1_3142/L0008/268ef25aa6a95b14",
+      "cubit-v1/train/CR1_3142/L0009/96f12cfdd6d03e35"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1367",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1367.JPG",
+    "label_relpath": "train/labels/CR1_1367.txt",
+    "label_sha256": "a2311a237c232ebf35903098b3d97d3d3c4acaac317b8e4cab8d8f679f9ef721",
+    "image_sha256": "fb31fa79f2350baf8ce37f2fa23c44f71aa0ebd11f8d9e731607eefced36dcce",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2449422,
+    "instances": 31,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 19,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1367/L0001/e2d271a6f1ea6c6f",
+      "cubit-v1/train/CR1_1367/L0002/f2c360e5f14d53e4",
+      "cubit-v1/train/CR1_1367/L0003/ece7414dda0f9018",
+      "cubit-v1/train/CR1_1367/L0004/8c03300692c466e8",
+      "cubit-v1/train/CR1_1367/L0005/3337d4cda057207a",
+      "cubit-v1/train/CR1_1367/L0006/0eae00a68c60e658",
+      "cubit-v1/train/CR1_1367/L0007/951c1085a988c4cf",
+      "cubit-v1/train/CR1_1367/L0008/e5e071b60a6b84de",
+      "cubit-v1/train/CR1_1367/L0009/bb8e92227f818ca6",
+      "cubit-v1/train/CR1_1367/L0010/b850839db65fdaa2",
+      "cubit-v1/train/CR1_1367/L0011/5499363cd2e5b8f3",
+      "cubit-v1/train/CR1_1367/L0012/36c7f9ee65fa0470",
+      "cubit-v1/train/CR1_1367/L0013/4ac10d429a28c43a",
+      "cubit-v1/train/CR1_1367/L0014/944beef4ff2ac949",
+      "cubit-v1/train/CR1_1367/L0015/74c77915dc64d5e3",
+      "cubit-v1/train/CR1_1367/L0016/7bc28d67bf1da32c",
+      "cubit-v1/train/CR1_1367/L0017/ba4016dbc9bbee88",
+      "cubit-v1/train/CR1_1367/L0018/30086b5540af15c8",
+      "cubit-v1/train/CR1_1367/L0019/0d0db992e5ebbf79",
+      "cubit-v1/train/CR1_1367/L0020/566283be9eca263d",
+      "cubit-v1/train/CR1_1367/L0021/f4d062787bbecabe",
+      "cubit-v1/train/CR1_1367/L0022/3bdaf1e71f51ef26",
+      "cubit-v1/train/CR1_1367/L0023/e988a92d64ab7e90",
+      "cubit-v1/train/CR1_1367/L0024/bb3d54a22680752e",
+      "cubit-v1/train/CR1_1367/L0025/9b1ef2cf493d983c",
+      "cubit-v1/train/CR1_1367/L0026/586b911912a0cb75",
+      "cubit-v1/train/CR1_1367/L0027/2ac60972340ac1ea",
+      "cubit-v1/train/CR1_1367/L0028/2e1fda4fd8371a67",
+      "cubit-v1/train/CR1_1367/L0029/83293261a05ebe37",
+      "cubit-v1/train/CR1_1367/L0030/eff2394c2af7b687",
+      "cubit-v1/train/CR1_1367/L0031/2eb6ce09c5854b94"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1355",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1355.JPG",
+    "label_relpath": "train/labels/CR1_1355.txt",
+    "label_sha256": "a648d66bf341e5e00bec45447c403efad5cde3fcc2ce5956075a85541c71d96d",
+    "image_sha256": "70d9759cc299084f2d416f6cb57a0573bb77d7ad8114ea83c6bd73e1ba46f9eb",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2474476,
+    "instances": 37,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 20,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1355/L0001/f40c1af7a51ce42a",
+      "cubit-v1/train/CR1_1355/L0002/e01ffd174d455e40",
+      "cubit-v1/train/CR1_1355/L0003/737a74a38ceb31f9",
+      "cubit-v1/train/CR1_1355/L0004/c00ce6a08c5a6264",
+      "cubit-v1/train/CR1_1355/L0005/a1b587ddbc89a4f9",
+      "cubit-v1/train/CR1_1355/L0006/2edeb8f0a5a8f822",
+      "cubit-v1/train/CR1_1355/L0007/31c78161d144f96d",
+      "cubit-v1/train/CR1_1355/L0008/8efea2fc093cc772",
+      "cubit-v1/train/CR1_1355/L0009/67a0a1083d417886",
+      "cubit-v1/train/CR1_1355/L0010/25399eeb90425dc3",
+      "cubit-v1/train/CR1_1355/L0011/78eeee8d119572d2",
+      "cubit-v1/train/CR1_1355/L0012/c344b4b47c2c77f7",
+      "cubit-v1/train/CR1_1355/L0013/d15a41c5b5677b97",
+      "cubit-v1/train/CR1_1355/L0014/de1fb29e285acafd",
+      "cubit-v1/train/CR1_1355/L0015/ff080ad1762b2a43",
+      "cubit-v1/train/CR1_1355/L0016/6a3e3508ca0bd0b2",
+      "cubit-v1/train/CR1_1355/L0017/fd95c1393da694bf",
+      "cubit-v1/train/CR1_1355/L0018/a31b7bf1998892c2",
+      "cubit-v1/train/CR1_1355/L0019/3d8b793961548ccb",
+      "cubit-v1/train/CR1_1355/L0020/2ca7fc99580169f2",
+      "cubit-v1/train/CR1_1355/L0021/9e676520800d9020",
+      "cubit-v1/train/CR1_1355/L0022/600a96f59a306b05",
+      "cubit-v1/train/CR1_1355/L0023/710ffd289f4ec5b1",
+      "cubit-v1/train/CR1_1355/L0024/e82116a02b591450",
+      "cubit-v1/train/CR1_1355/L0025/0b6c381f4ff9cf33",
+      "cubit-v1/train/CR1_1355/L0026/439cc5bcad6e48cb",
+      "cubit-v1/train/CR1_1355/L0027/8983c6ac3dd68b99",
+      "cubit-v1/train/CR1_1355/L0028/da78d71f5851f6a7",
+      "cubit-v1/train/CR1_1355/L0029/4c75f95cc478ea46",
+      "cubit-v1/train/CR1_1355/L0030/bfb46a903608b9af",
+      "cubit-v1/train/CR1_1355/L0031/ec22dccdfd222c46",
+      "cubit-v1/train/CR1_1355/L0032/24eb32e60d2394e5",
+      "cubit-v1/train/CR1_1355/L0033/491fbf0311937bf4",
+      "cubit-v1/train/CR1_1355/L0034/661794a0be9571d2",
+      "cubit-v1/train/CR1_1355/L0035/05267496d57c0357",
+      "cubit-v1/train/CR1_1355/L0036/cdd370ce7d8446b2",
+      "cubit-v1/train/CR1_1355/L0037/8b9a02d717bc78d3"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1560",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1560.JPG",
+    "label_relpath": "train/labels/CR1_1560.txt",
+    "label_sha256": "d5cb59a0890d138e6ce2a3c90c7b9a5c24477a5d2688ebb9242c1ee2b146a5ad",
+    "image_sha256": "205911c3025b22ccdf1383d5f58ee66bfeb08f86ed93af382ca57f807b1627b0",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1863377,
+    "instances": 31,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 21,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1560/L0001/2cd4057c5343f0dc",
+      "cubit-v1/train/CR1_1560/L0002/9772cd9e86f47e9d",
+      "cubit-v1/train/CR1_1560/L0003/68553eb5ab820947",
+      "cubit-v1/train/CR1_1560/L0004/27a35e626deec11c",
+      "cubit-v1/train/CR1_1560/L0005/dab9820ecb05ab83",
+      "cubit-v1/train/CR1_1560/L0006/a09fde2e1d10ba88",
+      "cubit-v1/train/CR1_1560/L0007/56533ec6e1d73f41",
+      "cubit-v1/train/CR1_1560/L0008/17b456099add0d3f",
+      "cubit-v1/train/CR1_1560/L0009/01a61479c2441515",
+      "cubit-v1/train/CR1_1560/L0010/db8d0b1cebb2c46f",
+      "cubit-v1/train/CR1_1560/L0011/7394d7d795a025c6",
+      "cubit-v1/train/CR1_1560/L0012/b9d3d16060f0f6f4",
+      "cubit-v1/train/CR1_1560/L0013/2b82e9e6ec48a1fe",
+      "cubit-v1/train/CR1_1560/L0014/feacfc12f6858e41",
+      "cubit-v1/train/CR1_1560/L0015/e497860ed47506bf",
+      "cubit-v1/train/CR1_1560/L0016/ba0999cc2991bc95",
+      "cubit-v1/train/CR1_1560/L0017/d2975ac404e9d166",
+      "cubit-v1/train/CR1_1560/L0018/2ad71125c79454ca",
+      "cubit-v1/train/CR1_1560/L0019/9e0024622c7b9c83",
+      "cubit-v1/train/CR1_1560/L0020/b4513d9b4d57f590",
+      "cubit-v1/train/CR1_1560/L0021/24dd1670b81fd094",
+      "cubit-v1/train/CR1_1560/L0022/3828a0df4ea22038",
+      "cubit-v1/train/CR1_1560/L0023/52fa2be70a9a1454",
+      "cubit-v1/train/CR1_1560/L0024/16f6c00d859b8b62",
+      "cubit-v1/train/CR1_1560/L0025/19b3fd09c9559421",
+      "cubit-v1/train/CR1_1560/L0026/376e4a082af58b9a",
+      "cubit-v1/train/CR1_1560/L0027/b060fb2128bb9b5f",
+      "cubit-v1/train/CR1_1560/L0028/0d740c44bebcec4d",
+      "cubit-v1/train/CR1_1560/L0029/48c8ab2d54f8abb1",
+      "cubit-v1/train/CR1_1560/L0030/7abe7caa1a74a3bc",
+      "cubit-v1/train/CR1_1560/L0031/d41c6a409ccd9f21"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1312",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1312.JPG",
+    "label_relpath": "train/labels/CR1_1312.txt",
+    "label_sha256": "dc2cf5620d2ecf41245d7c5a5e597f0201f45e7a768adbd3ee97b0cb00083068",
+    "image_sha256": "592aba9897bba6b9ac52d22cb62285344494b91c4ad63b5eae8546fc40782383",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2531172,
+    "instances": 43,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 22,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1312/L0001/9c013afa9b791c1a",
+      "cubit-v1/train/CR1_1312/L0002/ad7132fe091319d0",
+      "cubit-v1/train/CR1_1312/L0003/50a364fd007c6618",
+      "cubit-v1/train/CR1_1312/L0004/bfa63ce2049116a3",
+      "cubit-v1/train/CR1_1312/L0005/04e584ac89c2948d",
+      "cubit-v1/train/CR1_1312/L0006/74f27f100741b72b",
+      "cubit-v1/train/CR1_1312/L0007/6a51f823bfca4e5d",
+      "cubit-v1/train/CR1_1312/L0008/47f79ab51362806b",
+      "cubit-v1/train/CR1_1312/L0009/ae8b23a4dc50ae9c",
+      "cubit-v1/train/CR1_1312/L0010/03f0a473e616ebe8",
+      "cubit-v1/train/CR1_1312/L0011/799ef05cbfa4883a",
+      "cubit-v1/train/CR1_1312/L0012/914955ad1d89add9",
+      "cubit-v1/train/CR1_1312/L0013/c76a96d92c3004f0",
+      "cubit-v1/train/CR1_1312/L0014/5f524104dba59d48",
+      "cubit-v1/train/CR1_1312/L0015/2ff4a96b9fa3b62b",
+      "cubit-v1/train/CR1_1312/L0016/a90b593243ae97ea",
+      "cubit-v1/train/CR1_1312/L0017/21285942121ffeae",
+      "cubit-v1/train/CR1_1312/L0018/4bb1b10f3b83175d",
+      "cubit-v1/train/CR1_1312/L0019/1b419c0bab3f6adf",
+      "cubit-v1/train/CR1_1312/L0020/62eb4d5cec65f150",
+      "cubit-v1/train/CR1_1312/L0021/af8e0c78a3034a0c",
+      "cubit-v1/train/CR1_1312/L0022/7089ff0a73e06df8",
+      "cubit-v1/train/CR1_1312/L0023/ced5b02d23ac6528",
+      "cubit-v1/train/CR1_1312/L0024/ad6708392174363c",
+      "cubit-v1/train/CR1_1312/L0025/c2bd03cadb3dc7b3",
+      "cubit-v1/train/CR1_1312/L0026/46fb96fe3482a065",
+      "cubit-v1/train/CR1_1312/L0027/f7b8e1a8f8f19c85",
+      "cubit-v1/train/CR1_1312/L0028/f3d981591201d16c",
+      "cubit-v1/train/CR1_1312/L0029/e63742bfa943d541",
+      "cubit-v1/train/CR1_1312/L0030/89abe173e7a74fa8",
+      "cubit-v1/train/CR1_1312/L0031/05573faa7d190d7f",
+      "cubit-v1/train/CR1_1312/L0032/70e8a40a0cc69074",
+      "cubit-v1/train/CR1_1312/L0033/78ca91b5480b727a",
+      "cubit-v1/train/CR1_1312/L0034/d91ac2e3d2247779",
+      "cubit-v1/train/CR1_1312/L0035/fecd7e09928e5487",
+      "cubit-v1/train/CR1_1312/L0036/1247d7c73282e356",
+      "cubit-v1/train/CR1_1312/L0037/5ce2cfbcc001cd19",
+      "cubit-v1/train/CR1_1312/L0038/23f1adba939b4809",
+      "cubit-v1/train/CR1_1312/L0039/fdffdcd3d6f01383",
+      "cubit-v1/train/CR1_1312/L0040/9fe567a0d120d73d",
+      "cubit-v1/train/CR1_1312/L0041/01fc59dc794a399f",
+      "cubit-v1/train/CR1_1312/L0042/3cc58fc64ba7f646",
+      "cubit-v1/train/CR1_1312/L0043/82a036727e95cbb3"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_2311",
+    "split": "train",
+    "image_relpath": "train/images/CR1_2311.JPG",
+    "label_relpath": "train/labels/CR1_2311.txt",
+    "label_sha256": "b4f24c665b564495480a24644e8a99b2325f414b847da80671ddf064be4edd2f",
+    "image_sha256": "baf3ebea1eaafaf55d80f1e475320bd407b044d031f822863e3606a483ec48dd",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1653098,
+    "instances": 29,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 23,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_2311/L0001/842ecdc60015a107",
+      "cubit-v1/train/CR1_2311/L0002/757e642265491968",
+      "cubit-v1/train/CR1_2311/L0003/5d284c359d0579b7",
+      "cubit-v1/train/CR1_2311/L0004/86f984785f1b957c",
+      "cubit-v1/train/CR1_2311/L0005/f8506691714da534",
+      "cubit-v1/train/CR1_2311/L0006/cd39ddcb5aa5fb6e",
+      "cubit-v1/train/CR1_2311/L0007/aad18b3fb3c20618",
+      "cubit-v1/train/CR1_2311/L0008/a9d4a73122e9838a",
+      "cubit-v1/train/CR1_2311/L0009/9431995c9c2f083c",
+      "cubit-v1/train/CR1_2311/L0010/baa321877d255750",
+      "cubit-v1/train/CR1_2311/L0011/eb8aa03bbfd2ade3",
+      "cubit-v1/train/CR1_2311/L0012/a117a8e593599de3",
+      "cubit-v1/train/CR1_2311/L0013/8fe54046706cb922",
+      "cubit-v1/train/CR1_2311/L0014/ef5cbb832ebcfa68",
+      "cubit-v1/train/CR1_2311/L0015/bd560f33cee062a7",
+      "cubit-v1/train/CR1_2311/L0016/94a4a977fe19d188",
+      "cubit-v1/train/CR1_2311/L0017/f65c0be9e44e4899",
+      "cubit-v1/train/CR1_2311/L0018/929f1f78688c8830",
+      "cubit-v1/train/CR1_2311/L0019/f81217f225f6b083",
+      "cubit-v1/train/CR1_2311/L0020/5d8159d4f7196119",
+      "cubit-v1/train/CR1_2311/L0021/83c7ff733854fbf6",
+      "cubit-v1/train/CR1_2311/L0022/cab25f7adc68ffc0",
+      "cubit-v1/train/CR1_2311/L0023/6a9dd0c429643e24",
+      "cubit-v1/train/CR1_2311/L0024/b65998413c8bb8f6",
+      "cubit-v1/train/CR1_2311/L0025/4833cccb52253d76",
+      "cubit-v1/train/CR1_2311/L0026/bc5a860c979baea9",
+      "cubit-v1/train/CR1_2311/L0027/47c3c66af0ea92ab",
+      "cubit-v1/train/CR1_2311/L0028/5d16952068bc36a2",
+      "cubit-v1/train/CR1_2311/L0029/cd43536d107fb991"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1466",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1466.JPG",
+    "label_relpath": "train/labels/CR1_1466.txt",
+    "label_sha256": "b1639188c4e4a8daaa65ffb5b00783575544f4c7b40f8561dadd6bf02d9f6815",
+    "image_sha256": "457c655a432ddb9cfb2559518414f4a916782dbee7ad94e37fda04458160b9b2",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1951726,
+    "instances": 32,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 24,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/CR1_1466/L0001/0bbd1babb4c03f70",
+      "cubit-v1/train/CR1_1466/L0002/32c10dd2ac0c321c",
+      "cubit-v1/train/CR1_1466/L0003/654b66808d1a4776",
+      "cubit-v1/train/CR1_1466/L0004/6f9ab6db78251c99",
+      "cubit-v1/train/CR1_1466/L0005/b020e74b75b21655",
+      "cubit-v1/train/CR1_1466/L0006/cff4d098740142c1",
+      "cubit-v1/train/CR1_1466/L0007/659eb261beb2a4f9",
+      "cubit-v1/train/CR1_1466/L0008/31e2a2f9c418932c",
+      "cubit-v1/train/CR1_1466/L0009/d55cedc3c44bf6b2",
+      "cubit-v1/train/CR1_1466/L0010/ff43adce1847cc08",
+      "cubit-v1/train/CR1_1466/L0011/17807e61039d6025",
+      "cubit-v1/train/CR1_1466/L0012/fdc5b945a13d0d1d",
+      "cubit-v1/train/CR1_1466/L0013/c58454a933ffacb0",
+      "cubit-v1/train/CR1_1466/L0014/8e7f601a33dc9935",
+      "cubit-v1/train/CR1_1466/L0015/9cea259fcb1ed94e",
+      "cubit-v1/train/CR1_1466/L0016/637d0160731db6e3",
+      "cubit-v1/train/CR1_1466/L0017/d1c14686bde93733",
+      "cubit-v1/train/CR1_1466/L0018/9f109e0b1e21cdf9",
+      "cubit-v1/train/CR1_1466/L0019/2240fd0f03d8ca79",
+      "cubit-v1/train/CR1_1466/L0020/ace7f99365da9aa6",
+      "cubit-v1/train/CR1_1466/L0021/0a0bbd681612bdff",
+      "cubit-v1/train/CR1_1466/L0022/e6f34a9f27c16567",
+      "cubit-v1/train/CR1_1466/L0023/a95df646ff43bc8c",
+      "cubit-v1/train/CR1_1466/L0024/9e935b28032517e4",
+      "cubit-v1/train/CR1_1466/L0025/05b13f1232aa73b4",
+      "cubit-v1/train/CR1_1466/L0026/7f1c1bedab210b07",
+      "cubit-v1/train/CR1_1466/L0027/393ba84b61da2dee",
+      "cubit-v1/train/CR1_1466/L0028/e658d93f038372f8",
+      "cubit-v1/train/CR1_1466/L0029/1b16e8416ad265d1",
+      "cubit-v1/train/CR1_1466/L0030/92e5a277d9f33f6a",
+      "cubit-v1/train/CR1_1466/L0031/6505d1d991dd880f",
+      "cubit-v1/train/CR1_1466/L0032/bd4cbeb0747b280d"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1427",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1427.JPG",
+    "label_relpath": "train/labels/SP1_1427.txt",
+    "label_sha256": "4f95eb7652ce25f1269293bdcf3942ea8a223085c901e2271e0e214f9cee8dfc",
+    "image_sha256": "c3c15caa1d07238226118b0e6decd2728ee2ed4dada2657d469e53a8309033f2",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 3694200,
+    "instances": 1,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 25,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1427/L0001/4f95eb7652ce25f1"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_199",
+    "split": "train",
+    "image_relpath": "train/images/SP0_199.JPG",
+    "label_relpath": "train/labels/SP0_199.txt",
+    "label_sha256": "503259cc1337829eca6900d45297426a65741cd53ecf93b441cec08f374f8f93",
+    "image_sha256": "31c5066be39ae9c05552cf2bb7b1938f0a161f29d47fbc7b557fe943bcf22839",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 2649727,
+    "instances": 1,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 26,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_199/L0001/503259cc1337829e"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_660",
+    "split": "train",
+    "image_relpath": "train/images/SP0_660.JPG",
+    "label_relpath": "train/labels/SP0_660.txt",
+    "label_sha256": "9f0cf92a24e62e5edcc15eb6b5c6b7586d15e780fabf5112dacb2fbca1a78bd0",
+    "image_sha256": "b896a991a6838171254eb0b052f052dcd3a037be28dfb38ee2b4607741dc7939",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 4670128,
+    "instances": 1,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 27,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_660/L0001/9f0cf92a24e62e5e"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1421",
+    "split": "train",
+    "image_relpath": "train/images/SP0_1421.JPG",
+    "label_relpath": "train/labels/SP0_1421.txt",
+    "label_sha256": "7eede248bc06c661de09ee44e396f65cb7ab85db848e1d7527d1c7a652fed983",
+    "image_sha256": "147d902f1195f5b648bb9fe7c35feb8c489bfd11e3b18f6fc85bf6410e5447b4",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 5105926,
+    "instances": 1,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 28,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_1421/L0001/7eede248bc06c661"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_643",
+    "split": "train",
+    "image_relpath": "train/images/SP1_643.JPG",
+    "label_relpath": "train/labels/SP1_643.txt",
+    "label_sha256": "4cf44732b7514dd0cfccd5f2202965dc41121b3ba0383be604d127b9048bfb10",
+    "image_sha256": "0e13d5a2442e05e81ba31a6130c71bb7623538d03ee3920fe58ef3b445cee03c",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 4316527,
+    "instances": 1,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 29,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_643/L0001/4cf44732b7514dd0"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1758",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1758.JPG",
+    "label_relpath": "train/labels/SP1_1758.txt",
+    "label_sha256": "4f9832aeaa1a9a6d4248292bb4738a92a976df493cfbf28d8b00d4817dd58ee1",
+    "image_sha256": "f6bc7b6e647c30beb6fd7bcb7de0a210d56f0e0ebca07bdedfef4f7a5ab66c52",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2468877,
+    "instances": 1,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 30,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1758/L0001/4f9832aeaa1a9a6d"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1133",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1133.JPG",
+    "label_relpath": "train/labels/SP1_1133.txt",
+    "label_sha256": "3a900340bfb58b72e1880b74ff02fd1836891d429f9d5b501c90177b9c08a6b1",
+    "image_sha256": "56e12c0b6449d91ca3fd3fa0044cc1a9aca342f3e89a19a1ec21c6a0d4767aed",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2688943,
+    "instances": 3,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 31,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1133/L0001/5e2d3130d9922a69",
+      "cubit-v1/train/SP1_1133/L0002/37e1821ddcdc49da",
+      "cubit-v1/train/SP1_1133/L0003/0c15105f04a475dc"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1688",
+    "split": "train",
+    "image_relpath": "train/images/SP0_1688.JPG",
+    "label_relpath": "train/labels/SP0_1688.txt",
+    "label_sha256": "92917828962acee53823ab0cce70824fcf6d88f0865315fee101b70cce4d2683",
+    "image_sha256": "4e4d7125c34daa2cb8f748ff4ad6ff6335b49cfe802f6c68dd1c34ed2c463059",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 4044339,
+    "instances": 3,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 32,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_1688/L0001/7ba6ec801494cbe8",
+      "cubit-v1/train/SP0_1688/L0002/75cfac8ba6101efc",
+      "cubit-v1/train/SP0_1688/L0003/0e397845d5cbf71e"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1704",
+    "split": "train",
+    "image_relpath": "train/images/SP0_1704.JPG",
+    "label_relpath": "train/labels/SP0_1704.txt",
+    "label_sha256": "14209aec7d0fef9deb73b56ba5b4349708da56695f6215d9a284d6b7b4c92d8e",
+    "image_sha256": "13813d405280a316ce34484682a92a1d48dcb169e0998038cf60d0745e8e8ca0",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 3986273,
+    "instances": 3,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 33,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_1704/L0001/d68945c5bc8c4630",
+      "cubit-v1/train/SP0_1704/L0002/f811bd665fec1087",
+      "cubit-v1/train/SP0_1704/L0003/0b77b9cbddb4d6da"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1148",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1148.JPG",
+    "label_relpath": "train/labels/SP1_1148.txt",
+    "label_sha256": "59acd29e2c9513df34ae8c195b5e38b2f3c7f2672fe9aba50050d183f15b6428",
+    "image_sha256": "7f34803f56562c2b30c72ca67d20a9b2b3d0337c2aae39020db731358bf0ef27",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2815451,
+    "instances": 3,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 34,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1148/L0001/61d634e6efc52a68",
+      "cubit-v1/train/SP1_1148/L0002/5d5a0d56d0a32590",
+      "cubit-v1/train/SP1_1148/L0003/daf1d11152edb099"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_436",
+    "split": "train",
+    "image_relpath": "train/images/SP1_436.JPG",
+    "label_relpath": "train/labels/SP1_436.txt",
+    "label_sha256": "77ebf0518b0dc38f693578c722bd1dfd79ac59366aec064247f61ef8642ef85b",
+    "image_sha256": "1c100f969ad4c3763d10fc8da6246de53009e1e99af990bda3d955e7d0e56e9a",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2304392,
+    "instances": 2,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 35,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_436/L0001/e6e0ff85823597ec",
+      "cubit-v1/train/SP1_436/L0002/a651918e0829a086"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_991",
+    "split": "train",
+    "image_relpath": "train/images/SP0_991.JPG",
+    "label_relpath": "train/labels/SP0_991.txt",
+    "label_sha256": "dda3c6a80282679ad72d076b9fc778d2aecf26aeef4bcc4404c0f3a89ee0f8f1",
+    "image_sha256": "af90d8c2dcda6e870f68944d4561559e1a4cd987e6806b478a6c12cf583536ac",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 3695148,
+    "instances": 4,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 36,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_991/L0001/4290e8b57946c1fb",
+      "cubit-v1/train/SP0_991/L0002/b989180850f282a2",
+      "cubit-v1/train/SP0_991/L0003/8be5486bebc0a962",
+      "cubit-v1/train/SP0_991/L0004/852eeeaf7093a219"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_70",
+    "split": "train",
+    "image_relpath": "train/images/SP0_70.JPG",
+    "label_relpath": "train/labels/SP0_70.txt",
+    "label_sha256": "89388d2096977c576d33c0a9643625f283c7cee7ad35db892c89ff4656f6b88f",
+    "image_sha256": "df244d22992bb79f62f6d3f99967c4a212b53ba82f8fb56ac073c911492e42d1",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 3056483,
+    "instances": 7,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 37,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_70/L0001/29abdf899f8115c3",
+      "cubit-v1/train/SP0_70/L0002/de7a2821462d9e10",
+      "cubit-v1/train/SP0_70/L0003/87ac1569255c414e",
+      "cubit-v1/train/SP0_70/L0004/a2369f49474a879e",
+      "cubit-v1/train/SP0_70/L0005/55a75f48bcd42209",
+      "cubit-v1/train/SP0_70/L0006/6e24223e88494d15",
+      "cubit-v1/train/SP0_70/L0007/d79a06fc84ce63d7"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1113",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1113.JPG",
+    "label_relpath": "train/labels/SP1_1113.txt",
+    "label_sha256": "76f2986a2e60f29b811a85582c94d65bb73b60cb2616e2cac5497373a395c089",
+    "image_sha256": "a053b8c91db0db0def065fe9775f45c780e205c301c12118cf47efe350eda94a",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2673246,
+    "instances": 6,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 38,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1113/L0001/4b605f846081469c",
+      "cubit-v1/train/SP1_1113/L0002/ff888c914d39746f",
+      "cubit-v1/train/SP1_1113/L0003/c2efe6c5e1330181",
+      "cubit-v1/train/SP1_1113/L0004/9433374ad32c9825",
+      "cubit-v1/train/SP1_1113/L0005/38d1e36832d9d605",
+      "cubit-v1/train/SP1_1113/L0006/467968e8ae34eef4"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1117",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1117.JPG",
+    "label_relpath": "train/labels/SP1_1117.txt",
+    "label_sha256": "201d3fc73b5b0ffa876a2a1a9f40ea763f8d62154ce04aff170ce075ffae3c18",
+    "image_sha256": "1c222ae6ab7b2e764215ca7ef2d3a15587853d6453869768c16c29c3de9ca181",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 2708877,
+    "instances": 6,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 39,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1117/L0001/1e6e23085d199b4f",
+      "cubit-v1/train/SP1_1117/L0002/638b087beaef18c0",
+      "cubit-v1/train/SP1_1117/L0003/f81d5fd7d8f62566",
+      "cubit-v1/train/SP1_1117/L0004/eac5e020f91c7bb4",
+      "cubit-v1/train/SP1_1117/L0005/70c58a815e7cbcfe",
+      "cubit-v1/train/SP1_1117/L0006/fc4e2cb1dad5acda"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1107",
+    "split": "train",
+    "image_relpath": "train/images/SP1_1107.JPG",
+    "label_relpath": "train/labels/SP1_1107.txt",
+    "label_sha256": "48dff7dd6f23a5027442434fe38666e7626001ba622957861809afc6326155a0",
+    "image_sha256": "8e74c22491eb493fdc8dffaf96cd1fa22ae52e1223cd3345b37248255d28e343",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 3051012,
+    "instances": 6,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 40,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP1_1107/L0001/587645e7f28d9655",
+      "cubit-v1/train/SP1_1107/L0002/42596eb40b4d48a3",
+      "cubit-v1/train/SP1_1107/L0003/791d73c38f905100",
+      "cubit-v1/train/SP1_1107/L0004/f628822f330945b6",
+      "cubit-v1/train/SP1_1107/L0005/07b65f09e5c71750",
+      "cubit-v1/train/SP1_1107/L0006/a6f80fcf44c39b69"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_76",
+    "split": "train",
+    "image_relpath": "train/images/SP0_76.JPG",
+    "label_relpath": "train/labels/SP0_76.txt",
+    "label_sha256": "3d658ea2d4e2dda827e8168b56130342d8de20c3148c22662bcd82a1ae5d1d20",
+    "image_sha256": "9fb844fe90c62c5af05ff496b0e9b953d8174e2744af3cf3962a6f1912bab7f5",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 4056915,
+    "instances": 6,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 41,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_76/L0001/d5d7de975c522153",
+      "cubit-v1/train/SP0_76/L0002/541a732754e589b2",
+      "cubit-v1/train/SP0_76/L0003/da1a90399b9dccac",
+      "cubit-v1/train/SP0_76/L0004/6d0b485e45a06efd",
+      "cubit-v1/train/SP0_76/L0005/392397fb6d48ebd0",
+      "cubit-v1/train/SP0_76/L0006/8db432d0908545ef"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1127",
+    "split": "train",
+    "image_relpath": "train/images/SP0_1127.JPG",
+    "label_relpath": "train/labels/SP0_1127.txt",
+    "label_sha256": "aca258c591c75477c3b02acd4da24032b70e7e552d598fa8df8b40de3e214a80",
+    "image_sha256": "9fc6228c71d23d022fe8991391733fe7d3cf52ef5ff418c6a4b5f0803665756a",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 3426420,
+    "instances": 6,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 42,
+    "candidate_status": "pending_visual_review",
+    "screening_reason": "train; outside historical duplicate groups; valid polygon geometry; class/instance-count diversity",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ],
+    "target_options": [
+      "cubit-v1/train/SP0_1127/L0001/a24c5051b1e870bb",
+      "cubit-v1/train/SP0_1127/L0002/aec36ac6654657b4",
+      "cubit-v1/train/SP0_1127/L0003/457d20e8c62a4bbd",
+      "cubit-v1/train/SP0_1127/L0004/bb1111ffcb6ac3dc",
+      "cubit-v1/train/SP0_1127/L0005/990ff05e78754534",
+      "cubit-v1/train/SP0_1127/L0006/96beb54b99de42fb"
+    ]
+  }
+]

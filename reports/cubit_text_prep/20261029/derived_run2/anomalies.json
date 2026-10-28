@@ -1,0 +1,275 @@
+[
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.092889,
+      0.001333,
+      0.093556,
+      0.001333
+    ],
+    "bbox_center": [
+      0.0932225,
+      0.001333
+    ],
+    "vertices": 4,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2035/L0006/f0cf95df5398cdf3",
+    "image_id": "cubit-v1/train/CR1_2035",
+    "line_1based": 6,
+    "label_sha256": "02a980f4c89541060ee139b385852624a2206c87f179fab3460a483a4c0703ef",
+    "line_sha256": "f0cf95df5398cdf3a436863e84647bc46f5ba2224314a9832d523672f9e3a3fd"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.952222,
+      0.001333,
+      0.953111,
+      0.001333
+    ],
+    "bbox_center": [
+      0.9526665000000001,
+      0.001333
+    ],
+    "vertices": 5,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2136/L0019/fa10931e837401c1",
+    "image_id": "cubit-v1/train/CR1_2136",
+    "line_1based": 19,
+    "label_sha256": "fc9d37a242d0c2bf0cc4054b48044e9985d7830a2e3e891756b8383064587955",
+    "line_sha256": "fa10931e837401c10cb40d73cd56a5f0f10566ce66c948e02f2441942c6335fb"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.885556,
+      0.001333,
+      0.886444,
+      0.001333
+    ],
+    "bbox_center": [
+      0.886,
+      0.001333
+    ],
+    "vertices": 5,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2137/L0017/780a856ec2b66ede",
+    "image_id": "cubit-v1/train/CR1_2137",
+    "line_1based": 17,
+    "label_sha256": "0be6085e57c7ee9f06fffd985234d7a34948e62ded002a8a29d7ed237a298073",
+    "line_sha256": "780a856ec2b66ede0fb02c12402b635fcbf20bebf71067d95950fc33d73939dc"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.818889,
+      0.001333,
+      0.819778,
+      0.001333
+    ],
+    "bbox_center": [
+      0.8193334999999999,
+      0.001333
+    ],
+    "vertices": 5,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2138/L0017/35b2677bfdfaedbe",
+    "image_id": "cubit-v1/train/CR1_2138",
+    "line_1based": 17,
+    "label_sha256": "23a70ed480dbd72f42a8333cedf10ed74712b90732867323fab11e747c8edc0d",
+    "line_sha256": "35b2677bfdfaedbe92beb0324de1c5a384099053d2169438dd65dd01ea7282b6"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.752222,
+      0.001333,
+      0.753111,
+      0.001333
+    ],
+    "bbox_center": [
+      0.7526664999999999,
+      0.001333
+    ],
+    "vertices": 5,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2139/L0018/67c75d1c118f23d9",
+    "image_id": "cubit-v1/train/CR1_2139",
+    "line_1based": 18,
+    "label_sha256": "56f346cd78f6be53e4d34f5d172c3753410b9ea516e0a66bca58dd1b885a3f01",
+    "line_sha256": "67c75d1c118f23d969bce727e737efe05e2d5fce37c04f64b07600d7b4b32f86"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.685556,
+      0.001333,
+      0.686444,
+      0.001333
+    ],
+    "bbox_center": [
+      0.686,
+      0.001333
+    ],
+    "vertices": 5,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2140/L0020/e20fd479f5435763",
+    "image_id": "cubit-v1/train/CR1_2140",
+    "line_1based": 20,
+    "label_sha256": "c09c8cd05938c38a8cb97a3b2c732d2018d20adf2273a82ee449bd9ce04a1e11",
+    "line_sha256": "e20fd479f54357632298843d87e7eebdbb162238800ca7cd96ef0784d315ae33"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.998222,
+      0.998333,
+      0.998889,
+      0.998667
+    ],
+    "bbox_center": [
+      0.9985555,
+      0.9984999999999999
+    ],
+    "vertices": 4,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/CR1_2993/L0001/8549e3b3c8fcef2b",
+    "image_id": "cubit-v1/train/CR1_2993",
+    "line_1based": 1,
+    "label_sha256": "7a31d905917a3a92b41f75d1d7811353e840818c7a91df6d49907383c1995e9c",
+    "line_sha256": "8549e3b3c8fcef2b7b6da0aa2c07947ca4a263eb7087b77ef82a2ec9023f552d"
+  },
+  {
+    "class_id_internal": 1,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.998958,
+      0.006875,
+      0.998958,
+      0.008438
+    ],
+    "bbox_center": [
+      0.998958,
+      0.0076565
+    ],
+    "vertices": 6,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/train/SP0_1025/L0004/2748c292c1309e14",
+    "image_id": "cubit-v1/train/SP0_1025",
+    "line_1based": 4,
+    "label_sha256": "0207ebf49ad8395817b1612b77eb7582a3c2ffa4dbb1548bc29106c61cc9f229",
+    "line_sha256": "2748c292c1309e142ac2e00aabdabf94ce36fe64af878610e671bc2ed8e4956b"
+  },
+  {
+    "class_id_internal": 1,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.998958,
+      0.069375,
+      0.998958,
+      0.070938
+    ],
+    "bbox_center": [
+      0.998958,
+      0.07015650000000001
+    ],
+    "vertices": 6,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/val/SP0_1018/L0004/63242501abea3b87",
+    "image_id": "cubit-v1/val/SP0_1018",
+    "line_1based": 4,
+    "label_sha256": "7b214a5cb89733ffa70a5c899fad86c6c1aa0384e7ea9934ccc0851c045e33a9",
+    "line_sha256": "63242501abea3b87e366f55d905340a07f788c521372f038bb110977175b8619"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.226222,
+      0.001333,
+      0.226889,
+      0.001333
+    ],
+    "bbox_center": [
+      0.22655550000000002,
+      0.001333
+    ],
+    "vertices": 4,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/test/CR1_2033/L0009/816f98e0ce70e1d9",
+    "image_id": "cubit-v1/test/CR1_2033",
+    "line_1based": 9,
+    "label_sha256": "4e196456d0f8ec3fb51844c96a698fc2c2da689f259939c5e162ac8b128a7bad",
+    "line_sha256": "816f98e0ce70e1d915ec2ab40609bc4b08b1f846e1211f9a1e6244cabd001d8b"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.159556,
+      0.001333,
+      0.160222,
+      0.001333
+    ],
+    "bbox_center": [
+      0.159889,
+      0.001333
+    ],
+    "vertices": 4,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/test/CR1_2034/L0007/fcbb2294ce0250e9",
+    "image_id": "cubit-v1/test/CR1_2034",
+    "line_1based": 7,
+    "label_sha256": "5f9e30bb2b7a77f4b91477bdeef2b9dc544529a1b4db1e10ac8e1c81a96b6888",
+    "line_sha256": "fcbb2294ce0250e95d53e566c4f20480dee28e23373f67be02cce874080898f6"
+  },
+  {
+    "class_id_internal": 0,
+    "area_normalized": 0.0,
+    "bbox_normalized": [
+      0.026222,
+      0.001333,
+      0.026889,
+      0.001333
+    ],
+    "bbox_center": [
+      0.0265555,
+      0.001333
+    ],
+    "vertices": 4,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/test/CR1_2036/L0005/254794372f2795a2",
+    "image_id": "cubit-v1/test/CR1_2036",
+    "line_1based": 5,
+    "label_sha256": "9fc67d9a7ba9548251b021cfff855721dbff1f92fdc73fcbe1417483b9ef4d63",
+    "line_sha256": "254794372f2795a2eebb36b40753d8250effe56d414690abf9b7591faff08100"
+  },
+  {
+    "class_id_internal": 1,
+    "area_normalized": 5.551115123125783e-17,
+    "bbox_normalized": [
+      0.998958,
+      0.131875,
+      0.998958,
+      0.133437
+    ],
+    "bbox_center": [
+      0.998958,
+      0.132656
+    ],
+    "vertices": 6,
+    "issue": "zero_area",
+    "instance_id": "cubit-v1/test/SP0_1011/L0004/a6057c40b6309224",
+    "image_id": "cubit-v1/test/SP0_1011",
+    "line_1based": 4,
+    "label_sha256": "20620a23006b8c61e56cef7d3e3db20ab540964f419bda4c30a43db580331951",
+    "line_sha256": "a6057c40b630922482761835f4798872fa0ddafae91f77f77ecde259b38bf7ca"
+  }
+]

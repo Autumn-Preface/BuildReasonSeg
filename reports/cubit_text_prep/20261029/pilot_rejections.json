@@ -1,0 +1,116 @@
+[
+  {
+    "image_id": "cubit-v1/train/CR1_32",
+    "pilot_order": 3,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 2
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_45",
+    "pilot_order": 4,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 2
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_28",
+    "pilot_order": 5,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 2
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_184",
+    "pilot_order": 6,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 1
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1421",
+    "pilot_order": 28,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 25
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_643",
+    "pilot_order": 29,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 27
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1704",
+    "pilot_order": 33,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 32
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1148",
+    "pilot_order": 34,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 31
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1113",
+    "pilot_order": 38,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 31
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1117",
+    "pilot_order": 39,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 31
+  },
+  {
+    "image_id": "cubit-v1/train/SP1_1107",
+    "pilot_order": 40,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 31
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_76",
+    "pilot_order": 41,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 37
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_1127",
+    "pilot_order": 42,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 31
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1714",
+    "pilot_order": 44,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 15
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_314",
+    "pilot_order": 45,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 10
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1597",
+    "pilot_order": 46,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 21
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_435",
+    "pilot_order": 47,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 35
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_77",
+    "pilot_order": 48,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 37
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_628",
+    "pilot_order": 50,
+    "reason": "bounded_visual_same_scene_or_shifted_view",
+    "similar_to_order": 49
+  }
+]

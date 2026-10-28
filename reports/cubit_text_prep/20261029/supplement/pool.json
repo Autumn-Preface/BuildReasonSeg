@@ -1,0 +1,301 @@
+[
+  {
+    "image_id": "cubit-v1/train/CR1_2744",
+    "split": "train",
+    "image_relpath": "train/images/CR1_2744.JPG",
+    "label_relpath": "train/labels/CR1_2744.txt",
+    "label_sha256": "24099988e39f4940f18f2595bf8bb2648644a0ba3993300cfba38d098ebf3a19",
+    "image_sha256": "ca54a56449533d359855a2b064bd8dd46bf245b77139458874b0933a2344b622",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1818648,
+    "instances": 14,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 43,
+    "target_options": [
+      "cubit-v1/train/CR1_2744/L0001/b5b9dabcf694a7f0",
+      "cubit-v1/train/CR1_2744/L0002/ce8bdfe18f28ce5e",
+      "cubit-v1/train/CR1_2744/L0003/842b476a8ffa7ff1",
+      "cubit-v1/train/CR1_2744/L0004/329bc1466e325013",
+      "cubit-v1/train/CR1_2744/L0005/21bc745feceabdfd",
+      "cubit-v1/train/CR1_2744/L0006/2d3ceaa0bf04d4b1",
+      "cubit-v1/train/CR1_2744/L0007/83553e03bcf480ea",
+      "cubit-v1/train/CR1_2744/L0008/c7d9746b2bb80e9f",
+      "cubit-v1/train/CR1_2744/L0009/af88189698924cc7",
+      "cubit-v1/train/CR1_2744/L0010/076d9957d1165912",
+      "cubit-v1/train/CR1_2744/L0011/83e8fd2a35e28fa6",
+      "cubit-v1/train/CR1_2744/L0012/20e0b12b909ff3de",
+      "cubit-v1/train/CR1_2744/L0013/cabc8181d1aaf7a2",
+      "cubit-v1/train/CR1_2744/L0014/7dabdae9ddf672c4"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1714",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1714.JPG",
+    "label_relpath": "train/labels/CR1_1714.txt",
+    "label_sha256": "47180adda1886dbeccfb4a79e3e84fac5e3405458c273d57376c0ac088985fd9",
+    "image_sha256": "f8b98540890c2c62b1630fbab5356347bc458abb4842a1c511f9e0915e4171d1",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1676759,
+    "instances": 9,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 44,
+    "target_options": [
+      "cubit-v1/train/CR1_1714/L0001/ed234b1ef5ead2c9",
+      "cubit-v1/train/CR1_1714/L0002/62f403cf3db7d71b",
+      "cubit-v1/train/CR1_1714/L0003/556bbf1a6ecd4841",
+      "cubit-v1/train/CR1_1714/L0004/c521bb0824aca4f8",
+      "cubit-v1/train/CR1_1714/L0005/aa27d8643e451525",
+      "cubit-v1/train/CR1_1714/L0006/9995013cd6b967fd",
+      "cubit-v1/train/CR1_1714/L0007/85bfb07a1efccf08",
+      "cubit-v1/train/CR1_1714/L0008/10f6c9026cfe7a12",
+      "cubit-v1/train/CR1_1714/L0009/046b360bb9e766e3"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_314",
+    "split": "train",
+    "image_relpath": "train/images/CR1_314.JPG",
+    "label_relpath": "train/labels/CR1_314.txt",
+    "label_sha256": "3d6e965218fb64bd73d7497f37b3a4b7deaac2b411b10d0af528c3da8f71c4ed",
+    "image_sha256": "4507dd8a3091d4159edc4f5c27177db0cd883c4a6ac0fec0b5df9ad4fde8820e",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 912665,
+    "instances": 3,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 45,
+    "target_options": [
+      "cubit-v1/train/CR1_314/L0001/e526e1be991dc7fd",
+      "cubit-v1/train/CR1_314/L0002/e2027fe09f128d21",
+      "cubit-v1/train/CR1_314/L0003/6194da88b27f31e5"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/CR1_1597",
+    "split": "train",
+    "image_relpath": "train/images/CR1_1597.JPG",
+    "label_relpath": "train/labels/CR1_1597.txt",
+    "label_sha256": "619e078763eaa0217911d99601cdad468ab4b14866874f81cd99aa971fb39483",
+    "image_sha256": "8b5bbf73b11e03372857316bdb5fc0cbc0b96840c60c71fa495262f81ee5ce33",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4500,
+      3000
+    ],
+    "image_bytes": 1902354,
+    "instances": 11,
+    "class_ids_internal": [
+      0
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 46,
+    "target_options": [
+      "cubit-v1/train/CR1_1597/L0001/fe4706d4322f8429",
+      "cubit-v1/train/CR1_1597/L0002/b39ff138b6c9f805",
+      "cubit-v1/train/CR1_1597/L0003/93fc9ab0c0af205b",
+      "cubit-v1/train/CR1_1597/L0004/c6e91d5b8fecfe27",
+      "cubit-v1/train/CR1_1597/L0005/b5cf739a6f145192",
+      "cubit-v1/train/CR1_1597/L0006/1a071825ba62dda4",
+      "cubit-v1/train/CR1_1597/L0007/7669b9a210a33693",
+      "cubit-v1/train/CR1_1597/L0008/bc749e3e62757c9d",
+      "cubit-v1/train/CR1_1597/L0009/dab662aa58c6ab45",
+      "cubit-v1/train/CR1_1597/L0010/b5caac26775ebe34",
+      "cubit-v1/train/CR1_1597/L0011/8cd66309ab3af0ca"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_435",
+    "split": "train",
+    "image_relpath": "train/images/SP0_435.JPG",
+    "label_relpath": "train/labels/SP0_435.txt",
+    "label_sha256": "3ad1c8b5c9523d29ac8695b04a7f47765e151b0197bdd0f79867a16a45eda79b",
+    "image_sha256": "402ffbc8d715cd045e01b4f4ba4db4617fdc81416f249a19903dc0adaa25070f",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 2855400,
+    "instances": 2,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 47,
+    "target_options": [
+      "cubit-v1/train/SP0_435/L0001/73c37ea9e99e6f0c",
+      "cubit-v1/train/SP0_435/L0002/92e518f52522fede"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_77",
+    "split": "train",
+    "image_relpath": "train/images/SP0_77.JPG",
+    "label_relpath": "train/labels/SP0_77.txt",
+    "label_sha256": "fa6833e7c3b355312ce0034191b7ab543285bdc039ee7cae98bf427bb6d083e3",
+    "image_sha256": "175d0fd65efeba055096c2064e0dce09cc9c95d38e2b2dd5f5aef878b65abed4",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 3137705,
+    "instances": 7,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 48,
+    "target_options": [
+      "cubit-v1/train/SP0_77/L0001/5bae3f8fb47aae79",
+      "cubit-v1/train/SP0_77/L0002/8c39e1bbbc87315c",
+      "cubit-v1/train/SP0_77/L0003/5f1827ddb971ff97",
+      "cubit-v1/train/SP0_77/L0004/cc9648d65ed5d93d",
+      "cubit-v1/train/SP0_77/L0005/70f4e1dc2f703655",
+      "cubit-v1/train/SP0_77/L0006/d9369826e440089f",
+      "cubit-v1/train/SP0_77/L0007/524a53f0cd273bc6"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_794",
+    "split": "train",
+    "image_relpath": "train/images/SP0_794.JPG",
+    "label_relpath": "train/labels/SP0_794.txt",
+    "label_sha256": "2395d82ca0dbb602687c155070845f6e8eaa6bfa64d7f2325b12ea5f9a557100",
+    "image_sha256": "b2fd20243a87e28d2764177df694562ed7a7180dc7c295b829db2e488ca8d5bd",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 3846513,
+    "instances": 3,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 49,
+    "target_options": [
+      "cubit-v1/train/SP0_794/L0001/72f4c36425a39152",
+      "cubit-v1/train/SP0_794/L0002/fe66bdce69f53fa4",
+      "cubit-v1/train/SP0_794/L0003/1ae9780561b79115"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  },
+  {
+    "image_id": "cubit-v1/train/SP0_628",
+    "split": "train",
+    "image_relpath": "train/images/SP0_628.JPG",
+    "label_relpath": "train/labels/SP0_628.txt",
+    "label_sha256": "d69546fa869042bad7f51d2548193e02d0b867948462c156bf58fa66f43cd4ed",
+    "image_sha256": "0e3c5796012b41ec5f18ff0d6e57bdd847e58960108e38492e6766dc38957598",
+    "image_hash_status": "sha256_current_candidate_only",
+    "width_height": [
+      4800,
+      3200
+    ],
+    "image_bytes": 4481509,
+    "instances": 2,
+    "class_ids_internal": [
+      1
+    ],
+    "issues": [],
+    "building_group": null,
+    "annotation_valid_domain": "unknown",
+    "pilot_order": 50,
+    "target_options": [
+      "cubit-v1/train/SP0_628/L0001/7bda934fc42c9278",
+      "cubit-v1/train/SP0_628/L0002/726e8755e19b4221"
+    ],
+    "candidate_status": "pending_visual_review",
+    "ambiguity_flags": [
+      "class_mapping_unconfirmed",
+      "annotation_completeness_unknown",
+      "building_group_unknown",
+      "semantic_reference_unverified"
+    ]
+  }
+]

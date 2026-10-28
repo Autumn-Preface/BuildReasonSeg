@@ -1,0 +1,28 @@
+schema_version: 1
+task_id: NONE
+status: AWAITING_SUPERVISOR
+executor: CODEX
+branch: null
+head: null
+last_checkpoint:
+  commit: null
+  pushed: null
+last_task:
+  task_id: LOCAL-STORAGE-CLEANUP-20261027
+  execution_status: COMPLETE_PENDING_SUPERVISOR_REVIEW
+  finalized_date: '2026-10-28'
+  report: reports/storage_cleanup/20261027/README.md
+  deleted_files: 685
+  deleted_logical_bytes: 15057511
+  empty_directories_removed: 1049
+  deletion_window_net_free_bytes: 14876672
+  post_cleanup_protection_check: PASS
+  v3_full_self_check: PASS
+  v3_native_window_check: PASS
+  training_calls: 0
+  dataset_download_bytes: 0
+research_context:
+  damage_p1a: STOP_DATA_ADMISSION_AWAITING_SUPERVISOR
+  real_training_steps: 0
+  legacy_rc1: FROZEN_HISTORICAL
+next_action: Await Supervisor review; do not rerun cleanup or start download/research tasks.

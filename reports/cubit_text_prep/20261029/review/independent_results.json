@@ -1,0 +1,88 @@
+{
+  "checks": {
+    "counts_match_6996_62187": true,
+    "unique_ids": true,
+    "links_and_label_hash": true,
+    "counts_per_image": true,
+    "pool_train_only": true,
+    "pool_avoids_duplicate_candidates": true,
+    "pool_geometry_and_identity_issues_empty": true,
+    "pool_targets_resolve": true,
+    "bounded_pilot_image_hashes_match": true,
+    "all_reported_degenerates_exact_zero": true,
+    "anomaly_line_hashes_match": true,
+    "quarantines_trailing_nonnumeric_token": false
+  },
+  "exact_degenerate_checks": [
+    {
+      "instance_id": "cubit-v1/train/CR1_2035/L0006/f0cf95df5398cdf3",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/CR1_2136/L0019/fa10931e837401c1",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/CR1_2137/L0017/780a856ec2b66ede",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/CR1_2138/L0017/35b2677bfdfaedbe",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/CR1_2139/L0018/67c75d1c118f23d9",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/CR1_2140/L0020/e20fd479f5435763",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/CR1_2993/L0001/8549e3b3c8fcef2b",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/train/SP0_1025/L0004/2748c292c1309e14",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/val/SP0_1018/L0004/63242501abea3b87",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/test/CR1_2033/L0009/816f98e0ce70e1d9",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/test/CR1_2034/L0007/fcbb2294ce0250e9",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/test/CR1_2036/L0005/254794372f2795a2",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    },
+    {
+      "instance_id": "cubit-v1/test/SP0_1011/L0004/a6057c40b6309224",
+      "exact_twice_signed_area": "0E-12",
+      "line_sha256_matches": true
+    }
+  ],
+  "candidate_hashes_checked": 42,
+  "bounded_source_bytes_read": 136497679,
+  "elapsed_seconds": 0.6507102999994459,
+  "parser_exception": "string or file could not be read to its end due to unmatched data",
+  "scope": "independent artifact consistency plus bounded source checks; not scientific approval or full image duplicate audit"
+}

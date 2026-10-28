@@ -1,0 +1,39 @@
+{
+  "checks": {
+    "exactly_31_unique_train": true,
+    "all_final_avoid_historical_duplicate_candidates": true,
+    "all_final_issue_free": true,
+    "all_final_label_hashes_match_index": true,
+    "all_final_source_image_hashes_match_pool": true,
+    "all_instance_targets_resolve": true,
+    "focus_is_target_option": true,
+    "not_human_annotations_no_instructions": true,
+    "all_previews_exist": true,
+    "all_50_triage_accounted": true,
+    "final_hashes_unique": true,
+    "prior_42_hash_check_pass": true,
+    "two_supplement_hashes_match_source": true,
+    "parser_adversarial_7_pass": true,
+    "prior_13_decimal_degenerate_check_pass": true
+  },
+  "parser_probes": {
+    "bad_token": true,
+    "trailing_numeric_token": true,
+    "nonfinite": true,
+    "outside_domain": true,
+    "unknown_class": true,
+    "collinear_exact_integer": true,
+    "positive_triangle": true
+  },
+  "all_pass": true,
+  "new_image_hashes_checked": 2,
+  "source_bytes_read": 5665161,
+  "elapsed_seconds": 0.5802117999992333,
+  "source_cost_cumulative_prior_two_rounds_plus_this": 278660519,
+  "opportunities": {
+    "direct_target": 31,
+    "spatial_or_visual_semantic_review": 13,
+    "position_reference": 25
+  },
+  "limitation": "thumbnail triage remains provisional; no independent scientific or annotation acceptance"
+}
